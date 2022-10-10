@@ -1,0 +1,5 @@
+resources:
+  - 01-good-middleware.viper.yaml
+  - 02-good-middleware.yaml
+  - 03-strip-prefix.yaml
+  - 04-service-monitor.yaml
