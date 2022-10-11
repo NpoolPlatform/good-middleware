@@ -7,6 +7,7 @@ import (
 
 	"github.com/shopspring/decimal"
 
+	constant1 "github.com/NpoolPlatform/good-middleware/pkg/const"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/message/const"
 	commontracer "github.com/NpoolPlatform/good-middleware/pkg/tracer"
 
@@ -17,6 +18,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	mgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 
 	goodmw "github.com/NpoolPlatform/good-middleware/pkg/good"
@@ -85,6 +87,7 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 	}
 
 	span = commontracer.TraceInvoker(span, "Good", "mw", "CreateGood")
+
 	info, err := goodmw.CreateGood(ctx, in.GetInfo())
 	if err != nil {
 		logger.Sugar().Errorw("CreateGood", "Good", in.GetInfo(), "error", err)
@@ -97,11 +100,117 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 }
 
 func (s *Server) GetGood(ctx context.Context, in *npool.GetGoodRequest) (*npool.GetGoodResponse, error) {
-	return &npool.GetGoodResponse{}, nil
+	var err error
+
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetGood")
+	defer span.End()
+
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+
+	if _, err := uuid.Parse(in.GetID()); err != nil {
+		logger.Sugar().Errorw("GetGood", "ID", in.GetID(), "error", err)
+		return &npool.GetGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	span = commontracer.TraceInvoker(span, "Good", "mw", "GetGood")
+
+	info, err := goodmw.GetGood(ctx, in.GetID())
+	if err != nil {
+		logger.Sugar().Errorw("GetGood", "ID", in.GetID(), "error", err)
+		return &npool.GetGoodResponse{}, status.Error(codes.Internal, err.Error())
+	}
+
+	return &npool.GetGoodResponse{
+		Info: info,
+	}, nil
 }
 
+// nolint
 func (s *Server) GetGoods(ctx context.Context, in *npool.GetGoodsRequest) (*npool.GetGoodsResponse, error) {
-	return &npool.GetGoodsResponse{}, nil
+	var err error
+
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetGoods")
+	defer span.End()
+
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+
+	if in.GetConds().ID != nil {
+		if _, err := uuid.Parse(in.GetConds().GetID().GetValue()); err != nil {
+			logger.Sugar().Errorw("GetGoods", "ID", in.GetConds().GetID().GetValue(), "error", err)
+			return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		}
+	}
+
+	if in.GetConds().DeviceInfoID != nil {
+		if _, err := uuid.Parse(in.GetConds().GetDeviceInfoID().GetValue()); err != nil {
+			logger.Sugar().Errorw("GetGoods", "DeviceInfoID", in.GetConds().GetDeviceInfoID().GetValue(), "error", err)
+			return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		}
+	}
+
+	if in.GetConds().CoinTypeID != nil {
+		if _, err := uuid.Parse(in.GetConds().GetCoinTypeID().GetValue()); err != nil {
+			logger.Sugar().Errorw("GetGoods", "CoinTypeID", in.GetConds().GetCoinTypeID().GetValue(), "error", err)
+			return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		}
+	}
+
+	if in.GetConds().VendorLocationID != nil {
+		if _, err := uuid.Parse(in.GetConds().GetVendorLocationID().GetValue()); err != nil {
+			logger.Sugar().Errorw("GetGoods", "VendorLocationID", in.GetConds().GetVendorLocationID().GetValue(), "error", err)
+			return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		}
+	}
+
+	if in.GetConds().BenefitType != nil {
+		switch mgrpb.BenefitType(in.GetConds().GetBenefitType().GetValue()) {
+		case mgrpb.BenefitType_BenefitTypePlatform:
+		case mgrpb.BenefitType_BenefitTypePool:
+		default:
+			logger.Sugar().Errorw("GetGoods", "BenefitType", in.GetConds().GetBenefitType().GetValue())
+			return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, "BenefitType is invalid")
+		}
+	}
+
+	if in.GetConds().GoodType != nil {
+		switch mgrpb.GoodType(in.GetConds().GetGoodType().GetValue()) {
+		case mgrpb.GoodType_GoodTypeClassicMining:
+		case mgrpb.GoodType_GoodTypeUnionMining:
+		case mgrpb.GoodType_GoodTypeTechniqueFee:
+		case mgrpb.GoodType_GoodTypeElectricityFee:
+		default:
+			logger.Sugar().Errorw("GetGoods", "GoodType", in.GetConds().GetGoodType().GetValue())
+			return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, "GoodType is invalid")
+		}
+	}
+
+	span = commontracer.TraceInvoker(span, "Good", "mw", "GetGoods")
+
+	limit := in.GetLimit()
+	if limit <= 0 {
+		limit = constant1.DefaultLimit
+	}
+
+	infos, total, err := goodmw.GetGoods(ctx, in.GetConds(), in.GetOffset(), limit)
+	if err != nil {
+		logger.Sugar().Errorw("GetGoods", "Conds", in.GetConds(), "error", err)
+		return &npool.GetGoodsResponse{}, status.Error(codes.Internal, err.Error())
+	}
+
+	return &npool.GetGoodsResponse{
+		Infos: infos,
+		Total: total,
+	}, nil
 }
 
 func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*npool.UpdateGoodResponse, error) {
