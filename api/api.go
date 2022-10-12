@@ -5,6 +5,7 @@ import (
 
 	goodmw "github.com/NpoolPlatform/message/npool/good/mw/v1"
 
+	"github.com/NpoolPlatform/good-middleware/api/appgood"
 	"github.com/NpoolPlatform/good-middleware/api/good"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -18,6 +19,7 @@ type Server struct {
 func Register(server grpc.ServiceRegistrar) {
 	goodmw.RegisterMiddlewareServer(server, &Server{})
 	good.Register(server)
+	appgood.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
@@ -25,6 +27,9 @@ func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOpt
 		return err
 	}
 	if err := good.RegisterGateway(mux, endpoint, opts); err != nil {
+		return err
+	}
+	if err := appgood.RegisterGateway(mux, endpoint, opts); err != nil {
 		return err
 	}
 	return nil
