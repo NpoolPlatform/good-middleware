@@ -33,7 +33,7 @@ func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 	var infos []*npool.Good
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetUser")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetGood")
 	defer span.End()
 	defer func() {
 		if err != nil {
@@ -42,7 +42,7 @@ func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 		}
 	}()
 
-	span = commontracer.TraceInvoker(span, "user", "middleware", "CRUD")
+	span = commontracer.TraceInvoker(span, "good", "middleware", "CRUD")
 
 	err = db.WithClient(ctx, func(ctx context.Context, cli *ent.Client) error {
 		stm := cli.
