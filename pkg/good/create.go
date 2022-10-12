@@ -48,6 +48,7 @@ func CreateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 			VendorLocationID:   in.VendorLocationID,
 			BenefitType:        in.BenefitType,
 			GoodType:           in.GoodType,
+			Price:              in.Price,
 			Title:              in.Title,
 			Unit:               in.Unit,
 			UnitAmount:         in.UnitAmount,

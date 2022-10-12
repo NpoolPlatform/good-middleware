@@ -102,6 +102,7 @@ func join(stm *ent.GoodQuery) *ent.GoodSelect {
 			entgood.FieldTestOnly,
 			entgood.FieldCreatedAt,
 			entgood.FieldUpdatedAt,
+			entgood.FieldVendorLocationID,
 		).
 		Modify(func(s *sql.Selector) {
 			t1 := sql.Table(entdeviceinfo.Table)
