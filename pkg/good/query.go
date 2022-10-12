@@ -2,6 +2,7 @@ package good
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"go.opentelemetry.io/otel"
@@ -57,7 +58,7 @@ func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 			Scan(ctx, &infos)
 	})
 	if err != nil {
-		logger.Sugar().Errorw("get good", "err", err.Error())
+		logger.Sugar().Errorw("get good", "err", err)
 		return nil, err
 	}
 	if len(infos) == 0 {
@@ -66,6 +67,12 @@ func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 	if len(infos) > 1 {
 		logger.Sugar().Errorw("GetGood", "err", "too many records")
 		return nil, fmt.Errorf("too many records")
+	}
+
+	infos, err = expand(infos)
+	if err != nil {
+		logger.Sugar().Errorw("GetGood", "err", err)
+		return nil, err
 	}
 
 	return infos[0], nil
@@ -168,4 +175,27 @@ func join(stm *ent.GoodQuery) *ent.GoodSelect {
 					sql.As(t5.C(entstock.FieldSold), "good_sold"),
 				)
 		})
+}
+
+func expand(infos []*npool.Good) ([]*npool.Good, error) {
+	for _, info := range infos {
+		var labels []string
+		if err := json.Unmarshal([]byte(info.LabelsStr), &labels); err != nil {
+			return nil, err
+		}
+		info.Labels = labels
+
+		var posters []string
+		if err := json.Unmarshal([]byte(info.PostersStr), &posters); err != nil {
+			return nil, err
+		}
+		info.Posters = posters
+
+		var coinTypeIDs []string
+		if err := json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &coinTypeIDs); err != nil {
+			return nil, err
+		}
+		info.SupportCoinTypeIDs = coinTypeIDs
+	}
+	return infos, nil
 }

@@ -54,6 +54,7 @@ func CreateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 			SupportCoinTypeIDs: in.SupportCoinTypeIDs,
 			DeliveryAt:         in.DeliveryAt,
 			StartAt:            in.StartAt,
+			TestOnly:           in.TestOnly,
 		})
 		if err != nil {
 			return err
@@ -82,7 +83,9 @@ func CreateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 
 		c2 := tx.ExtraInfo.Create()
 		stm2, err := extrainfocrud.CreateSet(c2, &extrainfomgrpb.ExtraInfoReq{
-			GoodID: &id,
+			GoodID:  &id,
+			Posters: in.Posters,
+			Labels:  in.Labels,
 		})
 		if err != nil {
 			return err

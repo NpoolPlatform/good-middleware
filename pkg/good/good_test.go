@@ -77,12 +77,18 @@ func creatGood(t *testing.T) {
 			StartAt:            &goodInfo.StartAt,
 			TestOnly:           &goodInfo.TestOnly,
 			Total:              &goodInfo.GoodTotal,
+			Posters:            goodInfo.Posters,
+			Labels:             goodInfo.Labels,
 		}
 	)
 	info, err := CreateGood(context.Background(), &goodReq)
 	if assert.Nil(t, err) {
 		goodInfo.CreatedAt = info.CreatedAt
 		goodInfo.UpdatedAt = info.UpdatedAt
+		goodInfo.GoodStockID = info.GoodStockID
+		goodInfo.SupportCoinTypeIDsStr = info.SupportCoinTypeIDsStr
+		goodInfo.PostersStr = info.PostersStr
+		goodInfo.LabelsStr = info.LabelsStr
 		assert.Equal(t, info, &goodInfo)
 	}
 }
