@@ -3,6 +3,7 @@ module github.com/NpoolPlatform/good-middleware
 go 1.17
 
 require (
+	entgo.io/ent v0.11.3
 	github.com/NpoolPlatform/api-manager v0.0.0-20220826022307-d72866fe3ec0
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20220927113434-7c153f087a8c
 	github.com/NpoolPlatform/good-manager v0.0.0-20221012095947-43ffcf68a3f3
@@ -22,7 +23,6 @@ require (
 
 require (
 	ariga.io/atlas v0.7.2-0.20220927111110-867ee0cca56a // indirect
-	entgo.io/ent v0.11.3 // indirect
 	github.com/NpoolPlatform/libent-cruder v0.0.0-20220821121920-9559f5776d15 // indirect
 	github.com/Shonminh/apollo-client v0.4.0 // indirect
 	github.com/agext/levenshtein v1.2.1 // indirect
