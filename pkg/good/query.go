@@ -117,12 +117,12 @@ func join(stm *ent.GoodQuery) *ent.GoodSelect {
 				LeftJoin(t2).
 				On(
 					s.C(entgood.FieldInheritFromGoodID),
-					t1.C(entgood.FieldID),
+					t2.C(entgood.FieldID),
 				).
 				AppendSelect(
-					sql.As(t1.C(entgood.FieldTitle), "inherit_from_good_name"),
-					sql.As(t1.C(entgood.FieldGoodType), "inherit_from_good_type"),
-					sql.As(t1.C(entgood.FieldBenefitType), "inherit_from_good_benefit_type"),
+					sql.As(t2.C(entgood.FieldTitle), "inherit_from_good_name"),
+					sql.As(t2.C(entgood.FieldGoodType), "inherit_from_good_type"),
+					sql.As(t2.C(entgood.FieldBenefitType), "inherit_from_good_benefit_type"),
 				)
 
 			t3 := sql.Table(entvendorlocation.Table)
@@ -133,10 +133,10 @@ func join(stm *ent.GoodQuery) *ent.GoodSelect {
 					t3.C(entvendorlocation.FieldID),
 				).
 				AppendSelect(
-					sql.As(t1.C(entvendorlocation.FieldCountry), "vendor_location_country"),
-					sql.As(t1.C(entvendorlocation.FieldProvince), "vendor_location_province"),
-					sql.As(t1.C(entvendorlocation.FieldCity), "vendor_location_city"),
-					sql.As(t1.C(entvendorlocation.FieldAddress), "vendor_location_address"),
+					sql.As(t3.C(entvendorlocation.FieldCountry), "vendor_location_country"),
+					sql.As(t3.C(entvendorlocation.FieldProvince), "vendor_location_province"),
+					sql.As(t3.C(entvendorlocation.FieldCity), "vendor_location_city"),
+					sql.As(t3.C(entvendorlocation.FieldAddress), "vendor_location_address"),
 				)
 
 			t4 := sql.Table(entextrainfo.Table)

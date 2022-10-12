@@ -95,6 +95,7 @@ func CreateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 
 		return nil
 	})
+
 	if err != nil {
 		return nil, err
 	}
