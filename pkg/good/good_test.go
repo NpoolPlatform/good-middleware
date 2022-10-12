@@ -89,6 +89,8 @@ func creatGood(t *testing.T) {
 		goodInfo.SupportCoinTypeIDsStr = info.SupportCoinTypeIDsStr
 		goodInfo.PostersStr = info.PostersStr
 		goodInfo.LabelsStr = info.LabelsStr
+		goodInfo.BenefitTypeStr = info.BenefitTypeStr
+		goodInfo.GoodTypeStr = info.GoodTypeStr
 		assert.Equal(t, info, &goodInfo)
 	}
 }

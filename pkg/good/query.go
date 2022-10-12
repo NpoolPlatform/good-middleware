@@ -196,6 +196,9 @@ func expand(infos []*npool.Good) ([]*npool.Good, error) {
 			return nil, err
 		}
 		info.SupportCoinTypeIDs = coinTypeIDs
+
+		info.GoodType = mgrpb.GoodType(mgrpb.GoodType_value[info.GoodTypeStr])
+		info.BenefitType = mgrpb.BenefitType(mgrpb.BenefitType_value[info.BenefitTypeStr])
 	}
 	return infos, nil
 }
