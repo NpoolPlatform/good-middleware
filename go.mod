@@ -6,7 +6,7 @@ require (
 	github.com/NpoolPlatform/api-manager v0.0.0-20220826022307-d72866fe3ec0
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20220927113434-7c153f087a8c
 	github.com/NpoolPlatform/good-manager v0.0.0-20221012095947-43ffcf68a3f3
-	github.com/NpoolPlatform/message v0.0.0-20221012075527-bd4b0fb0d383
+	github.com/NpoolPlatform/message v0.0.0-20221012120552-63ecf915e8d3
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0
