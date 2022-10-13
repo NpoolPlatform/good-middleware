@@ -237,6 +237,45 @@ func (s *Server) GetGoods(ctx context.Context, in *npool.GetGoodsRequest) (*npoo
 	}, nil
 }
 
+func (s *Server) GetManyGoods(ctx context.Context, in *npool.GetManyGoodsRequest) (*npool.GetManyGoodsResponse, error) {
+	var err error
+
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetManyGoods")
+	defer span.End()
+
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+
+	for _, id := range in.GetIDs() {
+		if _, err := uuid.Parse(id); err != nil {
+			logger.Sugar().Errorw("GetManyGoods", "IDs", in.GetIDs(), "error", err)
+			return &npool.GetManyGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		}
+	}
+
+	span = commontracer.TraceInvoker(span, "Good", "mw", "GetManyGoods")
+
+	limit := in.GetLimit()
+	if limit <= 0 {
+		limit = constant1.DefaultLimit
+	}
+
+	infos, total, err := goodmw.GetManyGoods(ctx, in.GetIDs(), in.GetOffset(), limit)
+	if err != nil {
+		logger.Sugar().Errorw("GetManyGoods", "ID", in.GetIDs(), "error", err)
+		return &npool.GetManyGoodsResponse{}, status.Error(codes.Internal, err.Error())
+	}
+
+	return &npool.GetManyGoodsResponse{
+		Infos: infos,
+		Total: total,
+	}, nil
+}
+
 // nolint
 func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*npool.UpdateGoodResponse, error) {
 	var err error

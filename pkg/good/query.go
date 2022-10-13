@@ -45,7 +45,7 @@ func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 
 	span = commontracer.TraceInvoker(span, "good", "middleware", "CRUD")
 
-	err = db.WithClient(ctx, func(ctx context.Context, cli *ent.Client) error {
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm := cli.
 			Good.
 			Query().
@@ -55,10 +55,10 @@ func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 			Limit(1)
 
 		return join(stm).
-			Scan(ctx, &infos)
+			Scan(_ctx, &infos)
 	})
 	if err != nil {
-		logger.Sugar().Errorw("get good", "err", err)
+		logger.Sugar().Errorw("GetGood", "err", err)
 		return nil, err
 	}
 	if len(infos) == 0 {
@@ -80,6 +80,65 @@ func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 
 func GetGoods(ctx context.Context, conds *mgrpb.Conds, offset, limit int32) ([]*npool.Good, uint32, error) {
 	return nil, 0, nil
+}
+
+func GetManyGoods(ctx context.Context, ids []string, offset, limit int32) ([]*npool.Good, uint32, error) {
+	var infos []*npool.Good
+	var total uint32
+	var err error
+
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetManyGoods")
+	defer span.End()
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+
+	uids := []uuid.UUID{}
+	for _, id := range ids {
+		uids = append(uids, uuid.MustParse(id))
+	}
+
+	span = commontracer.TraceInvoker(span, "good", "middleware", "CRUD")
+
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		stm := cli.
+			Good.
+			Query().
+			Where(
+				entgood.IDIn(uids...),
+			)
+
+		n, err := stm.Count(_ctx)
+		if err != nil {
+			return err
+		}
+		total = uint32(n)
+
+		stm.
+			Offset(int(offset)).
+			Limit(int(limit))
+
+		return join(stm).
+			Scan(_ctx, &infos)
+	})
+	if err != nil {
+		logger.Sugar().Errorw("GetManyGoods", "err", err)
+		return nil, 0, err
+	}
+	if len(infos) == 0 {
+		return nil, 0, nil
+	}
+
+	infos, err = expand(infos)
+	if err != nil {
+		logger.Sugar().Errorw("GetManyGoods", "err", err)
+		return nil, 0, err
+	}
+
+	return infos, total, nil
 }
 
 func join(stm *ent.GoodQuery) *ent.GoodSelect {
