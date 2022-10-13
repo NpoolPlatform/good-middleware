@@ -79,7 +79,95 @@ func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 }
 
 func GetGoods(ctx context.Context, conds *mgrpb.Conds, offset, limit int32) ([]*npool.Good, uint32, error) {
-	return nil, 0, nil
+	var infos []*npool.Good
+	var total uint32
+	var err error
+
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetManyGoods")
+	defer span.End()
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+
+	span = commontracer.TraceInvoker(span, "good", "middleware", "CRUD")
+
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		stm := cli.
+			Good.
+			Query()
+
+		if conds.ID != nil {
+			stm.Where(
+				entgood.ID(uuid.MustParse(conds.GetID().GetValue())),
+			)
+		}
+		if conds.DeviceInfoID != nil {
+			stm.Where(
+				entgood.DeviceInfoID(uuid.MustParse(conds.GetDeviceInfoID().GetValue())),
+			)
+		}
+		if conds.CoinTypeID != nil {
+			stm.Where(
+				entgood.CoinTypeID(uuid.MustParse(conds.GetCoinTypeID().GetValue())),
+			)
+		}
+		if conds.VendorLocationID != nil {
+			stm.Where(
+				entgood.VendorLocationID(uuid.MustParse(conds.GetVendorLocationID().GetValue())),
+			)
+		}
+		if conds.BenefitType != nil {
+			stm.Where(
+				entgood.BenefitType(mgrpb.BenefitType(conds.GetBenefitType().GetValue()).String()),
+			)
+		}
+		if conds.GoodType != nil {
+			stm.Where(
+				entgood.GoodType(mgrpb.GoodType(conds.GetGoodType().GetValue()).String()),
+			)
+		}
+		if conds.IDs != nil {
+			ids := []uuid.UUID{}
+			for _, id := range conds.GetIDs().GetValue() {
+				ids = append(ids, uuid.MustParse(id))
+			}
+			stm.Where(
+				entgood.IDIn(ids...),
+			)
+		}
+
+		n, err := stm.Count(_ctx)
+		if err != nil {
+			return err
+		}
+		total = uint32(n)
+
+		stm.
+			Offset(int(offset)).
+			Limit(int(limit))
+
+		return join(stm).
+			Scan(_ctx, &infos)
+	})
+
+	if err != nil {
+		logger.Sugar().Errorw("GetManyGoods", "err", err)
+		return nil, 0, err
+	}
+	if len(infos) == 0 {
+		return nil, 0, nil
+	}
+
+	infos, err = expand(infos)
+	if err != nil {
+		logger.Sugar().Errorw("GetManyGoods", "err", err)
+		return nil, 0, err
+	}
+
+	return infos, total, nil
 }
 
 func GetManyGoods(ctx context.Context, ids []string, offset, limit int32) ([]*npool.Good, uint32, error) {
