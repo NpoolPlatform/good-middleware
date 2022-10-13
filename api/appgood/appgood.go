@@ -24,7 +24,37 @@ import (
 	"github.com/google/uuid"
 )
 
-// nolint
+func (s *Server) GetGood(ctx context.Context, in *npool.GetGoodRequest) (*npool.GetGoodResponse, error) {
+	var err error
+
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetGood")
+	defer span.End()
+
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+
+	if _, err := uuid.Parse(in.GetID()); err != nil {
+		logger.Sugar().Errorw("GetGood", "ID", in.GetID(), "error", err)
+		return &npool.GetGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	span = commontracer.TraceInvoker(span, "Good", "mw", "GetGood")
+
+	info, err := goodmw.GetGood(ctx, in.GetID())
+	if err != nil {
+		logger.Sugar().Errorw("GetGood", "ID", in.GetID(), "error", err)
+		return &npool.GetGoodResponse{}, status.Error(codes.Internal, err.Error())
+	}
+
+	return &npool.GetGoodResponse{
+		Info: info,
+	}, nil
+}
+
 func (s *Server) GetGoods(ctx context.Context, in *npool.GetGoodsRequest) (*npool.GetGoodsResponse, error) {
 	var err error
 

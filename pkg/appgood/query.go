@@ -27,6 +27,39 @@ import (
 	"github.com/google/uuid"
 )
 
+func GetGood(ctx context.Context, id string) (*npool.Good, error) {
+	var infos []*npool.Good
+	var err error
+
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		stm := cli.
+			AppGood.
+			Query().
+			Where(
+				entappgood.ID(uuid.MustParse(id)),
+			).
+			Limit(1)
+
+		return join(stm).
+			Scan(_ctx, &infos)
+	})
+	if err != nil {
+		logger.Sugar().Errorw("GetGoods", "err", err)
+		return nil, err
+	}
+	if len(infos) == 0 {
+		return nil, nil
+	}
+
+	infos, err = expand(infos)
+	if err != nil {
+		logger.Sugar().Errorw("GetGoods", "err", err)
+		return nil, err
+	}
+
+	return infos[0], nil
+}
+
 func GetGoods(ctx context.Context, conds *mgrpb.Conds, offset, limit int32) ([]*npool.Good, uint32, error) {
 	var infos []*npool.Good
 	var total uint32
