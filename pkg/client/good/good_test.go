@@ -146,7 +146,7 @@ func getGoods(t *testing.T) {
 	}
 }
 
-func getGoodOnly(t *testing.T) {
+func getManyGoods(t *testing.T) {
 	var err error
 	infos, total, err := GetManyGoods(context.Background(), []string{info.ID}, 0, 1)
 	if assert.Nil(t, err) {
@@ -169,6 +169,6 @@ func TestMainOrder(t *testing.T) {
 	t.Run("createGood", createGood)
 	t.Run("getGood", getGood)
 	t.Run("getGoods", getGoods)
-	t.Run("getGoodOnly", getGoodOnly)
+	t.Run("getManyGoods", getManyGoods)
 	t.Run("updateGood", updateGood)
 }
