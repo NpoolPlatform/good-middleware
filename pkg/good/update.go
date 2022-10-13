@@ -3,9 +3,133 @@ package good
 import (
 	"context"
 
+	extramgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/extrainfo"
+	goodmgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/good"
+	stockmgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/stock"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
+
+	extracrud "github.com/NpoolPlatform/good-manager/pkg/crud/extrainfo"
+	goodcrud "github.com/NpoolPlatform/good-manager/pkg/crud/good"
+	stockcrud "github.com/NpoolPlatform/good-manager/pkg/crud/stock"
+
+	"github.com/NpoolPlatform/good-manager/pkg/db"
+	"github.com/NpoolPlatform/good-manager/pkg/db/ent"
+
+	entextra "github.com/NpoolPlatform/good-manager/pkg/db/ent/extrainfo"
+	entstock "github.com/NpoolPlatform/good-manager/pkg/db/ent/stock"
+
+	"github.com/google/uuid"
 )
 
+// nolint
 func UpdateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
-	return nil, nil
+	var err error
+
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		u, err := goodcrud.UpdateSet(
+			tx.Good.UpdateOneID(uuid.MustParse(in.GetID())),
+			&goodmgrpb.GoodReq{
+				DeviceInfoID:       in.DeviceInfoID,
+				DurationDays:       in.DurationDays,
+				CoinTypeID:         in.CoinTypeID,
+				InheritFromGoodID:  in.InheritFromGoodID,
+				VendorLocationID:   in.VendorLocationID,
+				Price:              in.Price,
+				Title:              in.Title,
+				Unit:               in.Unit,
+				UnitAmount:         in.UnitAmount,
+				SupportCoinTypeIDs: in.SupportCoinTypeIDs,
+				DeliveryAt:         in.DeliveryAt,
+				StartAt:            in.StartAt,
+				TestOnly:           in.TestOnly,
+			},
+		)
+		if err != nil {
+			return err
+		}
+
+		_, err = u.Save(_ctx)
+		if err != nil {
+			return err
+		}
+
+		extra, err := tx.
+			ExtraInfo.
+			Query().
+			Where(
+				entextra.GoodID(uuid.MustParse(in.GetID())),
+			).
+			ForUpdate().
+			Only(ctx)
+		if err != nil {
+			return err
+		}
+
+		u1, err := extracrud.UpdateSet(
+			extra.Update(),
+			&extramgrpb.ExtraInfoReq{
+				Posters: in.Posters,
+				Labels:  in.Labels,
+			},
+		)
+		if err != nil {
+			return err
+		}
+
+		_, err = u1.Save(_ctx)
+		if err != nil {
+			return err
+		}
+
+		stock, err := tx.
+			Stock.
+			Query().
+			Where(
+				entstock.GoodID(uuid.MustParse(in.GetID())),
+			).
+			ForUpdate().
+			Only(ctx)
+		if err != nil {
+			return err
+		}
+
+		u2, err := stockcrud.UpdateSet(
+			stock.Update(),
+			&stockmgrpb.StockReq{
+				Total: in.Total,
+			},
+		)
+		if err != nil {
+			return err
+		}
+
+		_, err = u2.Save(_ctx)
+		if err != nil {
+			return err
+		}
+
+		u3, err := stockcrud.AddFieldSet(
+			stock,
+			&stockmgrpb.StockReq{
+				Locked:    in.Locked,
+				InService: in.InService,
+				Sold:      in.Sold,
+			},
+		)
+		if err != nil {
+			return err
+		}
+
+		_, err = u3.Save(_ctx)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return GetGood(ctx, in.GetID())
 }
