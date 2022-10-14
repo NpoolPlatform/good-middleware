@@ -44,7 +44,7 @@ func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 			Scan(_ctx, &infos)
 	})
 	if err != nil {
-		logger.Sugar().Errorw("GetGoods", "err", err)
+		logger.Sugar().Errorw("GetGood", "err", err)
 		return nil, err
 	}
 	if len(infos) == 0 {
@@ -53,7 +53,7 @@ func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 
 	infos, err = expand(infos)
 	if err != nil {
-		logger.Sugar().Errorw("GetGoods", "err", err)
+		logger.Sugar().Errorw("GetGood", "err", err)
 		return nil, err
 	}
 
