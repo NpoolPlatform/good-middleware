@@ -27,6 +27,12 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/stretchr/testify/assert"
+
+	deviceinfocrud "github.com/NpoolPlatform/good-manager/pkg/crud/deviceinfo"
+	vendorlocationcrud "github.com/NpoolPlatform/good-manager/pkg/crud/vendorlocation"
+
+	deviceinfomgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/deviceinfo"
+	vendorlocationmgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/vendorlocation"
 )
 
 func init() {
@@ -39,7 +45,12 @@ func init() {
 }
 
 var (
-	inheritGoodID = uuid.NewString()
+	inheritGoodID    = uuid.NewString()
+	inheritGoodTitle = "Test Inherit Good"
+	inheritGoodPrice = "12345.000000"
+
+	deviceInfoID     = uuid.NewString()
+	vendorLocationID = uuid.NewString()
 
 	supportCoinTypeIDs    = []string{uuid.NewString(), uuid.NewString()}
 	supportCoinTypeIDsStr = fmt.Sprintf(`["%v", "%v"]`, supportCoinTypeIDs[0], supportCoinTypeIDs[1])
@@ -52,11 +63,11 @@ var (
 
 	goodInfo = npool.Good{
 		ID:                    uuid.NewString(),
-		DeviceInfoID:          uuid.NewString(),
+		DeviceInfoID:          deviceInfoID,
 		DurationDays:          365,
 		CoinTypeID:            uuid.NewString(),
 		InheritFromGoodID:     &inheritGoodID,
-		VendorLocationID:      uuid.NewString(),
+		VendorLocationID:      vendorLocationID,
 		GoodType:              mgrpb.GoodType_GoodTypeClassicMining,
 		GoodTypeStr:           mgrpb.GoodType_GoodTypeClassicMining.String(),
 		BenefitType:           mgrpb.BenefitType_BenefitTypePlatform,
@@ -106,6 +117,39 @@ var info *npool.Good
 
 func createGood(t *testing.T) {
 	var err error
+
+	_, err = deviceinfocrud.Create(context.Background(), &deviceinfomgrpb.DeviceInfoReq{
+		ID: &deviceInfoID,
+	})
+	assert.Nil(t, err)
+
+	_, err = vendorlocationcrud.Create(context.Background(), &vendorlocationmgrpb.VendorLocationReq{
+		ID: &vendorLocationID,
+	})
+	assert.Nil(t, err)
+
+	_, err = CreateGood(context.Background(), &npool.GoodReq{
+		ID:                 &inheritGoodID,
+		DeviceInfoID:       &goodInfo.DeviceInfoID,
+		DurationDays:       &goodInfo.DurationDays,
+		CoinTypeID:         &goodInfo.CoinTypeID,
+		VendorLocationID:   &goodInfo.VendorLocationID,
+		Price:              &inheritGoodPrice,
+		BenefitType:        &goodInfo.BenefitType,
+		GoodType:           &goodInfo.GoodType,
+		Title:              &inheritGoodTitle,
+		Unit:               &goodInfo.Unit,
+		UnitAmount:         &goodInfo.UnitAmount,
+		SupportCoinTypeIDs: goodInfo.SupportCoinTypeIDs,
+		DeliveryAt:         &goodInfo.DeliveryAt,
+		StartAt:            &goodInfo.StartAt,
+		TestOnly:           &goodInfo.TestOnly,
+		Total:              &goodInfo.GoodTotal,
+		Posters:            goodInfo.Posters,
+		Labels:             goodInfo.Labels,
+	})
+	assert.Nil(t, err)
+
 	info, err = CreateGood(context.Background(), &goodReq)
 	if assert.Nil(t, err) {
 		goodInfo.CreatedAt = info.CreatedAt
