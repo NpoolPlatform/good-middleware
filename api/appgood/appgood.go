@@ -19,6 +19,7 @@ import (
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/appgood"
 
+	goodmgrcli "github.com/NpoolPlatform/good-manager/pkg/client/good"
 	goodmw "github.com/NpoolPlatform/good-middleware/pkg/appgood"
 
 	"github.com/google/uuid"
@@ -82,7 +83,20 @@ func (s *Server) GetGoods(ctx context.Context, in *npool.GetGoodsRequest) (*npoo
 		}
 	}
 
-	// TODO: check good exist
+	if _, err := uuid.Parse(in.GetConds().GetGoodID().GetValue()); err != nil {
+		logger.Sugar().Errorw("GetGoods", "GoodID", in.GetConds().GetGoodID().GetValue(), "error", err)
+		return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	exist, err := goodmgrcli.ExistGood(ctx, in.GetConds().GetGoodID().GetValue())
+	if err != nil {
+		logger.Sugar().Errorw("GetGoods", "GoodID", in.GetConds().GetGoodID().GetValue(), "error", err)
+		return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
+	}
+	if !exist {
+		logger.Sugar().Errorw("GetGoods", "GoodID", in.GetConds().GetGoodID().GetValue(), "exist", exist)
+		return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, "InheritFromGood not exist")
+	}
 
 	span = commontracer.TraceInvoker(span, "Good", "mw", "GetGoods")
 

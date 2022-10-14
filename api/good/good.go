@@ -23,6 +23,10 @@ import (
 
 	goodmw "github.com/NpoolPlatform/good-middleware/pkg/good"
 
+	deviceinfomgrcli "github.com/NpoolPlatform/good-manager/pkg/client/deviceinfo"
+	goodmgrcli "github.com/NpoolPlatform/good-manager/pkg/client/good"
+	vendorlocationmgrcli "github.com/NpoolPlatform/good-manager/pkg/client/vendorlocation"
+
 	"github.com/google/uuid"
 )
 
@@ -40,9 +44,50 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		}
 	}()
 
-	// TODO: Check if device exist
-	// TODO: Check inherit from good exist
-	// TODO: Check vendor location exist
+	if _, err := uuid.Parse(in.GetInfo().GetDeviceInfoID()); err != nil {
+		logger.Sugar().Errorw("CreateGood", "DeviceInfoID", in.GetInfo().GetDeviceInfoID(), "error", err)
+		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	exist, err := deviceinfomgrcli.ExistDeviceInfo(ctx, in.GetInfo().GetDeviceInfoID())
+	if err != nil {
+		logger.Sugar().Errorw("CreateGood", "DeviceInfoID", in.GetInfo().GetDeviceInfoID(), "error", err)
+		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+	}
+	if !exist {
+		logger.Sugar().Errorw("CreateGood", "DeviceInfoID", in.GetInfo().GetDeviceInfoID(), "exist", exist)
+		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, "DeviceInfo not exist")
+	}
+
+	if _, err := uuid.Parse(in.GetInfo().GetInheritFromGoodID()); err != nil {
+		logger.Sugar().Errorw("CreateGood", "InheritFromGoodID", in.GetInfo().GetInheritFromGoodID(), "error", err)
+		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	exist, err = goodmgrcli.ExistGood(ctx, in.GetInfo().GetInheritFromGoodID())
+	if err != nil {
+		logger.Sugar().Errorw("CreateGood", "InheritFromGoodID", in.GetInfo().GetInheritFromGoodID(), "error", err)
+		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+	}
+	if !exist {
+		logger.Sugar().Errorw("CreateGood", "InheritFromGoodID", in.GetInfo().GetInheritFromGoodID(), "exist", exist)
+		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, "InheritFromGood not exist")
+	}
+
+	if _, err := uuid.Parse(in.GetInfo().GetVendorLocationID()); err != nil {
+		logger.Sugar().Errorw("CreateGood", "VendorLocationID", in.GetInfo().GetVendorLocationID(), "error", err)
+		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	exist, err = vendorlocationmgrcli.ExistVendorLocation(ctx, in.GetInfo().GetVendorLocationID())
+	if err != nil {
+		logger.Sugar().Errorw("CreateGood", "VendorLocationID", in.GetInfo().GetVendorLocationID(), "error", err)
+		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+	}
+	if !exist {
+		logger.Sugar().Errorw("CreateGood", "VendorLocationID", in.GetInfo().GetVendorLocationID(), "exist", exist)
+		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, "VendorLocation not exist")
+	}
 
 	if _, err := uuid.Parse(in.GetInfo().GetCoinTypeID()); err != nil {
 		logger.Sugar().Errorw("CreateGood", "CoinTypeID", in.GetInfo().GetCoinTypeID(), "error", err)
