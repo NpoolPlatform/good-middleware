@@ -46,25 +46,19 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		}
 	}
 
-	if in.GetInfo().AppID != nil {
-		if _, err := uuid.Parse(in.GetInfo().GetAppID()); err != nil {
-			logger.Sugar().Errorw("CreateGood", "AppID", in.GetInfo().GetAppID(), "error", err)
-			return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
-		}
+	if _, err := uuid.Parse(in.GetInfo().GetAppID()); err != nil {
+		logger.Sugar().Errorw("CreateGood", "AppID", in.GetInfo().GetAppID(), "error", err)
+		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	if in.GetInfo().Price != nil {
-		if price, err := decimal.NewFromString(in.GetInfo().GetPrice()); err != nil || price.Cmp(decimal.NewFromInt(0)) <= 0 {
-			logger.Sugar().Errorw("CreateGood", "Price", in.GetInfo().GetPrice(), "error", err)
-			return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, "Price is invalid")
-		}
+	if price, err := decimal.NewFromString(in.GetInfo().GetPrice()); err != nil || price.Cmp(decimal.NewFromInt(0)) <= 0 {
+		logger.Sugar().Errorw("CreateGood", "Price", in.GetInfo().GetPrice(), "error", err)
+		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, "Price is invalid")
 	}
 
-	if in.GetInfo().GoodName != nil {
-		if in.GetInfo().GetGoodName() == "" {
-			logger.Sugar().Errorw("CreateGood", "GoodName", in.GetInfo().GetGoodName())
-			return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, "GoodName is invalid")
-		}
+	if in.GetInfo().GetGoodName() == "" {
+		logger.Sugar().Errorw("CreateGood", "GoodName", in.GetInfo().GetGoodName())
+		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, "GoodName is invalid")
 	}
 
 	if in.GetInfo().DisplayIndex != nil {
