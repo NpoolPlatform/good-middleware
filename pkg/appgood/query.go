@@ -243,6 +243,9 @@ func expand(infos []*npool.Good) ([]*npool.Good, error) { //nolint
 
 		info.GoodType = goodmgrpb.GoodType(goodmgrpb.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = goodmgrpb.BenefitType(goodmgrpb.BenefitType_value[info.BenefitTypeStr])
+
+		info.Visible = info.VisibleInt > 0
+		info.Online = info.OnlineInt > 0
 	}
 	return infos, nil
 }

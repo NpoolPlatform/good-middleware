@@ -157,6 +157,19 @@ var (
 		Posters:            goodInfo.Posters,
 		Labels:             goodInfo.Labels,
 	}
+
+	appGoodReq = mgrpb.AppGoodReq{
+		ID:                &appGoodInfo.ID,
+		AppID:             &appGoodInfo.AppID,
+		GoodID:            &goodInfo.ID,
+		Online:            &appGoodInfo.Online,
+		Visible:           &appGoodInfo.Visible,
+		GoodName:          &appGoodInfo.GoodName,
+		Price:             &appGoodInfo.Price,
+		DisplayIndex:      &appGoodInfo.DisplayIndex,
+		PurchaseLimit:     &appGoodInfo.PurchaseLimit,
+		CommissionPercent: &appGoodInfo.CommissionPercent,
+	}
 )
 
 var info *npool.Good
@@ -201,18 +214,7 @@ func createGood(t *testing.T) {
 		goodInfo.CreatedAt = info1.CreatedAt
 	}
 
-	info, err := CreateGood(context.Background(), &mgrpb.AppGoodReq{
-		ID:                &appGoodInfo.ID,
-		AppID:             &appGoodInfo.AppID,
-		GoodID:            &goodInfo.ID,
-		Online:            &appGoodInfo.Online,
-		Visible:           &appGoodInfo.Visible,
-		GoodName:          &appGoodInfo.GoodName,
-		Price:             &appGoodInfo.Price,
-		DisplayIndex:      &appGoodInfo.DisplayIndex,
-		PurchaseLimit:     &appGoodInfo.PurchaseLimit,
-		CommissionPercent: &appGoodInfo.CommissionPercent,
-	})
+	info, err = CreateGood(context.Background(), &appGoodReq)
 	if assert.Nil(t, err) {
 		appGoodInfo.CreatedAt = info.CreatedAt
 		assert.Equal(t, info, &appGoodInfo)
@@ -220,14 +222,32 @@ func createGood(t *testing.T) {
 }
 
 func updateGood(t *testing.T) {
-	/*
-		var err error
-		info, err = UpdateGood(context.Background(), &goodReq)
-		if assert.Nil(t, err) {
-			goodInfo.UpdatedAt = info.UpdatedAt
-			assert.Equal(t, info, &goodInfo)
-		}
-	*/
+	var err error
+
+	online := true
+	visible := true
+	displayIndex := int32(10)
+	purchaseLimit := int32(10)
+	commissionPercent := int32(30)
+
+	appGoodReq.Online = &online
+	appGoodReq.Visible = &visible
+	appGoodReq.DisplayIndex = &displayIndex
+	appGoodReq.PurchaseLimit = &purchaseLimit
+	appGoodReq.CommissionPercent = &commissionPercent
+
+	appGoodInfo.Online = online
+	appGoodInfo.OnlineInt = 1
+	appGoodInfo.Visible = visible
+	appGoodInfo.VisibleInt = 1
+	appGoodInfo.DisplayIndex = displayIndex
+	appGoodInfo.PurchaseLimit = purchaseLimit
+	appGoodInfo.CommissionPercent = commissionPercent
+
+	info, err = UpdateGood(context.Background(), &appGoodReq)
+	if assert.Nil(t, err) {
+		assert.Equal(t, info, &appGoodInfo)
+	}
 }
 
 func getGood(t *testing.T) {
