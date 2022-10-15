@@ -325,34 +325,12 @@ func join(stm *ent.GoodQuery) *ent.GoodSelect {
 		})
 }
 
-func expand(infos []*npool.Good) ([]*npool.Good, error) {
+func expand(infos []*npool.Good) ([]*npool.Good, error) { //nolint
 	for _, info := range infos {
-		var labels []string
-		if err := json.Unmarshal([]byte(info.LabelsStr), &labels); err != nil {
-			return nil, err
-		}
-		info.Labels = labels
-
-		var posters []string
-		if err := json.Unmarshal([]byte(info.PostersStr), &posters); err != nil {
-			return nil, err
-		}
-		info.Posters = posters
-
-		var coinTypeIDs []string
-		if err := json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &coinTypeIDs); err != nil {
-			return nil, err
-		}
-		info.SupportCoinTypeIDs = coinTypeIDs
-
-		var devicePosters []string
-
-		if info.DevicePostersStr != "" {
-			if err := json.Unmarshal([]byte(info.DevicePostersStr), &devicePosters); err != nil {
-				return nil, err
-			}
-			info.DevicePosters = devicePosters
-		}
+		_ = json.Unmarshal([]byte(info.LabelsStr), &info.Labels)
+		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
+		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
+		_ = json.Unmarshal([]byte(info.DevicePostersStr), &info.DevicePosters)
 
 		info.GoodType = mgrpb.GoodType(mgrpb.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = mgrpb.BenefitType(mgrpb.BenefitType_value[info.BenefitTypeStr])

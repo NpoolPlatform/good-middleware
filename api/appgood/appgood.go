@@ -169,19 +169,21 @@ func (s *Server) GetGoods(ctx context.Context, in *npool.GetGoodsRequest) (*npoo
 		}
 	}
 
-	if _, err := uuid.Parse(in.GetConds().GetGoodID().GetValue()); err != nil {
-		logger.Sugar().Errorw("GetGoods", "GoodID", in.GetConds().GetGoodID().GetValue(), "error", err)
-		return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
-	}
+	if in.GetConds().GoodID != nil {
+		if _, err := uuid.Parse(in.GetConds().GetGoodID().GetValue()); err != nil {
+			logger.Sugar().Errorw("GetGoods", "GoodID", in.GetConds().GetGoodID().GetValue(), "error", err)
+			return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		}
 
-	exist, err := goodmgrcli.ExistGood(ctx, in.GetConds().GetGoodID().GetValue())
-	if err != nil {
-		logger.Sugar().Errorw("GetGoods", "GoodID", in.GetConds().GetGoodID().GetValue(), "error", err)
-		return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
-	}
-	if !exist {
-		logger.Sugar().Errorw("GetGoods", "GoodID", in.GetConds().GetGoodID().GetValue(), "exist", exist)
-		return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, "GoodID not exist")
+		exist, err := goodmgrcli.ExistGood(ctx, in.GetConds().GetGoodID().GetValue())
+		if err != nil {
+			logger.Sugar().Errorw("GetGoods", "GoodID", in.GetConds().GetGoodID().GetValue(), "error", err)
+			return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		}
+		if !exist {
+			logger.Sugar().Errorw("GetGoods", "GoodID", in.GetConds().GetGoodID().GetValue(), "exist", exist)
+			return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, "GoodID not exist")
+		}
 	}
 
 	span = commontracer.TraceInvoker(span, "Good", "mw", "GetGoods")
