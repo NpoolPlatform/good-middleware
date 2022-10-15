@@ -16,8 +16,8 @@ import (
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	"google.golang.org/grpc"
 
-	// "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	// val "github.com/NpoolPlatform/message/npool"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	val "github.com/NpoolPlatform/message/npool"
 
 	mgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/appgood"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/appgood"
@@ -251,29 +251,25 @@ func updateGood(t *testing.T) {
 }
 
 func getGood(t *testing.T) {
-	/*
-		var err error
-		info, err = GetGood(context.Background(), info.ID)
-		if assert.Nil(t, err) {
-			assert.Equal(t, info, &goodInfo)
-		}
-	*/
+	var err error
+	info, err = GetGood(context.Background(), info.ID)
+	if assert.Nil(t, err) {
+		assert.Equal(t, info, &appGoodInfo)
+	}
 }
 
 func getGoods(t *testing.T) {
-	/*
-		infos, total, err := GetGoods(context.Background(),
-			&goodmgrpb.Conds{
-				ID: &val.StringVal{
-					Value: info.ID,
-					Op:    cruder.EQ,
-				},
-			}, 0, 1)
-		if assert.Nil(t, err) {
-			assert.Equal(t, total, uint32(1))
-			assert.Equal(t, infos[0], &goodInfo)
-		}
-	*/
+	infos, total, err := GetGoods(context.Background(),
+		&mgrpb.Conds{
+			ID: &val.StringVal{
+				Value: info.ID,
+				Op:    cruder.EQ,
+			},
+		}, 0, 1)
+	if assert.Nil(t, err) {
+		assert.Equal(t, total, uint32(1))
+		assert.Equal(t, infos[0], &appGoodInfo)
+	}
 }
 
 func TestMainOrder(t *testing.T) {
