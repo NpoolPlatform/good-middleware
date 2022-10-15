@@ -345,8 +345,26 @@ func expand(infos []*npool.Good) ([]*npool.Good, error) {
 		}
 		info.SupportCoinTypeIDs = coinTypeIDs
 
+		var devicePosters []string
+
+		if info.DevicePostersStr != "" {
+			if err := json.Unmarshal([]byte(info.DevicePostersStr), &devicePosters); err != nil {
+				return nil, err
+			}
+			info.DevicePosters = devicePosters
+		}
+
 		info.GoodType = mgrpb.GoodType(mgrpb.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = mgrpb.BenefitType(mgrpb.BenefitType_value[info.BenefitTypeStr])
+
+		if info.InheritFromGoodTypeStr != nil {
+			inheritFromGoodType := mgrpb.GoodType(mgrpb.GoodType_value[*info.InheritFromGoodTypeStr])
+			info.InheritFromGoodType = &inheritFromGoodType
+		}
+		if info.InheritFromGoodBenefitTypeStr != nil {
+			inheritFromGoodBenefitType := mgrpb.BenefitType(mgrpb.BenefitType_value[*info.InheritFromGoodBenefitTypeStr])
+			info.InheritFromGoodBenefitType = &inheritFromGoodBenefitType
+		}
 	}
 	return infos, nil
 }

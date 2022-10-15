@@ -3,6 +3,7 @@ package good
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
@@ -46,6 +47,7 @@ func CreateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 		return resp.Info, nil
 	})
 	if err != nil {
+		fmt.Printf("- err : %v\n", err)
 		return nil, err
 	}
 	return info.(*npool.Good), nil

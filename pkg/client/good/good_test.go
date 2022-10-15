@@ -45,9 +45,13 @@ func init() {
 }
 
 var (
-	inheritGoodID    = uuid.NewString()
-	inheritGoodTitle = "Test Inherit Good"
-	inheritGoodPrice = "12345.000000"
+	inheritGoodID             = uuid.NewString()
+	inheritGoodTitle          = "Test Inherit Good"
+	inheritGoodPrice          = "12345.000000"
+	inheritGoodType           = mgrpb.GoodType_GoodTypeClassicMining
+	inheritGoodTypeStr        = mgrpb.GoodType_GoodTypeClassicMining.String()
+	inheritGoodBenefitType    = mgrpb.BenefitType_BenefitTypePlatform
+	inheritGoodBenefitTypeStr = mgrpb.BenefitType_BenefitTypePlatform.String()
 
 	deviceInfoID     = uuid.NewString()
 	vendorLocationID = uuid.NewString()
@@ -62,30 +66,36 @@ var (
 	labelsStr = fmt.Sprintf(`["%v", "%v"]`, labels[0], labels[1])
 
 	goodInfo = npool.Good{
-		ID:                    uuid.NewString(),
-		DeviceInfoID:          deviceInfoID,
-		DurationDays:          365,
-		CoinTypeID:            uuid.NewString(),
-		InheritFromGoodID:     &inheritGoodID,
-		VendorLocationID:      vendorLocationID,
-		GoodType:              mgrpb.GoodType_GoodTypeClassicMining,
-		GoodTypeStr:           mgrpb.GoodType_GoodTypeClassicMining.String(),
-		BenefitType:           mgrpb.BenefitType_BenefitTypePlatform,
-		BenefitTypeStr:        mgrpb.BenefitType_BenefitTypePlatform.String(),
-		Price:                 "123.000000000000000000",
-		Title:                 uuid.NewString(),
-		Unit:                  "TiB",
-		UnitAmount:            1,
-		SupportCoinTypeIDs:    supportCoinTypeIDs,
-		SupportCoinTypeIDsStr: supportCoinTypeIDsStr,
-		TestOnly:              true,
-		Posters:               posters,
-		PostersStr:            postersStr,
-		Labels:                labels,
-		LabelsStr:             labelsStr,
-		GoodTotal:             1000,
-		DeliveryAt:            uint32(time.Now().Unix() + 1000),
-		StartAt:               uint32(time.Now().Unix() + 1000),
+		ID:                            uuid.NewString(),
+		DeviceInfoID:                  deviceInfoID,
+		DevicePostersStr:              "[]",
+		DurationDays:                  365,
+		CoinTypeID:                    uuid.NewString(),
+		InheritFromGoodID:             &inheritGoodID,
+		InheritFromGoodName:           &inheritGoodTitle,
+		InheritFromGoodType:           &inheritGoodType,
+		InheritFromGoodTypeStr:        &inheritGoodTypeStr,
+		InheritFromGoodBenefitType:    &inheritGoodBenefitType,
+		InheritFromGoodBenefitTypeStr: &inheritGoodBenefitTypeStr,
+		VendorLocationID:              vendorLocationID,
+		GoodType:                      mgrpb.GoodType_GoodTypeClassicMining,
+		GoodTypeStr:                   mgrpb.GoodType_GoodTypeClassicMining.String(),
+		BenefitType:                   mgrpb.BenefitType_BenefitTypePlatform,
+		BenefitTypeStr:                mgrpb.BenefitType_BenefitTypePlatform.String(),
+		Price:                         "123.000000000000000000",
+		Title:                         uuid.NewString(),
+		Unit:                          "TiB",
+		UnitAmount:                    1,
+		SupportCoinTypeIDs:            supportCoinTypeIDs,
+		SupportCoinTypeIDsStr:         supportCoinTypeIDsStr,
+		TestOnly:                      true,
+		Posters:                       posters,
+		PostersStr:                    postersStr,
+		Labels:                        labels,
+		LabelsStr:                     labelsStr,
+		GoodTotal:                     1000,
+		DeliveryAt:                    uint32(time.Now().Unix() + 1000),
+		StartAt:                       uint32(time.Now().Unix() + 1000),
 	}
 )
 
