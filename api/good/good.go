@@ -59,19 +59,21 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, "DeviceInfo not exist")
 	}
 
-	if _, err := uuid.Parse(in.GetInfo().GetInheritFromGoodID()); err != nil {
-		logger.Sugar().Errorw("CreateGood", "InheritFromGoodID", in.GetInfo().GetInheritFromGoodID(), "error", err)
-		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
-	}
+	if in.GetInfo().InheritFromGoodID != nil {
+		if _, err := uuid.Parse(in.GetInfo().GetInheritFromGoodID()); err != nil {
+			logger.Sugar().Errorw("CreateGood", "InheritFromGoodID", in.GetInfo().GetInheritFromGoodID(), "error", err)
+			return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		}
 
-	exist, err = goodmgrcli.ExistGood(ctx, in.GetInfo().GetInheritFromGoodID())
-	if err != nil {
-		logger.Sugar().Errorw("CreateGood", "InheritFromGoodID", in.GetInfo().GetInheritFromGoodID(), "error", err)
-		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
-	}
-	if !exist {
-		logger.Sugar().Errorw("CreateGood", "InheritFromGoodID", in.GetInfo().GetInheritFromGoodID(), "exist", exist)
-		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, "InheritFromGood not exist")
+		exist, err = goodmgrcli.ExistGood(ctx, in.GetInfo().GetInheritFromGoodID())
+		if err != nil {
+			logger.Sugar().Errorw("CreateGood", "InheritFromGoodID", in.GetInfo().GetInheritFromGoodID(), "error", err)
+			return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		}
+		if !exist {
+			logger.Sugar().Errorw("CreateGood", "InheritFromGoodID", in.GetInfo().GetInheritFromGoodID(), "exist", exist)
+			return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, "InheritFromGood not exist")
+		}
 	}
 
 	if _, err := uuid.Parse(in.GetInfo().GetVendorLocationID()); err != nil {

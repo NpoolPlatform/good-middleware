@@ -35,6 +35,21 @@ func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 	return handler(_ctx, cli)
 }
 
+func CreateGood(ctx context.Context, in *mgrpb.AppGoodReq) (*npool.Good, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+		resp, err := cli.CreateGood(ctx, &npool.CreateGoodRequest{
+			Info: in,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.Good), nil
+}
 func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.GetGood(ctx, &npool.GetGoodRequest{

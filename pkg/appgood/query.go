@@ -44,7 +44,7 @@ func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 			Scan(_ctx, &infos)
 	})
 	if err != nil {
-		logger.Sugar().Errorw("GetGoods", "err", err)
+		logger.Sugar().Errorw("GetGood", "err", err)
 		return nil, err
 	}
 	if len(infos) == 0 {
@@ -53,7 +53,7 @@ func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 
 	infos, err = expand(infos)
 	if err != nil {
-		logger.Sugar().Errorw("GetGoods", "err", err)
+		logger.Sugar().Errorw("GetGood", "err", err)
 		return nil, err
 	}
 
@@ -248,28 +248,17 @@ func join(stm *ent.AppGoodQuery) *ent.AppGoodSelect {
 		})
 }
 
-func expand(infos []*npool.Good) ([]*npool.Good, error) {
+func expand(infos []*npool.Good) ([]*npool.Good, error) { //nolint
 	for _, info := range infos {
-		var labels []string
-		if err := json.Unmarshal([]byte(info.LabelsStr), &labels); err != nil {
-			return nil, err
-		}
-		info.Labels = labels
-
-		var posters []string
-		if err := json.Unmarshal([]byte(info.PostersStr), &posters); err != nil {
-			return nil, err
-		}
-		info.Posters = posters
-
-		var coinTypeIDs []string
-		if err := json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &coinTypeIDs); err != nil {
-			return nil, err
-		}
-		info.SupportCoinTypeIDs = coinTypeIDs
+		_ = json.Unmarshal([]byte(info.LabelsStr), &info.Labels)
+		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
+		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
 
 		info.GoodType = goodmgrpb.GoodType(goodmgrpb.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = goodmgrpb.BenefitType(goodmgrpb.BenefitType_value[info.BenefitTypeStr])
+
+		info.Visible = info.VisibleInt > 0
+		info.Online = info.OnlineInt > 0
 	}
 	return infos, nil
 }
