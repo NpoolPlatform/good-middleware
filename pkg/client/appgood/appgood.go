@@ -12,7 +12,7 @@ import (
 	mgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/appgood"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/appgood"
 
-	constant "github.com/NpoolPlatform/good-manager/pkg/message/const"
+	constant "github.com/NpoolPlatform/good-middleware/pkg/message/const"
 )
 
 var timeout = 10 * time.Second
