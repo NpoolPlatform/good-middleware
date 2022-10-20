@@ -98,47 +98,47 @@ func GetGoods(ctx context.Context, conds *mgrpb.Conds, offset, limit int32) ([]*
 		stm := cli.
 			Good.
 			Query()
-
-		if conds.ID != nil {
-			stm.Where(
-				entgood.ID(uuid.MustParse(conds.GetID().GetValue())),
-			)
-		}
-		if conds.DeviceInfoID != nil {
-			stm.Where(
-				entgood.DeviceInfoID(uuid.MustParse(conds.GetDeviceInfoID().GetValue())),
-			)
-		}
-		if conds.CoinTypeID != nil {
-			stm.Where(
-				entgood.CoinTypeID(uuid.MustParse(conds.GetCoinTypeID().GetValue())),
-			)
-		}
-		if conds.VendorLocationID != nil {
-			stm.Where(
-				entgood.VendorLocationID(uuid.MustParse(conds.GetVendorLocationID().GetValue())),
-			)
-		}
-		if conds.BenefitType != nil {
-			stm.Where(
-				entgood.BenefitType(mgrpb.BenefitType(conds.GetBenefitType().GetValue()).String()),
-			)
-		}
-		if conds.GoodType != nil {
-			stm.Where(
-				entgood.GoodType(mgrpb.GoodType(conds.GetGoodType().GetValue()).String()),
-			)
-		}
-		if conds.IDs != nil {
-			ids := []uuid.UUID{}
-			for _, id := range conds.GetIDs().GetValue() {
-				ids = append(ids, uuid.MustParse(id))
+		if conds != nil {
+			if conds.ID != nil {
+				stm.Where(
+					entgood.ID(uuid.MustParse(conds.GetID().GetValue())),
+				)
 			}
-			stm.Where(
-				entgood.IDIn(ids...),
-			)
+			if conds.DeviceInfoID != nil {
+				stm.Where(
+					entgood.DeviceInfoID(uuid.MustParse(conds.GetDeviceInfoID().GetValue())),
+				)
+			}
+			if conds.CoinTypeID != nil {
+				stm.Where(
+					entgood.CoinTypeID(uuid.MustParse(conds.GetCoinTypeID().GetValue())),
+				)
+			}
+			if conds.VendorLocationID != nil {
+				stm.Where(
+					entgood.VendorLocationID(uuid.MustParse(conds.GetVendorLocationID().GetValue())),
+				)
+			}
+			if conds.BenefitType != nil {
+				stm.Where(
+					entgood.BenefitType(mgrpb.BenefitType(conds.GetBenefitType().GetValue()).String()),
+				)
+			}
+			if conds.GoodType != nil {
+				stm.Where(
+					entgood.GoodType(mgrpb.GoodType(conds.GetGoodType().GetValue()).String()),
+				)
+			}
+			if conds.IDs != nil {
+				ids := []uuid.UUID{}
+				for _, id := range conds.GetIDs().GetValue() {
+					ids = append(ids, uuid.MustParse(id))
+				}
+				stm.Where(
+					entgood.IDIn(ids...),
+				)
+			}
 		}
-
 		n, err := stm.Count(_ctx)
 		if err != nil {
 			return err

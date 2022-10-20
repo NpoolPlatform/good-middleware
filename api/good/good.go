@@ -215,56 +215,57 @@ func (s *Server) GetGoods(ctx context.Context, in *npool.GetGoodsRequest) (*npoo
 		}
 	}()
 
-	if in.GetConds().ID != nil {
-		if _, err := uuid.Parse(in.GetConds().GetID().GetValue()); err != nil {
-			logger.Sugar().Errorw("GetGoods", "ID", in.GetConds().GetID().GetValue(), "error", err)
-			return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
+	if in.Conds != nil {
+		if in.GetConds().ID != nil {
+			if _, err := uuid.Parse(in.GetConds().GetID().GetValue()); err != nil {
+				logger.Sugar().Errorw("GetGoods", "ID", in.GetConds().GetID().GetValue(), "error", err)
+				return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
+			}
+		}
+
+		if in.GetConds().DeviceInfoID != nil {
+			if _, err := uuid.Parse(in.GetConds().GetDeviceInfoID().GetValue()); err != nil {
+				logger.Sugar().Errorw("GetGoods", "DeviceInfoID", in.GetConds().GetDeviceInfoID().GetValue(), "error", err)
+				return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
+			}
+		}
+
+		if in.GetConds().CoinTypeID != nil {
+			if _, err := uuid.Parse(in.GetConds().GetCoinTypeID().GetValue()); err != nil {
+				logger.Sugar().Errorw("GetGoods", "CoinTypeID", in.GetConds().GetCoinTypeID().GetValue(), "error", err)
+				return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
+			}
+		}
+
+		if in.GetConds().VendorLocationID != nil {
+			if _, err := uuid.Parse(in.GetConds().GetVendorLocationID().GetValue()); err != nil {
+				logger.Sugar().Errorw("GetGoods", "VendorLocationID", in.GetConds().GetVendorLocationID().GetValue(), "error", err)
+				return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
+			}
+		}
+
+		if in.GetConds().BenefitType != nil {
+			switch mgrpb.BenefitType(in.GetConds().GetBenefitType().GetValue()) {
+			case mgrpb.BenefitType_BenefitTypePlatform:
+			case mgrpb.BenefitType_BenefitTypePool:
+			default:
+				logger.Sugar().Errorw("GetGoods", "BenefitType", in.GetConds().GetBenefitType().GetValue())
+				return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, "BenefitType is invalid")
+			}
+		}
+
+		if in.GetConds().GoodType != nil {
+			switch mgrpb.GoodType(in.GetConds().GetGoodType().GetValue()) {
+			case mgrpb.GoodType_GoodTypeClassicMining:
+			case mgrpb.GoodType_GoodTypeUnionMining:
+			case mgrpb.GoodType_GoodTypeTechniqueFee:
+			case mgrpb.GoodType_GoodTypeElectricityFee:
+			default:
+				logger.Sugar().Errorw("GetGoods", "GoodType", in.GetConds().GetGoodType().GetValue())
+				return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, "GoodType is invalid")
+			}
 		}
 	}
-
-	if in.GetConds().DeviceInfoID != nil {
-		if _, err := uuid.Parse(in.GetConds().GetDeviceInfoID().GetValue()); err != nil {
-			logger.Sugar().Errorw("GetGoods", "DeviceInfoID", in.GetConds().GetDeviceInfoID().GetValue(), "error", err)
-			return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
-		}
-	}
-
-	if in.GetConds().CoinTypeID != nil {
-		if _, err := uuid.Parse(in.GetConds().GetCoinTypeID().GetValue()); err != nil {
-			logger.Sugar().Errorw("GetGoods", "CoinTypeID", in.GetConds().GetCoinTypeID().GetValue(), "error", err)
-			return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
-		}
-	}
-
-	if in.GetConds().VendorLocationID != nil {
-		if _, err := uuid.Parse(in.GetConds().GetVendorLocationID().GetValue()); err != nil {
-			logger.Sugar().Errorw("GetGoods", "VendorLocationID", in.GetConds().GetVendorLocationID().GetValue(), "error", err)
-			return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, err.Error())
-		}
-	}
-
-	if in.GetConds().BenefitType != nil {
-		switch mgrpb.BenefitType(in.GetConds().GetBenefitType().GetValue()) {
-		case mgrpb.BenefitType_BenefitTypePlatform:
-		case mgrpb.BenefitType_BenefitTypePool:
-		default:
-			logger.Sugar().Errorw("GetGoods", "BenefitType", in.GetConds().GetBenefitType().GetValue())
-			return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, "BenefitType is invalid")
-		}
-	}
-
-	if in.GetConds().GoodType != nil {
-		switch mgrpb.GoodType(in.GetConds().GetGoodType().GetValue()) {
-		case mgrpb.GoodType_GoodTypeClassicMining:
-		case mgrpb.GoodType_GoodTypeUnionMining:
-		case mgrpb.GoodType_GoodTypeTechniqueFee:
-		case mgrpb.GoodType_GoodTypeElectricityFee:
-		default:
-			logger.Sugar().Errorw("GetGoods", "GoodType", in.GetConds().GetGoodType().GetValue())
-			return &npool.GetGoodsResponse{}, status.Error(codes.InvalidArgument, "GoodType is invalid")
-		}
-	}
-
 	span = commontracer.TraceInvoker(span, "Good", "mw", "GetGoods")
 
 	limit := in.GetLimit()
