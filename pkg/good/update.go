@@ -2,6 +2,9 @@ package good
 
 import (
 	"context"
+	"fmt"
+
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	extramgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/extrainfo"
 	goodmgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/good"
@@ -19,11 +22,18 @@ import (
 	entstock "github.com/NpoolPlatform/good-manager/pkg/db/ent/stock"
 
 	"github.com/google/uuid"
+
+	npoolpb "github.com/NpoolPlatform/message/npool"
 )
 
 // nolint
 func UpdateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 	var err error
+
+	err = checkGoodExist(ctx, in)
+	if err != nil {
+		return nil, err
+	}
 
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		u, err := goodcrud.UpdateSet(
@@ -132,4 +142,56 @@ func UpdateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 	}
 
 	return GetGood(ctx, in.GetID())
+}
+
+func checkGoodExist(ctx context.Context, in *npool.GoodReq) error {
+	goodExist, err := goodcrud.Exist(ctx, uuid.MustParse(in.GetID()))
+	if err != nil {
+		return err
+	}
+	if !goodExist {
+		return fmt.Errorf("good not exsit")
+	}
+
+	extraExist, err := extracrud.ExistConds(ctx, &extramgrpb.Conds{
+		GoodID: &npoolpb.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetID(),
+		},
+	})
+	if err != nil {
+		return err
+	}
+	if !extraExist {
+		_, err = extracrud.Create(ctx, &extramgrpb.ExtraInfoReq{
+			GoodID:  in.ID,
+			Posters: in.Posters,
+			Labels:  in.Labels,
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	stockExist, err := stockcrud.ExistConds(ctx, &stockmgrpb.Conds{
+		GoodID: &npoolpb.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetID(),
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	if !stockExist {
+		_, err = stockcrud.Create(ctx, &stockmgrpb.StockReq{
+			GoodID: in.ID,
+			Total:  in.Total,
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
