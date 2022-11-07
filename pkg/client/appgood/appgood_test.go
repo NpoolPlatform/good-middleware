@@ -271,6 +271,18 @@ func getGoods(t *testing.T) {
 		assert.Equal(t, infos[0], &appGoodInfo)
 	}
 }
+func getOnlyGood(t *testing.T) {
+	info, err := GetOnlyGood(context.Background(),
+		&mgrpb.Conds{
+			ID: &val.StringVal{
+				Value: info.ID,
+				Op:    cruder.EQ,
+			},
+		})
+	if assert.Nil(t, err) {
+		assert.Equal(t, info, &appGoodInfo)
+	}
+}
 
 func TestMainOrder(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
@@ -285,6 +297,7 @@ func TestMainOrder(t *testing.T) {
 
 	t.Run("createGood", createGood)
 	t.Run("getGood", getGood)
+	t.Run("getOnlyGood", getOnlyGood)
 	t.Run("getGoods", getGoods)
 	t.Run("updateGood", updateGood)
 }

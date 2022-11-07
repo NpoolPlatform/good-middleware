@@ -86,6 +86,22 @@ func GetGoods(ctx context.Context, conds *mgrpb.Conds, offset, limit int32) ([]*
 	return infos.([]*npool.Good), total, nil
 }
 
+func GetOnlyGood(ctx context.Context, conds *mgrpb.Conds) (*npool.Good, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+		resp, err := cli.GetOnlyGood(ctx, &npool.GetOnlyGoodRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.Good), nil
+}
+
 func UpdateGood(ctx context.Context, in *mgrpb.AppGoodReq) (*npool.Good, error) {
 	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.UpdateGood(ctx, &npool.UpdateGoodRequest{
