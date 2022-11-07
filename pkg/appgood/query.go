@@ -3,6 +3,7 @@ package appgood
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	mgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/appgood"
 	goodmgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/good"
@@ -125,6 +126,58 @@ func GetGoods(ctx context.Context, conds *mgrpb.Conds, offset, limit int32) ([]*
 	}
 
 	return infos, total, nil
+}
+
+func GetOnlyGood(ctx context.Context, conds *mgrpb.Conds) (*npool.Good, error) {
+	var infos []*npool.Good
+	var err error
+
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		stm := cli.
+			AppGood.
+			Query()
+
+		if conds.ID != nil {
+			stm.Where(
+				entappgood.ID(uuid.MustParse(conds.GetID().GetValue())),
+			)
+		}
+		if conds.AppID != nil {
+			stm.Where(
+				entappgood.AppID(uuid.MustParse(conds.GetAppID().GetValue())),
+			)
+		}
+		if conds.GoodID != nil {
+			stm.Where(
+				entappgood.GoodID(uuid.MustParse(conds.GetGoodID().GetValue())),
+			)
+		}
+		stm.
+			Limit(1)
+
+		return join(stm).
+			Scan(_ctx, &infos)
+	})
+	if err != nil {
+		logger.Sugar().Errorw("GetGoods", "err", err)
+		return nil, err
+	}
+
+	if len(infos) == 0 {
+		return nil, nil
+	}
+	if len(infos) > 1 {
+		logger.Sugar().Errorw("err", "too many records")
+		return nil, fmt.Errorf("too many records")
+	}
+
+	infos, err = expand(infos)
+	if err != nil {
+		logger.Sugar().Errorw("GetGoods", "err", err)
+		return nil, err
+	}
+
+	return infos[0], nil
 }
 
 // nolint
