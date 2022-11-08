@@ -187,7 +187,7 @@ func (s *Server) GetGoodOnly(ctx context.Context, in *npool.GetGoodOnlyRequest) 
 
 	span = commontracer.TraceInvoker(span, "Good", "mw", "GetGood")
 
-	info, err := goodmw.GetOnlyGood(ctx, in.Conds)
+	info, err := goodmw.GetGoodOnly(ctx, in.Conds)
 	if err != nil {
 		logger.Sugar().Errorw("GetGood", "error", err)
 		return &npool.GetGoodOnlyResponse{}, status.Error(codes.Internal, err.Error())

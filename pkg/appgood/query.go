@@ -128,7 +128,7 @@ func GetGoods(ctx context.Context, conds *mgrpb.Conds, offset, limit int32) ([]*
 	return infos, total, nil
 }
 
-func GetOnlyGood(ctx context.Context, conds *mgrpb.Conds) (*npool.Good, error) {
+func GetGoodOnly(ctx context.Context, conds *mgrpb.Conds) (*npool.Good, error) {
 	var infos []*npool.Good
 	var err error
 
