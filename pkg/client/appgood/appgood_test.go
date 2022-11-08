@@ -272,7 +272,7 @@ func getGoods(t *testing.T) {
 	}
 }
 func getOnlyGood(t *testing.T) {
-	info, err := GetOnlyGood(context.Background(),
+	info, err := GetGoodOnly(context.Background(),
 		&mgrpb.Conds{
 			ID: &val.StringVal{
 				Value: info.ID,

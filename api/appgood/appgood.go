@@ -136,7 +136,7 @@ func (s *Server) GetGood(ctx context.Context, in *npool.GetGoodRequest) (*npool.
 	}, nil
 }
 
-func (s *Server) GetOnlyGood(ctx context.Context, in *npool.GetOnlyGoodRequest) (*npool.GetOnlyGoodResponse, error) {
+func (s *Server) GetGoodOnly(ctx context.Context, in *npool.GetGoodOnlyRequest) (*npool.GetGoodOnlyResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetGood")
@@ -151,37 +151,37 @@ func (s *Server) GetOnlyGood(ctx context.Context, in *npool.GetOnlyGoodRequest) 
 
 	if in.Conds == nil {
 		logger.Sugar().Errorw("GetGoods", "error", err)
-		return &npool.GetOnlyGoodResponse{}, status.Error(codes.InvalidArgument, "conds is empty")
+		return &npool.GetGoodOnlyResponse{}, status.Error(codes.InvalidArgument, "conds is empty")
 	}
 
 	if in.GetConds().ID != nil {
 		if _, err := uuid.Parse(in.GetConds().GetID().GetValue()); err != nil {
 			logger.Sugar().Errorw("GetGoods", "ID", in.GetConds().GetID().GetValue(), "error", err)
-			return &npool.GetOnlyGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+			return &npool.GetGoodOnlyResponse{}, status.Error(codes.InvalidArgument, err.Error())
 		}
 	}
 
 	if in.GetConds().AppID != nil {
 		if _, err := uuid.Parse(in.GetConds().GetAppID().GetValue()); err != nil {
 			logger.Sugar().Errorw("GetGoods", "AppID", in.GetConds().GetAppID().GetValue(), "error", err)
-			return &npool.GetOnlyGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+			return &npool.GetGoodOnlyResponse{}, status.Error(codes.InvalidArgument, err.Error())
 		}
 	}
 
 	if in.GetConds().GoodID != nil {
 		if _, err := uuid.Parse(in.GetConds().GetGoodID().GetValue()); err != nil {
 			logger.Sugar().Errorw("GetGoods", "GoodID", in.GetConds().GetGoodID().GetValue(), "error", err)
-			return &npool.GetOnlyGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+			return &npool.GetGoodOnlyResponse{}, status.Error(codes.InvalidArgument, err.Error())
 		}
 
 		exist, err := goodmgrcli.ExistGood(ctx, in.GetConds().GetGoodID().GetValue())
 		if err != nil {
 			logger.Sugar().Errorw("GetGoods", "GoodID", in.GetConds().GetGoodID().GetValue(), "error", err)
-			return &npool.GetOnlyGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+			return &npool.GetGoodOnlyResponse{}, status.Error(codes.InvalidArgument, err.Error())
 		}
 		if !exist {
 			logger.Sugar().Errorw("GetGoods", "GoodID", in.GetConds().GetGoodID().GetValue(), "exist", exist)
-			return &npool.GetOnlyGoodResponse{}, status.Error(codes.InvalidArgument, "GoodID not exist")
+			return &npool.GetGoodOnlyResponse{}, status.Error(codes.InvalidArgument, "GoodID not exist")
 		}
 	}
 
@@ -190,10 +190,10 @@ func (s *Server) GetOnlyGood(ctx context.Context, in *npool.GetOnlyGoodRequest) 
 	info, err := goodmw.GetOnlyGood(ctx, in.Conds)
 	if err != nil {
 		logger.Sugar().Errorw("GetGood", "error", err)
-		return &npool.GetOnlyGoodResponse{}, status.Error(codes.Internal, err.Error())
+		return &npool.GetGoodOnlyResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	return &npool.GetOnlyGoodResponse{
+	return &npool.GetGoodOnlyResponse{
 		Info: info,
 	}, nil
 }
