@@ -47,7 +47,6 @@ func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm := cli.
-			Debug().
 			Good.
 			Query().
 			Where(

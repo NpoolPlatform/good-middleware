@@ -51,7 +51,7 @@ func init() {
 var (
 	inheritGoodID             = uuid.NewString()
 	inheritGoodTitle          = "Test Inherit Good"
-	inheritGoodPrice          = "12345.000000"
+	inheritGoodPrice          = "12345.000000000000000000"
 	inheritGoodType           = goodmgrpb.GoodType_GoodTypeClassicMining
 	inheritGoodTypeStr        = goodmgrpb.GoodType_GoodTypeClassicMining.String()
 	inheritGoodBenefitType    = goodmgrpb.BenefitType_BenefitTypePlatform
@@ -130,6 +130,7 @@ var (
 		Labels:                goodInfo.Labels,
 		LabelsStr:             goodInfo.LabelsStr,
 		GoodTotal:             goodInfo.GoodTotal,
+		DailyRewardAmount:     "123.000000000000000000",
 		StartAt:               goodInfo.StartAt,
 		CreatedAt:             goodInfo.CreatedAt,
 	}
@@ -169,6 +170,7 @@ var (
 		DisplayIndex:      &appGoodInfo.DisplayIndex,
 		PurchaseLimit:     &appGoodInfo.PurchaseLimit,
 		CommissionPercent: &appGoodInfo.CommissionPercent,
+		DailyRewardAmount: &appGoodInfo.DailyRewardAmount,
 	}
 )
 
@@ -217,6 +219,7 @@ func createGood(t *testing.T) {
 	info, err = CreateGood(context.Background(), &appGoodReq)
 	if assert.Nil(t, err) {
 		appGoodInfo.CreatedAt = info.CreatedAt
+		appGoodInfo.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, info, &appGoodInfo)
 	}
 }
@@ -229,12 +232,14 @@ func updateGood(t *testing.T) {
 	displayIndex := int32(10)
 	purchaseLimit := int32(10)
 	commissionPercent := int32(30)
+	amount := "12345.000000000000000000"
 
 	appGoodReq.Online = &online
 	appGoodReq.Visible = &visible
 	appGoodReq.DisplayIndex = &displayIndex
 	appGoodReq.PurchaseLimit = &purchaseLimit
 	appGoodReq.CommissionPercent = &commissionPercent
+	appGoodReq.DailyRewardAmount = &amount
 
 	appGoodInfo.Online = online
 	appGoodInfo.OnlineInt = 1
@@ -243,9 +248,11 @@ func updateGood(t *testing.T) {
 	appGoodInfo.DisplayIndex = displayIndex
 	appGoodInfo.PurchaseLimit = purchaseLimit
 	appGoodInfo.CommissionPercent = commissionPercent
+	appGoodInfo.DailyRewardAmount = amount
 
 	info, err = UpdateGood(context.Background(), &appGoodReq)
 	if assert.Nil(t, err) {
+		appGoodInfo.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, info, &appGoodInfo)
 	}
 }
