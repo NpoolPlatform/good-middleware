@@ -7,7 +7,7 @@ require (
 	entgo.io/ent v0.11.3
 	github.com/NpoolPlatform/api-manager v0.0.0-20220826022307-d72866fe3ec0
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20221015040432-cd676d323379
-	github.com/NpoolPlatform/good-manager v0.0.0-20221216022543-8d97c46cf364
+	github.com/NpoolPlatform/good-manager v0.0.0-20221216030805-38dedefc7bd0
 	github.com/NpoolPlatform/libent-cruder v0.0.0-20221109023947-366125b690fb
 	github.com/NpoolPlatform/message v0.0.0-20221216024225-e7572ae5c761
 	github.com/go-resty/resty/v2 v2.7.0
