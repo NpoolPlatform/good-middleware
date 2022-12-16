@@ -195,6 +195,13 @@ func join(stm *ent.AppGoodQuery) *ent.AppGoodSelect {
 			entappgood.FieldCommissionPercent,
 			entappgood.FieldGoodName,
 			entappgood.FieldCreatedAt,
+			entappgood.FieldUpdatedAt,
+			entappgood.FieldSaleStartAt,
+			entappgood.FieldSaleEndAt,
+			entappgood.FieldServiceStartAt,
+			entappgood.FieldTechnicalFeeRatio,
+			entappgood.FieldElectricityFeeRatio,
+			entappgood.FieldDailyRewardAmount,
 		).
 		Modify(func(s *sql.Selector) {
 			t1 := sql.Table(entgood.Table)

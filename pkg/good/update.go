@@ -18,6 +18,7 @@ import (
 	"github.com/NpoolPlatform/good-manager/pkg/db"
 	"github.com/NpoolPlatform/good-manager/pkg/db/ent"
 
+	entappgood "github.com/NpoolPlatform/good-manager/pkg/db/ent/appgood"
 	entextra "github.com/NpoolPlatform/good-manager/pkg/db/ent/extrainfo"
 	entstock "github.com/NpoolPlatform/good-manager/pkg/db/ent/stock"
 
@@ -133,6 +134,34 @@ func UpdateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 		_, err = u3.Save(_ctx)
 		if err != nil {
 			return err
+		}
+
+		if in.StartAt == nil {
+			return nil
+		}
+
+		appGoods, err := tx.
+			AppGood.
+			Query().
+			Where(
+				entappgood.GoodID(uuid.MustParse(in.GetID())),
+			).
+			All(_ctx)
+		if err != nil {
+			return err
+		}
+
+		for _, ag := range appGoods {
+			if in.GetStartAt() > ag.ServiceStartAt {
+				_, err := tx.
+					AppGood.
+					UpdateOneID(ag.ID).
+					SetServiceStartAt(in.GetStartAt()).
+					Save(_ctx)
+				if err != nil {
+					return err
+				}
+			}
 		}
 
 		return nil
