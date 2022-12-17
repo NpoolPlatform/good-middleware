@@ -96,6 +96,7 @@ var (
 		GoodTotal:                     1000,
 		DeliveryAt:                    uint32(time.Now().Unix() + 1000),
 		StartAt:                       uint32(time.Now().Unix() + 1000),
+		BenefitIntervalHours:          24,
 	}
 )
 
@@ -171,6 +172,11 @@ func createGood(t *testing.T) {
 
 func updateGood(t *testing.T) {
 	var err error
+	hours := uint32(2)
+
+	goodReq.BenefitIntervalHours = &hours
+	goodInfo.BenefitIntervalHours = hours
+
 	info, err = UpdateGood(context.Background(), &goodReq)
 	if assert.Nil(t, err) {
 		goodInfo.UpdatedAt = info.UpdatedAt

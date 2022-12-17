@@ -233,6 +233,7 @@ func join(stm *ent.AppGoodQuery) *ent.AppGoodSelect {
 					sql.As(t1.C(entgood.FieldUnitAmount), "unit_amount"),
 					sql.As(t1.C(entgood.FieldSupportCoinTypeIds), "support_coin_type_ids"),
 					sql.As(t1.C(entgood.FieldTestOnly), "test_only"),
+					sql.As(t1.C(entgood.FieldBenefitIntervalHours), "benefit_interval_hours"),
 					sql.As(t1.C(entgood.FieldStartAt), "start_at"),
 					sql.As(t2.C(entdeviceinfo.FieldType), "device_type"),
 					sql.As(t2.C(entdeviceinfo.FieldManufacturer), "device_manufacturer"),

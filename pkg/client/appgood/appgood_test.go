@@ -133,6 +133,7 @@ var (
 		DailyRewardAmount:     "123.000000000000000000",
 		StartAt:               goodInfo.StartAt,
 		CreatedAt:             goodInfo.CreatedAt,
+		BenefitIntervalHours:  24,
 	}
 )
 
