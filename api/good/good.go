@@ -145,6 +145,11 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, "Total is invalid")
 	}
 
+	if in.GetInfo().BenefitIntervalHours != nil && in.GetInfo().GetBenefitIntervalHours() == 0 {
+		logger.Sugar().Errorw("CreateGood", "BenefitIntervalHours", in.GetInfo().GetBenefitIntervalHours())
+		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, "BenefitIntervalHours is invalid")
+	}
+
 	span = commontracer.TraceInvoker(span, "Good", "mw", "CreateGood")
 
 	info, err := goodmw.CreateGood(ctx, in.GetInfo())
@@ -418,6 +423,13 @@ func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*
 		if in.GetInfo().GetTotal() <= 0 {
 			logger.Sugar().Errorw("UpdateGood", "Total", in.GetInfo().GetTotal())
 			return &npool.UpdateGoodResponse{}, status.Error(codes.InvalidArgument, "Total is invalid")
+		}
+	}
+
+	if in.GetInfo().BenefitIntervalHours != nil {
+		if in.GetInfo().GetBenefitIntervalHours() == 0 {
+			logger.Sugar().Errorw("UpdateGood", "BenefitIntervalHours", in.GetInfo().GetBenefitIntervalHours())
+			return &npool.UpdateGoodResponse{}, status.Error(codes.InvalidArgument, "BenefitIntervalHours is invalid")
 		}
 	}
 
