@@ -25,6 +25,8 @@ import (
 	goodmgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/good"
 	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 
+	commmgrpb "github.com/NpoolPlatform/message/npool/inspire/mgr/v1/commission"
+
 	testinit "github.com/NpoolPlatform/good-middleware/pkg/testinit"
 	"github.com/google/uuid"
 
@@ -103,37 +105,39 @@ var (
 	}
 
 	appGoodInfo = npool.Good{
-		ID:                    uuid.NewString(),
-		AppID:                 uuid.NewString(),
-		GoodID:                goodInfo.ID,
-		Online:                false,
-		Visible:               false,
-		Price:                 "123123123.000000000000000000",
-		DisplayIndex:          1,
-		PurchaseLimit:         3000,
-		CommissionPercent:     30,
-		DevicePostersStr:      goodInfo.DevicePostersStr,
-		DurationDays:          goodInfo.DurationDays,
-		CoinTypeID:            goodInfo.CoinTypeID,
-		GoodType:              goodInfo.GoodType,
-		GoodTypeStr:           goodInfo.GoodTypeStr,
-		BenefitType:           goodInfo.BenefitType,
-		BenefitTypeStr:        goodInfo.BenefitTypeStr,
-		GoodName:              "My Test Good",
-		Unit:                  goodInfo.Unit,
-		UnitAmount:            goodInfo.UnitAmount,
-		SupportCoinTypeIDs:    goodInfo.SupportCoinTypeIDs,
-		SupportCoinTypeIDsStr: goodInfo.SupportCoinTypeIDsStr,
-		TestOnly:              goodInfo.TestOnly,
-		Posters:               goodInfo.Posters,
-		PostersStr:            goodInfo.PostersStr,
-		Labels:                goodInfo.Labels,
-		LabelsStr:             goodInfo.LabelsStr,
-		GoodTotal:             goodInfo.GoodTotal,
-		DailyRewardAmount:     "123.000000000000000000",
-		StartAt:               goodInfo.StartAt,
-		CreatedAt:             goodInfo.CreatedAt,
-		BenefitIntervalHours:  24,
+		ID:                      uuid.NewString(),
+		AppID:                   uuid.NewString(),
+		GoodID:                  goodInfo.ID,
+		Online:                  false,
+		Visible:                 false,
+		Price:                   "123123123.000000000000000000",
+		DisplayIndex:            1,
+		PurchaseLimit:           3000,
+		CommissionPercent:       30,
+		DevicePostersStr:        goodInfo.DevicePostersStr,
+		DurationDays:            goodInfo.DurationDays,
+		CoinTypeID:              goodInfo.CoinTypeID,
+		GoodType:                goodInfo.GoodType,
+		GoodTypeStr:             goodInfo.GoodTypeStr,
+		BenefitType:             goodInfo.BenefitType,
+		BenefitTypeStr:          goodInfo.BenefitTypeStr,
+		GoodName:                "My Test Good",
+		Unit:                    goodInfo.Unit,
+		UnitAmount:              goodInfo.UnitAmount,
+		SupportCoinTypeIDs:      goodInfo.SupportCoinTypeIDs,
+		SupportCoinTypeIDsStr:   goodInfo.SupportCoinTypeIDsStr,
+		TestOnly:                goodInfo.TestOnly,
+		Posters:                 goodInfo.Posters,
+		PostersStr:              goodInfo.PostersStr,
+		Labels:                  goodInfo.Labels,
+		LabelsStr:               goodInfo.LabelsStr,
+		GoodTotal:               goodInfo.GoodTotal,
+		DailyRewardAmount:       "123.000000000000000000",
+		StartAt:                 goodInfo.StartAt,
+		CreatedAt:               goodInfo.CreatedAt,
+		BenefitIntervalHours:    24,
+		CommissionSettleTypeStr: commmgrpb.SettleType_NoCommission.String(),
+		CommissionSettleType:    commmgrpb.SettleType_NoCommission,
 	}
 )
 

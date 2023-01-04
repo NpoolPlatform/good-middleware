@@ -8,6 +8,7 @@ import (
 	mgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/appgood"
 	goodmgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/appgood"
+	commmgrpb "github.com/NpoolPlatform/message/npool/inspire/mgr/v1/commission"
 
 	"github.com/NpoolPlatform/good-manager/pkg/db"
 	"github.com/NpoolPlatform/good-manager/pkg/db/ent"
@@ -202,6 +203,7 @@ func join(stm *ent.AppGoodQuery) *ent.AppGoodSelect {
 			entappgood.FieldTechnicalFeeRatio,
 			entappgood.FieldElectricityFeeRatio,
 			entappgood.FieldDailyRewardAmount,
+			entappgood.FieldCommissionSettleType,
 		).
 		Modify(func(s *sql.Selector) {
 			t1 := sql.Table(entgood.Table)
@@ -317,6 +319,7 @@ func expand(infos []*npool.Good) ([]*npool.Good, error) { //nolint
 
 		info.GoodType = goodmgrpb.GoodType(goodmgrpb.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = goodmgrpb.BenefitType(goodmgrpb.BenefitType_value[info.BenefitTypeStr])
+		info.CommissionSettleType = commmgrpb.SettleType(commmgrpb.SettleType_value[info.CommissionSettleTypeStr])
 
 		info.Visible = info.VisibleInt > 0
 		info.Online = info.OnlineInt > 0
