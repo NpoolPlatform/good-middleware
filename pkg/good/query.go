@@ -287,6 +287,7 @@ func join(stm *ent.GoodQuery) *ent.GoodSelect {
 					sql.As(t5.C(entstock.FieldTotal), "good_total"),
 					sql.As(t5.C(entstock.FieldLocked), "good_locked"),
 					sql.As(t5.C(entstock.FieldInService), "good_in_service"),
+					sql.As(t5.C(entstock.FieldWaitStart), "good_wait_start"),
 					sql.As(t5.C(entstock.FieldSold), "good_sold"),
 				)
 		})

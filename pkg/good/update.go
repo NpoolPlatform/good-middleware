@@ -133,6 +133,7 @@ func UpdateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 			&stockmgrpb.StockReq{
 				Locked:    in.Locked,
 				InService: in.InService,
+				WaitStart: in.WaitStart,
 				Sold:      in.Sold,
 			},
 		)
