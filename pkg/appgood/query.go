@@ -100,6 +100,19 @@ func GetGoods(ctx context.Context, conds *mgrpb.Conds, offset, limit int32) ([]*
 				entappgood.GoodIDIn(goodIDs...),
 			)
 		}
+		if conds.AppIDs != nil {
+			appIDs := []uuid.UUID{}
+			for _, v := range conds.GetAppIDs().GetValue() {
+				uAppID, err := uuid.Parse(v)
+				if err != nil {
+					return err
+				}
+				appIDs = append(appIDs, uAppID)
+			}
+			stm.Where(
+				entappgood.AppIDIn(appIDs...),
+			)
+		}
 
 		n, err := stm.Count(_ctx)
 		if err != nil {
