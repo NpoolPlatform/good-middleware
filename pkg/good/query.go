@@ -27,6 +27,8 @@ import (
 	entstock "github.com/NpoolPlatform/good-manager/pkg/db/ent/stock"
 	entvendorlocation "github.com/NpoolPlatform/good-manager/pkg/db/ent/vendorlocation"
 
+	goodcrud "github.com/NpoolPlatform/good-manager/pkg/crud/good"
+
 	"github.com/google/uuid"
 )
 
@@ -98,47 +100,11 @@ func GetGoods(ctx context.Context, conds *mgrpb.Conds, offset, limit int32) ([]*
 		stm := cli.
 			Good.
 			Query()
-		if conds != nil {
-			if conds.ID != nil {
-				stm.Where(
-					entgood.ID(uuid.MustParse(conds.GetID().GetValue())),
-				)
-			}
-			if conds.DeviceInfoID != nil {
-				stm.Where(
-					entgood.DeviceInfoID(uuid.MustParse(conds.GetDeviceInfoID().GetValue())),
-				)
-			}
-			if conds.CoinTypeID != nil {
-				stm.Where(
-					entgood.CoinTypeID(uuid.MustParse(conds.GetCoinTypeID().GetValue())),
-				)
-			}
-			if conds.VendorLocationID != nil {
-				stm.Where(
-					entgood.VendorLocationID(uuid.MustParse(conds.GetVendorLocationID().GetValue())),
-				)
-			}
-			if conds.BenefitType != nil {
-				stm.Where(
-					entgood.BenefitType(mgrpb.BenefitType(conds.GetBenefitType().GetValue()).String()),
-				)
-			}
-			if conds.GoodType != nil {
-				stm.Where(
-					entgood.GoodType(mgrpb.GoodType(conds.GetGoodType().GetValue()).String()),
-				)
-			}
-			if conds.IDs != nil {
-				ids := []uuid.UUID{}
-				for _, id := range conds.GetIDs().GetValue() {
-					ids = append(ids, uuid.MustParse(id))
-				}
-				stm.Where(
-					entgood.IDIn(ids...),
-				)
-			}
+		stm, err := goodcrud.SetQueryConds(conds, cli)
+		if err != nil {
+			return err
 		}
+
 		n, err := stm.Count(_ctx)
 		if err != nil {
 			return err
@@ -251,6 +217,9 @@ func join(stm *ent.GoodQuery) *ent.GoodSelect {
 			entgood.FieldUpdatedAt,
 			entgood.FieldVendorLocationID,
 			entgood.FieldBenefitIntervalHours,
+			entgood.FieldBenefitState,
+			entgood.FieldLastBenefitAt,
+			entgood.FieldBenefitTids,
 		).
 		Modify(func(s *sql.Selector) {
 			t1 := sql.Table(entdeviceinfo.Table)
@@ -332,9 +301,11 @@ func expand(infos []*npool.Good) ([]*npool.Good, error) { //nolint
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
 		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
 		_ = json.Unmarshal([]byte(info.DevicePostersStr), &info.DevicePosters)
+		_ = json.Unmarshal([]byte(info.BenefitTIDsStr), &info.BenefitTIDs)
 
 		info.GoodType = mgrpb.GoodType(mgrpb.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = mgrpb.BenefitType(mgrpb.BenefitType_value[info.BenefitTypeStr])
+		info.BenefitState = mgrpb.BenefitState(mgrpb.BenefitState_value[info.BenefitStateStr])
 
 		if info.InheritFromGoodTypeStr != nil {
 			inheritFromGoodType := mgrpb.GoodType(mgrpb.GoodType_value[*info.InheritFromGoodTypeStr])
