@@ -97,9 +97,6 @@ func GetGoods(ctx context.Context, conds *mgrpb.Conds, offset, limit int32) ([]*
 	span = commontracer.TraceInvoker(span, "good", "middleware", "CRUD")
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm := cli.
-			Good.
-			Query()
 		stm, err := goodcrud.SetQueryConds(conds, cli)
 		if err != nil {
 			return err
