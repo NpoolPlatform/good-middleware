@@ -217,6 +217,7 @@ func join(stm *ent.GoodQuery) *ent.GoodSelect {
 			entgood.FieldBenefitState,
 			entgood.FieldLastBenefitAt,
 			entgood.FieldBenefitTids,
+			entgood.FieldNextBenefitStartAmount,
 		).
 		Modify(func(s *sql.Selector) {
 			t1 := sql.Table(entdeviceinfo.Table)

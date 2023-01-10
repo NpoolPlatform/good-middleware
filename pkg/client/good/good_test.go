@@ -99,6 +99,7 @@ var (
 		BenefitIntervalHours:          24,
 		BenefitState:                  mgrpb.BenefitState_BenefitWait,
 		BenefitTIDs:                   []string{},
+		NextBenefitStartAmount:        "0.000000000000000000",
 	}
 )
 
