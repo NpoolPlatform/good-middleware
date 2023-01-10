@@ -100,6 +100,7 @@ var (
 		BenefitState:                  mgrpb.BenefitState_BenefitWait,
 		BenefitTIDs:                   []string{},
 		NextBenefitStartAmount:        "0.000000000000000000",
+		LastBenefitAmount:             "0.000000000000000000",
 	}
 )
 

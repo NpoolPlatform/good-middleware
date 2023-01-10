@@ -63,6 +63,7 @@ func UpdateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 				BenefitState:           in.BenefitState,
 				BenefitTIDs:            in.BenefitTIDs,
 				NextBenefitStartAmount: in.NextBenefitStartAmount,
+				LastBenefitAmount:      in.LastBenefitAmount,
 			},
 		)
 		if err != nil {
