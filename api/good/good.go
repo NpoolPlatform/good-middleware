@@ -440,6 +440,13 @@ func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*
 		}
 	}
 
+	for _, id := range in.GetInfo().GetBenefitTIDs() {
+		if _, err := uuid.Parse(id); err != nil {
+			logger.Sugar().Errorw("UpdateGood", "Error", err)
+			return &npool.UpdateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		}
+	}
+
 	span = commontracer.TraceInvoker(span, "Good", "mw", "UpdateGood")
 
 	info, err := goodmw.UpdateGood(ctx, in.GetInfo())

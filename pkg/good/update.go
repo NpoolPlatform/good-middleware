@@ -20,6 +20,7 @@ import (
 
 	entappgood "github.com/NpoolPlatform/good-manager/pkg/db/ent/appgood"
 	entextra "github.com/NpoolPlatform/good-manager/pkg/db/ent/extrainfo"
+	entgood "github.com/NpoolPlatform/good-manager/pkg/db/ent/good"
 	entstock "github.com/NpoolPlatform/good-manager/pkg/db/ent/stock"
 
 	"github.com/google/uuid"
@@ -37,23 +38,32 @@ func UpdateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 	}
 
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		info, err := tx.Good.Query().Where(entgood.ID(uuid.MustParse(in.GetID()))).ForUpdate().Only(_ctx)
+		if err != nil {
+			return err
+		}
+
 		u, err := goodcrud.UpdateSet(
-			tx.Good.UpdateOneID(uuid.MustParse(in.GetID())),
+			info,
 			&goodmgrpb.GoodReq{
-				DeviceInfoID:         in.DeviceInfoID,
-				DurationDays:         in.DurationDays,
-				CoinTypeID:           in.CoinTypeID,
-				InheritFromGoodID:    in.InheritFromGoodID,
-				VendorLocationID:     in.VendorLocationID,
-				Price:                in.Price,
-				Title:                in.Title,
-				Unit:                 in.Unit,
-				UnitAmount:           in.UnitAmount,
-				SupportCoinTypeIDs:   in.SupportCoinTypeIDs,
-				DeliveryAt:           in.DeliveryAt,
-				StartAt:              in.StartAt,
-				TestOnly:             in.TestOnly,
-				BenefitIntervalHours: in.BenefitIntervalHours,
+				DeviceInfoID:           in.DeviceInfoID,
+				DurationDays:           in.DurationDays,
+				CoinTypeID:             in.CoinTypeID,
+				InheritFromGoodID:      in.InheritFromGoodID,
+				VendorLocationID:       in.VendorLocationID,
+				Price:                  in.Price,
+				Title:                  in.Title,
+				Unit:                   in.Unit,
+				UnitAmount:             in.UnitAmount,
+				SupportCoinTypeIDs:     in.SupportCoinTypeIDs,
+				DeliveryAt:             in.DeliveryAt,
+				StartAt:                in.StartAt,
+				TestOnly:               in.TestOnly,
+				BenefitIntervalHours:   in.BenefitIntervalHours,
+				BenefitState:           in.BenefitState,
+				BenefitTIDs:            in.BenefitTIDs,
+				NextBenefitStartAmount: in.NextBenefitStartAmount,
+				LastBenefitAmount:      in.LastBenefitAmount,
 			},
 		)
 		if err != nil {
@@ -125,6 +135,7 @@ func UpdateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 			&stockmgrpb.StockReq{
 				Locked:    in.Locked,
 				InService: in.InService,
+				WaitStart: in.WaitStart,
 				Sold:      in.Sold,
 			},
 		)

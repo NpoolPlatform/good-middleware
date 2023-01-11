@@ -97,6 +97,10 @@ var (
 		DeliveryAt:                    uint32(time.Now().Unix() + 1000),
 		StartAt:                       uint32(time.Now().Unix() + 1000),
 		BenefitIntervalHours:          24,
+		BenefitState:                  mgrpb.BenefitState_BenefitWait,
+		BenefitTIDs:                   []string{},
+		NextBenefitStartAmount:        "0.000000000000000000",
+		LastBenefitAmount:             "0.000000000000000000",
 	}
 )
 
@@ -166,6 +170,9 @@ func createGood(t *testing.T) {
 		goodInfo.CreatedAt = info.CreatedAt
 		goodInfo.UpdatedAt = info.UpdatedAt
 		goodInfo.GoodStockID = info.GoodStockID
+		goodInfo.BenefitStateStr = info.BenefitStateStr
+		goodInfo.BenefitTIDsStr = info.BenefitTIDsStr
+		goodInfo.BenefitTIDs = info.BenefitTIDs
 		assert.Equal(t, info, &goodInfo)
 	}
 }
