@@ -52,12 +52,12 @@ github.com/NpoolPlatform/basal-middleware v0.0.0-20221228013048-951da3e0461c h1:
 github.com/NpoolPlatform/basal-middleware v0.0.0-20221228013048-951da3e0461c/go.mod h1:2ve2qsnYtLc5YOuMUQDt3pzYUAokI9bWaK2fjJSNjmY=
 github.com/NpoolPlatform/go-service-framework v0.0.0-20221102072657-7fcc5e6f1012 h1:agWdYMDo1nBXR0w/PQz9Kze5IZsROOwSL8WcQFTMT4Q=
 github.com/NpoolPlatform/go-service-framework v0.0.0-20221102072657-7fcc5e6f1012/go.mod h1:/sor3E0i0XR8BaKInJwWC85aXLmbMFRNLdIuw+ed+ig=
-github.com/NpoolPlatform/good-manager v0.0.0-20230117010903-60b51d6c36ec h1:dRmwetl7oUchYVfv4IHkbEGVOLLM/gnIl0+pLNaYwmo=
-github.com/NpoolPlatform/good-manager v0.0.0-20230117010903-60b51d6c36ec/go.mod h1:eo1W0zRrbFtSUOZNuWYaYgN/EHxSpQ51kXESjKEMvLo=
+github.com/NpoolPlatform/good-manager v0.0.0-20230117114838-1ca3d4652688 h1:3WsBcbET/PsUNcaaddDZT4fdhdyZc8T+jdKkgulx55o=
+github.com/NpoolPlatform/good-manager v0.0.0-20230117114838-1ca3d4652688/go.mod h1:z4oPgmLhpAa79qBEZ16zDX7vRR0qeS4flROFbT8tQMM=
 github.com/NpoolPlatform/libent-cruder v0.0.0-20221109023947-366125b690fb h1:IAQOJ0xQWdJS1BnimNdM6GZMLgTL/FnIa8C8K4xffUA=
 github.com/NpoolPlatform/libent-cruder v0.0.0-20221109023947-366125b690fb/go.mod h1:zvvqlRwbOdTUauPQ9dFDhDuxa91ILV0CQfVdPBZj+eA=
-github.com/NpoolPlatform/message v0.0.0-20230117011612-1e6d63b7e194 h1:J50Xb+3bylhrQONXY29jaULiroR7w8iIzqeIhoqBmvY=
-github.com/NpoolPlatform/message v0.0.0-20230117011612-1e6d63b7e194/go.mod h1:1+x0MiGmn9vsOFSZl9wF0tGJJg95IDTs35zDMSBjXMw=
+github.com/NpoolPlatform/message v0.0.0-20230117114345-d1bad67f1aee h1:Kwx4z1gIbfDEkrGzio7NmlTxVm2J+VYTa4BeNcmD80E=
+github.com/NpoolPlatform/message v0.0.0-20230117114345-d1bad67f1aee/go.mod h1:1+x0MiGmn9vsOFSZl9wF0tGJJg95IDTs35zDMSBjXMw=
 github.com/OneOfOne/xxhash v1.2.2 h1:KMrpdQIwFcEqXDklaen+P1axHaj9BSKzvpUUfnHldSE=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/Shonminh/apollo-client v0.4.0 h1:AXGp4wOahrEKjheMXehgsG9B8dEfLQHttRLHeEefvus=
