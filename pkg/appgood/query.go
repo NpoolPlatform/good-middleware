@@ -122,6 +122,7 @@ func GetGoods(ctx context.Context, conds *mgrpb.Conds, offset, limit int32) ([]*
 		total = uint32(n)
 
 		stm.
+			Order(ent.Asc(entappgood.FieldDisplayIndex)).
 			Offset(int(offset)).
 			Limit(int(limit))
 
@@ -325,6 +326,7 @@ func join(stm *ent.AppGoodQuery) *ent.AppGoodSelect {
 					sql.As(t7.C(entrecommend.FieldRecommendIndex), "recommend_index"),
 				)
 		})
+
 }
 
 func expand(infos []*npool.Good) ([]*npool.Good, error) { //nolint
