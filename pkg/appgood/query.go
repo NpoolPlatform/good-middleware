@@ -220,6 +220,7 @@ func join(stm *ent.AppGoodQuery) *ent.AppGoodSelect {
 			entappgood.FieldCommissionSettleType,
 			entappgood.FieldDescriptions,
 			entappgood.FieldGoodBanner,
+			entappgood.FieldDisplayNames,
 		).
 		Modify(func(s *sql.Selector) {
 			t1 := sql.Table(entgood.Table)
@@ -335,6 +336,7 @@ func expand(infos []*npool.Good) ([]*npool.Good, error) { //nolint
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
 		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
 		_ = json.Unmarshal([]byte(info.DescriptionsStr), &info.Descriptions)
+		_ = json.Unmarshal([]byte(info.DisplayNamesStr), &info.DisplayNames)
 
 		info.GoodType = goodmgrpb.GoodType(goodmgrpb.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = goodmgrpb.BenefitType(goodmgrpb.BenefitType_value[info.BenefitTypeStr])
