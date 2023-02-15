@@ -21,7 +21,7 @@ import (
 	entappgood "github.com/NpoolPlatform/good-manager/pkg/db/ent/appgood"
 	entextra "github.com/NpoolPlatform/good-manager/pkg/db/ent/extrainfo"
 	entgood "github.com/NpoolPlatform/good-manager/pkg/db/ent/good"
-	entstock "github.com/NpoolPlatform/good-manager/pkg/db/ent/stock"
+	entstock "github.com/NpoolPlatform/good-manager/pkg/db/ent/stockv1"
 
 	"github.com/google/uuid"
 
@@ -84,6 +84,8 @@ func UpdateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 			ForUpdate().
 			Only(ctx)
 		if err != nil {
+			fmt.Println(in.GetID())
+			fmt.Println(err)
 			return err
 		}
 
@@ -104,7 +106,7 @@ func UpdateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 		}
 
 		stock, err := tx.
-			Stock.
+			StockV1.
 			Query().
 			Where(
 				entstock.GoodID(uuid.MustParse(in.GetID())),

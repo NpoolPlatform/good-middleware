@@ -99,9 +99,13 @@ var (
 		PostersStr:                    postersStr,
 		Labels:                        labels,
 		LabelsStr:                     labelsStr,
-		GoodTotal:                     1000,
+		GoodTotal:                     "1000.000000000000000000",
 		DeliveryAt:                    uint32(time.Now().Unix() + 1000),
 		StartAt:                       uint32(time.Now().Unix() + 1000),
+		GoodLocked:                    "0.000000000000000000",
+		GoodInService:                 "0.000000000000000000",
+		GoodSold:                      "0.000000000000000000",
+		GoodWaitStart:                 "0.000000000000000000",
 	}
 
 	appGoodInfo = npool.Good{
@@ -132,6 +136,10 @@ var (
 		Labels:                  goodInfo.Labels,
 		LabelsStr:               goodInfo.LabelsStr,
 		GoodTotal:               goodInfo.GoodTotal,
+		GoodLocked:              goodInfo.GoodLocked,
+		GoodInService:           goodInfo.GoodInService,
+		GoodSold:                goodInfo.GoodSold,
+		GoodWaitStart:           goodInfo.GoodWaitStart,
 		DailyRewardAmount:       "123.000000000000000000",
 		StartAt:                 goodInfo.StartAt,
 		CreatedAt:               goodInfo.CreatedAt,
