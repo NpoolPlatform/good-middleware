@@ -322,6 +322,13 @@ func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*
 		}
 	}
 
+	if in.GetInfo().DailyRewardAmount != nil {
+		if _, err := decimal.NewFromString(in.GetInfo().GetDailyRewardAmount()); err != nil {
+			logger.Sugar().Errorw("UpdateGood", "DailyRewardAmount", in.GetInfo().GetDailyRewardAmount())
+			return &npool.UpdateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		}
+	}
+
 	span = commontracer.TraceInvoker(span, "Good", "mw", "UpdateGood")
 
 	info, err := goodmw.UpdateGood(ctx, in.GetInfo())

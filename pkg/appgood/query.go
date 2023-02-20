@@ -122,6 +122,7 @@ func GetGoods(ctx context.Context, conds *mgrpb.Conds, offset, limit int32) ([]*
 		total = uint32(n)
 
 		stm.
+			Order(ent.Asc(entappgood.FieldDisplayIndex)).
 			Offset(int(offset)).
 			Limit(int(limit))
 
@@ -217,6 +218,9 @@ func join(stm *ent.AppGoodQuery) *ent.AppGoodSelect {
 			entappgood.FieldElectricityFeeRatio,
 			entappgood.FieldDailyRewardAmount,
 			entappgood.FieldCommissionSettleType,
+			entappgood.FieldDescriptions,
+			entappgood.FieldGoodBanner,
+			entappgood.FieldDisplayNames,
 		).
 		Modify(func(s *sql.Selector) {
 			t1 := sql.Table(entgood.Table)
@@ -323,6 +327,7 @@ func join(stm *ent.AppGoodQuery) *ent.AppGoodSelect {
 					sql.As(t7.C(entrecommend.FieldRecommendIndex), "recommend_index"),
 				)
 		})
+
 }
 
 func expand(infos []*npool.Good) ([]*npool.Good, error) { //nolint
@@ -330,6 +335,8 @@ func expand(infos []*npool.Good) ([]*npool.Good, error) { //nolint
 		_ = json.Unmarshal([]byte(info.LabelsStr), &info.Labels)
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
 		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
+		_ = json.Unmarshal([]byte(info.DescriptionsStr), &info.Descriptions)
+		_ = json.Unmarshal([]byte(info.DisplayNamesStr), &info.DisplayNames)
 
 		info.GoodType = goodmgrpb.GoodType(goodmgrpb.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = goodmgrpb.BenefitType(goodmgrpb.BenefitType_value[info.BenefitTypeStr])
