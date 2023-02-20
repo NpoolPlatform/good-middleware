@@ -24,7 +24,7 @@ import (
 	entdeviceinfo "github.com/NpoolPlatform/good-manager/pkg/db/ent/deviceinfo"
 	entextrainfo "github.com/NpoolPlatform/good-manager/pkg/db/ent/extrainfo"
 	entgood "github.com/NpoolPlatform/good-manager/pkg/db/ent/good"
-	entstock "github.com/NpoolPlatform/good-manager/pkg/db/ent/stockv1"
+	entstock "github.com/NpoolPlatform/good-manager/pkg/db/ent/stock"
 	entvendorlocation "github.com/NpoolPlatform/good-manager/pkg/db/ent/vendorlocation"
 
 	goodcrud "github.com/NpoolPlatform/good-manager/pkg/crud/good"
