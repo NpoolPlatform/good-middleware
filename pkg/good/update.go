@@ -84,8 +84,6 @@ func UpdateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 			ForUpdate().
 			Only(ctx)
 		if err != nil {
-			fmt.Println(in.GetID())
-			fmt.Println(err)
 			return err
 		}
 
