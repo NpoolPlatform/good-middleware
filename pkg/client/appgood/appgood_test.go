@@ -146,6 +146,8 @@ var (
 		BenefitIntervalHours:    24,
 		CommissionSettleTypeStr: commmgrpb.SettleType_NoCommission.String(),
 		CommissionSettleType:    commmgrpb.SettleType_NoCommission,
+		DescriptionsStr:         "[]",
+		DisplayNamesStr:         "[]",
 	}
 )
 
