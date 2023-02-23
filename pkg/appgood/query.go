@@ -23,7 +23,7 @@ import (
 	entgood "github.com/NpoolPlatform/good-manager/pkg/db/ent/good"
 	entpromotion "github.com/NpoolPlatform/good-manager/pkg/db/ent/promotion"
 	entrecommend "github.com/NpoolPlatform/good-manager/pkg/db/ent/recommend"
-	entstock "github.com/NpoolPlatform/good-manager/pkg/db/ent/stockv1"
+	entstock "github.com/NpoolPlatform/good-manager/pkg/db/ent/stock"
 	entvendorlocation "github.com/NpoolPlatform/good-manager/pkg/db/ent/vendorlocation"
 
 	"github.com/google/uuid"

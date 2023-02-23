@@ -69,7 +69,7 @@ func CreateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 
 		id = info.ID.String()
 
-		c1 := tx.StockV1.Create()
+		c1 := tx.Stock.Create()
 		stm1, err := stockcrud.CreateSet(c1, &stockmgrpb.StockReq{
 			GoodID: &id,
 			Total:  in.Total,
