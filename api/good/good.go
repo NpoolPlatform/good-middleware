@@ -140,7 +140,12 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		}
 	}
 
-	if in.GetInfo().GetTotal() <= 0 {
+	total, err := decimal.NewFromString(in.GetInfo().GetTotal())
+	if err != nil {
+		logger.Sugar().Errorw("CreateGood", "total", in.GetInfo().GetTotal(), "error", err)
+		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+	}
+	if total.Cmp(decimal.NewFromInt(0)) <= 0 {
 		logger.Sugar().Errorw("CreateGood", "Total", in.GetInfo().GetTotal())
 		return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, "Total is invalid")
 	}
@@ -420,8 +425,13 @@ func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*
 	}
 
 	if in.GetInfo().Total != nil {
-		if in.GetInfo().GetTotal() <= 0 {
-			logger.Sugar().Errorw("UpdateGood", "Total", in.GetInfo().GetTotal())
+		total, err := decimal.NewFromString(in.GetInfo().GetTotal())
+		if err != nil {
+			logger.Sugar().Errorw("CreateGood", "total", in.GetInfo().GetTotal(), "error", err)
+			return &npool.UpdateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		}
+		if total.Cmp(decimal.NewFromInt(0)) <= 0 {
+			logger.Sugar().Errorw("CreateGood", "Total", in.GetInfo().GetTotal())
 			return &npool.UpdateGoodResponse{}, status.Error(codes.InvalidArgument, "Total is invalid")
 		}
 	}
@@ -434,8 +444,13 @@ func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*
 	}
 
 	if in.GetInfo().Sold != nil {
-		if in.GetInfo().GetSold() <= 0 {
-			logger.Sugar().Errorw("UpdateGood", "Sold", in.GetInfo().GetSold())
+		sold, err := decimal.NewFromString(in.GetInfo().GetSold())
+		if err != nil {
+			logger.Sugar().Errorw("CreateGood", "sold", in.GetInfo().GetSold(), "error", err)
+			return &npool.UpdateGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		}
+		if sold.Cmp(decimal.NewFromInt(0)) <= 0 {
+			logger.Sugar().Errorw("CreateGood", "Sold", in.GetInfo().GetSold())
 			return &npool.UpdateGoodResponse{}, status.Error(codes.InvalidArgument, "Sold is invalid")
 		}
 	}

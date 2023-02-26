@@ -93,7 +93,7 @@ var (
 		PostersStr:                    postersStr,
 		Labels:                        labels,
 		LabelsStr:                     labelsStr,
-		GoodTotal:                     1000,
+		GoodTotal:                     "1000.000000000000000000",
 		DeliveryAt:                    uint32(time.Now().Unix() + 1000),
 		StartAt:                       uint32(time.Now().Unix() + 1000),
 		BenefitIntervalHours:          24,
@@ -170,6 +170,10 @@ func createGood(t *testing.T) {
 		goodInfo.CreatedAt = info.CreatedAt
 		goodInfo.UpdatedAt = info.UpdatedAt
 		goodInfo.GoodStockID = info.GoodStockID
+		goodInfo.GoodInService = info.GoodInService
+		goodInfo.GoodLocked = info.GoodLocked
+		goodInfo.GoodWaitStart = info.GoodWaitStart
+		goodInfo.GoodSold = info.GoodSold
 		goodInfo.BenefitStateStr = info.BenefitStateStr
 		goodInfo.BenefitTIDsStr = info.BenefitTIDsStr
 		goodInfo.BenefitTIDs = info.BenefitTIDs
