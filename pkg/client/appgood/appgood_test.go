@@ -148,6 +148,10 @@ var (
 		CommissionSettleType:    commmgrpb.SettleType_NoCommission,
 		DescriptionsStr:         "[]",
 		DisplayNamesStr:         "[]",
+		OpenPurchase:            true,
+		IntoProductPage:         true,
+		CancelableBefore:        uint32(time.Now().Unix()),
+		UserPurchaseLimit:       "100.000000000000000000",
 	}
 )
 
@@ -186,6 +190,10 @@ var (
 		PurchaseLimit:     &appGoodInfo.PurchaseLimit,
 		CommissionPercent: &appGoodInfo.CommissionPercent,
 		DailyRewardAmount: &appGoodInfo.DailyRewardAmount,
+		OpenPurchase:      &appGoodInfo.OpenPurchase,
+		IntoProductPage:   &appGoodInfo.IntoProductPage,
+		CancelableBefore:  &appGoodInfo.CancelableBefore,
+		UserPurchaseLimit: &appGoodInfo.UserPurchaseLimit,
 	}
 )
 
@@ -249,12 +257,21 @@ func updateGood(t *testing.T) {
 	commissionPercent := int32(30)
 	amount := "12345.000000000000000000"
 
+	openPurchase := false
+	intoProductPage := false
+	canCancel := uint32(time.Now().Add(10).Unix())
+	userPurchaseLimit := "12345.000000000000000000"
+
 	appGoodReq.Online = &online
 	appGoodReq.Visible = &visible
 	appGoodReq.DisplayIndex = &displayIndex
 	appGoodReq.PurchaseLimit = &purchaseLimit
 	appGoodReq.CommissionPercent = &commissionPercent
 	appGoodReq.DailyRewardAmount = &amount
+	appGoodReq.OpenPurchase = &openPurchase
+	appGoodReq.IntoProductPage = &intoProductPage
+	appGoodReq.CancelableBefore = &canCancel
+	appGoodReq.UserPurchaseLimit = &userPurchaseLimit
 
 	appGoodInfo.Online = online
 	appGoodInfo.OnlineInt = 1
@@ -264,6 +281,10 @@ func updateGood(t *testing.T) {
 	appGoodInfo.PurchaseLimit = purchaseLimit
 	appGoodInfo.CommissionPercent = commissionPercent
 	appGoodInfo.DailyRewardAmount = amount
+	appGoodInfo.OpenPurchase = openPurchase
+	appGoodInfo.IntoProductPage = intoProductPage
+	appGoodInfo.CancelableBefore = canCancel
+	appGoodInfo.UserPurchaseLimit = userPurchaseLimit
 
 	info, err = UpdateGood(context.Background(), &appGoodReq)
 	if assert.Nil(t, err) {
