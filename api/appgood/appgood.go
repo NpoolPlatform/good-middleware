@@ -75,6 +75,17 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		}
 	}
 
+	if in.GetInfo().UserPurchaseLimit != nil {
+		userPurchaseLimit, err := decimal.NewFromString(in.GetInfo().GetUserPurchaseLimit())
+		if err != nil {
+			return nil, err
+		}
+		if userPurchaseLimit.Cmp(decimal.NewFromInt(0)) <= 0 {
+			logger.Sugar().Errorw("CreateGood", "UserPurchaseLimit", in.GetInfo().GetUserPurchaseLimit())
+			return &npool.CreateGoodResponse{}, status.Error(codes.InvalidArgument, "UserPurchaseLimit is invalid")
+		}
+	}
+
 	if in.GetInfo().CommissionPercent != nil {
 		if in.GetInfo().GetCommissionPercent() >= 100 || in.GetInfo().GetCommissionPercent() < 0 {
 			logger.Sugar().Errorw("CreateGood", "CommissionPercent", in.GetInfo().GetCommissionPercent())
@@ -312,6 +323,17 @@ func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*
 		if in.GetInfo().GetPurchaseLimit() <= 0 {
 			logger.Sugar().Errorw("UpdateGood", "PurchaseLimit", in.GetInfo().GetPurchaseLimit())
 			return &npool.UpdateGoodResponse{}, status.Error(codes.InvalidArgument, "PurchaseLimit is invalid")
+		}
+	}
+
+	if in.GetInfo().UserPurchaseLimit != nil {
+		userPurchaseLimit, err := decimal.NewFromString(in.GetInfo().GetUserPurchaseLimit())
+		if err != nil {
+			return nil, err
+		}
+		if userPurchaseLimit.Cmp(decimal.NewFromInt(0)) <= 0 {
+			logger.Sugar().Errorw("UpdateGood", "UserPurchaseLimit", in.GetInfo().GetUserPurchaseLimit())
+			return &npool.UpdateGoodResponse{}, status.Error(codes.InvalidArgument, "UserPurchaseLimit is invalid")
 		}
 	}
 
