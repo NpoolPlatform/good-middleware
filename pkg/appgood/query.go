@@ -221,9 +221,9 @@ func join(stm *ent.AppGoodQuery) *ent.AppGoodSelect {
 			entappgood.FieldDescriptions,
 			entappgood.FieldGoodBanner,
 			entappgood.FieldDisplayNames,
-			entappgood.FieldOpenPurchase,
-			entappgood.FieldIntoProductPage,
-			entappgood.FieldCancelableBefore,
+			entappgood.FieldEnablePurchase,
+			entappgood.FieldEnableProductPage,
+			entappgood.FieldCancelMode,
 			entappgood.FieldUserPurchaseLimit,
 		).
 		Modify(func(s *sql.Selector) {
@@ -345,6 +345,7 @@ func expand(infos []*npool.Good) ([]*npool.Good, error) { //nolint
 		info.GoodType = goodmgrpb.GoodType(goodmgrpb.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = goodmgrpb.BenefitType(goodmgrpb.BenefitType_value[info.BenefitTypeStr])
 		info.CommissionSettleType = commmgrpb.SettleType(commmgrpb.SettleType_value[info.CommissionSettleTypeStr])
+		info.CancelMode = mgrpb.CancelMode(mgrpb.CancelMode_value[info.CancelModeStr])
 
 		info.Visible = info.VisibleInt > 0
 		info.Online = info.OnlineInt > 0
