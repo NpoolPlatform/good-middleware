@@ -153,6 +153,8 @@ var (
 		CancelMode:              mgrpb.CancelMode_CancellableBeforeBenefit,
 		CancelModeStr:           mgrpb.CancelMode_CancellableBeforeBenefit.String(),
 		UserPurchaseLimit:       "100.000000000000000000",
+		DisplayColors:           uuid.NewString(),
+		CancellableBeforeStart:  100,
 	}
 )
 
@@ -180,21 +182,23 @@ var (
 	}
 
 	appGoodReq = mgrpb.AppGoodReq{
-		ID:                &appGoodInfo.ID,
-		AppID:             &appGoodInfo.AppID,
-		GoodID:            &goodInfo.ID,
-		Online:            &appGoodInfo.Online,
-		Visible:           &appGoodInfo.Visible,
-		GoodName:          &appGoodInfo.GoodName,
-		Price:             &appGoodInfo.Price,
-		DisplayIndex:      &appGoodInfo.DisplayIndex,
-		PurchaseLimit:     &appGoodInfo.PurchaseLimit,
-		CommissionPercent: &appGoodInfo.CommissionPercent,
-		DailyRewardAmount: &appGoodInfo.DailyRewardAmount,
-		EnablePurchase:    &appGoodInfo.EnablePurchase,
-		EnableProductPage: &appGoodInfo.EnableProductPage,
-		CancelMode:        &appGoodInfo.CancelMode,
-		UserPurchaseLimit: &appGoodInfo.UserPurchaseLimit,
+		ID:                     &appGoodInfo.ID,
+		AppID:                  &appGoodInfo.AppID,
+		GoodID:                 &goodInfo.ID,
+		Online:                 &appGoodInfo.Online,
+		Visible:                &appGoodInfo.Visible,
+		GoodName:               &appGoodInfo.GoodName,
+		Price:                  &appGoodInfo.Price,
+		DisplayIndex:           &appGoodInfo.DisplayIndex,
+		PurchaseLimit:          &appGoodInfo.PurchaseLimit,
+		CommissionPercent:      &appGoodInfo.CommissionPercent,
+		DailyRewardAmount:      &appGoodInfo.DailyRewardAmount,
+		EnablePurchase:         &appGoodInfo.EnablePurchase,
+		EnableProductPage:      &appGoodInfo.EnableProductPage,
+		CancelMode:             &appGoodInfo.CancelMode,
+		UserPurchaseLimit:      &appGoodInfo.UserPurchaseLimit,
+		DisplayColors:          &appGoodInfo.DisplayColors,
+		CancellableBeforeStart: &appGoodInfo.CancellableBeforeStart,
 	}
 )
 
