@@ -227,6 +227,7 @@ func join(stm *ent.AppGoodQuery) *ent.AppGoodSelect {
 			entappgood.FieldUserPurchaseLimit,
 			entappgood.FieldDisplayColors,
 			entappgood.FieldCancellableBeforeStart,
+			entappgood.FieldProductPage,
 		).
 		Modify(func(s *sql.Selector) {
 			t1 := sql.Table(entgood.Table)
@@ -343,6 +344,7 @@ func expand(infos []*npool.Good) ([]*npool.Good, error) { //nolint
 		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
 		_ = json.Unmarshal([]byte(info.DescriptionsStr), &info.Descriptions)
 		_ = json.Unmarshal([]byte(info.DisplayNamesStr), &info.DisplayNames)
+		_ = json.Unmarshal([]byte(info.DisplayColorsStr), &info.DisplayColors)
 
 		info.GoodType = goodmgrpb.GoodType(goodmgrpb.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = goodmgrpb.BenefitType(goodmgrpb.BenefitType_value[info.BenefitTypeStr])
