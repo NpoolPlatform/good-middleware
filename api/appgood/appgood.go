@@ -107,7 +107,7 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 
 	info, err := goodmw.CreateGood(ctx, in.GetInfo())
 	if err != nil {
-		logger.Sugar().Errorw("CreateGood", "Good", in.GetInfo())
+		logger.Sugar().Errorw("CreateGood", "Good", in.GetInfo(), "err", err.Error())
 		return &npool.CreateGoodResponse{}, status.Error(codes.Internal, err.Error())
 	}
 

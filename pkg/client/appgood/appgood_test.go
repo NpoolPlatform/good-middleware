@@ -153,8 +153,9 @@ var (
 		CancelMode:              mgrpb.CancelMode_CancellableBeforeBenefit,
 		CancelModeStr:           mgrpb.CancelMode_CancellableBeforeBenefit.String(),
 		UserPurchaseLimit:       "100.000000000000000000",
-		DisplayColors:           uuid.NewString(),
+		DisplayColorsStr:        "[]",
 		CancellableBeforeStart:  100,
+		ProductPage:             uuid.NewString(),
 	}
 )
 
@@ -197,8 +198,9 @@ var (
 		EnableProductPage:      &appGoodInfo.EnableProductPage,
 		CancelMode:             &appGoodInfo.CancelMode,
 		UserPurchaseLimit:      &appGoodInfo.UserPurchaseLimit,
-		DisplayColors:          &appGoodInfo.DisplayColors,
+		DisplayColors:          appGoodInfo.DisplayColors,
 		CancellableBeforeStart: &appGoodInfo.CancellableBeforeStart,
+		ProductPage:            &appGoodInfo.ProductPage,
 	}
 )
 
