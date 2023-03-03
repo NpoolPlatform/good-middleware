@@ -262,6 +262,7 @@ func join(stm *ent.AppGoodQuery) *ent.AppGoodSelect {
 					sql.As(t1.C(entgood.FieldTestOnly), "test_only"),
 					sql.As(t1.C(entgood.FieldBenefitIntervalHours), "benefit_interval_hours"),
 					sql.As(t1.C(entgood.FieldStartAt), "start_at"),
+					sql.As(t1.C(entgood.FieldBenefitState), "benefit_state"),
 					sql.As(t2.C(entdeviceinfo.FieldType), "device_type"),
 					sql.As(t2.C(entdeviceinfo.FieldManufacturer), "device_manufacturer"),
 					sql.As(t2.C(entdeviceinfo.FieldPowerComsuption), "device_power_comsuption"),
@@ -349,6 +350,7 @@ func expand(infos []*npool.Good) ([]*npool.Good, error) { //nolint
 
 		info.GoodType = goodmgrpb.GoodType(goodmgrpb.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = goodmgrpb.BenefitType(goodmgrpb.BenefitType_value[info.BenefitTypeStr])
+		info.BenefitState = goodmgrpb.BenefitState(goodmgrpb.BenefitState_value[info.BenefitStateStr])
 		info.CommissionSettleType = commmgrpb.SettleType(commmgrpb.SettleType_value[info.CommissionSettleTypeStr])
 		info.CancelMode = mgrpb.CancelMode(mgrpb.CancelMode_value[info.CancelModeStr])
 
