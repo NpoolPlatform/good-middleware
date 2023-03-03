@@ -228,6 +228,7 @@ func join(stm *ent.AppGoodQuery) *ent.AppGoodSelect {
 			entappgood.FieldDisplayColors,
 			entappgood.FieldCancellableBeforeStart,
 			entappgood.FieldProductPage,
+			entappgood.FieldEnableSetCommission,
 		).
 		Modify(func(s *sql.Selector) {
 			t1 := sql.Table(entgood.Table)

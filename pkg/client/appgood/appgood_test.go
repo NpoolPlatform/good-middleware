@@ -156,6 +156,7 @@ var (
 		DisplayColorsStr:        "[]",
 		CancellableBeforeStart:  100,
 		ProductPage:             uuid.NewString(),
+		EnableSetCommission:     false,
 	}
 )
 
@@ -201,6 +202,7 @@ var (
 		DisplayColors:          appGoodInfo.DisplayColors,
 		CancellableBeforeStart: &appGoodInfo.CancellableBeforeStart,
 		ProductPage:            &appGoodInfo.ProductPage,
+		EnableSetCommission:    &appGoodInfo.EnableSetCommission,
 	}
 )
 
