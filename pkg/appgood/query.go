@@ -221,6 +221,14 @@ func join(stm *ent.AppGoodQuery) *ent.AppGoodSelect {
 			entappgood.FieldDescriptions,
 			entappgood.FieldGoodBanner,
 			entappgood.FieldDisplayNames,
+			entappgood.FieldEnablePurchase,
+			entappgood.FieldEnableProductPage,
+			entappgood.FieldCancelMode,
+			entappgood.FieldUserPurchaseLimit,
+			entappgood.FieldDisplayColors,
+			entappgood.FieldCancellableBeforeStart,
+			entappgood.FieldProductPage,
+			entappgood.FieldEnableSetCommission,
 		).
 		Modify(func(s *sql.Selector) {
 			t1 := sql.Table(entgood.Table)
@@ -254,6 +262,7 @@ func join(stm *ent.AppGoodQuery) *ent.AppGoodSelect {
 					sql.As(t1.C(entgood.FieldTestOnly), "test_only"),
 					sql.As(t1.C(entgood.FieldBenefitIntervalHours), "benefit_interval_hours"),
 					sql.As(t1.C(entgood.FieldStartAt), "start_at"),
+					sql.As(t1.C(entgood.FieldBenefitState), "benefit_state"),
 					sql.As(t2.C(entdeviceinfo.FieldType), "device_type"),
 					sql.As(t2.C(entdeviceinfo.FieldManufacturer), "device_manufacturer"),
 					sql.As(t2.C(entdeviceinfo.FieldPowerComsuption), "device_power_comsuption"),
@@ -337,10 +346,13 @@ func expand(infos []*npool.Good) ([]*npool.Good, error) { //nolint
 		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
 		_ = json.Unmarshal([]byte(info.DescriptionsStr), &info.Descriptions)
 		_ = json.Unmarshal([]byte(info.DisplayNamesStr), &info.DisplayNames)
+		_ = json.Unmarshal([]byte(info.DisplayColorsStr), &info.DisplayColors)
 
 		info.GoodType = goodmgrpb.GoodType(goodmgrpb.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = goodmgrpb.BenefitType(goodmgrpb.BenefitType_value[info.BenefitTypeStr])
+		info.BenefitState = goodmgrpb.BenefitState(goodmgrpb.BenefitState_value[info.BenefitStateStr])
 		info.CommissionSettleType = commmgrpb.SettleType(commmgrpb.SettleType_value[info.CommissionSettleTypeStr])
+		info.CancelMode = mgrpb.CancelMode(mgrpb.CancelMode_value[info.CancelModeStr])
 
 		info.Visible = info.VisibleInt > 0
 		info.Online = info.OnlineInt > 0

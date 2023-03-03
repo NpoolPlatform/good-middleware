@@ -86,6 +86,8 @@ var (
 		VendorLocationID:              vendorLocationID,
 		GoodType:                      goodmgrpb.GoodType_GoodTypeClassicMining,
 		GoodTypeStr:                   goodmgrpb.GoodType_GoodTypeClassicMining.String(),
+		BenefitState:                  goodmgrpb.BenefitState_BenefitWait,
+		BenefitStateStr:               goodmgrpb.BenefitState_BenefitWait.String(),
 		BenefitType:                   goodmgrpb.BenefitType_BenefitTypePlatform,
 		BenefitTypeStr:                goodmgrpb.BenefitType_BenefitTypePlatform.String(),
 		Price:                         "123.000000000000000000",
@@ -125,6 +127,8 @@ var (
 		GoodTypeStr:             goodInfo.GoodTypeStr,
 		BenefitType:             goodInfo.BenefitType,
 		BenefitTypeStr:          goodInfo.BenefitTypeStr,
+		BenefitState:            goodInfo.BenefitState,
+		BenefitStateStr:         goodInfo.BenefitStateStr,
 		GoodName:                "My Test Good",
 		Unit:                    goodInfo.Unit,
 		UnitAmount:              goodInfo.UnitAmount,
@@ -148,6 +152,15 @@ var (
 		CommissionSettleType:    commmgrpb.SettleType_NoCommission,
 		DescriptionsStr:         "[]",
 		DisplayNamesStr:         "[]",
+		EnablePurchase:          true,
+		EnableProductPage:       true,
+		CancelMode:              mgrpb.CancelMode_CancellableBeforeBenefit,
+		CancelModeStr:           mgrpb.CancelMode_CancellableBeforeBenefit.String(),
+		UserPurchaseLimit:       "100.000000000000000000",
+		DisplayColorsStr:        "[]",
+		CancellableBeforeStart:  100,
+		ProductPage:             uuid.NewString(),
+		EnableSetCommission:     false,
 	}
 )
 
@@ -161,6 +174,7 @@ var (
 		VendorLocationID:   &goodInfo.VendorLocationID,
 		Price:              &goodInfo.Price,
 		BenefitType:        &goodInfo.BenefitType,
+		BenefitState:       &goodInfo.BenefitState,
 		GoodType:           &goodInfo.GoodType,
 		Title:              &goodInfo.Title,
 		Unit:               &goodInfo.Unit,
@@ -175,17 +189,25 @@ var (
 	}
 
 	appGoodReq = mgrpb.AppGoodReq{
-		ID:                &appGoodInfo.ID,
-		AppID:             &appGoodInfo.AppID,
-		GoodID:            &goodInfo.ID,
-		Online:            &appGoodInfo.Online,
-		Visible:           &appGoodInfo.Visible,
-		GoodName:          &appGoodInfo.GoodName,
-		Price:             &appGoodInfo.Price,
-		DisplayIndex:      &appGoodInfo.DisplayIndex,
-		PurchaseLimit:     &appGoodInfo.PurchaseLimit,
-		CommissionPercent: &appGoodInfo.CommissionPercent,
-		DailyRewardAmount: &appGoodInfo.DailyRewardAmount,
+		ID:                     &appGoodInfo.ID,
+		AppID:                  &appGoodInfo.AppID,
+		GoodID:                 &goodInfo.ID,
+		Online:                 &appGoodInfo.Online,
+		Visible:                &appGoodInfo.Visible,
+		GoodName:               &appGoodInfo.GoodName,
+		Price:                  &appGoodInfo.Price,
+		DisplayIndex:           &appGoodInfo.DisplayIndex,
+		PurchaseLimit:          &appGoodInfo.PurchaseLimit,
+		CommissionPercent:      &appGoodInfo.CommissionPercent,
+		DailyRewardAmount:      &appGoodInfo.DailyRewardAmount,
+		EnablePurchase:         &appGoodInfo.EnablePurchase,
+		EnableProductPage:      &appGoodInfo.EnableProductPage,
+		CancelMode:             &appGoodInfo.CancelMode,
+		UserPurchaseLimit:      &appGoodInfo.UserPurchaseLimit,
+		DisplayColors:          appGoodInfo.DisplayColors,
+		CancellableBeforeStart: &appGoodInfo.CancellableBeforeStart,
+		ProductPage:            &appGoodInfo.ProductPage,
+		EnableSetCommission:    &appGoodInfo.EnableSetCommission,
 	}
 )
 
@@ -212,6 +234,7 @@ func createGood(t *testing.T) {
 		VendorLocationID:   &goodInfo.VendorLocationID,
 		Price:              &inheritGoodPrice,
 		BenefitType:        &goodInfo.BenefitType,
+		BenefitState:       &goodInfo.BenefitState,
 		GoodType:           &goodInfo.GoodType,
 		Title:              &inheritGoodTitle,
 		Unit:               &goodInfo.Unit,
@@ -249,12 +272,21 @@ func updateGood(t *testing.T) {
 	commissionPercent := int32(30)
 	amount := "12345.000000000000000000"
 
+	enablePurchase := false
+	enableProductPage := false
+	canCancel := mgrpb.CancelMode_CancellableBeforeBenefit
+	userPurchaseLimit := "12345.000000000000000000"
+
 	appGoodReq.Online = &online
 	appGoodReq.Visible = &visible
 	appGoodReq.DisplayIndex = &displayIndex
 	appGoodReq.PurchaseLimit = &purchaseLimit
 	appGoodReq.CommissionPercent = &commissionPercent
 	appGoodReq.DailyRewardAmount = &amount
+	appGoodReq.EnablePurchase = &enablePurchase
+	appGoodReq.EnableProductPage = &enableProductPage
+	appGoodReq.CancelMode = &canCancel
+	appGoodReq.UserPurchaseLimit = &userPurchaseLimit
 
 	appGoodInfo.Online = online
 	appGoodInfo.OnlineInt = 1
@@ -264,6 +296,10 @@ func updateGood(t *testing.T) {
 	appGoodInfo.PurchaseLimit = purchaseLimit
 	appGoodInfo.CommissionPercent = commissionPercent
 	appGoodInfo.DailyRewardAmount = amount
+	appGoodInfo.EnablePurchase = enablePurchase
+	appGoodInfo.EnableProductPage = enableProductPage
+	appGoodInfo.CancelMode = canCancel
+	appGoodInfo.UserPurchaseLimit = userPurchaseLimit
 
 	info, err = UpdateGood(context.Background(), &appGoodReq)
 	if assert.Nil(t, err) {
