@@ -86,3 +86,19 @@ func GetAppDefaultGoodOnly(ctx context.Context, conds *mgrpb.Conds) (*mgrpb.AppD
 	}
 	return info.(*mgrpb.AppDefaultGood), nil
 }
+
+func DeleteAppDefaultGood(ctx context.Context, id string) (*mgrpb.AppDefaultGood, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+		resp, err := cli.DeleteAppDefaultGood(ctx, &npool.DeleteAppDefaultGoodRequest{
+			ID: id,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*mgrpb.AppDefaultGood), nil
+}

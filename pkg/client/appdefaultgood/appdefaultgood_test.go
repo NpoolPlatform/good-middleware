@@ -61,6 +61,8 @@ func getAppDefaultGood(t *testing.T) {
 	info = mgrconverter.Ent2Grpc(entInfo)
 	info, err = GetAppDefaultGood(context.Background(), info.ID)
 	if assert.Nil(t, err) {
+		appDate.CreatedAt = info.CreatedAt
+		appDate.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, info, &appDate)
 	}
 }
@@ -74,6 +76,8 @@ func getAppDefaultGoods(t *testing.T) {
 			},
 		}, 0, 1)
 	if assert.Nil(t, err) {
+		appDate.CreatedAt = info.CreatedAt
+		appDate.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, total, uint32(1))
 		assert.Equal(t, infos[0], &appDate)
 	}
@@ -89,8 +93,17 @@ func getAppDefaultGoodOnly(t *testing.T) {
 			},
 		})
 	if assert.Nil(t, err) {
+		appDate.CreatedAt = info.CreatedAt
+		appDate.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, info, &appDate)
 	}
+}
+
+func deleteAppDefaultGood(t *testing.T) {
+	_, err := DeleteAppDefaultGood(context.Background(), info.ID)
+	assert.Nil(t, err)
+	_, err = GetAppDefaultGood(context.Background(), info.ID)
+	assert.NotNil(t, err)
 }
 
 func TestMainOrder(t *testing.T) {
@@ -106,4 +119,5 @@ func TestMainOrder(t *testing.T) {
 	t.Run("getAppDefaultGood", getAppDefaultGood)
 	t.Run("getAppDefaultGoods", getAppDefaultGoods)
 	t.Run("getAppDefaultGoodOnly", getAppDefaultGoodOnly)
+	t.Run("deleteAppDefaultGood", deleteAppDefaultGood)
 }
