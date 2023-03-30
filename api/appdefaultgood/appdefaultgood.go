@@ -194,3 +194,40 @@ func (s *Server) GetAppDefaultGoods(
 		Total: total,
 	}, nil
 }
+
+func (s *Server) DeleteAppDefaultGood(
+	ctx context.Context,
+	in *npool.DeleteAppDefaultGoodRequest,
+) (
+	*npool.DeleteAppDefaultGoodResponse,
+	error,
+) {
+	var err error
+
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "DeleteAppDefaultGood")
+	defer span.End()
+
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+
+	if _, err := uuid.Parse(in.GetID()); err != nil {
+		logger.Sugar().Errorw("DeleteAppDefaultGood", "ID", in.GetID(), "error", err)
+		return &npool.DeleteAppDefaultGoodResponse{}, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	span = commontracer.TraceInvoker(span, "AppDefaultGood", "mw", "DeleteAppDefaultGood")
+
+	info, err := mgrcli.DeleteAppDefaultGood(ctx, in.GetID())
+	if err != nil {
+		logger.Sugar().Errorw("DeleteAppDefaultGood", "ID", in.GetID(), "error", err)
+		return &npool.DeleteAppDefaultGoodResponse{}, status.Error(codes.Internal, err.Error())
+	}
+
+	return &npool.DeleteAppDefaultGoodResponse{
+		Info: info,
+	}, nil
+}
