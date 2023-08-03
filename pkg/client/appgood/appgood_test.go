@@ -25,7 +25,7 @@ import (
 	goodmgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/good"
 	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 
-	commmgrpb "github.com/NpoolPlatform/message/npool/inspire/mgr/v1/commission"
+	inspiretypes "github.com/NpoolPlatform/message/npool/basetypes/inspire/v1"
 
 	testinit "github.com/NpoolPlatform/good-middleware/pkg/testinit"
 	"github.com/google/uuid"
@@ -148,8 +148,8 @@ var (
 		StartAt:                 goodInfo.StartAt,
 		CreatedAt:               goodInfo.CreatedAt,
 		BenefitIntervalHours:    24,
-		CommissionSettleTypeStr: commmgrpb.SettleType_NoCommission.String(),
-		CommissionSettleType:    commmgrpb.SettleType_NoCommission,
+		CommissionSettleTypeStr: inspiretypes.SettleType_NoCommission.String(),
+		CommissionSettleType:    inspiretypes.SettleType_NoCommission,
 		DescriptionsStr:         "[]",
 		DisplayNamesStr:         "[]",
 		EnablePurchase:          true,
