@@ -22,7 +22,6 @@ type Req struct {
 	Price                  *decimal.Decimal
 	DisplayIndex           *int32
 	PurchaseLimit          *int32
-	CommissionPercent      *decimal.Decimal
 	SaleStartAt            *uint32
 	SaleEndAt              *uint32
 	ServiceStartAt         *uint32
