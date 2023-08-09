@@ -231,33 +231,6 @@ func (agu *AppGoodUpdate) ClearPurchaseLimit() *AppGoodUpdate {
 	return agu
 }
 
-// SetCommissionPercent sets the "commission_percent" field.
-func (agu *AppGoodUpdate) SetCommissionPercent(i int32) *AppGoodUpdate {
-	agu.mutation.ResetCommissionPercent()
-	agu.mutation.SetCommissionPercent(i)
-	return agu
-}
-
-// SetNillableCommissionPercent sets the "commission_percent" field if the given value is not nil.
-func (agu *AppGoodUpdate) SetNillableCommissionPercent(i *int32) *AppGoodUpdate {
-	if i != nil {
-		agu.SetCommissionPercent(*i)
-	}
-	return agu
-}
-
-// AddCommissionPercent adds i to the "commission_percent" field.
-func (agu *AppGoodUpdate) AddCommissionPercent(i int32) *AppGoodUpdate {
-	agu.mutation.AddCommissionPercent(i)
-	return agu
-}
-
-// ClearCommissionPercent clears the value of the "commission_percent" field.
-func (agu *AppGoodUpdate) ClearCommissionPercent() *AppGoodUpdate {
-	agu.mutation.ClearCommissionPercent()
-	return agu
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (agu *AppGoodUpdate) SetSaleStartAt(u uint32) *AppGoodUpdate {
 	agu.mutation.ResetSaleStartAt()
@@ -336,100 +309,6 @@ func (agu *AppGoodUpdate) AddServiceStartAt(u int32) *AppGoodUpdate {
 // ClearServiceStartAt clears the value of the "service_start_at" field.
 func (agu *AppGoodUpdate) ClearServiceStartAt() *AppGoodUpdate {
 	agu.mutation.ClearServiceStartAt()
-	return agu
-}
-
-// SetTechnicalFeeRatio sets the "technical_fee_ratio" field.
-func (agu *AppGoodUpdate) SetTechnicalFeeRatio(u uint32) *AppGoodUpdate {
-	agu.mutation.ResetTechnicalFeeRatio()
-	agu.mutation.SetTechnicalFeeRatio(u)
-	return agu
-}
-
-// SetNillableTechnicalFeeRatio sets the "technical_fee_ratio" field if the given value is not nil.
-func (agu *AppGoodUpdate) SetNillableTechnicalFeeRatio(u *uint32) *AppGoodUpdate {
-	if u != nil {
-		agu.SetTechnicalFeeRatio(*u)
-	}
-	return agu
-}
-
-// AddTechnicalFeeRatio adds u to the "technical_fee_ratio" field.
-func (agu *AppGoodUpdate) AddTechnicalFeeRatio(u int32) *AppGoodUpdate {
-	agu.mutation.AddTechnicalFeeRatio(u)
-	return agu
-}
-
-// ClearTechnicalFeeRatio clears the value of the "technical_fee_ratio" field.
-func (agu *AppGoodUpdate) ClearTechnicalFeeRatio() *AppGoodUpdate {
-	agu.mutation.ClearTechnicalFeeRatio()
-	return agu
-}
-
-// SetElectricityFeeRatio sets the "electricity_fee_ratio" field.
-func (agu *AppGoodUpdate) SetElectricityFeeRatio(u uint32) *AppGoodUpdate {
-	agu.mutation.ResetElectricityFeeRatio()
-	agu.mutation.SetElectricityFeeRatio(u)
-	return agu
-}
-
-// SetNillableElectricityFeeRatio sets the "electricity_fee_ratio" field if the given value is not nil.
-func (agu *AppGoodUpdate) SetNillableElectricityFeeRatio(u *uint32) *AppGoodUpdate {
-	if u != nil {
-		agu.SetElectricityFeeRatio(*u)
-	}
-	return agu
-}
-
-// AddElectricityFeeRatio adds u to the "electricity_fee_ratio" field.
-func (agu *AppGoodUpdate) AddElectricityFeeRatio(u int32) *AppGoodUpdate {
-	agu.mutation.AddElectricityFeeRatio(u)
-	return agu
-}
-
-// ClearElectricityFeeRatio clears the value of the "electricity_fee_ratio" field.
-func (agu *AppGoodUpdate) ClearElectricityFeeRatio() *AppGoodUpdate {
-	agu.mutation.ClearElectricityFeeRatio()
-	return agu
-}
-
-// SetDailyRewardAmount sets the "daily_reward_amount" field.
-func (agu *AppGoodUpdate) SetDailyRewardAmount(d decimal.Decimal) *AppGoodUpdate {
-	agu.mutation.SetDailyRewardAmount(d)
-	return agu
-}
-
-// SetNillableDailyRewardAmount sets the "daily_reward_amount" field if the given value is not nil.
-func (agu *AppGoodUpdate) SetNillableDailyRewardAmount(d *decimal.Decimal) *AppGoodUpdate {
-	if d != nil {
-		agu.SetDailyRewardAmount(*d)
-	}
-	return agu
-}
-
-// ClearDailyRewardAmount clears the value of the "daily_reward_amount" field.
-func (agu *AppGoodUpdate) ClearDailyRewardAmount() *AppGoodUpdate {
-	agu.mutation.ClearDailyRewardAmount()
-	return agu
-}
-
-// SetCommissionSettleType sets the "commission_settle_type" field.
-func (agu *AppGoodUpdate) SetCommissionSettleType(s string) *AppGoodUpdate {
-	agu.mutation.SetCommissionSettleType(s)
-	return agu
-}
-
-// SetNillableCommissionSettleType sets the "commission_settle_type" field if the given value is not nil.
-func (agu *AppGoodUpdate) SetNillableCommissionSettleType(s *string) *AppGoodUpdate {
-	if s != nil {
-		agu.SetCommissionSettleType(*s)
-	}
-	return agu
-}
-
-// ClearCommissionSettleType clears the value of the "commission_settle_type" field.
-func (agu *AppGoodUpdate) ClearCommissionSettleType() *AppGoodUpdate {
-	agu.mutation.ClearCommissionSettleType()
 	return agu
 }
 
@@ -633,6 +512,18 @@ func (agu *AppGoodUpdate) SetNillableEnableSetCommission(b *bool) *AppGoodUpdate
 // ClearEnableSetCommission clears the value of the "enable_set_commission" field.
 func (agu *AppGoodUpdate) ClearEnableSetCommission() *AppGoodUpdate {
 	agu.mutation.ClearEnableSetCommission()
+	return agu
+}
+
+// SetPosters sets the "posters" field.
+func (agu *AppGoodUpdate) SetPosters(s []string) *AppGoodUpdate {
+	agu.mutation.SetPosters(s)
+	return agu
+}
+
+// ClearPosters clears the value of the "posters" field.
+func (agu *AppGoodUpdate) ClearPosters() *AppGoodUpdate {
+	agu.mutation.ClearPosters()
 	return agu
 }
 
@@ -882,26 +773,6 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appgood.FieldPurchaseLimit,
 		})
 	}
-	if value, ok := agu.mutation.CommissionPercent(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: appgood.FieldCommissionPercent,
-		})
-	}
-	if value, ok := agu.mutation.AddedCommissionPercent(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: appgood.FieldCommissionPercent,
-		})
-	}
-	if agu.mutation.CommissionPercentCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Column: appgood.FieldCommissionPercent,
-		})
-	}
 	if value, ok := agu.mutation.SaleStartAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -960,72 +831,6 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: appgood.FieldServiceStartAt,
-		})
-	}
-	if value, ok := agu.mutation.TechnicalFeeRatio(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appgood.FieldTechnicalFeeRatio,
-		})
-	}
-	if value, ok := agu.mutation.AddedTechnicalFeeRatio(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appgood.FieldTechnicalFeeRatio,
-		})
-	}
-	if agu.mutation.TechnicalFeeRatioCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: appgood.FieldTechnicalFeeRatio,
-		})
-	}
-	if value, ok := agu.mutation.ElectricityFeeRatio(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appgood.FieldElectricityFeeRatio,
-		})
-	}
-	if value, ok := agu.mutation.AddedElectricityFeeRatio(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appgood.FieldElectricityFeeRatio,
-		})
-	}
-	if agu.mutation.ElectricityFeeRatioCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: appgood.FieldElectricityFeeRatio,
-		})
-	}
-	if value, ok := agu.mutation.DailyRewardAmount(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: appgood.FieldDailyRewardAmount,
-		})
-	}
-	if agu.mutation.DailyRewardAmountCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: appgood.FieldDailyRewardAmount,
-		})
-	}
-	if value, ok := agu.mutation.CommissionSettleType(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appgood.FieldCommissionSettleType,
-		})
-	}
-	if agu.mutation.CommissionSettleTypeCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: appgood.FieldCommissionSettleType,
 		})
 	}
 	if value, ok := agu.mutation.Descriptions(); ok {
@@ -1176,6 +981,19 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Column: appgood.FieldEnableSetCommission,
+		})
+	}
+	if value, ok := agu.mutation.Posters(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: appgood.FieldPosters,
+		})
+	}
+	if agu.mutation.PostersCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Column: appgood.FieldPosters,
 		})
 	}
 	_spec.Modifiers = agu.modifiers
@@ -1400,33 +1218,6 @@ func (aguo *AppGoodUpdateOne) ClearPurchaseLimit() *AppGoodUpdateOne {
 	return aguo
 }
 
-// SetCommissionPercent sets the "commission_percent" field.
-func (aguo *AppGoodUpdateOne) SetCommissionPercent(i int32) *AppGoodUpdateOne {
-	aguo.mutation.ResetCommissionPercent()
-	aguo.mutation.SetCommissionPercent(i)
-	return aguo
-}
-
-// SetNillableCommissionPercent sets the "commission_percent" field if the given value is not nil.
-func (aguo *AppGoodUpdateOne) SetNillableCommissionPercent(i *int32) *AppGoodUpdateOne {
-	if i != nil {
-		aguo.SetCommissionPercent(*i)
-	}
-	return aguo
-}
-
-// AddCommissionPercent adds i to the "commission_percent" field.
-func (aguo *AppGoodUpdateOne) AddCommissionPercent(i int32) *AppGoodUpdateOne {
-	aguo.mutation.AddCommissionPercent(i)
-	return aguo
-}
-
-// ClearCommissionPercent clears the value of the "commission_percent" field.
-func (aguo *AppGoodUpdateOne) ClearCommissionPercent() *AppGoodUpdateOne {
-	aguo.mutation.ClearCommissionPercent()
-	return aguo
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (aguo *AppGoodUpdateOne) SetSaleStartAt(u uint32) *AppGoodUpdateOne {
 	aguo.mutation.ResetSaleStartAt()
@@ -1505,100 +1296,6 @@ func (aguo *AppGoodUpdateOne) AddServiceStartAt(u int32) *AppGoodUpdateOne {
 // ClearServiceStartAt clears the value of the "service_start_at" field.
 func (aguo *AppGoodUpdateOne) ClearServiceStartAt() *AppGoodUpdateOne {
 	aguo.mutation.ClearServiceStartAt()
-	return aguo
-}
-
-// SetTechnicalFeeRatio sets the "technical_fee_ratio" field.
-func (aguo *AppGoodUpdateOne) SetTechnicalFeeRatio(u uint32) *AppGoodUpdateOne {
-	aguo.mutation.ResetTechnicalFeeRatio()
-	aguo.mutation.SetTechnicalFeeRatio(u)
-	return aguo
-}
-
-// SetNillableTechnicalFeeRatio sets the "technical_fee_ratio" field if the given value is not nil.
-func (aguo *AppGoodUpdateOne) SetNillableTechnicalFeeRatio(u *uint32) *AppGoodUpdateOne {
-	if u != nil {
-		aguo.SetTechnicalFeeRatio(*u)
-	}
-	return aguo
-}
-
-// AddTechnicalFeeRatio adds u to the "technical_fee_ratio" field.
-func (aguo *AppGoodUpdateOne) AddTechnicalFeeRatio(u int32) *AppGoodUpdateOne {
-	aguo.mutation.AddTechnicalFeeRatio(u)
-	return aguo
-}
-
-// ClearTechnicalFeeRatio clears the value of the "technical_fee_ratio" field.
-func (aguo *AppGoodUpdateOne) ClearTechnicalFeeRatio() *AppGoodUpdateOne {
-	aguo.mutation.ClearTechnicalFeeRatio()
-	return aguo
-}
-
-// SetElectricityFeeRatio sets the "electricity_fee_ratio" field.
-func (aguo *AppGoodUpdateOne) SetElectricityFeeRatio(u uint32) *AppGoodUpdateOne {
-	aguo.mutation.ResetElectricityFeeRatio()
-	aguo.mutation.SetElectricityFeeRatio(u)
-	return aguo
-}
-
-// SetNillableElectricityFeeRatio sets the "electricity_fee_ratio" field if the given value is not nil.
-func (aguo *AppGoodUpdateOne) SetNillableElectricityFeeRatio(u *uint32) *AppGoodUpdateOne {
-	if u != nil {
-		aguo.SetElectricityFeeRatio(*u)
-	}
-	return aguo
-}
-
-// AddElectricityFeeRatio adds u to the "electricity_fee_ratio" field.
-func (aguo *AppGoodUpdateOne) AddElectricityFeeRatio(u int32) *AppGoodUpdateOne {
-	aguo.mutation.AddElectricityFeeRatio(u)
-	return aguo
-}
-
-// ClearElectricityFeeRatio clears the value of the "electricity_fee_ratio" field.
-func (aguo *AppGoodUpdateOne) ClearElectricityFeeRatio() *AppGoodUpdateOne {
-	aguo.mutation.ClearElectricityFeeRatio()
-	return aguo
-}
-
-// SetDailyRewardAmount sets the "daily_reward_amount" field.
-func (aguo *AppGoodUpdateOne) SetDailyRewardAmount(d decimal.Decimal) *AppGoodUpdateOne {
-	aguo.mutation.SetDailyRewardAmount(d)
-	return aguo
-}
-
-// SetNillableDailyRewardAmount sets the "daily_reward_amount" field if the given value is not nil.
-func (aguo *AppGoodUpdateOne) SetNillableDailyRewardAmount(d *decimal.Decimal) *AppGoodUpdateOne {
-	if d != nil {
-		aguo.SetDailyRewardAmount(*d)
-	}
-	return aguo
-}
-
-// ClearDailyRewardAmount clears the value of the "daily_reward_amount" field.
-func (aguo *AppGoodUpdateOne) ClearDailyRewardAmount() *AppGoodUpdateOne {
-	aguo.mutation.ClearDailyRewardAmount()
-	return aguo
-}
-
-// SetCommissionSettleType sets the "commission_settle_type" field.
-func (aguo *AppGoodUpdateOne) SetCommissionSettleType(s string) *AppGoodUpdateOne {
-	aguo.mutation.SetCommissionSettleType(s)
-	return aguo
-}
-
-// SetNillableCommissionSettleType sets the "commission_settle_type" field if the given value is not nil.
-func (aguo *AppGoodUpdateOne) SetNillableCommissionSettleType(s *string) *AppGoodUpdateOne {
-	if s != nil {
-		aguo.SetCommissionSettleType(*s)
-	}
-	return aguo
-}
-
-// ClearCommissionSettleType clears the value of the "commission_settle_type" field.
-func (aguo *AppGoodUpdateOne) ClearCommissionSettleType() *AppGoodUpdateOne {
-	aguo.mutation.ClearCommissionSettleType()
 	return aguo
 }
 
@@ -1802,6 +1499,18 @@ func (aguo *AppGoodUpdateOne) SetNillableEnableSetCommission(b *bool) *AppGoodUp
 // ClearEnableSetCommission clears the value of the "enable_set_commission" field.
 func (aguo *AppGoodUpdateOne) ClearEnableSetCommission() *AppGoodUpdateOne {
 	aguo.mutation.ClearEnableSetCommission()
+	return aguo
+}
+
+// SetPosters sets the "posters" field.
+func (aguo *AppGoodUpdateOne) SetPosters(s []string) *AppGoodUpdateOne {
+	aguo.mutation.SetPosters(s)
+	return aguo
+}
+
+// ClearPosters clears the value of the "posters" field.
+func (aguo *AppGoodUpdateOne) ClearPosters() *AppGoodUpdateOne {
+	aguo.mutation.ClearPosters()
 	return aguo
 }
 
@@ -2081,26 +1790,6 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 			Column: appgood.FieldPurchaseLimit,
 		})
 	}
-	if value, ok := aguo.mutation.CommissionPercent(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: appgood.FieldCommissionPercent,
-		})
-	}
-	if value, ok := aguo.mutation.AddedCommissionPercent(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: appgood.FieldCommissionPercent,
-		})
-	}
-	if aguo.mutation.CommissionPercentCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Column: appgood.FieldCommissionPercent,
-		})
-	}
 	if value, ok := aguo.mutation.SaleStartAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -2159,72 +1848,6 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: appgood.FieldServiceStartAt,
-		})
-	}
-	if value, ok := aguo.mutation.TechnicalFeeRatio(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appgood.FieldTechnicalFeeRatio,
-		})
-	}
-	if value, ok := aguo.mutation.AddedTechnicalFeeRatio(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appgood.FieldTechnicalFeeRatio,
-		})
-	}
-	if aguo.mutation.TechnicalFeeRatioCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: appgood.FieldTechnicalFeeRatio,
-		})
-	}
-	if value, ok := aguo.mutation.ElectricityFeeRatio(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appgood.FieldElectricityFeeRatio,
-		})
-	}
-	if value, ok := aguo.mutation.AddedElectricityFeeRatio(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appgood.FieldElectricityFeeRatio,
-		})
-	}
-	if aguo.mutation.ElectricityFeeRatioCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: appgood.FieldElectricityFeeRatio,
-		})
-	}
-	if value, ok := aguo.mutation.DailyRewardAmount(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: appgood.FieldDailyRewardAmount,
-		})
-	}
-	if aguo.mutation.DailyRewardAmountCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: appgood.FieldDailyRewardAmount,
-		})
-	}
-	if value, ok := aguo.mutation.CommissionSettleType(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appgood.FieldCommissionSettleType,
-		})
-	}
-	if aguo.mutation.CommissionSettleTypeCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: appgood.FieldCommissionSettleType,
 		})
 	}
 	if value, ok := aguo.mutation.Descriptions(); ok {
@@ -2375,6 +1998,19 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Column: appgood.FieldEnableSetCommission,
+		})
+	}
+	if value, ok := aguo.mutation.Posters(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: appgood.FieldPosters,
+		})
+	}
+	if aguo.mutation.PostersCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Column: appgood.FieldPosters,
 		})
 	}
 	_spec.Modifiers = aguo.modifiers

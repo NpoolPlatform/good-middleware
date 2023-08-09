@@ -35,22 +35,12 @@ const (
 	FieldDisplayIndex = "display_index"
 	// FieldPurchaseLimit holds the string denoting the purchase_limit field in the database.
 	FieldPurchaseLimit = "purchase_limit"
-	// FieldCommissionPercent holds the string denoting the commission_percent field in the database.
-	FieldCommissionPercent = "commission_percent"
 	// FieldSaleStartAt holds the string denoting the sale_start_at field in the database.
 	FieldSaleStartAt = "sale_start_at"
 	// FieldSaleEndAt holds the string denoting the sale_end_at field in the database.
 	FieldSaleEndAt = "sale_end_at"
 	// FieldServiceStartAt holds the string denoting the service_start_at field in the database.
 	FieldServiceStartAt = "service_start_at"
-	// FieldTechnicalFeeRatio holds the string denoting the technical_fee_ratio field in the database.
-	FieldTechnicalFeeRatio = "technical_fee_ratio"
-	// FieldElectricityFeeRatio holds the string denoting the electricity_fee_ratio field in the database.
-	FieldElectricityFeeRatio = "electricity_fee_ratio"
-	// FieldDailyRewardAmount holds the string denoting the daily_reward_amount field in the database.
-	FieldDailyRewardAmount = "daily_reward_amount"
-	// FieldCommissionSettleType holds the string denoting the commission_settle_type field in the database.
-	FieldCommissionSettleType = "commission_settle_type"
 	// FieldDescriptions holds the string denoting the descriptions field in the database.
 	FieldDescriptions = "descriptions"
 	// FieldGoodBanner holds the string denoting the good_banner field in the database.
@@ -73,6 +63,8 @@ const (
 	FieldProductPage = "product_page"
 	// FieldEnableSetCommission holds the string denoting the enable_set_commission field in the database.
 	FieldEnableSetCommission = "enable_set_commission"
+	// FieldPosters holds the string denoting the posters field in the database.
+	FieldPosters = "posters"
 	// Table holds the table name of the appgood in the database.
 	Table = "app_goods"
 )
@@ -91,14 +83,9 @@ var Columns = []string{
 	FieldPrice,
 	FieldDisplayIndex,
 	FieldPurchaseLimit,
-	FieldCommissionPercent,
 	FieldSaleStartAt,
 	FieldSaleEndAt,
 	FieldServiceStartAt,
-	FieldTechnicalFeeRatio,
-	FieldElectricityFeeRatio,
-	FieldDailyRewardAmount,
-	FieldCommissionSettleType,
 	FieldDescriptions,
 	FieldGoodBanner,
 	FieldDisplayNames,
@@ -110,6 +97,7 @@ var Columns = []string{
 	FieldCancellableBeforeStart,
 	FieldProductPage,
 	FieldEnableSetCommission,
+	FieldPosters,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -151,22 +139,12 @@ var (
 	DefaultDisplayIndex int32
 	// DefaultPurchaseLimit holds the default value on creation for the "purchase_limit" field.
 	DefaultPurchaseLimit int32
-	// DefaultCommissionPercent holds the default value on creation for the "commission_percent" field.
-	DefaultCommissionPercent int32
 	// DefaultSaleStartAt holds the default value on creation for the "sale_start_at" field.
 	DefaultSaleStartAt uint32
 	// DefaultSaleEndAt holds the default value on creation for the "sale_end_at" field.
 	DefaultSaleEndAt uint32
 	// DefaultServiceStartAt holds the default value on creation for the "service_start_at" field.
 	DefaultServiceStartAt uint32
-	// DefaultTechnicalFeeRatio holds the default value on creation for the "technical_fee_ratio" field.
-	DefaultTechnicalFeeRatio uint32
-	// DefaultElectricityFeeRatio holds the default value on creation for the "electricity_fee_ratio" field.
-	DefaultElectricityFeeRatio uint32
-	// DefaultDailyRewardAmount holds the default value on creation for the "daily_reward_amount" field.
-	DefaultDailyRewardAmount decimal.Decimal
-	// DefaultCommissionSettleType holds the default value on creation for the "commission_settle_type" field.
-	DefaultCommissionSettleType string
 	// DefaultDescriptions holds the default value on creation for the "descriptions" field.
 	DefaultDescriptions []string
 	// DefaultGoodBanner holds the default value on creation for the "good_banner" field.
@@ -187,6 +165,8 @@ var (
 	DefaultProductPage string
 	// DefaultEnableSetCommission holds the default value on creation for the "enable_set_commission" field.
 	DefaultEnableSetCommission bool
+	// DefaultPosters holds the default value on creation for the "posters" field.
+	DefaultPosters []string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

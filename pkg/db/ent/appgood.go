@@ -40,22 +40,12 @@ type AppGood struct {
 	DisplayIndex int32 `json:"display_index,omitempty"`
 	// PurchaseLimit holds the value of the "purchase_limit" field.
 	PurchaseLimit int32 `json:"purchase_limit,omitempty"`
-	// CommissionPercent holds the value of the "commission_percent" field.
-	CommissionPercent int32 `json:"commission_percent,omitempty"`
 	// SaleStartAt holds the value of the "sale_start_at" field.
 	SaleStartAt uint32 `json:"sale_start_at,omitempty"`
 	// SaleEndAt holds the value of the "sale_end_at" field.
 	SaleEndAt uint32 `json:"sale_end_at,omitempty"`
 	// ServiceStartAt holds the value of the "service_start_at" field.
 	ServiceStartAt uint32 `json:"service_start_at,omitempty"`
-	// TechnicalFeeRatio holds the value of the "technical_fee_ratio" field.
-	TechnicalFeeRatio uint32 `json:"technical_fee_ratio,omitempty"`
-	// ElectricityFeeRatio holds the value of the "electricity_fee_ratio" field.
-	ElectricityFeeRatio uint32 `json:"electricity_fee_ratio,omitempty"`
-	// DailyRewardAmount holds the value of the "daily_reward_amount" field.
-	DailyRewardAmount decimal.Decimal `json:"daily_reward_amount,omitempty"`
-	// CommissionSettleType holds the value of the "commission_settle_type" field.
-	CommissionSettleType string `json:"commission_settle_type,omitempty"`
 	// Descriptions holds the value of the "descriptions" field.
 	Descriptions []string `json:"descriptions,omitempty"`
 	// GoodBanner holds the value of the "good_banner" field.
@@ -78,6 +68,8 @@ type AppGood struct {
 	ProductPage string `json:"product_page,omitempty"`
 	// EnableSetCommission holds the value of the "enable_set_commission" field.
 	EnableSetCommission bool `json:"enable_set_commission,omitempty"`
+	// Posters holds the value of the "posters" field.
+	Posters []string `json:"posters,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -85,15 +77,15 @@ func (*AppGood) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case appgood.FieldDescriptions, appgood.FieldDisplayNames, appgood.FieldDisplayColors:
+		case appgood.FieldDescriptions, appgood.FieldDisplayNames, appgood.FieldDisplayColors, appgood.FieldPosters:
 			values[i] = new([]byte)
-		case appgood.FieldPrice, appgood.FieldDailyRewardAmount, appgood.FieldUserPurchaseLimit:
+		case appgood.FieldPrice, appgood.FieldUserPurchaseLimit:
 			values[i] = new(decimal.Decimal)
 		case appgood.FieldOnline, appgood.FieldVisible, appgood.FieldEnablePurchase, appgood.FieldEnableProductPage, appgood.FieldEnableSetCommission:
 			values[i] = new(sql.NullBool)
-		case appgood.FieldCreatedAt, appgood.FieldUpdatedAt, appgood.FieldDeletedAt, appgood.FieldDisplayIndex, appgood.FieldPurchaseLimit, appgood.FieldCommissionPercent, appgood.FieldSaleStartAt, appgood.FieldSaleEndAt, appgood.FieldServiceStartAt, appgood.FieldTechnicalFeeRatio, appgood.FieldElectricityFeeRatio, appgood.FieldCancellableBeforeStart:
+		case appgood.FieldCreatedAt, appgood.FieldUpdatedAt, appgood.FieldDeletedAt, appgood.FieldDisplayIndex, appgood.FieldPurchaseLimit, appgood.FieldSaleStartAt, appgood.FieldSaleEndAt, appgood.FieldServiceStartAt, appgood.FieldCancellableBeforeStart:
 			values[i] = new(sql.NullInt64)
-		case appgood.FieldGoodName, appgood.FieldCommissionSettleType, appgood.FieldGoodBanner, appgood.FieldCancelMode, appgood.FieldProductPage:
+		case appgood.FieldGoodName, appgood.FieldGoodBanner, appgood.FieldCancelMode, appgood.FieldProductPage:
 			values[i] = new(sql.NullString)
 		case appgood.FieldID, appgood.FieldAppID, appgood.FieldGoodID:
 			values[i] = new(uuid.UUID)
@@ -184,12 +176,6 @@ func (ag *AppGood) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				ag.PurchaseLimit = int32(value.Int64)
 			}
-		case appgood.FieldCommissionPercent:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field commission_percent", values[i])
-			} else if value.Valid {
-				ag.CommissionPercent = int32(value.Int64)
-			}
 		case appgood.FieldSaleStartAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field sale_start_at", values[i])
@@ -207,30 +193,6 @@ func (ag *AppGood) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field service_start_at", values[i])
 			} else if value.Valid {
 				ag.ServiceStartAt = uint32(value.Int64)
-			}
-		case appgood.FieldTechnicalFeeRatio:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field technical_fee_ratio", values[i])
-			} else if value.Valid {
-				ag.TechnicalFeeRatio = uint32(value.Int64)
-			}
-		case appgood.FieldElectricityFeeRatio:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field electricity_fee_ratio", values[i])
-			} else if value.Valid {
-				ag.ElectricityFeeRatio = uint32(value.Int64)
-			}
-		case appgood.FieldDailyRewardAmount:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field daily_reward_amount", values[i])
-			} else if value != nil {
-				ag.DailyRewardAmount = *value
-			}
-		case appgood.FieldCommissionSettleType:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field commission_settle_type", values[i])
-			} else if value.Valid {
-				ag.CommissionSettleType = value.String
 			}
 		case appgood.FieldDescriptions:
 			if value, ok := values[i].(*[]byte); !ok {
@@ -304,6 +266,14 @@ func (ag *AppGood) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				ag.EnableSetCommission = value.Bool
 			}
+		case appgood.FieldPosters:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field posters", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &ag.Posters); err != nil {
+					return fmt.Errorf("unmarshal field posters: %w", err)
+				}
+			}
 		}
 	}
 	return nil
@@ -365,9 +335,6 @@ func (ag *AppGood) String() string {
 	builder.WriteString("purchase_limit=")
 	builder.WriteString(fmt.Sprintf("%v", ag.PurchaseLimit))
 	builder.WriteString(", ")
-	builder.WriteString("commission_percent=")
-	builder.WriteString(fmt.Sprintf("%v", ag.CommissionPercent))
-	builder.WriteString(", ")
 	builder.WriteString("sale_start_at=")
 	builder.WriteString(fmt.Sprintf("%v", ag.SaleStartAt))
 	builder.WriteString(", ")
@@ -376,18 +343,6 @@ func (ag *AppGood) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("service_start_at=")
 	builder.WriteString(fmt.Sprintf("%v", ag.ServiceStartAt))
-	builder.WriteString(", ")
-	builder.WriteString("technical_fee_ratio=")
-	builder.WriteString(fmt.Sprintf("%v", ag.TechnicalFeeRatio))
-	builder.WriteString(", ")
-	builder.WriteString("electricity_fee_ratio=")
-	builder.WriteString(fmt.Sprintf("%v", ag.ElectricityFeeRatio))
-	builder.WriteString(", ")
-	builder.WriteString("daily_reward_amount=")
-	builder.WriteString(fmt.Sprintf("%v", ag.DailyRewardAmount))
-	builder.WriteString(", ")
-	builder.WriteString("commission_settle_type=")
-	builder.WriteString(ag.CommissionSettleType)
 	builder.WriteString(", ")
 	builder.WriteString("descriptions=")
 	builder.WriteString(fmt.Sprintf("%v", ag.Descriptions))
@@ -421,6 +376,9 @@ func (ag *AppGood) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("enable_set_commission=")
 	builder.WriteString(fmt.Sprintf("%v", ag.EnableSetCommission))
+	builder.WriteString(", ")
+	builder.WriteString("posters=")
+	builder.WriteString(fmt.Sprintf("%v", ag.Posters))
 	builder.WriteByte(')')
 	return builder.String()
 }

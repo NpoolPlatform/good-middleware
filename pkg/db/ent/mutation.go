@@ -759,20 +759,12 @@ type AppGoodMutation struct {
 	adddisplay_index            *int32
 	purchase_limit              *int32
 	addpurchase_limit           *int32
-	commission_percent          *int32
-	addcommission_percent       *int32
 	sale_start_at               *uint32
 	addsale_start_at            *int32
 	sale_end_at                 *uint32
 	addsale_end_at              *int32
 	service_start_at            *uint32
 	addservice_start_at         *int32
-	technical_fee_ratio         *uint32
-	addtechnical_fee_ratio      *int32
-	electricity_fee_ratio       *uint32
-	addelectricity_fee_ratio    *int32
-	daily_reward_amount         *decimal.Decimal
-	commission_settle_type      *string
 	descriptions                *[]string
 	good_banner                 *string
 	display_names               *[]string
@@ -785,6 +777,7 @@ type AppGoodMutation struct {
 	addcancellable_before_start *int32
 	product_page                *string
 	enable_set_commission       *bool
+	posters                     *[]string
 	clearedFields               map[string]struct{}
 	done                        bool
 	oldValue                    func(context.Context) (*AppGood, error)
@@ -1471,76 +1464,6 @@ func (m *AppGoodMutation) ResetPurchaseLimit() {
 	delete(m.clearedFields, appgood.FieldPurchaseLimit)
 }
 
-// SetCommissionPercent sets the "commission_percent" field.
-func (m *AppGoodMutation) SetCommissionPercent(i int32) {
-	m.commission_percent = &i
-	m.addcommission_percent = nil
-}
-
-// CommissionPercent returns the value of the "commission_percent" field in the mutation.
-func (m *AppGoodMutation) CommissionPercent() (r int32, exists bool) {
-	v := m.commission_percent
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCommissionPercent returns the old "commission_percent" field's value of the AppGood entity.
-// If the AppGood object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppGoodMutation) OldCommissionPercent(ctx context.Context) (v int32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCommissionPercent is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCommissionPercent requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCommissionPercent: %w", err)
-	}
-	return oldValue.CommissionPercent, nil
-}
-
-// AddCommissionPercent adds i to the "commission_percent" field.
-func (m *AppGoodMutation) AddCommissionPercent(i int32) {
-	if m.addcommission_percent != nil {
-		*m.addcommission_percent += i
-	} else {
-		m.addcommission_percent = &i
-	}
-}
-
-// AddedCommissionPercent returns the value that was added to the "commission_percent" field in this mutation.
-func (m *AppGoodMutation) AddedCommissionPercent() (r int32, exists bool) {
-	v := m.addcommission_percent
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ClearCommissionPercent clears the value of the "commission_percent" field.
-func (m *AppGoodMutation) ClearCommissionPercent() {
-	m.commission_percent = nil
-	m.addcommission_percent = nil
-	m.clearedFields[appgood.FieldCommissionPercent] = struct{}{}
-}
-
-// CommissionPercentCleared returns if the "commission_percent" field was cleared in this mutation.
-func (m *AppGoodMutation) CommissionPercentCleared() bool {
-	_, ok := m.clearedFields[appgood.FieldCommissionPercent]
-	return ok
-}
-
-// ResetCommissionPercent resets all changes to the "commission_percent" field.
-func (m *AppGoodMutation) ResetCommissionPercent() {
-	m.commission_percent = nil
-	m.addcommission_percent = nil
-	delete(m.clearedFields, appgood.FieldCommissionPercent)
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (m *AppGoodMutation) SetSaleStartAt(u uint32) {
 	m.sale_start_at = &u
@@ -1749,244 +1672,6 @@ func (m *AppGoodMutation) ResetServiceStartAt() {
 	m.service_start_at = nil
 	m.addservice_start_at = nil
 	delete(m.clearedFields, appgood.FieldServiceStartAt)
-}
-
-// SetTechnicalFeeRatio sets the "technical_fee_ratio" field.
-func (m *AppGoodMutation) SetTechnicalFeeRatio(u uint32) {
-	m.technical_fee_ratio = &u
-	m.addtechnical_fee_ratio = nil
-}
-
-// TechnicalFeeRatio returns the value of the "technical_fee_ratio" field in the mutation.
-func (m *AppGoodMutation) TechnicalFeeRatio() (r uint32, exists bool) {
-	v := m.technical_fee_ratio
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldTechnicalFeeRatio returns the old "technical_fee_ratio" field's value of the AppGood entity.
-// If the AppGood object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppGoodMutation) OldTechnicalFeeRatio(ctx context.Context) (v uint32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldTechnicalFeeRatio is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldTechnicalFeeRatio requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldTechnicalFeeRatio: %w", err)
-	}
-	return oldValue.TechnicalFeeRatio, nil
-}
-
-// AddTechnicalFeeRatio adds u to the "technical_fee_ratio" field.
-func (m *AppGoodMutation) AddTechnicalFeeRatio(u int32) {
-	if m.addtechnical_fee_ratio != nil {
-		*m.addtechnical_fee_ratio += u
-	} else {
-		m.addtechnical_fee_ratio = &u
-	}
-}
-
-// AddedTechnicalFeeRatio returns the value that was added to the "technical_fee_ratio" field in this mutation.
-func (m *AppGoodMutation) AddedTechnicalFeeRatio() (r int32, exists bool) {
-	v := m.addtechnical_fee_ratio
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ClearTechnicalFeeRatio clears the value of the "technical_fee_ratio" field.
-func (m *AppGoodMutation) ClearTechnicalFeeRatio() {
-	m.technical_fee_ratio = nil
-	m.addtechnical_fee_ratio = nil
-	m.clearedFields[appgood.FieldTechnicalFeeRatio] = struct{}{}
-}
-
-// TechnicalFeeRatioCleared returns if the "technical_fee_ratio" field was cleared in this mutation.
-func (m *AppGoodMutation) TechnicalFeeRatioCleared() bool {
-	_, ok := m.clearedFields[appgood.FieldTechnicalFeeRatio]
-	return ok
-}
-
-// ResetTechnicalFeeRatio resets all changes to the "technical_fee_ratio" field.
-func (m *AppGoodMutation) ResetTechnicalFeeRatio() {
-	m.technical_fee_ratio = nil
-	m.addtechnical_fee_ratio = nil
-	delete(m.clearedFields, appgood.FieldTechnicalFeeRatio)
-}
-
-// SetElectricityFeeRatio sets the "electricity_fee_ratio" field.
-func (m *AppGoodMutation) SetElectricityFeeRatio(u uint32) {
-	m.electricity_fee_ratio = &u
-	m.addelectricity_fee_ratio = nil
-}
-
-// ElectricityFeeRatio returns the value of the "electricity_fee_ratio" field in the mutation.
-func (m *AppGoodMutation) ElectricityFeeRatio() (r uint32, exists bool) {
-	v := m.electricity_fee_ratio
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldElectricityFeeRatio returns the old "electricity_fee_ratio" field's value of the AppGood entity.
-// If the AppGood object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppGoodMutation) OldElectricityFeeRatio(ctx context.Context) (v uint32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldElectricityFeeRatio is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldElectricityFeeRatio requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldElectricityFeeRatio: %w", err)
-	}
-	return oldValue.ElectricityFeeRatio, nil
-}
-
-// AddElectricityFeeRatio adds u to the "electricity_fee_ratio" field.
-func (m *AppGoodMutation) AddElectricityFeeRatio(u int32) {
-	if m.addelectricity_fee_ratio != nil {
-		*m.addelectricity_fee_ratio += u
-	} else {
-		m.addelectricity_fee_ratio = &u
-	}
-}
-
-// AddedElectricityFeeRatio returns the value that was added to the "electricity_fee_ratio" field in this mutation.
-func (m *AppGoodMutation) AddedElectricityFeeRatio() (r int32, exists bool) {
-	v := m.addelectricity_fee_ratio
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ClearElectricityFeeRatio clears the value of the "electricity_fee_ratio" field.
-func (m *AppGoodMutation) ClearElectricityFeeRatio() {
-	m.electricity_fee_ratio = nil
-	m.addelectricity_fee_ratio = nil
-	m.clearedFields[appgood.FieldElectricityFeeRatio] = struct{}{}
-}
-
-// ElectricityFeeRatioCleared returns if the "electricity_fee_ratio" field was cleared in this mutation.
-func (m *AppGoodMutation) ElectricityFeeRatioCleared() bool {
-	_, ok := m.clearedFields[appgood.FieldElectricityFeeRatio]
-	return ok
-}
-
-// ResetElectricityFeeRatio resets all changes to the "electricity_fee_ratio" field.
-func (m *AppGoodMutation) ResetElectricityFeeRatio() {
-	m.electricity_fee_ratio = nil
-	m.addelectricity_fee_ratio = nil
-	delete(m.clearedFields, appgood.FieldElectricityFeeRatio)
-}
-
-// SetDailyRewardAmount sets the "daily_reward_amount" field.
-func (m *AppGoodMutation) SetDailyRewardAmount(d decimal.Decimal) {
-	m.daily_reward_amount = &d
-}
-
-// DailyRewardAmount returns the value of the "daily_reward_amount" field in the mutation.
-func (m *AppGoodMutation) DailyRewardAmount() (r decimal.Decimal, exists bool) {
-	v := m.daily_reward_amount
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldDailyRewardAmount returns the old "daily_reward_amount" field's value of the AppGood entity.
-// If the AppGood object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppGoodMutation) OldDailyRewardAmount(ctx context.Context) (v decimal.Decimal, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDailyRewardAmount is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDailyRewardAmount requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDailyRewardAmount: %w", err)
-	}
-	return oldValue.DailyRewardAmount, nil
-}
-
-// ClearDailyRewardAmount clears the value of the "daily_reward_amount" field.
-func (m *AppGoodMutation) ClearDailyRewardAmount() {
-	m.daily_reward_amount = nil
-	m.clearedFields[appgood.FieldDailyRewardAmount] = struct{}{}
-}
-
-// DailyRewardAmountCleared returns if the "daily_reward_amount" field was cleared in this mutation.
-func (m *AppGoodMutation) DailyRewardAmountCleared() bool {
-	_, ok := m.clearedFields[appgood.FieldDailyRewardAmount]
-	return ok
-}
-
-// ResetDailyRewardAmount resets all changes to the "daily_reward_amount" field.
-func (m *AppGoodMutation) ResetDailyRewardAmount() {
-	m.daily_reward_amount = nil
-	delete(m.clearedFields, appgood.FieldDailyRewardAmount)
-}
-
-// SetCommissionSettleType sets the "commission_settle_type" field.
-func (m *AppGoodMutation) SetCommissionSettleType(s string) {
-	m.commission_settle_type = &s
-}
-
-// CommissionSettleType returns the value of the "commission_settle_type" field in the mutation.
-func (m *AppGoodMutation) CommissionSettleType() (r string, exists bool) {
-	v := m.commission_settle_type
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCommissionSettleType returns the old "commission_settle_type" field's value of the AppGood entity.
-// If the AppGood object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppGoodMutation) OldCommissionSettleType(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCommissionSettleType is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCommissionSettleType requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCommissionSettleType: %w", err)
-	}
-	return oldValue.CommissionSettleType, nil
-}
-
-// ClearCommissionSettleType clears the value of the "commission_settle_type" field.
-func (m *AppGoodMutation) ClearCommissionSettleType() {
-	m.commission_settle_type = nil
-	m.clearedFields[appgood.FieldCommissionSettleType] = struct{}{}
-}
-
-// CommissionSettleTypeCleared returns if the "commission_settle_type" field was cleared in this mutation.
-func (m *AppGoodMutation) CommissionSettleTypeCleared() bool {
-	_, ok := m.clearedFields[appgood.FieldCommissionSettleType]
-	return ok
-}
-
-// ResetCommissionSettleType resets all changes to the "commission_settle_type" field.
-func (m *AppGoodMutation) ResetCommissionSettleType() {
-	m.commission_settle_type = nil
-	delete(m.clearedFields, appgood.FieldCommissionSettleType)
 }
 
 // SetDescriptions sets the "descriptions" field.
@@ -2549,6 +2234,55 @@ func (m *AppGoodMutation) ResetEnableSetCommission() {
 	delete(m.clearedFields, appgood.FieldEnableSetCommission)
 }
 
+// SetPosters sets the "posters" field.
+func (m *AppGoodMutation) SetPosters(s []string) {
+	m.posters = &s
+}
+
+// Posters returns the value of the "posters" field in the mutation.
+func (m *AppGoodMutation) Posters() (r []string, exists bool) {
+	v := m.posters
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPosters returns the old "posters" field's value of the AppGood entity.
+// If the AppGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodMutation) OldPosters(ctx context.Context) (v []string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPosters is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPosters requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPosters: %w", err)
+	}
+	return oldValue.Posters, nil
+}
+
+// ClearPosters clears the value of the "posters" field.
+func (m *AppGoodMutation) ClearPosters() {
+	m.posters = nil
+	m.clearedFields[appgood.FieldPosters] = struct{}{}
+}
+
+// PostersCleared returns if the "posters" field was cleared in this mutation.
+func (m *AppGoodMutation) PostersCleared() bool {
+	_, ok := m.clearedFields[appgood.FieldPosters]
+	return ok
+}
+
+// ResetPosters resets all changes to the "posters" field.
+func (m *AppGoodMutation) ResetPosters() {
+	m.posters = nil
+	delete(m.clearedFields, appgood.FieldPosters)
+}
+
 // Where appends a list predicates to the AppGoodMutation builder.
 func (m *AppGoodMutation) Where(ps ...predicate.AppGood) {
 	m.predicates = append(m.predicates, ps...)
@@ -2568,7 +2302,7 @@ func (m *AppGoodMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppGoodMutation) Fields() []string {
-	fields := make([]string, 0, 30)
+	fields := make([]string, 0, 26)
 	if m.created_at != nil {
 		fields = append(fields, appgood.FieldCreatedAt)
 	}
@@ -2602,9 +2336,6 @@ func (m *AppGoodMutation) Fields() []string {
 	if m.purchase_limit != nil {
 		fields = append(fields, appgood.FieldPurchaseLimit)
 	}
-	if m.commission_percent != nil {
-		fields = append(fields, appgood.FieldCommissionPercent)
-	}
 	if m.sale_start_at != nil {
 		fields = append(fields, appgood.FieldSaleStartAt)
 	}
@@ -2613,18 +2344,6 @@ func (m *AppGoodMutation) Fields() []string {
 	}
 	if m.service_start_at != nil {
 		fields = append(fields, appgood.FieldServiceStartAt)
-	}
-	if m.technical_fee_ratio != nil {
-		fields = append(fields, appgood.FieldTechnicalFeeRatio)
-	}
-	if m.electricity_fee_ratio != nil {
-		fields = append(fields, appgood.FieldElectricityFeeRatio)
-	}
-	if m.daily_reward_amount != nil {
-		fields = append(fields, appgood.FieldDailyRewardAmount)
-	}
-	if m.commission_settle_type != nil {
-		fields = append(fields, appgood.FieldCommissionSettleType)
 	}
 	if m.descriptions != nil {
 		fields = append(fields, appgood.FieldDescriptions)
@@ -2659,6 +2378,9 @@ func (m *AppGoodMutation) Fields() []string {
 	if m.enable_set_commission != nil {
 		fields = append(fields, appgood.FieldEnableSetCommission)
 	}
+	if m.posters != nil {
+		fields = append(fields, appgood.FieldPosters)
+	}
 	return fields
 }
 
@@ -2689,22 +2411,12 @@ func (m *AppGoodMutation) Field(name string) (ent.Value, bool) {
 		return m.DisplayIndex()
 	case appgood.FieldPurchaseLimit:
 		return m.PurchaseLimit()
-	case appgood.FieldCommissionPercent:
-		return m.CommissionPercent()
 	case appgood.FieldSaleStartAt:
 		return m.SaleStartAt()
 	case appgood.FieldSaleEndAt:
 		return m.SaleEndAt()
 	case appgood.FieldServiceStartAt:
 		return m.ServiceStartAt()
-	case appgood.FieldTechnicalFeeRatio:
-		return m.TechnicalFeeRatio()
-	case appgood.FieldElectricityFeeRatio:
-		return m.ElectricityFeeRatio()
-	case appgood.FieldDailyRewardAmount:
-		return m.DailyRewardAmount()
-	case appgood.FieldCommissionSettleType:
-		return m.CommissionSettleType()
 	case appgood.FieldDescriptions:
 		return m.Descriptions()
 	case appgood.FieldGoodBanner:
@@ -2727,6 +2439,8 @@ func (m *AppGoodMutation) Field(name string) (ent.Value, bool) {
 		return m.ProductPage()
 	case appgood.FieldEnableSetCommission:
 		return m.EnableSetCommission()
+	case appgood.FieldPosters:
+		return m.Posters()
 	}
 	return nil, false
 }
@@ -2758,22 +2472,12 @@ func (m *AppGoodMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldDisplayIndex(ctx)
 	case appgood.FieldPurchaseLimit:
 		return m.OldPurchaseLimit(ctx)
-	case appgood.FieldCommissionPercent:
-		return m.OldCommissionPercent(ctx)
 	case appgood.FieldSaleStartAt:
 		return m.OldSaleStartAt(ctx)
 	case appgood.FieldSaleEndAt:
 		return m.OldSaleEndAt(ctx)
 	case appgood.FieldServiceStartAt:
 		return m.OldServiceStartAt(ctx)
-	case appgood.FieldTechnicalFeeRatio:
-		return m.OldTechnicalFeeRatio(ctx)
-	case appgood.FieldElectricityFeeRatio:
-		return m.OldElectricityFeeRatio(ctx)
-	case appgood.FieldDailyRewardAmount:
-		return m.OldDailyRewardAmount(ctx)
-	case appgood.FieldCommissionSettleType:
-		return m.OldCommissionSettleType(ctx)
 	case appgood.FieldDescriptions:
 		return m.OldDescriptions(ctx)
 	case appgood.FieldGoodBanner:
@@ -2796,6 +2500,8 @@ func (m *AppGoodMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldProductPage(ctx)
 	case appgood.FieldEnableSetCommission:
 		return m.OldEnableSetCommission(ctx)
+	case appgood.FieldPosters:
+		return m.OldPosters(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppGood field %s", name)
 }
@@ -2882,13 +2588,6 @@ func (m *AppGoodMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetPurchaseLimit(v)
 		return nil
-	case appgood.FieldCommissionPercent:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCommissionPercent(v)
-		return nil
 	case appgood.FieldSaleStartAt:
 		v, ok := value.(uint32)
 		if !ok {
@@ -2909,34 +2608,6 @@ func (m *AppGoodMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetServiceStartAt(v)
-		return nil
-	case appgood.FieldTechnicalFeeRatio:
-		v, ok := value.(uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetTechnicalFeeRatio(v)
-		return nil
-	case appgood.FieldElectricityFeeRatio:
-		v, ok := value.(uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetElectricityFeeRatio(v)
-		return nil
-	case appgood.FieldDailyRewardAmount:
-		v, ok := value.(decimal.Decimal)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetDailyRewardAmount(v)
-		return nil
-	case appgood.FieldCommissionSettleType:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCommissionSettleType(v)
 		return nil
 	case appgood.FieldDescriptions:
 		v, ok := value.([]string)
@@ -3015,6 +2686,13 @@ func (m *AppGoodMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetEnableSetCommission(v)
 		return nil
+	case appgood.FieldPosters:
+		v, ok := value.([]string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPosters(v)
+		return nil
 	}
 	return fmt.Errorf("unknown AppGood field %s", name)
 }
@@ -3038,9 +2716,6 @@ func (m *AppGoodMutation) AddedFields() []string {
 	if m.addpurchase_limit != nil {
 		fields = append(fields, appgood.FieldPurchaseLimit)
 	}
-	if m.addcommission_percent != nil {
-		fields = append(fields, appgood.FieldCommissionPercent)
-	}
 	if m.addsale_start_at != nil {
 		fields = append(fields, appgood.FieldSaleStartAt)
 	}
@@ -3049,12 +2724,6 @@ func (m *AppGoodMutation) AddedFields() []string {
 	}
 	if m.addservice_start_at != nil {
 		fields = append(fields, appgood.FieldServiceStartAt)
-	}
-	if m.addtechnical_fee_ratio != nil {
-		fields = append(fields, appgood.FieldTechnicalFeeRatio)
-	}
-	if m.addelectricity_fee_ratio != nil {
-		fields = append(fields, appgood.FieldElectricityFeeRatio)
 	}
 	if m.addcancellable_before_start != nil {
 		fields = append(fields, appgood.FieldCancellableBeforeStart)
@@ -3077,18 +2746,12 @@ func (m *AppGoodMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedDisplayIndex()
 	case appgood.FieldPurchaseLimit:
 		return m.AddedPurchaseLimit()
-	case appgood.FieldCommissionPercent:
-		return m.AddedCommissionPercent()
 	case appgood.FieldSaleStartAt:
 		return m.AddedSaleStartAt()
 	case appgood.FieldSaleEndAt:
 		return m.AddedSaleEndAt()
 	case appgood.FieldServiceStartAt:
 		return m.AddedServiceStartAt()
-	case appgood.FieldTechnicalFeeRatio:
-		return m.AddedTechnicalFeeRatio()
-	case appgood.FieldElectricityFeeRatio:
-		return m.AddedElectricityFeeRatio()
 	case appgood.FieldCancellableBeforeStart:
 		return m.AddedCancellableBeforeStart()
 	}
@@ -3135,13 +2798,6 @@ func (m *AppGoodMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddPurchaseLimit(v)
 		return nil
-	case appgood.FieldCommissionPercent:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddCommissionPercent(v)
-		return nil
 	case appgood.FieldSaleStartAt:
 		v, ok := value.(int32)
 		if !ok {
@@ -3162,20 +2818,6 @@ func (m *AppGoodMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddServiceStartAt(v)
-		return nil
-	case appgood.FieldTechnicalFeeRatio:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddTechnicalFeeRatio(v)
-		return nil
-	case appgood.FieldElectricityFeeRatio:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddElectricityFeeRatio(v)
 		return nil
 	case appgood.FieldCancellableBeforeStart:
 		v, ok := value.(int32)
@@ -3210,9 +2852,6 @@ func (m *AppGoodMutation) ClearedFields() []string {
 	if m.FieldCleared(appgood.FieldPurchaseLimit) {
 		fields = append(fields, appgood.FieldPurchaseLimit)
 	}
-	if m.FieldCleared(appgood.FieldCommissionPercent) {
-		fields = append(fields, appgood.FieldCommissionPercent)
-	}
 	if m.FieldCleared(appgood.FieldSaleStartAt) {
 		fields = append(fields, appgood.FieldSaleStartAt)
 	}
@@ -3221,18 +2860,6 @@ func (m *AppGoodMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(appgood.FieldServiceStartAt) {
 		fields = append(fields, appgood.FieldServiceStartAt)
-	}
-	if m.FieldCleared(appgood.FieldTechnicalFeeRatio) {
-		fields = append(fields, appgood.FieldTechnicalFeeRatio)
-	}
-	if m.FieldCleared(appgood.FieldElectricityFeeRatio) {
-		fields = append(fields, appgood.FieldElectricityFeeRatio)
-	}
-	if m.FieldCleared(appgood.FieldDailyRewardAmount) {
-		fields = append(fields, appgood.FieldDailyRewardAmount)
-	}
-	if m.FieldCleared(appgood.FieldCommissionSettleType) {
-		fields = append(fields, appgood.FieldCommissionSettleType)
 	}
 	if m.FieldCleared(appgood.FieldDescriptions) {
 		fields = append(fields, appgood.FieldDescriptions)
@@ -3267,6 +2894,9 @@ func (m *AppGoodMutation) ClearedFields() []string {
 	if m.FieldCleared(appgood.FieldEnableSetCommission) {
 		fields = append(fields, appgood.FieldEnableSetCommission)
 	}
+	if m.FieldCleared(appgood.FieldPosters) {
+		fields = append(fields, appgood.FieldPosters)
+	}
 	return fields
 }
 
@@ -3299,9 +2929,6 @@ func (m *AppGoodMutation) ClearField(name string) error {
 	case appgood.FieldPurchaseLimit:
 		m.ClearPurchaseLimit()
 		return nil
-	case appgood.FieldCommissionPercent:
-		m.ClearCommissionPercent()
-		return nil
 	case appgood.FieldSaleStartAt:
 		m.ClearSaleStartAt()
 		return nil
@@ -3310,18 +2937,6 @@ func (m *AppGoodMutation) ClearField(name string) error {
 		return nil
 	case appgood.FieldServiceStartAt:
 		m.ClearServiceStartAt()
-		return nil
-	case appgood.FieldTechnicalFeeRatio:
-		m.ClearTechnicalFeeRatio()
-		return nil
-	case appgood.FieldElectricityFeeRatio:
-		m.ClearElectricityFeeRatio()
-		return nil
-	case appgood.FieldDailyRewardAmount:
-		m.ClearDailyRewardAmount()
-		return nil
-	case appgood.FieldCommissionSettleType:
-		m.ClearCommissionSettleType()
 		return nil
 	case appgood.FieldDescriptions:
 		m.ClearDescriptions()
@@ -3355,6 +2970,9 @@ func (m *AppGoodMutation) ClearField(name string) error {
 		return nil
 	case appgood.FieldEnableSetCommission:
 		m.ClearEnableSetCommission()
+		return nil
+	case appgood.FieldPosters:
+		m.ClearPosters()
 		return nil
 	}
 	return fmt.Errorf("unknown AppGood nullable field %s", name)
@@ -3397,9 +3015,6 @@ func (m *AppGoodMutation) ResetField(name string) error {
 	case appgood.FieldPurchaseLimit:
 		m.ResetPurchaseLimit()
 		return nil
-	case appgood.FieldCommissionPercent:
-		m.ResetCommissionPercent()
-		return nil
 	case appgood.FieldSaleStartAt:
 		m.ResetSaleStartAt()
 		return nil
@@ -3408,18 +3023,6 @@ func (m *AppGoodMutation) ResetField(name string) error {
 		return nil
 	case appgood.FieldServiceStartAt:
 		m.ResetServiceStartAt()
-		return nil
-	case appgood.FieldTechnicalFeeRatio:
-		m.ResetTechnicalFeeRatio()
-		return nil
-	case appgood.FieldElectricityFeeRatio:
-		m.ResetElectricityFeeRatio()
-		return nil
-	case appgood.FieldDailyRewardAmount:
-		m.ResetDailyRewardAmount()
-		return nil
-	case appgood.FieldCommissionSettleType:
-		m.ResetCommissionSettleType()
 		return nil
 	case appgood.FieldDescriptions:
 		m.ResetDescriptions()
@@ -3453,6 +3056,9 @@ func (m *AppGoodMutation) ResetField(name string) error {
 		return nil
 	case appgood.FieldEnableSetCommission:
 		m.ResetEnableSetCommission()
+		return nil
+	case appgood.FieldPosters:
+		m.ResetPosters()
 		return nil
 	}
 	return fmt.Errorf("unknown AppGood field %s", name)

@@ -162,20 +162,6 @@ func (agc *AppGoodCreate) SetNillablePurchaseLimit(i *int32) *AppGoodCreate {
 	return agc
 }
 
-// SetCommissionPercent sets the "commission_percent" field.
-func (agc *AppGoodCreate) SetCommissionPercent(i int32) *AppGoodCreate {
-	agc.mutation.SetCommissionPercent(i)
-	return agc
-}
-
-// SetNillableCommissionPercent sets the "commission_percent" field if the given value is not nil.
-func (agc *AppGoodCreate) SetNillableCommissionPercent(i *int32) *AppGoodCreate {
-	if i != nil {
-		agc.SetCommissionPercent(*i)
-	}
-	return agc
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (agc *AppGoodCreate) SetSaleStartAt(u uint32) *AppGoodCreate {
 	agc.mutation.SetSaleStartAt(u)
@@ -214,62 +200,6 @@ func (agc *AppGoodCreate) SetServiceStartAt(u uint32) *AppGoodCreate {
 func (agc *AppGoodCreate) SetNillableServiceStartAt(u *uint32) *AppGoodCreate {
 	if u != nil {
 		agc.SetServiceStartAt(*u)
-	}
-	return agc
-}
-
-// SetTechnicalFeeRatio sets the "technical_fee_ratio" field.
-func (agc *AppGoodCreate) SetTechnicalFeeRatio(u uint32) *AppGoodCreate {
-	agc.mutation.SetTechnicalFeeRatio(u)
-	return agc
-}
-
-// SetNillableTechnicalFeeRatio sets the "technical_fee_ratio" field if the given value is not nil.
-func (agc *AppGoodCreate) SetNillableTechnicalFeeRatio(u *uint32) *AppGoodCreate {
-	if u != nil {
-		agc.SetTechnicalFeeRatio(*u)
-	}
-	return agc
-}
-
-// SetElectricityFeeRatio sets the "electricity_fee_ratio" field.
-func (agc *AppGoodCreate) SetElectricityFeeRatio(u uint32) *AppGoodCreate {
-	agc.mutation.SetElectricityFeeRatio(u)
-	return agc
-}
-
-// SetNillableElectricityFeeRatio sets the "electricity_fee_ratio" field if the given value is not nil.
-func (agc *AppGoodCreate) SetNillableElectricityFeeRatio(u *uint32) *AppGoodCreate {
-	if u != nil {
-		agc.SetElectricityFeeRatio(*u)
-	}
-	return agc
-}
-
-// SetDailyRewardAmount sets the "daily_reward_amount" field.
-func (agc *AppGoodCreate) SetDailyRewardAmount(d decimal.Decimal) *AppGoodCreate {
-	agc.mutation.SetDailyRewardAmount(d)
-	return agc
-}
-
-// SetNillableDailyRewardAmount sets the "daily_reward_amount" field if the given value is not nil.
-func (agc *AppGoodCreate) SetNillableDailyRewardAmount(d *decimal.Decimal) *AppGoodCreate {
-	if d != nil {
-		agc.SetDailyRewardAmount(*d)
-	}
-	return agc
-}
-
-// SetCommissionSettleType sets the "commission_settle_type" field.
-func (agc *AppGoodCreate) SetCommissionSettleType(s string) *AppGoodCreate {
-	agc.mutation.SetCommissionSettleType(s)
-	return agc
-}
-
-// SetNillableCommissionSettleType sets the "commission_settle_type" field if the given value is not nil.
-func (agc *AppGoodCreate) SetNillableCommissionSettleType(s *string) *AppGoodCreate {
-	if s != nil {
-		agc.SetCommissionSettleType(*s)
 	}
 	return agc
 }
@@ -401,6 +331,12 @@ func (agc *AppGoodCreate) SetNillableEnableSetCommission(b *bool) *AppGoodCreate
 	if b != nil {
 		agc.SetEnableSetCommission(*b)
 	}
+	return agc
+}
+
+// SetPosters sets the "posters" field.
+func (agc *AppGoodCreate) SetPosters(s []string) *AppGoodCreate {
+	agc.mutation.SetPosters(s)
 	return agc
 }
 
@@ -542,10 +478,6 @@ func (agc *AppGoodCreate) defaults() error {
 		v := appgood.DefaultPurchaseLimit
 		agc.mutation.SetPurchaseLimit(v)
 	}
-	if _, ok := agc.mutation.CommissionPercent(); !ok {
-		v := appgood.DefaultCommissionPercent
-		agc.mutation.SetCommissionPercent(v)
-	}
 	if _, ok := agc.mutation.SaleStartAt(); !ok {
 		v := appgood.DefaultSaleStartAt
 		agc.mutation.SetSaleStartAt(v)
@@ -557,22 +489,6 @@ func (agc *AppGoodCreate) defaults() error {
 	if _, ok := agc.mutation.ServiceStartAt(); !ok {
 		v := appgood.DefaultServiceStartAt
 		agc.mutation.SetServiceStartAt(v)
-	}
-	if _, ok := agc.mutation.TechnicalFeeRatio(); !ok {
-		v := appgood.DefaultTechnicalFeeRatio
-		agc.mutation.SetTechnicalFeeRatio(v)
-	}
-	if _, ok := agc.mutation.ElectricityFeeRatio(); !ok {
-		v := appgood.DefaultElectricityFeeRatio
-		agc.mutation.SetElectricityFeeRatio(v)
-	}
-	if _, ok := agc.mutation.DailyRewardAmount(); !ok {
-		v := appgood.DefaultDailyRewardAmount
-		agc.mutation.SetDailyRewardAmount(v)
-	}
-	if _, ok := agc.mutation.CommissionSettleType(); !ok {
-		v := appgood.DefaultCommissionSettleType
-		agc.mutation.SetCommissionSettleType(v)
 	}
 	if _, ok := agc.mutation.Descriptions(); !ok {
 		v := appgood.DefaultDescriptions
@@ -613,6 +529,10 @@ func (agc *AppGoodCreate) defaults() error {
 	if _, ok := agc.mutation.EnableSetCommission(); !ok {
 		v := appgood.DefaultEnableSetCommission
 		agc.mutation.SetEnableSetCommission(v)
+	}
+	if _, ok := agc.mutation.Posters(); !ok {
+		v := appgood.DefaultPosters
+		agc.mutation.SetPosters(v)
 	}
 	if _, ok := agc.mutation.ID(); !ok {
 		if appgood.DefaultID == nil {
@@ -766,14 +686,6 @@ func (agc *AppGoodCreate) createSpec() (*AppGood, *sqlgraph.CreateSpec) {
 		})
 		_node.PurchaseLimit = value
 	}
-	if value, ok := agc.mutation.CommissionPercent(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: appgood.FieldCommissionPercent,
-		})
-		_node.CommissionPercent = value
-	}
 	if value, ok := agc.mutation.SaleStartAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -797,38 +709,6 @@ func (agc *AppGoodCreate) createSpec() (*AppGood, *sqlgraph.CreateSpec) {
 			Column: appgood.FieldServiceStartAt,
 		})
 		_node.ServiceStartAt = value
-	}
-	if value, ok := agc.mutation.TechnicalFeeRatio(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appgood.FieldTechnicalFeeRatio,
-		})
-		_node.TechnicalFeeRatio = value
-	}
-	if value, ok := agc.mutation.ElectricityFeeRatio(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appgood.FieldElectricityFeeRatio,
-		})
-		_node.ElectricityFeeRatio = value
-	}
-	if value, ok := agc.mutation.DailyRewardAmount(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: appgood.FieldDailyRewardAmount,
-		})
-		_node.DailyRewardAmount = value
-	}
-	if value, ok := agc.mutation.CommissionSettleType(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appgood.FieldCommissionSettleType,
-		})
-		_node.CommissionSettleType = value
 	}
 	if value, ok := agc.mutation.Descriptions(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -917,6 +797,14 @@ func (agc *AppGoodCreate) createSpec() (*AppGood, *sqlgraph.CreateSpec) {
 			Column: appgood.FieldEnableSetCommission,
 		})
 		_node.EnableSetCommission = value
+	}
+	if value, ok := agc.mutation.Posters(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: appgood.FieldPosters,
+		})
+		_node.Posters = value
 	}
 	return _node, _spec
 }
@@ -1170,30 +1058,6 @@ func (u *AppGoodUpsert) ClearPurchaseLimit() *AppGoodUpsert {
 	return u
 }
 
-// SetCommissionPercent sets the "commission_percent" field.
-func (u *AppGoodUpsert) SetCommissionPercent(v int32) *AppGoodUpsert {
-	u.Set(appgood.FieldCommissionPercent, v)
-	return u
-}
-
-// UpdateCommissionPercent sets the "commission_percent" field to the value that was provided on create.
-func (u *AppGoodUpsert) UpdateCommissionPercent() *AppGoodUpsert {
-	u.SetExcluded(appgood.FieldCommissionPercent)
-	return u
-}
-
-// AddCommissionPercent adds v to the "commission_percent" field.
-func (u *AppGoodUpsert) AddCommissionPercent(v int32) *AppGoodUpsert {
-	u.Add(appgood.FieldCommissionPercent, v)
-	return u
-}
-
-// ClearCommissionPercent clears the value of the "commission_percent" field.
-func (u *AppGoodUpsert) ClearCommissionPercent() *AppGoodUpsert {
-	u.SetNull(appgood.FieldCommissionPercent)
-	return u
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (u *AppGoodUpsert) SetSaleStartAt(v uint32) *AppGoodUpsert {
 	u.Set(appgood.FieldSaleStartAt, v)
@@ -1263,90 +1127,6 @@ func (u *AppGoodUpsert) AddServiceStartAt(v uint32) *AppGoodUpsert {
 // ClearServiceStartAt clears the value of the "service_start_at" field.
 func (u *AppGoodUpsert) ClearServiceStartAt() *AppGoodUpsert {
 	u.SetNull(appgood.FieldServiceStartAt)
-	return u
-}
-
-// SetTechnicalFeeRatio sets the "technical_fee_ratio" field.
-func (u *AppGoodUpsert) SetTechnicalFeeRatio(v uint32) *AppGoodUpsert {
-	u.Set(appgood.FieldTechnicalFeeRatio, v)
-	return u
-}
-
-// UpdateTechnicalFeeRatio sets the "technical_fee_ratio" field to the value that was provided on create.
-func (u *AppGoodUpsert) UpdateTechnicalFeeRatio() *AppGoodUpsert {
-	u.SetExcluded(appgood.FieldTechnicalFeeRatio)
-	return u
-}
-
-// AddTechnicalFeeRatio adds v to the "technical_fee_ratio" field.
-func (u *AppGoodUpsert) AddTechnicalFeeRatio(v uint32) *AppGoodUpsert {
-	u.Add(appgood.FieldTechnicalFeeRatio, v)
-	return u
-}
-
-// ClearTechnicalFeeRatio clears the value of the "technical_fee_ratio" field.
-func (u *AppGoodUpsert) ClearTechnicalFeeRatio() *AppGoodUpsert {
-	u.SetNull(appgood.FieldTechnicalFeeRatio)
-	return u
-}
-
-// SetElectricityFeeRatio sets the "electricity_fee_ratio" field.
-func (u *AppGoodUpsert) SetElectricityFeeRatio(v uint32) *AppGoodUpsert {
-	u.Set(appgood.FieldElectricityFeeRatio, v)
-	return u
-}
-
-// UpdateElectricityFeeRatio sets the "electricity_fee_ratio" field to the value that was provided on create.
-func (u *AppGoodUpsert) UpdateElectricityFeeRatio() *AppGoodUpsert {
-	u.SetExcluded(appgood.FieldElectricityFeeRatio)
-	return u
-}
-
-// AddElectricityFeeRatio adds v to the "electricity_fee_ratio" field.
-func (u *AppGoodUpsert) AddElectricityFeeRatio(v uint32) *AppGoodUpsert {
-	u.Add(appgood.FieldElectricityFeeRatio, v)
-	return u
-}
-
-// ClearElectricityFeeRatio clears the value of the "electricity_fee_ratio" field.
-func (u *AppGoodUpsert) ClearElectricityFeeRatio() *AppGoodUpsert {
-	u.SetNull(appgood.FieldElectricityFeeRatio)
-	return u
-}
-
-// SetDailyRewardAmount sets the "daily_reward_amount" field.
-func (u *AppGoodUpsert) SetDailyRewardAmount(v decimal.Decimal) *AppGoodUpsert {
-	u.Set(appgood.FieldDailyRewardAmount, v)
-	return u
-}
-
-// UpdateDailyRewardAmount sets the "daily_reward_amount" field to the value that was provided on create.
-func (u *AppGoodUpsert) UpdateDailyRewardAmount() *AppGoodUpsert {
-	u.SetExcluded(appgood.FieldDailyRewardAmount)
-	return u
-}
-
-// ClearDailyRewardAmount clears the value of the "daily_reward_amount" field.
-func (u *AppGoodUpsert) ClearDailyRewardAmount() *AppGoodUpsert {
-	u.SetNull(appgood.FieldDailyRewardAmount)
-	return u
-}
-
-// SetCommissionSettleType sets the "commission_settle_type" field.
-func (u *AppGoodUpsert) SetCommissionSettleType(v string) *AppGoodUpsert {
-	u.Set(appgood.FieldCommissionSettleType, v)
-	return u
-}
-
-// UpdateCommissionSettleType sets the "commission_settle_type" field to the value that was provided on create.
-func (u *AppGoodUpsert) UpdateCommissionSettleType() *AppGoodUpsert {
-	u.SetExcluded(appgood.FieldCommissionSettleType)
-	return u
-}
-
-// ClearCommissionSettleType clears the value of the "commission_settle_type" field.
-func (u *AppGoodUpsert) ClearCommissionSettleType() *AppGoodUpsert {
-	u.SetNull(appgood.FieldCommissionSettleType)
 	return u
 }
 
@@ -1551,6 +1331,24 @@ func (u *AppGoodUpsert) UpdateEnableSetCommission() *AppGoodUpsert {
 // ClearEnableSetCommission clears the value of the "enable_set_commission" field.
 func (u *AppGoodUpsert) ClearEnableSetCommission() *AppGoodUpsert {
 	u.SetNull(appgood.FieldEnableSetCommission)
+	return u
+}
+
+// SetPosters sets the "posters" field.
+func (u *AppGoodUpsert) SetPosters(v []string) *AppGoodUpsert {
+	u.Set(appgood.FieldPosters, v)
+	return u
+}
+
+// UpdatePosters sets the "posters" field to the value that was provided on create.
+func (u *AppGoodUpsert) UpdatePosters() *AppGoodUpsert {
+	u.SetExcluded(appgood.FieldPosters)
+	return u
+}
+
+// ClearPosters clears the value of the "posters" field.
+func (u *AppGoodUpsert) ClearPosters() *AppGoodUpsert {
+	u.SetNull(appgood.FieldPosters)
 	return u
 }
 
@@ -1835,34 +1633,6 @@ func (u *AppGoodUpsertOne) ClearPurchaseLimit() *AppGoodUpsertOne {
 	})
 }
 
-// SetCommissionPercent sets the "commission_percent" field.
-func (u *AppGoodUpsertOne) SetCommissionPercent(v int32) *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.SetCommissionPercent(v)
-	})
-}
-
-// AddCommissionPercent adds v to the "commission_percent" field.
-func (u *AppGoodUpsertOne) AddCommissionPercent(v int32) *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.AddCommissionPercent(v)
-	})
-}
-
-// UpdateCommissionPercent sets the "commission_percent" field to the value that was provided on create.
-func (u *AppGoodUpsertOne) UpdateCommissionPercent() *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdateCommissionPercent()
-	})
-}
-
-// ClearCommissionPercent clears the value of the "commission_percent" field.
-func (u *AppGoodUpsertOne) ClearCommissionPercent() *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearCommissionPercent()
-	})
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (u *AppGoodUpsertOne) SetSaleStartAt(v uint32) *AppGoodUpsertOne {
 	return u.Update(func(s *AppGoodUpsert) {
@@ -1944,104 +1714,6 @@ func (u *AppGoodUpsertOne) UpdateServiceStartAt() *AppGoodUpsertOne {
 func (u *AppGoodUpsertOne) ClearServiceStartAt() *AppGoodUpsertOne {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.ClearServiceStartAt()
-	})
-}
-
-// SetTechnicalFeeRatio sets the "technical_fee_ratio" field.
-func (u *AppGoodUpsertOne) SetTechnicalFeeRatio(v uint32) *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.SetTechnicalFeeRatio(v)
-	})
-}
-
-// AddTechnicalFeeRatio adds v to the "technical_fee_ratio" field.
-func (u *AppGoodUpsertOne) AddTechnicalFeeRatio(v uint32) *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.AddTechnicalFeeRatio(v)
-	})
-}
-
-// UpdateTechnicalFeeRatio sets the "technical_fee_ratio" field to the value that was provided on create.
-func (u *AppGoodUpsertOne) UpdateTechnicalFeeRatio() *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdateTechnicalFeeRatio()
-	})
-}
-
-// ClearTechnicalFeeRatio clears the value of the "technical_fee_ratio" field.
-func (u *AppGoodUpsertOne) ClearTechnicalFeeRatio() *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearTechnicalFeeRatio()
-	})
-}
-
-// SetElectricityFeeRatio sets the "electricity_fee_ratio" field.
-func (u *AppGoodUpsertOne) SetElectricityFeeRatio(v uint32) *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.SetElectricityFeeRatio(v)
-	})
-}
-
-// AddElectricityFeeRatio adds v to the "electricity_fee_ratio" field.
-func (u *AppGoodUpsertOne) AddElectricityFeeRatio(v uint32) *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.AddElectricityFeeRatio(v)
-	})
-}
-
-// UpdateElectricityFeeRatio sets the "electricity_fee_ratio" field to the value that was provided on create.
-func (u *AppGoodUpsertOne) UpdateElectricityFeeRatio() *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdateElectricityFeeRatio()
-	})
-}
-
-// ClearElectricityFeeRatio clears the value of the "electricity_fee_ratio" field.
-func (u *AppGoodUpsertOne) ClearElectricityFeeRatio() *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearElectricityFeeRatio()
-	})
-}
-
-// SetDailyRewardAmount sets the "daily_reward_amount" field.
-func (u *AppGoodUpsertOne) SetDailyRewardAmount(v decimal.Decimal) *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.SetDailyRewardAmount(v)
-	})
-}
-
-// UpdateDailyRewardAmount sets the "daily_reward_amount" field to the value that was provided on create.
-func (u *AppGoodUpsertOne) UpdateDailyRewardAmount() *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdateDailyRewardAmount()
-	})
-}
-
-// ClearDailyRewardAmount clears the value of the "daily_reward_amount" field.
-func (u *AppGoodUpsertOne) ClearDailyRewardAmount() *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearDailyRewardAmount()
-	})
-}
-
-// SetCommissionSettleType sets the "commission_settle_type" field.
-func (u *AppGoodUpsertOne) SetCommissionSettleType(v string) *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.SetCommissionSettleType(v)
-	})
-}
-
-// UpdateCommissionSettleType sets the "commission_settle_type" field to the value that was provided on create.
-func (u *AppGoodUpsertOne) UpdateCommissionSettleType() *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdateCommissionSettleType()
-	})
-}
-
-// ClearCommissionSettleType clears the value of the "commission_settle_type" field.
-func (u *AppGoodUpsertOne) ClearCommissionSettleType() *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearCommissionSettleType()
 	})
 }
 
@@ -2280,6 +1952,27 @@ func (u *AppGoodUpsertOne) UpdateEnableSetCommission() *AppGoodUpsertOne {
 func (u *AppGoodUpsertOne) ClearEnableSetCommission() *AppGoodUpsertOne {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.ClearEnableSetCommission()
+	})
+}
+
+// SetPosters sets the "posters" field.
+func (u *AppGoodUpsertOne) SetPosters(v []string) *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetPosters(v)
+	})
+}
+
+// UpdatePosters sets the "posters" field to the value that was provided on create.
+func (u *AppGoodUpsertOne) UpdatePosters() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdatePosters()
+	})
+}
+
+// ClearPosters clears the value of the "posters" field.
+func (u *AppGoodUpsertOne) ClearPosters() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearPosters()
 	})
 }
 
@@ -2730,34 +2423,6 @@ func (u *AppGoodUpsertBulk) ClearPurchaseLimit() *AppGoodUpsertBulk {
 	})
 }
 
-// SetCommissionPercent sets the "commission_percent" field.
-func (u *AppGoodUpsertBulk) SetCommissionPercent(v int32) *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.SetCommissionPercent(v)
-	})
-}
-
-// AddCommissionPercent adds v to the "commission_percent" field.
-func (u *AppGoodUpsertBulk) AddCommissionPercent(v int32) *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.AddCommissionPercent(v)
-	})
-}
-
-// UpdateCommissionPercent sets the "commission_percent" field to the value that was provided on create.
-func (u *AppGoodUpsertBulk) UpdateCommissionPercent() *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdateCommissionPercent()
-	})
-}
-
-// ClearCommissionPercent clears the value of the "commission_percent" field.
-func (u *AppGoodUpsertBulk) ClearCommissionPercent() *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearCommissionPercent()
-	})
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (u *AppGoodUpsertBulk) SetSaleStartAt(v uint32) *AppGoodUpsertBulk {
 	return u.Update(func(s *AppGoodUpsert) {
@@ -2839,104 +2504,6 @@ func (u *AppGoodUpsertBulk) UpdateServiceStartAt() *AppGoodUpsertBulk {
 func (u *AppGoodUpsertBulk) ClearServiceStartAt() *AppGoodUpsertBulk {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.ClearServiceStartAt()
-	})
-}
-
-// SetTechnicalFeeRatio sets the "technical_fee_ratio" field.
-func (u *AppGoodUpsertBulk) SetTechnicalFeeRatio(v uint32) *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.SetTechnicalFeeRatio(v)
-	})
-}
-
-// AddTechnicalFeeRatio adds v to the "technical_fee_ratio" field.
-func (u *AppGoodUpsertBulk) AddTechnicalFeeRatio(v uint32) *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.AddTechnicalFeeRatio(v)
-	})
-}
-
-// UpdateTechnicalFeeRatio sets the "technical_fee_ratio" field to the value that was provided on create.
-func (u *AppGoodUpsertBulk) UpdateTechnicalFeeRatio() *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdateTechnicalFeeRatio()
-	})
-}
-
-// ClearTechnicalFeeRatio clears the value of the "technical_fee_ratio" field.
-func (u *AppGoodUpsertBulk) ClearTechnicalFeeRatio() *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearTechnicalFeeRatio()
-	})
-}
-
-// SetElectricityFeeRatio sets the "electricity_fee_ratio" field.
-func (u *AppGoodUpsertBulk) SetElectricityFeeRatio(v uint32) *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.SetElectricityFeeRatio(v)
-	})
-}
-
-// AddElectricityFeeRatio adds v to the "electricity_fee_ratio" field.
-func (u *AppGoodUpsertBulk) AddElectricityFeeRatio(v uint32) *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.AddElectricityFeeRatio(v)
-	})
-}
-
-// UpdateElectricityFeeRatio sets the "electricity_fee_ratio" field to the value that was provided on create.
-func (u *AppGoodUpsertBulk) UpdateElectricityFeeRatio() *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdateElectricityFeeRatio()
-	})
-}
-
-// ClearElectricityFeeRatio clears the value of the "electricity_fee_ratio" field.
-func (u *AppGoodUpsertBulk) ClearElectricityFeeRatio() *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearElectricityFeeRatio()
-	})
-}
-
-// SetDailyRewardAmount sets the "daily_reward_amount" field.
-func (u *AppGoodUpsertBulk) SetDailyRewardAmount(v decimal.Decimal) *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.SetDailyRewardAmount(v)
-	})
-}
-
-// UpdateDailyRewardAmount sets the "daily_reward_amount" field to the value that was provided on create.
-func (u *AppGoodUpsertBulk) UpdateDailyRewardAmount() *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdateDailyRewardAmount()
-	})
-}
-
-// ClearDailyRewardAmount clears the value of the "daily_reward_amount" field.
-func (u *AppGoodUpsertBulk) ClearDailyRewardAmount() *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearDailyRewardAmount()
-	})
-}
-
-// SetCommissionSettleType sets the "commission_settle_type" field.
-func (u *AppGoodUpsertBulk) SetCommissionSettleType(v string) *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.SetCommissionSettleType(v)
-	})
-}
-
-// UpdateCommissionSettleType sets the "commission_settle_type" field to the value that was provided on create.
-func (u *AppGoodUpsertBulk) UpdateCommissionSettleType() *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdateCommissionSettleType()
-	})
-}
-
-// ClearCommissionSettleType clears the value of the "commission_settle_type" field.
-func (u *AppGoodUpsertBulk) ClearCommissionSettleType() *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearCommissionSettleType()
 	})
 }
 
@@ -3175,6 +2742,27 @@ func (u *AppGoodUpsertBulk) UpdateEnableSetCommission() *AppGoodUpsertBulk {
 func (u *AppGoodUpsertBulk) ClearEnableSetCommission() *AppGoodUpsertBulk {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.ClearEnableSetCommission()
+	})
+}
+
+// SetPosters sets the "posters" field.
+func (u *AppGoodUpsertBulk) SetPosters(v []string) *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetPosters(v)
+	})
+}
+
+// UpdatePosters sets the "posters" field to the value that was provided on create.
+func (u *AppGoodUpsertBulk) UpdatePosters() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdatePosters()
+	})
+}
+
+// ClearPosters clears the value of the "posters" field.
+func (u *AppGoodUpsertBulk) ClearPosters() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearPosters()
 	})
 }
 

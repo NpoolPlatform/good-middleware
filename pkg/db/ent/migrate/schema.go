@@ -39,14 +39,9 @@ var (
 		{Name: "price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "display_index", Type: field.TypeInt32, Nullable: true, Default: 0},
 		{Name: "purchase_limit", Type: field.TypeInt32, Nullable: true, Default: 3000},
-		{Name: "commission_percent", Type: field.TypeInt32, Nullable: true, Default: 0},
 		{Name: "sale_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "sale_end_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "service_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
-		{Name: "technical_fee_ratio", Type: field.TypeUint32, Nullable: true, Default: 0},
-		{Name: "electricity_fee_ratio", Type: field.TypeUint32, Nullable: true, Default: 0},
-		{Name: "daily_reward_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
-		{Name: "commission_settle_type", Type: field.TypeString, Nullable: true, Default: "NoCommission"},
 		{Name: "descriptions", Type: field.TypeJSON, Nullable: true},
 		{Name: "good_banner", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "display_names", Type: field.TypeJSON, Nullable: true},
@@ -58,6 +53,7 @@ var (
 		{Name: "cancellable_before_start", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "product_page", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "enable_set_commission", Type: field.TypeBool, Nullable: true, Default: true},
+		{Name: "posters", Type: field.TypeJSON, Nullable: true},
 	}
 	// AppGoodsTable holds the schema information for the "app_goods" table.
 	AppGoodsTable = &schema.Table{

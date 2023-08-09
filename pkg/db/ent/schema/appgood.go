@@ -6,12 +6,9 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
-	"github.com/shopspring/decimal"
-
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	"github.com/google/uuid"
-
-	inspiretypes "github.com/NpoolPlatform/message/npool/basetypes/inspire/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mgr/v1/appgood"
+	"github.com/shopspring/decimal"
 )
 
 // AppGood holds the schema definition for the AppGood entity.
@@ -65,10 +62,6 @@ func (AppGood) Fields() []ent.Field {
 			Optional().
 			Default(int32(lDef)),
 		field.
-			Int32("commission_percent").
-			Optional().
-			Default(0),
-		field.
 			Uint32("sale_start_at").
 			Optional().
 			Default(0),
@@ -80,25 +73,6 @@ func (AppGood) Fields() []ent.Field {
 			Uint32("service_start_at").
 			Optional().
 			Default(0),
-		field.
-			Uint32("technical_fee_ratio").
-			Optional().
-			Default(0),
-		field.
-			Uint32("electricity_fee_ratio").
-			Optional().
-			Default(0),
-		field.
-			Other("daily_reward_amount", decimal.Decimal{}).
-			SchemaType(map[string]string{
-				dialect.MySQL: "decimal(37,18)",
-			}).
-			Optional().
-			Default(decimal.Decimal{}),
-		field.
-			String("commission_settle_type").
-			Optional().
-			Default(inspiretypes.SettleType_NoCommission.String()),
 		field.
 			JSON("descriptions", []string{}).
 			Optional().
@@ -122,7 +96,7 @@ func (AppGood) Fields() []ent.Field {
 		field.
 			String("cancel_mode").
 			Optional().
-			Default(npool.CancelMode_Uncancellable.String()),
+			Default(types.CancelMode_Uncancellable.String()),
 		field.
 			Other("user_purchase_limit", decimal.Decimal{}).
 			SchemaType(map[string]string{
@@ -145,6 +119,10 @@ func (AppGood) Fields() []ent.Field {
 			Bool("enable_set_commission").
 			Optional().
 			Default(true),
+		field.
+			JSON("posters", []string{}).
+			Optional().
+			Default([]string{}),
 	}
 }
 

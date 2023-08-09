@@ -65,14 +65,9 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appgood.FieldPrice:                  {Type: field.TypeOther, Column: appgood.FieldPrice},
 			appgood.FieldDisplayIndex:           {Type: field.TypeInt32, Column: appgood.FieldDisplayIndex},
 			appgood.FieldPurchaseLimit:          {Type: field.TypeInt32, Column: appgood.FieldPurchaseLimit},
-			appgood.FieldCommissionPercent:      {Type: field.TypeInt32, Column: appgood.FieldCommissionPercent},
 			appgood.FieldSaleStartAt:            {Type: field.TypeUint32, Column: appgood.FieldSaleStartAt},
 			appgood.FieldSaleEndAt:              {Type: field.TypeUint32, Column: appgood.FieldSaleEndAt},
 			appgood.FieldServiceStartAt:         {Type: field.TypeUint32, Column: appgood.FieldServiceStartAt},
-			appgood.FieldTechnicalFeeRatio:      {Type: field.TypeUint32, Column: appgood.FieldTechnicalFeeRatio},
-			appgood.FieldElectricityFeeRatio:    {Type: field.TypeUint32, Column: appgood.FieldElectricityFeeRatio},
-			appgood.FieldDailyRewardAmount:      {Type: field.TypeOther, Column: appgood.FieldDailyRewardAmount},
-			appgood.FieldCommissionSettleType:   {Type: field.TypeString, Column: appgood.FieldCommissionSettleType},
 			appgood.FieldDescriptions:           {Type: field.TypeJSON, Column: appgood.FieldDescriptions},
 			appgood.FieldGoodBanner:             {Type: field.TypeString, Column: appgood.FieldGoodBanner},
 			appgood.FieldDisplayNames:           {Type: field.TypeJSON, Column: appgood.FieldDisplayNames},
@@ -84,6 +79,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appgood.FieldCancellableBeforeStart: {Type: field.TypeUint32, Column: appgood.FieldCancellableBeforeStart},
 			appgood.FieldProductPage:            {Type: field.TypeString, Column: appgood.FieldProductPage},
 			appgood.FieldEnableSetCommission:    {Type: field.TypeBool, Column: appgood.FieldEnableSetCommission},
+			appgood.FieldPosters:                {Type: field.TypeJSON, Column: appgood.FieldPosters},
 		},
 	}
 	graph.Nodes[2] = &sqlgraph.Node{
@@ -468,11 +464,6 @@ func (f *AppGoodFilter) WherePurchaseLimit(p entql.Int32P) {
 	f.Where(p.Field(appgood.FieldPurchaseLimit))
 }
 
-// WhereCommissionPercent applies the entql int32 predicate on the commission_percent field.
-func (f *AppGoodFilter) WhereCommissionPercent(p entql.Int32P) {
-	f.Where(p.Field(appgood.FieldCommissionPercent))
-}
-
 // WhereSaleStartAt applies the entql uint32 predicate on the sale_start_at field.
 func (f *AppGoodFilter) WhereSaleStartAt(p entql.Uint32P) {
 	f.Where(p.Field(appgood.FieldSaleStartAt))
@@ -486,26 +477,6 @@ func (f *AppGoodFilter) WhereSaleEndAt(p entql.Uint32P) {
 // WhereServiceStartAt applies the entql uint32 predicate on the service_start_at field.
 func (f *AppGoodFilter) WhereServiceStartAt(p entql.Uint32P) {
 	f.Where(p.Field(appgood.FieldServiceStartAt))
-}
-
-// WhereTechnicalFeeRatio applies the entql uint32 predicate on the technical_fee_ratio field.
-func (f *AppGoodFilter) WhereTechnicalFeeRatio(p entql.Uint32P) {
-	f.Where(p.Field(appgood.FieldTechnicalFeeRatio))
-}
-
-// WhereElectricityFeeRatio applies the entql uint32 predicate on the electricity_fee_ratio field.
-func (f *AppGoodFilter) WhereElectricityFeeRatio(p entql.Uint32P) {
-	f.Where(p.Field(appgood.FieldElectricityFeeRatio))
-}
-
-// WhereDailyRewardAmount applies the entql other predicate on the daily_reward_amount field.
-func (f *AppGoodFilter) WhereDailyRewardAmount(p entql.OtherP) {
-	f.Where(p.Field(appgood.FieldDailyRewardAmount))
-}
-
-// WhereCommissionSettleType applies the entql string predicate on the commission_settle_type field.
-func (f *AppGoodFilter) WhereCommissionSettleType(p entql.StringP) {
-	f.Where(p.Field(appgood.FieldCommissionSettleType))
 }
 
 // WhereDescriptions applies the entql json.RawMessage predicate on the descriptions field.
@@ -561,6 +532,11 @@ func (f *AppGoodFilter) WhereProductPage(p entql.StringP) {
 // WhereEnableSetCommission applies the entql bool predicate on the enable_set_commission field.
 func (f *AppGoodFilter) WhereEnableSetCommission(p entql.BoolP) {
 	f.Where(p.Field(appgood.FieldEnableSetCommission))
+}
+
+// WherePosters applies the entql json.RawMessage predicate on the posters field.
+func (f *AppGoodFilter) WherePosters(p entql.BytesP) {
+	f.Where(p.Field(appgood.FieldPosters))
 }
 
 // addPredicate implements the predicateAdder interface.
