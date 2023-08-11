@@ -8846,26 +8846,26 @@ func (m *GoodMutation) ResetEdge(name string) error {
 // GoodRewardMutation represents an operation that mutates the GoodReward nodes in the graph.
 type GoodRewardMutation struct {
 	config
-	op                        Op
-	typ                       string
-	id                        *uuid.UUID
-	created_at                *uint32
-	addcreated_at             *int32
-	updated_at                *uint32
-	addupdated_at             *int32
-	deleted_at                *uint32
-	adddeleted_at             *int32
-	good_id                   *uuid.UUID
-	benefit_state             *string
-	last_benefit_at           *uint32
-	addlast_benefit_at        *int32
-	benefit_tids              *[]uuid.UUID
-	next_benefit_start_amount *decimal.Decimal
-	last_benefit_amount       *decimal.Decimal
-	clearedFields             map[string]struct{}
-	done                      bool
-	oldValue                  func(context.Context) (*GoodReward, error)
-	predicates                []predicate.GoodReward
+	op                       Op
+	typ                      string
+	id                       *uuid.UUID
+	created_at               *uint32
+	addcreated_at            *int32
+	updated_at               *uint32
+	addupdated_at            *int32
+	deleted_at               *uint32
+	adddeleted_at            *int32
+	good_id                  *uuid.UUID
+	reward_state             *string
+	last_reward_at           *uint32
+	addlast_reward_at        *int32
+	reward_tid               *uuid.UUID
+	next_reward_start_amount *decimal.Decimal
+	last_reward_amount       *decimal.Decimal
+	clearedFields            map[string]struct{}
+	done                     bool
+	oldValue                 func(context.Context) (*GoodReward, error)
+	predicates               []predicate.GoodReward
 }
 
 var _ ent.Mutation = (*GoodRewardMutation)(nil)
@@ -9176,270 +9176,270 @@ func (m *GoodRewardMutation) ResetGoodID() {
 	m.good_id = nil
 }
 
-// SetBenefitState sets the "benefit_state" field.
-func (m *GoodRewardMutation) SetBenefitState(s string) {
-	m.benefit_state = &s
+// SetRewardState sets the "reward_state" field.
+func (m *GoodRewardMutation) SetRewardState(s string) {
+	m.reward_state = &s
 }
 
-// BenefitState returns the value of the "benefit_state" field in the mutation.
-func (m *GoodRewardMutation) BenefitState() (r string, exists bool) {
-	v := m.benefit_state
+// RewardState returns the value of the "reward_state" field in the mutation.
+func (m *GoodRewardMutation) RewardState() (r string, exists bool) {
+	v := m.reward_state
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldBenefitState returns the old "benefit_state" field's value of the GoodReward entity.
+// OldRewardState returns the old "reward_state" field's value of the GoodReward entity.
 // If the GoodReward object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodRewardMutation) OldBenefitState(ctx context.Context) (v string, err error) {
+func (m *GoodRewardMutation) OldRewardState(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldBenefitState is only allowed on UpdateOne operations")
+		return v, errors.New("OldRewardState is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldBenefitState requires an ID field in the mutation")
+		return v, errors.New("OldRewardState requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldBenefitState: %w", err)
+		return v, fmt.Errorf("querying old value for OldRewardState: %w", err)
 	}
-	return oldValue.BenefitState, nil
+	return oldValue.RewardState, nil
 }
 
-// ClearBenefitState clears the value of the "benefit_state" field.
-func (m *GoodRewardMutation) ClearBenefitState() {
-	m.benefit_state = nil
-	m.clearedFields[goodreward.FieldBenefitState] = struct{}{}
+// ClearRewardState clears the value of the "reward_state" field.
+func (m *GoodRewardMutation) ClearRewardState() {
+	m.reward_state = nil
+	m.clearedFields[goodreward.FieldRewardState] = struct{}{}
 }
 
-// BenefitStateCleared returns if the "benefit_state" field was cleared in this mutation.
-func (m *GoodRewardMutation) BenefitStateCleared() bool {
-	_, ok := m.clearedFields[goodreward.FieldBenefitState]
+// RewardStateCleared returns if the "reward_state" field was cleared in this mutation.
+func (m *GoodRewardMutation) RewardStateCleared() bool {
+	_, ok := m.clearedFields[goodreward.FieldRewardState]
 	return ok
 }
 
-// ResetBenefitState resets all changes to the "benefit_state" field.
-func (m *GoodRewardMutation) ResetBenefitState() {
-	m.benefit_state = nil
-	delete(m.clearedFields, goodreward.FieldBenefitState)
+// ResetRewardState resets all changes to the "reward_state" field.
+func (m *GoodRewardMutation) ResetRewardState() {
+	m.reward_state = nil
+	delete(m.clearedFields, goodreward.FieldRewardState)
 }
 
-// SetLastBenefitAt sets the "last_benefit_at" field.
-func (m *GoodRewardMutation) SetLastBenefitAt(u uint32) {
-	m.last_benefit_at = &u
-	m.addlast_benefit_at = nil
+// SetLastRewardAt sets the "last_reward_at" field.
+func (m *GoodRewardMutation) SetLastRewardAt(u uint32) {
+	m.last_reward_at = &u
+	m.addlast_reward_at = nil
 }
 
-// LastBenefitAt returns the value of the "last_benefit_at" field in the mutation.
-func (m *GoodRewardMutation) LastBenefitAt() (r uint32, exists bool) {
-	v := m.last_benefit_at
+// LastRewardAt returns the value of the "last_reward_at" field in the mutation.
+func (m *GoodRewardMutation) LastRewardAt() (r uint32, exists bool) {
+	v := m.last_reward_at
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldLastBenefitAt returns the old "last_benefit_at" field's value of the GoodReward entity.
+// OldLastRewardAt returns the old "last_reward_at" field's value of the GoodReward entity.
 // If the GoodReward object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodRewardMutation) OldLastBenefitAt(ctx context.Context) (v uint32, err error) {
+func (m *GoodRewardMutation) OldLastRewardAt(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldLastBenefitAt is only allowed on UpdateOne operations")
+		return v, errors.New("OldLastRewardAt is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldLastBenefitAt requires an ID field in the mutation")
+		return v, errors.New("OldLastRewardAt requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLastBenefitAt: %w", err)
+		return v, fmt.Errorf("querying old value for OldLastRewardAt: %w", err)
 	}
-	return oldValue.LastBenefitAt, nil
+	return oldValue.LastRewardAt, nil
 }
 
-// AddLastBenefitAt adds u to the "last_benefit_at" field.
-func (m *GoodRewardMutation) AddLastBenefitAt(u int32) {
-	if m.addlast_benefit_at != nil {
-		*m.addlast_benefit_at += u
+// AddLastRewardAt adds u to the "last_reward_at" field.
+func (m *GoodRewardMutation) AddLastRewardAt(u int32) {
+	if m.addlast_reward_at != nil {
+		*m.addlast_reward_at += u
 	} else {
-		m.addlast_benefit_at = &u
+		m.addlast_reward_at = &u
 	}
 }
 
-// AddedLastBenefitAt returns the value that was added to the "last_benefit_at" field in this mutation.
-func (m *GoodRewardMutation) AddedLastBenefitAt() (r int32, exists bool) {
-	v := m.addlast_benefit_at
+// AddedLastRewardAt returns the value that was added to the "last_reward_at" field in this mutation.
+func (m *GoodRewardMutation) AddedLastRewardAt() (r int32, exists bool) {
+	v := m.addlast_reward_at
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
-func (m *GoodRewardMutation) ClearLastBenefitAt() {
-	m.last_benefit_at = nil
-	m.addlast_benefit_at = nil
-	m.clearedFields[goodreward.FieldLastBenefitAt] = struct{}{}
+// ClearLastRewardAt clears the value of the "last_reward_at" field.
+func (m *GoodRewardMutation) ClearLastRewardAt() {
+	m.last_reward_at = nil
+	m.addlast_reward_at = nil
+	m.clearedFields[goodreward.FieldLastRewardAt] = struct{}{}
 }
 
-// LastBenefitAtCleared returns if the "last_benefit_at" field was cleared in this mutation.
-func (m *GoodRewardMutation) LastBenefitAtCleared() bool {
-	_, ok := m.clearedFields[goodreward.FieldLastBenefitAt]
+// LastRewardAtCleared returns if the "last_reward_at" field was cleared in this mutation.
+func (m *GoodRewardMutation) LastRewardAtCleared() bool {
+	_, ok := m.clearedFields[goodreward.FieldLastRewardAt]
 	return ok
 }
 
-// ResetLastBenefitAt resets all changes to the "last_benefit_at" field.
-func (m *GoodRewardMutation) ResetLastBenefitAt() {
-	m.last_benefit_at = nil
-	m.addlast_benefit_at = nil
-	delete(m.clearedFields, goodreward.FieldLastBenefitAt)
+// ResetLastRewardAt resets all changes to the "last_reward_at" field.
+func (m *GoodRewardMutation) ResetLastRewardAt() {
+	m.last_reward_at = nil
+	m.addlast_reward_at = nil
+	delete(m.clearedFields, goodreward.FieldLastRewardAt)
 }
 
-// SetBenefitTids sets the "benefit_tids" field.
-func (m *GoodRewardMutation) SetBenefitTids(u []uuid.UUID) {
-	m.benefit_tids = &u
+// SetRewardTid sets the "reward_tid" field.
+func (m *GoodRewardMutation) SetRewardTid(u uuid.UUID) {
+	m.reward_tid = &u
 }
 
-// BenefitTids returns the value of the "benefit_tids" field in the mutation.
-func (m *GoodRewardMutation) BenefitTids() (r []uuid.UUID, exists bool) {
-	v := m.benefit_tids
+// RewardTid returns the value of the "reward_tid" field in the mutation.
+func (m *GoodRewardMutation) RewardTid() (r uuid.UUID, exists bool) {
+	v := m.reward_tid
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldBenefitTids returns the old "benefit_tids" field's value of the GoodReward entity.
+// OldRewardTid returns the old "reward_tid" field's value of the GoodReward entity.
 // If the GoodReward object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodRewardMutation) OldBenefitTids(ctx context.Context) (v []uuid.UUID, err error) {
+func (m *GoodRewardMutation) OldRewardTid(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldBenefitTids is only allowed on UpdateOne operations")
+		return v, errors.New("OldRewardTid is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldBenefitTids requires an ID field in the mutation")
+		return v, errors.New("OldRewardTid requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldBenefitTids: %w", err)
+		return v, fmt.Errorf("querying old value for OldRewardTid: %w", err)
 	}
-	return oldValue.BenefitTids, nil
+	return oldValue.RewardTid, nil
 }
 
-// ClearBenefitTids clears the value of the "benefit_tids" field.
-func (m *GoodRewardMutation) ClearBenefitTids() {
-	m.benefit_tids = nil
-	m.clearedFields[goodreward.FieldBenefitTids] = struct{}{}
+// ClearRewardTid clears the value of the "reward_tid" field.
+func (m *GoodRewardMutation) ClearRewardTid() {
+	m.reward_tid = nil
+	m.clearedFields[goodreward.FieldRewardTid] = struct{}{}
 }
 
-// BenefitTidsCleared returns if the "benefit_tids" field was cleared in this mutation.
-func (m *GoodRewardMutation) BenefitTidsCleared() bool {
-	_, ok := m.clearedFields[goodreward.FieldBenefitTids]
+// RewardTidCleared returns if the "reward_tid" field was cleared in this mutation.
+func (m *GoodRewardMutation) RewardTidCleared() bool {
+	_, ok := m.clearedFields[goodreward.FieldRewardTid]
 	return ok
 }
 
-// ResetBenefitTids resets all changes to the "benefit_tids" field.
-func (m *GoodRewardMutation) ResetBenefitTids() {
-	m.benefit_tids = nil
-	delete(m.clearedFields, goodreward.FieldBenefitTids)
+// ResetRewardTid resets all changes to the "reward_tid" field.
+func (m *GoodRewardMutation) ResetRewardTid() {
+	m.reward_tid = nil
+	delete(m.clearedFields, goodreward.FieldRewardTid)
 }
 
-// SetNextBenefitStartAmount sets the "next_benefit_start_amount" field.
-func (m *GoodRewardMutation) SetNextBenefitStartAmount(d decimal.Decimal) {
-	m.next_benefit_start_amount = &d
+// SetNextRewardStartAmount sets the "next_reward_start_amount" field.
+func (m *GoodRewardMutation) SetNextRewardStartAmount(d decimal.Decimal) {
+	m.next_reward_start_amount = &d
 }
 
-// NextBenefitStartAmount returns the value of the "next_benefit_start_amount" field in the mutation.
-func (m *GoodRewardMutation) NextBenefitStartAmount() (r decimal.Decimal, exists bool) {
-	v := m.next_benefit_start_amount
+// NextRewardStartAmount returns the value of the "next_reward_start_amount" field in the mutation.
+func (m *GoodRewardMutation) NextRewardStartAmount() (r decimal.Decimal, exists bool) {
+	v := m.next_reward_start_amount
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldNextBenefitStartAmount returns the old "next_benefit_start_amount" field's value of the GoodReward entity.
+// OldNextRewardStartAmount returns the old "next_reward_start_amount" field's value of the GoodReward entity.
 // If the GoodReward object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodRewardMutation) OldNextBenefitStartAmount(ctx context.Context) (v decimal.Decimal, err error) {
+func (m *GoodRewardMutation) OldNextRewardStartAmount(ctx context.Context) (v decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldNextBenefitStartAmount is only allowed on UpdateOne operations")
+		return v, errors.New("OldNextRewardStartAmount is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldNextBenefitStartAmount requires an ID field in the mutation")
+		return v, errors.New("OldNextRewardStartAmount requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldNextBenefitStartAmount: %w", err)
+		return v, fmt.Errorf("querying old value for OldNextRewardStartAmount: %w", err)
 	}
-	return oldValue.NextBenefitStartAmount, nil
+	return oldValue.NextRewardStartAmount, nil
 }
 
-// ClearNextBenefitStartAmount clears the value of the "next_benefit_start_amount" field.
-func (m *GoodRewardMutation) ClearNextBenefitStartAmount() {
-	m.next_benefit_start_amount = nil
-	m.clearedFields[goodreward.FieldNextBenefitStartAmount] = struct{}{}
+// ClearNextRewardStartAmount clears the value of the "next_reward_start_amount" field.
+func (m *GoodRewardMutation) ClearNextRewardStartAmount() {
+	m.next_reward_start_amount = nil
+	m.clearedFields[goodreward.FieldNextRewardStartAmount] = struct{}{}
 }
 
-// NextBenefitStartAmountCleared returns if the "next_benefit_start_amount" field was cleared in this mutation.
-func (m *GoodRewardMutation) NextBenefitStartAmountCleared() bool {
-	_, ok := m.clearedFields[goodreward.FieldNextBenefitStartAmount]
+// NextRewardStartAmountCleared returns if the "next_reward_start_amount" field was cleared in this mutation.
+func (m *GoodRewardMutation) NextRewardStartAmountCleared() bool {
+	_, ok := m.clearedFields[goodreward.FieldNextRewardStartAmount]
 	return ok
 }
 
-// ResetNextBenefitStartAmount resets all changes to the "next_benefit_start_amount" field.
-func (m *GoodRewardMutation) ResetNextBenefitStartAmount() {
-	m.next_benefit_start_amount = nil
-	delete(m.clearedFields, goodreward.FieldNextBenefitStartAmount)
+// ResetNextRewardStartAmount resets all changes to the "next_reward_start_amount" field.
+func (m *GoodRewardMutation) ResetNextRewardStartAmount() {
+	m.next_reward_start_amount = nil
+	delete(m.clearedFields, goodreward.FieldNextRewardStartAmount)
 }
 
-// SetLastBenefitAmount sets the "last_benefit_amount" field.
-func (m *GoodRewardMutation) SetLastBenefitAmount(d decimal.Decimal) {
-	m.last_benefit_amount = &d
+// SetLastRewardAmount sets the "last_reward_amount" field.
+func (m *GoodRewardMutation) SetLastRewardAmount(d decimal.Decimal) {
+	m.last_reward_amount = &d
 }
 
-// LastBenefitAmount returns the value of the "last_benefit_amount" field in the mutation.
-func (m *GoodRewardMutation) LastBenefitAmount() (r decimal.Decimal, exists bool) {
-	v := m.last_benefit_amount
+// LastRewardAmount returns the value of the "last_reward_amount" field in the mutation.
+func (m *GoodRewardMutation) LastRewardAmount() (r decimal.Decimal, exists bool) {
+	v := m.last_reward_amount
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldLastBenefitAmount returns the old "last_benefit_amount" field's value of the GoodReward entity.
+// OldLastRewardAmount returns the old "last_reward_amount" field's value of the GoodReward entity.
 // If the GoodReward object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodRewardMutation) OldLastBenefitAmount(ctx context.Context) (v decimal.Decimal, err error) {
+func (m *GoodRewardMutation) OldLastRewardAmount(ctx context.Context) (v decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldLastBenefitAmount is only allowed on UpdateOne operations")
+		return v, errors.New("OldLastRewardAmount is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldLastBenefitAmount requires an ID field in the mutation")
+		return v, errors.New("OldLastRewardAmount requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLastBenefitAmount: %w", err)
+		return v, fmt.Errorf("querying old value for OldLastRewardAmount: %w", err)
 	}
-	return oldValue.LastBenefitAmount, nil
+	return oldValue.LastRewardAmount, nil
 }
 
-// ClearLastBenefitAmount clears the value of the "last_benefit_amount" field.
-func (m *GoodRewardMutation) ClearLastBenefitAmount() {
-	m.last_benefit_amount = nil
-	m.clearedFields[goodreward.FieldLastBenefitAmount] = struct{}{}
+// ClearLastRewardAmount clears the value of the "last_reward_amount" field.
+func (m *GoodRewardMutation) ClearLastRewardAmount() {
+	m.last_reward_amount = nil
+	m.clearedFields[goodreward.FieldLastRewardAmount] = struct{}{}
 }
 
-// LastBenefitAmountCleared returns if the "last_benefit_amount" field was cleared in this mutation.
-func (m *GoodRewardMutation) LastBenefitAmountCleared() bool {
-	_, ok := m.clearedFields[goodreward.FieldLastBenefitAmount]
+// LastRewardAmountCleared returns if the "last_reward_amount" field was cleared in this mutation.
+func (m *GoodRewardMutation) LastRewardAmountCleared() bool {
+	_, ok := m.clearedFields[goodreward.FieldLastRewardAmount]
 	return ok
 }
 
-// ResetLastBenefitAmount resets all changes to the "last_benefit_amount" field.
-func (m *GoodRewardMutation) ResetLastBenefitAmount() {
-	m.last_benefit_amount = nil
-	delete(m.clearedFields, goodreward.FieldLastBenefitAmount)
+// ResetLastRewardAmount resets all changes to the "last_reward_amount" field.
+func (m *GoodRewardMutation) ResetLastRewardAmount() {
+	m.last_reward_amount = nil
+	delete(m.clearedFields, goodreward.FieldLastRewardAmount)
 }
 
 // Where appends a list predicates to the GoodRewardMutation builder.
@@ -9474,20 +9474,20 @@ func (m *GoodRewardMutation) Fields() []string {
 	if m.good_id != nil {
 		fields = append(fields, goodreward.FieldGoodID)
 	}
-	if m.benefit_state != nil {
-		fields = append(fields, goodreward.FieldBenefitState)
+	if m.reward_state != nil {
+		fields = append(fields, goodreward.FieldRewardState)
 	}
-	if m.last_benefit_at != nil {
-		fields = append(fields, goodreward.FieldLastBenefitAt)
+	if m.last_reward_at != nil {
+		fields = append(fields, goodreward.FieldLastRewardAt)
 	}
-	if m.benefit_tids != nil {
-		fields = append(fields, goodreward.FieldBenefitTids)
+	if m.reward_tid != nil {
+		fields = append(fields, goodreward.FieldRewardTid)
 	}
-	if m.next_benefit_start_amount != nil {
-		fields = append(fields, goodreward.FieldNextBenefitStartAmount)
+	if m.next_reward_start_amount != nil {
+		fields = append(fields, goodreward.FieldNextRewardStartAmount)
 	}
-	if m.last_benefit_amount != nil {
-		fields = append(fields, goodreward.FieldLastBenefitAmount)
+	if m.last_reward_amount != nil {
+		fields = append(fields, goodreward.FieldLastRewardAmount)
 	}
 	return fields
 }
@@ -9505,16 +9505,16 @@ func (m *GoodRewardMutation) Field(name string) (ent.Value, bool) {
 		return m.DeletedAt()
 	case goodreward.FieldGoodID:
 		return m.GoodID()
-	case goodreward.FieldBenefitState:
-		return m.BenefitState()
-	case goodreward.FieldLastBenefitAt:
-		return m.LastBenefitAt()
-	case goodreward.FieldBenefitTids:
-		return m.BenefitTids()
-	case goodreward.FieldNextBenefitStartAmount:
-		return m.NextBenefitStartAmount()
-	case goodreward.FieldLastBenefitAmount:
-		return m.LastBenefitAmount()
+	case goodreward.FieldRewardState:
+		return m.RewardState()
+	case goodreward.FieldLastRewardAt:
+		return m.LastRewardAt()
+	case goodreward.FieldRewardTid:
+		return m.RewardTid()
+	case goodreward.FieldNextRewardStartAmount:
+		return m.NextRewardStartAmount()
+	case goodreward.FieldLastRewardAmount:
+		return m.LastRewardAmount()
 	}
 	return nil, false
 }
@@ -9532,16 +9532,16 @@ func (m *GoodRewardMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldDeletedAt(ctx)
 	case goodreward.FieldGoodID:
 		return m.OldGoodID(ctx)
-	case goodreward.FieldBenefitState:
-		return m.OldBenefitState(ctx)
-	case goodreward.FieldLastBenefitAt:
-		return m.OldLastBenefitAt(ctx)
-	case goodreward.FieldBenefitTids:
-		return m.OldBenefitTids(ctx)
-	case goodreward.FieldNextBenefitStartAmount:
-		return m.OldNextBenefitStartAmount(ctx)
-	case goodreward.FieldLastBenefitAmount:
-		return m.OldLastBenefitAmount(ctx)
+	case goodreward.FieldRewardState:
+		return m.OldRewardState(ctx)
+	case goodreward.FieldLastRewardAt:
+		return m.OldLastRewardAt(ctx)
+	case goodreward.FieldRewardTid:
+		return m.OldRewardTid(ctx)
+	case goodreward.FieldNextRewardStartAmount:
+		return m.OldNextRewardStartAmount(ctx)
+	case goodreward.FieldLastRewardAmount:
+		return m.OldLastRewardAmount(ctx)
 	}
 	return nil, fmt.Errorf("unknown GoodReward field %s", name)
 }
@@ -9579,40 +9579,40 @@ func (m *GoodRewardMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetGoodID(v)
 		return nil
-	case goodreward.FieldBenefitState:
+	case goodreward.FieldRewardState:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetBenefitState(v)
+		m.SetRewardState(v)
 		return nil
-	case goodreward.FieldLastBenefitAt:
+	case goodreward.FieldLastRewardAt:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetLastBenefitAt(v)
+		m.SetLastRewardAt(v)
 		return nil
-	case goodreward.FieldBenefitTids:
-		v, ok := value.([]uuid.UUID)
+	case goodreward.FieldRewardTid:
+		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetBenefitTids(v)
+		m.SetRewardTid(v)
 		return nil
-	case goodreward.FieldNextBenefitStartAmount:
+	case goodreward.FieldNextRewardStartAmount:
 		v, ok := value.(decimal.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetNextBenefitStartAmount(v)
+		m.SetNextRewardStartAmount(v)
 		return nil
-	case goodreward.FieldLastBenefitAmount:
+	case goodreward.FieldLastRewardAmount:
 		v, ok := value.(decimal.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetLastBenefitAmount(v)
+		m.SetLastRewardAmount(v)
 		return nil
 	}
 	return fmt.Errorf("unknown GoodReward field %s", name)
@@ -9631,8 +9631,8 @@ func (m *GoodRewardMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, goodreward.FieldDeletedAt)
 	}
-	if m.addlast_benefit_at != nil {
-		fields = append(fields, goodreward.FieldLastBenefitAt)
+	if m.addlast_reward_at != nil {
+		fields = append(fields, goodreward.FieldLastRewardAt)
 	}
 	return fields
 }
@@ -9648,8 +9648,8 @@ func (m *GoodRewardMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdatedAt()
 	case goodreward.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case goodreward.FieldLastBenefitAt:
-		return m.AddedLastBenefitAt()
+	case goodreward.FieldLastRewardAt:
+		return m.AddedLastRewardAt()
 	}
 	return nil, false
 }
@@ -9680,12 +9680,12 @@ func (m *GoodRewardMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddDeletedAt(v)
 		return nil
-	case goodreward.FieldLastBenefitAt:
+	case goodreward.FieldLastRewardAt:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddLastBenefitAt(v)
+		m.AddLastRewardAt(v)
 		return nil
 	}
 	return fmt.Errorf("unknown GoodReward numeric field %s", name)
@@ -9695,20 +9695,20 @@ func (m *GoodRewardMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *GoodRewardMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(goodreward.FieldBenefitState) {
-		fields = append(fields, goodreward.FieldBenefitState)
+	if m.FieldCleared(goodreward.FieldRewardState) {
+		fields = append(fields, goodreward.FieldRewardState)
 	}
-	if m.FieldCleared(goodreward.FieldLastBenefitAt) {
-		fields = append(fields, goodreward.FieldLastBenefitAt)
+	if m.FieldCleared(goodreward.FieldLastRewardAt) {
+		fields = append(fields, goodreward.FieldLastRewardAt)
 	}
-	if m.FieldCleared(goodreward.FieldBenefitTids) {
-		fields = append(fields, goodreward.FieldBenefitTids)
+	if m.FieldCleared(goodreward.FieldRewardTid) {
+		fields = append(fields, goodreward.FieldRewardTid)
 	}
-	if m.FieldCleared(goodreward.FieldNextBenefitStartAmount) {
-		fields = append(fields, goodreward.FieldNextBenefitStartAmount)
+	if m.FieldCleared(goodreward.FieldNextRewardStartAmount) {
+		fields = append(fields, goodreward.FieldNextRewardStartAmount)
 	}
-	if m.FieldCleared(goodreward.FieldLastBenefitAmount) {
-		fields = append(fields, goodreward.FieldLastBenefitAmount)
+	if m.FieldCleared(goodreward.FieldLastRewardAmount) {
+		fields = append(fields, goodreward.FieldLastRewardAmount)
 	}
 	return fields
 }
@@ -9724,20 +9724,20 @@ func (m *GoodRewardMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *GoodRewardMutation) ClearField(name string) error {
 	switch name {
-	case goodreward.FieldBenefitState:
-		m.ClearBenefitState()
+	case goodreward.FieldRewardState:
+		m.ClearRewardState()
 		return nil
-	case goodreward.FieldLastBenefitAt:
-		m.ClearLastBenefitAt()
+	case goodreward.FieldLastRewardAt:
+		m.ClearLastRewardAt()
 		return nil
-	case goodreward.FieldBenefitTids:
-		m.ClearBenefitTids()
+	case goodreward.FieldRewardTid:
+		m.ClearRewardTid()
 		return nil
-	case goodreward.FieldNextBenefitStartAmount:
-		m.ClearNextBenefitStartAmount()
+	case goodreward.FieldNextRewardStartAmount:
+		m.ClearNextRewardStartAmount()
 		return nil
-	case goodreward.FieldLastBenefitAmount:
-		m.ClearLastBenefitAmount()
+	case goodreward.FieldLastRewardAmount:
+		m.ClearLastRewardAmount()
 		return nil
 	}
 	return fmt.Errorf("unknown GoodReward nullable field %s", name)
@@ -9759,20 +9759,20 @@ func (m *GoodRewardMutation) ResetField(name string) error {
 	case goodreward.FieldGoodID:
 		m.ResetGoodID()
 		return nil
-	case goodreward.FieldBenefitState:
-		m.ResetBenefitState()
+	case goodreward.FieldRewardState:
+		m.ResetRewardState()
 		return nil
-	case goodreward.FieldLastBenefitAt:
-		m.ResetLastBenefitAt()
+	case goodreward.FieldLastRewardAt:
+		m.ResetLastRewardAt()
 		return nil
-	case goodreward.FieldBenefitTids:
-		m.ResetBenefitTids()
+	case goodreward.FieldRewardTid:
+		m.ResetRewardTid()
 		return nil
-	case goodreward.FieldNextBenefitStartAmount:
-		m.ResetNextBenefitStartAmount()
+	case goodreward.FieldNextRewardStartAmount:
+		m.ResetNextRewardStartAmount()
 		return nil
-	case goodreward.FieldLastBenefitAmount:
-		m.ResetLastBenefitAmount()
+	case goodreward.FieldLastRewardAmount:
+		m.ResetLastRewardAmount()
 		return nil
 	}
 	return fmt.Errorf("unknown GoodReward field %s", name)

@@ -72,64 +72,72 @@ func (grc *GoodRewardCreate) SetGoodID(u uuid.UUID) *GoodRewardCreate {
 	return grc
 }
 
-// SetBenefitState sets the "benefit_state" field.
-func (grc *GoodRewardCreate) SetBenefitState(s string) *GoodRewardCreate {
-	grc.mutation.SetBenefitState(s)
+// SetRewardState sets the "reward_state" field.
+func (grc *GoodRewardCreate) SetRewardState(s string) *GoodRewardCreate {
+	grc.mutation.SetRewardState(s)
 	return grc
 }
 
-// SetNillableBenefitState sets the "benefit_state" field if the given value is not nil.
-func (grc *GoodRewardCreate) SetNillableBenefitState(s *string) *GoodRewardCreate {
+// SetNillableRewardState sets the "reward_state" field if the given value is not nil.
+func (grc *GoodRewardCreate) SetNillableRewardState(s *string) *GoodRewardCreate {
 	if s != nil {
-		grc.SetBenefitState(*s)
+		grc.SetRewardState(*s)
 	}
 	return grc
 }
 
-// SetLastBenefitAt sets the "last_benefit_at" field.
-func (grc *GoodRewardCreate) SetLastBenefitAt(u uint32) *GoodRewardCreate {
-	grc.mutation.SetLastBenefitAt(u)
+// SetLastRewardAt sets the "last_reward_at" field.
+func (grc *GoodRewardCreate) SetLastRewardAt(u uint32) *GoodRewardCreate {
+	grc.mutation.SetLastRewardAt(u)
 	return grc
 }
 
-// SetNillableLastBenefitAt sets the "last_benefit_at" field if the given value is not nil.
-func (grc *GoodRewardCreate) SetNillableLastBenefitAt(u *uint32) *GoodRewardCreate {
+// SetNillableLastRewardAt sets the "last_reward_at" field if the given value is not nil.
+func (grc *GoodRewardCreate) SetNillableLastRewardAt(u *uint32) *GoodRewardCreate {
 	if u != nil {
-		grc.SetLastBenefitAt(*u)
+		grc.SetLastRewardAt(*u)
 	}
 	return grc
 }
 
-// SetBenefitTids sets the "benefit_tids" field.
-func (grc *GoodRewardCreate) SetBenefitTids(u []uuid.UUID) *GoodRewardCreate {
-	grc.mutation.SetBenefitTids(u)
+// SetRewardTid sets the "reward_tid" field.
+func (grc *GoodRewardCreate) SetRewardTid(u uuid.UUID) *GoodRewardCreate {
+	grc.mutation.SetRewardTid(u)
 	return grc
 }
 
-// SetNextBenefitStartAmount sets the "next_benefit_start_amount" field.
-func (grc *GoodRewardCreate) SetNextBenefitStartAmount(d decimal.Decimal) *GoodRewardCreate {
-	grc.mutation.SetNextBenefitStartAmount(d)
-	return grc
-}
-
-// SetNillableNextBenefitStartAmount sets the "next_benefit_start_amount" field if the given value is not nil.
-func (grc *GoodRewardCreate) SetNillableNextBenefitStartAmount(d *decimal.Decimal) *GoodRewardCreate {
-	if d != nil {
-		grc.SetNextBenefitStartAmount(*d)
+// SetNillableRewardTid sets the "reward_tid" field if the given value is not nil.
+func (grc *GoodRewardCreate) SetNillableRewardTid(u *uuid.UUID) *GoodRewardCreate {
+	if u != nil {
+		grc.SetRewardTid(*u)
 	}
 	return grc
 }
 
-// SetLastBenefitAmount sets the "last_benefit_amount" field.
-func (grc *GoodRewardCreate) SetLastBenefitAmount(d decimal.Decimal) *GoodRewardCreate {
-	grc.mutation.SetLastBenefitAmount(d)
+// SetNextRewardStartAmount sets the "next_reward_start_amount" field.
+func (grc *GoodRewardCreate) SetNextRewardStartAmount(d decimal.Decimal) *GoodRewardCreate {
+	grc.mutation.SetNextRewardStartAmount(d)
 	return grc
 }
 
-// SetNillableLastBenefitAmount sets the "last_benefit_amount" field if the given value is not nil.
-func (grc *GoodRewardCreate) SetNillableLastBenefitAmount(d *decimal.Decimal) *GoodRewardCreate {
+// SetNillableNextRewardStartAmount sets the "next_reward_start_amount" field if the given value is not nil.
+func (grc *GoodRewardCreate) SetNillableNextRewardStartAmount(d *decimal.Decimal) *GoodRewardCreate {
 	if d != nil {
-		grc.SetLastBenefitAmount(*d)
+		grc.SetNextRewardStartAmount(*d)
+	}
+	return grc
+}
+
+// SetLastRewardAmount sets the "last_reward_amount" field.
+func (grc *GoodRewardCreate) SetLastRewardAmount(d decimal.Decimal) *GoodRewardCreate {
+	grc.mutation.SetLastRewardAmount(d)
+	return grc
+}
+
+// SetNillableLastRewardAmount sets the "last_reward_amount" field if the given value is not nil.
+func (grc *GoodRewardCreate) SetNillableLastRewardAmount(d *decimal.Decimal) *GoodRewardCreate {
+	if d != nil {
+		grc.SetLastRewardAmount(*d)
 	}
 	return grc
 }
@@ -248,25 +256,28 @@ func (grc *GoodRewardCreate) defaults() error {
 		v := goodreward.DefaultDeletedAt()
 		grc.mutation.SetDeletedAt(v)
 	}
-	if _, ok := grc.mutation.BenefitState(); !ok {
-		v := goodreward.DefaultBenefitState
-		grc.mutation.SetBenefitState(v)
+	if _, ok := grc.mutation.RewardState(); !ok {
+		v := goodreward.DefaultRewardState
+		grc.mutation.SetRewardState(v)
 	}
-	if _, ok := grc.mutation.LastBenefitAt(); !ok {
-		v := goodreward.DefaultLastBenefitAt
-		grc.mutation.SetLastBenefitAt(v)
+	if _, ok := grc.mutation.LastRewardAt(); !ok {
+		v := goodreward.DefaultLastRewardAt
+		grc.mutation.SetLastRewardAt(v)
 	}
-	if _, ok := grc.mutation.BenefitTids(); !ok {
-		v := goodreward.DefaultBenefitTids
-		grc.mutation.SetBenefitTids(v)
+	if _, ok := grc.mutation.RewardTid(); !ok {
+		if goodreward.DefaultRewardTid == nil {
+			return fmt.Errorf("ent: uninitialized goodreward.DefaultRewardTid (forgotten import ent/runtime?)")
+		}
+		v := goodreward.DefaultRewardTid()
+		grc.mutation.SetRewardTid(v)
 	}
-	if _, ok := grc.mutation.NextBenefitStartAmount(); !ok {
-		v := goodreward.DefaultNextBenefitStartAmount
-		grc.mutation.SetNextBenefitStartAmount(v)
+	if _, ok := grc.mutation.NextRewardStartAmount(); !ok {
+		v := goodreward.DefaultNextRewardStartAmount
+		grc.mutation.SetNextRewardStartAmount(v)
 	}
-	if _, ok := grc.mutation.LastBenefitAmount(); !ok {
-		v := goodreward.DefaultLastBenefitAmount
-		grc.mutation.SetLastBenefitAmount(v)
+	if _, ok := grc.mutation.LastRewardAmount(); !ok {
+		v := goodreward.DefaultLastRewardAmount
+		grc.mutation.SetLastRewardAmount(v)
 	}
 	if _, ok := grc.mutation.ID(); !ok {
 		if goodreward.DefaultID == nil {
@@ -361,45 +372,45 @@ func (grc *GoodRewardCreate) createSpec() (*GoodReward, *sqlgraph.CreateSpec) {
 		})
 		_node.GoodID = value
 	}
-	if value, ok := grc.mutation.BenefitState(); ok {
+	if value, ok := grc.mutation.RewardState(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: goodreward.FieldBenefitState,
+			Column: goodreward.FieldRewardState,
 		})
-		_node.BenefitState = value
+		_node.RewardState = value
 	}
-	if value, ok := grc.mutation.LastBenefitAt(); ok {
+	if value, ok := grc.mutation.LastRewardAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: goodreward.FieldLastBenefitAt,
+			Column: goodreward.FieldLastRewardAt,
 		})
-		_node.LastBenefitAt = value
+		_node.LastRewardAt = value
 	}
-	if value, ok := grc.mutation.BenefitTids(); ok {
+	if value, ok := grc.mutation.RewardTid(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: goodreward.FieldBenefitTids,
+			Column: goodreward.FieldRewardTid,
 		})
-		_node.BenefitTids = value
+		_node.RewardTid = value
 	}
-	if value, ok := grc.mutation.NextBenefitStartAmount(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: goodreward.FieldNextBenefitStartAmount,
-		})
-		_node.NextBenefitStartAmount = value
-	}
-	if value, ok := grc.mutation.LastBenefitAmount(); ok {
+	if value, ok := grc.mutation.NextRewardStartAmount(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: goodreward.FieldLastBenefitAmount,
+			Column: goodreward.FieldNextRewardStartAmount,
 		})
-		_node.LastBenefitAmount = value
+		_node.NextRewardStartAmount = value
+	}
+	if value, ok := grc.mutation.LastRewardAmount(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: goodreward.FieldLastRewardAmount,
+		})
+		_node.LastRewardAmount = value
 	}
 	return _node, _spec
 }
@@ -521,99 +532,99 @@ func (u *GoodRewardUpsert) UpdateGoodID() *GoodRewardUpsert {
 	return u
 }
 
-// SetBenefitState sets the "benefit_state" field.
-func (u *GoodRewardUpsert) SetBenefitState(v string) *GoodRewardUpsert {
-	u.Set(goodreward.FieldBenefitState, v)
+// SetRewardState sets the "reward_state" field.
+func (u *GoodRewardUpsert) SetRewardState(v string) *GoodRewardUpsert {
+	u.Set(goodreward.FieldRewardState, v)
 	return u
 }
 
-// UpdateBenefitState sets the "benefit_state" field to the value that was provided on create.
-func (u *GoodRewardUpsert) UpdateBenefitState() *GoodRewardUpsert {
-	u.SetExcluded(goodreward.FieldBenefitState)
+// UpdateRewardState sets the "reward_state" field to the value that was provided on create.
+func (u *GoodRewardUpsert) UpdateRewardState() *GoodRewardUpsert {
+	u.SetExcluded(goodreward.FieldRewardState)
 	return u
 }
 
-// ClearBenefitState clears the value of the "benefit_state" field.
-func (u *GoodRewardUpsert) ClearBenefitState() *GoodRewardUpsert {
-	u.SetNull(goodreward.FieldBenefitState)
+// ClearRewardState clears the value of the "reward_state" field.
+func (u *GoodRewardUpsert) ClearRewardState() *GoodRewardUpsert {
+	u.SetNull(goodreward.FieldRewardState)
 	return u
 }
 
-// SetLastBenefitAt sets the "last_benefit_at" field.
-func (u *GoodRewardUpsert) SetLastBenefitAt(v uint32) *GoodRewardUpsert {
-	u.Set(goodreward.FieldLastBenefitAt, v)
+// SetLastRewardAt sets the "last_reward_at" field.
+func (u *GoodRewardUpsert) SetLastRewardAt(v uint32) *GoodRewardUpsert {
+	u.Set(goodreward.FieldLastRewardAt, v)
 	return u
 }
 
-// UpdateLastBenefitAt sets the "last_benefit_at" field to the value that was provided on create.
-func (u *GoodRewardUpsert) UpdateLastBenefitAt() *GoodRewardUpsert {
-	u.SetExcluded(goodreward.FieldLastBenefitAt)
+// UpdateLastRewardAt sets the "last_reward_at" field to the value that was provided on create.
+func (u *GoodRewardUpsert) UpdateLastRewardAt() *GoodRewardUpsert {
+	u.SetExcluded(goodreward.FieldLastRewardAt)
 	return u
 }
 
-// AddLastBenefitAt adds v to the "last_benefit_at" field.
-func (u *GoodRewardUpsert) AddLastBenefitAt(v uint32) *GoodRewardUpsert {
-	u.Add(goodreward.FieldLastBenefitAt, v)
+// AddLastRewardAt adds v to the "last_reward_at" field.
+func (u *GoodRewardUpsert) AddLastRewardAt(v uint32) *GoodRewardUpsert {
+	u.Add(goodreward.FieldLastRewardAt, v)
 	return u
 }
 
-// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
-func (u *GoodRewardUpsert) ClearLastBenefitAt() *GoodRewardUpsert {
-	u.SetNull(goodreward.FieldLastBenefitAt)
+// ClearLastRewardAt clears the value of the "last_reward_at" field.
+func (u *GoodRewardUpsert) ClearLastRewardAt() *GoodRewardUpsert {
+	u.SetNull(goodreward.FieldLastRewardAt)
 	return u
 }
 
-// SetBenefitTids sets the "benefit_tids" field.
-func (u *GoodRewardUpsert) SetBenefitTids(v []uuid.UUID) *GoodRewardUpsert {
-	u.Set(goodreward.FieldBenefitTids, v)
+// SetRewardTid sets the "reward_tid" field.
+func (u *GoodRewardUpsert) SetRewardTid(v uuid.UUID) *GoodRewardUpsert {
+	u.Set(goodreward.FieldRewardTid, v)
 	return u
 }
 
-// UpdateBenefitTids sets the "benefit_tids" field to the value that was provided on create.
-func (u *GoodRewardUpsert) UpdateBenefitTids() *GoodRewardUpsert {
-	u.SetExcluded(goodreward.FieldBenefitTids)
+// UpdateRewardTid sets the "reward_tid" field to the value that was provided on create.
+func (u *GoodRewardUpsert) UpdateRewardTid() *GoodRewardUpsert {
+	u.SetExcluded(goodreward.FieldRewardTid)
 	return u
 }
 
-// ClearBenefitTids clears the value of the "benefit_tids" field.
-func (u *GoodRewardUpsert) ClearBenefitTids() *GoodRewardUpsert {
-	u.SetNull(goodreward.FieldBenefitTids)
+// ClearRewardTid clears the value of the "reward_tid" field.
+func (u *GoodRewardUpsert) ClearRewardTid() *GoodRewardUpsert {
+	u.SetNull(goodreward.FieldRewardTid)
 	return u
 }
 
-// SetNextBenefitStartAmount sets the "next_benefit_start_amount" field.
-func (u *GoodRewardUpsert) SetNextBenefitStartAmount(v decimal.Decimal) *GoodRewardUpsert {
-	u.Set(goodreward.FieldNextBenefitStartAmount, v)
+// SetNextRewardStartAmount sets the "next_reward_start_amount" field.
+func (u *GoodRewardUpsert) SetNextRewardStartAmount(v decimal.Decimal) *GoodRewardUpsert {
+	u.Set(goodreward.FieldNextRewardStartAmount, v)
 	return u
 }
 
-// UpdateNextBenefitStartAmount sets the "next_benefit_start_amount" field to the value that was provided on create.
-func (u *GoodRewardUpsert) UpdateNextBenefitStartAmount() *GoodRewardUpsert {
-	u.SetExcluded(goodreward.FieldNextBenefitStartAmount)
+// UpdateNextRewardStartAmount sets the "next_reward_start_amount" field to the value that was provided on create.
+func (u *GoodRewardUpsert) UpdateNextRewardStartAmount() *GoodRewardUpsert {
+	u.SetExcluded(goodreward.FieldNextRewardStartAmount)
 	return u
 }
 
-// ClearNextBenefitStartAmount clears the value of the "next_benefit_start_amount" field.
-func (u *GoodRewardUpsert) ClearNextBenefitStartAmount() *GoodRewardUpsert {
-	u.SetNull(goodreward.FieldNextBenefitStartAmount)
+// ClearNextRewardStartAmount clears the value of the "next_reward_start_amount" field.
+func (u *GoodRewardUpsert) ClearNextRewardStartAmount() *GoodRewardUpsert {
+	u.SetNull(goodreward.FieldNextRewardStartAmount)
 	return u
 }
 
-// SetLastBenefitAmount sets the "last_benefit_amount" field.
-func (u *GoodRewardUpsert) SetLastBenefitAmount(v decimal.Decimal) *GoodRewardUpsert {
-	u.Set(goodreward.FieldLastBenefitAmount, v)
+// SetLastRewardAmount sets the "last_reward_amount" field.
+func (u *GoodRewardUpsert) SetLastRewardAmount(v decimal.Decimal) *GoodRewardUpsert {
+	u.Set(goodreward.FieldLastRewardAmount, v)
 	return u
 }
 
-// UpdateLastBenefitAmount sets the "last_benefit_amount" field to the value that was provided on create.
-func (u *GoodRewardUpsert) UpdateLastBenefitAmount() *GoodRewardUpsert {
-	u.SetExcluded(goodreward.FieldLastBenefitAmount)
+// UpdateLastRewardAmount sets the "last_reward_amount" field to the value that was provided on create.
+func (u *GoodRewardUpsert) UpdateLastRewardAmount() *GoodRewardUpsert {
+	u.SetExcluded(goodreward.FieldLastRewardAmount)
 	return u
 }
 
-// ClearLastBenefitAmount clears the value of the "last_benefit_amount" field.
-func (u *GoodRewardUpsert) ClearLastBenefitAmount() *GoodRewardUpsert {
-	u.SetNull(goodreward.FieldLastBenefitAmount)
+// ClearLastRewardAmount clears the value of the "last_reward_amount" field.
+func (u *GoodRewardUpsert) ClearLastRewardAmount() *GoodRewardUpsert {
+	u.SetNull(goodreward.FieldLastRewardAmount)
 	return u
 }
 
@@ -744,115 +755,115 @@ func (u *GoodRewardUpsertOne) UpdateGoodID() *GoodRewardUpsertOne {
 	})
 }
 
-// SetBenefitState sets the "benefit_state" field.
-func (u *GoodRewardUpsertOne) SetBenefitState(v string) *GoodRewardUpsertOne {
+// SetRewardState sets the "reward_state" field.
+func (u *GoodRewardUpsertOne) SetRewardState(v string) *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.SetBenefitState(v)
+		s.SetRewardState(v)
 	})
 }
 
-// UpdateBenefitState sets the "benefit_state" field to the value that was provided on create.
-func (u *GoodRewardUpsertOne) UpdateBenefitState() *GoodRewardUpsertOne {
+// UpdateRewardState sets the "reward_state" field to the value that was provided on create.
+func (u *GoodRewardUpsertOne) UpdateRewardState() *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.UpdateBenefitState()
+		s.UpdateRewardState()
 	})
 }
 
-// ClearBenefitState clears the value of the "benefit_state" field.
-func (u *GoodRewardUpsertOne) ClearBenefitState() *GoodRewardUpsertOne {
+// ClearRewardState clears the value of the "reward_state" field.
+func (u *GoodRewardUpsertOne) ClearRewardState() *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.ClearBenefitState()
+		s.ClearRewardState()
 	})
 }
 
-// SetLastBenefitAt sets the "last_benefit_at" field.
-func (u *GoodRewardUpsertOne) SetLastBenefitAt(v uint32) *GoodRewardUpsertOne {
+// SetLastRewardAt sets the "last_reward_at" field.
+func (u *GoodRewardUpsertOne) SetLastRewardAt(v uint32) *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.SetLastBenefitAt(v)
+		s.SetLastRewardAt(v)
 	})
 }
 
-// AddLastBenefitAt adds v to the "last_benefit_at" field.
-func (u *GoodRewardUpsertOne) AddLastBenefitAt(v uint32) *GoodRewardUpsertOne {
+// AddLastRewardAt adds v to the "last_reward_at" field.
+func (u *GoodRewardUpsertOne) AddLastRewardAt(v uint32) *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.AddLastBenefitAt(v)
+		s.AddLastRewardAt(v)
 	})
 }
 
-// UpdateLastBenefitAt sets the "last_benefit_at" field to the value that was provided on create.
-func (u *GoodRewardUpsertOne) UpdateLastBenefitAt() *GoodRewardUpsertOne {
+// UpdateLastRewardAt sets the "last_reward_at" field to the value that was provided on create.
+func (u *GoodRewardUpsertOne) UpdateLastRewardAt() *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.UpdateLastBenefitAt()
+		s.UpdateLastRewardAt()
 	})
 }
 
-// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
-func (u *GoodRewardUpsertOne) ClearLastBenefitAt() *GoodRewardUpsertOne {
+// ClearLastRewardAt clears the value of the "last_reward_at" field.
+func (u *GoodRewardUpsertOne) ClearLastRewardAt() *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.ClearLastBenefitAt()
+		s.ClearLastRewardAt()
 	})
 }
 
-// SetBenefitTids sets the "benefit_tids" field.
-func (u *GoodRewardUpsertOne) SetBenefitTids(v []uuid.UUID) *GoodRewardUpsertOne {
+// SetRewardTid sets the "reward_tid" field.
+func (u *GoodRewardUpsertOne) SetRewardTid(v uuid.UUID) *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.SetBenefitTids(v)
+		s.SetRewardTid(v)
 	})
 }
 
-// UpdateBenefitTids sets the "benefit_tids" field to the value that was provided on create.
-func (u *GoodRewardUpsertOne) UpdateBenefitTids() *GoodRewardUpsertOne {
+// UpdateRewardTid sets the "reward_tid" field to the value that was provided on create.
+func (u *GoodRewardUpsertOne) UpdateRewardTid() *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.UpdateBenefitTids()
+		s.UpdateRewardTid()
 	})
 }
 
-// ClearBenefitTids clears the value of the "benefit_tids" field.
-func (u *GoodRewardUpsertOne) ClearBenefitTids() *GoodRewardUpsertOne {
+// ClearRewardTid clears the value of the "reward_tid" field.
+func (u *GoodRewardUpsertOne) ClearRewardTid() *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.ClearBenefitTids()
+		s.ClearRewardTid()
 	})
 }
 
-// SetNextBenefitStartAmount sets the "next_benefit_start_amount" field.
-func (u *GoodRewardUpsertOne) SetNextBenefitStartAmount(v decimal.Decimal) *GoodRewardUpsertOne {
+// SetNextRewardStartAmount sets the "next_reward_start_amount" field.
+func (u *GoodRewardUpsertOne) SetNextRewardStartAmount(v decimal.Decimal) *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.SetNextBenefitStartAmount(v)
+		s.SetNextRewardStartAmount(v)
 	})
 }
 
-// UpdateNextBenefitStartAmount sets the "next_benefit_start_amount" field to the value that was provided on create.
-func (u *GoodRewardUpsertOne) UpdateNextBenefitStartAmount() *GoodRewardUpsertOne {
+// UpdateNextRewardStartAmount sets the "next_reward_start_amount" field to the value that was provided on create.
+func (u *GoodRewardUpsertOne) UpdateNextRewardStartAmount() *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.UpdateNextBenefitStartAmount()
+		s.UpdateNextRewardStartAmount()
 	})
 }
 
-// ClearNextBenefitStartAmount clears the value of the "next_benefit_start_amount" field.
-func (u *GoodRewardUpsertOne) ClearNextBenefitStartAmount() *GoodRewardUpsertOne {
+// ClearNextRewardStartAmount clears the value of the "next_reward_start_amount" field.
+func (u *GoodRewardUpsertOne) ClearNextRewardStartAmount() *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.ClearNextBenefitStartAmount()
+		s.ClearNextRewardStartAmount()
 	})
 }
 
-// SetLastBenefitAmount sets the "last_benefit_amount" field.
-func (u *GoodRewardUpsertOne) SetLastBenefitAmount(v decimal.Decimal) *GoodRewardUpsertOne {
+// SetLastRewardAmount sets the "last_reward_amount" field.
+func (u *GoodRewardUpsertOne) SetLastRewardAmount(v decimal.Decimal) *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.SetLastBenefitAmount(v)
+		s.SetLastRewardAmount(v)
 	})
 }
 
-// UpdateLastBenefitAmount sets the "last_benefit_amount" field to the value that was provided on create.
-func (u *GoodRewardUpsertOne) UpdateLastBenefitAmount() *GoodRewardUpsertOne {
+// UpdateLastRewardAmount sets the "last_reward_amount" field to the value that was provided on create.
+func (u *GoodRewardUpsertOne) UpdateLastRewardAmount() *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.UpdateLastBenefitAmount()
+		s.UpdateLastRewardAmount()
 	})
 }
 
-// ClearLastBenefitAmount clears the value of the "last_benefit_amount" field.
-func (u *GoodRewardUpsertOne) ClearLastBenefitAmount() *GoodRewardUpsertOne {
+// ClearLastRewardAmount clears the value of the "last_reward_amount" field.
+func (u *GoodRewardUpsertOne) ClearLastRewardAmount() *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.ClearLastBenefitAmount()
+		s.ClearLastRewardAmount()
 	})
 }
 
@@ -1149,115 +1160,115 @@ func (u *GoodRewardUpsertBulk) UpdateGoodID() *GoodRewardUpsertBulk {
 	})
 }
 
-// SetBenefitState sets the "benefit_state" field.
-func (u *GoodRewardUpsertBulk) SetBenefitState(v string) *GoodRewardUpsertBulk {
+// SetRewardState sets the "reward_state" field.
+func (u *GoodRewardUpsertBulk) SetRewardState(v string) *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.SetBenefitState(v)
+		s.SetRewardState(v)
 	})
 }
 
-// UpdateBenefitState sets the "benefit_state" field to the value that was provided on create.
-func (u *GoodRewardUpsertBulk) UpdateBenefitState() *GoodRewardUpsertBulk {
+// UpdateRewardState sets the "reward_state" field to the value that was provided on create.
+func (u *GoodRewardUpsertBulk) UpdateRewardState() *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.UpdateBenefitState()
+		s.UpdateRewardState()
 	})
 }
 
-// ClearBenefitState clears the value of the "benefit_state" field.
-func (u *GoodRewardUpsertBulk) ClearBenefitState() *GoodRewardUpsertBulk {
+// ClearRewardState clears the value of the "reward_state" field.
+func (u *GoodRewardUpsertBulk) ClearRewardState() *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.ClearBenefitState()
+		s.ClearRewardState()
 	})
 }
 
-// SetLastBenefitAt sets the "last_benefit_at" field.
-func (u *GoodRewardUpsertBulk) SetLastBenefitAt(v uint32) *GoodRewardUpsertBulk {
+// SetLastRewardAt sets the "last_reward_at" field.
+func (u *GoodRewardUpsertBulk) SetLastRewardAt(v uint32) *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.SetLastBenefitAt(v)
+		s.SetLastRewardAt(v)
 	})
 }
 
-// AddLastBenefitAt adds v to the "last_benefit_at" field.
-func (u *GoodRewardUpsertBulk) AddLastBenefitAt(v uint32) *GoodRewardUpsertBulk {
+// AddLastRewardAt adds v to the "last_reward_at" field.
+func (u *GoodRewardUpsertBulk) AddLastRewardAt(v uint32) *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.AddLastBenefitAt(v)
+		s.AddLastRewardAt(v)
 	})
 }
 
-// UpdateLastBenefitAt sets the "last_benefit_at" field to the value that was provided on create.
-func (u *GoodRewardUpsertBulk) UpdateLastBenefitAt() *GoodRewardUpsertBulk {
+// UpdateLastRewardAt sets the "last_reward_at" field to the value that was provided on create.
+func (u *GoodRewardUpsertBulk) UpdateLastRewardAt() *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.UpdateLastBenefitAt()
+		s.UpdateLastRewardAt()
 	})
 }
 
-// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
-func (u *GoodRewardUpsertBulk) ClearLastBenefitAt() *GoodRewardUpsertBulk {
+// ClearLastRewardAt clears the value of the "last_reward_at" field.
+func (u *GoodRewardUpsertBulk) ClearLastRewardAt() *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.ClearLastBenefitAt()
+		s.ClearLastRewardAt()
 	})
 }
 
-// SetBenefitTids sets the "benefit_tids" field.
-func (u *GoodRewardUpsertBulk) SetBenefitTids(v []uuid.UUID) *GoodRewardUpsertBulk {
+// SetRewardTid sets the "reward_tid" field.
+func (u *GoodRewardUpsertBulk) SetRewardTid(v uuid.UUID) *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.SetBenefitTids(v)
+		s.SetRewardTid(v)
 	})
 }
 
-// UpdateBenefitTids sets the "benefit_tids" field to the value that was provided on create.
-func (u *GoodRewardUpsertBulk) UpdateBenefitTids() *GoodRewardUpsertBulk {
+// UpdateRewardTid sets the "reward_tid" field to the value that was provided on create.
+func (u *GoodRewardUpsertBulk) UpdateRewardTid() *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.UpdateBenefitTids()
+		s.UpdateRewardTid()
 	})
 }
 
-// ClearBenefitTids clears the value of the "benefit_tids" field.
-func (u *GoodRewardUpsertBulk) ClearBenefitTids() *GoodRewardUpsertBulk {
+// ClearRewardTid clears the value of the "reward_tid" field.
+func (u *GoodRewardUpsertBulk) ClearRewardTid() *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.ClearBenefitTids()
+		s.ClearRewardTid()
 	})
 }
 
-// SetNextBenefitStartAmount sets the "next_benefit_start_amount" field.
-func (u *GoodRewardUpsertBulk) SetNextBenefitStartAmount(v decimal.Decimal) *GoodRewardUpsertBulk {
+// SetNextRewardStartAmount sets the "next_reward_start_amount" field.
+func (u *GoodRewardUpsertBulk) SetNextRewardStartAmount(v decimal.Decimal) *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.SetNextBenefitStartAmount(v)
+		s.SetNextRewardStartAmount(v)
 	})
 }
 
-// UpdateNextBenefitStartAmount sets the "next_benefit_start_amount" field to the value that was provided on create.
-func (u *GoodRewardUpsertBulk) UpdateNextBenefitStartAmount() *GoodRewardUpsertBulk {
+// UpdateNextRewardStartAmount sets the "next_reward_start_amount" field to the value that was provided on create.
+func (u *GoodRewardUpsertBulk) UpdateNextRewardStartAmount() *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.UpdateNextBenefitStartAmount()
+		s.UpdateNextRewardStartAmount()
 	})
 }
 
-// ClearNextBenefitStartAmount clears the value of the "next_benefit_start_amount" field.
-func (u *GoodRewardUpsertBulk) ClearNextBenefitStartAmount() *GoodRewardUpsertBulk {
+// ClearNextRewardStartAmount clears the value of the "next_reward_start_amount" field.
+func (u *GoodRewardUpsertBulk) ClearNextRewardStartAmount() *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.ClearNextBenefitStartAmount()
+		s.ClearNextRewardStartAmount()
 	})
 }
 
-// SetLastBenefitAmount sets the "last_benefit_amount" field.
-func (u *GoodRewardUpsertBulk) SetLastBenefitAmount(v decimal.Decimal) *GoodRewardUpsertBulk {
+// SetLastRewardAmount sets the "last_reward_amount" field.
+func (u *GoodRewardUpsertBulk) SetLastRewardAmount(v decimal.Decimal) *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.SetLastBenefitAmount(v)
+		s.SetLastRewardAmount(v)
 	})
 }
 
-// UpdateLastBenefitAmount sets the "last_benefit_amount" field to the value that was provided on create.
-func (u *GoodRewardUpsertBulk) UpdateLastBenefitAmount() *GoodRewardUpsertBulk {
+// UpdateLastRewardAmount sets the "last_reward_amount" field to the value that was provided on create.
+func (u *GoodRewardUpsertBulk) UpdateLastRewardAmount() *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.UpdateLastBenefitAmount()
+		s.UpdateLastRewardAmount()
 	})
 }
 
-// ClearLastBenefitAmount clears the value of the "last_benefit_amount" field.
-func (u *GoodRewardUpsertBulk) ClearLastBenefitAmount() *GoodRewardUpsertBulk {
+// ClearLastRewardAmount clears the value of the "last_reward_amount" field.
+func (u *GoodRewardUpsertBulk) ClearLastRewardAmount() *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
-		s.ClearLastBenefitAmount()
+		s.ClearLastRewardAmount()
 	})
 }
 

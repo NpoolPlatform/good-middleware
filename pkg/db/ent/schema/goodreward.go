@@ -31,26 +31,28 @@ func (GoodReward) Fields() []ent.Field {
 		field.
 			UUID("good_id", uuid.UUID{}),
 		field.
-			String("benefit_state").
+			String("reward_state").
 			Optional().
 			Default(types.BenefitState_BenefitWait.String()),
 		field.
-			Uint32("last_benefit_at").
+			Uint32("last_reward_at").
 			Optional().
 			Default(0),
 		field.
-			JSON("benefit_tids", []uuid.UUID{}).
+			UUID("reward_tid", uuid.UUID{}).
 			Optional().
-			Default([]uuid.UUID{}),
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
-			Other("next_benefit_start_amount", decimal.Decimal{}).
+			Other("next_reward_start_amount", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).
 			Optional().
 			Default(decimal.Decimal{}),
 		field.
-			Other("last_benefit_amount", decimal.Decimal{}).
+			Other("last_reward_amount", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).

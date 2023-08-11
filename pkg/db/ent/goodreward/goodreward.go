@@ -21,16 +21,16 @@ const (
 	FieldDeletedAt = "deleted_at"
 	// FieldGoodID holds the string denoting the good_id field in the database.
 	FieldGoodID = "good_id"
-	// FieldBenefitState holds the string denoting the benefit_state field in the database.
-	FieldBenefitState = "benefit_state"
-	// FieldLastBenefitAt holds the string denoting the last_benefit_at field in the database.
-	FieldLastBenefitAt = "last_benefit_at"
-	// FieldBenefitTids holds the string denoting the benefit_tids field in the database.
-	FieldBenefitTids = "benefit_tids"
-	// FieldNextBenefitStartAmount holds the string denoting the next_benefit_start_amount field in the database.
-	FieldNextBenefitStartAmount = "next_benefit_start_amount"
-	// FieldLastBenefitAmount holds the string denoting the last_benefit_amount field in the database.
-	FieldLastBenefitAmount = "last_benefit_amount"
+	// FieldRewardState holds the string denoting the reward_state field in the database.
+	FieldRewardState = "reward_state"
+	// FieldLastRewardAt holds the string denoting the last_reward_at field in the database.
+	FieldLastRewardAt = "last_reward_at"
+	// FieldRewardTid holds the string denoting the reward_tid field in the database.
+	FieldRewardTid = "reward_tid"
+	// FieldNextRewardStartAmount holds the string denoting the next_reward_start_amount field in the database.
+	FieldNextRewardStartAmount = "next_reward_start_amount"
+	// FieldLastRewardAmount holds the string denoting the last_reward_amount field in the database.
+	FieldLastRewardAmount = "last_reward_amount"
 	// Table holds the table name of the goodreward in the database.
 	Table = "good_rewards"
 )
@@ -42,11 +42,11 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldDeletedAt,
 	FieldGoodID,
-	FieldBenefitState,
-	FieldLastBenefitAt,
-	FieldBenefitTids,
-	FieldNextBenefitStartAmount,
-	FieldLastBenefitAmount,
+	FieldRewardState,
+	FieldLastRewardAt,
+	FieldRewardTid,
+	FieldNextRewardStartAmount,
+	FieldLastRewardAmount,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -76,16 +76,16 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
-	// DefaultBenefitState holds the default value on creation for the "benefit_state" field.
-	DefaultBenefitState string
-	// DefaultLastBenefitAt holds the default value on creation for the "last_benefit_at" field.
-	DefaultLastBenefitAt uint32
-	// DefaultBenefitTids holds the default value on creation for the "benefit_tids" field.
-	DefaultBenefitTids []uuid.UUID
-	// DefaultNextBenefitStartAmount holds the default value on creation for the "next_benefit_start_amount" field.
-	DefaultNextBenefitStartAmount decimal.Decimal
-	// DefaultLastBenefitAmount holds the default value on creation for the "last_benefit_amount" field.
-	DefaultLastBenefitAmount decimal.Decimal
+	// DefaultRewardState holds the default value on creation for the "reward_state" field.
+	DefaultRewardState string
+	// DefaultLastRewardAt holds the default value on creation for the "last_reward_at" field.
+	DefaultLastRewardAt uint32
+	// DefaultRewardTid holds the default value on creation for the "reward_tid" field.
+	DefaultRewardTid func() uuid.UUID
+	// DefaultNextRewardStartAmount holds the default value on creation for the "next_reward_start_amount" field.
+	DefaultNextRewardStartAmount decimal.Decimal
+	// DefaultLastRewardAmount holds the default value on creation for the "last_reward_amount" field.
+	DefaultLastRewardAmount decimal.Decimal
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

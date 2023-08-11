@@ -217,15 +217,15 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "GoodReward",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			goodreward.FieldCreatedAt:              {Type: field.TypeUint32, Column: goodreward.FieldCreatedAt},
-			goodreward.FieldUpdatedAt:              {Type: field.TypeUint32, Column: goodreward.FieldUpdatedAt},
-			goodreward.FieldDeletedAt:              {Type: field.TypeUint32, Column: goodreward.FieldDeletedAt},
-			goodreward.FieldGoodID:                 {Type: field.TypeUUID, Column: goodreward.FieldGoodID},
-			goodreward.FieldBenefitState:           {Type: field.TypeString, Column: goodreward.FieldBenefitState},
-			goodreward.FieldLastBenefitAt:          {Type: field.TypeUint32, Column: goodreward.FieldLastBenefitAt},
-			goodreward.FieldBenefitTids:            {Type: field.TypeJSON, Column: goodreward.FieldBenefitTids},
-			goodreward.FieldNextBenefitStartAmount: {Type: field.TypeOther, Column: goodreward.FieldNextBenefitStartAmount},
-			goodreward.FieldLastBenefitAmount:      {Type: field.TypeOther, Column: goodreward.FieldLastBenefitAmount},
+			goodreward.FieldCreatedAt:             {Type: field.TypeUint32, Column: goodreward.FieldCreatedAt},
+			goodreward.FieldUpdatedAt:             {Type: field.TypeUint32, Column: goodreward.FieldUpdatedAt},
+			goodreward.FieldDeletedAt:             {Type: field.TypeUint32, Column: goodreward.FieldDeletedAt},
+			goodreward.FieldGoodID:                {Type: field.TypeUUID, Column: goodreward.FieldGoodID},
+			goodreward.FieldRewardState:           {Type: field.TypeString, Column: goodreward.FieldRewardState},
+			goodreward.FieldLastRewardAt:          {Type: field.TypeUint32, Column: goodreward.FieldLastRewardAt},
+			goodreward.FieldRewardTid:             {Type: field.TypeUUID, Column: goodreward.FieldRewardTid},
+			goodreward.FieldNextRewardStartAmount: {Type: field.TypeOther, Column: goodreward.FieldNextRewardStartAmount},
+			goodreward.FieldLastRewardAmount:      {Type: field.TypeOther, Column: goodreward.FieldLastRewardAmount},
 		},
 	}
 	graph.Nodes[8] = &sqlgraph.Node{
@@ -1145,29 +1145,29 @@ func (f *GoodRewardFilter) WhereGoodID(p entql.ValueP) {
 	f.Where(p.Field(goodreward.FieldGoodID))
 }
 
-// WhereBenefitState applies the entql string predicate on the benefit_state field.
-func (f *GoodRewardFilter) WhereBenefitState(p entql.StringP) {
-	f.Where(p.Field(goodreward.FieldBenefitState))
+// WhereRewardState applies the entql string predicate on the reward_state field.
+func (f *GoodRewardFilter) WhereRewardState(p entql.StringP) {
+	f.Where(p.Field(goodreward.FieldRewardState))
 }
 
-// WhereLastBenefitAt applies the entql uint32 predicate on the last_benefit_at field.
-func (f *GoodRewardFilter) WhereLastBenefitAt(p entql.Uint32P) {
-	f.Where(p.Field(goodreward.FieldLastBenefitAt))
+// WhereLastRewardAt applies the entql uint32 predicate on the last_reward_at field.
+func (f *GoodRewardFilter) WhereLastRewardAt(p entql.Uint32P) {
+	f.Where(p.Field(goodreward.FieldLastRewardAt))
 }
 
-// WhereBenefitTids applies the entql json.RawMessage predicate on the benefit_tids field.
-func (f *GoodRewardFilter) WhereBenefitTids(p entql.BytesP) {
-	f.Where(p.Field(goodreward.FieldBenefitTids))
+// WhereRewardTid applies the entql [16]byte predicate on the reward_tid field.
+func (f *GoodRewardFilter) WhereRewardTid(p entql.ValueP) {
+	f.Where(p.Field(goodreward.FieldRewardTid))
 }
 
-// WhereNextBenefitStartAmount applies the entql other predicate on the next_benefit_start_amount field.
-func (f *GoodRewardFilter) WhereNextBenefitStartAmount(p entql.OtherP) {
-	f.Where(p.Field(goodreward.FieldNextBenefitStartAmount))
+// WhereNextRewardStartAmount applies the entql other predicate on the next_reward_start_amount field.
+func (f *GoodRewardFilter) WhereNextRewardStartAmount(p entql.OtherP) {
+	f.Where(p.Field(goodreward.FieldNextRewardStartAmount))
 }
 
-// WhereLastBenefitAmount applies the entql other predicate on the last_benefit_amount field.
-func (f *GoodRewardFilter) WhereLastBenefitAmount(p entql.OtherP) {
-	f.Where(p.Field(goodreward.FieldLastBenefitAmount))
+// WhereLastRewardAmount applies the entql other predicate on the last_reward_amount field.
+func (f *GoodRewardFilter) WhereLastRewardAmount(p entql.OtherP) {
+	f.Where(p.Field(goodreward.FieldLastRewardAmount))
 }
 
 // addPredicate implements the predicateAdder interface.

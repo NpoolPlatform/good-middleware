@@ -202,11 +202,11 @@ var (
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "good_id", Type: field.TypeUUID},
-		{Name: "benefit_state", Type: field.TypeString, Nullable: true, Default: "BenefitWait"},
-		{Name: "last_benefit_at", Type: field.TypeUint32, Nullable: true, Default: 0},
-		{Name: "benefit_tids", Type: field.TypeJSON, Nullable: true},
-		{Name: "next_benefit_start_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
-		{Name: "last_benefit_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "reward_state", Type: field.TypeString, Nullable: true, Default: "BenefitWait"},
+		{Name: "last_reward_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "reward_tid", Type: field.TypeUUID, Nullable: true},
+		{Name: "next_reward_start_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "last_reward_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}
 	// GoodRewardsTable holds the schema information for the "good_rewards" table.
 	GoodRewardsTable = &schema.Table{

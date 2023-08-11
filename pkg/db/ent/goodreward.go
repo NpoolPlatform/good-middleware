@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -26,16 +25,16 @@ type GoodReward struct {
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// GoodID holds the value of the "good_id" field.
 	GoodID uuid.UUID `json:"good_id,omitempty"`
-	// BenefitState holds the value of the "benefit_state" field.
-	BenefitState string `json:"benefit_state,omitempty"`
-	// LastBenefitAt holds the value of the "last_benefit_at" field.
-	LastBenefitAt uint32 `json:"last_benefit_at,omitempty"`
-	// BenefitTids holds the value of the "benefit_tids" field.
-	BenefitTids []uuid.UUID `json:"benefit_tids,omitempty"`
-	// NextBenefitStartAmount holds the value of the "next_benefit_start_amount" field.
-	NextBenefitStartAmount decimal.Decimal `json:"next_benefit_start_amount,omitempty"`
-	// LastBenefitAmount holds the value of the "last_benefit_amount" field.
-	LastBenefitAmount decimal.Decimal `json:"last_benefit_amount,omitempty"`
+	// RewardState holds the value of the "reward_state" field.
+	RewardState string `json:"reward_state,omitempty"`
+	// LastRewardAt holds the value of the "last_reward_at" field.
+	LastRewardAt uint32 `json:"last_reward_at,omitempty"`
+	// RewardTid holds the value of the "reward_tid" field.
+	RewardTid uuid.UUID `json:"reward_tid,omitempty"`
+	// NextRewardStartAmount holds the value of the "next_reward_start_amount" field.
+	NextRewardStartAmount decimal.Decimal `json:"next_reward_start_amount,omitempty"`
+	// LastRewardAmount holds the value of the "last_reward_amount" field.
+	LastRewardAmount decimal.Decimal `json:"last_reward_amount,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -43,15 +42,13 @@ func (*GoodReward) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case goodreward.FieldBenefitTids:
-			values[i] = new([]byte)
-		case goodreward.FieldNextBenefitStartAmount, goodreward.FieldLastBenefitAmount:
+		case goodreward.FieldNextRewardStartAmount, goodreward.FieldLastRewardAmount:
 			values[i] = new(decimal.Decimal)
-		case goodreward.FieldCreatedAt, goodreward.FieldUpdatedAt, goodreward.FieldDeletedAt, goodreward.FieldLastBenefitAt:
+		case goodreward.FieldCreatedAt, goodreward.FieldUpdatedAt, goodreward.FieldDeletedAt, goodreward.FieldLastRewardAt:
 			values[i] = new(sql.NullInt64)
-		case goodreward.FieldBenefitState:
+		case goodreward.FieldRewardState:
 			values[i] = new(sql.NullString)
-		case goodreward.FieldID, goodreward.FieldGoodID:
+		case goodreward.FieldID, goodreward.FieldGoodID, goodreward.FieldRewardTid:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type GoodReward", columns[i])
@@ -98,37 +95,35 @@ func (gr *GoodReward) assignValues(columns []string, values []interface{}) error
 			} else if value != nil {
 				gr.GoodID = *value
 			}
-		case goodreward.FieldBenefitState:
+		case goodreward.FieldRewardState:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field benefit_state", values[i])
+				return fmt.Errorf("unexpected type %T for field reward_state", values[i])
 			} else if value.Valid {
-				gr.BenefitState = value.String
+				gr.RewardState = value.String
 			}
-		case goodreward.FieldLastBenefitAt:
+		case goodreward.FieldLastRewardAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field last_benefit_at", values[i])
+				return fmt.Errorf("unexpected type %T for field last_reward_at", values[i])
 			} else if value.Valid {
-				gr.LastBenefitAt = uint32(value.Int64)
+				gr.LastRewardAt = uint32(value.Int64)
 			}
-		case goodreward.FieldBenefitTids:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field benefit_tids", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &gr.BenefitTids); err != nil {
-					return fmt.Errorf("unmarshal field benefit_tids: %w", err)
-				}
-			}
-		case goodreward.FieldNextBenefitStartAmount:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field next_benefit_start_amount", values[i])
+		case goodreward.FieldRewardTid:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field reward_tid", values[i])
 			} else if value != nil {
-				gr.NextBenefitStartAmount = *value
+				gr.RewardTid = *value
 			}
-		case goodreward.FieldLastBenefitAmount:
+		case goodreward.FieldNextRewardStartAmount:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field last_benefit_amount", values[i])
+				return fmt.Errorf("unexpected type %T for field next_reward_start_amount", values[i])
 			} else if value != nil {
-				gr.LastBenefitAmount = *value
+				gr.NextRewardStartAmount = *value
+			}
+		case goodreward.FieldLastRewardAmount:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field last_reward_amount", values[i])
+			} else if value != nil {
+				gr.LastRewardAmount = *value
 			}
 		}
 	}
@@ -170,20 +165,20 @@ func (gr *GoodReward) String() string {
 	builder.WriteString("good_id=")
 	builder.WriteString(fmt.Sprintf("%v", gr.GoodID))
 	builder.WriteString(", ")
-	builder.WriteString("benefit_state=")
-	builder.WriteString(gr.BenefitState)
+	builder.WriteString("reward_state=")
+	builder.WriteString(gr.RewardState)
 	builder.WriteString(", ")
-	builder.WriteString("last_benefit_at=")
-	builder.WriteString(fmt.Sprintf("%v", gr.LastBenefitAt))
+	builder.WriteString("last_reward_at=")
+	builder.WriteString(fmt.Sprintf("%v", gr.LastRewardAt))
 	builder.WriteString(", ")
-	builder.WriteString("benefit_tids=")
-	builder.WriteString(fmt.Sprintf("%v", gr.BenefitTids))
+	builder.WriteString("reward_tid=")
+	builder.WriteString(fmt.Sprintf("%v", gr.RewardTid))
 	builder.WriteString(", ")
-	builder.WriteString("next_benefit_start_amount=")
-	builder.WriteString(fmt.Sprintf("%v", gr.NextBenefitStartAmount))
+	builder.WriteString("next_reward_start_amount=")
+	builder.WriteString(fmt.Sprintf("%v", gr.NextRewardStartAmount))
 	builder.WriteString(", ")
-	builder.WriteString("last_benefit_amount=")
-	builder.WriteString(fmt.Sprintf("%v", gr.LastBenefitAmount))
+	builder.WriteString("last_reward_amount=")
+	builder.WriteString(fmt.Sprintf("%v", gr.LastRewardAmount))
 	builder.WriteByte(')')
 	return builder.String()
 }

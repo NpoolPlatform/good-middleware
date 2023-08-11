@@ -491,26 +491,26 @@ func init() {
 	goodrewardDescDeletedAt := goodrewardMixinFields0[2].Descriptor()
 	// goodreward.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	goodreward.DefaultDeletedAt = goodrewardDescDeletedAt.Default.(func() uint32)
-	// goodrewardDescBenefitState is the schema descriptor for benefit_state field.
-	goodrewardDescBenefitState := goodrewardFields[2].Descriptor()
-	// goodreward.DefaultBenefitState holds the default value on creation for the benefit_state field.
-	goodreward.DefaultBenefitState = goodrewardDescBenefitState.Default.(string)
-	// goodrewardDescLastBenefitAt is the schema descriptor for last_benefit_at field.
-	goodrewardDescLastBenefitAt := goodrewardFields[3].Descriptor()
-	// goodreward.DefaultLastBenefitAt holds the default value on creation for the last_benefit_at field.
-	goodreward.DefaultLastBenefitAt = goodrewardDescLastBenefitAt.Default.(uint32)
-	// goodrewardDescBenefitTids is the schema descriptor for benefit_tids field.
-	goodrewardDescBenefitTids := goodrewardFields[4].Descriptor()
-	// goodreward.DefaultBenefitTids holds the default value on creation for the benefit_tids field.
-	goodreward.DefaultBenefitTids = goodrewardDescBenefitTids.Default.([]uuid.UUID)
-	// goodrewardDescNextBenefitStartAmount is the schema descriptor for next_benefit_start_amount field.
-	goodrewardDescNextBenefitStartAmount := goodrewardFields[5].Descriptor()
-	// goodreward.DefaultNextBenefitStartAmount holds the default value on creation for the next_benefit_start_amount field.
-	goodreward.DefaultNextBenefitStartAmount = goodrewardDescNextBenefitStartAmount.Default.(decimal.Decimal)
-	// goodrewardDescLastBenefitAmount is the schema descriptor for last_benefit_amount field.
-	goodrewardDescLastBenefitAmount := goodrewardFields[6].Descriptor()
-	// goodreward.DefaultLastBenefitAmount holds the default value on creation for the last_benefit_amount field.
-	goodreward.DefaultLastBenefitAmount = goodrewardDescLastBenefitAmount.Default.(decimal.Decimal)
+	// goodrewardDescRewardState is the schema descriptor for reward_state field.
+	goodrewardDescRewardState := goodrewardFields[2].Descriptor()
+	// goodreward.DefaultRewardState holds the default value on creation for the reward_state field.
+	goodreward.DefaultRewardState = goodrewardDescRewardState.Default.(string)
+	// goodrewardDescLastRewardAt is the schema descriptor for last_reward_at field.
+	goodrewardDescLastRewardAt := goodrewardFields[3].Descriptor()
+	// goodreward.DefaultLastRewardAt holds the default value on creation for the last_reward_at field.
+	goodreward.DefaultLastRewardAt = goodrewardDescLastRewardAt.Default.(uint32)
+	// goodrewardDescRewardTid is the schema descriptor for reward_tid field.
+	goodrewardDescRewardTid := goodrewardFields[4].Descriptor()
+	// goodreward.DefaultRewardTid holds the default value on creation for the reward_tid field.
+	goodreward.DefaultRewardTid = goodrewardDescRewardTid.Default.(func() uuid.UUID)
+	// goodrewardDescNextRewardStartAmount is the schema descriptor for next_reward_start_amount field.
+	goodrewardDescNextRewardStartAmount := goodrewardFields[5].Descriptor()
+	// goodreward.DefaultNextRewardStartAmount holds the default value on creation for the next_reward_start_amount field.
+	goodreward.DefaultNextRewardStartAmount = goodrewardDescNextRewardStartAmount.Default.(decimal.Decimal)
+	// goodrewardDescLastRewardAmount is the schema descriptor for last_reward_amount field.
+	goodrewardDescLastRewardAmount := goodrewardFields[6].Descriptor()
+	// goodreward.DefaultLastRewardAmount holds the default value on creation for the last_reward_amount field.
+	goodreward.DefaultLastRewardAmount = goodrewardDescLastRewardAmount.Default.(decimal.Decimal)
 	// goodrewardDescID is the schema descriptor for id field.
 	goodrewardDescID := goodrewardFields[0].Descriptor()
 	// goodreward.DefaultID holds the default value on creation for the id field.

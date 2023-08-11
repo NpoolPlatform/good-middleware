@@ -91,102 +91,110 @@ func (gru *GoodRewardUpdate) SetGoodID(u uuid.UUID) *GoodRewardUpdate {
 	return gru
 }
 
-// SetBenefitState sets the "benefit_state" field.
-func (gru *GoodRewardUpdate) SetBenefitState(s string) *GoodRewardUpdate {
-	gru.mutation.SetBenefitState(s)
+// SetRewardState sets the "reward_state" field.
+func (gru *GoodRewardUpdate) SetRewardState(s string) *GoodRewardUpdate {
+	gru.mutation.SetRewardState(s)
 	return gru
 }
 
-// SetNillableBenefitState sets the "benefit_state" field if the given value is not nil.
-func (gru *GoodRewardUpdate) SetNillableBenefitState(s *string) *GoodRewardUpdate {
+// SetNillableRewardState sets the "reward_state" field if the given value is not nil.
+func (gru *GoodRewardUpdate) SetNillableRewardState(s *string) *GoodRewardUpdate {
 	if s != nil {
-		gru.SetBenefitState(*s)
+		gru.SetRewardState(*s)
 	}
 	return gru
 }
 
-// ClearBenefitState clears the value of the "benefit_state" field.
-func (gru *GoodRewardUpdate) ClearBenefitState() *GoodRewardUpdate {
-	gru.mutation.ClearBenefitState()
+// ClearRewardState clears the value of the "reward_state" field.
+func (gru *GoodRewardUpdate) ClearRewardState() *GoodRewardUpdate {
+	gru.mutation.ClearRewardState()
 	return gru
 }
 
-// SetLastBenefitAt sets the "last_benefit_at" field.
-func (gru *GoodRewardUpdate) SetLastBenefitAt(u uint32) *GoodRewardUpdate {
-	gru.mutation.ResetLastBenefitAt()
-	gru.mutation.SetLastBenefitAt(u)
+// SetLastRewardAt sets the "last_reward_at" field.
+func (gru *GoodRewardUpdate) SetLastRewardAt(u uint32) *GoodRewardUpdate {
+	gru.mutation.ResetLastRewardAt()
+	gru.mutation.SetLastRewardAt(u)
 	return gru
 }
 
-// SetNillableLastBenefitAt sets the "last_benefit_at" field if the given value is not nil.
-func (gru *GoodRewardUpdate) SetNillableLastBenefitAt(u *uint32) *GoodRewardUpdate {
+// SetNillableLastRewardAt sets the "last_reward_at" field if the given value is not nil.
+func (gru *GoodRewardUpdate) SetNillableLastRewardAt(u *uint32) *GoodRewardUpdate {
 	if u != nil {
-		gru.SetLastBenefitAt(*u)
+		gru.SetLastRewardAt(*u)
 	}
 	return gru
 }
 
-// AddLastBenefitAt adds u to the "last_benefit_at" field.
-func (gru *GoodRewardUpdate) AddLastBenefitAt(u int32) *GoodRewardUpdate {
-	gru.mutation.AddLastBenefitAt(u)
+// AddLastRewardAt adds u to the "last_reward_at" field.
+func (gru *GoodRewardUpdate) AddLastRewardAt(u int32) *GoodRewardUpdate {
+	gru.mutation.AddLastRewardAt(u)
 	return gru
 }
 
-// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
-func (gru *GoodRewardUpdate) ClearLastBenefitAt() *GoodRewardUpdate {
-	gru.mutation.ClearLastBenefitAt()
+// ClearLastRewardAt clears the value of the "last_reward_at" field.
+func (gru *GoodRewardUpdate) ClearLastRewardAt() *GoodRewardUpdate {
+	gru.mutation.ClearLastRewardAt()
 	return gru
 }
 
-// SetBenefitTids sets the "benefit_tids" field.
-func (gru *GoodRewardUpdate) SetBenefitTids(u []uuid.UUID) *GoodRewardUpdate {
-	gru.mutation.SetBenefitTids(u)
+// SetRewardTid sets the "reward_tid" field.
+func (gru *GoodRewardUpdate) SetRewardTid(u uuid.UUID) *GoodRewardUpdate {
+	gru.mutation.SetRewardTid(u)
 	return gru
 }
 
-// ClearBenefitTids clears the value of the "benefit_tids" field.
-func (gru *GoodRewardUpdate) ClearBenefitTids() *GoodRewardUpdate {
-	gru.mutation.ClearBenefitTids()
+// SetNillableRewardTid sets the "reward_tid" field if the given value is not nil.
+func (gru *GoodRewardUpdate) SetNillableRewardTid(u *uuid.UUID) *GoodRewardUpdate {
+	if u != nil {
+		gru.SetRewardTid(*u)
+	}
 	return gru
 }
 
-// SetNextBenefitStartAmount sets the "next_benefit_start_amount" field.
-func (gru *GoodRewardUpdate) SetNextBenefitStartAmount(d decimal.Decimal) *GoodRewardUpdate {
-	gru.mutation.SetNextBenefitStartAmount(d)
+// ClearRewardTid clears the value of the "reward_tid" field.
+func (gru *GoodRewardUpdate) ClearRewardTid() *GoodRewardUpdate {
+	gru.mutation.ClearRewardTid()
 	return gru
 }
 
-// SetNillableNextBenefitStartAmount sets the "next_benefit_start_amount" field if the given value is not nil.
-func (gru *GoodRewardUpdate) SetNillableNextBenefitStartAmount(d *decimal.Decimal) *GoodRewardUpdate {
+// SetNextRewardStartAmount sets the "next_reward_start_amount" field.
+func (gru *GoodRewardUpdate) SetNextRewardStartAmount(d decimal.Decimal) *GoodRewardUpdate {
+	gru.mutation.SetNextRewardStartAmount(d)
+	return gru
+}
+
+// SetNillableNextRewardStartAmount sets the "next_reward_start_amount" field if the given value is not nil.
+func (gru *GoodRewardUpdate) SetNillableNextRewardStartAmount(d *decimal.Decimal) *GoodRewardUpdate {
 	if d != nil {
-		gru.SetNextBenefitStartAmount(*d)
+		gru.SetNextRewardStartAmount(*d)
 	}
 	return gru
 }
 
-// ClearNextBenefitStartAmount clears the value of the "next_benefit_start_amount" field.
-func (gru *GoodRewardUpdate) ClearNextBenefitStartAmount() *GoodRewardUpdate {
-	gru.mutation.ClearNextBenefitStartAmount()
+// ClearNextRewardStartAmount clears the value of the "next_reward_start_amount" field.
+func (gru *GoodRewardUpdate) ClearNextRewardStartAmount() *GoodRewardUpdate {
+	gru.mutation.ClearNextRewardStartAmount()
 	return gru
 }
 
-// SetLastBenefitAmount sets the "last_benefit_amount" field.
-func (gru *GoodRewardUpdate) SetLastBenefitAmount(d decimal.Decimal) *GoodRewardUpdate {
-	gru.mutation.SetLastBenefitAmount(d)
+// SetLastRewardAmount sets the "last_reward_amount" field.
+func (gru *GoodRewardUpdate) SetLastRewardAmount(d decimal.Decimal) *GoodRewardUpdate {
+	gru.mutation.SetLastRewardAmount(d)
 	return gru
 }
 
-// SetNillableLastBenefitAmount sets the "last_benefit_amount" field if the given value is not nil.
-func (gru *GoodRewardUpdate) SetNillableLastBenefitAmount(d *decimal.Decimal) *GoodRewardUpdate {
+// SetNillableLastRewardAmount sets the "last_reward_amount" field if the given value is not nil.
+func (gru *GoodRewardUpdate) SetNillableLastRewardAmount(d *decimal.Decimal) *GoodRewardUpdate {
 	if d != nil {
-		gru.SetLastBenefitAmount(*d)
+		gru.SetLastRewardAmount(*d)
 	}
 	return gru
 }
 
-// ClearLastBenefitAmount clears the value of the "last_benefit_amount" field.
-func (gru *GoodRewardUpdate) ClearLastBenefitAmount() *GoodRewardUpdate {
-	gru.mutation.ClearLastBenefitAmount()
+// ClearLastRewardAmount clears the value of the "last_reward_amount" field.
+func (gru *GoodRewardUpdate) ClearLastRewardAmount() *GoodRewardUpdate {
+	gru.mutation.ClearLastRewardAmount()
 	return gru
 }
 
@@ -337,76 +345,76 @@ func (gru *GoodRewardUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: goodreward.FieldGoodID,
 		})
 	}
-	if value, ok := gru.mutation.BenefitState(); ok {
+	if value, ok := gru.mutation.RewardState(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: goodreward.FieldBenefitState,
+			Column: goodreward.FieldRewardState,
 		})
 	}
-	if gru.mutation.BenefitStateCleared() {
+	if gru.mutation.RewardStateCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: goodreward.FieldBenefitState,
+			Column: goodreward.FieldRewardState,
 		})
 	}
-	if value, ok := gru.mutation.LastBenefitAt(); ok {
+	if value, ok := gru.mutation.LastRewardAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: goodreward.FieldLastBenefitAt,
+			Column: goodreward.FieldLastRewardAt,
 		})
 	}
-	if value, ok := gru.mutation.AddedLastBenefitAt(); ok {
+	if value, ok := gru.mutation.AddedLastRewardAt(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: goodreward.FieldLastBenefitAt,
+			Column: goodreward.FieldLastRewardAt,
 		})
 	}
-	if gru.mutation.LastBenefitAtCleared() {
+	if gru.mutation.LastRewardAtCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: goodreward.FieldLastBenefitAt,
+			Column: goodreward.FieldLastRewardAt,
 		})
 	}
-	if value, ok := gru.mutation.BenefitTids(); ok {
+	if value, ok := gru.mutation.RewardTid(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: goodreward.FieldBenefitTids,
+			Column: goodreward.FieldRewardTid,
 		})
 	}
-	if gru.mutation.BenefitTidsCleared() {
+	if gru.mutation.RewardTidCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: goodreward.FieldBenefitTids,
+			Type:   field.TypeUUID,
+			Column: goodreward.FieldRewardTid,
 		})
 	}
-	if value, ok := gru.mutation.NextBenefitStartAmount(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: goodreward.FieldNextBenefitStartAmount,
-		})
-	}
-	if gru.mutation.NextBenefitStartAmountCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: goodreward.FieldNextBenefitStartAmount,
-		})
-	}
-	if value, ok := gru.mutation.LastBenefitAmount(); ok {
+	if value, ok := gru.mutation.NextRewardStartAmount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: goodreward.FieldLastBenefitAmount,
+			Column: goodreward.FieldNextRewardStartAmount,
 		})
 	}
-	if gru.mutation.LastBenefitAmountCleared() {
+	if gru.mutation.NextRewardStartAmountCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: goodreward.FieldLastBenefitAmount,
+			Column: goodreward.FieldNextRewardStartAmount,
+		})
+	}
+	if value, ok := gru.mutation.LastRewardAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: goodreward.FieldLastRewardAmount,
+		})
+	}
+	if gru.mutation.LastRewardAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: goodreward.FieldLastRewardAmount,
 		})
 	}
 	_spec.Modifiers = gru.modifiers
@@ -491,102 +499,110 @@ func (gruo *GoodRewardUpdateOne) SetGoodID(u uuid.UUID) *GoodRewardUpdateOne {
 	return gruo
 }
 
-// SetBenefitState sets the "benefit_state" field.
-func (gruo *GoodRewardUpdateOne) SetBenefitState(s string) *GoodRewardUpdateOne {
-	gruo.mutation.SetBenefitState(s)
+// SetRewardState sets the "reward_state" field.
+func (gruo *GoodRewardUpdateOne) SetRewardState(s string) *GoodRewardUpdateOne {
+	gruo.mutation.SetRewardState(s)
 	return gruo
 }
 
-// SetNillableBenefitState sets the "benefit_state" field if the given value is not nil.
-func (gruo *GoodRewardUpdateOne) SetNillableBenefitState(s *string) *GoodRewardUpdateOne {
+// SetNillableRewardState sets the "reward_state" field if the given value is not nil.
+func (gruo *GoodRewardUpdateOne) SetNillableRewardState(s *string) *GoodRewardUpdateOne {
 	if s != nil {
-		gruo.SetBenefitState(*s)
+		gruo.SetRewardState(*s)
 	}
 	return gruo
 }
 
-// ClearBenefitState clears the value of the "benefit_state" field.
-func (gruo *GoodRewardUpdateOne) ClearBenefitState() *GoodRewardUpdateOne {
-	gruo.mutation.ClearBenefitState()
+// ClearRewardState clears the value of the "reward_state" field.
+func (gruo *GoodRewardUpdateOne) ClearRewardState() *GoodRewardUpdateOne {
+	gruo.mutation.ClearRewardState()
 	return gruo
 }
 
-// SetLastBenefitAt sets the "last_benefit_at" field.
-func (gruo *GoodRewardUpdateOne) SetLastBenefitAt(u uint32) *GoodRewardUpdateOne {
-	gruo.mutation.ResetLastBenefitAt()
-	gruo.mutation.SetLastBenefitAt(u)
+// SetLastRewardAt sets the "last_reward_at" field.
+func (gruo *GoodRewardUpdateOne) SetLastRewardAt(u uint32) *GoodRewardUpdateOne {
+	gruo.mutation.ResetLastRewardAt()
+	gruo.mutation.SetLastRewardAt(u)
 	return gruo
 }
 
-// SetNillableLastBenefitAt sets the "last_benefit_at" field if the given value is not nil.
-func (gruo *GoodRewardUpdateOne) SetNillableLastBenefitAt(u *uint32) *GoodRewardUpdateOne {
+// SetNillableLastRewardAt sets the "last_reward_at" field if the given value is not nil.
+func (gruo *GoodRewardUpdateOne) SetNillableLastRewardAt(u *uint32) *GoodRewardUpdateOne {
 	if u != nil {
-		gruo.SetLastBenefitAt(*u)
+		gruo.SetLastRewardAt(*u)
 	}
 	return gruo
 }
 
-// AddLastBenefitAt adds u to the "last_benefit_at" field.
-func (gruo *GoodRewardUpdateOne) AddLastBenefitAt(u int32) *GoodRewardUpdateOne {
-	gruo.mutation.AddLastBenefitAt(u)
+// AddLastRewardAt adds u to the "last_reward_at" field.
+func (gruo *GoodRewardUpdateOne) AddLastRewardAt(u int32) *GoodRewardUpdateOne {
+	gruo.mutation.AddLastRewardAt(u)
 	return gruo
 }
 
-// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
-func (gruo *GoodRewardUpdateOne) ClearLastBenefitAt() *GoodRewardUpdateOne {
-	gruo.mutation.ClearLastBenefitAt()
+// ClearLastRewardAt clears the value of the "last_reward_at" field.
+func (gruo *GoodRewardUpdateOne) ClearLastRewardAt() *GoodRewardUpdateOne {
+	gruo.mutation.ClearLastRewardAt()
 	return gruo
 }
 
-// SetBenefitTids sets the "benefit_tids" field.
-func (gruo *GoodRewardUpdateOne) SetBenefitTids(u []uuid.UUID) *GoodRewardUpdateOne {
-	gruo.mutation.SetBenefitTids(u)
+// SetRewardTid sets the "reward_tid" field.
+func (gruo *GoodRewardUpdateOne) SetRewardTid(u uuid.UUID) *GoodRewardUpdateOne {
+	gruo.mutation.SetRewardTid(u)
 	return gruo
 }
 
-// ClearBenefitTids clears the value of the "benefit_tids" field.
-func (gruo *GoodRewardUpdateOne) ClearBenefitTids() *GoodRewardUpdateOne {
-	gruo.mutation.ClearBenefitTids()
+// SetNillableRewardTid sets the "reward_tid" field if the given value is not nil.
+func (gruo *GoodRewardUpdateOne) SetNillableRewardTid(u *uuid.UUID) *GoodRewardUpdateOne {
+	if u != nil {
+		gruo.SetRewardTid(*u)
+	}
 	return gruo
 }
 
-// SetNextBenefitStartAmount sets the "next_benefit_start_amount" field.
-func (gruo *GoodRewardUpdateOne) SetNextBenefitStartAmount(d decimal.Decimal) *GoodRewardUpdateOne {
-	gruo.mutation.SetNextBenefitStartAmount(d)
+// ClearRewardTid clears the value of the "reward_tid" field.
+func (gruo *GoodRewardUpdateOne) ClearRewardTid() *GoodRewardUpdateOne {
+	gruo.mutation.ClearRewardTid()
 	return gruo
 }
 
-// SetNillableNextBenefitStartAmount sets the "next_benefit_start_amount" field if the given value is not nil.
-func (gruo *GoodRewardUpdateOne) SetNillableNextBenefitStartAmount(d *decimal.Decimal) *GoodRewardUpdateOne {
+// SetNextRewardStartAmount sets the "next_reward_start_amount" field.
+func (gruo *GoodRewardUpdateOne) SetNextRewardStartAmount(d decimal.Decimal) *GoodRewardUpdateOne {
+	gruo.mutation.SetNextRewardStartAmount(d)
+	return gruo
+}
+
+// SetNillableNextRewardStartAmount sets the "next_reward_start_amount" field if the given value is not nil.
+func (gruo *GoodRewardUpdateOne) SetNillableNextRewardStartAmount(d *decimal.Decimal) *GoodRewardUpdateOne {
 	if d != nil {
-		gruo.SetNextBenefitStartAmount(*d)
+		gruo.SetNextRewardStartAmount(*d)
 	}
 	return gruo
 }
 
-// ClearNextBenefitStartAmount clears the value of the "next_benefit_start_amount" field.
-func (gruo *GoodRewardUpdateOne) ClearNextBenefitStartAmount() *GoodRewardUpdateOne {
-	gruo.mutation.ClearNextBenefitStartAmount()
+// ClearNextRewardStartAmount clears the value of the "next_reward_start_amount" field.
+func (gruo *GoodRewardUpdateOne) ClearNextRewardStartAmount() *GoodRewardUpdateOne {
+	gruo.mutation.ClearNextRewardStartAmount()
 	return gruo
 }
 
-// SetLastBenefitAmount sets the "last_benefit_amount" field.
-func (gruo *GoodRewardUpdateOne) SetLastBenefitAmount(d decimal.Decimal) *GoodRewardUpdateOne {
-	gruo.mutation.SetLastBenefitAmount(d)
+// SetLastRewardAmount sets the "last_reward_amount" field.
+func (gruo *GoodRewardUpdateOne) SetLastRewardAmount(d decimal.Decimal) *GoodRewardUpdateOne {
+	gruo.mutation.SetLastRewardAmount(d)
 	return gruo
 }
 
-// SetNillableLastBenefitAmount sets the "last_benefit_amount" field if the given value is not nil.
-func (gruo *GoodRewardUpdateOne) SetNillableLastBenefitAmount(d *decimal.Decimal) *GoodRewardUpdateOne {
+// SetNillableLastRewardAmount sets the "last_reward_amount" field if the given value is not nil.
+func (gruo *GoodRewardUpdateOne) SetNillableLastRewardAmount(d *decimal.Decimal) *GoodRewardUpdateOne {
 	if d != nil {
-		gruo.SetLastBenefitAmount(*d)
+		gruo.SetLastRewardAmount(*d)
 	}
 	return gruo
 }
 
-// ClearLastBenefitAmount clears the value of the "last_benefit_amount" field.
-func (gruo *GoodRewardUpdateOne) ClearLastBenefitAmount() *GoodRewardUpdateOne {
-	gruo.mutation.ClearLastBenefitAmount()
+// ClearLastRewardAmount clears the value of the "last_reward_amount" field.
+func (gruo *GoodRewardUpdateOne) ClearLastRewardAmount() *GoodRewardUpdateOne {
+	gruo.mutation.ClearLastRewardAmount()
 	return gruo
 }
 
@@ -767,76 +783,76 @@ func (gruo *GoodRewardUpdateOne) sqlSave(ctx context.Context) (_node *GoodReward
 			Column: goodreward.FieldGoodID,
 		})
 	}
-	if value, ok := gruo.mutation.BenefitState(); ok {
+	if value, ok := gruo.mutation.RewardState(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: goodreward.FieldBenefitState,
+			Column: goodreward.FieldRewardState,
 		})
 	}
-	if gruo.mutation.BenefitStateCleared() {
+	if gruo.mutation.RewardStateCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: goodreward.FieldBenefitState,
+			Column: goodreward.FieldRewardState,
 		})
 	}
-	if value, ok := gruo.mutation.LastBenefitAt(); ok {
+	if value, ok := gruo.mutation.LastRewardAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: goodreward.FieldLastBenefitAt,
+			Column: goodreward.FieldLastRewardAt,
 		})
 	}
-	if value, ok := gruo.mutation.AddedLastBenefitAt(); ok {
+	if value, ok := gruo.mutation.AddedLastRewardAt(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: goodreward.FieldLastBenefitAt,
+			Column: goodreward.FieldLastRewardAt,
 		})
 	}
-	if gruo.mutation.LastBenefitAtCleared() {
+	if gruo.mutation.LastRewardAtCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: goodreward.FieldLastBenefitAt,
+			Column: goodreward.FieldLastRewardAt,
 		})
 	}
-	if value, ok := gruo.mutation.BenefitTids(); ok {
+	if value, ok := gruo.mutation.RewardTid(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: goodreward.FieldBenefitTids,
+			Column: goodreward.FieldRewardTid,
 		})
 	}
-	if gruo.mutation.BenefitTidsCleared() {
+	if gruo.mutation.RewardTidCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: goodreward.FieldBenefitTids,
+			Type:   field.TypeUUID,
+			Column: goodreward.FieldRewardTid,
 		})
 	}
-	if value, ok := gruo.mutation.NextBenefitStartAmount(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: goodreward.FieldNextBenefitStartAmount,
-		})
-	}
-	if gruo.mutation.NextBenefitStartAmountCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: goodreward.FieldNextBenefitStartAmount,
-		})
-	}
-	if value, ok := gruo.mutation.LastBenefitAmount(); ok {
+	if value, ok := gruo.mutation.NextRewardStartAmount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: goodreward.FieldLastBenefitAmount,
+			Column: goodreward.FieldNextRewardStartAmount,
 		})
 	}
-	if gruo.mutation.LastBenefitAmountCleared() {
+	if gruo.mutation.NextRewardStartAmountCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: goodreward.FieldLastBenefitAmount,
+			Column: goodreward.FieldNextRewardStartAmount,
+		})
+	}
+	if value, ok := gruo.mutation.LastRewardAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: goodreward.FieldLastRewardAmount,
+		})
+	}
+	if gruo.mutation.LastRewardAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: goodreward.FieldLastRewardAmount,
 		})
 	}
 	_spec.Modifiers = gruo.modifiers
