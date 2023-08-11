@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // ID filters vertices based on their ID field.
@@ -129,7 +130,7 @@ func Message(v string) predicate.Recommend {
 }
 
 // RecommendIndex applies equality check predicate on the "recommend_index" field. It's identical to RecommendIndexEQ.
-func RecommendIndex(v float64) predicate.Recommend {
+func RecommendIndex(v decimal.Decimal) predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldRecommendIndex), v))
 	})
@@ -647,21 +648,21 @@ func MessageContainsFold(v string) predicate.Recommend {
 }
 
 // RecommendIndexEQ applies the EQ predicate on the "recommend_index" field.
-func RecommendIndexEQ(v float64) predicate.Recommend {
+func RecommendIndexEQ(v decimal.Decimal) predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldRecommendIndex), v))
 	})
 }
 
 // RecommendIndexNEQ applies the NEQ predicate on the "recommend_index" field.
-func RecommendIndexNEQ(v float64) predicate.Recommend {
+func RecommendIndexNEQ(v decimal.Decimal) predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldRecommendIndex), v))
 	})
 }
 
 // RecommendIndexIn applies the In predicate on the "recommend_index" field.
-func RecommendIndexIn(vs ...float64) predicate.Recommend {
+func RecommendIndexIn(vs ...decimal.Decimal) predicate.Recommend {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -672,7 +673,7 @@ func RecommendIndexIn(vs ...float64) predicate.Recommend {
 }
 
 // RecommendIndexNotIn applies the NotIn predicate on the "recommend_index" field.
-func RecommendIndexNotIn(vs ...float64) predicate.Recommend {
+func RecommendIndexNotIn(vs ...decimal.Decimal) predicate.Recommend {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -683,28 +684,28 @@ func RecommendIndexNotIn(vs ...float64) predicate.Recommend {
 }
 
 // RecommendIndexGT applies the GT predicate on the "recommend_index" field.
-func RecommendIndexGT(v float64) predicate.Recommend {
+func RecommendIndexGT(v decimal.Decimal) predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldRecommendIndex), v))
 	})
 }
 
 // RecommendIndexGTE applies the GTE predicate on the "recommend_index" field.
-func RecommendIndexGTE(v float64) predicate.Recommend {
+func RecommendIndexGTE(v decimal.Decimal) predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldRecommendIndex), v))
 	})
 }
 
 // RecommendIndexLT applies the LT predicate on the "recommend_index" field.
-func RecommendIndexLT(v float64) predicate.Recommend {
+func RecommendIndexLT(v decimal.Decimal) predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldRecommendIndex), v))
 	})
 }
 
 // RecommendIndexLTE applies the LTE predicate on the "recommend_index" field.
-func RecommendIndexLTE(v float64) predicate.Recommend {
+func RecommendIndexLTE(v decimal.Decimal) predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldRecommendIndex), v))
 	})

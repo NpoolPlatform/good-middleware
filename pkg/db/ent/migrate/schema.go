@@ -223,7 +223,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "good_id", Type: field.TypeUUID},
-		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1691740423},
+		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1691741281},
 		{Name: "tid", Type: field.TypeUUID, Nullable: true},
 		{Name: "amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "unit_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
@@ -290,7 +290,7 @@ var (
 		{Name: "good_id", Type: field.TypeUUID},
 		{Name: "recommender_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "message", Type: field.TypeString, Nullable: true, Default: ""},
-		{Name: "recommend_index", Type: field.TypeFloat64, Nullable: true, Default: 0},
+		{Name: "recommend_index", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}
 	// RecommendsTable holds the schema information for the "recommends" table.
 	RecommendsTable = &schema.Table{

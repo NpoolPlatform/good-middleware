@@ -700,7 +700,7 @@ func init() {
 	// recommendDescRecommendIndex is the schema descriptor for recommend_index field.
 	recommendDescRecommendIndex := recommendFields[5].Descriptor()
 	// recommend.DefaultRecommendIndex holds the default value on creation for the recommend_index field.
-	recommend.DefaultRecommendIndex = recommendDescRecommendIndex.Default.(float64)
+	recommend.DefaultRecommendIndex = recommendDescRecommendIndex.Default.(decimal.Decimal)
 	// recommendDescID is the schema descriptor for id field.
 	recommendDescID := recommendFields[0].Descriptor()
 	// recommend.DefaultID holds the default value on creation for the id field.

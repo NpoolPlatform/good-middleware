@@ -5,6 +5,7 @@ package recommend
 import (
 	"entgo.io/ent"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 const (
@@ -77,7 +78,7 @@ var (
 	// DefaultMessage holds the default value on creation for the "message" field.
 	DefaultMessage string
 	// DefaultRecommendIndex holds the default value on creation for the "recommend_index" field.
-	DefaultRecommendIndex float64
+	DefaultRecommendIndex decimal.Decimal
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

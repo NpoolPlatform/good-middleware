@@ -2,12 +2,12 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
-
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // Recommend holds the schema definition for the Recommend entity.
@@ -35,18 +35,20 @@ func (Recommend) Fields() []ent.Field {
 		field.
 			UUID("recommender_id", uuid.UUID{}).
 			Optional().
-			Default(
-				func() uuid.UUID {
-					return uuid.UUID{}
-				}),
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
 		field.
 			String("message").
 			Optional().
 			Default(""),
 		field.
-			Float("recommend_index").
+			Other("recommend_index", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
 			Optional().
-			Default(0),
+			Default(decimal.Decimal{}),
 	}
 }
 

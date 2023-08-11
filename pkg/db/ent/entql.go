@@ -316,7 +316,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			recommend.FieldGoodID:         {Type: field.TypeUUID, Column: recommend.FieldGoodID},
 			recommend.FieldRecommenderID:  {Type: field.TypeUUID, Column: recommend.FieldRecommenderID},
 			recommend.FieldMessage:        {Type: field.TypeString, Column: recommend.FieldMessage},
-			recommend.FieldRecommendIndex: {Type: field.TypeFloat64, Column: recommend.FieldRecommendIndex},
+			recommend.FieldRecommendIndex: {Type: field.TypeOther, Column: recommend.FieldRecommendIndex},
 		},
 	}
 	graph.Nodes[12] = &sqlgraph.Node{
@@ -1557,8 +1557,8 @@ func (f *RecommendFilter) WhereMessage(p entql.StringP) {
 	f.Where(p.Field(recommend.FieldMessage))
 }
 
-// WhereRecommendIndex applies the entql float64 predicate on the recommend_index field.
-func (f *RecommendFilter) WhereRecommendIndex(p entql.Float64P) {
+// WhereRecommendIndex applies the entql other predicate on the recommend_index field.
+func (f *RecommendFilter) WhereRecommendIndex(p entql.OtherP) {
 	f.Where(p.Field(recommend.FieldRecommendIndex))
 }
 

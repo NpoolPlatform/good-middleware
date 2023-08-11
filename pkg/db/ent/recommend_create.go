@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // RecommendCreate is the builder for creating a Recommend entity.
@@ -106,15 +107,15 @@ func (rc *RecommendCreate) SetNillableMessage(s *string) *RecommendCreate {
 }
 
 // SetRecommendIndex sets the "recommend_index" field.
-func (rc *RecommendCreate) SetRecommendIndex(f float64) *RecommendCreate {
-	rc.mutation.SetRecommendIndex(f)
+func (rc *RecommendCreate) SetRecommendIndex(d decimal.Decimal) *RecommendCreate {
+	rc.mutation.SetRecommendIndex(d)
 	return rc
 }
 
 // SetNillableRecommendIndex sets the "recommend_index" field if the given value is not nil.
-func (rc *RecommendCreate) SetNillableRecommendIndex(f *float64) *RecommendCreate {
-	if f != nil {
-		rc.SetRecommendIndex(*f)
+func (rc *RecommendCreate) SetNillableRecommendIndex(d *decimal.Decimal) *RecommendCreate {
+	if d != nil {
+		rc.SetRecommendIndex(*d)
 	}
 	return rc
 }
@@ -370,7 +371,7 @@ func (rc *RecommendCreate) createSpec() (*Recommend, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := rc.mutation.RecommendIndex(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: recommend.FieldRecommendIndex,
 		})
@@ -545,7 +546,7 @@ func (u *RecommendUpsert) ClearMessage() *RecommendUpsert {
 }
 
 // SetRecommendIndex sets the "recommend_index" field.
-func (u *RecommendUpsert) SetRecommendIndex(v float64) *RecommendUpsert {
+func (u *RecommendUpsert) SetRecommendIndex(v decimal.Decimal) *RecommendUpsert {
 	u.Set(recommend.FieldRecommendIndex, v)
 	return u
 }
@@ -553,12 +554,6 @@ func (u *RecommendUpsert) SetRecommendIndex(v float64) *RecommendUpsert {
 // UpdateRecommendIndex sets the "recommend_index" field to the value that was provided on create.
 func (u *RecommendUpsert) UpdateRecommendIndex() *RecommendUpsert {
 	u.SetExcluded(recommend.FieldRecommendIndex)
-	return u
-}
-
-// AddRecommendIndex adds v to the "recommend_index" field.
-func (u *RecommendUpsert) AddRecommendIndex(v float64) *RecommendUpsert {
-	u.Add(recommend.FieldRecommendIndex, v)
 	return u
 }
 
@@ -752,16 +747,9 @@ func (u *RecommendUpsertOne) ClearMessage() *RecommendUpsertOne {
 }
 
 // SetRecommendIndex sets the "recommend_index" field.
-func (u *RecommendUpsertOne) SetRecommendIndex(v float64) *RecommendUpsertOne {
+func (u *RecommendUpsertOne) SetRecommendIndex(v decimal.Decimal) *RecommendUpsertOne {
 	return u.Update(func(s *RecommendUpsert) {
 		s.SetRecommendIndex(v)
-	})
-}
-
-// AddRecommendIndex adds v to the "recommend_index" field.
-func (u *RecommendUpsertOne) AddRecommendIndex(v float64) *RecommendUpsertOne {
-	return u.Update(func(s *RecommendUpsert) {
-		s.AddRecommendIndex(v)
 	})
 }
 
@@ -1129,16 +1117,9 @@ func (u *RecommendUpsertBulk) ClearMessage() *RecommendUpsertBulk {
 }
 
 // SetRecommendIndex sets the "recommend_index" field.
-func (u *RecommendUpsertBulk) SetRecommendIndex(v float64) *RecommendUpsertBulk {
+func (u *RecommendUpsertBulk) SetRecommendIndex(v decimal.Decimal) *RecommendUpsertBulk {
 	return u.Update(func(s *RecommendUpsert) {
 		s.SetRecommendIndex(v)
-	})
-}
-
-// AddRecommendIndex adds v to the "recommend_index" field.
-func (u *RecommendUpsertBulk) AddRecommendIndex(v float64) *RecommendUpsertBulk {
-	return u.Update(func(s *RecommendUpsert) {
-		s.AddRecommendIndex(v)
 	})
 }
 

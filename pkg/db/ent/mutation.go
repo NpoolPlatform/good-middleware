@@ -12864,25 +12864,24 @@ func (m *PromotionMutation) ResetEdge(name string) error {
 // RecommendMutation represents an operation that mutates the Recommend nodes in the graph.
 type RecommendMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *uuid.UUID
-	created_at         *uint32
-	addcreated_at      *int32
-	updated_at         *uint32
-	addupdated_at      *int32
-	deleted_at         *uint32
-	adddeleted_at      *int32
-	app_id             *uuid.UUID
-	good_id            *uuid.UUID
-	recommender_id     *uuid.UUID
-	message            *string
-	recommend_index    *float64
-	addrecommend_index *float64
-	clearedFields      map[string]struct{}
-	done               bool
-	oldValue           func(context.Context) (*Recommend, error)
-	predicates         []predicate.Recommend
+	op              Op
+	typ             string
+	id              *uuid.UUID
+	created_at      *uint32
+	addcreated_at   *int32
+	updated_at      *uint32
+	addupdated_at   *int32
+	deleted_at      *uint32
+	adddeleted_at   *int32
+	app_id          *uuid.UUID
+	good_id         *uuid.UUID
+	recommender_id  *uuid.UUID
+	message         *string
+	recommend_index *decimal.Decimal
+	clearedFields   map[string]struct{}
+	done            bool
+	oldValue        func(context.Context) (*Recommend, error)
+	predicates      []predicate.Recommend
 }
 
 var _ ent.Mutation = (*RecommendMutation)(nil)
@@ -13328,13 +13327,12 @@ func (m *RecommendMutation) ResetMessage() {
 }
 
 // SetRecommendIndex sets the "recommend_index" field.
-func (m *RecommendMutation) SetRecommendIndex(f float64) {
-	m.recommend_index = &f
-	m.addrecommend_index = nil
+func (m *RecommendMutation) SetRecommendIndex(d decimal.Decimal) {
+	m.recommend_index = &d
 }
 
 // RecommendIndex returns the value of the "recommend_index" field in the mutation.
-func (m *RecommendMutation) RecommendIndex() (r float64, exists bool) {
+func (m *RecommendMutation) RecommendIndex() (r decimal.Decimal, exists bool) {
 	v := m.recommend_index
 	if v == nil {
 		return
@@ -13345,7 +13343,7 @@ func (m *RecommendMutation) RecommendIndex() (r float64, exists bool) {
 // OldRecommendIndex returns the old "recommend_index" field's value of the Recommend entity.
 // If the Recommend object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RecommendMutation) OldRecommendIndex(ctx context.Context) (v float64, err error) {
+func (m *RecommendMutation) OldRecommendIndex(ctx context.Context) (v decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldRecommendIndex is only allowed on UpdateOne operations")
 	}
@@ -13359,28 +13357,9 @@ func (m *RecommendMutation) OldRecommendIndex(ctx context.Context) (v float64, e
 	return oldValue.RecommendIndex, nil
 }
 
-// AddRecommendIndex adds f to the "recommend_index" field.
-func (m *RecommendMutation) AddRecommendIndex(f float64) {
-	if m.addrecommend_index != nil {
-		*m.addrecommend_index += f
-	} else {
-		m.addrecommend_index = &f
-	}
-}
-
-// AddedRecommendIndex returns the value that was added to the "recommend_index" field in this mutation.
-func (m *RecommendMutation) AddedRecommendIndex() (r float64, exists bool) {
-	v := m.addrecommend_index
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
 // ClearRecommendIndex clears the value of the "recommend_index" field.
 func (m *RecommendMutation) ClearRecommendIndex() {
 	m.recommend_index = nil
-	m.addrecommend_index = nil
 	m.clearedFields[recommend.FieldRecommendIndex] = struct{}{}
 }
 
@@ -13393,7 +13372,6 @@ func (m *RecommendMutation) RecommendIndexCleared() bool {
 // ResetRecommendIndex resets all changes to the "recommend_index" field.
 func (m *RecommendMutation) ResetRecommendIndex() {
 	m.recommend_index = nil
-	m.addrecommend_index = nil
 	delete(m.clearedFields, recommend.FieldRecommendIndex)
 }
 
@@ -13549,7 +13527,7 @@ func (m *RecommendMutation) SetField(name string, value ent.Value) error {
 		m.SetMessage(v)
 		return nil
 	case recommend.FieldRecommendIndex:
-		v, ok := value.(float64)
+		v, ok := value.(decimal.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -13572,9 +13550,6 @@ func (m *RecommendMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, recommend.FieldDeletedAt)
 	}
-	if m.addrecommend_index != nil {
-		fields = append(fields, recommend.FieldRecommendIndex)
-	}
 	return fields
 }
 
@@ -13589,8 +13564,6 @@ func (m *RecommendMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdatedAt()
 	case recommend.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case recommend.FieldRecommendIndex:
-		return m.AddedRecommendIndex()
 	}
 	return nil, false
 }
@@ -13620,13 +13593,6 @@ func (m *RecommendMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddDeletedAt(v)
-		return nil
-	case recommend.FieldRecommendIndex:
-		v, ok := value.(float64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddRecommendIndex(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Recommend numeric field %s", name)

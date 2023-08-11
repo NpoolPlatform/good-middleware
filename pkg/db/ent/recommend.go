@@ -9,6 +9,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // Recommend is the model entity for the Recommend schema.
@@ -31,7 +32,7 @@ type Recommend struct {
 	// Message holds the value of the "message" field.
 	Message string `json:"message,omitempty"`
 	// RecommendIndex holds the value of the "recommend_index" field.
-	RecommendIndex float64 `json:"recommend_index,omitempty"`
+	RecommendIndex decimal.Decimal `json:"recommend_index,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -40,7 +41,7 @@ func (*Recommend) scanValues(columns []string) ([]interface{}, error) {
 	for i := range columns {
 		switch columns[i] {
 		case recommend.FieldRecommendIndex:
-			values[i] = new(sql.NullFloat64)
+			values[i] = new(decimal.Decimal)
 		case recommend.FieldCreatedAt, recommend.FieldUpdatedAt, recommend.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
 		case recommend.FieldMessage:
@@ -111,10 +112,10 @@ func (r *Recommend) assignValues(columns []string, values []interface{}) error {
 				r.Message = value.String
 			}
 		case recommend.FieldRecommendIndex:
-			if value, ok := values[i].(*sql.NullFloat64); !ok {
+			if value, ok := values[i].(*decimal.Decimal); !ok {
 				return fmt.Errorf("unexpected type %T for field recommend_index", values[i])
-			} else if value.Valid {
-				r.RecommendIndex = value.Float64
+			} else if value != nil {
+				r.RecommendIndex = *value
 			}
 		}
 	}

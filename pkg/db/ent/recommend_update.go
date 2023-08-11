@@ -13,6 +13,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // RecommendUpdate is the builder for updating Recommend entities.
@@ -137,23 +138,16 @@ func (ru *RecommendUpdate) ClearMessage() *RecommendUpdate {
 }
 
 // SetRecommendIndex sets the "recommend_index" field.
-func (ru *RecommendUpdate) SetRecommendIndex(f float64) *RecommendUpdate {
-	ru.mutation.ResetRecommendIndex()
-	ru.mutation.SetRecommendIndex(f)
+func (ru *RecommendUpdate) SetRecommendIndex(d decimal.Decimal) *RecommendUpdate {
+	ru.mutation.SetRecommendIndex(d)
 	return ru
 }
 
 // SetNillableRecommendIndex sets the "recommend_index" field if the given value is not nil.
-func (ru *RecommendUpdate) SetNillableRecommendIndex(f *float64) *RecommendUpdate {
-	if f != nil {
-		ru.SetRecommendIndex(*f)
+func (ru *RecommendUpdate) SetNillableRecommendIndex(d *decimal.Decimal) *RecommendUpdate {
+	if d != nil {
+		ru.SetRecommendIndex(*d)
 	}
-	return ru
-}
-
-// AddRecommendIndex adds f to the "recommend_index" field.
-func (ru *RecommendUpdate) AddRecommendIndex(f float64) *RecommendUpdate {
-	ru.mutation.AddRecommendIndex(f)
 	return ru
 }
 
@@ -345,21 +339,14 @@ func (ru *RecommendUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := ru.mutation.RecommendIndex(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
-			Value:  value,
-			Column: recommend.FieldRecommendIndex,
-		})
-	}
-	if value, ok := ru.mutation.AddedRecommendIndex(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: recommend.FieldRecommendIndex,
 		})
 	}
 	if ru.mutation.RecommendIndexCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Column: recommend.FieldRecommendIndex,
 		})
 	}
@@ -492,23 +479,16 @@ func (ruo *RecommendUpdateOne) ClearMessage() *RecommendUpdateOne {
 }
 
 // SetRecommendIndex sets the "recommend_index" field.
-func (ruo *RecommendUpdateOne) SetRecommendIndex(f float64) *RecommendUpdateOne {
-	ruo.mutation.ResetRecommendIndex()
-	ruo.mutation.SetRecommendIndex(f)
+func (ruo *RecommendUpdateOne) SetRecommendIndex(d decimal.Decimal) *RecommendUpdateOne {
+	ruo.mutation.SetRecommendIndex(d)
 	return ruo
 }
 
 // SetNillableRecommendIndex sets the "recommend_index" field if the given value is not nil.
-func (ruo *RecommendUpdateOne) SetNillableRecommendIndex(f *float64) *RecommendUpdateOne {
-	if f != nil {
-		ruo.SetRecommendIndex(*f)
+func (ruo *RecommendUpdateOne) SetNillableRecommendIndex(d *decimal.Decimal) *RecommendUpdateOne {
+	if d != nil {
+		ruo.SetRecommendIndex(*d)
 	}
-	return ruo
-}
-
-// AddRecommendIndex adds f to the "recommend_index" field.
-func (ruo *RecommendUpdateOne) AddRecommendIndex(f float64) *RecommendUpdateOne {
-	ruo.mutation.AddRecommendIndex(f)
 	return ruo
 }
 
@@ -730,21 +710,14 @@ func (ruo *RecommendUpdateOne) sqlSave(ctx context.Context) (_node *Recommend, e
 	}
 	if value, ok := ruo.mutation.RecommendIndex(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
-			Value:  value,
-			Column: recommend.FieldRecommendIndex,
-		})
-	}
-	if value, ok := ruo.mutation.AddedRecommendIndex(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: recommend.FieldRecommendIndex,
 		})
 	}
 	if ruo.mutation.RecommendIndexCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Column: recommend.FieldRecommendIndex,
 		})
 	}
