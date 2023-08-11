@@ -224,6 +224,8 @@ var (
 		{Name: "reward_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "tid", Type: field.TypeUUID, Nullable: true},
 		{Name: "amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "unit_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "result", Type: field.TypeString, Nullable: true, Default: "DefaultResult"},
 	}
 	// GoodRewardHistoriesTable holds the schema information for the "good_reward_histories" table.
 	GoodRewardHistoriesTable = &schema.Table{

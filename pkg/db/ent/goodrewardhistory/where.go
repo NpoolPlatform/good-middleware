@@ -129,6 +129,20 @@ func Amount(v decimal.Decimal) predicate.GoodRewardHistory {
 	})
 }
 
+// UnitAmount applies equality check predicate on the "unit_amount" field. It's identical to UnitAmountEQ.
+func UnitAmount(v decimal.Decimal) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUnitAmount), v))
+	})
+}
+
+// Result applies equality check predicate on the "result" field. It's identical to ResultEQ.
+func Result(v string) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldResult), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.GoodRewardHistory {
 	return predicate.GoodRewardHistory(func(s *sql.Selector) {
@@ -616,6 +630,197 @@ func AmountIsNil() predicate.GoodRewardHistory {
 func AmountNotNil() predicate.GoodRewardHistory {
 	return predicate.GoodRewardHistory(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldAmount)))
+	})
+}
+
+// UnitAmountEQ applies the EQ predicate on the "unit_amount" field.
+func UnitAmountEQ(v decimal.Decimal) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUnitAmount), v))
+	})
+}
+
+// UnitAmountNEQ applies the NEQ predicate on the "unit_amount" field.
+func UnitAmountNEQ(v decimal.Decimal) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUnitAmount), v))
+	})
+}
+
+// UnitAmountIn applies the In predicate on the "unit_amount" field.
+func UnitAmountIn(vs ...decimal.Decimal) predicate.GoodRewardHistory {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldUnitAmount), v...))
+	})
+}
+
+// UnitAmountNotIn applies the NotIn predicate on the "unit_amount" field.
+func UnitAmountNotIn(vs ...decimal.Decimal) predicate.GoodRewardHistory {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldUnitAmount), v...))
+	})
+}
+
+// UnitAmountGT applies the GT predicate on the "unit_amount" field.
+func UnitAmountGT(v decimal.Decimal) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUnitAmount), v))
+	})
+}
+
+// UnitAmountGTE applies the GTE predicate on the "unit_amount" field.
+func UnitAmountGTE(v decimal.Decimal) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUnitAmount), v))
+	})
+}
+
+// UnitAmountLT applies the LT predicate on the "unit_amount" field.
+func UnitAmountLT(v decimal.Decimal) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUnitAmount), v))
+	})
+}
+
+// UnitAmountLTE applies the LTE predicate on the "unit_amount" field.
+func UnitAmountLTE(v decimal.Decimal) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUnitAmount), v))
+	})
+}
+
+// UnitAmountIsNil applies the IsNil predicate on the "unit_amount" field.
+func UnitAmountIsNil() predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldUnitAmount)))
+	})
+}
+
+// UnitAmountNotNil applies the NotNil predicate on the "unit_amount" field.
+func UnitAmountNotNil() predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldUnitAmount)))
+	})
+}
+
+// ResultEQ applies the EQ predicate on the "result" field.
+func ResultEQ(v string) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldResult), v))
+	})
+}
+
+// ResultNEQ applies the NEQ predicate on the "result" field.
+func ResultNEQ(v string) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldResult), v))
+	})
+}
+
+// ResultIn applies the In predicate on the "result" field.
+func ResultIn(vs ...string) predicate.GoodRewardHistory {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldResult), v...))
+	})
+}
+
+// ResultNotIn applies the NotIn predicate on the "result" field.
+func ResultNotIn(vs ...string) predicate.GoodRewardHistory {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldResult), v...))
+	})
+}
+
+// ResultGT applies the GT predicate on the "result" field.
+func ResultGT(v string) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldResult), v))
+	})
+}
+
+// ResultGTE applies the GTE predicate on the "result" field.
+func ResultGTE(v string) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldResult), v))
+	})
+}
+
+// ResultLT applies the LT predicate on the "result" field.
+func ResultLT(v string) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldResult), v))
+	})
+}
+
+// ResultLTE applies the LTE predicate on the "result" field.
+func ResultLTE(v string) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldResult), v))
+	})
+}
+
+// ResultContains applies the Contains predicate on the "result" field.
+func ResultContains(v string) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldResult), v))
+	})
+}
+
+// ResultHasPrefix applies the HasPrefix predicate on the "result" field.
+func ResultHasPrefix(v string) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldResult), v))
+	})
+}
+
+// ResultHasSuffix applies the HasSuffix predicate on the "result" field.
+func ResultHasSuffix(v string) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldResult), v))
+	})
+}
+
+// ResultIsNil applies the IsNil predicate on the "result" field.
+func ResultIsNil() predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldResult)))
+	})
+}
+
+// ResultNotNil applies the NotNil predicate on the "result" field.
+func ResultNotNil() predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldResult)))
+	})
+}
+
+// ResultEqualFold applies the EqualFold predicate on the "result" field.
+func ResultEqualFold(v string) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldResult), v))
+	})
+}
+
+// ResultContainsFold applies the ContainsFold predicate on the "result" field.
+func ResultContainsFold(v string) predicate.GoodRewardHistory {
+	return predicate.GoodRewardHistory(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldResult), v))
 	})
 }
 

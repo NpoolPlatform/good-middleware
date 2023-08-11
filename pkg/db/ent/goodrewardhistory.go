@@ -31,6 +31,10 @@ type GoodRewardHistory struct {
 	Tid uuid.UUID `json:"tid,omitempty"`
 	// Amount holds the value of the "amount" field.
 	Amount decimal.Decimal `json:"amount,omitempty"`
+	// UnitAmount holds the value of the "unit_amount" field.
+	UnitAmount decimal.Decimal `json:"unit_amount,omitempty"`
+	// Result holds the value of the "result" field.
+	Result string `json:"result,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -38,10 +42,12 @@ func (*GoodRewardHistory) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case goodrewardhistory.FieldAmount:
+		case goodrewardhistory.FieldAmount, goodrewardhistory.FieldUnitAmount:
 			values[i] = new(decimal.Decimal)
 		case goodrewardhistory.FieldCreatedAt, goodrewardhistory.FieldUpdatedAt, goodrewardhistory.FieldDeletedAt, goodrewardhistory.FieldRewardAt:
 			values[i] = new(sql.NullInt64)
+		case goodrewardhistory.FieldResult:
+			values[i] = new(sql.NullString)
 		case goodrewardhistory.FieldID, goodrewardhistory.FieldGoodID, goodrewardhistory.FieldTid:
 			values[i] = new(uuid.UUID)
 		default:
@@ -107,6 +113,18 @@ func (grh *GoodRewardHistory) assignValues(columns []string, values []interface{
 			} else if value != nil {
 				grh.Amount = *value
 			}
+		case goodrewardhistory.FieldUnitAmount:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field unit_amount", values[i])
+			} else if value != nil {
+				grh.UnitAmount = *value
+			}
+		case goodrewardhistory.FieldResult:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field result", values[i])
+			} else if value.Valid {
+				grh.Result = value.String
+			}
 		}
 	}
 	return nil
@@ -155,6 +173,12 @@ func (grh *GoodRewardHistory) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("amount=")
 	builder.WriteString(fmt.Sprintf("%v", grh.Amount))
+	builder.WriteString(", ")
+	builder.WriteString("unit_amount=")
+	builder.WriteString(fmt.Sprintf("%v", grh.UnitAmount))
+	builder.WriteString(", ")
+	builder.WriteString("result=")
+	builder.WriteString(grh.Result)
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -158,6 +158,46 @@ func (grhu *GoodRewardHistoryUpdate) ClearAmount() *GoodRewardHistoryUpdate {
 	return grhu
 }
 
+// SetUnitAmount sets the "unit_amount" field.
+func (grhu *GoodRewardHistoryUpdate) SetUnitAmount(d decimal.Decimal) *GoodRewardHistoryUpdate {
+	grhu.mutation.SetUnitAmount(d)
+	return grhu
+}
+
+// SetNillableUnitAmount sets the "unit_amount" field if the given value is not nil.
+func (grhu *GoodRewardHistoryUpdate) SetNillableUnitAmount(d *decimal.Decimal) *GoodRewardHistoryUpdate {
+	if d != nil {
+		grhu.SetUnitAmount(*d)
+	}
+	return grhu
+}
+
+// ClearUnitAmount clears the value of the "unit_amount" field.
+func (grhu *GoodRewardHistoryUpdate) ClearUnitAmount() *GoodRewardHistoryUpdate {
+	grhu.mutation.ClearUnitAmount()
+	return grhu
+}
+
+// SetResult sets the "result" field.
+func (grhu *GoodRewardHistoryUpdate) SetResult(s string) *GoodRewardHistoryUpdate {
+	grhu.mutation.SetResult(s)
+	return grhu
+}
+
+// SetNillableResult sets the "result" field if the given value is not nil.
+func (grhu *GoodRewardHistoryUpdate) SetNillableResult(s *string) *GoodRewardHistoryUpdate {
+	if s != nil {
+		grhu.SetResult(*s)
+	}
+	return grhu
+}
+
+// ClearResult clears the value of the "result" field.
+func (grhu *GoodRewardHistoryUpdate) ClearResult() *GoodRewardHistoryUpdate {
+	grhu.mutation.ClearResult()
+	return grhu
+}
+
 // Mutation returns the GoodRewardHistoryMutation object of the builder.
 func (grhu *GoodRewardHistoryUpdate) Mutation() *GoodRewardHistoryMutation {
 	return grhu.mutation
@@ -351,6 +391,32 @@ func (grhu *GoodRewardHistoryUpdate) sqlSave(ctx context.Context) (n int, err er
 			Column: goodrewardhistory.FieldAmount,
 		})
 	}
+	if value, ok := grhu.mutation.UnitAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: goodrewardhistory.FieldUnitAmount,
+		})
+	}
+	if grhu.mutation.UnitAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: goodrewardhistory.FieldUnitAmount,
+		})
+	}
+	if value, ok := grhu.mutation.Result(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: goodrewardhistory.FieldResult,
+		})
+	}
+	if grhu.mutation.ResultCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: goodrewardhistory.FieldResult,
+		})
+	}
 	_spec.Modifiers = grhu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, grhu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -497,6 +563,46 @@ func (grhuo *GoodRewardHistoryUpdateOne) SetNillableAmount(d *decimal.Decimal) *
 // ClearAmount clears the value of the "amount" field.
 func (grhuo *GoodRewardHistoryUpdateOne) ClearAmount() *GoodRewardHistoryUpdateOne {
 	grhuo.mutation.ClearAmount()
+	return grhuo
+}
+
+// SetUnitAmount sets the "unit_amount" field.
+func (grhuo *GoodRewardHistoryUpdateOne) SetUnitAmount(d decimal.Decimal) *GoodRewardHistoryUpdateOne {
+	grhuo.mutation.SetUnitAmount(d)
+	return grhuo
+}
+
+// SetNillableUnitAmount sets the "unit_amount" field if the given value is not nil.
+func (grhuo *GoodRewardHistoryUpdateOne) SetNillableUnitAmount(d *decimal.Decimal) *GoodRewardHistoryUpdateOne {
+	if d != nil {
+		grhuo.SetUnitAmount(*d)
+	}
+	return grhuo
+}
+
+// ClearUnitAmount clears the value of the "unit_amount" field.
+func (grhuo *GoodRewardHistoryUpdateOne) ClearUnitAmount() *GoodRewardHistoryUpdateOne {
+	grhuo.mutation.ClearUnitAmount()
+	return grhuo
+}
+
+// SetResult sets the "result" field.
+func (grhuo *GoodRewardHistoryUpdateOne) SetResult(s string) *GoodRewardHistoryUpdateOne {
+	grhuo.mutation.SetResult(s)
+	return grhuo
+}
+
+// SetNillableResult sets the "result" field if the given value is not nil.
+func (grhuo *GoodRewardHistoryUpdateOne) SetNillableResult(s *string) *GoodRewardHistoryUpdateOne {
+	if s != nil {
+		grhuo.SetResult(*s)
+	}
+	return grhuo
+}
+
+// ClearResult clears the value of the "result" field.
+func (grhuo *GoodRewardHistoryUpdateOne) ClearResult() *GoodRewardHistoryUpdateOne {
+	grhuo.mutation.ClearResult()
 	return grhuo
 }
 
@@ -721,6 +827,32 @@ func (grhuo *GoodRewardHistoryUpdateOne) sqlSave(ctx context.Context) (_node *Go
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: goodrewardhistory.FieldAmount,
+		})
+	}
+	if value, ok := grhuo.mutation.UnitAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: goodrewardhistory.FieldUnitAmount,
+		})
+	}
+	if grhuo.mutation.UnitAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: goodrewardhistory.FieldUnitAmount,
+		})
+	}
+	if value, ok := grhuo.mutation.Result(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: goodrewardhistory.FieldResult,
+		})
+	}
+	if grhuo.mutation.ResultCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: goodrewardhistory.FieldResult,
 		})
 	}
 	_spec.Modifiers = grhuo.modifiers

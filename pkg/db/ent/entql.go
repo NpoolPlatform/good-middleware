@@ -239,13 +239,15 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "GoodRewardHistory",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			goodrewardhistory.FieldCreatedAt: {Type: field.TypeUint32, Column: goodrewardhistory.FieldCreatedAt},
-			goodrewardhistory.FieldUpdatedAt: {Type: field.TypeUint32, Column: goodrewardhistory.FieldUpdatedAt},
-			goodrewardhistory.FieldDeletedAt: {Type: field.TypeUint32, Column: goodrewardhistory.FieldDeletedAt},
-			goodrewardhistory.FieldGoodID:    {Type: field.TypeUUID, Column: goodrewardhistory.FieldGoodID},
-			goodrewardhistory.FieldRewardAt:  {Type: field.TypeUint32, Column: goodrewardhistory.FieldRewardAt},
-			goodrewardhistory.FieldTid:       {Type: field.TypeUUID, Column: goodrewardhistory.FieldTid},
-			goodrewardhistory.FieldAmount:    {Type: field.TypeOther, Column: goodrewardhistory.FieldAmount},
+			goodrewardhistory.FieldCreatedAt:  {Type: field.TypeUint32, Column: goodrewardhistory.FieldCreatedAt},
+			goodrewardhistory.FieldUpdatedAt:  {Type: field.TypeUint32, Column: goodrewardhistory.FieldUpdatedAt},
+			goodrewardhistory.FieldDeletedAt:  {Type: field.TypeUint32, Column: goodrewardhistory.FieldDeletedAt},
+			goodrewardhistory.FieldGoodID:     {Type: field.TypeUUID, Column: goodrewardhistory.FieldGoodID},
+			goodrewardhistory.FieldRewardAt:   {Type: field.TypeUint32, Column: goodrewardhistory.FieldRewardAt},
+			goodrewardhistory.FieldTid:        {Type: field.TypeUUID, Column: goodrewardhistory.FieldTid},
+			goodrewardhistory.FieldAmount:     {Type: field.TypeOther, Column: goodrewardhistory.FieldAmount},
+			goodrewardhistory.FieldUnitAmount: {Type: field.TypeOther, Column: goodrewardhistory.FieldUnitAmount},
+			goodrewardhistory.FieldResult:     {Type: field.TypeString, Column: goodrewardhistory.FieldResult},
 		},
 	}
 	graph.Nodes[9] = &sqlgraph.Node{
@@ -1243,6 +1245,16 @@ func (f *GoodRewardHistoryFilter) WhereTid(p entql.ValueP) {
 // WhereAmount applies the entql other predicate on the amount field.
 func (f *GoodRewardHistoryFilter) WhereAmount(p entql.OtherP) {
 	f.Where(p.Field(goodrewardhistory.FieldAmount))
+}
+
+// WhereUnitAmount applies the entql other predicate on the unit_amount field.
+func (f *GoodRewardHistoryFilter) WhereUnitAmount(p entql.OtherP) {
+	f.Where(p.Field(goodrewardhistory.FieldUnitAmount))
+}
+
+// WhereResult applies the entql string predicate on the result field.
+func (f *GoodRewardHistoryFilter) WhereResult(p entql.StringP) {
+	f.Where(p.Field(goodrewardhistory.FieldResult))
 }
 
 // addPredicate implements the predicateAdder interface.

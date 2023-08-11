@@ -555,6 +555,14 @@ func init() {
 	goodrewardhistoryDescAmount := goodrewardhistoryFields[4].Descriptor()
 	// goodrewardhistory.DefaultAmount holds the default value on creation for the amount field.
 	goodrewardhistory.DefaultAmount = goodrewardhistoryDescAmount.Default.(decimal.Decimal)
+	// goodrewardhistoryDescUnitAmount is the schema descriptor for unit_amount field.
+	goodrewardhistoryDescUnitAmount := goodrewardhistoryFields[5].Descriptor()
+	// goodrewardhistory.DefaultUnitAmount holds the default value on creation for the unit_amount field.
+	goodrewardhistory.DefaultUnitAmount = goodrewardhistoryDescUnitAmount.Default.(decimal.Decimal)
+	// goodrewardhistoryDescResult is the schema descriptor for result field.
+	goodrewardhistoryDescResult := goodrewardhistoryFields[6].Descriptor()
+	// goodrewardhistory.DefaultResult holds the default value on creation for the result field.
+	goodrewardhistory.DefaultResult = goodrewardhistoryDescResult.Default.(string)
 	// goodrewardhistoryDescID is the schema descriptor for id field.
 	goodrewardhistoryDescID := goodrewardhistoryFields[0].Descriptor()
 	// goodrewardhistory.DefaultID holds the default value on creation for the id field.

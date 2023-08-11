@@ -27,6 +27,10 @@ const (
 	FieldTid = "tid"
 	// FieldAmount holds the string denoting the amount field in the database.
 	FieldAmount = "amount"
+	// FieldUnitAmount holds the string denoting the unit_amount field in the database.
+	FieldUnitAmount = "unit_amount"
+	// FieldResult holds the string denoting the result field in the database.
+	FieldResult = "result"
 	// Table holds the table name of the goodrewardhistory in the database.
 	Table = "good_reward_histories"
 )
@@ -41,6 +45,8 @@ var Columns = []string{
 	FieldRewardAt,
 	FieldTid,
 	FieldAmount,
+	FieldUnitAmount,
+	FieldResult,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -76,6 +82,10 @@ var (
 	DefaultTid func() uuid.UUID
 	// DefaultAmount holds the default value on creation for the "amount" field.
 	DefaultAmount decimal.Decimal
+	// DefaultUnitAmount holds the default value on creation for the "unit_amount" field.
+	DefaultUnitAmount decimal.Decimal
+	// DefaultResult holds the default value on creation for the "result" field.
+	DefaultResult string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
