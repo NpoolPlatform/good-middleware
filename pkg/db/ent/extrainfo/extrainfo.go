@@ -5,6 +5,7 @@ package extrainfo
 import (
 	"entgo.io/ent"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 const (
@@ -26,8 +27,8 @@ const (
 	FieldLabels = "labels"
 	// FieldVoteCount holds the string denoting the vote_count field in the database.
 	FieldVoteCount = "vote_count"
-	// FieldRating holds the string denoting the rating field in the database.
-	FieldRating = "rating"
+	// FieldRatingV1 holds the string denoting the rating_v1 field in the database.
+	FieldRatingV1 = "rating_v1"
 	// Table holds the table name of the extrainfo in the database.
 	Table = "extra_infos"
 )
@@ -42,7 +43,7 @@ var Columns = []string{
 	FieldPosters,
 	FieldLabels,
 	FieldVoteCount,
-	FieldRating,
+	FieldRatingV1,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -78,8 +79,8 @@ var (
 	DefaultLabels []string
 	// DefaultVoteCount holds the default value on creation for the "vote_count" field.
 	DefaultVoteCount uint32
-	// DefaultRating holds the default value on creation for the "rating" field.
-	DefaultRating float32
+	// DefaultRatingV1 holds the default value on creation for the "rating_v1" field.
+	DefaultRatingV1 decimal.Decimal
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

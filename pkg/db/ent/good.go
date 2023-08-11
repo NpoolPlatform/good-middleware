@@ -56,16 +56,8 @@ type Good struct {
 	TestOnly bool `json:"test_only,omitempty"`
 	// BenefitIntervalHours holds the value of the "benefit_interval_hours" field.
 	BenefitIntervalHours uint32 `json:"benefit_interval_hours,omitempty"`
-	// BenefitState holds the value of the "benefit_state" field.
-	BenefitState string `json:"benefit_state,omitempty"`
-	// LastBenefitAt holds the value of the "last_benefit_at" field.
-	LastBenefitAt uint32 `json:"last_benefit_at,omitempty"`
-	// BenefitTids holds the value of the "benefit_tids" field.
-	BenefitTids []uuid.UUID `json:"benefit_tids,omitempty"`
-	// NextBenefitStartAmount holds the value of the "next_benefit_start_amount" field.
-	NextBenefitStartAmount decimal.Decimal `json:"next_benefit_start_amount,omitempty"`
-	// LastBenefitAmount holds the value of the "last_benefit_amount" field.
-	LastBenefitAmount decimal.Decimal `json:"last_benefit_amount,omitempty"`
+	// ChannelLockDeposit holds the value of the "channel_lock_deposit" field.
+	ChannelLockDeposit decimal.Decimal `json:"channel_lock_deposit,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -73,15 +65,15 @@ func (*Good) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case good.FieldSupportCoinTypeIds, good.FieldBenefitTids:
+		case good.FieldSupportCoinTypeIds:
 			values[i] = new([]byte)
-		case good.FieldPrice, good.FieldNextBenefitStartAmount, good.FieldLastBenefitAmount:
+		case good.FieldPrice, good.FieldChannelLockDeposit:
 			values[i] = new(decimal.Decimal)
 		case good.FieldTestOnly:
 			values[i] = new(sql.NullBool)
-		case good.FieldCreatedAt, good.FieldUpdatedAt, good.FieldDeletedAt, good.FieldDurationDays, good.FieldUnitAmount, good.FieldDeliveryAt, good.FieldStartAt, good.FieldBenefitIntervalHours, good.FieldLastBenefitAt:
+		case good.FieldCreatedAt, good.FieldUpdatedAt, good.FieldDeletedAt, good.FieldDurationDays, good.FieldUnitAmount, good.FieldDeliveryAt, good.FieldStartAt, good.FieldBenefitIntervalHours:
 			values[i] = new(sql.NullInt64)
-		case good.FieldBenefitType, good.FieldGoodType, good.FieldTitle, good.FieldUnit, good.FieldBenefitState:
+		case good.FieldBenefitType, good.FieldGoodType, good.FieldTitle, good.FieldUnit:
 			values[i] = new(sql.NullString)
 		case good.FieldID, good.FieldDeviceInfoID, good.FieldCoinTypeID, good.FieldInheritFromGoodID, good.FieldVendorLocationID:
 			values[i] = new(uuid.UUID)
@@ -222,37 +214,11 @@ func (_go *Good) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				_go.BenefitIntervalHours = uint32(value.Int64)
 			}
-		case good.FieldBenefitState:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field benefit_state", values[i])
-			} else if value.Valid {
-				_go.BenefitState = value.String
-			}
-		case good.FieldLastBenefitAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field last_benefit_at", values[i])
-			} else if value.Valid {
-				_go.LastBenefitAt = uint32(value.Int64)
-			}
-		case good.FieldBenefitTids:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field benefit_tids", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &_go.BenefitTids); err != nil {
-					return fmt.Errorf("unmarshal field benefit_tids: %w", err)
-				}
-			}
-		case good.FieldNextBenefitStartAmount:
+		case good.FieldChannelLockDeposit:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field next_benefit_start_amount", values[i])
+				return fmt.Errorf("unexpected type %T for field channel_lock_deposit", values[i])
 			} else if value != nil {
-				_go.NextBenefitStartAmount = *value
-			}
-		case good.FieldLastBenefitAmount:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field last_benefit_amount", values[i])
-			} else if value != nil {
-				_go.LastBenefitAmount = *value
+				_go.ChannelLockDeposit = *value
 			}
 		}
 	}
@@ -339,20 +305,8 @@ func (_go *Good) String() string {
 	builder.WriteString("benefit_interval_hours=")
 	builder.WriteString(fmt.Sprintf("%v", _go.BenefitIntervalHours))
 	builder.WriteString(", ")
-	builder.WriteString("benefit_state=")
-	builder.WriteString(_go.BenefitState)
-	builder.WriteString(", ")
-	builder.WriteString("last_benefit_at=")
-	builder.WriteString(fmt.Sprintf("%v", _go.LastBenefitAt))
-	builder.WriteString(", ")
-	builder.WriteString("benefit_tids=")
-	builder.WriteString(fmt.Sprintf("%v", _go.BenefitTids))
-	builder.WriteString(", ")
-	builder.WriteString("next_benefit_start_amount=")
-	builder.WriteString(fmt.Sprintf("%v", _go.NextBenefitStartAmount))
-	builder.WriteString(", ")
-	builder.WriteString("last_benefit_amount=")
-	builder.WriteString(fmt.Sprintf("%v", _go.LastBenefitAmount))
+	builder.WriteString("channel_lock_deposit=")
+	builder.WriteString(fmt.Sprintf("%v", _go.ChannelLockDeposit))
 	builder.WriteByte(')')
 	return builder.String()
 }

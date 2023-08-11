@@ -143,6 +143,13 @@ func Sold(v decimal.Decimal) predicate.Stock {
 	})
 }
 
+// ChannelLocked applies equality check predicate on the "channel_locked" field. It's identical to ChannelLockedEQ.
+func ChannelLocked(v decimal.Decimal) predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldChannelLocked), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
@@ -786,6 +793,84 @@ func SoldIsNil() predicate.Stock {
 func SoldNotNil() predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldSold)))
+	})
+}
+
+// ChannelLockedEQ applies the EQ predicate on the "channel_locked" field.
+func ChannelLockedEQ(v decimal.Decimal) predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldChannelLocked), v))
+	})
+}
+
+// ChannelLockedNEQ applies the NEQ predicate on the "channel_locked" field.
+func ChannelLockedNEQ(v decimal.Decimal) predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldChannelLocked), v))
+	})
+}
+
+// ChannelLockedIn applies the In predicate on the "channel_locked" field.
+func ChannelLockedIn(vs ...decimal.Decimal) predicate.Stock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldChannelLocked), v...))
+	})
+}
+
+// ChannelLockedNotIn applies the NotIn predicate on the "channel_locked" field.
+func ChannelLockedNotIn(vs ...decimal.Decimal) predicate.Stock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldChannelLocked), v...))
+	})
+}
+
+// ChannelLockedGT applies the GT predicate on the "channel_locked" field.
+func ChannelLockedGT(v decimal.Decimal) predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldChannelLocked), v))
+	})
+}
+
+// ChannelLockedGTE applies the GTE predicate on the "channel_locked" field.
+func ChannelLockedGTE(v decimal.Decimal) predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldChannelLocked), v))
+	})
+}
+
+// ChannelLockedLT applies the LT predicate on the "channel_locked" field.
+func ChannelLockedLT(v decimal.Decimal) predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldChannelLocked), v))
+	})
+}
+
+// ChannelLockedLTE applies the LTE predicate on the "channel_locked" field.
+func ChannelLockedLTE(v decimal.Decimal) predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldChannelLocked), v))
+	})
+}
+
+// ChannelLockedIsNil applies the IsNil predicate on the "channel_locked" field.
+func ChannelLockedIsNil() predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldChannelLocked)))
+	})
+}
+
+// ChannelLockedNotNil applies the NotNil predicate on the "channel_locked" field.
+func ChannelLockedNotNil() predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldChannelLocked)))
 	})
 }
 

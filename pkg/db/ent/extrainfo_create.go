@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // ExtraInfoCreate is the builder for creating a ExtraInfo entity.
@@ -97,16 +98,16 @@ func (eic *ExtraInfoCreate) SetNillableVoteCount(u *uint32) *ExtraInfoCreate {
 	return eic
 }
 
-// SetRating sets the "rating" field.
-func (eic *ExtraInfoCreate) SetRating(f float32) *ExtraInfoCreate {
-	eic.mutation.SetRating(f)
+// SetRatingV1 sets the "rating_v1" field.
+func (eic *ExtraInfoCreate) SetRatingV1(d decimal.Decimal) *ExtraInfoCreate {
+	eic.mutation.SetRatingV1(d)
 	return eic
 }
 
-// SetNillableRating sets the "rating" field if the given value is not nil.
-func (eic *ExtraInfoCreate) SetNillableRating(f *float32) *ExtraInfoCreate {
-	if f != nil {
-		eic.SetRating(*f)
+// SetNillableRatingV1 sets the "rating_v1" field if the given value is not nil.
+func (eic *ExtraInfoCreate) SetNillableRatingV1(d *decimal.Decimal) *ExtraInfoCreate {
+	if d != nil {
+		eic.SetRatingV1(*d)
 	}
 	return eic
 }
@@ -237,9 +238,9 @@ func (eic *ExtraInfoCreate) defaults() error {
 		v := extrainfo.DefaultVoteCount
 		eic.mutation.SetVoteCount(v)
 	}
-	if _, ok := eic.mutation.Rating(); !ok {
-		v := extrainfo.DefaultRating
-		eic.mutation.SetRating(v)
+	if _, ok := eic.mutation.RatingV1(); !ok {
+		v := extrainfo.DefaultRatingV1
+		eic.mutation.SetRatingV1(v)
 	}
 	if _, ok := eic.mutation.ID(); !ok {
 		if extrainfo.DefaultID == nil {
@@ -358,13 +359,13 @@ func (eic *ExtraInfoCreate) createSpec() (*ExtraInfo, *sqlgraph.CreateSpec) {
 		})
 		_node.VoteCount = value
 	}
-	if value, ok := eic.mutation.Rating(); ok {
+	if value, ok := eic.mutation.RatingV1(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat32,
+			Type:   field.TypeOther,
 			Value:  value,
-			Column: extrainfo.FieldRating,
+			Column: extrainfo.FieldRatingV1,
 		})
-		_node.Rating = value
+		_node.RatingV1 = value
 	}
 	return _node, _spec
 }
@@ -546,27 +547,21 @@ func (u *ExtraInfoUpsert) ClearVoteCount() *ExtraInfoUpsert {
 	return u
 }
 
-// SetRating sets the "rating" field.
-func (u *ExtraInfoUpsert) SetRating(v float32) *ExtraInfoUpsert {
-	u.Set(extrainfo.FieldRating, v)
+// SetRatingV1 sets the "rating_v1" field.
+func (u *ExtraInfoUpsert) SetRatingV1(v decimal.Decimal) *ExtraInfoUpsert {
+	u.Set(extrainfo.FieldRatingV1, v)
 	return u
 }
 
-// UpdateRating sets the "rating" field to the value that was provided on create.
-func (u *ExtraInfoUpsert) UpdateRating() *ExtraInfoUpsert {
-	u.SetExcluded(extrainfo.FieldRating)
+// UpdateRatingV1 sets the "rating_v1" field to the value that was provided on create.
+func (u *ExtraInfoUpsert) UpdateRatingV1() *ExtraInfoUpsert {
+	u.SetExcluded(extrainfo.FieldRatingV1)
 	return u
 }
 
-// AddRating adds v to the "rating" field.
-func (u *ExtraInfoUpsert) AddRating(v float32) *ExtraInfoUpsert {
-	u.Add(extrainfo.FieldRating, v)
-	return u
-}
-
-// ClearRating clears the value of the "rating" field.
-func (u *ExtraInfoUpsert) ClearRating() *ExtraInfoUpsert {
-	u.SetNull(extrainfo.FieldRating)
+// ClearRatingV1 clears the value of the "rating_v1" field.
+func (u *ExtraInfoUpsert) ClearRatingV1() *ExtraInfoUpsert {
+	u.SetNull(extrainfo.FieldRatingV1)
 	return u
 }
 
@@ -767,31 +762,24 @@ func (u *ExtraInfoUpsertOne) ClearVoteCount() *ExtraInfoUpsertOne {
 	})
 }
 
-// SetRating sets the "rating" field.
-func (u *ExtraInfoUpsertOne) SetRating(v float32) *ExtraInfoUpsertOne {
+// SetRatingV1 sets the "rating_v1" field.
+func (u *ExtraInfoUpsertOne) SetRatingV1(v decimal.Decimal) *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetRating(v)
+		s.SetRatingV1(v)
 	})
 }
 
-// AddRating adds v to the "rating" field.
-func (u *ExtraInfoUpsertOne) AddRating(v float32) *ExtraInfoUpsertOne {
+// UpdateRatingV1 sets the "rating_v1" field to the value that was provided on create.
+func (u *ExtraInfoUpsertOne) UpdateRatingV1() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.AddRating(v)
+		s.UpdateRatingV1()
 	})
 }
 
-// UpdateRating sets the "rating" field to the value that was provided on create.
-func (u *ExtraInfoUpsertOne) UpdateRating() *ExtraInfoUpsertOne {
+// ClearRatingV1 clears the value of the "rating_v1" field.
+func (u *ExtraInfoUpsertOne) ClearRatingV1() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateRating()
-	})
-}
-
-// ClearRating clears the value of the "rating" field.
-func (u *ExtraInfoUpsertOne) ClearRating() *ExtraInfoUpsertOne {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearRating()
+		s.ClearRatingV1()
 	})
 }
 
@@ -1158,31 +1146,24 @@ func (u *ExtraInfoUpsertBulk) ClearVoteCount() *ExtraInfoUpsertBulk {
 	})
 }
 
-// SetRating sets the "rating" field.
-func (u *ExtraInfoUpsertBulk) SetRating(v float32) *ExtraInfoUpsertBulk {
+// SetRatingV1 sets the "rating_v1" field.
+func (u *ExtraInfoUpsertBulk) SetRatingV1(v decimal.Decimal) *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetRating(v)
+		s.SetRatingV1(v)
 	})
 }
 
-// AddRating adds v to the "rating" field.
-func (u *ExtraInfoUpsertBulk) AddRating(v float32) *ExtraInfoUpsertBulk {
+// UpdateRatingV1 sets the "rating_v1" field to the value that was provided on create.
+func (u *ExtraInfoUpsertBulk) UpdateRatingV1() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.AddRating(v)
+		s.UpdateRatingV1()
 	})
 }
 
-// UpdateRating sets the "rating" field to the value that was provided on create.
-func (u *ExtraInfoUpsertBulk) UpdateRating() *ExtraInfoUpsertBulk {
+// ClearRatingV1 clears the value of the "rating_v1" field.
+func (u *ExtraInfoUpsertBulk) ClearRatingV1() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateRating()
-	})
-}
-
-// ClearRating clears the value of the "rating" field.
-func (u *ExtraInfoUpsertBulk) ClearRating() *ExtraInfoUpsertBulk {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearRating()
+		s.ClearRatingV1()
 	})
 }
 

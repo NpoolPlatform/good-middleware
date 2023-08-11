@@ -13,6 +13,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // ExtraInfoUpdate is the builder for updating ExtraInfo entities.
@@ -141,30 +142,23 @@ func (eiu *ExtraInfoUpdate) ClearVoteCount() *ExtraInfoUpdate {
 	return eiu
 }
 
-// SetRating sets the "rating" field.
-func (eiu *ExtraInfoUpdate) SetRating(f float32) *ExtraInfoUpdate {
-	eiu.mutation.ResetRating()
-	eiu.mutation.SetRating(f)
+// SetRatingV1 sets the "rating_v1" field.
+func (eiu *ExtraInfoUpdate) SetRatingV1(d decimal.Decimal) *ExtraInfoUpdate {
+	eiu.mutation.SetRatingV1(d)
 	return eiu
 }
 
-// SetNillableRating sets the "rating" field if the given value is not nil.
-func (eiu *ExtraInfoUpdate) SetNillableRating(f *float32) *ExtraInfoUpdate {
-	if f != nil {
-		eiu.SetRating(*f)
+// SetNillableRatingV1 sets the "rating_v1" field if the given value is not nil.
+func (eiu *ExtraInfoUpdate) SetNillableRatingV1(d *decimal.Decimal) *ExtraInfoUpdate {
+	if d != nil {
+		eiu.SetRatingV1(*d)
 	}
 	return eiu
 }
 
-// AddRating adds f to the "rating" field.
-func (eiu *ExtraInfoUpdate) AddRating(f float32) *ExtraInfoUpdate {
-	eiu.mutation.AddRating(f)
-	return eiu
-}
-
-// ClearRating clears the value of the "rating" field.
-func (eiu *ExtraInfoUpdate) ClearRating() *ExtraInfoUpdate {
-	eiu.mutation.ClearRating()
+// ClearRatingV1 clears the value of the "rating_v1" field.
+func (eiu *ExtraInfoUpdate) ClearRatingV1() *ExtraInfoUpdate {
+	eiu.mutation.ClearRatingV1()
 	return eiu
 }
 
@@ -361,24 +355,17 @@ func (eiu *ExtraInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: extrainfo.FieldVoteCount,
 		})
 	}
-	if value, ok := eiu.mutation.Rating(); ok {
+	if value, ok := eiu.mutation.RatingV1(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat32,
+			Type:   field.TypeOther,
 			Value:  value,
-			Column: extrainfo.FieldRating,
+			Column: extrainfo.FieldRatingV1,
 		})
 	}
-	if value, ok := eiu.mutation.AddedRating(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat32,
-			Value:  value,
-			Column: extrainfo.FieldRating,
-		})
-	}
-	if eiu.mutation.RatingCleared() {
+	if eiu.mutation.RatingV1Cleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat32,
-			Column: extrainfo.FieldRating,
+			Type:   field.TypeOther,
+			Column: extrainfo.FieldRatingV1,
 		})
 	}
 	_spec.Modifiers = eiu.modifiers
@@ -514,30 +501,23 @@ func (eiuo *ExtraInfoUpdateOne) ClearVoteCount() *ExtraInfoUpdateOne {
 	return eiuo
 }
 
-// SetRating sets the "rating" field.
-func (eiuo *ExtraInfoUpdateOne) SetRating(f float32) *ExtraInfoUpdateOne {
-	eiuo.mutation.ResetRating()
-	eiuo.mutation.SetRating(f)
+// SetRatingV1 sets the "rating_v1" field.
+func (eiuo *ExtraInfoUpdateOne) SetRatingV1(d decimal.Decimal) *ExtraInfoUpdateOne {
+	eiuo.mutation.SetRatingV1(d)
 	return eiuo
 }
 
-// SetNillableRating sets the "rating" field if the given value is not nil.
-func (eiuo *ExtraInfoUpdateOne) SetNillableRating(f *float32) *ExtraInfoUpdateOne {
-	if f != nil {
-		eiuo.SetRating(*f)
+// SetNillableRatingV1 sets the "rating_v1" field if the given value is not nil.
+func (eiuo *ExtraInfoUpdateOne) SetNillableRatingV1(d *decimal.Decimal) *ExtraInfoUpdateOne {
+	if d != nil {
+		eiuo.SetRatingV1(*d)
 	}
 	return eiuo
 }
 
-// AddRating adds f to the "rating" field.
-func (eiuo *ExtraInfoUpdateOne) AddRating(f float32) *ExtraInfoUpdateOne {
-	eiuo.mutation.AddRating(f)
-	return eiuo
-}
-
-// ClearRating clears the value of the "rating" field.
-func (eiuo *ExtraInfoUpdateOne) ClearRating() *ExtraInfoUpdateOne {
-	eiuo.mutation.ClearRating()
+// ClearRatingV1 clears the value of the "rating_v1" field.
+func (eiuo *ExtraInfoUpdateOne) ClearRatingV1() *ExtraInfoUpdateOne {
+	eiuo.mutation.ClearRatingV1()
 	return eiuo
 }
 
@@ -764,24 +744,17 @@ func (eiuo *ExtraInfoUpdateOne) sqlSave(ctx context.Context) (_node *ExtraInfo, 
 			Column: extrainfo.FieldVoteCount,
 		})
 	}
-	if value, ok := eiuo.mutation.Rating(); ok {
+	if value, ok := eiuo.mutation.RatingV1(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat32,
+			Type:   field.TypeOther,
 			Value:  value,
-			Column: extrainfo.FieldRating,
+			Column: extrainfo.FieldRatingV1,
 		})
 	}
-	if value, ok := eiuo.mutation.AddedRating(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat32,
-			Value:  value,
-			Column: extrainfo.FieldRating,
-		})
-	}
-	if eiuo.mutation.RatingCleared() {
+	if eiuo.mutation.RatingV1Cleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat32,
-			Column: extrainfo.FieldRating,
+			Type:   field.TypeOther,
+			Column: extrainfo.FieldRatingV1,
 		})
 	}
 	_spec.Modifiers = eiuo.modifiers

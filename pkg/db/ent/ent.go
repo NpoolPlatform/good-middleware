@@ -12,14 +12,17 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/promotion"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
-	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/subgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 )
 
@@ -41,17 +44,20 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		appdefaultgood.Table: appdefaultgood.ValidColumn,
-		appgood.Table:        appgood.ValidColumn,
-		comment.Table:        comment.ValidColumn,
-		deviceinfo.Table:     deviceinfo.ValidColumn,
-		extrainfo.Table:      extrainfo.ValidColumn,
-		good.Table:           good.ValidColumn,
-		promotion.Table:      promotion.ValidColumn,
-		recommend.Table:      recommend.ValidColumn,
-		stock.Table:          stock.ValidColumn,
-		subgood.Table:        subgood.ValidColumn,
-		vendorlocation.Table: vendorlocation.ValidColumn,
+		appdefaultgood.Table:    appdefaultgood.ValidColumn,
+		appgood.Table:           appgood.ValidColumn,
+		appstock.Table:          appstock.ValidColumn,
+		comment.Table:           comment.ValidColumn,
+		deviceinfo.Table:        deviceinfo.ValidColumn,
+		extrainfo.Table:         extrainfo.ValidColumn,
+		good.Table:              good.ValidColumn,
+		goodreward.Table:        goodreward.ValidColumn,
+		goodrewardhistory.Table: goodrewardhistory.ValidColumn,
+		promotion.Table:         promotion.ValidColumn,
+		recommend.Table:         recommend.ValidColumn,
+		requiredgood.Table:      requiredgood.ValidColumn,
+		stock.Table:             stock.ValidColumn,
+		vendorlocation.Table:    vendorlocation.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

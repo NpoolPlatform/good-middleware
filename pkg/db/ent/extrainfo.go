@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // ExtraInfo is the model entity for the ExtraInfo schema.
@@ -31,8 +32,8 @@ type ExtraInfo struct {
 	Labels []string `json:"labels,omitempty"`
 	// VoteCount holds the value of the "vote_count" field.
 	VoteCount uint32 `json:"vote_count,omitempty"`
-	// Rating holds the value of the "rating" field.
-	Rating float32 `json:"rating,omitempty"`
+	// RatingV1 holds the value of the "rating_v1" field.
+	RatingV1 decimal.Decimal `json:"rating_v1,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -42,8 +43,8 @@ func (*ExtraInfo) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case extrainfo.FieldPosters, extrainfo.FieldLabels:
 			values[i] = new([]byte)
-		case extrainfo.FieldRating:
-			values[i] = new(sql.NullFloat64)
+		case extrainfo.FieldRatingV1:
+			values[i] = new(decimal.Decimal)
 		case extrainfo.FieldCreatedAt, extrainfo.FieldUpdatedAt, extrainfo.FieldDeletedAt, extrainfo.FieldVoteCount:
 			values[i] = new(sql.NullInt64)
 		case extrainfo.FieldID, extrainfo.FieldGoodID:
@@ -115,11 +116,11 @@ func (ei *ExtraInfo) assignValues(columns []string, values []interface{}) error 
 			} else if value.Valid {
 				ei.VoteCount = uint32(value.Int64)
 			}
-		case extrainfo.FieldRating:
-			if value, ok := values[i].(*sql.NullFloat64); !ok {
-				return fmt.Errorf("unexpected type %T for field rating", values[i])
-			} else if value.Valid {
-				ei.Rating = float32(value.Float64)
+		case extrainfo.FieldRatingV1:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field rating_v1", values[i])
+			} else if value != nil {
+				ei.RatingV1 = *value
 			}
 		}
 	}
@@ -170,8 +171,8 @@ func (ei *ExtraInfo) String() string {
 	builder.WriteString("vote_count=")
 	builder.WriteString(fmt.Sprintf("%v", ei.VoteCount))
 	builder.WriteString(", ")
-	builder.WriteString("rating=")
-	builder.WriteString(fmt.Sprintf("%v", ei.Rating))
+	builder.WriteString("rating_v1=")
+	builder.WriteString(fmt.Sprintf("%v", ei.RatingV1))
 	builder.WriteByte(')')
 	return builder.String()
 }

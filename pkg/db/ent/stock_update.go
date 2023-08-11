@@ -191,6 +191,26 @@ func (su *StockUpdate) ClearSold() *StockUpdate {
 	return su
 }
 
+// SetChannelLocked sets the "channel_locked" field.
+func (su *StockUpdate) SetChannelLocked(d decimal.Decimal) *StockUpdate {
+	su.mutation.SetChannelLocked(d)
+	return su
+}
+
+// SetNillableChannelLocked sets the "channel_locked" field if the given value is not nil.
+func (su *StockUpdate) SetNillableChannelLocked(d *decimal.Decimal) *StockUpdate {
+	if d != nil {
+		su.SetChannelLocked(*d)
+	}
+	return su
+}
+
+// ClearChannelLocked clears the value of the "channel_locked" field.
+func (su *StockUpdate) ClearChannelLocked() *StockUpdate {
+	su.mutation.ClearChannelLocked()
+	return su
+}
+
 // Mutation returns the StockMutation object of the builder.
 func (su *StockUpdate) Mutation() *StockMutation {
 	return su.mutation
@@ -403,6 +423,19 @@ func (su *StockUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: stock.FieldSold,
 		})
 	}
+	if value, ok := su.mutation.ChannelLocked(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: stock.FieldChannelLocked,
+		})
+	}
+	if su.mutation.ChannelLockedCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: stock.FieldChannelLocked,
+		})
+	}
 	_spec.Modifiers = su.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, su.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -582,6 +615,26 @@ func (suo *StockUpdateOne) SetNillableSold(d *decimal.Decimal) *StockUpdateOne {
 // ClearSold clears the value of the "sold" field.
 func (suo *StockUpdateOne) ClearSold() *StockUpdateOne {
 	suo.mutation.ClearSold()
+	return suo
+}
+
+// SetChannelLocked sets the "channel_locked" field.
+func (suo *StockUpdateOne) SetChannelLocked(d decimal.Decimal) *StockUpdateOne {
+	suo.mutation.SetChannelLocked(d)
+	return suo
+}
+
+// SetNillableChannelLocked sets the "channel_locked" field if the given value is not nil.
+func (suo *StockUpdateOne) SetNillableChannelLocked(d *decimal.Decimal) *StockUpdateOne {
+	if d != nil {
+		suo.SetChannelLocked(*d)
+	}
+	return suo
+}
+
+// ClearChannelLocked clears the value of the "channel_locked" field.
+func (suo *StockUpdateOne) ClearChannelLocked() *StockUpdateOne {
+	suo.mutation.ClearChannelLocked()
 	return suo
 }
 
@@ -825,6 +878,19 @@ func (suo *StockUpdateOne) sqlSave(ctx context.Context) (_node *Stock, err error
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: stock.FieldSold,
+		})
+	}
+	if value, ok := suo.mutation.ChannelLocked(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: stock.FieldChannelLocked,
+		})
+	}
+	if suo.mutation.ChannelLockedCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: stock.FieldChannelLocked,
 		})
 	}
 	_spec.Modifiers = suo.modifiers

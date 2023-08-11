@@ -390,102 +390,23 @@ func (gu *GoodUpdate) ClearBenefitIntervalHours() *GoodUpdate {
 	return gu
 }
 
-// SetBenefitState sets the "benefit_state" field.
-func (gu *GoodUpdate) SetBenefitState(s string) *GoodUpdate {
-	gu.mutation.SetBenefitState(s)
+// SetChannelLockDeposit sets the "channel_lock_deposit" field.
+func (gu *GoodUpdate) SetChannelLockDeposit(d decimal.Decimal) *GoodUpdate {
+	gu.mutation.SetChannelLockDeposit(d)
 	return gu
 }
 
-// SetNillableBenefitState sets the "benefit_state" field if the given value is not nil.
-func (gu *GoodUpdate) SetNillableBenefitState(s *string) *GoodUpdate {
-	if s != nil {
-		gu.SetBenefitState(*s)
-	}
-	return gu
-}
-
-// ClearBenefitState clears the value of the "benefit_state" field.
-func (gu *GoodUpdate) ClearBenefitState() *GoodUpdate {
-	gu.mutation.ClearBenefitState()
-	return gu
-}
-
-// SetLastBenefitAt sets the "last_benefit_at" field.
-func (gu *GoodUpdate) SetLastBenefitAt(u uint32) *GoodUpdate {
-	gu.mutation.ResetLastBenefitAt()
-	gu.mutation.SetLastBenefitAt(u)
-	return gu
-}
-
-// SetNillableLastBenefitAt sets the "last_benefit_at" field if the given value is not nil.
-func (gu *GoodUpdate) SetNillableLastBenefitAt(u *uint32) *GoodUpdate {
-	if u != nil {
-		gu.SetLastBenefitAt(*u)
-	}
-	return gu
-}
-
-// AddLastBenefitAt adds u to the "last_benefit_at" field.
-func (gu *GoodUpdate) AddLastBenefitAt(u int32) *GoodUpdate {
-	gu.mutation.AddLastBenefitAt(u)
-	return gu
-}
-
-// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
-func (gu *GoodUpdate) ClearLastBenefitAt() *GoodUpdate {
-	gu.mutation.ClearLastBenefitAt()
-	return gu
-}
-
-// SetBenefitTids sets the "benefit_tids" field.
-func (gu *GoodUpdate) SetBenefitTids(u []uuid.UUID) *GoodUpdate {
-	gu.mutation.SetBenefitTids(u)
-	return gu
-}
-
-// ClearBenefitTids clears the value of the "benefit_tids" field.
-func (gu *GoodUpdate) ClearBenefitTids() *GoodUpdate {
-	gu.mutation.ClearBenefitTids()
-	return gu
-}
-
-// SetNextBenefitStartAmount sets the "next_benefit_start_amount" field.
-func (gu *GoodUpdate) SetNextBenefitStartAmount(d decimal.Decimal) *GoodUpdate {
-	gu.mutation.SetNextBenefitStartAmount(d)
-	return gu
-}
-
-// SetNillableNextBenefitStartAmount sets the "next_benefit_start_amount" field if the given value is not nil.
-func (gu *GoodUpdate) SetNillableNextBenefitStartAmount(d *decimal.Decimal) *GoodUpdate {
+// SetNillableChannelLockDeposit sets the "channel_lock_deposit" field if the given value is not nil.
+func (gu *GoodUpdate) SetNillableChannelLockDeposit(d *decimal.Decimal) *GoodUpdate {
 	if d != nil {
-		gu.SetNextBenefitStartAmount(*d)
+		gu.SetChannelLockDeposit(*d)
 	}
 	return gu
 }
 
-// ClearNextBenefitStartAmount clears the value of the "next_benefit_start_amount" field.
-func (gu *GoodUpdate) ClearNextBenefitStartAmount() *GoodUpdate {
-	gu.mutation.ClearNextBenefitStartAmount()
-	return gu
-}
-
-// SetLastBenefitAmount sets the "last_benefit_amount" field.
-func (gu *GoodUpdate) SetLastBenefitAmount(d decimal.Decimal) *GoodUpdate {
-	gu.mutation.SetLastBenefitAmount(d)
-	return gu
-}
-
-// SetNillableLastBenefitAmount sets the "last_benefit_amount" field if the given value is not nil.
-func (gu *GoodUpdate) SetNillableLastBenefitAmount(d *decimal.Decimal) *GoodUpdate {
-	if d != nil {
-		gu.SetLastBenefitAmount(*d)
-	}
-	return gu
-}
-
-// ClearLastBenefitAmount clears the value of the "last_benefit_amount" field.
-func (gu *GoodUpdate) ClearLastBenefitAmount() *GoodUpdate {
-	gu.mutation.ClearLastBenefitAmount()
+// ClearChannelLockDeposit clears the value of the "channel_lock_deposit" field.
+func (gu *GoodUpdate) ClearChannelLockDeposit() *GoodUpdate {
+	gu.mutation.ClearChannelLockDeposit()
 	return gu
 }
 
@@ -854,76 +775,17 @@ func (gu *GoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: good.FieldBenefitIntervalHours,
 		})
 	}
-	if value, ok := gu.mutation.BenefitState(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: good.FieldBenefitState,
-		})
-	}
-	if gu.mutation.BenefitStateCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: good.FieldBenefitState,
-		})
-	}
-	if value, ok := gu.mutation.LastBenefitAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: good.FieldLastBenefitAt,
-		})
-	}
-	if value, ok := gu.mutation.AddedLastBenefitAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: good.FieldLastBenefitAt,
-		})
-	}
-	if gu.mutation.LastBenefitAtCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: good.FieldLastBenefitAt,
-		})
-	}
-	if value, ok := gu.mutation.BenefitTids(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: good.FieldBenefitTids,
-		})
-	}
-	if gu.mutation.BenefitTidsCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: good.FieldBenefitTids,
-		})
-	}
-	if value, ok := gu.mutation.NextBenefitStartAmount(); ok {
+	if value, ok := gu.mutation.ChannelLockDeposit(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: good.FieldNextBenefitStartAmount,
+			Column: good.FieldChannelLockDeposit,
 		})
 	}
-	if gu.mutation.NextBenefitStartAmountCleared() {
+	if gu.mutation.ChannelLockDepositCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: good.FieldNextBenefitStartAmount,
-		})
-	}
-	if value, ok := gu.mutation.LastBenefitAmount(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: good.FieldLastBenefitAmount,
-		})
-	}
-	if gu.mutation.LastBenefitAmountCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: good.FieldLastBenefitAmount,
+			Column: good.FieldChannelLockDeposit,
 		})
 	}
 	_spec.Modifiers = gu.modifiers
@@ -1307,102 +1169,23 @@ func (guo *GoodUpdateOne) ClearBenefitIntervalHours() *GoodUpdateOne {
 	return guo
 }
 
-// SetBenefitState sets the "benefit_state" field.
-func (guo *GoodUpdateOne) SetBenefitState(s string) *GoodUpdateOne {
-	guo.mutation.SetBenefitState(s)
+// SetChannelLockDeposit sets the "channel_lock_deposit" field.
+func (guo *GoodUpdateOne) SetChannelLockDeposit(d decimal.Decimal) *GoodUpdateOne {
+	guo.mutation.SetChannelLockDeposit(d)
 	return guo
 }
 
-// SetNillableBenefitState sets the "benefit_state" field if the given value is not nil.
-func (guo *GoodUpdateOne) SetNillableBenefitState(s *string) *GoodUpdateOne {
-	if s != nil {
-		guo.SetBenefitState(*s)
-	}
-	return guo
-}
-
-// ClearBenefitState clears the value of the "benefit_state" field.
-func (guo *GoodUpdateOne) ClearBenefitState() *GoodUpdateOne {
-	guo.mutation.ClearBenefitState()
-	return guo
-}
-
-// SetLastBenefitAt sets the "last_benefit_at" field.
-func (guo *GoodUpdateOne) SetLastBenefitAt(u uint32) *GoodUpdateOne {
-	guo.mutation.ResetLastBenefitAt()
-	guo.mutation.SetLastBenefitAt(u)
-	return guo
-}
-
-// SetNillableLastBenefitAt sets the "last_benefit_at" field if the given value is not nil.
-func (guo *GoodUpdateOne) SetNillableLastBenefitAt(u *uint32) *GoodUpdateOne {
-	if u != nil {
-		guo.SetLastBenefitAt(*u)
-	}
-	return guo
-}
-
-// AddLastBenefitAt adds u to the "last_benefit_at" field.
-func (guo *GoodUpdateOne) AddLastBenefitAt(u int32) *GoodUpdateOne {
-	guo.mutation.AddLastBenefitAt(u)
-	return guo
-}
-
-// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
-func (guo *GoodUpdateOne) ClearLastBenefitAt() *GoodUpdateOne {
-	guo.mutation.ClearLastBenefitAt()
-	return guo
-}
-
-// SetBenefitTids sets the "benefit_tids" field.
-func (guo *GoodUpdateOne) SetBenefitTids(u []uuid.UUID) *GoodUpdateOne {
-	guo.mutation.SetBenefitTids(u)
-	return guo
-}
-
-// ClearBenefitTids clears the value of the "benefit_tids" field.
-func (guo *GoodUpdateOne) ClearBenefitTids() *GoodUpdateOne {
-	guo.mutation.ClearBenefitTids()
-	return guo
-}
-
-// SetNextBenefitStartAmount sets the "next_benefit_start_amount" field.
-func (guo *GoodUpdateOne) SetNextBenefitStartAmount(d decimal.Decimal) *GoodUpdateOne {
-	guo.mutation.SetNextBenefitStartAmount(d)
-	return guo
-}
-
-// SetNillableNextBenefitStartAmount sets the "next_benefit_start_amount" field if the given value is not nil.
-func (guo *GoodUpdateOne) SetNillableNextBenefitStartAmount(d *decimal.Decimal) *GoodUpdateOne {
+// SetNillableChannelLockDeposit sets the "channel_lock_deposit" field if the given value is not nil.
+func (guo *GoodUpdateOne) SetNillableChannelLockDeposit(d *decimal.Decimal) *GoodUpdateOne {
 	if d != nil {
-		guo.SetNextBenefitStartAmount(*d)
+		guo.SetChannelLockDeposit(*d)
 	}
 	return guo
 }
 
-// ClearNextBenefitStartAmount clears the value of the "next_benefit_start_amount" field.
-func (guo *GoodUpdateOne) ClearNextBenefitStartAmount() *GoodUpdateOne {
-	guo.mutation.ClearNextBenefitStartAmount()
-	return guo
-}
-
-// SetLastBenefitAmount sets the "last_benefit_amount" field.
-func (guo *GoodUpdateOne) SetLastBenefitAmount(d decimal.Decimal) *GoodUpdateOne {
-	guo.mutation.SetLastBenefitAmount(d)
-	return guo
-}
-
-// SetNillableLastBenefitAmount sets the "last_benefit_amount" field if the given value is not nil.
-func (guo *GoodUpdateOne) SetNillableLastBenefitAmount(d *decimal.Decimal) *GoodUpdateOne {
-	if d != nil {
-		guo.SetLastBenefitAmount(*d)
-	}
-	return guo
-}
-
-// ClearLastBenefitAmount clears the value of the "last_benefit_amount" field.
-func (guo *GoodUpdateOne) ClearLastBenefitAmount() *GoodUpdateOne {
-	guo.mutation.ClearLastBenefitAmount()
+// ClearChannelLockDeposit clears the value of the "channel_lock_deposit" field.
+func (guo *GoodUpdateOne) ClearChannelLockDeposit() *GoodUpdateOne {
+	guo.mutation.ClearChannelLockDeposit()
 	return guo
 }
 
@@ -1801,76 +1584,17 @@ func (guo *GoodUpdateOne) sqlSave(ctx context.Context) (_node *Good, err error) 
 			Column: good.FieldBenefitIntervalHours,
 		})
 	}
-	if value, ok := guo.mutation.BenefitState(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: good.FieldBenefitState,
-		})
-	}
-	if guo.mutation.BenefitStateCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: good.FieldBenefitState,
-		})
-	}
-	if value, ok := guo.mutation.LastBenefitAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: good.FieldLastBenefitAt,
-		})
-	}
-	if value, ok := guo.mutation.AddedLastBenefitAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: good.FieldLastBenefitAt,
-		})
-	}
-	if guo.mutation.LastBenefitAtCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: good.FieldLastBenefitAt,
-		})
-	}
-	if value, ok := guo.mutation.BenefitTids(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: good.FieldBenefitTids,
-		})
-	}
-	if guo.mutation.BenefitTidsCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: good.FieldBenefitTids,
-		})
-	}
-	if value, ok := guo.mutation.NextBenefitStartAmount(); ok {
+	if value, ok := guo.mutation.ChannelLockDeposit(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: good.FieldNextBenefitStartAmount,
+			Column: good.FieldChannelLockDeposit,
 		})
 	}
-	if guo.mutation.NextBenefitStartAmountCleared() {
+	if guo.mutation.ChannelLockDepositCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: good.FieldNextBenefitStartAmount,
-		})
-	}
-	if value, ok := guo.mutation.LastBenefitAmount(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: good.FieldLastBenefitAmount,
-		})
-	}
-	if guo.mutation.LastBenefitAmountCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: good.FieldLastBenefitAmount,
+			Column: good.FieldChannelLockDeposit,
 		})
 	}
 	_spec.Modifiers = guo.modifiers

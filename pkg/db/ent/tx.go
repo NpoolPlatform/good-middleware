@@ -18,6 +18,8 @@ type Tx struct {
 	AppDefaultGood *AppDefaultGoodClient
 	// AppGood is the client for interacting with the AppGood builders.
 	AppGood *AppGoodClient
+	// AppStock is the client for interacting with the AppStock builders.
+	AppStock *AppStockClient
 	// Comment is the client for interacting with the Comment builders.
 	Comment *CommentClient
 	// DeviceInfo is the client for interacting with the DeviceInfo builders.
@@ -26,14 +28,18 @@ type Tx struct {
 	ExtraInfo *ExtraInfoClient
 	// Good is the client for interacting with the Good builders.
 	Good *GoodClient
+	// GoodReward is the client for interacting with the GoodReward builders.
+	GoodReward *GoodRewardClient
+	// GoodRewardHistory is the client for interacting with the GoodRewardHistory builders.
+	GoodRewardHistory *GoodRewardHistoryClient
 	// Promotion is the client for interacting with the Promotion builders.
 	Promotion *PromotionClient
 	// Recommend is the client for interacting with the Recommend builders.
 	Recommend *RecommendClient
+	// RequiredGood is the client for interacting with the RequiredGood builders.
+	RequiredGood *RequiredGoodClient
 	// Stock is the client for interacting with the Stock builders.
 	Stock *StockClient
-	// SubGood is the client for interacting with the SubGood builders.
-	SubGood *SubGoodClient
 	// VendorLocation is the client for interacting with the VendorLocation builders.
 	VendorLocation *VendorLocationClient
 
@@ -173,14 +179,17 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.AppDefaultGood = NewAppDefaultGoodClient(tx.config)
 	tx.AppGood = NewAppGoodClient(tx.config)
+	tx.AppStock = NewAppStockClient(tx.config)
 	tx.Comment = NewCommentClient(tx.config)
 	tx.DeviceInfo = NewDeviceInfoClient(tx.config)
 	tx.ExtraInfo = NewExtraInfoClient(tx.config)
 	tx.Good = NewGoodClient(tx.config)
+	tx.GoodReward = NewGoodRewardClient(tx.config)
+	tx.GoodRewardHistory = NewGoodRewardHistoryClient(tx.config)
 	tx.Promotion = NewPromotionClient(tx.config)
 	tx.Recommend = NewRecommendClient(tx.config)
+	tx.RequiredGood = NewRequiredGoodClient(tx.config)
 	tx.Stock = NewStockClient(tx.config)
-	tx.SubGood = NewSubGoodClient(tx.config)
 	tx.VendorLocation = NewVendorLocationClient(tx.config)
 }
 

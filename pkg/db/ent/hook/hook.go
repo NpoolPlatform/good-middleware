@@ -35,6 +35,19 @@ func (f AppGoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	return f(ctx, mv)
 }
 
+// The AppStockFunc type is an adapter to allow the use of ordinary
+// function as AppStock mutator.
+type AppStockFunc func(context.Context, *ent.AppStockMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppStockFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppStockMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppStockMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The CommentFunc type is an adapter to allow the use of ordinary
 // function as Comment mutator.
 type CommentFunc func(context.Context, *ent.CommentMutation) (ent.Value, error)
@@ -87,6 +100,32 @@ func (f GoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	return f(ctx, mv)
 }
 
+// The GoodRewardFunc type is an adapter to allow the use of ordinary
+// function as GoodReward mutator.
+type GoodRewardFunc func(context.Context, *ent.GoodRewardMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f GoodRewardFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.GoodRewardMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GoodRewardMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The GoodRewardHistoryFunc type is an adapter to allow the use of ordinary
+// function as GoodRewardHistory mutator.
+type GoodRewardHistoryFunc func(context.Context, *ent.GoodRewardHistoryMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f GoodRewardHistoryFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.GoodRewardHistoryMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GoodRewardHistoryMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The PromotionFunc type is an adapter to allow the use of ordinary
 // function as Promotion mutator.
 type PromotionFunc func(context.Context, *ent.PromotionMutation) (ent.Value, error)
@@ -113,6 +152,19 @@ func (f RecommendFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, e
 	return f(ctx, mv)
 }
 
+// The RequiredGoodFunc type is an adapter to allow the use of ordinary
+// function as RequiredGood mutator.
+type RequiredGoodFunc func(context.Context, *ent.RequiredGoodMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f RequiredGoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.RequiredGoodMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RequiredGoodMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The StockFunc type is an adapter to allow the use of ordinary
 // function as Stock mutator.
 type StockFunc func(context.Context, *ent.StockMutation) (ent.Value, error)
@@ -122,19 +174,6 @@ func (f StockFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error
 	mv, ok := m.(*ent.StockMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.StockMutation", m)
-	}
-	return f(ctx, mv)
-}
-
-// The SubGoodFunc type is an adapter to allow the use of ordinary
-// function as SubGood mutator.
-type SubGoodFunc func(context.Context, *ent.SubGoodMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f SubGoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.SubGoodMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SubGoodMutation", m)
 	}
 	return f(ctx, mv)
 }

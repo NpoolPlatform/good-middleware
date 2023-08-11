@@ -8,19 +8,19 @@ import (
 	"github.com/google/uuid"
 )
 
-// SubGood holds the schema definition for the SubGood entity.
-type SubGood struct {
+// RequiredGood holds the schema definition for the RequiredGood entity.
+type RequiredGood struct {
 	ent.Schema
 }
 
-func (SubGood) Mixin() []ent.Mixin {
+func (RequiredGood) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.TimeMixin{},
 	}
 }
 
-// Fields of the SubGood.
-func (SubGood) Fields() []ent.Field {
+// Fields of the RequiredGood.
+func (RequiredGood) Fields() []ent.Field {
 	return []ent.Field{
 		field.
 			UUID("id", uuid.UUID{}).
@@ -31,7 +31,7 @@ func (SubGood) Fields() []ent.Field {
 		field.
 			UUID("main_good_id", uuid.UUID{}),
 		field.
-			UUID("sub_good_id", uuid.UUID{}),
+			UUID("required_good_id", uuid.UUID{}),
 		field.
 			Bool("must").
 			Optional().
@@ -43,13 +43,13 @@ func (SubGood) Fields() []ent.Field {
 	}
 }
 
-// Edges of the SubGood.
-func (SubGood) Edges() []ent.Edge {
+// Edges of the RequiredGood.
+func (RequiredGood) Edges() []ent.Edge {
 	return nil
 }
 
-func (SubGood) Indexes() []ent.Index {
+func (RequiredGood) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("app_id", "main_good_id", "sub_good_id"),
+		index.Fields("app_id", "main_good_id", "required_good_id"),
 	}
 }

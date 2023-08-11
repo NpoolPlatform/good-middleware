@@ -28,17 +28,20 @@ type config struct {
 
 // hooks per client, for fast access.
 type hooks struct {
-	AppDefaultGood []ent.Hook
-	AppGood        []ent.Hook
-	Comment        []ent.Hook
-	DeviceInfo     []ent.Hook
-	ExtraInfo      []ent.Hook
-	Good           []ent.Hook
-	Promotion      []ent.Hook
-	Recommend      []ent.Hook
-	Stock          []ent.Hook
-	SubGood        []ent.Hook
-	VendorLocation []ent.Hook
+	AppDefaultGood    []ent.Hook
+	AppGood           []ent.Hook
+	AppStock          []ent.Hook
+	Comment           []ent.Hook
+	DeviceInfo        []ent.Hook
+	ExtraInfo         []ent.Hook
+	Good              []ent.Hook
+	GoodReward        []ent.Hook
+	GoodRewardHistory []ent.Hook
+	Promotion         []ent.Hook
+	Recommend         []ent.Hook
+	RequiredGood      []ent.Hook
+	Stock             []ent.Hook
+	VendorLocation    []ent.Hook
 }
 
 // Options applies the options on the config object.

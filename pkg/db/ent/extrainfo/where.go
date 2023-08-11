@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // ID filters vertices based on their ID field.
@@ -114,10 +115,10 @@ func VoteCount(v uint32) predicate.ExtraInfo {
 	})
 }
 
-// Rating applies equality check predicate on the "rating" field. It's identical to RatingEQ.
-func Rating(v float32) predicate.ExtraInfo {
+// RatingV1 applies equality check predicate on the "rating_v1" field. It's identical to RatingV1EQ.
+func RatingV1(v decimal.Decimal) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldRating), v))
+		s.Where(sql.EQ(s.C(FieldRatingV1), v))
 	})
 }
 
@@ -483,81 +484,81 @@ func VoteCountNotNil() predicate.ExtraInfo {
 	})
 }
 
-// RatingEQ applies the EQ predicate on the "rating" field.
-func RatingEQ(v float32) predicate.ExtraInfo {
+// RatingV1EQ applies the EQ predicate on the "rating_v1" field.
+func RatingV1EQ(v decimal.Decimal) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldRating), v))
+		s.Where(sql.EQ(s.C(FieldRatingV1), v))
 	})
 }
 
-// RatingNEQ applies the NEQ predicate on the "rating" field.
-func RatingNEQ(v float32) predicate.ExtraInfo {
+// RatingV1NEQ applies the NEQ predicate on the "rating_v1" field.
+func RatingV1NEQ(v decimal.Decimal) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldRating), v))
+		s.Where(sql.NEQ(s.C(FieldRatingV1), v))
 	})
 }
 
-// RatingIn applies the In predicate on the "rating" field.
-func RatingIn(vs ...float32) predicate.ExtraInfo {
+// RatingV1In applies the In predicate on the "rating_v1" field.
+func RatingV1In(vs ...decimal.Decimal) predicate.ExtraInfo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldRating), v...))
+		s.Where(sql.In(s.C(FieldRatingV1), v...))
 	})
 }
 
-// RatingNotIn applies the NotIn predicate on the "rating" field.
-func RatingNotIn(vs ...float32) predicate.ExtraInfo {
+// RatingV1NotIn applies the NotIn predicate on the "rating_v1" field.
+func RatingV1NotIn(vs ...decimal.Decimal) predicate.ExtraInfo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldRating), v...))
+		s.Where(sql.NotIn(s.C(FieldRatingV1), v...))
 	})
 }
 
-// RatingGT applies the GT predicate on the "rating" field.
-func RatingGT(v float32) predicate.ExtraInfo {
+// RatingV1GT applies the GT predicate on the "rating_v1" field.
+func RatingV1GT(v decimal.Decimal) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldRating), v))
+		s.Where(sql.GT(s.C(FieldRatingV1), v))
 	})
 }
 
-// RatingGTE applies the GTE predicate on the "rating" field.
-func RatingGTE(v float32) predicate.ExtraInfo {
+// RatingV1GTE applies the GTE predicate on the "rating_v1" field.
+func RatingV1GTE(v decimal.Decimal) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldRating), v))
+		s.Where(sql.GTE(s.C(FieldRatingV1), v))
 	})
 }
 
-// RatingLT applies the LT predicate on the "rating" field.
-func RatingLT(v float32) predicate.ExtraInfo {
+// RatingV1LT applies the LT predicate on the "rating_v1" field.
+func RatingV1LT(v decimal.Decimal) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldRating), v))
+		s.Where(sql.LT(s.C(FieldRatingV1), v))
 	})
 }
 
-// RatingLTE applies the LTE predicate on the "rating" field.
-func RatingLTE(v float32) predicate.ExtraInfo {
+// RatingV1LTE applies the LTE predicate on the "rating_v1" field.
+func RatingV1LTE(v decimal.Decimal) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldRating), v))
+		s.Where(sql.LTE(s.C(FieldRatingV1), v))
 	})
 }
 
-// RatingIsNil applies the IsNil predicate on the "rating" field.
-func RatingIsNil() predicate.ExtraInfo {
+// RatingV1IsNil applies the IsNil predicate on the "rating_v1" field.
+func RatingV1IsNil() predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldRating)))
+		s.Where(sql.IsNull(s.C(FieldRatingV1)))
 	})
 }
 
-// RatingNotNil applies the NotNil predicate on the "rating" field.
-func RatingNotNil() predicate.ExtraInfo {
+// RatingV1NotNil applies the NotNil predicate on the "rating_v1" field.
+func RatingV1NotNil() predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldRating)))
+		s.Where(sql.NotNull(s.C(FieldRatingV1)))
 	})
 }
 

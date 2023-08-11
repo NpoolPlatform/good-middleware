@@ -7,12 +7,12 @@ import (
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/subgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/google/uuid"
 )
 
-// SubGood is the model entity for the SubGood schema.
-type SubGood struct {
+// RequiredGood is the model entity for the RequiredGood schema.
+type RequiredGood struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
@@ -26,8 +26,8 @@ type SubGood struct {
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// MainGoodID holds the value of the "main_good_id" field.
 	MainGoodID uuid.UUID `json:"main_good_id,omitempty"`
-	// SubGoodID holds the value of the "sub_good_id" field.
-	SubGoodID uuid.UUID `json:"sub_good_id,omitempty"`
+	// RequiredGoodID holds the value of the "required_good_id" field.
+	RequiredGoodID uuid.UUID `json:"required_good_id,omitempty"`
 	// Must holds the value of the "must" field.
 	Must bool `json:"must,omitempty"`
 	// Commission holds the value of the "commission" field.
@@ -35,145 +35,145 @@ type SubGood struct {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*SubGood) scanValues(columns []string) ([]interface{}, error) {
+func (*RequiredGood) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case subgood.FieldMust, subgood.FieldCommission:
+		case requiredgood.FieldMust, requiredgood.FieldCommission:
 			values[i] = new(sql.NullBool)
-		case subgood.FieldCreatedAt, subgood.FieldUpdatedAt, subgood.FieldDeletedAt:
+		case requiredgood.FieldCreatedAt, requiredgood.FieldUpdatedAt, requiredgood.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case subgood.FieldID, subgood.FieldAppID, subgood.FieldMainGoodID, subgood.FieldSubGoodID:
+		case requiredgood.FieldID, requiredgood.FieldAppID, requiredgood.FieldMainGoodID, requiredgood.FieldRequiredGoodID:
 			values[i] = new(uuid.UUID)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type SubGood", columns[i])
+			return nil, fmt.Errorf("unexpected column %q for type RequiredGood", columns[i])
 		}
 	}
 	return values, nil
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the SubGood fields.
-func (sg *SubGood) assignValues(columns []string, values []interface{}) error {
+// to the RequiredGood fields.
+func (rg *RequiredGood) assignValues(columns []string, values []interface{}) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	for i := range columns {
 		switch columns[i] {
-		case subgood.FieldID:
+		case requiredgood.FieldID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value != nil {
-				sg.ID = *value
+				rg.ID = *value
 			}
-		case subgood.FieldCreatedAt:
+		case requiredgood.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				sg.CreatedAt = uint32(value.Int64)
+				rg.CreatedAt = uint32(value.Int64)
 			}
-		case subgood.FieldUpdatedAt:
+		case requiredgood.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
-				sg.UpdatedAt = uint32(value.Int64)
+				rg.UpdatedAt = uint32(value.Int64)
 			}
-		case subgood.FieldDeletedAt:
+		case requiredgood.FieldDeletedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
-				sg.DeletedAt = uint32(value.Int64)
+				rg.DeletedAt = uint32(value.Int64)
 			}
-		case subgood.FieldAppID:
+		case requiredgood.FieldAppID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field app_id", values[i])
 			} else if value != nil {
-				sg.AppID = *value
+				rg.AppID = *value
 			}
-		case subgood.FieldMainGoodID:
+		case requiredgood.FieldMainGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field main_good_id", values[i])
 			} else if value != nil {
-				sg.MainGoodID = *value
+				rg.MainGoodID = *value
 			}
-		case subgood.FieldSubGoodID:
+		case requiredgood.FieldRequiredGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field sub_good_id", values[i])
+				return fmt.Errorf("unexpected type %T for field required_good_id", values[i])
 			} else if value != nil {
-				sg.SubGoodID = *value
+				rg.RequiredGoodID = *value
 			}
-		case subgood.FieldMust:
+		case requiredgood.FieldMust:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field must", values[i])
 			} else if value.Valid {
-				sg.Must = value.Bool
+				rg.Must = value.Bool
 			}
-		case subgood.FieldCommission:
+		case requiredgood.FieldCommission:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field commission", values[i])
 			} else if value.Valid {
-				sg.Commission = value.Bool
+				rg.Commission = value.Bool
 			}
 		}
 	}
 	return nil
 }
 
-// Update returns a builder for updating this SubGood.
-// Note that you need to call SubGood.Unwrap() before calling this method if this SubGood
+// Update returns a builder for updating this RequiredGood.
+// Note that you need to call RequiredGood.Unwrap() before calling this method if this RequiredGood
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (sg *SubGood) Update() *SubGoodUpdateOne {
-	return (&SubGoodClient{config: sg.config}).UpdateOne(sg)
+func (rg *RequiredGood) Update() *RequiredGoodUpdateOne {
+	return (&RequiredGoodClient{config: rg.config}).UpdateOne(rg)
 }
 
-// Unwrap unwraps the SubGood entity that was returned from a transaction after it was closed,
+// Unwrap unwraps the RequiredGood entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (sg *SubGood) Unwrap() *SubGood {
-	_tx, ok := sg.config.driver.(*txDriver)
+func (rg *RequiredGood) Unwrap() *RequiredGood {
+	_tx, ok := rg.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: SubGood is not a transactional entity")
+		panic("ent: RequiredGood is not a transactional entity")
 	}
-	sg.config.driver = _tx.drv
-	return sg
+	rg.config.driver = _tx.drv
+	return rg
 }
 
 // String implements the fmt.Stringer.
-func (sg *SubGood) String() string {
+func (rg *RequiredGood) String() string {
 	var builder strings.Builder
-	builder.WriteString("SubGood(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", sg.ID))
+	builder.WriteString("RequiredGood(")
+	builder.WriteString(fmt.Sprintf("id=%v, ", rg.ID))
 	builder.WriteString("created_at=")
-	builder.WriteString(fmt.Sprintf("%v", sg.CreatedAt))
+	builder.WriteString(fmt.Sprintf("%v", rg.CreatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
-	builder.WriteString(fmt.Sprintf("%v", sg.UpdatedAt))
+	builder.WriteString(fmt.Sprintf("%v", rg.UpdatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("deleted_at=")
-	builder.WriteString(fmt.Sprintf("%v", sg.DeletedAt))
+	builder.WriteString(fmt.Sprintf("%v", rg.DeletedAt))
 	builder.WriteString(", ")
 	builder.WriteString("app_id=")
-	builder.WriteString(fmt.Sprintf("%v", sg.AppID))
+	builder.WriteString(fmt.Sprintf("%v", rg.AppID))
 	builder.WriteString(", ")
 	builder.WriteString("main_good_id=")
-	builder.WriteString(fmt.Sprintf("%v", sg.MainGoodID))
+	builder.WriteString(fmt.Sprintf("%v", rg.MainGoodID))
 	builder.WriteString(", ")
-	builder.WriteString("sub_good_id=")
-	builder.WriteString(fmt.Sprintf("%v", sg.SubGoodID))
+	builder.WriteString("required_good_id=")
+	builder.WriteString(fmt.Sprintf("%v", rg.RequiredGoodID))
 	builder.WriteString(", ")
 	builder.WriteString("must=")
-	builder.WriteString(fmt.Sprintf("%v", sg.Must))
+	builder.WriteString(fmt.Sprintf("%v", rg.Must))
 	builder.WriteString(", ")
 	builder.WriteString("commission=")
-	builder.WriteString(fmt.Sprintf("%v", sg.Commission))
+	builder.WriteString(fmt.Sprintf("%v", rg.Commission))
 	builder.WriteByte(')')
 	return builder.String()
 }
 
-// SubGoods is a parsable slice of SubGood.
-type SubGoods []*SubGood
+// RequiredGoods is a parsable slice of RequiredGood.
+type RequiredGoods []*RequiredGood
 
-func (sg SubGoods) config(cfg config) {
-	for _i := range sg {
-		sg[_i].config = cfg
+func (rg RequiredGoods) config(cfg config) {
+	for _i := range rg {
+		rg[_i].config = cfg
 	}
 }

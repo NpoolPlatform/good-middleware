@@ -258,64 +258,16 @@ func (gc *GoodCreate) SetNillableBenefitIntervalHours(u *uint32) *GoodCreate {
 	return gc
 }
 
-// SetBenefitState sets the "benefit_state" field.
-func (gc *GoodCreate) SetBenefitState(s string) *GoodCreate {
-	gc.mutation.SetBenefitState(s)
+// SetChannelLockDeposit sets the "channel_lock_deposit" field.
+func (gc *GoodCreate) SetChannelLockDeposit(d decimal.Decimal) *GoodCreate {
+	gc.mutation.SetChannelLockDeposit(d)
 	return gc
 }
 
-// SetNillableBenefitState sets the "benefit_state" field if the given value is not nil.
-func (gc *GoodCreate) SetNillableBenefitState(s *string) *GoodCreate {
-	if s != nil {
-		gc.SetBenefitState(*s)
-	}
-	return gc
-}
-
-// SetLastBenefitAt sets the "last_benefit_at" field.
-func (gc *GoodCreate) SetLastBenefitAt(u uint32) *GoodCreate {
-	gc.mutation.SetLastBenefitAt(u)
-	return gc
-}
-
-// SetNillableLastBenefitAt sets the "last_benefit_at" field if the given value is not nil.
-func (gc *GoodCreate) SetNillableLastBenefitAt(u *uint32) *GoodCreate {
-	if u != nil {
-		gc.SetLastBenefitAt(*u)
-	}
-	return gc
-}
-
-// SetBenefitTids sets the "benefit_tids" field.
-func (gc *GoodCreate) SetBenefitTids(u []uuid.UUID) *GoodCreate {
-	gc.mutation.SetBenefitTids(u)
-	return gc
-}
-
-// SetNextBenefitStartAmount sets the "next_benefit_start_amount" field.
-func (gc *GoodCreate) SetNextBenefitStartAmount(d decimal.Decimal) *GoodCreate {
-	gc.mutation.SetNextBenefitStartAmount(d)
-	return gc
-}
-
-// SetNillableNextBenefitStartAmount sets the "next_benefit_start_amount" field if the given value is not nil.
-func (gc *GoodCreate) SetNillableNextBenefitStartAmount(d *decimal.Decimal) *GoodCreate {
+// SetNillableChannelLockDeposit sets the "channel_lock_deposit" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableChannelLockDeposit(d *decimal.Decimal) *GoodCreate {
 	if d != nil {
-		gc.SetNextBenefitStartAmount(*d)
-	}
-	return gc
-}
-
-// SetLastBenefitAmount sets the "last_benefit_amount" field.
-func (gc *GoodCreate) SetLastBenefitAmount(d decimal.Decimal) *GoodCreate {
-	gc.mutation.SetLastBenefitAmount(d)
-	return gc
-}
-
-// SetNillableLastBenefitAmount sets the "last_benefit_amount" field if the given value is not nil.
-func (gc *GoodCreate) SetNillableLastBenefitAmount(d *decimal.Decimal) *GoodCreate {
-	if d != nil {
-		gc.SetLastBenefitAmount(*d)
+		gc.SetChannelLockDeposit(*d)
 	}
 	return gc
 }
@@ -489,25 +441,9 @@ func (gc *GoodCreate) defaults() error {
 		v := good.DefaultBenefitIntervalHours
 		gc.mutation.SetBenefitIntervalHours(v)
 	}
-	if _, ok := gc.mutation.BenefitState(); !ok {
-		v := good.DefaultBenefitState
-		gc.mutation.SetBenefitState(v)
-	}
-	if _, ok := gc.mutation.LastBenefitAt(); !ok {
-		v := good.DefaultLastBenefitAt
-		gc.mutation.SetLastBenefitAt(v)
-	}
-	if _, ok := gc.mutation.BenefitTids(); !ok {
-		v := good.DefaultBenefitTids
-		gc.mutation.SetBenefitTids(v)
-	}
-	if _, ok := gc.mutation.NextBenefitStartAmount(); !ok {
-		v := good.DefaultNextBenefitStartAmount
-		gc.mutation.SetNextBenefitStartAmount(v)
-	}
-	if _, ok := gc.mutation.LastBenefitAmount(); !ok {
-		v := good.DefaultLastBenefitAmount
-		gc.mutation.SetLastBenefitAmount(v)
+	if _, ok := gc.mutation.ChannelLockDeposit(); !ok {
+		v := good.DefaultChannelLockDeposit
+		gc.mutation.SetChannelLockDeposit(v)
 	}
 	if _, ok := gc.mutation.ID(); !ok {
 		if good.DefaultID == nil {
@@ -728,45 +664,13 @@ func (gc *GoodCreate) createSpec() (*Good, *sqlgraph.CreateSpec) {
 		})
 		_node.BenefitIntervalHours = value
 	}
-	if value, ok := gc.mutation.BenefitState(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: good.FieldBenefitState,
-		})
-		_node.BenefitState = value
-	}
-	if value, ok := gc.mutation.LastBenefitAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: good.FieldLastBenefitAt,
-		})
-		_node.LastBenefitAt = value
-	}
-	if value, ok := gc.mutation.BenefitTids(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: good.FieldBenefitTids,
-		})
-		_node.BenefitTids = value
-	}
-	if value, ok := gc.mutation.NextBenefitStartAmount(); ok {
+	if value, ok := gc.mutation.ChannelLockDeposit(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: good.FieldNextBenefitStartAmount,
+			Column: good.FieldChannelLockDeposit,
 		})
-		_node.NextBenefitStartAmount = value
-	}
-	if value, ok := gc.mutation.LastBenefitAmount(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: good.FieldLastBenefitAmount,
-		})
-		_node.LastBenefitAmount = value
+		_node.ChannelLockDeposit = value
 	}
 	return _node, _spec
 }
@@ -1176,99 +1080,21 @@ func (u *GoodUpsert) ClearBenefitIntervalHours() *GoodUpsert {
 	return u
 }
 
-// SetBenefitState sets the "benefit_state" field.
-func (u *GoodUpsert) SetBenefitState(v string) *GoodUpsert {
-	u.Set(good.FieldBenefitState, v)
+// SetChannelLockDeposit sets the "channel_lock_deposit" field.
+func (u *GoodUpsert) SetChannelLockDeposit(v decimal.Decimal) *GoodUpsert {
+	u.Set(good.FieldChannelLockDeposit, v)
 	return u
 }
 
-// UpdateBenefitState sets the "benefit_state" field to the value that was provided on create.
-func (u *GoodUpsert) UpdateBenefitState() *GoodUpsert {
-	u.SetExcluded(good.FieldBenefitState)
+// UpdateChannelLockDeposit sets the "channel_lock_deposit" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateChannelLockDeposit() *GoodUpsert {
+	u.SetExcluded(good.FieldChannelLockDeposit)
 	return u
 }
 
-// ClearBenefitState clears the value of the "benefit_state" field.
-func (u *GoodUpsert) ClearBenefitState() *GoodUpsert {
-	u.SetNull(good.FieldBenefitState)
-	return u
-}
-
-// SetLastBenefitAt sets the "last_benefit_at" field.
-func (u *GoodUpsert) SetLastBenefitAt(v uint32) *GoodUpsert {
-	u.Set(good.FieldLastBenefitAt, v)
-	return u
-}
-
-// UpdateLastBenefitAt sets the "last_benefit_at" field to the value that was provided on create.
-func (u *GoodUpsert) UpdateLastBenefitAt() *GoodUpsert {
-	u.SetExcluded(good.FieldLastBenefitAt)
-	return u
-}
-
-// AddLastBenefitAt adds v to the "last_benefit_at" field.
-func (u *GoodUpsert) AddLastBenefitAt(v uint32) *GoodUpsert {
-	u.Add(good.FieldLastBenefitAt, v)
-	return u
-}
-
-// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
-func (u *GoodUpsert) ClearLastBenefitAt() *GoodUpsert {
-	u.SetNull(good.FieldLastBenefitAt)
-	return u
-}
-
-// SetBenefitTids sets the "benefit_tids" field.
-func (u *GoodUpsert) SetBenefitTids(v []uuid.UUID) *GoodUpsert {
-	u.Set(good.FieldBenefitTids, v)
-	return u
-}
-
-// UpdateBenefitTids sets the "benefit_tids" field to the value that was provided on create.
-func (u *GoodUpsert) UpdateBenefitTids() *GoodUpsert {
-	u.SetExcluded(good.FieldBenefitTids)
-	return u
-}
-
-// ClearBenefitTids clears the value of the "benefit_tids" field.
-func (u *GoodUpsert) ClearBenefitTids() *GoodUpsert {
-	u.SetNull(good.FieldBenefitTids)
-	return u
-}
-
-// SetNextBenefitStartAmount sets the "next_benefit_start_amount" field.
-func (u *GoodUpsert) SetNextBenefitStartAmount(v decimal.Decimal) *GoodUpsert {
-	u.Set(good.FieldNextBenefitStartAmount, v)
-	return u
-}
-
-// UpdateNextBenefitStartAmount sets the "next_benefit_start_amount" field to the value that was provided on create.
-func (u *GoodUpsert) UpdateNextBenefitStartAmount() *GoodUpsert {
-	u.SetExcluded(good.FieldNextBenefitStartAmount)
-	return u
-}
-
-// ClearNextBenefitStartAmount clears the value of the "next_benefit_start_amount" field.
-func (u *GoodUpsert) ClearNextBenefitStartAmount() *GoodUpsert {
-	u.SetNull(good.FieldNextBenefitStartAmount)
-	return u
-}
-
-// SetLastBenefitAmount sets the "last_benefit_amount" field.
-func (u *GoodUpsert) SetLastBenefitAmount(v decimal.Decimal) *GoodUpsert {
-	u.Set(good.FieldLastBenefitAmount, v)
-	return u
-}
-
-// UpdateLastBenefitAmount sets the "last_benefit_amount" field to the value that was provided on create.
-func (u *GoodUpsert) UpdateLastBenefitAmount() *GoodUpsert {
-	u.SetExcluded(good.FieldLastBenefitAmount)
-	return u
-}
-
-// ClearLastBenefitAmount clears the value of the "last_benefit_amount" field.
-func (u *GoodUpsert) ClearLastBenefitAmount() *GoodUpsert {
-	u.SetNull(good.FieldLastBenefitAmount)
+// ClearChannelLockDeposit clears the value of the "channel_lock_deposit" field.
+func (u *GoodUpsert) ClearChannelLockDeposit() *GoodUpsert {
+	u.SetNull(good.FieldChannelLockDeposit)
 	return u
 }
 
@@ -1735,115 +1561,24 @@ func (u *GoodUpsertOne) ClearBenefitIntervalHours() *GoodUpsertOne {
 	})
 }
 
-// SetBenefitState sets the "benefit_state" field.
-func (u *GoodUpsertOne) SetBenefitState(v string) *GoodUpsertOne {
+// SetChannelLockDeposit sets the "channel_lock_deposit" field.
+func (u *GoodUpsertOne) SetChannelLockDeposit(v decimal.Decimal) *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.SetBenefitState(v)
+		s.SetChannelLockDeposit(v)
 	})
 }
 
-// UpdateBenefitState sets the "benefit_state" field to the value that was provided on create.
-func (u *GoodUpsertOne) UpdateBenefitState() *GoodUpsertOne {
+// UpdateChannelLockDeposit sets the "channel_lock_deposit" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateChannelLockDeposit() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.UpdateBenefitState()
+		s.UpdateChannelLockDeposit()
 	})
 }
 
-// ClearBenefitState clears the value of the "benefit_state" field.
-func (u *GoodUpsertOne) ClearBenefitState() *GoodUpsertOne {
+// ClearChannelLockDeposit clears the value of the "channel_lock_deposit" field.
+func (u *GoodUpsertOne) ClearChannelLockDeposit() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.ClearBenefitState()
-	})
-}
-
-// SetLastBenefitAt sets the "last_benefit_at" field.
-func (u *GoodUpsertOne) SetLastBenefitAt(v uint32) *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.SetLastBenefitAt(v)
-	})
-}
-
-// AddLastBenefitAt adds v to the "last_benefit_at" field.
-func (u *GoodUpsertOne) AddLastBenefitAt(v uint32) *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.AddLastBenefitAt(v)
-	})
-}
-
-// UpdateLastBenefitAt sets the "last_benefit_at" field to the value that was provided on create.
-func (u *GoodUpsertOne) UpdateLastBenefitAt() *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.UpdateLastBenefitAt()
-	})
-}
-
-// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
-func (u *GoodUpsertOne) ClearLastBenefitAt() *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.ClearLastBenefitAt()
-	})
-}
-
-// SetBenefitTids sets the "benefit_tids" field.
-func (u *GoodUpsertOne) SetBenefitTids(v []uuid.UUID) *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.SetBenefitTids(v)
-	})
-}
-
-// UpdateBenefitTids sets the "benefit_tids" field to the value that was provided on create.
-func (u *GoodUpsertOne) UpdateBenefitTids() *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.UpdateBenefitTids()
-	})
-}
-
-// ClearBenefitTids clears the value of the "benefit_tids" field.
-func (u *GoodUpsertOne) ClearBenefitTids() *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.ClearBenefitTids()
-	})
-}
-
-// SetNextBenefitStartAmount sets the "next_benefit_start_amount" field.
-func (u *GoodUpsertOne) SetNextBenefitStartAmount(v decimal.Decimal) *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.SetNextBenefitStartAmount(v)
-	})
-}
-
-// UpdateNextBenefitStartAmount sets the "next_benefit_start_amount" field to the value that was provided on create.
-func (u *GoodUpsertOne) UpdateNextBenefitStartAmount() *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.UpdateNextBenefitStartAmount()
-	})
-}
-
-// ClearNextBenefitStartAmount clears the value of the "next_benefit_start_amount" field.
-func (u *GoodUpsertOne) ClearNextBenefitStartAmount() *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.ClearNextBenefitStartAmount()
-	})
-}
-
-// SetLastBenefitAmount sets the "last_benefit_amount" field.
-func (u *GoodUpsertOne) SetLastBenefitAmount(v decimal.Decimal) *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.SetLastBenefitAmount(v)
-	})
-}
-
-// UpdateLastBenefitAmount sets the "last_benefit_amount" field to the value that was provided on create.
-func (u *GoodUpsertOne) UpdateLastBenefitAmount() *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.UpdateLastBenefitAmount()
-	})
-}
-
-// ClearLastBenefitAmount clears the value of the "last_benefit_amount" field.
-func (u *GoodUpsertOne) ClearLastBenefitAmount() *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.ClearLastBenefitAmount()
+		s.ClearChannelLockDeposit()
 	})
 }
 
@@ -2476,115 +2211,24 @@ func (u *GoodUpsertBulk) ClearBenefitIntervalHours() *GoodUpsertBulk {
 	})
 }
 
-// SetBenefitState sets the "benefit_state" field.
-func (u *GoodUpsertBulk) SetBenefitState(v string) *GoodUpsertBulk {
+// SetChannelLockDeposit sets the "channel_lock_deposit" field.
+func (u *GoodUpsertBulk) SetChannelLockDeposit(v decimal.Decimal) *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.SetBenefitState(v)
+		s.SetChannelLockDeposit(v)
 	})
 }
 
-// UpdateBenefitState sets the "benefit_state" field to the value that was provided on create.
-func (u *GoodUpsertBulk) UpdateBenefitState() *GoodUpsertBulk {
+// UpdateChannelLockDeposit sets the "channel_lock_deposit" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateChannelLockDeposit() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.UpdateBenefitState()
+		s.UpdateChannelLockDeposit()
 	})
 }
 
-// ClearBenefitState clears the value of the "benefit_state" field.
-func (u *GoodUpsertBulk) ClearBenefitState() *GoodUpsertBulk {
+// ClearChannelLockDeposit clears the value of the "channel_lock_deposit" field.
+func (u *GoodUpsertBulk) ClearChannelLockDeposit() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.ClearBenefitState()
-	})
-}
-
-// SetLastBenefitAt sets the "last_benefit_at" field.
-func (u *GoodUpsertBulk) SetLastBenefitAt(v uint32) *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.SetLastBenefitAt(v)
-	})
-}
-
-// AddLastBenefitAt adds v to the "last_benefit_at" field.
-func (u *GoodUpsertBulk) AddLastBenefitAt(v uint32) *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.AddLastBenefitAt(v)
-	})
-}
-
-// UpdateLastBenefitAt sets the "last_benefit_at" field to the value that was provided on create.
-func (u *GoodUpsertBulk) UpdateLastBenefitAt() *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.UpdateLastBenefitAt()
-	})
-}
-
-// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
-func (u *GoodUpsertBulk) ClearLastBenefitAt() *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.ClearLastBenefitAt()
-	})
-}
-
-// SetBenefitTids sets the "benefit_tids" field.
-func (u *GoodUpsertBulk) SetBenefitTids(v []uuid.UUID) *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.SetBenefitTids(v)
-	})
-}
-
-// UpdateBenefitTids sets the "benefit_tids" field to the value that was provided on create.
-func (u *GoodUpsertBulk) UpdateBenefitTids() *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.UpdateBenefitTids()
-	})
-}
-
-// ClearBenefitTids clears the value of the "benefit_tids" field.
-func (u *GoodUpsertBulk) ClearBenefitTids() *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.ClearBenefitTids()
-	})
-}
-
-// SetNextBenefitStartAmount sets the "next_benefit_start_amount" field.
-func (u *GoodUpsertBulk) SetNextBenefitStartAmount(v decimal.Decimal) *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.SetNextBenefitStartAmount(v)
-	})
-}
-
-// UpdateNextBenefitStartAmount sets the "next_benefit_start_amount" field to the value that was provided on create.
-func (u *GoodUpsertBulk) UpdateNextBenefitStartAmount() *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.UpdateNextBenefitStartAmount()
-	})
-}
-
-// ClearNextBenefitStartAmount clears the value of the "next_benefit_start_amount" field.
-func (u *GoodUpsertBulk) ClearNextBenefitStartAmount() *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.ClearNextBenefitStartAmount()
-	})
-}
-
-// SetLastBenefitAmount sets the "last_benefit_amount" field.
-func (u *GoodUpsertBulk) SetLastBenefitAmount(v decimal.Decimal) *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.SetLastBenefitAmount(v)
-	})
-}
-
-// UpdateLastBenefitAmount sets the "last_benefit_amount" field to the value that was provided on create.
-func (u *GoodUpsertBulk) UpdateLastBenefitAmount() *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.UpdateLastBenefitAmount()
-	})
-}
-
-// ClearLastBenefitAmount clears the value of the "last_benefit_amount" field.
-func (u *GoodUpsertBulk) ClearLastBenefitAmount() *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.ClearLastBenefitAmount()
+		s.ClearChannelLockDeposit()
 	})
 }
 

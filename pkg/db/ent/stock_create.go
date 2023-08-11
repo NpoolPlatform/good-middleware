@@ -142,6 +142,20 @@ func (sc *StockCreate) SetNillableSold(d *decimal.Decimal) *StockCreate {
 	return sc
 }
 
+// SetChannelLocked sets the "channel_locked" field.
+func (sc *StockCreate) SetChannelLocked(d decimal.Decimal) *StockCreate {
+	sc.mutation.SetChannelLocked(d)
+	return sc
+}
+
+// SetNillableChannelLocked sets the "channel_locked" field if the given value is not nil.
+func (sc *StockCreate) SetNillableChannelLocked(d *decimal.Decimal) *StockCreate {
+	if d != nil {
+		sc.SetChannelLocked(*d)
+	}
+	return sc
+}
+
 // SetID sets the "id" field.
 func (sc *StockCreate) SetID(u uuid.UUID) *StockCreate {
 	sc.mutation.SetID(u)
@@ -276,6 +290,10 @@ func (sc *StockCreate) defaults() error {
 		v := stock.DefaultSold
 		sc.mutation.SetSold(v)
 	}
+	if _, ok := sc.mutation.ChannelLocked(); !ok {
+		v := stock.DefaultChannelLocked
+		sc.mutation.SetChannelLocked(v)
+	}
 	if _, ok := sc.mutation.ID(); !ok {
 		if stock.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized stock.DefaultID (forgotten import ent/runtime?)")
@@ -408,6 +426,14 @@ func (sc *StockCreate) createSpec() (*Stock, *sqlgraph.CreateSpec) {
 			Column: stock.FieldSold,
 		})
 		_node.Sold = value
+	}
+	if value, ok := sc.mutation.ChannelLocked(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: stock.FieldChannelLocked,
+		})
+		_node.ChannelLocked = value
 	}
 	return _node, _spec
 }
@@ -616,6 +642,24 @@ func (u *StockUpsert) UpdateSold() *StockUpsert {
 // ClearSold clears the value of the "sold" field.
 func (u *StockUpsert) ClearSold() *StockUpsert {
 	u.SetNull(stock.FieldSold)
+	return u
+}
+
+// SetChannelLocked sets the "channel_locked" field.
+func (u *StockUpsert) SetChannelLocked(v decimal.Decimal) *StockUpsert {
+	u.Set(stock.FieldChannelLocked, v)
+	return u
+}
+
+// UpdateChannelLocked sets the "channel_locked" field to the value that was provided on create.
+func (u *StockUpsert) UpdateChannelLocked() *StockUpsert {
+	u.SetExcluded(stock.FieldChannelLocked)
+	return u
+}
+
+// ClearChannelLocked clears the value of the "channel_locked" field.
+func (u *StockUpsert) ClearChannelLocked() *StockUpsert {
+	u.SetNull(stock.FieldChannelLocked)
 	return u
 }
 
@@ -848,6 +892,27 @@ func (u *StockUpsertOne) UpdateSold() *StockUpsertOne {
 func (u *StockUpsertOne) ClearSold() *StockUpsertOne {
 	return u.Update(func(s *StockUpsert) {
 		s.ClearSold()
+	})
+}
+
+// SetChannelLocked sets the "channel_locked" field.
+func (u *StockUpsertOne) SetChannelLocked(v decimal.Decimal) *StockUpsertOne {
+	return u.Update(func(s *StockUpsert) {
+		s.SetChannelLocked(v)
+	})
+}
+
+// UpdateChannelLocked sets the "channel_locked" field to the value that was provided on create.
+func (u *StockUpsertOne) UpdateChannelLocked() *StockUpsertOne {
+	return u.Update(func(s *StockUpsert) {
+		s.UpdateChannelLocked()
+	})
+}
+
+// ClearChannelLocked clears the value of the "channel_locked" field.
+func (u *StockUpsertOne) ClearChannelLocked() *StockUpsertOne {
+	return u.Update(func(s *StockUpsert) {
+		s.ClearChannelLocked()
 	})
 }
 
@@ -1246,6 +1311,27 @@ func (u *StockUpsertBulk) UpdateSold() *StockUpsertBulk {
 func (u *StockUpsertBulk) ClearSold() *StockUpsertBulk {
 	return u.Update(func(s *StockUpsert) {
 		s.ClearSold()
+	})
+}
+
+// SetChannelLocked sets the "channel_locked" field.
+func (u *StockUpsertBulk) SetChannelLocked(v decimal.Decimal) *StockUpsertBulk {
+	return u.Update(func(s *StockUpsert) {
+		s.SetChannelLocked(v)
+	})
+}
+
+// UpdateChannelLocked sets the "channel_locked" field to the value that was provided on create.
+func (u *StockUpsertBulk) UpdateChannelLocked() *StockUpsertBulk {
+	return u.Update(func(s *StockUpsert) {
+		s.UpdateChannelLocked()
+	})
+}
+
+// ClearChannelLocked clears the value of the "channel_locked" field.
+func (u *StockUpsertBulk) ClearChannelLocked() *StockUpsertBulk {
+	return u.Update(func(s *StockUpsert) {
+		s.ClearChannelLocked()
 	})
 }
 

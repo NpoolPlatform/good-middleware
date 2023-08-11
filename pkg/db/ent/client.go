@@ -13,14 +13,17 @@ import (
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/promotion"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
-	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/subgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 
 	"entgo.io/ent/dialect"
@@ -36,6 +39,8 @@ type Client struct {
 	AppDefaultGood *AppDefaultGoodClient
 	// AppGood is the client for interacting with the AppGood builders.
 	AppGood *AppGoodClient
+	// AppStock is the client for interacting with the AppStock builders.
+	AppStock *AppStockClient
 	// Comment is the client for interacting with the Comment builders.
 	Comment *CommentClient
 	// DeviceInfo is the client for interacting with the DeviceInfo builders.
@@ -44,14 +49,18 @@ type Client struct {
 	ExtraInfo *ExtraInfoClient
 	// Good is the client for interacting with the Good builders.
 	Good *GoodClient
+	// GoodReward is the client for interacting with the GoodReward builders.
+	GoodReward *GoodRewardClient
+	// GoodRewardHistory is the client for interacting with the GoodRewardHistory builders.
+	GoodRewardHistory *GoodRewardHistoryClient
 	// Promotion is the client for interacting with the Promotion builders.
 	Promotion *PromotionClient
 	// Recommend is the client for interacting with the Recommend builders.
 	Recommend *RecommendClient
+	// RequiredGood is the client for interacting with the RequiredGood builders.
+	RequiredGood *RequiredGoodClient
 	// Stock is the client for interacting with the Stock builders.
 	Stock *StockClient
-	// SubGood is the client for interacting with the SubGood builders.
-	SubGood *SubGoodClient
 	// VendorLocation is the client for interacting with the VendorLocation builders.
 	VendorLocation *VendorLocationClient
 }
@@ -69,14 +78,17 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.AppDefaultGood = NewAppDefaultGoodClient(c.config)
 	c.AppGood = NewAppGoodClient(c.config)
+	c.AppStock = NewAppStockClient(c.config)
 	c.Comment = NewCommentClient(c.config)
 	c.DeviceInfo = NewDeviceInfoClient(c.config)
 	c.ExtraInfo = NewExtraInfoClient(c.config)
 	c.Good = NewGoodClient(c.config)
+	c.GoodReward = NewGoodRewardClient(c.config)
+	c.GoodRewardHistory = NewGoodRewardHistoryClient(c.config)
 	c.Promotion = NewPromotionClient(c.config)
 	c.Recommend = NewRecommendClient(c.config)
+	c.RequiredGood = NewRequiredGoodClient(c.config)
 	c.Stock = NewStockClient(c.config)
-	c.SubGood = NewSubGoodClient(c.config)
 	c.VendorLocation = NewVendorLocationClient(c.config)
 }
 
@@ -109,19 +121,22 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:            ctx,
-		config:         cfg,
-		AppDefaultGood: NewAppDefaultGoodClient(cfg),
-		AppGood:        NewAppGoodClient(cfg),
-		Comment:        NewCommentClient(cfg),
-		DeviceInfo:     NewDeviceInfoClient(cfg),
-		ExtraInfo:      NewExtraInfoClient(cfg),
-		Good:           NewGoodClient(cfg),
-		Promotion:      NewPromotionClient(cfg),
-		Recommend:      NewRecommendClient(cfg),
-		Stock:          NewStockClient(cfg),
-		SubGood:        NewSubGoodClient(cfg),
-		VendorLocation: NewVendorLocationClient(cfg),
+		ctx:               ctx,
+		config:            cfg,
+		AppDefaultGood:    NewAppDefaultGoodClient(cfg),
+		AppGood:           NewAppGoodClient(cfg),
+		AppStock:          NewAppStockClient(cfg),
+		Comment:           NewCommentClient(cfg),
+		DeviceInfo:        NewDeviceInfoClient(cfg),
+		ExtraInfo:         NewExtraInfoClient(cfg),
+		Good:              NewGoodClient(cfg),
+		GoodReward:        NewGoodRewardClient(cfg),
+		GoodRewardHistory: NewGoodRewardHistoryClient(cfg),
+		Promotion:         NewPromotionClient(cfg),
+		Recommend:         NewRecommendClient(cfg),
+		RequiredGood:      NewRequiredGoodClient(cfg),
+		Stock:             NewStockClient(cfg),
+		VendorLocation:    NewVendorLocationClient(cfg),
 	}, nil
 }
 
@@ -139,19 +154,22 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:            ctx,
-		config:         cfg,
-		AppDefaultGood: NewAppDefaultGoodClient(cfg),
-		AppGood:        NewAppGoodClient(cfg),
-		Comment:        NewCommentClient(cfg),
-		DeviceInfo:     NewDeviceInfoClient(cfg),
-		ExtraInfo:      NewExtraInfoClient(cfg),
-		Good:           NewGoodClient(cfg),
-		Promotion:      NewPromotionClient(cfg),
-		Recommend:      NewRecommendClient(cfg),
-		Stock:          NewStockClient(cfg),
-		SubGood:        NewSubGoodClient(cfg),
-		VendorLocation: NewVendorLocationClient(cfg),
+		ctx:               ctx,
+		config:            cfg,
+		AppDefaultGood:    NewAppDefaultGoodClient(cfg),
+		AppGood:           NewAppGoodClient(cfg),
+		AppStock:          NewAppStockClient(cfg),
+		Comment:           NewCommentClient(cfg),
+		DeviceInfo:        NewDeviceInfoClient(cfg),
+		ExtraInfo:         NewExtraInfoClient(cfg),
+		Good:              NewGoodClient(cfg),
+		GoodReward:        NewGoodRewardClient(cfg),
+		GoodRewardHistory: NewGoodRewardHistoryClient(cfg),
+		Promotion:         NewPromotionClient(cfg),
+		Recommend:         NewRecommendClient(cfg),
+		RequiredGood:      NewRequiredGoodClient(cfg),
+		Stock:             NewStockClient(cfg),
+		VendorLocation:    NewVendorLocationClient(cfg),
 	}, nil
 }
 
@@ -183,14 +201,17 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	c.AppDefaultGood.Use(hooks...)
 	c.AppGood.Use(hooks...)
+	c.AppStock.Use(hooks...)
 	c.Comment.Use(hooks...)
 	c.DeviceInfo.Use(hooks...)
 	c.ExtraInfo.Use(hooks...)
 	c.Good.Use(hooks...)
+	c.GoodReward.Use(hooks...)
+	c.GoodRewardHistory.Use(hooks...)
 	c.Promotion.Use(hooks...)
 	c.Recommend.Use(hooks...)
+	c.RequiredGood.Use(hooks...)
 	c.Stock.Use(hooks...)
-	c.SubGood.Use(hooks...)
 	c.VendorLocation.Use(hooks...)
 }
 
@@ -374,6 +395,97 @@ func (c *AppGoodClient) GetX(ctx context.Context, id uuid.UUID) *AppGood {
 func (c *AppGoodClient) Hooks() []Hook {
 	hooks := c.hooks.AppGood
 	return append(hooks[:len(hooks):len(hooks)], appgood.Hooks[:]...)
+}
+
+// AppStockClient is a client for the AppStock schema.
+type AppStockClient struct {
+	config
+}
+
+// NewAppStockClient returns a client for the AppStock from the given config.
+func NewAppStockClient(c config) *AppStockClient {
+	return &AppStockClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appstock.Hooks(f(g(h())))`.
+func (c *AppStockClient) Use(hooks ...Hook) {
+	c.hooks.AppStock = append(c.hooks.AppStock, hooks...)
+}
+
+// Create returns a builder for creating a AppStock entity.
+func (c *AppStockClient) Create() *AppStockCreate {
+	mutation := newAppStockMutation(c.config, OpCreate)
+	return &AppStockCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppStock entities.
+func (c *AppStockClient) CreateBulk(builders ...*AppStockCreate) *AppStockCreateBulk {
+	return &AppStockCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppStock.
+func (c *AppStockClient) Update() *AppStockUpdate {
+	mutation := newAppStockMutation(c.config, OpUpdate)
+	return &AppStockUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppStockClient) UpdateOne(as *AppStock) *AppStockUpdateOne {
+	mutation := newAppStockMutation(c.config, OpUpdateOne, withAppStock(as))
+	return &AppStockUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppStockClient) UpdateOneID(id uuid.UUID) *AppStockUpdateOne {
+	mutation := newAppStockMutation(c.config, OpUpdateOne, withAppStockID(id))
+	return &AppStockUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppStock.
+func (c *AppStockClient) Delete() *AppStockDelete {
+	mutation := newAppStockMutation(c.config, OpDelete)
+	return &AppStockDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppStockClient) DeleteOne(as *AppStock) *AppStockDeleteOne {
+	return c.DeleteOneID(as.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppStockClient) DeleteOneID(id uuid.UUID) *AppStockDeleteOne {
+	builder := c.Delete().Where(appstock.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppStockDeleteOne{builder}
+}
+
+// Query returns a query builder for AppStock.
+func (c *AppStockClient) Query() *AppStockQuery {
+	return &AppStockQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppStock entity by its id.
+func (c *AppStockClient) Get(ctx context.Context, id uuid.UUID) (*AppStock, error) {
+	return c.Query().Where(appstock.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppStockClient) GetX(ctx context.Context, id uuid.UUID) *AppStock {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppStockClient) Hooks() []Hook {
+	hooks := c.hooks.AppStock
+	return append(hooks[:len(hooks):len(hooks)], appstock.Hooks[:]...)
 }
 
 // CommentClient is a client for the Comment schema.
@@ -740,6 +852,188 @@ func (c *GoodClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], good.Hooks[:]...)
 }
 
+// GoodRewardClient is a client for the GoodReward schema.
+type GoodRewardClient struct {
+	config
+}
+
+// NewGoodRewardClient returns a client for the GoodReward from the given config.
+func NewGoodRewardClient(c config) *GoodRewardClient {
+	return &GoodRewardClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `goodreward.Hooks(f(g(h())))`.
+func (c *GoodRewardClient) Use(hooks ...Hook) {
+	c.hooks.GoodReward = append(c.hooks.GoodReward, hooks...)
+}
+
+// Create returns a builder for creating a GoodReward entity.
+func (c *GoodRewardClient) Create() *GoodRewardCreate {
+	mutation := newGoodRewardMutation(c.config, OpCreate)
+	return &GoodRewardCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of GoodReward entities.
+func (c *GoodRewardClient) CreateBulk(builders ...*GoodRewardCreate) *GoodRewardCreateBulk {
+	return &GoodRewardCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for GoodReward.
+func (c *GoodRewardClient) Update() *GoodRewardUpdate {
+	mutation := newGoodRewardMutation(c.config, OpUpdate)
+	return &GoodRewardUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GoodRewardClient) UpdateOne(gr *GoodReward) *GoodRewardUpdateOne {
+	mutation := newGoodRewardMutation(c.config, OpUpdateOne, withGoodReward(gr))
+	return &GoodRewardUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GoodRewardClient) UpdateOneID(id uuid.UUID) *GoodRewardUpdateOne {
+	mutation := newGoodRewardMutation(c.config, OpUpdateOne, withGoodRewardID(id))
+	return &GoodRewardUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for GoodReward.
+func (c *GoodRewardClient) Delete() *GoodRewardDelete {
+	mutation := newGoodRewardMutation(c.config, OpDelete)
+	return &GoodRewardDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *GoodRewardClient) DeleteOne(gr *GoodReward) *GoodRewardDeleteOne {
+	return c.DeleteOneID(gr.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *GoodRewardClient) DeleteOneID(id uuid.UUID) *GoodRewardDeleteOne {
+	builder := c.Delete().Where(goodreward.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GoodRewardDeleteOne{builder}
+}
+
+// Query returns a query builder for GoodReward.
+func (c *GoodRewardClient) Query() *GoodRewardQuery {
+	return &GoodRewardQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a GoodReward entity by its id.
+func (c *GoodRewardClient) Get(ctx context.Context, id uuid.UUID) (*GoodReward, error) {
+	return c.Query().Where(goodreward.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GoodRewardClient) GetX(ctx context.Context, id uuid.UUID) *GoodReward {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *GoodRewardClient) Hooks() []Hook {
+	hooks := c.hooks.GoodReward
+	return append(hooks[:len(hooks):len(hooks)], goodreward.Hooks[:]...)
+}
+
+// GoodRewardHistoryClient is a client for the GoodRewardHistory schema.
+type GoodRewardHistoryClient struct {
+	config
+}
+
+// NewGoodRewardHistoryClient returns a client for the GoodRewardHistory from the given config.
+func NewGoodRewardHistoryClient(c config) *GoodRewardHistoryClient {
+	return &GoodRewardHistoryClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `goodrewardhistory.Hooks(f(g(h())))`.
+func (c *GoodRewardHistoryClient) Use(hooks ...Hook) {
+	c.hooks.GoodRewardHistory = append(c.hooks.GoodRewardHistory, hooks...)
+}
+
+// Create returns a builder for creating a GoodRewardHistory entity.
+func (c *GoodRewardHistoryClient) Create() *GoodRewardHistoryCreate {
+	mutation := newGoodRewardHistoryMutation(c.config, OpCreate)
+	return &GoodRewardHistoryCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of GoodRewardHistory entities.
+func (c *GoodRewardHistoryClient) CreateBulk(builders ...*GoodRewardHistoryCreate) *GoodRewardHistoryCreateBulk {
+	return &GoodRewardHistoryCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for GoodRewardHistory.
+func (c *GoodRewardHistoryClient) Update() *GoodRewardHistoryUpdate {
+	mutation := newGoodRewardHistoryMutation(c.config, OpUpdate)
+	return &GoodRewardHistoryUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GoodRewardHistoryClient) UpdateOne(grh *GoodRewardHistory) *GoodRewardHistoryUpdateOne {
+	mutation := newGoodRewardHistoryMutation(c.config, OpUpdateOne, withGoodRewardHistory(grh))
+	return &GoodRewardHistoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GoodRewardHistoryClient) UpdateOneID(id uuid.UUID) *GoodRewardHistoryUpdateOne {
+	mutation := newGoodRewardHistoryMutation(c.config, OpUpdateOne, withGoodRewardHistoryID(id))
+	return &GoodRewardHistoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for GoodRewardHistory.
+func (c *GoodRewardHistoryClient) Delete() *GoodRewardHistoryDelete {
+	mutation := newGoodRewardHistoryMutation(c.config, OpDelete)
+	return &GoodRewardHistoryDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *GoodRewardHistoryClient) DeleteOne(grh *GoodRewardHistory) *GoodRewardHistoryDeleteOne {
+	return c.DeleteOneID(grh.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *GoodRewardHistoryClient) DeleteOneID(id uuid.UUID) *GoodRewardHistoryDeleteOne {
+	builder := c.Delete().Where(goodrewardhistory.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GoodRewardHistoryDeleteOne{builder}
+}
+
+// Query returns a query builder for GoodRewardHistory.
+func (c *GoodRewardHistoryClient) Query() *GoodRewardHistoryQuery {
+	return &GoodRewardHistoryQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a GoodRewardHistory entity by its id.
+func (c *GoodRewardHistoryClient) Get(ctx context.Context, id uuid.UUID) (*GoodRewardHistory, error) {
+	return c.Query().Where(goodrewardhistory.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GoodRewardHistoryClient) GetX(ctx context.Context, id uuid.UUID) *GoodRewardHistory {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *GoodRewardHistoryClient) Hooks() []Hook {
+	hooks := c.hooks.GoodRewardHistory
+	return append(hooks[:len(hooks):len(hooks)], goodrewardhistory.Hooks[:]...)
+}
+
 // PromotionClient is a client for the Promotion schema.
 type PromotionClient struct {
 	config
@@ -922,6 +1216,97 @@ func (c *RecommendClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], recommend.Hooks[:]...)
 }
 
+// RequiredGoodClient is a client for the RequiredGood schema.
+type RequiredGoodClient struct {
+	config
+}
+
+// NewRequiredGoodClient returns a client for the RequiredGood from the given config.
+func NewRequiredGoodClient(c config) *RequiredGoodClient {
+	return &RequiredGoodClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `requiredgood.Hooks(f(g(h())))`.
+func (c *RequiredGoodClient) Use(hooks ...Hook) {
+	c.hooks.RequiredGood = append(c.hooks.RequiredGood, hooks...)
+}
+
+// Create returns a builder for creating a RequiredGood entity.
+func (c *RequiredGoodClient) Create() *RequiredGoodCreate {
+	mutation := newRequiredGoodMutation(c.config, OpCreate)
+	return &RequiredGoodCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of RequiredGood entities.
+func (c *RequiredGoodClient) CreateBulk(builders ...*RequiredGoodCreate) *RequiredGoodCreateBulk {
+	return &RequiredGoodCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for RequiredGood.
+func (c *RequiredGoodClient) Update() *RequiredGoodUpdate {
+	mutation := newRequiredGoodMutation(c.config, OpUpdate)
+	return &RequiredGoodUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *RequiredGoodClient) UpdateOne(rg *RequiredGood) *RequiredGoodUpdateOne {
+	mutation := newRequiredGoodMutation(c.config, OpUpdateOne, withRequiredGood(rg))
+	return &RequiredGoodUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *RequiredGoodClient) UpdateOneID(id uuid.UUID) *RequiredGoodUpdateOne {
+	mutation := newRequiredGoodMutation(c.config, OpUpdateOne, withRequiredGoodID(id))
+	return &RequiredGoodUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for RequiredGood.
+func (c *RequiredGoodClient) Delete() *RequiredGoodDelete {
+	mutation := newRequiredGoodMutation(c.config, OpDelete)
+	return &RequiredGoodDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *RequiredGoodClient) DeleteOne(rg *RequiredGood) *RequiredGoodDeleteOne {
+	return c.DeleteOneID(rg.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *RequiredGoodClient) DeleteOneID(id uuid.UUID) *RequiredGoodDeleteOne {
+	builder := c.Delete().Where(requiredgood.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &RequiredGoodDeleteOne{builder}
+}
+
+// Query returns a query builder for RequiredGood.
+func (c *RequiredGoodClient) Query() *RequiredGoodQuery {
+	return &RequiredGoodQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a RequiredGood entity by its id.
+func (c *RequiredGoodClient) Get(ctx context.Context, id uuid.UUID) (*RequiredGood, error) {
+	return c.Query().Where(requiredgood.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *RequiredGoodClient) GetX(ctx context.Context, id uuid.UUID) *RequiredGood {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *RequiredGoodClient) Hooks() []Hook {
+	hooks := c.hooks.RequiredGood
+	return append(hooks[:len(hooks):len(hooks)], requiredgood.Hooks[:]...)
+}
+
 // StockClient is a client for the Stock schema.
 type StockClient struct {
 	config
@@ -1011,97 +1396,6 @@ func (c *StockClient) GetX(ctx context.Context, id uuid.UUID) *Stock {
 func (c *StockClient) Hooks() []Hook {
 	hooks := c.hooks.Stock
 	return append(hooks[:len(hooks):len(hooks)], stock.Hooks[:]...)
-}
-
-// SubGoodClient is a client for the SubGood schema.
-type SubGoodClient struct {
-	config
-}
-
-// NewSubGoodClient returns a client for the SubGood from the given config.
-func NewSubGoodClient(c config) *SubGoodClient {
-	return &SubGoodClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `subgood.Hooks(f(g(h())))`.
-func (c *SubGoodClient) Use(hooks ...Hook) {
-	c.hooks.SubGood = append(c.hooks.SubGood, hooks...)
-}
-
-// Create returns a builder for creating a SubGood entity.
-func (c *SubGoodClient) Create() *SubGoodCreate {
-	mutation := newSubGoodMutation(c.config, OpCreate)
-	return &SubGoodCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// CreateBulk returns a builder for creating a bulk of SubGood entities.
-func (c *SubGoodClient) CreateBulk(builders ...*SubGoodCreate) *SubGoodCreateBulk {
-	return &SubGoodCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for SubGood.
-func (c *SubGoodClient) Update() *SubGoodUpdate {
-	mutation := newSubGoodMutation(c.config, OpUpdate)
-	return &SubGoodUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *SubGoodClient) UpdateOne(sg *SubGood) *SubGoodUpdateOne {
-	mutation := newSubGoodMutation(c.config, OpUpdateOne, withSubGood(sg))
-	return &SubGoodUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *SubGoodClient) UpdateOneID(id uuid.UUID) *SubGoodUpdateOne {
-	mutation := newSubGoodMutation(c.config, OpUpdateOne, withSubGoodID(id))
-	return &SubGoodUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for SubGood.
-func (c *SubGoodClient) Delete() *SubGoodDelete {
-	mutation := newSubGoodMutation(c.config, OpDelete)
-	return &SubGoodDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a builder for deleting the given entity.
-func (c *SubGoodClient) DeleteOne(sg *SubGood) *SubGoodDeleteOne {
-	return c.DeleteOneID(sg.ID)
-}
-
-// DeleteOne returns a builder for deleting the given entity by its id.
-func (c *SubGoodClient) DeleteOneID(id uuid.UUID) *SubGoodDeleteOne {
-	builder := c.Delete().Where(subgood.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &SubGoodDeleteOne{builder}
-}
-
-// Query returns a query builder for SubGood.
-func (c *SubGoodClient) Query() *SubGoodQuery {
-	return &SubGoodQuery{
-		config: c.config,
-	}
-}
-
-// Get returns a SubGood entity by its id.
-func (c *SubGoodClient) Get(ctx context.Context, id uuid.UUID) (*SubGood, error) {
-	return c.Query().Where(subgood.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *SubGoodClient) GetX(ctx context.Context, id uuid.UUID) *SubGood {
-	obj, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return obj
-}
-
-// Hooks returns the client hooks.
-func (c *SubGoodClient) Hooks() []Hook {
-	hooks := c.hooks.SubGood
-	return append(hooks[:len(hooks):len(hooks)], subgood.Hooks[:]...)
 }
 
 // VendorLocationClient is a client for the VendorLocation schema.

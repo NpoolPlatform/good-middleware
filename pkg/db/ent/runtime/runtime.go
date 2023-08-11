@@ -7,15 +7,18 @@ import (
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/promotion"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/schema"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
-	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/subgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -172,6 +175,58 @@ func init() {
 	appgoodDescID := appgoodFields[0].Descriptor()
 	// appgood.DefaultID holds the default value on creation for the id field.
 	appgood.DefaultID = appgoodDescID.Default.(func() uuid.UUID)
+	appstockMixin := schema.AppStock{}.Mixin()
+	appstock.Policy = privacy.NewPolicies(appstockMixin[0], schema.AppStock{})
+	appstock.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := appstock.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	appstockMixinFields0 := appstockMixin[0].Fields()
+	_ = appstockMixinFields0
+	appstockFields := schema.AppStock{}.Fields()
+	_ = appstockFields
+	// appstockDescCreatedAt is the schema descriptor for created_at field.
+	appstockDescCreatedAt := appstockMixinFields0[0].Descriptor()
+	// appstock.DefaultCreatedAt holds the default value on creation for the created_at field.
+	appstock.DefaultCreatedAt = appstockDescCreatedAt.Default.(func() uint32)
+	// appstockDescUpdatedAt is the schema descriptor for updated_at field.
+	appstockDescUpdatedAt := appstockMixinFields0[1].Descriptor()
+	// appstock.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	appstock.DefaultUpdatedAt = appstockDescUpdatedAt.Default.(func() uint32)
+	// appstock.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	appstock.UpdateDefaultUpdatedAt = appstockDescUpdatedAt.UpdateDefault.(func() uint32)
+	// appstockDescDeletedAt is the schema descriptor for deleted_at field.
+	appstockDescDeletedAt := appstockMixinFields0[2].Descriptor()
+	// appstock.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	appstock.DefaultDeletedAt = appstockDescDeletedAt.Default.(func() uint32)
+	// appstockDescTotal is the schema descriptor for total field.
+	appstockDescTotal := appstockFields[3].Descriptor()
+	// appstock.DefaultTotal holds the default value on creation for the total field.
+	appstock.DefaultTotal = appstockDescTotal.Default.(decimal.Decimal)
+	// appstockDescLocked is the schema descriptor for locked field.
+	appstockDescLocked := appstockFields[4].Descriptor()
+	// appstock.DefaultLocked holds the default value on creation for the locked field.
+	appstock.DefaultLocked = appstockDescLocked.Default.(decimal.Decimal)
+	// appstockDescInService is the schema descriptor for in_service field.
+	appstockDescInService := appstockFields[5].Descriptor()
+	// appstock.DefaultInService holds the default value on creation for the in_service field.
+	appstock.DefaultInService = appstockDescInService.Default.(decimal.Decimal)
+	// appstockDescWaitStart is the schema descriptor for wait_start field.
+	appstockDescWaitStart := appstockFields[6].Descriptor()
+	// appstock.DefaultWaitStart holds the default value on creation for the wait_start field.
+	appstock.DefaultWaitStart = appstockDescWaitStart.Default.(decimal.Decimal)
+	// appstockDescSold is the schema descriptor for sold field.
+	appstockDescSold := appstockFields[7].Descriptor()
+	// appstock.DefaultSold holds the default value on creation for the sold field.
+	appstock.DefaultSold = appstockDescSold.Default.(decimal.Decimal)
+	// appstockDescID is the schema descriptor for id field.
+	appstockDescID := appstockFields[0].Descriptor()
+	// appstock.DefaultID holds the default value on creation for the id field.
+	appstock.DefaultID = appstockDescID.Default.(func() uuid.UUID)
 	commentMixin := schema.Comment{}.Mixin()
 	comment.Policy = privacy.NewPolicies(commentMixin[0], schema.Comment{})
 	comment.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -308,10 +363,10 @@ func init() {
 	extrainfoDescVoteCount := extrainfoFields[4].Descriptor()
 	// extrainfo.DefaultVoteCount holds the default value on creation for the vote_count field.
 	extrainfo.DefaultVoteCount = extrainfoDescVoteCount.Default.(uint32)
-	// extrainfoDescRating is the schema descriptor for rating field.
-	extrainfoDescRating := extrainfoFields[5].Descriptor()
-	// extrainfo.DefaultRating holds the default value on creation for the rating field.
-	extrainfo.DefaultRating = extrainfoDescRating.Default.(float32)
+	// extrainfoDescRatingV1 is the schema descriptor for rating_v1 field.
+	extrainfoDescRatingV1 := extrainfoFields[5].Descriptor()
+	// extrainfo.DefaultRatingV1 holds the default value on creation for the rating_v1 field.
+	extrainfo.DefaultRatingV1 = extrainfoDescRatingV1.Default.(decimal.Decimal)
 	// extrainfoDescID is the schema descriptor for id field.
 	extrainfoDescID := extrainfoFields[0].Descriptor()
 	// extrainfo.DefaultID holds the default value on creation for the id field.
@@ -396,30 +451,110 @@ func init() {
 	goodDescBenefitIntervalHours := goodFields[16].Descriptor()
 	// good.DefaultBenefitIntervalHours holds the default value on creation for the benefit_interval_hours field.
 	good.DefaultBenefitIntervalHours = goodDescBenefitIntervalHours.Default.(uint32)
-	// goodDescBenefitState is the schema descriptor for benefit_state field.
-	goodDescBenefitState := goodFields[17].Descriptor()
-	// good.DefaultBenefitState holds the default value on creation for the benefit_state field.
-	good.DefaultBenefitState = goodDescBenefitState.Default.(string)
-	// goodDescLastBenefitAt is the schema descriptor for last_benefit_at field.
-	goodDescLastBenefitAt := goodFields[18].Descriptor()
-	// good.DefaultLastBenefitAt holds the default value on creation for the last_benefit_at field.
-	good.DefaultLastBenefitAt = goodDescLastBenefitAt.Default.(uint32)
-	// goodDescBenefitTids is the schema descriptor for benefit_tids field.
-	goodDescBenefitTids := goodFields[19].Descriptor()
-	// good.DefaultBenefitTids holds the default value on creation for the benefit_tids field.
-	good.DefaultBenefitTids = goodDescBenefitTids.Default.([]uuid.UUID)
-	// goodDescNextBenefitStartAmount is the schema descriptor for next_benefit_start_amount field.
-	goodDescNextBenefitStartAmount := goodFields[20].Descriptor()
-	// good.DefaultNextBenefitStartAmount holds the default value on creation for the next_benefit_start_amount field.
-	good.DefaultNextBenefitStartAmount = goodDescNextBenefitStartAmount.Default.(decimal.Decimal)
-	// goodDescLastBenefitAmount is the schema descriptor for last_benefit_amount field.
-	goodDescLastBenefitAmount := goodFields[21].Descriptor()
-	// good.DefaultLastBenefitAmount holds the default value on creation for the last_benefit_amount field.
-	good.DefaultLastBenefitAmount = goodDescLastBenefitAmount.Default.(decimal.Decimal)
+	// goodDescChannelLockDeposit is the schema descriptor for channel_lock_deposit field.
+	goodDescChannelLockDeposit := goodFields[17].Descriptor()
+	// good.DefaultChannelLockDeposit holds the default value on creation for the channel_lock_deposit field.
+	good.DefaultChannelLockDeposit = goodDescChannelLockDeposit.Default.(decimal.Decimal)
 	// goodDescID is the schema descriptor for id field.
 	goodDescID := goodFields[0].Descriptor()
 	// good.DefaultID holds the default value on creation for the id field.
 	good.DefaultID = goodDescID.Default.(func() uuid.UUID)
+	goodrewardMixin := schema.GoodReward{}.Mixin()
+	goodreward.Policy = privacy.NewPolicies(goodrewardMixin[0], schema.GoodReward{})
+	goodreward.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := goodreward.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	goodrewardMixinFields0 := goodrewardMixin[0].Fields()
+	_ = goodrewardMixinFields0
+	goodrewardFields := schema.GoodReward{}.Fields()
+	_ = goodrewardFields
+	// goodrewardDescCreatedAt is the schema descriptor for created_at field.
+	goodrewardDescCreatedAt := goodrewardMixinFields0[0].Descriptor()
+	// goodreward.DefaultCreatedAt holds the default value on creation for the created_at field.
+	goodreward.DefaultCreatedAt = goodrewardDescCreatedAt.Default.(func() uint32)
+	// goodrewardDescUpdatedAt is the schema descriptor for updated_at field.
+	goodrewardDescUpdatedAt := goodrewardMixinFields0[1].Descriptor()
+	// goodreward.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	goodreward.DefaultUpdatedAt = goodrewardDescUpdatedAt.Default.(func() uint32)
+	// goodreward.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	goodreward.UpdateDefaultUpdatedAt = goodrewardDescUpdatedAt.UpdateDefault.(func() uint32)
+	// goodrewardDescDeletedAt is the schema descriptor for deleted_at field.
+	goodrewardDescDeletedAt := goodrewardMixinFields0[2].Descriptor()
+	// goodreward.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	goodreward.DefaultDeletedAt = goodrewardDescDeletedAt.Default.(func() uint32)
+	// goodrewardDescBenefitState is the schema descriptor for benefit_state field.
+	goodrewardDescBenefitState := goodrewardFields[2].Descriptor()
+	// goodreward.DefaultBenefitState holds the default value on creation for the benefit_state field.
+	goodreward.DefaultBenefitState = goodrewardDescBenefitState.Default.(string)
+	// goodrewardDescLastBenefitAt is the schema descriptor for last_benefit_at field.
+	goodrewardDescLastBenefitAt := goodrewardFields[3].Descriptor()
+	// goodreward.DefaultLastBenefitAt holds the default value on creation for the last_benefit_at field.
+	goodreward.DefaultLastBenefitAt = goodrewardDescLastBenefitAt.Default.(uint32)
+	// goodrewardDescBenefitTids is the schema descriptor for benefit_tids field.
+	goodrewardDescBenefitTids := goodrewardFields[4].Descriptor()
+	// goodreward.DefaultBenefitTids holds the default value on creation for the benefit_tids field.
+	goodreward.DefaultBenefitTids = goodrewardDescBenefitTids.Default.([]uuid.UUID)
+	// goodrewardDescNextBenefitStartAmount is the schema descriptor for next_benefit_start_amount field.
+	goodrewardDescNextBenefitStartAmount := goodrewardFields[5].Descriptor()
+	// goodreward.DefaultNextBenefitStartAmount holds the default value on creation for the next_benefit_start_amount field.
+	goodreward.DefaultNextBenefitStartAmount = goodrewardDescNextBenefitStartAmount.Default.(decimal.Decimal)
+	// goodrewardDescLastBenefitAmount is the schema descriptor for last_benefit_amount field.
+	goodrewardDescLastBenefitAmount := goodrewardFields[6].Descriptor()
+	// goodreward.DefaultLastBenefitAmount holds the default value on creation for the last_benefit_amount field.
+	goodreward.DefaultLastBenefitAmount = goodrewardDescLastBenefitAmount.Default.(decimal.Decimal)
+	// goodrewardDescID is the schema descriptor for id field.
+	goodrewardDescID := goodrewardFields[0].Descriptor()
+	// goodreward.DefaultID holds the default value on creation for the id field.
+	goodreward.DefaultID = goodrewardDescID.Default.(func() uuid.UUID)
+	goodrewardhistoryMixin := schema.GoodRewardHistory{}.Mixin()
+	goodrewardhistory.Policy = privacy.NewPolicies(goodrewardhistoryMixin[0], schema.GoodRewardHistory{})
+	goodrewardhistory.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := goodrewardhistory.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	goodrewardhistoryMixinFields0 := goodrewardhistoryMixin[0].Fields()
+	_ = goodrewardhistoryMixinFields0
+	goodrewardhistoryFields := schema.GoodRewardHistory{}.Fields()
+	_ = goodrewardhistoryFields
+	// goodrewardhistoryDescCreatedAt is the schema descriptor for created_at field.
+	goodrewardhistoryDescCreatedAt := goodrewardhistoryMixinFields0[0].Descriptor()
+	// goodrewardhistory.DefaultCreatedAt holds the default value on creation for the created_at field.
+	goodrewardhistory.DefaultCreatedAt = goodrewardhistoryDescCreatedAt.Default.(func() uint32)
+	// goodrewardhistoryDescUpdatedAt is the schema descriptor for updated_at field.
+	goodrewardhistoryDescUpdatedAt := goodrewardhistoryMixinFields0[1].Descriptor()
+	// goodrewardhistory.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	goodrewardhistory.DefaultUpdatedAt = goodrewardhistoryDescUpdatedAt.Default.(func() uint32)
+	// goodrewardhistory.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	goodrewardhistory.UpdateDefaultUpdatedAt = goodrewardhistoryDescUpdatedAt.UpdateDefault.(func() uint32)
+	// goodrewardhistoryDescDeletedAt is the schema descriptor for deleted_at field.
+	goodrewardhistoryDescDeletedAt := goodrewardhistoryMixinFields0[2].Descriptor()
+	// goodrewardhistory.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	goodrewardhistory.DefaultDeletedAt = goodrewardhistoryDescDeletedAt.Default.(func() uint32)
+	// goodrewardhistoryDescRewardAt is the schema descriptor for reward_at field.
+	goodrewardhistoryDescRewardAt := goodrewardhistoryFields[2].Descriptor()
+	// goodrewardhistory.DefaultRewardAt holds the default value on creation for the reward_at field.
+	goodrewardhistory.DefaultRewardAt = goodrewardhistoryDescRewardAt.Default.(uint32)
+	// goodrewardhistoryDescTid is the schema descriptor for tid field.
+	goodrewardhistoryDescTid := goodrewardhistoryFields[3].Descriptor()
+	// goodrewardhistory.DefaultTid holds the default value on creation for the tid field.
+	goodrewardhistory.DefaultTid = goodrewardhistoryDescTid.Default.(func() uuid.UUID)
+	// goodrewardhistoryDescAmount is the schema descriptor for amount field.
+	goodrewardhistoryDescAmount := goodrewardhistoryFields[4].Descriptor()
+	// goodrewardhistory.DefaultAmount holds the default value on creation for the amount field.
+	goodrewardhistory.DefaultAmount = goodrewardhistoryDescAmount.Default.(decimal.Decimal)
+	// goodrewardhistoryDescID is the schema descriptor for id field.
+	goodrewardhistoryDescID := goodrewardhistoryFields[0].Descriptor()
+	// goodrewardhistory.DefaultID holds the default value on creation for the id field.
+	goodrewardhistory.DefaultID = goodrewardhistoryDescID.Default.(func() uuid.UUID)
 	promotionMixin := schema.Promotion{}.Mixin()
 	promotion.Policy = privacy.NewPolicies(promotionMixin[0], schema.Promotion{})
 	promotion.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -516,6 +651,46 @@ func init() {
 	recommendDescID := recommendFields[0].Descriptor()
 	// recommend.DefaultID holds the default value on creation for the id field.
 	recommend.DefaultID = recommendDescID.Default.(func() uuid.UUID)
+	requiredgoodMixin := schema.RequiredGood{}.Mixin()
+	requiredgood.Policy = privacy.NewPolicies(requiredgoodMixin[0], schema.RequiredGood{})
+	requiredgood.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := requiredgood.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	requiredgoodMixinFields0 := requiredgoodMixin[0].Fields()
+	_ = requiredgoodMixinFields0
+	requiredgoodFields := schema.RequiredGood{}.Fields()
+	_ = requiredgoodFields
+	// requiredgoodDescCreatedAt is the schema descriptor for created_at field.
+	requiredgoodDescCreatedAt := requiredgoodMixinFields0[0].Descriptor()
+	// requiredgood.DefaultCreatedAt holds the default value on creation for the created_at field.
+	requiredgood.DefaultCreatedAt = requiredgoodDescCreatedAt.Default.(func() uint32)
+	// requiredgoodDescUpdatedAt is the schema descriptor for updated_at field.
+	requiredgoodDescUpdatedAt := requiredgoodMixinFields0[1].Descriptor()
+	// requiredgood.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	requiredgood.DefaultUpdatedAt = requiredgoodDescUpdatedAt.Default.(func() uint32)
+	// requiredgood.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	requiredgood.UpdateDefaultUpdatedAt = requiredgoodDescUpdatedAt.UpdateDefault.(func() uint32)
+	// requiredgoodDescDeletedAt is the schema descriptor for deleted_at field.
+	requiredgoodDescDeletedAt := requiredgoodMixinFields0[2].Descriptor()
+	// requiredgood.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	requiredgood.DefaultDeletedAt = requiredgoodDescDeletedAt.Default.(func() uint32)
+	// requiredgoodDescMust is the schema descriptor for must field.
+	requiredgoodDescMust := requiredgoodFields[4].Descriptor()
+	// requiredgood.DefaultMust holds the default value on creation for the must field.
+	requiredgood.DefaultMust = requiredgoodDescMust.Default.(bool)
+	// requiredgoodDescCommission is the schema descriptor for commission field.
+	requiredgoodDescCommission := requiredgoodFields[5].Descriptor()
+	// requiredgood.DefaultCommission holds the default value on creation for the commission field.
+	requiredgood.DefaultCommission = requiredgoodDescCommission.Default.(bool)
+	// requiredgoodDescID is the schema descriptor for id field.
+	requiredgoodDescID := requiredgoodFields[0].Descriptor()
+	// requiredgood.DefaultID holds the default value on creation for the id field.
+	requiredgood.DefaultID = requiredgoodDescID.Default.(func() uuid.UUID)
 	stockMixin := schema.Stock{}.Mixin()
 	stock.Policy = privacy.NewPolicies(stockMixin[0], schema.Stock{})
 	stock.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -564,50 +739,14 @@ func init() {
 	stockDescSold := stockFields[6].Descriptor()
 	// stock.DefaultSold holds the default value on creation for the sold field.
 	stock.DefaultSold = stockDescSold.Default.(decimal.Decimal)
+	// stockDescChannelLocked is the schema descriptor for channel_locked field.
+	stockDescChannelLocked := stockFields[7].Descriptor()
+	// stock.DefaultChannelLocked holds the default value on creation for the channel_locked field.
+	stock.DefaultChannelLocked = stockDescChannelLocked.Default.(decimal.Decimal)
 	// stockDescID is the schema descriptor for id field.
 	stockDescID := stockFields[0].Descriptor()
 	// stock.DefaultID holds the default value on creation for the id field.
 	stock.DefaultID = stockDescID.Default.(func() uuid.UUID)
-	subgoodMixin := schema.SubGood{}.Mixin()
-	subgood.Policy = privacy.NewPolicies(subgoodMixin[0], schema.SubGood{})
-	subgood.Hooks[0] = func(next ent.Mutator) ent.Mutator {
-		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-			if err := subgood.Policy.EvalMutation(ctx, m); err != nil {
-				return nil, err
-			}
-			return next.Mutate(ctx, m)
-		})
-	}
-	subgoodMixinFields0 := subgoodMixin[0].Fields()
-	_ = subgoodMixinFields0
-	subgoodFields := schema.SubGood{}.Fields()
-	_ = subgoodFields
-	// subgoodDescCreatedAt is the schema descriptor for created_at field.
-	subgoodDescCreatedAt := subgoodMixinFields0[0].Descriptor()
-	// subgood.DefaultCreatedAt holds the default value on creation for the created_at field.
-	subgood.DefaultCreatedAt = subgoodDescCreatedAt.Default.(func() uint32)
-	// subgoodDescUpdatedAt is the schema descriptor for updated_at field.
-	subgoodDescUpdatedAt := subgoodMixinFields0[1].Descriptor()
-	// subgood.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	subgood.DefaultUpdatedAt = subgoodDescUpdatedAt.Default.(func() uint32)
-	// subgood.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	subgood.UpdateDefaultUpdatedAt = subgoodDescUpdatedAt.UpdateDefault.(func() uint32)
-	// subgoodDescDeletedAt is the schema descriptor for deleted_at field.
-	subgoodDescDeletedAt := subgoodMixinFields0[2].Descriptor()
-	// subgood.DefaultDeletedAt holds the default value on creation for the deleted_at field.
-	subgood.DefaultDeletedAt = subgoodDescDeletedAt.Default.(func() uint32)
-	// subgoodDescMust is the schema descriptor for must field.
-	subgoodDescMust := subgoodFields[4].Descriptor()
-	// subgood.DefaultMust holds the default value on creation for the must field.
-	subgood.DefaultMust = subgoodDescMust.Default.(bool)
-	// subgoodDescCommission is the schema descriptor for commission field.
-	subgoodDescCommission := subgoodFields[5].Descriptor()
-	// subgood.DefaultCommission holds the default value on creation for the commission field.
-	subgood.DefaultCommission = subgoodDescCommission.Default.(bool)
-	// subgoodDescID is the schema descriptor for id field.
-	subgoodDescID := subgoodFields[0].Descriptor()
-	// subgood.DefaultID holds the default value on creation for the id field.
-	subgood.DefaultID = subgoodDescID.Default.(func() uuid.UUID)
 	vendorlocationMixin := schema.VendorLocation{}.Mixin()
 	vendorlocation.Policy = privacy.NewPolicies(vendorlocationMixin[0], schema.VendorLocation{})
 	vendorlocation.Hooks[0] = func(next ent.Mutator) ent.Mutator {
