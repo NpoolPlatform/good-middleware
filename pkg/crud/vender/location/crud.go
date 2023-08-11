@@ -1,4 +1,4 @@
-package vendorlocation
+package location
 
 import (
 	"fmt"
@@ -11,12 +11,13 @@ import (
 )
 
 type Req struct {
-	ID       *uuid.UUID
-	Country  *string
-	Province *string
-	City     *string
-	Address  *string
-	BrandID  *uuid.UUID
+	ID        *uuid.UUID
+	Country   *string
+	Province  *string
+	City      *string
+	Address   *string
+	BrandID   *uuid.UUID
+	DeletedAt *uint32
 }
 
 func CreateSet(c *ent.VendorLocationCreate, req *Req) *ent.VendorLocationCreate {
@@ -57,6 +58,9 @@ func UpdateSet(u *ent.VendorLocationUpdateOne, req *Req) *ent.VendorLocationUpda
 	if req.BrandID != nil {
 		u.SetBrandID(*req.BrandID)
 	}
+	if req.DeletedAt != nil {
+		u.SetDeletedAt(*req.DeletedAt)
+	}
 	return u
 }
 
@@ -64,6 +68,8 @@ type Conds struct {
 	ID       *cruder.Cond
 	Country  *cruder.Cond
 	Province *cruder.Cond
+	City     *cruder.Cond
+	Address  *cruder.Cond
 	BrandID  *cruder.Cond
 }
 
@@ -80,6 +86,8 @@ func SetQueryConds(q *ent.VendorLocationQuery, conds *Conds) (*ent.VendorLocatio
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entvendorlocation.ID(id))
+		case cruder.NEQ:
+			q.Where(entvendorlocation.IDNEQ(id))
 		default:
 			return nil, fmt.Errorf("invalid vendorlocation field")
 		}
@@ -104,6 +112,30 @@ func SetQueryConds(q *ent.VendorLocationQuery, conds *Conds) (*ent.VendorLocatio
 		switch conds.Province.Op {
 		case cruder.EQ:
 			q.Where(entvendorlocation.Province(province))
+		default:
+			return nil, fmt.Errorf("invalid vendorlocation field")
+		}
+	}
+	if conds.City != nil {
+		country, ok := conds.City.Val.(string)
+		if !ok {
+			return nil, fmt.Errorf("invalid city")
+		}
+		switch conds.City.Op {
+		case cruder.EQ:
+			q.Where(entvendorlocation.City(country))
+		default:
+			return nil, fmt.Errorf("invalid vendorlocation field")
+		}
+	}
+	if conds.Address != nil {
+		country, ok := conds.Address.Val.(string)
+		if !ok {
+			return nil, fmt.Errorf("invalid address")
+		}
+		switch conds.Address.Op {
+		case cruder.EQ:
+			q.Where(entvendorlocation.Address(country))
 		default:
 			return nil, fmt.Errorf("invalid vendorlocation field")
 		}

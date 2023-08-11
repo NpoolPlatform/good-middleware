@@ -1,24 +1,53 @@
-package deviceinfo
+package location
 
 import (
 	"context"
 	"fmt"
 
 	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
-	deviceinfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/deviceinfo"
+	locationcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/vender/location"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"
+
+	"github.com/google/uuid"
 )
 
-func (h *Handler) UpdateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, error) {
+func (h *Handler) UpdateLocation(ctx context.Context) (*npool.Location, error) {
 	if h.ID == nil {
 		return nil, fmt.Errorf("invalid id")
 	}
 
-	key := fmt.Sprintf("%v:%v", basetypes.Prefix_PrefixCreateDeviceInfo, *h.Type)
+	info, err := h.GetLocation(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if info == nil {
+		return nil, fmt.Errorf("invalid location")
+	}
+
+	if h.Country == nil {
+		h.Country = &info.Country
+	}
+	if h.Province == nil {
+		h.Province = &info.Province
+	}
+	if h.City == nil {
+		h.City = &info.City
+	}
+	if h.Address == nil {
+		h.Address = &info.Address
+	}
+	if h.BrandID == nil {
+		id, err := uuid.Parse(info.BrandID)
+		if err != nil {
+			return nil, err
+		}
+		h.BrandID = &id
+	}
+
+	key := h.lockKey()
 	if err := redis2.TryLock(key, 0); err != nil {
 		return nil, err
 	}
@@ -26,11 +55,15 @@ func (h *Handler) UpdateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 		_ = redis2.Unlock(key)
 	}()
 
-	h.Conds = &deviceinfocrud.Conds{
-		ID:   &cruder.Cond{Op: cruder.NEQ, Val: *h.ID},
-		Type: &cruder.Cond{Op: cruder.EQ, Val: *h.Type},
+	h.Conds = &locationcrud.Conds{
+		ID:       &cruder.Cond{Op: cruder.NEQ, Val: *h.ID},
+		Country:  &cruder.Cond{Op: cruder.EQ, Val: *h.Country},
+		Province: &cruder.Cond{Op: cruder.EQ, Val: *h.Province},
+		City:     &cruder.Cond{Op: cruder.EQ, Val: *h.City},
+		Address:  &cruder.Cond{Op: cruder.EQ, Val: *h.Address},
+		BrandID:  &cruder.Cond{Op: cruder.EQ, Val: *h.BrandID},
 	}
-	exist, err := h.ExistDeviceInfoConds(ctx)
+	exist, err := h.ExistLocationConds(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -38,15 +71,20 @@ func (h *Handler) UpdateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 		return nil, fmt.Errorf("arleady exists")
 	}
 
+	id := uuid.New()
+	if h.ID == nil {
+		h.ID = &id
+	}
+
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if _, err := deviceinfocrud.UpdateSet(
-			cli.DeviceInfo.UpdateOneID(*h.ID),
-			&deviceinfocrud.Req{
-				Type:            h.Type,
-				Manufacturer:    h.Manufacturer,
-				PowerComsuption: h.PowerComsuption,
-				ShipmentAt:      h.ShipmentAt,
-				Posters:         h.Posters,
+		if _, err := locationcrud.UpdateSet(
+			cli.VendorLocation.UpdateOneID(*h.ID),
+			&locationcrud.Req{
+				Country:  h.Country,
+				Province: h.Province,
+				City:     h.City,
+				Address:  h.Address,
+				BrandID:  h.BrandID,
 			},
 		).Save(_ctx); err != nil {
 			return err
@@ -57,5 +95,5 @@ func (h *Handler) UpdateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 		return nil, err
 	}
 
-	return h.GetDeviceInfo(ctx)
+	return h.GetLocation(ctx)
 }

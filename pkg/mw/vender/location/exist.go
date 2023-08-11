@@ -1,17 +1,17 @@
-package deviceinfo
+package location
 
 import (
 	"context"
 
-	deviceinfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/deviceinfo"
+	locationcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/vender/location"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 )
 
-func (h *Handler) ExistDeviceInfoConds(ctx context.Context) (bool, error) {
+func (h *Handler) ExistLocationConds(ctx context.Context) (bool, error) {
 	exist := false
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := deviceinfocrud.SetQueryConds(cli.DeviceInfo.Query(), h.Conds)
+		stm, err := locationcrud.SetQueryConds(cli.VendorLocation.Query(), h.Conds)
 		if err != nil {
 			return err
 		}

@@ -1,6 +1,7 @@
 package deviceinfo
 
 import (
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 
@@ -8,5 +9,6 @@ import (
 )
 
 func (h *Handler) lockKey() string {
-	return fmt.Sprintf("%v:%v", basetypes.Prefix_PrefixCreateDeviceInfo, hex.EncodeToString([]byte(*h.Type)))
+	sha := sha256.Sum224([]byte(*h.Type))
+	return fmt.Sprintf("%v:%v", basetypes.Prefix_PrefixCreateDeviceInfo, hex.EncodeToString(sha[:]))
 }

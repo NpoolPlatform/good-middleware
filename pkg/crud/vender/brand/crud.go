@@ -1,4 +1,4 @@
-package vendorbrand
+package brand
 
 import (
 	"fmt"

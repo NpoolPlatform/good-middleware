@@ -1,26 +1,37 @@
-package deviceinfo
+package location
 
 import (
 	"context"
 	"fmt"
 
 	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
-	deviceinfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/deviceinfo"
+	locationcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/vender/location"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"
 
 	"github.com/google/uuid"
 )
 
-func (h *Handler) CreateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, error) {
-	if h.Type == nil {
-		return nil, fmt.Errorf("invalid type")
+func (h *Handler) CreateLocation(ctx context.Context) (*npool.Location, error) {
+	if h.Country == nil {
+		return nil, fmt.Errorf("invalid country")
+	}
+	if h.Province == nil {
+		return nil, fmt.Errorf("invalid province")
+	}
+	if h.City == nil {
+		return nil, fmt.Errorf("invalid city")
+	}
+	if h.Address == nil {
+		return nil, fmt.Errorf("invalid address")
+	}
+	if h.BrandID == nil {
+		return nil, fmt.Errorf("invalid brandid")
 	}
 
-	key := fmt.Sprintf("%v:%v", basetypes.Prefix_PrefixCreateDeviceInfo, *h.Type)
+	key := h.lockKey()
 	if err := redis2.TryLock(key, 0); err != nil {
 		return nil, err
 	}
@@ -28,10 +39,14 @@ func (h *Handler) CreateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 		_ = redis2.Unlock(key)
 	}()
 
-	h.Conds = &deviceinfocrud.Conds{
-		Type: &cruder.Cond{Op: cruder.EQ, Val: *h.Type},
+	h.Conds = &locationcrud.Conds{
+		Country:  &cruder.Cond{Op: cruder.EQ, Val: *h.Country},
+		Province: &cruder.Cond{Op: cruder.EQ, Val: *h.Province},
+		City:     &cruder.Cond{Op: cruder.EQ, Val: *h.City},
+		Address:  &cruder.Cond{Op: cruder.EQ, Val: *h.Address},
+		BrandID:  &cruder.Cond{Op: cruder.EQ, Val: *h.BrandID},
 	}
-	exist, err := h.ExistDeviceInfoConds(ctx)
+	exist, err := h.ExistLocationConds(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -45,15 +60,15 @@ func (h *Handler) CreateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 	}
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if _, err := deviceinfocrud.CreateSet(
-			cli.DeviceInfo.Create(),
-			&deviceinfocrud.Req{
-				ID:              h.ID,
-				Type:            h.Type,
-				Manufacturer:    h.Manufacturer,
-				PowerComsuption: h.PowerComsuption,
-				ShipmentAt:      h.ShipmentAt,
-				Posters:         h.Posters,
+		if _, err := locationcrud.CreateSet(
+			cli.VendorLocation.Create(),
+			&locationcrud.Req{
+				ID:       h.ID,
+				Country:  h.Country,
+				Province: h.Province,
+				City:     h.City,
+				Address:  h.Address,
+				BrandID:  h.BrandID,
 			},
 		).Save(_ctx); err != nil {
 			return err
@@ -64,5 +79,5 @@ func (h *Handler) CreateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 		return nil, err
 	}
 
-	return h.GetDeviceInfo(ctx)
+	return h.GetLocation(ctx)
 }

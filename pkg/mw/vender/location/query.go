@@ -1,4 +1,4 @@
-package deviceinfo
+package location
 
 import (
 	"context"
@@ -7,35 +7,35 @@ import (
 	// deviceinfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/deviceinfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entdeviceinfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	entlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"
 )
 
 type queryHandler struct {
 	*Handler
-	stmSelect *ent.DeviceInfoSelect
-	infos     []*npool.DeviceInfo
+	stmSelect *ent.VendorLocationSelect
+	infos     []*npool.Location
 	total     uint32
 }
 
-func (h *queryHandler) selectDeviceInfo(stm *ent.DeviceInfoQuery) {
+func (h *queryHandler) selectVendorLocation(stm *ent.VendorLocationQuery) {
 	h.stmSelect = stm.Select(
-		entdeviceinfo.FieldID,
-		entdeviceinfo.FieldType,
-		entdeviceinfo.FieldManufacturer,
-		entdeviceinfo.FieldPowerComsuption,
-		entdeviceinfo.FieldShipmentAt,
-		entdeviceinfo.FieldPosters,
+		entlocation.FieldID,
+		entlocation.FieldCountry,
+		entlocation.FieldProvince,
+		entlocation.FieldCity,
+		entlocation.FieldAddress,
+		entlocation.FieldBrandID,
 	)
 }
 
-func (h *queryHandler) queryDeviceInfo(cli *ent.Client) {
-	h.selectDeviceInfo(
-		cli.DeviceInfo.
+func (h *queryHandler) queryVendorLocation(cli *ent.Client) {
+	h.selectVendorLocation(
+		cli.VendorLocation.
 			Query().
 			Where(
-				entdeviceinfo.ID(*h.ID),
-				entdeviceinfo.DeletedAt(0),
+				entlocation.ID(*h.ID),
+				entlocation.DeletedAt(0),
 			),
 	)
 }
@@ -44,7 +44,7 @@ func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
 }
 
-func (h *Handler) GetDeviceInfo(ctx context.Context) (*npool.DeviceInfo, error) {
+func (h *Handler) GetLocation(ctx context.Context) (*npool.Location, error) {
 	if h.ID == nil {
 		return nil, fmt.Errorf("invalid id")
 	}
@@ -54,7 +54,7 @@ func (h *Handler) GetDeviceInfo(ctx context.Context) (*npool.DeviceInfo, error) 
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.queryDeviceInfo(cli)
+		handler.queryVendorLocation(cli)
 		return handler.scan(_ctx)
 	})
 	if err != nil {
