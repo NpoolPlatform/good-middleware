@@ -199,6 +199,7 @@ var (
 		DisplayIndex:           &appGoodInfo.DisplayIndex,
 		PurchaseLimit:          &appGoodInfo.PurchaseLimit,
 		CommissionPercent:      &appGoodInfo.CommissionPercent,
+		CommissionSettleType:   &appGoodInfo.CommissionSettleType,
 		DailyRewardAmount:      &appGoodInfo.DailyRewardAmount,
 		EnablePurchase:         &appGoodInfo.EnablePurchase,
 		EnableProductPage:      &appGoodInfo.EnableProductPage,
