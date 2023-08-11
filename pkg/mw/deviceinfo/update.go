@@ -9,7 +9,6 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
 )
 
@@ -18,7 +17,7 @@ func (h *Handler) UpdateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 		return nil, fmt.Errorf("invalid id")
 	}
 
-	key := fmt.Sprintf("%v:%v", basetypes.Prefix_PrefixCreateDeviceInfo, *h.Type)
+	key := h.lockKey()
 	if err := redis2.TryLock(key, 0); err != nil {
 		return nil, err
 	}
