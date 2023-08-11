@@ -207,20 +207,24 @@ func init() {
 	appstockDescTotal := appstockFields[3].Descriptor()
 	// appstock.DefaultTotal holds the default value on creation for the total field.
 	appstock.DefaultTotal = appstockDescTotal.Default.(decimal.Decimal)
+	// appstockDescSpotQuantity is the schema descriptor for spot_quantity field.
+	appstockDescSpotQuantity := appstockFields[4].Descriptor()
+	// appstock.DefaultSpotQuantity holds the default value on creation for the spot_quantity field.
+	appstock.DefaultSpotQuantity = appstockDescSpotQuantity.Default.(decimal.Decimal)
 	// appstockDescLocked is the schema descriptor for locked field.
-	appstockDescLocked := appstockFields[4].Descriptor()
+	appstockDescLocked := appstockFields[5].Descriptor()
 	// appstock.DefaultLocked holds the default value on creation for the locked field.
 	appstock.DefaultLocked = appstockDescLocked.Default.(decimal.Decimal)
 	// appstockDescInService is the schema descriptor for in_service field.
-	appstockDescInService := appstockFields[5].Descriptor()
+	appstockDescInService := appstockFields[6].Descriptor()
 	// appstock.DefaultInService holds the default value on creation for the in_service field.
 	appstock.DefaultInService = appstockDescInService.Default.(decimal.Decimal)
 	// appstockDescWaitStart is the schema descriptor for wait_start field.
-	appstockDescWaitStart := appstockFields[6].Descriptor()
+	appstockDescWaitStart := appstockFields[7].Descriptor()
 	// appstock.DefaultWaitStart holds the default value on creation for the wait_start field.
 	appstock.DefaultWaitStart = appstockDescWaitStart.Default.(decimal.Decimal)
 	// appstockDescSold is the schema descriptor for sold field.
-	appstockDescSold := appstockFields[7].Descriptor()
+	appstockDescSold := appstockFields[8].Descriptor()
 	// appstock.DefaultSold holds the default value on creation for the sold field.
 	appstock.DefaultSold = appstockDescSold.Default.(decimal.Decimal)
 	// appstockDescID is the schema descriptor for id field.
@@ -451,10 +455,10 @@ func init() {
 	goodDescBenefitIntervalHours := goodFields[16].Descriptor()
 	// good.DefaultBenefitIntervalHours holds the default value on creation for the benefit_interval_hours field.
 	good.DefaultBenefitIntervalHours = goodDescBenefitIntervalHours.Default.(uint32)
-	// goodDescChannelLockDeposit is the schema descriptor for channel_lock_deposit field.
-	goodDescChannelLockDeposit := goodFields[17].Descriptor()
-	// good.DefaultChannelLockDeposit holds the default value on creation for the channel_lock_deposit field.
-	good.DefaultChannelLockDeposit = goodDescChannelLockDeposit.Default.(decimal.Decimal)
+	// goodDescUnitLockDeposit is the schema descriptor for unit_lock_deposit field.
+	goodDescUnitLockDeposit := goodFields[17].Descriptor()
+	// good.DefaultUnitLockDeposit holds the default value on creation for the unit_lock_deposit field.
+	good.DefaultUnitLockDeposit = goodDescUnitLockDeposit.Default.(decimal.Decimal)
 	// goodDescID is the schema descriptor for id field.
 	goodDescID := goodFields[0].Descriptor()
 	// good.DefaultID holds the default value on creation for the id field.
@@ -739,10 +743,10 @@ func init() {
 	stockDescSold := stockFields[6].Descriptor()
 	// stock.DefaultSold holds the default value on creation for the sold field.
 	stock.DefaultSold = stockDescSold.Default.(decimal.Decimal)
-	// stockDescChannelLocked is the schema descriptor for channel_locked field.
-	stockDescChannelLocked := stockFields[7].Descriptor()
-	// stock.DefaultChannelLocked holds the default value on creation for the channel_locked field.
-	stock.DefaultChannelLocked = stockDescChannelLocked.Default.(decimal.Decimal)
+	// stockDescAppLocked is the schema descriptor for app_locked field.
+	stockDescAppLocked := stockFields[7].Descriptor()
+	// stock.DefaultAppLocked holds the default value on creation for the app_locked field.
+	stock.DefaultAppLocked = stockDescAppLocked.Default.(decimal.Decimal)
 	// stockDescID is the schema descriptor for id field.
 	stockDescID := stockFields[0].Descriptor()
 	// stock.DefaultID holds the default value on creation for the id field.

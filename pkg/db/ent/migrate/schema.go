@@ -77,6 +77,7 @@ var (
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "good_id", Type: field.TypeUUID},
 		{Name: "total", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "spot_quantity", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "locked", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "in_service", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "wait_start", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
@@ -179,7 +180,7 @@ var (
 		{Name: "start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "test_only", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "benefit_interval_hours", Type: field.TypeUint32, Nullable: true, Default: 24},
-		{Name: "channel_lock_deposit", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "unit_lock_deposit", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}
 	// GoodsTable holds the schema information for the "goods" table.
 	GoodsTable = &schema.Table{
@@ -319,20 +320,13 @@ var (
 		{Name: "in_service", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "wait_start", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "sold", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
-		{Name: "channel_locked", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "app_locked", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}
 	// StocksV1Table holds the schema information for the "stocks_v1" table.
 	StocksV1Table = &schema.Table{
 		Name:       "stocks_v1",
 		Columns:    StocksV1Columns,
 		PrimaryKey: []*schema.Column{StocksV1Columns[0]},
-		Indexes: []*schema.Index{
-			{
-				Name:    "stock_good_id",
-				Unique:  true,
-				Columns: []*schema.Column{StocksV1Columns[4]},
-			},
-		},
 	}
 	// VendorLocationsColumns holds the columns for the "vendor_locations" table.
 	VendorLocationsColumns = []*schema.Column{

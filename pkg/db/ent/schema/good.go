@@ -98,7 +98,7 @@ func (Good) Fields() []ent.Field {
 			Optional().
 			Default(benefitHours),
 		field.
-			Other("channel_lock_deposit", decimal.Decimal{}).
+			Other("unit_lock_deposit", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).

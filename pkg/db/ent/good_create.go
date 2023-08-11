@@ -258,16 +258,16 @@ func (gc *GoodCreate) SetNillableBenefitIntervalHours(u *uint32) *GoodCreate {
 	return gc
 }
 
-// SetChannelLockDeposit sets the "channel_lock_deposit" field.
-func (gc *GoodCreate) SetChannelLockDeposit(d decimal.Decimal) *GoodCreate {
-	gc.mutation.SetChannelLockDeposit(d)
+// SetUnitLockDeposit sets the "unit_lock_deposit" field.
+func (gc *GoodCreate) SetUnitLockDeposit(d decimal.Decimal) *GoodCreate {
+	gc.mutation.SetUnitLockDeposit(d)
 	return gc
 }
 
-// SetNillableChannelLockDeposit sets the "channel_lock_deposit" field if the given value is not nil.
-func (gc *GoodCreate) SetNillableChannelLockDeposit(d *decimal.Decimal) *GoodCreate {
+// SetNillableUnitLockDeposit sets the "unit_lock_deposit" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableUnitLockDeposit(d *decimal.Decimal) *GoodCreate {
 	if d != nil {
-		gc.SetChannelLockDeposit(*d)
+		gc.SetUnitLockDeposit(*d)
 	}
 	return gc
 }
@@ -441,9 +441,9 @@ func (gc *GoodCreate) defaults() error {
 		v := good.DefaultBenefitIntervalHours
 		gc.mutation.SetBenefitIntervalHours(v)
 	}
-	if _, ok := gc.mutation.ChannelLockDeposit(); !ok {
-		v := good.DefaultChannelLockDeposit
-		gc.mutation.SetChannelLockDeposit(v)
+	if _, ok := gc.mutation.UnitLockDeposit(); !ok {
+		v := good.DefaultUnitLockDeposit
+		gc.mutation.SetUnitLockDeposit(v)
 	}
 	if _, ok := gc.mutation.ID(); !ok {
 		if good.DefaultID == nil {
@@ -664,13 +664,13 @@ func (gc *GoodCreate) createSpec() (*Good, *sqlgraph.CreateSpec) {
 		})
 		_node.BenefitIntervalHours = value
 	}
-	if value, ok := gc.mutation.ChannelLockDeposit(); ok {
+	if value, ok := gc.mutation.UnitLockDeposit(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: good.FieldChannelLockDeposit,
+			Column: good.FieldUnitLockDeposit,
 		})
-		_node.ChannelLockDeposit = value
+		_node.UnitLockDeposit = value
 	}
 	return _node, _spec
 }
@@ -1080,21 +1080,21 @@ func (u *GoodUpsert) ClearBenefitIntervalHours() *GoodUpsert {
 	return u
 }
 
-// SetChannelLockDeposit sets the "channel_lock_deposit" field.
-func (u *GoodUpsert) SetChannelLockDeposit(v decimal.Decimal) *GoodUpsert {
-	u.Set(good.FieldChannelLockDeposit, v)
+// SetUnitLockDeposit sets the "unit_lock_deposit" field.
+func (u *GoodUpsert) SetUnitLockDeposit(v decimal.Decimal) *GoodUpsert {
+	u.Set(good.FieldUnitLockDeposit, v)
 	return u
 }
 
-// UpdateChannelLockDeposit sets the "channel_lock_deposit" field to the value that was provided on create.
-func (u *GoodUpsert) UpdateChannelLockDeposit() *GoodUpsert {
-	u.SetExcluded(good.FieldChannelLockDeposit)
+// UpdateUnitLockDeposit sets the "unit_lock_deposit" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateUnitLockDeposit() *GoodUpsert {
+	u.SetExcluded(good.FieldUnitLockDeposit)
 	return u
 }
 
-// ClearChannelLockDeposit clears the value of the "channel_lock_deposit" field.
-func (u *GoodUpsert) ClearChannelLockDeposit() *GoodUpsert {
-	u.SetNull(good.FieldChannelLockDeposit)
+// ClearUnitLockDeposit clears the value of the "unit_lock_deposit" field.
+func (u *GoodUpsert) ClearUnitLockDeposit() *GoodUpsert {
+	u.SetNull(good.FieldUnitLockDeposit)
 	return u
 }
 
@@ -1561,24 +1561,24 @@ func (u *GoodUpsertOne) ClearBenefitIntervalHours() *GoodUpsertOne {
 	})
 }
 
-// SetChannelLockDeposit sets the "channel_lock_deposit" field.
-func (u *GoodUpsertOne) SetChannelLockDeposit(v decimal.Decimal) *GoodUpsertOne {
+// SetUnitLockDeposit sets the "unit_lock_deposit" field.
+func (u *GoodUpsertOne) SetUnitLockDeposit(v decimal.Decimal) *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.SetChannelLockDeposit(v)
+		s.SetUnitLockDeposit(v)
 	})
 }
 
-// UpdateChannelLockDeposit sets the "channel_lock_deposit" field to the value that was provided on create.
-func (u *GoodUpsertOne) UpdateChannelLockDeposit() *GoodUpsertOne {
+// UpdateUnitLockDeposit sets the "unit_lock_deposit" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateUnitLockDeposit() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.UpdateChannelLockDeposit()
+		s.UpdateUnitLockDeposit()
 	})
 }
 
-// ClearChannelLockDeposit clears the value of the "channel_lock_deposit" field.
-func (u *GoodUpsertOne) ClearChannelLockDeposit() *GoodUpsertOne {
+// ClearUnitLockDeposit clears the value of the "unit_lock_deposit" field.
+func (u *GoodUpsertOne) ClearUnitLockDeposit() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.ClearChannelLockDeposit()
+		s.ClearUnitLockDeposit()
 	})
 }
 
@@ -2211,24 +2211,24 @@ func (u *GoodUpsertBulk) ClearBenefitIntervalHours() *GoodUpsertBulk {
 	})
 }
 
-// SetChannelLockDeposit sets the "channel_lock_deposit" field.
-func (u *GoodUpsertBulk) SetChannelLockDeposit(v decimal.Decimal) *GoodUpsertBulk {
+// SetUnitLockDeposit sets the "unit_lock_deposit" field.
+func (u *GoodUpsertBulk) SetUnitLockDeposit(v decimal.Decimal) *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.SetChannelLockDeposit(v)
+		s.SetUnitLockDeposit(v)
 	})
 }
 
-// UpdateChannelLockDeposit sets the "channel_lock_deposit" field to the value that was provided on create.
-func (u *GoodUpsertBulk) UpdateChannelLockDeposit() *GoodUpsertBulk {
+// UpdateUnitLockDeposit sets the "unit_lock_deposit" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateUnitLockDeposit() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.UpdateChannelLockDeposit()
+		s.UpdateUnitLockDeposit()
 	})
 }
 
-// ClearChannelLockDeposit clears the value of the "channel_lock_deposit" field.
-func (u *GoodUpsertBulk) ClearChannelLockDeposit() *GoodUpsertBulk {
+// ClearUnitLockDeposit clears the value of the "unit_lock_deposit" field.
+func (u *GoodUpsertBulk) ClearUnitLockDeposit() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.ClearChannelLockDeposit()
+		s.ClearUnitLockDeposit()
 	})
 }
 

@@ -142,16 +142,16 @@ func (sc *StockCreate) SetNillableSold(d *decimal.Decimal) *StockCreate {
 	return sc
 }
 
-// SetChannelLocked sets the "channel_locked" field.
-func (sc *StockCreate) SetChannelLocked(d decimal.Decimal) *StockCreate {
-	sc.mutation.SetChannelLocked(d)
+// SetAppLocked sets the "app_locked" field.
+func (sc *StockCreate) SetAppLocked(d decimal.Decimal) *StockCreate {
+	sc.mutation.SetAppLocked(d)
 	return sc
 }
 
-// SetNillableChannelLocked sets the "channel_locked" field if the given value is not nil.
-func (sc *StockCreate) SetNillableChannelLocked(d *decimal.Decimal) *StockCreate {
+// SetNillableAppLocked sets the "app_locked" field if the given value is not nil.
+func (sc *StockCreate) SetNillableAppLocked(d *decimal.Decimal) *StockCreate {
 	if d != nil {
-		sc.SetChannelLocked(*d)
+		sc.SetAppLocked(*d)
 	}
 	return sc
 }
@@ -290,9 +290,9 @@ func (sc *StockCreate) defaults() error {
 		v := stock.DefaultSold
 		sc.mutation.SetSold(v)
 	}
-	if _, ok := sc.mutation.ChannelLocked(); !ok {
-		v := stock.DefaultChannelLocked
-		sc.mutation.SetChannelLocked(v)
+	if _, ok := sc.mutation.AppLocked(); !ok {
+		v := stock.DefaultAppLocked
+		sc.mutation.SetAppLocked(v)
 	}
 	if _, ok := sc.mutation.ID(); !ok {
 		if stock.DefaultID == nil {
@@ -427,13 +427,13 @@ func (sc *StockCreate) createSpec() (*Stock, *sqlgraph.CreateSpec) {
 		})
 		_node.Sold = value
 	}
-	if value, ok := sc.mutation.ChannelLocked(); ok {
+	if value, ok := sc.mutation.AppLocked(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: stock.FieldChannelLocked,
+			Column: stock.FieldAppLocked,
 		})
-		_node.ChannelLocked = value
+		_node.AppLocked = value
 	}
 	return _node, _spec
 }
@@ -645,21 +645,21 @@ func (u *StockUpsert) ClearSold() *StockUpsert {
 	return u
 }
 
-// SetChannelLocked sets the "channel_locked" field.
-func (u *StockUpsert) SetChannelLocked(v decimal.Decimal) *StockUpsert {
-	u.Set(stock.FieldChannelLocked, v)
+// SetAppLocked sets the "app_locked" field.
+func (u *StockUpsert) SetAppLocked(v decimal.Decimal) *StockUpsert {
+	u.Set(stock.FieldAppLocked, v)
 	return u
 }
 
-// UpdateChannelLocked sets the "channel_locked" field to the value that was provided on create.
-func (u *StockUpsert) UpdateChannelLocked() *StockUpsert {
-	u.SetExcluded(stock.FieldChannelLocked)
+// UpdateAppLocked sets the "app_locked" field to the value that was provided on create.
+func (u *StockUpsert) UpdateAppLocked() *StockUpsert {
+	u.SetExcluded(stock.FieldAppLocked)
 	return u
 }
 
-// ClearChannelLocked clears the value of the "channel_locked" field.
-func (u *StockUpsert) ClearChannelLocked() *StockUpsert {
-	u.SetNull(stock.FieldChannelLocked)
+// ClearAppLocked clears the value of the "app_locked" field.
+func (u *StockUpsert) ClearAppLocked() *StockUpsert {
+	u.SetNull(stock.FieldAppLocked)
 	return u
 }
 
@@ -895,24 +895,24 @@ func (u *StockUpsertOne) ClearSold() *StockUpsertOne {
 	})
 }
 
-// SetChannelLocked sets the "channel_locked" field.
-func (u *StockUpsertOne) SetChannelLocked(v decimal.Decimal) *StockUpsertOne {
+// SetAppLocked sets the "app_locked" field.
+func (u *StockUpsertOne) SetAppLocked(v decimal.Decimal) *StockUpsertOne {
 	return u.Update(func(s *StockUpsert) {
-		s.SetChannelLocked(v)
+		s.SetAppLocked(v)
 	})
 }
 
-// UpdateChannelLocked sets the "channel_locked" field to the value that was provided on create.
-func (u *StockUpsertOne) UpdateChannelLocked() *StockUpsertOne {
+// UpdateAppLocked sets the "app_locked" field to the value that was provided on create.
+func (u *StockUpsertOne) UpdateAppLocked() *StockUpsertOne {
 	return u.Update(func(s *StockUpsert) {
-		s.UpdateChannelLocked()
+		s.UpdateAppLocked()
 	})
 }
 
-// ClearChannelLocked clears the value of the "channel_locked" field.
-func (u *StockUpsertOne) ClearChannelLocked() *StockUpsertOne {
+// ClearAppLocked clears the value of the "app_locked" field.
+func (u *StockUpsertOne) ClearAppLocked() *StockUpsertOne {
 	return u.Update(func(s *StockUpsert) {
-		s.ClearChannelLocked()
+		s.ClearAppLocked()
 	})
 }
 
@@ -1314,24 +1314,24 @@ func (u *StockUpsertBulk) ClearSold() *StockUpsertBulk {
 	})
 }
 
-// SetChannelLocked sets the "channel_locked" field.
-func (u *StockUpsertBulk) SetChannelLocked(v decimal.Decimal) *StockUpsertBulk {
+// SetAppLocked sets the "app_locked" field.
+func (u *StockUpsertBulk) SetAppLocked(v decimal.Decimal) *StockUpsertBulk {
 	return u.Update(func(s *StockUpsert) {
-		s.SetChannelLocked(v)
+		s.SetAppLocked(v)
 	})
 }
 
-// UpdateChannelLocked sets the "channel_locked" field to the value that was provided on create.
-func (u *StockUpsertBulk) UpdateChannelLocked() *StockUpsertBulk {
+// UpdateAppLocked sets the "app_locked" field to the value that was provided on create.
+func (u *StockUpsertBulk) UpdateAppLocked() *StockUpsertBulk {
 	return u.Update(func(s *StockUpsert) {
-		s.UpdateChannelLocked()
+		s.UpdateAppLocked()
 	})
 }
 
-// ClearChannelLocked clears the value of the "channel_locked" field.
-func (u *StockUpsertBulk) ClearChannelLocked() *StockUpsertBulk {
+// ClearAppLocked clears the value of the "app_locked" field.
+func (u *StockUpsertBulk) ClearAppLocked() *StockUpsertBulk {
 	return u.Update(func(s *StockUpsert) {
-		s.ClearChannelLocked()
+		s.ClearAppLocked()
 	})
 }
 

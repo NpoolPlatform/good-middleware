@@ -6,7 +6,6 @@ import (
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
-	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -68,7 +67,7 @@ func (Stock) Fields() []ent.Field {
 			Optional().
 			Default(decimal.Decimal{}),
 		field.
-			Other("channel_locked", decimal.Decimal{}).
+			Other("app_locked", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).
@@ -84,7 +83,5 @@ func (Stock) Annotations() []schema.Annotation {
 }
 
 func (Stock) Indexes() []ent.Index {
-	return []ent.Index{
-		index.Fields("good_id").Unique(),
-	}
+	return nil
 }

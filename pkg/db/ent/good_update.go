@@ -390,23 +390,23 @@ func (gu *GoodUpdate) ClearBenefitIntervalHours() *GoodUpdate {
 	return gu
 }
 
-// SetChannelLockDeposit sets the "channel_lock_deposit" field.
-func (gu *GoodUpdate) SetChannelLockDeposit(d decimal.Decimal) *GoodUpdate {
-	gu.mutation.SetChannelLockDeposit(d)
+// SetUnitLockDeposit sets the "unit_lock_deposit" field.
+func (gu *GoodUpdate) SetUnitLockDeposit(d decimal.Decimal) *GoodUpdate {
+	gu.mutation.SetUnitLockDeposit(d)
 	return gu
 }
 
-// SetNillableChannelLockDeposit sets the "channel_lock_deposit" field if the given value is not nil.
-func (gu *GoodUpdate) SetNillableChannelLockDeposit(d *decimal.Decimal) *GoodUpdate {
+// SetNillableUnitLockDeposit sets the "unit_lock_deposit" field if the given value is not nil.
+func (gu *GoodUpdate) SetNillableUnitLockDeposit(d *decimal.Decimal) *GoodUpdate {
 	if d != nil {
-		gu.SetChannelLockDeposit(*d)
+		gu.SetUnitLockDeposit(*d)
 	}
 	return gu
 }
 
-// ClearChannelLockDeposit clears the value of the "channel_lock_deposit" field.
-func (gu *GoodUpdate) ClearChannelLockDeposit() *GoodUpdate {
-	gu.mutation.ClearChannelLockDeposit()
+// ClearUnitLockDeposit clears the value of the "unit_lock_deposit" field.
+func (gu *GoodUpdate) ClearUnitLockDeposit() *GoodUpdate {
+	gu.mutation.ClearUnitLockDeposit()
 	return gu
 }
 
@@ -775,17 +775,17 @@ func (gu *GoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: good.FieldBenefitIntervalHours,
 		})
 	}
-	if value, ok := gu.mutation.ChannelLockDeposit(); ok {
+	if value, ok := gu.mutation.UnitLockDeposit(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: good.FieldChannelLockDeposit,
+			Column: good.FieldUnitLockDeposit,
 		})
 	}
-	if gu.mutation.ChannelLockDepositCleared() {
+	if gu.mutation.UnitLockDepositCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: good.FieldChannelLockDeposit,
+			Column: good.FieldUnitLockDeposit,
 		})
 	}
 	_spec.Modifiers = gu.modifiers
@@ -1169,23 +1169,23 @@ func (guo *GoodUpdateOne) ClearBenefitIntervalHours() *GoodUpdateOne {
 	return guo
 }
 
-// SetChannelLockDeposit sets the "channel_lock_deposit" field.
-func (guo *GoodUpdateOne) SetChannelLockDeposit(d decimal.Decimal) *GoodUpdateOne {
-	guo.mutation.SetChannelLockDeposit(d)
+// SetUnitLockDeposit sets the "unit_lock_deposit" field.
+func (guo *GoodUpdateOne) SetUnitLockDeposit(d decimal.Decimal) *GoodUpdateOne {
+	guo.mutation.SetUnitLockDeposit(d)
 	return guo
 }
 
-// SetNillableChannelLockDeposit sets the "channel_lock_deposit" field if the given value is not nil.
-func (guo *GoodUpdateOne) SetNillableChannelLockDeposit(d *decimal.Decimal) *GoodUpdateOne {
+// SetNillableUnitLockDeposit sets the "unit_lock_deposit" field if the given value is not nil.
+func (guo *GoodUpdateOne) SetNillableUnitLockDeposit(d *decimal.Decimal) *GoodUpdateOne {
 	if d != nil {
-		guo.SetChannelLockDeposit(*d)
+		guo.SetUnitLockDeposit(*d)
 	}
 	return guo
 }
 
-// ClearChannelLockDeposit clears the value of the "channel_lock_deposit" field.
-func (guo *GoodUpdateOne) ClearChannelLockDeposit() *GoodUpdateOne {
-	guo.mutation.ClearChannelLockDeposit()
+// ClearUnitLockDeposit clears the value of the "unit_lock_deposit" field.
+func (guo *GoodUpdateOne) ClearUnitLockDeposit() *GoodUpdateOne {
+	guo.mutation.ClearUnitLockDeposit()
 	return guo
 }
 
@@ -1584,17 +1584,17 @@ func (guo *GoodUpdateOne) sqlSave(ctx context.Context) (_node *Good, err error) 
 			Column: good.FieldBenefitIntervalHours,
 		})
 	}
-	if value, ok := guo.mutation.ChannelLockDeposit(); ok {
+	if value, ok := guo.mutation.UnitLockDeposit(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: good.FieldChannelLockDeposit,
+			Column: good.FieldUnitLockDeposit,
 		})
 	}
-	if guo.mutation.ChannelLockDepositCleared() {
+	if guo.mutation.UnitLockDepositCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: good.FieldChannelLockDeposit,
+			Column: good.FieldUnitLockDeposit,
 		})
 	}
 	_spec.Modifiers = guo.modifiers

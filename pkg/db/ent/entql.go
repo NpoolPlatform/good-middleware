@@ -96,16 +96,17 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppStock",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			appstock.FieldCreatedAt: {Type: field.TypeUint32, Column: appstock.FieldCreatedAt},
-			appstock.FieldUpdatedAt: {Type: field.TypeUint32, Column: appstock.FieldUpdatedAt},
-			appstock.FieldDeletedAt: {Type: field.TypeUint32, Column: appstock.FieldDeletedAt},
-			appstock.FieldAppID:     {Type: field.TypeUUID, Column: appstock.FieldAppID},
-			appstock.FieldGoodID:    {Type: field.TypeUUID, Column: appstock.FieldGoodID},
-			appstock.FieldTotal:     {Type: field.TypeOther, Column: appstock.FieldTotal},
-			appstock.FieldLocked:    {Type: field.TypeOther, Column: appstock.FieldLocked},
-			appstock.FieldInService: {Type: field.TypeOther, Column: appstock.FieldInService},
-			appstock.FieldWaitStart: {Type: field.TypeOther, Column: appstock.FieldWaitStart},
-			appstock.FieldSold:      {Type: field.TypeOther, Column: appstock.FieldSold},
+			appstock.FieldCreatedAt:    {Type: field.TypeUint32, Column: appstock.FieldCreatedAt},
+			appstock.FieldUpdatedAt:    {Type: field.TypeUint32, Column: appstock.FieldUpdatedAt},
+			appstock.FieldDeletedAt:    {Type: field.TypeUint32, Column: appstock.FieldDeletedAt},
+			appstock.FieldAppID:        {Type: field.TypeUUID, Column: appstock.FieldAppID},
+			appstock.FieldGoodID:       {Type: field.TypeUUID, Column: appstock.FieldGoodID},
+			appstock.FieldTotal:        {Type: field.TypeOther, Column: appstock.FieldTotal},
+			appstock.FieldSpotQuantity: {Type: field.TypeOther, Column: appstock.FieldSpotQuantity},
+			appstock.FieldLocked:       {Type: field.TypeOther, Column: appstock.FieldLocked},
+			appstock.FieldInService:    {Type: field.TypeOther, Column: appstock.FieldInService},
+			appstock.FieldWaitStart:    {Type: field.TypeOther, Column: appstock.FieldWaitStart},
+			appstock.FieldSold:         {Type: field.TypeOther, Column: appstock.FieldSold},
 		},
 	}
 	graph.Nodes[3] = &sqlgraph.Node{
@@ -202,7 +203,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			good.FieldStartAt:              {Type: field.TypeUint32, Column: good.FieldStartAt},
 			good.FieldTestOnly:             {Type: field.TypeBool, Column: good.FieldTestOnly},
 			good.FieldBenefitIntervalHours: {Type: field.TypeUint32, Column: good.FieldBenefitIntervalHours},
-			good.FieldChannelLockDeposit:   {Type: field.TypeOther, Column: good.FieldChannelLockDeposit},
+			good.FieldUnitLockDeposit:      {Type: field.TypeOther, Column: good.FieldUnitLockDeposit},
 		},
 	}
 	graph.Nodes[7] = &sqlgraph.Node{
@@ -323,16 +324,16 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Stock",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			stock.FieldCreatedAt:     {Type: field.TypeUint32, Column: stock.FieldCreatedAt},
-			stock.FieldUpdatedAt:     {Type: field.TypeUint32, Column: stock.FieldUpdatedAt},
-			stock.FieldDeletedAt:     {Type: field.TypeUint32, Column: stock.FieldDeletedAt},
-			stock.FieldGoodID:        {Type: field.TypeUUID, Column: stock.FieldGoodID},
-			stock.FieldTotal:         {Type: field.TypeOther, Column: stock.FieldTotal},
-			stock.FieldLocked:        {Type: field.TypeOther, Column: stock.FieldLocked},
-			stock.FieldInService:     {Type: field.TypeOther, Column: stock.FieldInService},
-			stock.FieldWaitStart:     {Type: field.TypeOther, Column: stock.FieldWaitStart},
-			stock.FieldSold:          {Type: field.TypeOther, Column: stock.FieldSold},
-			stock.FieldChannelLocked: {Type: field.TypeOther, Column: stock.FieldChannelLocked},
+			stock.FieldCreatedAt: {Type: field.TypeUint32, Column: stock.FieldCreatedAt},
+			stock.FieldUpdatedAt: {Type: field.TypeUint32, Column: stock.FieldUpdatedAt},
+			stock.FieldDeletedAt: {Type: field.TypeUint32, Column: stock.FieldDeletedAt},
+			stock.FieldGoodID:    {Type: field.TypeUUID, Column: stock.FieldGoodID},
+			stock.FieldTotal:     {Type: field.TypeOther, Column: stock.FieldTotal},
+			stock.FieldLocked:    {Type: field.TypeOther, Column: stock.FieldLocked},
+			stock.FieldInService: {Type: field.TypeOther, Column: stock.FieldInService},
+			stock.FieldWaitStart: {Type: field.TypeOther, Column: stock.FieldWaitStart},
+			stock.FieldSold:      {Type: field.TypeOther, Column: stock.FieldSold},
+			stock.FieldAppLocked: {Type: field.TypeOther, Column: stock.FieldAppLocked},
 		},
 	}
 	graph.Nodes[13] = &sqlgraph.Node{
@@ -672,6 +673,11 @@ func (f *AppStockFilter) WhereGoodID(p entql.ValueP) {
 // WhereTotal applies the entql other predicate on the total field.
 func (f *AppStockFilter) WhereTotal(p entql.OtherP) {
 	f.Where(p.Field(appstock.FieldTotal))
+}
+
+// WhereSpotQuantity applies the entql other predicate on the spot_quantity field.
+func (f *AppStockFilter) WhereSpotQuantity(p entql.OtherP) {
+	f.Where(p.Field(appstock.FieldSpotQuantity))
 }
 
 // WhereLocked applies the entql other predicate on the locked field.
@@ -1074,9 +1080,9 @@ func (f *GoodFilter) WhereBenefitIntervalHours(p entql.Uint32P) {
 	f.Where(p.Field(good.FieldBenefitIntervalHours))
 }
 
-// WhereChannelLockDeposit applies the entql other predicate on the channel_lock_deposit field.
-func (f *GoodFilter) WhereChannelLockDeposit(p entql.OtherP) {
-	f.Where(p.Field(good.FieldChannelLockDeposit))
+// WhereUnitLockDeposit applies the entql other predicate on the unit_lock_deposit field.
+func (f *GoodFilter) WhereUnitLockDeposit(p entql.OtherP) {
+	f.Where(p.Field(good.FieldUnitLockDeposit))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -1574,9 +1580,9 @@ func (f *StockFilter) WhereSold(p entql.OtherP) {
 	f.Where(p.Field(stock.FieldSold))
 }
 
-// WhereChannelLocked applies the entql other predicate on the channel_locked field.
-func (f *StockFilter) WhereChannelLocked(p entql.OtherP) {
-	f.Where(p.Field(stock.FieldChannelLocked))
+// WhereAppLocked applies the entql other predicate on the app_locked field.
+func (f *StockFilter) WhereAppLocked(p entql.OtherP) {
+	f.Where(p.Field(stock.FieldAppLocked))
 }
 
 // addPredicate implements the predicateAdder interface.

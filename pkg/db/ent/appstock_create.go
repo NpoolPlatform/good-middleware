@@ -92,6 +92,20 @@ func (asc *AppStockCreate) SetNillableTotal(d *decimal.Decimal) *AppStockCreate 
 	return asc
 }
 
+// SetSpotQuantity sets the "spot_quantity" field.
+func (asc *AppStockCreate) SetSpotQuantity(d decimal.Decimal) *AppStockCreate {
+	asc.mutation.SetSpotQuantity(d)
+	return asc
+}
+
+// SetNillableSpotQuantity sets the "spot_quantity" field if the given value is not nil.
+func (asc *AppStockCreate) SetNillableSpotQuantity(d *decimal.Decimal) *AppStockCreate {
+	if d != nil {
+		asc.SetSpotQuantity(*d)
+	}
+	return asc
+}
+
 // SetLocked sets the "locked" field.
 func (asc *AppStockCreate) SetLocked(d decimal.Decimal) *AppStockCreate {
 	asc.mutation.SetLocked(d)
@@ -266,6 +280,10 @@ func (asc *AppStockCreate) defaults() error {
 		v := appstock.DefaultTotal
 		asc.mutation.SetTotal(v)
 	}
+	if _, ok := asc.mutation.SpotQuantity(); !ok {
+		v := appstock.DefaultSpotQuantity
+		asc.mutation.SetSpotQuantity(v)
+	}
 	if _, ok := asc.mutation.Locked(); !ok {
 		v := appstock.DefaultLocked
 		asc.mutation.SetLocked(v)
@@ -393,6 +411,14 @@ func (asc *AppStockCreate) createSpec() (*AppStock, *sqlgraph.CreateSpec) {
 			Column: appstock.FieldTotal,
 		})
 		_node.Total = value
+	}
+	if value, ok := asc.mutation.SpotQuantity(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appstock.FieldSpotQuantity,
+		})
+		_node.SpotQuantity = value
 	}
 	if value, ok := asc.mutation.Locked(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -573,6 +599,24 @@ func (u *AppStockUpsert) UpdateTotal() *AppStockUpsert {
 // ClearTotal clears the value of the "total" field.
 func (u *AppStockUpsert) ClearTotal() *AppStockUpsert {
 	u.SetNull(appstock.FieldTotal)
+	return u
+}
+
+// SetSpotQuantity sets the "spot_quantity" field.
+func (u *AppStockUpsert) SetSpotQuantity(v decimal.Decimal) *AppStockUpsert {
+	u.Set(appstock.FieldSpotQuantity, v)
+	return u
+}
+
+// UpdateSpotQuantity sets the "spot_quantity" field to the value that was provided on create.
+func (u *AppStockUpsert) UpdateSpotQuantity() *AppStockUpsert {
+	u.SetExcluded(appstock.FieldSpotQuantity)
+	return u
+}
+
+// ClearSpotQuantity clears the value of the "spot_quantity" field.
+func (u *AppStockUpsert) ClearSpotQuantity() *AppStockUpsert {
+	u.SetNull(appstock.FieldSpotQuantity)
 	return u
 }
 
@@ -807,6 +851,27 @@ func (u *AppStockUpsertOne) UpdateTotal() *AppStockUpsertOne {
 func (u *AppStockUpsertOne) ClearTotal() *AppStockUpsertOne {
 	return u.Update(func(s *AppStockUpsert) {
 		s.ClearTotal()
+	})
+}
+
+// SetSpotQuantity sets the "spot_quantity" field.
+func (u *AppStockUpsertOne) SetSpotQuantity(v decimal.Decimal) *AppStockUpsertOne {
+	return u.Update(func(s *AppStockUpsert) {
+		s.SetSpotQuantity(v)
+	})
+}
+
+// UpdateSpotQuantity sets the "spot_quantity" field to the value that was provided on create.
+func (u *AppStockUpsertOne) UpdateSpotQuantity() *AppStockUpsertOne {
+	return u.Update(func(s *AppStockUpsert) {
+		s.UpdateSpotQuantity()
+	})
+}
+
+// ClearSpotQuantity clears the value of the "spot_quantity" field.
+func (u *AppStockUpsertOne) ClearSpotQuantity() *AppStockUpsertOne {
+	return u.Update(func(s *AppStockUpsert) {
+		s.ClearSpotQuantity()
 	})
 }
 
@@ -1219,6 +1284,27 @@ func (u *AppStockUpsertBulk) UpdateTotal() *AppStockUpsertBulk {
 func (u *AppStockUpsertBulk) ClearTotal() *AppStockUpsertBulk {
 	return u.Update(func(s *AppStockUpsert) {
 		s.ClearTotal()
+	})
+}
+
+// SetSpotQuantity sets the "spot_quantity" field.
+func (u *AppStockUpsertBulk) SetSpotQuantity(v decimal.Decimal) *AppStockUpsertBulk {
+	return u.Update(func(s *AppStockUpsert) {
+		s.SetSpotQuantity(v)
+	})
+}
+
+// UpdateSpotQuantity sets the "spot_quantity" field to the value that was provided on create.
+func (u *AppStockUpsertBulk) UpdateSpotQuantity() *AppStockUpsertBulk {
+	return u.Update(func(s *AppStockUpsert) {
+		s.UpdateSpotQuantity()
+	})
+}
+
+// ClearSpotQuantity clears the value of the "spot_quantity" field.
+func (u *AppStockUpsertBulk) ClearSpotQuantity() *AppStockUpsertBulk {
+	return u.Update(func(s *AppStockUpsert) {
+		s.ClearSpotQuantity()
 	})
 }
 

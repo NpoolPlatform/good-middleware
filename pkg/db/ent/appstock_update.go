@@ -117,6 +117,26 @@ func (asu *AppStockUpdate) ClearTotal() *AppStockUpdate {
 	return asu
 }
 
+// SetSpotQuantity sets the "spot_quantity" field.
+func (asu *AppStockUpdate) SetSpotQuantity(d decimal.Decimal) *AppStockUpdate {
+	asu.mutation.SetSpotQuantity(d)
+	return asu
+}
+
+// SetNillableSpotQuantity sets the "spot_quantity" field if the given value is not nil.
+func (asu *AppStockUpdate) SetNillableSpotQuantity(d *decimal.Decimal) *AppStockUpdate {
+	if d != nil {
+		asu.SetSpotQuantity(*d)
+	}
+	return asu
+}
+
+// ClearSpotQuantity clears the value of the "spot_quantity" field.
+func (asu *AppStockUpdate) ClearSpotQuantity() *AppStockUpdate {
+	asu.mutation.ClearSpotQuantity()
+	return asu
+}
+
 // SetLocked sets the "locked" field.
 func (asu *AppStockUpdate) SetLocked(d decimal.Decimal) *AppStockUpdate {
 	asu.mutation.SetLocked(d)
@@ -364,6 +384,19 @@ func (asu *AppStockUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appstock.FieldTotal,
 		})
 	}
+	if value, ok := asu.mutation.SpotQuantity(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appstock.FieldSpotQuantity,
+		})
+	}
+	if asu.mutation.SpotQuantityCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appstock.FieldSpotQuantity,
+		})
+	}
 	if value, ok := asu.mutation.Locked(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
@@ -521,6 +554,26 @@ func (asuo *AppStockUpdateOne) SetNillableTotal(d *decimal.Decimal) *AppStockUpd
 // ClearTotal clears the value of the "total" field.
 func (asuo *AppStockUpdateOne) ClearTotal() *AppStockUpdateOne {
 	asuo.mutation.ClearTotal()
+	return asuo
+}
+
+// SetSpotQuantity sets the "spot_quantity" field.
+func (asuo *AppStockUpdateOne) SetSpotQuantity(d decimal.Decimal) *AppStockUpdateOne {
+	asuo.mutation.SetSpotQuantity(d)
+	return asuo
+}
+
+// SetNillableSpotQuantity sets the "spot_quantity" field if the given value is not nil.
+func (asuo *AppStockUpdateOne) SetNillableSpotQuantity(d *decimal.Decimal) *AppStockUpdateOne {
+	if d != nil {
+		asuo.SetSpotQuantity(*d)
+	}
+	return asuo
+}
+
+// ClearSpotQuantity clears the value of the "spot_quantity" field.
+func (asuo *AppStockUpdateOne) ClearSpotQuantity() *AppStockUpdateOne {
+	asuo.mutation.ClearSpotQuantity()
 	return asuo
 }
 
@@ -799,6 +852,19 @@ func (asuo *AppStockUpdateOne) sqlSave(ctx context.Context) (_node *AppStock, er
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: appstock.FieldTotal,
+		})
+	}
+	if value, ok := asuo.mutation.SpotQuantity(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appstock.FieldSpotQuantity,
+		})
+	}
+	if asuo.mutation.SpotQuantityCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appstock.FieldSpotQuantity,
 		})
 	}
 	if value, ok := asuo.mutation.Locked(); ok {

@@ -56,8 +56,8 @@ type Good struct {
 	TestOnly bool `json:"test_only,omitempty"`
 	// BenefitIntervalHours holds the value of the "benefit_interval_hours" field.
 	BenefitIntervalHours uint32 `json:"benefit_interval_hours,omitempty"`
-	// ChannelLockDeposit holds the value of the "channel_lock_deposit" field.
-	ChannelLockDeposit decimal.Decimal `json:"channel_lock_deposit,omitempty"`
+	// UnitLockDeposit holds the value of the "unit_lock_deposit" field.
+	UnitLockDeposit decimal.Decimal `json:"unit_lock_deposit,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -67,7 +67,7 @@ func (*Good) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case good.FieldSupportCoinTypeIds:
 			values[i] = new([]byte)
-		case good.FieldPrice, good.FieldChannelLockDeposit:
+		case good.FieldPrice, good.FieldUnitLockDeposit:
 			values[i] = new(decimal.Decimal)
 		case good.FieldTestOnly:
 			values[i] = new(sql.NullBool)
@@ -214,11 +214,11 @@ func (_go *Good) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				_go.BenefitIntervalHours = uint32(value.Int64)
 			}
-		case good.FieldChannelLockDeposit:
+		case good.FieldUnitLockDeposit:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field channel_lock_deposit", values[i])
+				return fmt.Errorf("unexpected type %T for field unit_lock_deposit", values[i])
 			} else if value != nil {
-				_go.ChannelLockDeposit = *value
+				_go.UnitLockDeposit = *value
 			}
 		}
 	}
@@ -305,8 +305,8 @@ func (_go *Good) String() string {
 	builder.WriteString("benefit_interval_hours=")
 	builder.WriteString(fmt.Sprintf("%v", _go.BenefitIntervalHours))
 	builder.WriteString(", ")
-	builder.WriteString("channel_lock_deposit=")
-	builder.WriteString(fmt.Sprintf("%v", _go.ChannelLockDeposit))
+	builder.WriteString("unit_lock_deposit=")
+	builder.WriteString(fmt.Sprintf("%v", _go.UnitLockDeposit))
 	builder.WriteByte(')')
 	return builder.String()
 }

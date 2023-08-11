@@ -3133,6 +3133,7 @@ type AppStockMutation struct {
 	app_id        *uuid.UUID
 	good_id       *uuid.UUID
 	total         *decimal.Decimal
+	spot_quantity *decimal.Decimal
 	locked        *decimal.Decimal
 	in_service    *decimal.Decimal
 	wait_start    *decimal.Decimal
@@ -3536,6 +3537,55 @@ func (m *AppStockMutation) ResetTotal() {
 	delete(m.clearedFields, appstock.FieldTotal)
 }
 
+// SetSpotQuantity sets the "spot_quantity" field.
+func (m *AppStockMutation) SetSpotQuantity(d decimal.Decimal) {
+	m.spot_quantity = &d
+}
+
+// SpotQuantity returns the value of the "spot_quantity" field in the mutation.
+func (m *AppStockMutation) SpotQuantity() (r decimal.Decimal, exists bool) {
+	v := m.spot_quantity
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSpotQuantity returns the old "spot_quantity" field's value of the AppStock entity.
+// If the AppStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppStockMutation) OldSpotQuantity(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSpotQuantity is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSpotQuantity requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSpotQuantity: %w", err)
+	}
+	return oldValue.SpotQuantity, nil
+}
+
+// ClearSpotQuantity clears the value of the "spot_quantity" field.
+func (m *AppStockMutation) ClearSpotQuantity() {
+	m.spot_quantity = nil
+	m.clearedFields[appstock.FieldSpotQuantity] = struct{}{}
+}
+
+// SpotQuantityCleared returns if the "spot_quantity" field was cleared in this mutation.
+func (m *AppStockMutation) SpotQuantityCleared() bool {
+	_, ok := m.clearedFields[appstock.FieldSpotQuantity]
+	return ok
+}
+
+// ResetSpotQuantity resets all changes to the "spot_quantity" field.
+func (m *AppStockMutation) ResetSpotQuantity() {
+	m.spot_quantity = nil
+	delete(m.clearedFields, appstock.FieldSpotQuantity)
+}
+
 // SetLocked sets the "locked" field.
 func (m *AppStockMutation) SetLocked(d decimal.Decimal) {
 	m.locked = &d
@@ -3751,7 +3801,7 @@ func (m *AppStockMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppStockMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, appstock.FieldCreatedAt)
 	}
@@ -3769,6 +3819,9 @@ func (m *AppStockMutation) Fields() []string {
 	}
 	if m.total != nil {
 		fields = append(fields, appstock.FieldTotal)
+	}
+	if m.spot_quantity != nil {
+		fields = append(fields, appstock.FieldSpotQuantity)
 	}
 	if m.locked != nil {
 		fields = append(fields, appstock.FieldLocked)
@@ -3802,6 +3855,8 @@ func (m *AppStockMutation) Field(name string) (ent.Value, bool) {
 		return m.GoodID()
 	case appstock.FieldTotal:
 		return m.Total()
+	case appstock.FieldSpotQuantity:
+		return m.SpotQuantity()
 	case appstock.FieldLocked:
 		return m.Locked()
 	case appstock.FieldInService:
@@ -3831,6 +3886,8 @@ func (m *AppStockMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldGoodID(ctx)
 	case appstock.FieldTotal:
 		return m.OldTotal(ctx)
+	case appstock.FieldSpotQuantity:
+		return m.OldSpotQuantity(ctx)
 	case appstock.FieldLocked:
 		return m.OldLocked(ctx)
 	case appstock.FieldInService:
@@ -3889,6 +3946,13 @@ func (m *AppStockMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetTotal(v)
+		return nil
+	case appstock.FieldSpotQuantity:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSpotQuantity(v)
 		return nil
 	case appstock.FieldLocked:
 		v, ok := value.(decimal.Decimal)
@@ -3990,6 +4054,9 @@ func (m *AppStockMutation) ClearedFields() []string {
 	if m.FieldCleared(appstock.FieldTotal) {
 		fields = append(fields, appstock.FieldTotal)
 	}
+	if m.FieldCleared(appstock.FieldSpotQuantity) {
+		fields = append(fields, appstock.FieldSpotQuantity)
+	}
 	if m.FieldCleared(appstock.FieldLocked) {
 		fields = append(fields, appstock.FieldLocked)
 	}
@@ -4018,6 +4085,9 @@ func (m *AppStockMutation) ClearField(name string) error {
 	switch name {
 	case appstock.FieldTotal:
 		m.ClearTotal()
+		return nil
+	case appstock.FieldSpotQuantity:
+		m.ClearSpotQuantity()
 		return nil
 	case appstock.FieldLocked:
 		m.ClearLocked()
@@ -4056,6 +4126,9 @@ func (m *AppStockMutation) ResetField(name string) error {
 		return nil
 	case appstock.FieldTotal:
 		m.ResetTotal()
+		return nil
+	case appstock.FieldSpotQuantity:
+		m.ResetSpotQuantity()
 		return nil
 	case appstock.FieldLocked:
 		m.ResetLocked()
@@ -6919,7 +6992,7 @@ type GoodMutation struct {
 	test_only                 *bool
 	benefit_interval_hours    *uint32
 	addbenefit_interval_hours *int32
-	channel_lock_deposit      *decimal.Decimal
+	unit_lock_deposit         *decimal.Decimal
 	clearedFields             map[string]struct{}
 	done                      bool
 	oldValue                  func(context.Context) (*Good, error)
@@ -8048,53 +8121,53 @@ func (m *GoodMutation) ResetBenefitIntervalHours() {
 	delete(m.clearedFields, good.FieldBenefitIntervalHours)
 }
 
-// SetChannelLockDeposit sets the "channel_lock_deposit" field.
-func (m *GoodMutation) SetChannelLockDeposit(d decimal.Decimal) {
-	m.channel_lock_deposit = &d
+// SetUnitLockDeposit sets the "unit_lock_deposit" field.
+func (m *GoodMutation) SetUnitLockDeposit(d decimal.Decimal) {
+	m.unit_lock_deposit = &d
 }
 
-// ChannelLockDeposit returns the value of the "channel_lock_deposit" field in the mutation.
-func (m *GoodMutation) ChannelLockDeposit() (r decimal.Decimal, exists bool) {
-	v := m.channel_lock_deposit
+// UnitLockDeposit returns the value of the "unit_lock_deposit" field in the mutation.
+func (m *GoodMutation) UnitLockDeposit() (r decimal.Decimal, exists bool) {
+	v := m.unit_lock_deposit
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldChannelLockDeposit returns the old "channel_lock_deposit" field's value of the Good entity.
+// OldUnitLockDeposit returns the old "unit_lock_deposit" field's value of the Good entity.
 // If the Good object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodMutation) OldChannelLockDeposit(ctx context.Context) (v decimal.Decimal, err error) {
+func (m *GoodMutation) OldUnitLockDeposit(ctx context.Context) (v decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldChannelLockDeposit is only allowed on UpdateOne operations")
+		return v, errors.New("OldUnitLockDeposit is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldChannelLockDeposit requires an ID field in the mutation")
+		return v, errors.New("OldUnitLockDeposit requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldChannelLockDeposit: %w", err)
+		return v, fmt.Errorf("querying old value for OldUnitLockDeposit: %w", err)
 	}
-	return oldValue.ChannelLockDeposit, nil
+	return oldValue.UnitLockDeposit, nil
 }
 
-// ClearChannelLockDeposit clears the value of the "channel_lock_deposit" field.
-func (m *GoodMutation) ClearChannelLockDeposit() {
-	m.channel_lock_deposit = nil
-	m.clearedFields[good.FieldChannelLockDeposit] = struct{}{}
+// ClearUnitLockDeposit clears the value of the "unit_lock_deposit" field.
+func (m *GoodMutation) ClearUnitLockDeposit() {
+	m.unit_lock_deposit = nil
+	m.clearedFields[good.FieldUnitLockDeposit] = struct{}{}
 }
 
-// ChannelLockDepositCleared returns if the "channel_lock_deposit" field was cleared in this mutation.
-func (m *GoodMutation) ChannelLockDepositCleared() bool {
-	_, ok := m.clearedFields[good.FieldChannelLockDeposit]
+// UnitLockDepositCleared returns if the "unit_lock_deposit" field was cleared in this mutation.
+func (m *GoodMutation) UnitLockDepositCleared() bool {
+	_, ok := m.clearedFields[good.FieldUnitLockDeposit]
 	return ok
 }
 
-// ResetChannelLockDeposit resets all changes to the "channel_lock_deposit" field.
-func (m *GoodMutation) ResetChannelLockDeposit() {
-	m.channel_lock_deposit = nil
-	delete(m.clearedFields, good.FieldChannelLockDeposit)
+// ResetUnitLockDeposit resets all changes to the "unit_lock_deposit" field.
+func (m *GoodMutation) ResetUnitLockDeposit() {
+	m.unit_lock_deposit = nil
+	delete(m.clearedFields, good.FieldUnitLockDeposit)
 }
 
 // Where appends a list predicates to the GoodMutation builder.
@@ -8174,8 +8247,8 @@ func (m *GoodMutation) Fields() []string {
 	if m.benefit_interval_hours != nil {
 		fields = append(fields, good.FieldBenefitIntervalHours)
 	}
-	if m.channel_lock_deposit != nil {
-		fields = append(fields, good.FieldChannelLockDeposit)
+	if m.unit_lock_deposit != nil {
+		fields = append(fields, good.FieldUnitLockDeposit)
 	}
 	return fields
 }
@@ -8223,8 +8296,8 @@ func (m *GoodMutation) Field(name string) (ent.Value, bool) {
 		return m.TestOnly()
 	case good.FieldBenefitIntervalHours:
 		return m.BenefitIntervalHours()
-	case good.FieldChannelLockDeposit:
-		return m.ChannelLockDeposit()
+	case good.FieldUnitLockDeposit:
+		return m.UnitLockDeposit()
 	}
 	return nil, false
 }
@@ -8272,8 +8345,8 @@ func (m *GoodMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldTestOnly(ctx)
 	case good.FieldBenefitIntervalHours:
 		return m.OldBenefitIntervalHours(ctx)
-	case good.FieldChannelLockDeposit:
-		return m.OldChannelLockDeposit(ctx)
+	case good.FieldUnitLockDeposit:
+		return m.OldUnitLockDeposit(ctx)
 	}
 	return nil, fmt.Errorf("unknown Good field %s", name)
 }
@@ -8416,12 +8489,12 @@ func (m *GoodMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetBenefitIntervalHours(v)
 		return nil
-	case good.FieldChannelLockDeposit:
+	case good.FieldUnitLockDeposit:
 		v, ok := value.(decimal.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetChannelLockDeposit(v)
+		m.SetUnitLockDeposit(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Good field %s", name)
@@ -8591,8 +8664,8 @@ func (m *GoodMutation) ClearedFields() []string {
 	if m.FieldCleared(good.FieldBenefitIntervalHours) {
 		fields = append(fields, good.FieldBenefitIntervalHours)
 	}
-	if m.FieldCleared(good.FieldChannelLockDeposit) {
-		fields = append(fields, good.FieldChannelLockDeposit)
+	if m.FieldCleared(good.FieldUnitLockDeposit) {
+		fields = append(fields, good.FieldUnitLockDeposit)
 	}
 	return fields
 }
@@ -8647,8 +8720,8 @@ func (m *GoodMutation) ClearField(name string) error {
 	case good.FieldBenefitIntervalHours:
 		m.ClearBenefitIntervalHours()
 		return nil
-	case good.FieldChannelLockDeposit:
-		m.ClearChannelLockDeposit()
+	case good.FieldUnitLockDeposit:
+		m.ClearUnitLockDeposit()
 		return nil
 	}
 	return fmt.Errorf("unknown Good nullable field %s", name)
@@ -8715,8 +8788,8 @@ func (m *GoodMutation) ResetField(name string) error {
 	case good.FieldBenefitIntervalHours:
 		m.ResetBenefitIntervalHours()
 		return nil
-	case good.FieldChannelLockDeposit:
-		m.ResetChannelLockDeposit()
+	case good.FieldUnitLockDeposit:
+		m.ResetUnitLockDeposit()
 		return nil
 	}
 	return fmt.Errorf("unknown Good field %s", name)
@@ -13393,26 +13466,26 @@ func (m *RequiredGoodMutation) ResetEdge(name string) error {
 // StockMutation represents an operation that mutates the Stock nodes in the graph.
 type StockMutation struct {
 	config
-	op             Op
-	typ            string
-	id             *uuid.UUID
-	created_at     *uint32
-	addcreated_at  *int32
-	updated_at     *uint32
-	addupdated_at  *int32
-	deleted_at     *uint32
-	adddeleted_at  *int32
-	good_id        *uuid.UUID
-	total          *decimal.Decimal
-	locked         *decimal.Decimal
-	in_service     *decimal.Decimal
-	wait_start     *decimal.Decimal
-	sold           *decimal.Decimal
-	channel_locked *decimal.Decimal
-	clearedFields  map[string]struct{}
-	done           bool
-	oldValue       func(context.Context) (*Stock, error)
-	predicates     []predicate.Stock
+	op            Op
+	typ           string
+	id            *uuid.UUID
+	created_at    *uint32
+	addcreated_at *int32
+	updated_at    *uint32
+	addupdated_at *int32
+	deleted_at    *uint32
+	adddeleted_at *int32
+	good_id       *uuid.UUID
+	total         *decimal.Decimal
+	locked        *decimal.Decimal
+	in_service    *decimal.Decimal
+	wait_start    *decimal.Decimal
+	sold          *decimal.Decimal
+	app_locked    *decimal.Decimal
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Stock, error)
+	predicates    []predicate.Stock
 }
 
 var _ ent.Mutation = (*StockMutation)(nil)
@@ -13968,53 +14041,53 @@ func (m *StockMutation) ResetSold() {
 	delete(m.clearedFields, stock.FieldSold)
 }
 
-// SetChannelLocked sets the "channel_locked" field.
-func (m *StockMutation) SetChannelLocked(d decimal.Decimal) {
-	m.channel_locked = &d
+// SetAppLocked sets the "app_locked" field.
+func (m *StockMutation) SetAppLocked(d decimal.Decimal) {
+	m.app_locked = &d
 }
 
-// ChannelLocked returns the value of the "channel_locked" field in the mutation.
-func (m *StockMutation) ChannelLocked() (r decimal.Decimal, exists bool) {
-	v := m.channel_locked
+// AppLocked returns the value of the "app_locked" field in the mutation.
+func (m *StockMutation) AppLocked() (r decimal.Decimal, exists bool) {
+	v := m.app_locked
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldChannelLocked returns the old "channel_locked" field's value of the Stock entity.
+// OldAppLocked returns the old "app_locked" field's value of the Stock entity.
 // If the Stock object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StockMutation) OldChannelLocked(ctx context.Context) (v decimal.Decimal, err error) {
+func (m *StockMutation) OldAppLocked(ctx context.Context) (v decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldChannelLocked is only allowed on UpdateOne operations")
+		return v, errors.New("OldAppLocked is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldChannelLocked requires an ID field in the mutation")
+		return v, errors.New("OldAppLocked requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldChannelLocked: %w", err)
+		return v, fmt.Errorf("querying old value for OldAppLocked: %w", err)
 	}
-	return oldValue.ChannelLocked, nil
+	return oldValue.AppLocked, nil
 }
 
-// ClearChannelLocked clears the value of the "channel_locked" field.
-func (m *StockMutation) ClearChannelLocked() {
-	m.channel_locked = nil
-	m.clearedFields[stock.FieldChannelLocked] = struct{}{}
+// ClearAppLocked clears the value of the "app_locked" field.
+func (m *StockMutation) ClearAppLocked() {
+	m.app_locked = nil
+	m.clearedFields[stock.FieldAppLocked] = struct{}{}
 }
 
-// ChannelLockedCleared returns if the "channel_locked" field was cleared in this mutation.
-func (m *StockMutation) ChannelLockedCleared() bool {
-	_, ok := m.clearedFields[stock.FieldChannelLocked]
+// AppLockedCleared returns if the "app_locked" field was cleared in this mutation.
+func (m *StockMutation) AppLockedCleared() bool {
+	_, ok := m.clearedFields[stock.FieldAppLocked]
 	return ok
 }
 
-// ResetChannelLocked resets all changes to the "channel_locked" field.
-func (m *StockMutation) ResetChannelLocked() {
-	m.channel_locked = nil
-	delete(m.clearedFields, stock.FieldChannelLocked)
+// ResetAppLocked resets all changes to the "app_locked" field.
+func (m *StockMutation) ResetAppLocked() {
+	m.app_locked = nil
+	delete(m.clearedFields, stock.FieldAppLocked)
 }
 
 // Where appends a list predicates to the StockMutation builder.
@@ -14064,8 +14137,8 @@ func (m *StockMutation) Fields() []string {
 	if m.sold != nil {
 		fields = append(fields, stock.FieldSold)
 	}
-	if m.channel_locked != nil {
-		fields = append(fields, stock.FieldChannelLocked)
+	if m.app_locked != nil {
+		fields = append(fields, stock.FieldAppLocked)
 	}
 	return fields
 }
@@ -14093,8 +14166,8 @@ func (m *StockMutation) Field(name string) (ent.Value, bool) {
 		return m.WaitStart()
 	case stock.FieldSold:
 		return m.Sold()
-	case stock.FieldChannelLocked:
-		return m.ChannelLocked()
+	case stock.FieldAppLocked:
+		return m.AppLocked()
 	}
 	return nil, false
 }
@@ -14122,8 +14195,8 @@ func (m *StockMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldWaitStart(ctx)
 	case stock.FieldSold:
 		return m.OldSold(ctx)
-	case stock.FieldChannelLocked:
-		return m.OldChannelLocked(ctx)
+	case stock.FieldAppLocked:
+		return m.OldAppLocked(ctx)
 	}
 	return nil, fmt.Errorf("unknown Stock field %s", name)
 }
@@ -14196,12 +14269,12 @@ func (m *StockMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetSold(v)
 		return nil
-	case stock.FieldChannelLocked:
+	case stock.FieldAppLocked:
 		v, ok := value.(decimal.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetChannelLocked(v)
+		m.SetAppLocked(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Stock field %s", name)
@@ -14287,8 +14360,8 @@ func (m *StockMutation) ClearedFields() []string {
 	if m.FieldCleared(stock.FieldSold) {
 		fields = append(fields, stock.FieldSold)
 	}
-	if m.FieldCleared(stock.FieldChannelLocked) {
-		fields = append(fields, stock.FieldChannelLocked)
+	if m.FieldCleared(stock.FieldAppLocked) {
+		fields = append(fields, stock.FieldAppLocked)
 	}
 	return fields
 }
@@ -14319,8 +14392,8 @@ func (m *StockMutation) ClearField(name string) error {
 	case stock.FieldSold:
 		m.ClearSold()
 		return nil
-	case stock.FieldChannelLocked:
-		m.ClearChannelLocked()
+	case stock.FieldAppLocked:
+		m.ClearAppLocked()
 		return nil
 	}
 	return fmt.Errorf("unknown Stock nullable field %s", name)
@@ -14357,8 +14430,8 @@ func (m *StockMutation) ResetField(name string) error {
 	case stock.FieldSold:
 		m.ResetSold()
 		return nil
-	case stock.FieldChannelLocked:
-		m.ResetChannelLocked()
+	case stock.FieldAppLocked:
+		m.ResetAppLocked()
 		return nil
 	}
 	return fmt.Errorf("unknown Stock field %s", name)

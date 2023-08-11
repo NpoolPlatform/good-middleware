@@ -206,10 +206,10 @@ func BenefitIntervalHours(v uint32) predicate.Good {
 	})
 }
 
-// ChannelLockDeposit applies equality check predicate on the "channel_lock_deposit" field. It's identical to ChannelLockDepositEQ.
-func ChannelLockDeposit(v decimal.Decimal) predicate.Good {
+// UnitLockDeposit applies equality check predicate on the "unit_lock_deposit" field. It's identical to UnitLockDepositEQ.
+func UnitLockDeposit(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldChannelLockDeposit), v))
+		s.Where(sql.EQ(s.C(FieldUnitLockDeposit), v))
 	})
 }
 
@@ -1637,81 +1637,81 @@ func BenefitIntervalHoursNotNil() predicate.Good {
 	})
 }
 
-// ChannelLockDepositEQ applies the EQ predicate on the "channel_lock_deposit" field.
-func ChannelLockDepositEQ(v decimal.Decimal) predicate.Good {
+// UnitLockDepositEQ applies the EQ predicate on the "unit_lock_deposit" field.
+func UnitLockDepositEQ(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldChannelLockDeposit), v))
+		s.Where(sql.EQ(s.C(FieldUnitLockDeposit), v))
 	})
 }
 
-// ChannelLockDepositNEQ applies the NEQ predicate on the "channel_lock_deposit" field.
-func ChannelLockDepositNEQ(v decimal.Decimal) predicate.Good {
+// UnitLockDepositNEQ applies the NEQ predicate on the "unit_lock_deposit" field.
+func UnitLockDepositNEQ(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldChannelLockDeposit), v))
+		s.Where(sql.NEQ(s.C(FieldUnitLockDeposit), v))
 	})
 }
 
-// ChannelLockDepositIn applies the In predicate on the "channel_lock_deposit" field.
-func ChannelLockDepositIn(vs ...decimal.Decimal) predicate.Good {
+// UnitLockDepositIn applies the In predicate on the "unit_lock_deposit" field.
+func UnitLockDepositIn(vs ...decimal.Decimal) predicate.Good {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldChannelLockDeposit), v...))
+		s.Where(sql.In(s.C(FieldUnitLockDeposit), v...))
 	})
 }
 
-// ChannelLockDepositNotIn applies the NotIn predicate on the "channel_lock_deposit" field.
-func ChannelLockDepositNotIn(vs ...decimal.Decimal) predicate.Good {
+// UnitLockDepositNotIn applies the NotIn predicate on the "unit_lock_deposit" field.
+func UnitLockDepositNotIn(vs ...decimal.Decimal) predicate.Good {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldChannelLockDeposit), v...))
+		s.Where(sql.NotIn(s.C(FieldUnitLockDeposit), v...))
 	})
 }
 
-// ChannelLockDepositGT applies the GT predicate on the "channel_lock_deposit" field.
-func ChannelLockDepositGT(v decimal.Decimal) predicate.Good {
+// UnitLockDepositGT applies the GT predicate on the "unit_lock_deposit" field.
+func UnitLockDepositGT(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldChannelLockDeposit), v))
+		s.Where(sql.GT(s.C(FieldUnitLockDeposit), v))
 	})
 }
 
-// ChannelLockDepositGTE applies the GTE predicate on the "channel_lock_deposit" field.
-func ChannelLockDepositGTE(v decimal.Decimal) predicate.Good {
+// UnitLockDepositGTE applies the GTE predicate on the "unit_lock_deposit" field.
+func UnitLockDepositGTE(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldChannelLockDeposit), v))
+		s.Where(sql.GTE(s.C(FieldUnitLockDeposit), v))
 	})
 }
 
-// ChannelLockDepositLT applies the LT predicate on the "channel_lock_deposit" field.
-func ChannelLockDepositLT(v decimal.Decimal) predicate.Good {
+// UnitLockDepositLT applies the LT predicate on the "unit_lock_deposit" field.
+func UnitLockDepositLT(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldChannelLockDeposit), v))
+		s.Where(sql.LT(s.C(FieldUnitLockDeposit), v))
 	})
 }
 
-// ChannelLockDepositLTE applies the LTE predicate on the "channel_lock_deposit" field.
-func ChannelLockDepositLTE(v decimal.Decimal) predicate.Good {
+// UnitLockDepositLTE applies the LTE predicate on the "unit_lock_deposit" field.
+func UnitLockDepositLTE(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldChannelLockDeposit), v))
+		s.Where(sql.LTE(s.C(FieldUnitLockDeposit), v))
 	})
 }
 
-// ChannelLockDepositIsNil applies the IsNil predicate on the "channel_lock_deposit" field.
-func ChannelLockDepositIsNil() predicate.Good {
+// UnitLockDepositIsNil applies the IsNil predicate on the "unit_lock_deposit" field.
+func UnitLockDepositIsNil() predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldChannelLockDeposit)))
+		s.Where(sql.IsNull(s.C(FieldUnitLockDeposit)))
 	})
 }
 
-// ChannelLockDepositNotNil applies the NotNil predicate on the "channel_lock_deposit" field.
-func ChannelLockDepositNotNil() predicate.Good {
+// UnitLockDepositNotNil applies the NotNil predicate on the "unit_lock_deposit" field.
+func UnitLockDepositNotNil() predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldChannelLockDeposit)))
+		s.Where(sql.NotNull(s.C(FieldUnitLockDeposit)))
 	})
 }
 

@@ -143,10 +143,10 @@ func Sold(v decimal.Decimal) predicate.Stock {
 	})
 }
 
-// ChannelLocked applies equality check predicate on the "channel_locked" field. It's identical to ChannelLockedEQ.
-func ChannelLocked(v decimal.Decimal) predicate.Stock {
+// AppLocked applies equality check predicate on the "app_locked" field. It's identical to AppLockedEQ.
+func AppLocked(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldChannelLocked), v))
+		s.Where(sql.EQ(s.C(FieldAppLocked), v))
 	})
 }
 
@@ -796,81 +796,81 @@ func SoldNotNil() predicate.Stock {
 	})
 }
 
-// ChannelLockedEQ applies the EQ predicate on the "channel_locked" field.
-func ChannelLockedEQ(v decimal.Decimal) predicate.Stock {
+// AppLockedEQ applies the EQ predicate on the "app_locked" field.
+func AppLockedEQ(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldChannelLocked), v))
+		s.Where(sql.EQ(s.C(FieldAppLocked), v))
 	})
 }
 
-// ChannelLockedNEQ applies the NEQ predicate on the "channel_locked" field.
-func ChannelLockedNEQ(v decimal.Decimal) predicate.Stock {
+// AppLockedNEQ applies the NEQ predicate on the "app_locked" field.
+func AppLockedNEQ(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldChannelLocked), v))
+		s.Where(sql.NEQ(s.C(FieldAppLocked), v))
 	})
 }
 
-// ChannelLockedIn applies the In predicate on the "channel_locked" field.
-func ChannelLockedIn(vs ...decimal.Decimal) predicate.Stock {
+// AppLockedIn applies the In predicate on the "app_locked" field.
+func AppLockedIn(vs ...decimal.Decimal) predicate.Stock {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldChannelLocked), v...))
+		s.Where(sql.In(s.C(FieldAppLocked), v...))
 	})
 }
 
-// ChannelLockedNotIn applies the NotIn predicate on the "channel_locked" field.
-func ChannelLockedNotIn(vs ...decimal.Decimal) predicate.Stock {
+// AppLockedNotIn applies the NotIn predicate on the "app_locked" field.
+func AppLockedNotIn(vs ...decimal.Decimal) predicate.Stock {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldChannelLocked), v...))
+		s.Where(sql.NotIn(s.C(FieldAppLocked), v...))
 	})
 }
 
-// ChannelLockedGT applies the GT predicate on the "channel_locked" field.
-func ChannelLockedGT(v decimal.Decimal) predicate.Stock {
+// AppLockedGT applies the GT predicate on the "app_locked" field.
+func AppLockedGT(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldChannelLocked), v))
+		s.Where(sql.GT(s.C(FieldAppLocked), v))
 	})
 }
 
-// ChannelLockedGTE applies the GTE predicate on the "channel_locked" field.
-func ChannelLockedGTE(v decimal.Decimal) predicate.Stock {
+// AppLockedGTE applies the GTE predicate on the "app_locked" field.
+func AppLockedGTE(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldChannelLocked), v))
+		s.Where(sql.GTE(s.C(FieldAppLocked), v))
 	})
 }
 
-// ChannelLockedLT applies the LT predicate on the "channel_locked" field.
-func ChannelLockedLT(v decimal.Decimal) predicate.Stock {
+// AppLockedLT applies the LT predicate on the "app_locked" field.
+func AppLockedLT(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldChannelLocked), v))
+		s.Where(sql.LT(s.C(FieldAppLocked), v))
 	})
 }
 
-// ChannelLockedLTE applies the LTE predicate on the "channel_locked" field.
-func ChannelLockedLTE(v decimal.Decimal) predicate.Stock {
+// AppLockedLTE applies the LTE predicate on the "app_locked" field.
+func AppLockedLTE(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldChannelLocked), v))
+		s.Where(sql.LTE(s.C(FieldAppLocked), v))
 	})
 }
 
-// ChannelLockedIsNil applies the IsNil predicate on the "channel_locked" field.
-func ChannelLockedIsNil() predicate.Stock {
+// AppLockedIsNil applies the IsNil predicate on the "app_locked" field.
+func AppLockedIsNil() predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldChannelLocked)))
+		s.Where(sql.IsNull(s.C(FieldAppLocked)))
 	})
 }
 
-// ChannelLockedNotNil applies the NotNil predicate on the "channel_locked" field.
-func ChannelLockedNotNil() predicate.Stock {
+// AppLockedNotNil applies the NotNil predicate on the "app_locked" field.
+func AppLockedNotNil() predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldChannelLocked)))
+		s.Where(sql.NotNull(s.C(FieldAppLocked)))
 	})
 }
 

@@ -51,8 +51,8 @@ const (
 	FieldTestOnly = "test_only"
 	// FieldBenefitIntervalHours holds the string denoting the benefit_interval_hours field in the database.
 	FieldBenefitIntervalHours = "benefit_interval_hours"
-	// FieldChannelLockDeposit holds the string denoting the channel_lock_deposit field in the database.
-	FieldChannelLockDeposit = "channel_lock_deposit"
+	// FieldUnitLockDeposit holds the string denoting the unit_lock_deposit field in the database.
+	FieldUnitLockDeposit = "unit_lock_deposit"
 	// Table holds the table name of the good in the database.
 	Table = "goods"
 )
@@ -79,7 +79,7 @@ var Columns = []string{
 	FieldStartAt,
 	FieldTestOnly,
 	FieldBenefitIntervalHours,
-	FieldChannelLockDeposit,
+	FieldUnitLockDeposit,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -135,8 +135,8 @@ var (
 	DefaultTestOnly bool
 	// DefaultBenefitIntervalHours holds the default value on creation for the "benefit_interval_hours" field.
 	DefaultBenefitIntervalHours uint32
-	// DefaultChannelLockDeposit holds the default value on creation for the "channel_lock_deposit" field.
-	DefaultChannelLockDeposit decimal.Decimal
+	// DefaultUnitLockDeposit holds the default value on creation for the "unit_lock_deposit" field.
+	DefaultUnitLockDeposit decimal.Decimal
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

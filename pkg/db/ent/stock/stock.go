@@ -31,8 +31,8 @@ const (
 	FieldWaitStart = "wait_start"
 	// FieldSold holds the string denoting the sold field in the database.
 	FieldSold = "sold"
-	// FieldChannelLocked holds the string denoting the channel_locked field in the database.
-	FieldChannelLocked = "channel_locked"
+	// FieldAppLocked holds the string denoting the app_locked field in the database.
+	FieldAppLocked = "app_locked"
 	// Table holds the table name of the stock in the database.
 	Table = "stocks_v1"
 )
@@ -49,7 +49,7 @@ var Columns = []string{
 	FieldInService,
 	FieldWaitStart,
 	FieldSold,
-	FieldChannelLocked,
+	FieldAppLocked,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -89,8 +89,8 @@ var (
 	DefaultWaitStart decimal.Decimal
 	// DefaultSold holds the default value on creation for the "sold" field.
 	DefaultSold decimal.Decimal
-	// DefaultChannelLocked holds the default value on creation for the "channel_locked" field.
-	DefaultChannelLocked decimal.Decimal
+	// DefaultAppLocked holds the default value on creation for the "app_locked" field.
+	DefaultAppLocked decimal.Decimal
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

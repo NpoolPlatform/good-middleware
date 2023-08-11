@@ -191,23 +191,23 @@ func (su *StockUpdate) ClearSold() *StockUpdate {
 	return su
 }
 
-// SetChannelLocked sets the "channel_locked" field.
-func (su *StockUpdate) SetChannelLocked(d decimal.Decimal) *StockUpdate {
-	su.mutation.SetChannelLocked(d)
+// SetAppLocked sets the "app_locked" field.
+func (su *StockUpdate) SetAppLocked(d decimal.Decimal) *StockUpdate {
+	su.mutation.SetAppLocked(d)
 	return su
 }
 
-// SetNillableChannelLocked sets the "channel_locked" field if the given value is not nil.
-func (su *StockUpdate) SetNillableChannelLocked(d *decimal.Decimal) *StockUpdate {
+// SetNillableAppLocked sets the "app_locked" field if the given value is not nil.
+func (su *StockUpdate) SetNillableAppLocked(d *decimal.Decimal) *StockUpdate {
 	if d != nil {
-		su.SetChannelLocked(*d)
+		su.SetAppLocked(*d)
 	}
 	return su
 }
 
-// ClearChannelLocked clears the value of the "channel_locked" field.
-func (su *StockUpdate) ClearChannelLocked() *StockUpdate {
-	su.mutation.ClearChannelLocked()
+// ClearAppLocked clears the value of the "app_locked" field.
+func (su *StockUpdate) ClearAppLocked() *StockUpdate {
+	su.mutation.ClearAppLocked()
 	return su
 }
 
@@ -423,17 +423,17 @@ func (su *StockUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: stock.FieldSold,
 		})
 	}
-	if value, ok := su.mutation.ChannelLocked(); ok {
+	if value, ok := su.mutation.AppLocked(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: stock.FieldChannelLocked,
+			Column: stock.FieldAppLocked,
 		})
 	}
-	if su.mutation.ChannelLockedCleared() {
+	if su.mutation.AppLockedCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: stock.FieldChannelLocked,
+			Column: stock.FieldAppLocked,
 		})
 	}
 	_spec.Modifiers = su.modifiers
@@ -618,23 +618,23 @@ func (suo *StockUpdateOne) ClearSold() *StockUpdateOne {
 	return suo
 }
 
-// SetChannelLocked sets the "channel_locked" field.
-func (suo *StockUpdateOne) SetChannelLocked(d decimal.Decimal) *StockUpdateOne {
-	suo.mutation.SetChannelLocked(d)
+// SetAppLocked sets the "app_locked" field.
+func (suo *StockUpdateOne) SetAppLocked(d decimal.Decimal) *StockUpdateOne {
+	suo.mutation.SetAppLocked(d)
 	return suo
 }
 
-// SetNillableChannelLocked sets the "channel_locked" field if the given value is not nil.
-func (suo *StockUpdateOne) SetNillableChannelLocked(d *decimal.Decimal) *StockUpdateOne {
+// SetNillableAppLocked sets the "app_locked" field if the given value is not nil.
+func (suo *StockUpdateOne) SetNillableAppLocked(d *decimal.Decimal) *StockUpdateOne {
 	if d != nil {
-		suo.SetChannelLocked(*d)
+		suo.SetAppLocked(*d)
 	}
 	return suo
 }
 
-// ClearChannelLocked clears the value of the "channel_locked" field.
-func (suo *StockUpdateOne) ClearChannelLocked() *StockUpdateOne {
-	suo.mutation.ClearChannelLocked()
+// ClearAppLocked clears the value of the "app_locked" field.
+func (suo *StockUpdateOne) ClearAppLocked() *StockUpdateOne {
+	suo.mutation.ClearAppLocked()
 	return suo
 }
 
@@ -880,17 +880,17 @@ func (suo *StockUpdateOne) sqlSave(ctx context.Context) (_node *Stock, err error
 			Column: stock.FieldSold,
 		})
 	}
-	if value, ok := suo.mutation.ChannelLocked(); ok {
+	if value, ok := suo.mutation.AppLocked(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: stock.FieldChannelLocked,
+			Column: stock.FieldAppLocked,
 		})
 	}
-	if suo.mutation.ChannelLockedCleared() {
+	if suo.mutation.AppLockedCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: stock.FieldChannelLocked,
+			Column: stock.FieldAppLocked,
 		})
 	}
 	_spec.Modifiers = suo.modifiers
