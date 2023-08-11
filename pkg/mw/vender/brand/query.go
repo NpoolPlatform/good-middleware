@@ -1,4 +1,4 @@
-package location
+package brand
 
 import (
 	"context"
@@ -7,37 +7,34 @@ import (
 	// deviceinfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/deviceinfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"
+	entbrand "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/brand"
 )
 
 type queryHandler struct {
 	*Handler
-	stmSelect *ent.VendorLocationSelect
-	infos     []*npool.Location
+	stmSelect *ent.VendorBrandSelect
+	infos     []*npool.Brand
 	total     uint32
 }
 
-func (h *queryHandler) selectVendorLocation(stm *ent.VendorLocationQuery) {
+func (h *queryHandler) selectVendorBrand(stm *ent.VendorBrandQuery) {
 	h.stmSelect = stm.Select(
-		entlocation.FieldID,
-		entlocation.FieldCountry,
-		entlocation.FieldProvince,
-		entlocation.FieldCity,
-		entlocation.FieldAddress,
-		entlocation.FieldBrandID,
-		entlocation.FieldCreatedAt,
-		entlocation.FieldUpdatedAt,
+		entbrand.FieldID,
+		entbrand.FieldName,
+		entbrand.FieldLogo,
+		entbrand.FieldCreatedAt,
+		entbrand.FieldUpdatedAt,
 	)
 }
 
-func (h *queryHandler) queryVendorLocation(cli *ent.Client) {
-	h.selectVendorLocation(
-		cli.VendorLocation.
+func (h *queryHandler) queryVendorBrand(cli *ent.Client) {
+	h.selectVendorBrand(
+		cli.VendorBrand.
 			Query().
 			Where(
-				entlocation.ID(*h.ID),
-				entlocation.DeletedAt(0),
+				entbrand.ID(*h.ID),
+				entbrand.DeletedAt(0),
 			),
 	)
 }
@@ -46,7 +43,7 @@ func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
 }
 
-func (h *Handler) GetLocation(ctx context.Context) (*npool.Location, error) {
+func (h *Handler) GetBrand(ctx context.Context) (*npool.Brand, error) {
 	if h.ID == nil {
 		return nil, fmt.Errorf("invalid id")
 	}
@@ -56,7 +53,7 @@ func (h *Handler) GetLocation(ctx context.Context) (*npool.Location, error) {
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.queryVendorLocation(cli)
+		handler.queryVendorBrand(cli)
 		return handler.scan(_ctx)
 	})
 	if err != nil {

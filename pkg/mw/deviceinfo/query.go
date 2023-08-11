@@ -26,6 +26,8 @@ func (h *queryHandler) selectDeviceInfo(stm *ent.DeviceInfoQuery) {
 		entdeviceinfo.FieldPowerComsuption,
 		entdeviceinfo.FieldShipmentAt,
 		entdeviceinfo.FieldPosters,
+		entdeviceinfo.FieldCreatedAt,
+		entdeviceinfo.FieldUpdatedAt,
 	)
 }
 
