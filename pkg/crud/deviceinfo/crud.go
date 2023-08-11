@@ -3,8 +3,8 @@ package deviceinfo
 import (
 	"fmt"
 
-	"github.com/NpoolPlatform/good-manager/pkg/db/ent"
-	entdeviceinfo "github.com/NpoolPlatform/good-manager/pkg/db/ent/deviceinfo"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entdeviceinfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	"github.com/google/uuid"
@@ -17,6 +17,7 @@ type Req struct {
 	PowerComsuption *uint32
 	ShipmentAt      *uint32
 	Posters         []string
+	DeletedAt       *uint32
 }
 
 func CreateSet(c *ent.DeviceInfoCreate, req *Req) *ent.DeviceInfoCreate {
@@ -45,6 +46,9 @@ func UpdateSet(u *ent.DeviceInfoUpdateOne, req *Req) *ent.DeviceInfoUpdateOne {
 	if len(req.Posters) > 0 {
 		u.SetPosters(req.Posters)
 	}
+	if req.DeletedAt != nil {
+		u.SetDeletedAt(*req.DeletedAt)
+	}
 	return u
 }
 
@@ -67,6 +71,8 @@ func SetQueryConds(q *ent.DeviceInfoQuery, conds *Conds) (*ent.DeviceInfoQuery, 
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entdeviceinfo.ID(id))
+		case cruder.NEQ:
+			q.Where(entdeviceinfo.IDNEQ(id))
 		default:
 			return nil, fmt.Errorf("invalid deviceinfo field")
 		}
