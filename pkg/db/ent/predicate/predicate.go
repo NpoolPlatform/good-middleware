@@ -33,6 +33,9 @@ type GoodReward func(*sql.Selector)
 // GoodRewardHistory is the predicate function for goodrewardhistory builders.
 type GoodRewardHistory func(*sql.Selector)
 
+// Like is the predicate function for like builders.
+type Like func(*sql.Selector)
+
 // Promotion is the predicate function for promotion builders.
 type Promotion func(*sql.Selector)
 
@@ -41,6 +44,9 @@ type Recommend func(*sql.Selector)
 
 // RequiredGood is the predicate function for requiredgood builders.
 type RequiredGood func(*sql.Selector)
+
+// Score is the predicate function for score builders.
+type Score func(*sql.Selector)
 
 // Stock is the predicate function for stock builders.
 type Stock func(*sql.Selector)

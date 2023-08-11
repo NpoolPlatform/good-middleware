@@ -108,10 +108,17 @@ func GoodID(v uuid.UUID) predicate.ExtraInfo {
 	})
 }
 
-// VoteCount applies equality check predicate on the "vote_count" field. It's identical to VoteCountEQ.
-func VoteCount(v uint32) predicate.ExtraInfo {
+// Likes applies equality check predicate on the "likes" field. It's identical to LikesEQ.
+func Likes(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldVoteCount), v))
+		s.Where(sql.EQ(s.C(FieldLikes), v))
+	})
+}
+
+// Dislikes applies equality check predicate on the "dislikes" field. It's identical to DislikesEQ.
+func Dislikes(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDislikes), v))
 	})
 }
 
@@ -406,81 +413,159 @@ func LabelsNotNil() predicate.ExtraInfo {
 	})
 }
 
-// VoteCountEQ applies the EQ predicate on the "vote_count" field.
-func VoteCountEQ(v uint32) predicate.ExtraInfo {
+// LikesEQ applies the EQ predicate on the "likes" field.
+func LikesEQ(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldVoteCount), v))
+		s.Where(sql.EQ(s.C(FieldLikes), v))
 	})
 }
 
-// VoteCountNEQ applies the NEQ predicate on the "vote_count" field.
-func VoteCountNEQ(v uint32) predicate.ExtraInfo {
+// LikesNEQ applies the NEQ predicate on the "likes" field.
+func LikesNEQ(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldVoteCount), v))
+		s.Where(sql.NEQ(s.C(FieldLikes), v))
 	})
 }
 
-// VoteCountIn applies the In predicate on the "vote_count" field.
-func VoteCountIn(vs ...uint32) predicate.ExtraInfo {
+// LikesIn applies the In predicate on the "likes" field.
+func LikesIn(vs ...uint32) predicate.ExtraInfo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldVoteCount), v...))
+		s.Where(sql.In(s.C(FieldLikes), v...))
 	})
 }
 
-// VoteCountNotIn applies the NotIn predicate on the "vote_count" field.
-func VoteCountNotIn(vs ...uint32) predicate.ExtraInfo {
+// LikesNotIn applies the NotIn predicate on the "likes" field.
+func LikesNotIn(vs ...uint32) predicate.ExtraInfo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldVoteCount), v...))
+		s.Where(sql.NotIn(s.C(FieldLikes), v...))
 	})
 }
 
-// VoteCountGT applies the GT predicate on the "vote_count" field.
-func VoteCountGT(v uint32) predicate.ExtraInfo {
+// LikesGT applies the GT predicate on the "likes" field.
+func LikesGT(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldVoteCount), v))
+		s.Where(sql.GT(s.C(FieldLikes), v))
 	})
 }
 
-// VoteCountGTE applies the GTE predicate on the "vote_count" field.
-func VoteCountGTE(v uint32) predicate.ExtraInfo {
+// LikesGTE applies the GTE predicate on the "likes" field.
+func LikesGTE(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldVoteCount), v))
+		s.Where(sql.GTE(s.C(FieldLikes), v))
 	})
 }
 
-// VoteCountLT applies the LT predicate on the "vote_count" field.
-func VoteCountLT(v uint32) predicate.ExtraInfo {
+// LikesLT applies the LT predicate on the "likes" field.
+func LikesLT(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldVoteCount), v))
+		s.Where(sql.LT(s.C(FieldLikes), v))
 	})
 }
 
-// VoteCountLTE applies the LTE predicate on the "vote_count" field.
-func VoteCountLTE(v uint32) predicate.ExtraInfo {
+// LikesLTE applies the LTE predicate on the "likes" field.
+func LikesLTE(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldVoteCount), v))
+		s.Where(sql.LTE(s.C(FieldLikes), v))
 	})
 }
 
-// VoteCountIsNil applies the IsNil predicate on the "vote_count" field.
-func VoteCountIsNil() predicate.ExtraInfo {
+// LikesIsNil applies the IsNil predicate on the "likes" field.
+func LikesIsNil() predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldVoteCount)))
+		s.Where(sql.IsNull(s.C(FieldLikes)))
 	})
 }
 
-// VoteCountNotNil applies the NotNil predicate on the "vote_count" field.
-func VoteCountNotNil() predicate.ExtraInfo {
+// LikesNotNil applies the NotNil predicate on the "likes" field.
+func LikesNotNil() predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldVoteCount)))
+		s.Where(sql.NotNull(s.C(FieldLikes)))
+	})
+}
+
+// DislikesEQ applies the EQ predicate on the "dislikes" field.
+func DislikesEQ(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDislikes), v))
+	})
+}
+
+// DislikesNEQ applies the NEQ predicate on the "dislikes" field.
+func DislikesNEQ(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDislikes), v))
+	})
+}
+
+// DislikesIn applies the In predicate on the "dislikes" field.
+func DislikesIn(vs ...uint32) predicate.ExtraInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldDislikes), v...))
+	})
+}
+
+// DislikesNotIn applies the NotIn predicate on the "dislikes" field.
+func DislikesNotIn(vs ...uint32) predicate.ExtraInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldDislikes), v...))
+	})
+}
+
+// DislikesGT applies the GT predicate on the "dislikes" field.
+func DislikesGT(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDislikes), v))
+	})
+}
+
+// DislikesGTE applies the GTE predicate on the "dislikes" field.
+func DislikesGTE(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDislikes), v))
+	})
+}
+
+// DislikesLT applies the LT predicate on the "dislikes" field.
+func DislikesLT(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDislikes), v))
+	})
+}
+
+// DislikesLTE applies the LTE predicate on the "dislikes" field.
+func DislikesLTE(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDislikes), v))
+	})
+}
+
+// DislikesIsNil applies the IsNil predicate on the "dislikes" field.
+func DislikesIsNil() predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldDislikes)))
+	})
+}
+
+// DislikesNotNil applies the NotNil predicate on the "dislikes" field.
+func DislikesNotNil() predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldDislikes)))
 	})
 }
 

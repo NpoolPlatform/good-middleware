@@ -142,7 +142,8 @@ var (
 		{Name: "good_id", Type: field.TypeUUID},
 		{Name: "posters", Type: field.TypeJSON, Nullable: true},
 		{Name: "labels", Type: field.TypeJSON, Nullable: true},
-		{Name: "vote_count", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "likes", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "dislikes", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "rating_v1", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}
 	// ExtraInfosTable holds the schema information for the "extra_infos" table.
@@ -222,7 +223,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "good_id", Type: field.TypeUUID},
-		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1691737723},
+		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1691740423},
 		{Name: "tid", Type: field.TypeUUID, Nullable: true},
 		{Name: "amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "unit_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
@@ -234,6 +235,23 @@ var (
 		Name:       "good_reward_histories",
 		Columns:    GoodRewardHistoriesColumns,
 		PrimaryKey: []*schema.Column{GoodRewardHistoriesColumns[0]},
+	}
+	// LikesColumns holds the columns for the "likes" table.
+	LikesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "good_id", Type: field.TypeUUID},
+		{Name: "like", Type: field.TypeBool},
+	}
+	// LikesTable holds the schema information for the "likes" table.
+	LikesTable = &schema.Table{
+		Name:       "likes",
+		Columns:    LikesColumns,
+		PrimaryKey: []*schema.Column{LikesColumns[0]},
 	}
 	// PromotionsColumns holds the columns for the "promotions" table.
 	PromotionsColumns = []*schema.Column{
@@ -312,6 +330,23 @@ var (
 			},
 		},
 	}
+	// ScoresColumns holds the columns for the "scores" table.
+	ScoresColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "good_id", Type: field.TypeUUID},
+		{Name: "score", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+	}
+	// ScoresTable holds the schema information for the "scores" table.
+	ScoresTable = &schema.Table{
+		Name:       "scores",
+		Columns:    ScoresColumns,
+		PrimaryKey: []*schema.Column{ScoresColumns[0]},
+	}
 	// StocksV1Columns holds the columns for the "stocks_v1" table.
 	StocksV1Columns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -360,9 +395,11 @@ var (
 		GoodsTable,
 		GoodRewardsTable,
 		GoodRewardHistoriesTable,
+		LikesTable,
 		PromotionsTable,
 		RecommendsTable,
 		RequiredGoodsTable,
+		ScoresTable,
 		StocksV1Table,
 		VendorLocationsTable,
 	}

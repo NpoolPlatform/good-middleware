@@ -39,7 +39,11 @@ func (ExtraInfo) Fields() []ent.Field {
 			Optional().
 			Default([]string{}),
 		field.
-			Uint32("vote_count").
+			Uint32("likes").
+			Optional().
+			Default(0),
+		field.
+			Uint32("dislikes").
 			Optional().
 			Default(0),
 		field.

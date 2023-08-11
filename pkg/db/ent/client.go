@@ -20,9 +20,11 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/promotion"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 
@@ -53,12 +55,16 @@ type Client struct {
 	GoodReward *GoodRewardClient
 	// GoodRewardHistory is the client for interacting with the GoodRewardHistory builders.
 	GoodRewardHistory *GoodRewardHistoryClient
+	// Like is the client for interacting with the Like builders.
+	Like *LikeClient
 	// Promotion is the client for interacting with the Promotion builders.
 	Promotion *PromotionClient
 	// Recommend is the client for interacting with the Recommend builders.
 	Recommend *RecommendClient
 	// RequiredGood is the client for interacting with the RequiredGood builders.
 	RequiredGood *RequiredGoodClient
+	// Score is the client for interacting with the Score builders.
+	Score *ScoreClient
 	// Stock is the client for interacting with the Stock builders.
 	Stock *StockClient
 	// VendorLocation is the client for interacting with the VendorLocation builders.
@@ -85,9 +91,11 @@ func (c *Client) init() {
 	c.Good = NewGoodClient(c.config)
 	c.GoodReward = NewGoodRewardClient(c.config)
 	c.GoodRewardHistory = NewGoodRewardHistoryClient(c.config)
+	c.Like = NewLikeClient(c.config)
 	c.Promotion = NewPromotionClient(c.config)
 	c.Recommend = NewRecommendClient(c.config)
 	c.RequiredGood = NewRequiredGoodClient(c.config)
+	c.Score = NewScoreClient(c.config)
 	c.Stock = NewStockClient(c.config)
 	c.VendorLocation = NewVendorLocationClient(c.config)
 }
@@ -132,9 +140,11 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Good:              NewGoodClient(cfg),
 		GoodReward:        NewGoodRewardClient(cfg),
 		GoodRewardHistory: NewGoodRewardHistoryClient(cfg),
+		Like:              NewLikeClient(cfg),
 		Promotion:         NewPromotionClient(cfg),
 		Recommend:         NewRecommendClient(cfg),
 		RequiredGood:      NewRequiredGoodClient(cfg),
+		Score:             NewScoreClient(cfg),
 		Stock:             NewStockClient(cfg),
 		VendorLocation:    NewVendorLocationClient(cfg),
 	}, nil
@@ -165,9 +175,11 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Good:              NewGoodClient(cfg),
 		GoodReward:        NewGoodRewardClient(cfg),
 		GoodRewardHistory: NewGoodRewardHistoryClient(cfg),
+		Like:              NewLikeClient(cfg),
 		Promotion:         NewPromotionClient(cfg),
 		Recommend:         NewRecommendClient(cfg),
 		RequiredGood:      NewRequiredGoodClient(cfg),
+		Score:             NewScoreClient(cfg),
 		Stock:             NewStockClient(cfg),
 		VendorLocation:    NewVendorLocationClient(cfg),
 	}, nil
@@ -208,9 +220,11 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Good.Use(hooks...)
 	c.GoodReward.Use(hooks...)
 	c.GoodRewardHistory.Use(hooks...)
+	c.Like.Use(hooks...)
 	c.Promotion.Use(hooks...)
 	c.Recommend.Use(hooks...)
 	c.RequiredGood.Use(hooks...)
+	c.Score.Use(hooks...)
 	c.Stock.Use(hooks...)
 	c.VendorLocation.Use(hooks...)
 }
@@ -1034,6 +1048,97 @@ func (c *GoodRewardHistoryClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], goodrewardhistory.Hooks[:]...)
 }
 
+// LikeClient is a client for the Like schema.
+type LikeClient struct {
+	config
+}
+
+// NewLikeClient returns a client for the Like from the given config.
+func NewLikeClient(c config) *LikeClient {
+	return &LikeClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `like.Hooks(f(g(h())))`.
+func (c *LikeClient) Use(hooks ...Hook) {
+	c.hooks.Like = append(c.hooks.Like, hooks...)
+}
+
+// Create returns a builder for creating a Like entity.
+func (c *LikeClient) Create() *LikeCreate {
+	mutation := newLikeMutation(c.config, OpCreate)
+	return &LikeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Like entities.
+func (c *LikeClient) CreateBulk(builders ...*LikeCreate) *LikeCreateBulk {
+	return &LikeCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Like.
+func (c *LikeClient) Update() *LikeUpdate {
+	mutation := newLikeMutation(c.config, OpUpdate)
+	return &LikeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *LikeClient) UpdateOne(l *Like) *LikeUpdateOne {
+	mutation := newLikeMutation(c.config, OpUpdateOne, withLike(l))
+	return &LikeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *LikeClient) UpdateOneID(id uuid.UUID) *LikeUpdateOne {
+	mutation := newLikeMutation(c.config, OpUpdateOne, withLikeID(id))
+	return &LikeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Like.
+func (c *LikeClient) Delete() *LikeDelete {
+	mutation := newLikeMutation(c.config, OpDelete)
+	return &LikeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *LikeClient) DeleteOne(l *Like) *LikeDeleteOne {
+	return c.DeleteOneID(l.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *LikeClient) DeleteOneID(id uuid.UUID) *LikeDeleteOne {
+	builder := c.Delete().Where(like.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &LikeDeleteOne{builder}
+}
+
+// Query returns a query builder for Like.
+func (c *LikeClient) Query() *LikeQuery {
+	return &LikeQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Like entity by its id.
+func (c *LikeClient) Get(ctx context.Context, id uuid.UUID) (*Like, error) {
+	return c.Query().Where(like.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *LikeClient) GetX(ctx context.Context, id uuid.UUID) *Like {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *LikeClient) Hooks() []Hook {
+	hooks := c.hooks.Like
+	return append(hooks[:len(hooks):len(hooks)], like.Hooks[:]...)
+}
+
 // PromotionClient is a client for the Promotion schema.
 type PromotionClient struct {
 	config
@@ -1305,6 +1410,97 @@ func (c *RequiredGoodClient) GetX(ctx context.Context, id uuid.UUID) *RequiredGo
 func (c *RequiredGoodClient) Hooks() []Hook {
 	hooks := c.hooks.RequiredGood
 	return append(hooks[:len(hooks):len(hooks)], requiredgood.Hooks[:]...)
+}
+
+// ScoreClient is a client for the Score schema.
+type ScoreClient struct {
+	config
+}
+
+// NewScoreClient returns a client for the Score from the given config.
+func NewScoreClient(c config) *ScoreClient {
+	return &ScoreClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `score.Hooks(f(g(h())))`.
+func (c *ScoreClient) Use(hooks ...Hook) {
+	c.hooks.Score = append(c.hooks.Score, hooks...)
+}
+
+// Create returns a builder for creating a Score entity.
+func (c *ScoreClient) Create() *ScoreCreate {
+	mutation := newScoreMutation(c.config, OpCreate)
+	return &ScoreCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Score entities.
+func (c *ScoreClient) CreateBulk(builders ...*ScoreCreate) *ScoreCreateBulk {
+	return &ScoreCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Score.
+func (c *ScoreClient) Update() *ScoreUpdate {
+	mutation := newScoreMutation(c.config, OpUpdate)
+	return &ScoreUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ScoreClient) UpdateOne(s *Score) *ScoreUpdateOne {
+	mutation := newScoreMutation(c.config, OpUpdateOne, withScore(s))
+	return &ScoreUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ScoreClient) UpdateOneID(id uuid.UUID) *ScoreUpdateOne {
+	mutation := newScoreMutation(c.config, OpUpdateOne, withScoreID(id))
+	return &ScoreUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Score.
+func (c *ScoreClient) Delete() *ScoreDelete {
+	mutation := newScoreMutation(c.config, OpDelete)
+	return &ScoreDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ScoreClient) DeleteOne(s *Score) *ScoreDeleteOne {
+	return c.DeleteOneID(s.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *ScoreClient) DeleteOneID(id uuid.UUID) *ScoreDeleteOne {
+	builder := c.Delete().Where(score.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ScoreDeleteOne{builder}
+}
+
+// Query returns a query builder for Score.
+func (c *ScoreClient) Query() *ScoreQuery {
+	return &ScoreQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Score entity by its id.
+func (c *ScoreClient) Get(ctx context.Context, id uuid.UUID) (*Score, error) {
+	return c.Query().Where(score.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ScoreClient) GetX(ctx context.Context, id uuid.UUID) *Score {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *ScoreClient) Hooks() []Hook {
+	hooks := c.hooks.Score
+	return append(hooks[:len(hooks):len(hooks)], score.Hooks[:]...)
 }
 
 // StockClient is a client for the Stock schema.

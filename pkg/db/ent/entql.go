@@ -12,9 +12,11 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/promotion"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 
@@ -26,7 +28,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 14)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 16)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   appdefaultgood.Table,
@@ -169,7 +171,8 @@ var schemaGraph = func() *sqlgraph.Schema {
 			extrainfo.FieldGoodID:    {Type: field.TypeUUID, Column: extrainfo.FieldGoodID},
 			extrainfo.FieldPosters:   {Type: field.TypeJSON, Column: extrainfo.FieldPosters},
 			extrainfo.FieldLabels:    {Type: field.TypeJSON, Column: extrainfo.FieldLabels},
-			extrainfo.FieldVoteCount: {Type: field.TypeUint32, Column: extrainfo.FieldVoteCount},
+			extrainfo.FieldLikes:     {Type: field.TypeUint32, Column: extrainfo.FieldLikes},
+			extrainfo.FieldDislikes:  {Type: field.TypeUint32, Column: extrainfo.FieldDislikes},
 			extrainfo.FieldRatingV1:  {Type: field.TypeOther, Column: extrainfo.FieldRatingV1},
 		},
 	}
@@ -254,6 +257,26 @@ var schemaGraph = func() *sqlgraph.Schema {
 	}
 	graph.Nodes[9] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
+			Table:   like.Table,
+			Columns: like.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUUID,
+				Column: like.FieldID,
+			},
+		},
+		Type: "Like",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			like.FieldCreatedAt: {Type: field.TypeUint32, Column: like.FieldCreatedAt},
+			like.FieldUpdatedAt: {Type: field.TypeUint32, Column: like.FieldUpdatedAt},
+			like.FieldDeletedAt: {Type: field.TypeUint32, Column: like.FieldDeletedAt},
+			like.FieldAppID:     {Type: field.TypeUUID, Column: like.FieldAppID},
+			like.FieldUserID:    {Type: field.TypeUUID, Column: like.FieldUserID},
+			like.FieldGoodID:    {Type: field.TypeUUID, Column: like.FieldGoodID},
+			like.FieldLike:      {Type: field.TypeBool, Column: like.FieldLike},
+		},
+	}
+	graph.Nodes[10] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
 			Table:   promotion.Table,
 			Columns: promotion.Columns,
 			ID: &sqlgraph.FieldSpec{
@@ -275,7 +298,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			promotion.FieldPosters:   {Type: field.TypeJSON, Column: promotion.FieldPosters},
 		},
 	}
-	graph.Nodes[10] = &sqlgraph.Node{
+	graph.Nodes[11] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   recommend.Table,
 			Columns: recommend.Columns,
@@ -296,7 +319,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			recommend.FieldRecommendIndex: {Type: field.TypeFloat64, Column: recommend.FieldRecommendIndex},
 		},
 	}
-	graph.Nodes[11] = &sqlgraph.Node{
+	graph.Nodes[12] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   requiredgood.Table,
 			Columns: requiredgood.Columns,
@@ -317,7 +340,27 @@ var schemaGraph = func() *sqlgraph.Schema {
 			requiredgood.FieldCommission:     {Type: field.TypeBool, Column: requiredgood.FieldCommission},
 		},
 	}
-	graph.Nodes[12] = &sqlgraph.Node{
+	graph.Nodes[13] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   score.Table,
+			Columns: score.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUUID,
+				Column: score.FieldID,
+			},
+		},
+		Type: "Score",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			score.FieldCreatedAt: {Type: field.TypeUint32, Column: score.FieldCreatedAt},
+			score.FieldUpdatedAt: {Type: field.TypeUint32, Column: score.FieldUpdatedAt},
+			score.FieldDeletedAt: {Type: field.TypeUint32, Column: score.FieldDeletedAt},
+			score.FieldAppID:     {Type: field.TypeUUID, Column: score.FieldAppID},
+			score.FieldUserID:    {Type: field.TypeUUID, Column: score.FieldUserID},
+			score.FieldGoodID:    {Type: field.TypeUUID, Column: score.FieldGoodID},
+			score.FieldScore:     {Type: field.TypeOther, Column: score.FieldScore},
+		},
+	}
+	graph.Nodes[14] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   stock.Table,
 			Columns: stock.Columns,
@@ -340,7 +383,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			stock.FieldAppLocked: {Type: field.TypeOther, Column: stock.FieldAppLocked},
 		},
 	}
-	graph.Nodes[13] = &sqlgraph.Node{
+	graph.Nodes[15] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   vendorlocation.Table,
 			Columns: vendorlocation.Columns,
@@ -939,9 +982,14 @@ func (f *ExtraInfoFilter) WhereLabels(p entql.BytesP) {
 	f.Where(p.Field(extrainfo.FieldLabels))
 }
 
-// WhereVoteCount applies the entql uint32 predicate on the vote_count field.
-func (f *ExtraInfoFilter) WhereVoteCount(p entql.Uint32P) {
-	f.Where(p.Field(extrainfo.FieldVoteCount))
+// WhereLikes applies the entql uint32 predicate on the likes field.
+func (f *ExtraInfoFilter) WhereLikes(p entql.Uint32P) {
+	f.Where(p.Field(extrainfo.FieldLikes))
+}
+
+// WhereDislikes applies the entql uint32 predicate on the dislikes field.
+func (f *ExtraInfoFilter) WhereDislikes(p entql.Uint32P) {
+	f.Where(p.Field(extrainfo.FieldDislikes))
 }
 
 // WhereRatingV1 applies the entql other predicate on the rating_v1 field.
@@ -1270,6 +1318,81 @@ func (f *GoodRewardHistoryFilter) WhereResult(p entql.StringP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (lq *LikeQuery) addPredicate(pred func(s *sql.Selector)) {
+	lq.predicates = append(lq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the LikeQuery builder.
+func (lq *LikeQuery) Filter() *LikeFilter {
+	return &LikeFilter{config: lq.config, predicateAdder: lq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *LikeMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the LikeMutation builder.
+func (m *LikeMutation) Filter() *LikeFilter {
+	return &LikeFilter{config: m.config, predicateAdder: m}
+}
+
+// LikeFilter provides a generic filtering capability at runtime for LikeQuery.
+type LikeFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *LikeFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[9].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql [16]byte predicate on the id field.
+func (f *LikeFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(like.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *LikeFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(like.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *LikeFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(like.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *LikeFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(like.FieldDeletedAt))
+}
+
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *LikeFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(like.FieldAppID))
+}
+
+// WhereUserID applies the entql [16]byte predicate on the user_id field.
+func (f *LikeFilter) WhereUserID(p entql.ValueP) {
+	f.Where(p.Field(like.FieldUserID))
+}
+
+// WhereGoodID applies the entql [16]byte predicate on the good_id field.
+func (f *LikeFilter) WhereGoodID(p entql.ValueP) {
+	f.Where(p.Field(like.FieldGoodID))
+}
+
+// WhereLike applies the entql bool predicate on the like field.
+func (f *LikeFilter) WhereLike(p entql.BoolP) {
+	f.Where(p.Field(like.FieldLike))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (pq *PromotionQuery) addPredicate(pred func(s *sql.Selector)) {
 	pq.predicates = append(pq.predicates, pred)
 }
@@ -1298,7 +1421,7 @@ type PromotionFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *PromotionFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[9].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[10].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1388,7 +1511,7 @@ type RecommendFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *RecommendFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[10].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[11].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1468,7 +1591,7 @@ type RequiredGoodFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *RequiredGoodFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[11].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[12].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1520,6 +1643,81 @@ func (f *RequiredGoodFilter) WhereCommission(p entql.BoolP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (sq *ScoreQuery) addPredicate(pred func(s *sql.Selector)) {
+	sq.predicates = append(sq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the ScoreQuery builder.
+func (sq *ScoreQuery) Filter() *ScoreFilter {
+	return &ScoreFilter{config: sq.config, predicateAdder: sq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *ScoreMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the ScoreMutation builder.
+func (m *ScoreMutation) Filter() *ScoreFilter {
+	return &ScoreFilter{config: m.config, predicateAdder: m}
+}
+
+// ScoreFilter provides a generic filtering capability at runtime for ScoreQuery.
+type ScoreFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *ScoreFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[13].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql [16]byte predicate on the id field.
+func (f *ScoreFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(score.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *ScoreFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(score.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *ScoreFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(score.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *ScoreFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(score.FieldDeletedAt))
+}
+
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *ScoreFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(score.FieldAppID))
+}
+
+// WhereUserID applies the entql [16]byte predicate on the user_id field.
+func (f *ScoreFilter) WhereUserID(p entql.ValueP) {
+	f.Where(p.Field(score.FieldUserID))
+}
+
+// WhereGoodID applies the entql [16]byte predicate on the good_id field.
+func (f *ScoreFilter) WhereGoodID(p entql.ValueP) {
+	f.Where(p.Field(score.FieldGoodID))
+}
+
+// WhereScore applies the entql other predicate on the score field.
+func (f *ScoreFilter) WhereScore(p entql.OtherP) {
+	f.Where(p.Field(score.FieldScore))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (sq *StockQuery) addPredicate(pred func(s *sql.Selector)) {
 	sq.predicates = append(sq.predicates, pred)
 }
@@ -1548,7 +1746,7 @@ type StockFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *StockFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[12].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[14].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1638,7 +1836,7 @@ type VendorLocationFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *VendorLocationFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[13].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[15].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})

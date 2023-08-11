@@ -32,12 +32,16 @@ type Tx struct {
 	GoodReward *GoodRewardClient
 	// GoodRewardHistory is the client for interacting with the GoodRewardHistory builders.
 	GoodRewardHistory *GoodRewardHistoryClient
+	// Like is the client for interacting with the Like builders.
+	Like *LikeClient
 	// Promotion is the client for interacting with the Promotion builders.
 	Promotion *PromotionClient
 	// Recommend is the client for interacting with the Recommend builders.
 	Recommend *RecommendClient
 	// RequiredGood is the client for interacting with the RequiredGood builders.
 	RequiredGood *RequiredGoodClient
+	// Score is the client for interacting with the Score builders.
+	Score *ScoreClient
 	// Stock is the client for interacting with the Stock builders.
 	Stock *StockClient
 	// VendorLocation is the client for interacting with the VendorLocation builders.
@@ -186,9 +190,11 @@ func (tx *Tx) init() {
 	tx.Good = NewGoodClient(tx.config)
 	tx.GoodReward = NewGoodRewardClient(tx.config)
 	tx.GoodRewardHistory = NewGoodRewardHistoryClient(tx.config)
+	tx.Like = NewLikeClient(tx.config)
 	tx.Promotion = NewPromotionClient(tx.config)
 	tx.Recommend = NewRecommendClient(tx.config)
 	tx.RequiredGood = NewRequiredGoodClient(tx.config)
+	tx.Score = NewScoreClient(tx.config)
 	tx.Stock = NewStockClient(tx.config)
 	tx.VendorLocation = NewVendorLocationClient(tx.config)
 }

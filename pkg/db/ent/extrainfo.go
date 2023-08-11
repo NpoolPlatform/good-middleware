@@ -30,8 +30,10 @@ type ExtraInfo struct {
 	Posters []string `json:"posters,omitempty"`
 	// Labels holds the value of the "labels" field.
 	Labels []string `json:"labels,omitempty"`
-	// VoteCount holds the value of the "vote_count" field.
-	VoteCount uint32 `json:"vote_count,omitempty"`
+	// Likes holds the value of the "likes" field.
+	Likes uint32 `json:"likes,omitempty"`
+	// Dislikes holds the value of the "dislikes" field.
+	Dislikes uint32 `json:"dislikes,omitempty"`
 	// RatingV1 holds the value of the "rating_v1" field.
 	RatingV1 decimal.Decimal `json:"rating_v1,omitempty"`
 }
@@ -45,7 +47,7 @@ func (*ExtraInfo) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new([]byte)
 		case extrainfo.FieldRatingV1:
 			values[i] = new(decimal.Decimal)
-		case extrainfo.FieldCreatedAt, extrainfo.FieldUpdatedAt, extrainfo.FieldDeletedAt, extrainfo.FieldVoteCount:
+		case extrainfo.FieldCreatedAt, extrainfo.FieldUpdatedAt, extrainfo.FieldDeletedAt, extrainfo.FieldLikes, extrainfo.FieldDislikes:
 			values[i] = new(sql.NullInt64)
 		case extrainfo.FieldID, extrainfo.FieldGoodID:
 			values[i] = new(uuid.UUID)
@@ -110,11 +112,17 @@ func (ei *ExtraInfo) assignValues(columns []string, values []interface{}) error 
 					return fmt.Errorf("unmarshal field labels: %w", err)
 				}
 			}
-		case extrainfo.FieldVoteCount:
+		case extrainfo.FieldLikes:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field vote_count", values[i])
+				return fmt.Errorf("unexpected type %T for field likes", values[i])
 			} else if value.Valid {
-				ei.VoteCount = uint32(value.Int64)
+				ei.Likes = uint32(value.Int64)
+			}
+		case extrainfo.FieldDislikes:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field dislikes", values[i])
+			} else if value.Valid {
+				ei.Dislikes = uint32(value.Int64)
 			}
 		case extrainfo.FieldRatingV1:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
@@ -168,8 +176,11 @@ func (ei *ExtraInfo) String() string {
 	builder.WriteString("labels=")
 	builder.WriteString(fmt.Sprintf("%v", ei.Labels))
 	builder.WriteString(", ")
-	builder.WriteString("vote_count=")
-	builder.WriteString(fmt.Sprintf("%v", ei.VoteCount))
+	builder.WriteString("likes=")
+	builder.WriteString(fmt.Sprintf("%v", ei.Likes))
+	builder.WriteString(", ")
+	builder.WriteString("dislikes=")
+	builder.WriteString(fmt.Sprintf("%v", ei.Dislikes))
 	builder.WriteString(", ")
 	builder.WriteString("rating_v1=")
 	builder.WriteString(fmt.Sprintf("%v", ei.RatingV1))

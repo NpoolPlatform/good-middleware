@@ -14,10 +14,12 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/promotion"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/schema"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	"github.com/google/uuid"
@@ -363,12 +365,16 @@ func init() {
 	extrainfoDescLabels := extrainfoFields[3].Descriptor()
 	// extrainfo.DefaultLabels holds the default value on creation for the labels field.
 	extrainfo.DefaultLabels = extrainfoDescLabels.Default.([]string)
-	// extrainfoDescVoteCount is the schema descriptor for vote_count field.
-	extrainfoDescVoteCount := extrainfoFields[4].Descriptor()
-	// extrainfo.DefaultVoteCount holds the default value on creation for the vote_count field.
-	extrainfo.DefaultVoteCount = extrainfoDescVoteCount.Default.(uint32)
+	// extrainfoDescLikes is the schema descriptor for likes field.
+	extrainfoDescLikes := extrainfoFields[4].Descriptor()
+	// extrainfo.DefaultLikes holds the default value on creation for the likes field.
+	extrainfo.DefaultLikes = extrainfoDescLikes.Default.(uint32)
+	// extrainfoDescDislikes is the schema descriptor for dislikes field.
+	extrainfoDescDislikes := extrainfoFields[5].Descriptor()
+	// extrainfo.DefaultDislikes holds the default value on creation for the dislikes field.
+	extrainfo.DefaultDislikes = extrainfoDescDislikes.Default.(uint32)
 	// extrainfoDescRatingV1 is the schema descriptor for rating_v1 field.
-	extrainfoDescRatingV1 := extrainfoFields[5].Descriptor()
+	extrainfoDescRatingV1 := extrainfoFields[6].Descriptor()
 	// extrainfo.DefaultRatingV1 holds the default value on creation for the rating_v1 field.
 	extrainfo.DefaultRatingV1 = extrainfoDescRatingV1.Default.(decimal.Decimal)
 	// extrainfoDescID is the schema descriptor for id field.
@@ -571,6 +577,38 @@ func init() {
 	goodrewardhistoryDescID := goodrewardhistoryFields[0].Descriptor()
 	// goodrewardhistory.DefaultID holds the default value on creation for the id field.
 	goodrewardhistory.DefaultID = goodrewardhistoryDescID.Default.(func() uuid.UUID)
+	likeMixin := schema.Like{}.Mixin()
+	like.Policy = privacy.NewPolicies(likeMixin[0], schema.Like{})
+	like.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := like.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	likeMixinFields0 := likeMixin[0].Fields()
+	_ = likeMixinFields0
+	likeFields := schema.Like{}.Fields()
+	_ = likeFields
+	// likeDescCreatedAt is the schema descriptor for created_at field.
+	likeDescCreatedAt := likeMixinFields0[0].Descriptor()
+	// like.DefaultCreatedAt holds the default value on creation for the created_at field.
+	like.DefaultCreatedAt = likeDescCreatedAt.Default.(func() uint32)
+	// likeDescUpdatedAt is the schema descriptor for updated_at field.
+	likeDescUpdatedAt := likeMixinFields0[1].Descriptor()
+	// like.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	like.DefaultUpdatedAt = likeDescUpdatedAt.Default.(func() uint32)
+	// like.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	like.UpdateDefaultUpdatedAt = likeDescUpdatedAt.UpdateDefault.(func() uint32)
+	// likeDescDeletedAt is the schema descriptor for deleted_at field.
+	likeDescDeletedAt := likeMixinFields0[2].Descriptor()
+	// like.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	like.DefaultDeletedAt = likeDescDeletedAt.Default.(func() uint32)
+	// likeDescID is the schema descriptor for id field.
+	likeDescID := likeFields[0].Descriptor()
+	// like.DefaultID holds the default value on creation for the id field.
+	like.DefaultID = likeDescID.Default.(func() uuid.UUID)
 	promotionMixin := schema.Promotion{}.Mixin()
 	promotion.Policy = privacy.NewPolicies(promotionMixin[0], schema.Promotion{})
 	promotion.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -707,6 +745,42 @@ func init() {
 	requiredgoodDescID := requiredgoodFields[0].Descriptor()
 	// requiredgood.DefaultID holds the default value on creation for the id field.
 	requiredgood.DefaultID = requiredgoodDescID.Default.(func() uuid.UUID)
+	scoreMixin := schema.Score{}.Mixin()
+	score.Policy = privacy.NewPolicies(scoreMixin[0], schema.Score{})
+	score.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := score.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	scoreMixinFields0 := scoreMixin[0].Fields()
+	_ = scoreMixinFields0
+	scoreFields := schema.Score{}.Fields()
+	_ = scoreFields
+	// scoreDescCreatedAt is the schema descriptor for created_at field.
+	scoreDescCreatedAt := scoreMixinFields0[0].Descriptor()
+	// score.DefaultCreatedAt holds the default value on creation for the created_at field.
+	score.DefaultCreatedAt = scoreDescCreatedAt.Default.(func() uint32)
+	// scoreDescUpdatedAt is the schema descriptor for updated_at field.
+	scoreDescUpdatedAt := scoreMixinFields0[1].Descriptor()
+	// score.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	score.DefaultUpdatedAt = scoreDescUpdatedAt.Default.(func() uint32)
+	// score.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	score.UpdateDefaultUpdatedAt = scoreDescUpdatedAt.UpdateDefault.(func() uint32)
+	// scoreDescDeletedAt is the schema descriptor for deleted_at field.
+	scoreDescDeletedAt := scoreMixinFields0[2].Descriptor()
+	// score.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	score.DefaultDeletedAt = scoreDescDeletedAt.Default.(func() uint32)
+	// scoreDescScore is the schema descriptor for score field.
+	scoreDescScore := scoreFields[4].Descriptor()
+	// score.DefaultScore holds the default value on creation for the score field.
+	score.DefaultScore = scoreDescScore.Default.(decimal.Decimal)
+	// scoreDescID is the schema descriptor for id field.
+	scoreDescID := scoreFields[0].Descriptor()
+	// score.DefaultID holds the default value on creation for the id field.
+	score.DefaultID = scoreDescID.Default.(func() uuid.UUID)
 	stockMixin := schema.Stock{}.Mixin()
 	stock.Policy = privacy.NewPolicies(stockMixin[0], schema.Stock{})
 	stock.Hooks[0] = func(next ent.Mutator) ent.Mutator {

@@ -115,30 +115,57 @@ func (eiu *ExtraInfoUpdate) ClearLabels() *ExtraInfoUpdate {
 	return eiu
 }
 
-// SetVoteCount sets the "vote_count" field.
-func (eiu *ExtraInfoUpdate) SetVoteCount(u uint32) *ExtraInfoUpdate {
-	eiu.mutation.ResetVoteCount()
-	eiu.mutation.SetVoteCount(u)
+// SetLikes sets the "likes" field.
+func (eiu *ExtraInfoUpdate) SetLikes(u uint32) *ExtraInfoUpdate {
+	eiu.mutation.ResetLikes()
+	eiu.mutation.SetLikes(u)
 	return eiu
 }
 
-// SetNillableVoteCount sets the "vote_count" field if the given value is not nil.
-func (eiu *ExtraInfoUpdate) SetNillableVoteCount(u *uint32) *ExtraInfoUpdate {
+// SetNillableLikes sets the "likes" field if the given value is not nil.
+func (eiu *ExtraInfoUpdate) SetNillableLikes(u *uint32) *ExtraInfoUpdate {
 	if u != nil {
-		eiu.SetVoteCount(*u)
+		eiu.SetLikes(*u)
 	}
 	return eiu
 }
 
-// AddVoteCount adds u to the "vote_count" field.
-func (eiu *ExtraInfoUpdate) AddVoteCount(u int32) *ExtraInfoUpdate {
-	eiu.mutation.AddVoteCount(u)
+// AddLikes adds u to the "likes" field.
+func (eiu *ExtraInfoUpdate) AddLikes(u int32) *ExtraInfoUpdate {
+	eiu.mutation.AddLikes(u)
 	return eiu
 }
 
-// ClearVoteCount clears the value of the "vote_count" field.
-func (eiu *ExtraInfoUpdate) ClearVoteCount() *ExtraInfoUpdate {
-	eiu.mutation.ClearVoteCount()
+// ClearLikes clears the value of the "likes" field.
+func (eiu *ExtraInfoUpdate) ClearLikes() *ExtraInfoUpdate {
+	eiu.mutation.ClearLikes()
+	return eiu
+}
+
+// SetDislikes sets the "dislikes" field.
+func (eiu *ExtraInfoUpdate) SetDislikes(u uint32) *ExtraInfoUpdate {
+	eiu.mutation.ResetDislikes()
+	eiu.mutation.SetDislikes(u)
+	return eiu
+}
+
+// SetNillableDislikes sets the "dislikes" field if the given value is not nil.
+func (eiu *ExtraInfoUpdate) SetNillableDislikes(u *uint32) *ExtraInfoUpdate {
+	if u != nil {
+		eiu.SetDislikes(*u)
+	}
+	return eiu
+}
+
+// AddDislikes adds u to the "dislikes" field.
+func (eiu *ExtraInfoUpdate) AddDislikes(u int32) *ExtraInfoUpdate {
+	eiu.mutation.AddDislikes(u)
+	return eiu
+}
+
+// ClearDislikes clears the value of the "dislikes" field.
+func (eiu *ExtraInfoUpdate) ClearDislikes() *ExtraInfoUpdate {
+	eiu.mutation.ClearDislikes()
 	return eiu
 }
 
@@ -335,24 +362,44 @@ func (eiu *ExtraInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: extrainfo.FieldLabels,
 		})
 	}
-	if value, ok := eiu.mutation.VoteCount(); ok {
+	if value, ok := eiu.mutation.Likes(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: extrainfo.FieldVoteCount,
+			Column: extrainfo.FieldLikes,
 		})
 	}
-	if value, ok := eiu.mutation.AddedVoteCount(); ok {
+	if value, ok := eiu.mutation.AddedLikes(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: extrainfo.FieldVoteCount,
+			Column: extrainfo.FieldLikes,
 		})
 	}
-	if eiu.mutation.VoteCountCleared() {
+	if eiu.mutation.LikesCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: extrainfo.FieldVoteCount,
+			Column: extrainfo.FieldLikes,
+		})
+	}
+	if value, ok := eiu.mutation.Dislikes(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldDislikes,
+		})
+	}
+	if value, ok := eiu.mutation.AddedDislikes(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldDislikes,
+		})
+	}
+	if eiu.mutation.DislikesCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: extrainfo.FieldDislikes,
 		})
 	}
 	if value, ok := eiu.mutation.RatingV1(); ok {
@@ -474,30 +521,57 @@ func (eiuo *ExtraInfoUpdateOne) ClearLabels() *ExtraInfoUpdateOne {
 	return eiuo
 }
 
-// SetVoteCount sets the "vote_count" field.
-func (eiuo *ExtraInfoUpdateOne) SetVoteCount(u uint32) *ExtraInfoUpdateOne {
-	eiuo.mutation.ResetVoteCount()
-	eiuo.mutation.SetVoteCount(u)
+// SetLikes sets the "likes" field.
+func (eiuo *ExtraInfoUpdateOne) SetLikes(u uint32) *ExtraInfoUpdateOne {
+	eiuo.mutation.ResetLikes()
+	eiuo.mutation.SetLikes(u)
 	return eiuo
 }
 
-// SetNillableVoteCount sets the "vote_count" field if the given value is not nil.
-func (eiuo *ExtraInfoUpdateOne) SetNillableVoteCount(u *uint32) *ExtraInfoUpdateOne {
+// SetNillableLikes sets the "likes" field if the given value is not nil.
+func (eiuo *ExtraInfoUpdateOne) SetNillableLikes(u *uint32) *ExtraInfoUpdateOne {
 	if u != nil {
-		eiuo.SetVoteCount(*u)
+		eiuo.SetLikes(*u)
 	}
 	return eiuo
 }
 
-// AddVoteCount adds u to the "vote_count" field.
-func (eiuo *ExtraInfoUpdateOne) AddVoteCount(u int32) *ExtraInfoUpdateOne {
-	eiuo.mutation.AddVoteCount(u)
+// AddLikes adds u to the "likes" field.
+func (eiuo *ExtraInfoUpdateOne) AddLikes(u int32) *ExtraInfoUpdateOne {
+	eiuo.mutation.AddLikes(u)
 	return eiuo
 }
 
-// ClearVoteCount clears the value of the "vote_count" field.
-func (eiuo *ExtraInfoUpdateOne) ClearVoteCount() *ExtraInfoUpdateOne {
-	eiuo.mutation.ClearVoteCount()
+// ClearLikes clears the value of the "likes" field.
+func (eiuo *ExtraInfoUpdateOne) ClearLikes() *ExtraInfoUpdateOne {
+	eiuo.mutation.ClearLikes()
+	return eiuo
+}
+
+// SetDislikes sets the "dislikes" field.
+func (eiuo *ExtraInfoUpdateOne) SetDislikes(u uint32) *ExtraInfoUpdateOne {
+	eiuo.mutation.ResetDislikes()
+	eiuo.mutation.SetDislikes(u)
+	return eiuo
+}
+
+// SetNillableDislikes sets the "dislikes" field if the given value is not nil.
+func (eiuo *ExtraInfoUpdateOne) SetNillableDislikes(u *uint32) *ExtraInfoUpdateOne {
+	if u != nil {
+		eiuo.SetDislikes(*u)
+	}
+	return eiuo
+}
+
+// AddDislikes adds u to the "dislikes" field.
+func (eiuo *ExtraInfoUpdateOne) AddDislikes(u int32) *ExtraInfoUpdateOne {
+	eiuo.mutation.AddDislikes(u)
+	return eiuo
+}
+
+// ClearDislikes clears the value of the "dislikes" field.
+func (eiuo *ExtraInfoUpdateOne) ClearDislikes() *ExtraInfoUpdateOne {
+	eiuo.mutation.ClearDislikes()
 	return eiuo
 }
 
@@ -724,24 +798,44 @@ func (eiuo *ExtraInfoUpdateOne) sqlSave(ctx context.Context) (_node *ExtraInfo, 
 			Column: extrainfo.FieldLabels,
 		})
 	}
-	if value, ok := eiuo.mutation.VoteCount(); ok {
+	if value, ok := eiuo.mutation.Likes(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: extrainfo.FieldVoteCount,
+			Column: extrainfo.FieldLikes,
 		})
 	}
-	if value, ok := eiuo.mutation.AddedVoteCount(); ok {
+	if value, ok := eiuo.mutation.AddedLikes(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: extrainfo.FieldVoteCount,
+			Column: extrainfo.FieldLikes,
 		})
 	}
-	if eiuo.mutation.VoteCountCleared() {
+	if eiuo.mutation.LikesCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: extrainfo.FieldVoteCount,
+			Column: extrainfo.FieldLikes,
+		})
+	}
+	if value, ok := eiuo.mutation.Dislikes(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldDislikes,
+		})
+	}
+	if value, ok := eiuo.mutation.AddedDislikes(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldDislikes,
+		})
+	}
+	if eiuo.mutation.DislikesCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: extrainfo.FieldDislikes,
 		})
 	}
 	if value, ok := eiuo.mutation.RatingV1(); ok {

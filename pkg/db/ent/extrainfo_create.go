@@ -84,16 +84,30 @@ func (eic *ExtraInfoCreate) SetLabels(s []string) *ExtraInfoCreate {
 	return eic
 }
 
-// SetVoteCount sets the "vote_count" field.
-func (eic *ExtraInfoCreate) SetVoteCount(u uint32) *ExtraInfoCreate {
-	eic.mutation.SetVoteCount(u)
+// SetLikes sets the "likes" field.
+func (eic *ExtraInfoCreate) SetLikes(u uint32) *ExtraInfoCreate {
+	eic.mutation.SetLikes(u)
 	return eic
 }
 
-// SetNillableVoteCount sets the "vote_count" field if the given value is not nil.
-func (eic *ExtraInfoCreate) SetNillableVoteCount(u *uint32) *ExtraInfoCreate {
+// SetNillableLikes sets the "likes" field if the given value is not nil.
+func (eic *ExtraInfoCreate) SetNillableLikes(u *uint32) *ExtraInfoCreate {
 	if u != nil {
-		eic.SetVoteCount(*u)
+		eic.SetLikes(*u)
+	}
+	return eic
+}
+
+// SetDislikes sets the "dislikes" field.
+func (eic *ExtraInfoCreate) SetDislikes(u uint32) *ExtraInfoCreate {
+	eic.mutation.SetDislikes(u)
+	return eic
+}
+
+// SetNillableDislikes sets the "dislikes" field if the given value is not nil.
+func (eic *ExtraInfoCreate) SetNillableDislikes(u *uint32) *ExtraInfoCreate {
+	if u != nil {
+		eic.SetDislikes(*u)
 	}
 	return eic
 }
@@ -234,9 +248,13 @@ func (eic *ExtraInfoCreate) defaults() error {
 		v := extrainfo.DefaultLabels
 		eic.mutation.SetLabels(v)
 	}
-	if _, ok := eic.mutation.VoteCount(); !ok {
-		v := extrainfo.DefaultVoteCount
-		eic.mutation.SetVoteCount(v)
+	if _, ok := eic.mutation.Likes(); !ok {
+		v := extrainfo.DefaultLikes
+		eic.mutation.SetLikes(v)
+	}
+	if _, ok := eic.mutation.Dislikes(); !ok {
+		v := extrainfo.DefaultDislikes
+		eic.mutation.SetDislikes(v)
 	}
 	if _, ok := eic.mutation.RatingV1(); !ok {
 		v := extrainfo.DefaultRatingV1
@@ -351,13 +369,21 @@ func (eic *ExtraInfoCreate) createSpec() (*ExtraInfo, *sqlgraph.CreateSpec) {
 		})
 		_node.Labels = value
 	}
-	if value, ok := eic.mutation.VoteCount(); ok {
+	if value, ok := eic.mutation.Likes(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: extrainfo.FieldVoteCount,
+			Column: extrainfo.FieldLikes,
 		})
-		_node.VoteCount = value
+		_node.Likes = value
+	}
+	if value, ok := eic.mutation.Dislikes(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldDislikes,
+		})
+		_node.Dislikes = value
 	}
 	if value, ok := eic.mutation.RatingV1(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -523,27 +549,51 @@ func (u *ExtraInfoUpsert) ClearLabels() *ExtraInfoUpsert {
 	return u
 }
 
-// SetVoteCount sets the "vote_count" field.
-func (u *ExtraInfoUpsert) SetVoteCount(v uint32) *ExtraInfoUpsert {
-	u.Set(extrainfo.FieldVoteCount, v)
+// SetLikes sets the "likes" field.
+func (u *ExtraInfoUpsert) SetLikes(v uint32) *ExtraInfoUpsert {
+	u.Set(extrainfo.FieldLikes, v)
 	return u
 }
 
-// UpdateVoteCount sets the "vote_count" field to the value that was provided on create.
-func (u *ExtraInfoUpsert) UpdateVoteCount() *ExtraInfoUpsert {
-	u.SetExcluded(extrainfo.FieldVoteCount)
+// UpdateLikes sets the "likes" field to the value that was provided on create.
+func (u *ExtraInfoUpsert) UpdateLikes() *ExtraInfoUpsert {
+	u.SetExcluded(extrainfo.FieldLikes)
 	return u
 }
 
-// AddVoteCount adds v to the "vote_count" field.
-func (u *ExtraInfoUpsert) AddVoteCount(v uint32) *ExtraInfoUpsert {
-	u.Add(extrainfo.FieldVoteCount, v)
+// AddLikes adds v to the "likes" field.
+func (u *ExtraInfoUpsert) AddLikes(v uint32) *ExtraInfoUpsert {
+	u.Add(extrainfo.FieldLikes, v)
 	return u
 }
 
-// ClearVoteCount clears the value of the "vote_count" field.
-func (u *ExtraInfoUpsert) ClearVoteCount() *ExtraInfoUpsert {
-	u.SetNull(extrainfo.FieldVoteCount)
+// ClearLikes clears the value of the "likes" field.
+func (u *ExtraInfoUpsert) ClearLikes() *ExtraInfoUpsert {
+	u.SetNull(extrainfo.FieldLikes)
+	return u
+}
+
+// SetDislikes sets the "dislikes" field.
+func (u *ExtraInfoUpsert) SetDislikes(v uint32) *ExtraInfoUpsert {
+	u.Set(extrainfo.FieldDislikes, v)
+	return u
+}
+
+// UpdateDislikes sets the "dislikes" field to the value that was provided on create.
+func (u *ExtraInfoUpsert) UpdateDislikes() *ExtraInfoUpsert {
+	u.SetExcluded(extrainfo.FieldDislikes)
+	return u
+}
+
+// AddDislikes adds v to the "dislikes" field.
+func (u *ExtraInfoUpsert) AddDislikes(v uint32) *ExtraInfoUpsert {
+	u.Add(extrainfo.FieldDislikes, v)
+	return u
+}
+
+// ClearDislikes clears the value of the "dislikes" field.
+func (u *ExtraInfoUpsert) ClearDislikes() *ExtraInfoUpsert {
+	u.SetNull(extrainfo.FieldDislikes)
 	return u
 }
 
@@ -734,31 +784,59 @@ func (u *ExtraInfoUpsertOne) ClearLabels() *ExtraInfoUpsertOne {
 	})
 }
 
-// SetVoteCount sets the "vote_count" field.
-func (u *ExtraInfoUpsertOne) SetVoteCount(v uint32) *ExtraInfoUpsertOne {
+// SetLikes sets the "likes" field.
+func (u *ExtraInfoUpsertOne) SetLikes(v uint32) *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetVoteCount(v)
+		s.SetLikes(v)
 	})
 }
 
-// AddVoteCount adds v to the "vote_count" field.
-func (u *ExtraInfoUpsertOne) AddVoteCount(v uint32) *ExtraInfoUpsertOne {
+// AddLikes adds v to the "likes" field.
+func (u *ExtraInfoUpsertOne) AddLikes(v uint32) *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.AddVoteCount(v)
+		s.AddLikes(v)
 	})
 }
 
-// UpdateVoteCount sets the "vote_count" field to the value that was provided on create.
-func (u *ExtraInfoUpsertOne) UpdateVoteCount() *ExtraInfoUpsertOne {
+// UpdateLikes sets the "likes" field to the value that was provided on create.
+func (u *ExtraInfoUpsertOne) UpdateLikes() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateVoteCount()
+		s.UpdateLikes()
 	})
 }
 
-// ClearVoteCount clears the value of the "vote_count" field.
-func (u *ExtraInfoUpsertOne) ClearVoteCount() *ExtraInfoUpsertOne {
+// ClearLikes clears the value of the "likes" field.
+func (u *ExtraInfoUpsertOne) ClearLikes() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearVoteCount()
+		s.ClearLikes()
+	})
+}
+
+// SetDislikes sets the "dislikes" field.
+func (u *ExtraInfoUpsertOne) SetDislikes(v uint32) *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.SetDislikes(v)
+	})
+}
+
+// AddDislikes adds v to the "dislikes" field.
+func (u *ExtraInfoUpsertOne) AddDislikes(v uint32) *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.AddDislikes(v)
+	})
+}
+
+// UpdateDislikes sets the "dislikes" field to the value that was provided on create.
+func (u *ExtraInfoUpsertOne) UpdateDislikes() *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.UpdateDislikes()
+	})
+}
+
+// ClearDislikes clears the value of the "dislikes" field.
+func (u *ExtraInfoUpsertOne) ClearDislikes() *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.ClearDislikes()
 	})
 }
 
@@ -1118,31 +1196,59 @@ func (u *ExtraInfoUpsertBulk) ClearLabels() *ExtraInfoUpsertBulk {
 	})
 }
 
-// SetVoteCount sets the "vote_count" field.
-func (u *ExtraInfoUpsertBulk) SetVoteCount(v uint32) *ExtraInfoUpsertBulk {
+// SetLikes sets the "likes" field.
+func (u *ExtraInfoUpsertBulk) SetLikes(v uint32) *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetVoteCount(v)
+		s.SetLikes(v)
 	})
 }
 
-// AddVoteCount adds v to the "vote_count" field.
-func (u *ExtraInfoUpsertBulk) AddVoteCount(v uint32) *ExtraInfoUpsertBulk {
+// AddLikes adds v to the "likes" field.
+func (u *ExtraInfoUpsertBulk) AddLikes(v uint32) *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.AddVoteCount(v)
+		s.AddLikes(v)
 	})
 }
 
-// UpdateVoteCount sets the "vote_count" field to the value that was provided on create.
-func (u *ExtraInfoUpsertBulk) UpdateVoteCount() *ExtraInfoUpsertBulk {
+// UpdateLikes sets the "likes" field to the value that was provided on create.
+func (u *ExtraInfoUpsertBulk) UpdateLikes() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateVoteCount()
+		s.UpdateLikes()
 	})
 }
 
-// ClearVoteCount clears the value of the "vote_count" field.
-func (u *ExtraInfoUpsertBulk) ClearVoteCount() *ExtraInfoUpsertBulk {
+// ClearLikes clears the value of the "likes" field.
+func (u *ExtraInfoUpsertBulk) ClearLikes() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearVoteCount()
+		s.ClearLikes()
+	})
+}
+
+// SetDislikes sets the "dislikes" field.
+func (u *ExtraInfoUpsertBulk) SetDislikes(v uint32) *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.SetDislikes(v)
+	})
+}
+
+// AddDislikes adds v to the "dislikes" field.
+func (u *ExtraInfoUpsertBulk) AddDislikes(v uint32) *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.AddDislikes(v)
+	})
+}
+
+// UpdateDislikes sets the "dislikes" field to the value that was provided on create.
+func (u *ExtraInfoUpsertBulk) UpdateDislikes() *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.UpdateDislikes()
+	})
+}
+
+// ClearDislikes clears the value of the "dislikes" field.
+func (u *ExtraInfoUpsertBulk) ClearDislikes() *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.ClearDislikes()
 	})
 }
 

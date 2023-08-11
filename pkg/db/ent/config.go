@@ -37,9 +37,11 @@ type hooks struct {
 	Good              []ent.Hook
 	GoodReward        []ent.Hook
 	GoodRewardHistory []ent.Hook
+	Like              []ent.Hook
 	Promotion         []ent.Hook
 	Recommend         []ent.Hook
 	RequiredGood      []ent.Hook
+	Score             []ent.Hook
 	Stock             []ent.Hook
 	VendorLocation    []ent.Hook
 }

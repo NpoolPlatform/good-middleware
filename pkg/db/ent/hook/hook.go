@@ -126,6 +126,19 @@ func (f GoodRewardHistoryFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.
 	return f(ctx, mv)
 }
 
+// The LikeFunc type is an adapter to allow the use of ordinary
+// function as Like mutator.
+type LikeFunc func(context.Context, *ent.LikeMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f LikeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.LikeMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.LikeMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The PromotionFunc type is an adapter to allow the use of ordinary
 // function as Promotion mutator.
 type PromotionFunc func(context.Context, *ent.PromotionMutation) (ent.Value, error)
@@ -161,6 +174,19 @@ func (f RequiredGoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value
 	mv, ok := m.(*ent.RequiredGoodMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RequiredGoodMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The ScoreFunc type is an adapter to allow the use of ordinary
+// function as Score mutator.
+type ScoreFunc func(context.Context, *ent.ScoreMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ScoreFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.ScoreMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ScoreMutation", m)
 	}
 	return f(ctx, mv)
 }

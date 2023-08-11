@@ -17,10 +17,12 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/promotion"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	"github.com/google/uuid"
@@ -47,9 +49,11 @@ const (
 	TypeGood              = "Good"
 	TypeGoodReward        = "GoodReward"
 	TypeGoodRewardHistory = "GoodRewardHistory"
+	TypeLike              = "Like"
 	TypePromotion         = "Promotion"
 	TypeRecommend         = "Recommend"
 	TypeRequiredGood      = "RequiredGood"
+	TypeScore             = "Score"
 	TypeStock             = "Stock"
 	TypeVendorLocation    = "VendorLocation"
 )
@@ -6064,8 +6068,10 @@ type ExtraInfoMutation struct {
 	good_id       *uuid.UUID
 	posters       *[]string
 	labels        *[]string
-	vote_count    *uint32
-	addvote_count *int32
+	likes         *uint32
+	addlikes      *int32
+	dislikes      *uint32
+	adddislikes   *int32
 	rating_v1     *decimal.Decimal
 	clearedFields map[string]struct{}
 	done          bool
@@ -6479,74 +6485,144 @@ func (m *ExtraInfoMutation) ResetLabels() {
 	delete(m.clearedFields, extrainfo.FieldLabels)
 }
 
-// SetVoteCount sets the "vote_count" field.
-func (m *ExtraInfoMutation) SetVoteCount(u uint32) {
-	m.vote_count = &u
-	m.addvote_count = nil
+// SetLikes sets the "likes" field.
+func (m *ExtraInfoMutation) SetLikes(u uint32) {
+	m.likes = &u
+	m.addlikes = nil
 }
 
-// VoteCount returns the value of the "vote_count" field in the mutation.
-func (m *ExtraInfoMutation) VoteCount() (r uint32, exists bool) {
-	v := m.vote_count
+// Likes returns the value of the "likes" field in the mutation.
+func (m *ExtraInfoMutation) Likes() (r uint32, exists bool) {
+	v := m.likes
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldVoteCount returns the old "vote_count" field's value of the ExtraInfo entity.
+// OldLikes returns the old "likes" field's value of the ExtraInfo entity.
 // If the ExtraInfo object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ExtraInfoMutation) OldVoteCount(ctx context.Context) (v uint32, err error) {
+func (m *ExtraInfoMutation) OldLikes(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldVoteCount is only allowed on UpdateOne operations")
+		return v, errors.New("OldLikes is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldVoteCount requires an ID field in the mutation")
+		return v, errors.New("OldLikes requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldVoteCount: %w", err)
+		return v, fmt.Errorf("querying old value for OldLikes: %w", err)
 	}
-	return oldValue.VoteCount, nil
+	return oldValue.Likes, nil
 }
 
-// AddVoteCount adds u to the "vote_count" field.
-func (m *ExtraInfoMutation) AddVoteCount(u int32) {
-	if m.addvote_count != nil {
-		*m.addvote_count += u
+// AddLikes adds u to the "likes" field.
+func (m *ExtraInfoMutation) AddLikes(u int32) {
+	if m.addlikes != nil {
+		*m.addlikes += u
 	} else {
-		m.addvote_count = &u
+		m.addlikes = &u
 	}
 }
 
-// AddedVoteCount returns the value that was added to the "vote_count" field in this mutation.
-func (m *ExtraInfoMutation) AddedVoteCount() (r int32, exists bool) {
-	v := m.addvote_count
+// AddedLikes returns the value that was added to the "likes" field in this mutation.
+func (m *ExtraInfoMutation) AddedLikes() (r int32, exists bool) {
+	v := m.addlikes
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ClearVoteCount clears the value of the "vote_count" field.
-func (m *ExtraInfoMutation) ClearVoteCount() {
-	m.vote_count = nil
-	m.addvote_count = nil
-	m.clearedFields[extrainfo.FieldVoteCount] = struct{}{}
+// ClearLikes clears the value of the "likes" field.
+func (m *ExtraInfoMutation) ClearLikes() {
+	m.likes = nil
+	m.addlikes = nil
+	m.clearedFields[extrainfo.FieldLikes] = struct{}{}
 }
 
-// VoteCountCleared returns if the "vote_count" field was cleared in this mutation.
-func (m *ExtraInfoMutation) VoteCountCleared() bool {
-	_, ok := m.clearedFields[extrainfo.FieldVoteCount]
+// LikesCleared returns if the "likes" field was cleared in this mutation.
+func (m *ExtraInfoMutation) LikesCleared() bool {
+	_, ok := m.clearedFields[extrainfo.FieldLikes]
 	return ok
 }
 
-// ResetVoteCount resets all changes to the "vote_count" field.
-func (m *ExtraInfoMutation) ResetVoteCount() {
-	m.vote_count = nil
-	m.addvote_count = nil
-	delete(m.clearedFields, extrainfo.FieldVoteCount)
+// ResetLikes resets all changes to the "likes" field.
+func (m *ExtraInfoMutation) ResetLikes() {
+	m.likes = nil
+	m.addlikes = nil
+	delete(m.clearedFields, extrainfo.FieldLikes)
+}
+
+// SetDislikes sets the "dislikes" field.
+func (m *ExtraInfoMutation) SetDislikes(u uint32) {
+	m.dislikes = &u
+	m.adddislikes = nil
+}
+
+// Dislikes returns the value of the "dislikes" field in the mutation.
+func (m *ExtraInfoMutation) Dislikes() (r uint32, exists bool) {
+	v := m.dislikes
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDislikes returns the old "dislikes" field's value of the ExtraInfo entity.
+// If the ExtraInfo object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ExtraInfoMutation) OldDislikes(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDislikes is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDislikes requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDislikes: %w", err)
+	}
+	return oldValue.Dislikes, nil
+}
+
+// AddDislikes adds u to the "dislikes" field.
+func (m *ExtraInfoMutation) AddDislikes(u int32) {
+	if m.adddislikes != nil {
+		*m.adddislikes += u
+	} else {
+		m.adddislikes = &u
+	}
+}
+
+// AddedDislikes returns the value that was added to the "dislikes" field in this mutation.
+func (m *ExtraInfoMutation) AddedDislikes() (r int32, exists bool) {
+	v := m.adddislikes
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearDislikes clears the value of the "dislikes" field.
+func (m *ExtraInfoMutation) ClearDislikes() {
+	m.dislikes = nil
+	m.adddislikes = nil
+	m.clearedFields[extrainfo.FieldDislikes] = struct{}{}
+}
+
+// DislikesCleared returns if the "dislikes" field was cleared in this mutation.
+func (m *ExtraInfoMutation) DislikesCleared() bool {
+	_, ok := m.clearedFields[extrainfo.FieldDislikes]
+	return ok
+}
+
+// ResetDislikes resets all changes to the "dislikes" field.
+func (m *ExtraInfoMutation) ResetDislikes() {
+	m.dislikes = nil
+	m.adddislikes = nil
+	delete(m.clearedFields, extrainfo.FieldDislikes)
 }
 
 // SetRatingV1 sets the "rating_v1" field.
@@ -6617,7 +6693,7 @@ func (m *ExtraInfoMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ExtraInfoMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 9)
 	if m.created_at != nil {
 		fields = append(fields, extrainfo.FieldCreatedAt)
 	}
@@ -6636,8 +6712,11 @@ func (m *ExtraInfoMutation) Fields() []string {
 	if m.labels != nil {
 		fields = append(fields, extrainfo.FieldLabels)
 	}
-	if m.vote_count != nil {
-		fields = append(fields, extrainfo.FieldVoteCount)
+	if m.likes != nil {
+		fields = append(fields, extrainfo.FieldLikes)
+	}
+	if m.dislikes != nil {
+		fields = append(fields, extrainfo.FieldDislikes)
 	}
 	if m.rating_v1 != nil {
 		fields = append(fields, extrainfo.FieldRatingV1)
@@ -6662,8 +6741,10 @@ func (m *ExtraInfoMutation) Field(name string) (ent.Value, bool) {
 		return m.Posters()
 	case extrainfo.FieldLabels:
 		return m.Labels()
-	case extrainfo.FieldVoteCount:
-		return m.VoteCount()
+	case extrainfo.FieldLikes:
+		return m.Likes()
+	case extrainfo.FieldDislikes:
+		return m.Dislikes()
 	case extrainfo.FieldRatingV1:
 		return m.RatingV1()
 	}
@@ -6687,8 +6768,10 @@ func (m *ExtraInfoMutation) OldField(ctx context.Context, name string) (ent.Valu
 		return m.OldPosters(ctx)
 	case extrainfo.FieldLabels:
 		return m.OldLabels(ctx)
-	case extrainfo.FieldVoteCount:
-		return m.OldVoteCount(ctx)
+	case extrainfo.FieldLikes:
+		return m.OldLikes(ctx)
+	case extrainfo.FieldDislikes:
+		return m.OldDislikes(ctx)
 	case extrainfo.FieldRatingV1:
 		return m.OldRatingV1(ctx)
 	}
@@ -6742,12 +6825,19 @@ func (m *ExtraInfoMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetLabels(v)
 		return nil
-	case extrainfo.FieldVoteCount:
+	case extrainfo.FieldLikes:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetVoteCount(v)
+		m.SetLikes(v)
+		return nil
+	case extrainfo.FieldDislikes:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDislikes(v)
 		return nil
 	case extrainfo.FieldRatingV1:
 		v, ok := value.(decimal.Decimal)
@@ -6773,8 +6863,11 @@ func (m *ExtraInfoMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, extrainfo.FieldDeletedAt)
 	}
-	if m.addvote_count != nil {
-		fields = append(fields, extrainfo.FieldVoteCount)
+	if m.addlikes != nil {
+		fields = append(fields, extrainfo.FieldLikes)
+	}
+	if m.adddislikes != nil {
+		fields = append(fields, extrainfo.FieldDislikes)
 	}
 	return fields
 }
@@ -6790,8 +6883,10 @@ func (m *ExtraInfoMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdatedAt()
 	case extrainfo.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case extrainfo.FieldVoteCount:
-		return m.AddedVoteCount()
+	case extrainfo.FieldLikes:
+		return m.AddedLikes()
+	case extrainfo.FieldDislikes:
+		return m.AddedDislikes()
 	}
 	return nil, false
 }
@@ -6822,12 +6917,19 @@ func (m *ExtraInfoMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddDeletedAt(v)
 		return nil
-	case extrainfo.FieldVoteCount:
+	case extrainfo.FieldLikes:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddVoteCount(v)
+		m.AddLikes(v)
+		return nil
+	case extrainfo.FieldDislikes:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDislikes(v)
 		return nil
 	}
 	return fmt.Errorf("unknown ExtraInfo numeric field %s", name)
@@ -6843,8 +6945,11 @@ func (m *ExtraInfoMutation) ClearedFields() []string {
 	if m.FieldCleared(extrainfo.FieldLabels) {
 		fields = append(fields, extrainfo.FieldLabels)
 	}
-	if m.FieldCleared(extrainfo.FieldVoteCount) {
-		fields = append(fields, extrainfo.FieldVoteCount)
+	if m.FieldCleared(extrainfo.FieldLikes) {
+		fields = append(fields, extrainfo.FieldLikes)
+	}
+	if m.FieldCleared(extrainfo.FieldDislikes) {
+		fields = append(fields, extrainfo.FieldDislikes)
 	}
 	if m.FieldCleared(extrainfo.FieldRatingV1) {
 		fields = append(fields, extrainfo.FieldRatingV1)
@@ -6869,8 +6974,11 @@ func (m *ExtraInfoMutation) ClearField(name string) error {
 	case extrainfo.FieldLabels:
 		m.ClearLabels()
 		return nil
-	case extrainfo.FieldVoteCount:
-		m.ClearVoteCount()
+	case extrainfo.FieldLikes:
+		m.ClearLikes()
+		return nil
+	case extrainfo.FieldDislikes:
+		m.ClearDislikes()
 		return nil
 	case extrainfo.FieldRatingV1:
 		m.ClearRatingV1()
@@ -6901,8 +7009,11 @@ func (m *ExtraInfoMutation) ResetField(name string) error {
 	case extrainfo.FieldLabels:
 		m.ResetLabels()
 		return nil
-	case extrainfo.FieldVoteCount:
-		m.ResetVoteCount()
+	case extrainfo.FieldLikes:
+		m.ResetLikes()
+		return nil
+	case extrainfo.FieldDislikes:
+		m.ResetDislikes()
 		return nil
 	case extrainfo.FieldRatingV1:
 		m.ResetRatingV1()
@@ -10936,6 +11047,749 @@ func (m *GoodRewardHistoryMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown GoodRewardHistory edge %s", name)
 }
 
+// LikeMutation represents an operation that mutates the Like nodes in the graph.
+type LikeMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *uuid.UUID
+	created_at    *uint32
+	addcreated_at *int32
+	updated_at    *uint32
+	addupdated_at *int32
+	deleted_at    *uint32
+	adddeleted_at *int32
+	app_id        *uuid.UUID
+	user_id       *uuid.UUID
+	good_id       *uuid.UUID
+	like          *bool
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Like, error)
+	predicates    []predicate.Like
+}
+
+var _ ent.Mutation = (*LikeMutation)(nil)
+
+// likeOption allows management of the mutation configuration using functional options.
+type likeOption func(*LikeMutation)
+
+// newLikeMutation creates new mutation for the Like entity.
+func newLikeMutation(c config, op Op, opts ...likeOption) *LikeMutation {
+	m := &LikeMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeLike,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withLikeID sets the ID field of the mutation.
+func withLikeID(id uuid.UUID) likeOption {
+	return func(m *LikeMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Like
+		)
+		m.oldValue = func(ctx context.Context) (*Like, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Like.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withLike sets the old Like of the mutation.
+func withLike(node *Like) likeOption {
+	return func(m *LikeMutation) {
+		m.oldValue = func(context.Context) (*Like, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m LikeMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m LikeMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Like entities.
+func (m *LikeMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *LikeMutation) ID() (id uuid.UUID, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *LikeMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uuid.UUID{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Like.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *LikeMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *LikeMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the Like entity.
+// If the Like object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *LikeMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *LikeMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *LikeMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *LikeMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *LikeMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *LikeMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the Like entity.
+// If the Like object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *LikeMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *LikeMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *LikeMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *LikeMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *LikeMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *LikeMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the Like entity.
+// If the Like object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *LikeMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *LikeMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *LikeMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *LikeMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetAppID sets the "app_id" field.
+func (m *LikeMutation) SetAppID(u uuid.UUID) {
+	m.app_id = &u
+}
+
+// AppID returns the value of the "app_id" field in the mutation.
+func (m *LikeMutation) AppID() (r uuid.UUID, exists bool) {
+	v := m.app_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppID returns the old "app_id" field's value of the Like entity.
+// If the Like object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *LikeMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
+	}
+	return oldValue.AppID, nil
+}
+
+// ResetAppID resets all changes to the "app_id" field.
+func (m *LikeMutation) ResetAppID() {
+	m.app_id = nil
+}
+
+// SetUserID sets the "user_id" field.
+func (m *LikeMutation) SetUserID(u uuid.UUID) {
+	m.user_id = &u
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *LikeMutation) UserID() (r uuid.UUID, exists bool) {
+	v := m.user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the Like entity.
+// If the Like object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *LikeMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *LikeMutation) ResetUserID() {
+	m.user_id = nil
+}
+
+// SetGoodID sets the "good_id" field.
+func (m *LikeMutation) SetGoodID(u uuid.UUID) {
+	m.good_id = &u
+}
+
+// GoodID returns the value of the "good_id" field in the mutation.
+func (m *LikeMutation) GoodID() (r uuid.UUID, exists bool) {
+	v := m.good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGoodID returns the old "good_id" field's value of the Like entity.
+// If the Like object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *LikeMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGoodID: %w", err)
+	}
+	return oldValue.GoodID, nil
+}
+
+// ResetGoodID resets all changes to the "good_id" field.
+func (m *LikeMutation) ResetGoodID() {
+	m.good_id = nil
+}
+
+// SetLike sets the "like" field.
+func (m *LikeMutation) SetLike(b bool) {
+	m.like = &b
+}
+
+// Like returns the value of the "like" field in the mutation.
+func (m *LikeMutation) Like() (r bool, exists bool) {
+	v := m.like
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLike returns the old "like" field's value of the Like entity.
+// If the Like object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *LikeMutation) OldLike(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLike is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLike requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLike: %w", err)
+	}
+	return oldValue.Like, nil
+}
+
+// ResetLike resets all changes to the "like" field.
+func (m *LikeMutation) ResetLike() {
+	m.like = nil
+}
+
+// Where appends a list predicates to the LikeMutation builder.
+func (m *LikeMutation) Where(ps ...predicate.Like) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *LikeMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Like).
+func (m *LikeMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *LikeMutation) Fields() []string {
+	fields := make([]string, 0, 7)
+	if m.created_at != nil {
+		fields = append(fields, like.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, like.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, like.FieldDeletedAt)
+	}
+	if m.app_id != nil {
+		fields = append(fields, like.FieldAppID)
+	}
+	if m.user_id != nil {
+		fields = append(fields, like.FieldUserID)
+	}
+	if m.good_id != nil {
+		fields = append(fields, like.FieldGoodID)
+	}
+	if m.like != nil {
+		fields = append(fields, like.FieldLike)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *LikeMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case like.FieldCreatedAt:
+		return m.CreatedAt()
+	case like.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case like.FieldDeletedAt:
+		return m.DeletedAt()
+	case like.FieldAppID:
+		return m.AppID()
+	case like.FieldUserID:
+		return m.UserID()
+	case like.FieldGoodID:
+		return m.GoodID()
+	case like.FieldLike:
+		return m.Like()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *LikeMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case like.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case like.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case like.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case like.FieldAppID:
+		return m.OldAppID(ctx)
+	case like.FieldUserID:
+		return m.OldUserID(ctx)
+	case like.FieldGoodID:
+		return m.OldGoodID(ctx)
+	case like.FieldLike:
+		return m.OldLike(ctx)
+	}
+	return nil, fmt.Errorf("unknown Like field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *LikeMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case like.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case like.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case like.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case like.FieldAppID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppID(v)
+		return nil
+	case like.FieldUserID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
+	case like.FieldGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGoodID(v)
+		return nil
+	case like.FieldLike:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLike(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Like field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *LikeMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, like.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, like.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, like.FieldDeletedAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *LikeMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case like.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case like.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case like.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *LikeMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case like.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case like.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case like.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Like numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *LikeMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *LikeMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *LikeMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Like nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *LikeMutation) ResetField(name string) error {
+	switch name {
+	case like.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case like.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case like.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case like.FieldAppID:
+		m.ResetAppID()
+		return nil
+	case like.FieldUserID:
+		m.ResetUserID()
+		return nil
+	case like.FieldGoodID:
+		m.ResetGoodID()
+		return nil
+	case like.FieldLike:
+		m.ResetLike()
+		return nil
+	}
+	return fmt.Errorf("unknown Like field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *LikeMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *LikeMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *LikeMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *LikeMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *LikeMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *LikeMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *LikeMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Like unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *LikeMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Like edge %s", name)
+}
+
 // PromotionMutation represents an operation that mutates the Promotion nodes in the graph.
 type PromotionMutation struct {
 	config
@@ -13734,6 +14588,771 @@ func (m *RequiredGoodMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *RequiredGoodMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown RequiredGood edge %s", name)
+}
+
+// ScoreMutation represents an operation that mutates the Score nodes in the graph.
+type ScoreMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *uuid.UUID
+	created_at    *uint32
+	addcreated_at *int32
+	updated_at    *uint32
+	addupdated_at *int32
+	deleted_at    *uint32
+	adddeleted_at *int32
+	app_id        *uuid.UUID
+	user_id       *uuid.UUID
+	good_id       *uuid.UUID
+	score         *decimal.Decimal
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Score, error)
+	predicates    []predicate.Score
+}
+
+var _ ent.Mutation = (*ScoreMutation)(nil)
+
+// scoreOption allows management of the mutation configuration using functional options.
+type scoreOption func(*ScoreMutation)
+
+// newScoreMutation creates new mutation for the Score entity.
+func newScoreMutation(c config, op Op, opts ...scoreOption) *ScoreMutation {
+	m := &ScoreMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeScore,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withScoreID sets the ID field of the mutation.
+func withScoreID(id uuid.UUID) scoreOption {
+	return func(m *ScoreMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Score
+		)
+		m.oldValue = func(ctx context.Context) (*Score, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Score.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withScore sets the old Score of the mutation.
+func withScore(node *Score) scoreOption {
+	return func(m *ScoreMutation) {
+		m.oldValue = func(context.Context) (*Score, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m ScoreMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m ScoreMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Score entities.
+func (m *ScoreMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *ScoreMutation) ID() (id uuid.UUID, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *ScoreMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uuid.UUID{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Score.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *ScoreMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *ScoreMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the Score entity.
+// If the Score object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ScoreMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *ScoreMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *ScoreMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *ScoreMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *ScoreMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *ScoreMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the Score entity.
+// If the Score object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ScoreMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *ScoreMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *ScoreMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *ScoreMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *ScoreMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *ScoreMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the Score entity.
+// If the Score object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ScoreMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *ScoreMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *ScoreMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *ScoreMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetAppID sets the "app_id" field.
+func (m *ScoreMutation) SetAppID(u uuid.UUID) {
+	m.app_id = &u
+}
+
+// AppID returns the value of the "app_id" field in the mutation.
+func (m *ScoreMutation) AppID() (r uuid.UUID, exists bool) {
+	v := m.app_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppID returns the old "app_id" field's value of the Score entity.
+// If the Score object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ScoreMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
+	}
+	return oldValue.AppID, nil
+}
+
+// ResetAppID resets all changes to the "app_id" field.
+func (m *ScoreMutation) ResetAppID() {
+	m.app_id = nil
+}
+
+// SetUserID sets the "user_id" field.
+func (m *ScoreMutation) SetUserID(u uuid.UUID) {
+	m.user_id = &u
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *ScoreMutation) UserID() (r uuid.UUID, exists bool) {
+	v := m.user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the Score entity.
+// If the Score object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ScoreMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *ScoreMutation) ResetUserID() {
+	m.user_id = nil
+}
+
+// SetGoodID sets the "good_id" field.
+func (m *ScoreMutation) SetGoodID(u uuid.UUID) {
+	m.good_id = &u
+}
+
+// GoodID returns the value of the "good_id" field in the mutation.
+func (m *ScoreMutation) GoodID() (r uuid.UUID, exists bool) {
+	v := m.good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGoodID returns the old "good_id" field's value of the Score entity.
+// If the Score object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ScoreMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGoodID: %w", err)
+	}
+	return oldValue.GoodID, nil
+}
+
+// ResetGoodID resets all changes to the "good_id" field.
+func (m *ScoreMutation) ResetGoodID() {
+	m.good_id = nil
+}
+
+// SetScore sets the "score" field.
+func (m *ScoreMutation) SetScore(d decimal.Decimal) {
+	m.score = &d
+}
+
+// Score returns the value of the "score" field in the mutation.
+func (m *ScoreMutation) Score() (r decimal.Decimal, exists bool) {
+	v := m.score
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldScore returns the old "score" field's value of the Score entity.
+// If the Score object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ScoreMutation) OldScore(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldScore is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldScore requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldScore: %w", err)
+	}
+	return oldValue.Score, nil
+}
+
+// ClearScore clears the value of the "score" field.
+func (m *ScoreMutation) ClearScore() {
+	m.score = nil
+	m.clearedFields[score.FieldScore] = struct{}{}
+}
+
+// ScoreCleared returns if the "score" field was cleared in this mutation.
+func (m *ScoreMutation) ScoreCleared() bool {
+	_, ok := m.clearedFields[score.FieldScore]
+	return ok
+}
+
+// ResetScore resets all changes to the "score" field.
+func (m *ScoreMutation) ResetScore() {
+	m.score = nil
+	delete(m.clearedFields, score.FieldScore)
+}
+
+// Where appends a list predicates to the ScoreMutation builder.
+func (m *ScoreMutation) Where(ps ...predicate.Score) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *ScoreMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Score).
+func (m *ScoreMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *ScoreMutation) Fields() []string {
+	fields := make([]string, 0, 7)
+	if m.created_at != nil {
+		fields = append(fields, score.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, score.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, score.FieldDeletedAt)
+	}
+	if m.app_id != nil {
+		fields = append(fields, score.FieldAppID)
+	}
+	if m.user_id != nil {
+		fields = append(fields, score.FieldUserID)
+	}
+	if m.good_id != nil {
+		fields = append(fields, score.FieldGoodID)
+	}
+	if m.score != nil {
+		fields = append(fields, score.FieldScore)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *ScoreMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case score.FieldCreatedAt:
+		return m.CreatedAt()
+	case score.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case score.FieldDeletedAt:
+		return m.DeletedAt()
+	case score.FieldAppID:
+		return m.AppID()
+	case score.FieldUserID:
+		return m.UserID()
+	case score.FieldGoodID:
+		return m.GoodID()
+	case score.FieldScore:
+		return m.Score()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *ScoreMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case score.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case score.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case score.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case score.FieldAppID:
+		return m.OldAppID(ctx)
+	case score.FieldUserID:
+		return m.OldUserID(ctx)
+	case score.FieldGoodID:
+		return m.OldGoodID(ctx)
+	case score.FieldScore:
+		return m.OldScore(ctx)
+	}
+	return nil, fmt.Errorf("unknown Score field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ScoreMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case score.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case score.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case score.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case score.FieldAppID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppID(v)
+		return nil
+	case score.FieldUserID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
+	case score.FieldGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGoodID(v)
+		return nil
+	case score.FieldScore:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetScore(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Score field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *ScoreMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, score.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, score.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, score.FieldDeletedAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *ScoreMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case score.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case score.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case score.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ScoreMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case score.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case score.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case score.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Score numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *ScoreMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(score.FieldScore) {
+		fields = append(fields, score.FieldScore)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *ScoreMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ScoreMutation) ClearField(name string) error {
+	switch name {
+	case score.FieldScore:
+		m.ClearScore()
+		return nil
+	}
+	return fmt.Errorf("unknown Score nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *ScoreMutation) ResetField(name string) error {
+	switch name {
+	case score.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case score.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case score.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case score.FieldAppID:
+		m.ResetAppID()
+		return nil
+	case score.FieldUserID:
+		m.ResetUserID()
+		return nil
+	case score.FieldGoodID:
+		m.ResetGoodID()
+		return nil
+	case score.FieldScore:
+		m.ResetScore()
+		return nil
+	}
+	return fmt.Errorf("unknown Score field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *ScoreMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *ScoreMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *ScoreMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *ScoreMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *ScoreMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *ScoreMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *ScoreMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Score unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *ScoreMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Score edge %s", name)
 }
 
 // StockMutation represents an operation that mutates the Stock nodes in the graph.

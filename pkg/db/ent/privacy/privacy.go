@@ -366,6 +366,30 @@ func (f GoodRewardHistoryMutationRuleFunc) EvalMutation(ctx context.Context, m e
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.GoodRewardHistoryMutation", m)
 }
 
+// The LikeQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type LikeQueryRuleFunc func(context.Context, *ent.LikeQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f LikeQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.LikeQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.LikeQuery", q)
+}
+
+// The LikeMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type LikeMutationRuleFunc func(context.Context, *ent.LikeMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f LikeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.LikeMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.LikeMutation", m)
+}
+
 // The PromotionQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type PromotionQueryRuleFunc func(context.Context, *ent.PromotionQuery) error
@@ -436,6 +460,30 @@ func (f RequiredGoodMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mu
 		return f(ctx, m)
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.RequiredGoodMutation", m)
+}
+
+// The ScoreQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type ScoreQueryRuleFunc func(context.Context, *ent.ScoreQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f ScoreQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.ScoreQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.ScoreQuery", q)
+}
+
+// The ScoreMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type ScoreMutationRuleFunc func(context.Context, *ent.ScoreMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f ScoreMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.ScoreMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.ScoreMutation", m)
 }
 
 // The StockQueryRuleFunc type is an adapter to allow the use of ordinary
@@ -539,11 +587,15 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.GoodRewardHistoryQuery:
 		return q.Filter(), nil
+	case *ent.LikeQuery:
+		return q.Filter(), nil
 	case *ent.PromotionQuery:
 		return q.Filter(), nil
 	case *ent.RecommendQuery:
 		return q.Filter(), nil
 	case *ent.RequiredGoodQuery:
+		return q.Filter(), nil
+	case *ent.ScoreQuery:
 		return q.Filter(), nil
 	case *ent.StockQuery:
 		return q.Filter(), nil
@@ -574,11 +626,15 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 		return m.Filter(), nil
 	case *ent.GoodRewardHistoryMutation:
 		return m.Filter(), nil
+	case *ent.LikeMutation:
+		return m.Filter(), nil
 	case *ent.PromotionMutation:
 		return m.Filter(), nil
 	case *ent.RecommendMutation:
 		return m.Filter(), nil
 	case *ent.RequiredGoodMutation:
+		return m.Filter(), nil
+	case *ent.ScoreMutation:
 		return m.Filter(), nil
 	case *ent.StockMutation:
 		return m.Filter(), nil
