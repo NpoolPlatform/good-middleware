@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 
+	inspiretypes "github.com/NpoolPlatform/message/npool/basetypes/inspire/v1"
 	mgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/appgood"
 	goodmgrpb "github.com/NpoolPlatform/message/npool/good/mgr/v1/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/appgood"
-	commmgrpb "github.com/NpoolPlatform/message/npool/inspire/mgr/v1/commission"
 
 	"github.com/NpoolPlatform/good-manager/pkg/db"
 	"github.com/NpoolPlatform/good-manager/pkg/db/ent"
@@ -351,7 +351,7 @@ func expand(infos []*npool.Good) ([]*npool.Good, error) { //nolint
 		info.GoodType = goodmgrpb.GoodType(goodmgrpb.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = goodmgrpb.BenefitType(goodmgrpb.BenefitType_value[info.BenefitTypeStr])
 		info.BenefitState = goodmgrpb.BenefitState(goodmgrpb.BenefitState_value[info.BenefitStateStr])
-		info.CommissionSettleType = commmgrpb.SettleType(commmgrpb.SettleType_value[info.CommissionSettleTypeStr])
+		info.CommissionSettleType = inspiretypes.SettleType(inspiretypes.SettleType_value[info.CommissionSettleTypeStr])
 		info.CancelMode = mgrpb.CancelMode(mgrpb.CancelMode_value[info.CancelModeStr])
 
 		info.Visible = info.VisibleInt > 0
