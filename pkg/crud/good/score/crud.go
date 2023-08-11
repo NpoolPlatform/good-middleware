@@ -1,26 +1,25 @@
-package comment
+package score
 
 import (
 	"fmt"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entcomment "github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
+	entscore "github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 type Req struct {
-	ID        *uuid.UUID
-	AppID     *uuid.UUID
-	UserID    *uuid.UUID
-	GoodID    *uuid.UUID
-	OrderID   *uuid.UUID
-	Content   *string
-	ReplyToID *uuid.UUID
+	ID     *uuid.UUID
+	AppID  *uuid.UUID
+	UserID *uuid.UUID
+	GoodID *uuid.UUID
+	Score  *decimal.Decimal
 }
 
-func CreateSet(c *ent.CommentCreate, req *Req) *ent.CommentCreate {
+func CreateSet(c *ent.ScoreCreate, req *Req) *ent.ScoreCreate {
 	if req.ID != nil {
 		c.SetID(*req.ID)
 	}
@@ -33,24 +32,15 @@ func CreateSet(c *ent.CommentCreate, req *Req) *ent.CommentCreate {
 	if req.GoodID != nil {
 		c.SetGoodID(*req.GoodID)
 	}
-	if req.OrderID != nil {
-		c.SetOrderID(*req.OrderID)
-	}
-	if req.Content != nil {
-		c.SetContent(*req.Content)
-	}
-	if req.ReplyToID != nil {
-		c.SetReplyToID(*req.ReplyToID)
+	if req.Score != nil {
+		c.SetScore(*req.Score)
 	}
 	return c
 }
 
-func UpdateSet(u *ent.CommentUpdateOne, req *Req) *ent.CommentUpdateOne {
-	if req.Content != nil {
-		u.SetContent(*req.Content)
-	}
-	if req.ReplyToID != nil {
-		u.SetReplyToID(*req.ReplyToID)
+func UpdateSet(u *ent.ScoreUpdateOne, req *Req) *ent.ScoreUpdateOne {
+	if req.Score != nil {
+		u.SetScore(*req.Score)
 	}
 	return u
 }
@@ -62,8 +52,8 @@ type Conds struct {
 	GoodID *cruder.Cond
 }
 
-func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error) {
-	q.Where(entcomment.DeletedAt(0))
+func SetQueryConds(q *ent.ScoreQuery, conds *Conds) (*ent.ScoreQuery, error) {
+	q.Where(entscore.DeletedAt(0))
 	if conds == nil {
 		return q, nil
 	}
@@ -74,9 +64,9 @@ func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error)
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
-			q.Where(entcomment.ID(id))
+			q.Where(entscore.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid comment field")
+			return nil, fmt.Errorf("invalid score field")
 		}
 	}
 	if conds.AppID != nil {
@@ -86,9 +76,9 @@ func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error)
 		}
 		switch conds.AppID.Op {
 		case cruder.EQ:
-			q.Where(entcomment.AppID(id))
+			q.Where(entscore.AppID(id))
 		default:
-			return nil, fmt.Errorf("invalid comment field")
+			return nil, fmt.Errorf("invalid score field")
 		}
 	}
 	if conds.UserID != nil {
@@ -98,9 +88,9 @@ func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error)
 		}
 		switch conds.UserID.Op {
 		case cruder.EQ:
-			q.Where(entcomment.UserID(id))
+			q.Where(entscore.UserID(id))
 		default:
-			return nil, fmt.Errorf("invalid comment field")
+			return nil, fmt.Errorf("invalid score field")
 		}
 	}
 	if conds.GoodID != nil {
@@ -110,9 +100,9 @@ func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error)
 		}
 		switch conds.GoodID.Op {
 		case cruder.EQ:
-			q.Where(entcomment.GoodID(id))
+			q.Where(entscore.GoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid comment field")
+			return nil, fmt.Errorf("invalid score field")
 		}
 	}
 	return q, nil

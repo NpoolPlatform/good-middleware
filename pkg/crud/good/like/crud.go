@@ -1,26 +1,24 @@
-package comment
+package like
 
 import (
 	"fmt"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entcomment "github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
+	entlike "github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	"github.com/google/uuid"
 )
 
 type Req struct {
-	ID        *uuid.UUID
-	AppID     *uuid.UUID
-	UserID    *uuid.UUID
-	GoodID    *uuid.UUID
-	OrderID   *uuid.UUID
-	Content   *string
-	ReplyToID *uuid.UUID
+	ID     *uuid.UUID
+	AppID  *uuid.UUID
+	UserID *uuid.UUID
+	GoodID *uuid.UUID
+	Like   *bool
 }
 
-func CreateSet(c *ent.CommentCreate, req *Req) *ent.CommentCreate {
+func CreateSet(c *ent.LikeCreate, req *Req) *ent.LikeCreate {
 	if req.ID != nil {
 		c.SetID(*req.ID)
 	}
@@ -33,24 +31,15 @@ func CreateSet(c *ent.CommentCreate, req *Req) *ent.CommentCreate {
 	if req.GoodID != nil {
 		c.SetGoodID(*req.GoodID)
 	}
-	if req.OrderID != nil {
-		c.SetOrderID(*req.OrderID)
-	}
-	if req.Content != nil {
-		c.SetContent(*req.Content)
-	}
-	if req.ReplyToID != nil {
-		c.SetReplyToID(*req.ReplyToID)
+	if req.Like != nil {
+		c.SetLike(*req.Like)
 	}
 	return c
 }
 
-func UpdateSet(u *ent.CommentUpdateOne, req *Req) *ent.CommentUpdateOne {
-	if req.Content != nil {
-		u.SetContent(*req.Content)
-	}
-	if req.ReplyToID != nil {
-		u.SetReplyToID(*req.ReplyToID)
+func UpdateSet(u *ent.LikeUpdateOne, req *Req) *ent.LikeUpdateOne {
+	if req.Like != nil {
+		u.SetLike(*req.Like)
 	}
 	return u
 }
@@ -62,8 +51,8 @@ type Conds struct {
 	GoodID *cruder.Cond
 }
 
-func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error) {
-	q.Where(entcomment.DeletedAt(0))
+func SetQueryConds(q *ent.LikeQuery, conds *Conds) (*ent.LikeQuery, error) {
+	q.Where(entlike.DeletedAt(0))
 	if conds == nil {
 		return q, nil
 	}
@@ -74,9 +63,9 @@ func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error)
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
-			q.Where(entcomment.ID(id))
+			q.Where(entlike.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid comment field")
+			return nil, fmt.Errorf("invalid like field")
 		}
 	}
 	if conds.AppID != nil {
@@ -86,9 +75,9 @@ func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error)
 		}
 		switch conds.AppID.Op {
 		case cruder.EQ:
-			q.Where(entcomment.AppID(id))
+			q.Where(entlike.AppID(id))
 		default:
-			return nil, fmt.Errorf("invalid comment field")
+			return nil, fmt.Errorf("invalid like field")
 		}
 	}
 	if conds.UserID != nil {
@@ -98,9 +87,9 @@ func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error)
 		}
 		switch conds.UserID.Op {
 		case cruder.EQ:
-			q.Where(entcomment.UserID(id))
+			q.Where(entlike.UserID(id))
 		default:
-			return nil, fmt.Errorf("invalid comment field")
+			return nil, fmt.Errorf("invalid like field")
 		}
 	}
 	if conds.GoodID != nil {
@@ -110,9 +99,9 @@ func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error)
 		}
 		switch conds.GoodID.Op {
 		case cruder.EQ:
-			q.Where(entcomment.GoodID(id))
+			q.Where(entlike.GoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid comment field")
+			return nil, fmt.Errorf("invalid like field")
 		}
 	}
 	return q, nil
