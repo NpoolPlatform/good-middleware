@@ -21,6 +21,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/schema"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -837,6 +838,50 @@ func init() {
 	stockDescID := stockFields[0].Descriptor()
 	// stock.DefaultID holds the default value on creation for the id field.
 	stock.DefaultID = stockDescID.Default.(func() uuid.UUID)
+	vendorbrandMixin := schema.VendorBrand{}.Mixin()
+	vendorbrand.Policy = privacy.NewPolicies(vendorbrandMixin[0], schema.VendorBrand{})
+	vendorbrand.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := vendorbrand.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	vendorbrandMixinFields0 := vendorbrandMixin[0].Fields()
+	_ = vendorbrandMixinFields0
+	vendorbrandFields := schema.VendorBrand{}.Fields()
+	_ = vendorbrandFields
+	// vendorbrandDescCreatedAt is the schema descriptor for created_at field.
+	vendorbrandDescCreatedAt := vendorbrandMixinFields0[0].Descriptor()
+	// vendorbrand.DefaultCreatedAt holds the default value on creation for the created_at field.
+	vendorbrand.DefaultCreatedAt = vendorbrandDescCreatedAt.Default.(func() uint32)
+	// vendorbrandDescUpdatedAt is the schema descriptor for updated_at field.
+	vendorbrandDescUpdatedAt := vendorbrandMixinFields0[1].Descriptor()
+	// vendorbrand.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	vendorbrand.DefaultUpdatedAt = vendorbrandDescUpdatedAt.Default.(func() uint32)
+	// vendorbrand.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	vendorbrand.UpdateDefaultUpdatedAt = vendorbrandDescUpdatedAt.UpdateDefault.(func() uint32)
+	// vendorbrandDescDeletedAt is the schema descriptor for deleted_at field.
+	vendorbrandDescDeletedAt := vendorbrandMixinFields0[2].Descriptor()
+	// vendorbrand.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	vendorbrand.DefaultDeletedAt = vendorbrandDescDeletedAt.Default.(func() uint32)
+	// vendorbrandDescName is the schema descriptor for name field.
+	vendorbrandDescName := vendorbrandFields[1].Descriptor()
+	// vendorbrand.DefaultName holds the default value on creation for the name field.
+	vendorbrand.DefaultName = vendorbrandDescName.Default.(string)
+	// vendorbrand.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	vendorbrand.NameValidator = vendorbrandDescName.Validators[0].(func(string) error)
+	// vendorbrandDescLogo is the schema descriptor for logo field.
+	vendorbrandDescLogo := vendorbrandFields[2].Descriptor()
+	// vendorbrand.DefaultLogo holds the default value on creation for the logo field.
+	vendorbrand.DefaultLogo = vendorbrandDescLogo.Default.(string)
+	// vendorbrand.LogoValidator is a validator for the "logo" field. It is called by the builders before save.
+	vendorbrand.LogoValidator = vendorbrandDescLogo.Validators[0].(func(string) error)
+	// vendorbrandDescID is the schema descriptor for id field.
+	vendorbrandDescID := vendorbrandFields[0].Descriptor()
+	// vendorbrand.DefaultID holds the default value on creation for the id field.
+	vendorbrand.DefaultID = vendorbrandDescID.Default.(func() uuid.UUID)
 	vendorlocationMixin := schema.VendorLocation{}.Mixin()
 	vendorlocation.Policy = privacy.NewPolicies(vendorlocationMixin[0], schema.VendorLocation{})
 	vendorlocation.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -889,6 +934,10 @@ func init() {
 	vendorlocation.DefaultAddress = vendorlocationDescAddress.Default.(string)
 	// vendorlocation.AddressValidator is a validator for the "address" field. It is called by the builders before save.
 	vendorlocation.AddressValidator = vendorlocationDescAddress.Validators[0].(func(string) error)
+	// vendorlocationDescBrandID is the schema descriptor for brand_id field.
+	vendorlocationDescBrandID := vendorlocationFields[5].Descriptor()
+	// vendorlocation.DefaultBrandID holds the default value on creation for the brand_id field.
+	vendorlocation.DefaultBrandID = vendorlocationDescBrandID.Default.(func() uuid.UUID)
 	// vendorlocationDescID is the schema descriptor for id field.
 	vendorlocationDescID := vendorlocationFields[0].Descriptor()
 	// vendorlocation.DefaultID holds the default value on creation for the id field.

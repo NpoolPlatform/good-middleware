@@ -26,6 +26,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 
 	"entgo.io/ent/dialect"
@@ -67,6 +68,8 @@ type Client struct {
 	Score *ScoreClient
 	// Stock is the client for interacting with the Stock builders.
 	Stock *StockClient
+	// VendorBrand is the client for interacting with the VendorBrand builders.
+	VendorBrand *VendorBrandClient
 	// VendorLocation is the client for interacting with the VendorLocation builders.
 	VendorLocation *VendorLocationClient
 }
@@ -97,6 +100,7 @@ func (c *Client) init() {
 	c.RequiredGood = NewRequiredGoodClient(c.config)
 	c.Score = NewScoreClient(c.config)
 	c.Stock = NewStockClient(c.config)
+	c.VendorBrand = NewVendorBrandClient(c.config)
 	c.VendorLocation = NewVendorLocationClient(c.config)
 }
 
@@ -146,6 +150,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		RequiredGood:      NewRequiredGoodClient(cfg),
 		Score:             NewScoreClient(cfg),
 		Stock:             NewStockClient(cfg),
+		VendorBrand:       NewVendorBrandClient(cfg),
 		VendorLocation:    NewVendorLocationClient(cfg),
 	}, nil
 }
@@ -181,6 +186,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		RequiredGood:      NewRequiredGoodClient(cfg),
 		Score:             NewScoreClient(cfg),
 		Stock:             NewStockClient(cfg),
+		VendorBrand:       NewVendorBrandClient(cfg),
 		VendorLocation:    NewVendorLocationClient(cfg),
 	}, nil
 }
@@ -226,6 +232,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.RequiredGood.Use(hooks...)
 	c.Score.Use(hooks...)
 	c.Stock.Use(hooks...)
+	c.VendorBrand.Use(hooks...)
 	c.VendorLocation.Use(hooks...)
 }
 
@@ -1592,6 +1599,97 @@ func (c *StockClient) GetX(ctx context.Context, id uuid.UUID) *Stock {
 func (c *StockClient) Hooks() []Hook {
 	hooks := c.hooks.Stock
 	return append(hooks[:len(hooks):len(hooks)], stock.Hooks[:]...)
+}
+
+// VendorBrandClient is a client for the VendorBrand schema.
+type VendorBrandClient struct {
+	config
+}
+
+// NewVendorBrandClient returns a client for the VendorBrand from the given config.
+func NewVendorBrandClient(c config) *VendorBrandClient {
+	return &VendorBrandClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `vendorbrand.Hooks(f(g(h())))`.
+func (c *VendorBrandClient) Use(hooks ...Hook) {
+	c.hooks.VendorBrand = append(c.hooks.VendorBrand, hooks...)
+}
+
+// Create returns a builder for creating a VendorBrand entity.
+func (c *VendorBrandClient) Create() *VendorBrandCreate {
+	mutation := newVendorBrandMutation(c.config, OpCreate)
+	return &VendorBrandCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of VendorBrand entities.
+func (c *VendorBrandClient) CreateBulk(builders ...*VendorBrandCreate) *VendorBrandCreateBulk {
+	return &VendorBrandCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for VendorBrand.
+func (c *VendorBrandClient) Update() *VendorBrandUpdate {
+	mutation := newVendorBrandMutation(c.config, OpUpdate)
+	return &VendorBrandUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *VendorBrandClient) UpdateOne(vb *VendorBrand) *VendorBrandUpdateOne {
+	mutation := newVendorBrandMutation(c.config, OpUpdateOne, withVendorBrand(vb))
+	return &VendorBrandUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *VendorBrandClient) UpdateOneID(id uuid.UUID) *VendorBrandUpdateOne {
+	mutation := newVendorBrandMutation(c.config, OpUpdateOne, withVendorBrandID(id))
+	return &VendorBrandUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for VendorBrand.
+func (c *VendorBrandClient) Delete() *VendorBrandDelete {
+	mutation := newVendorBrandMutation(c.config, OpDelete)
+	return &VendorBrandDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *VendorBrandClient) DeleteOne(vb *VendorBrand) *VendorBrandDeleteOne {
+	return c.DeleteOneID(vb.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *VendorBrandClient) DeleteOneID(id uuid.UUID) *VendorBrandDeleteOne {
+	builder := c.Delete().Where(vendorbrand.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &VendorBrandDeleteOne{builder}
+}
+
+// Query returns a query builder for VendorBrand.
+func (c *VendorBrandClient) Query() *VendorBrandQuery {
+	return &VendorBrandQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a VendorBrand entity by its id.
+func (c *VendorBrandClient) Get(ctx context.Context, id uuid.UUID) (*VendorBrand, error) {
+	return c.Query().Where(vendorbrand.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *VendorBrandClient) GetX(ctx context.Context, id uuid.UUID) *VendorBrand {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *VendorBrandClient) Hooks() []Hook {
+	hooks := c.hooks.VendorBrand
+	return append(hooks[:len(hooks):len(hooks)], vendorbrand.Hooks[:]...)
 }
 
 // VendorLocationClient is a client for the VendorLocation schema.

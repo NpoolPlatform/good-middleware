@@ -26,6 +26,8 @@ const (
 	FieldCity = "city"
 	// FieldAddress holds the string denoting the address field in the database.
 	FieldAddress = "address"
+	// FieldBrandID holds the string denoting the brand_id field in the database.
+	FieldBrandID = "brand_id"
 	// Table holds the table name of the vendorlocation in the database.
 	Table = "vendor_locations"
 )
@@ -40,6 +42,7 @@ var Columns = []string{
 	FieldProvince,
 	FieldCity,
 	FieldAddress,
+	FieldBrandID,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -85,6 +88,8 @@ var (
 	DefaultAddress string
 	// AddressValidator is a validator for the "address" field. It is called by the builders before save.
 	AddressValidator func(string) error
+	// DefaultBrandID holds the default value on creation for the "brand_id" field.
+	DefaultBrandID func() uuid.UUID
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

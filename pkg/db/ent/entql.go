@@ -18,6 +18,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 
 	"entgo.io/ent/dialect/sql"
@@ -28,7 +29,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 16)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 17)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   appdefaultgood.Table,
@@ -385,6 +386,24 @@ var schemaGraph = func() *sqlgraph.Schema {
 	}
 	graph.Nodes[15] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
+			Table:   vendorbrand.Table,
+			Columns: vendorbrand.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUUID,
+				Column: vendorbrand.FieldID,
+			},
+		},
+		Type: "VendorBrand",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			vendorbrand.FieldCreatedAt: {Type: field.TypeUint32, Column: vendorbrand.FieldCreatedAt},
+			vendorbrand.FieldUpdatedAt: {Type: field.TypeUint32, Column: vendorbrand.FieldUpdatedAt},
+			vendorbrand.FieldDeletedAt: {Type: field.TypeUint32, Column: vendorbrand.FieldDeletedAt},
+			vendorbrand.FieldName:      {Type: field.TypeString, Column: vendorbrand.FieldName},
+			vendorbrand.FieldLogo:      {Type: field.TypeString, Column: vendorbrand.FieldLogo},
+		},
+	}
+	graph.Nodes[16] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
 			Table:   vendorlocation.Table,
 			Columns: vendorlocation.Columns,
 			ID: &sqlgraph.FieldSpec{
@@ -401,6 +420,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			vendorlocation.FieldProvince:  {Type: field.TypeString, Column: vendorlocation.FieldProvince},
 			vendorlocation.FieldCity:      {Type: field.TypeString, Column: vendorlocation.FieldCity},
 			vendorlocation.FieldAddress:   {Type: field.TypeString, Column: vendorlocation.FieldAddress},
+			vendorlocation.FieldBrandID:   {Type: field.TypeUUID, Column: vendorlocation.FieldBrandID},
 		},
 	}
 	return graph
@@ -1808,6 +1828,71 @@ func (f *StockFilter) WhereAppLocked(p entql.OtherP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (vbq *VendorBrandQuery) addPredicate(pred func(s *sql.Selector)) {
+	vbq.predicates = append(vbq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the VendorBrandQuery builder.
+func (vbq *VendorBrandQuery) Filter() *VendorBrandFilter {
+	return &VendorBrandFilter{config: vbq.config, predicateAdder: vbq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *VendorBrandMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the VendorBrandMutation builder.
+func (m *VendorBrandMutation) Filter() *VendorBrandFilter {
+	return &VendorBrandFilter{config: m.config, predicateAdder: m}
+}
+
+// VendorBrandFilter provides a generic filtering capability at runtime for VendorBrandQuery.
+type VendorBrandFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *VendorBrandFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[15].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql [16]byte predicate on the id field.
+func (f *VendorBrandFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(vendorbrand.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *VendorBrandFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(vendorbrand.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *VendorBrandFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(vendorbrand.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *VendorBrandFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(vendorbrand.FieldDeletedAt))
+}
+
+// WhereName applies the entql string predicate on the name field.
+func (f *VendorBrandFilter) WhereName(p entql.StringP) {
+	f.Where(p.Field(vendorbrand.FieldName))
+}
+
+// WhereLogo applies the entql string predicate on the logo field.
+func (f *VendorBrandFilter) WhereLogo(p entql.StringP) {
+	f.Where(p.Field(vendorbrand.FieldLogo))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (vlq *VendorLocationQuery) addPredicate(pred func(s *sql.Selector)) {
 	vlq.predicates = append(vlq.predicates, pred)
 }
@@ -1836,7 +1921,7 @@ type VendorLocationFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *VendorLocationFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[15].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[16].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1880,4 +1965,9 @@ func (f *VendorLocationFilter) WhereCity(p entql.StringP) {
 // WhereAddress applies the entql string predicate on the address field.
 func (f *VendorLocationFilter) WhereAddress(p entql.StringP) {
 	f.Where(p.Field(vendorlocation.FieldAddress))
+}
+
+// WhereBrandID applies the entql [16]byte predicate on the brand_id field.
+func (f *VendorLocationFilter) WhereBrandID(p entql.ValueP) {
+	f.Where(p.Field(vendorlocation.FieldBrandID))
 }

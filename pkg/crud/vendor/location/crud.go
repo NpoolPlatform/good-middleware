@@ -3,8 +3,8 @@ package vendorlocation
 import (
 	"fmt"
 
-	"github.com/NpoolPlatform/good-manager/pkg/db/ent"
-	entvendorlocation "github.com/NpoolPlatform/good-manager/pkg/db/ent/vendorlocation"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entvendorlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	"github.com/google/uuid"
@@ -16,6 +16,7 @@ type Req struct {
 	Province *string
 	City     *string
 	Address  *string
+	BrandID  *uuid.UUID
 }
 
 func CreateSet(c *ent.VendorLocationCreate, req *Req) *ent.VendorLocationCreate {
@@ -34,6 +35,9 @@ func CreateSet(c *ent.VendorLocationCreate, req *Req) *ent.VendorLocationCreate 
 	if req.Address != nil {
 		c.SetAddress(*req.Address)
 	}
+	if req.BrandID != nil {
+		c.SetBrandID(*req.BrandID)
+	}
 	return c
 }
 
@@ -50,6 +54,9 @@ func UpdateSet(u *ent.VendorLocationUpdateOne, req *Req) *ent.VendorLocationUpda
 	if req.Address != nil {
 		u.SetAddress(*req.Address)
 	}
+	if req.BrandID != nil {
+		u.SetBrandID(*req.BrandID)
+	}
 	return u
 }
 
@@ -57,6 +64,7 @@ type Conds struct {
 	ID       *cruder.Cond
 	Country  *cruder.Cond
 	Province *cruder.Cond
+	BrandID  *cruder.Cond
 }
 
 func SetQueryConds(q *ent.VendorLocationQuery, conds *Conds) (*ent.VendorLocationQuery, error) {
@@ -81,7 +89,7 @@ func SetQueryConds(q *ent.VendorLocationQuery, conds *Conds) (*ent.VendorLocatio
 		if !ok {
 			return nil, fmt.Errorf("invalid country")
 		}
-		switch conds.Province.Op {
+		switch conds.Country.Op {
 		case cruder.EQ:
 			q.Where(entvendorlocation.Country(country))
 		default:
@@ -96,6 +104,18 @@ func SetQueryConds(q *ent.VendorLocationQuery, conds *Conds) (*ent.VendorLocatio
 		switch conds.Province.Op {
 		case cruder.EQ:
 			q.Where(entvendorlocation.Province(province))
+		default:
+			return nil, fmt.Errorf("invalid vendorlocation field")
+		}
+	}
+	if conds.BrandID != nil {
+		id, ok := conds.BrandID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid brandid")
+		}
+		switch conds.BrandID.Op {
+		case cruder.EQ:
+			q.Where(entvendorlocation.BrandID(id))
 		default:
 			return nil, fmt.Errorf("invalid vendorlocation field")
 		}

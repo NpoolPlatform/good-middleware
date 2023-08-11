@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
+	"github.com/google/uuid"
 )
 
 // VendorLocationUpdate is the builder for updating VendorLocation entities.
@@ -160,6 +161,26 @@ func (vlu *VendorLocationUpdate) SetNillableAddress(s *string) *VendorLocationUp
 // ClearAddress clears the value of the "address" field.
 func (vlu *VendorLocationUpdate) ClearAddress() *VendorLocationUpdate {
 	vlu.mutation.ClearAddress()
+	return vlu
+}
+
+// SetBrandID sets the "brand_id" field.
+func (vlu *VendorLocationUpdate) SetBrandID(u uuid.UUID) *VendorLocationUpdate {
+	vlu.mutation.SetBrandID(u)
+	return vlu
+}
+
+// SetNillableBrandID sets the "brand_id" field if the given value is not nil.
+func (vlu *VendorLocationUpdate) SetNillableBrandID(u *uuid.UUID) *VendorLocationUpdate {
+	if u != nil {
+		vlu.SetBrandID(*u)
+	}
+	return vlu
+}
+
+// ClearBrandID clears the value of the "brand_id" field.
+func (vlu *VendorLocationUpdate) ClearBrandID() *VendorLocationUpdate {
+	vlu.mutation.ClearBrandID()
 	return vlu
 }
 
@@ -386,6 +407,19 @@ func (vlu *VendorLocationUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Column: vendorlocation.FieldAddress,
 		})
 	}
+	if value, ok := vlu.mutation.BrandID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: vendorlocation.FieldBrandID,
+		})
+	}
+	if vlu.mutation.BrandIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: vendorlocation.FieldBrandID,
+		})
+	}
 	_spec.Modifiers = vlu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, vlu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -539,6 +573,26 @@ func (vluo *VendorLocationUpdateOne) SetNillableAddress(s *string) *VendorLocati
 // ClearAddress clears the value of the "address" field.
 func (vluo *VendorLocationUpdateOne) ClearAddress() *VendorLocationUpdateOne {
 	vluo.mutation.ClearAddress()
+	return vluo
+}
+
+// SetBrandID sets the "brand_id" field.
+func (vluo *VendorLocationUpdateOne) SetBrandID(u uuid.UUID) *VendorLocationUpdateOne {
+	vluo.mutation.SetBrandID(u)
+	return vluo
+}
+
+// SetNillableBrandID sets the "brand_id" field if the given value is not nil.
+func (vluo *VendorLocationUpdateOne) SetNillableBrandID(u *uuid.UUID) *VendorLocationUpdateOne {
+	if u != nil {
+		vluo.SetBrandID(*u)
+	}
+	return vluo
+}
+
+// ClearBrandID clears the value of the "brand_id" field.
+func (vluo *VendorLocationUpdateOne) ClearBrandID() *VendorLocationUpdateOne {
+	vluo.mutation.ClearBrandID()
 	return vluo
 }
 
@@ -793,6 +847,19 @@ func (vluo *VendorLocationUpdateOne) sqlSave(ctx context.Context) (_node *Vendor
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: vendorlocation.FieldAddress,
+		})
+	}
+	if value, ok := vluo.mutation.BrandID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: vendorlocation.FieldBrandID,
+		})
+	}
+	if vluo.mutation.BrandIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: vendorlocation.FieldBrandID,
 		})
 	}
 	_spec.Modifiers = vluo.modifiers

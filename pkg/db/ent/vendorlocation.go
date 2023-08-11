@@ -30,6 +30,8 @@ type VendorLocation struct {
 	City string `json:"city,omitempty"`
 	// Address holds the value of the "address" field.
 	Address string `json:"address,omitempty"`
+	// BrandID holds the value of the "brand_id" field.
+	BrandID uuid.UUID `json:"brand_id,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -41,7 +43,7 @@ func (*VendorLocation) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case vendorlocation.FieldCountry, vendorlocation.FieldProvince, vendorlocation.FieldCity, vendorlocation.FieldAddress:
 			values[i] = new(sql.NullString)
-		case vendorlocation.FieldID:
+		case vendorlocation.FieldID, vendorlocation.FieldBrandID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type VendorLocation", columns[i])
@@ -106,6 +108,12 @@ func (vl *VendorLocation) assignValues(columns []string, values []interface{}) e
 			} else if value.Valid {
 				vl.Address = value.String
 			}
+		case vendorlocation.FieldBrandID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field brand_id", values[i])
+			} else if value != nil {
+				vl.BrandID = *value
+			}
 		}
 	}
 	return nil
@@ -154,6 +162,9 @@ func (vl *VendorLocation) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("address=")
 	builder.WriteString(vl.Address)
+	builder.WriteString(", ")
+	builder.WriteString("brand_id=")
+	builder.WriteString(fmt.Sprintf("%v", vl.BrandID))
 	builder.WriteByte(')')
 	return builder.String()
 }

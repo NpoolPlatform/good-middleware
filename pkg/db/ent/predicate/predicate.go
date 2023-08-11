@@ -51,5 +51,8 @@ type Score func(*sql.Selector)
 // Stock is the predicate function for stock builders.
 type Stock func(*sql.Selector)
 
+// VendorBrand is the predicate function for vendorbrand builders.
+type VendorBrand func(*sql.Selector)
+
 // VendorLocation is the predicate function for vendorlocation builders.
 type VendorLocation func(*sql.Selector)

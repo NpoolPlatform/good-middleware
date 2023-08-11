@@ -121,6 +121,20 @@ func (vlc *VendorLocationCreate) SetNillableAddress(s *string) *VendorLocationCr
 	return vlc
 }
 
+// SetBrandID sets the "brand_id" field.
+func (vlc *VendorLocationCreate) SetBrandID(u uuid.UUID) *VendorLocationCreate {
+	vlc.mutation.SetBrandID(u)
+	return vlc
+}
+
+// SetNillableBrandID sets the "brand_id" field if the given value is not nil.
+func (vlc *VendorLocationCreate) SetNillableBrandID(u *uuid.UUID) *VendorLocationCreate {
+	if u != nil {
+		vlc.SetBrandID(*u)
+	}
+	return vlc
+}
+
 // SetID sets the "id" field.
 func (vlc *VendorLocationCreate) SetID(u uuid.UUID) *VendorLocationCreate {
 	vlc.mutation.SetID(u)
@@ -250,6 +264,13 @@ func (vlc *VendorLocationCreate) defaults() error {
 	if _, ok := vlc.mutation.Address(); !ok {
 		v := vendorlocation.DefaultAddress
 		vlc.mutation.SetAddress(v)
+	}
+	if _, ok := vlc.mutation.BrandID(); !ok {
+		if vendorlocation.DefaultBrandID == nil {
+			return fmt.Errorf("ent: uninitialized vendorlocation.DefaultBrandID (forgotten import ent/runtime?)")
+		}
+		v := vendorlocation.DefaultBrandID()
+		vlc.mutation.SetBrandID(v)
 	}
 	if _, ok := vlc.mutation.ID(); !ok {
 		if vendorlocation.DefaultID == nil {
@@ -384,6 +405,14 @@ func (vlc *VendorLocationCreate) createSpec() (*VendorLocation, *sqlgraph.Create
 			Column: vendorlocation.FieldAddress,
 		})
 		_node.Address = value
+	}
+	if value, ok := vlc.mutation.BrandID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: vendorlocation.FieldBrandID,
+		})
+		_node.BrandID = value
 	}
 	return _node, _spec
 }
@@ -562,6 +591,24 @@ func (u *VendorLocationUpsert) UpdateAddress() *VendorLocationUpsert {
 // ClearAddress clears the value of the "address" field.
 func (u *VendorLocationUpsert) ClearAddress() *VendorLocationUpsert {
 	u.SetNull(vendorlocation.FieldAddress)
+	return u
+}
+
+// SetBrandID sets the "brand_id" field.
+func (u *VendorLocationUpsert) SetBrandID(v uuid.UUID) *VendorLocationUpsert {
+	u.Set(vendorlocation.FieldBrandID, v)
+	return u
+}
+
+// UpdateBrandID sets the "brand_id" field to the value that was provided on create.
+func (u *VendorLocationUpsert) UpdateBrandID() *VendorLocationUpsert {
+	u.SetExcluded(vendorlocation.FieldBrandID)
+	return u
+}
+
+// ClearBrandID clears the value of the "brand_id" field.
+func (u *VendorLocationUpsert) ClearBrandID() *VendorLocationUpsert {
+	u.SetNull(vendorlocation.FieldBrandID)
 	return u
 }
 
@@ -759,6 +806,27 @@ func (u *VendorLocationUpsertOne) UpdateAddress() *VendorLocationUpsertOne {
 func (u *VendorLocationUpsertOne) ClearAddress() *VendorLocationUpsertOne {
 	return u.Update(func(s *VendorLocationUpsert) {
 		s.ClearAddress()
+	})
+}
+
+// SetBrandID sets the "brand_id" field.
+func (u *VendorLocationUpsertOne) SetBrandID(v uuid.UUID) *VendorLocationUpsertOne {
+	return u.Update(func(s *VendorLocationUpsert) {
+		s.SetBrandID(v)
+	})
+}
+
+// UpdateBrandID sets the "brand_id" field to the value that was provided on create.
+func (u *VendorLocationUpsertOne) UpdateBrandID() *VendorLocationUpsertOne {
+	return u.Update(func(s *VendorLocationUpsert) {
+		s.UpdateBrandID()
+	})
+}
+
+// ClearBrandID clears the value of the "brand_id" field.
+func (u *VendorLocationUpsertOne) ClearBrandID() *VendorLocationUpsertOne {
+	return u.Update(func(s *VendorLocationUpsert) {
+		s.ClearBrandID()
 	})
 }
 
@@ -1122,6 +1190,27 @@ func (u *VendorLocationUpsertBulk) UpdateAddress() *VendorLocationUpsertBulk {
 func (u *VendorLocationUpsertBulk) ClearAddress() *VendorLocationUpsertBulk {
 	return u.Update(func(s *VendorLocationUpsert) {
 		s.ClearAddress()
+	})
+}
+
+// SetBrandID sets the "brand_id" field.
+func (u *VendorLocationUpsertBulk) SetBrandID(v uuid.UUID) *VendorLocationUpsertBulk {
+	return u.Update(func(s *VendorLocationUpsert) {
+		s.SetBrandID(v)
+	})
+}
+
+// UpdateBrandID sets the "brand_id" field to the value that was provided on create.
+func (u *VendorLocationUpsertBulk) UpdateBrandID() *VendorLocationUpsertBulk {
+	return u.Update(func(s *VendorLocationUpsert) {
+		s.UpdateBrandID()
+	})
+}
+
+// ClearBrandID clears the value of the "brand_id" field.
+func (u *VendorLocationUpsertBulk) ClearBrandID() *VendorLocationUpsertBulk {
+	return u.Update(func(s *VendorLocationUpsert) {
+		s.ClearBrandID()
 	})
 }
 

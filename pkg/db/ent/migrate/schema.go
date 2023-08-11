@@ -223,7 +223,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "good_id", Type: field.TypeUUID},
-		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1691743915},
+		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1691759696},
 		{Name: "tid", Type: field.TypeUUID, Nullable: true},
 		{Name: "amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "unit_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
@@ -367,6 +367,21 @@ var (
 		Columns:    StocksV1Columns,
 		PrimaryKey: []*schema.Column{StocksV1Columns[0]},
 	}
+	// VendorBrandsColumns holds the columns for the "vendor_brands" table.
+	VendorBrandsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "name", Type: field.TypeString, Nullable: true, Size: 128, Default: ""},
+		{Name: "logo", Type: field.TypeString, Nullable: true, Size: 128, Default: ""},
+	}
+	// VendorBrandsTable holds the schema information for the "vendor_brands" table.
+	VendorBrandsTable = &schema.Table{
+		Name:       "vendor_brands",
+		Columns:    VendorBrandsColumns,
+		PrimaryKey: []*schema.Column{VendorBrandsColumns[0]},
+	}
 	// VendorLocationsColumns holds the columns for the "vendor_locations" table.
 	VendorLocationsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -377,6 +392,7 @@ var (
 		{Name: "province", Type: field.TypeString, Nullable: true, Size: 128, Default: ""},
 		{Name: "city", Type: field.TypeString, Nullable: true, Size: 128, Default: ""},
 		{Name: "address", Type: field.TypeString, Nullable: true, Size: 256, Default: ""},
+		{Name: "brand_id", Type: field.TypeUUID, Nullable: true},
 	}
 	// VendorLocationsTable holds the schema information for the "vendor_locations" table.
 	VendorLocationsTable = &schema.Table{
@@ -401,6 +417,7 @@ var (
 		RequiredGoodsTable,
 		ScoresTable,
 		StocksV1Table,
+		VendorBrandsTable,
 		VendorLocationsTable,
 	}
 )

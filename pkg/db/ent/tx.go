@@ -44,6 +44,8 @@ type Tx struct {
 	Score *ScoreClient
 	// Stock is the client for interacting with the Stock builders.
 	Stock *StockClient
+	// VendorBrand is the client for interacting with the VendorBrand builders.
+	VendorBrand *VendorBrandClient
 	// VendorLocation is the client for interacting with the VendorLocation builders.
 	VendorLocation *VendorLocationClient
 
@@ -196,6 +198,7 @@ func (tx *Tx) init() {
 	tx.RequiredGood = NewRequiredGoodClient(tx.config)
 	tx.Score = NewScoreClient(tx.config)
 	tx.Stock = NewStockClient(tx.config)
+	tx.VendorBrand = NewVendorBrandClient(tx.config)
 	tx.VendorLocation = NewVendorLocationClient(tx.config)
 }
 

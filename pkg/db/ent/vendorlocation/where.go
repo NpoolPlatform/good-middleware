@@ -128,6 +128,13 @@ func Address(v string) predicate.VendorLocation {
 	})
 }
 
+// BrandID applies equality check predicate on the "brand_id" field. It's identical to BrandIDEQ.
+func BrandID(v uuid.UUID) predicate.VendorLocation {
+	return predicate.VendorLocation(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldBrandID), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.VendorLocation {
 	return predicate.VendorLocation(func(s *sql.Selector) {
@@ -769,6 +776,84 @@ func AddressEqualFold(v string) predicate.VendorLocation {
 func AddressContainsFold(v string) predicate.VendorLocation {
 	return predicate.VendorLocation(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldAddress), v))
+	})
+}
+
+// BrandIDEQ applies the EQ predicate on the "brand_id" field.
+func BrandIDEQ(v uuid.UUID) predicate.VendorLocation {
+	return predicate.VendorLocation(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldBrandID), v))
+	})
+}
+
+// BrandIDNEQ applies the NEQ predicate on the "brand_id" field.
+func BrandIDNEQ(v uuid.UUID) predicate.VendorLocation {
+	return predicate.VendorLocation(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldBrandID), v))
+	})
+}
+
+// BrandIDIn applies the In predicate on the "brand_id" field.
+func BrandIDIn(vs ...uuid.UUID) predicate.VendorLocation {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.VendorLocation(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldBrandID), v...))
+	})
+}
+
+// BrandIDNotIn applies the NotIn predicate on the "brand_id" field.
+func BrandIDNotIn(vs ...uuid.UUID) predicate.VendorLocation {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.VendorLocation(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldBrandID), v...))
+	})
+}
+
+// BrandIDGT applies the GT predicate on the "brand_id" field.
+func BrandIDGT(v uuid.UUID) predicate.VendorLocation {
+	return predicate.VendorLocation(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldBrandID), v))
+	})
+}
+
+// BrandIDGTE applies the GTE predicate on the "brand_id" field.
+func BrandIDGTE(v uuid.UUID) predicate.VendorLocation {
+	return predicate.VendorLocation(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldBrandID), v))
+	})
+}
+
+// BrandIDLT applies the LT predicate on the "brand_id" field.
+func BrandIDLT(v uuid.UUID) predicate.VendorLocation {
+	return predicate.VendorLocation(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldBrandID), v))
+	})
+}
+
+// BrandIDLTE applies the LTE predicate on the "brand_id" field.
+func BrandIDLTE(v uuid.UUID) predicate.VendorLocation {
+	return predicate.VendorLocation(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldBrandID), v))
+	})
+}
+
+// BrandIDIsNil applies the IsNil predicate on the "brand_id" field.
+func BrandIDIsNil() predicate.VendorLocation {
+	return predicate.VendorLocation(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldBrandID)))
+	})
+}
+
+// BrandIDNotNil applies the NotNil predicate on the "brand_id" field.
+func BrandIDNotNil() predicate.VendorLocation {
+	return predicate.VendorLocation(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldBrandID)))
 	})
 }
 

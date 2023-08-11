@@ -510,6 +510,30 @@ func (f StockMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation)
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.StockMutation", m)
 }
 
+// The VendorBrandQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type VendorBrandQueryRuleFunc func(context.Context, *ent.VendorBrandQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f VendorBrandQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.VendorBrandQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.VendorBrandQuery", q)
+}
+
+// The VendorBrandMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type VendorBrandMutationRuleFunc func(context.Context, *ent.VendorBrandMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f VendorBrandMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.VendorBrandMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.VendorBrandMutation", m)
+}
+
 // The VendorLocationQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type VendorLocationQueryRuleFunc func(context.Context, *ent.VendorLocationQuery) error
@@ -599,6 +623,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.StockQuery:
 		return q.Filter(), nil
+	case *ent.VendorBrandQuery:
+		return q.Filter(), nil
 	case *ent.VendorLocationQuery:
 		return q.Filter(), nil
 	default:
@@ -637,6 +663,8 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	case *ent.ScoreMutation:
 		return m.Filter(), nil
 	case *ent.StockMutation:
+		return m.Filter(), nil
+	case *ent.VendorBrandMutation:
 		return m.Filter(), nil
 	case *ent.VendorLocationMutation:
 		return m.Filter(), nil

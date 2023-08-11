@@ -204,6 +204,19 @@ func (f StockFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error
 	return f(ctx, mv)
 }
 
+// The VendorBrandFunc type is an adapter to allow the use of ordinary
+// function as VendorBrand mutator.
+type VendorBrandFunc func(context.Context, *ent.VendorBrandMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f VendorBrandFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.VendorBrandMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.VendorBrandMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The VendorLocationFunc type is an adapter to allow the use of ordinary
 // function as VendorLocation mutator.
 type VendorLocationFunc func(context.Context, *ent.VendorLocationMutation) (ent.Value, error)

@@ -43,6 +43,11 @@ func (VendorLocation) Fields() []ent.Field {
 			Optional().
 			Default("").
 			MaxLen(addressMaxLen),
+		field.UUID("brand_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 	}
 }
 
