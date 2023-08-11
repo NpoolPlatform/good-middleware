@@ -3,412 +3,114 @@ package recommend
 import (
 	"fmt"
 
-	"github.com/NpoolPlatform/good-manager/pkg/db/ent"
-	entrecommend "github.com/NpoolPlatform/good-manager/pkg/db/ent/recommend"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entrecommend "github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
-func CreateSet(c *ent.RecommendCreate, in *npool.RecommendReq) (*ent.RecommendCreate, error) {
-	if in.ID != nil {
-		c.SetID(uuid.MustParse(in.GetID()))
-	}
-	if in.AppID != nil {
-		c.SetAppID(uuid.MustParse(in.GetAppID()))
-	}
-	if in.GoodID != nil {
-		c.SetGoodID(uuid.MustParse(in.GetGoodID()))
-	}
-	if in.RecommenderID != nil {
-		c.SetRecommenderID(uuid.MustParse(in.GetRecommenderID()))
-	}
-	if in.Message != nil {
-		c.SetMessage(in.GetMessage())
-	}
-	if in.RecommendIndex != nil {
-		c.SetRecommendIndex(float64(in.GetRecommendIndex()))
-	}
-	return c, nil
+type Req struct {
+	ID             *uuid.UUID
+	AppID          *uuid.UUID
+	GoodID         *uuid.UUID
+	RecommenderID  *uuid.UUID
+	Message        *string
+	RecommendIndex *decimal.Decimal
 }
 
-func Create(ctx context.Context, in *npool.RecommendReq) (*ent.Recommend, error) {
-	var info *ent.Recommend
-	var err error
-
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
-	defer span.End()
-
-	defer func() {
-		if err != nil {
-			span.SetStatus(codes.Error, "db operation fail")
-			span.RecordError(err)
-		}
-	}()
-
-	span = tracer.Trace(span, in)
-
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		c := cli.Recommend.Create()
-		stm, err := CreateSet(c, in)
-		if err != nil {
-			return err
-		}
-		info, err = stm.Save(_ctx)
-		return err
-	})
-	if err != nil {
-		return nil, err
+func CreateSet(c *ent.RecommendCreate, req *Req) *ent.RecommendCreate {
+	if req.ID != nil {
+		c.SetID(*req.ID)
 	}
-
-	return info, nil
+	if req.AppID != nil {
+		c.SetAppID(*req.AppID)
+	}
+	if req.GoodID != nil {
+		c.SetGoodID(*req.GoodID)
+	}
+	if req.RecommenderID != nil {
+		c.SetRecommenderID(*req.RecommenderID)
+	}
+	if req.Message != nil {
+		c.SetMessage(*req.Message)
+	}
+	if req.RecommendIndex != nil {
+		c.SetRecommendIndex(*req.RecommendIndex)
+	}
+	return c
 }
 
-func CreateBulk(ctx context.Context, in []*npool.RecommendReq) ([]*ent.Recommend, error) {
-	var err error
-
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateBulk")
-	defer span.End()
-
-	defer func() {
-		if err != nil {
-			span.SetStatus(codes.Error, "db operation fail")
-			span.RecordError(err)
-		}
-	}()
-
-	span = tracer.TraceMany(span, in)
-
-	rows := []*ent.Recommend{}
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		bulk := make([]*ent.RecommendCreate, len(in))
-		for i, info := range in {
-			bulk[i] = tx.Recommend.Create()
-			bulk[i], err = CreateSet(bulk[i], info)
-			if err != nil {
-				return err
-			}
-		}
-		rows, err = tx.Recommend.CreateBulk(bulk...).Save(_ctx)
-		return err
-	})
-	if err != nil {
-		return nil, err
+func UpdateSet(u *ent.RecommendUpdateOne, req *Req) *ent.RecommendUpdateOne {
+	if req.Message != nil {
+		u.SetMessage(*req.Message)
 	}
-	return rows, nil
+	if req.RecommendIndex != nil {
+		u.SetRecommendIndex(*req.RecommendIndex)
+	}
+	return u
 }
 
-func UpdateSet(u *ent.RecommendUpdateOne, in *npool.RecommendReq) (*ent.RecommendUpdateOne, error) {
-	if in.Message != nil {
-		u.SetMessage(in.GetMessage())
-	}
-	if in.RecommendIndex != nil {
-		u.SetRecommendIndex(float64(in.GetRecommendIndex()))
-	}
-	return u, nil
+type Conds struct {
+	ID            *cruder.Cond
+	AppID         *cruder.Cond
+	RecommenderID *cruder.Cond
+	GoodID        *cruder.Cond
 }
 
-func Update(ctx context.Context, in *npool.RecommendReq) (*ent.Recommend, error) {
-	var info *ent.Recommend
-	var err error
-
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Update")
-	defer span.End()
-
-	defer func() {
-		if err != nil {
-			span.SetStatus(codes.Error, "db operation fail")
-			span.RecordError(err)
-		}
-	}()
-
-	span = tracer.Trace(span, in)
-
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		info, err = tx.Recommend.Query().Where(recommend.ID(uuid.MustParse(in.GetID()))).ForUpdate().Only(_ctx)
-		if err != nil {
-			return err
-		}
-
-		stm, err := UpdateSet(info.Update(), in)
-		if err != nil {
-			return err
-		}
-
-		info, err = stm.Save(_ctx)
-		return err
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	return info, nil
-}
-
-func Row(ctx context.Context, id uuid.UUID) (*ent.Recommend, error) {
-	var info *ent.Recommend
-	var err error
-
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Row")
-	defer span.End()
-
-	defer func() {
-		if err != nil {
-			span.SetStatus(codes.Error, "db operation fail")
-			span.RecordError(err)
-		}
-	}()
-
-	span = commontracer.TraceID(span, id.String())
-
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		info, err = cli.Recommend.Query().Where(recommend.ID(id)).Only(_ctx)
-		return err
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	return info, nil
-}
-
-func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.RecommendQuery, error) {
-	stm := cli.Recommend.Query()
+func SetQueryConds(q *ent.RecommendQuery, conds *Conds) (*ent.RecommendQuery, error) {
+	q.Where(entrecommend.DeletedAt(0))
 	if conds == nil {
-		return stm, nil
+		return q, nil
 	}
 	if conds.ID != nil {
-		switch conds.GetID().GetOp() {
+		id, ok := conds.ID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid id")
+		}
+		switch conds.ID.Op {
 		case cruder.EQ:
-			stm.Where(recommend.ID(uuid.MustParse(conds.GetID().GetValue())))
+			q.Where(entrecommend.ID(id))
 		default:
 			return nil, fmt.Errorf("invalid recommend field")
 		}
 	}
 	if conds.AppID != nil {
-		switch conds.GetAppID().GetOp() {
+		id, ok := conds.AppID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid appid")
+		}
+		switch conds.AppID.Op {
 		case cruder.EQ:
-			stm.Where(recommend.AppID(uuid.MustParse(conds.GetAppID().GetValue())))
+			q.Where(entrecommend.AppID(id))
+		default:
+			return nil, fmt.Errorf("invalid recommend field")
+		}
+	}
+	if conds.RecommenderID != nil {
+		id, ok := conds.RecommenderID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid recommenderid")
+		}
+		switch conds.RecommenderID.Op {
+		case cruder.EQ:
+			q.Where(entrecommend.RecommenderID(id))
 		default:
 			return nil, fmt.Errorf("invalid recommend field")
 		}
 	}
 	if conds.GoodID != nil {
-		switch conds.GetGoodID().GetOp() {
+		id, ok := conds.GoodID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid goodid")
+		}
+		switch conds.GoodID.Op {
 		case cruder.EQ:
-			stm.Where(recommend.GoodID(uuid.MustParse(conds.GetGoodID().GetValue())))
+			q.Where(entrecommend.GoodID(id))
 		default:
 			return nil, fmt.Errorf("invalid recommend field")
 		}
 	}
-	return stm, nil
-}
-
-func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Recommend, int, error) {
-	var err error
-
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Rows")
-	defer span.End()
-
-	defer func() {
-		if err != nil {
-			span.SetStatus(codes.Error, "db operation fail")
-			span.RecordError(err)
-		}
-	}()
-
-	span = tracer.TraceConds(span, conds)
-	span = commontracer.TraceOffsetLimit(span, offset, limit)
-
-	rows := []*ent.Recommend{}
-	var total int
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := setQueryConds(conds, cli)
-		if err != nil {
-			return err
-		}
-
-		total, err = stm.Count(_ctx)
-		if err != nil {
-			return err
-		}
-
-		rows, err = stm.
-			Offset(offset).
-			Order(ent.Desc(recommend.FieldUpdatedAt)).
-			Limit(limit).
-			All(_ctx)
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
-	if err != nil {
-		return nil, 0, err
-	}
-	return rows, total, nil
-}
-
-func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.Recommend, error) {
-	var info *ent.Recommend
-	var err error
-
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "RowOnly")
-	defer span.End()
-
-	defer func() {
-		if err != nil {
-			span.SetStatus(codes.Error, "db operation fail")
-			span.RecordError(err)
-		}
-	}()
-
-	span = tracer.TraceConds(span, conds)
-
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := setQueryConds(conds, cli)
-		if err != nil {
-			return err
-		}
-
-		info, err = stm.Only(_ctx)
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	return info, nil
-}
-
-func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
-	var err error
-	var total int
-
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Count")
-	defer span.End()
-
-	defer func() {
-		if err != nil {
-			span.SetStatus(codes.Error, "db operation fail")
-			span.RecordError(err)
-		}
-	}()
-
-	span = tracer.TraceConds(span, conds)
-
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := setQueryConds(conds, cli)
-		if err != nil {
-			return err
-		}
-
-		total, err = stm.Count(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-	if err != nil {
-		return 0, err
-	}
-
-	return uint32(total), nil
-}
-
-func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
-	var err error
-	exist := false
-
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Exist")
-	defer span.End()
-
-	defer func() {
-		if err != nil {
-			span.SetStatus(codes.Error, "db operation fail")
-			span.RecordError(err)
-		}
-	}()
-
-	span = commontracer.TraceID(span, id.String())
-
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		exist, err = cli.Recommend.Query().Where(recommend.ID(id)).Exist(_ctx)
-		return err
-	})
-	if err != nil {
-		return false, err
-	}
-
-	return exist, nil
-}
-
-func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	var err error
-	exist := false
-
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistConds")
-	defer span.End()
-
-	defer func() {
-		if err != nil {
-			span.SetStatus(codes.Error, "db operation fail")
-			span.RecordError(err)
-		}
-	}()
-
-	span = tracer.TraceConds(span, conds)
-
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := setQueryConds(conds, cli)
-		if err != nil {
-			return err
-		}
-
-		exist, err = stm.Exist(_ctx)
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
-	if err != nil {
-		return false, err
-	}
-
-	return exist, nil
-}
-
-func Delete(ctx context.Context, id string) (*ent.Recommend, error) {
-	var info *ent.Recommend
-	var err error
-
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Delete")
-	defer span.End()
-
-	defer func() {
-		if err != nil {
-			span.SetStatus(codes.Error, "db operation fail")
-			span.RecordError(err)
-		}
-	}()
-
-	span = commontracer.TraceID(span, id)
-
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		info, err = cli.Recommend.UpdateOneID(uuid.MustParse(id)).
-			SetDeletedAt(uint32(time.Now().Unix())).
-			Save(_ctx)
-		return err
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	return info, nil
+	return q, nil
 }
