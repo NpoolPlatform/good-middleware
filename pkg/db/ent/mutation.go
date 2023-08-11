@@ -9829,26 +9829,28 @@ func (m *GoodRewardMutation) ResetEdge(name string) error {
 // GoodRewardHistoryMutation represents an operation that mutates the GoodRewardHistory nodes in the graph.
 type GoodRewardHistoryMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uuid.UUID
-	created_at    *uint32
-	addcreated_at *int32
-	updated_at    *uint32
-	addupdated_at *int32
-	deleted_at    *uint32
-	adddeleted_at *int32
-	good_id       *uuid.UUID
-	reward_at     *uint32
-	addreward_at  *int32
-	tid           *uuid.UUID
-	amount        *decimal.Decimal
-	unit_amount   *decimal.Decimal
-	result        *string
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*GoodRewardHistory, error)
-	predicates    []predicate.GoodRewardHistory
+	op              Op
+	typ             string
+	id              *uuid.UUID
+	created_at      *uint32
+	addcreated_at   *int32
+	updated_at      *uint32
+	addupdated_at   *int32
+	deleted_at      *uint32
+	adddeleted_at   *int32
+	app_id          *uuid.UUID
+	good_id         *uuid.UUID
+	reward_date     *uint32
+	addreward_date  *int32
+	tid             *uuid.UUID
+	amount          *decimal.Decimal
+	unit_amount     *decimal.Decimal
+	unit_net_amount *decimal.Decimal
+	result          *string
+	clearedFields   map[string]struct{}
+	done            bool
+	oldValue        func(context.Context) (*GoodRewardHistory, error)
+	predicates      []predicate.GoodRewardHistory
 }
 
 var _ ent.Mutation = (*GoodRewardHistoryMutation)(nil)
@@ -10123,6 +10125,42 @@ func (m *GoodRewardHistoryMutation) ResetDeletedAt() {
 	m.adddeleted_at = nil
 }
 
+// SetAppID sets the "app_id" field.
+func (m *GoodRewardHistoryMutation) SetAppID(u uuid.UUID) {
+	m.app_id = &u
+}
+
+// AppID returns the value of the "app_id" field in the mutation.
+func (m *GoodRewardHistoryMutation) AppID() (r uuid.UUID, exists bool) {
+	v := m.app_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppID returns the old "app_id" field's value of the GoodRewardHistory entity.
+// If the GoodRewardHistory object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodRewardHistoryMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
+	}
+	return oldValue.AppID, nil
+}
+
+// ResetAppID resets all changes to the "app_id" field.
+func (m *GoodRewardHistoryMutation) ResetAppID() {
+	m.app_id = nil
+}
+
 // SetGoodID sets the "good_id" field.
 func (m *GoodRewardHistoryMutation) SetGoodID(u uuid.UUID) {
 	m.good_id = &u
@@ -10159,74 +10197,74 @@ func (m *GoodRewardHistoryMutation) ResetGoodID() {
 	m.good_id = nil
 }
 
-// SetRewardAt sets the "reward_at" field.
-func (m *GoodRewardHistoryMutation) SetRewardAt(u uint32) {
-	m.reward_at = &u
-	m.addreward_at = nil
+// SetRewardDate sets the "reward_date" field.
+func (m *GoodRewardHistoryMutation) SetRewardDate(u uint32) {
+	m.reward_date = &u
+	m.addreward_date = nil
 }
 
-// RewardAt returns the value of the "reward_at" field in the mutation.
-func (m *GoodRewardHistoryMutation) RewardAt() (r uint32, exists bool) {
-	v := m.reward_at
+// RewardDate returns the value of the "reward_date" field in the mutation.
+func (m *GoodRewardHistoryMutation) RewardDate() (r uint32, exists bool) {
+	v := m.reward_date
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldRewardAt returns the old "reward_at" field's value of the GoodRewardHistory entity.
+// OldRewardDate returns the old "reward_date" field's value of the GoodRewardHistory entity.
 // If the GoodRewardHistory object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodRewardHistoryMutation) OldRewardAt(ctx context.Context) (v uint32, err error) {
+func (m *GoodRewardHistoryMutation) OldRewardDate(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldRewardAt is only allowed on UpdateOne operations")
+		return v, errors.New("OldRewardDate is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldRewardAt requires an ID field in the mutation")
+		return v, errors.New("OldRewardDate requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldRewardAt: %w", err)
+		return v, fmt.Errorf("querying old value for OldRewardDate: %w", err)
 	}
-	return oldValue.RewardAt, nil
+	return oldValue.RewardDate, nil
 }
 
-// AddRewardAt adds u to the "reward_at" field.
-func (m *GoodRewardHistoryMutation) AddRewardAt(u int32) {
-	if m.addreward_at != nil {
-		*m.addreward_at += u
+// AddRewardDate adds u to the "reward_date" field.
+func (m *GoodRewardHistoryMutation) AddRewardDate(u int32) {
+	if m.addreward_date != nil {
+		*m.addreward_date += u
 	} else {
-		m.addreward_at = &u
+		m.addreward_date = &u
 	}
 }
 
-// AddedRewardAt returns the value that was added to the "reward_at" field in this mutation.
-func (m *GoodRewardHistoryMutation) AddedRewardAt() (r int32, exists bool) {
-	v := m.addreward_at
+// AddedRewardDate returns the value that was added to the "reward_date" field in this mutation.
+func (m *GoodRewardHistoryMutation) AddedRewardDate() (r int32, exists bool) {
+	v := m.addreward_date
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ClearRewardAt clears the value of the "reward_at" field.
-func (m *GoodRewardHistoryMutation) ClearRewardAt() {
-	m.reward_at = nil
-	m.addreward_at = nil
-	m.clearedFields[goodrewardhistory.FieldRewardAt] = struct{}{}
+// ClearRewardDate clears the value of the "reward_date" field.
+func (m *GoodRewardHistoryMutation) ClearRewardDate() {
+	m.reward_date = nil
+	m.addreward_date = nil
+	m.clearedFields[goodrewardhistory.FieldRewardDate] = struct{}{}
 }
 
-// RewardAtCleared returns if the "reward_at" field was cleared in this mutation.
-func (m *GoodRewardHistoryMutation) RewardAtCleared() bool {
-	_, ok := m.clearedFields[goodrewardhistory.FieldRewardAt]
+// RewardDateCleared returns if the "reward_date" field was cleared in this mutation.
+func (m *GoodRewardHistoryMutation) RewardDateCleared() bool {
+	_, ok := m.clearedFields[goodrewardhistory.FieldRewardDate]
 	return ok
 }
 
-// ResetRewardAt resets all changes to the "reward_at" field.
-func (m *GoodRewardHistoryMutation) ResetRewardAt() {
-	m.reward_at = nil
-	m.addreward_at = nil
-	delete(m.clearedFields, goodrewardhistory.FieldRewardAt)
+// ResetRewardDate resets all changes to the "reward_date" field.
+func (m *GoodRewardHistoryMutation) ResetRewardDate() {
+	m.reward_date = nil
+	m.addreward_date = nil
+	delete(m.clearedFields, goodrewardhistory.FieldRewardDate)
 }
 
 // SetTid sets the "tid" field.
@@ -10376,6 +10414,55 @@ func (m *GoodRewardHistoryMutation) ResetUnitAmount() {
 	delete(m.clearedFields, goodrewardhistory.FieldUnitAmount)
 }
 
+// SetUnitNetAmount sets the "unit_net_amount" field.
+func (m *GoodRewardHistoryMutation) SetUnitNetAmount(d decimal.Decimal) {
+	m.unit_net_amount = &d
+}
+
+// UnitNetAmount returns the value of the "unit_net_amount" field in the mutation.
+func (m *GoodRewardHistoryMutation) UnitNetAmount() (r decimal.Decimal, exists bool) {
+	v := m.unit_net_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUnitNetAmount returns the old "unit_net_amount" field's value of the GoodRewardHistory entity.
+// If the GoodRewardHistory object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodRewardHistoryMutation) OldUnitNetAmount(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUnitNetAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUnitNetAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUnitNetAmount: %w", err)
+	}
+	return oldValue.UnitNetAmount, nil
+}
+
+// ClearUnitNetAmount clears the value of the "unit_net_amount" field.
+func (m *GoodRewardHistoryMutation) ClearUnitNetAmount() {
+	m.unit_net_amount = nil
+	m.clearedFields[goodrewardhistory.FieldUnitNetAmount] = struct{}{}
+}
+
+// UnitNetAmountCleared returns if the "unit_net_amount" field was cleared in this mutation.
+func (m *GoodRewardHistoryMutation) UnitNetAmountCleared() bool {
+	_, ok := m.clearedFields[goodrewardhistory.FieldUnitNetAmount]
+	return ok
+}
+
+// ResetUnitNetAmount resets all changes to the "unit_net_amount" field.
+func (m *GoodRewardHistoryMutation) ResetUnitNetAmount() {
+	m.unit_net_amount = nil
+	delete(m.clearedFields, goodrewardhistory.FieldUnitNetAmount)
+}
+
 // SetResult sets the "result" field.
 func (m *GoodRewardHistoryMutation) SetResult(s string) {
 	m.result = &s
@@ -10444,7 +10531,7 @@ func (m *GoodRewardHistoryMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *GoodRewardHistoryMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, goodrewardhistory.FieldCreatedAt)
 	}
@@ -10454,11 +10541,14 @@ func (m *GoodRewardHistoryMutation) Fields() []string {
 	if m.deleted_at != nil {
 		fields = append(fields, goodrewardhistory.FieldDeletedAt)
 	}
+	if m.app_id != nil {
+		fields = append(fields, goodrewardhistory.FieldAppID)
+	}
 	if m.good_id != nil {
 		fields = append(fields, goodrewardhistory.FieldGoodID)
 	}
-	if m.reward_at != nil {
-		fields = append(fields, goodrewardhistory.FieldRewardAt)
+	if m.reward_date != nil {
+		fields = append(fields, goodrewardhistory.FieldRewardDate)
 	}
 	if m.tid != nil {
 		fields = append(fields, goodrewardhistory.FieldTid)
@@ -10468,6 +10558,9 @@ func (m *GoodRewardHistoryMutation) Fields() []string {
 	}
 	if m.unit_amount != nil {
 		fields = append(fields, goodrewardhistory.FieldUnitAmount)
+	}
+	if m.unit_net_amount != nil {
+		fields = append(fields, goodrewardhistory.FieldUnitNetAmount)
 	}
 	if m.result != nil {
 		fields = append(fields, goodrewardhistory.FieldResult)
@@ -10486,16 +10579,20 @@ func (m *GoodRewardHistoryMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdatedAt()
 	case goodrewardhistory.FieldDeletedAt:
 		return m.DeletedAt()
+	case goodrewardhistory.FieldAppID:
+		return m.AppID()
 	case goodrewardhistory.FieldGoodID:
 		return m.GoodID()
-	case goodrewardhistory.FieldRewardAt:
-		return m.RewardAt()
+	case goodrewardhistory.FieldRewardDate:
+		return m.RewardDate()
 	case goodrewardhistory.FieldTid:
 		return m.Tid()
 	case goodrewardhistory.FieldAmount:
 		return m.Amount()
 	case goodrewardhistory.FieldUnitAmount:
 		return m.UnitAmount()
+	case goodrewardhistory.FieldUnitNetAmount:
+		return m.UnitNetAmount()
 	case goodrewardhistory.FieldResult:
 		return m.Result()
 	}
@@ -10513,16 +10610,20 @@ func (m *GoodRewardHistoryMutation) OldField(ctx context.Context, name string) (
 		return m.OldUpdatedAt(ctx)
 	case goodrewardhistory.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
+	case goodrewardhistory.FieldAppID:
+		return m.OldAppID(ctx)
 	case goodrewardhistory.FieldGoodID:
 		return m.OldGoodID(ctx)
-	case goodrewardhistory.FieldRewardAt:
-		return m.OldRewardAt(ctx)
+	case goodrewardhistory.FieldRewardDate:
+		return m.OldRewardDate(ctx)
 	case goodrewardhistory.FieldTid:
 		return m.OldTid(ctx)
 	case goodrewardhistory.FieldAmount:
 		return m.OldAmount(ctx)
 	case goodrewardhistory.FieldUnitAmount:
 		return m.OldUnitAmount(ctx)
+	case goodrewardhistory.FieldUnitNetAmount:
+		return m.OldUnitNetAmount(ctx)
 	case goodrewardhistory.FieldResult:
 		return m.OldResult(ctx)
 	}
@@ -10555,6 +10656,13 @@ func (m *GoodRewardHistoryMutation) SetField(name string, value ent.Value) error
 		}
 		m.SetDeletedAt(v)
 		return nil
+	case goodrewardhistory.FieldAppID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppID(v)
+		return nil
 	case goodrewardhistory.FieldGoodID:
 		v, ok := value.(uuid.UUID)
 		if !ok {
@@ -10562,12 +10670,12 @@ func (m *GoodRewardHistoryMutation) SetField(name string, value ent.Value) error
 		}
 		m.SetGoodID(v)
 		return nil
-	case goodrewardhistory.FieldRewardAt:
+	case goodrewardhistory.FieldRewardDate:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetRewardAt(v)
+		m.SetRewardDate(v)
 		return nil
 	case goodrewardhistory.FieldTid:
 		v, ok := value.(uuid.UUID)
@@ -10589,6 +10697,13 @@ func (m *GoodRewardHistoryMutation) SetField(name string, value ent.Value) error
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUnitAmount(v)
+		return nil
+	case goodrewardhistory.FieldUnitNetAmount:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUnitNetAmount(v)
 		return nil
 	case goodrewardhistory.FieldResult:
 		v, ok := value.(string)
@@ -10614,8 +10729,8 @@ func (m *GoodRewardHistoryMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, goodrewardhistory.FieldDeletedAt)
 	}
-	if m.addreward_at != nil {
-		fields = append(fields, goodrewardhistory.FieldRewardAt)
+	if m.addreward_date != nil {
+		fields = append(fields, goodrewardhistory.FieldRewardDate)
 	}
 	return fields
 }
@@ -10631,8 +10746,8 @@ func (m *GoodRewardHistoryMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdatedAt()
 	case goodrewardhistory.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case goodrewardhistory.FieldRewardAt:
-		return m.AddedRewardAt()
+	case goodrewardhistory.FieldRewardDate:
+		return m.AddedRewardDate()
 	}
 	return nil, false
 }
@@ -10663,12 +10778,12 @@ func (m *GoodRewardHistoryMutation) AddField(name string, value ent.Value) error
 		}
 		m.AddDeletedAt(v)
 		return nil
-	case goodrewardhistory.FieldRewardAt:
+	case goodrewardhistory.FieldRewardDate:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddRewardAt(v)
+		m.AddRewardDate(v)
 		return nil
 	}
 	return fmt.Errorf("unknown GoodRewardHistory numeric field %s", name)
@@ -10678,8 +10793,8 @@ func (m *GoodRewardHistoryMutation) AddField(name string, value ent.Value) error
 // mutation.
 func (m *GoodRewardHistoryMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(goodrewardhistory.FieldRewardAt) {
-		fields = append(fields, goodrewardhistory.FieldRewardAt)
+	if m.FieldCleared(goodrewardhistory.FieldRewardDate) {
+		fields = append(fields, goodrewardhistory.FieldRewardDate)
 	}
 	if m.FieldCleared(goodrewardhistory.FieldTid) {
 		fields = append(fields, goodrewardhistory.FieldTid)
@@ -10689,6 +10804,9 @@ func (m *GoodRewardHistoryMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(goodrewardhistory.FieldUnitAmount) {
 		fields = append(fields, goodrewardhistory.FieldUnitAmount)
+	}
+	if m.FieldCleared(goodrewardhistory.FieldUnitNetAmount) {
+		fields = append(fields, goodrewardhistory.FieldUnitNetAmount)
 	}
 	if m.FieldCleared(goodrewardhistory.FieldResult) {
 		fields = append(fields, goodrewardhistory.FieldResult)
@@ -10707,8 +10825,8 @@ func (m *GoodRewardHistoryMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *GoodRewardHistoryMutation) ClearField(name string) error {
 	switch name {
-	case goodrewardhistory.FieldRewardAt:
-		m.ClearRewardAt()
+	case goodrewardhistory.FieldRewardDate:
+		m.ClearRewardDate()
 		return nil
 	case goodrewardhistory.FieldTid:
 		m.ClearTid()
@@ -10718,6 +10836,9 @@ func (m *GoodRewardHistoryMutation) ClearField(name string) error {
 		return nil
 	case goodrewardhistory.FieldUnitAmount:
 		m.ClearUnitAmount()
+		return nil
+	case goodrewardhistory.FieldUnitNetAmount:
+		m.ClearUnitNetAmount()
 		return nil
 	case goodrewardhistory.FieldResult:
 		m.ClearResult()
@@ -10739,11 +10860,14 @@ func (m *GoodRewardHistoryMutation) ResetField(name string) error {
 	case goodrewardhistory.FieldDeletedAt:
 		m.ResetDeletedAt()
 		return nil
+	case goodrewardhistory.FieldAppID:
+		m.ResetAppID()
+		return nil
 	case goodrewardhistory.FieldGoodID:
 		m.ResetGoodID()
 		return nil
-	case goodrewardhistory.FieldRewardAt:
-		m.ResetRewardAt()
+	case goodrewardhistory.FieldRewardDate:
+		m.ResetRewardDate()
 		return nil
 	case goodrewardhistory.FieldTid:
 		m.ResetTid()
@@ -10753,6 +10877,9 @@ func (m *GoodRewardHistoryMutation) ResetField(name string) error {
 		return nil
 	case goodrewardhistory.FieldUnitAmount:
 		m.ResetUnitAmount()
+		return nil
+	case goodrewardhistory.FieldUnitNetAmount:
+		m.ResetUnitNetAmount()
 		return nil
 	case goodrewardhistory.FieldResult:
 		m.ResetResult()

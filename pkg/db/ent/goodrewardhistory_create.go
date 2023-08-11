@@ -66,22 +66,28 @@ func (grhc *GoodRewardHistoryCreate) SetNillableDeletedAt(u *uint32) *GoodReward
 	return grhc
 }
 
+// SetAppID sets the "app_id" field.
+func (grhc *GoodRewardHistoryCreate) SetAppID(u uuid.UUID) *GoodRewardHistoryCreate {
+	grhc.mutation.SetAppID(u)
+	return grhc
+}
+
 // SetGoodID sets the "good_id" field.
 func (grhc *GoodRewardHistoryCreate) SetGoodID(u uuid.UUID) *GoodRewardHistoryCreate {
 	grhc.mutation.SetGoodID(u)
 	return grhc
 }
 
-// SetRewardAt sets the "reward_at" field.
-func (grhc *GoodRewardHistoryCreate) SetRewardAt(u uint32) *GoodRewardHistoryCreate {
-	grhc.mutation.SetRewardAt(u)
+// SetRewardDate sets the "reward_date" field.
+func (grhc *GoodRewardHistoryCreate) SetRewardDate(u uint32) *GoodRewardHistoryCreate {
+	grhc.mutation.SetRewardDate(u)
 	return grhc
 }
 
-// SetNillableRewardAt sets the "reward_at" field if the given value is not nil.
-func (grhc *GoodRewardHistoryCreate) SetNillableRewardAt(u *uint32) *GoodRewardHistoryCreate {
+// SetNillableRewardDate sets the "reward_date" field if the given value is not nil.
+func (grhc *GoodRewardHistoryCreate) SetNillableRewardDate(u *uint32) *GoodRewardHistoryCreate {
 	if u != nil {
-		grhc.SetRewardAt(*u)
+		grhc.SetRewardDate(*u)
 	}
 	return grhc
 }
@@ -124,6 +130,20 @@ func (grhc *GoodRewardHistoryCreate) SetUnitAmount(d decimal.Decimal) *GoodRewar
 func (grhc *GoodRewardHistoryCreate) SetNillableUnitAmount(d *decimal.Decimal) *GoodRewardHistoryCreate {
 	if d != nil {
 		grhc.SetUnitAmount(*d)
+	}
+	return grhc
+}
+
+// SetUnitNetAmount sets the "unit_net_amount" field.
+func (grhc *GoodRewardHistoryCreate) SetUnitNetAmount(d decimal.Decimal) *GoodRewardHistoryCreate {
+	grhc.mutation.SetUnitNetAmount(d)
+	return grhc
+}
+
+// SetNillableUnitNetAmount sets the "unit_net_amount" field if the given value is not nil.
+func (grhc *GoodRewardHistoryCreate) SetNillableUnitNetAmount(d *decimal.Decimal) *GoodRewardHistoryCreate {
+	if d != nil {
+		grhc.SetUnitNetAmount(*d)
 	}
 	return grhc
 }
@@ -256,9 +276,9 @@ func (grhc *GoodRewardHistoryCreate) defaults() error {
 		v := goodrewardhistory.DefaultDeletedAt()
 		grhc.mutation.SetDeletedAt(v)
 	}
-	if _, ok := grhc.mutation.RewardAt(); !ok {
-		v := goodrewardhistory.DefaultRewardAt
-		grhc.mutation.SetRewardAt(v)
+	if _, ok := grhc.mutation.RewardDate(); !ok {
+		v := goodrewardhistory.DefaultRewardDate
+		grhc.mutation.SetRewardDate(v)
 	}
 	if _, ok := grhc.mutation.Tid(); !ok {
 		if goodrewardhistory.DefaultTid == nil {
@@ -274,6 +294,10 @@ func (grhc *GoodRewardHistoryCreate) defaults() error {
 	if _, ok := grhc.mutation.UnitAmount(); !ok {
 		v := goodrewardhistory.DefaultUnitAmount
 		grhc.mutation.SetUnitAmount(v)
+	}
+	if _, ok := grhc.mutation.UnitNetAmount(); !ok {
+		v := goodrewardhistory.DefaultUnitNetAmount
+		grhc.mutation.SetUnitNetAmount(v)
 	}
 	if _, ok := grhc.mutation.Result(); !ok {
 		v := goodrewardhistory.DefaultResult
@@ -299,6 +323,9 @@ func (grhc *GoodRewardHistoryCreate) check() error {
 	}
 	if _, ok := grhc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "GoodRewardHistory.deleted_at"`)}
+	}
+	if _, ok := grhc.mutation.AppID(); !ok {
+		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "GoodRewardHistory.app_id"`)}
 	}
 	if _, ok := grhc.mutation.GoodID(); !ok {
 		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "GoodRewardHistory.good_id"`)}
@@ -364,6 +391,14 @@ func (grhc *GoodRewardHistoryCreate) createSpec() (*GoodRewardHistory, *sqlgraph
 		})
 		_node.DeletedAt = value
 	}
+	if value, ok := grhc.mutation.AppID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: goodrewardhistory.FieldAppID,
+		})
+		_node.AppID = value
+	}
 	if value, ok := grhc.mutation.GoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -372,13 +407,13 @@ func (grhc *GoodRewardHistoryCreate) createSpec() (*GoodRewardHistory, *sqlgraph
 		})
 		_node.GoodID = value
 	}
-	if value, ok := grhc.mutation.RewardAt(); ok {
+	if value, ok := grhc.mutation.RewardDate(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: goodrewardhistory.FieldRewardAt,
+			Column: goodrewardhistory.FieldRewardDate,
 		})
-		_node.RewardAt = value
+		_node.RewardDate = value
 	}
 	if value, ok := grhc.mutation.Tid(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -403,6 +438,14 @@ func (grhc *GoodRewardHistoryCreate) createSpec() (*GoodRewardHistory, *sqlgraph
 			Column: goodrewardhistory.FieldUnitAmount,
 		})
 		_node.UnitAmount = value
+	}
+	if value, ok := grhc.mutation.UnitNetAmount(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: goodrewardhistory.FieldUnitNetAmount,
+		})
+		_node.UnitNetAmount = value
 	}
 	if value, ok := grhc.mutation.Result(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -520,6 +563,18 @@ func (u *GoodRewardHistoryUpsert) AddDeletedAt(v uint32) *GoodRewardHistoryUpser
 	return u
 }
 
+// SetAppID sets the "app_id" field.
+func (u *GoodRewardHistoryUpsert) SetAppID(v uuid.UUID) *GoodRewardHistoryUpsert {
+	u.Set(goodrewardhistory.FieldAppID, v)
+	return u
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *GoodRewardHistoryUpsert) UpdateAppID() *GoodRewardHistoryUpsert {
+	u.SetExcluded(goodrewardhistory.FieldAppID)
+	return u
+}
+
 // SetGoodID sets the "good_id" field.
 func (u *GoodRewardHistoryUpsert) SetGoodID(v uuid.UUID) *GoodRewardHistoryUpsert {
 	u.Set(goodrewardhistory.FieldGoodID, v)
@@ -532,27 +587,27 @@ func (u *GoodRewardHistoryUpsert) UpdateGoodID() *GoodRewardHistoryUpsert {
 	return u
 }
 
-// SetRewardAt sets the "reward_at" field.
-func (u *GoodRewardHistoryUpsert) SetRewardAt(v uint32) *GoodRewardHistoryUpsert {
-	u.Set(goodrewardhistory.FieldRewardAt, v)
+// SetRewardDate sets the "reward_date" field.
+func (u *GoodRewardHistoryUpsert) SetRewardDate(v uint32) *GoodRewardHistoryUpsert {
+	u.Set(goodrewardhistory.FieldRewardDate, v)
 	return u
 }
 
-// UpdateRewardAt sets the "reward_at" field to the value that was provided on create.
-func (u *GoodRewardHistoryUpsert) UpdateRewardAt() *GoodRewardHistoryUpsert {
-	u.SetExcluded(goodrewardhistory.FieldRewardAt)
+// UpdateRewardDate sets the "reward_date" field to the value that was provided on create.
+func (u *GoodRewardHistoryUpsert) UpdateRewardDate() *GoodRewardHistoryUpsert {
+	u.SetExcluded(goodrewardhistory.FieldRewardDate)
 	return u
 }
 
-// AddRewardAt adds v to the "reward_at" field.
-func (u *GoodRewardHistoryUpsert) AddRewardAt(v uint32) *GoodRewardHistoryUpsert {
-	u.Add(goodrewardhistory.FieldRewardAt, v)
+// AddRewardDate adds v to the "reward_date" field.
+func (u *GoodRewardHistoryUpsert) AddRewardDate(v uint32) *GoodRewardHistoryUpsert {
+	u.Add(goodrewardhistory.FieldRewardDate, v)
 	return u
 }
 
-// ClearRewardAt clears the value of the "reward_at" field.
-func (u *GoodRewardHistoryUpsert) ClearRewardAt() *GoodRewardHistoryUpsert {
-	u.SetNull(goodrewardhistory.FieldRewardAt)
+// ClearRewardDate clears the value of the "reward_date" field.
+func (u *GoodRewardHistoryUpsert) ClearRewardDate() *GoodRewardHistoryUpsert {
+	u.SetNull(goodrewardhistory.FieldRewardDate)
 	return u
 }
 
@@ -607,6 +662,24 @@ func (u *GoodRewardHistoryUpsert) UpdateUnitAmount() *GoodRewardHistoryUpsert {
 // ClearUnitAmount clears the value of the "unit_amount" field.
 func (u *GoodRewardHistoryUpsert) ClearUnitAmount() *GoodRewardHistoryUpsert {
 	u.SetNull(goodrewardhistory.FieldUnitAmount)
+	return u
+}
+
+// SetUnitNetAmount sets the "unit_net_amount" field.
+func (u *GoodRewardHistoryUpsert) SetUnitNetAmount(v decimal.Decimal) *GoodRewardHistoryUpsert {
+	u.Set(goodrewardhistory.FieldUnitNetAmount, v)
+	return u
+}
+
+// UpdateUnitNetAmount sets the "unit_net_amount" field to the value that was provided on create.
+func (u *GoodRewardHistoryUpsert) UpdateUnitNetAmount() *GoodRewardHistoryUpsert {
+	u.SetExcluded(goodrewardhistory.FieldUnitNetAmount)
+	return u
+}
+
+// ClearUnitNetAmount clears the value of the "unit_net_amount" field.
+func (u *GoodRewardHistoryUpsert) ClearUnitNetAmount() *GoodRewardHistoryUpsert {
+	u.SetNull(goodrewardhistory.FieldUnitNetAmount)
 	return u
 }
 
@@ -741,6 +814,20 @@ func (u *GoodRewardHistoryUpsertOne) UpdateDeletedAt() *GoodRewardHistoryUpsertO
 	})
 }
 
+// SetAppID sets the "app_id" field.
+func (u *GoodRewardHistoryUpsertOne) SetAppID(v uuid.UUID) *GoodRewardHistoryUpsertOne {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.SetAppID(v)
+	})
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *GoodRewardHistoryUpsertOne) UpdateAppID() *GoodRewardHistoryUpsertOne {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.UpdateAppID()
+	})
+}
+
 // SetGoodID sets the "good_id" field.
 func (u *GoodRewardHistoryUpsertOne) SetGoodID(v uuid.UUID) *GoodRewardHistoryUpsertOne {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
@@ -755,31 +842,31 @@ func (u *GoodRewardHistoryUpsertOne) UpdateGoodID() *GoodRewardHistoryUpsertOne 
 	})
 }
 
-// SetRewardAt sets the "reward_at" field.
-func (u *GoodRewardHistoryUpsertOne) SetRewardAt(v uint32) *GoodRewardHistoryUpsertOne {
+// SetRewardDate sets the "reward_date" field.
+func (u *GoodRewardHistoryUpsertOne) SetRewardDate(v uint32) *GoodRewardHistoryUpsertOne {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.SetRewardAt(v)
+		s.SetRewardDate(v)
 	})
 }
 
-// AddRewardAt adds v to the "reward_at" field.
-func (u *GoodRewardHistoryUpsertOne) AddRewardAt(v uint32) *GoodRewardHistoryUpsertOne {
+// AddRewardDate adds v to the "reward_date" field.
+func (u *GoodRewardHistoryUpsertOne) AddRewardDate(v uint32) *GoodRewardHistoryUpsertOne {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.AddRewardAt(v)
+		s.AddRewardDate(v)
 	})
 }
 
-// UpdateRewardAt sets the "reward_at" field to the value that was provided on create.
-func (u *GoodRewardHistoryUpsertOne) UpdateRewardAt() *GoodRewardHistoryUpsertOne {
+// UpdateRewardDate sets the "reward_date" field to the value that was provided on create.
+func (u *GoodRewardHistoryUpsertOne) UpdateRewardDate() *GoodRewardHistoryUpsertOne {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.UpdateRewardAt()
+		s.UpdateRewardDate()
 	})
 }
 
-// ClearRewardAt clears the value of the "reward_at" field.
-func (u *GoodRewardHistoryUpsertOne) ClearRewardAt() *GoodRewardHistoryUpsertOne {
+// ClearRewardDate clears the value of the "reward_date" field.
+func (u *GoodRewardHistoryUpsertOne) ClearRewardDate() *GoodRewardHistoryUpsertOne {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.ClearRewardAt()
+		s.ClearRewardDate()
 	})
 }
 
@@ -843,6 +930,27 @@ func (u *GoodRewardHistoryUpsertOne) UpdateUnitAmount() *GoodRewardHistoryUpsert
 func (u *GoodRewardHistoryUpsertOne) ClearUnitAmount() *GoodRewardHistoryUpsertOne {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
 		s.ClearUnitAmount()
+	})
+}
+
+// SetUnitNetAmount sets the "unit_net_amount" field.
+func (u *GoodRewardHistoryUpsertOne) SetUnitNetAmount(v decimal.Decimal) *GoodRewardHistoryUpsertOne {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.SetUnitNetAmount(v)
+	})
+}
+
+// UpdateUnitNetAmount sets the "unit_net_amount" field to the value that was provided on create.
+func (u *GoodRewardHistoryUpsertOne) UpdateUnitNetAmount() *GoodRewardHistoryUpsertOne {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.UpdateUnitNetAmount()
+	})
+}
+
+// ClearUnitNetAmount clears the value of the "unit_net_amount" field.
+func (u *GoodRewardHistoryUpsertOne) ClearUnitNetAmount() *GoodRewardHistoryUpsertOne {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.ClearUnitNetAmount()
 	})
 }
 
@@ -1146,6 +1254,20 @@ func (u *GoodRewardHistoryUpsertBulk) UpdateDeletedAt() *GoodRewardHistoryUpsert
 	})
 }
 
+// SetAppID sets the "app_id" field.
+func (u *GoodRewardHistoryUpsertBulk) SetAppID(v uuid.UUID) *GoodRewardHistoryUpsertBulk {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.SetAppID(v)
+	})
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *GoodRewardHistoryUpsertBulk) UpdateAppID() *GoodRewardHistoryUpsertBulk {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.UpdateAppID()
+	})
+}
+
 // SetGoodID sets the "good_id" field.
 func (u *GoodRewardHistoryUpsertBulk) SetGoodID(v uuid.UUID) *GoodRewardHistoryUpsertBulk {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
@@ -1160,31 +1282,31 @@ func (u *GoodRewardHistoryUpsertBulk) UpdateGoodID() *GoodRewardHistoryUpsertBul
 	})
 }
 
-// SetRewardAt sets the "reward_at" field.
-func (u *GoodRewardHistoryUpsertBulk) SetRewardAt(v uint32) *GoodRewardHistoryUpsertBulk {
+// SetRewardDate sets the "reward_date" field.
+func (u *GoodRewardHistoryUpsertBulk) SetRewardDate(v uint32) *GoodRewardHistoryUpsertBulk {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.SetRewardAt(v)
+		s.SetRewardDate(v)
 	})
 }
 
-// AddRewardAt adds v to the "reward_at" field.
-func (u *GoodRewardHistoryUpsertBulk) AddRewardAt(v uint32) *GoodRewardHistoryUpsertBulk {
+// AddRewardDate adds v to the "reward_date" field.
+func (u *GoodRewardHistoryUpsertBulk) AddRewardDate(v uint32) *GoodRewardHistoryUpsertBulk {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.AddRewardAt(v)
+		s.AddRewardDate(v)
 	})
 }
 
-// UpdateRewardAt sets the "reward_at" field to the value that was provided on create.
-func (u *GoodRewardHistoryUpsertBulk) UpdateRewardAt() *GoodRewardHistoryUpsertBulk {
+// UpdateRewardDate sets the "reward_date" field to the value that was provided on create.
+func (u *GoodRewardHistoryUpsertBulk) UpdateRewardDate() *GoodRewardHistoryUpsertBulk {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.UpdateRewardAt()
+		s.UpdateRewardDate()
 	})
 }
 
-// ClearRewardAt clears the value of the "reward_at" field.
-func (u *GoodRewardHistoryUpsertBulk) ClearRewardAt() *GoodRewardHistoryUpsertBulk {
+// ClearRewardDate clears the value of the "reward_date" field.
+func (u *GoodRewardHistoryUpsertBulk) ClearRewardDate() *GoodRewardHistoryUpsertBulk {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.ClearRewardAt()
+		s.ClearRewardDate()
 	})
 }
 
@@ -1248,6 +1370,27 @@ func (u *GoodRewardHistoryUpsertBulk) UpdateUnitAmount() *GoodRewardHistoryUpser
 func (u *GoodRewardHistoryUpsertBulk) ClearUnitAmount() *GoodRewardHistoryUpsertBulk {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
 		s.ClearUnitAmount()
+	})
+}
+
+// SetUnitNetAmount sets the "unit_net_amount" field.
+func (u *GoodRewardHistoryUpsertBulk) SetUnitNetAmount(v decimal.Decimal) *GoodRewardHistoryUpsertBulk {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.SetUnitNetAmount(v)
+	})
+}
+
+// UpdateUnitNetAmount sets the "unit_net_amount" field to the value that was provided on create.
+func (u *GoodRewardHistoryUpsertBulk) UpdateUnitNetAmount() *GoodRewardHistoryUpsertBulk {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.UpdateUnitNetAmount()
+	})
+}
+
+// ClearUnitNetAmount clears the value of the "unit_net_amount" field.
+func (u *GoodRewardHistoryUpsertBulk) ClearUnitNetAmount() *GoodRewardHistoryUpsertBulk {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.ClearUnitNetAmount()
 	})
 }
 

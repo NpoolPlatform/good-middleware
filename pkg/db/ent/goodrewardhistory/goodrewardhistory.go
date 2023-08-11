@@ -19,16 +19,20 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
+	// FieldAppID holds the string denoting the app_id field in the database.
+	FieldAppID = "app_id"
 	// FieldGoodID holds the string denoting the good_id field in the database.
 	FieldGoodID = "good_id"
-	// FieldRewardAt holds the string denoting the reward_at field in the database.
-	FieldRewardAt = "reward_at"
+	// FieldRewardDate holds the string denoting the reward_date field in the database.
+	FieldRewardDate = "reward_date"
 	// FieldTid holds the string denoting the tid field in the database.
 	FieldTid = "tid"
 	// FieldAmount holds the string denoting the amount field in the database.
 	FieldAmount = "amount"
 	// FieldUnitAmount holds the string denoting the unit_amount field in the database.
 	FieldUnitAmount = "unit_amount"
+	// FieldUnitNetAmount holds the string denoting the unit_net_amount field in the database.
+	FieldUnitNetAmount = "unit_net_amount"
 	// FieldResult holds the string denoting the result field in the database.
 	FieldResult = "result"
 	// Table holds the table name of the goodrewardhistory in the database.
@@ -41,11 +45,13 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
+	FieldAppID,
 	FieldGoodID,
-	FieldRewardAt,
+	FieldRewardDate,
 	FieldTid,
 	FieldAmount,
 	FieldUnitAmount,
+	FieldUnitNetAmount,
 	FieldResult,
 }
 
@@ -76,14 +82,16 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
-	// DefaultRewardAt holds the default value on creation for the "reward_at" field.
-	DefaultRewardAt uint32
+	// DefaultRewardDate holds the default value on creation for the "reward_date" field.
+	DefaultRewardDate uint32
 	// DefaultTid holds the default value on creation for the "tid" field.
 	DefaultTid func() uuid.UUID
 	// DefaultAmount holds the default value on creation for the "amount" field.
 	DefaultAmount decimal.Decimal
 	// DefaultUnitAmount holds the default value on creation for the "unit_amount" field.
 	DefaultUnitAmount decimal.Decimal
+	// DefaultUnitNetAmount holds the default value on creation for the "unit_net_amount" field.
+	DefaultUnitNetAmount decimal.Decimal
 	// DefaultResult holds the default value on creation for the "result" field.
 	DefaultResult string
 	// DefaultID holds the default value on creation for the "id" field.

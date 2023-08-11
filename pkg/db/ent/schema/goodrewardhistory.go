@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"time"
+
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
@@ -29,11 +31,13 @@ func (GoodRewardHistory) Fields() []ent.Field {
 			Default(uuid.New).
 			Unique(),
 		field.
+			UUID("app_id", uuid.UUID{}),
+		field.
 			UUID("good_id", uuid.UUID{}),
 		field.
-			Uint32("reward_at").
+			Uint32("reward_date").
 			Optional().
-			Default(0),
+			Default(uint32(time.Now().Unix())),
 		field.
 			UUID("tid", uuid.UUID{}).
 			Optional().
@@ -49,6 +53,13 @@ func (GoodRewardHistory) Fields() []ent.Field {
 			Default(decimal.Decimal{}),
 		field.
 			Other("unit_amount", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.Decimal{}),
+		field.
+			Other("unit_net_amount", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).

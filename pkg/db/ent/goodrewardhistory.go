@@ -23,16 +23,20 @@ type GoodRewardHistory struct {
 	UpdatedAt uint32 `json:"updated_at,omitempty"`
 	// DeletedAt holds the value of the "deleted_at" field.
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
+	// AppID holds the value of the "app_id" field.
+	AppID uuid.UUID `json:"app_id,omitempty"`
 	// GoodID holds the value of the "good_id" field.
 	GoodID uuid.UUID `json:"good_id,omitempty"`
-	// RewardAt holds the value of the "reward_at" field.
-	RewardAt uint32 `json:"reward_at,omitempty"`
+	// RewardDate holds the value of the "reward_date" field.
+	RewardDate uint32 `json:"reward_date,omitempty"`
 	// Tid holds the value of the "tid" field.
 	Tid uuid.UUID `json:"tid,omitempty"`
 	// Amount holds the value of the "amount" field.
 	Amount decimal.Decimal `json:"amount,omitempty"`
 	// UnitAmount holds the value of the "unit_amount" field.
 	UnitAmount decimal.Decimal `json:"unit_amount,omitempty"`
+	// UnitNetAmount holds the value of the "unit_net_amount" field.
+	UnitNetAmount decimal.Decimal `json:"unit_net_amount,omitempty"`
 	// Result holds the value of the "result" field.
 	Result string `json:"result,omitempty"`
 }
@@ -42,13 +46,13 @@ func (*GoodRewardHistory) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case goodrewardhistory.FieldAmount, goodrewardhistory.FieldUnitAmount:
+		case goodrewardhistory.FieldAmount, goodrewardhistory.FieldUnitAmount, goodrewardhistory.FieldUnitNetAmount:
 			values[i] = new(decimal.Decimal)
-		case goodrewardhistory.FieldCreatedAt, goodrewardhistory.FieldUpdatedAt, goodrewardhistory.FieldDeletedAt, goodrewardhistory.FieldRewardAt:
+		case goodrewardhistory.FieldCreatedAt, goodrewardhistory.FieldUpdatedAt, goodrewardhistory.FieldDeletedAt, goodrewardhistory.FieldRewardDate:
 			values[i] = new(sql.NullInt64)
 		case goodrewardhistory.FieldResult:
 			values[i] = new(sql.NullString)
-		case goodrewardhistory.FieldID, goodrewardhistory.FieldGoodID, goodrewardhistory.FieldTid:
+		case goodrewardhistory.FieldID, goodrewardhistory.FieldAppID, goodrewardhistory.FieldGoodID, goodrewardhistory.FieldTid:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type GoodRewardHistory", columns[i])
@@ -89,17 +93,23 @@ func (grh *GoodRewardHistory) assignValues(columns []string, values []interface{
 			} else if value.Valid {
 				grh.DeletedAt = uint32(value.Int64)
 			}
+		case goodrewardhistory.FieldAppID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field app_id", values[i])
+			} else if value != nil {
+				grh.AppID = *value
+			}
 		case goodrewardhistory.FieldGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field good_id", values[i])
 			} else if value != nil {
 				grh.GoodID = *value
 			}
-		case goodrewardhistory.FieldRewardAt:
+		case goodrewardhistory.FieldRewardDate:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field reward_at", values[i])
+				return fmt.Errorf("unexpected type %T for field reward_date", values[i])
 			} else if value.Valid {
-				grh.RewardAt = uint32(value.Int64)
+				grh.RewardDate = uint32(value.Int64)
 			}
 		case goodrewardhistory.FieldTid:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -118,6 +128,12 @@ func (grh *GoodRewardHistory) assignValues(columns []string, values []interface{
 				return fmt.Errorf("unexpected type %T for field unit_amount", values[i])
 			} else if value != nil {
 				grh.UnitAmount = *value
+			}
+		case goodrewardhistory.FieldUnitNetAmount:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field unit_net_amount", values[i])
+			} else if value != nil {
+				grh.UnitNetAmount = *value
 			}
 		case goodrewardhistory.FieldResult:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -162,11 +178,14 @@ func (grh *GoodRewardHistory) String() string {
 	builder.WriteString("deleted_at=")
 	builder.WriteString(fmt.Sprintf("%v", grh.DeletedAt))
 	builder.WriteString(", ")
+	builder.WriteString("app_id=")
+	builder.WriteString(fmt.Sprintf("%v", grh.AppID))
+	builder.WriteString(", ")
 	builder.WriteString("good_id=")
 	builder.WriteString(fmt.Sprintf("%v", grh.GoodID))
 	builder.WriteString(", ")
-	builder.WriteString("reward_at=")
-	builder.WriteString(fmt.Sprintf("%v", grh.RewardAt))
+	builder.WriteString("reward_date=")
+	builder.WriteString(fmt.Sprintf("%v", grh.RewardDate))
 	builder.WriteString(", ")
 	builder.WriteString("tid=")
 	builder.WriteString(fmt.Sprintf("%v", grh.Tid))
@@ -176,6 +195,9 @@ func (grh *GoodRewardHistory) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("unit_amount=")
 	builder.WriteString(fmt.Sprintf("%v", grh.UnitAmount))
+	builder.WriteString(", ")
+	builder.WriteString("unit_net_amount=")
+	builder.WriteString(fmt.Sprintf("%v", grh.UnitNetAmount))
 	builder.WriteString(", ")
 	builder.WriteString("result=")
 	builder.WriteString(grh.Result)

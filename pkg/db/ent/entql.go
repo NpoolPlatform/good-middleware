@@ -239,15 +239,17 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "GoodRewardHistory",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			goodrewardhistory.FieldCreatedAt:  {Type: field.TypeUint32, Column: goodrewardhistory.FieldCreatedAt},
-			goodrewardhistory.FieldUpdatedAt:  {Type: field.TypeUint32, Column: goodrewardhistory.FieldUpdatedAt},
-			goodrewardhistory.FieldDeletedAt:  {Type: field.TypeUint32, Column: goodrewardhistory.FieldDeletedAt},
-			goodrewardhistory.FieldGoodID:     {Type: field.TypeUUID, Column: goodrewardhistory.FieldGoodID},
-			goodrewardhistory.FieldRewardAt:   {Type: field.TypeUint32, Column: goodrewardhistory.FieldRewardAt},
-			goodrewardhistory.FieldTid:        {Type: field.TypeUUID, Column: goodrewardhistory.FieldTid},
-			goodrewardhistory.FieldAmount:     {Type: field.TypeOther, Column: goodrewardhistory.FieldAmount},
-			goodrewardhistory.FieldUnitAmount: {Type: field.TypeOther, Column: goodrewardhistory.FieldUnitAmount},
-			goodrewardhistory.FieldResult:     {Type: field.TypeString, Column: goodrewardhistory.FieldResult},
+			goodrewardhistory.FieldCreatedAt:     {Type: field.TypeUint32, Column: goodrewardhistory.FieldCreatedAt},
+			goodrewardhistory.FieldUpdatedAt:     {Type: field.TypeUint32, Column: goodrewardhistory.FieldUpdatedAt},
+			goodrewardhistory.FieldDeletedAt:     {Type: field.TypeUint32, Column: goodrewardhistory.FieldDeletedAt},
+			goodrewardhistory.FieldAppID:         {Type: field.TypeUUID, Column: goodrewardhistory.FieldAppID},
+			goodrewardhistory.FieldGoodID:        {Type: field.TypeUUID, Column: goodrewardhistory.FieldGoodID},
+			goodrewardhistory.FieldRewardDate:    {Type: field.TypeUint32, Column: goodrewardhistory.FieldRewardDate},
+			goodrewardhistory.FieldTid:           {Type: field.TypeUUID, Column: goodrewardhistory.FieldTid},
+			goodrewardhistory.FieldAmount:        {Type: field.TypeOther, Column: goodrewardhistory.FieldAmount},
+			goodrewardhistory.FieldUnitAmount:    {Type: field.TypeOther, Column: goodrewardhistory.FieldUnitAmount},
+			goodrewardhistory.FieldUnitNetAmount: {Type: field.TypeOther, Column: goodrewardhistory.FieldUnitNetAmount},
+			goodrewardhistory.FieldResult:        {Type: field.TypeString, Column: goodrewardhistory.FieldResult},
 		},
 	}
 	graph.Nodes[9] = &sqlgraph.Node{
@@ -1227,14 +1229,19 @@ func (f *GoodRewardHistoryFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(goodrewardhistory.FieldDeletedAt))
 }
 
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *GoodRewardHistoryFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(goodrewardhistory.FieldAppID))
+}
+
 // WhereGoodID applies the entql [16]byte predicate on the good_id field.
 func (f *GoodRewardHistoryFilter) WhereGoodID(p entql.ValueP) {
 	f.Where(p.Field(goodrewardhistory.FieldGoodID))
 }
 
-// WhereRewardAt applies the entql uint32 predicate on the reward_at field.
-func (f *GoodRewardHistoryFilter) WhereRewardAt(p entql.Uint32P) {
-	f.Where(p.Field(goodrewardhistory.FieldRewardAt))
+// WhereRewardDate applies the entql uint32 predicate on the reward_date field.
+func (f *GoodRewardHistoryFilter) WhereRewardDate(p entql.Uint32P) {
+	f.Where(p.Field(goodrewardhistory.FieldRewardDate))
 }
 
 // WhereTid applies the entql [16]byte predicate on the tid field.
@@ -1250,6 +1257,11 @@ func (f *GoodRewardHistoryFilter) WhereAmount(p entql.OtherP) {
 // WhereUnitAmount applies the entql other predicate on the unit_amount field.
 func (f *GoodRewardHistoryFilter) WhereUnitAmount(p entql.OtherP) {
 	f.Where(p.Field(goodrewardhistory.FieldUnitAmount))
+}
+
+// WhereUnitNetAmount applies the entql other predicate on the unit_net_amount field.
+func (f *GoodRewardHistoryFilter) WhereUnitNetAmount(p entql.OtherP) {
+	f.Where(p.Field(goodrewardhistory.FieldUnitNetAmount))
 }
 
 // WhereResult applies the entql string predicate on the result field.

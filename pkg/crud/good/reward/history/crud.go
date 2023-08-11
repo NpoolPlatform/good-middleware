@@ -1,12 +1,12 @@
-package goodreward
+package goodrewardhistory
 
 import (
 	"fmt"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entgoodreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
+	entgoodrewardhistory "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
+	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -15,51 +15,54 @@ import (
 type Req struct {
 	ID         *uuid.UUID
 	GoodID     *uuid.UUID
-	RewardAt   *uint32
+	RewardDate *uint32
 	TID        *uuid.UUID
 	Amount     *decimal.Decimal
 	UnitAmount *decimal.Decimal
 	Result     *basetypes.Result
 }
 
-func CreateSet(c *ent.GoodRewardCreate, req *Req) *ent.GoodRewardCreate {
+func CreateSet(c *ent.GoodRewardHistoryCreate, req *Req) *ent.GoodRewardHistoryCreate {
 	if req.ID != nil {
 		c.SetID(*req.ID)
 	}
 	if req.GoodID != nil {
 		c.SetGoodID(*req.GoodID)
 	}
-	c.SetRewardState(types.BenefitState_BenefitWait.String())
+	if req.RewardDate != nil {
+		c.SetRewardDate(*req.RewardDate)
+	}
+	if req.TID != nil {
+		c.SetTid(*req.TID)
+	}
+	if req.Amount != nil {
+		c.SetAmount(*req.Amount)
+	}
+	if req.UnitAmount != nil {
+		c.SetUnitAmount(*req.UnitAmount)
+	}
+	if req.Result != nil {
+		c.SetResult(req.Result.String())
+	}
 	return c
 }
 
-func UpdateSet(u *ent.GoodRewardUpdateOne, req *Req) *ent.GoodRewardUpdateOne {
-	if req.RewardState != nil {
-		u.SetRewardState(req.RewardState.String())
-	}
-	if req.LastRewardAt != nil {
-		u.SetLastRewardAt(*req.LastRewardAt)
-	}
-	if req.RewardTID != nil {
-		u.SetRewardTid(*req.RewardTID)
-	}
-	if req.NextRewardStartAmount != nil {
-		u.SetNextRewardStartAmount(*req.NextRewardStartAmount)
-	}
-	if req.LastRewardAmount != nil {
-		u.SetLastRewardAmount(*req.LastRewardAmount)
+func UpdateSet(u *ent.GoodRewardHistoryUpdateOne, req *Req) *ent.GoodRewardHistoryUpdateOne {
+	if req.Result != nil {
+		u.SetResult(req.Result.String())
 	}
 	return u
 }
 
 type Conds struct {
-	ID          *cruder.Cond
-	GoodID      *cruder.Cond
-	RewardState *cruder.Cond
+	ID         *cruder.Cond
+	GoodID     *cruder.Cond
+	RewardDate *cruder.Cond
+	Result     *cruder.Cond
 }
 
-func SetQueryConds(q *ent.GoodRewardQuery, conds *Conds) (*ent.GoodRewardQuery, error) {
-	q.Where(entgoodreward.DeletedAt(0))
+func SetQueryConds(q *ent.GoodRewardHistoryQuery, conds *Conds) (*ent.GoodRewardHistoryQuery, error) {
+	q.Where(entgoodrewardhistory.DeletedAt(0))
 	if conds == nil {
 		return q, nil
 	}
@@ -70,9 +73,9 @@ func SetQueryConds(q *ent.GoodRewardQuery, conds *Conds) (*ent.GoodRewardQuery, 
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
-			q.Where(entgoodreward.ID(id))
+			q.Where(entgoodrewardhistory.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid goodreward field")
+			return nil, fmt.Errorf("invalid goodrewardhistory field")
 		}
 	}
 	if conds.GoodID != nil {
@@ -82,21 +85,25 @@ func SetQueryConds(q *ent.GoodRewardQuery, conds *Conds) (*ent.GoodRewardQuery, 
 		}
 		switch conds.GoodID.Op {
 		case cruder.EQ:
-			q.Where(entgoodreward.GoodID(id))
+			q.Where(entgoodrewardhistory.GoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid goodreward field")
+			return nil, fmt.Errorf("invalid goodrewardhistory field")
 		}
 	}
-	if conds.RewardState != nil {
-		state, ok := conds.RewardState.Val.(types.BenefitState)
+	if conds.RewardDate != nil {
+		date, ok := conds.RewardDate.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid rewardstate")
+			return nil, fmt.Errorf("invalid rewarddate")
 		}
-		switch conds.RewardState.Op {
+		switch conds.RewardDate.Op {
 		case cruder.EQ:
-			q.Where(entgoodreward.RewardState(state.String()))
+			q.Where(entgoodrewardhistory.RewardDate(date))
+		case cruder.LTE:
+			q.Where(entgoodrewardhistory.RewardDateLTE(date))
+		case cruder.GTE:
+			q.Where(entgoodrewardhistory.RewardDateGTE(date))
 		default:
-			return nil, fmt.Errorf("invalid goodreward field")
+			return nil, fmt.Errorf("invalid goodrewardhistory field")
 		}
 	}
 	return q, nil

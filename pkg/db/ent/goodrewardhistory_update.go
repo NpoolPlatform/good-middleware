@@ -85,36 +85,42 @@ func (grhu *GoodRewardHistoryUpdate) AddDeletedAt(u int32) *GoodRewardHistoryUpd
 	return grhu
 }
 
+// SetAppID sets the "app_id" field.
+func (grhu *GoodRewardHistoryUpdate) SetAppID(u uuid.UUID) *GoodRewardHistoryUpdate {
+	grhu.mutation.SetAppID(u)
+	return grhu
+}
+
 // SetGoodID sets the "good_id" field.
 func (grhu *GoodRewardHistoryUpdate) SetGoodID(u uuid.UUID) *GoodRewardHistoryUpdate {
 	grhu.mutation.SetGoodID(u)
 	return grhu
 }
 
-// SetRewardAt sets the "reward_at" field.
-func (grhu *GoodRewardHistoryUpdate) SetRewardAt(u uint32) *GoodRewardHistoryUpdate {
-	grhu.mutation.ResetRewardAt()
-	grhu.mutation.SetRewardAt(u)
+// SetRewardDate sets the "reward_date" field.
+func (grhu *GoodRewardHistoryUpdate) SetRewardDate(u uint32) *GoodRewardHistoryUpdate {
+	grhu.mutation.ResetRewardDate()
+	grhu.mutation.SetRewardDate(u)
 	return grhu
 }
 
-// SetNillableRewardAt sets the "reward_at" field if the given value is not nil.
-func (grhu *GoodRewardHistoryUpdate) SetNillableRewardAt(u *uint32) *GoodRewardHistoryUpdate {
+// SetNillableRewardDate sets the "reward_date" field if the given value is not nil.
+func (grhu *GoodRewardHistoryUpdate) SetNillableRewardDate(u *uint32) *GoodRewardHistoryUpdate {
 	if u != nil {
-		grhu.SetRewardAt(*u)
+		grhu.SetRewardDate(*u)
 	}
 	return grhu
 }
 
-// AddRewardAt adds u to the "reward_at" field.
-func (grhu *GoodRewardHistoryUpdate) AddRewardAt(u int32) *GoodRewardHistoryUpdate {
-	grhu.mutation.AddRewardAt(u)
+// AddRewardDate adds u to the "reward_date" field.
+func (grhu *GoodRewardHistoryUpdate) AddRewardDate(u int32) *GoodRewardHistoryUpdate {
+	grhu.mutation.AddRewardDate(u)
 	return grhu
 }
 
-// ClearRewardAt clears the value of the "reward_at" field.
-func (grhu *GoodRewardHistoryUpdate) ClearRewardAt() *GoodRewardHistoryUpdate {
-	grhu.mutation.ClearRewardAt()
+// ClearRewardDate clears the value of the "reward_date" field.
+func (grhu *GoodRewardHistoryUpdate) ClearRewardDate() *GoodRewardHistoryUpdate {
+	grhu.mutation.ClearRewardDate()
 	return grhu
 }
 
@@ -175,6 +181,26 @@ func (grhu *GoodRewardHistoryUpdate) SetNillableUnitAmount(d *decimal.Decimal) *
 // ClearUnitAmount clears the value of the "unit_amount" field.
 func (grhu *GoodRewardHistoryUpdate) ClearUnitAmount() *GoodRewardHistoryUpdate {
 	grhu.mutation.ClearUnitAmount()
+	return grhu
+}
+
+// SetUnitNetAmount sets the "unit_net_amount" field.
+func (grhu *GoodRewardHistoryUpdate) SetUnitNetAmount(d decimal.Decimal) *GoodRewardHistoryUpdate {
+	grhu.mutation.SetUnitNetAmount(d)
+	return grhu
+}
+
+// SetNillableUnitNetAmount sets the "unit_net_amount" field if the given value is not nil.
+func (grhu *GoodRewardHistoryUpdate) SetNillableUnitNetAmount(d *decimal.Decimal) *GoodRewardHistoryUpdate {
+	if d != nil {
+		grhu.SetUnitNetAmount(*d)
+	}
+	return grhu
+}
+
+// ClearUnitNetAmount clears the value of the "unit_net_amount" field.
+func (grhu *GoodRewardHistoryUpdate) ClearUnitNetAmount() *GoodRewardHistoryUpdate {
+	grhu.mutation.ClearUnitNetAmount()
 	return grhu
 }
 
@@ -338,6 +364,13 @@ func (grhu *GoodRewardHistoryUpdate) sqlSave(ctx context.Context) (n int, err er
 			Column: goodrewardhistory.FieldDeletedAt,
 		})
 	}
+	if value, ok := grhu.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: goodrewardhistory.FieldAppID,
+		})
+	}
 	if value, ok := grhu.mutation.GoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -345,24 +378,24 @@ func (grhu *GoodRewardHistoryUpdate) sqlSave(ctx context.Context) (n int, err er
 			Column: goodrewardhistory.FieldGoodID,
 		})
 	}
-	if value, ok := grhu.mutation.RewardAt(); ok {
+	if value, ok := grhu.mutation.RewardDate(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: goodrewardhistory.FieldRewardAt,
+			Column: goodrewardhistory.FieldRewardDate,
 		})
 	}
-	if value, ok := grhu.mutation.AddedRewardAt(); ok {
+	if value, ok := grhu.mutation.AddedRewardDate(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: goodrewardhistory.FieldRewardAt,
+			Column: goodrewardhistory.FieldRewardDate,
 		})
 	}
-	if grhu.mutation.RewardAtCleared() {
+	if grhu.mutation.RewardDateCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: goodrewardhistory.FieldRewardAt,
+			Column: goodrewardhistory.FieldRewardDate,
 		})
 	}
 	if value, ok := grhu.mutation.Tid(); ok {
@@ -402,6 +435,19 @@ func (grhu *GoodRewardHistoryUpdate) sqlSave(ctx context.Context) (n int, err er
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: goodrewardhistory.FieldUnitAmount,
+		})
+	}
+	if value, ok := grhu.mutation.UnitNetAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: goodrewardhistory.FieldUnitNetAmount,
+		})
+	}
+	if grhu.mutation.UnitNetAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: goodrewardhistory.FieldUnitNetAmount,
 		})
 	}
 	if value, ok := grhu.mutation.Result(); ok {
@@ -493,36 +539,42 @@ func (grhuo *GoodRewardHistoryUpdateOne) AddDeletedAt(u int32) *GoodRewardHistor
 	return grhuo
 }
 
+// SetAppID sets the "app_id" field.
+func (grhuo *GoodRewardHistoryUpdateOne) SetAppID(u uuid.UUID) *GoodRewardHistoryUpdateOne {
+	grhuo.mutation.SetAppID(u)
+	return grhuo
+}
+
 // SetGoodID sets the "good_id" field.
 func (grhuo *GoodRewardHistoryUpdateOne) SetGoodID(u uuid.UUID) *GoodRewardHistoryUpdateOne {
 	grhuo.mutation.SetGoodID(u)
 	return grhuo
 }
 
-// SetRewardAt sets the "reward_at" field.
-func (grhuo *GoodRewardHistoryUpdateOne) SetRewardAt(u uint32) *GoodRewardHistoryUpdateOne {
-	grhuo.mutation.ResetRewardAt()
-	grhuo.mutation.SetRewardAt(u)
+// SetRewardDate sets the "reward_date" field.
+func (grhuo *GoodRewardHistoryUpdateOne) SetRewardDate(u uint32) *GoodRewardHistoryUpdateOne {
+	grhuo.mutation.ResetRewardDate()
+	grhuo.mutation.SetRewardDate(u)
 	return grhuo
 }
 
-// SetNillableRewardAt sets the "reward_at" field if the given value is not nil.
-func (grhuo *GoodRewardHistoryUpdateOne) SetNillableRewardAt(u *uint32) *GoodRewardHistoryUpdateOne {
+// SetNillableRewardDate sets the "reward_date" field if the given value is not nil.
+func (grhuo *GoodRewardHistoryUpdateOne) SetNillableRewardDate(u *uint32) *GoodRewardHistoryUpdateOne {
 	if u != nil {
-		grhuo.SetRewardAt(*u)
+		grhuo.SetRewardDate(*u)
 	}
 	return grhuo
 }
 
-// AddRewardAt adds u to the "reward_at" field.
-func (grhuo *GoodRewardHistoryUpdateOne) AddRewardAt(u int32) *GoodRewardHistoryUpdateOne {
-	grhuo.mutation.AddRewardAt(u)
+// AddRewardDate adds u to the "reward_date" field.
+func (grhuo *GoodRewardHistoryUpdateOne) AddRewardDate(u int32) *GoodRewardHistoryUpdateOne {
+	grhuo.mutation.AddRewardDate(u)
 	return grhuo
 }
 
-// ClearRewardAt clears the value of the "reward_at" field.
-func (grhuo *GoodRewardHistoryUpdateOne) ClearRewardAt() *GoodRewardHistoryUpdateOne {
-	grhuo.mutation.ClearRewardAt()
+// ClearRewardDate clears the value of the "reward_date" field.
+func (grhuo *GoodRewardHistoryUpdateOne) ClearRewardDate() *GoodRewardHistoryUpdateOne {
+	grhuo.mutation.ClearRewardDate()
 	return grhuo
 }
 
@@ -583,6 +635,26 @@ func (grhuo *GoodRewardHistoryUpdateOne) SetNillableUnitAmount(d *decimal.Decima
 // ClearUnitAmount clears the value of the "unit_amount" field.
 func (grhuo *GoodRewardHistoryUpdateOne) ClearUnitAmount() *GoodRewardHistoryUpdateOne {
 	grhuo.mutation.ClearUnitAmount()
+	return grhuo
+}
+
+// SetUnitNetAmount sets the "unit_net_amount" field.
+func (grhuo *GoodRewardHistoryUpdateOne) SetUnitNetAmount(d decimal.Decimal) *GoodRewardHistoryUpdateOne {
+	grhuo.mutation.SetUnitNetAmount(d)
+	return grhuo
+}
+
+// SetNillableUnitNetAmount sets the "unit_net_amount" field if the given value is not nil.
+func (grhuo *GoodRewardHistoryUpdateOne) SetNillableUnitNetAmount(d *decimal.Decimal) *GoodRewardHistoryUpdateOne {
+	if d != nil {
+		grhuo.SetUnitNetAmount(*d)
+	}
+	return grhuo
+}
+
+// ClearUnitNetAmount clears the value of the "unit_net_amount" field.
+func (grhuo *GoodRewardHistoryUpdateOne) ClearUnitNetAmount() *GoodRewardHistoryUpdateOne {
+	grhuo.mutation.ClearUnitNetAmount()
 	return grhuo
 }
 
@@ -776,6 +848,13 @@ func (grhuo *GoodRewardHistoryUpdateOne) sqlSave(ctx context.Context) (_node *Go
 			Column: goodrewardhistory.FieldDeletedAt,
 		})
 	}
+	if value, ok := grhuo.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: goodrewardhistory.FieldAppID,
+		})
+	}
 	if value, ok := grhuo.mutation.GoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -783,24 +862,24 @@ func (grhuo *GoodRewardHistoryUpdateOne) sqlSave(ctx context.Context) (_node *Go
 			Column: goodrewardhistory.FieldGoodID,
 		})
 	}
-	if value, ok := grhuo.mutation.RewardAt(); ok {
+	if value, ok := grhuo.mutation.RewardDate(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: goodrewardhistory.FieldRewardAt,
+			Column: goodrewardhistory.FieldRewardDate,
 		})
 	}
-	if value, ok := grhuo.mutation.AddedRewardAt(); ok {
+	if value, ok := grhuo.mutation.AddedRewardDate(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: goodrewardhistory.FieldRewardAt,
+			Column: goodrewardhistory.FieldRewardDate,
 		})
 	}
-	if grhuo.mutation.RewardAtCleared() {
+	if grhuo.mutation.RewardDateCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: goodrewardhistory.FieldRewardAt,
+			Column: goodrewardhistory.FieldRewardDate,
 		})
 	}
 	if value, ok := grhuo.mutation.Tid(); ok {
@@ -840,6 +919,19 @@ func (grhuo *GoodRewardHistoryUpdateOne) sqlSave(ctx context.Context) (_node *Go
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: goodrewardhistory.FieldUnitAmount,
+		})
+	}
+	if value, ok := grhuo.mutation.UnitNetAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: goodrewardhistory.FieldUnitNetAmount,
+		})
+	}
+	if grhuo.mutation.UnitNetAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: goodrewardhistory.FieldUnitNetAmount,
 		})
 	}
 	if value, ok := grhuo.mutation.Result(); ok {
