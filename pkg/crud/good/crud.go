@@ -3,8 +3,8 @@ package good
 import (
 	"fmt"
 
-	"github.com/NpoolPlatform/good-manager/pkg/db/ent"
-	entgood "github.com/NpoolPlatform/good-manager/pkg/db/ent/good"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 

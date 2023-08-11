@@ -3,8 +3,8 @@ package extrainfo
 import (
 	"fmt"
 
-	"github.com/NpoolPlatform/good-manager/pkg/db/ent"
-	entextrainfo "github.com/NpoolPlatform/good-manager/pkg/db/ent/extrainfo"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entextrainfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	"github.com/google/uuid"
@@ -37,9 +37,9 @@ func CreateSet(c *ent.ExtraInfoCreate, req *Req) *ent.ExtraInfoCreate {
 		c.SetVoteCount(*req.VoteCount)
 	}
 	if req.Rating != nil {
-		c.SetRating(*req.Rating)
+		c.SetRatingV1(*req.Rating)
 	}
-	return c, nil
+	return c
 }
 
 func UpdateSet(u *ent.ExtraInfoUpdateOne, req *Req) *ent.ExtraInfoUpdateOne {
@@ -53,13 +53,18 @@ func UpdateSet(u *ent.ExtraInfoUpdateOne, req *Req) *ent.ExtraInfoUpdateOne {
 		u.SetVoteCount(*req.VoteCount)
 	}
 	if req.Rating != nil {
-		u.SetRating(*req.Rating)
+		u.SetRatingV1(*req.Rating)
 	}
-	return u, nil
+	return u
+}
+
+type Conds struct {
+	ID     *cruder.Cond
+	GoodID *cruder.Cond
 }
 
 func SetQueryConds(q *ent.ExtraInfoQuery, conds *Conds) (*ent.ExtraInfoQuery, error) {
-	q.Where(entgood.DeletedAt(0))
+	q.Where(entextrainfo.DeletedAt(0))
 	if conds == nil {
 		return q, nil
 	}
@@ -70,7 +75,7 @@ func SetQueryConds(q *ent.ExtraInfoQuery, conds *Conds) (*ent.ExtraInfoQuery, er
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
-			q.Where(enbextrainfo.ID(id))
+			q.Where(entextrainfo.ID(id))
 		default:
 			return nil, fmt.Errorf("invalid extrainfo field")
 		}
