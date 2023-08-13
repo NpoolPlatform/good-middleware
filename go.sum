@@ -75,6 +75,8 @@ github.com/NpoolPlatform/message v0.0.0-20230811133834-51edf97cdf7e h1:E2e9+TJr2
 github.com/NpoolPlatform/message v0.0.0-20230811133834-51edf97cdf7e/go.mod h1:PxJpF0vSSOke+NJskbRBRQ2fK2K3SRe8zaEja+GxSHk=
 github.com/NpoolPlatform/message v0.0.0-20230813090310-a309c96a3cde h1:zOUfeWpclucIH1+LPMvwpF+pAl+GKyK3tz9uNjtL/tM=
 github.com/NpoolPlatform/message v0.0.0-20230813090310-a309c96a3cde/go.mod h1:PxJpF0vSSOke+NJskbRBRQ2fK2K3SRe8zaEja+GxSHk=
+github.com/NpoolPlatform/message v0.0.0-20230813094002-107ea949305d h1:9z7o45IOPU29hJtshFYE8Ow1mx9m7nBs+xtSfNp4m0I=
+github.com/NpoolPlatform/message v0.0.0-20230813094002-107ea949305d/go.mod h1:PxJpF0vSSOke+NJskbRBRQ2fK2K3SRe8zaEja+GxSHk=
 github.com/OneOfOne/xxhash v1.2.2 h1:KMrpdQIwFcEqXDklaen+P1axHaj9BSKzvpUUfnHldSE=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/Shonminh/apollo-client v0.4.0 h1:AXGp4wOahrEKjheMXehgsG9B8dEfLQHttRLHeEefvus=

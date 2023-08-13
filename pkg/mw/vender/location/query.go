@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	// deviceinfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/deviceinfo"
+	locationcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/vender/location"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
@@ -42,6 +42,20 @@ func (h *queryHandler) queryVendorLocation(cli *ent.Client) {
 	)
 }
 
+func (h *queryHandler) queryVendorLocations(ctx context.Context, cli *ent.Client) error {
+	stm, err := locationcrud.SetQueryConds(cli.VendorLocation.Query(), h.Conds)
+	if err != nil {
+		return err
+	}
+	total, err := stm.Count(ctx)
+	if err != nil {
+		return err
+	}
+	h.total = uint32(total)
+	h.selectVendorLocation(stm)
+	return nil
+}
+
 func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
 }
@@ -69,4 +83,20 @@ func (h *Handler) GetLocation(ctx context.Context) (*npool.Location, error) {
 		return nil, fmt.Errorf("too many records")
 	}
 	return handler.infos[0], nil
+}
+
+func (h *Handler) GetLocations(ctx context.Context) ([]*npool.Location, uint32, error) {
+	handler := &queryHandler{
+		Handler: h,
+	}
+	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		if err := handler.queryVendorLocations(_ctx, cli); err != nil {
+			return err
+		}
+		return handler.scan(_ctx)
+	})
+	if err != nil {
+		return nil, 0, err
+	}
+	return handler.infos, handler.total, nil
 }
