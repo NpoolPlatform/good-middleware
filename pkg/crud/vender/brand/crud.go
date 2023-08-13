@@ -61,6 +61,8 @@ func SetQueryConds(q *ent.VendorBrandQuery, conds *Conds) (*ent.VendorBrandQuery
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entvendorbrand.ID(id))
+		case cruder.NEQ:
+			q.Where(entvendorbrand.IDNEQ(id))
 		default:
 			return nil, fmt.Errorf("invalid vendorbrand field")
 		}

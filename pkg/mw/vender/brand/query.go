@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	// deviceinfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/deviceinfo"
+	brandcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/vender/brand"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entbrand "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
@@ -39,6 +39,20 @@ func (h *queryHandler) queryVendorBrand(cli *ent.Client) {
 	)
 }
 
+func (h *queryHandler) queryVendorBrands(ctx context.Context, cli *ent.Client) error {
+	stm, err := brandcrud.SetQueryConds(cli.VendorBrand.Query(), h.Conds)
+	if err != nil {
+		return err
+	}
+	total, err := stm.Count(ctx)
+	if err != nil {
+		return err
+	}
+	h.total = uint32(total)
+	h.selectVendorBrand(stm)
+	return nil
+}
+
 func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
 }
@@ -66,4 +80,20 @@ func (h *Handler) GetBrand(ctx context.Context) (*npool.Brand, error) {
 		return nil, fmt.Errorf("too many records")
 	}
 	return handler.infos[0], nil
+}
+
+func (h *Handler) GetBrands(ctx context.Context) ([]*npool.Brand, uint32, error) {
+	handler := &queryHandler{
+		Handler: h,
+	}
+	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		if err := handler.queryVendorBrands(_ctx, cli); err != nil {
+			return err
+		}
+		return handler.scan(_ctx)
+	})
+	if err != nil {
+		return nil, 0, err
+	}
+	return handler.infos, handler.total, nil
 }
