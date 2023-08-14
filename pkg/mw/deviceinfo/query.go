@@ -101,6 +101,9 @@ func (h *Handler) GetDeviceInfos(ctx context.Context) ([]*npool.DeviceInfo, uint
 		if err := handler.queryDeviceInfos(_ctx, cli); err != nil {
 			return err
 		}
+		handler.stmSelect.
+			Offset(int(h.Offset)).
+			Limit(int(h.Limit))
 		return handler.scan(_ctx)
 	})
 	if err != nil {

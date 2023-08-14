@@ -90,6 +90,9 @@ func (h *Handler) GetBrands(ctx context.Context) ([]*npool.Brand, uint32, error)
 		if err := handler.queryVendorBrands(_ctx, cli); err != nil {
 			return err
 		}
+		handler.stmSelect.
+			Offset(int(h.Offset)).
+			Limit(int(h.Limit))
 		return handler.scan(_ctx)
 	})
 	if err != nil {

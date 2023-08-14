@@ -141,6 +141,7 @@ type Conds struct {
 	BenefitType      *cruder.Cond
 	GoodType         *cruder.Cond
 	IDs              *cruder.Cond
+	Title            *cruder.Cond
 }
 
 //nolint
@@ -229,6 +230,18 @@ func SetQueryConds(q *ent.GoodQuery, conds *Conds) (*ent.GoodQuery, error) {
 		switch conds.IDs.Op {
 		case cruder.IN:
 			q.Where(entgood.IDIn(ids...))
+		default:
+			return nil, fmt.Errorf("invalid good field")
+		}
+	}
+	if conds.Title != nil {
+		title, ok := conds.Title.Val.(string)
+		if !ok {
+			return nil, fmt.Errorf("invalid title")
+		}
+		switch conds.Title.Op {
+		case cruder.EQ:
+			q.Where(entgood.Title(title))
 		default:
 			return nil, fmt.Errorf("invalid good field")
 		}

@@ -93,6 +93,9 @@ func (h *Handler) GetLocations(ctx context.Context) ([]*npool.Location, uint32, 
 		if err := handler.queryVendorLocations(_ctx, cli); err != nil {
 			return err
 		}
+		handler.stmSelect.
+			Offset(int(h.Offset)).
+			Limit(int(h.Limit))
 		return handler.scan(_ctx)
 	})
 	if err != nil {
