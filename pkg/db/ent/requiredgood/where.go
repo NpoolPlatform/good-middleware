@@ -100,13 +100,6 @@ func DeletedAt(v uint32) predicate.RequiredGood {
 	})
 }
 
-// AppID applies equality check predicate on the "app_id" field. It's identical to AppIDEQ.
-func AppID(v uuid.UUID) predicate.RequiredGood {
-	return predicate.RequiredGood(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppID), v))
-	})
-}
-
 // MainGoodID applies equality check predicate on the "main_good_id" field. It's identical to MainGoodIDEQ.
 func MainGoodID(v uuid.UUID) predicate.RequiredGood {
 	return predicate.RequiredGood(func(s *sql.Selector) {
@@ -324,70 +317,6 @@ func DeletedAtLT(v uint32) predicate.RequiredGood {
 func DeletedAtLTE(v uint32) predicate.RequiredGood {
 	return predicate.RequiredGood(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldDeletedAt), v))
-	})
-}
-
-// AppIDEQ applies the EQ predicate on the "app_id" field.
-func AppIDEQ(v uuid.UUID) predicate.RequiredGood {
-	return predicate.RequiredGood(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDNEQ applies the NEQ predicate on the "app_id" field.
-func AppIDNEQ(v uuid.UUID) predicate.RequiredGood {
-	return predicate.RequiredGood(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDIn applies the In predicate on the "app_id" field.
-func AppIDIn(vs ...uuid.UUID) predicate.RequiredGood {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.RequiredGood(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldAppID), v...))
-	})
-}
-
-// AppIDNotIn applies the NotIn predicate on the "app_id" field.
-func AppIDNotIn(vs ...uuid.UUID) predicate.RequiredGood {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.RequiredGood(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldAppID), v...))
-	})
-}
-
-// AppIDGT applies the GT predicate on the "app_id" field.
-func AppIDGT(v uuid.UUID) predicate.RequiredGood {
-	return predicate.RequiredGood(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDGTE applies the GTE predicate on the "app_id" field.
-func AppIDGTE(v uuid.UUID) predicate.RequiredGood {
-	return predicate.RequiredGood(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDLT applies the LT predicate on the "app_id" field.
-func AppIDLT(v uuid.UUID) predicate.RequiredGood {
-	return predicate.RequiredGood(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDLTE applies the LTE predicate on the "app_id" field.
-func AppIDLTE(v uuid.UUID) predicate.RequiredGood {
-	return predicate.RequiredGood(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAppID), v))
 	})
 }
 

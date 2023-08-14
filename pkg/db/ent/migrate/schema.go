@@ -224,7 +224,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "good_id", Type: field.TypeUUID},
-		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1692016964},
+		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1692018272},
 		{Name: "tid", Type: field.TypeUUID, Nullable: true},
 		{Name: "amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "unit_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
@@ -312,7 +312,6 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "main_good_id", Type: field.TypeUUID},
 		{Name: "required_good_id", Type: field.TypeUUID},
 		{Name: "must", Type: field.TypeBool, Nullable: true, Default: false},
@@ -325,9 +324,9 @@ var (
 		PrimaryKey: []*schema.Column{RequiredGoodsColumns[0]},
 		Indexes: []*schema.Index{
 			{
-				Name:    "requiredgood_app_id_main_good_id_required_good_id",
+				Name:    "requiredgood_main_good_id_required_good_id",
 				Unique:  false,
-				Columns: []*schema.Column{RequiredGoodsColumns[4], RequiredGoodsColumns[5], RequiredGoodsColumns[6]},
+				Columns: []*schema.Column{RequiredGoodsColumns[4], RequiredGoodsColumns[5]},
 			},
 		},
 	}

@@ -18,8 +18,6 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
-	// FieldAppID holds the string denoting the app_id field in the database.
-	FieldAppID = "app_id"
 	// FieldMainGoodID holds the string denoting the main_good_id field in the database.
 	FieldMainGoodID = "main_good_id"
 	// FieldRequiredGoodID holds the string denoting the required_good_id field in the database.
@@ -38,7 +36,6 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
-	FieldAppID,
 	FieldMainGoodID,
 	FieldRequiredGoodID,
 	FieldMust,

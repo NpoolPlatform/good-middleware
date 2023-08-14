@@ -27,8 +27,6 @@ func (RequiredGood) Fields() []ent.Field {
 			Default(uuid.New).
 			Unique(),
 		field.
-			UUID("app_id", uuid.UUID{}),
-		field.
 			UUID("main_good_id", uuid.UUID{}),
 		field.
 			UUID("required_good_id", uuid.UUID{}),
@@ -50,6 +48,6 @@ func (RequiredGood) Edges() []ent.Edge {
 
 func (RequiredGood) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("app_id", "main_good_id", "required_good_id"),
+		index.Fields("main_good_id", "required_good_id"),
 	}
 }

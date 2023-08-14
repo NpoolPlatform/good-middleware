@@ -84,12 +84,6 @@ func (rgu *RequiredGoodUpdate) AddDeletedAt(u int32) *RequiredGoodUpdate {
 	return rgu
 }
 
-// SetAppID sets the "app_id" field.
-func (rgu *RequiredGoodUpdate) SetAppID(u uuid.UUID) *RequiredGoodUpdate {
-	rgu.mutation.SetAppID(u)
-	return rgu
-}
-
 // SetMainGoodID sets the "main_good_id" field.
 func (rgu *RequiredGoodUpdate) SetMainGoodID(u uuid.UUID) *RequiredGoodUpdate {
 	rgu.mutation.SetMainGoodID(u)
@@ -282,13 +276,6 @@ func (rgu *RequiredGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: requiredgood.FieldDeletedAt,
 		})
 	}
-	if value, ok := rgu.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: requiredgood.FieldAppID,
-		})
-	}
 	if value, ok := rgu.mutation.MainGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -402,12 +389,6 @@ func (rguo *RequiredGoodUpdateOne) SetNillableDeletedAt(u *uint32) *RequiredGood
 // AddDeletedAt adds u to the "deleted_at" field.
 func (rguo *RequiredGoodUpdateOne) AddDeletedAt(u int32) *RequiredGoodUpdateOne {
 	rguo.mutation.AddDeletedAt(u)
-	return rguo
-}
-
-// SetAppID sets the "app_id" field.
-func (rguo *RequiredGoodUpdateOne) SetAppID(u uuid.UUID) *RequiredGoodUpdateOne {
-	rguo.mutation.SetAppID(u)
 	return rguo
 }
 
@@ -631,13 +612,6 @@ func (rguo *RequiredGoodUpdateOne) sqlSave(ctx context.Context) (_node *Required
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: requiredgood.FieldDeletedAt,
-		})
-	}
-	if value, ok := rguo.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: requiredgood.FieldAppID,
 		})
 	}
 	if value, ok := rguo.mutation.MainGoodID(); ok {

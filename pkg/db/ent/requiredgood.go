@@ -22,8 +22,6 @@ type RequiredGood struct {
 	UpdatedAt uint32 `json:"updated_at,omitempty"`
 	// DeletedAt holds the value of the "deleted_at" field.
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
-	// AppID holds the value of the "app_id" field.
-	AppID uuid.UUID `json:"app_id,omitempty"`
 	// MainGoodID holds the value of the "main_good_id" field.
 	MainGoodID uuid.UUID `json:"main_good_id,omitempty"`
 	// RequiredGoodID holds the value of the "required_good_id" field.
@@ -43,7 +41,7 @@ func (*RequiredGood) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullBool)
 		case requiredgood.FieldCreatedAt, requiredgood.FieldUpdatedAt, requiredgood.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case requiredgood.FieldID, requiredgood.FieldAppID, requiredgood.FieldMainGoodID, requiredgood.FieldRequiredGoodID:
+		case requiredgood.FieldID, requiredgood.FieldMainGoodID, requiredgood.FieldRequiredGoodID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type RequiredGood", columns[i])
@@ -83,12 +81,6 @@ func (rg *RequiredGood) assignValues(columns []string, values []interface{}) err
 				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
 				rg.DeletedAt = uint32(value.Int64)
-			}
-		case requiredgood.FieldAppID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field app_id", values[i])
-			} else if value != nil {
-				rg.AppID = *value
 			}
 		case requiredgood.FieldMainGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -150,9 +142,6 @@ func (rg *RequiredGood) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("deleted_at=")
 	builder.WriteString(fmt.Sprintf("%v", rg.DeletedAt))
-	builder.WriteString(", ")
-	builder.WriteString("app_id=")
-	builder.WriteString(fmt.Sprintf("%v", rg.AppID))
 	builder.WriteString(", ")
 	builder.WriteString("main_good_id=")
 	builder.WriteString(fmt.Sprintf("%v", rg.MainGoodID))

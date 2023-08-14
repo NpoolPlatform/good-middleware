@@ -335,7 +335,6 @@ var schemaGraph = func() *sqlgraph.Schema {
 			requiredgood.FieldCreatedAt:      {Type: field.TypeUint32, Column: requiredgood.FieldCreatedAt},
 			requiredgood.FieldUpdatedAt:      {Type: field.TypeUint32, Column: requiredgood.FieldUpdatedAt},
 			requiredgood.FieldDeletedAt:      {Type: field.TypeUint32, Column: requiredgood.FieldDeletedAt},
-			requiredgood.FieldAppID:          {Type: field.TypeUUID, Column: requiredgood.FieldAppID},
 			requiredgood.FieldMainGoodID:     {Type: field.TypeUUID, Column: requiredgood.FieldMainGoodID},
 			requiredgood.FieldRequiredGoodID: {Type: field.TypeUUID, Column: requiredgood.FieldRequiredGoodID},
 			requiredgood.FieldMust:           {Type: field.TypeBool, Column: requiredgood.FieldMust},
@@ -1641,11 +1640,6 @@ func (f *RequiredGoodFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *RequiredGoodFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(requiredgood.FieldDeletedAt))
-}
-
-// WhereAppID applies the entql [16]byte predicate on the app_id field.
-func (f *RequiredGoodFilter) WhereAppID(p entql.ValueP) {
-	f.Where(p.Field(requiredgood.FieldAppID))
 }
 
 // WhereMainGoodID applies the entql [16]byte predicate on the main_good_id field.

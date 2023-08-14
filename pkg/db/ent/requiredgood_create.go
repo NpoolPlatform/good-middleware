@@ -65,12 +65,6 @@ func (rgc *RequiredGoodCreate) SetNillableDeletedAt(u *uint32) *RequiredGoodCrea
 	return rgc
 }
 
-// SetAppID sets the "app_id" field.
-func (rgc *RequiredGoodCreate) SetAppID(u uuid.UUID) *RequiredGoodCreate {
-	rgc.mutation.SetAppID(u)
-	return rgc
-}
-
 // SetMainGoodID sets the "main_good_id" field.
 func (rgc *RequiredGoodCreate) SetMainGoodID(u uuid.UUID) *RequiredGoodCreate {
 	rgc.mutation.SetMainGoodID(u)
@@ -254,9 +248,6 @@ func (rgc *RequiredGoodCreate) check() error {
 	if _, ok := rgc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "RequiredGood.deleted_at"`)}
 	}
-	if _, ok := rgc.mutation.AppID(); !ok {
-		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "RequiredGood.app_id"`)}
-	}
 	if _, ok := rgc.mutation.MainGoodID(); !ok {
 		return &ValidationError{Name: "main_good_id", err: errors.New(`ent: missing required field "RequiredGood.main_good_id"`)}
 	}
@@ -323,14 +314,6 @@ func (rgc *RequiredGoodCreate) createSpec() (*RequiredGood, *sqlgraph.CreateSpec
 			Column: requiredgood.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
-	}
-	if value, ok := rgc.mutation.AppID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: requiredgood.FieldAppID,
-		})
-		_node.AppID = value
 	}
 	if value, ok := rgc.mutation.MainGoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -469,18 +452,6 @@ func (u *RequiredGoodUpsert) UpdateDeletedAt() *RequiredGoodUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *RequiredGoodUpsert) AddDeletedAt(v uint32) *RequiredGoodUpsert {
 	u.Add(requiredgood.FieldDeletedAt, v)
-	return u
-}
-
-// SetAppID sets the "app_id" field.
-func (u *RequiredGoodUpsert) SetAppID(v uuid.UUID) *RequiredGoodUpsert {
-	u.Set(requiredgood.FieldAppID, v)
-	return u
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *RequiredGoodUpsert) UpdateAppID() *RequiredGoodUpsert {
-	u.SetExcluded(requiredgood.FieldAppID)
 	return u
 }
 
@@ -654,20 +625,6 @@ func (u *RequiredGoodUpsertOne) AddDeletedAt(v uint32) *RequiredGoodUpsertOne {
 func (u *RequiredGoodUpsertOne) UpdateDeletedAt() *RequiredGoodUpsertOne {
 	return u.Update(func(s *RequiredGoodUpsert) {
 		s.UpdateDeletedAt()
-	})
-}
-
-// SetAppID sets the "app_id" field.
-func (u *RequiredGoodUpsertOne) SetAppID(v uuid.UUID) *RequiredGoodUpsertOne {
-	return u.Update(func(s *RequiredGoodUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *RequiredGoodUpsertOne) UpdateAppID() *RequiredGoodUpsertOne {
-	return u.Update(func(s *RequiredGoodUpsert) {
-		s.UpdateAppID()
 	})
 }
 
@@ -1017,20 +974,6 @@ func (u *RequiredGoodUpsertBulk) AddDeletedAt(v uint32) *RequiredGoodUpsertBulk 
 func (u *RequiredGoodUpsertBulk) UpdateDeletedAt() *RequiredGoodUpsertBulk {
 	return u.Update(func(s *RequiredGoodUpsert) {
 		s.UpdateDeletedAt()
-	})
-}
-
-// SetAppID sets the "app_id" field.
-func (u *RequiredGoodUpsertBulk) SetAppID(v uuid.UUID) *RequiredGoodUpsertBulk {
-	return u.Update(func(s *RequiredGoodUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *RequiredGoodUpsertBulk) UpdateAppID() *RequiredGoodUpsertBulk {
-	return u.Update(func(s *RequiredGoodUpsert) {
-		s.UpdateAppID()
 	})
 }
 
