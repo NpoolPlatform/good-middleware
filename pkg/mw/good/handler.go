@@ -18,16 +18,24 @@ import (
 
 type Handler struct {
 	goodcrud.Req
-	Total     *decimal.Decimal
-	Locked    *decimal.Decimal
-	InService *decimal.Decimal
-	WaitStart *decimal.Decimal
-	Posters   []string
-	Labels    []string
-	AppLocked *decimal.Decimal
-	Conds     *goodcrud.Conds
-	Offset    int32
-	Limit     int32
+	Total                 *decimal.Decimal
+	Locked                *decimal.Decimal
+	InService             *decimal.Decimal
+	WaitStart             *decimal.Decimal
+	Posters               []string
+	Labels                []string
+	AppLocked             *decimal.Decimal
+	Likes                 *uint32
+	Dislikes              *uint32
+	Rating                *decimal.Decimal
+	RewardState           *types.BenefitState
+	LastRewardAt          *uint32
+	RewardTID             *uuid.UUID
+	NextRewardStartAmount *decimal.Decimal
+	LastRewardAmount      *decimal.Decimal
+	Conds                 *goodcrud.Conds
+	Offset                int32
+	Limit                 int32
 }
 
 const leastStrLen = 3
@@ -436,6 +444,133 @@ func WithAppLocked(s *string, must bool) func(context.Context, *Handler) error {
 			return err
 		}
 		h.AppLocked = &amount
+		return nil
+	}
+}
+
+func WithLikes(n *uint32, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if n == nil {
+			if must {
+				return fmt.Errorf("invalid likes")
+			}
+			return nil
+		}
+		h.Likes = n
+		return nil
+	}
+}
+
+func WithDislikes(n *uint32, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if n == nil {
+			if must {
+				return fmt.Errorf("invalid dislikes")
+			}
+			return nil
+		}
+		h.Dislikes = n
+		return nil
+	}
+}
+
+func WithRating(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid rating")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.Rating = &amount
+		return nil
+	}
+}
+
+func WithRewardState(e *types.BenefitState, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return fmt.Errorf("invalid rewardstate")
+			}
+			return nil
+		}
+		switch *e {
+		case types.BenefitState_BenefitWait:
+		case types.BenefitState_BenefitTransferring:
+		case types.BenefitState_BenefitBookKeeping:
+		default:
+			return fmt.Errorf("invalid rewardstate")
+		}
+		h.RewardState = e
+		return nil
+	}
+}
+
+func WithRewardTID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid rewardtid")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
+		if err != nil {
+			return err
+		}
+		h.RewardTID = &_id
+		return nil
+	}
+}
+
+func WithLastRewardAt(n *uint32, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if n == nil {
+			if must {
+				return fmt.Errorf("invalid lastrewardat")
+			}
+			return nil
+		}
+		h.LastRewardAt = n
+		return nil
+	}
+}
+
+func WithNextRewardStartAmount(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid nextrewardstartamount")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.NextRewardStartAmount = &amount
+		return nil
+	}
+}
+
+func WithLastRewardAmount(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid lastrewardamount")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.LastRewardAmount = &amount
 		return nil
 	}
 }

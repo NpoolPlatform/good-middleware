@@ -30,6 +30,7 @@ type Req struct {
 	TestOnly             *bool
 	BenefitIntervalHours *uint32
 	UnitLockDeposit      *decimal.Decimal
+	DeletedAt            *uint32
 }
 
 func CreateSet(c *ent.GoodCreate, req *Req) *ent.GoodCreate {
@@ -129,6 +130,9 @@ func UpdateSet(u *ent.GoodUpdateOne, req *Req) *ent.GoodUpdateOne {
 	}
 	if req.UnitLockDeposit != nil {
 		u.SetUnitLockDeposit(*req.UnitLockDeposit)
+	}
+	if req.DeletedAt != nil {
+		u.SetDeletedAt(*req.DeletedAt)
 	}
 	return u
 }

@@ -60,6 +60,34 @@ func (h *createHandler) createStock(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
+func (h *createHandler) createGood(ctx context.Context, tx *ent.Tx) error {
+	if _, err := goodcrud.CreateSet(
+		tx.Good.Create(),
+		&goodcrud.Req{
+			ID:                   h.ID,
+			DeviceInfoID:         h.DeviceInfoID,
+			DurationDays:         h.DurationDays,
+			CoinTypeID:           h.CoinTypeID,
+			VendorLocationID:     h.VendorLocationID,
+			Price:                h.Price,
+			BenefitType:          h.BenefitType,
+			GoodType:             h.GoodType,
+			Title:                h.Title,
+			Unit:                 h.Unit,
+			UnitAmount:           h.UnitAmount,
+			SupportCoinTypeIDs:   h.SupportCoinTypeIDs,
+			DeliveryAt:           h.DeliveryAt,
+			StartAt:              h.StartAt,
+			TestOnly:             h.TestOnly,
+			BenefitIntervalHours: h.BenefitIntervalHours,
+			UnitLockDeposit:      h.UnitLockDeposit,
+		},
+	).Save(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (h *Handler) CreateGood(ctx context.Context) (*npool.Good, error) {
 	key := h.lockKey()
 	if err := redis2.TryLock(key, 0); err != nil {
@@ -97,6 +125,9 @@ func (h *Handler) CreateGood(ctx context.Context) (*npool.Good, error) {
 			return err
 		}
 		if err := handler.createStock(_ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.createGood(_ctx, tx); err != nil {
 			return err
 		}
 		return nil

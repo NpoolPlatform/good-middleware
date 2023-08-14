@@ -20,6 +20,7 @@ type Req struct {
 	WaitStart *decimal.Decimal
 	Sold      *decimal.Decimal
 	AppLocked *decimal.Decimal
+	DeletedAt *uint32
 }
 
 func CreateSet(c *ent.StockCreate, req *Req) *ent.StockCreate {
@@ -58,6 +59,9 @@ func UpdateSet(u *ent.StockUpdateOne, req *Req) *ent.StockUpdateOne {
 	}
 	if req.AppLocked != nil {
 		u.SetAppLocked(*req.AppLocked)
+	}
+	if req.DeletedAt != nil {
+		u.SetDeletedAt(*req.DeletedAt)
 	}
 	return u
 }

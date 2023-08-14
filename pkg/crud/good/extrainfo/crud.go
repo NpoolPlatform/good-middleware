@@ -12,13 +12,14 @@ import (
 )
 
 type Req struct {
-	ID       *uuid.UUID
-	GoodID   *uuid.UUID
-	Posters  []string
-	Labels   []string
-	Likes    *uint32
-	Dislikes *uint32
-	Rating   *decimal.Decimal
+	ID        *uuid.UUID
+	GoodID    *uuid.UUID
+	Posters   []string
+	Labels    []string
+	Likes     *uint32
+	Dislikes  *uint32
+	Rating    *decimal.Decimal
+	DeletedAt *uint32
 }
 
 func CreateSet(c *ent.ExtraInfoCreate, req *Req) *ent.ExtraInfoCreate {
@@ -61,6 +62,9 @@ func UpdateSet(u *ent.ExtraInfoUpdateOne, req *Req) *ent.ExtraInfoUpdateOne {
 	}
 	if req.Rating != nil {
 		u.SetRatingV1(*req.Rating)
+	}
+	if req.DeletedAt != nil {
+		u.SetDeletedAt(*req.DeletedAt)
 	}
 	return u
 }
