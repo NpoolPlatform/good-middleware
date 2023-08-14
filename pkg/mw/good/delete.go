@@ -26,7 +26,7 @@ func (h *deleteHandler) deleteExtraInfo(ctx context.Context, tx *ent.Tx) error {
 		Query().
 		Where(
 			entextrainfo.GoodID(*h.ID),
-			entextrainfo.UpdatedAt(0),
+			entextrainfo.DeletedAt(0),
 		).
 		ForUpdate().
 		Only(ctx)
@@ -112,11 +112,16 @@ func (h *deleteHandler) deleteGood(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) DeleteGood(ctx context.Context) (*npool.Good, error) {
+	info, err := h.GetGood(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	handler := &deleteHandler{
 		Handler: h,
 	}
 
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.deleteExtraInfo(_ctx, tx); err != nil {
 			return err
 		}
@@ -135,5 +140,5 @@ func (h *Handler) DeleteGood(ctx context.Context) (*npool.Good, error) {
 		return nil, err
 	}
 
-	return h.GetGood(ctx)
+	return info, nil
 }

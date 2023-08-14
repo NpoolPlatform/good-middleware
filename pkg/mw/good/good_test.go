@@ -10,12 +10,13 @@ import (
 	"testing"
 	"time"
 
-	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
-
 	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/mw/deviceinfo"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
+	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -248,6 +249,73 @@ func updateGood(t *testing.T) {
 	}
 }
 
+func getGood(t *testing.T) {
+	handler, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+	)
+	if assert.Nil(t, err) {
+		info, err := handler.GetGood(context.Background())
+		if assert.Nil(t, err) {
+			info.LabelsStr = strings.ReplaceAll(info.LabelsStr, " ", "")
+			info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
+			info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
+			info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
+			assert.Equal(t, &ret, info)
+		}
+	}
+}
+
+func getGoods(t *testing.T) {
+	handler, err := NewHandler(
+		context.Background(),
+		WithConds(&npool.Conds{
+			ID:               &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+			DeviceInfoID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.DeviceInfoID},
+			CoinTypeID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.CoinTypeID},
+			VendorLocationID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.VendorLocationID},
+			BenefitType:      &basetypes.Uint32Val{Op: cruder.EQ, Value: uint32(ret.BenefitType)},
+			GoodType:         &basetypes.Uint32Val{Op: cruder.EQ, Value: uint32(ret.GoodType)},
+			IDs:              &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.ID}},
+		}),
+		WithOffset(0),
+		WithLimit(0),
+	)
+	if assert.Nil(t, err) {
+		infos, total, err := handler.GetGoods(context.Background())
+		if assert.Nil(t, err) {
+			if assert.Equal(t, uint32(1), total) {
+				infos[0].LabelsStr = strings.ReplaceAll(infos[0].LabelsStr, " ", "")
+				infos[0].PostersStr = strings.ReplaceAll(infos[0].PostersStr, " ", "")
+				infos[0].SupportCoinTypeIDsStr = strings.ReplaceAll(infos[0].SupportCoinTypeIDsStr, " ", "")
+				infos[0].DevicePostersStr = strings.ReplaceAll(infos[0].DevicePostersStr, " ", "")
+				assert.Equal(t, &ret, infos[0])
+			}
+		}
+	}
+}
+
+func deleteGood(t *testing.T) {
+	handler, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+	)
+	if assert.Nil(t, err) {
+		info, err := handler.DeleteGood(context.Background())
+		if assert.Nil(t, err) {
+			info.LabelsStr = strings.ReplaceAll(info.LabelsStr, " ", "")
+			info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
+			info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
+			info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
+			assert.Equal(t, &ret, info)
+		}
+
+		info, err = handler.GetGood(context.Background())
+		assert.Nil(t, err)
+		assert.Nil(t, info)
+	}
+}
+
 func TestGood(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
@@ -258,4 +326,7 @@ func TestGood(t *testing.T) {
 
 	t.Run("createGood", createGood)
 	t.Run("updateGood", updateGood)
+	t.Run("getGood", getGood)
+	t.Run("getGoods", getGoods)
+	t.Run("deleteGood", deleteGood)
 }
