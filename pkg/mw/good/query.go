@@ -19,6 +19,8 @@ import (
 	entvendorlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
+
+	"github.com/shopspring/decimal"
 )
 
 type queryHandler struct {
@@ -224,6 +226,66 @@ func (h *queryHandler) formalize() {
 		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
 		_ = json.Unmarshal([]byte(info.LabelsStr), &info.Labels)
+		amount, err := decimal.NewFromString(info.UnitLockDeposit)
+		if err != nil {
+			info.UnitLockDeposit = decimal.NewFromInt(0).String()
+		} else {
+			info.UnitLockDeposit = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.GoodTotal)
+		if err != nil {
+			info.GoodTotal = decimal.NewFromInt(0).String()
+		} else {
+			info.GoodTotal = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.GoodLocked)
+		if err != nil {
+			info.GoodLocked = decimal.NewFromInt(0).String()
+		} else {
+			info.GoodLocked = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.GoodInService)
+		if err != nil {
+			info.GoodInService = decimal.NewFromInt(0).String()
+		} else {
+			info.GoodInService = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.GoodWaitStart)
+		if err != nil {
+			info.GoodWaitStart = decimal.NewFromInt(0).String()
+		} else {
+			info.GoodWaitStart = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.GoodSold)
+		if err != nil {
+			info.GoodSold = decimal.NewFromInt(0).String()
+		} else {
+			info.GoodSold = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.GoodAppLocked)
+		if err != nil {
+			info.GoodAppLocked = decimal.NewFromInt(0).String()
+		} else {
+			info.GoodAppLocked = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.Price)
+		if err != nil {
+			info.Price = decimal.NewFromInt(0).String()
+		} else {
+			info.Price = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.NextRewardStartAmount)
+		if err != nil {
+			info.NextRewardStartAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.NextRewardStartAmount = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.LastRewardAmount)
+		if err != nil {
+			info.LastRewardAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.LastRewardAmount = amount.String()
+		}
 	}
 }
 
