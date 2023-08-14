@@ -2,9 +2,19 @@ package good
 
 import (
 	"context"
+	"fmt"
 
 	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
+	goodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good"
+	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/extrainfo"
+	rewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward"
+	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
+
+	"github.com/google/uuid"
 )
 
 type createHandler struct {
@@ -79,7 +89,7 @@ func (h *Handler) CreateGood(ctx context.Context) (*npool.Good, error) {
 		Handler: h,
 	}
 
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createExtraInfo(_ctx, tx); err != nil {
 			return err
 		}

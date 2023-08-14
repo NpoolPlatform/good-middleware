@@ -12,12 +12,13 @@ import (
 )
 
 type Req struct {
-	ID        *uuid.UUID
-	GoodID    *uuid.UUID
-	Posters   []string
-	Labels    []string
-	VoteCount *uint32
-	Rating    *decimal.Decimal
+	ID       *uuid.UUID
+	GoodID   *uuid.UUID
+	Posters  []string
+	Labels   []string
+	Likes    *uint32
+	Dislikes *uint32
+	Rating   *decimal.Decimal
 }
 
 func CreateSet(c *ent.ExtraInfoCreate, req *Req) *ent.ExtraInfoCreate {
@@ -33,8 +34,11 @@ func CreateSet(c *ent.ExtraInfoCreate, req *Req) *ent.ExtraInfoCreate {
 	if len(req.Labels) > 0 {
 		c.SetLabels(req.Labels)
 	}
-	if req.VoteCount != nil {
-		c.SetVoteCount(*req.VoteCount)
+	if req.Likes != nil {
+		c.SetLikes(*req.Likes)
+	}
+	if req.Dislikes != nil {
+		c.SetDislikes(*req.Dislikes)
 	}
 	if req.Rating != nil {
 		c.SetRatingV1(*req.Rating)
@@ -49,8 +53,11 @@ func UpdateSet(u *ent.ExtraInfoUpdateOne, req *Req) *ent.ExtraInfoUpdateOne {
 	if len(req.Labels) > 0 {
 		u.SetLabels(req.Labels)
 	}
-	if req.VoteCount != nil {
-		u.SetVoteCount(*req.VoteCount)
+	if req.Likes != nil {
+		u.SetLikes(*req.Likes)
+	}
+	if req.Dislikes != nil {
+		u.SetDislikes(*req.Dislikes)
 	}
 	if req.Rating != nil {
 		u.SetRatingV1(*req.Rating)
