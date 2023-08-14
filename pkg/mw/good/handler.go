@@ -3,9 +3,7 @@ package good
 import (
 	"context"
 	"fmt"
-	"time"
 
-	timedef "github.com/NpoolPlatform/go-service-framework/pkg/const/time"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	goodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good"
 	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/mw/deviceinfo"
@@ -44,9 +42,12 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 	return handler, nil
 }
 
-func WithID(id *string) func(context.Context, *Handler) error {
+func WithID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
+			if must {
+				return fmt.Errorf("invalid id")
+			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
@@ -58,9 +59,12 @@ func WithID(id *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithDeviceInfoID(id *string) func(context.Context, *Handler) error {
+func WithDeviceInfoID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
+			if must {
+				return fmt.Errorf("invalid deviceinfoid")
+			}
 			return nil
 		}
 		handler, err := deviceinfo1.NewHandler(
@@ -82,22 +86,25 @@ func WithDeviceInfoID(id *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithDurationDays(n *int32) func(context.Context, *Handler) error {
+func WithDurationDays(n *int32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if n == nil {
+			if must {
+				return fmt.Errorf("invalid durationdays")
+			}
 			return nil
-		}
-		if *n == 0 {
-			*n = timedef.DaysPerYear
 		}
 		h.DurationDays = n
 		return nil
 	}
 }
 
-func WithCoinTypeID(id *string) func(context.Context, *Handler) error {
+func WithCoinTypeID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
+			if must {
+				return fmt.Errorf("invalid cointypeid")
+			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
@@ -109,9 +116,12 @@ func WithCoinTypeID(id *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithVendorLocationID(id *string) func(context.Context, *Handler) error {
+func WithVendorLocationID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
+			if must {
+				return fmt.Errorf("invalid vendorlocationid")
+			}
 			return nil
 		}
 		handler, err := vendorlocation1.NewHandler(
@@ -133,9 +143,12 @@ func WithVendorLocationID(id *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithPrice(s *string) func(context.Context, *Handler) error {
+func WithPrice(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
+			if must {
+				return fmt.Errorf("invalid price")
+			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
@@ -147,9 +160,12 @@ func WithPrice(s *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithBenefitType(e *types.BenefitType) func(context.Context, *Handler) error {
+func WithBenefitType(e *types.BenefitType, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
+			if must {
+				return fmt.Errorf("invalid benefittype")
+			}
 			return nil
 		}
 		switch *e {
@@ -163,9 +179,12 @@ func WithBenefitType(e *types.BenefitType) func(context.Context, *Handler) error
 	}
 }
 
-func WithGoodType(e *types.GoodType) func(context.Context, *Handler) error {
+func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
+			if must {
+				return fmt.Errorf("invalid goodtype")
+			}
 			return nil
 		}
 		switch *e {
@@ -190,9 +209,12 @@ func WithGoodType(e *types.GoodType) func(context.Context, *Handler) error {
 	}
 }
 
-func WithTitle(s *string) func(context.Context, *Handler) error {
+func WithTitle(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
+			if must {
+				return fmt.Errorf("invalid title")
+			}
 			return nil
 		}
 		if len(*s) < leastStrLen {
@@ -203,9 +225,12 @@ func WithTitle(s *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithUnit(s *string) func(context.Context, *Handler) error {
+func WithUnit(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
+			if must {
+				return fmt.Errorf("invalid unit")
+			}
 			return nil
 		}
 		const leastUnitLen = 2
@@ -217,14 +242,20 @@ func WithUnit(s *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithUnitAmount(n *int32) func(context.Context, *Handler) error {
+func WithUnitAmount(n *int32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if n == nil {
+			if must {
+				return fmt.Errorf("invalid unitamount")
+			}
+			return nil
+		}
 		h.UnitAmount = n
 		return nil
 	}
 }
 
-func WithSupportCoinTypeIDs(ss []string) func(context.Context, *Handler) error {
+func WithSupportCoinTypeIDs(ss []string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		for _, s := range ss {
 			id, err := uuid.Parse(s)
@@ -237,34 +268,45 @@ func WithSupportCoinTypeIDs(ss []string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithDeliveryAt(n *uint32) func(context.Context, *Handler) error {
+func WithDeliveryAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if n == nil {
+			if must {
+				return fmt.Errorf("invalid deliveryat")
+			}
+			return nil
+		}
 		h.DeliveryAt = n
 		return nil
 	}
 }
 
-func WithStartAt(n *uint32) func(context.Context, *Handler) error {
+func WithStartAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		now := uint32(time.Now().Unix())
-		if n == nil || *n == 0 {
-			n = &now
+		if n == nil {
+			if must {
+				return fmt.Errorf("invalid startat")
+			}
+			return nil
 		}
 		h.StartAt = n
 		return nil
 	}
 }
 
-func WithTestOnly(b *bool) func(context.Context, *Handler) error {
+func WithTestOnly(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.TestOnly = b
 		return nil
 	}
 }
 
-func WithTotal(s *string) func(context.Context, *Handler) error {
+func WithTotal(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
+			if must {
+				return fmt.Errorf("invalid total")
+			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
@@ -276,9 +318,12 @@ func WithTotal(s *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithLocked(s *string) func(context.Context, *Handler) error {
+func WithLocked(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
+			if must {
+				return fmt.Errorf("invalid locked")
+			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
@@ -290,9 +335,12 @@ func WithLocked(s *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithInService(s *string) func(context.Context, *Handler) error {
+func WithInService(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
+			if must {
+				return fmt.Errorf("invalid inservice")
+			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
@@ -304,9 +352,12 @@ func WithInService(s *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithWaitStart(s *string) func(context.Context, *Handler) error {
+func WithWaitStart(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
+			if must {
+				return fmt.Errorf("invalid waitstart")
+			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
@@ -318,7 +369,7 @@ func WithWaitStart(s *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithPosters(ss []string) func(context.Context, *Handler) error {
+func WithPosters(ss []string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		for _, s := range ss {
 			if len(s) < leastStrLen {
@@ -330,7 +381,7 @@ func WithPosters(ss []string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithLabels(ss []string) func(context.Context, *Handler) error {
+func WithLabels(ss []string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		for _, s := range ss {
 			if len(s) < leastStrLen {
@@ -342,20 +393,25 @@ func WithLabels(ss []string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithBenefitIntervalHours(n *uint32) func(context.Context, *Handler) error {
+func WithBenefitIntervalHours(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		interval := uint32(timedef.HoursPerDay)
-		if n == nil || *n == 0 {
-			n = &interval
+		if n == nil {
+			if must {
+				return fmt.Errorf("invalid benefitintervalhours")
+			}
+			return nil
 		}
 		h.BenefitIntervalHours = n
 		return nil
 	}
 }
 
-func WithUnitLockDeposit(s *string) func(context.Context, *Handler) error {
+func WithUnitLockDeposit(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
+			if must {
+				return fmt.Errorf("invalid unitlockdeposit")
+			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
@@ -367,9 +423,12 @@ func WithUnitLockDeposit(s *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithAppLocked(s *string) func(context.Context, *Handler) error {
+func WithAppLocked(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
+			if must {
+				return fmt.Errorf("invalid applocked")
+			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
