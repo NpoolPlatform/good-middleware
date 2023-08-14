@@ -8,6 +8,7 @@ import (
 	goodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good"
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/extrainfo"
 	rewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward"
+	rewardhistorycrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward/history"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -62,6 +63,10 @@ func (h *updateHandler) updateExtraInfo(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
+	if h.RewardState == nil {
+		return nil
+	}
+
 	info, err := tx.
 		GoodReward.
 		Query().
@@ -75,37 +80,57 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 		return err
 	}
 
-	if h.RewardState != nil {
-		switch info.RewardState {
-		case types.BenefitState_BenefitWait.String():
-			if *h.RewardState != types.BenefitState_BenefitTransferring {
-				return fmt.Errorf("broken rewardstate")
-			}
-		case types.BenefitState_BenefitTransferring.String():
-			if *h.RewardState != types.BenefitState_BenefitBookKeeping {
-				return fmt.Errorf("broken rewardstate")
-			}
-		case types.BenefitState_BenefitBookKeeping.String():
-			if *h.RewardState != types.BenefitState_BenefitWait {
-				return fmt.Errorf("broken rewardstate")
-			}
-		default:
-			return fmt.Errorf("invalid rewardstate")
+	switch info.RewardState {
+	case types.BenefitState_BenefitWait.String():
+		if *h.RewardState != types.BenefitState_BenefitTransferring {
+			return fmt.Errorf("broken rewardstate")
 		}
+	case types.BenefitState_BenefitTransferring.String():
+		if *h.RewardState != types.BenefitState_BenefitBookKeeping {
+			return fmt.Errorf("broken rewardstate")
+		}
+	case types.BenefitState_BenefitBookKeeping.String():
+		if *h.RewardState != types.BenefitState_BenefitDone {
+			return fmt.Errorf("broken rewardstate")
+		}
+	case types.BenefitState_BenefitDone.String():
+		if *h.RewardState != types.BenefitState_BenefitWait {
+			return fmt.Errorf("broken rewardstate")
+		}
+	default:
+		return fmt.Errorf("invalid rewardstate")
 	}
 
 	if _, err := rewardcrud.UpdateSet(
 		info.Update(),
 		&rewardcrud.Req{
 			RewardState:           h.RewardState,
-			LastRewardAt:          h.LastRewardAt,
+			LastRewardAt:          h.RewardAt,
 			RewardTID:             h.RewardTID,
 			NextRewardStartAmount: h.NextRewardStartAmount,
-			LastRewardAmount:      h.LastRewardAmount,
+			LastRewardAmount:      h.RewardAmount,
 		},
 	).Save(ctx); err != nil {
 		return err
 	}
+
+	if *h.RewardState != types.BenefitState_BenefitDone {
+		return nil
+	}
+
+	if _, err := rewardhistorycrud.CreateSet(
+		tx.GoodRewardHistory.Create(),
+		&rewardhistorycrud.Req{
+			GoodID:     h.ID,
+			RewardDate: h.RewardAt,
+			TID:        h.RewardTID,
+			Amount:     h.RewardAmount,
+			UnitAmount: h.UnitRewardAmount,
+		},
+	).Save(ctx); err != nil {
+		return err
+	}
+
 	return nil
 }
 

@@ -29,10 +29,11 @@ type Handler struct {
 	Dislikes              *uint32
 	Rating                *decimal.Decimal
 	RewardState           *types.BenefitState
-	LastRewardAt          *uint32
+	RewardAt              *uint32
 	RewardTID             *uuid.UUID
 	NextRewardStartAmount *decimal.Decimal
-	LastRewardAmount      *decimal.Decimal
+	RewardAmount          *decimal.Decimal
+	UnitRewardAmount      *decimal.Decimal
 	Conds                 *goodcrud.Conds
 	Offset                int32
 	Limit                 int32
@@ -528,15 +529,15 @@ func WithRewardTID(id *string, must bool) func(context.Context, *Handler) error 
 	}
 }
 
-func WithLastRewardAt(n *uint32, must bool) func(context.Context, *Handler) error {
+func WithRewardAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if n == nil {
 			if must {
-				return fmt.Errorf("invalid lastrewardat")
+				return fmt.Errorf("invalid rewardat")
 			}
 			return nil
 		}
-		h.LastRewardAt = n
+		h.RewardAt = n
 		return nil
 	}
 }
@@ -558,11 +559,11 @@ func WithNextRewardStartAmount(s *string, must bool) func(context.Context, *Hand
 	}
 }
 
-func WithLastRewardAmount(s *string, must bool) func(context.Context, *Handler) error {
+func WithRewardAmount(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid lastrewardamount")
+				return fmt.Errorf("invalid rewardamount")
 			}
 			return nil
 		}
@@ -570,7 +571,24 @@ func WithLastRewardAmount(s *string, must bool) func(context.Context, *Handler) 
 		if err != nil {
 			return err
 		}
-		h.LastRewardAmount = &amount
+		h.RewardAmount = &amount
+		return nil
+	}
+}
+
+func WithUnitRewardAmount(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid unitrewardamount")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.UnitRewardAmount = &amount
 		return nil
 	}
 }

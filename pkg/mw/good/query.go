@@ -76,6 +76,8 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entgood.FieldTestOnly), "test_only"),
 			sql.As(t.C(entgood.FieldBenefitIntervalHours), "benefit_interval_hours"),
 			sql.As(t.C(entgood.FieldUnitLockDeposit), "unit_lock_deposit"),
+			sql.As(t.C(entgood.FieldCreatedAt), "created_at"),
+			sql.As(t.C(entgood.FieldUpdatedAt), "updated_at"),
 		)
 }
 
