@@ -172,6 +172,82 @@ func createGood(t *testing.T) {
 	}
 }
 
+func updateGood(t *testing.T) {
+	ret.UnitLockDeposit = decimal.NewFromInt(20).String()
+	locked := decimal.NewFromInt(1).String()
+	ret.GoodLocked = locked
+	ret.GoodInService = locked
+	ret.GoodWaitStart = locked
+	ret.GoodSold = locked
+
+	handler, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithLocked(&locked, true),
+		WithInService(&locked, true),
+		WithWaitStart(&locked, true),
+		WithUnitLockDeposit(&ret.UnitLockDeposit, true),
+	)
+	if assert.Nil(t, err) {
+		info, err := handler.UpdateGood(context.Background())
+		if assert.Nil(t, err) {
+			info.LabelsStr = strings.ReplaceAll(info.LabelsStr, " ", "")
+			info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
+			info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
+			info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
+			assert.Equal(t, &ret, info)
+		}
+	}
+
+	ret.GoodLocked = "2"
+	ret.GoodInService = "2"
+	ret.GoodWaitStart = "2"
+	ret.GoodSold = "2"
+
+	info, err := handler.UpdateGood(context.Background())
+	if assert.Nil(t, err) {
+		info.LabelsStr = strings.ReplaceAll(info.LabelsStr, " ", "")
+		info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
+		info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
+		info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
+		assert.Equal(t, &ret, info)
+	}
+
+	locked = decimal.NewFromInt(-1).String()
+	ret.GoodLocked = "1"
+	ret.GoodInService = "1"
+	ret.GoodWaitStart = "1"
+
+	handler, err = NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithLocked(&locked, true),
+		WithInService(&locked, true),
+		WithWaitStart(&locked, true),
+	)
+	if assert.Nil(t, err) {
+		info, err := handler.UpdateGood(context.Background())
+		if assert.Nil(t, err) {
+			info.LabelsStr = strings.ReplaceAll(info.LabelsStr, " ", "")
+			info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
+			info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
+			info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
+			assert.Equal(t, &ret, info)
+		}
+	}
+
+	locked = decimal.NewFromInt(1000).String()
+	handler, err = NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithLocked(&locked, true),
+	)
+	if assert.Nil(t, err) {
+		_, err := handler.UpdateGood(context.Background())
+		assert.NotNil(t, err)
+	}
+}
+
 func TestGood(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
@@ -181,4 +257,5 @@ func TestGood(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createGood", createGood)
+	t.Run("updateGood", updateGood)
 }
