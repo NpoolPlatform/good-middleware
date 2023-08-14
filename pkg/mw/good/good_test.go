@@ -63,6 +63,7 @@ var ret = npool.Good{
 	StartAt:                uint32(time.Now().Unix() + 1000),
 	BenefitIntervalHours:   24,
 	GoodAppLocked:          decimal.NewFromInt(0).String(),
+	UnitLockDeposit:        decimal.NewFromInt(1).String(),
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -110,6 +111,40 @@ func setup(t *testing.T) func(*testing.T) {
 	}
 }
 
+func createGood(t *testing.T) {
+	handler, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithDeviceInfoID(&ret.DeviceInfoID, true),
+		WithDurationDays(&ret.DurationDays, true),
+		WithCoinTypeID(&ret.CoinTypeID, true),
+		WithVendorLocationID(&ret.VendorLocationID, true),
+		WithPrice(&ret.Price, true),
+		WithBenefitType(&ret.BenefitType, true),
+		WithGoodType(&ret.GoodType, true),
+		WithTitle(&ret.Title, true),
+		WithUnit(&ret.Unit, true),
+		WithUnitAmount(&ret.UnitAmount, true),
+		WithSupportCoinTypeIDs(ret.SupportCoinTypeIDs, false),
+		WithDeliveryAt(&ret.DeliveryAt, true),
+		WithStartAt(&ret.StartAt, true),
+		WithTestOnly(&ret.TestOnly, false),
+		WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
+		WithUnitLockDeposit(&ret.UnitLockDeposit, false),
+		WithTotal(&ret.GoodTotal, true),
+		WithPosters(ret.Posters, false),
+		WithLabels(ret.Labels, false),
+	)
+	if assert.Nil(t, err) {
+		info, err := handler.CreateGood(context.Background())
+		if assert.Nil(t, err) {
+			ret.CreatedAt = info.CreatedAt
+			ret.UpdatedAt = info.UpdatedAt
+			assert.Equal(t, &ret, info)
+		}
+	}
+}
+
 func TestGood(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
@@ -117,4 +152,6 @@ func TestGood(t *testing.T) {
 
 	teardown := setup(t)
 	defer teardown(t)
+
+	t.Run("createGood", createGood)
 }

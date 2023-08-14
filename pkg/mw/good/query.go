@@ -235,16 +235,6 @@ func (h *Handler) GetGood(ctx context.Context) (*npool.Good, error) {
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		handler.queryGood(cli)
 		handler.queryJoin()
-
-		total, err := handler.stmCount.Count(_ctx)
-		if err != nil {
-			return err
-		}
-		handler.total = uint32(total)
-
-		handler.stmSelect.
-			Offset(int(handler.Offset)).
-			Limit(int(handler.Limit))
 		return handler.scan(_ctx)
 	})
 	if err != nil {
