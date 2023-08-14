@@ -8,6 +8,8 @@ import (
 	timedef "github.com/NpoolPlatform/go-service-framework/pkg/const/time"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	goodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good"
+	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/mw/deviceinfo"
+	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
@@ -61,11 +63,21 @@ func WithDeviceInfoID(id *string) func(context.Context, *Handler) error {
 		if id == nil {
 			return nil
 		}
-		_id, err := uuid.Parse(*id)
+		handler, err := deviceinfo1.NewHandler(
+			ctx,
+			deviceinfo1.WithID(id),
+		)
 		if err != nil {
 			return err
 		}
-		h.DeviceInfoID = &_id
+		exist, err := handler.ExistDeviceInfo(ctx)
+		if err != nil {
+			return err
+		}
+		if !exist {
+			return fmt.Errorf("invalid deviceinfo")
+		}
+		h.DeviceInfoID = handler.ID
 		return nil
 	}
 }
@@ -102,11 +114,21 @@ func WithVendorLocationID(id *string) func(context.Context, *Handler) error {
 		if id == nil {
 			return nil
 		}
-		_id, err := uuid.Parse(*id)
+		handler, err := vendorlocation1.NewHandler(
+			ctx,
+			vendorlocation1.WithID(id),
+		)
 		if err != nil {
 			return err
 		}
-		h.VendorLocationID = &_id
+		exist, err := handler.ExistLocation(ctx)
+		if err != nil {
+			return err
+		}
+		if !exist {
+			return fmt.Errorf("invalid vendorlocation")
+		}
+		h.VendorLocationID = handler.ID
 		return nil
 	}
 }

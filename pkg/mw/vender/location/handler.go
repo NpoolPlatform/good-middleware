@@ -6,6 +6,7 @@ import (
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	locationcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/vender/location"
+	brand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"
 
@@ -104,11 +105,21 @@ func WithBrandID(id *string) func(context.Context, *Handler) error {
 		if id == nil {
 			return nil
 		}
-		_id, err := uuid.Parse(*id)
+		handler, err := brand1.NewHandler(
+			ctx,
+			brand1.WithID(id),
+		)
 		if err != nil {
 			return err
 		}
-		h.BrandID = &_id
+		exist, err := handler.ExistBrand(ctx)
+		if err != nil {
+			return err
+		}
+		if !exist {
+			return fmt.Errorf("invalid brand")
+		}
+		h.BrandID = handler.ID
 		return nil
 	}
 }
