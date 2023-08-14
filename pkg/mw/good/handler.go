@@ -25,9 +25,6 @@ type Handler struct {
 	Posters               []string
 	Labels                []string
 	AppLocked             *decimal.Decimal
-	Likes                 *uint32
-	Dislikes              *uint32
-	Rating                *decimal.Decimal
 	RewardState           *types.BenefitState
 	RewardAt              *uint32
 	RewardTID             *uuid.UUID
@@ -445,49 +442,6 @@ func WithAppLocked(s *string, must bool) func(context.Context, *Handler) error {
 			return err
 		}
 		h.AppLocked = &amount
-		return nil
-	}
-}
-
-func WithLikes(n *uint32, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if n == nil {
-			if must {
-				return fmt.Errorf("invalid likes")
-			}
-			return nil
-		}
-		h.Likes = n
-		return nil
-	}
-}
-
-func WithDislikes(n *uint32, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if n == nil {
-			if must {
-				return fmt.Errorf("invalid dislikes")
-			}
-			return nil
-		}
-		h.Dislikes = n
-		return nil
-	}
-}
-
-func WithRating(s *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return fmt.Errorf("invalid rating")
-			}
-			return nil
-		}
-		amount, err := decimal.NewFromString(*s)
-		if err != nil {
-			return err
-		}
-		h.Rating = &amount
 		return nil
 	}
 }

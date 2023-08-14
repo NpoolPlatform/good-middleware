@@ -40,23 +40,11 @@ func (h *updateHandler) updateExtraInfo(ctx context.Context, tx *ent.Tx) error {
 		return err
 	}
 
-	dislikes := info.Dislikes
-	if h.Dislikes != nil {
-		dislikes += *h.Dislikes
-	}
-	likes := info.Likes
-	if h.Likes != nil {
-		likes += *h.Likes
-	}
-
 	if _, err := extrainfocrud.UpdateSet(
 		info.Update(),
 		&extrainfocrud.Req{
-			Posters:  h.Posters,
-			Labels:   h.Labels,
-			Likes:    &likes,
-			Dislikes: &dislikes,
-			Rating:   h.Rating,
+			Posters: h.Posters,
+			Labels:  h.Labels,
 		},
 	).Save(ctx); err != nil {
 		return err
