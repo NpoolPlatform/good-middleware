@@ -47,6 +47,10 @@ func (ExtraInfo) Fields() []ent.Field {
 			Optional().
 			Default(0),
 		field.
+			Uint32("rate_count").
+			Optional().
+			Default(0),
+		field.
 			Other("rating_v1", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",

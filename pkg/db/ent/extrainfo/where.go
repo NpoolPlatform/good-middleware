@@ -122,6 +122,13 @@ func Dislikes(v uint32) predicate.ExtraInfo {
 	})
 }
 
+// RateCount applies equality check predicate on the "rate_count" field. It's identical to RateCountEQ.
+func RateCount(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRateCount), v))
+	})
+}
+
 // RatingV1 applies equality check predicate on the "rating_v1" field. It's identical to RatingV1EQ.
 func RatingV1(v decimal.Decimal) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
@@ -566,6 +573,84 @@ func DislikesIsNil() predicate.ExtraInfo {
 func DislikesNotNil() predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldDislikes)))
+	})
+}
+
+// RateCountEQ applies the EQ predicate on the "rate_count" field.
+func RateCountEQ(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRateCount), v))
+	})
+}
+
+// RateCountNEQ applies the NEQ predicate on the "rate_count" field.
+func RateCountNEQ(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldRateCount), v))
+	})
+}
+
+// RateCountIn applies the In predicate on the "rate_count" field.
+func RateCountIn(vs ...uint32) predicate.ExtraInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldRateCount), v...))
+	})
+}
+
+// RateCountNotIn applies the NotIn predicate on the "rate_count" field.
+func RateCountNotIn(vs ...uint32) predicate.ExtraInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldRateCount), v...))
+	})
+}
+
+// RateCountGT applies the GT predicate on the "rate_count" field.
+func RateCountGT(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldRateCount), v))
+	})
+}
+
+// RateCountGTE applies the GTE predicate on the "rate_count" field.
+func RateCountGTE(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldRateCount), v))
+	})
+}
+
+// RateCountLT applies the LT predicate on the "rate_count" field.
+func RateCountLT(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldRateCount), v))
+	})
+}
+
+// RateCountLTE applies the LTE predicate on the "rate_count" field.
+func RateCountLTE(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldRateCount), v))
+	})
+}
+
+// RateCountIsNil applies the IsNil predicate on the "rate_count" field.
+func RateCountIsNil() predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldRateCount)))
+	})
+}
+
+// RateCountNotNil applies the NotNil predicate on the "rate_count" field.
+func RateCountNotNil() predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldRateCount)))
 	})
 }
 

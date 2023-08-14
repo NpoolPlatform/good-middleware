@@ -112,6 +112,20 @@ func (eic *ExtraInfoCreate) SetNillableDislikes(u *uint32) *ExtraInfoCreate {
 	return eic
 }
 
+// SetRateCount sets the "rate_count" field.
+func (eic *ExtraInfoCreate) SetRateCount(u uint32) *ExtraInfoCreate {
+	eic.mutation.SetRateCount(u)
+	return eic
+}
+
+// SetNillableRateCount sets the "rate_count" field if the given value is not nil.
+func (eic *ExtraInfoCreate) SetNillableRateCount(u *uint32) *ExtraInfoCreate {
+	if u != nil {
+		eic.SetRateCount(*u)
+	}
+	return eic
+}
+
 // SetRatingV1 sets the "rating_v1" field.
 func (eic *ExtraInfoCreate) SetRatingV1(d decimal.Decimal) *ExtraInfoCreate {
 	eic.mutation.SetRatingV1(d)
@@ -256,6 +270,10 @@ func (eic *ExtraInfoCreate) defaults() error {
 		v := extrainfo.DefaultDislikes
 		eic.mutation.SetDislikes(v)
 	}
+	if _, ok := eic.mutation.RateCount(); !ok {
+		v := extrainfo.DefaultRateCount
+		eic.mutation.SetRateCount(v)
+	}
 	if _, ok := eic.mutation.RatingV1(); !ok {
 		v := extrainfo.DefaultRatingV1
 		eic.mutation.SetRatingV1(v)
@@ -384,6 +402,14 @@ func (eic *ExtraInfoCreate) createSpec() (*ExtraInfo, *sqlgraph.CreateSpec) {
 			Column: extrainfo.FieldDislikes,
 		})
 		_node.Dislikes = value
+	}
+	if value, ok := eic.mutation.RateCount(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldRateCount,
+		})
+		_node.RateCount = value
 	}
 	if value, ok := eic.mutation.RatingV1(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -594,6 +620,30 @@ func (u *ExtraInfoUpsert) AddDislikes(v uint32) *ExtraInfoUpsert {
 // ClearDislikes clears the value of the "dislikes" field.
 func (u *ExtraInfoUpsert) ClearDislikes() *ExtraInfoUpsert {
 	u.SetNull(extrainfo.FieldDislikes)
+	return u
+}
+
+// SetRateCount sets the "rate_count" field.
+func (u *ExtraInfoUpsert) SetRateCount(v uint32) *ExtraInfoUpsert {
+	u.Set(extrainfo.FieldRateCount, v)
+	return u
+}
+
+// UpdateRateCount sets the "rate_count" field to the value that was provided on create.
+func (u *ExtraInfoUpsert) UpdateRateCount() *ExtraInfoUpsert {
+	u.SetExcluded(extrainfo.FieldRateCount)
+	return u
+}
+
+// AddRateCount adds v to the "rate_count" field.
+func (u *ExtraInfoUpsert) AddRateCount(v uint32) *ExtraInfoUpsert {
+	u.Add(extrainfo.FieldRateCount, v)
+	return u
+}
+
+// ClearRateCount clears the value of the "rate_count" field.
+func (u *ExtraInfoUpsert) ClearRateCount() *ExtraInfoUpsert {
+	u.SetNull(extrainfo.FieldRateCount)
 	return u
 }
 
@@ -837,6 +887,34 @@ func (u *ExtraInfoUpsertOne) UpdateDislikes() *ExtraInfoUpsertOne {
 func (u *ExtraInfoUpsertOne) ClearDislikes() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
 		s.ClearDislikes()
+	})
+}
+
+// SetRateCount sets the "rate_count" field.
+func (u *ExtraInfoUpsertOne) SetRateCount(v uint32) *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.SetRateCount(v)
+	})
+}
+
+// AddRateCount adds v to the "rate_count" field.
+func (u *ExtraInfoUpsertOne) AddRateCount(v uint32) *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.AddRateCount(v)
+	})
+}
+
+// UpdateRateCount sets the "rate_count" field to the value that was provided on create.
+func (u *ExtraInfoUpsertOne) UpdateRateCount() *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.UpdateRateCount()
+	})
+}
+
+// ClearRateCount clears the value of the "rate_count" field.
+func (u *ExtraInfoUpsertOne) ClearRateCount() *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.ClearRateCount()
 	})
 }
 
@@ -1249,6 +1327,34 @@ func (u *ExtraInfoUpsertBulk) UpdateDislikes() *ExtraInfoUpsertBulk {
 func (u *ExtraInfoUpsertBulk) ClearDislikes() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
 		s.ClearDislikes()
+	})
+}
+
+// SetRateCount sets the "rate_count" field.
+func (u *ExtraInfoUpsertBulk) SetRateCount(v uint32) *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.SetRateCount(v)
+	})
+}
+
+// AddRateCount adds v to the "rate_count" field.
+func (u *ExtraInfoUpsertBulk) AddRateCount(v uint32) *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.AddRateCount(v)
+	})
+}
+
+// UpdateRateCount sets the "rate_count" field to the value that was provided on create.
+func (u *ExtraInfoUpsertBulk) UpdateRateCount() *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.UpdateRateCount()
+	})
+}
+
+// ClearRateCount clears the value of the "rate_count" field.
+func (u *ExtraInfoUpsertBulk) ClearRateCount() *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.ClearRateCount()
 	})
 }
 

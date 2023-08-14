@@ -174,6 +174,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			extrainfo.FieldLabels:    {Type: field.TypeJSON, Column: extrainfo.FieldLabels},
 			extrainfo.FieldLikes:     {Type: field.TypeUint32, Column: extrainfo.FieldLikes},
 			extrainfo.FieldDislikes:  {Type: field.TypeUint32, Column: extrainfo.FieldDislikes},
+			extrainfo.FieldRateCount: {Type: field.TypeUint32, Column: extrainfo.FieldRateCount},
 			extrainfo.FieldRatingV1:  {Type: field.TypeOther, Column: extrainfo.FieldRatingV1},
 		},
 	}
@@ -1010,6 +1011,11 @@ func (f *ExtraInfoFilter) WhereLikes(p entql.Uint32P) {
 // WhereDislikes applies the entql uint32 predicate on the dislikes field.
 func (f *ExtraInfoFilter) WhereDislikes(p entql.Uint32P) {
 	f.Where(p.Field(extrainfo.FieldDislikes))
+}
+
+// WhereRateCount applies the entql uint32 predicate on the rate_count field.
+func (f *ExtraInfoFilter) WhereRateCount(p entql.Uint32P) {
+	f.Where(p.Field(extrainfo.FieldRateCount))
 }
 
 // WhereRatingV1 applies the entql other predicate on the rating_v1 field.

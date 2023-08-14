@@ -169,6 +169,33 @@ func (eiu *ExtraInfoUpdate) ClearDislikes() *ExtraInfoUpdate {
 	return eiu
 }
 
+// SetRateCount sets the "rate_count" field.
+func (eiu *ExtraInfoUpdate) SetRateCount(u uint32) *ExtraInfoUpdate {
+	eiu.mutation.ResetRateCount()
+	eiu.mutation.SetRateCount(u)
+	return eiu
+}
+
+// SetNillableRateCount sets the "rate_count" field if the given value is not nil.
+func (eiu *ExtraInfoUpdate) SetNillableRateCount(u *uint32) *ExtraInfoUpdate {
+	if u != nil {
+		eiu.SetRateCount(*u)
+	}
+	return eiu
+}
+
+// AddRateCount adds u to the "rate_count" field.
+func (eiu *ExtraInfoUpdate) AddRateCount(u int32) *ExtraInfoUpdate {
+	eiu.mutation.AddRateCount(u)
+	return eiu
+}
+
+// ClearRateCount clears the value of the "rate_count" field.
+func (eiu *ExtraInfoUpdate) ClearRateCount() *ExtraInfoUpdate {
+	eiu.mutation.ClearRateCount()
+	return eiu
+}
+
 // SetRatingV1 sets the "rating_v1" field.
 func (eiu *ExtraInfoUpdate) SetRatingV1(d decimal.Decimal) *ExtraInfoUpdate {
 	eiu.mutation.SetRatingV1(d)
@@ -402,6 +429,26 @@ func (eiu *ExtraInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: extrainfo.FieldDislikes,
 		})
 	}
+	if value, ok := eiu.mutation.RateCount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldRateCount,
+		})
+	}
+	if value, ok := eiu.mutation.AddedRateCount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldRateCount,
+		})
+	}
+	if eiu.mutation.RateCountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: extrainfo.FieldRateCount,
+		})
+	}
 	if value, ok := eiu.mutation.RatingV1(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
@@ -572,6 +619,33 @@ func (eiuo *ExtraInfoUpdateOne) AddDislikes(u int32) *ExtraInfoUpdateOne {
 // ClearDislikes clears the value of the "dislikes" field.
 func (eiuo *ExtraInfoUpdateOne) ClearDislikes() *ExtraInfoUpdateOne {
 	eiuo.mutation.ClearDislikes()
+	return eiuo
+}
+
+// SetRateCount sets the "rate_count" field.
+func (eiuo *ExtraInfoUpdateOne) SetRateCount(u uint32) *ExtraInfoUpdateOne {
+	eiuo.mutation.ResetRateCount()
+	eiuo.mutation.SetRateCount(u)
+	return eiuo
+}
+
+// SetNillableRateCount sets the "rate_count" field if the given value is not nil.
+func (eiuo *ExtraInfoUpdateOne) SetNillableRateCount(u *uint32) *ExtraInfoUpdateOne {
+	if u != nil {
+		eiuo.SetRateCount(*u)
+	}
+	return eiuo
+}
+
+// AddRateCount adds u to the "rate_count" field.
+func (eiuo *ExtraInfoUpdateOne) AddRateCount(u int32) *ExtraInfoUpdateOne {
+	eiuo.mutation.AddRateCount(u)
+	return eiuo
+}
+
+// ClearRateCount clears the value of the "rate_count" field.
+func (eiuo *ExtraInfoUpdateOne) ClearRateCount() *ExtraInfoUpdateOne {
+	eiuo.mutation.ClearRateCount()
 	return eiuo
 }
 
@@ -836,6 +910,26 @@ func (eiuo *ExtraInfoUpdateOne) sqlSave(ctx context.Context) (_node *ExtraInfo, 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: extrainfo.FieldDislikes,
+		})
+	}
+	if value, ok := eiuo.mutation.RateCount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldRateCount,
+		})
+	}
+	if value, ok := eiuo.mutation.AddedRateCount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldRateCount,
+		})
+	}
+	if eiuo.mutation.RateCountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: extrainfo.FieldRateCount,
 		})
 	}
 	if value, ok := eiuo.mutation.RatingV1(); ok {

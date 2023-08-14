@@ -6074,6 +6074,8 @@ type ExtraInfoMutation struct {
 	addlikes      *int32
 	dislikes      *uint32
 	adddislikes   *int32
+	rate_count    *uint32
+	addrate_count *int32
 	rating_v1     *decimal.Decimal
 	clearedFields map[string]struct{}
 	done          bool
@@ -6627,6 +6629,76 @@ func (m *ExtraInfoMutation) ResetDislikes() {
 	delete(m.clearedFields, extrainfo.FieldDislikes)
 }
 
+// SetRateCount sets the "rate_count" field.
+func (m *ExtraInfoMutation) SetRateCount(u uint32) {
+	m.rate_count = &u
+	m.addrate_count = nil
+}
+
+// RateCount returns the value of the "rate_count" field in the mutation.
+func (m *ExtraInfoMutation) RateCount() (r uint32, exists bool) {
+	v := m.rate_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRateCount returns the old "rate_count" field's value of the ExtraInfo entity.
+// If the ExtraInfo object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ExtraInfoMutation) OldRateCount(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRateCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRateCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRateCount: %w", err)
+	}
+	return oldValue.RateCount, nil
+}
+
+// AddRateCount adds u to the "rate_count" field.
+func (m *ExtraInfoMutation) AddRateCount(u int32) {
+	if m.addrate_count != nil {
+		*m.addrate_count += u
+	} else {
+		m.addrate_count = &u
+	}
+}
+
+// AddedRateCount returns the value that was added to the "rate_count" field in this mutation.
+func (m *ExtraInfoMutation) AddedRateCount() (r int32, exists bool) {
+	v := m.addrate_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearRateCount clears the value of the "rate_count" field.
+func (m *ExtraInfoMutation) ClearRateCount() {
+	m.rate_count = nil
+	m.addrate_count = nil
+	m.clearedFields[extrainfo.FieldRateCount] = struct{}{}
+}
+
+// RateCountCleared returns if the "rate_count" field was cleared in this mutation.
+func (m *ExtraInfoMutation) RateCountCleared() bool {
+	_, ok := m.clearedFields[extrainfo.FieldRateCount]
+	return ok
+}
+
+// ResetRateCount resets all changes to the "rate_count" field.
+func (m *ExtraInfoMutation) ResetRateCount() {
+	m.rate_count = nil
+	m.addrate_count = nil
+	delete(m.clearedFields, extrainfo.FieldRateCount)
+}
+
 // SetRatingV1 sets the "rating_v1" field.
 func (m *ExtraInfoMutation) SetRatingV1(d decimal.Decimal) {
 	m.rating_v1 = &d
@@ -6695,7 +6767,7 @@ func (m *ExtraInfoMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ExtraInfoMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.created_at != nil {
 		fields = append(fields, extrainfo.FieldCreatedAt)
 	}
@@ -6719,6 +6791,9 @@ func (m *ExtraInfoMutation) Fields() []string {
 	}
 	if m.dislikes != nil {
 		fields = append(fields, extrainfo.FieldDislikes)
+	}
+	if m.rate_count != nil {
+		fields = append(fields, extrainfo.FieldRateCount)
 	}
 	if m.rating_v1 != nil {
 		fields = append(fields, extrainfo.FieldRatingV1)
@@ -6747,6 +6822,8 @@ func (m *ExtraInfoMutation) Field(name string) (ent.Value, bool) {
 		return m.Likes()
 	case extrainfo.FieldDislikes:
 		return m.Dislikes()
+	case extrainfo.FieldRateCount:
+		return m.RateCount()
 	case extrainfo.FieldRatingV1:
 		return m.RatingV1()
 	}
@@ -6774,6 +6851,8 @@ func (m *ExtraInfoMutation) OldField(ctx context.Context, name string) (ent.Valu
 		return m.OldLikes(ctx)
 	case extrainfo.FieldDislikes:
 		return m.OldDislikes(ctx)
+	case extrainfo.FieldRateCount:
+		return m.OldRateCount(ctx)
 	case extrainfo.FieldRatingV1:
 		return m.OldRatingV1(ctx)
 	}
@@ -6841,6 +6920,13 @@ func (m *ExtraInfoMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDislikes(v)
 		return nil
+	case extrainfo.FieldRateCount:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRateCount(v)
+		return nil
 	case extrainfo.FieldRatingV1:
 		v, ok := value.(decimal.Decimal)
 		if !ok {
@@ -6871,6 +6957,9 @@ func (m *ExtraInfoMutation) AddedFields() []string {
 	if m.adddislikes != nil {
 		fields = append(fields, extrainfo.FieldDislikes)
 	}
+	if m.addrate_count != nil {
+		fields = append(fields, extrainfo.FieldRateCount)
+	}
 	return fields
 }
 
@@ -6889,6 +6978,8 @@ func (m *ExtraInfoMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedLikes()
 	case extrainfo.FieldDislikes:
 		return m.AddedDislikes()
+	case extrainfo.FieldRateCount:
+		return m.AddedRateCount()
 	}
 	return nil, false
 }
@@ -6933,6 +7024,13 @@ func (m *ExtraInfoMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddDislikes(v)
 		return nil
+	case extrainfo.FieldRateCount:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddRateCount(v)
+		return nil
 	}
 	return fmt.Errorf("unknown ExtraInfo numeric field %s", name)
 }
@@ -6952,6 +7050,9 @@ func (m *ExtraInfoMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(extrainfo.FieldDislikes) {
 		fields = append(fields, extrainfo.FieldDislikes)
+	}
+	if m.FieldCleared(extrainfo.FieldRateCount) {
+		fields = append(fields, extrainfo.FieldRateCount)
 	}
 	if m.FieldCleared(extrainfo.FieldRatingV1) {
 		fields = append(fields, extrainfo.FieldRatingV1)
@@ -6981,6 +7082,9 @@ func (m *ExtraInfoMutation) ClearField(name string) error {
 		return nil
 	case extrainfo.FieldDislikes:
 		m.ClearDislikes()
+		return nil
+	case extrainfo.FieldRateCount:
+		m.ClearRateCount()
 		return nil
 	case extrainfo.FieldRatingV1:
 		m.ClearRatingV1()
@@ -7016,6 +7120,9 @@ func (m *ExtraInfoMutation) ResetField(name string) error {
 		return nil
 	case extrainfo.FieldDislikes:
 		m.ResetDislikes()
+		return nil
+	case extrainfo.FieldRateCount:
+		m.ResetRateCount()
 		return nil
 	case extrainfo.FieldRatingV1:
 		m.ResetRatingV1()
