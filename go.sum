@@ -57,6 +57,8 @@ github.com/NpoolPlatform/go-service-framework v0.0.0-20230713042541-12fa919fa92a
 github.com/NpoolPlatform/go-service-framework v0.0.0-20230713042541-12fa919fa92a/go.mod h1:Kh7DMkWnYOMHxEKq7QfJqbxm1HaUPkhTNN74lfHQxyE=
 github.com/NpoolPlatform/go-service-framework v0.0.0-20230813055757-23d6ad3123fc h1:SRg92xu81QsUSBDm9/zSUiy9PYTJvNwHxl6Rql9bWz0=
 github.com/NpoolPlatform/go-service-framework v0.0.0-20230813055757-23d6ad3123fc/go.mod h1:Kh7DMkWnYOMHxEKq7QfJqbxm1HaUPkhTNN74lfHQxyE=
+github.com/NpoolPlatform/go-service-framework v0.0.0-20230814035104-e1466b5c157e h1:17BGexCmCdOOBXKYogP8RNE+pAHRu2N4LKq9znPJ4vc=
+github.com/NpoolPlatform/go-service-framework v0.0.0-20230814035104-e1466b5c157e/go.mod h1:Kh7DMkWnYOMHxEKq7QfJqbxm1HaUPkhTNN74lfHQxyE=
 github.com/NpoolPlatform/good-manager v0.0.0-20230803062814-3c1c287a6981 h1:RN8v+22k1hNaks52q73lLNSNBP2bBA1fRDErYhi3LBQ=
 github.com/NpoolPlatform/good-manager v0.0.0-20230803062814-3c1c287a6981/go.mod h1:bUTIwJP6L02K7bcWBRkShs2ZDhOfH4ONQp8ekdte5Kk=
 github.com/NpoolPlatform/libent-cruder v0.0.0-20221109023947-366125b690fb h1:IAQOJ0xQWdJS1BnimNdM6GZMLgTL/FnIa8C8K4xffUA=
@@ -77,6 +79,8 @@ github.com/NpoolPlatform/message v0.0.0-20230813090310-a309c96a3cde h1:zOUfeWpcl
 github.com/NpoolPlatform/message v0.0.0-20230813090310-a309c96a3cde/go.mod h1:PxJpF0vSSOke+NJskbRBRQ2fK2K3SRe8zaEja+GxSHk=
 github.com/NpoolPlatform/message v0.0.0-20230813094002-107ea949305d h1:9z7o45IOPU29hJtshFYE8Ow1mx9m7nBs+xtSfNp4m0I=
 github.com/NpoolPlatform/message v0.0.0-20230813094002-107ea949305d/go.mod h1:PxJpF0vSSOke+NJskbRBRQ2fK2K3SRe8zaEja+GxSHk=
+github.com/NpoolPlatform/message v0.0.0-20230814030455-5df44dda4d4b h1:AWkqEqfMC5EwXaDVaUgTbqjHCqD6VTXaScFIEEE6BgE=
+github.com/NpoolPlatform/message v0.0.0-20230814030455-5df44dda4d4b/go.mod h1:PxJpF0vSSOke+NJskbRBRQ2fK2K3SRe8zaEja+GxSHk=
 github.com/OneOfOne/xxhash v1.2.2 h1:KMrpdQIwFcEqXDklaen+P1axHaj9BSKzvpUUfnHldSE=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/Shonminh/apollo-client v0.4.0 h1:AXGp4wOahrEKjheMXehgsG9B8dEfLQHttRLHeEefvus=
