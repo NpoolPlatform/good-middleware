@@ -12,7 +12,6 @@ import (
 
 type Req struct {
 	ID             *uuid.UUID
-	AppID          *uuid.UUID
 	MainGoodID     *uuid.UUID
 	RequiredGoodID *uuid.UUID
 	Must           *bool
@@ -22,9 +21,6 @@ type Req struct {
 func CreateSet(c *ent.RequiredGoodCreate, req *Req) *ent.RequiredGoodCreate {
 	if req.ID != nil {
 		c.SetID(*req.ID)
-	}
-	if req.AppID != nil {
-		c.SetAppID(*req.AppID)
 	}
 	if req.MainGoodID != nil {
 		c.SetMainGoodID(*req.MainGoodID)
@@ -42,10 +38,9 @@ func CreateSet(c *ent.RequiredGoodCreate, req *Req) *ent.RequiredGoodCreate {
 }
 
 type Conds struct {
-	ID          *cruder.Cond
-	AppID       *cruder.Cond
-	MainGoodID  *cruder.Cond
-	MainGoodIDs *cruder.Cond
+	ID      *cruder.Cond
+	GoodID  *cruder.Cond
+	GoodIDs *cruder.Cond
 }
 
 func SetQueryConds(q *ent.RequiredGoodQuery, conds *Conds) (*ent.RequiredGoodQuery, error) {
@@ -65,38 +60,36 @@ func SetQueryConds(q *ent.RequiredGoodQuery, conds *Conds) (*ent.RequiredGoodQue
 			return nil, fmt.Errorf("invalid requiredgood field")
 		}
 	}
-	if conds.AppID != nil {
-		id, ok := conds.AppID.Val.(uuid.UUID)
+	if conds.GoodID != nil {
+		id, ok := conds.GoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appid")
+			return nil, fmt.Errorf("invalid goodid")
 		}
-		switch conds.AppID.Op {
+		switch conds.GoodID.Op {
 		case cruder.EQ:
-			q.Where(entrequiredgood.AppID(id))
+			q.Where(
+				entrequiredgood.Or(
+					entrequiredgood.MainGoodID(id),
+					entrequiredgood.RequiredGoodID(id),
+				),
+			)
 		default:
 			return nil, fmt.Errorf("invalid requiredgood field")
 		}
 	}
-	if conds.MainGoodID != nil {
-		id, ok := conds.MainGoodID.Val.(uuid.UUID)
+	if conds.GoodIDs != nil {
+		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid maingoodid")
+			return nil, fmt.Errorf("invalid goodids")
 		}
-		switch conds.MainGoodID.Op {
-		case cruder.EQ:
-			q.Where(entrequiredgood.MainGoodID(id))
-		default:
-			return nil, fmt.Errorf("invalid requiredgood field")
-		}
-	}
-	if conds.MainGoodIDs != nil {
-		ids, ok := conds.MainGoodIDs.Val.([]uuid.UUID)
-		if !ok {
-			return nil, fmt.Errorf("invalid maingoodids")
-		}
-		switch conds.MainGoodIDs.Op {
+		switch conds.GoodIDs.Op {
 		case cruder.IN:
-			q.Where(entrequiredgood.MainGoodIDIn(ids...))
+			q.Where(
+				entrequiredgood.Or(
+					entrequiredgood.MainGoodIDIn(ids...),
+					entrequiredgood.RequiredGoodIDIn(ids...),
+				),
+			)
 		default:
 			return nil, fmt.Errorf("invalid requiredgood field")
 		}
