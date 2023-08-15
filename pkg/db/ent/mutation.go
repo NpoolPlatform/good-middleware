@@ -6058,29 +6058,31 @@ func (m *DeviceInfoMutation) ResetEdge(name string) error {
 // ExtraInfoMutation represents an operation that mutates the ExtraInfo nodes in the graph.
 type ExtraInfoMutation struct {
 	config
-	op             Op
-	typ            string
-	id             *uuid.UUID
-	created_at     *uint32
-	addcreated_at  *int32
-	updated_at     *uint32
-	addupdated_at  *int32
-	deleted_at     *uint32
-	adddeleted_at  *int32
-	good_id        *uuid.UUID
-	posters        *[]string
-	labels         *[]string
-	likes          *uint32
-	addlikes       *int32
-	dislikes       *uint32
-	adddislikes    *int32
-	score_count    *uint32
-	addscore_count *int32
-	score          *decimal.Decimal
-	clearedFields  map[string]struct{}
-	done           bool
-	oldValue       func(context.Context) (*ExtraInfo, error)
-	predicates     []predicate.ExtraInfo
+	op                 Op
+	typ                string
+	id                 *uuid.UUID
+	created_at         *uint32
+	addcreated_at      *int32
+	updated_at         *uint32
+	addupdated_at      *int32
+	deleted_at         *uint32
+	adddeleted_at      *int32
+	good_id            *uuid.UUID
+	posters            *[]string
+	labels             *[]string
+	likes              *uint32
+	addlikes           *int32
+	dislikes           *uint32
+	adddislikes        *int32
+	recommend_count    *uint32
+	addrecommend_count *int32
+	score_count        *uint32
+	addscore_count     *int32
+	score              *decimal.Decimal
+	clearedFields      map[string]struct{}
+	done               bool
+	oldValue           func(context.Context) (*ExtraInfo, error)
+	predicates         []predicate.ExtraInfo
 }
 
 var _ ent.Mutation = (*ExtraInfoMutation)(nil)
@@ -6629,6 +6631,76 @@ func (m *ExtraInfoMutation) ResetDislikes() {
 	delete(m.clearedFields, extrainfo.FieldDislikes)
 }
 
+// SetRecommendCount sets the "recommend_count" field.
+func (m *ExtraInfoMutation) SetRecommendCount(u uint32) {
+	m.recommend_count = &u
+	m.addrecommend_count = nil
+}
+
+// RecommendCount returns the value of the "recommend_count" field in the mutation.
+func (m *ExtraInfoMutation) RecommendCount() (r uint32, exists bool) {
+	v := m.recommend_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRecommendCount returns the old "recommend_count" field's value of the ExtraInfo entity.
+// If the ExtraInfo object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ExtraInfoMutation) OldRecommendCount(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRecommendCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRecommendCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRecommendCount: %w", err)
+	}
+	return oldValue.RecommendCount, nil
+}
+
+// AddRecommendCount adds u to the "recommend_count" field.
+func (m *ExtraInfoMutation) AddRecommendCount(u int32) {
+	if m.addrecommend_count != nil {
+		*m.addrecommend_count += u
+	} else {
+		m.addrecommend_count = &u
+	}
+}
+
+// AddedRecommendCount returns the value that was added to the "recommend_count" field in this mutation.
+func (m *ExtraInfoMutation) AddedRecommendCount() (r int32, exists bool) {
+	v := m.addrecommend_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearRecommendCount clears the value of the "recommend_count" field.
+func (m *ExtraInfoMutation) ClearRecommendCount() {
+	m.recommend_count = nil
+	m.addrecommend_count = nil
+	m.clearedFields[extrainfo.FieldRecommendCount] = struct{}{}
+}
+
+// RecommendCountCleared returns if the "recommend_count" field was cleared in this mutation.
+func (m *ExtraInfoMutation) RecommendCountCleared() bool {
+	_, ok := m.clearedFields[extrainfo.FieldRecommendCount]
+	return ok
+}
+
+// ResetRecommendCount resets all changes to the "recommend_count" field.
+func (m *ExtraInfoMutation) ResetRecommendCount() {
+	m.recommend_count = nil
+	m.addrecommend_count = nil
+	delete(m.clearedFields, extrainfo.FieldRecommendCount)
+}
+
 // SetScoreCount sets the "score_count" field.
 func (m *ExtraInfoMutation) SetScoreCount(u uint32) {
 	m.score_count = &u
@@ -6767,7 +6839,7 @@ func (m *ExtraInfoMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ExtraInfoMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, extrainfo.FieldCreatedAt)
 	}
@@ -6791,6 +6863,9 @@ func (m *ExtraInfoMutation) Fields() []string {
 	}
 	if m.dislikes != nil {
 		fields = append(fields, extrainfo.FieldDislikes)
+	}
+	if m.recommend_count != nil {
+		fields = append(fields, extrainfo.FieldRecommendCount)
 	}
 	if m.score_count != nil {
 		fields = append(fields, extrainfo.FieldScoreCount)
@@ -6822,6 +6897,8 @@ func (m *ExtraInfoMutation) Field(name string) (ent.Value, bool) {
 		return m.Likes()
 	case extrainfo.FieldDislikes:
 		return m.Dislikes()
+	case extrainfo.FieldRecommendCount:
+		return m.RecommendCount()
 	case extrainfo.FieldScoreCount:
 		return m.ScoreCount()
 	case extrainfo.FieldScore:
@@ -6851,6 +6928,8 @@ func (m *ExtraInfoMutation) OldField(ctx context.Context, name string) (ent.Valu
 		return m.OldLikes(ctx)
 	case extrainfo.FieldDislikes:
 		return m.OldDislikes(ctx)
+	case extrainfo.FieldRecommendCount:
+		return m.OldRecommendCount(ctx)
 	case extrainfo.FieldScoreCount:
 		return m.OldScoreCount(ctx)
 	case extrainfo.FieldScore:
@@ -6920,6 +6999,13 @@ func (m *ExtraInfoMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDislikes(v)
 		return nil
+	case extrainfo.FieldRecommendCount:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRecommendCount(v)
+		return nil
 	case extrainfo.FieldScoreCount:
 		v, ok := value.(uint32)
 		if !ok {
@@ -6957,6 +7043,9 @@ func (m *ExtraInfoMutation) AddedFields() []string {
 	if m.adddislikes != nil {
 		fields = append(fields, extrainfo.FieldDislikes)
 	}
+	if m.addrecommend_count != nil {
+		fields = append(fields, extrainfo.FieldRecommendCount)
+	}
 	if m.addscore_count != nil {
 		fields = append(fields, extrainfo.FieldScoreCount)
 	}
@@ -6978,6 +7067,8 @@ func (m *ExtraInfoMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedLikes()
 	case extrainfo.FieldDislikes:
 		return m.AddedDislikes()
+	case extrainfo.FieldRecommendCount:
+		return m.AddedRecommendCount()
 	case extrainfo.FieldScoreCount:
 		return m.AddedScoreCount()
 	}
@@ -7024,6 +7115,13 @@ func (m *ExtraInfoMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddDislikes(v)
 		return nil
+	case extrainfo.FieldRecommendCount:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddRecommendCount(v)
+		return nil
 	case extrainfo.FieldScoreCount:
 		v, ok := value.(int32)
 		if !ok {
@@ -7050,6 +7148,9 @@ func (m *ExtraInfoMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(extrainfo.FieldDislikes) {
 		fields = append(fields, extrainfo.FieldDislikes)
+	}
+	if m.FieldCleared(extrainfo.FieldRecommendCount) {
+		fields = append(fields, extrainfo.FieldRecommendCount)
 	}
 	if m.FieldCleared(extrainfo.FieldScoreCount) {
 		fields = append(fields, extrainfo.FieldScoreCount)
@@ -7082,6 +7183,9 @@ func (m *ExtraInfoMutation) ClearField(name string) error {
 		return nil
 	case extrainfo.FieldDislikes:
 		m.ClearDislikes()
+		return nil
+	case extrainfo.FieldRecommendCount:
+		m.ClearRecommendCount()
 		return nil
 	case extrainfo.FieldScoreCount:
 		m.ClearScoreCount()
@@ -7120,6 +7224,9 @@ func (m *ExtraInfoMutation) ResetField(name string) error {
 		return nil
 	case extrainfo.FieldDislikes:
 		m.ResetDislikes()
+		return nil
+	case extrainfo.FieldRecommendCount:
+		m.ResetRecommendCount()
 		return nil
 	case extrainfo.FieldScoreCount:
 		m.ResetScoreCount()

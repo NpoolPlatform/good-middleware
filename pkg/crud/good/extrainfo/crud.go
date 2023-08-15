@@ -12,15 +12,16 @@ import (
 )
 
 type Req struct {
-	ID         *uuid.UUID
-	GoodID     *uuid.UUID
-	Posters    []string
-	Labels     []string
-	Likes      *uint32
-	Dislikes   *uint32
-	ScoreCount *uint32
-	Score      *decimal.Decimal
-	DeletedAt  *uint32
+	ID             *uuid.UUID
+	GoodID         *uuid.UUID
+	Posters        []string
+	Labels         []string
+	Likes          *uint32
+	Dislikes       *uint32
+	ScoreCount     *uint32
+	RecommendCount *uint32
+	Score          *decimal.Decimal
+	DeletedAt      *uint32
 }
 
 func CreateSet(c *ent.ExtraInfoCreate, req *Req) *ent.ExtraInfoCreate {
@@ -45,6 +46,9 @@ func CreateSet(c *ent.ExtraInfoCreate, req *Req) *ent.ExtraInfoCreate {
 	if req.ScoreCount != nil {
 		c.SetScoreCount(*req.ScoreCount)
 	}
+	if req.RecommendCount != nil {
+		c.SetRecommendCount(*req.RecommendCount)
+	}
 	if req.Score != nil {
 		c.SetScore(*req.Score)
 	}
@@ -66,6 +70,9 @@ func UpdateSet(u *ent.ExtraInfoUpdateOne, req *Req) *ent.ExtraInfoUpdateOne {
 	}
 	if req.ScoreCount != nil {
 		u.SetScoreCount(*req.ScoreCount)
+	}
+	if req.RecommendCount != nil {
+		u.SetRecommendCount(*req.RecommendCount)
 	}
 	if req.Score != nil {
 		u.SetScore(*req.Score)

@@ -29,6 +29,8 @@ const (
 	FieldLikes = "likes"
 	// FieldDislikes holds the string denoting the dislikes field in the database.
 	FieldDislikes = "dislikes"
+	// FieldRecommendCount holds the string denoting the recommend_count field in the database.
+	FieldRecommendCount = "recommend_count"
 	// FieldScoreCount holds the string denoting the score_count field in the database.
 	FieldScoreCount = "score_count"
 	// FieldScore holds the string denoting the score field in the database.
@@ -48,6 +50,7 @@ var Columns = []string{
 	FieldLabels,
 	FieldLikes,
 	FieldDislikes,
+	FieldRecommendCount,
 	FieldScoreCount,
 	FieldScore,
 }
@@ -87,6 +90,8 @@ var (
 	DefaultLikes uint32
 	// DefaultDislikes holds the default value on creation for the "dislikes" field.
 	DefaultDislikes uint32
+	// DefaultRecommendCount holds the default value on creation for the "recommend_count" field.
+	DefaultRecommendCount uint32
 	// DefaultScoreCount holds the default value on creation for the "score_count" field.
 	DefaultScoreCount uint32
 	// DefaultScore holds the default value on creation for the "score" field.

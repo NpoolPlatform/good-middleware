@@ -144,6 +144,7 @@ var (
 		{Name: "labels", Type: field.TypeJSON, Nullable: true},
 		{Name: "likes", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "dislikes", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "recommend_count", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "score_count", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "score", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}
@@ -224,7 +225,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "good_id", Type: field.TypeUUID},
-		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1692077946},
+		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1692082046},
 		{Name: "tid", Type: field.TypeUUID, Nullable: true},
 		{Name: "amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "unit_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},

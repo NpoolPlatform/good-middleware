@@ -122,6 +122,13 @@ func Dislikes(v uint32) predicate.ExtraInfo {
 	})
 }
 
+// RecommendCount applies equality check predicate on the "recommend_count" field. It's identical to RecommendCountEQ.
+func RecommendCount(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRecommendCount), v))
+	})
+}
+
 // ScoreCount applies equality check predicate on the "score_count" field. It's identical to ScoreCountEQ.
 func ScoreCount(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
@@ -573,6 +580,84 @@ func DislikesIsNil() predicate.ExtraInfo {
 func DislikesNotNil() predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldDislikes)))
+	})
+}
+
+// RecommendCountEQ applies the EQ predicate on the "recommend_count" field.
+func RecommendCountEQ(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRecommendCount), v))
+	})
+}
+
+// RecommendCountNEQ applies the NEQ predicate on the "recommend_count" field.
+func RecommendCountNEQ(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldRecommendCount), v))
+	})
+}
+
+// RecommendCountIn applies the In predicate on the "recommend_count" field.
+func RecommendCountIn(vs ...uint32) predicate.ExtraInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldRecommendCount), v...))
+	})
+}
+
+// RecommendCountNotIn applies the NotIn predicate on the "recommend_count" field.
+func RecommendCountNotIn(vs ...uint32) predicate.ExtraInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldRecommendCount), v...))
+	})
+}
+
+// RecommendCountGT applies the GT predicate on the "recommend_count" field.
+func RecommendCountGT(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldRecommendCount), v))
+	})
+}
+
+// RecommendCountGTE applies the GTE predicate on the "recommend_count" field.
+func RecommendCountGTE(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldRecommendCount), v))
+	})
+}
+
+// RecommendCountLT applies the LT predicate on the "recommend_count" field.
+func RecommendCountLT(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldRecommendCount), v))
+	})
+}
+
+// RecommendCountLTE applies the LTE predicate on the "recommend_count" field.
+func RecommendCountLTE(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldRecommendCount), v))
+	})
+}
+
+// RecommendCountIsNil applies the IsNil predicate on the "recommend_count" field.
+func RecommendCountIsNil() predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldRecommendCount)))
+	})
+}
+
+// RecommendCountNotNil applies the NotNil predicate on the "recommend_count" field.
+func RecommendCountNotNil() predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldRecommendCount)))
 	})
 }
 

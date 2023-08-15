@@ -112,6 +112,20 @@ func (eic *ExtraInfoCreate) SetNillableDislikes(u *uint32) *ExtraInfoCreate {
 	return eic
 }
 
+// SetRecommendCount sets the "recommend_count" field.
+func (eic *ExtraInfoCreate) SetRecommendCount(u uint32) *ExtraInfoCreate {
+	eic.mutation.SetRecommendCount(u)
+	return eic
+}
+
+// SetNillableRecommendCount sets the "recommend_count" field if the given value is not nil.
+func (eic *ExtraInfoCreate) SetNillableRecommendCount(u *uint32) *ExtraInfoCreate {
+	if u != nil {
+		eic.SetRecommendCount(*u)
+	}
+	return eic
+}
+
 // SetScoreCount sets the "score_count" field.
 func (eic *ExtraInfoCreate) SetScoreCount(u uint32) *ExtraInfoCreate {
 	eic.mutation.SetScoreCount(u)
@@ -270,6 +284,10 @@ func (eic *ExtraInfoCreate) defaults() error {
 		v := extrainfo.DefaultDislikes
 		eic.mutation.SetDislikes(v)
 	}
+	if _, ok := eic.mutation.RecommendCount(); !ok {
+		v := extrainfo.DefaultRecommendCount
+		eic.mutation.SetRecommendCount(v)
+	}
 	if _, ok := eic.mutation.ScoreCount(); !ok {
 		v := extrainfo.DefaultScoreCount
 		eic.mutation.SetScoreCount(v)
@@ -402,6 +420,14 @@ func (eic *ExtraInfoCreate) createSpec() (*ExtraInfo, *sqlgraph.CreateSpec) {
 			Column: extrainfo.FieldDislikes,
 		})
 		_node.Dislikes = value
+	}
+	if value, ok := eic.mutation.RecommendCount(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldRecommendCount,
+		})
+		_node.RecommendCount = value
 	}
 	if value, ok := eic.mutation.ScoreCount(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -620,6 +646,30 @@ func (u *ExtraInfoUpsert) AddDislikes(v uint32) *ExtraInfoUpsert {
 // ClearDislikes clears the value of the "dislikes" field.
 func (u *ExtraInfoUpsert) ClearDislikes() *ExtraInfoUpsert {
 	u.SetNull(extrainfo.FieldDislikes)
+	return u
+}
+
+// SetRecommendCount sets the "recommend_count" field.
+func (u *ExtraInfoUpsert) SetRecommendCount(v uint32) *ExtraInfoUpsert {
+	u.Set(extrainfo.FieldRecommendCount, v)
+	return u
+}
+
+// UpdateRecommendCount sets the "recommend_count" field to the value that was provided on create.
+func (u *ExtraInfoUpsert) UpdateRecommendCount() *ExtraInfoUpsert {
+	u.SetExcluded(extrainfo.FieldRecommendCount)
+	return u
+}
+
+// AddRecommendCount adds v to the "recommend_count" field.
+func (u *ExtraInfoUpsert) AddRecommendCount(v uint32) *ExtraInfoUpsert {
+	u.Add(extrainfo.FieldRecommendCount, v)
+	return u
+}
+
+// ClearRecommendCount clears the value of the "recommend_count" field.
+func (u *ExtraInfoUpsert) ClearRecommendCount() *ExtraInfoUpsert {
+	u.SetNull(extrainfo.FieldRecommendCount)
 	return u
 }
 
@@ -887,6 +937,34 @@ func (u *ExtraInfoUpsertOne) UpdateDislikes() *ExtraInfoUpsertOne {
 func (u *ExtraInfoUpsertOne) ClearDislikes() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
 		s.ClearDislikes()
+	})
+}
+
+// SetRecommendCount sets the "recommend_count" field.
+func (u *ExtraInfoUpsertOne) SetRecommendCount(v uint32) *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.SetRecommendCount(v)
+	})
+}
+
+// AddRecommendCount adds v to the "recommend_count" field.
+func (u *ExtraInfoUpsertOne) AddRecommendCount(v uint32) *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.AddRecommendCount(v)
+	})
+}
+
+// UpdateRecommendCount sets the "recommend_count" field to the value that was provided on create.
+func (u *ExtraInfoUpsertOne) UpdateRecommendCount() *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.UpdateRecommendCount()
+	})
+}
+
+// ClearRecommendCount clears the value of the "recommend_count" field.
+func (u *ExtraInfoUpsertOne) ClearRecommendCount() *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.ClearRecommendCount()
 	})
 }
 
@@ -1327,6 +1405,34 @@ func (u *ExtraInfoUpsertBulk) UpdateDislikes() *ExtraInfoUpsertBulk {
 func (u *ExtraInfoUpsertBulk) ClearDislikes() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
 		s.ClearDislikes()
+	})
+}
+
+// SetRecommendCount sets the "recommend_count" field.
+func (u *ExtraInfoUpsertBulk) SetRecommendCount(v uint32) *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.SetRecommendCount(v)
+	})
+}
+
+// AddRecommendCount adds v to the "recommend_count" field.
+func (u *ExtraInfoUpsertBulk) AddRecommendCount(v uint32) *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.AddRecommendCount(v)
+	})
+}
+
+// UpdateRecommendCount sets the "recommend_count" field to the value that was provided on create.
+func (u *ExtraInfoUpsertBulk) UpdateRecommendCount() *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.UpdateRecommendCount()
+	})
+}
+
+// ClearRecommendCount clears the value of the "recommend_count" field.
+func (u *ExtraInfoUpsertBulk) ClearRecommendCount() *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.ClearRecommendCount()
 	})
 }
 

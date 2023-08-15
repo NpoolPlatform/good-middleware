@@ -18,6 +18,7 @@ type Req struct {
 	RecommenderID  *uuid.UUID
 	Message        *string
 	RecommendIndex *decimal.Decimal
+	DeletedAt      *uint32
 }
 
 func CreateSet(c *ent.RecommendCreate, req *Req) *ent.RecommendCreate {
@@ -48,6 +49,9 @@ func UpdateSet(u *ent.RecommendUpdateOne, req *Req) *ent.RecommendUpdateOne {
 	}
 	if req.RecommendIndex != nil {
 		u.SetRecommendIndex(*req.RecommendIndex)
+	}
+	if req.DeletedAt != nil {
+		u.SetDeletedAt(*req.DeletedAt)
 	}
 	return u
 }

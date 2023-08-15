@@ -34,6 +34,8 @@ type ExtraInfo struct {
 	Likes uint32 `json:"likes,omitempty"`
 	// Dislikes holds the value of the "dislikes" field.
 	Dislikes uint32 `json:"dislikes,omitempty"`
+	// RecommendCount holds the value of the "recommend_count" field.
+	RecommendCount uint32 `json:"recommend_count,omitempty"`
 	// ScoreCount holds the value of the "score_count" field.
 	ScoreCount uint32 `json:"score_count,omitempty"`
 	// Score holds the value of the "score" field.
@@ -49,7 +51,7 @@ func (*ExtraInfo) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new([]byte)
 		case extrainfo.FieldScore:
 			values[i] = new(decimal.Decimal)
-		case extrainfo.FieldCreatedAt, extrainfo.FieldUpdatedAt, extrainfo.FieldDeletedAt, extrainfo.FieldLikes, extrainfo.FieldDislikes, extrainfo.FieldScoreCount:
+		case extrainfo.FieldCreatedAt, extrainfo.FieldUpdatedAt, extrainfo.FieldDeletedAt, extrainfo.FieldLikes, extrainfo.FieldDislikes, extrainfo.FieldRecommendCount, extrainfo.FieldScoreCount:
 			values[i] = new(sql.NullInt64)
 		case extrainfo.FieldID, extrainfo.FieldGoodID:
 			values[i] = new(uuid.UUID)
@@ -126,6 +128,12 @@ func (ei *ExtraInfo) assignValues(columns []string, values []interface{}) error 
 			} else if value.Valid {
 				ei.Dislikes = uint32(value.Int64)
 			}
+		case extrainfo.FieldRecommendCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field recommend_count", values[i])
+			} else if value.Valid {
+				ei.RecommendCount = uint32(value.Int64)
+			}
 		case extrainfo.FieldScoreCount:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field score_count", values[i])
@@ -189,6 +197,9 @@ func (ei *ExtraInfo) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("dislikes=")
 	builder.WriteString(fmt.Sprintf("%v", ei.Dislikes))
+	builder.WriteString(", ")
+	builder.WriteString("recommend_count=")
+	builder.WriteString(fmt.Sprintf("%v", ei.RecommendCount))
 	builder.WriteString(", ")
 	builder.WriteString("score_count=")
 	builder.WriteString(fmt.Sprintf("%v", ei.ScoreCount))

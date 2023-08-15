@@ -166,16 +166,17 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "ExtraInfo",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			extrainfo.FieldCreatedAt:  {Type: field.TypeUint32, Column: extrainfo.FieldCreatedAt},
-			extrainfo.FieldUpdatedAt:  {Type: field.TypeUint32, Column: extrainfo.FieldUpdatedAt},
-			extrainfo.FieldDeletedAt:  {Type: field.TypeUint32, Column: extrainfo.FieldDeletedAt},
-			extrainfo.FieldGoodID:     {Type: field.TypeUUID, Column: extrainfo.FieldGoodID},
-			extrainfo.FieldPosters:    {Type: field.TypeJSON, Column: extrainfo.FieldPosters},
-			extrainfo.FieldLabels:     {Type: field.TypeJSON, Column: extrainfo.FieldLabels},
-			extrainfo.FieldLikes:      {Type: field.TypeUint32, Column: extrainfo.FieldLikes},
-			extrainfo.FieldDislikes:   {Type: field.TypeUint32, Column: extrainfo.FieldDislikes},
-			extrainfo.FieldScoreCount: {Type: field.TypeUint32, Column: extrainfo.FieldScoreCount},
-			extrainfo.FieldScore:      {Type: field.TypeOther, Column: extrainfo.FieldScore},
+			extrainfo.FieldCreatedAt:      {Type: field.TypeUint32, Column: extrainfo.FieldCreatedAt},
+			extrainfo.FieldUpdatedAt:      {Type: field.TypeUint32, Column: extrainfo.FieldUpdatedAt},
+			extrainfo.FieldDeletedAt:      {Type: field.TypeUint32, Column: extrainfo.FieldDeletedAt},
+			extrainfo.FieldGoodID:         {Type: field.TypeUUID, Column: extrainfo.FieldGoodID},
+			extrainfo.FieldPosters:        {Type: field.TypeJSON, Column: extrainfo.FieldPosters},
+			extrainfo.FieldLabels:         {Type: field.TypeJSON, Column: extrainfo.FieldLabels},
+			extrainfo.FieldLikes:          {Type: field.TypeUint32, Column: extrainfo.FieldLikes},
+			extrainfo.FieldDislikes:       {Type: field.TypeUint32, Column: extrainfo.FieldDislikes},
+			extrainfo.FieldRecommendCount: {Type: field.TypeUint32, Column: extrainfo.FieldRecommendCount},
+			extrainfo.FieldScoreCount:     {Type: field.TypeUint32, Column: extrainfo.FieldScoreCount},
+			extrainfo.FieldScore:          {Type: field.TypeOther, Column: extrainfo.FieldScore},
 		},
 	}
 	graph.Nodes[6] = &sqlgraph.Node{
@@ -1010,6 +1011,11 @@ func (f *ExtraInfoFilter) WhereLikes(p entql.Uint32P) {
 // WhereDislikes applies the entql uint32 predicate on the dislikes field.
 func (f *ExtraInfoFilter) WhereDislikes(p entql.Uint32P) {
 	f.Where(p.Field(extrainfo.FieldDislikes))
+}
+
+// WhereRecommendCount applies the entql uint32 predicate on the recommend_count field.
+func (f *ExtraInfoFilter) WhereRecommendCount(p entql.Uint32P) {
+	f.Where(p.Field(extrainfo.FieldRecommendCount))
 }
 
 // WhereScoreCount applies the entql uint32 predicate on the score_count field.

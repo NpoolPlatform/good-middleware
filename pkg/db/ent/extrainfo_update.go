@@ -169,6 +169,33 @@ func (eiu *ExtraInfoUpdate) ClearDislikes() *ExtraInfoUpdate {
 	return eiu
 }
 
+// SetRecommendCount sets the "recommend_count" field.
+func (eiu *ExtraInfoUpdate) SetRecommendCount(u uint32) *ExtraInfoUpdate {
+	eiu.mutation.ResetRecommendCount()
+	eiu.mutation.SetRecommendCount(u)
+	return eiu
+}
+
+// SetNillableRecommendCount sets the "recommend_count" field if the given value is not nil.
+func (eiu *ExtraInfoUpdate) SetNillableRecommendCount(u *uint32) *ExtraInfoUpdate {
+	if u != nil {
+		eiu.SetRecommendCount(*u)
+	}
+	return eiu
+}
+
+// AddRecommendCount adds u to the "recommend_count" field.
+func (eiu *ExtraInfoUpdate) AddRecommendCount(u int32) *ExtraInfoUpdate {
+	eiu.mutation.AddRecommendCount(u)
+	return eiu
+}
+
+// ClearRecommendCount clears the value of the "recommend_count" field.
+func (eiu *ExtraInfoUpdate) ClearRecommendCount() *ExtraInfoUpdate {
+	eiu.mutation.ClearRecommendCount()
+	return eiu
+}
+
 // SetScoreCount sets the "score_count" field.
 func (eiu *ExtraInfoUpdate) SetScoreCount(u uint32) *ExtraInfoUpdate {
 	eiu.mutation.ResetScoreCount()
@@ -429,6 +456,26 @@ func (eiu *ExtraInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: extrainfo.FieldDislikes,
 		})
 	}
+	if value, ok := eiu.mutation.RecommendCount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldRecommendCount,
+		})
+	}
+	if value, ok := eiu.mutation.AddedRecommendCount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldRecommendCount,
+		})
+	}
+	if eiu.mutation.RecommendCountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: extrainfo.FieldRecommendCount,
+		})
+	}
 	if value, ok := eiu.mutation.ScoreCount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -619,6 +666,33 @@ func (eiuo *ExtraInfoUpdateOne) AddDislikes(u int32) *ExtraInfoUpdateOne {
 // ClearDislikes clears the value of the "dislikes" field.
 func (eiuo *ExtraInfoUpdateOne) ClearDislikes() *ExtraInfoUpdateOne {
 	eiuo.mutation.ClearDislikes()
+	return eiuo
+}
+
+// SetRecommendCount sets the "recommend_count" field.
+func (eiuo *ExtraInfoUpdateOne) SetRecommendCount(u uint32) *ExtraInfoUpdateOne {
+	eiuo.mutation.ResetRecommendCount()
+	eiuo.mutation.SetRecommendCount(u)
+	return eiuo
+}
+
+// SetNillableRecommendCount sets the "recommend_count" field if the given value is not nil.
+func (eiuo *ExtraInfoUpdateOne) SetNillableRecommendCount(u *uint32) *ExtraInfoUpdateOne {
+	if u != nil {
+		eiuo.SetRecommendCount(*u)
+	}
+	return eiuo
+}
+
+// AddRecommendCount adds u to the "recommend_count" field.
+func (eiuo *ExtraInfoUpdateOne) AddRecommendCount(u int32) *ExtraInfoUpdateOne {
+	eiuo.mutation.AddRecommendCount(u)
+	return eiuo
+}
+
+// ClearRecommendCount clears the value of the "recommend_count" field.
+func (eiuo *ExtraInfoUpdateOne) ClearRecommendCount() *ExtraInfoUpdateOne {
+	eiuo.mutation.ClearRecommendCount()
 	return eiuo
 }
 
@@ -910,6 +984,26 @@ func (eiuo *ExtraInfoUpdateOne) sqlSave(ctx context.Context) (_node *ExtraInfo, 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: extrainfo.FieldDislikes,
+		})
+	}
+	if value, ok := eiuo.mutation.RecommendCount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldRecommendCount,
+		})
+	}
+	if value, ok := eiuo.mutation.AddedRecommendCount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldRecommendCount,
+		})
+	}
+	if eiuo.mutation.RecommendCountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: extrainfo.FieldRecommendCount,
 		})
 	}
 	if value, ok := eiuo.mutation.ScoreCount(); ok {
