@@ -207,27 +207,27 @@ func init() {
 	// appstock.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	appstock.DefaultDeletedAt = appstockDescDeletedAt.Default.(func() uint32)
 	// appstockDescTotal is the schema descriptor for total field.
-	appstockDescTotal := appstockFields[3].Descriptor()
+	appstockDescTotal := appstockFields[4].Descriptor()
 	// appstock.DefaultTotal holds the default value on creation for the total field.
 	appstock.DefaultTotal = appstockDescTotal.Default.(decimal.Decimal)
 	// appstockDescSpotQuantity is the schema descriptor for spot_quantity field.
-	appstockDescSpotQuantity := appstockFields[4].Descriptor()
+	appstockDescSpotQuantity := appstockFields[5].Descriptor()
 	// appstock.DefaultSpotQuantity holds the default value on creation for the spot_quantity field.
 	appstock.DefaultSpotQuantity = appstockDescSpotQuantity.Default.(decimal.Decimal)
 	// appstockDescLocked is the schema descriptor for locked field.
-	appstockDescLocked := appstockFields[5].Descriptor()
+	appstockDescLocked := appstockFields[6].Descriptor()
 	// appstock.DefaultLocked holds the default value on creation for the locked field.
 	appstock.DefaultLocked = appstockDescLocked.Default.(decimal.Decimal)
 	// appstockDescInService is the schema descriptor for in_service field.
-	appstockDescInService := appstockFields[6].Descriptor()
+	appstockDescInService := appstockFields[7].Descriptor()
 	// appstock.DefaultInService holds the default value on creation for the in_service field.
 	appstock.DefaultInService = appstockDescInService.Default.(decimal.Decimal)
 	// appstockDescWaitStart is the schema descriptor for wait_start field.
-	appstockDescWaitStart := appstockFields[7].Descriptor()
+	appstockDescWaitStart := appstockFields[8].Descriptor()
 	// appstock.DefaultWaitStart holds the default value on creation for the wait_start field.
 	appstock.DefaultWaitStart = appstockDescWaitStart.Default.(decimal.Decimal)
 	// appstockDescSold is the schema descriptor for sold field.
-	appstockDescSold := appstockFields[8].Descriptor()
+	appstockDescSold := appstockFields[9].Descriptor()
 	// appstock.DefaultSold holds the default value on creation for the sold field.
 	appstock.DefaultSold = appstockDescSold.Default.(decimal.Decimal)
 	// appstockDescID is the schema descriptor for id field.

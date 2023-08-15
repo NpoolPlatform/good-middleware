@@ -15,9 +15,9 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "app_id", Type: field.TypeUUID},
-		{Name: "good_id", Type: field.TypeUUID},
-		{Name: "coin_type_id", Type: field.TypeUUID},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "coin_type_id", Type: field.TypeUUID, Nullable: true},
 	}
 	// AppDefaultGoodsTable holds the schema information for the "app_default_goods" table.
 	AppDefaultGoodsTable = &schema.Table{
@@ -74,8 +74,9 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "app_id", Type: field.TypeUUID},
-		{Name: "good_id", Type: field.TypeUUID},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "total", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "spot_quantity", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "locked", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
@@ -226,7 +227,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "good_id", Type: field.TypeUUID},
-		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1692085560},
+		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1692093371},
 		{Name: "tid", Type: field.TypeUUID, Nullable: true},
 		{Name: "amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "unit_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},

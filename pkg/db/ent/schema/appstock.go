@@ -29,9 +29,14 @@ func (AppStock) Fields() []ent.Field {
 			Default(uuid.New).
 			Unique(),
 		field.
-			UUID("app_id", uuid.UUID{}),
+			UUID("app_id", uuid.UUID{}).
+			Optional(),
 		field.
-			UUID("good_id", uuid.UUID{}),
+			UUID("good_id", uuid.UUID{}).
+			Optional(),
+		field.
+			UUID("app_good_id", uuid.UUID{}).
+			Optional(),
 		field.
 			Other("total", decimal.Decimal{}).
 			SchemaType(map[string]string{

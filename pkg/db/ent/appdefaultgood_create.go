@@ -71,15 +71,39 @@ func (adgc *AppDefaultGoodCreate) SetAppID(u uuid.UUID) *AppDefaultGoodCreate {
 	return adgc
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (adgc *AppDefaultGoodCreate) SetNillableAppID(u *uuid.UUID) *AppDefaultGoodCreate {
+	if u != nil {
+		adgc.SetAppID(*u)
+	}
+	return adgc
+}
+
 // SetGoodID sets the "good_id" field.
 func (adgc *AppDefaultGoodCreate) SetGoodID(u uuid.UUID) *AppDefaultGoodCreate {
 	adgc.mutation.SetGoodID(u)
 	return adgc
 }
 
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (adgc *AppDefaultGoodCreate) SetNillableGoodID(u *uuid.UUID) *AppDefaultGoodCreate {
+	if u != nil {
+		adgc.SetGoodID(*u)
+	}
+	return adgc
+}
+
 // SetCoinTypeID sets the "coin_type_id" field.
 func (adgc *AppDefaultGoodCreate) SetCoinTypeID(u uuid.UUID) *AppDefaultGoodCreate {
 	adgc.mutation.SetCoinTypeID(u)
+	return adgc
+}
+
+// SetNillableCoinTypeID sets the "coin_type_id" field if the given value is not nil.
+func (adgc *AppDefaultGoodCreate) SetNillableCoinTypeID(u *uuid.UUID) *AppDefaultGoodCreate {
+	if u != nil {
+		adgc.SetCoinTypeID(*u)
+	}
 	return adgc
 }
 
@@ -217,15 +241,6 @@ func (adgc *AppDefaultGoodCreate) check() error {
 	}
 	if _, ok := adgc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "AppDefaultGood.deleted_at"`)}
-	}
-	if _, ok := adgc.mutation.AppID(); !ok {
-		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "AppDefaultGood.app_id"`)}
-	}
-	if _, ok := adgc.mutation.GoodID(); !ok {
-		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "AppDefaultGood.good_id"`)}
-	}
-	if _, ok := adgc.mutation.CoinTypeID(); !ok {
-		return &ValidationError{Name: "coin_type_id", err: errors.New(`ent: missing required field "AppDefaultGood.coin_type_id"`)}
 	}
 	return nil
 }
@@ -432,6 +447,12 @@ func (u *AppDefaultGoodUpsert) UpdateAppID() *AppDefaultGoodUpsert {
 	return u
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppDefaultGoodUpsert) ClearAppID() *AppDefaultGoodUpsert {
+	u.SetNull(appdefaultgood.FieldAppID)
+	return u
+}
+
 // SetGoodID sets the "good_id" field.
 func (u *AppDefaultGoodUpsert) SetGoodID(v uuid.UUID) *AppDefaultGoodUpsert {
 	u.Set(appdefaultgood.FieldGoodID, v)
@@ -444,6 +465,12 @@ func (u *AppDefaultGoodUpsert) UpdateGoodID() *AppDefaultGoodUpsert {
 	return u
 }
 
+// ClearGoodID clears the value of the "good_id" field.
+func (u *AppDefaultGoodUpsert) ClearGoodID() *AppDefaultGoodUpsert {
+	u.SetNull(appdefaultgood.FieldGoodID)
+	return u
+}
+
 // SetCoinTypeID sets the "coin_type_id" field.
 func (u *AppDefaultGoodUpsert) SetCoinTypeID(v uuid.UUID) *AppDefaultGoodUpsert {
 	u.Set(appdefaultgood.FieldCoinTypeID, v)
@@ -453,6 +480,12 @@ func (u *AppDefaultGoodUpsert) SetCoinTypeID(v uuid.UUID) *AppDefaultGoodUpsert 
 // UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
 func (u *AppDefaultGoodUpsert) UpdateCoinTypeID() *AppDefaultGoodUpsert {
 	u.SetExcluded(appdefaultgood.FieldCoinTypeID)
+	return u
+}
+
+// ClearCoinTypeID clears the value of the "coin_type_id" field.
+func (u *AppDefaultGoodUpsert) ClearCoinTypeID() *AppDefaultGoodUpsert {
+	u.SetNull(appdefaultgood.FieldCoinTypeID)
 	return u
 }
 
@@ -583,6 +616,13 @@ func (u *AppDefaultGoodUpsertOne) UpdateAppID() *AppDefaultGoodUpsertOne {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppDefaultGoodUpsertOne) ClearAppID() *AppDefaultGoodUpsertOne {
+	return u.Update(func(s *AppDefaultGoodUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetGoodID sets the "good_id" field.
 func (u *AppDefaultGoodUpsertOne) SetGoodID(v uuid.UUID) *AppDefaultGoodUpsertOne {
 	return u.Update(func(s *AppDefaultGoodUpsert) {
@@ -597,6 +637,13 @@ func (u *AppDefaultGoodUpsertOne) UpdateGoodID() *AppDefaultGoodUpsertOne {
 	})
 }
 
+// ClearGoodID clears the value of the "good_id" field.
+func (u *AppDefaultGoodUpsertOne) ClearGoodID() *AppDefaultGoodUpsertOne {
+	return u.Update(func(s *AppDefaultGoodUpsert) {
+		s.ClearGoodID()
+	})
+}
+
 // SetCoinTypeID sets the "coin_type_id" field.
 func (u *AppDefaultGoodUpsertOne) SetCoinTypeID(v uuid.UUID) *AppDefaultGoodUpsertOne {
 	return u.Update(func(s *AppDefaultGoodUpsert) {
@@ -608,6 +655,13 @@ func (u *AppDefaultGoodUpsertOne) SetCoinTypeID(v uuid.UUID) *AppDefaultGoodUpse
 func (u *AppDefaultGoodUpsertOne) UpdateCoinTypeID() *AppDefaultGoodUpsertOne {
 	return u.Update(func(s *AppDefaultGoodUpsert) {
 		s.UpdateCoinTypeID()
+	})
+}
+
+// ClearCoinTypeID clears the value of the "coin_type_id" field.
+func (u *AppDefaultGoodUpsertOne) ClearCoinTypeID() *AppDefaultGoodUpsertOne {
+	return u.Update(func(s *AppDefaultGoodUpsert) {
+		s.ClearCoinTypeID()
 	})
 }
 
@@ -904,6 +958,13 @@ func (u *AppDefaultGoodUpsertBulk) UpdateAppID() *AppDefaultGoodUpsertBulk {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppDefaultGoodUpsertBulk) ClearAppID() *AppDefaultGoodUpsertBulk {
+	return u.Update(func(s *AppDefaultGoodUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetGoodID sets the "good_id" field.
 func (u *AppDefaultGoodUpsertBulk) SetGoodID(v uuid.UUID) *AppDefaultGoodUpsertBulk {
 	return u.Update(func(s *AppDefaultGoodUpsert) {
@@ -918,6 +979,13 @@ func (u *AppDefaultGoodUpsertBulk) UpdateGoodID() *AppDefaultGoodUpsertBulk {
 	})
 }
 
+// ClearGoodID clears the value of the "good_id" field.
+func (u *AppDefaultGoodUpsertBulk) ClearGoodID() *AppDefaultGoodUpsertBulk {
+	return u.Update(func(s *AppDefaultGoodUpsert) {
+		s.ClearGoodID()
+	})
+}
+
 // SetCoinTypeID sets the "coin_type_id" field.
 func (u *AppDefaultGoodUpsertBulk) SetCoinTypeID(v uuid.UUID) *AppDefaultGoodUpsertBulk {
 	return u.Update(func(s *AppDefaultGoodUpsert) {
@@ -929,6 +997,13 @@ func (u *AppDefaultGoodUpsertBulk) SetCoinTypeID(v uuid.UUID) *AppDefaultGoodUps
 func (u *AppDefaultGoodUpsertBulk) UpdateCoinTypeID() *AppDefaultGoodUpsertBulk {
 	return u.Update(func(s *AppDefaultGoodUpsert) {
 		s.UpdateCoinTypeID()
+	})
+}
+
+// ClearCoinTypeID clears the value of the "coin_type_id" field.
+func (u *AppDefaultGoodUpsertBulk) ClearCoinTypeID() *AppDefaultGoodUpsertBulk {
+	return u.Update(func(s *AppDefaultGoodUpsert) {
+		s.ClearCoinTypeID()
 	})
 }
 

@@ -25,11 +25,14 @@ func (AppDefaultGood) Fields() []ent.Field {
 			Default(uuid.New).
 			Unique(),
 		field.
-			UUID("app_id", uuid.UUID{}),
+			UUID("app_id", uuid.UUID{}).
+			Optional(),
 		field.
-			UUID("good_id", uuid.UUID{}),
+			UUID("good_id", uuid.UUID{}).
+			Optional(),
 		field.
-			UUID("coin_type_id", uuid.UUID{}),
+			UUID("coin_type_id", uuid.UUID{}).
+			Optional(),
 	}
 }
 

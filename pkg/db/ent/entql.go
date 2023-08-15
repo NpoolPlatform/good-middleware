@@ -104,6 +104,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appstock.FieldDeletedAt:    {Type: field.TypeUint32, Column: appstock.FieldDeletedAt},
 			appstock.FieldAppID:        {Type: field.TypeUUID, Column: appstock.FieldAppID},
 			appstock.FieldGoodID:       {Type: field.TypeUUID, Column: appstock.FieldGoodID},
+			appstock.FieldAppGoodID:    {Type: field.TypeUUID, Column: appstock.FieldAppGoodID},
 			appstock.FieldTotal:        {Type: field.TypeOther, Column: appstock.FieldTotal},
 			appstock.FieldSpotQuantity: {Type: field.TypeOther, Column: appstock.FieldSpotQuantity},
 			appstock.FieldLocked:       {Type: field.TypeOther, Column: appstock.FieldLocked},
@@ -737,6 +738,11 @@ func (f *AppStockFilter) WhereAppID(p entql.ValueP) {
 // WhereGoodID applies the entql [16]byte predicate on the good_id field.
 func (f *AppStockFilter) WhereGoodID(p entql.ValueP) {
 	f.Where(p.Field(appstock.FieldGoodID))
+}
+
+// WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
+func (f *AppStockFilter) WhereAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(appstock.FieldAppGoodID))
 }
 
 // WhereTotal applies the entql other predicate on the total field.

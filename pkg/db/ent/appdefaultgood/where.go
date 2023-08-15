@@ -377,6 +377,20 @@ func AppIDLTE(v uuid.UUID) predicate.AppDefaultGood {
 	})
 }
 
+// AppIDIsNil applies the IsNil predicate on the "app_id" field.
+func AppIDIsNil() predicate.AppDefaultGood {
+	return predicate.AppDefaultGood(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAppID)))
+	})
+}
+
+// AppIDNotNil applies the NotNil predicate on the "app_id" field.
+func AppIDNotNil() predicate.AppDefaultGood {
+	return predicate.AppDefaultGood(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAppID)))
+	})
+}
+
 // GoodIDEQ applies the EQ predicate on the "good_id" field.
 func GoodIDEQ(v uuid.UUID) predicate.AppDefaultGood {
 	return predicate.AppDefaultGood(func(s *sql.Selector) {
@@ -441,6 +455,20 @@ func GoodIDLTE(v uuid.UUID) predicate.AppDefaultGood {
 	})
 }
 
+// GoodIDIsNil applies the IsNil predicate on the "good_id" field.
+func GoodIDIsNil() predicate.AppDefaultGood {
+	return predicate.AppDefaultGood(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldGoodID)))
+	})
+}
+
+// GoodIDNotNil applies the NotNil predicate on the "good_id" field.
+func GoodIDNotNil() predicate.AppDefaultGood {
+	return predicate.AppDefaultGood(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldGoodID)))
+	})
+}
+
 // CoinTypeIDEQ applies the EQ predicate on the "coin_type_id" field.
 func CoinTypeIDEQ(v uuid.UUID) predicate.AppDefaultGood {
 	return predicate.AppDefaultGood(func(s *sql.Selector) {
@@ -502,6 +530,20 @@ func CoinTypeIDLT(v uuid.UUID) predicate.AppDefaultGood {
 func CoinTypeIDLTE(v uuid.UUID) predicate.AppDefaultGood {
 	return predicate.AppDefaultGood(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldCoinTypeID), v))
+	})
+}
+
+// CoinTypeIDIsNil applies the IsNil predicate on the "coin_type_id" field.
+func CoinTypeIDIsNil() predicate.AppDefaultGood {
+	return predicate.AppDefaultGood(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCoinTypeID)))
+	})
+}
+
+// CoinTypeIDNotNil applies the NotNil predicate on the "coin_type_id" field.
+func CoinTypeIDNotNil() predicate.AppDefaultGood {
+	return predicate.AppDefaultGood(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCoinTypeID)))
 	})
 }
 

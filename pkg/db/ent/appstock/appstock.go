@@ -23,6 +23,8 @@ const (
 	FieldAppID = "app_id"
 	// FieldGoodID holds the string denoting the good_id field in the database.
 	FieldGoodID = "good_id"
+	// FieldAppGoodID holds the string denoting the app_good_id field in the database.
+	FieldAppGoodID = "app_good_id"
 	// FieldTotal holds the string denoting the total field in the database.
 	FieldTotal = "total"
 	// FieldSpotQuantity holds the string denoting the spot_quantity field in the database.
@@ -47,6 +49,7 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldAppID,
 	FieldGoodID,
+	FieldAppGoodID,
 	FieldTotal,
 	FieldSpotQuantity,
 	FieldLocked,
