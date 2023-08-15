@@ -45,10 +45,11 @@ func UpdateSet(u *ent.LikeUpdateOne, req *Req) *ent.LikeUpdateOne {
 }
 
 type Conds struct {
-	ID     *cruder.Cond
-	AppID  *cruder.Cond
-	UserID *cruder.Cond
-	GoodID *cruder.Cond
+	ID      *cruder.Cond
+	AppID   *cruder.Cond
+	UserID  *cruder.Cond
+	GoodID  *cruder.Cond
+	GoodIDs *cruder.Cond
 }
 
 func SetQueryConds(q *ent.LikeQuery, conds *Conds) (*ent.LikeQuery, error) {
@@ -100,6 +101,18 @@ func SetQueryConds(q *ent.LikeQuery, conds *Conds) (*ent.LikeQuery, error) {
 		switch conds.GoodID.Op {
 		case cruder.EQ:
 			q.Where(entlike.GoodID(id))
+		default:
+			return nil, fmt.Errorf("invalid like field")
+		}
+	}
+	if conds.GoodIDs != nil {
+		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid goodids")
+		}
+		switch conds.GoodIDs.Op {
+		case cruder.IN:
+			q.Where(entlike.GoodIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid like field")
 		}
