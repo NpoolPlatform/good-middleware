@@ -1,29 +1,29 @@
-package recommend
+package comment
 
 import (
 	"context"
 	"fmt"
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
-	recommendcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/recommend"
+	commentcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/comment"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/recommend"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
 
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 type Handler struct {
-	ID             *uuid.UUID
-	AppID          *uuid.UUID
-	RecommenderID  *uuid.UUID
-	GoodID         *uuid.UUID
-	Message        *string
-	RecommendIndex *decimal.Decimal
-	Conds          *recommendcrud.Conds
-	Offset         int32
-	Limit          int32
+	ID        *uuid.UUID
+	AppID     *uuid.UUID
+	UserID    *uuid.UUID
+	GoodID    *uuid.UUID
+	OrderID   *uuid.UUID
+	Content   *string
+	ReplyToID *uuid.UUID
+	Conds     *commentcrud.Conds
+	Offset    int32
+	Limit     int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -70,11 +70,11 @@ func WithAppID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithRecommenderID(id *string, must bool) func(context.Context, *Handler) error {
+func WithUserID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid recommenderid")
+				return fmt.Errorf("invalid userid")
 			}
 			return nil
 		}
@@ -82,7 +82,7 @@ func WithRecommenderID(id *string, must bool) func(context.Context, *Handler) er
 		if err != nil {
 			return err
 		}
-		h.RecommenderID = &_id
+		h.UserID = &_id
 		return nil
 	}
 }
@@ -108,41 +108,66 @@ func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithMessage(s *string, must bool) func(context.Context, *Handler) error {
+func WithOrderID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		const leastMessageLen = 10
-		if s == nil {
+		if id == nil {
 			if must {
-				return fmt.Errorf("invalid message")
+				return fmt.Errorf("invalid orderid")
 			}
+			return nil
 		}
-		if len(*s) < leastMessageLen {
-			return fmt.Errorf("invalid message")
+		_id, err := uuid.Parse(*id)
+		if err != nil {
+			return err
 		}
-		h.Message = s
+		h.OrderID = &_id
 		return nil
 	}
 }
 
-func WithRecommendIndex(s *string, must bool) func(context.Context, *Handler) error {
+func WithContent(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		const leastContentLen = 10
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid recommendindex")
+				return fmt.Errorf("invalid content")
 			}
 		}
-		amount, err := decimal.NewFromString(*s)
+		if len(*s) < leastContentLen {
+			return fmt.Errorf("invalid content")
+		}
+		h.Content = s
+		return nil
+	}
+}
+
+func WithReplyToID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			return nil
+		}
+		handler, err := NewHandler(
+			ctx,
+			WithID(id, true),
+		)
 		if err != nil {
 			return err
 		}
-		h.RecommendIndex = &amount
+		exist, err := handler.ExistComment(ctx)
+		if err != nil {
+			return err
+		}
+		if !exist {
+			return fmt.Errorf("invalid replytoid")
+		}
+		h.ReplyToID = handler.ID
 		return nil
 	}
 }
 
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.Conds = &recommendcrud.Conds{}
+		h.Conds = &commentcrud.Conds{}
 		if conds == nil {
 			return nil
 		}
@@ -166,13 +191,13 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				Val: id,
 			}
 		}
-		if conds.RecommenderID != nil {
-			id, err := uuid.Parse(conds.GetRecommenderID().GetValue())
+		if conds.UserID != nil {
+			id, err := uuid.Parse(conds.GetUserID().GetValue())
 			if err != nil {
 				return err
 			}
-			h.Conds.RecommenderID = &cruder.Cond{
-				Op:  conds.GetRecommenderID().GetOp(),
+			h.Conds.UserID = &cruder.Cond{
+				Op:  conds.GetUserID().GetOp(),
 				Val: id,
 			}
 		}

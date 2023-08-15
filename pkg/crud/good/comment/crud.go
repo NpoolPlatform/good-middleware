@@ -56,10 +56,13 @@ func UpdateSet(u *ent.CommentUpdateOne, req *Req) *ent.CommentUpdateOne {
 }
 
 type Conds struct {
-	ID     *cruder.Cond
-	AppID  *cruder.Cond
-	UserID *cruder.Cond
-	GoodID *cruder.Cond
+	ID       *cruder.Cond
+	AppID    *cruder.Cond
+	UserID   *cruder.Cond
+	GoodID   *cruder.Cond
+	OrderID  *cruder.Cond
+	OrderIDs *cruder.Cond
+	GoodIDs  *cruder.Cond
 }
 
 func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error) {
@@ -111,6 +114,42 @@ func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error)
 		switch conds.GoodID.Op {
 		case cruder.EQ:
 			q.Where(entcomment.GoodID(id))
+		default:
+			return nil, fmt.Errorf("invalid comment field")
+		}
+	}
+	if conds.OrderID != nil {
+		id, ok := conds.OrderID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid orderid")
+		}
+		switch conds.OrderID.Op {
+		case cruder.EQ:
+			q.Where(entcomment.OrderID(id))
+		default:
+			return nil, fmt.Errorf("invalid comment field")
+		}
+	}
+	if conds.OrderIDs != nil {
+		ids, ok := conds.OrderIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid userids")
+		}
+		switch conds.OrderIDs.Op {
+		case cruder.EQ:
+			q.Where(entcomment.UserIDIn(ids...))
+		default:
+			return nil, fmt.Errorf("invalid comment field")
+		}
+	}
+	if conds.GoodIDs != nil {
+		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid goodids")
+		}
+		switch conds.GoodIDs.Op {
+		case cruder.EQ:
+			q.Where(entcomment.GoodIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid comment field")
 		}
