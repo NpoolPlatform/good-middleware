@@ -6,6 +6,7 @@ import (
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	appgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good"
+	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
@@ -31,9 +32,12 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 	return handler, nil
 }
 
-func WithID(id *string) func(context.Context, *Handler) error {
+func WithID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
+			if must {
+				return fmt.Errorf("invalid id")
+			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
@@ -45,9 +49,12 @@ func WithID(id *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithAppID(id *string) func(context.Context, *Handler) error {
+func WithAppID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
+			if must {
+				return fmt.Errorf("invalid appid")
+			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
@@ -59,37 +66,47 @@ func WithAppID(id *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithGoodID(id *string) func(context.Context, *Handler) error {
+func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		if id == nil {
-			return nil
-		}
-		_id, err := uuid.Parse(*id)
+		handler, err := good1.NewHandler(
+			ctx,
+			good1.WithID(id, true),
+		)
 		if err != nil {
 			return err
 		}
-		h.GoodID = &_id
+		exist, err := handler.ExistGood(ctx)
+		if err != nil {
+			return err
+		}
+		if !exist {
+			return fmt.Errorf("invalid good")
+		}
+		h.GoodID = handler.ID
 		return nil
 	}
 }
 
-func WithOnline(b *bool) func(context.Context, *Handler) error {
+func WithOnline(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Online = b
 		return nil
 	}
 }
 
-func WithVisible(b *bool) func(context.Context, *Handler) error {
+func WithVisible(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Visible = b
 		return nil
 	}
 }
 
-func WithGoodName(s *string) func(context.Context, *Handler) error {
+func WithGoodName(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
+			if must {
+				return fmt.Errorf("invalid goodname")
+			}
 			return nil
 		}
 		const leastNameLen = 3
@@ -101,9 +118,12 @@ func WithGoodName(s *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithPrice(s *string) func(context.Context, *Handler) error {
+func WithPrice(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
+			if must {
+				return fmt.Errorf("invalid price")
+			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
@@ -115,72 +135,75 @@ func WithPrice(s *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithDisplayIndex(n *int32) func(context.Context, *Handler) error {
+func WithDisplayIndex(n *int32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.DisplayIndex = n
 		return nil
 	}
 }
 
-func WithPurchaseLimit(n *int32) func(context.Context, *Handler) error {
+func WithPurchaseLimit(n *int32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.PurchaseLimit = n
 		return nil
 	}
 }
 
-func WithSaleStartAt(n *uint32) func(context.Context, *Handler) error {
+func WithSaleStartAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.SaleStartAt = n
 		return nil
 	}
 }
 
-func WithSaleEndAt(n *uint32) func(context.Context, *Handler) error {
+func WithSaleEndAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.SaleEndAt = n
 		return nil
 	}
 }
 
-func WithServiceStartAt(n *uint32) func(context.Context, *Handler) error {
+func WithServiceStartAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.ServiceStartAt = n
 		return nil
 	}
 }
 
-func WithDescriptions(ss []string) func(context.Context, *Handler) error {
+func WithDescriptions(ss []string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Descriptions = ss
 		return nil
 	}
 }
 
-func WithGoodBanner(s *string) func(context.Context, *Handler) error {
+func WithGoodBanner(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.GoodBanner = s
 		return nil
 	}
 }
 
-func WithEnablePurchase(b *bool) func(context.Context, *Handler) error {
+func WithEnablePurchase(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.EnablePurchase = b
 		return nil
 	}
 }
 
-func WithEnableProductPage(b *bool) func(context.Context, *Handler) error {
+func WithEnableProductPage(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.EnableProductPage = b
 		return nil
 	}
 }
 
-func WithCancelMode(e *types.CancelMode) func(context.Context, *Handler) error {
+func WithCancelMode(e *types.CancelMode, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
+			if must {
+				return fmt.Errorf("invalid cancelmode")
+			}
 			return nil
 		}
 		switch *e {
@@ -195,9 +218,12 @@ func WithCancelMode(e *types.CancelMode) func(context.Context, *Handler) error {
 	}
 }
 
-func WithUserPurchaseLimit(s *string) func(context.Context, *Handler) error {
+func WithUserPurchaseLimit(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
+			if must {
+				return fmt.Errorf("invalid purchaselimit")
+			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
@@ -209,35 +235,35 @@ func WithUserPurchaseLimit(s *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithDisplayColors(ss []string) func(context.Context, *Handler) error {
+func WithDisplayColors(ss []string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.DisplayColors = ss
 		return nil
 	}
 }
 
-func WithCancellableBeforeStart(n *uint32) func(context.Context, *Handler) error {
+func WithCancellableBeforeStart(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.CancellableBeforeStart = n
 		return nil
 	}
 }
 
-func WithProductPage(s *string) func(context.Context, *Handler) error {
+func WithProductPage(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.ProductPage = s
 		return nil
 	}
 }
 
-func WithEnableSetCommission(b *bool) func(context.Context, *Handler) error {
+func WithEnableSetCommission(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.EnableSetCommission = b
 		return nil
 	}
 }
 
-func WithPosters(ss []string) func(context.Context, *Handler) error {
+func WithPosters(ss []string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Posters = ss
 		return nil
