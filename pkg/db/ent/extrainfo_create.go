@@ -112,30 +112,30 @@ func (eic *ExtraInfoCreate) SetNillableDislikes(u *uint32) *ExtraInfoCreate {
 	return eic
 }
 
-// SetRateCount sets the "rate_count" field.
-func (eic *ExtraInfoCreate) SetRateCount(u uint32) *ExtraInfoCreate {
-	eic.mutation.SetRateCount(u)
+// SetScoreCount sets the "score_count" field.
+func (eic *ExtraInfoCreate) SetScoreCount(u uint32) *ExtraInfoCreate {
+	eic.mutation.SetScoreCount(u)
 	return eic
 }
 
-// SetNillableRateCount sets the "rate_count" field if the given value is not nil.
-func (eic *ExtraInfoCreate) SetNillableRateCount(u *uint32) *ExtraInfoCreate {
+// SetNillableScoreCount sets the "score_count" field if the given value is not nil.
+func (eic *ExtraInfoCreate) SetNillableScoreCount(u *uint32) *ExtraInfoCreate {
 	if u != nil {
-		eic.SetRateCount(*u)
+		eic.SetScoreCount(*u)
 	}
 	return eic
 }
 
-// SetRatingV1 sets the "rating_v1" field.
-func (eic *ExtraInfoCreate) SetRatingV1(d decimal.Decimal) *ExtraInfoCreate {
-	eic.mutation.SetRatingV1(d)
+// SetScore sets the "score" field.
+func (eic *ExtraInfoCreate) SetScore(d decimal.Decimal) *ExtraInfoCreate {
+	eic.mutation.SetScore(d)
 	return eic
 }
 
-// SetNillableRatingV1 sets the "rating_v1" field if the given value is not nil.
-func (eic *ExtraInfoCreate) SetNillableRatingV1(d *decimal.Decimal) *ExtraInfoCreate {
+// SetNillableScore sets the "score" field if the given value is not nil.
+func (eic *ExtraInfoCreate) SetNillableScore(d *decimal.Decimal) *ExtraInfoCreate {
 	if d != nil {
-		eic.SetRatingV1(*d)
+		eic.SetScore(*d)
 	}
 	return eic
 }
@@ -270,13 +270,13 @@ func (eic *ExtraInfoCreate) defaults() error {
 		v := extrainfo.DefaultDislikes
 		eic.mutation.SetDislikes(v)
 	}
-	if _, ok := eic.mutation.RateCount(); !ok {
-		v := extrainfo.DefaultRateCount
-		eic.mutation.SetRateCount(v)
+	if _, ok := eic.mutation.ScoreCount(); !ok {
+		v := extrainfo.DefaultScoreCount
+		eic.mutation.SetScoreCount(v)
 	}
-	if _, ok := eic.mutation.RatingV1(); !ok {
-		v := extrainfo.DefaultRatingV1
-		eic.mutation.SetRatingV1(v)
+	if _, ok := eic.mutation.Score(); !ok {
+		v := extrainfo.DefaultScore
+		eic.mutation.SetScore(v)
 	}
 	if _, ok := eic.mutation.ID(); !ok {
 		if extrainfo.DefaultID == nil {
@@ -403,21 +403,21 @@ func (eic *ExtraInfoCreate) createSpec() (*ExtraInfo, *sqlgraph.CreateSpec) {
 		})
 		_node.Dislikes = value
 	}
-	if value, ok := eic.mutation.RateCount(); ok {
+	if value, ok := eic.mutation.ScoreCount(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: extrainfo.FieldRateCount,
+			Column: extrainfo.FieldScoreCount,
 		})
-		_node.RateCount = value
+		_node.ScoreCount = value
 	}
-	if value, ok := eic.mutation.RatingV1(); ok {
+	if value, ok := eic.mutation.Score(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: extrainfo.FieldRatingV1,
+			Column: extrainfo.FieldScore,
 		})
-		_node.RatingV1 = value
+		_node.Score = value
 	}
 	return _node, _spec
 }
@@ -623,45 +623,45 @@ func (u *ExtraInfoUpsert) ClearDislikes() *ExtraInfoUpsert {
 	return u
 }
 
-// SetRateCount sets the "rate_count" field.
-func (u *ExtraInfoUpsert) SetRateCount(v uint32) *ExtraInfoUpsert {
-	u.Set(extrainfo.FieldRateCount, v)
+// SetScoreCount sets the "score_count" field.
+func (u *ExtraInfoUpsert) SetScoreCount(v uint32) *ExtraInfoUpsert {
+	u.Set(extrainfo.FieldScoreCount, v)
 	return u
 }
 
-// UpdateRateCount sets the "rate_count" field to the value that was provided on create.
-func (u *ExtraInfoUpsert) UpdateRateCount() *ExtraInfoUpsert {
-	u.SetExcluded(extrainfo.FieldRateCount)
+// UpdateScoreCount sets the "score_count" field to the value that was provided on create.
+func (u *ExtraInfoUpsert) UpdateScoreCount() *ExtraInfoUpsert {
+	u.SetExcluded(extrainfo.FieldScoreCount)
 	return u
 }
 
-// AddRateCount adds v to the "rate_count" field.
-func (u *ExtraInfoUpsert) AddRateCount(v uint32) *ExtraInfoUpsert {
-	u.Add(extrainfo.FieldRateCount, v)
+// AddScoreCount adds v to the "score_count" field.
+func (u *ExtraInfoUpsert) AddScoreCount(v uint32) *ExtraInfoUpsert {
+	u.Add(extrainfo.FieldScoreCount, v)
 	return u
 }
 
-// ClearRateCount clears the value of the "rate_count" field.
-func (u *ExtraInfoUpsert) ClearRateCount() *ExtraInfoUpsert {
-	u.SetNull(extrainfo.FieldRateCount)
+// ClearScoreCount clears the value of the "score_count" field.
+func (u *ExtraInfoUpsert) ClearScoreCount() *ExtraInfoUpsert {
+	u.SetNull(extrainfo.FieldScoreCount)
 	return u
 }
 
-// SetRatingV1 sets the "rating_v1" field.
-func (u *ExtraInfoUpsert) SetRatingV1(v decimal.Decimal) *ExtraInfoUpsert {
-	u.Set(extrainfo.FieldRatingV1, v)
+// SetScore sets the "score" field.
+func (u *ExtraInfoUpsert) SetScore(v decimal.Decimal) *ExtraInfoUpsert {
+	u.Set(extrainfo.FieldScore, v)
 	return u
 }
 
-// UpdateRatingV1 sets the "rating_v1" field to the value that was provided on create.
-func (u *ExtraInfoUpsert) UpdateRatingV1() *ExtraInfoUpsert {
-	u.SetExcluded(extrainfo.FieldRatingV1)
+// UpdateScore sets the "score" field to the value that was provided on create.
+func (u *ExtraInfoUpsert) UpdateScore() *ExtraInfoUpsert {
+	u.SetExcluded(extrainfo.FieldScore)
 	return u
 }
 
-// ClearRatingV1 clears the value of the "rating_v1" field.
-func (u *ExtraInfoUpsert) ClearRatingV1() *ExtraInfoUpsert {
-	u.SetNull(extrainfo.FieldRatingV1)
+// ClearScore clears the value of the "score" field.
+func (u *ExtraInfoUpsert) ClearScore() *ExtraInfoUpsert {
+	u.SetNull(extrainfo.FieldScore)
 	return u
 }
 
@@ -890,52 +890,52 @@ func (u *ExtraInfoUpsertOne) ClearDislikes() *ExtraInfoUpsertOne {
 	})
 }
 
-// SetRateCount sets the "rate_count" field.
-func (u *ExtraInfoUpsertOne) SetRateCount(v uint32) *ExtraInfoUpsertOne {
+// SetScoreCount sets the "score_count" field.
+func (u *ExtraInfoUpsertOne) SetScoreCount(v uint32) *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetRateCount(v)
+		s.SetScoreCount(v)
 	})
 }
 
-// AddRateCount adds v to the "rate_count" field.
-func (u *ExtraInfoUpsertOne) AddRateCount(v uint32) *ExtraInfoUpsertOne {
+// AddScoreCount adds v to the "score_count" field.
+func (u *ExtraInfoUpsertOne) AddScoreCount(v uint32) *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.AddRateCount(v)
+		s.AddScoreCount(v)
 	})
 }
 
-// UpdateRateCount sets the "rate_count" field to the value that was provided on create.
-func (u *ExtraInfoUpsertOne) UpdateRateCount() *ExtraInfoUpsertOne {
+// UpdateScoreCount sets the "score_count" field to the value that was provided on create.
+func (u *ExtraInfoUpsertOne) UpdateScoreCount() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateRateCount()
+		s.UpdateScoreCount()
 	})
 }
 
-// ClearRateCount clears the value of the "rate_count" field.
-func (u *ExtraInfoUpsertOne) ClearRateCount() *ExtraInfoUpsertOne {
+// ClearScoreCount clears the value of the "score_count" field.
+func (u *ExtraInfoUpsertOne) ClearScoreCount() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearRateCount()
+		s.ClearScoreCount()
 	})
 }
 
-// SetRatingV1 sets the "rating_v1" field.
-func (u *ExtraInfoUpsertOne) SetRatingV1(v decimal.Decimal) *ExtraInfoUpsertOne {
+// SetScore sets the "score" field.
+func (u *ExtraInfoUpsertOne) SetScore(v decimal.Decimal) *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetRatingV1(v)
+		s.SetScore(v)
 	})
 }
 
-// UpdateRatingV1 sets the "rating_v1" field to the value that was provided on create.
-func (u *ExtraInfoUpsertOne) UpdateRatingV1() *ExtraInfoUpsertOne {
+// UpdateScore sets the "score" field to the value that was provided on create.
+func (u *ExtraInfoUpsertOne) UpdateScore() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateRatingV1()
+		s.UpdateScore()
 	})
 }
 
-// ClearRatingV1 clears the value of the "rating_v1" field.
-func (u *ExtraInfoUpsertOne) ClearRatingV1() *ExtraInfoUpsertOne {
+// ClearScore clears the value of the "score" field.
+func (u *ExtraInfoUpsertOne) ClearScore() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearRatingV1()
+		s.ClearScore()
 	})
 }
 
@@ -1330,52 +1330,52 @@ func (u *ExtraInfoUpsertBulk) ClearDislikes() *ExtraInfoUpsertBulk {
 	})
 }
 
-// SetRateCount sets the "rate_count" field.
-func (u *ExtraInfoUpsertBulk) SetRateCount(v uint32) *ExtraInfoUpsertBulk {
+// SetScoreCount sets the "score_count" field.
+func (u *ExtraInfoUpsertBulk) SetScoreCount(v uint32) *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetRateCount(v)
+		s.SetScoreCount(v)
 	})
 }
 
-// AddRateCount adds v to the "rate_count" field.
-func (u *ExtraInfoUpsertBulk) AddRateCount(v uint32) *ExtraInfoUpsertBulk {
+// AddScoreCount adds v to the "score_count" field.
+func (u *ExtraInfoUpsertBulk) AddScoreCount(v uint32) *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.AddRateCount(v)
+		s.AddScoreCount(v)
 	})
 }
 
-// UpdateRateCount sets the "rate_count" field to the value that was provided on create.
-func (u *ExtraInfoUpsertBulk) UpdateRateCount() *ExtraInfoUpsertBulk {
+// UpdateScoreCount sets the "score_count" field to the value that was provided on create.
+func (u *ExtraInfoUpsertBulk) UpdateScoreCount() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateRateCount()
+		s.UpdateScoreCount()
 	})
 }
 
-// ClearRateCount clears the value of the "rate_count" field.
-func (u *ExtraInfoUpsertBulk) ClearRateCount() *ExtraInfoUpsertBulk {
+// ClearScoreCount clears the value of the "score_count" field.
+func (u *ExtraInfoUpsertBulk) ClearScoreCount() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearRateCount()
+		s.ClearScoreCount()
 	})
 }
 
-// SetRatingV1 sets the "rating_v1" field.
-func (u *ExtraInfoUpsertBulk) SetRatingV1(v decimal.Decimal) *ExtraInfoUpsertBulk {
+// SetScore sets the "score" field.
+func (u *ExtraInfoUpsertBulk) SetScore(v decimal.Decimal) *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetRatingV1(v)
+		s.SetScore(v)
 	})
 }
 
-// UpdateRatingV1 sets the "rating_v1" field to the value that was provided on create.
-func (u *ExtraInfoUpsertBulk) UpdateRatingV1() *ExtraInfoUpsertBulk {
+// UpdateScore sets the "score" field to the value that was provided on create.
+func (u *ExtraInfoUpsertBulk) UpdateScore() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateRatingV1()
+		s.UpdateScore()
 	})
 }
 
-// ClearRatingV1 clears the value of the "rating_v1" field.
-func (u *ExtraInfoUpsertBulk) ClearRatingV1() *ExtraInfoUpsertBulk {
+// ClearScore clears the value of the "score" field.
+func (u *ExtraInfoUpsertBulk) ClearScore() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearRatingV1()
+		s.ClearScore()
 	})
 }
 

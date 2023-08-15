@@ -34,10 +34,10 @@ type ExtraInfo struct {
 	Likes uint32 `json:"likes,omitempty"`
 	// Dislikes holds the value of the "dislikes" field.
 	Dislikes uint32 `json:"dislikes,omitempty"`
-	// RateCount holds the value of the "rate_count" field.
-	RateCount uint32 `json:"rate_count,omitempty"`
-	// RatingV1 holds the value of the "rating_v1" field.
-	RatingV1 decimal.Decimal `json:"rating_v1,omitempty"`
+	// ScoreCount holds the value of the "score_count" field.
+	ScoreCount uint32 `json:"score_count,omitempty"`
+	// Score holds the value of the "score" field.
+	Score decimal.Decimal `json:"score,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -47,9 +47,9 @@ func (*ExtraInfo) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case extrainfo.FieldPosters, extrainfo.FieldLabels:
 			values[i] = new([]byte)
-		case extrainfo.FieldRatingV1:
+		case extrainfo.FieldScore:
 			values[i] = new(decimal.Decimal)
-		case extrainfo.FieldCreatedAt, extrainfo.FieldUpdatedAt, extrainfo.FieldDeletedAt, extrainfo.FieldLikes, extrainfo.FieldDislikes, extrainfo.FieldRateCount:
+		case extrainfo.FieldCreatedAt, extrainfo.FieldUpdatedAt, extrainfo.FieldDeletedAt, extrainfo.FieldLikes, extrainfo.FieldDislikes, extrainfo.FieldScoreCount:
 			values[i] = new(sql.NullInt64)
 		case extrainfo.FieldID, extrainfo.FieldGoodID:
 			values[i] = new(uuid.UUID)
@@ -126,17 +126,17 @@ func (ei *ExtraInfo) assignValues(columns []string, values []interface{}) error 
 			} else if value.Valid {
 				ei.Dislikes = uint32(value.Int64)
 			}
-		case extrainfo.FieldRateCount:
+		case extrainfo.FieldScoreCount:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field rate_count", values[i])
+				return fmt.Errorf("unexpected type %T for field score_count", values[i])
 			} else if value.Valid {
-				ei.RateCount = uint32(value.Int64)
+				ei.ScoreCount = uint32(value.Int64)
 			}
-		case extrainfo.FieldRatingV1:
+		case extrainfo.FieldScore:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field rating_v1", values[i])
+				return fmt.Errorf("unexpected type %T for field score", values[i])
 			} else if value != nil {
-				ei.RatingV1 = *value
+				ei.Score = *value
 			}
 		}
 	}
@@ -190,11 +190,11 @@ func (ei *ExtraInfo) String() string {
 	builder.WriteString("dislikes=")
 	builder.WriteString(fmt.Sprintf("%v", ei.Dislikes))
 	builder.WriteString(", ")
-	builder.WriteString("rate_count=")
-	builder.WriteString(fmt.Sprintf("%v", ei.RateCount))
+	builder.WriteString("score_count=")
+	builder.WriteString(fmt.Sprintf("%v", ei.ScoreCount))
 	builder.WriteString(", ")
-	builder.WriteString("rating_v1=")
-	builder.WriteString(fmt.Sprintf("%v", ei.RatingV1))
+	builder.WriteString("score=")
+	builder.WriteString(fmt.Sprintf("%v", ei.Score))
 	builder.WriteByte(')')
 	return builder.String()
 }

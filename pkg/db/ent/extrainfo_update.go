@@ -169,50 +169,50 @@ func (eiu *ExtraInfoUpdate) ClearDislikes() *ExtraInfoUpdate {
 	return eiu
 }
 
-// SetRateCount sets the "rate_count" field.
-func (eiu *ExtraInfoUpdate) SetRateCount(u uint32) *ExtraInfoUpdate {
-	eiu.mutation.ResetRateCount()
-	eiu.mutation.SetRateCount(u)
+// SetScoreCount sets the "score_count" field.
+func (eiu *ExtraInfoUpdate) SetScoreCount(u uint32) *ExtraInfoUpdate {
+	eiu.mutation.ResetScoreCount()
+	eiu.mutation.SetScoreCount(u)
 	return eiu
 }
 
-// SetNillableRateCount sets the "rate_count" field if the given value is not nil.
-func (eiu *ExtraInfoUpdate) SetNillableRateCount(u *uint32) *ExtraInfoUpdate {
+// SetNillableScoreCount sets the "score_count" field if the given value is not nil.
+func (eiu *ExtraInfoUpdate) SetNillableScoreCount(u *uint32) *ExtraInfoUpdate {
 	if u != nil {
-		eiu.SetRateCount(*u)
+		eiu.SetScoreCount(*u)
 	}
 	return eiu
 }
 
-// AddRateCount adds u to the "rate_count" field.
-func (eiu *ExtraInfoUpdate) AddRateCount(u int32) *ExtraInfoUpdate {
-	eiu.mutation.AddRateCount(u)
+// AddScoreCount adds u to the "score_count" field.
+func (eiu *ExtraInfoUpdate) AddScoreCount(u int32) *ExtraInfoUpdate {
+	eiu.mutation.AddScoreCount(u)
 	return eiu
 }
 
-// ClearRateCount clears the value of the "rate_count" field.
-func (eiu *ExtraInfoUpdate) ClearRateCount() *ExtraInfoUpdate {
-	eiu.mutation.ClearRateCount()
+// ClearScoreCount clears the value of the "score_count" field.
+func (eiu *ExtraInfoUpdate) ClearScoreCount() *ExtraInfoUpdate {
+	eiu.mutation.ClearScoreCount()
 	return eiu
 }
 
-// SetRatingV1 sets the "rating_v1" field.
-func (eiu *ExtraInfoUpdate) SetRatingV1(d decimal.Decimal) *ExtraInfoUpdate {
-	eiu.mutation.SetRatingV1(d)
+// SetScore sets the "score" field.
+func (eiu *ExtraInfoUpdate) SetScore(d decimal.Decimal) *ExtraInfoUpdate {
+	eiu.mutation.SetScore(d)
 	return eiu
 }
 
-// SetNillableRatingV1 sets the "rating_v1" field if the given value is not nil.
-func (eiu *ExtraInfoUpdate) SetNillableRatingV1(d *decimal.Decimal) *ExtraInfoUpdate {
+// SetNillableScore sets the "score" field if the given value is not nil.
+func (eiu *ExtraInfoUpdate) SetNillableScore(d *decimal.Decimal) *ExtraInfoUpdate {
 	if d != nil {
-		eiu.SetRatingV1(*d)
+		eiu.SetScore(*d)
 	}
 	return eiu
 }
 
-// ClearRatingV1 clears the value of the "rating_v1" field.
-func (eiu *ExtraInfoUpdate) ClearRatingV1() *ExtraInfoUpdate {
-	eiu.mutation.ClearRatingV1()
+// ClearScore clears the value of the "score" field.
+func (eiu *ExtraInfoUpdate) ClearScore() *ExtraInfoUpdate {
+	eiu.mutation.ClearScore()
 	return eiu
 }
 
@@ -429,37 +429,37 @@ func (eiu *ExtraInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: extrainfo.FieldDislikes,
 		})
 	}
-	if value, ok := eiu.mutation.RateCount(); ok {
+	if value, ok := eiu.mutation.ScoreCount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: extrainfo.FieldRateCount,
+			Column: extrainfo.FieldScoreCount,
 		})
 	}
-	if value, ok := eiu.mutation.AddedRateCount(); ok {
+	if value, ok := eiu.mutation.AddedScoreCount(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: extrainfo.FieldRateCount,
+			Column: extrainfo.FieldScoreCount,
 		})
 	}
-	if eiu.mutation.RateCountCleared() {
+	if eiu.mutation.ScoreCountCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: extrainfo.FieldRateCount,
+			Column: extrainfo.FieldScoreCount,
 		})
 	}
-	if value, ok := eiu.mutation.RatingV1(); ok {
+	if value, ok := eiu.mutation.Score(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: extrainfo.FieldRatingV1,
+			Column: extrainfo.FieldScore,
 		})
 	}
-	if eiu.mutation.RatingV1Cleared() {
+	if eiu.mutation.ScoreCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: extrainfo.FieldRatingV1,
+			Column: extrainfo.FieldScore,
 		})
 	}
 	_spec.Modifiers = eiu.modifiers
@@ -622,50 +622,50 @@ func (eiuo *ExtraInfoUpdateOne) ClearDislikes() *ExtraInfoUpdateOne {
 	return eiuo
 }
 
-// SetRateCount sets the "rate_count" field.
-func (eiuo *ExtraInfoUpdateOne) SetRateCount(u uint32) *ExtraInfoUpdateOne {
-	eiuo.mutation.ResetRateCount()
-	eiuo.mutation.SetRateCount(u)
+// SetScoreCount sets the "score_count" field.
+func (eiuo *ExtraInfoUpdateOne) SetScoreCount(u uint32) *ExtraInfoUpdateOne {
+	eiuo.mutation.ResetScoreCount()
+	eiuo.mutation.SetScoreCount(u)
 	return eiuo
 }
 
-// SetNillableRateCount sets the "rate_count" field if the given value is not nil.
-func (eiuo *ExtraInfoUpdateOne) SetNillableRateCount(u *uint32) *ExtraInfoUpdateOne {
+// SetNillableScoreCount sets the "score_count" field if the given value is not nil.
+func (eiuo *ExtraInfoUpdateOne) SetNillableScoreCount(u *uint32) *ExtraInfoUpdateOne {
 	if u != nil {
-		eiuo.SetRateCount(*u)
+		eiuo.SetScoreCount(*u)
 	}
 	return eiuo
 }
 
-// AddRateCount adds u to the "rate_count" field.
-func (eiuo *ExtraInfoUpdateOne) AddRateCount(u int32) *ExtraInfoUpdateOne {
-	eiuo.mutation.AddRateCount(u)
+// AddScoreCount adds u to the "score_count" field.
+func (eiuo *ExtraInfoUpdateOne) AddScoreCount(u int32) *ExtraInfoUpdateOne {
+	eiuo.mutation.AddScoreCount(u)
 	return eiuo
 }
 
-// ClearRateCount clears the value of the "rate_count" field.
-func (eiuo *ExtraInfoUpdateOne) ClearRateCount() *ExtraInfoUpdateOne {
-	eiuo.mutation.ClearRateCount()
+// ClearScoreCount clears the value of the "score_count" field.
+func (eiuo *ExtraInfoUpdateOne) ClearScoreCount() *ExtraInfoUpdateOne {
+	eiuo.mutation.ClearScoreCount()
 	return eiuo
 }
 
-// SetRatingV1 sets the "rating_v1" field.
-func (eiuo *ExtraInfoUpdateOne) SetRatingV1(d decimal.Decimal) *ExtraInfoUpdateOne {
-	eiuo.mutation.SetRatingV1(d)
+// SetScore sets the "score" field.
+func (eiuo *ExtraInfoUpdateOne) SetScore(d decimal.Decimal) *ExtraInfoUpdateOne {
+	eiuo.mutation.SetScore(d)
 	return eiuo
 }
 
-// SetNillableRatingV1 sets the "rating_v1" field if the given value is not nil.
-func (eiuo *ExtraInfoUpdateOne) SetNillableRatingV1(d *decimal.Decimal) *ExtraInfoUpdateOne {
+// SetNillableScore sets the "score" field if the given value is not nil.
+func (eiuo *ExtraInfoUpdateOne) SetNillableScore(d *decimal.Decimal) *ExtraInfoUpdateOne {
 	if d != nil {
-		eiuo.SetRatingV1(*d)
+		eiuo.SetScore(*d)
 	}
 	return eiuo
 }
 
-// ClearRatingV1 clears the value of the "rating_v1" field.
-func (eiuo *ExtraInfoUpdateOne) ClearRatingV1() *ExtraInfoUpdateOne {
-	eiuo.mutation.ClearRatingV1()
+// ClearScore clears the value of the "score" field.
+func (eiuo *ExtraInfoUpdateOne) ClearScore() *ExtraInfoUpdateOne {
+	eiuo.mutation.ClearScore()
 	return eiuo
 }
 
@@ -912,37 +912,37 @@ func (eiuo *ExtraInfoUpdateOne) sqlSave(ctx context.Context) (_node *ExtraInfo, 
 			Column: extrainfo.FieldDislikes,
 		})
 	}
-	if value, ok := eiuo.mutation.RateCount(); ok {
+	if value, ok := eiuo.mutation.ScoreCount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: extrainfo.FieldRateCount,
+			Column: extrainfo.FieldScoreCount,
 		})
 	}
-	if value, ok := eiuo.mutation.AddedRateCount(); ok {
+	if value, ok := eiuo.mutation.AddedScoreCount(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: extrainfo.FieldRateCount,
+			Column: extrainfo.FieldScoreCount,
 		})
 	}
-	if eiuo.mutation.RateCountCleared() {
+	if eiuo.mutation.ScoreCountCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: extrainfo.FieldRateCount,
+			Column: extrainfo.FieldScoreCount,
 		})
 	}
-	if value, ok := eiuo.mutation.RatingV1(); ok {
+	if value, ok := eiuo.mutation.Score(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: extrainfo.FieldRatingV1,
+			Column: extrainfo.FieldScore,
 		})
 	}
-	if eiuo.mutation.RatingV1Cleared() {
+	if eiuo.mutation.ScoreCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: extrainfo.FieldRatingV1,
+			Column: extrainfo.FieldScore,
 		})
 	}
 	_spec.Modifiers = eiuo.modifiers

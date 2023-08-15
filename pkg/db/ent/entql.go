@@ -166,16 +166,16 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "ExtraInfo",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			extrainfo.FieldCreatedAt: {Type: field.TypeUint32, Column: extrainfo.FieldCreatedAt},
-			extrainfo.FieldUpdatedAt: {Type: field.TypeUint32, Column: extrainfo.FieldUpdatedAt},
-			extrainfo.FieldDeletedAt: {Type: field.TypeUint32, Column: extrainfo.FieldDeletedAt},
-			extrainfo.FieldGoodID:    {Type: field.TypeUUID, Column: extrainfo.FieldGoodID},
-			extrainfo.FieldPosters:   {Type: field.TypeJSON, Column: extrainfo.FieldPosters},
-			extrainfo.FieldLabels:    {Type: field.TypeJSON, Column: extrainfo.FieldLabels},
-			extrainfo.FieldLikes:     {Type: field.TypeUint32, Column: extrainfo.FieldLikes},
-			extrainfo.FieldDislikes:  {Type: field.TypeUint32, Column: extrainfo.FieldDislikes},
-			extrainfo.FieldRateCount: {Type: field.TypeUint32, Column: extrainfo.FieldRateCount},
-			extrainfo.FieldRatingV1:  {Type: field.TypeOther, Column: extrainfo.FieldRatingV1},
+			extrainfo.FieldCreatedAt:  {Type: field.TypeUint32, Column: extrainfo.FieldCreatedAt},
+			extrainfo.FieldUpdatedAt:  {Type: field.TypeUint32, Column: extrainfo.FieldUpdatedAt},
+			extrainfo.FieldDeletedAt:  {Type: field.TypeUint32, Column: extrainfo.FieldDeletedAt},
+			extrainfo.FieldGoodID:     {Type: field.TypeUUID, Column: extrainfo.FieldGoodID},
+			extrainfo.FieldPosters:    {Type: field.TypeJSON, Column: extrainfo.FieldPosters},
+			extrainfo.FieldLabels:     {Type: field.TypeJSON, Column: extrainfo.FieldLabels},
+			extrainfo.FieldLikes:      {Type: field.TypeUint32, Column: extrainfo.FieldLikes},
+			extrainfo.FieldDislikes:   {Type: field.TypeUint32, Column: extrainfo.FieldDislikes},
+			extrainfo.FieldScoreCount: {Type: field.TypeUint32, Column: extrainfo.FieldScoreCount},
+			extrainfo.FieldScore:      {Type: field.TypeOther, Column: extrainfo.FieldScore},
 		},
 	}
 	graph.Nodes[6] = &sqlgraph.Node{
@@ -1012,14 +1012,14 @@ func (f *ExtraInfoFilter) WhereDislikes(p entql.Uint32P) {
 	f.Where(p.Field(extrainfo.FieldDislikes))
 }
 
-// WhereRateCount applies the entql uint32 predicate on the rate_count field.
-func (f *ExtraInfoFilter) WhereRateCount(p entql.Uint32P) {
-	f.Where(p.Field(extrainfo.FieldRateCount))
+// WhereScoreCount applies the entql uint32 predicate on the score_count field.
+func (f *ExtraInfoFilter) WhereScoreCount(p entql.Uint32P) {
+	f.Where(p.Field(extrainfo.FieldScoreCount))
 }
 
-// WhereRatingV1 applies the entql other predicate on the rating_v1 field.
-func (f *ExtraInfoFilter) WhereRatingV1(p entql.OtherP) {
-	f.Where(p.Field(extrainfo.FieldRatingV1))
+// WhereScore applies the entql other predicate on the score field.
+func (f *ExtraInfoFilter) WhereScore(p entql.OtherP) {
+	f.Where(p.Field(extrainfo.FieldScore))
 }
 
 // addPredicate implements the predicateAdder interface.

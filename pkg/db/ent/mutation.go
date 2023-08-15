@@ -6058,29 +6058,29 @@ func (m *DeviceInfoMutation) ResetEdge(name string) error {
 // ExtraInfoMutation represents an operation that mutates the ExtraInfo nodes in the graph.
 type ExtraInfoMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uuid.UUID
-	created_at    *uint32
-	addcreated_at *int32
-	updated_at    *uint32
-	addupdated_at *int32
-	deleted_at    *uint32
-	adddeleted_at *int32
-	good_id       *uuid.UUID
-	posters       *[]string
-	labels        *[]string
-	likes         *uint32
-	addlikes      *int32
-	dislikes      *uint32
-	adddislikes   *int32
-	rate_count    *uint32
-	addrate_count *int32
-	rating_v1     *decimal.Decimal
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*ExtraInfo, error)
-	predicates    []predicate.ExtraInfo
+	op             Op
+	typ            string
+	id             *uuid.UUID
+	created_at     *uint32
+	addcreated_at  *int32
+	updated_at     *uint32
+	addupdated_at  *int32
+	deleted_at     *uint32
+	adddeleted_at  *int32
+	good_id        *uuid.UUID
+	posters        *[]string
+	labels         *[]string
+	likes          *uint32
+	addlikes       *int32
+	dislikes       *uint32
+	adddislikes    *int32
+	score_count    *uint32
+	addscore_count *int32
+	score          *decimal.Decimal
+	clearedFields  map[string]struct{}
+	done           bool
+	oldValue       func(context.Context) (*ExtraInfo, error)
+	predicates     []predicate.ExtraInfo
 }
 
 var _ ent.Mutation = (*ExtraInfoMutation)(nil)
@@ -6629,123 +6629,123 @@ func (m *ExtraInfoMutation) ResetDislikes() {
 	delete(m.clearedFields, extrainfo.FieldDislikes)
 }
 
-// SetRateCount sets the "rate_count" field.
-func (m *ExtraInfoMutation) SetRateCount(u uint32) {
-	m.rate_count = &u
-	m.addrate_count = nil
+// SetScoreCount sets the "score_count" field.
+func (m *ExtraInfoMutation) SetScoreCount(u uint32) {
+	m.score_count = &u
+	m.addscore_count = nil
 }
 
-// RateCount returns the value of the "rate_count" field in the mutation.
-func (m *ExtraInfoMutation) RateCount() (r uint32, exists bool) {
-	v := m.rate_count
+// ScoreCount returns the value of the "score_count" field in the mutation.
+func (m *ExtraInfoMutation) ScoreCount() (r uint32, exists bool) {
+	v := m.score_count
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldRateCount returns the old "rate_count" field's value of the ExtraInfo entity.
+// OldScoreCount returns the old "score_count" field's value of the ExtraInfo entity.
 // If the ExtraInfo object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ExtraInfoMutation) OldRateCount(ctx context.Context) (v uint32, err error) {
+func (m *ExtraInfoMutation) OldScoreCount(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldRateCount is only allowed on UpdateOne operations")
+		return v, errors.New("OldScoreCount is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldRateCount requires an ID field in the mutation")
+		return v, errors.New("OldScoreCount requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldRateCount: %w", err)
+		return v, fmt.Errorf("querying old value for OldScoreCount: %w", err)
 	}
-	return oldValue.RateCount, nil
+	return oldValue.ScoreCount, nil
 }
 
-// AddRateCount adds u to the "rate_count" field.
-func (m *ExtraInfoMutation) AddRateCount(u int32) {
-	if m.addrate_count != nil {
-		*m.addrate_count += u
+// AddScoreCount adds u to the "score_count" field.
+func (m *ExtraInfoMutation) AddScoreCount(u int32) {
+	if m.addscore_count != nil {
+		*m.addscore_count += u
 	} else {
-		m.addrate_count = &u
+		m.addscore_count = &u
 	}
 }
 
-// AddedRateCount returns the value that was added to the "rate_count" field in this mutation.
-func (m *ExtraInfoMutation) AddedRateCount() (r int32, exists bool) {
-	v := m.addrate_count
+// AddedScoreCount returns the value that was added to the "score_count" field in this mutation.
+func (m *ExtraInfoMutation) AddedScoreCount() (r int32, exists bool) {
+	v := m.addscore_count
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ClearRateCount clears the value of the "rate_count" field.
-func (m *ExtraInfoMutation) ClearRateCount() {
-	m.rate_count = nil
-	m.addrate_count = nil
-	m.clearedFields[extrainfo.FieldRateCount] = struct{}{}
+// ClearScoreCount clears the value of the "score_count" field.
+func (m *ExtraInfoMutation) ClearScoreCount() {
+	m.score_count = nil
+	m.addscore_count = nil
+	m.clearedFields[extrainfo.FieldScoreCount] = struct{}{}
 }
 
-// RateCountCleared returns if the "rate_count" field was cleared in this mutation.
-func (m *ExtraInfoMutation) RateCountCleared() bool {
-	_, ok := m.clearedFields[extrainfo.FieldRateCount]
+// ScoreCountCleared returns if the "score_count" field was cleared in this mutation.
+func (m *ExtraInfoMutation) ScoreCountCleared() bool {
+	_, ok := m.clearedFields[extrainfo.FieldScoreCount]
 	return ok
 }
 
-// ResetRateCount resets all changes to the "rate_count" field.
-func (m *ExtraInfoMutation) ResetRateCount() {
-	m.rate_count = nil
-	m.addrate_count = nil
-	delete(m.clearedFields, extrainfo.FieldRateCount)
+// ResetScoreCount resets all changes to the "score_count" field.
+func (m *ExtraInfoMutation) ResetScoreCount() {
+	m.score_count = nil
+	m.addscore_count = nil
+	delete(m.clearedFields, extrainfo.FieldScoreCount)
 }
 
-// SetRatingV1 sets the "rating_v1" field.
-func (m *ExtraInfoMutation) SetRatingV1(d decimal.Decimal) {
-	m.rating_v1 = &d
+// SetScore sets the "score" field.
+func (m *ExtraInfoMutation) SetScore(d decimal.Decimal) {
+	m.score = &d
 }
 
-// RatingV1 returns the value of the "rating_v1" field in the mutation.
-func (m *ExtraInfoMutation) RatingV1() (r decimal.Decimal, exists bool) {
-	v := m.rating_v1
+// Score returns the value of the "score" field in the mutation.
+func (m *ExtraInfoMutation) Score() (r decimal.Decimal, exists bool) {
+	v := m.score
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldRatingV1 returns the old "rating_v1" field's value of the ExtraInfo entity.
+// OldScore returns the old "score" field's value of the ExtraInfo entity.
 // If the ExtraInfo object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ExtraInfoMutation) OldRatingV1(ctx context.Context) (v decimal.Decimal, err error) {
+func (m *ExtraInfoMutation) OldScore(ctx context.Context) (v decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldRatingV1 is only allowed on UpdateOne operations")
+		return v, errors.New("OldScore is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldRatingV1 requires an ID field in the mutation")
+		return v, errors.New("OldScore requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldRatingV1: %w", err)
+		return v, fmt.Errorf("querying old value for OldScore: %w", err)
 	}
-	return oldValue.RatingV1, nil
+	return oldValue.Score, nil
 }
 
-// ClearRatingV1 clears the value of the "rating_v1" field.
-func (m *ExtraInfoMutation) ClearRatingV1() {
-	m.rating_v1 = nil
-	m.clearedFields[extrainfo.FieldRatingV1] = struct{}{}
+// ClearScore clears the value of the "score" field.
+func (m *ExtraInfoMutation) ClearScore() {
+	m.score = nil
+	m.clearedFields[extrainfo.FieldScore] = struct{}{}
 }
 
-// RatingV1Cleared returns if the "rating_v1" field was cleared in this mutation.
-func (m *ExtraInfoMutation) RatingV1Cleared() bool {
-	_, ok := m.clearedFields[extrainfo.FieldRatingV1]
+// ScoreCleared returns if the "score" field was cleared in this mutation.
+func (m *ExtraInfoMutation) ScoreCleared() bool {
+	_, ok := m.clearedFields[extrainfo.FieldScore]
 	return ok
 }
 
-// ResetRatingV1 resets all changes to the "rating_v1" field.
-func (m *ExtraInfoMutation) ResetRatingV1() {
-	m.rating_v1 = nil
-	delete(m.clearedFields, extrainfo.FieldRatingV1)
+// ResetScore resets all changes to the "score" field.
+func (m *ExtraInfoMutation) ResetScore() {
+	m.score = nil
+	delete(m.clearedFields, extrainfo.FieldScore)
 }
 
 // Where appends a list predicates to the ExtraInfoMutation builder.
@@ -6792,11 +6792,11 @@ func (m *ExtraInfoMutation) Fields() []string {
 	if m.dislikes != nil {
 		fields = append(fields, extrainfo.FieldDislikes)
 	}
-	if m.rate_count != nil {
-		fields = append(fields, extrainfo.FieldRateCount)
+	if m.score_count != nil {
+		fields = append(fields, extrainfo.FieldScoreCount)
 	}
-	if m.rating_v1 != nil {
-		fields = append(fields, extrainfo.FieldRatingV1)
+	if m.score != nil {
+		fields = append(fields, extrainfo.FieldScore)
 	}
 	return fields
 }
@@ -6822,10 +6822,10 @@ func (m *ExtraInfoMutation) Field(name string) (ent.Value, bool) {
 		return m.Likes()
 	case extrainfo.FieldDislikes:
 		return m.Dislikes()
-	case extrainfo.FieldRateCount:
-		return m.RateCount()
-	case extrainfo.FieldRatingV1:
-		return m.RatingV1()
+	case extrainfo.FieldScoreCount:
+		return m.ScoreCount()
+	case extrainfo.FieldScore:
+		return m.Score()
 	}
 	return nil, false
 }
@@ -6851,10 +6851,10 @@ func (m *ExtraInfoMutation) OldField(ctx context.Context, name string) (ent.Valu
 		return m.OldLikes(ctx)
 	case extrainfo.FieldDislikes:
 		return m.OldDislikes(ctx)
-	case extrainfo.FieldRateCount:
-		return m.OldRateCount(ctx)
-	case extrainfo.FieldRatingV1:
-		return m.OldRatingV1(ctx)
+	case extrainfo.FieldScoreCount:
+		return m.OldScoreCount(ctx)
+	case extrainfo.FieldScore:
+		return m.OldScore(ctx)
 	}
 	return nil, fmt.Errorf("unknown ExtraInfo field %s", name)
 }
@@ -6920,19 +6920,19 @@ func (m *ExtraInfoMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDislikes(v)
 		return nil
-	case extrainfo.FieldRateCount:
+	case extrainfo.FieldScoreCount:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetRateCount(v)
+		m.SetScoreCount(v)
 		return nil
-	case extrainfo.FieldRatingV1:
+	case extrainfo.FieldScore:
 		v, ok := value.(decimal.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetRatingV1(v)
+		m.SetScore(v)
 		return nil
 	}
 	return fmt.Errorf("unknown ExtraInfo field %s", name)
@@ -6957,8 +6957,8 @@ func (m *ExtraInfoMutation) AddedFields() []string {
 	if m.adddislikes != nil {
 		fields = append(fields, extrainfo.FieldDislikes)
 	}
-	if m.addrate_count != nil {
-		fields = append(fields, extrainfo.FieldRateCount)
+	if m.addscore_count != nil {
+		fields = append(fields, extrainfo.FieldScoreCount)
 	}
 	return fields
 }
@@ -6978,8 +6978,8 @@ func (m *ExtraInfoMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedLikes()
 	case extrainfo.FieldDislikes:
 		return m.AddedDislikes()
-	case extrainfo.FieldRateCount:
-		return m.AddedRateCount()
+	case extrainfo.FieldScoreCount:
+		return m.AddedScoreCount()
 	}
 	return nil, false
 }
@@ -7024,12 +7024,12 @@ func (m *ExtraInfoMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddDislikes(v)
 		return nil
-	case extrainfo.FieldRateCount:
+	case extrainfo.FieldScoreCount:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddRateCount(v)
+		m.AddScoreCount(v)
 		return nil
 	}
 	return fmt.Errorf("unknown ExtraInfo numeric field %s", name)
@@ -7051,11 +7051,11 @@ func (m *ExtraInfoMutation) ClearedFields() []string {
 	if m.FieldCleared(extrainfo.FieldDislikes) {
 		fields = append(fields, extrainfo.FieldDislikes)
 	}
-	if m.FieldCleared(extrainfo.FieldRateCount) {
-		fields = append(fields, extrainfo.FieldRateCount)
+	if m.FieldCleared(extrainfo.FieldScoreCount) {
+		fields = append(fields, extrainfo.FieldScoreCount)
 	}
-	if m.FieldCleared(extrainfo.FieldRatingV1) {
-		fields = append(fields, extrainfo.FieldRatingV1)
+	if m.FieldCleared(extrainfo.FieldScore) {
+		fields = append(fields, extrainfo.FieldScore)
 	}
 	return fields
 }
@@ -7083,11 +7083,11 @@ func (m *ExtraInfoMutation) ClearField(name string) error {
 	case extrainfo.FieldDislikes:
 		m.ClearDislikes()
 		return nil
-	case extrainfo.FieldRateCount:
-		m.ClearRateCount()
+	case extrainfo.FieldScoreCount:
+		m.ClearScoreCount()
 		return nil
-	case extrainfo.FieldRatingV1:
-		m.ClearRatingV1()
+	case extrainfo.FieldScore:
+		m.ClearScore()
 		return nil
 	}
 	return fmt.Errorf("unknown ExtraInfo nullable field %s", name)
@@ -7121,11 +7121,11 @@ func (m *ExtraInfoMutation) ResetField(name string) error {
 	case extrainfo.FieldDislikes:
 		m.ResetDislikes()
 		return nil
-	case extrainfo.FieldRateCount:
-		m.ResetRateCount()
+	case extrainfo.FieldScoreCount:
+		m.ResetScoreCount()
 		return nil
-	case extrainfo.FieldRatingV1:
-		m.ResetRatingV1()
+	case extrainfo.FieldScore:
+		m.ResetScore()
 		return nil
 	}
 	return fmt.Errorf("unknown ExtraInfo field %s", name)

@@ -12,11 +12,12 @@ import (
 )
 
 type Req struct {
-	ID     *uuid.UUID
-	AppID  *uuid.UUID
-	UserID *uuid.UUID
-	GoodID *uuid.UUID
-	Score  *decimal.Decimal
+	ID        *uuid.UUID
+	AppID     *uuid.UUID
+	UserID    *uuid.UUID
+	GoodID    *uuid.UUID
+	Score     *decimal.Decimal
+	DeletedAt *uint32
 }
 
 func CreateSet(c *ent.ScoreCreate, req *Req) *ent.ScoreCreate {
@@ -39,6 +40,9 @@ func CreateSet(c *ent.ScoreCreate, req *Req) *ent.ScoreCreate {
 }
 
 func UpdateSet(u *ent.ScoreUpdateOne, req *Req) *ent.ScoreUpdateOne {
+	if req.DeletedAt != nil {
+		u.SetDeletedAt(*req.DeletedAt)
+	}
 	if req.Score != nil {
 		u.SetScore(*req.Score)
 	}

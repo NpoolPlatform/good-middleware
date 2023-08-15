@@ -374,14 +374,14 @@ func init() {
 	extrainfoDescDislikes := extrainfoFields[5].Descriptor()
 	// extrainfo.DefaultDislikes holds the default value on creation for the dislikes field.
 	extrainfo.DefaultDislikes = extrainfoDescDislikes.Default.(uint32)
-	// extrainfoDescRateCount is the schema descriptor for rate_count field.
-	extrainfoDescRateCount := extrainfoFields[6].Descriptor()
-	// extrainfo.DefaultRateCount holds the default value on creation for the rate_count field.
-	extrainfo.DefaultRateCount = extrainfoDescRateCount.Default.(uint32)
-	// extrainfoDescRatingV1 is the schema descriptor for rating_v1 field.
-	extrainfoDescRatingV1 := extrainfoFields[7].Descriptor()
-	// extrainfo.DefaultRatingV1 holds the default value on creation for the rating_v1 field.
-	extrainfo.DefaultRatingV1 = extrainfoDescRatingV1.Default.(decimal.Decimal)
+	// extrainfoDescScoreCount is the schema descriptor for score_count field.
+	extrainfoDescScoreCount := extrainfoFields[6].Descriptor()
+	// extrainfo.DefaultScoreCount holds the default value on creation for the score_count field.
+	extrainfo.DefaultScoreCount = extrainfoDescScoreCount.Default.(uint32)
+	// extrainfoDescScore is the schema descriptor for score field.
+	extrainfoDescScore := extrainfoFields[7].Descriptor()
+	// extrainfo.DefaultScore holds the default value on creation for the score field.
+	extrainfo.DefaultScore = extrainfoDescScore.Default.(decimal.Decimal)
 	// extrainfoDescID is the schema descriptor for id field.
 	extrainfoDescID := extrainfoFields[0].Descriptor()
 	// extrainfo.DefaultID holds the default value on creation for the id field.

@@ -122,17 +122,17 @@ func Dislikes(v uint32) predicate.ExtraInfo {
 	})
 }
 
-// RateCount applies equality check predicate on the "rate_count" field. It's identical to RateCountEQ.
-func RateCount(v uint32) predicate.ExtraInfo {
+// ScoreCount applies equality check predicate on the "score_count" field. It's identical to ScoreCountEQ.
+func ScoreCount(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldRateCount), v))
+		s.Where(sql.EQ(s.C(FieldScoreCount), v))
 	})
 }
 
-// RatingV1 applies equality check predicate on the "rating_v1" field. It's identical to RatingV1EQ.
-func RatingV1(v decimal.Decimal) predicate.ExtraInfo {
+// Score applies equality check predicate on the "score" field. It's identical to ScoreEQ.
+func Score(v decimal.Decimal) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldRatingV1), v))
+		s.Where(sql.EQ(s.C(FieldScore), v))
 	})
 }
 
@@ -576,159 +576,159 @@ func DislikesNotNil() predicate.ExtraInfo {
 	})
 }
 
-// RateCountEQ applies the EQ predicate on the "rate_count" field.
-func RateCountEQ(v uint32) predicate.ExtraInfo {
+// ScoreCountEQ applies the EQ predicate on the "score_count" field.
+func ScoreCountEQ(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldRateCount), v))
+		s.Where(sql.EQ(s.C(FieldScoreCount), v))
 	})
 }
 
-// RateCountNEQ applies the NEQ predicate on the "rate_count" field.
-func RateCountNEQ(v uint32) predicate.ExtraInfo {
+// ScoreCountNEQ applies the NEQ predicate on the "score_count" field.
+func ScoreCountNEQ(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldRateCount), v))
+		s.Where(sql.NEQ(s.C(FieldScoreCount), v))
 	})
 }
 
-// RateCountIn applies the In predicate on the "rate_count" field.
-func RateCountIn(vs ...uint32) predicate.ExtraInfo {
+// ScoreCountIn applies the In predicate on the "score_count" field.
+func ScoreCountIn(vs ...uint32) predicate.ExtraInfo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldRateCount), v...))
+		s.Where(sql.In(s.C(FieldScoreCount), v...))
 	})
 }
 
-// RateCountNotIn applies the NotIn predicate on the "rate_count" field.
-func RateCountNotIn(vs ...uint32) predicate.ExtraInfo {
+// ScoreCountNotIn applies the NotIn predicate on the "score_count" field.
+func ScoreCountNotIn(vs ...uint32) predicate.ExtraInfo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldRateCount), v...))
+		s.Where(sql.NotIn(s.C(FieldScoreCount), v...))
 	})
 }
 
-// RateCountGT applies the GT predicate on the "rate_count" field.
-func RateCountGT(v uint32) predicate.ExtraInfo {
+// ScoreCountGT applies the GT predicate on the "score_count" field.
+func ScoreCountGT(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldRateCount), v))
+		s.Where(sql.GT(s.C(FieldScoreCount), v))
 	})
 }
 
-// RateCountGTE applies the GTE predicate on the "rate_count" field.
-func RateCountGTE(v uint32) predicate.ExtraInfo {
+// ScoreCountGTE applies the GTE predicate on the "score_count" field.
+func ScoreCountGTE(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldRateCount), v))
+		s.Where(sql.GTE(s.C(FieldScoreCount), v))
 	})
 }
 
-// RateCountLT applies the LT predicate on the "rate_count" field.
-func RateCountLT(v uint32) predicate.ExtraInfo {
+// ScoreCountLT applies the LT predicate on the "score_count" field.
+func ScoreCountLT(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldRateCount), v))
+		s.Where(sql.LT(s.C(FieldScoreCount), v))
 	})
 }
 
-// RateCountLTE applies the LTE predicate on the "rate_count" field.
-func RateCountLTE(v uint32) predicate.ExtraInfo {
+// ScoreCountLTE applies the LTE predicate on the "score_count" field.
+func ScoreCountLTE(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldRateCount), v))
+		s.Where(sql.LTE(s.C(FieldScoreCount), v))
 	})
 }
 
-// RateCountIsNil applies the IsNil predicate on the "rate_count" field.
-func RateCountIsNil() predicate.ExtraInfo {
+// ScoreCountIsNil applies the IsNil predicate on the "score_count" field.
+func ScoreCountIsNil() predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldRateCount)))
+		s.Where(sql.IsNull(s.C(FieldScoreCount)))
 	})
 }
 
-// RateCountNotNil applies the NotNil predicate on the "rate_count" field.
-func RateCountNotNil() predicate.ExtraInfo {
+// ScoreCountNotNil applies the NotNil predicate on the "score_count" field.
+func ScoreCountNotNil() predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldRateCount)))
+		s.Where(sql.NotNull(s.C(FieldScoreCount)))
 	})
 }
 
-// RatingV1EQ applies the EQ predicate on the "rating_v1" field.
-func RatingV1EQ(v decimal.Decimal) predicate.ExtraInfo {
+// ScoreEQ applies the EQ predicate on the "score" field.
+func ScoreEQ(v decimal.Decimal) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldRatingV1), v))
+		s.Where(sql.EQ(s.C(FieldScore), v))
 	})
 }
 
-// RatingV1NEQ applies the NEQ predicate on the "rating_v1" field.
-func RatingV1NEQ(v decimal.Decimal) predicate.ExtraInfo {
+// ScoreNEQ applies the NEQ predicate on the "score" field.
+func ScoreNEQ(v decimal.Decimal) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldRatingV1), v))
+		s.Where(sql.NEQ(s.C(FieldScore), v))
 	})
 }
 
-// RatingV1In applies the In predicate on the "rating_v1" field.
-func RatingV1In(vs ...decimal.Decimal) predicate.ExtraInfo {
+// ScoreIn applies the In predicate on the "score" field.
+func ScoreIn(vs ...decimal.Decimal) predicate.ExtraInfo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldRatingV1), v...))
+		s.Where(sql.In(s.C(FieldScore), v...))
 	})
 }
 
-// RatingV1NotIn applies the NotIn predicate on the "rating_v1" field.
-func RatingV1NotIn(vs ...decimal.Decimal) predicate.ExtraInfo {
+// ScoreNotIn applies the NotIn predicate on the "score" field.
+func ScoreNotIn(vs ...decimal.Decimal) predicate.ExtraInfo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldRatingV1), v...))
+		s.Where(sql.NotIn(s.C(FieldScore), v...))
 	})
 }
 
-// RatingV1GT applies the GT predicate on the "rating_v1" field.
-func RatingV1GT(v decimal.Decimal) predicate.ExtraInfo {
+// ScoreGT applies the GT predicate on the "score" field.
+func ScoreGT(v decimal.Decimal) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldRatingV1), v))
+		s.Where(sql.GT(s.C(FieldScore), v))
 	})
 }
 
-// RatingV1GTE applies the GTE predicate on the "rating_v1" field.
-func RatingV1GTE(v decimal.Decimal) predicate.ExtraInfo {
+// ScoreGTE applies the GTE predicate on the "score" field.
+func ScoreGTE(v decimal.Decimal) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldRatingV1), v))
+		s.Where(sql.GTE(s.C(FieldScore), v))
 	})
 }
 
-// RatingV1LT applies the LT predicate on the "rating_v1" field.
-func RatingV1LT(v decimal.Decimal) predicate.ExtraInfo {
+// ScoreLT applies the LT predicate on the "score" field.
+func ScoreLT(v decimal.Decimal) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldRatingV1), v))
+		s.Where(sql.LT(s.C(FieldScore), v))
 	})
 }
 
-// RatingV1LTE applies the LTE predicate on the "rating_v1" field.
-func RatingV1LTE(v decimal.Decimal) predicate.ExtraInfo {
+// ScoreLTE applies the LTE predicate on the "score" field.
+func ScoreLTE(v decimal.Decimal) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldRatingV1), v))
+		s.Where(sql.LTE(s.C(FieldScore), v))
 	})
 }
 
-// RatingV1IsNil applies the IsNil predicate on the "rating_v1" field.
-func RatingV1IsNil() predicate.ExtraInfo {
+// ScoreIsNil applies the IsNil predicate on the "score" field.
+func ScoreIsNil() predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldRatingV1)))
+		s.Where(sql.IsNull(s.C(FieldScore)))
 	})
 }
 
-// RatingV1NotNil applies the NotNil predicate on the "rating_v1" field.
-func RatingV1NotNil() predicate.ExtraInfo {
+// ScoreNotNil applies the NotNil predicate on the "score" field.
+func ScoreNotNil() predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldRatingV1)))
+		s.Where(sql.NotNull(s.C(FieldScore)))
 	})
 }
 

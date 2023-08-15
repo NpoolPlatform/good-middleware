@@ -29,10 +29,10 @@ const (
 	FieldLikes = "likes"
 	// FieldDislikes holds the string denoting the dislikes field in the database.
 	FieldDislikes = "dislikes"
-	// FieldRateCount holds the string denoting the rate_count field in the database.
-	FieldRateCount = "rate_count"
-	// FieldRatingV1 holds the string denoting the rating_v1 field in the database.
-	FieldRatingV1 = "rating_v1"
+	// FieldScoreCount holds the string denoting the score_count field in the database.
+	FieldScoreCount = "score_count"
+	// FieldScore holds the string denoting the score field in the database.
+	FieldScore = "score"
 	// Table holds the table name of the extrainfo in the database.
 	Table = "extra_infos"
 )
@@ -48,8 +48,8 @@ var Columns = []string{
 	FieldLabels,
 	FieldLikes,
 	FieldDislikes,
-	FieldRateCount,
-	FieldRatingV1,
+	FieldScoreCount,
+	FieldScore,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -87,10 +87,10 @@ var (
 	DefaultLikes uint32
 	// DefaultDislikes holds the default value on creation for the "dislikes" field.
 	DefaultDislikes uint32
-	// DefaultRateCount holds the default value on creation for the "rate_count" field.
-	DefaultRateCount uint32
-	// DefaultRatingV1 holds the default value on creation for the "rating_v1" field.
-	DefaultRatingV1 decimal.Decimal
+	// DefaultScoreCount holds the default value on creation for the "score_count" field.
+	DefaultScoreCount uint32
+	// DefaultScore holds the default value on creation for the "score" field.
+	DefaultScore decimal.Decimal
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
