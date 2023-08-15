@@ -137,7 +137,7 @@ func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error)
 			return nil, fmt.Errorf("invalid userids")
 		}
 		switch conds.OrderIDs.Op {
-		case cruder.EQ:
+		case cruder.IN:
 			q.Where(entcomment.UserIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid comment field")
@@ -149,7 +149,7 @@ func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error)
 			return nil, fmt.Errorf("invalid goodids")
 		}
 		switch conds.GoodIDs.Op {
-		case cruder.EQ:
+		case cruder.IN:
 			q.Where(entcomment.GoodIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid comment field")
