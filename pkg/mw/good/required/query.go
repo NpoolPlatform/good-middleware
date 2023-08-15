@@ -6,7 +6,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
-	// requiredcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/required"
+	requiredcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/required"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
@@ -35,6 +35,14 @@ func (h *queryHandler) queryRequired(cli *ent.Client) {
 				entrequiredgood.DeletedAt(0),
 			),
 	)
+}
+
+func (h *queryHandler) queryRequireds(cli *ent.Client) (*ent.RequiredGoodSelect, error) {
+	stm, err := requiredcrud.SetQueryConds(cli.RequiredGood.Query(), h.Conds)
+	if err != nil {
+		return nil, err
+	}
+	return h.selectRequired(stm), nil
 }
 
 func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
@@ -118,4 +126,41 @@ func (h *Handler) GetRequired(ctx context.Context) (*npool.Required, error) {
 	}
 
 	return handler.infos[0], nil
+}
+
+func (h *Handler) GetRequireds(ctx context.Context) ([]*npool.Required, uint32, error) {
+	handler := &queryHandler{
+		Handler: h,
+	}
+
+	var err error
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		handler.stmSelect, err = handler.queryRequireds(cli)
+		if err != nil {
+			return err
+		}
+		handler.stmCount, err = handler.queryRequireds(cli)
+		if err != nil {
+			return err
+		}
+
+		handler.queryJoin()
+
+		total, err := handler.stmCount.Count(_ctx)
+		if err != nil {
+			return err
+		}
+		handler.total = uint32(total)
+
+		handler.stmSelect.
+			Offset(int(handler.Offset)).
+			Limit(int(handler.Limit))
+
+		return handler.scan(ctx)
+	})
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return handler.infos, handler.total, nil
 }

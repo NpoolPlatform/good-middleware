@@ -32,7 +32,7 @@ func (h *Handler) CreateRequired(ctx context.Context) (*npool.Required, error) {
 	if err != nil {
 		return nil, err
 	}
-	if !exist {
+	if exist {
 		return nil, fmt.Errorf("already exists")
 	}
 
@@ -43,7 +43,7 @@ func (h *Handler) CreateRequired(ctx context.Context) (*npool.Required, error) {
 	if err != nil {
 		return nil, err
 	}
-	if !exist {
+	if exist {
 		return nil, fmt.Errorf("not allowed")
 	}
 

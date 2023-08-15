@@ -39,6 +39,12 @@ func CreateSet(c *ent.RequiredGoodCreate, req *Req) *ent.RequiredGoodCreate {
 }
 
 func UpdateSet(u *ent.RequiredGoodUpdateOne, req *Req) *ent.RequiredGoodUpdateOne {
+	if req.Must != nil {
+		u.SetMust(*req.Must)
+	}
+	if req.Commission != nil {
+		u.SetCommission(*req.Commission)
+	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)
 	}
@@ -77,9 +83,7 @@ func SetQueryConds(q *ent.RequiredGoodQuery, conds *Conds) (*ent.RequiredGoodQue
 		}
 		switch conds.MainGoodID.Op {
 		case cruder.EQ:
-			q.Where(
-				entrequiredgood.MainGoodID(id),
-			)
+			q.Where(entrequiredgood.MainGoodID(id))
 		default:
 			return nil, fmt.Errorf("invalid requiredgood field")
 		}
@@ -91,9 +95,7 @@ func SetQueryConds(q *ent.RequiredGoodQuery, conds *Conds) (*ent.RequiredGoodQue
 		}
 		switch conds.RequiredGoodID.Op {
 		case cruder.EQ:
-			q.Where(
-				entrequiredgood.RequiredGoodID(id),
-			)
+			q.Where(entrequiredgood.RequiredGoodID(id))
 		default:
 			return nil, fmt.Errorf("invalid requiredgood field")
 		}

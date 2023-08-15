@@ -119,6 +119,26 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				Val: id,
 			}
 		}
+		if conds.MainGoodID != nil {
+			id, err := uuid.Parse(conds.GetMainGoodID().GetValue())
+			if err != nil {
+				return err
+			}
+			h.Conds.MainGoodID = &cruder.Cond{
+				Op:  conds.GetMainGoodID().GetOp(),
+				Val: id,
+			}
+		}
+		if conds.RequiredGoodID != nil {
+			id, err := uuid.Parse(conds.GetRequiredGoodID().GetValue())
+			if err != nil {
+				return err
+			}
+			h.Conds.RequiredGoodID = &cruder.Cond{
+				Op:  conds.GetRequiredGoodID().GetOp(),
+				Val: id,
+			}
+		}
 		if conds.GoodID != nil {
 			id, err := uuid.Parse(conds.GetGoodID().GetValue())
 			if err != nil {
