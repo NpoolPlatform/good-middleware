@@ -287,6 +287,12 @@ func (h *queryHandler) formalize() {
 		} else {
 			info.LastRewardAmount = amount.String()
 		}
+		amount, err = decimal.NewFromString(info.Score)
+		if err != nil {
+			info.Score = decimal.NewFromInt(0).String()
+		} else {
+			info.Score = amount.String()
+		}
 	}
 }
 

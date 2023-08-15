@@ -12,6 +12,8 @@ import (
 	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	entscore "github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/score"
+
+	"github.com/shopspring/decimal"
 )
 
 type queryHandler struct {
@@ -91,6 +93,17 @@ func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
 }
 
+func (h *queryHandler) formalize() {
+	for _, info := range h.infos {
+		amount, err := decimal.NewFromString(info.Score)
+		if err != nil {
+			info.Score = decimal.NewFromInt(0).String()
+		} else {
+			info.Score = amount.String()
+		}
+	}
+}
+
 func (h *Handler) GetScore(ctx context.Context) (*npool.Score, error) {
 	handler := &queryHandler{
 		Handler: h,
@@ -110,6 +123,8 @@ func (h *Handler) GetScore(ctx context.Context) (*npool.Score, error) {
 	if len(handler.infos) > 1 {
 		return nil, fmt.Errorf("too many records")
 	}
+
+	handler.formalize()
 
 	return handler.infos[0], nil
 }
@@ -147,6 +162,8 @@ func (h *Handler) GetScores(ctx context.Context) ([]*npool.Score, uint32, error)
 	if err != nil {
 		return nil, 0, err
 	}
+
+	handler.formalize()
 
 	return handler.infos, handler.total, nil
 }

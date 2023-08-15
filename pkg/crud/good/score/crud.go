@@ -116,7 +116,7 @@ func SetQueryConds(q *ent.ScoreQuery, conds *Conds) (*ent.ScoreQuery, error) {
 			return nil, fmt.Errorf("invalid goodids")
 		}
 		switch conds.GoodIDs.Op {
-		case cruder.EQ:
+		case cruder.IN:
 			q.Where(entscore.GoodIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid score field")
