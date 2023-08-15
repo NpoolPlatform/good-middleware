@@ -5,4 +5,5 @@ type createHandler struct {
 }
 
 func (h *Handler) CreateGood(ctx context.Context) (*npool.Good, error) {
+
 }
