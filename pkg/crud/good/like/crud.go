@@ -11,11 +11,12 @@ import (
 )
 
 type Req struct {
-	ID     *uuid.UUID
-	AppID  *uuid.UUID
-	UserID *uuid.UUID
-	GoodID *uuid.UUID
-	Like   *bool
+	ID        *uuid.UUID
+	AppID     *uuid.UUID
+	UserID    *uuid.UUID
+	GoodID    *uuid.UUID
+	Like      *bool
+	DeletedAt *uint32
 }
 
 func CreateSet(c *ent.LikeCreate, req *Req) *ent.LikeCreate {
@@ -40,6 +41,9 @@ func CreateSet(c *ent.LikeCreate, req *Req) *ent.LikeCreate {
 func UpdateSet(u *ent.LikeUpdateOne, req *Req) *ent.LikeUpdateOne {
 	if req.Like != nil {
 		u.SetLike(*req.Like)
+	}
+	if req.DeletedAt != nil {
+		u.SetDeletedAt(*req.DeletedAt)
 	}
 	return u
 }
