@@ -16,6 +16,7 @@ type Req struct {
 	RequiredGoodID *uuid.UUID
 	Must           *bool
 	Commission     *bool
+	DeletedAt      *uint32
 }
 
 func CreateSet(c *ent.RequiredGoodCreate, req *Req) *ent.RequiredGoodCreate {
@@ -37,10 +38,19 @@ func CreateSet(c *ent.RequiredGoodCreate, req *Req) *ent.RequiredGoodCreate {
 	return c
 }
 
+func UpdateSet(u *ent.RequiredGoodUpdateOne, req *Req) *ent.RequiredGoodUpdateOne {
+	if req.DeletedAt != nil {
+		u.SetDeletedAt(*req.DeletedAt)
+	}
+	return u
+}
+
 type Conds struct {
-	ID      *cruder.Cond
-	GoodID  *cruder.Cond
-	GoodIDs *cruder.Cond
+	ID             *cruder.Cond
+	MainGoodID     *cruder.Cond
+	RequiredGoodID *cruder.Cond
+	GoodID         *cruder.Cond
+	GoodIDs        *cruder.Cond
 }
 
 func SetQueryConds(q *ent.RequiredGoodQuery, conds *Conds) (*ent.RequiredGoodQuery, error) {
@@ -56,6 +66,34 @@ func SetQueryConds(q *ent.RequiredGoodQuery, conds *Conds) (*ent.RequiredGoodQue
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entrequiredgood.ID(id))
+		default:
+			return nil, fmt.Errorf("invalid requiredgood field")
+		}
+	}
+	if conds.MainGoodID != nil {
+		id, ok := conds.MainGoodID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid maingoodid")
+		}
+		switch conds.MainGoodID.Op {
+		case cruder.EQ:
+			q.Where(
+				entrequiredgood.MainGoodID(id),
+			)
+		default:
+			return nil, fmt.Errorf("invalid requiredgood field")
+		}
+	}
+	if conds.RequiredGoodID != nil {
+		id, ok := conds.RequiredGoodID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid requiredgoodid")
+		}
+		switch conds.RequiredGoodID.Op {
+		case cruder.EQ:
+			q.Where(
+				entrequiredgood.RequiredGoodID(id),
+			)
 		default:
 			return nil, fmt.Errorf("invalid requiredgood field")
 		}
