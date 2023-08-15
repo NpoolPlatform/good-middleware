@@ -107,16 +107,25 @@ func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithLike(b *bool, must bool) func(context.Context, *Handler) error {
+func WithScore(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.Like = b
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid score")
+			}
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.Score = &amount
 		return nil
 	}
 }
 
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.Conds = &likecrud.Conds{}
+		h.Conds = &scorecrud.Conds{}
 		if conds == nil {
 			return nil
 		}
