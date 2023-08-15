@@ -10,6 +10,8 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/like"
+
+	"github.com/google/uuid"
 )
 
 type deleteHandler struct {
@@ -66,6 +68,8 @@ func (h *Handler) DeleteLike(ctx context.Context) (*npool.Like, error) {
 		return nil, nil
 	}
 
+	goodID := uuid.MustParse(info.GoodID)
+	h.GoodID = &goodID
 	handler := &deleteHandler{
 		Handler: h,
 	}
