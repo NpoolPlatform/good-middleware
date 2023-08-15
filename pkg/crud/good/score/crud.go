@@ -46,10 +46,11 @@ func UpdateSet(u *ent.ScoreUpdateOne, req *Req) *ent.ScoreUpdateOne {
 }
 
 type Conds struct {
-	ID     *cruder.Cond
-	AppID  *cruder.Cond
-	UserID *cruder.Cond
-	GoodID *cruder.Cond
+	ID      *cruder.Cond
+	AppID   *cruder.Cond
+	UserID  *cruder.Cond
+	GoodID  *cruder.Cond
+	GoodIDs *cruder.Cond
 }
 
 func SetQueryConds(q *ent.ScoreQuery, conds *Conds) (*ent.ScoreQuery, error) {
@@ -101,6 +102,18 @@ func SetQueryConds(q *ent.ScoreQuery, conds *Conds) (*ent.ScoreQuery, error) {
 		switch conds.GoodID.Op {
 		case cruder.EQ:
 			q.Where(entscore.GoodID(id))
+		default:
+			return nil, fmt.Errorf("invalid score field")
+		}
+	}
+	if conds.GoodIDs != nil {
+		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid goodids")
+		}
+		switch conds.GoodIDs.Op {
+		case cruder.EQ:
+			q.Where(entscore.GoodIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid score field")
 		}
