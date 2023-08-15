@@ -378,12 +378,16 @@ func init() {
 	extrainfoDescRecommendCount := extrainfoFields[6].Descriptor()
 	// extrainfo.DefaultRecommendCount holds the default value on creation for the recommend_count field.
 	extrainfo.DefaultRecommendCount = extrainfoDescRecommendCount.Default.(uint32)
+	// extrainfoDescCommentCount is the schema descriptor for comment_count field.
+	extrainfoDescCommentCount := extrainfoFields[7].Descriptor()
+	// extrainfo.DefaultCommentCount holds the default value on creation for the comment_count field.
+	extrainfo.DefaultCommentCount = extrainfoDescCommentCount.Default.(uint32)
 	// extrainfoDescScoreCount is the schema descriptor for score_count field.
-	extrainfoDescScoreCount := extrainfoFields[7].Descriptor()
+	extrainfoDescScoreCount := extrainfoFields[8].Descriptor()
 	// extrainfo.DefaultScoreCount holds the default value on creation for the score_count field.
 	extrainfo.DefaultScoreCount = extrainfoDescScoreCount.Default.(uint32)
 	// extrainfoDescScore is the schema descriptor for score field.
-	extrainfoDescScore := extrainfoFields[8].Descriptor()
+	extrainfoDescScore := extrainfoFields[9].Descriptor()
 	// extrainfo.DefaultScore holds the default value on creation for the score field.
 	extrainfo.DefaultScore = extrainfoDescScore.Default.(decimal.Decimal)
 	// extrainfoDescID is the schema descriptor for id field.

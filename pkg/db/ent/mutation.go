@@ -6076,6 +6076,8 @@ type ExtraInfoMutation struct {
 	adddislikes        *int32
 	recommend_count    *uint32
 	addrecommend_count *int32
+	comment_count      *uint32
+	addcomment_count   *int32
 	score_count        *uint32
 	addscore_count     *int32
 	score              *decimal.Decimal
@@ -6701,6 +6703,76 @@ func (m *ExtraInfoMutation) ResetRecommendCount() {
 	delete(m.clearedFields, extrainfo.FieldRecommendCount)
 }
 
+// SetCommentCount sets the "comment_count" field.
+func (m *ExtraInfoMutation) SetCommentCount(u uint32) {
+	m.comment_count = &u
+	m.addcomment_count = nil
+}
+
+// CommentCount returns the value of the "comment_count" field in the mutation.
+func (m *ExtraInfoMutation) CommentCount() (r uint32, exists bool) {
+	v := m.comment_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCommentCount returns the old "comment_count" field's value of the ExtraInfo entity.
+// If the ExtraInfo object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ExtraInfoMutation) OldCommentCount(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCommentCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCommentCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCommentCount: %w", err)
+	}
+	return oldValue.CommentCount, nil
+}
+
+// AddCommentCount adds u to the "comment_count" field.
+func (m *ExtraInfoMutation) AddCommentCount(u int32) {
+	if m.addcomment_count != nil {
+		*m.addcomment_count += u
+	} else {
+		m.addcomment_count = &u
+	}
+}
+
+// AddedCommentCount returns the value that was added to the "comment_count" field in this mutation.
+func (m *ExtraInfoMutation) AddedCommentCount() (r int32, exists bool) {
+	v := m.addcomment_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearCommentCount clears the value of the "comment_count" field.
+func (m *ExtraInfoMutation) ClearCommentCount() {
+	m.comment_count = nil
+	m.addcomment_count = nil
+	m.clearedFields[extrainfo.FieldCommentCount] = struct{}{}
+}
+
+// CommentCountCleared returns if the "comment_count" field was cleared in this mutation.
+func (m *ExtraInfoMutation) CommentCountCleared() bool {
+	_, ok := m.clearedFields[extrainfo.FieldCommentCount]
+	return ok
+}
+
+// ResetCommentCount resets all changes to the "comment_count" field.
+func (m *ExtraInfoMutation) ResetCommentCount() {
+	m.comment_count = nil
+	m.addcomment_count = nil
+	delete(m.clearedFields, extrainfo.FieldCommentCount)
+}
+
 // SetScoreCount sets the "score_count" field.
 func (m *ExtraInfoMutation) SetScoreCount(u uint32) {
 	m.score_count = &u
@@ -6839,7 +6911,7 @@ func (m *ExtraInfoMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ExtraInfoMutation) Fields() []string {
-	fields := make([]string, 0, 11)
+	fields := make([]string, 0, 12)
 	if m.created_at != nil {
 		fields = append(fields, extrainfo.FieldCreatedAt)
 	}
@@ -6866,6 +6938,9 @@ func (m *ExtraInfoMutation) Fields() []string {
 	}
 	if m.recommend_count != nil {
 		fields = append(fields, extrainfo.FieldRecommendCount)
+	}
+	if m.comment_count != nil {
+		fields = append(fields, extrainfo.FieldCommentCount)
 	}
 	if m.score_count != nil {
 		fields = append(fields, extrainfo.FieldScoreCount)
@@ -6899,6 +6974,8 @@ func (m *ExtraInfoMutation) Field(name string) (ent.Value, bool) {
 		return m.Dislikes()
 	case extrainfo.FieldRecommendCount:
 		return m.RecommendCount()
+	case extrainfo.FieldCommentCount:
+		return m.CommentCount()
 	case extrainfo.FieldScoreCount:
 		return m.ScoreCount()
 	case extrainfo.FieldScore:
@@ -6930,6 +7007,8 @@ func (m *ExtraInfoMutation) OldField(ctx context.Context, name string) (ent.Valu
 		return m.OldDislikes(ctx)
 	case extrainfo.FieldRecommendCount:
 		return m.OldRecommendCount(ctx)
+	case extrainfo.FieldCommentCount:
+		return m.OldCommentCount(ctx)
 	case extrainfo.FieldScoreCount:
 		return m.OldScoreCount(ctx)
 	case extrainfo.FieldScore:
@@ -7006,6 +7085,13 @@ func (m *ExtraInfoMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetRecommendCount(v)
 		return nil
+	case extrainfo.FieldCommentCount:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCommentCount(v)
+		return nil
 	case extrainfo.FieldScoreCount:
 		v, ok := value.(uint32)
 		if !ok {
@@ -7046,6 +7132,9 @@ func (m *ExtraInfoMutation) AddedFields() []string {
 	if m.addrecommend_count != nil {
 		fields = append(fields, extrainfo.FieldRecommendCount)
 	}
+	if m.addcomment_count != nil {
+		fields = append(fields, extrainfo.FieldCommentCount)
+	}
 	if m.addscore_count != nil {
 		fields = append(fields, extrainfo.FieldScoreCount)
 	}
@@ -7069,6 +7158,8 @@ func (m *ExtraInfoMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedDislikes()
 	case extrainfo.FieldRecommendCount:
 		return m.AddedRecommendCount()
+	case extrainfo.FieldCommentCount:
+		return m.AddedCommentCount()
 	case extrainfo.FieldScoreCount:
 		return m.AddedScoreCount()
 	}
@@ -7122,6 +7213,13 @@ func (m *ExtraInfoMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddRecommendCount(v)
 		return nil
+	case extrainfo.FieldCommentCount:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCommentCount(v)
+		return nil
 	case extrainfo.FieldScoreCount:
 		v, ok := value.(int32)
 		if !ok {
@@ -7151,6 +7249,9 @@ func (m *ExtraInfoMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(extrainfo.FieldRecommendCount) {
 		fields = append(fields, extrainfo.FieldRecommendCount)
+	}
+	if m.FieldCleared(extrainfo.FieldCommentCount) {
+		fields = append(fields, extrainfo.FieldCommentCount)
 	}
 	if m.FieldCleared(extrainfo.FieldScoreCount) {
 		fields = append(fields, extrainfo.FieldScoreCount)
@@ -7186,6 +7287,9 @@ func (m *ExtraInfoMutation) ClearField(name string) error {
 		return nil
 	case extrainfo.FieldRecommendCount:
 		m.ClearRecommendCount()
+		return nil
+	case extrainfo.FieldCommentCount:
+		m.ClearCommentCount()
 		return nil
 	case extrainfo.FieldScoreCount:
 		m.ClearScoreCount()
@@ -7227,6 +7331,9 @@ func (m *ExtraInfoMutation) ResetField(name string) error {
 		return nil
 	case extrainfo.FieldRecommendCount:
 		m.ResetRecommendCount()
+		return nil
+	case extrainfo.FieldCommentCount:
+		m.ResetCommentCount()
 		return nil
 	case extrainfo.FieldScoreCount:
 		m.ResetScoreCount()

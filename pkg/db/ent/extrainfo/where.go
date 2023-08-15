@@ -129,6 +129,13 @@ func RecommendCount(v uint32) predicate.ExtraInfo {
 	})
 }
 
+// CommentCount applies equality check predicate on the "comment_count" field. It's identical to CommentCountEQ.
+func CommentCount(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCommentCount), v))
+	})
+}
+
 // ScoreCount applies equality check predicate on the "score_count" field. It's identical to ScoreCountEQ.
 func ScoreCount(v uint32) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
@@ -658,6 +665,84 @@ func RecommendCountIsNil() predicate.ExtraInfo {
 func RecommendCountNotNil() predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldRecommendCount)))
+	})
+}
+
+// CommentCountEQ applies the EQ predicate on the "comment_count" field.
+func CommentCountEQ(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCommentCount), v))
+	})
+}
+
+// CommentCountNEQ applies the NEQ predicate on the "comment_count" field.
+func CommentCountNEQ(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCommentCount), v))
+	})
+}
+
+// CommentCountIn applies the In predicate on the "comment_count" field.
+func CommentCountIn(vs ...uint32) predicate.ExtraInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCommentCount), v...))
+	})
+}
+
+// CommentCountNotIn applies the NotIn predicate on the "comment_count" field.
+func CommentCountNotIn(vs ...uint32) predicate.ExtraInfo {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCommentCount), v...))
+	})
+}
+
+// CommentCountGT applies the GT predicate on the "comment_count" field.
+func CommentCountGT(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCommentCount), v))
+	})
+}
+
+// CommentCountGTE applies the GTE predicate on the "comment_count" field.
+func CommentCountGTE(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCommentCount), v))
+	})
+}
+
+// CommentCountLT applies the LT predicate on the "comment_count" field.
+func CommentCountLT(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCommentCount), v))
+	})
+}
+
+// CommentCountLTE applies the LTE predicate on the "comment_count" field.
+func CommentCountLTE(v uint32) predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCommentCount), v))
+	})
+}
+
+// CommentCountIsNil applies the IsNil predicate on the "comment_count" field.
+func CommentCountIsNil() predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCommentCount)))
+	})
+}
+
+// CommentCountNotNil applies the NotNil predicate on the "comment_count" field.
+func CommentCountNotNil() predicate.ExtraInfo {
+	return predicate.ExtraInfo(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCommentCount)))
 	})
 }
 

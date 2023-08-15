@@ -196,6 +196,33 @@ func (eiu *ExtraInfoUpdate) ClearRecommendCount() *ExtraInfoUpdate {
 	return eiu
 }
 
+// SetCommentCount sets the "comment_count" field.
+func (eiu *ExtraInfoUpdate) SetCommentCount(u uint32) *ExtraInfoUpdate {
+	eiu.mutation.ResetCommentCount()
+	eiu.mutation.SetCommentCount(u)
+	return eiu
+}
+
+// SetNillableCommentCount sets the "comment_count" field if the given value is not nil.
+func (eiu *ExtraInfoUpdate) SetNillableCommentCount(u *uint32) *ExtraInfoUpdate {
+	if u != nil {
+		eiu.SetCommentCount(*u)
+	}
+	return eiu
+}
+
+// AddCommentCount adds u to the "comment_count" field.
+func (eiu *ExtraInfoUpdate) AddCommentCount(u int32) *ExtraInfoUpdate {
+	eiu.mutation.AddCommentCount(u)
+	return eiu
+}
+
+// ClearCommentCount clears the value of the "comment_count" field.
+func (eiu *ExtraInfoUpdate) ClearCommentCount() *ExtraInfoUpdate {
+	eiu.mutation.ClearCommentCount()
+	return eiu
+}
+
 // SetScoreCount sets the "score_count" field.
 func (eiu *ExtraInfoUpdate) SetScoreCount(u uint32) *ExtraInfoUpdate {
 	eiu.mutation.ResetScoreCount()
@@ -476,6 +503,26 @@ func (eiu *ExtraInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: extrainfo.FieldRecommendCount,
 		})
 	}
+	if value, ok := eiu.mutation.CommentCount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldCommentCount,
+		})
+	}
+	if value, ok := eiu.mutation.AddedCommentCount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldCommentCount,
+		})
+	}
+	if eiu.mutation.CommentCountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: extrainfo.FieldCommentCount,
+		})
+	}
 	if value, ok := eiu.mutation.ScoreCount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -693,6 +740,33 @@ func (eiuo *ExtraInfoUpdateOne) AddRecommendCount(u int32) *ExtraInfoUpdateOne {
 // ClearRecommendCount clears the value of the "recommend_count" field.
 func (eiuo *ExtraInfoUpdateOne) ClearRecommendCount() *ExtraInfoUpdateOne {
 	eiuo.mutation.ClearRecommendCount()
+	return eiuo
+}
+
+// SetCommentCount sets the "comment_count" field.
+func (eiuo *ExtraInfoUpdateOne) SetCommentCount(u uint32) *ExtraInfoUpdateOne {
+	eiuo.mutation.ResetCommentCount()
+	eiuo.mutation.SetCommentCount(u)
+	return eiuo
+}
+
+// SetNillableCommentCount sets the "comment_count" field if the given value is not nil.
+func (eiuo *ExtraInfoUpdateOne) SetNillableCommentCount(u *uint32) *ExtraInfoUpdateOne {
+	if u != nil {
+		eiuo.SetCommentCount(*u)
+	}
+	return eiuo
+}
+
+// AddCommentCount adds u to the "comment_count" field.
+func (eiuo *ExtraInfoUpdateOne) AddCommentCount(u int32) *ExtraInfoUpdateOne {
+	eiuo.mutation.AddCommentCount(u)
+	return eiuo
+}
+
+// ClearCommentCount clears the value of the "comment_count" field.
+func (eiuo *ExtraInfoUpdateOne) ClearCommentCount() *ExtraInfoUpdateOne {
+	eiuo.mutation.ClearCommentCount()
 	return eiuo
 }
 
@@ -1004,6 +1078,26 @@ func (eiuo *ExtraInfoUpdateOne) sqlSave(ctx context.Context) (_node *ExtraInfo, 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: extrainfo.FieldRecommendCount,
+		})
+	}
+	if value, ok := eiuo.mutation.CommentCount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldCommentCount,
+		})
+	}
+	if value, ok := eiuo.mutation.AddedCommentCount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldCommentCount,
+		})
+	}
+	if eiuo.mutation.CommentCountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: extrainfo.FieldCommentCount,
 		})
 	}
 	if value, ok := eiuo.mutation.ScoreCount(); ok {

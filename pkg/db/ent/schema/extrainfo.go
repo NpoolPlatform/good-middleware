@@ -51,6 +51,10 @@ func (ExtraInfo) Fields() []ent.Field {
 			Optional().
 			Default(0),
 		field.
+			Uint32("comment_count").
+			Optional().
+			Default(0),
+		field.
 			Uint32("score_count").
 			Optional().
 			Default(0),

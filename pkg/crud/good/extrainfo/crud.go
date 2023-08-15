@@ -20,6 +20,7 @@ type Req struct {
 	Dislikes       *uint32
 	ScoreCount     *uint32
 	RecommendCount *uint32
+	CommentCount   *uint32
 	Score          *decimal.Decimal
 	DeletedAt      *uint32
 }
@@ -49,6 +50,9 @@ func CreateSet(c *ent.ExtraInfoCreate, req *Req) *ent.ExtraInfoCreate {
 	if req.RecommendCount != nil {
 		c.SetRecommendCount(*req.RecommendCount)
 	}
+	if req.CommentCount != nil {
+		c.SetCommentCount(*req.CommentCount)
+	}
 	if req.Score != nil {
 		c.SetScore(*req.Score)
 	}
@@ -73,6 +77,9 @@ func UpdateSet(u *ent.ExtraInfoUpdateOne, req *Req) *ent.ExtraInfoUpdateOne {
 	}
 	if req.RecommendCount != nil {
 		u.SetRecommendCount(*req.RecommendCount)
+	}
+	if req.CommentCount != nil {
+		u.SetCommentCount(*req.CommentCount)
 	}
 	if req.Score != nil {
 		u.SetScore(*req.Score)

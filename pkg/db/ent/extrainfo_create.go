@@ -126,6 +126,20 @@ func (eic *ExtraInfoCreate) SetNillableRecommendCount(u *uint32) *ExtraInfoCreat
 	return eic
 }
 
+// SetCommentCount sets the "comment_count" field.
+func (eic *ExtraInfoCreate) SetCommentCount(u uint32) *ExtraInfoCreate {
+	eic.mutation.SetCommentCount(u)
+	return eic
+}
+
+// SetNillableCommentCount sets the "comment_count" field if the given value is not nil.
+func (eic *ExtraInfoCreate) SetNillableCommentCount(u *uint32) *ExtraInfoCreate {
+	if u != nil {
+		eic.SetCommentCount(*u)
+	}
+	return eic
+}
+
 // SetScoreCount sets the "score_count" field.
 func (eic *ExtraInfoCreate) SetScoreCount(u uint32) *ExtraInfoCreate {
 	eic.mutation.SetScoreCount(u)
@@ -288,6 +302,10 @@ func (eic *ExtraInfoCreate) defaults() error {
 		v := extrainfo.DefaultRecommendCount
 		eic.mutation.SetRecommendCount(v)
 	}
+	if _, ok := eic.mutation.CommentCount(); !ok {
+		v := extrainfo.DefaultCommentCount
+		eic.mutation.SetCommentCount(v)
+	}
 	if _, ok := eic.mutation.ScoreCount(); !ok {
 		v := extrainfo.DefaultScoreCount
 		eic.mutation.SetScoreCount(v)
@@ -428,6 +446,14 @@ func (eic *ExtraInfoCreate) createSpec() (*ExtraInfo, *sqlgraph.CreateSpec) {
 			Column: extrainfo.FieldRecommendCount,
 		})
 		_node.RecommendCount = value
+	}
+	if value, ok := eic.mutation.CommentCount(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: extrainfo.FieldCommentCount,
+		})
+		_node.CommentCount = value
 	}
 	if value, ok := eic.mutation.ScoreCount(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -670,6 +696,30 @@ func (u *ExtraInfoUpsert) AddRecommendCount(v uint32) *ExtraInfoUpsert {
 // ClearRecommendCount clears the value of the "recommend_count" field.
 func (u *ExtraInfoUpsert) ClearRecommendCount() *ExtraInfoUpsert {
 	u.SetNull(extrainfo.FieldRecommendCount)
+	return u
+}
+
+// SetCommentCount sets the "comment_count" field.
+func (u *ExtraInfoUpsert) SetCommentCount(v uint32) *ExtraInfoUpsert {
+	u.Set(extrainfo.FieldCommentCount, v)
+	return u
+}
+
+// UpdateCommentCount sets the "comment_count" field to the value that was provided on create.
+func (u *ExtraInfoUpsert) UpdateCommentCount() *ExtraInfoUpsert {
+	u.SetExcluded(extrainfo.FieldCommentCount)
+	return u
+}
+
+// AddCommentCount adds v to the "comment_count" field.
+func (u *ExtraInfoUpsert) AddCommentCount(v uint32) *ExtraInfoUpsert {
+	u.Add(extrainfo.FieldCommentCount, v)
+	return u
+}
+
+// ClearCommentCount clears the value of the "comment_count" field.
+func (u *ExtraInfoUpsert) ClearCommentCount() *ExtraInfoUpsert {
+	u.SetNull(extrainfo.FieldCommentCount)
 	return u
 }
 
@@ -965,6 +1015,34 @@ func (u *ExtraInfoUpsertOne) UpdateRecommendCount() *ExtraInfoUpsertOne {
 func (u *ExtraInfoUpsertOne) ClearRecommendCount() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
 		s.ClearRecommendCount()
+	})
+}
+
+// SetCommentCount sets the "comment_count" field.
+func (u *ExtraInfoUpsertOne) SetCommentCount(v uint32) *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.SetCommentCount(v)
+	})
+}
+
+// AddCommentCount adds v to the "comment_count" field.
+func (u *ExtraInfoUpsertOne) AddCommentCount(v uint32) *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.AddCommentCount(v)
+	})
+}
+
+// UpdateCommentCount sets the "comment_count" field to the value that was provided on create.
+func (u *ExtraInfoUpsertOne) UpdateCommentCount() *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.UpdateCommentCount()
+	})
+}
+
+// ClearCommentCount clears the value of the "comment_count" field.
+func (u *ExtraInfoUpsertOne) ClearCommentCount() *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.ClearCommentCount()
 	})
 }
 
@@ -1433,6 +1511,34 @@ func (u *ExtraInfoUpsertBulk) UpdateRecommendCount() *ExtraInfoUpsertBulk {
 func (u *ExtraInfoUpsertBulk) ClearRecommendCount() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
 		s.ClearRecommendCount()
+	})
+}
+
+// SetCommentCount sets the "comment_count" field.
+func (u *ExtraInfoUpsertBulk) SetCommentCount(v uint32) *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.SetCommentCount(v)
+	})
+}
+
+// AddCommentCount adds v to the "comment_count" field.
+func (u *ExtraInfoUpsertBulk) AddCommentCount(v uint32) *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.AddCommentCount(v)
+	})
+}
+
+// UpdateCommentCount sets the "comment_count" field to the value that was provided on create.
+func (u *ExtraInfoUpsertBulk) UpdateCommentCount() *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.UpdateCommentCount()
+	})
+}
+
+// ClearCommentCount clears the value of the "comment_count" field.
+func (u *ExtraInfoUpsertBulk) ClearCommentCount() *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.ClearCommentCount()
 	})
 }
 

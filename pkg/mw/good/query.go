@@ -100,6 +100,7 @@ func (h *queryHandler) queryJoinExtraInfo(s *sql.Selector) {
 			sql.As(t.C(entextrainfo.FieldDislikes), "dislikes"),
 			sql.As(t.C(entextrainfo.FieldScoreCount), "score_count"),
 			sql.As(t.C(entextrainfo.FieldRecommendCount), "recommend_count"),
+			sql.As(t.C(entextrainfo.FieldCommentCount), "comment_count"),
 			sql.As(t.C(entextrainfo.FieldScore), "score"),
 		)
 }

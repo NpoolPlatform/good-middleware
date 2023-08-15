@@ -175,6 +175,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			extrainfo.FieldLikes:          {Type: field.TypeUint32, Column: extrainfo.FieldLikes},
 			extrainfo.FieldDislikes:       {Type: field.TypeUint32, Column: extrainfo.FieldDislikes},
 			extrainfo.FieldRecommendCount: {Type: field.TypeUint32, Column: extrainfo.FieldRecommendCount},
+			extrainfo.FieldCommentCount:   {Type: field.TypeUint32, Column: extrainfo.FieldCommentCount},
 			extrainfo.FieldScoreCount:     {Type: field.TypeUint32, Column: extrainfo.FieldScoreCount},
 			extrainfo.FieldScore:          {Type: field.TypeOther, Column: extrainfo.FieldScore},
 		},
@@ -1016,6 +1017,11 @@ func (f *ExtraInfoFilter) WhereDislikes(p entql.Uint32P) {
 // WhereRecommendCount applies the entql uint32 predicate on the recommend_count field.
 func (f *ExtraInfoFilter) WhereRecommendCount(p entql.Uint32P) {
 	f.Where(p.Field(extrainfo.FieldRecommendCount))
+}
+
+// WhereCommentCount applies the entql uint32 predicate on the comment_count field.
+func (f *ExtraInfoFilter) WhereCommentCount(p entql.Uint32P) {
+	f.Where(p.Field(extrainfo.FieldCommentCount))
 }
 
 // WhereScoreCount applies the entql uint32 predicate on the score_count field.

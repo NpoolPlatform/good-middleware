@@ -18,6 +18,7 @@ type Req struct {
 	OrderID   *uuid.UUID
 	Content   *string
 	ReplyToID *uuid.UUID
+	DeletedAt *uint32
 }
 
 func CreateSet(c *ent.CommentCreate, req *Req) *ent.CommentCreate {
@@ -49,8 +50,8 @@ func UpdateSet(u *ent.CommentUpdateOne, req *Req) *ent.CommentUpdateOne {
 	if req.Content != nil {
 		u.SetContent(*req.Content)
 	}
-	if req.ReplyToID != nil {
-		u.SetReplyToID(*req.ReplyToID)
+	if req.DeletedAt != nil {
+		u.SetDeletedAt(*req.DeletedAt)
 	}
 	return u
 }
