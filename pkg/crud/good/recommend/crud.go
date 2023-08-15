@@ -57,6 +57,7 @@ type Conds struct {
 	AppID         *cruder.Cond
 	RecommenderID *cruder.Cond
 	GoodID        *cruder.Cond
+	GoodIDs       *cruder.Cond
 }
 
 func SetQueryConds(q *ent.RecommendQuery, conds *Conds) (*ent.RecommendQuery, error) {
@@ -108,6 +109,18 @@ func SetQueryConds(q *ent.RecommendQuery, conds *Conds) (*ent.RecommendQuery, er
 		switch conds.GoodID.Op {
 		case cruder.EQ:
 			q.Where(entrecommend.GoodID(id))
+		default:
+			return nil, fmt.Errorf("invalid recommend field")
+		}
+	}
+	if conds.GoodIDs != nil {
+		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid goodids")
+		}
+		switch conds.GoodIDs.Op {
+		case cruder.IN:
+			q.Where(entrecommend.GoodIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid recommend field")
 		}
