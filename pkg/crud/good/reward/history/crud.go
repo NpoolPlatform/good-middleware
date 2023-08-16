@@ -6,7 +6,6 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entgoodrewardhistory "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -19,7 +18,6 @@ type Req struct {
 	TID        *uuid.UUID
 	Amount     *decimal.Decimal
 	UnitAmount *decimal.Decimal
-	Result     *basetypes.Result
 }
 
 func CreateSet(c *ent.GoodRewardHistoryCreate, req *Req) *ent.GoodRewardHistoryCreate {
@@ -41,24 +39,18 @@ func CreateSet(c *ent.GoodRewardHistoryCreate, req *Req) *ent.GoodRewardHistoryC
 	if req.UnitAmount != nil {
 		c.SetUnitAmount(*req.UnitAmount)
 	}
-	if req.Result != nil {
-		c.SetResult(req.Result.String())
-	}
 	return c
 }
 
 func UpdateSet(u *ent.GoodRewardHistoryUpdateOne, req *Req) *ent.GoodRewardHistoryUpdateOne {
-	if req.Result != nil {
-		u.SetResult(req.Result.String())
-	}
 	return u
 }
 
 type Conds struct {
 	ID         *cruder.Cond
 	GoodID     *cruder.Cond
+	GoodIDs    *cruder.Cond
 	RewardDate *cruder.Cond
-	Result     *cruder.Cond
 }
 
 func SetQueryConds(q *ent.GoodRewardHistoryQuery, conds *Conds) (*ent.GoodRewardHistoryQuery, error) {
@@ -86,6 +78,18 @@ func SetQueryConds(q *ent.GoodRewardHistoryQuery, conds *Conds) (*ent.GoodReward
 		switch conds.GoodID.Op {
 		case cruder.EQ:
 			q.Where(entgoodrewardhistory.GoodID(id))
+		default:
+			return nil, fmt.Errorf("invalid goodrewardhistory field")
+		}
+	}
+	if conds.GoodIDs != nil {
+		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid goodids")
+		}
+		switch conds.GoodIDs.Op {
+		case cruder.IN:
+			q.Where(entgoodrewardhistory.GoodIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid goodrewardhistory field")
 		}
