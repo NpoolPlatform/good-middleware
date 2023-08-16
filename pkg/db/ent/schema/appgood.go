@@ -41,7 +41,7 @@ func (AppGood) Fields() []ent.Field {
 		field.
 			Bool("visible").
 			Optional().
-			Default(true),
+			Default(false),
 		field.
 			String("good_name").
 			Optional().
