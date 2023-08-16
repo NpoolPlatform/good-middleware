@@ -37,6 +37,7 @@ type Req struct {
 	ProductPage            *string
 	EnableSetCommission    *bool
 	Posters                []string
+	DeletedAt              *uint32
 }
 
 //nolint:funlen,gocyclo
@@ -179,6 +180,9 @@ func UpdateSet(u *ent.AppGoodUpdateOne, req *Req) *ent.AppGoodUpdateOne {
 	}
 	if len(req.Posters) > 0 {
 		u.SetPosters(req.Posters)
+	}
+	if req.DeletedAt != nil {
+		u.SetDeletedAt(*req.DeletedAt)
 	}
 	return u
 }

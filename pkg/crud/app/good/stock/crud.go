@@ -22,6 +22,7 @@ type Req struct {
 	InService    *decimal.Decimal
 	WaitStart    *decimal.Decimal
 	Sold         *decimal.Decimal
+	DeletedAt    *uint32
 }
 
 //nolint:funlen,gocyclo
@@ -77,6 +78,9 @@ func UpdateSet(u *ent.AppStockUpdateOne, req *Req) *ent.AppStockUpdateOne {
 	}
 	if req.Sold != nil {
 		u.SetSold(*req.Sold)
+	}
+	if req.DeletedAt != nil {
+		u.SetDeletedAt(*req.DeletedAt)
 	}
 	return u
 }
