@@ -41,10 +41,12 @@ func (h *updateHandler) updateGoodLike(ctx context.Context, tx *ent.Tx) error {
 	if err != nil {
 		return err
 	}
-	if *h.Like {
+	if *h.Like && info.Likes > 1 {
 		info.Likes -= 1
-	} else {
+	} else if info.Dislikes > 1 {
 		info.Dislikes -= 1
+	} else {
+		return fmt.Errorf("not allowed")
 	}
 	if _, err := extrainfocrud.UpdateSet(
 		info.Update(),

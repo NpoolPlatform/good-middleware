@@ -3199,7 +3199,7 @@ type AppStockMutation struct {
 	app_id        *uuid.UUID
 	good_id       *uuid.UUID
 	app_good_id   *uuid.UUID
-	total         *decimal.Decimal
+	reserved      *decimal.Decimal
 	spot_quantity *decimal.Decimal
 	locked        *decimal.Decimal
 	in_service    *decimal.Decimal
@@ -3630,53 +3630,53 @@ func (m *AppStockMutation) ResetAppGoodID() {
 	delete(m.clearedFields, appstock.FieldAppGoodID)
 }
 
-// SetTotal sets the "total" field.
-func (m *AppStockMutation) SetTotal(d decimal.Decimal) {
-	m.total = &d
+// SetReserved sets the "reserved" field.
+func (m *AppStockMutation) SetReserved(d decimal.Decimal) {
+	m.reserved = &d
 }
 
-// Total returns the value of the "total" field in the mutation.
-func (m *AppStockMutation) Total() (r decimal.Decimal, exists bool) {
-	v := m.total
+// Reserved returns the value of the "reserved" field in the mutation.
+func (m *AppStockMutation) Reserved() (r decimal.Decimal, exists bool) {
+	v := m.reserved
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldTotal returns the old "total" field's value of the AppStock entity.
+// OldReserved returns the old "reserved" field's value of the AppStock entity.
 // If the AppStock object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppStockMutation) OldTotal(ctx context.Context) (v decimal.Decimal, err error) {
+func (m *AppStockMutation) OldReserved(ctx context.Context) (v decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldTotal is only allowed on UpdateOne operations")
+		return v, errors.New("OldReserved is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldTotal requires an ID field in the mutation")
+		return v, errors.New("OldReserved requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldTotal: %w", err)
+		return v, fmt.Errorf("querying old value for OldReserved: %w", err)
 	}
-	return oldValue.Total, nil
+	return oldValue.Reserved, nil
 }
 
-// ClearTotal clears the value of the "total" field.
-func (m *AppStockMutation) ClearTotal() {
-	m.total = nil
-	m.clearedFields[appstock.FieldTotal] = struct{}{}
+// ClearReserved clears the value of the "reserved" field.
+func (m *AppStockMutation) ClearReserved() {
+	m.reserved = nil
+	m.clearedFields[appstock.FieldReserved] = struct{}{}
 }
 
-// TotalCleared returns if the "total" field was cleared in this mutation.
-func (m *AppStockMutation) TotalCleared() bool {
-	_, ok := m.clearedFields[appstock.FieldTotal]
+// ReservedCleared returns if the "reserved" field was cleared in this mutation.
+func (m *AppStockMutation) ReservedCleared() bool {
+	_, ok := m.clearedFields[appstock.FieldReserved]
 	return ok
 }
 
-// ResetTotal resets all changes to the "total" field.
-func (m *AppStockMutation) ResetTotal() {
-	m.total = nil
-	delete(m.clearedFields, appstock.FieldTotal)
+// ResetReserved resets all changes to the "reserved" field.
+func (m *AppStockMutation) ResetReserved() {
+	m.reserved = nil
+	delete(m.clearedFields, appstock.FieldReserved)
 }
 
 // SetSpotQuantity sets the "spot_quantity" field.
@@ -3962,8 +3962,8 @@ func (m *AppStockMutation) Fields() []string {
 	if m.app_good_id != nil {
 		fields = append(fields, appstock.FieldAppGoodID)
 	}
-	if m.total != nil {
-		fields = append(fields, appstock.FieldTotal)
+	if m.reserved != nil {
+		fields = append(fields, appstock.FieldReserved)
 	}
 	if m.spot_quantity != nil {
 		fields = append(fields, appstock.FieldSpotQuantity)
@@ -4000,8 +4000,8 @@ func (m *AppStockMutation) Field(name string) (ent.Value, bool) {
 		return m.GoodID()
 	case appstock.FieldAppGoodID:
 		return m.AppGoodID()
-	case appstock.FieldTotal:
-		return m.Total()
+	case appstock.FieldReserved:
+		return m.Reserved()
 	case appstock.FieldSpotQuantity:
 		return m.SpotQuantity()
 	case appstock.FieldLocked:
@@ -4033,8 +4033,8 @@ func (m *AppStockMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldGoodID(ctx)
 	case appstock.FieldAppGoodID:
 		return m.OldAppGoodID(ctx)
-	case appstock.FieldTotal:
-		return m.OldTotal(ctx)
+	case appstock.FieldReserved:
+		return m.OldReserved(ctx)
 	case appstock.FieldSpotQuantity:
 		return m.OldSpotQuantity(ctx)
 	case appstock.FieldLocked:
@@ -4096,12 +4096,12 @@ func (m *AppStockMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetAppGoodID(v)
 		return nil
-	case appstock.FieldTotal:
+	case appstock.FieldReserved:
 		v, ok := value.(decimal.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetTotal(v)
+		m.SetReserved(v)
 		return nil
 	case appstock.FieldSpotQuantity:
 		v, ok := value.(decimal.Decimal)
@@ -4216,8 +4216,8 @@ func (m *AppStockMutation) ClearedFields() []string {
 	if m.FieldCleared(appstock.FieldAppGoodID) {
 		fields = append(fields, appstock.FieldAppGoodID)
 	}
-	if m.FieldCleared(appstock.FieldTotal) {
-		fields = append(fields, appstock.FieldTotal)
+	if m.FieldCleared(appstock.FieldReserved) {
+		fields = append(fields, appstock.FieldReserved)
 	}
 	if m.FieldCleared(appstock.FieldSpotQuantity) {
 		fields = append(fields, appstock.FieldSpotQuantity)
@@ -4257,8 +4257,8 @@ func (m *AppStockMutation) ClearField(name string) error {
 	case appstock.FieldAppGoodID:
 		m.ClearAppGoodID()
 		return nil
-	case appstock.FieldTotal:
-		m.ClearTotal()
+	case appstock.FieldReserved:
+		m.ClearReserved()
 		return nil
 	case appstock.FieldSpotQuantity:
 		m.ClearSpotQuantity()
@@ -4301,8 +4301,8 @@ func (m *AppStockMutation) ResetField(name string) error {
 	case appstock.FieldAppGoodID:
 		m.ResetAppGoodID()
 		return nil
-	case appstock.FieldTotal:
-		m.ResetTotal()
+	case appstock.FieldReserved:
+		m.ResetReserved()
 		return nil
 	case appstock.FieldSpotQuantity:
 		m.ResetSpotQuantity()

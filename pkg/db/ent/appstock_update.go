@@ -145,23 +145,23 @@ func (asu *AppStockUpdate) ClearAppGoodID() *AppStockUpdate {
 	return asu
 }
 
-// SetTotal sets the "total" field.
-func (asu *AppStockUpdate) SetTotal(d decimal.Decimal) *AppStockUpdate {
-	asu.mutation.SetTotal(d)
+// SetReserved sets the "reserved" field.
+func (asu *AppStockUpdate) SetReserved(d decimal.Decimal) *AppStockUpdate {
+	asu.mutation.SetReserved(d)
 	return asu
 }
 
-// SetNillableTotal sets the "total" field if the given value is not nil.
-func (asu *AppStockUpdate) SetNillableTotal(d *decimal.Decimal) *AppStockUpdate {
+// SetNillableReserved sets the "reserved" field if the given value is not nil.
+func (asu *AppStockUpdate) SetNillableReserved(d *decimal.Decimal) *AppStockUpdate {
 	if d != nil {
-		asu.SetTotal(*d)
+		asu.SetReserved(*d)
 	}
 	return asu
 }
 
-// ClearTotal clears the value of the "total" field.
-func (asu *AppStockUpdate) ClearTotal() *AppStockUpdate {
-	asu.mutation.ClearTotal()
+// ClearReserved clears the value of the "reserved" field.
+func (asu *AppStockUpdate) ClearReserved() *AppStockUpdate {
+	asu.mutation.ClearReserved()
 	return asu
 }
 
@@ -444,17 +444,17 @@ func (asu *AppStockUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appstock.FieldAppGoodID,
 		})
 	}
-	if value, ok := asu.mutation.Total(); ok {
+	if value, ok := asu.mutation.Reserved(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: appstock.FieldTotal,
+			Column: appstock.FieldReserved,
 		})
 	}
-	if asu.mutation.TotalCleared() {
+	if asu.mutation.ReservedCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: appstock.FieldTotal,
+			Column: appstock.FieldReserved,
 		})
 	}
 	if value, ok := asu.mutation.SpotQuantity(); ok {
@@ -658,23 +658,23 @@ func (asuo *AppStockUpdateOne) ClearAppGoodID() *AppStockUpdateOne {
 	return asuo
 }
 
-// SetTotal sets the "total" field.
-func (asuo *AppStockUpdateOne) SetTotal(d decimal.Decimal) *AppStockUpdateOne {
-	asuo.mutation.SetTotal(d)
+// SetReserved sets the "reserved" field.
+func (asuo *AppStockUpdateOne) SetReserved(d decimal.Decimal) *AppStockUpdateOne {
+	asuo.mutation.SetReserved(d)
 	return asuo
 }
 
-// SetNillableTotal sets the "total" field if the given value is not nil.
-func (asuo *AppStockUpdateOne) SetNillableTotal(d *decimal.Decimal) *AppStockUpdateOne {
+// SetNillableReserved sets the "reserved" field if the given value is not nil.
+func (asuo *AppStockUpdateOne) SetNillableReserved(d *decimal.Decimal) *AppStockUpdateOne {
 	if d != nil {
-		asuo.SetTotal(*d)
+		asuo.SetReserved(*d)
 	}
 	return asuo
 }
 
-// ClearTotal clears the value of the "total" field.
-func (asuo *AppStockUpdateOne) ClearTotal() *AppStockUpdateOne {
-	asuo.mutation.ClearTotal()
+// ClearReserved clears the value of the "reserved" field.
+func (asuo *AppStockUpdateOne) ClearReserved() *AppStockUpdateOne {
+	asuo.mutation.ClearReserved()
 	return asuo
 }
 
@@ -987,17 +987,17 @@ func (asuo *AppStockUpdateOne) sqlSave(ctx context.Context) (_node *AppStock, er
 			Column: appstock.FieldAppGoodID,
 		})
 	}
-	if value, ok := asuo.mutation.Total(); ok {
+	if value, ok := asuo.mutation.Reserved(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: appstock.FieldTotal,
+			Column: appstock.FieldReserved,
 		})
 	}
-	if asuo.mutation.TotalCleared() {
+	if asuo.mutation.ReservedCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: appstock.FieldTotal,
+			Column: appstock.FieldReserved,
 		})
 	}
 	if value, ok := asuo.mutation.SpotQuantity(); ok {

@@ -105,7 +105,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appstock.FieldAppID:        {Type: field.TypeUUID, Column: appstock.FieldAppID},
 			appstock.FieldGoodID:       {Type: field.TypeUUID, Column: appstock.FieldGoodID},
 			appstock.FieldAppGoodID:    {Type: field.TypeUUID, Column: appstock.FieldAppGoodID},
-			appstock.FieldTotal:        {Type: field.TypeOther, Column: appstock.FieldTotal},
+			appstock.FieldReserved:     {Type: field.TypeOther, Column: appstock.FieldReserved},
 			appstock.FieldSpotQuantity: {Type: field.TypeOther, Column: appstock.FieldSpotQuantity},
 			appstock.FieldLocked:       {Type: field.TypeOther, Column: appstock.FieldLocked},
 			appstock.FieldInService:    {Type: field.TypeOther, Column: appstock.FieldInService},
@@ -745,9 +745,9 @@ func (f *AppStockFilter) WhereAppGoodID(p entql.ValueP) {
 	f.Where(p.Field(appstock.FieldAppGoodID))
 }
 
-// WhereTotal applies the entql other predicate on the total field.
-func (f *AppStockFilter) WhereTotal(p entql.OtherP) {
-	f.Where(p.Field(appstock.FieldTotal))
+// WhereReserved applies the entql other predicate on the reserved field.
+func (f *AppStockFilter) WhereReserved(p entql.OtherP) {
+	f.Where(p.Field(appstock.FieldReserved))
 }
 
 // WhereSpotQuantity applies the entql other predicate on the spot_quantity field.

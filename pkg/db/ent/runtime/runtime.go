@@ -206,10 +206,10 @@ func init() {
 	appstockDescDeletedAt := appstockMixinFields0[2].Descriptor()
 	// appstock.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	appstock.DefaultDeletedAt = appstockDescDeletedAt.Default.(func() uint32)
-	// appstockDescTotal is the schema descriptor for total field.
-	appstockDescTotal := appstockFields[4].Descriptor()
-	// appstock.DefaultTotal holds the default value on creation for the total field.
-	appstock.DefaultTotal = appstockDescTotal.Default.(decimal.Decimal)
+	// appstockDescReserved is the schema descriptor for reserved field.
+	appstockDescReserved := appstockFields[4].Descriptor()
+	// appstock.DefaultReserved holds the default value on creation for the reserved field.
+	appstock.DefaultReserved = appstockDescReserved.Default.(decimal.Decimal)
 	// appstockDescSpotQuantity is the schema descriptor for spot_quantity field.
 	appstockDescSpotQuantity := appstockFields[5].Descriptor()
 	// appstock.DefaultSpotQuantity holds the default value on creation for the spot_quantity field.

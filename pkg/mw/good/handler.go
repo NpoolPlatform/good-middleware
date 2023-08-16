@@ -19,9 +19,6 @@ import (
 type Handler struct {
 	goodcrud.Req
 	Total                 *decimal.Decimal
-	Locked                *decimal.Decimal
-	InService             *decimal.Decimal
-	WaitStart             *decimal.Decimal
 	Posters               []string
 	Labels                []string
 	AppLocked             *decimal.Decimal
@@ -202,10 +199,6 @@ func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) 
 		case types.GoodType_TechniqueServiceFee:
 			fallthrough //nolint
 		case types.GoodType_ElectricityFee:
-			fallthrough //nolint
-		case types.GoodType_CrowdFunding:
-			fallthrough //nolint
-		case types.GoodType_Arbitrage:
 			return fmt.Errorf("not implemented")
 		default:
 			return fmt.Errorf("invalid goodtype")
@@ -320,57 +313,6 @@ func WithTotal(s *string, must bool) func(context.Context, *Handler) error {
 			return err
 		}
 		h.Total = &amount
-		return nil
-	}
-}
-
-func WithLocked(s *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return fmt.Errorf("invalid locked")
-			}
-			return nil
-		}
-		amount, err := decimal.NewFromString(*s)
-		if err != nil {
-			return err
-		}
-		h.Locked = &amount
-		return nil
-	}
-}
-
-func WithInService(s *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return fmt.Errorf("invalid inservice")
-			}
-			return nil
-		}
-		amount, err := decimal.NewFromString(*s)
-		if err != nil {
-			return err
-		}
-		h.InService = &amount
-		return nil
-	}
-}
-
-func WithWaitStart(s *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return fmt.Errorf("invalid waitstart")
-			}
-			return nil
-		}
-		amount, err := decimal.NewFromString(*s)
-		if err != nil {
-			return err
-		}
-		h.WaitStart = &amount
 		return nil
 	}
 }

@@ -29,8 +29,8 @@ type AppStock struct {
 	GoodID uuid.UUID `json:"good_id,omitempty"`
 	// AppGoodID holds the value of the "app_good_id" field.
 	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
-	// Total holds the value of the "total" field.
-	Total decimal.Decimal `json:"total,omitempty"`
+	// Reserved holds the value of the "reserved" field.
+	Reserved decimal.Decimal `json:"reserved,omitempty"`
 	// SpotQuantity holds the value of the "spot_quantity" field.
 	SpotQuantity decimal.Decimal `json:"spot_quantity,omitempty"`
 	// Locked holds the value of the "locked" field.
@@ -48,7 +48,7 @@ func (*AppStock) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case appstock.FieldTotal, appstock.FieldSpotQuantity, appstock.FieldLocked, appstock.FieldInService, appstock.FieldWaitStart, appstock.FieldSold:
+		case appstock.FieldReserved, appstock.FieldSpotQuantity, appstock.FieldLocked, appstock.FieldInService, appstock.FieldWaitStart, appstock.FieldSold:
 			values[i] = new(decimal.Decimal)
 		case appstock.FieldCreatedAt, appstock.FieldUpdatedAt, appstock.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
@@ -111,11 +111,11 @@ func (as *AppStock) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				as.AppGoodID = *value
 			}
-		case appstock.FieldTotal:
+		case appstock.FieldReserved:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field total", values[i])
+				return fmt.Errorf("unexpected type %T for field reserved", values[i])
 			} else if value != nil {
-				as.Total = *value
+				as.Reserved = *value
 			}
 		case appstock.FieldSpotQuantity:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
@@ -193,8 +193,8 @@ func (as *AppStock) String() string {
 	builder.WriteString("app_good_id=")
 	builder.WriteString(fmt.Sprintf("%v", as.AppGoodID))
 	builder.WriteString(", ")
-	builder.WriteString("total=")
-	builder.WriteString(fmt.Sprintf("%v", as.Total))
+	builder.WriteString("reserved=")
+	builder.WriteString(fmt.Sprintf("%v", as.Reserved))
 	builder.WriteString(", ")
 	builder.WriteString("spot_quantity=")
 	builder.WriteString(fmt.Sprintf("%v", as.SpotQuantity))

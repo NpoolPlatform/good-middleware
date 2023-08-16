@@ -67,8 +67,9 @@ func UpdateSet(u *ent.StockUpdateOne, req *Req) *ent.StockUpdateOne {
 }
 
 type Conds struct {
-	ID     *cruder.Cond
-	GoodID *cruder.Cond
+	ID      *cruder.Cond
+	GoodID  *cruder.Cond
+	GoodIDs *cruder.Cond
 }
 
 func SetQueryConds(q *ent.StockQuery, conds *Conds) (*ent.StockQuery, error) {
@@ -96,6 +97,18 @@ func SetQueryConds(q *ent.StockQuery, conds *Conds) (*ent.StockQuery, error) {
 		switch conds.GoodID.Op {
 		case cruder.EQ:
 			q.Where(entstock.GoodID(id))
+		default:
+			return nil, fmt.Errorf("invalid stock field")
+		}
+	}
+	if conds.GoodIDs != nil {
+		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid goodids")
+		}
+		switch conds.GoodIDs.Op {
+		case cruder.EQ:
+			q.Where(entstock.GoodIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid stock field")
 		}

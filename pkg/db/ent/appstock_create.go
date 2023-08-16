@@ -108,16 +108,16 @@ func (asc *AppStockCreate) SetNillableAppGoodID(u *uuid.UUID) *AppStockCreate {
 	return asc
 }
 
-// SetTotal sets the "total" field.
-func (asc *AppStockCreate) SetTotal(d decimal.Decimal) *AppStockCreate {
-	asc.mutation.SetTotal(d)
+// SetReserved sets the "reserved" field.
+func (asc *AppStockCreate) SetReserved(d decimal.Decimal) *AppStockCreate {
+	asc.mutation.SetReserved(d)
 	return asc
 }
 
-// SetNillableTotal sets the "total" field if the given value is not nil.
-func (asc *AppStockCreate) SetNillableTotal(d *decimal.Decimal) *AppStockCreate {
+// SetNillableReserved sets the "reserved" field if the given value is not nil.
+func (asc *AppStockCreate) SetNillableReserved(d *decimal.Decimal) *AppStockCreate {
 	if d != nil {
-		asc.SetTotal(*d)
+		asc.SetReserved(*d)
 	}
 	return asc
 }
@@ -306,9 +306,9 @@ func (asc *AppStockCreate) defaults() error {
 		v := appstock.DefaultDeletedAt()
 		asc.mutation.SetDeletedAt(v)
 	}
-	if _, ok := asc.mutation.Total(); !ok {
-		v := appstock.DefaultTotal
-		asc.mutation.SetTotal(v)
+	if _, ok := asc.mutation.Reserved(); !ok {
+		v := appstock.DefaultReserved
+		asc.mutation.SetReserved(v)
 	}
 	if _, ok := asc.mutation.SpotQuantity(); !ok {
 		v := appstock.DefaultSpotQuantity
@@ -436,13 +436,13 @@ func (asc *AppStockCreate) createSpec() (*AppStock, *sqlgraph.CreateSpec) {
 		})
 		_node.AppGoodID = value
 	}
-	if value, ok := asc.mutation.Total(); ok {
+	if value, ok := asc.mutation.Reserved(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: appstock.FieldTotal,
+			Column: appstock.FieldReserved,
 		})
-		_node.Total = value
+		_node.Reserved = value
 	}
 	if value, ok := asc.mutation.SpotQuantity(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -646,21 +646,21 @@ func (u *AppStockUpsert) ClearAppGoodID() *AppStockUpsert {
 	return u
 }
 
-// SetTotal sets the "total" field.
-func (u *AppStockUpsert) SetTotal(v decimal.Decimal) *AppStockUpsert {
-	u.Set(appstock.FieldTotal, v)
+// SetReserved sets the "reserved" field.
+func (u *AppStockUpsert) SetReserved(v decimal.Decimal) *AppStockUpsert {
+	u.Set(appstock.FieldReserved, v)
 	return u
 }
 
-// UpdateTotal sets the "total" field to the value that was provided on create.
-func (u *AppStockUpsert) UpdateTotal() *AppStockUpsert {
-	u.SetExcluded(appstock.FieldTotal)
+// UpdateReserved sets the "reserved" field to the value that was provided on create.
+func (u *AppStockUpsert) UpdateReserved() *AppStockUpsert {
+	u.SetExcluded(appstock.FieldReserved)
 	return u
 }
 
-// ClearTotal clears the value of the "total" field.
-func (u *AppStockUpsert) ClearTotal() *AppStockUpsert {
-	u.SetNull(appstock.FieldTotal)
+// ClearReserved clears the value of the "reserved" field.
+func (u *AppStockUpsert) ClearReserved() *AppStockUpsert {
+	u.SetNull(appstock.FieldReserved)
 	return u
 }
 
@@ -930,24 +930,24 @@ func (u *AppStockUpsertOne) ClearAppGoodID() *AppStockUpsertOne {
 	})
 }
 
-// SetTotal sets the "total" field.
-func (u *AppStockUpsertOne) SetTotal(v decimal.Decimal) *AppStockUpsertOne {
+// SetReserved sets the "reserved" field.
+func (u *AppStockUpsertOne) SetReserved(v decimal.Decimal) *AppStockUpsertOne {
 	return u.Update(func(s *AppStockUpsert) {
-		s.SetTotal(v)
+		s.SetReserved(v)
 	})
 }
 
-// UpdateTotal sets the "total" field to the value that was provided on create.
-func (u *AppStockUpsertOne) UpdateTotal() *AppStockUpsertOne {
+// UpdateReserved sets the "reserved" field to the value that was provided on create.
+func (u *AppStockUpsertOne) UpdateReserved() *AppStockUpsertOne {
 	return u.Update(func(s *AppStockUpsert) {
-		s.UpdateTotal()
+		s.UpdateReserved()
 	})
 }
 
-// ClearTotal clears the value of the "total" field.
-func (u *AppStockUpsertOne) ClearTotal() *AppStockUpsertOne {
+// ClearReserved clears the value of the "reserved" field.
+func (u *AppStockUpsertOne) ClearReserved() *AppStockUpsertOne {
 	return u.Update(func(s *AppStockUpsert) {
-		s.ClearTotal()
+		s.ClearReserved()
 	})
 }
 
@@ -1398,24 +1398,24 @@ func (u *AppStockUpsertBulk) ClearAppGoodID() *AppStockUpsertBulk {
 	})
 }
 
-// SetTotal sets the "total" field.
-func (u *AppStockUpsertBulk) SetTotal(v decimal.Decimal) *AppStockUpsertBulk {
+// SetReserved sets the "reserved" field.
+func (u *AppStockUpsertBulk) SetReserved(v decimal.Decimal) *AppStockUpsertBulk {
 	return u.Update(func(s *AppStockUpsert) {
-		s.SetTotal(v)
+		s.SetReserved(v)
 	})
 }
 
-// UpdateTotal sets the "total" field to the value that was provided on create.
-func (u *AppStockUpsertBulk) UpdateTotal() *AppStockUpsertBulk {
+// UpdateReserved sets the "reserved" field to the value that was provided on create.
+func (u *AppStockUpsertBulk) UpdateReserved() *AppStockUpsertBulk {
 	return u.Update(func(s *AppStockUpsert) {
-		s.UpdateTotal()
+		s.UpdateReserved()
 	})
 }
 
-// ClearTotal clears the value of the "total" field.
-func (u *AppStockUpsertBulk) ClearTotal() *AppStockUpsertBulk {
+// ClearReserved clears the value of the "reserved" field.
+func (u *AppStockUpsertBulk) ClearReserved() *AppStockUpsertBulk {
 	return u.Update(func(s *AppStockUpsert) {
-		s.ClearTotal()
+		s.ClearReserved()
 	})
 }
 

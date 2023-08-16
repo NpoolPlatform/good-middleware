@@ -2,6 +2,7 @@ package like
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/extrainfo"
@@ -42,10 +43,12 @@ func (h *deleteHandler) subGoodLike(ctx context.Context, tx *ent.Tx, like bool) 
 	if err != nil {
 		return err
 	}
-	if like {
+	if like && info.Likes > 1 {
 		info.Likes -= 1
-	} else {
+	} else if info.Dislikes > 1 {
 		info.Dislikes -= 1
+	} else {
+		return fmt.Errorf("not allowed")
 	}
 	if _, err := extrainfocrud.UpdateSet(
 		info.Update(),

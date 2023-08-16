@@ -38,7 +38,7 @@ func (AppStock) Fields() []ent.Field {
 			UUID("app_good_id", uuid.UUID{}).
 			Optional(),
 		field.
-			Other("total", decimal.Decimal{}).
+			Other("reserved", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).

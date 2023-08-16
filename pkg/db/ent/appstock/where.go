@@ -122,10 +122,10 @@ func AppGoodID(v uuid.UUID) predicate.AppStock {
 	})
 }
 
-// Total applies equality check predicate on the "total" field. It's identical to TotalEQ.
-func Total(v decimal.Decimal) predicate.AppStock {
+// Reserved applies equality check predicate on the "reserved" field. It's identical to ReservedEQ.
+func Reserved(v decimal.Decimal) predicate.AppStock {
 	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldTotal), v))
+		s.Where(sql.EQ(s.C(FieldReserved), v))
 	})
 }
 
@@ -590,81 +590,81 @@ func AppGoodIDNotNil() predicate.AppStock {
 	})
 }
 
-// TotalEQ applies the EQ predicate on the "total" field.
-func TotalEQ(v decimal.Decimal) predicate.AppStock {
+// ReservedEQ applies the EQ predicate on the "reserved" field.
+func ReservedEQ(v decimal.Decimal) predicate.AppStock {
 	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldTotal), v))
+		s.Where(sql.EQ(s.C(FieldReserved), v))
 	})
 }
 
-// TotalNEQ applies the NEQ predicate on the "total" field.
-func TotalNEQ(v decimal.Decimal) predicate.AppStock {
+// ReservedNEQ applies the NEQ predicate on the "reserved" field.
+func ReservedNEQ(v decimal.Decimal) predicate.AppStock {
 	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldTotal), v))
+		s.Where(sql.NEQ(s.C(FieldReserved), v))
 	})
 }
 
-// TotalIn applies the In predicate on the "total" field.
-func TotalIn(vs ...decimal.Decimal) predicate.AppStock {
+// ReservedIn applies the In predicate on the "reserved" field.
+func ReservedIn(vs ...decimal.Decimal) predicate.AppStock {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldTotal), v...))
+		s.Where(sql.In(s.C(FieldReserved), v...))
 	})
 }
 
-// TotalNotIn applies the NotIn predicate on the "total" field.
-func TotalNotIn(vs ...decimal.Decimal) predicate.AppStock {
+// ReservedNotIn applies the NotIn predicate on the "reserved" field.
+func ReservedNotIn(vs ...decimal.Decimal) predicate.AppStock {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldTotal), v...))
+		s.Where(sql.NotIn(s.C(FieldReserved), v...))
 	})
 }
 
-// TotalGT applies the GT predicate on the "total" field.
-func TotalGT(v decimal.Decimal) predicate.AppStock {
+// ReservedGT applies the GT predicate on the "reserved" field.
+func ReservedGT(v decimal.Decimal) predicate.AppStock {
 	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldTotal), v))
+		s.Where(sql.GT(s.C(FieldReserved), v))
 	})
 }
 
-// TotalGTE applies the GTE predicate on the "total" field.
-func TotalGTE(v decimal.Decimal) predicate.AppStock {
+// ReservedGTE applies the GTE predicate on the "reserved" field.
+func ReservedGTE(v decimal.Decimal) predicate.AppStock {
 	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldTotal), v))
+		s.Where(sql.GTE(s.C(FieldReserved), v))
 	})
 }
 
-// TotalLT applies the LT predicate on the "total" field.
-func TotalLT(v decimal.Decimal) predicate.AppStock {
+// ReservedLT applies the LT predicate on the "reserved" field.
+func ReservedLT(v decimal.Decimal) predicate.AppStock {
 	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldTotal), v))
+		s.Where(sql.LT(s.C(FieldReserved), v))
 	})
 }
 
-// TotalLTE applies the LTE predicate on the "total" field.
-func TotalLTE(v decimal.Decimal) predicate.AppStock {
+// ReservedLTE applies the LTE predicate on the "reserved" field.
+func ReservedLTE(v decimal.Decimal) predicate.AppStock {
 	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldTotal), v))
+		s.Where(sql.LTE(s.C(FieldReserved), v))
 	})
 }
 
-// TotalIsNil applies the IsNil predicate on the "total" field.
-func TotalIsNil() predicate.AppStock {
+// ReservedIsNil applies the IsNil predicate on the "reserved" field.
+func ReservedIsNil() predicate.AppStock {
 	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldTotal)))
+		s.Where(sql.IsNull(s.C(FieldReserved)))
 	})
 }
 
-// TotalNotNil applies the NotNil predicate on the "total" field.
-func TotalNotNil() predicate.AppStock {
+// ReservedNotNil applies the NotNil predicate on the "reserved" field.
+func ReservedNotNil() predicate.AppStock {
 	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldTotal)))
+		s.Where(sql.NotNull(s.C(FieldReserved)))
 	})
 }
 

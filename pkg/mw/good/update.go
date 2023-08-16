@@ -18,8 +18,6 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
-
-	"github.com/shopspring/decimal"
 )
 
 type updateHandler struct {
@@ -138,47 +136,10 @@ func (h *updateHandler) updateStock(ctx context.Context, tx *ent.Tx) error {
 		return err
 	}
 
-	total := info.Total
-	if h.Total != nil {
-		total = *h.Total
-	}
-	locked := info.Locked
-	if h.Locked != nil {
-		locked = h.Locked.Add(locked)
-	}
-	inService := info.InService
-	if h.InService != nil {
-		inService = h.InService.Add(inService)
-	}
-	waitStart := info.WaitStart
-	sold := info.Sold
-	if h.WaitStart != nil {
-		waitStart = h.WaitStart.Add(waitStart)
-		if h.WaitStart.Cmp(decimal.NewFromInt(0)) > 0 {
-			sold = h.WaitStart.Add(sold)
-		}
-	}
-	appLocked := info.AppLocked
-	if h.AppLocked != nil {
-		appLocked = h.AppLocked.Add(appLocked)
-	}
-
-	out := locked.Add(inService)
-	out = out.Add(waitStart)
-	out = out.Add(appLocked)
-	if out.Cmp(total) > 0 {
-		return fmt.Errorf("stock exhausted")
-	}
-
 	if _, err := stockcrud.UpdateSet(
 		info.Update(),
 		&stockcrud.Req{
-			Total:     h.Total,
-			Locked:    &locked,
-			InService: &inService,
-			WaitStart: &waitStart,
-			Sold:      &sold,
-			AppLocked: &appLocked,
+			Total: h.Total,
 		},
 	).Save(ctx); err != nil {
 		return err

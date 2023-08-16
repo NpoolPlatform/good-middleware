@@ -25,8 +25,8 @@ const (
 	FieldGoodID = "good_id"
 	// FieldAppGoodID holds the string denoting the app_good_id field in the database.
 	FieldAppGoodID = "app_good_id"
-	// FieldTotal holds the string denoting the total field in the database.
-	FieldTotal = "total"
+	// FieldReserved holds the string denoting the reserved field in the database.
+	FieldReserved = "reserved"
 	// FieldSpotQuantity holds the string denoting the spot_quantity field in the database.
 	FieldSpotQuantity = "spot_quantity"
 	// FieldLocked holds the string denoting the locked field in the database.
@@ -50,7 +50,7 @@ var Columns = []string{
 	FieldAppID,
 	FieldGoodID,
 	FieldAppGoodID,
-	FieldTotal,
+	FieldReserved,
 	FieldSpotQuantity,
 	FieldLocked,
 	FieldInService,
@@ -85,8 +85,8 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
-	// DefaultTotal holds the default value on creation for the "total" field.
-	DefaultTotal decimal.Decimal
+	// DefaultReserved holds the default value on creation for the "reserved" field.
+	DefaultReserved decimal.Decimal
 	// DefaultSpotQuantity holds the default value on creation for the "spot_quantity" field.
 	DefaultSpotQuantity decimal.Decimal
 	// DefaultLocked holds the default value on creation for the "locked" field.
