@@ -37,11 +37,12 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 		locked = h.Locked.Add(locked)
 	}
 	inService := info.InService
+	sold := info.Sold
 	if h.InService != nil {
 		inService = h.InService.Add(inService)
+		sold = h.InService.Add(sold)
 	}
 	waitStart := info.WaitStart
-	sold := info.Sold
 	if h.WaitStart != nil {
 		waitStart = h.WaitStart.Add(waitStart)
 		sold = h.WaitStart.Add(sold)

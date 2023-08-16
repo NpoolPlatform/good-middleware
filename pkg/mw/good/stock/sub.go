@@ -31,12 +31,12 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 		return err
 	}
 	if info == nil {
-		return fmt.Errorf("invalid stock")
+		return fmt.Errorf("stock not found")
 	}
 
 	locked := info.Locked
 	if h.Locked != nil {
-		locked = h.Locked.Sub(locked)
+		locked = locked.Sub(*h.Locked)
 	}
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid locked")
@@ -44,16 +44,16 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	inService := info.InService
 	sold := info.Sold
 	if h.InService != nil {
-		inService = h.InService.Sub(inService)
-		sold = h.WaitStart.Sub(sold)
+		inService = inService.Sub(*h.InService)
+		sold = sold.Sub(*h.InService)
 	}
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid inservice")
 	}
 	waitStart := info.WaitStart
 	if h.WaitStart != nil {
-		waitStart = h.WaitStart.Sub(waitStart)
-		sold = h.WaitStart.Sub(sold)
+		waitStart = waitStart.Sub(*h.WaitStart)
+		sold = sold.Sub(*h.WaitStart)
 	}
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid waitstart")
@@ -63,7 +63,7 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	}
 	appLocked := info.AppLocked
 	if h.AppLocked != nil {
-		appLocked = h.AppLocked.Sub(appLocked)
+		appLocked = appLocked.Sub(*h.AppLocked)
 	}
 	if appLocked.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid applocked")
