@@ -567,27 +567,27 @@ func init() {
 	// goodrewardhistory.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	goodrewardhistory.DefaultDeletedAt = goodrewardhistoryDescDeletedAt.Default.(func() uint32)
 	// goodrewardhistoryDescRewardDate is the schema descriptor for reward_date field.
-	goodrewardhistoryDescRewardDate := goodrewardhistoryFields[3].Descriptor()
+	goodrewardhistoryDescRewardDate := goodrewardhistoryFields[2].Descriptor()
 	// goodrewardhistory.DefaultRewardDate holds the default value on creation for the reward_date field.
 	goodrewardhistory.DefaultRewardDate = goodrewardhistoryDescRewardDate.Default.(uint32)
 	// goodrewardhistoryDescTid is the schema descriptor for tid field.
-	goodrewardhistoryDescTid := goodrewardhistoryFields[4].Descriptor()
+	goodrewardhistoryDescTid := goodrewardhistoryFields[3].Descriptor()
 	// goodrewardhistory.DefaultTid holds the default value on creation for the tid field.
 	goodrewardhistory.DefaultTid = goodrewardhistoryDescTid.Default.(func() uuid.UUID)
 	// goodrewardhistoryDescAmount is the schema descriptor for amount field.
-	goodrewardhistoryDescAmount := goodrewardhistoryFields[5].Descriptor()
+	goodrewardhistoryDescAmount := goodrewardhistoryFields[4].Descriptor()
 	// goodrewardhistory.DefaultAmount holds the default value on creation for the amount field.
 	goodrewardhistory.DefaultAmount = goodrewardhistoryDescAmount.Default.(decimal.Decimal)
 	// goodrewardhistoryDescUnitAmount is the schema descriptor for unit_amount field.
-	goodrewardhistoryDescUnitAmount := goodrewardhistoryFields[6].Descriptor()
+	goodrewardhistoryDescUnitAmount := goodrewardhistoryFields[5].Descriptor()
 	// goodrewardhistory.DefaultUnitAmount holds the default value on creation for the unit_amount field.
 	goodrewardhistory.DefaultUnitAmount = goodrewardhistoryDescUnitAmount.Default.(decimal.Decimal)
 	// goodrewardhistoryDescUnitNetAmount is the schema descriptor for unit_net_amount field.
-	goodrewardhistoryDescUnitNetAmount := goodrewardhistoryFields[7].Descriptor()
+	goodrewardhistoryDescUnitNetAmount := goodrewardhistoryFields[6].Descriptor()
 	// goodrewardhistory.DefaultUnitNetAmount holds the default value on creation for the unit_net_amount field.
 	goodrewardhistory.DefaultUnitNetAmount = goodrewardhistoryDescUnitNetAmount.Default.(decimal.Decimal)
 	// goodrewardhistoryDescResult is the schema descriptor for result field.
-	goodrewardhistoryDescResult := goodrewardhistoryFields[8].Descriptor()
+	goodrewardhistoryDescResult := goodrewardhistoryFields[7].Descriptor()
 	// goodrewardhistory.DefaultResult holds the default value on creation for the result field.
 	goodrewardhistory.DefaultResult = goodrewardhistoryDescResult.Default.(string)
 	// goodrewardhistoryDescID is the schema descriptor for id field.

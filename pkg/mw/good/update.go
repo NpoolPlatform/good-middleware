@@ -76,19 +76,19 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 	switch info.RewardState {
 	case types.BenefitState_BenefitWait.String():
 		if *h.RewardState != types.BenefitState_BenefitTransferring {
-			return fmt.Errorf("broken rewardstate")
+			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
 		}
 	case types.BenefitState_BenefitTransferring.String():
 		if *h.RewardState != types.BenefitState_BenefitBookKeeping {
-			return fmt.Errorf("broken rewardstate")
+			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
 		}
 	case types.BenefitState_BenefitBookKeeping.String():
 		if *h.RewardState != types.BenefitState_BenefitDone {
-			return fmt.Errorf("broken rewardstate")
+			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
 		}
 	case types.BenefitState_BenefitDone.String():
 		if *h.RewardState != types.BenefitState_BenefitWait {
-			return fmt.Errorf("broken rewardstate")
+			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
 		}
 	default:
 		return fmt.Errorf("invalid rewardstate")

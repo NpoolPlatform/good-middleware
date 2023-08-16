@@ -31,9 +31,8 @@ func (GoodRewardHistory) Fields() []ent.Field {
 			Default(uuid.New).
 			Unique(),
 		field.
-			UUID("app_id", uuid.UUID{}),
-		field.
-			UUID("good_id", uuid.UUID{}),
+			UUID("good_id", uuid.UUID{}).
+			Optional(),
 		field.
 			Uint32("reward_date").
 			Optional().

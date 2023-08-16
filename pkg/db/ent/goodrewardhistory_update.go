@@ -85,15 +85,23 @@ func (grhu *GoodRewardHistoryUpdate) AddDeletedAt(u int32) *GoodRewardHistoryUpd
 	return grhu
 }
 
-// SetAppID sets the "app_id" field.
-func (grhu *GoodRewardHistoryUpdate) SetAppID(u uuid.UUID) *GoodRewardHistoryUpdate {
-	grhu.mutation.SetAppID(u)
-	return grhu
-}
-
 // SetGoodID sets the "good_id" field.
 func (grhu *GoodRewardHistoryUpdate) SetGoodID(u uuid.UUID) *GoodRewardHistoryUpdate {
 	grhu.mutation.SetGoodID(u)
+	return grhu
+}
+
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (grhu *GoodRewardHistoryUpdate) SetNillableGoodID(u *uuid.UUID) *GoodRewardHistoryUpdate {
+	if u != nil {
+		grhu.SetGoodID(*u)
+	}
+	return grhu
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (grhu *GoodRewardHistoryUpdate) ClearGoodID() *GoodRewardHistoryUpdate {
+	grhu.mutation.ClearGoodID()
 	return grhu
 }
 
@@ -364,17 +372,16 @@ func (grhu *GoodRewardHistoryUpdate) sqlSave(ctx context.Context) (n int, err er
 			Column: goodrewardhistory.FieldDeletedAt,
 		})
 	}
-	if value, ok := grhu.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: goodrewardhistory.FieldAppID,
-		})
-	}
 	if value, ok := grhu.mutation.GoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: goodrewardhistory.FieldGoodID,
+		})
+	}
+	if grhu.mutation.GoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: goodrewardhistory.FieldGoodID,
 		})
 	}
@@ -539,15 +546,23 @@ func (grhuo *GoodRewardHistoryUpdateOne) AddDeletedAt(u int32) *GoodRewardHistor
 	return grhuo
 }
 
-// SetAppID sets the "app_id" field.
-func (grhuo *GoodRewardHistoryUpdateOne) SetAppID(u uuid.UUID) *GoodRewardHistoryUpdateOne {
-	grhuo.mutation.SetAppID(u)
-	return grhuo
-}
-
 // SetGoodID sets the "good_id" field.
 func (grhuo *GoodRewardHistoryUpdateOne) SetGoodID(u uuid.UUID) *GoodRewardHistoryUpdateOne {
 	grhuo.mutation.SetGoodID(u)
+	return grhuo
+}
+
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (grhuo *GoodRewardHistoryUpdateOne) SetNillableGoodID(u *uuid.UUID) *GoodRewardHistoryUpdateOne {
+	if u != nil {
+		grhuo.SetGoodID(*u)
+	}
+	return grhuo
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (grhuo *GoodRewardHistoryUpdateOne) ClearGoodID() *GoodRewardHistoryUpdateOne {
+	grhuo.mutation.ClearGoodID()
 	return grhuo
 }
 
@@ -848,17 +863,16 @@ func (grhuo *GoodRewardHistoryUpdateOne) sqlSave(ctx context.Context) (_node *Go
 			Column: goodrewardhistory.FieldDeletedAt,
 		})
 	}
-	if value, ok := grhuo.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: goodrewardhistory.FieldAppID,
-		})
-	}
 	if value, ok := grhuo.mutation.GoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: goodrewardhistory.FieldGoodID,
+		})
+	}
+	if grhuo.mutation.GoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: goodrewardhistory.FieldGoodID,
 		})
 	}

@@ -19,8 +19,6 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
-	// FieldAppID holds the string denoting the app_id field in the database.
-	FieldAppID = "app_id"
 	// FieldGoodID holds the string denoting the good_id field in the database.
 	FieldGoodID = "good_id"
 	// FieldRewardDate holds the string denoting the reward_date field in the database.
@@ -45,7 +43,6 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
-	FieldAppID,
 	FieldGoodID,
 	FieldRewardDate,
 	FieldTid,

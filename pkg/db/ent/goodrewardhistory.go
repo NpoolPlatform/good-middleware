@@ -23,8 +23,6 @@ type GoodRewardHistory struct {
 	UpdatedAt uint32 `json:"updated_at,omitempty"`
 	// DeletedAt holds the value of the "deleted_at" field.
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
-	// AppID holds the value of the "app_id" field.
-	AppID uuid.UUID `json:"app_id,omitempty"`
 	// GoodID holds the value of the "good_id" field.
 	GoodID uuid.UUID `json:"good_id,omitempty"`
 	// RewardDate holds the value of the "reward_date" field.
@@ -52,7 +50,7 @@ func (*GoodRewardHistory) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case goodrewardhistory.FieldResult:
 			values[i] = new(sql.NullString)
-		case goodrewardhistory.FieldID, goodrewardhistory.FieldAppID, goodrewardhistory.FieldGoodID, goodrewardhistory.FieldTid:
+		case goodrewardhistory.FieldID, goodrewardhistory.FieldGoodID, goodrewardhistory.FieldTid:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type GoodRewardHistory", columns[i])
@@ -92,12 +90,6 @@ func (grh *GoodRewardHistory) assignValues(columns []string, values []interface{
 				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
 				grh.DeletedAt = uint32(value.Int64)
-			}
-		case goodrewardhistory.FieldAppID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field app_id", values[i])
-			} else if value != nil {
-				grh.AppID = *value
 			}
 		case goodrewardhistory.FieldGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -177,9 +169,6 @@ func (grh *GoodRewardHistory) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("deleted_at=")
 	builder.WriteString(fmt.Sprintf("%v", grh.DeletedAt))
-	builder.WriteString(", ")
-	builder.WriteString("app_id=")
-	builder.WriteString(fmt.Sprintf("%v", grh.AppID))
 	builder.WriteString(", ")
 	builder.WriteString("good_id=")
 	builder.WriteString(fmt.Sprintf("%v", grh.GoodID))

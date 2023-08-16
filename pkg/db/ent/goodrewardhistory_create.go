@@ -66,15 +66,17 @@ func (grhc *GoodRewardHistoryCreate) SetNillableDeletedAt(u *uint32) *GoodReward
 	return grhc
 }
 
-// SetAppID sets the "app_id" field.
-func (grhc *GoodRewardHistoryCreate) SetAppID(u uuid.UUID) *GoodRewardHistoryCreate {
-	grhc.mutation.SetAppID(u)
-	return grhc
-}
-
 // SetGoodID sets the "good_id" field.
 func (grhc *GoodRewardHistoryCreate) SetGoodID(u uuid.UUID) *GoodRewardHistoryCreate {
 	grhc.mutation.SetGoodID(u)
+	return grhc
+}
+
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (grhc *GoodRewardHistoryCreate) SetNillableGoodID(u *uuid.UUID) *GoodRewardHistoryCreate {
+	if u != nil {
+		grhc.SetGoodID(*u)
+	}
 	return grhc
 }
 
@@ -324,12 +326,6 @@ func (grhc *GoodRewardHistoryCreate) check() error {
 	if _, ok := grhc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "GoodRewardHistory.deleted_at"`)}
 	}
-	if _, ok := grhc.mutation.AppID(); !ok {
-		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "GoodRewardHistory.app_id"`)}
-	}
-	if _, ok := grhc.mutation.GoodID(); !ok {
-		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "GoodRewardHistory.good_id"`)}
-	}
 	return nil
 }
 
@@ -390,14 +386,6 @@ func (grhc *GoodRewardHistoryCreate) createSpec() (*GoodRewardHistory, *sqlgraph
 			Column: goodrewardhistory.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
-	}
-	if value, ok := grhc.mutation.AppID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: goodrewardhistory.FieldAppID,
-		})
-		_node.AppID = value
 	}
 	if value, ok := grhc.mutation.GoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -563,18 +551,6 @@ func (u *GoodRewardHistoryUpsert) AddDeletedAt(v uint32) *GoodRewardHistoryUpser
 	return u
 }
 
-// SetAppID sets the "app_id" field.
-func (u *GoodRewardHistoryUpsert) SetAppID(v uuid.UUID) *GoodRewardHistoryUpsert {
-	u.Set(goodrewardhistory.FieldAppID, v)
-	return u
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *GoodRewardHistoryUpsert) UpdateAppID() *GoodRewardHistoryUpsert {
-	u.SetExcluded(goodrewardhistory.FieldAppID)
-	return u
-}
-
 // SetGoodID sets the "good_id" field.
 func (u *GoodRewardHistoryUpsert) SetGoodID(v uuid.UUID) *GoodRewardHistoryUpsert {
 	u.Set(goodrewardhistory.FieldGoodID, v)
@@ -584,6 +560,12 @@ func (u *GoodRewardHistoryUpsert) SetGoodID(v uuid.UUID) *GoodRewardHistoryUpser
 // UpdateGoodID sets the "good_id" field to the value that was provided on create.
 func (u *GoodRewardHistoryUpsert) UpdateGoodID() *GoodRewardHistoryUpsert {
 	u.SetExcluded(goodrewardhistory.FieldGoodID)
+	return u
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (u *GoodRewardHistoryUpsert) ClearGoodID() *GoodRewardHistoryUpsert {
+	u.SetNull(goodrewardhistory.FieldGoodID)
 	return u
 }
 
@@ -814,20 +796,6 @@ func (u *GoodRewardHistoryUpsertOne) UpdateDeletedAt() *GoodRewardHistoryUpsertO
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *GoodRewardHistoryUpsertOne) SetAppID(v uuid.UUID) *GoodRewardHistoryUpsertOne {
-	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *GoodRewardHistoryUpsertOne) UpdateAppID() *GoodRewardHistoryUpsertOne {
-	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.UpdateAppID()
-	})
-}
-
 // SetGoodID sets the "good_id" field.
 func (u *GoodRewardHistoryUpsertOne) SetGoodID(v uuid.UUID) *GoodRewardHistoryUpsertOne {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
@@ -839,6 +807,13 @@ func (u *GoodRewardHistoryUpsertOne) SetGoodID(v uuid.UUID) *GoodRewardHistoryUp
 func (u *GoodRewardHistoryUpsertOne) UpdateGoodID() *GoodRewardHistoryUpsertOne {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (u *GoodRewardHistoryUpsertOne) ClearGoodID() *GoodRewardHistoryUpsertOne {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.ClearGoodID()
 	})
 }
 
@@ -1254,20 +1229,6 @@ func (u *GoodRewardHistoryUpsertBulk) UpdateDeletedAt() *GoodRewardHistoryUpsert
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *GoodRewardHistoryUpsertBulk) SetAppID(v uuid.UUID) *GoodRewardHistoryUpsertBulk {
-	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *GoodRewardHistoryUpsertBulk) UpdateAppID() *GoodRewardHistoryUpsertBulk {
-	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.UpdateAppID()
-	})
-}
-
 // SetGoodID sets the "good_id" field.
 func (u *GoodRewardHistoryUpsertBulk) SetGoodID(v uuid.UUID) *GoodRewardHistoryUpsertBulk {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
@@ -1279,6 +1240,13 @@ func (u *GoodRewardHistoryUpsertBulk) SetGoodID(v uuid.UUID) *GoodRewardHistoryU
 func (u *GoodRewardHistoryUpsertBulk) UpdateGoodID() *GoodRewardHistoryUpsertBulk {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (u *GoodRewardHistoryUpsertBulk) ClearGoodID() *GoodRewardHistoryUpsertBulk {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.ClearGoodID()
 	})
 }
 

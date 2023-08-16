@@ -10443,7 +10443,6 @@ type GoodRewardHistoryMutation struct {
 	addupdated_at   *int32
 	deleted_at      *uint32
 	adddeleted_at   *int32
-	app_id          *uuid.UUID
 	good_id         *uuid.UUID
 	reward_date     *uint32
 	addreward_date  *int32
@@ -10730,42 +10729,6 @@ func (m *GoodRewardHistoryMutation) ResetDeletedAt() {
 	m.adddeleted_at = nil
 }
 
-// SetAppID sets the "app_id" field.
-func (m *GoodRewardHistoryMutation) SetAppID(u uuid.UUID) {
-	m.app_id = &u
-}
-
-// AppID returns the value of the "app_id" field in the mutation.
-func (m *GoodRewardHistoryMutation) AppID() (r uuid.UUID, exists bool) {
-	v := m.app_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAppID returns the old "app_id" field's value of the GoodRewardHistory entity.
-// If the GoodRewardHistory object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodRewardHistoryMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAppID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
-	}
-	return oldValue.AppID, nil
-}
-
-// ResetAppID resets all changes to the "app_id" field.
-func (m *GoodRewardHistoryMutation) ResetAppID() {
-	m.app_id = nil
-}
-
 // SetGoodID sets the "good_id" field.
 func (m *GoodRewardHistoryMutation) SetGoodID(u uuid.UUID) {
 	m.good_id = &u
@@ -10797,9 +10760,22 @@ func (m *GoodRewardHistoryMutation) OldGoodID(ctx context.Context) (v uuid.UUID,
 	return oldValue.GoodID, nil
 }
 
+// ClearGoodID clears the value of the "good_id" field.
+func (m *GoodRewardHistoryMutation) ClearGoodID() {
+	m.good_id = nil
+	m.clearedFields[goodrewardhistory.FieldGoodID] = struct{}{}
+}
+
+// GoodIDCleared returns if the "good_id" field was cleared in this mutation.
+func (m *GoodRewardHistoryMutation) GoodIDCleared() bool {
+	_, ok := m.clearedFields[goodrewardhistory.FieldGoodID]
+	return ok
+}
+
 // ResetGoodID resets all changes to the "good_id" field.
 func (m *GoodRewardHistoryMutation) ResetGoodID() {
 	m.good_id = nil
+	delete(m.clearedFields, goodrewardhistory.FieldGoodID)
 }
 
 // SetRewardDate sets the "reward_date" field.
@@ -11136,7 +11112,7 @@ func (m *GoodRewardHistoryMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *GoodRewardHistoryMutation) Fields() []string {
-	fields := make([]string, 0, 11)
+	fields := make([]string, 0, 10)
 	if m.created_at != nil {
 		fields = append(fields, goodrewardhistory.FieldCreatedAt)
 	}
@@ -11145,9 +11121,6 @@ func (m *GoodRewardHistoryMutation) Fields() []string {
 	}
 	if m.deleted_at != nil {
 		fields = append(fields, goodrewardhistory.FieldDeletedAt)
-	}
-	if m.app_id != nil {
-		fields = append(fields, goodrewardhistory.FieldAppID)
 	}
 	if m.good_id != nil {
 		fields = append(fields, goodrewardhistory.FieldGoodID)
@@ -11184,8 +11157,6 @@ func (m *GoodRewardHistoryMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdatedAt()
 	case goodrewardhistory.FieldDeletedAt:
 		return m.DeletedAt()
-	case goodrewardhistory.FieldAppID:
-		return m.AppID()
 	case goodrewardhistory.FieldGoodID:
 		return m.GoodID()
 	case goodrewardhistory.FieldRewardDate:
@@ -11215,8 +11186,6 @@ func (m *GoodRewardHistoryMutation) OldField(ctx context.Context, name string) (
 		return m.OldUpdatedAt(ctx)
 	case goodrewardhistory.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
-	case goodrewardhistory.FieldAppID:
-		return m.OldAppID(ctx)
 	case goodrewardhistory.FieldGoodID:
 		return m.OldGoodID(ctx)
 	case goodrewardhistory.FieldRewardDate:
@@ -11260,13 +11229,6 @@ func (m *GoodRewardHistoryMutation) SetField(name string, value ent.Value) error
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDeletedAt(v)
-		return nil
-	case goodrewardhistory.FieldAppID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAppID(v)
 		return nil
 	case goodrewardhistory.FieldGoodID:
 		v, ok := value.(uuid.UUID)
@@ -11398,6 +11360,9 @@ func (m *GoodRewardHistoryMutation) AddField(name string, value ent.Value) error
 // mutation.
 func (m *GoodRewardHistoryMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(goodrewardhistory.FieldGoodID) {
+		fields = append(fields, goodrewardhistory.FieldGoodID)
+	}
 	if m.FieldCleared(goodrewardhistory.FieldRewardDate) {
 		fields = append(fields, goodrewardhistory.FieldRewardDate)
 	}
@@ -11430,6 +11395,9 @@ func (m *GoodRewardHistoryMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *GoodRewardHistoryMutation) ClearField(name string) error {
 	switch name {
+	case goodrewardhistory.FieldGoodID:
+		m.ClearGoodID()
+		return nil
 	case goodrewardhistory.FieldRewardDate:
 		m.ClearRewardDate()
 		return nil
@@ -11464,9 +11432,6 @@ func (m *GoodRewardHistoryMutation) ResetField(name string) error {
 		return nil
 	case goodrewardhistory.FieldDeletedAt:
 		m.ResetDeletedAt()
-		return nil
-	case goodrewardhistory.FieldAppID:
-		m.ResetAppID()
 		return nil
 	case goodrewardhistory.FieldGoodID:
 		m.ResetGoodID()
