@@ -15,7 +15,6 @@ import (
 	entdeviceinfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	entextrainfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
-	entgoodreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	entvendorbrand "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	entvendorlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
@@ -93,31 +92,62 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 }
 
 func (h *queryHandler) queryJoinGood(s *sql.Selector) {
-	t := sql.Table(entgood.Table)
-	s.LeftJoin(t).
+	t1 := sql.Table(entgood.Table)
+	t2 := sql.Table(entdeviceinfo.Table)
+	t3 := sql.Table(entvendorlocation.Table)
+	t4 := sql.Table(entvendorbrand.Table)
+
+	s.LeftJoin(t1).
 		On(
 			s.C(entappgood.FieldGoodID),
-			t.C(entgood.FieldID),
+			t1.C(entgood.FieldID),
+		).
+		LeftJoin(t2).
+		On(
+			t1.C(entgood.FieldDeviceInfoID),
+			t2.C(entdeviceinfo.FieldID),
+		).
+		OnP(
+			sql.EQ(t2.C(entdeviceinfo.FieldDeletedAt), 0),
+		).
+		LeftJoin(t3).
+		On(
+			t1.C(entgood.FieldVendorLocationID),
+			t3.C(entvendorlocation.FieldID),
+		).
+		OnP(
+			sql.EQ(t3.C(entvendorlocation.FieldDeletedAt), 0),
+		).
+		LeftJoin(t4).
+		On(
+			t3.C(entvendorlocation.FieldBrandID),
+			t4.C(entvendorbrand.FieldID),
+		).
+		OnP(
+			sql.EQ(t4.C(entvendorbrand.FieldDeletedAt), 0),
 		).
 		AppendSelect(
-			sql.As(t.C(entgood.FieldDeviceInfoID), "device_info_id"),
-			sql.As(t.C(entgood.FieldDurationDays), "duration_days"),
-			sql.As(t.C(entgood.FieldCoinTypeID), "coin_type_id"),
-			sql.As(t.C(entgood.FieldVendorLocationID), "vendor_location_id"),
-			sql.As(t.C(entgood.FieldPrice), "price"),
-			sql.As(t.C(entgood.FieldBenefitType), "benefit_type"),
-			sql.As(t.C(entgood.FieldGoodType), "good_type"),
-			sql.As(t.C(entgood.FieldTitle), "title"),
-			sql.As(t.C(entgood.FieldUnit), "unit"),
-			sql.As(t.C(entgood.FieldUnitAmount), "unit_amount"),
-			sql.As(t.C(entgood.FieldSupportCoinTypeIds), "support_coin_type_ids"),
-			sql.As(t.C(entgood.FieldDeliveryAt), "delivery_at"),
-			sql.As(t.C(entgood.FieldStartAt), "start_at"),
-			sql.As(t.C(entgood.FieldTestOnly), "test_only"),
-			sql.As(t.C(entgood.FieldBenefitIntervalHours), "benefit_interval_hours"),
-			sql.As(t.C(entgood.FieldUnitLockDeposit), "unit_lock_deposit"),
-			sql.As(t.C(entgood.FieldCreatedAt), "created_at"),
-			sql.As(t.C(entgood.FieldUpdatedAt), "updated_at"),
+			sql.As(t1.C(entgood.FieldDeviceInfoID), "device_info_id"),
+			sql.As(t1.C(entgood.FieldVendorLocationID), "vendor_location_id"),
+			sql.As(t1.C(entgood.FieldDurationDays), "duration_days"),
+			sql.As(t1.C(entgood.FieldCoinTypeID), "coin_type_id"),
+			sql.As(t1.C(entgood.FieldPrice), "price"),
+			sql.As(t1.C(entgood.FieldBenefitType), "benefit_type"),
+			sql.As(t1.C(entgood.FieldGoodType), "good_type"),
+			sql.As(t1.C(entgood.FieldUnit), "unit"),
+			sql.As(t1.C(entgood.FieldUnitAmount), "unit_amount"),
+			sql.As(t1.C(entgood.FieldSupportCoinTypeIds), "support_coin_type_ids"),
+			sql.As(t1.C(entgood.FieldStartAt), "start_at"),
+			sql.As(t1.C(entgood.FieldTestOnly), "test_only"),
+			sql.As(t1.C(entgood.FieldBenefitIntervalHours), "benefit_interval_hours"),
+			sql.As(t2.C(entdeviceinfo.FieldType), "device_type"),
+			sql.As(t2.C(entdeviceinfo.FieldManufacturer), "device_manufacturer"),
+			sql.As(t2.C(entdeviceinfo.FieldPowerComsuption), "device_power_comsuption"),
+			sql.As(t2.C(entdeviceinfo.FieldShipmentAt), "device_shipment_at"),
+			sql.As(t2.C(entdeviceinfo.FieldPosters), "device_posters"),
+			sql.As(t3.C(entvendorlocation.FieldCountry), "vendor_location_country"),
+			sql.As(t4.C(entvendorbrand.FieldName), "vendor_brand_name"),
+			sql.As(t4.C(entvendorbrand.FieldLogo), "vendor_brand_logo"),
 		)
 }
 
@@ -143,25 +173,6 @@ func (h *queryHandler) queryJoinExtraInfo(s *sql.Selector) {
 		)
 }
 
-func (h *queryHandler) queryJoinReward(s *sql.Selector) {
-	t := sql.Table(entgoodreward.Table)
-	s.LeftJoin(t).
-		On(
-			s.C(entappgood.FieldGoodID),
-			t.C(entgoodreward.FieldGoodID),
-		).
-		OnP(
-			sql.EQ(t.C(entgoodreward.FieldDeletedAt), 0),
-		).
-		AppendSelect(
-			sql.As(t.C(entgoodreward.FieldRewardState), "reward_state"),
-			sql.As(t.C(entgoodreward.FieldLastRewardAt), "last_reward_at"),
-			sql.As(t.C(entgoodreward.FieldRewardTid), "reward_tid"),
-			sql.As(t.C(entgoodreward.FieldNextRewardStartAmount), "next_reward_start_amount"),
-			sql.As(t.C(entgoodreward.FieldLastRewardAmount), "last_reward_amount"),
-		)
-}
-
 func (h *queryHandler) queryJoinStock(s *sql.Selector) {
 	t := sql.Table(entstock.Table)
 	s.LeftJoin(t).
@@ -173,13 +184,11 @@ func (h *queryHandler) queryJoinStock(s *sql.Selector) {
 			sql.EQ(t.C(entstock.FieldDeletedAt), 0),
 		).
 		AppendSelect(
-			sql.As(t.C(entstock.FieldID), "good_stock_id"),
 			sql.As(t.C(entstock.FieldTotal), "good_total"),
 			sql.As(t.C(entstock.FieldLocked), "good_locked"),
 			sql.As(t.C(entstock.FieldInService), "good_in_service"),
 			sql.As(t.C(entstock.FieldWaitStart), "good_wait_start"),
 			sql.As(t.C(entstock.FieldSold), "good_sold"),
-			sql.As(t.C(entstock.FieldAppLocked), "good_app_locked"),
 		)
 }
 
@@ -204,79 +213,21 @@ func (h *queryHandler) queryJoinAppStock(s *sql.Selector) {
 		)
 }
 
-func (h *queryHandler) queryJoinDeviceInfo(s *sql.Selector) {
-	t1 := sql.Table(entdeviceinfo.Table)
-	t2 := sql.Table(entgood.Table)
-	s.LeftJoin(t1).
-		On(
-			t2.C(entgood.FieldDeviceInfoID),
-			t1.C(entdeviceinfo.FieldID),
-		).
-		OnP(
-			sql.EQ(t1.C(entdeviceinfo.FieldDeletedAt), 0),
-		).
-		AppendSelect(
-			sql.As(t1.C(entdeviceinfo.FieldType), "device_type"),
-			sql.As(t1.C(entdeviceinfo.FieldManufacturer), "device_manufacturer"),
-			sql.As(t1.C(entdeviceinfo.FieldPowerComsuption), "device_power_comsuption"),
-			sql.As(t1.C(entdeviceinfo.FieldShipmentAt), "device_shipment_at"),
-			sql.As(t1.C(entdeviceinfo.FieldPosters), "device_posters"),
-		)
-}
-
-func (h *queryHandler) queryJoinVendorLocation(s *sql.Selector) {
-	t1 := sql.Table(entvendorlocation.Table)
-	t3 := sql.Table(entgood.Table)
-	s.LeftJoin(t1).
-		On(
-			t3.C(entgood.FieldVendorLocationID),
-			t1.C(entvendorlocation.FieldID),
-		).
-		OnP(
-			sql.EQ(t1.C(entvendorlocation.FieldDeletedAt), 0),
-		).
-		AppendSelect(
-			sql.As(t1.C(entvendorlocation.FieldCountry), "vendor_location_country"),
-			sql.As(t1.C(entvendorlocation.FieldProvince), "vendor_location_province"),
-			sql.As(t1.C(entvendorlocation.FieldCity), "vendor_location_city"),
-			sql.As(t1.C(entvendorlocation.FieldAddress), "vendor_location_address"),
-		)
-
-	t2 := sql.Table(entvendorbrand.Table)
-	s.LeftJoin(t2).
-		On(
-			t1.C(entvendorlocation.FieldBrandID),
-			t2.C(entvendorbrand.FieldID),
-		).
-		OnP(
-			sql.EQ(t2.C(entvendorbrand.FieldDeletedAt), 0),
-		).
-		AppendSelect(
-			sql.As(t2.C(entvendorbrand.FieldName), "vendor_brand_name"),
-			sql.As(t2.C(entvendorbrand.FieldLogo), "vendor_brand_logo"),
-		)
-}
-
 func (h *queryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
 		h.queryJoinGood(s)
 		h.queryJoinExtraInfo(s)
-		h.queryJoinReward(s)
 		h.queryJoinStock(s)
 		h.queryJoinAppStock(s)
-		h.queryJoinDeviceInfo(s)
-		h.queryJoinVendorLocation(s)
 	})
 	if h.stmCount == nil {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
+		h.queryJoinGood(s)
 		h.queryJoinExtraInfo(s)
-		h.queryJoinReward(s)
 		h.queryJoinStock(s)
-		h.queryJoinDeviceInfo(s)
-		h.queryJoinVendorLocation(s)
 	})
 }
 
@@ -347,7 +298,7 @@ func (h *Handler) GetGood(ctx context.Context) (*npool.Good, error) {
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.queryGood(cli)
+		handler.queryGood(cli.Debug())
 		handler.queryJoin()
 		return handler.scan(_ctx)
 	})
