@@ -514,6 +514,10 @@ func (agc *AppGoodCreate) defaults() error {
 		v := appgood.DefaultCancelMode
 		agc.mutation.SetCancelMode(v)
 	}
+	if _, ok := agc.mutation.UserPurchaseLimit(); !ok {
+		v := appgood.DefaultUserPurchaseLimit
+		agc.mutation.SetUserPurchaseLimit(v)
+	}
 	if _, ok := agc.mutation.DisplayColors(); !ok {
 		v := appgood.DefaultDisplayColors
 		agc.mutation.SetDisplayColors(v)

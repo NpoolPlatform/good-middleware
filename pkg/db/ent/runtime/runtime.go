@@ -154,6 +154,10 @@ func init() {
 	appgoodDescCancelMode := appgoodFields[17].Descriptor()
 	// appgood.DefaultCancelMode holds the default value on creation for the cancel_mode field.
 	appgood.DefaultCancelMode = appgoodDescCancelMode.Default.(string)
+	// appgoodDescUserPurchaseLimit is the schema descriptor for user_purchase_limit field.
+	appgoodDescUserPurchaseLimit := appgoodFields[18].Descriptor()
+	// appgood.DefaultUserPurchaseLimit holds the default value on creation for the user_purchase_limit field.
+	appgood.DefaultUserPurchaseLimit = appgoodDescUserPurchaseLimit.Default.(decimal.Decimal)
 	// appgoodDescDisplayColors is the schema descriptor for display_colors field.
 	appgoodDescDisplayColors := appgoodFields[19].Descriptor()
 	// appgood.DefaultDisplayColors holds the default value on creation for the display_colors field.

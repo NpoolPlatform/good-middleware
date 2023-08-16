@@ -102,7 +102,8 @@ func (AppGood) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).
-			Optional(),
+			Optional().
+			Default(decimal.NewFromInt(0)),
 		field.
 			JSON("display_colors", []string{}).
 			Optional().

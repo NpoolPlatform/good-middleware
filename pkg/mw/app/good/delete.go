@@ -8,6 +8,7 @@ import (
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 )
 
@@ -16,9 +17,22 @@ type deleteHandler struct {
 }
 
 func (h *deleteHandler) deleteStock(ctx context.Context, tx *ent.Tx) error {
+	info, err := tx.
+		AppStock.
+		Query().
+		Where(
+			entappstock.AppGoodID(*h.ID),
+			entappstock.DeletedAt(0),
+		).
+		ForUpdate().
+		Only(ctx)
+	if err != nil {
+		return err
+	}
+
 	now := uint32(time.Now().Unix())
 	if _, err := appstockcrud.UpdateSet(
-		tx.AppStock.UpdateOneID(*h.ID),
+		info.Update(),
 		&appstockcrud.Req{
 			DeletedAt: &now,
 		},
@@ -42,11 +56,19 @@ func (h *deleteHandler) deleteAppGood(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) DeleteGood(ctx context.Context) (*npool.Good, error) {
+	info, err := h.GetGood(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if info == nil {
+		return nil, nil
+	}
+
 	handler := &deleteHandler{
 		Handler: h,
 	}
 
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.deleteStock(ctx, tx); err != nil {
 			return err
 		}
@@ -59,5 +81,5 @@ func (h *Handler) DeleteGood(ctx context.Context) (*npool.Good, error) {
 		return nil, err
 	}
 
-	return h.GetGood(ctx)
+	return info, nil
 }

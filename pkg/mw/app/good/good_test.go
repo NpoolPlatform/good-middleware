@@ -77,11 +77,49 @@ var good = goodmwpb.Good{
 }
 
 var ret = npool.Good{
-	ID:       uuid.NewString(),
-	AppID:    uuid.NewString(),
-	GoodID:   good.ID,
-	GoodName: good.Title,
-	Price:    decimal.NewFromInt(125).String(),
+	ID:                    uuid.NewString(),
+	AppID:                 uuid.NewString(),
+	GoodID:                good.ID,
+	Online:                false,
+	Visible:               false,
+	GoodName:              good.Title,
+	Price:                 decimal.NewFromInt(125).String(),
+	DeviceInfoID:          good.DeviceInfoID,
+	DeviceType:            good.DeviceType,
+	DeviceManufacturer:    good.DeviceManufacturer,
+	DevicePowerComsuption: good.DevicePowerComsuption,
+	DevicePosters:         good.DevicePosters,
+	DeviceShipmentAt:      good.DeviceShipmentAt,
+	DurationDays:          good.DurationDays,
+	CoinTypeID:            good.CoinTypeID,
+	VendorLocationID:      good.VendorLocationID,
+	VendorLocationCountry: good.VendorLocationCountry,
+	VendorBrandName:       good.VendorBrandName,
+	VendorBrandLogo:       good.VendorBrandLogo,
+	GoodType:              good.GoodType,
+	Unit:                  good.Unit,
+	UnitAmount:            good.UnitAmount,
+	SupportCoinTypeIDs:    good.SupportCoinTypeIDs,
+	TestOnly:              good.TestOnly,
+	Posters:               good.Posters,
+	Labels:                good.Labels,
+	BenefitIntervalHours:  good.BenefitIntervalHours,
+	GoodTotal:             good.GoodTotal,
+	GoodLocked:            good.GoodLocked,
+	GoodInService:         good.GoodInService,
+	GoodWaitStart:         good.GoodWaitStart,
+	GoodSold:              good.GoodSold,
+	CancelModeStr:         types.CancelMode_Uncancellable.String(),
+	PurchaseLimit:         3000,
+	EnableSetCommission:   true,
+	EnablePurchase:        true,
+	EnableProductPage:     true,
+	Score:                 decimal.NewFromInt(0).String(),
+	StartAt:               good.StartAt,
+	BenefitType:           good.BenefitType,
+	BenefitTypeStr:        good.BenefitType.String(),
+	GoodTypeStr:           good.GoodType.String(),
+	UserPurchaseLimit:     decimal.NewFromInt(0).String(),
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -165,10 +203,19 @@ func createGood(t *testing.T) {
 		WithID(&ret.ID, true),
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
+		WithPrice(&ret.Price, true),
+		WithGoodName(&ret.GoodName, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.CreateGood(context.Background())
 		if assert.Nil(t, err) {
+			ret.DevicePostersStr = info.DevicePostersStr
+			ret.DisplayColorsStr = info.DisplayColorsStr
+			ret.DisplayNamesStr = info.DisplayNamesStr
+			ret.DescriptionsStr = info.DescriptionsStr
+			ret.LabelsStr = info.LabelsStr
+			ret.PostersStr = info.PostersStr
+			ret.SupportCoinTypeIDsStr = info.SupportCoinTypeIDsStr
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			assert.Equal(t, &ret, info)
@@ -252,8 +299,8 @@ func TestGood(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createGood", createGood)
-	// t.Run("updateGood", updateGood)
-	// t.Run("getGood", getGood)
-	// t.Run("getGoods", getGoods)
-	// t.Run("deleteGood", deleteGood)
+	t.Run("updateGood", updateGood)
+	t.Run("getGood", getGood)
+	t.Run("getGoods", getGoods)
+	t.Run("deleteGood", deleteGood)
 }

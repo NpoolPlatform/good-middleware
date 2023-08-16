@@ -131,7 +131,6 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 			sql.As(t1.C(entgood.FieldVendorLocationID), "vendor_location_id"),
 			sql.As(t1.C(entgood.FieldDurationDays), "duration_days"),
 			sql.As(t1.C(entgood.FieldCoinTypeID), "coin_type_id"),
-			sql.As(t1.C(entgood.FieldPrice), "price"),
 			sql.As(t1.C(entgood.FieldBenefitType), "benefit_type"),
 			sql.As(t1.C(entgood.FieldGoodType), "good_type"),
 			sql.As(t1.C(entgood.FieldUnit), "unit"),
@@ -284,6 +283,12 @@ func (h *queryHandler) formalize() {
 		} else {
 			info.Score = amount.String()
 		}
+		amount, err = decimal.NewFromString(info.UserPurchaseLimit)
+		if err != nil {
+			info.UserPurchaseLimit = decimal.NewFromInt(0).String()
+		} else {
+			info.UserPurchaseLimit = amount.String()
+		}
 		labels := []string{}
 		_ = json.Unmarshal([]byte(info.LabelsStr), &labels)
 		for _, label := range labels {
@@ -298,7 +303,7 @@ func (h *Handler) GetGood(ctx context.Context) (*npool.Good, error) {
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.queryGood(cli.Debug())
+		handler.queryGood(cli)
 		handler.queryJoin()
 		return handler.scan(_ctx)
 	})

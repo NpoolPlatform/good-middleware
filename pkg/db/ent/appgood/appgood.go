@@ -157,6 +157,8 @@ var (
 	DefaultEnableProductPage bool
 	// DefaultCancelMode holds the default value on creation for the "cancel_mode" field.
 	DefaultCancelMode string
+	// DefaultUserPurchaseLimit holds the default value on creation for the "user_purchase_limit" field.
+	DefaultUserPurchaseLimit decimal.Decimal
 	// DefaultDisplayColors holds the default value on creation for the "display_colors" field.
 	DefaultDisplayColors []string
 	// DefaultCancellableBeforeStart holds the default value on creation for the "cancellable_before_start" field.
