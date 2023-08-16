@@ -228,7 +228,6 @@ func (h *queryHandler) formalize() {
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
-		_ = json.Unmarshal([]byte(info.LabelsStr), &info.Labels)
 		amount, err := decimal.NewFromString(info.UnitLockDeposit)
 		if err != nil {
 			info.UnitLockDeposit = decimal.NewFromInt(0).String()
@@ -240,6 +239,36 @@ func (h *queryHandler) formalize() {
 			info.GoodTotal = decimal.NewFromInt(0).String()
 		} else {
 			info.GoodTotal = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.GoodLocked)
+		if err != nil {
+			info.GoodLocked = decimal.NewFromInt(0).String()
+		} else {
+			info.GoodLocked = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.GoodInService)
+		if err != nil {
+			info.GoodInService = decimal.NewFromInt(0).String()
+		} else {
+			info.GoodInService = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.GoodWaitStart)
+		if err != nil {
+			info.GoodWaitStart = decimal.NewFromInt(0).String()
+		} else {
+			info.GoodWaitStart = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.GoodSold)
+		if err != nil {
+			info.GoodSold = decimal.NewFromInt(0).String()
+		} else {
+			info.GoodSold = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.GoodAppLocked)
+		if err != nil {
+			info.GoodAppLocked = decimal.NewFromInt(0).String()
+		} else {
+			info.GoodAppLocked = amount.String()
 		}
 		amount, err = decimal.NewFromString(info.Price)
 		if err != nil {
@@ -264,6 +293,11 @@ func (h *queryHandler) formalize() {
 			info.Score = decimal.NewFromInt(0).String()
 		} else {
 			info.Score = amount.String()
+		}
+		labels := []string{}
+		_ = json.Unmarshal([]byte(info.LabelsStr), &labels)
+		for _, label := range labels {
+			info.Labels = append(info.Labels, types.GoodLabel(types.GoodLabel_value[label]))
 		}
 	}
 }

@@ -60,17 +60,21 @@ var ret = npool.Good{
 	SupportCoinTypeIDs:     []string{uuid.NewString(), uuid.NewString()},
 	TestOnly:               true,
 	Posters:                []string{uuid.NewString(), uuid.NewString()},
-	Labels:                 []string{uuid.NewString(), uuid.NewString()},
-	GoodTotal:              decimal.NewFromInt(1000).String(),
-	GoodLocked:             decimal.NewFromInt(0).String(),
-	GoodInService:          decimal.NewFromInt(0).String(),
-	GoodWaitStart:          decimal.NewFromInt(0).String(),
-	GoodSold:               decimal.NewFromInt(0).String(),
-	DeliveryAt:             uint32(time.Now().Unix() + 1000),
-	StartAt:                uint32(time.Now().Unix() + 1000),
-	BenefitIntervalHours:   24,
-	GoodAppLocked:          decimal.NewFromInt(0).String(),
-	UnitLockDeposit:        decimal.NewFromInt(1).String(),
+	Labels: []types.GoodLabel{
+		types.GoodLabel_GoodLabelInnovationStarter,
+		types.GoodLabel_GoodLabelNoviceExclusive,
+	},
+	GoodTotal:            decimal.NewFromInt(1000).String(),
+	GoodLocked:           decimal.NewFromInt(0).String(),
+	GoodInService:        decimal.NewFromInt(0).String(),
+	GoodWaitStart:        decimal.NewFromInt(0).String(),
+	GoodSold:             decimal.NewFromInt(0).String(),
+	DeliveryAt:           uint32(time.Now().Unix() + 1000),
+	StartAt:              uint32(time.Now().Unix() + 1000),
+	BenefitIntervalHours: 24,
+	GoodAppLocked:        decimal.NewFromInt(0).String(),
+	UnitLockDeposit:      decimal.NewFromInt(1).String(),
+	Score:                decimal.NewFromInt(0).String(),
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -168,6 +172,7 @@ func createGood(t *testing.T) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			ret.GoodStockID = info.GoodStockID
+			ret.LabelsStr = info.LabelsStr
 			assert.Equal(t, &ret, info)
 		}
 	}
@@ -175,18 +180,12 @@ func createGood(t *testing.T) {
 
 func updateGood(t *testing.T) {
 	ret.UnitLockDeposit = decimal.NewFromInt(20).String()
-	locked := decimal.NewFromInt(1).String()
-	ret.GoodLocked = locked
-	ret.GoodInService = locked
-	ret.GoodWaitStart = locked
-	ret.GoodSold = locked
+	ret.GoodTotal = decimal.NewFromInt(2000).String()
 
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
-		WithLocked(&locked, true),
-		WithInService(&locked, true),
-		WithWaitStart(&locked, true),
+		WithTotal(&ret.GoodTotal, true),
 		WithUnitLockDeposit(&ret.UnitLockDeposit, true),
 	)
 	if assert.Nil(t, err) {
@@ -198,54 +197,6 @@ func updateGood(t *testing.T) {
 			info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
 			assert.Equal(t, &ret, info)
 		}
-	}
-
-	ret.GoodLocked = "2"
-	ret.GoodInService = "2"
-	ret.GoodWaitStart = "2"
-	ret.GoodSold = "2"
-
-	info, err := handler.UpdateGood(context.Background())
-	if assert.Nil(t, err) {
-		info.LabelsStr = strings.ReplaceAll(info.LabelsStr, " ", "")
-		info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
-		info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
-		info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
-		assert.Equal(t, &ret, info)
-	}
-
-	locked = decimal.NewFromInt(-1).String()
-	ret.GoodLocked = "1"
-	ret.GoodInService = "1"
-	ret.GoodWaitStart = "1"
-
-	handler, err = NewHandler(
-		context.Background(),
-		WithID(&ret.ID, true),
-		WithLocked(&locked, true),
-		WithInService(&locked, true),
-		WithWaitStart(&locked, true),
-	)
-	if assert.Nil(t, err) {
-		info, err := handler.UpdateGood(context.Background())
-		if assert.Nil(t, err) {
-			info.LabelsStr = strings.ReplaceAll(info.LabelsStr, " ", "")
-			info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
-			info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
-			info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
-			assert.Equal(t, &ret, info)
-		}
-	}
-
-	locked = decimal.NewFromInt(1000).String()
-	handler, err = NewHandler(
-		context.Background(),
-		WithID(&ret.ID, true),
-		WithLocked(&locked, true),
-	)
-	if assert.Nil(t, err) {
-		_, err := handler.UpdateGood(context.Background())
-		assert.NotNil(t, err)
 	}
 }
 

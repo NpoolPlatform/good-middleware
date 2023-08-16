@@ -25,6 +25,11 @@ type updateHandler struct {
 }
 
 func (h *updateHandler) updateExtraInfo(ctx context.Context, tx *ent.Tx) error {
+	labels := []string{}
+	for _, label := range h.Labels {
+		labels = append(labels, label.String())
+	}
+
 	info, err := tx.
 		ExtraInfo.
 		Query().
@@ -42,7 +47,7 @@ func (h *updateHandler) updateExtraInfo(ctx context.Context, tx *ent.Tx) error {
 		info.Update(),
 		&extrainfocrud.Req{
 			Posters: h.Posters,
-			Labels:  h.Labels,
+			Labels:  labels,
 		},
 	).Save(ctx); err != nil {
 		return err

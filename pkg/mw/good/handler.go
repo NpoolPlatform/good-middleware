@@ -20,7 +20,7 @@ type Handler struct {
 	goodcrud.Req
 	Total                 *decimal.Decimal
 	Posters               []string
-	Labels                []string
+	Labels                []types.GoodLabel
 	AppLocked             *decimal.Decimal
 	RewardState           *types.BenefitState
 	RewardAt              *uint32
@@ -329,14 +329,19 @@ func WithPosters(ss []string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithLabels(ss []string, must bool) func(context.Context, *Handler) error {
+func WithLabels(es []types.GoodLabel, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		for _, s := range ss {
-			if len(s) < leastStrLen {
-				return fmt.Errorf("invalid labels")
+		for _, e := range es {
+			switch e {
+			case types.GoodLabel_GoodLabelPromotion:
+			case types.GoodLabel_GoodLabelNoviceExclusive:
+			case types.GoodLabel_GoodLabelInnovationStarter:
+			case types.GoodLabel_GoodLabelLoyaltyExclusive:
+			default:
+				return fmt.Errorf("invalid label")
 			}
 		}
-		h.Labels = ss
+		h.Labels = es
 		return nil
 	}
 }

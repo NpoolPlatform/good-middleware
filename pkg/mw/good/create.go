@@ -22,12 +22,17 @@ type createHandler struct {
 }
 
 func (h *createHandler) createExtraInfo(ctx context.Context, tx *ent.Tx) error {
+	labels := []string{}
+	for _, label := range h.Labels {
+		labels = append(labels, label.String())
+	}
+
 	if _, err := extrainfocrud.CreateSet(
 		tx.ExtraInfo.Create(),
 		&extrainfocrud.Req{
 			GoodID:  h.ID,
 			Posters: h.Posters,
-			Labels:  h.Labels,
+			Labels:  labels,
 		},
 	).Save(ctx); err != nil {
 		return err
