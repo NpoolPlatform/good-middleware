@@ -21,6 +21,8 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/schema"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	"github.com/google/uuid"
@@ -854,6 +856,126 @@ func init() {
 	stockDescID := stockFields[0].Descriptor()
 	// stock.DefaultID holds the default value on creation for the id field.
 	stock.DefaultID = stockDescID.Default.(func() uuid.UUID)
+	topmostMixin := schema.TopMost{}.Mixin()
+	topmost.Policy = privacy.NewPolicies(topmostMixin[0], schema.TopMost{})
+	topmost.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := topmost.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	topmostMixinFields0 := topmostMixin[0].Fields()
+	_ = topmostMixinFields0
+	topmostFields := schema.TopMost{}.Fields()
+	_ = topmostFields
+	// topmostDescCreatedAt is the schema descriptor for created_at field.
+	topmostDescCreatedAt := topmostMixinFields0[0].Descriptor()
+	// topmost.DefaultCreatedAt holds the default value on creation for the created_at field.
+	topmost.DefaultCreatedAt = topmostDescCreatedAt.Default.(func() uint32)
+	// topmostDescUpdatedAt is the schema descriptor for updated_at field.
+	topmostDescUpdatedAt := topmostMixinFields0[1].Descriptor()
+	// topmost.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	topmost.DefaultUpdatedAt = topmostDescUpdatedAt.Default.(func() uint32)
+	// topmost.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	topmost.UpdateDefaultUpdatedAt = topmostDescUpdatedAt.UpdateDefault.(func() uint32)
+	// topmostDescDeletedAt is the schema descriptor for deleted_at field.
+	topmostDescDeletedAt := topmostMixinFields0[2].Descriptor()
+	// topmost.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	topmost.DefaultDeletedAt = topmostDescDeletedAt.Default.(func() uint32)
+	// topmostDescTopMostType is the schema descriptor for top_most_type field.
+	topmostDescTopMostType := topmostFields[2].Descriptor()
+	// topmost.DefaultTopMostType holds the default value on creation for the top_most_type field.
+	topmost.DefaultTopMostType = topmostDescTopMostType.Default.(string)
+	// topmostDescTitle is the schema descriptor for title field.
+	topmostDescTitle := topmostFields[3].Descriptor()
+	// topmost.DefaultTitle holds the default value on creation for the title field.
+	topmost.DefaultTitle = topmostDescTitle.Default.(string)
+	// topmostDescMessage is the schema descriptor for message field.
+	topmostDescMessage := topmostFields[4].Descriptor()
+	// topmost.DefaultMessage holds the default value on creation for the message field.
+	topmost.DefaultMessage = topmostDescMessage.Default.(string)
+	// topmostDescPosters is the schema descriptor for posters field.
+	topmostDescPosters := topmostFields[5].Descriptor()
+	// topmost.DefaultPosters holds the default value on creation for the posters field.
+	topmost.DefaultPosters = topmostDescPosters.Default.([]string)
+	// topmostDescStartAt is the schema descriptor for start_at field.
+	topmostDescStartAt := topmostFields[6].Descriptor()
+	// topmost.DefaultStartAt holds the default value on creation for the start_at field.
+	topmost.DefaultStartAt = topmostDescStartAt.Default.(uint32)
+	// topmostDescEndAt is the schema descriptor for end_at field.
+	topmostDescEndAt := topmostFields[7].Descriptor()
+	// topmost.DefaultEndAt holds the default value on creation for the end_at field.
+	topmost.DefaultEndAt = topmostDescEndAt.Default.(uint32)
+	// topmostDescThresholdCredits is the schema descriptor for threshold_credits field.
+	topmostDescThresholdCredits := topmostFields[8].Descriptor()
+	// topmost.DefaultThresholdCredits holds the default value on creation for the threshold_credits field.
+	topmost.DefaultThresholdCredits = topmostDescThresholdCredits.Default.(string)
+	// topmostDescRegisterElapsedSeconds is the schema descriptor for register_elapsed_seconds field.
+	topmostDescRegisterElapsedSeconds := topmostFields[9].Descriptor()
+	// topmost.DefaultRegisterElapsedSeconds holds the default value on creation for the register_elapsed_seconds field.
+	topmost.DefaultRegisterElapsedSeconds = topmostDescRegisterElapsedSeconds.Default.(uint32)
+	// topmostDescThresholdPurchases is the schema descriptor for threshold_purchases field.
+	topmostDescThresholdPurchases := topmostFields[10].Descriptor()
+	// topmost.DefaultThresholdPurchases holds the default value on creation for the threshold_purchases field.
+	topmost.DefaultThresholdPurchases = topmostDescThresholdPurchases.Default.(uint32)
+	// topmostDescThresholdPaymentAmount is the schema descriptor for threshold_payment_amount field.
+	topmostDescThresholdPaymentAmount := topmostFields[11].Descriptor()
+	// topmost.DefaultThresholdPaymentAmount holds the default value on creation for the threshold_payment_amount field.
+	topmost.DefaultThresholdPaymentAmount = topmostDescThresholdPaymentAmount.Default.(string)
+	// topmostDescKycMust is the schema descriptor for kyc_must field.
+	topmostDescKycMust := topmostFields[12].Descriptor()
+	// topmost.DefaultKycMust holds the default value on creation for the kyc_must field.
+	topmost.DefaultKycMust = topmostDescKycMust.Default.(bool)
+	// topmostDescID is the schema descriptor for id field.
+	topmostDescID := topmostFields[0].Descriptor()
+	// topmost.DefaultID holds the default value on creation for the id field.
+	topmost.DefaultID = topmostDescID.Default.(func() uuid.UUID)
+	topmostgoodMixin := schema.TopMostGood{}.Mixin()
+	topmostgood.Policy = privacy.NewPolicies(topmostgoodMixin[0], schema.TopMostGood{})
+	topmostgood.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := topmostgood.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	topmostgoodMixinFields0 := topmostgoodMixin[0].Fields()
+	_ = topmostgoodMixinFields0
+	topmostgoodFields := schema.TopMostGood{}.Fields()
+	_ = topmostgoodFields
+	// topmostgoodDescCreatedAt is the schema descriptor for created_at field.
+	topmostgoodDescCreatedAt := topmostgoodMixinFields0[0].Descriptor()
+	// topmostgood.DefaultCreatedAt holds the default value on creation for the created_at field.
+	topmostgood.DefaultCreatedAt = topmostgoodDescCreatedAt.Default.(func() uint32)
+	// topmostgoodDescUpdatedAt is the schema descriptor for updated_at field.
+	topmostgoodDescUpdatedAt := topmostgoodMixinFields0[1].Descriptor()
+	// topmostgood.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	topmostgood.DefaultUpdatedAt = topmostgoodDescUpdatedAt.Default.(func() uint32)
+	// topmostgood.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	topmostgood.UpdateDefaultUpdatedAt = topmostgoodDescUpdatedAt.UpdateDefault.(func() uint32)
+	// topmostgoodDescDeletedAt is the schema descriptor for deleted_at field.
+	topmostgoodDescDeletedAt := topmostgoodMixinFields0[2].Descriptor()
+	// topmostgood.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	topmostgood.DefaultDeletedAt = topmostgoodDescDeletedAt.Default.(func() uint32)
+	// topmostgoodDescDisplayIndex is the schema descriptor for display_index field.
+	topmostgoodDescDisplayIndex := topmostgoodFields[4].Descriptor()
+	// topmostgood.DefaultDisplayIndex holds the default value on creation for the display_index field.
+	topmostgood.DefaultDisplayIndex = topmostgoodDescDisplayIndex.Default.(uint32)
+	// topmostgoodDescPosters is the schema descriptor for posters field.
+	topmostgoodDescPosters := topmostgoodFields[5].Descriptor()
+	// topmostgood.DefaultPosters holds the default value on creation for the posters field.
+	topmostgood.DefaultPosters = topmostgoodDescPosters.Default.([]string)
+	// topmostgoodDescPrice is the schema descriptor for price field.
+	topmostgoodDescPrice := topmostgoodFields[6].Descriptor()
+	// topmostgood.DefaultPrice holds the default value on creation for the price field.
+	topmostgood.DefaultPrice = topmostgoodDescPrice.Default.(decimal.Decimal)
+	// topmostgoodDescID is the schema descriptor for id field.
+	topmostgoodDescID := topmostgoodFields[0].Descriptor()
+	// topmostgood.DefaultID holds the default value on creation for the id field.
+	topmostgood.DefaultID = topmostgoodDescID.Default.(func() uuid.UUID)
 	vendorbrandMixin := schema.VendorBrand{}.Mixin()
 	vendorbrand.Policy = privacy.NewPolicies(vendorbrandMixin[0], schema.VendorBrand{})
 	vendorbrand.Hooks[0] = func(next ent.Mutator) ent.Mutator {

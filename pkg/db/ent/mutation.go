@@ -24,6 +24,8 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	"github.com/google/uuid"
@@ -56,6 +58,8 @@ const (
 	TypeRequiredGood      = "RequiredGood"
 	TypeScore             = "Score"
 	TypeStock             = "Stock"
+	TypeTopMost           = "TopMost"
+	TypeTopMostGood       = "TopMostGood"
 	TypeVendorBrand       = "VendorBrand"
 	TypeVendorLocation    = "VendorLocation"
 )
@@ -16819,6 +16823,2474 @@ func (m *StockMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *StockMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Stock edge %s", name)
+}
+
+// TopMostMutation represents an operation that mutates the TopMost nodes in the graph.
+type TopMostMutation struct {
+	config
+	op                          Op
+	typ                         string
+	id                          *uuid.UUID
+	created_at                  *uint32
+	addcreated_at               *int32
+	updated_at                  *uint32
+	addupdated_at               *int32
+	deleted_at                  *uint32
+	adddeleted_at               *int32
+	app_id                      *uuid.UUID
+	top_most_type               *string
+	title                       *string
+	message                     *string
+	posters                     *[]string
+	start_at                    *uint32
+	addstart_at                 *int32
+	end_at                      *uint32
+	addend_at                   *int32
+	threshold_credits           *string
+	register_elapsed_seconds    *uint32
+	addregister_elapsed_seconds *int32
+	threshold_purchases         *uint32
+	addthreshold_purchases      *int32
+	threshold_payment_amount    *string
+	kyc_must                    *bool
+	clearedFields               map[string]struct{}
+	done                        bool
+	oldValue                    func(context.Context) (*TopMost, error)
+	predicates                  []predicate.TopMost
+}
+
+var _ ent.Mutation = (*TopMostMutation)(nil)
+
+// topmostOption allows management of the mutation configuration using functional options.
+type topmostOption func(*TopMostMutation)
+
+// newTopMostMutation creates new mutation for the TopMost entity.
+func newTopMostMutation(c config, op Op, opts ...topmostOption) *TopMostMutation {
+	m := &TopMostMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeTopMost,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withTopMostID sets the ID field of the mutation.
+func withTopMostID(id uuid.UUID) topmostOption {
+	return func(m *TopMostMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *TopMost
+		)
+		m.oldValue = func(ctx context.Context) (*TopMost, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().TopMost.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withTopMost sets the old TopMost of the mutation.
+func withTopMost(node *TopMost) topmostOption {
+	return func(m *TopMostMutation) {
+		m.oldValue = func(context.Context) (*TopMost, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m TopMostMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m TopMostMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of TopMost entities.
+func (m *TopMostMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *TopMostMutation) ID() (id uuid.UUID, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *TopMostMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uuid.UUID{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().TopMost.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *TopMostMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *TopMostMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *TopMostMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *TopMostMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *TopMostMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *TopMostMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *TopMostMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *TopMostMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *TopMostMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *TopMostMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *TopMostMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *TopMostMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *TopMostMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *TopMostMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *TopMostMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetAppID sets the "app_id" field.
+func (m *TopMostMutation) SetAppID(u uuid.UUID) {
+	m.app_id = &u
+}
+
+// AppID returns the value of the "app_id" field in the mutation.
+func (m *TopMostMutation) AppID() (r uuid.UUID, exists bool) {
+	v := m.app_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppID returns the old "app_id" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
+	}
+	return oldValue.AppID, nil
+}
+
+// ResetAppID resets all changes to the "app_id" field.
+func (m *TopMostMutation) ResetAppID() {
+	m.app_id = nil
+}
+
+// SetTopMostType sets the "top_most_type" field.
+func (m *TopMostMutation) SetTopMostType(s string) {
+	m.top_most_type = &s
+}
+
+// TopMostType returns the value of the "top_most_type" field in the mutation.
+func (m *TopMostMutation) TopMostType() (r string, exists bool) {
+	v := m.top_most_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTopMostType returns the old "top_most_type" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldTopMostType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTopMostType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTopMostType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTopMostType: %w", err)
+	}
+	return oldValue.TopMostType, nil
+}
+
+// ClearTopMostType clears the value of the "top_most_type" field.
+func (m *TopMostMutation) ClearTopMostType() {
+	m.top_most_type = nil
+	m.clearedFields[topmost.FieldTopMostType] = struct{}{}
+}
+
+// TopMostTypeCleared returns if the "top_most_type" field was cleared in this mutation.
+func (m *TopMostMutation) TopMostTypeCleared() bool {
+	_, ok := m.clearedFields[topmost.FieldTopMostType]
+	return ok
+}
+
+// ResetTopMostType resets all changes to the "top_most_type" field.
+func (m *TopMostMutation) ResetTopMostType() {
+	m.top_most_type = nil
+	delete(m.clearedFields, topmost.FieldTopMostType)
+}
+
+// SetTitle sets the "title" field.
+func (m *TopMostMutation) SetTitle(s string) {
+	m.title = &s
+}
+
+// Title returns the value of the "title" field in the mutation.
+func (m *TopMostMutation) Title() (r string, exists bool) {
+	v := m.title
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTitle returns the old "title" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldTitle(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTitle is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTitle requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTitle: %w", err)
+	}
+	return oldValue.Title, nil
+}
+
+// ClearTitle clears the value of the "title" field.
+func (m *TopMostMutation) ClearTitle() {
+	m.title = nil
+	m.clearedFields[topmost.FieldTitle] = struct{}{}
+}
+
+// TitleCleared returns if the "title" field was cleared in this mutation.
+func (m *TopMostMutation) TitleCleared() bool {
+	_, ok := m.clearedFields[topmost.FieldTitle]
+	return ok
+}
+
+// ResetTitle resets all changes to the "title" field.
+func (m *TopMostMutation) ResetTitle() {
+	m.title = nil
+	delete(m.clearedFields, topmost.FieldTitle)
+}
+
+// SetMessage sets the "message" field.
+func (m *TopMostMutation) SetMessage(s string) {
+	m.message = &s
+}
+
+// Message returns the value of the "message" field in the mutation.
+func (m *TopMostMutation) Message() (r string, exists bool) {
+	v := m.message
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMessage returns the old "message" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldMessage(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMessage is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMessage requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMessage: %w", err)
+	}
+	return oldValue.Message, nil
+}
+
+// ClearMessage clears the value of the "message" field.
+func (m *TopMostMutation) ClearMessage() {
+	m.message = nil
+	m.clearedFields[topmost.FieldMessage] = struct{}{}
+}
+
+// MessageCleared returns if the "message" field was cleared in this mutation.
+func (m *TopMostMutation) MessageCleared() bool {
+	_, ok := m.clearedFields[topmost.FieldMessage]
+	return ok
+}
+
+// ResetMessage resets all changes to the "message" field.
+func (m *TopMostMutation) ResetMessage() {
+	m.message = nil
+	delete(m.clearedFields, topmost.FieldMessage)
+}
+
+// SetPosters sets the "posters" field.
+func (m *TopMostMutation) SetPosters(s []string) {
+	m.posters = &s
+}
+
+// Posters returns the value of the "posters" field in the mutation.
+func (m *TopMostMutation) Posters() (r []string, exists bool) {
+	v := m.posters
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPosters returns the old "posters" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldPosters(ctx context.Context) (v []string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPosters is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPosters requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPosters: %w", err)
+	}
+	return oldValue.Posters, nil
+}
+
+// ClearPosters clears the value of the "posters" field.
+func (m *TopMostMutation) ClearPosters() {
+	m.posters = nil
+	m.clearedFields[topmost.FieldPosters] = struct{}{}
+}
+
+// PostersCleared returns if the "posters" field was cleared in this mutation.
+func (m *TopMostMutation) PostersCleared() bool {
+	_, ok := m.clearedFields[topmost.FieldPosters]
+	return ok
+}
+
+// ResetPosters resets all changes to the "posters" field.
+func (m *TopMostMutation) ResetPosters() {
+	m.posters = nil
+	delete(m.clearedFields, topmost.FieldPosters)
+}
+
+// SetStartAt sets the "start_at" field.
+func (m *TopMostMutation) SetStartAt(u uint32) {
+	m.start_at = &u
+	m.addstart_at = nil
+}
+
+// StartAt returns the value of the "start_at" field in the mutation.
+func (m *TopMostMutation) StartAt() (r uint32, exists bool) {
+	v := m.start_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStartAt returns the old "start_at" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldStartAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStartAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStartAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStartAt: %w", err)
+	}
+	return oldValue.StartAt, nil
+}
+
+// AddStartAt adds u to the "start_at" field.
+func (m *TopMostMutation) AddStartAt(u int32) {
+	if m.addstart_at != nil {
+		*m.addstart_at += u
+	} else {
+		m.addstart_at = &u
+	}
+}
+
+// AddedStartAt returns the value that was added to the "start_at" field in this mutation.
+func (m *TopMostMutation) AddedStartAt() (r int32, exists bool) {
+	v := m.addstart_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearStartAt clears the value of the "start_at" field.
+func (m *TopMostMutation) ClearStartAt() {
+	m.start_at = nil
+	m.addstart_at = nil
+	m.clearedFields[topmost.FieldStartAt] = struct{}{}
+}
+
+// StartAtCleared returns if the "start_at" field was cleared in this mutation.
+func (m *TopMostMutation) StartAtCleared() bool {
+	_, ok := m.clearedFields[topmost.FieldStartAt]
+	return ok
+}
+
+// ResetStartAt resets all changes to the "start_at" field.
+func (m *TopMostMutation) ResetStartAt() {
+	m.start_at = nil
+	m.addstart_at = nil
+	delete(m.clearedFields, topmost.FieldStartAt)
+}
+
+// SetEndAt sets the "end_at" field.
+func (m *TopMostMutation) SetEndAt(u uint32) {
+	m.end_at = &u
+	m.addend_at = nil
+}
+
+// EndAt returns the value of the "end_at" field in the mutation.
+func (m *TopMostMutation) EndAt() (r uint32, exists bool) {
+	v := m.end_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEndAt returns the old "end_at" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldEndAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEndAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEndAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEndAt: %w", err)
+	}
+	return oldValue.EndAt, nil
+}
+
+// AddEndAt adds u to the "end_at" field.
+func (m *TopMostMutation) AddEndAt(u int32) {
+	if m.addend_at != nil {
+		*m.addend_at += u
+	} else {
+		m.addend_at = &u
+	}
+}
+
+// AddedEndAt returns the value that was added to the "end_at" field in this mutation.
+func (m *TopMostMutation) AddedEndAt() (r int32, exists bool) {
+	v := m.addend_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearEndAt clears the value of the "end_at" field.
+func (m *TopMostMutation) ClearEndAt() {
+	m.end_at = nil
+	m.addend_at = nil
+	m.clearedFields[topmost.FieldEndAt] = struct{}{}
+}
+
+// EndAtCleared returns if the "end_at" field was cleared in this mutation.
+func (m *TopMostMutation) EndAtCleared() bool {
+	_, ok := m.clearedFields[topmost.FieldEndAt]
+	return ok
+}
+
+// ResetEndAt resets all changes to the "end_at" field.
+func (m *TopMostMutation) ResetEndAt() {
+	m.end_at = nil
+	m.addend_at = nil
+	delete(m.clearedFields, topmost.FieldEndAt)
+}
+
+// SetThresholdCredits sets the "threshold_credits" field.
+func (m *TopMostMutation) SetThresholdCredits(s string) {
+	m.threshold_credits = &s
+}
+
+// ThresholdCredits returns the value of the "threshold_credits" field in the mutation.
+func (m *TopMostMutation) ThresholdCredits() (r string, exists bool) {
+	v := m.threshold_credits
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldThresholdCredits returns the old "threshold_credits" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldThresholdCredits(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldThresholdCredits is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldThresholdCredits requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldThresholdCredits: %w", err)
+	}
+	return oldValue.ThresholdCredits, nil
+}
+
+// ClearThresholdCredits clears the value of the "threshold_credits" field.
+func (m *TopMostMutation) ClearThresholdCredits() {
+	m.threshold_credits = nil
+	m.clearedFields[topmost.FieldThresholdCredits] = struct{}{}
+}
+
+// ThresholdCreditsCleared returns if the "threshold_credits" field was cleared in this mutation.
+func (m *TopMostMutation) ThresholdCreditsCleared() bool {
+	_, ok := m.clearedFields[topmost.FieldThresholdCredits]
+	return ok
+}
+
+// ResetThresholdCredits resets all changes to the "threshold_credits" field.
+func (m *TopMostMutation) ResetThresholdCredits() {
+	m.threshold_credits = nil
+	delete(m.clearedFields, topmost.FieldThresholdCredits)
+}
+
+// SetRegisterElapsedSeconds sets the "register_elapsed_seconds" field.
+func (m *TopMostMutation) SetRegisterElapsedSeconds(u uint32) {
+	m.register_elapsed_seconds = &u
+	m.addregister_elapsed_seconds = nil
+}
+
+// RegisterElapsedSeconds returns the value of the "register_elapsed_seconds" field in the mutation.
+func (m *TopMostMutation) RegisterElapsedSeconds() (r uint32, exists bool) {
+	v := m.register_elapsed_seconds
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRegisterElapsedSeconds returns the old "register_elapsed_seconds" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldRegisterElapsedSeconds(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRegisterElapsedSeconds is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRegisterElapsedSeconds requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRegisterElapsedSeconds: %w", err)
+	}
+	return oldValue.RegisterElapsedSeconds, nil
+}
+
+// AddRegisterElapsedSeconds adds u to the "register_elapsed_seconds" field.
+func (m *TopMostMutation) AddRegisterElapsedSeconds(u int32) {
+	if m.addregister_elapsed_seconds != nil {
+		*m.addregister_elapsed_seconds += u
+	} else {
+		m.addregister_elapsed_seconds = &u
+	}
+}
+
+// AddedRegisterElapsedSeconds returns the value that was added to the "register_elapsed_seconds" field in this mutation.
+func (m *TopMostMutation) AddedRegisterElapsedSeconds() (r int32, exists bool) {
+	v := m.addregister_elapsed_seconds
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearRegisterElapsedSeconds clears the value of the "register_elapsed_seconds" field.
+func (m *TopMostMutation) ClearRegisterElapsedSeconds() {
+	m.register_elapsed_seconds = nil
+	m.addregister_elapsed_seconds = nil
+	m.clearedFields[topmost.FieldRegisterElapsedSeconds] = struct{}{}
+}
+
+// RegisterElapsedSecondsCleared returns if the "register_elapsed_seconds" field was cleared in this mutation.
+func (m *TopMostMutation) RegisterElapsedSecondsCleared() bool {
+	_, ok := m.clearedFields[topmost.FieldRegisterElapsedSeconds]
+	return ok
+}
+
+// ResetRegisterElapsedSeconds resets all changes to the "register_elapsed_seconds" field.
+func (m *TopMostMutation) ResetRegisterElapsedSeconds() {
+	m.register_elapsed_seconds = nil
+	m.addregister_elapsed_seconds = nil
+	delete(m.clearedFields, topmost.FieldRegisterElapsedSeconds)
+}
+
+// SetThresholdPurchases sets the "threshold_purchases" field.
+func (m *TopMostMutation) SetThresholdPurchases(u uint32) {
+	m.threshold_purchases = &u
+	m.addthreshold_purchases = nil
+}
+
+// ThresholdPurchases returns the value of the "threshold_purchases" field in the mutation.
+func (m *TopMostMutation) ThresholdPurchases() (r uint32, exists bool) {
+	v := m.threshold_purchases
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldThresholdPurchases returns the old "threshold_purchases" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldThresholdPurchases(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldThresholdPurchases is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldThresholdPurchases requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldThresholdPurchases: %w", err)
+	}
+	return oldValue.ThresholdPurchases, nil
+}
+
+// AddThresholdPurchases adds u to the "threshold_purchases" field.
+func (m *TopMostMutation) AddThresholdPurchases(u int32) {
+	if m.addthreshold_purchases != nil {
+		*m.addthreshold_purchases += u
+	} else {
+		m.addthreshold_purchases = &u
+	}
+}
+
+// AddedThresholdPurchases returns the value that was added to the "threshold_purchases" field in this mutation.
+func (m *TopMostMutation) AddedThresholdPurchases() (r int32, exists bool) {
+	v := m.addthreshold_purchases
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearThresholdPurchases clears the value of the "threshold_purchases" field.
+func (m *TopMostMutation) ClearThresholdPurchases() {
+	m.threshold_purchases = nil
+	m.addthreshold_purchases = nil
+	m.clearedFields[topmost.FieldThresholdPurchases] = struct{}{}
+}
+
+// ThresholdPurchasesCleared returns if the "threshold_purchases" field was cleared in this mutation.
+func (m *TopMostMutation) ThresholdPurchasesCleared() bool {
+	_, ok := m.clearedFields[topmost.FieldThresholdPurchases]
+	return ok
+}
+
+// ResetThresholdPurchases resets all changes to the "threshold_purchases" field.
+func (m *TopMostMutation) ResetThresholdPurchases() {
+	m.threshold_purchases = nil
+	m.addthreshold_purchases = nil
+	delete(m.clearedFields, topmost.FieldThresholdPurchases)
+}
+
+// SetThresholdPaymentAmount sets the "threshold_payment_amount" field.
+func (m *TopMostMutation) SetThresholdPaymentAmount(s string) {
+	m.threshold_payment_amount = &s
+}
+
+// ThresholdPaymentAmount returns the value of the "threshold_payment_amount" field in the mutation.
+func (m *TopMostMutation) ThresholdPaymentAmount() (r string, exists bool) {
+	v := m.threshold_payment_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldThresholdPaymentAmount returns the old "threshold_payment_amount" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldThresholdPaymentAmount(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldThresholdPaymentAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldThresholdPaymentAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldThresholdPaymentAmount: %w", err)
+	}
+	return oldValue.ThresholdPaymentAmount, nil
+}
+
+// ClearThresholdPaymentAmount clears the value of the "threshold_payment_amount" field.
+func (m *TopMostMutation) ClearThresholdPaymentAmount() {
+	m.threshold_payment_amount = nil
+	m.clearedFields[topmost.FieldThresholdPaymentAmount] = struct{}{}
+}
+
+// ThresholdPaymentAmountCleared returns if the "threshold_payment_amount" field was cleared in this mutation.
+func (m *TopMostMutation) ThresholdPaymentAmountCleared() bool {
+	_, ok := m.clearedFields[topmost.FieldThresholdPaymentAmount]
+	return ok
+}
+
+// ResetThresholdPaymentAmount resets all changes to the "threshold_payment_amount" field.
+func (m *TopMostMutation) ResetThresholdPaymentAmount() {
+	m.threshold_payment_amount = nil
+	delete(m.clearedFields, topmost.FieldThresholdPaymentAmount)
+}
+
+// SetKycMust sets the "kyc_must" field.
+func (m *TopMostMutation) SetKycMust(b bool) {
+	m.kyc_must = &b
+}
+
+// KycMust returns the value of the "kyc_must" field in the mutation.
+func (m *TopMostMutation) KycMust() (r bool, exists bool) {
+	v := m.kyc_must
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldKycMust returns the old "kyc_must" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldKycMust(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldKycMust is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldKycMust requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldKycMust: %w", err)
+	}
+	return oldValue.KycMust, nil
+}
+
+// ClearKycMust clears the value of the "kyc_must" field.
+func (m *TopMostMutation) ClearKycMust() {
+	m.kyc_must = nil
+	m.clearedFields[topmost.FieldKycMust] = struct{}{}
+}
+
+// KycMustCleared returns if the "kyc_must" field was cleared in this mutation.
+func (m *TopMostMutation) KycMustCleared() bool {
+	_, ok := m.clearedFields[topmost.FieldKycMust]
+	return ok
+}
+
+// ResetKycMust resets all changes to the "kyc_must" field.
+func (m *TopMostMutation) ResetKycMust() {
+	m.kyc_must = nil
+	delete(m.clearedFields, topmost.FieldKycMust)
+}
+
+// Where appends a list predicates to the TopMostMutation builder.
+func (m *TopMostMutation) Where(ps ...predicate.TopMost) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *TopMostMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (TopMost).
+func (m *TopMostMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *TopMostMutation) Fields() []string {
+	fields := make([]string, 0, 15)
+	if m.created_at != nil {
+		fields = append(fields, topmost.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, topmost.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, topmost.FieldDeletedAt)
+	}
+	if m.app_id != nil {
+		fields = append(fields, topmost.FieldAppID)
+	}
+	if m.top_most_type != nil {
+		fields = append(fields, topmost.FieldTopMostType)
+	}
+	if m.title != nil {
+		fields = append(fields, topmost.FieldTitle)
+	}
+	if m.message != nil {
+		fields = append(fields, topmost.FieldMessage)
+	}
+	if m.posters != nil {
+		fields = append(fields, topmost.FieldPosters)
+	}
+	if m.start_at != nil {
+		fields = append(fields, topmost.FieldStartAt)
+	}
+	if m.end_at != nil {
+		fields = append(fields, topmost.FieldEndAt)
+	}
+	if m.threshold_credits != nil {
+		fields = append(fields, topmost.FieldThresholdCredits)
+	}
+	if m.register_elapsed_seconds != nil {
+		fields = append(fields, topmost.FieldRegisterElapsedSeconds)
+	}
+	if m.threshold_purchases != nil {
+		fields = append(fields, topmost.FieldThresholdPurchases)
+	}
+	if m.threshold_payment_amount != nil {
+		fields = append(fields, topmost.FieldThresholdPaymentAmount)
+	}
+	if m.kyc_must != nil {
+		fields = append(fields, topmost.FieldKycMust)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *TopMostMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case topmost.FieldCreatedAt:
+		return m.CreatedAt()
+	case topmost.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case topmost.FieldDeletedAt:
+		return m.DeletedAt()
+	case topmost.FieldAppID:
+		return m.AppID()
+	case topmost.FieldTopMostType:
+		return m.TopMostType()
+	case topmost.FieldTitle:
+		return m.Title()
+	case topmost.FieldMessage:
+		return m.Message()
+	case topmost.FieldPosters:
+		return m.Posters()
+	case topmost.FieldStartAt:
+		return m.StartAt()
+	case topmost.FieldEndAt:
+		return m.EndAt()
+	case topmost.FieldThresholdCredits:
+		return m.ThresholdCredits()
+	case topmost.FieldRegisterElapsedSeconds:
+		return m.RegisterElapsedSeconds()
+	case topmost.FieldThresholdPurchases:
+		return m.ThresholdPurchases()
+	case topmost.FieldThresholdPaymentAmount:
+		return m.ThresholdPaymentAmount()
+	case topmost.FieldKycMust:
+		return m.KycMust()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *TopMostMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case topmost.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case topmost.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case topmost.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case topmost.FieldAppID:
+		return m.OldAppID(ctx)
+	case topmost.FieldTopMostType:
+		return m.OldTopMostType(ctx)
+	case topmost.FieldTitle:
+		return m.OldTitle(ctx)
+	case topmost.FieldMessage:
+		return m.OldMessage(ctx)
+	case topmost.FieldPosters:
+		return m.OldPosters(ctx)
+	case topmost.FieldStartAt:
+		return m.OldStartAt(ctx)
+	case topmost.FieldEndAt:
+		return m.OldEndAt(ctx)
+	case topmost.FieldThresholdCredits:
+		return m.OldThresholdCredits(ctx)
+	case topmost.FieldRegisterElapsedSeconds:
+		return m.OldRegisterElapsedSeconds(ctx)
+	case topmost.FieldThresholdPurchases:
+		return m.OldThresholdPurchases(ctx)
+	case topmost.FieldThresholdPaymentAmount:
+		return m.OldThresholdPaymentAmount(ctx)
+	case topmost.FieldKycMust:
+		return m.OldKycMust(ctx)
+	}
+	return nil, fmt.Errorf("unknown TopMost field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *TopMostMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case topmost.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case topmost.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case topmost.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case topmost.FieldAppID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppID(v)
+		return nil
+	case topmost.FieldTopMostType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTopMostType(v)
+		return nil
+	case topmost.FieldTitle:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTitle(v)
+		return nil
+	case topmost.FieldMessage:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMessage(v)
+		return nil
+	case topmost.FieldPosters:
+		v, ok := value.([]string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPosters(v)
+		return nil
+	case topmost.FieldStartAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStartAt(v)
+		return nil
+	case topmost.FieldEndAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEndAt(v)
+		return nil
+	case topmost.FieldThresholdCredits:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetThresholdCredits(v)
+		return nil
+	case topmost.FieldRegisterElapsedSeconds:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRegisterElapsedSeconds(v)
+		return nil
+	case topmost.FieldThresholdPurchases:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetThresholdPurchases(v)
+		return nil
+	case topmost.FieldThresholdPaymentAmount:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetThresholdPaymentAmount(v)
+		return nil
+	case topmost.FieldKycMust:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetKycMust(v)
+		return nil
+	}
+	return fmt.Errorf("unknown TopMost field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *TopMostMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, topmost.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, topmost.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, topmost.FieldDeletedAt)
+	}
+	if m.addstart_at != nil {
+		fields = append(fields, topmost.FieldStartAt)
+	}
+	if m.addend_at != nil {
+		fields = append(fields, topmost.FieldEndAt)
+	}
+	if m.addregister_elapsed_seconds != nil {
+		fields = append(fields, topmost.FieldRegisterElapsedSeconds)
+	}
+	if m.addthreshold_purchases != nil {
+		fields = append(fields, topmost.FieldThresholdPurchases)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *TopMostMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case topmost.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case topmost.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case topmost.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	case topmost.FieldStartAt:
+		return m.AddedStartAt()
+	case topmost.FieldEndAt:
+		return m.AddedEndAt()
+	case topmost.FieldRegisterElapsedSeconds:
+		return m.AddedRegisterElapsedSeconds()
+	case topmost.FieldThresholdPurchases:
+		return m.AddedThresholdPurchases()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *TopMostMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case topmost.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case topmost.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case topmost.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	case topmost.FieldStartAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddStartAt(v)
+		return nil
+	case topmost.FieldEndAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddEndAt(v)
+		return nil
+	case topmost.FieldRegisterElapsedSeconds:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddRegisterElapsedSeconds(v)
+		return nil
+	case topmost.FieldThresholdPurchases:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddThresholdPurchases(v)
+		return nil
+	}
+	return fmt.Errorf("unknown TopMost numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *TopMostMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(topmost.FieldTopMostType) {
+		fields = append(fields, topmost.FieldTopMostType)
+	}
+	if m.FieldCleared(topmost.FieldTitle) {
+		fields = append(fields, topmost.FieldTitle)
+	}
+	if m.FieldCleared(topmost.FieldMessage) {
+		fields = append(fields, topmost.FieldMessage)
+	}
+	if m.FieldCleared(topmost.FieldPosters) {
+		fields = append(fields, topmost.FieldPosters)
+	}
+	if m.FieldCleared(topmost.FieldStartAt) {
+		fields = append(fields, topmost.FieldStartAt)
+	}
+	if m.FieldCleared(topmost.FieldEndAt) {
+		fields = append(fields, topmost.FieldEndAt)
+	}
+	if m.FieldCleared(topmost.FieldThresholdCredits) {
+		fields = append(fields, topmost.FieldThresholdCredits)
+	}
+	if m.FieldCleared(topmost.FieldRegisterElapsedSeconds) {
+		fields = append(fields, topmost.FieldRegisterElapsedSeconds)
+	}
+	if m.FieldCleared(topmost.FieldThresholdPurchases) {
+		fields = append(fields, topmost.FieldThresholdPurchases)
+	}
+	if m.FieldCleared(topmost.FieldThresholdPaymentAmount) {
+		fields = append(fields, topmost.FieldThresholdPaymentAmount)
+	}
+	if m.FieldCleared(topmost.FieldKycMust) {
+		fields = append(fields, topmost.FieldKycMust)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *TopMostMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *TopMostMutation) ClearField(name string) error {
+	switch name {
+	case topmost.FieldTopMostType:
+		m.ClearTopMostType()
+		return nil
+	case topmost.FieldTitle:
+		m.ClearTitle()
+		return nil
+	case topmost.FieldMessage:
+		m.ClearMessage()
+		return nil
+	case topmost.FieldPosters:
+		m.ClearPosters()
+		return nil
+	case topmost.FieldStartAt:
+		m.ClearStartAt()
+		return nil
+	case topmost.FieldEndAt:
+		m.ClearEndAt()
+		return nil
+	case topmost.FieldThresholdCredits:
+		m.ClearThresholdCredits()
+		return nil
+	case topmost.FieldRegisterElapsedSeconds:
+		m.ClearRegisterElapsedSeconds()
+		return nil
+	case topmost.FieldThresholdPurchases:
+		m.ClearThresholdPurchases()
+		return nil
+	case topmost.FieldThresholdPaymentAmount:
+		m.ClearThresholdPaymentAmount()
+		return nil
+	case topmost.FieldKycMust:
+		m.ClearKycMust()
+		return nil
+	}
+	return fmt.Errorf("unknown TopMost nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *TopMostMutation) ResetField(name string) error {
+	switch name {
+	case topmost.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case topmost.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case topmost.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case topmost.FieldAppID:
+		m.ResetAppID()
+		return nil
+	case topmost.FieldTopMostType:
+		m.ResetTopMostType()
+		return nil
+	case topmost.FieldTitle:
+		m.ResetTitle()
+		return nil
+	case topmost.FieldMessage:
+		m.ResetMessage()
+		return nil
+	case topmost.FieldPosters:
+		m.ResetPosters()
+		return nil
+	case topmost.FieldStartAt:
+		m.ResetStartAt()
+		return nil
+	case topmost.FieldEndAt:
+		m.ResetEndAt()
+		return nil
+	case topmost.FieldThresholdCredits:
+		m.ResetThresholdCredits()
+		return nil
+	case topmost.FieldRegisterElapsedSeconds:
+		m.ResetRegisterElapsedSeconds()
+		return nil
+	case topmost.FieldThresholdPurchases:
+		m.ResetThresholdPurchases()
+		return nil
+	case topmost.FieldThresholdPaymentAmount:
+		m.ResetThresholdPaymentAmount()
+		return nil
+	case topmost.FieldKycMust:
+		m.ResetKycMust()
+		return nil
+	}
+	return fmt.Errorf("unknown TopMost field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *TopMostMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *TopMostMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *TopMostMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *TopMostMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *TopMostMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *TopMostMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *TopMostMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown TopMost unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *TopMostMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown TopMost edge %s", name)
+}
+
+// TopMostGoodMutation represents an operation that mutates the TopMostGood nodes in the graph.
+type TopMostGoodMutation struct {
+	config
+	op               Op
+	typ              string
+	id               *uuid.UUID
+	created_at       *uint32
+	addcreated_at    *int32
+	updated_at       *uint32
+	addupdated_at    *int32
+	deleted_at       *uint32
+	adddeleted_at    *int32
+	app_id           *uuid.UUID
+	app_good_id      *uuid.UUID
+	top_most_id      *uuid.UUID
+	display_index    *uint32
+	adddisplay_index *int32
+	posters          *[]string
+	price            *decimal.Decimal
+	clearedFields    map[string]struct{}
+	done             bool
+	oldValue         func(context.Context) (*TopMostGood, error)
+	predicates       []predicate.TopMostGood
+}
+
+var _ ent.Mutation = (*TopMostGoodMutation)(nil)
+
+// topmostgoodOption allows management of the mutation configuration using functional options.
+type topmostgoodOption func(*TopMostGoodMutation)
+
+// newTopMostGoodMutation creates new mutation for the TopMostGood entity.
+func newTopMostGoodMutation(c config, op Op, opts ...topmostgoodOption) *TopMostGoodMutation {
+	m := &TopMostGoodMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeTopMostGood,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withTopMostGoodID sets the ID field of the mutation.
+func withTopMostGoodID(id uuid.UUID) topmostgoodOption {
+	return func(m *TopMostGoodMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *TopMostGood
+		)
+		m.oldValue = func(ctx context.Context) (*TopMostGood, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().TopMostGood.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withTopMostGood sets the old TopMostGood of the mutation.
+func withTopMostGood(node *TopMostGood) topmostgoodOption {
+	return func(m *TopMostGoodMutation) {
+		m.oldValue = func(context.Context) (*TopMostGood, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m TopMostGoodMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m TopMostGoodMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of TopMostGood entities.
+func (m *TopMostGoodMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *TopMostGoodMutation) ID() (id uuid.UUID, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *TopMostGoodMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uuid.UUID{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().TopMostGood.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *TopMostGoodMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *TopMostGoodMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the TopMostGood entity.
+// If the TopMostGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *TopMostGoodMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *TopMostGoodMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *TopMostGoodMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *TopMostGoodMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *TopMostGoodMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the TopMostGood entity.
+// If the TopMostGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *TopMostGoodMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *TopMostGoodMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *TopMostGoodMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *TopMostGoodMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *TopMostGoodMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the TopMostGood entity.
+// If the TopMostGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *TopMostGoodMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *TopMostGoodMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *TopMostGoodMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetAppID sets the "app_id" field.
+func (m *TopMostGoodMutation) SetAppID(u uuid.UUID) {
+	m.app_id = &u
+}
+
+// AppID returns the value of the "app_id" field in the mutation.
+func (m *TopMostGoodMutation) AppID() (r uuid.UUID, exists bool) {
+	v := m.app_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppID returns the old "app_id" field's value of the TopMostGood entity.
+// If the TopMostGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
+	}
+	return oldValue.AppID, nil
+}
+
+// ResetAppID resets all changes to the "app_id" field.
+func (m *TopMostGoodMutation) ResetAppID() {
+	m.app_id = nil
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (m *TopMostGoodMutation) SetAppGoodID(u uuid.UUID) {
+	m.app_good_id = &u
+}
+
+// AppGoodID returns the value of the "app_good_id" field in the mutation.
+func (m *TopMostGoodMutation) AppGoodID() (r uuid.UUID, exists bool) {
+	v := m.app_good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppGoodID returns the old "app_good_id" field's value of the TopMostGood entity.
+// If the TopMostGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodMutation) OldAppGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppGoodID: %w", err)
+	}
+	return oldValue.AppGoodID, nil
+}
+
+// ResetAppGoodID resets all changes to the "app_good_id" field.
+func (m *TopMostGoodMutation) ResetAppGoodID() {
+	m.app_good_id = nil
+}
+
+// SetTopMostID sets the "top_most_id" field.
+func (m *TopMostGoodMutation) SetTopMostID(u uuid.UUID) {
+	m.top_most_id = &u
+}
+
+// TopMostID returns the value of the "top_most_id" field in the mutation.
+func (m *TopMostGoodMutation) TopMostID() (r uuid.UUID, exists bool) {
+	v := m.top_most_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTopMostID returns the old "top_most_id" field's value of the TopMostGood entity.
+// If the TopMostGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodMutation) OldTopMostID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTopMostID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTopMostID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTopMostID: %w", err)
+	}
+	return oldValue.TopMostID, nil
+}
+
+// ResetTopMostID resets all changes to the "top_most_id" field.
+func (m *TopMostGoodMutation) ResetTopMostID() {
+	m.top_most_id = nil
+}
+
+// SetDisplayIndex sets the "display_index" field.
+func (m *TopMostGoodMutation) SetDisplayIndex(u uint32) {
+	m.display_index = &u
+	m.adddisplay_index = nil
+}
+
+// DisplayIndex returns the value of the "display_index" field in the mutation.
+func (m *TopMostGoodMutation) DisplayIndex() (r uint32, exists bool) {
+	v := m.display_index
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayIndex returns the old "display_index" field's value of the TopMostGood entity.
+// If the TopMostGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodMutation) OldDisplayIndex(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayIndex is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayIndex requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayIndex: %w", err)
+	}
+	return oldValue.DisplayIndex, nil
+}
+
+// AddDisplayIndex adds u to the "display_index" field.
+func (m *TopMostGoodMutation) AddDisplayIndex(u int32) {
+	if m.adddisplay_index != nil {
+		*m.adddisplay_index += u
+	} else {
+		m.adddisplay_index = &u
+	}
+}
+
+// AddedDisplayIndex returns the value that was added to the "display_index" field in this mutation.
+func (m *TopMostGoodMutation) AddedDisplayIndex() (r int32, exists bool) {
+	v := m.adddisplay_index
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearDisplayIndex clears the value of the "display_index" field.
+func (m *TopMostGoodMutation) ClearDisplayIndex() {
+	m.display_index = nil
+	m.adddisplay_index = nil
+	m.clearedFields[topmostgood.FieldDisplayIndex] = struct{}{}
+}
+
+// DisplayIndexCleared returns if the "display_index" field was cleared in this mutation.
+func (m *TopMostGoodMutation) DisplayIndexCleared() bool {
+	_, ok := m.clearedFields[topmostgood.FieldDisplayIndex]
+	return ok
+}
+
+// ResetDisplayIndex resets all changes to the "display_index" field.
+func (m *TopMostGoodMutation) ResetDisplayIndex() {
+	m.display_index = nil
+	m.adddisplay_index = nil
+	delete(m.clearedFields, topmostgood.FieldDisplayIndex)
+}
+
+// SetPosters sets the "posters" field.
+func (m *TopMostGoodMutation) SetPosters(s []string) {
+	m.posters = &s
+}
+
+// Posters returns the value of the "posters" field in the mutation.
+func (m *TopMostGoodMutation) Posters() (r []string, exists bool) {
+	v := m.posters
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPosters returns the old "posters" field's value of the TopMostGood entity.
+// If the TopMostGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodMutation) OldPosters(ctx context.Context) (v []string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPosters is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPosters requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPosters: %w", err)
+	}
+	return oldValue.Posters, nil
+}
+
+// ClearPosters clears the value of the "posters" field.
+func (m *TopMostGoodMutation) ClearPosters() {
+	m.posters = nil
+	m.clearedFields[topmostgood.FieldPosters] = struct{}{}
+}
+
+// PostersCleared returns if the "posters" field was cleared in this mutation.
+func (m *TopMostGoodMutation) PostersCleared() bool {
+	_, ok := m.clearedFields[topmostgood.FieldPosters]
+	return ok
+}
+
+// ResetPosters resets all changes to the "posters" field.
+func (m *TopMostGoodMutation) ResetPosters() {
+	m.posters = nil
+	delete(m.clearedFields, topmostgood.FieldPosters)
+}
+
+// SetPrice sets the "price" field.
+func (m *TopMostGoodMutation) SetPrice(d decimal.Decimal) {
+	m.price = &d
+}
+
+// Price returns the value of the "price" field in the mutation.
+func (m *TopMostGoodMutation) Price() (r decimal.Decimal, exists bool) {
+	v := m.price
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPrice returns the old "price" field's value of the TopMostGood entity.
+// If the TopMostGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodMutation) OldPrice(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPrice is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPrice requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPrice: %w", err)
+	}
+	return oldValue.Price, nil
+}
+
+// ClearPrice clears the value of the "price" field.
+func (m *TopMostGoodMutation) ClearPrice() {
+	m.price = nil
+	m.clearedFields[topmostgood.FieldPrice] = struct{}{}
+}
+
+// PriceCleared returns if the "price" field was cleared in this mutation.
+func (m *TopMostGoodMutation) PriceCleared() bool {
+	_, ok := m.clearedFields[topmostgood.FieldPrice]
+	return ok
+}
+
+// ResetPrice resets all changes to the "price" field.
+func (m *TopMostGoodMutation) ResetPrice() {
+	m.price = nil
+	delete(m.clearedFields, topmostgood.FieldPrice)
+}
+
+// Where appends a list predicates to the TopMostGoodMutation builder.
+func (m *TopMostGoodMutation) Where(ps ...predicate.TopMostGood) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *TopMostGoodMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (TopMostGood).
+func (m *TopMostGoodMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *TopMostGoodMutation) Fields() []string {
+	fields := make([]string, 0, 9)
+	if m.created_at != nil {
+		fields = append(fields, topmostgood.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, topmostgood.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, topmostgood.FieldDeletedAt)
+	}
+	if m.app_id != nil {
+		fields = append(fields, topmostgood.FieldAppID)
+	}
+	if m.app_good_id != nil {
+		fields = append(fields, topmostgood.FieldAppGoodID)
+	}
+	if m.top_most_id != nil {
+		fields = append(fields, topmostgood.FieldTopMostID)
+	}
+	if m.display_index != nil {
+		fields = append(fields, topmostgood.FieldDisplayIndex)
+	}
+	if m.posters != nil {
+		fields = append(fields, topmostgood.FieldPosters)
+	}
+	if m.price != nil {
+		fields = append(fields, topmostgood.FieldPrice)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *TopMostGoodMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case topmostgood.FieldCreatedAt:
+		return m.CreatedAt()
+	case topmostgood.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case topmostgood.FieldDeletedAt:
+		return m.DeletedAt()
+	case topmostgood.FieldAppID:
+		return m.AppID()
+	case topmostgood.FieldAppGoodID:
+		return m.AppGoodID()
+	case topmostgood.FieldTopMostID:
+		return m.TopMostID()
+	case topmostgood.FieldDisplayIndex:
+		return m.DisplayIndex()
+	case topmostgood.FieldPosters:
+		return m.Posters()
+	case topmostgood.FieldPrice:
+		return m.Price()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *TopMostGoodMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case topmostgood.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case topmostgood.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case topmostgood.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case topmostgood.FieldAppID:
+		return m.OldAppID(ctx)
+	case topmostgood.FieldAppGoodID:
+		return m.OldAppGoodID(ctx)
+	case topmostgood.FieldTopMostID:
+		return m.OldTopMostID(ctx)
+	case topmostgood.FieldDisplayIndex:
+		return m.OldDisplayIndex(ctx)
+	case topmostgood.FieldPosters:
+		return m.OldPosters(ctx)
+	case topmostgood.FieldPrice:
+		return m.OldPrice(ctx)
+	}
+	return nil, fmt.Errorf("unknown TopMostGood field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *TopMostGoodMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case topmostgood.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case topmostgood.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case topmostgood.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case topmostgood.FieldAppID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppID(v)
+		return nil
+	case topmostgood.FieldAppGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppGoodID(v)
+		return nil
+	case topmostgood.FieldTopMostID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTopMostID(v)
+		return nil
+	case topmostgood.FieldDisplayIndex:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayIndex(v)
+		return nil
+	case topmostgood.FieldPosters:
+		v, ok := value.([]string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPosters(v)
+		return nil
+	case topmostgood.FieldPrice:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPrice(v)
+		return nil
+	}
+	return fmt.Errorf("unknown TopMostGood field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *TopMostGoodMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, topmostgood.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, topmostgood.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, topmostgood.FieldDeletedAt)
+	}
+	if m.adddisplay_index != nil {
+		fields = append(fields, topmostgood.FieldDisplayIndex)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *TopMostGoodMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case topmostgood.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case topmostgood.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case topmostgood.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	case topmostgood.FieldDisplayIndex:
+		return m.AddedDisplayIndex()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *TopMostGoodMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case topmostgood.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case topmostgood.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case topmostgood.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	case topmostgood.FieldDisplayIndex:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisplayIndex(v)
+		return nil
+	}
+	return fmt.Errorf("unknown TopMostGood numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *TopMostGoodMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(topmostgood.FieldDisplayIndex) {
+		fields = append(fields, topmostgood.FieldDisplayIndex)
+	}
+	if m.FieldCleared(topmostgood.FieldPosters) {
+		fields = append(fields, topmostgood.FieldPosters)
+	}
+	if m.FieldCleared(topmostgood.FieldPrice) {
+		fields = append(fields, topmostgood.FieldPrice)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *TopMostGoodMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *TopMostGoodMutation) ClearField(name string) error {
+	switch name {
+	case topmostgood.FieldDisplayIndex:
+		m.ClearDisplayIndex()
+		return nil
+	case topmostgood.FieldPosters:
+		m.ClearPosters()
+		return nil
+	case topmostgood.FieldPrice:
+		m.ClearPrice()
+		return nil
+	}
+	return fmt.Errorf("unknown TopMostGood nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *TopMostGoodMutation) ResetField(name string) error {
+	switch name {
+	case topmostgood.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case topmostgood.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case topmostgood.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case topmostgood.FieldAppID:
+		m.ResetAppID()
+		return nil
+	case topmostgood.FieldAppGoodID:
+		m.ResetAppGoodID()
+		return nil
+	case topmostgood.FieldTopMostID:
+		m.ResetTopMostID()
+		return nil
+	case topmostgood.FieldDisplayIndex:
+		m.ResetDisplayIndex()
+		return nil
+	case topmostgood.FieldPosters:
+		m.ResetPosters()
+		return nil
+	case topmostgood.FieldPrice:
+		m.ResetPrice()
+		return nil
+	}
+	return fmt.Errorf("unknown TopMostGood field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *TopMostGoodMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *TopMostGoodMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *TopMostGoodMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *TopMostGoodMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *TopMostGoodMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *TopMostGoodMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *TopMostGoodMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown TopMostGood unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *TopMostGoodMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown TopMostGood edge %s", name)
 }
 
 // VendorBrandMutation represents an operation that mutates the VendorBrand nodes in the graph.

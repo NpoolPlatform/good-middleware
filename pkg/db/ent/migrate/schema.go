@@ -227,7 +227,7 @@ var (
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1692254912},
+		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1692260090},
 		{Name: "tid", Type: field.TypeUUID, Nullable: true},
 		{Name: "amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "unit_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
@@ -370,6 +370,50 @@ var (
 		Columns:    StocksV1Columns,
 		PrimaryKey: []*schema.Column{StocksV1Columns[0]},
 	}
+	// TopMostsColumns holds the columns for the "top_mosts" table.
+	TopMostsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "top_most_type", Type: field.TypeString, Nullable: true, Default: "DefaultGoodTopMostType"},
+		{Name: "title", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "message", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "posters", Type: field.TypeJSON, Nullable: true},
+		{Name: "start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "end_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "threshold_credits", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "register_elapsed_seconds", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "threshold_purchases", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "threshold_payment_amount", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "kyc_must", Type: field.TypeBool, Nullable: true, Default: true},
+	}
+	// TopMostsTable holds the schema information for the "top_mosts" table.
+	TopMostsTable = &schema.Table{
+		Name:       "top_mosts",
+		Columns:    TopMostsColumns,
+		PrimaryKey: []*schema.Column{TopMostsColumns[0]},
+	}
+	// TopMostGoodsColumns holds the columns for the "top_most_goods" table.
+	TopMostGoodsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "app_good_id", Type: field.TypeUUID},
+		{Name: "top_most_id", Type: field.TypeUUID},
+		{Name: "display_index", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "posters", Type: field.TypeJSON, Nullable: true},
+		{Name: "price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+	}
+	// TopMostGoodsTable holds the schema information for the "top_most_goods" table.
+	TopMostGoodsTable = &schema.Table{
+		Name:       "top_most_goods",
+		Columns:    TopMostGoodsColumns,
+		PrimaryKey: []*schema.Column{TopMostGoodsColumns[0]},
+	}
 	// VendorBrandsColumns holds the columns for the "vendor_brands" table.
 	VendorBrandsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -420,6 +464,8 @@ var (
 		RequiredGoodsTable,
 		ScoresTable,
 		StocksV1Table,
+		TopMostsTable,
+		TopMostGoodsTable,
 		VendorBrandsTable,
 		VendorLocationsTable,
 	}

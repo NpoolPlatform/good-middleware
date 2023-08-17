@@ -204,6 +204,32 @@ func (f StockFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error
 	return f(ctx, mv)
 }
 
+// The TopMostFunc type is an adapter to allow the use of ordinary
+// function as TopMost mutator.
+type TopMostFunc func(context.Context, *ent.TopMostMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f TopMostFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.TopMostMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TopMostMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The TopMostGoodFunc type is an adapter to allow the use of ordinary
+// function as TopMostGood mutator.
+type TopMostGoodFunc func(context.Context, *ent.TopMostGoodMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f TopMostGoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.TopMostGoodMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TopMostGoodMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The VendorBrandFunc type is an adapter to allow the use of ordinary
 // function as VendorBrand mutator.
 type VendorBrandFunc func(context.Context, *ent.VendorBrandMutation) (ent.Value, error)

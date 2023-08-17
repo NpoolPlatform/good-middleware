@@ -25,6 +25,8 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 )
@@ -62,6 +64,8 @@ func columnChecker(table string) func(string) error {
 		requiredgood.Table:      requiredgood.ValidColumn,
 		score.Table:             score.ValidColumn,
 		stock.Table:             stock.ValidColumn,
+		topmost.Table:           topmost.ValidColumn,
+		topmostgood.Table:       topmostgood.ValidColumn,
 		vendorbrand.Table:       vendorbrand.ValidColumn,
 		vendorlocation.Table:    vendorlocation.ValidColumn,
 	}

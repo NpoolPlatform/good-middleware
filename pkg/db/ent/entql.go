@@ -18,6 +18,8 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 
@@ -29,7 +31,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 17)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 19)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   appdefaultgood.Table,
@@ -389,6 +391,56 @@ var schemaGraph = func() *sqlgraph.Schema {
 	}
 	graph.Nodes[15] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
+			Table:   topmost.Table,
+			Columns: topmost.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUUID,
+				Column: topmost.FieldID,
+			},
+		},
+		Type: "TopMost",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			topmost.FieldCreatedAt:              {Type: field.TypeUint32, Column: topmost.FieldCreatedAt},
+			topmost.FieldUpdatedAt:              {Type: field.TypeUint32, Column: topmost.FieldUpdatedAt},
+			topmost.FieldDeletedAt:              {Type: field.TypeUint32, Column: topmost.FieldDeletedAt},
+			topmost.FieldAppID:                  {Type: field.TypeUUID, Column: topmost.FieldAppID},
+			topmost.FieldTopMostType:            {Type: field.TypeString, Column: topmost.FieldTopMostType},
+			topmost.FieldTitle:                  {Type: field.TypeString, Column: topmost.FieldTitle},
+			topmost.FieldMessage:                {Type: field.TypeString, Column: topmost.FieldMessage},
+			topmost.FieldPosters:                {Type: field.TypeJSON, Column: topmost.FieldPosters},
+			topmost.FieldStartAt:                {Type: field.TypeUint32, Column: topmost.FieldStartAt},
+			topmost.FieldEndAt:                  {Type: field.TypeUint32, Column: topmost.FieldEndAt},
+			topmost.FieldThresholdCredits:       {Type: field.TypeString, Column: topmost.FieldThresholdCredits},
+			topmost.FieldRegisterElapsedSeconds: {Type: field.TypeUint32, Column: topmost.FieldRegisterElapsedSeconds},
+			topmost.FieldThresholdPurchases:     {Type: field.TypeUint32, Column: topmost.FieldThresholdPurchases},
+			topmost.FieldThresholdPaymentAmount: {Type: field.TypeString, Column: topmost.FieldThresholdPaymentAmount},
+			topmost.FieldKycMust:                {Type: field.TypeBool, Column: topmost.FieldKycMust},
+		},
+	}
+	graph.Nodes[16] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   topmostgood.Table,
+			Columns: topmostgood.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUUID,
+				Column: topmostgood.FieldID,
+			},
+		},
+		Type: "TopMostGood",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			topmostgood.FieldCreatedAt:    {Type: field.TypeUint32, Column: topmostgood.FieldCreatedAt},
+			topmostgood.FieldUpdatedAt:    {Type: field.TypeUint32, Column: topmostgood.FieldUpdatedAt},
+			topmostgood.FieldDeletedAt:    {Type: field.TypeUint32, Column: topmostgood.FieldDeletedAt},
+			topmostgood.FieldAppID:        {Type: field.TypeUUID, Column: topmostgood.FieldAppID},
+			topmostgood.FieldAppGoodID:    {Type: field.TypeUUID, Column: topmostgood.FieldAppGoodID},
+			topmostgood.FieldTopMostID:    {Type: field.TypeUUID, Column: topmostgood.FieldTopMostID},
+			topmostgood.FieldDisplayIndex: {Type: field.TypeUint32, Column: topmostgood.FieldDisplayIndex},
+			topmostgood.FieldPosters:      {Type: field.TypeJSON, Column: topmostgood.FieldPosters},
+			topmostgood.FieldPrice:        {Type: field.TypeOther, Column: topmostgood.FieldPrice},
+		},
+	}
+	graph.Nodes[17] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
 			Table:   vendorbrand.Table,
 			Columns: vendorbrand.Columns,
 			ID: &sqlgraph.FieldSpec{
@@ -405,7 +457,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			vendorbrand.FieldLogo:      {Type: field.TypeString, Column: vendorbrand.FieldLogo},
 		},
 	}
-	graph.Nodes[16] = &sqlgraph.Node{
+	graph.Nodes[18] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   vendorlocation.Table,
 			Columns: vendorlocation.Columns,
@@ -1846,6 +1898,206 @@ func (f *StockFilter) WhereAppLocked(p entql.OtherP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (tmq *TopMostQuery) addPredicate(pred func(s *sql.Selector)) {
+	tmq.predicates = append(tmq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the TopMostQuery builder.
+func (tmq *TopMostQuery) Filter() *TopMostFilter {
+	return &TopMostFilter{config: tmq.config, predicateAdder: tmq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *TopMostMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the TopMostMutation builder.
+func (m *TopMostMutation) Filter() *TopMostFilter {
+	return &TopMostFilter{config: m.config, predicateAdder: m}
+}
+
+// TopMostFilter provides a generic filtering capability at runtime for TopMostQuery.
+type TopMostFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *TopMostFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[15].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql [16]byte predicate on the id field.
+func (f *TopMostFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(topmost.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *TopMostFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(topmost.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *TopMostFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(topmost.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *TopMostFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(topmost.FieldDeletedAt))
+}
+
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *TopMostFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(topmost.FieldAppID))
+}
+
+// WhereTopMostType applies the entql string predicate on the top_most_type field.
+func (f *TopMostFilter) WhereTopMostType(p entql.StringP) {
+	f.Where(p.Field(topmost.FieldTopMostType))
+}
+
+// WhereTitle applies the entql string predicate on the title field.
+func (f *TopMostFilter) WhereTitle(p entql.StringP) {
+	f.Where(p.Field(topmost.FieldTitle))
+}
+
+// WhereMessage applies the entql string predicate on the message field.
+func (f *TopMostFilter) WhereMessage(p entql.StringP) {
+	f.Where(p.Field(topmost.FieldMessage))
+}
+
+// WherePosters applies the entql json.RawMessage predicate on the posters field.
+func (f *TopMostFilter) WherePosters(p entql.BytesP) {
+	f.Where(p.Field(topmost.FieldPosters))
+}
+
+// WhereStartAt applies the entql uint32 predicate on the start_at field.
+func (f *TopMostFilter) WhereStartAt(p entql.Uint32P) {
+	f.Where(p.Field(topmost.FieldStartAt))
+}
+
+// WhereEndAt applies the entql uint32 predicate on the end_at field.
+func (f *TopMostFilter) WhereEndAt(p entql.Uint32P) {
+	f.Where(p.Field(topmost.FieldEndAt))
+}
+
+// WhereThresholdCredits applies the entql string predicate on the threshold_credits field.
+func (f *TopMostFilter) WhereThresholdCredits(p entql.StringP) {
+	f.Where(p.Field(topmost.FieldThresholdCredits))
+}
+
+// WhereRegisterElapsedSeconds applies the entql uint32 predicate on the register_elapsed_seconds field.
+func (f *TopMostFilter) WhereRegisterElapsedSeconds(p entql.Uint32P) {
+	f.Where(p.Field(topmost.FieldRegisterElapsedSeconds))
+}
+
+// WhereThresholdPurchases applies the entql uint32 predicate on the threshold_purchases field.
+func (f *TopMostFilter) WhereThresholdPurchases(p entql.Uint32P) {
+	f.Where(p.Field(topmost.FieldThresholdPurchases))
+}
+
+// WhereThresholdPaymentAmount applies the entql string predicate on the threshold_payment_amount field.
+func (f *TopMostFilter) WhereThresholdPaymentAmount(p entql.StringP) {
+	f.Where(p.Field(topmost.FieldThresholdPaymentAmount))
+}
+
+// WhereKycMust applies the entql bool predicate on the kyc_must field.
+func (f *TopMostFilter) WhereKycMust(p entql.BoolP) {
+	f.Where(p.Field(topmost.FieldKycMust))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (tmgq *TopMostGoodQuery) addPredicate(pred func(s *sql.Selector)) {
+	tmgq.predicates = append(tmgq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the TopMostGoodQuery builder.
+func (tmgq *TopMostGoodQuery) Filter() *TopMostGoodFilter {
+	return &TopMostGoodFilter{config: tmgq.config, predicateAdder: tmgq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *TopMostGoodMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the TopMostGoodMutation builder.
+func (m *TopMostGoodMutation) Filter() *TopMostGoodFilter {
+	return &TopMostGoodFilter{config: m.config, predicateAdder: m}
+}
+
+// TopMostGoodFilter provides a generic filtering capability at runtime for TopMostGoodQuery.
+type TopMostGoodFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *TopMostGoodFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[16].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql [16]byte predicate on the id field.
+func (f *TopMostGoodFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(topmostgood.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *TopMostGoodFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(topmostgood.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *TopMostGoodFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(topmostgood.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *TopMostGoodFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(topmostgood.FieldDeletedAt))
+}
+
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *TopMostGoodFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(topmostgood.FieldAppID))
+}
+
+// WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
+func (f *TopMostGoodFilter) WhereAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(topmostgood.FieldAppGoodID))
+}
+
+// WhereTopMostID applies the entql [16]byte predicate on the top_most_id field.
+func (f *TopMostGoodFilter) WhereTopMostID(p entql.ValueP) {
+	f.Where(p.Field(topmostgood.FieldTopMostID))
+}
+
+// WhereDisplayIndex applies the entql uint32 predicate on the display_index field.
+func (f *TopMostGoodFilter) WhereDisplayIndex(p entql.Uint32P) {
+	f.Where(p.Field(topmostgood.FieldDisplayIndex))
+}
+
+// WherePosters applies the entql json.RawMessage predicate on the posters field.
+func (f *TopMostGoodFilter) WherePosters(p entql.BytesP) {
+	f.Where(p.Field(topmostgood.FieldPosters))
+}
+
+// WherePrice applies the entql other predicate on the price field.
+func (f *TopMostGoodFilter) WherePrice(p entql.OtherP) {
+	f.Where(p.Field(topmostgood.FieldPrice))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (vbq *VendorBrandQuery) addPredicate(pred func(s *sql.Selector)) {
 	vbq.predicates = append(vbq.predicates, pred)
 }
@@ -1874,7 +2126,7 @@ type VendorBrandFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *VendorBrandFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[15].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[17].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1939,7 +2191,7 @@ type VendorLocationFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *VendorLocationFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[16].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[18].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})

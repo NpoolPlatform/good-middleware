@@ -51,6 +51,12 @@ type Score func(*sql.Selector)
 // Stock is the predicate function for stock builders.
 type Stock func(*sql.Selector)
 
+// TopMost is the predicate function for topmost builders.
+type TopMost func(*sql.Selector)
+
+// TopMostGood is the predicate function for topmostgood builders.
+type TopMostGood func(*sql.Selector)
+
 // VendorBrand is the predicate function for vendorbrand builders.
 type VendorBrand func(*sql.Selector)
 

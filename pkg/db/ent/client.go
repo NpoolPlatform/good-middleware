@@ -26,6 +26,8 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 
@@ -68,6 +70,10 @@ type Client struct {
 	Score *ScoreClient
 	// Stock is the client for interacting with the Stock builders.
 	Stock *StockClient
+	// TopMost is the client for interacting with the TopMost builders.
+	TopMost *TopMostClient
+	// TopMostGood is the client for interacting with the TopMostGood builders.
+	TopMostGood *TopMostGoodClient
 	// VendorBrand is the client for interacting with the VendorBrand builders.
 	VendorBrand *VendorBrandClient
 	// VendorLocation is the client for interacting with the VendorLocation builders.
@@ -100,6 +106,8 @@ func (c *Client) init() {
 	c.RequiredGood = NewRequiredGoodClient(c.config)
 	c.Score = NewScoreClient(c.config)
 	c.Stock = NewStockClient(c.config)
+	c.TopMost = NewTopMostClient(c.config)
+	c.TopMostGood = NewTopMostGoodClient(c.config)
 	c.VendorBrand = NewVendorBrandClient(c.config)
 	c.VendorLocation = NewVendorLocationClient(c.config)
 }
@@ -150,6 +158,8 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		RequiredGood:      NewRequiredGoodClient(cfg),
 		Score:             NewScoreClient(cfg),
 		Stock:             NewStockClient(cfg),
+		TopMost:           NewTopMostClient(cfg),
+		TopMostGood:       NewTopMostGoodClient(cfg),
 		VendorBrand:       NewVendorBrandClient(cfg),
 		VendorLocation:    NewVendorLocationClient(cfg),
 	}, nil
@@ -186,6 +196,8 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		RequiredGood:      NewRequiredGoodClient(cfg),
 		Score:             NewScoreClient(cfg),
 		Stock:             NewStockClient(cfg),
+		TopMost:           NewTopMostClient(cfg),
+		TopMostGood:       NewTopMostGoodClient(cfg),
 		VendorBrand:       NewVendorBrandClient(cfg),
 		VendorLocation:    NewVendorLocationClient(cfg),
 	}, nil
@@ -232,6 +244,8 @@ func (c *Client) Use(hooks ...Hook) {
 	c.RequiredGood.Use(hooks...)
 	c.Score.Use(hooks...)
 	c.Stock.Use(hooks...)
+	c.TopMost.Use(hooks...)
+	c.TopMostGood.Use(hooks...)
 	c.VendorBrand.Use(hooks...)
 	c.VendorLocation.Use(hooks...)
 }
@@ -1599,6 +1613,188 @@ func (c *StockClient) GetX(ctx context.Context, id uuid.UUID) *Stock {
 func (c *StockClient) Hooks() []Hook {
 	hooks := c.hooks.Stock
 	return append(hooks[:len(hooks):len(hooks)], stock.Hooks[:]...)
+}
+
+// TopMostClient is a client for the TopMost schema.
+type TopMostClient struct {
+	config
+}
+
+// NewTopMostClient returns a client for the TopMost from the given config.
+func NewTopMostClient(c config) *TopMostClient {
+	return &TopMostClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `topmost.Hooks(f(g(h())))`.
+func (c *TopMostClient) Use(hooks ...Hook) {
+	c.hooks.TopMost = append(c.hooks.TopMost, hooks...)
+}
+
+// Create returns a builder for creating a TopMost entity.
+func (c *TopMostClient) Create() *TopMostCreate {
+	mutation := newTopMostMutation(c.config, OpCreate)
+	return &TopMostCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of TopMost entities.
+func (c *TopMostClient) CreateBulk(builders ...*TopMostCreate) *TopMostCreateBulk {
+	return &TopMostCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for TopMost.
+func (c *TopMostClient) Update() *TopMostUpdate {
+	mutation := newTopMostMutation(c.config, OpUpdate)
+	return &TopMostUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *TopMostClient) UpdateOne(tm *TopMost) *TopMostUpdateOne {
+	mutation := newTopMostMutation(c.config, OpUpdateOne, withTopMost(tm))
+	return &TopMostUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *TopMostClient) UpdateOneID(id uuid.UUID) *TopMostUpdateOne {
+	mutation := newTopMostMutation(c.config, OpUpdateOne, withTopMostID(id))
+	return &TopMostUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for TopMost.
+func (c *TopMostClient) Delete() *TopMostDelete {
+	mutation := newTopMostMutation(c.config, OpDelete)
+	return &TopMostDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *TopMostClient) DeleteOne(tm *TopMost) *TopMostDeleteOne {
+	return c.DeleteOneID(tm.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *TopMostClient) DeleteOneID(id uuid.UUID) *TopMostDeleteOne {
+	builder := c.Delete().Where(topmost.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TopMostDeleteOne{builder}
+}
+
+// Query returns a query builder for TopMost.
+func (c *TopMostClient) Query() *TopMostQuery {
+	return &TopMostQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a TopMost entity by its id.
+func (c *TopMostClient) Get(ctx context.Context, id uuid.UUID) (*TopMost, error) {
+	return c.Query().Where(topmost.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *TopMostClient) GetX(ctx context.Context, id uuid.UUID) *TopMost {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *TopMostClient) Hooks() []Hook {
+	hooks := c.hooks.TopMost
+	return append(hooks[:len(hooks):len(hooks)], topmost.Hooks[:]...)
+}
+
+// TopMostGoodClient is a client for the TopMostGood schema.
+type TopMostGoodClient struct {
+	config
+}
+
+// NewTopMostGoodClient returns a client for the TopMostGood from the given config.
+func NewTopMostGoodClient(c config) *TopMostGoodClient {
+	return &TopMostGoodClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `topmostgood.Hooks(f(g(h())))`.
+func (c *TopMostGoodClient) Use(hooks ...Hook) {
+	c.hooks.TopMostGood = append(c.hooks.TopMostGood, hooks...)
+}
+
+// Create returns a builder for creating a TopMostGood entity.
+func (c *TopMostGoodClient) Create() *TopMostGoodCreate {
+	mutation := newTopMostGoodMutation(c.config, OpCreate)
+	return &TopMostGoodCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of TopMostGood entities.
+func (c *TopMostGoodClient) CreateBulk(builders ...*TopMostGoodCreate) *TopMostGoodCreateBulk {
+	return &TopMostGoodCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for TopMostGood.
+func (c *TopMostGoodClient) Update() *TopMostGoodUpdate {
+	mutation := newTopMostGoodMutation(c.config, OpUpdate)
+	return &TopMostGoodUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *TopMostGoodClient) UpdateOne(tmg *TopMostGood) *TopMostGoodUpdateOne {
+	mutation := newTopMostGoodMutation(c.config, OpUpdateOne, withTopMostGood(tmg))
+	return &TopMostGoodUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *TopMostGoodClient) UpdateOneID(id uuid.UUID) *TopMostGoodUpdateOne {
+	mutation := newTopMostGoodMutation(c.config, OpUpdateOne, withTopMostGoodID(id))
+	return &TopMostGoodUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for TopMostGood.
+func (c *TopMostGoodClient) Delete() *TopMostGoodDelete {
+	mutation := newTopMostGoodMutation(c.config, OpDelete)
+	return &TopMostGoodDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *TopMostGoodClient) DeleteOne(tmg *TopMostGood) *TopMostGoodDeleteOne {
+	return c.DeleteOneID(tmg.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *TopMostGoodClient) DeleteOneID(id uuid.UUID) *TopMostGoodDeleteOne {
+	builder := c.Delete().Where(topmostgood.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TopMostGoodDeleteOne{builder}
+}
+
+// Query returns a query builder for TopMostGood.
+func (c *TopMostGoodClient) Query() *TopMostGoodQuery {
+	return &TopMostGoodQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a TopMostGood entity by its id.
+func (c *TopMostGoodClient) Get(ctx context.Context, id uuid.UUID) (*TopMostGood, error) {
+	return c.Query().Where(topmostgood.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *TopMostGoodClient) GetX(ctx context.Context, id uuid.UUID) *TopMostGood {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *TopMostGoodClient) Hooks() []Hook {
+	hooks := c.hooks.TopMostGood
+	return append(hooks[:len(hooks):len(hooks)], topmostgood.Hooks[:]...)
 }
 
 // VendorBrandClient is a client for the VendorBrand schema.
