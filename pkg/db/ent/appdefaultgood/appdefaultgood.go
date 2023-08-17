@@ -22,6 +22,8 @@ const (
 	FieldAppID = "app_id"
 	// FieldGoodID holds the string denoting the good_id field in the database.
 	FieldGoodID = "good_id"
+	// FieldAppGoodID holds the string denoting the app_good_id field in the database.
+	FieldAppGoodID = "app_good_id"
 	// FieldCoinTypeID holds the string denoting the coin_type_id field in the database.
 	FieldCoinTypeID = "coin_type_id"
 	// Table holds the table name of the appdefaultgood in the database.
@@ -36,6 +38,7 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldAppID,
 	FieldGoodID,
+	FieldAppGoodID,
 	FieldCoinTypeID,
 }
 

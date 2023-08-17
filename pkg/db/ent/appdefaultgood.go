@@ -26,6 +26,8 @@ type AppDefaultGood struct {
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// GoodID holds the value of the "good_id" field.
 	GoodID uuid.UUID `json:"good_id,omitempty"`
+	// AppGoodID holds the value of the "app_good_id" field.
+	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// CoinTypeID holds the value of the "coin_type_id" field.
 	CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
 }
@@ -37,7 +39,7 @@ func (*AppDefaultGood) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appdefaultgood.FieldCreatedAt, appdefaultgood.FieldUpdatedAt, appdefaultgood.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case appdefaultgood.FieldID, appdefaultgood.FieldAppID, appdefaultgood.FieldGoodID, appdefaultgood.FieldCoinTypeID:
+		case appdefaultgood.FieldID, appdefaultgood.FieldAppID, appdefaultgood.FieldGoodID, appdefaultgood.FieldAppGoodID, appdefaultgood.FieldCoinTypeID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type AppDefaultGood", columns[i])
@@ -90,6 +92,12 @@ func (adg *AppDefaultGood) assignValues(columns []string, values []interface{}) 
 			} else if value != nil {
 				adg.GoodID = *value
 			}
+		case appdefaultgood.FieldAppGoodID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field app_good_id", values[i])
+			} else if value != nil {
+				adg.AppGoodID = *value
+			}
 		case appdefaultgood.FieldCoinTypeID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field coin_type_id", values[i])
@@ -138,6 +146,9 @@ func (adg *AppDefaultGood) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("good_id=")
 	builder.WriteString(fmt.Sprintf("%v", adg.GoodID))
+	builder.WriteString(", ")
+	builder.WriteString("app_good_id=")
+	builder.WriteString(fmt.Sprintf("%v", adg.AppGoodID))
 	builder.WriteString(", ")
 	builder.WriteString("coin_type_id=")
 	builder.WriteString(fmt.Sprintf("%v", adg.CoinTypeID))

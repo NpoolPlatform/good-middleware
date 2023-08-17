@@ -46,6 +46,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appdefaultgood.FieldDeletedAt:  {Type: field.TypeUint32, Column: appdefaultgood.FieldDeletedAt},
 			appdefaultgood.FieldAppID:      {Type: field.TypeUUID, Column: appdefaultgood.FieldAppID},
 			appdefaultgood.FieldGoodID:     {Type: field.TypeUUID, Column: appdefaultgood.FieldGoodID},
+			appdefaultgood.FieldAppGoodID:  {Type: field.TypeUUID, Column: appdefaultgood.FieldAppGoodID},
 			appdefaultgood.FieldCoinTypeID: {Type: field.TypeUUID, Column: appdefaultgood.FieldCoinTypeID},
 		},
 	}
@@ -497,6 +498,11 @@ func (f *AppDefaultGoodFilter) WhereAppID(p entql.ValueP) {
 // WhereGoodID applies the entql [16]byte predicate on the good_id field.
 func (f *AppDefaultGoodFilter) WhereGoodID(p entql.ValueP) {
 	f.Where(p.Field(appdefaultgood.FieldGoodID))
+}
+
+// WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
+func (f *AppDefaultGoodFilter) WhereAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(appdefaultgood.FieldAppGoodID))
 }
 
 // WhereCoinTypeID applies the entql [16]byte predicate on the coin_type_id field.

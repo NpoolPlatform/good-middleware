@@ -124,6 +124,26 @@ func (adgu *AppDefaultGoodUpdate) ClearGoodID() *AppDefaultGoodUpdate {
 	return adgu
 }
 
+// SetAppGoodID sets the "app_good_id" field.
+func (adgu *AppDefaultGoodUpdate) SetAppGoodID(u uuid.UUID) *AppDefaultGoodUpdate {
+	adgu.mutation.SetAppGoodID(u)
+	return adgu
+}
+
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (adgu *AppDefaultGoodUpdate) SetNillableAppGoodID(u *uuid.UUID) *AppDefaultGoodUpdate {
+	if u != nil {
+		adgu.SetAppGoodID(*u)
+	}
+	return adgu
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (adgu *AppDefaultGoodUpdate) ClearAppGoodID() *AppDefaultGoodUpdate {
+	adgu.mutation.ClearAppGoodID()
+	return adgu
+}
+
 // SetCoinTypeID sets the "coin_type_id" field.
 func (adgu *AppDefaultGoodUpdate) SetCoinTypeID(u uuid.UUID) *AppDefaultGoodUpdate {
 	adgu.mutation.SetCoinTypeID(u)
@@ -310,6 +330,19 @@ func (adgu *AppDefaultGoodUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: appdefaultgood.FieldGoodID,
 		})
 	}
+	if value, ok := adgu.mutation.AppGoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appdefaultgood.FieldAppGoodID,
+		})
+	}
+	if adgu.mutation.AppGoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appdefaultgood.FieldAppGoodID,
+		})
+	}
 	if value, ok := adgu.mutation.CoinTypeID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -436,6 +469,26 @@ func (adguo *AppDefaultGoodUpdateOne) SetNillableGoodID(u *uuid.UUID) *AppDefaul
 // ClearGoodID clears the value of the "good_id" field.
 func (adguo *AppDefaultGoodUpdateOne) ClearGoodID() *AppDefaultGoodUpdateOne {
 	adguo.mutation.ClearGoodID()
+	return adguo
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (adguo *AppDefaultGoodUpdateOne) SetAppGoodID(u uuid.UUID) *AppDefaultGoodUpdateOne {
+	adguo.mutation.SetAppGoodID(u)
+	return adguo
+}
+
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (adguo *AppDefaultGoodUpdateOne) SetNillableAppGoodID(u *uuid.UUID) *AppDefaultGoodUpdateOne {
+	if u != nil {
+		adguo.SetAppGoodID(*u)
+	}
+	return adguo
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (adguo *AppDefaultGoodUpdateOne) ClearAppGoodID() *AppDefaultGoodUpdateOne {
+	adguo.mutation.ClearAppGoodID()
 	return adguo
 }
 
@@ -653,6 +706,19 @@ func (adguo *AppDefaultGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppDe
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Column: appdefaultgood.FieldGoodID,
+		})
+	}
+	if value, ok := adguo.mutation.AppGoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appdefaultgood.FieldAppGoodID,
+		})
+	}
+	if adguo.mutation.AppGoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appdefaultgood.FieldAppGoodID,
 		})
 	}
 	if value, ok := adguo.mutation.CoinTypeID(); ok {
