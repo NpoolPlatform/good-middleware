@@ -195,7 +195,7 @@ func (h *queryHandler) queryJoinAppStock(s *sql.Selector) {
 	t := sql.Table(entappstock.Table)
 	s.LeftJoin(t).
 		On(
-			s.C(entappgood.FieldGoodID),
+			s.C(entappgood.FieldID),
 			t.C(entappstock.FieldAppGoodID),
 		).
 		OnP(
@@ -311,7 +311,6 @@ func (h *Handler) GetGood(ctx context.Context) (*npool.Good, error) {
 		return nil, err
 	}
 	if len(handler.infos) == 0 {
-		fmt.Println("11111111111111111111111111111")
 		return nil, nil
 	}
 	if len(handler.infos) > 1 {
