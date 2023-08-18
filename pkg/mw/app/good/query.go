@@ -311,6 +311,7 @@ func (h *Handler) GetGood(ctx context.Context) (*npool.Good, error) {
 		return nil, err
 	}
 	if len(handler.infos) == 0 {
+		fmt.Println("11111111111111111111111111111")
 		return nil, nil
 	}
 	if len(handler.infos) > 1 {
@@ -318,7 +319,6 @@ func (h *Handler) GetGood(ctx context.Context) (*npool.Good, error) {
 	}
 
 	handler.formalize()
-
 	return handler.infos[0], nil
 }
 
