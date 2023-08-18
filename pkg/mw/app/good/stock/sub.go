@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -143,9 +144,9 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 		spotQuantity = decimal.NewFromInt(0)
 	}
 
-	if _, err := stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(info.ID),
-		&stockcrud.Req{
+	if _, err := appstockcrud.UpdateSet(
+		tx.AppStock.UpdateOneID(info.ID),
+		&appstockcrud.Req{
 			Locked:    &locked,
 			InService: &inService,
 			WaitStart: &waitStart,
@@ -164,7 +165,7 @@ func (h *Handler) SubStock(ctx context.Context) (*npool.Stock, error) {
 
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.subStock(ctx, tx); err != nil {
-			return &ent.NotLoadedError{}
+			return err
 		}
 		if err := handler.subAppStock(ctx, tx); err != nil {
 			return err

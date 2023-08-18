@@ -132,6 +132,89 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
+func (h *addHandler) addReserved(ctx context.Context, tx *ent.Tx) error {
+	info, err := tx.
+		Stock.
+		Query().
+		Where(
+			entstock.GoodID(*h.GoodID),
+			entstock.DeletedAt(0),
+		).
+		ForUpdate().
+		Only(ctx)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		return fmt.Errorf("invalid stock")
+	}
+
+	appReserved := info.AppReserved
+	if h.Reserved != nil {
+		appReserved = h.Reserved.Add(appReserved)
+	}
+
+	if info.Locked.Add(info.InService).
+		Add(info.WaitStart).
+		Add(appReserved).
+		Cmp(info.Total) > 0 {
+		return fmt.Errorf("stock exhausted")
+	}
+
+	if _, err := stockcrud.UpdateSet(
+		tx.Stock.UpdateOneID(info.ID),
+		&stockcrud.Req{
+			AppReserved: &appReserved,
+		},
+	).Save(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (h *addHandler) addAppReserved(ctx context.Context, tx *ent.Tx) error {
+	info, err := tx.
+		AppStock.
+		Query().
+		Where(
+			entappstock.ID(*h.ID),
+			entappstock.DeletedAt(0),
+		).
+		ForUpdate().
+		Only(ctx)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		return fmt.Errorf("invalid app stock")
+	}
+	h.GoodID = &info.GoodID
+	spotQuantity := info.SpotQuantity
+
+	reserved := info.Reserved
+	if h.Reserved != nil {
+		reserved = h.Reserved.Add(reserved)
+		spotQuantity = spotQuantity.Add(*h.Reserved)
+	}
+
+	if info.Locked.Add(info.InService).
+		Add(info.WaitStart).
+		Cmp(spotQuantity) > 0 {
+		spotQuantity = decimal.NewFromInt(0)
+	}
+
+	if _, err := appstockcrud.UpdateSet(
+		tx.AppStock.UpdateOneID(info.ID),
+		&appstockcrud.Req{
+			SpotQuantity: &spotQuantity,
+			Reserved:     &reserved,
+		},
+	).Save(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (h *Handler) AddStock(ctx context.Context) (*npool.Stock, error) {
 	handler := &addHandler{
 		Handler: h,
@@ -157,10 +240,10 @@ func (h *Handler) AddReserved(ctx context.Context) (*npool.Stock, error) {
 		Handler: h,
 	}
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.addStock(ctx, tx); err != nil {
+		if err := handler.addReserved(ctx, tx); err != nil {
 			return err
 		}
-		if err := handler.addAppStock(ctx, tx); err != nil {
+		if err := handler.addAppReserved(ctx, tx); err != nil {
 			return err
 		}
 		return nil
