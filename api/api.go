@@ -3,13 +3,11 @@ package api
 import (
 	"context"
 
-	"github.com/NpoolPlatform/good-middleware/api/appdefaultgood"
-
-	"github.com/NpoolPlatform/good-middleware/api/recommend"
+	appdefaultgood "github.com/NpoolPlatform/good-middleware/api/app/good/default"
 
 	goodmw "github.com/NpoolPlatform/message/npool/good/mw/v1"
 
-	"github.com/NpoolPlatform/good-middleware/api/appgood"
+	appgood "github.com/NpoolPlatform/good-middleware/api/app/good"
 	"github.com/NpoolPlatform/good-middleware/api/good"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -24,7 +22,6 @@ func Register(server grpc.ServiceRegistrar) {
 	goodmw.RegisterMiddlewareServer(server, &Server{})
 	good.Register(server)
 	appgood.Register(server)
-	recommend.Register(server)
 	appdefaultgood.Register(server)
 }
 

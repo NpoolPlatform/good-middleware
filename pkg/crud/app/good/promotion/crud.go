@@ -3,8 +3,8 @@ package promotion
 import (
 	"fmt"
 
-	"github.com/NpoolPlatform/good-manager/pkg/db/ent"
-	entpromotion "github.com/NpoolPlatform/good-manager/pkg/db/ent/promotion"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entpromotion "github.com/NpoolPlatform/good-middleware/pkg/db/ent/promotion"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	"github.com/google/uuid"

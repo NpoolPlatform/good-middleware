@@ -4,7 +4,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/api"
 	"github.com/NpoolPlatform/good-middleware/pkg/migrator"
 
-	"github.com/NpoolPlatform/good-manager/pkg/db"
+	"github.com/NpoolPlatform/good-middleware/pkg/db"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
