@@ -1,4 +1,4 @@
-package appdefaultgood
+package appgood
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/default"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
 )
@@ -33,9 +33,9 @@ func do(ctx context.Context, handler handler) (cruder.Any, error) {
 	return handler(_ctx, cli)
 }
 
-func CreateDefault(ctx context.Context, in *npool.DefaultReq) (*npool.Default, error) {
+func CreateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.CreateDefault(ctx, &npool.CreateDefaultRequest{
+		resp, err := cli.CreateGood(ctx, &npool.CreateGoodRequest{
 			Info: in,
 		})
 		if err != nil {
@@ -46,12 +46,12 @@ func CreateDefault(ctx context.Context, in *npool.DefaultReq) (*npool.Default, e
 	if err != nil {
 		return nil, err
 	}
-	return info.(*npool.Default), nil
+	return info.(*npool.Good), nil
 }
 
-func GetDefault(ctx context.Context, id string) (*npool.Default, error) {
+func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.GetDefault(ctx, &npool.GetDefaultRequest{
+		resp, err := cli.GetGood(ctx, &npool.GetGoodRequest{
 			ID: id,
 		})
 		if err != nil {
@@ -62,14 +62,14 @@ func GetDefault(ctx context.Context, id string) (*npool.Default, error) {
 	if err != nil {
 		return nil, err
 	}
-	return info.(*npool.Default), nil
+	return info.(*npool.Good), nil
 }
 
-func GetDefaults(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.Default, uint32, error) {
+func GetGoods(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.Good, uint32, error) {
 	total := uint32(0)
 
 	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.GetDefaults(ctx, &npool.GetDefaultsRequest{
+		resp, err := cli.GetGoods(ctx, &npool.GetGoodsRequest{
 			Conds:  conds,
 			Offset: offset,
 			Limit:  limit,
@@ -85,13 +85,13 @@ func GetDefaults(ctx context.Context, conds *npool.Conds, offset, limit int32) (
 	if err != nil {
 		return nil, 0, err
 	}
-	return infos.([]*npool.Default), total, nil
+	return infos.([]*npool.Good), total, nil
 }
 
-func GetDefaultOnly(ctx context.Context, conds *npool.Conds) (*npool.Default, error) {
+func GetGoodOnly(ctx context.Context, conds *npool.Conds) (*npool.Good, error) {
 	const limit = 2
 	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.GetDefaults(ctx, &npool.GetDefaultsRequest{
+		resp, err := cli.GetGoods(ctx, &npool.GetGoodsRequest{
 			Conds:  conds,
 			Offset: 0,
 			Limit:  limit,
@@ -104,18 +104,18 @@ func GetDefaultOnly(ctx context.Context, conds *npool.Conds) (*npool.Default, er
 	if err != nil {
 		return nil, err
 	}
-	if len(infos.([]*npool.Default)) == 0 {
+	if len(infos.([]*npool.Good)) == 0 {
 		return nil, nil
 	}
-	if len(infos.([]*npool.Default)) > 1 {
+	if len(infos.([]*npool.Good)) > 1 {
 		return nil, fmt.Errorf("too many records")
 	}
-	return infos.([]*npool.Default)[0], nil
+	return infos.([]*npool.Good)[0], nil
 }
 
-func DeleteDefault(ctx context.Context, in *npool.DefaultReq) (*npool.Default, error) {
+func UpdateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.DeleteDefault(ctx, &npool.DeleteDefaultRequest{
+		resp, err := cli.UpdateGood(ctx, &npool.UpdateGoodRequest{
 			Info: in,
 		})
 		if err != nil {
@@ -126,21 +126,5 @@ func DeleteDefault(ctx context.Context, in *npool.DefaultReq) (*npool.Default, e
 	if err != nil {
 		return nil, err
 	}
-	return info.(*npool.Default), nil
-}
-
-func UpdateDefault(ctx context.Context, in *npool.DefaultReq) (*npool.Default, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.UpdateDefault(ctx, &npool.UpdateDefaultRequest{
-			Info: in,
-		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
-	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Default), nil
+	return info.(*npool.Good), nil
 }

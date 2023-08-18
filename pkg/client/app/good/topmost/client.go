@@ -128,3 +128,19 @@ func DeleteTopMost(ctx context.Context, in *npool.TopMostReq) (*npool.TopMost, e
 	}
 	return info.(*npool.TopMost), nil
 }
+
+func UpdateTopMost(ctx context.Context, in *npool.TopMostReq) (*npool.TopMost, error) {
+	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+		resp, err := cli.UpdateTopMost(ctx, &npool.UpdateTopMostRequest{
+			Info: in,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.TopMost), nil
+}
