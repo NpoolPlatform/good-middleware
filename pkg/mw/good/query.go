@@ -141,7 +141,7 @@ func (h *queryHandler) queryJoinStock(s *sql.Selector) {
 			sql.As(t.C(entstock.FieldInService), "good_in_service"),
 			sql.As(t.C(entstock.FieldWaitStart), "good_wait_start"),
 			sql.As(t.C(entstock.FieldSold), "good_sold"),
-			sql.As(t.C(entstock.FieldAppLocked), "good_app_locked"),
+			sql.As(t.C(entstock.FieldAppReserved), "good_app_reserved"),
 		)
 }
 
@@ -264,11 +264,11 @@ func (h *queryHandler) formalize() {
 		} else {
 			info.GoodSold = amount.String()
 		}
-		amount, err = decimal.NewFromString(info.GoodAppLocked)
+		amount, err = decimal.NewFromString(info.GoodAppReserved)
 		if err != nil {
-			info.GoodAppLocked = decimal.NewFromInt(0).String()
+			info.GoodAppReserved = decimal.NewFromInt(0).String()
 		} else {
-			info.GoodAppLocked = amount.String()
+			info.GoodAppReserved = amount.String()
 		}
 		amount, err = decimal.NewFromString(info.Price)
 		if err != nil {

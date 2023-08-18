@@ -53,7 +53,7 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 
 	if locked.Add(inService).
 		Add(waitStart).
-		Add(info.AppLocked).
+		Add(info.AppReserved).
 		Cmp(info.Total) > 0 {
 		return fmt.Errorf("stock exhausted")
 	}
@@ -133,6 +133,26 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) AddStock(ctx context.Context) (*npool.Stock, error) {
+	handler := &addHandler{
+		Handler: h,
+	}
+	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		if err := handler.addStock(ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.addAppStock(ctx, tx); err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return h.GetStock(ctx)
+}
+
+func (h *Handler) AddReserved(ctx context.Context) (*npool.Stock, error) {
 	handler := &addHandler{
 		Handler: h,
 	}

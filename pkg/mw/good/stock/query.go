@@ -61,7 +61,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entstock.FieldInService), "in_service"),
 			sql.As(t.C(entstock.FieldWaitStart), "wait_start"),
 			sql.As(t.C(entstock.FieldSold), "sold"),
-			sql.As(t.C(entstock.FieldAppLocked), "app_locked"),
+			sql.As(t.C(entstock.FieldAppReserved), "app_reserved"),
 			sql.As(t.C(entstock.FieldCreatedAt), "created_at"),
 			sql.As(t.C(entstock.FieldUpdatedAt), "updated_at"),
 		)
@@ -128,11 +128,11 @@ func (h *queryHandler) formalize() {
 		} else {
 			info.Sold = amount.String()
 		}
-		amount, err = decimal.NewFromString(info.AppLocked)
+		amount, err = decimal.NewFromString(info.AppReserved)
 		if err != nil {
-			info.AppLocked = decimal.NewFromInt(0).String()
+			info.AppReserved = decimal.NewFromInt(0).String()
 		} else {
-			info.AppLocked = amount.String()
+			info.AppReserved = amount.String()
 		}
 	}
 }

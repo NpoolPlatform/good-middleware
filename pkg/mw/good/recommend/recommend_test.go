@@ -69,7 +69,7 @@ var good = goodmwpb.Good{
 	DeliveryAt:             uint32(time.Now().Unix() + 1000),
 	StartAt:                uint32(time.Now().Unix() + 1000),
 	BenefitIntervalHours:   24,
-	GoodAppLocked:          decimal.NewFromInt(0).String(),
+	GoodAppReserved:        decimal.NewFromInt(0).String(),
 	UnitLockDeposit:        decimal.NewFromInt(1).String(),
 }
 

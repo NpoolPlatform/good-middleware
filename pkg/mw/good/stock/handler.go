@@ -15,15 +15,15 @@ import (
 )
 
 type Handler struct {
-	ID        *uuid.UUID
-	GoodID    *uuid.UUID
-	Locked    *decimal.Decimal
-	WaitStart *decimal.Decimal
-	InService *decimal.Decimal
-	AppLocked *decimal.Decimal
-	Conds     *stockcrud.Conds
-	Offset    int32
-	Limit     int32
+	ID          *uuid.UUID
+	GoodID      *uuid.UUID
+	Locked      *decimal.Decimal
+	WaitStart   *decimal.Decimal
+	InService   *decimal.Decimal
+	AppReserved *decimal.Decimal
+	Conds       *stockcrud.Conds
+	Offset      int32
+	Limit       int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -122,18 +122,18 @@ func WithInService(s *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithAppLocked(s *string, must bool) func(context.Context, *Handler) error {
+func WithAppReserved(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid applocked")
+				return fmt.Errorf("invalid appreserved")
 			}
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
 			return err
 		}
-		h.AppLocked = &amount
+		h.AppReserved = &amount
 		return nil
 	}
 }

@@ -73,7 +73,7 @@ var good = goodmwpb.Good{
 	DeliveryAt:           uint32(time.Now().Unix() + 1000),
 	StartAt:              uint32(time.Now().Unix() + 1000),
 	BenefitIntervalHours: 24,
-	GoodAppLocked:        decimal.NewFromInt(0).String(),
+	GoodAppReserved:      decimal.NewFromInt(0).String(),
 	UnitLockDeposit:      decimal.NewFromInt(1).String(),
 }
 
@@ -124,14 +124,14 @@ var appgood = appgoodmwpb.Good{
 }
 
 var stock = stockmwpb.Stock{
-	GoodID:    good.ID,
-	GoodName:  good.Title,
-	Total:     good.GoodTotal,
-	Locked:    decimal.NewFromInt(10).String(),
-	InService: decimal.NewFromInt(0).String(),
-	WaitStart: decimal.NewFromInt(10).String(),
-	Sold:      decimal.NewFromInt(10).String(),
-	AppLocked: decimal.NewFromInt(100).String(),
+	GoodID:      good.ID,
+	GoodName:    good.Title,
+	Total:       good.GoodTotal,
+	Locked:      decimal.NewFromInt(10).String(),
+	InService:   decimal.NewFromInt(0).String(),
+	WaitStart:   decimal.NewFromInt(10).String(),
+	Sold:        decimal.NewFromInt(10).String(),
+	AppReserved: decimal.NewFromInt(100).String(),
 }
 
 var ret = npool.Stock{
@@ -346,7 +346,7 @@ func subStock(t *testing.T) {
 			// assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodInService)
 			// assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodWaitStart)
 			// assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodSold)
-			// assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodAppLocked)
+			// assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodAppReserved)
 		}
 	}
 }

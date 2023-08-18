@@ -70,19 +70,19 @@ var good = goodmwpb.Good{
 	DeliveryAt:           uint32(time.Now().Unix() + 1000),
 	StartAt:              uint32(time.Now().Unix() + 1000),
 	BenefitIntervalHours: 24,
-	GoodAppLocked:        decimal.NewFromInt(0).String(),
+	GoodAppReserved:      decimal.NewFromInt(0).String(),
 	UnitLockDeposit:      decimal.NewFromInt(1).String(),
 }
 
 var ret = npool.Stock{
-	GoodID:    good.ID,
-	GoodName:  good.Title,
-	Total:     good.GoodTotal,
-	Locked:    decimal.NewFromInt(10).String(),
-	InService: decimal.NewFromInt(0).String(),
-	WaitStart: decimal.NewFromInt(10).String(),
-	Sold:      decimal.NewFromInt(10).String(),
-	AppLocked: decimal.NewFromInt(10).String(),
+	GoodID:      good.ID,
+	GoodName:    good.Title,
+	Total:       good.GoodTotal,
+	Locked:      decimal.NewFromInt(10).String(),
+	InService:   decimal.NewFromInt(0).String(),
+	WaitStart:   decimal.NewFromInt(10).String(),
+	Sold:        decimal.NewFromInt(10).String(),
+	AppReserved: decimal.NewFromInt(10).String(),
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -169,7 +169,7 @@ func addStock(t *testing.T) {
 		WithLocked(&ret.Locked, true),
 		WithInService(&ret.InService, true),
 		WithWaitStart(&ret.WaitStart, true),
-		WithAppLocked(&ret.AppLocked, true),
+		WithAppReserved(&ret.AppReserved, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.AddStock(context.Background())
@@ -210,7 +210,7 @@ func addStock(t *testing.T) {
 			assert.Equal(t, ret.InService, info.GoodInService)
 			assert.Equal(t, ret.WaitStart, info.GoodWaitStart)
 			assert.Equal(t, ret.Sold, info.GoodSold)
-			assert.Equal(t, ret.AppLocked, info.GoodAppLocked)
+			assert.Equal(t, ret.AppReserved, info.GoodAppReserved)
 		}
 	}
 
@@ -235,7 +235,7 @@ func subStock(t *testing.T) {
 		WithLocked(&ret.Locked, true),
 		WithInService(&ret.InService, true),
 		WithWaitStart(&ret.WaitStart, true),
-		WithAppLocked(&ret.AppLocked, true),
+		WithAppReserved(&ret.AppReserved, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.SubStock(context.Background())
@@ -245,7 +245,7 @@ func subStock(t *testing.T) {
 			ret.InService = decimal.NewFromInt(0).String()
 			ret.WaitStart = decimal.NewFromInt(0).String()
 			ret.Sold = decimal.NewFromInt(0).String()
-			ret.AppLocked = decimal.NewFromInt(0).String()
+			ret.AppReserved = decimal.NewFromInt(0).String()
 			assert.Equal(t, &ret, info)
 		}
 	}
@@ -261,7 +261,7 @@ func subStock(t *testing.T) {
 			// assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodInService)
 			// assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodWaitStart)
 			// assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodSold)
-			// assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodAppLocked)
+			// assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodAppReserved)
 		}
 	}
 }

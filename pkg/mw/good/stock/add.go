@@ -47,14 +47,14 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 		waitStart = h.WaitStart.Add(waitStart)
 		sold = h.WaitStart.Add(sold)
 	}
-	appLocked := info.AppLocked
-	if h.AppLocked != nil {
-		appLocked = h.AppLocked.Add(appLocked)
+	appReserved := info.AppReserved
+	if h.AppReserved != nil {
+		appReserved = h.AppReserved.Add(appReserved)
 	}
 
 	if locked.Add(inService).
 		Add(waitStart).
-		Add(appLocked).
+		Add(appReserved).
 		Cmp(info.Total) > 0 {
 		return fmt.Errorf("stock exhausted")
 	}
@@ -62,11 +62,11 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 	if _, err := stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(*h.ID),
 		&stockcrud.Req{
-			Locked:    &locked,
-			InService: &inService,
-			WaitStart: &waitStart,
-			AppLocked: &appLocked,
-			Sold:      &sold,
+			Locked:      &locked,
+			InService:   &inService,
+			WaitStart:   &waitStart,
+			AppReserved: &appReserved,
+			Sold:        &sold,
 		},
 	).Save(ctx); err != nil {
 		return err

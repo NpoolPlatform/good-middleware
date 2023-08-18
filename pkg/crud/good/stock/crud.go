@@ -12,15 +12,15 @@ import (
 )
 
 type Req struct {
-	ID        *uuid.UUID
-	GoodID    *uuid.UUID
-	Total     *decimal.Decimal
-	Locked    *decimal.Decimal
-	InService *decimal.Decimal
-	WaitStart *decimal.Decimal
-	Sold      *decimal.Decimal
-	AppLocked *decimal.Decimal
-	DeletedAt *uint32
+	ID          *uuid.UUID
+	GoodID      *uuid.UUID
+	Total       *decimal.Decimal
+	Locked      *decimal.Decimal
+	InService   *decimal.Decimal
+	WaitStart   *decimal.Decimal
+	Sold        *decimal.Decimal
+	AppReserved *decimal.Decimal
+	DeletedAt   *uint32
 }
 
 func CreateSet(c *ent.StockCreate, req *Req) *ent.StockCreate {
@@ -37,7 +37,7 @@ func CreateSet(c *ent.StockCreate, req *Req) *ent.StockCreate {
 	c.SetInService(decimal.NewFromInt(0))
 	c.SetWaitStart(decimal.NewFromInt(0))
 	c.SetSold(decimal.NewFromInt(0))
-	c.SetAppLocked(decimal.NewFromInt(0))
+	c.SetAppReserved(decimal.NewFromInt(0))
 	return c
 }
 
@@ -57,8 +57,8 @@ func UpdateSet(u *ent.StockUpdateOne, req *Req) *ent.StockUpdateOne {
 	if req.Sold != nil {
 		u.SetSold(*req.Sold)
 	}
-	if req.AppLocked != nil {
-		u.SetAppLocked(*req.AppLocked)
+	if req.AppReserved != nil {
+		u.SetAppReserved(*req.AppReserved)
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)

@@ -61,17 +61,17 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	if sold.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid sold")
 	}
-	appLocked := info.AppLocked
-	if h.AppLocked != nil {
-		appLocked = appLocked.Sub(*h.AppLocked)
+	appReserved := info.AppReserved
+	if h.AppReserved != nil {
+		appReserved = appReserved.Sub(*h.AppReserved)
 	}
-	if appLocked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid applocked")
+	if appReserved.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid appreserved")
 	}
 
 	if locked.Add(inService).
 		Add(waitStart).
-		Add(appLocked).
+		Add(appReserved).
 		Cmp(info.Total) > 0 {
 		return fmt.Errorf("invalid stock")
 	}
@@ -79,11 +79,11 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	if _, err := stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(*h.ID),
 		&stockcrud.Req{
-			Locked:    &locked,
-			InService: &inService,
-			WaitStart: &waitStart,
-			AppLocked: &appLocked,
-			Sold:      &sold,
+			Locked:      &locked,
+			InService:   &inService,
+			WaitStart:   &waitStart,
+			AppReserved: &appReserved,
+			Sold:        &sold,
 		},
 	).Save(ctx); err != nil {
 		return err

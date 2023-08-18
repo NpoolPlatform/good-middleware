@@ -21,7 +21,7 @@ type Handler struct {
 	Total                 *decimal.Decimal
 	Posters               []string
 	Labels                []types.GoodLabel
-	AppLocked             *decimal.Decimal
+	AppReserved           *decimal.Decimal
 	RewardState           *types.BenefitState
 	RewardAt              *uint32
 	RewardTID             *uuid.UUID
@@ -376,11 +376,11 @@ func WithUnitLockDeposit(s *string, must bool) func(context.Context, *Handler) e
 	}
 }
 
-func WithAppLocked(s *string, must bool) func(context.Context, *Handler) error {
+func WithAppReserved(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid applocked")
+				return fmt.Errorf("invalid appreserved")
 			}
 			return nil
 		}
@@ -388,7 +388,7 @@ func WithAppLocked(s *string, must bool) func(context.Context, *Handler) error {
 		if err != nil {
 			return err
 		}
-		h.AppLocked = &amount
+		h.AppReserved = &amount
 		return nil
 	}
 }
