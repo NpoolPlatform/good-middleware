@@ -218,6 +218,13 @@ func createGood(t *testing.T) {
 			ret.SupportCoinTypeIDsStr = info.SupportCoinTypeIDsStr
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
+			ret.AppGoodStockID = info.AppGoodStockID
+			ret.AppGoodReserved = info.AppGoodReserved
+			ret.AppSpotQuantity = info.AppSpotQuantity
+			ret.AppGoodLocked = info.AppGoodLocked
+			ret.AppGoodWaitStart = info.AppGoodWaitStart
+			ret.AppGoodInService = info.AppGoodInService
+			ret.AppGoodSold = info.AppGoodSold
 			assert.Equal(t, &ret, info)
 		}
 	}

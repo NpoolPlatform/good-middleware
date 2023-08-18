@@ -355,6 +355,7 @@ func subStock(t *testing.T) {
 			ret.InService = decimal.NewFromInt(0).String()
 			ret.WaitStart = decimal.NewFromInt(0).String()
 			ret.Sold = decimal.NewFromInt(0).String()
+			ret.SpotQuantity = decimal.NewFromInt(100).String()
 			assert.Equal(t, &ret, info)
 		}
 	}
