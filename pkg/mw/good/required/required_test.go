@@ -1,3 +1,4 @@
+//nolint:dupl
 package required
 
 import (
@@ -60,17 +61,20 @@ var mainGood = goodmwpb.Good{
 	SupportCoinTypeIDs:     []string{uuid.NewString(), uuid.NewString()},
 	TestOnly:               true,
 	Posters:                []string{uuid.NewString(), uuid.NewString()},
-	Labels:                 []string{uuid.NewString(), uuid.NewString()},
-	GoodTotal:              decimal.NewFromInt(1000).String(),
-	GoodLocked:             decimal.NewFromInt(0).String(),
-	GoodInService:          decimal.NewFromInt(0).String(),
-	GoodWaitStart:          decimal.NewFromInt(0).String(),
-	GoodSold:               decimal.NewFromInt(0).String(),
-	DeliveryAt:             uint32(time.Now().Unix() + 1000),
-	StartAt:                uint32(time.Now().Unix() + 1000),
-	BenefitIntervalHours:   24,
-	GoodAppReserved:        decimal.NewFromInt(0).String(),
-	UnitLockDeposit:        decimal.NewFromInt(1).String(),
+	Labels: []types.GoodLabel{
+		types.GoodLabel_GoodLabelInnovationStarter,
+		types.GoodLabel_GoodLabelNoviceExclusive,
+	},
+	GoodTotal:            decimal.NewFromInt(1000).String(),
+	GoodLocked:           decimal.NewFromInt(0).String(),
+	GoodInService:        decimal.NewFromInt(0).String(),
+	GoodWaitStart:        decimal.NewFromInt(0).String(),
+	GoodSold:             decimal.NewFromInt(0).String(),
+	DeliveryAt:           uint32(time.Now().Unix() + 1000),
+	StartAt:              uint32(time.Now().Unix() + 1000),
+	BenefitIntervalHours: 24,
+	GoodAppReserved:      decimal.NewFromInt(0).String(),
+	UnitLockDeposit:      decimal.NewFromInt(1).String(),
 }
 
 var requiredGood = goodmwpb.Good{
@@ -99,17 +103,20 @@ var requiredGood = goodmwpb.Good{
 	SupportCoinTypeIDs:     []string{uuid.NewString(), uuid.NewString()},
 	TestOnly:               true,
 	Posters:                []string{uuid.NewString(), uuid.NewString()},
-	Labels:                 []string{uuid.NewString(), uuid.NewString()},
-	GoodTotal:              decimal.NewFromInt(1000).String(),
-	GoodLocked:             decimal.NewFromInt(0).String(),
-	GoodInService:          decimal.NewFromInt(0).String(),
-	GoodWaitStart:          decimal.NewFromInt(0).String(),
-	GoodSold:               decimal.NewFromInt(0).String(),
-	DeliveryAt:             uint32(time.Now().Unix() + 1000),
-	StartAt:                uint32(time.Now().Unix() + 1000),
-	BenefitIntervalHours:   24,
-	GoodAppReserved:        decimal.NewFromInt(0).String(),
-	UnitLockDeposit:        decimal.NewFromInt(1).String(),
+	Labels: []types.GoodLabel{
+		types.GoodLabel_GoodLabelInnovationStarter,
+		types.GoodLabel_GoodLabelNoviceExclusive,
+	},
+	GoodTotal:            decimal.NewFromInt(1000).String(),
+	GoodLocked:           decimal.NewFromInt(0).String(),
+	GoodInService:        decimal.NewFromInt(0).String(),
+	GoodWaitStart:        decimal.NewFromInt(0).String(),
+	GoodSold:             decimal.NewFromInt(0).String(),
+	DeliveryAt:           uint32(time.Now().Unix() + 1000),
+	StartAt:              uint32(time.Now().Unix() + 1000),
+	BenefitIntervalHours: 24,
+	GoodAppReserved:      decimal.NewFromInt(0).String(),
+	UnitLockDeposit:      decimal.NewFromInt(1).String(),
 }
 
 var ret = npool.Required{
@@ -122,6 +129,7 @@ var ret = npool.Required{
 	Commission:       true,
 }
 
+//nolint:funlen
 func setup(t *testing.T) func(*testing.T) {
 	h1, err := vendorbrand1.NewHandler(
 		context.Background(),
