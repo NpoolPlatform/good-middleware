@@ -154,6 +154,7 @@ var ret = npool.TopMostGood{
 	Price:        decimal.NewFromInt(234).String(),
 }
 
+//nolint:funlen
 func setup(t *testing.T) func(*testing.T) {
 	h1, err := vendorbrand1.NewHandler(
 		context.Background(),

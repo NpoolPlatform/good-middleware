@@ -1,3 +1,4 @@
+//nolint:dupl
 package appstock
 
 import (
@@ -147,10 +148,11 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 	if _, err := appstockcrud.UpdateSet(
 		tx.AppStock.UpdateOneID(info.ID),
 		&appstockcrud.Req{
-			Locked:    &locked,
-			InService: &inService,
-			WaitStart: &waitStart,
-			Sold:      &sold,
+			SpotQuantity: &spotQuantity,
+			Locked:       &locked,
+			InService:    &inService,
+			WaitStart:    &waitStart,
+			Sold:         &sold,
 		},
 	).Save(ctx); err != nil {
 		return err

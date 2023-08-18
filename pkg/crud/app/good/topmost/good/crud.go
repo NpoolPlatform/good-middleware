@@ -23,7 +23,6 @@ type Req struct {
 	DeletedAt    *uint32
 }
 
-//nolint:funlen,gocyclo
 func CreateSet(c *ent.TopMostGoodCreate, req *Req) *ent.TopMostGoodCreate {
 	if req.ID != nil {
 		c.SetID(*req.ID)
@@ -85,6 +84,7 @@ type Conds struct {
 	TopMostID *cruder.Cond
 }
 
+//nolint:gocyclo
 func SetQueryConds(q *ent.TopMostGoodQuery, conds *Conds) (*ent.TopMostGoodQuery, error) {
 	q.Where(enttopmostgood.DeletedAt(0))
 	if conds == nil {

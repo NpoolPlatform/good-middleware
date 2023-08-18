@@ -66,6 +66,7 @@ type Conds struct {
 	GoodIDs  *cruder.Cond
 }
 
+//nolint:funlen,gocyclo
 func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error) {
 	q.Where(entcomment.DeletedAt(0))
 	if conds == nil {

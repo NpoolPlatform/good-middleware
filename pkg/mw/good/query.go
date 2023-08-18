@@ -105,6 +105,7 @@ func (h *queryHandler) queryJoinExtraInfo(s *sql.Selector) {
 		)
 }
 
+//nolint:dupl
 func (h *queryHandler) queryJoinReward(s *sql.Selector) {
 	t := sql.Table(entgoodreward.Table)
 	s.LeftJoin(t).
@@ -145,6 +146,7 @@ func (h *queryHandler) queryJoinStock(s *sql.Selector) {
 		)
 }
 
+//nolint:dupl
 func (h *queryHandler) queryJoinDeviceInfo(s *sql.Selector) {
 	t := sql.Table(entdeviceinfo.Table)
 	s.LeftJoin(t).

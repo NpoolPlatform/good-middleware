@@ -28,7 +28,6 @@ type Req struct {
 	DeletedAt              *uint32
 }
 
-//nolint:funlen,gocyclo
 func CreateSet(c *ent.TopMostCreate, req *Req) *ent.TopMostCreate {
 	if req.ID != nil {
 		c.SetID(*req.ID)

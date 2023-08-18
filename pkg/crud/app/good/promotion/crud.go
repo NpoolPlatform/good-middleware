@@ -77,6 +77,7 @@ type Conds struct {
 	EndAt   *cruder.Cond
 }
 
+//nolint:funlen,gocyclo
 func SetQueryConds(q *ent.PromotionQuery, conds *Conds) (*ent.PromotionQuery, error) {
 	q.Where(entpromotion.DeletedAt(0))
 	if conds == nil {

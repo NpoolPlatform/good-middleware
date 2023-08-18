@@ -20,6 +20,7 @@ type deleteHandler struct {
 	*Handler
 }
 
+//nolint:dupl
 func (h *deleteHandler) deleteExtraInfo(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		ExtraInfo.
@@ -46,6 +47,7 @@ func (h *deleteHandler) deleteExtraInfo(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
+//nolint:dupl
 func (h *deleteHandler) deleteReward(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		GoodReward.
@@ -72,6 +74,7 @@ func (h *deleteHandler) deleteReward(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
+//nolint:dupl
 func (h *deleteHandler) deleteStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		Stock.

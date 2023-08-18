@@ -59,6 +59,7 @@ type Conds struct {
 	CoinTypeID *cruder.Cond
 }
 
+//nolint:gocyclo
 func SetQueryConds(q *ent.AppDefaultGoodQuery, conds *Conds) (*ent.AppDefaultGoodQuery, error) {
 	q.Where(entappdefaultgood.DeletedAt(0))
 	if conds == nil {

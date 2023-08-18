@@ -367,10 +367,6 @@ func subStock(t *testing.T) {
 		info, err := h1.GetGood(context.Background())
 		if assert.Nil(t, err) {
 			assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodLocked)
-			// assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodInService)
-			// assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodWaitStart)
-			// assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodSold)
-			// assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodAppReserved)
 		}
 	}
 }

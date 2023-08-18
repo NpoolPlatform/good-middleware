@@ -130,6 +130,7 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = h3.CreateDeviceInfo(context.Background())
+	assert.Nil(t, err)
 
 	return func(*testing.T) {
 		_, _ = h3.DeleteDeviceInfo(context.Background())

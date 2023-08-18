@@ -86,6 +86,7 @@ var ret = npool.History{
 	UnitAmount: decimal.RequireFromString("2.51").String(),
 }
 
+//nolint:funlen
 func setup(t *testing.T) func(*testing.T) {
 	h1, err := vendorbrand1.NewHandler(
 		context.Background(),

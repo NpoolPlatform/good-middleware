@@ -6,7 +6,6 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
-	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
@@ -20,7 +19,6 @@ type queryHandler struct {
 	stmSelect *ent.AppStockSelect
 	stmCount  *ent.AppStockSelect
 	infos     []*npool.Stock
-	total     uint32
 }
 
 func (h *queryHandler) selectStock(stm *ent.AppStockQuery) *ent.AppStockSelect {
@@ -36,14 +34,6 @@ func (h *queryHandler) queryStock(cli *ent.Client) {
 				entappstock.DeletedAt(0),
 			),
 	)
-}
-
-func (h *queryHandler) queryStocks(cli *ent.Client) (*ent.AppStockSelect, error) {
-	stm, err := appstockcrud.SetQueryConds(cli.AppStock.Query(), h.Conds)
-	if err != nil {
-		return nil, err
-	}
-	return h.selectStock(stm), nil
 }
 
 func (h *queryHandler) queryJoinMyself(s *sql.Selector) {

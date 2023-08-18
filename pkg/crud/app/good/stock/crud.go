@@ -25,7 +25,6 @@ type Req struct {
 	DeletedAt    *uint32
 }
 
-//nolint:funlen,gocyclo
 func CreateSet(c *ent.AppStockCreate, req *Req) *ent.AppStockCreate {
 	if req.ID != nil {
 		c.SetID(*req.ID)
@@ -95,6 +94,7 @@ type Conds struct {
 	AppIDs     *cruder.Cond
 }
 
+//nolint:funlen,gocyclo
 func SetQueryConds(q *ent.AppStockQuery, conds *Conds) (*ent.AppStockQuery, error) {
 	q.Where(entappstock.DeletedAt(0))
 	if conds == nil {

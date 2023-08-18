@@ -40,7 +40,7 @@ type Req struct {
 	DeletedAt              *uint32
 }
 
-//nolint:funlen,gocyclo
+//nolint:gocyclo
 func CreateSet(c *ent.AppGoodCreate, req *Req) *ent.AppGoodCreate {
 	if req.ID != nil {
 		c.SetID(*req.ID)
@@ -117,6 +117,7 @@ func CreateSet(c *ent.AppGoodCreate, req *Req) *ent.AppGoodCreate {
 	return c
 }
 
+//nolint:gocyclo
 func UpdateSet(u *ent.AppGoodUpdateOne, req *Req) *ent.AppGoodUpdateOne {
 	if req.Online != nil {
 		u.SetOnline(*req.Online)
@@ -195,6 +196,7 @@ type Conds struct {
 	AppIDs  *cruder.Cond
 }
 
+//nolint:gocyclo
 func SetQueryConds(q *ent.AppGoodQuery, conds *Conds) (*ent.AppGoodQuery, error) {
 	q.Where(entappgood.DeletedAt(0))
 	if conds == nil {

@@ -20,6 +20,7 @@ type Req struct {
 	DeletedAt *uint32
 }
 
+//nolint:dupl
 func CreateSet(c *ent.VendorLocationCreate, req *Req) *ent.VendorLocationCreate {
 	if req.ID != nil {
 		c.SetID(*req.ID)
@@ -42,6 +43,7 @@ func CreateSet(c *ent.VendorLocationCreate, req *Req) *ent.VendorLocationCreate 
 	return c
 }
 
+//nolint:dupl
 func UpdateSet(u *ent.VendorLocationUpdateOne, req *Req) *ent.VendorLocationUpdateOne {
 	if req.Country != nil {
 		u.SetCountry(*req.Country)
@@ -73,6 +75,7 @@ type Conds struct {
 	BrandID  *cruder.Cond
 }
 
+//nolint:funlen,gocyclo
 func SetQueryConds(q *ent.VendorLocationQuery, conds *Conds) (*ent.VendorLocationQuery, error) {
 	q.Where(entvendorlocation.DeletedAt(0))
 	if conds == nil {

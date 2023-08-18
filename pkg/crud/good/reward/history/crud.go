@@ -53,6 +53,7 @@ type Conds struct {
 	RewardDate *cruder.Cond
 }
 
+//nolint:gocyclo
 func SetQueryConds(q *ent.GoodRewardHistoryQuery, conds *Conds) (*ent.GoodRewardHistoryQuery, error) {
 	q.Where(entgoodrewardhistory.DeletedAt(0))
 	if conds == nil {

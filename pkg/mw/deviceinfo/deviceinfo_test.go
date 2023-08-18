@@ -39,7 +39,7 @@ var (
 	}
 )
 
-func setup(t *testing.T) func(*testing.T) {
+func setup() func(*testing.T) {
 	b, _ := json.Marshal(ret.Posters)
 	ret.PostersStr = string(b)
 	return func(*testing.T) {}
@@ -141,7 +141,7 @@ func TestDeviceInfo(t *testing.T) {
 		return
 	}
 
-	teardown := setup(t)
+	teardown := setup()
 	defer teardown(t)
 
 	t.Run("createDeviceInfo", createDeviceInfo)

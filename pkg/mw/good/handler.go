@@ -62,6 +62,7 @@ func WithID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
+//nolint:dupl
 func WithDeviceInfoID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
@@ -119,6 +120,7 @@ func WithCoinTypeID(id *string, must bool) func(context.Context, *Handler) error
 	}
 }
 
+//nolint:dupl
 func WithVendorLocationID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
