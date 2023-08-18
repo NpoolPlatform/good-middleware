@@ -21,6 +21,8 @@ const (
 	FieldDeletedAt = "deleted_at"
 	// FieldAppID holds the string denoting the app_id field in the database.
 	FieldAppID = "app_id"
+	// FieldGoodID holds the string denoting the good_id field in the database.
+	FieldGoodID = "good_id"
 	// FieldAppGoodID holds the string denoting the app_good_id field in the database.
 	FieldAppGoodID = "app_good_id"
 	// FieldTopMostID holds the string denoting the top_most_id field in the database.
@@ -42,6 +44,7 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldDeletedAt,
 	FieldAppID,
+	FieldGoodID,
 	FieldAppGoodID,
 	FieldTopMostID,
 	FieldDisplayIndex,

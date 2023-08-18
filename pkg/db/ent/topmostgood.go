@@ -26,6 +26,8 @@ type TopMostGood struct {
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// AppID holds the value of the "app_id" field.
 	AppID uuid.UUID `json:"app_id,omitempty"`
+	// GoodID holds the value of the "good_id" field.
+	GoodID uuid.UUID `json:"good_id,omitempty"`
 	// AppGoodID holds the value of the "app_good_id" field.
 	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// TopMostID holds the value of the "top_most_id" field.
@@ -49,7 +51,7 @@ func (*TopMostGood) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case topmostgood.FieldCreatedAt, topmostgood.FieldUpdatedAt, topmostgood.FieldDeletedAt, topmostgood.FieldDisplayIndex:
 			values[i] = new(sql.NullInt64)
-		case topmostgood.FieldID, topmostgood.FieldAppID, topmostgood.FieldAppGoodID, topmostgood.FieldTopMostID:
+		case topmostgood.FieldID, topmostgood.FieldAppID, topmostgood.FieldGoodID, topmostgood.FieldAppGoodID, topmostgood.FieldTopMostID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type TopMostGood", columns[i])
@@ -95,6 +97,12 @@ func (tmg *TopMostGood) assignValues(columns []string, values []interface{}) err
 				return fmt.Errorf("unexpected type %T for field app_id", values[i])
 			} else if value != nil {
 				tmg.AppID = *value
+			}
+		case topmostgood.FieldGoodID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field good_id", values[i])
+			} else if value != nil {
+				tmg.GoodID = *value
 			}
 		case topmostgood.FieldAppGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -167,6 +175,9 @@ func (tmg *TopMostGood) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("app_id=")
 	builder.WriteString(fmt.Sprintf("%v", tmg.AppID))
+	builder.WriteString(", ")
+	builder.WriteString("good_id=")
+	builder.WriteString(fmt.Sprintf("%v", tmg.GoodID))
 	builder.WriteString(", ")
 	builder.WriteString("app_good_id=")
 	builder.WriteString(fmt.Sprintf("%v", tmg.AppGoodID))

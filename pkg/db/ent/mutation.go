@@ -18361,6 +18361,7 @@ type TopMostGoodMutation struct {
 	deleted_at       *uint32
 	adddeleted_at    *int32
 	app_id           *uuid.UUID
+	good_id          *uuid.UUID
 	app_good_id      *uuid.UUID
 	top_most_id      *uuid.UUID
 	display_index    *uint32
@@ -18681,6 +18682,42 @@ func (m *TopMostGoodMutation) ResetAppID() {
 	m.app_id = nil
 }
 
+// SetGoodID sets the "good_id" field.
+func (m *TopMostGoodMutation) SetGoodID(u uuid.UUID) {
+	m.good_id = &u
+}
+
+// GoodID returns the value of the "good_id" field in the mutation.
+func (m *TopMostGoodMutation) GoodID() (r uuid.UUID, exists bool) {
+	v := m.good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGoodID returns the old "good_id" field's value of the TopMostGood entity.
+// If the TopMostGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGoodID: %w", err)
+	}
+	return oldValue.GoodID, nil
+}
+
+// ResetGoodID resets all changes to the "good_id" field.
+func (m *TopMostGoodMutation) ResetGoodID() {
+	m.good_id = nil
+}
+
 // SetAppGoodID sets the "app_good_id" field.
 func (m *TopMostGoodMutation) SetAppGoodID(u uuid.UUID) {
 	m.app_good_id = &u
@@ -18940,7 +18977,7 @@ func (m *TopMostGoodMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TopMostGoodMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.created_at != nil {
 		fields = append(fields, topmostgood.FieldCreatedAt)
 	}
@@ -18952,6 +18989,9 @@ func (m *TopMostGoodMutation) Fields() []string {
 	}
 	if m.app_id != nil {
 		fields = append(fields, topmostgood.FieldAppID)
+	}
+	if m.good_id != nil {
+		fields = append(fields, topmostgood.FieldGoodID)
 	}
 	if m.app_good_id != nil {
 		fields = append(fields, topmostgood.FieldAppGoodID)
@@ -18984,6 +19024,8 @@ func (m *TopMostGoodMutation) Field(name string) (ent.Value, bool) {
 		return m.DeletedAt()
 	case topmostgood.FieldAppID:
 		return m.AppID()
+	case topmostgood.FieldGoodID:
+		return m.GoodID()
 	case topmostgood.FieldAppGoodID:
 		return m.AppGoodID()
 	case topmostgood.FieldTopMostID:
@@ -19011,6 +19053,8 @@ func (m *TopMostGoodMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldDeletedAt(ctx)
 	case topmostgood.FieldAppID:
 		return m.OldAppID(ctx)
+	case topmostgood.FieldGoodID:
+		return m.OldGoodID(ctx)
 	case topmostgood.FieldAppGoodID:
 		return m.OldAppGoodID(ctx)
 	case topmostgood.FieldTopMostID:
@@ -19057,6 +19101,13 @@ func (m *TopMostGoodMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAppID(v)
+		return nil
+	case topmostgood.FieldGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGoodID(v)
 		return nil
 	case topmostgood.FieldAppGoodID:
 		v, ok := value.(uuid.UUID)
@@ -19225,6 +19276,9 @@ func (m *TopMostGoodMutation) ResetField(name string) error {
 		return nil
 	case topmostgood.FieldAppID:
 		m.ResetAppID()
+		return nil
+	case topmostgood.FieldGoodID:
+		m.ResetGoodID()
 		return nil
 	case topmostgood.FieldAppGoodID:
 		m.ResetAppGoodID()

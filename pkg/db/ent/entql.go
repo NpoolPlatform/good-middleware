@@ -432,6 +432,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostgood.FieldUpdatedAt:    {Type: field.TypeUint32, Column: topmostgood.FieldUpdatedAt},
 			topmostgood.FieldDeletedAt:    {Type: field.TypeUint32, Column: topmostgood.FieldDeletedAt},
 			topmostgood.FieldAppID:        {Type: field.TypeUUID, Column: topmostgood.FieldAppID},
+			topmostgood.FieldGoodID:       {Type: field.TypeUUID, Column: topmostgood.FieldGoodID},
 			topmostgood.FieldAppGoodID:    {Type: field.TypeUUID, Column: topmostgood.FieldAppGoodID},
 			topmostgood.FieldTopMostID:    {Type: field.TypeUUID, Column: topmostgood.FieldTopMostID},
 			topmostgood.FieldDisplayIndex: {Type: field.TypeUint32, Column: topmostgood.FieldDisplayIndex},
@@ -2070,6 +2071,11 @@ func (f *TopMostGoodFilter) WhereDeletedAt(p entql.Uint32P) {
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
 func (f *TopMostGoodFilter) WhereAppID(p entql.ValueP) {
 	f.Where(p.Field(topmostgood.FieldAppID))
+}
+
+// WhereGoodID applies the entql [16]byte predicate on the good_id field.
+func (f *TopMostGoodFilter) WhereGoodID(p entql.ValueP) {
+	f.Where(p.Field(topmostgood.FieldGoodID))
 }
 
 // WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.

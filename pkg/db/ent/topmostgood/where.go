@@ -108,6 +108,13 @@ func AppID(v uuid.UUID) predicate.TopMostGood {
 	})
 }
 
+// GoodID applies equality check predicate on the "good_id" field. It's identical to GoodIDEQ.
+func GoodID(v uuid.UUID) predicate.TopMostGood {
+	return predicate.TopMostGood(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGoodID), v))
+	})
+}
+
 // AppGoodID applies equality check predicate on the "app_good_id" field. It's identical to AppGoodIDEQ.
 func AppGoodID(v uuid.UUID) predicate.TopMostGood {
 	return predicate.TopMostGood(func(s *sql.Selector) {
@@ -389,6 +396,70 @@ func AppIDLT(v uuid.UUID) predicate.TopMostGood {
 func AppIDLTE(v uuid.UUID) predicate.TopMostGood {
 	return predicate.TopMostGood(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldAppID), v))
+	})
+}
+
+// GoodIDEQ applies the EQ predicate on the "good_id" field.
+func GoodIDEQ(v uuid.UUID) predicate.TopMostGood {
+	return predicate.TopMostGood(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGoodID), v))
+	})
+}
+
+// GoodIDNEQ applies the NEQ predicate on the "good_id" field.
+func GoodIDNEQ(v uuid.UUID) predicate.TopMostGood {
+	return predicate.TopMostGood(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldGoodID), v))
+	})
+}
+
+// GoodIDIn applies the In predicate on the "good_id" field.
+func GoodIDIn(vs ...uuid.UUID) predicate.TopMostGood {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.TopMostGood(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldGoodID), v...))
+	})
+}
+
+// GoodIDNotIn applies the NotIn predicate on the "good_id" field.
+func GoodIDNotIn(vs ...uuid.UUID) predicate.TopMostGood {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.TopMostGood(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldGoodID), v...))
+	})
+}
+
+// GoodIDGT applies the GT predicate on the "good_id" field.
+func GoodIDGT(v uuid.UUID) predicate.TopMostGood {
+	return predicate.TopMostGood(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldGoodID), v))
+	})
+}
+
+// GoodIDGTE applies the GTE predicate on the "good_id" field.
+func GoodIDGTE(v uuid.UUID) predicate.TopMostGood {
+	return predicate.TopMostGood(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldGoodID), v))
+	})
+}
+
+// GoodIDLT applies the LT predicate on the "good_id" field.
+func GoodIDLT(v uuid.UUID) predicate.TopMostGood {
+	return predicate.TopMostGood(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldGoodID), v))
+	})
+}
+
+// GoodIDLTE applies the LTE predicate on the "good_id" field.
+func GoodIDLTE(v uuid.UUID) predicate.TopMostGood {
+	return predicate.TopMostGood(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldGoodID), v))
 	})
 }
 

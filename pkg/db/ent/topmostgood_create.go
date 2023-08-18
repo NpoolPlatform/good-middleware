@@ -72,6 +72,12 @@ func (tmgc *TopMostGoodCreate) SetAppID(u uuid.UUID) *TopMostGoodCreate {
 	return tmgc
 }
 
+// SetGoodID sets the "good_id" field.
+func (tmgc *TopMostGoodCreate) SetGoodID(u uuid.UUID) *TopMostGoodCreate {
+	tmgc.mutation.SetGoodID(u)
+	return tmgc
+}
+
 // SetAppGoodID sets the "app_good_id" field.
 func (tmgc *TopMostGoodCreate) SetAppGoodID(u uuid.UUID) *TopMostGoodCreate {
 	tmgc.mutation.SetAppGoodID(u)
@@ -268,6 +274,9 @@ func (tmgc *TopMostGoodCreate) check() error {
 	if _, ok := tmgc.mutation.AppID(); !ok {
 		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "TopMostGood.app_id"`)}
 	}
+	if _, ok := tmgc.mutation.GoodID(); !ok {
+		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "TopMostGood.good_id"`)}
+	}
 	if _, ok := tmgc.mutation.AppGoodID(); !ok {
 		return &ValidationError{Name: "app_good_id", err: errors.New(`ent: missing required field "TopMostGood.app_good_id"`)}
 	}
@@ -342,6 +351,14 @@ func (tmgc *TopMostGoodCreate) createSpec() (*TopMostGood, *sqlgraph.CreateSpec)
 			Column: topmostgood.FieldAppID,
 		})
 		_node.AppID = value
+	}
+	if value, ok := tmgc.mutation.GoodID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: topmostgood.FieldGoodID,
+		})
+		_node.GoodID = value
 	}
 	if value, ok := tmgc.mutation.AppGoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -500,6 +517,18 @@ func (u *TopMostGoodUpsert) SetAppID(v uuid.UUID) *TopMostGoodUpsert {
 // UpdateAppID sets the "app_id" field to the value that was provided on create.
 func (u *TopMostGoodUpsert) UpdateAppID() *TopMostGoodUpsert {
 	u.SetExcluded(topmostgood.FieldAppID)
+	return u
+}
+
+// SetGoodID sets the "good_id" field.
+func (u *TopMostGoodUpsert) SetGoodID(v uuid.UUID) *TopMostGoodUpsert {
+	u.Set(topmostgood.FieldGoodID, v)
+	return u
+}
+
+// UpdateGoodID sets the "good_id" field to the value that was provided on create.
+func (u *TopMostGoodUpsert) UpdateGoodID() *TopMostGoodUpsert {
+	u.SetExcluded(topmostgood.FieldGoodID)
 	return u
 }
 
@@ -711,6 +740,20 @@ func (u *TopMostGoodUpsertOne) SetAppID(v uuid.UUID) *TopMostGoodUpsertOne {
 func (u *TopMostGoodUpsertOne) UpdateAppID() *TopMostGoodUpsertOne {
 	return u.Update(func(s *TopMostGoodUpsert) {
 		s.UpdateAppID()
+	})
+}
+
+// SetGoodID sets the "good_id" field.
+func (u *TopMostGoodUpsertOne) SetGoodID(v uuid.UUID) *TopMostGoodUpsertOne {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.SetGoodID(v)
+	})
+}
+
+// UpdateGoodID sets the "good_id" field to the value that was provided on create.
+func (u *TopMostGoodUpsertOne) UpdateGoodID() *TopMostGoodUpsertOne {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.UpdateGoodID()
 	})
 }
 
@@ -1102,6 +1145,20 @@ func (u *TopMostGoodUpsertBulk) SetAppID(v uuid.UUID) *TopMostGoodUpsertBulk {
 func (u *TopMostGoodUpsertBulk) UpdateAppID() *TopMostGoodUpsertBulk {
 	return u.Update(func(s *TopMostGoodUpsert) {
 		s.UpdateAppID()
+	})
+}
+
+// SetGoodID sets the "good_id" field.
+func (u *TopMostGoodUpsertBulk) SetGoodID(v uuid.UUID) *TopMostGoodUpsertBulk {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.SetGoodID(v)
+	})
+}
+
+// UpdateGoodID sets the "good_id" field to the value that was provided on create.
+func (u *TopMostGoodUpsertBulk) UpdateGoodID() *TopMostGoodUpsertBulk {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.UpdateGoodID()
 	})
 }
 

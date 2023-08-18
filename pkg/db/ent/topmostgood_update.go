@@ -91,6 +91,12 @@ func (tmgu *TopMostGoodUpdate) SetAppID(u uuid.UUID) *TopMostGoodUpdate {
 	return tmgu
 }
 
+// SetGoodID sets the "good_id" field.
+func (tmgu *TopMostGoodUpdate) SetGoodID(u uuid.UUID) *TopMostGoodUpdate {
+	tmgu.mutation.SetGoodID(u)
+	return tmgu
+}
+
 // SetAppGoodID sets the "app_good_id" field.
 func (tmgu *TopMostGoodUpdate) SetAppGoodID(u uuid.UUID) *TopMostGoodUpdate {
 	tmgu.mutation.SetAppGoodID(u)
@@ -309,6 +315,13 @@ func (tmgu *TopMostGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: topmostgood.FieldAppID,
 		})
 	}
+	if value, ok := tmgu.mutation.GoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: topmostgood.FieldGoodID,
+		})
+	}
 	if value, ok := tmgu.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -448,6 +461,12 @@ func (tmguo *TopMostGoodUpdateOne) AddDeletedAt(u int32) *TopMostGoodUpdateOne {
 // SetAppID sets the "app_id" field.
 func (tmguo *TopMostGoodUpdateOne) SetAppID(u uuid.UUID) *TopMostGoodUpdateOne {
 	tmguo.mutation.SetAppID(u)
+	return tmguo
+}
+
+// SetGoodID sets the "good_id" field.
+func (tmguo *TopMostGoodUpdateOne) SetGoodID(u uuid.UUID) *TopMostGoodUpdateOne {
+	tmguo.mutation.SetGoodID(u)
 	return tmguo
 }
 
@@ -697,6 +716,13 @@ func (tmguo *TopMostGoodUpdateOne) sqlSave(ctx context.Context) (_node *TopMostG
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: topmostgood.FieldAppID,
+		})
+	}
+	if value, ok := tmguo.mutation.GoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: topmostgood.FieldGoodID,
 		})
 	}
 	if value, ok := tmguo.mutation.AppGoodID(); ok {

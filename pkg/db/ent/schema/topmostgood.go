@@ -31,6 +31,8 @@ func (TopMostGood) Fields() []ent.Field {
 		field.
 			UUID("app_id", uuid.UUID{}),
 		field.
+			UUID("good_id", uuid.UUID{}),
+		field.
 			UUID("app_good_id", uuid.UUID{}),
 		field.
 			UUID("top_most_id", uuid.UUID{}),
