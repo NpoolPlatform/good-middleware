@@ -143,10 +143,10 @@ func Sold(v decimal.Decimal) predicate.Stock {
 	})
 }
 
-// AppLocked applies equality check predicate on the "app_locked" field. It's identical to AppLockedEQ.
-func AppLocked(v decimal.Decimal) predicate.Stock {
+// AppReserved applies equality check predicate on the "app_reserved" field. It's identical to AppReservedEQ.
+func AppReserved(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppLocked), v))
+		s.Where(sql.EQ(s.C(FieldAppReserved), v))
 	})
 }
 
@@ -796,81 +796,81 @@ func SoldNotNil() predicate.Stock {
 	})
 }
 
-// AppLockedEQ applies the EQ predicate on the "app_locked" field.
-func AppLockedEQ(v decimal.Decimal) predicate.Stock {
+// AppReservedEQ applies the EQ predicate on the "app_reserved" field.
+func AppReservedEQ(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppLocked), v))
+		s.Where(sql.EQ(s.C(FieldAppReserved), v))
 	})
 }
 
-// AppLockedNEQ applies the NEQ predicate on the "app_locked" field.
-func AppLockedNEQ(v decimal.Decimal) predicate.Stock {
+// AppReservedNEQ applies the NEQ predicate on the "app_reserved" field.
+func AppReservedNEQ(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAppLocked), v))
+		s.Where(sql.NEQ(s.C(FieldAppReserved), v))
 	})
 }
 
-// AppLockedIn applies the In predicate on the "app_locked" field.
-func AppLockedIn(vs ...decimal.Decimal) predicate.Stock {
+// AppReservedIn applies the In predicate on the "app_reserved" field.
+func AppReservedIn(vs ...decimal.Decimal) predicate.Stock {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldAppLocked), v...))
+		s.Where(sql.In(s.C(FieldAppReserved), v...))
 	})
 }
 
-// AppLockedNotIn applies the NotIn predicate on the "app_locked" field.
-func AppLockedNotIn(vs ...decimal.Decimal) predicate.Stock {
+// AppReservedNotIn applies the NotIn predicate on the "app_reserved" field.
+func AppReservedNotIn(vs ...decimal.Decimal) predicate.Stock {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldAppLocked), v...))
+		s.Where(sql.NotIn(s.C(FieldAppReserved), v...))
 	})
 }
 
-// AppLockedGT applies the GT predicate on the "app_locked" field.
-func AppLockedGT(v decimal.Decimal) predicate.Stock {
+// AppReservedGT applies the GT predicate on the "app_reserved" field.
+func AppReservedGT(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAppLocked), v))
+		s.Where(sql.GT(s.C(FieldAppReserved), v))
 	})
 }
 
-// AppLockedGTE applies the GTE predicate on the "app_locked" field.
-func AppLockedGTE(v decimal.Decimal) predicate.Stock {
+// AppReservedGTE applies the GTE predicate on the "app_reserved" field.
+func AppReservedGTE(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAppLocked), v))
+		s.Where(sql.GTE(s.C(FieldAppReserved), v))
 	})
 }
 
-// AppLockedLT applies the LT predicate on the "app_locked" field.
-func AppLockedLT(v decimal.Decimal) predicate.Stock {
+// AppReservedLT applies the LT predicate on the "app_reserved" field.
+func AppReservedLT(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAppLocked), v))
+		s.Where(sql.LT(s.C(FieldAppReserved), v))
 	})
 }
 
-// AppLockedLTE applies the LTE predicate on the "app_locked" field.
-func AppLockedLTE(v decimal.Decimal) predicate.Stock {
+// AppReservedLTE applies the LTE predicate on the "app_reserved" field.
+func AppReservedLTE(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAppLocked), v))
+		s.Where(sql.LTE(s.C(FieldAppReserved), v))
 	})
 }
 
-// AppLockedIsNil applies the IsNil predicate on the "app_locked" field.
-func AppLockedIsNil() predicate.Stock {
+// AppReservedIsNil applies the IsNil predicate on the "app_reserved" field.
+func AppReservedIsNil() predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldAppLocked)))
+		s.Where(sql.IsNull(s.C(FieldAppReserved)))
 	})
 }
 
-// AppLockedNotNil applies the NotNil predicate on the "app_locked" field.
-func AppLockedNotNil() predicate.Stock {
+// AppReservedNotNil applies the NotNil predicate on the "app_reserved" field.
+func AppReservedNotNil() predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldAppLocked)))
+		s.Where(sql.NotNull(s.C(FieldAppReserved)))
 	})
 }
 

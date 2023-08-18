@@ -185,6 +185,10 @@ github.com/NpoolPlatform/message v0.0.0-20230818060900-39804d4d8da6 h1:XblwIEkD1
 github.com/NpoolPlatform/message v0.0.0-20230818060900-39804d4d8da6/go.mod h1:PxJpF0vSSOke+NJskbRBRQ2fK2K3SRe8zaEja+GxSHk=
 github.com/NpoolPlatform/message v0.0.0-20230818072906-1e3d3fd2855b h1:isMEHq0vQP5ZHzRXRUr7U7L4wzItQBzy/+X1m0zxPV8=
 github.com/NpoolPlatform/message v0.0.0-20230818072906-1e3d3fd2855b/go.mod h1:PxJpF0vSSOke+NJskbRBRQ2fK2K3SRe8zaEja+GxSHk=
+github.com/NpoolPlatform/message v0.0.0-20230818101318-2722ac7962b4 h1:W890KtFnVfWE4aH4vGwVpIHE7VDX8mxb4VQuhrHKS4M=
+github.com/NpoolPlatform/message v0.0.0-20230818101318-2722ac7962b4/go.mod h1:PxJpF0vSSOke+NJskbRBRQ2fK2K3SRe8zaEja+GxSHk=
+github.com/NpoolPlatform/message v0.0.0-20230818102940-5a791b25adc6 h1:Kuw/TajUbKG/lBbVAntnSIuFA1AKEUxd6soXqPOsftI=
+github.com/NpoolPlatform/message v0.0.0-20230818102940-5a791b25adc6/go.mod h1:PxJpF0vSSOke+NJskbRBRQ2fK2K3SRe8zaEja+GxSHk=
 github.com/OneOfOne/xxhash v1.2.2 h1:KMrpdQIwFcEqXDklaen+P1axHaj9BSKzvpUUfnHldSE=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/Shonminh/apollo-client v0.4.0 h1:AXGp4wOahrEKjheMXehgsG9B8dEfLQHttRLHeEefvus=

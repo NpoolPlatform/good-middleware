@@ -67,7 +67,7 @@ func (Stock) Fields() []ent.Field {
 			Optional().
 			Default(decimal.Decimal{}),
 		field.
-			Other("app_locked", decimal.Decimal{}).
+			Other("app_reserved", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).

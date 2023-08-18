@@ -142,16 +142,16 @@ func (sc *StockCreate) SetNillableSold(d *decimal.Decimal) *StockCreate {
 	return sc
 }
 
-// SetAppLocked sets the "app_locked" field.
-func (sc *StockCreate) SetAppLocked(d decimal.Decimal) *StockCreate {
-	sc.mutation.SetAppLocked(d)
+// SetAppReserved sets the "app_reserved" field.
+func (sc *StockCreate) SetAppReserved(d decimal.Decimal) *StockCreate {
+	sc.mutation.SetAppReserved(d)
 	return sc
 }
 
-// SetNillableAppLocked sets the "app_locked" field if the given value is not nil.
-func (sc *StockCreate) SetNillableAppLocked(d *decimal.Decimal) *StockCreate {
+// SetNillableAppReserved sets the "app_reserved" field if the given value is not nil.
+func (sc *StockCreate) SetNillableAppReserved(d *decimal.Decimal) *StockCreate {
 	if d != nil {
-		sc.SetAppLocked(*d)
+		sc.SetAppReserved(*d)
 	}
 	return sc
 }
@@ -290,9 +290,9 @@ func (sc *StockCreate) defaults() error {
 		v := stock.DefaultSold
 		sc.mutation.SetSold(v)
 	}
-	if _, ok := sc.mutation.AppLocked(); !ok {
-		v := stock.DefaultAppLocked
-		sc.mutation.SetAppLocked(v)
+	if _, ok := sc.mutation.AppReserved(); !ok {
+		v := stock.DefaultAppReserved
+		sc.mutation.SetAppReserved(v)
 	}
 	if _, ok := sc.mutation.ID(); !ok {
 		if stock.DefaultID == nil {
@@ -427,13 +427,13 @@ func (sc *StockCreate) createSpec() (*Stock, *sqlgraph.CreateSpec) {
 		})
 		_node.Sold = value
 	}
-	if value, ok := sc.mutation.AppLocked(); ok {
+	if value, ok := sc.mutation.AppReserved(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: stock.FieldAppLocked,
+			Column: stock.FieldAppReserved,
 		})
-		_node.AppLocked = value
+		_node.AppReserved = value
 	}
 	return _node, _spec
 }
@@ -645,21 +645,21 @@ func (u *StockUpsert) ClearSold() *StockUpsert {
 	return u
 }
 
-// SetAppLocked sets the "app_locked" field.
-func (u *StockUpsert) SetAppLocked(v decimal.Decimal) *StockUpsert {
-	u.Set(stock.FieldAppLocked, v)
+// SetAppReserved sets the "app_reserved" field.
+func (u *StockUpsert) SetAppReserved(v decimal.Decimal) *StockUpsert {
+	u.Set(stock.FieldAppReserved, v)
 	return u
 }
 
-// UpdateAppLocked sets the "app_locked" field to the value that was provided on create.
-func (u *StockUpsert) UpdateAppLocked() *StockUpsert {
-	u.SetExcluded(stock.FieldAppLocked)
+// UpdateAppReserved sets the "app_reserved" field to the value that was provided on create.
+func (u *StockUpsert) UpdateAppReserved() *StockUpsert {
+	u.SetExcluded(stock.FieldAppReserved)
 	return u
 }
 
-// ClearAppLocked clears the value of the "app_locked" field.
-func (u *StockUpsert) ClearAppLocked() *StockUpsert {
-	u.SetNull(stock.FieldAppLocked)
+// ClearAppReserved clears the value of the "app_reserved" field.
+func (u *StockUpsert) ClearAppReserved() *StockUpsert {
+	u.SetNull(stock.FieldAppReserved)
 	return u
 }
 
@@ -895,24 +895,24 @@ func (u *StockUpsertOne) ClearSold() *StockUpsertOne {
 	})
 }
 
-// SetAppLocked sets the "app_locked" field.
-func (u *StockUpsertOne) SetAppLocked(v decimal.Decimal) *StockUpsertOne {
+// SetAppReserved sets the "app_reserved" field.
+func (u *StockUpsertOne) SetAppReserved(v decimal.Decimal) *StockUpsertOne {
 	return u.Update(func(s *StockUpsert) {
-		s.SetAppLocked(v)
+		s.SetAppReserved(v)
 	})
 }
 
-// UpdateAppLocked sets the "app_locked" field to the value that was provided on create.
-func (u *StockUpsertOne) UpdateAppLocked() *StockUpsertOne {
+// UpdateAppReserved sets the "app_reserved" field to the value that was provided on create.
+func (u *StockUpsertOne) UpdateAppReserved() *StockUpsertOne {
 	return u.Update(func(s *StockUpsert) {
-		s.UpdateAppLocked()
+		s.UpdateAppReserved()
 	})
 }
 
-// ClearAppLocked clears the value of the "app_locked" field.
-func (u *StockUpsertOne) ClearAppLocked() *StockUpsertOne {
+// ClearAppReserved clears the value of the "app_reserved" field.
+func (u *StockUpsertOne) ClearAppReserved() *StockUpsertOne {
 	return u.Update(func(s *StockUpsert) {
-		s.ClearAppLocked()
+		s.ClearAppReserved()
 	})
 }
 
@@ -1314,24 +1314,24 @@ func (u *StockUpsertBulk) ClearSold() *StockUpsertBulk {
 	})
 }
 
-// SetAppLocked sets the "app_locked" field.
-func (u *StockUpsertBulk) SetAppLocked(v decimal.Decimal) *StockUpsertBulk {
+// SetAppReserved sets the "app_reserved" field.
+func (u *StockUpsertBulk) SetAppReserved(v decimal.Decimal) *StockUpsertBulk {
 	return u.Update(func(s *StockUpsert) {
-		s.SetAppLocked(v)
+		s.SetAppReserved(v)
 	})
 }
 
-// UpdateAppLocked sets the "app_locked" field to the value that was provided on create.
-func (u *StockUpsertBulk) UpdateAppLocked() *StockUpsertBulk {
+// UpdateAppReserved sets the "app_reserved" field to the value that was provided on create.
+func (u *StockUpsertBulk) UpdateAppReserved() *StockUpsertBulk {
 	return u.Update(func(s *StockUpsert) {
-		s.UpdateAppLocked()
+		s.UpdateAppReserved()
 	})
 }
 
-// ClearAppLocked clears the value of the "app_locked" field.
-func (u *StockUpsertBulk) ClearAppLocked() *StockUpsertBulk {
+// ClearAppReserved clears the value of the "app_reserved" field.
+func (u *StockUpsertBulk) ClearAppReserved() *StockUpsertBulk {
 	return u.Update(func(s *StockUpsert) {
-		s.ClearAppLocked()
+		s.ClearAppReserved()
 	})
 }
 

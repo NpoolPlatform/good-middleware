@@ -191,23 +191,23 @@ func (su *StockUpdate) ClearSold() *StockUpdate {
 	return su
 }
 
-// SetAppLocked sets the "app_locked" field.
-func (su *StockUpdate) SetAppLocked(d decimal.Decimal) *StockUpdate {
-	su.mutation.SetAppLocked(d)
+// SetAppReserved sets the "app_reserved" field.
+func (su *StockUpdate) SetAppReserved(d decimal.Decimal) *StockUpdate {
+	su.mutation.SetAppReserved(d)
 	return su
 }
 
-// SetNillableAppLocked sets the "app_locked" field if the given value is not nil.
-func (su *StockUpdate) SetNillableAppLocked(d *decimal.Decimal) *StockUpdate {
+// SetNillableAppReserved sets the "app_reserved" field if the given value is not nil.
+func (su *StockUpdate) SetNillableAppReserved(d *decimal.Decimal) *StockUpdate {
 	if d != nil {
-		su.SetAppLocked(*d)
+		su.SetAppReserved(*d)
 	}
 	return su
 }
 
-// ClearAppLocked clears the value of the "app_locked" field.
-func (su *StockUpdate) ClearAppLocked() *StockUpdate {
-	su.mutation.ClearAppLocked()
+// ClearAppReserved clears the value of the "app_reserved" field.
+func (su *StockUpdate) ClearAppReserved() *StockUpdate {
+	su.mutation.ClearAppReserved()
 	return su
 }
 
@@ -423,17 +423,17 @@ func (su *StockUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: stock.FieldSold,
 		})
 	}
-	if value, ok := su.mutation.AppLocked(); ok {
+	if value, ok := su.mutation.AppReserved(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: stock.FieldAppLocked,
+			Column: stock.FieldAppReserved,
 		})
 	}
-	if su.mutation.AppLockedCleared() {
+	if su.mutation.AppReservedCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: stock.FieldAppLocked,
+			Column: stock.FieldAppReserved,
 		})
 	}
 	_spec.Modifiers = su.modifiers
@@ -618,23 +618,23 @@ func (suo *StockUpdateOne) ClearSold() *StockUpdateOne {
 	return suo
 }
 
-// SetAppLocked sets the "app_locked" field.
-func (suo *StockUpdateOne) SetAppLocked(d decimal.Decimal) *StockUpdateOne {
-	suo.mutation.SetAppLocked(d)
+// SetAppReserved sets the "app_reserved" field.
+func (suo *StockUpdateOne) SetAppReserved(d decimal.Decimal) *StockUpdateOne {
+	suo.mutation.SetAppReserved(d)
 	return suo
 }
 
-// SetNillableAppLocked sets the "app_locked" field if the given value is not nil.
-func (suo *StockUpdateOne) SetNillableAppLocked(d *decimal.Decimal) *StockUpdateOne {
+// SetNillableAppReserved sets the "app_reserved" field if the given value is not nil.
+func (suo *StockUpdateOne) SetNillableAppReserved(d *decimal.Decimal) *StockUpdateOne {
 	if d != nil {
-		suo.SetAppLocked(*d)
+		suo.SetAppReserved(*d)
 	}
 	return suo
 }
 
-// ClearAppLocked clears the value of the "app_locked" field.
-func (suo *StockUpdateOne) ClearAppLocked() *StockUpdateOne {
-	suo.mutation.ClearAppLocked()
+// ClearAppReserved clears the value of the "app_reserved" field.
+func (suo *StockUpdateOne) ClearAppReserved() *StockUpdateOne {
+	suo.mutation.ClearAppReserved()
 	return suo
 }
 
@@ -880,17 +880,17 @@ func (suo *StockUpdateOne) sqlSave(ctx context.Context) (_node *Stock, err error
 			Column: stock.FieldSold,
 		})
 	}
-	if value, ok := suo.mutation.AppLocked(); ok {
+	if value, ok := suo.mutation.AppReserved(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: stock.FieldAppLocked,
+			Column: stock.FieldAppReserved,
 		})
 	}
-	if suo.mutation.AppLockedCleared() {
+	if suo.mutation.AppReservedCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: stock.FieldAppLocked,
+			Column: stock.FieldAppReserved,
 		})
 	}
 	_spec.Modifiers = suo.modifiers

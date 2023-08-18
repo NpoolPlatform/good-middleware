@@ -377,16 +377,16 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Stock",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			stock.FieldCreatedAt: {Type: field.TypeUint32, Column: stock.FieldCreatedAt},
-			stock.FieldUpdatedAt: {Type: field.TypeUint32, Column: stock.FieldUpdatedAt},
-			stock.FieldDeletedAt: {Type: field.TypeUint32, Column: stock.FieldDeletedAt},
-			stock.FieldGoodID:    {Type: field.TypeUUID, Column: stock.FieldGoodID},
-			stock.FieldTotal:     {Type: field.TypeOther, Column: stock.FieldTotal},
-			stock.FieldLocked:    {Type: field.TypeOther, Column: stock.FieldLocked},
-			stock.FieldInService: {Type: field.TypeOther, Column: stock.FieldInService},
-			stock.FieldWaitStart: {Type: field.TypeOther, Column: stock.FieldWaitStart},
-			stock.FieldSold:      {Type: field.TypeOther, Column: stock.FieldSold},
-			stock.FieldAppLocked: {Type: field.TypeOther, Column: stock.FieldAppLocked},
+			stock.FieldCreatedAt:   {Type: field.TypeUint32, Column: stock.FieldCreatedAt},
+			stock.FieldUpdatedAt:   {Type: field.TypeUint32, Column: stock.FieldUpdatedAt},
+			stock.FieldDeletedAt:   {Type: field.TypeUint32, Column: stock.FieldDeletedAt},
+			stock.FieldGoodID:      {Type: field.TypeUUID, Column: stock.FieldGoodID},
+			stock.FieldTotal:       {Type: field.TypeOther, Column: stock.FieldTotal},
+			stock.FieldLocked:      {Type: field.TypeOther, Column: stock.FieldLocked},
+			stock.FieldInService:   {Type: field.TypeOther, Column: stock.FieldInService},
+			stock.FieldWaitStart:   {Type: field.TypeOther, Column: stock.FieldWaitStart},
+			stock.FieldSold:        {Type: field.TypeOther, Column: stock.FieldSold},
+			stock.FieldAppReserved: {Type: field.TypeOther, Column: stock.FieldAppReserved},
 		},
 	}
 	graph.Nodes[15] = &sqlgraph.Node{
@@ -1893,9 +1893,9 @@ func (f *StockFilter) WhereSold(p entql.OtherP) {
 	f.Where(p.Field(stock.FieldSold))
 }
 
-// WhereAppLocked applies the entql other predicate on the app_locked field.
-func (f *StockFilter) WhereAppLocked(p entql.OtherP) {
-	f.Where(p.Field(stock.FieldAppLocked))
+// WhereAppReserved applies the entql other predicate on the app_reserved field.
+func (f *StockFilter) WhereAppReserved(p entql.OtherP) {
+	f.Where(p.Field(stock.FieldAppReserved))
 }
 
 // addPredicate implements the predicateAdder interface.

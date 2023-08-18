@@ -35,8 +35,8 @@ type Stock struct {
 	WaitStart decimal.Decimal `json:"wait_start,omitempty"`
 	// Sold holds the value of the "sold" field.
 	Sold decimal.Decimal `json:"sold,omitempty"`
-	// AppLocked holds the value of the "app_locked" field.
-	AppLocked decimal.Decimal `json:"app_locked,omitempty"`
+	// AppReserved holds the value of the "app_reserved" field.
+	AppReserved decimal.Decimal `json:"app_reserved,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -44,7 +44,7 @@ func (*Stock) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case stock.FieldTotal, stock.FieldLocked, stock.FieldInService, stock.FieldWaitStart, stock.FieldSold, stock.FieldAppLocked:
+		case stock.FieldTotal, stock.FieldLocked, stock.FieldInService, stock.FieldWaitStart, stock.FieldSold, stock.FieldAppReserved:
 			values[i] = new(decimal.Decimal)
 		case stock.FieldCreatedAt, stock.FieldUpdatedAt, stock.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
@@ -125,11 +125,11 @@ func (s *Stock) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				s.Sold = *value
 			}
-		case stock.FieldAppLocked:
+		case stock.FieldAppReserved:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field app_locked", values[i])
+				return fmt.Errorf("unexpected type %T for field app_reserved", values[i])
 			} else if value != nil {
-				s.AppLocked = *value
+				s.AppReserved = *value
 			}
 		}
 	}
@@ -186,8 +186,8 @@ func (s *Stock) String() string {
 	builder.WriteString("sold=")
 	builder.WriteString(fmt.Sprintf("%v", s.Sold))
 	builder.WriteString(", ")
-	builder.WriteString("app_locked=")
-	builder.WriteString(fmt.Sprintf("%v", s.AppLocked))
+	builder.WriteString("app_reserved=")
+	builder.WriteString(fmt.Sprintf("%v", s.AppReserved))
 	builder.WriteByte(')')
 	return builder.String()
 }

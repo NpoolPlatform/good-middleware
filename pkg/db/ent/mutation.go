@@ -15821,7 +15821,7 @@ type StockMutation struct {
 	in_service    *decimal.Decimal
 	wait_start    *decimal.Decimal
 	sold          *decimal.Decimal
-	app_locked    *decimal.Decimal
+	app_reserved  *decimal.Decimal
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*Stock, error)
@@ -16381,53 +16381,53 @@ func (m *StockMutation) ResetSold() {
 	delete(m.clearedFields, stock.FieldSold)
 }
 
-// SetAppLocked sets the "app_locked" field.
-func (m *StockMutation) SetAppLocked(d decimal.Decimal) {
-	m.app_locked = &d
+// SetAppReserved sets the "app_reserved" field.
+func (m *StockMutation) SetAppReserved(d decimal.Decimal) {
+	m.app_reserved = &d
 }
 
-// AppLocked returns the value of the "app_locked" field in the mutation.
-func (m *StockMutation) AppLocked() (r decimal.Decimal, exists bool) {
-	v := m.app_locked
+// AppReserved returns the value of the "app_reserved" field in the mutation.
+func (m *StockMutation) AppReserved() (r decimal.Decimal, exists bool) {
+	v := m.app_reserved
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAppLocked returns the old "app_locked" field's value of the Stock entity.
+// OldAppReserved returns the old "app_reserved" field's value of the Stock entity.
 // If the Stock object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StockMutation) OldAppLocked(ctx context.Context) (v decimal.Decimal, err error) {
+func (m *StockMutation) OldAppReserved(ctx context.Context) (v decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAppLocked is only allowed on UpdateOne operations")
+		return v, errors.New("OldAppReserved is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAppLocked requires an ID field in the mutation")
+		return v, errors.New("OldAppReserved requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAppLocked: %w", err)
+		return v, fmt.Errorf("querying old value for OldAppReserved: %w", err)
 	}
-	return oldValue.AppLocked, nil
+	return oldValue.AppReserved, nil
 }
 
-// ClearAppLocked clears the value of the "app_locked" field.
-func (m *StockMutation) ClearAppLocked() {
-	m.app_locked = nil
-	m.clearedFields[stock.FieldAppLocked] = struct{}{}
+// ClearAppReserved clears the value of the "app_reserved" field.
+func (m *StockMutation) ClearAppReserved() {
+	m.app_reserved = nil
+	m.clearedFields[stock.FieldAppReserved] = struct{}{}
 }
 
-// AppLockedCleared returns if the "app_locked" field was cleared in this mutation.
-func (m *StockMutation) AppLockedCleared() bool {
-	_, ok := m.clearedFields[stock.FieldAppLocked]
+// AppReservedCleared returns if the "app_reserved" field was cleared in this mutation.
+func (m *StockMutation) AppReservedCleared() bool {
+	_, ok := m.clearedFields[stock.FieldAppReserved]
 	return ok
 }
 
-// ResetAppLocked resets all changes to the "app_locked" field.
-func (m *StockMutation) ResetAppLocked() {
-	m.app_locked = nil
-	delete(m.clearedFields, stock.FieldAppLocked)
+// ResetAppReserved resets all changes to the "app_reserved" field.
+func (m *StockMutation) ResetAppReserved() {
+	m.app_reserved = nil
+	delete(m.clearedFields, stock.FieldAppReserved)
 }
 
 // Where appends a list predicates to the StockMutation builder.
@@ -16477,8 +16477,8 @@ func (m *StockMutation) Fields() []string {
 	if m.sold != nil {
 		fields = append(fields, stock.FieldSold)
 	}
-	if m.app_locked != nil {
-		fields = append(fields, stock.FieldAppLocked)
+	if m.app_reserved != nil {
+		fields = append(fields, stock.FieldAppReserved)
 	}
 	return fields
 }
@@ -16506,8 +16506,8 @@ func (m *StockMutation) Field(name string) (ent.Value, bool) {
 		return m.WaitStart()
 	case stock.FieldSold:
 		return m.Sold()
-	case stock.FieldAppLocked:
-		return m.AppLocked()
+	case stock.FieldAppReserved:
+		return m.AppReserved()
 	}
 	return nil, false
 }
@@ -16535,8 +16535,8 @@ func (m *StockMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldWaitStart(ctx)
 	case stock.FieldSold:
 		return m.OldSold(ctx)
-	case stock.FieldAppLocked:
-		return m.OldAppLocked(ctx)
+	case stock.FieldAppReserved:
+		return m.OldAppReserved(ctx)
 	}
 	return nil, fmt.Errorf("unknown Stock field %s", name)
 }
@@ -16609,12 +16609,12 @@ func (m *StockMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetSold(v)
 		return nil
-	case stock.FieldAppLocked:
+	case stock.FieldAppReserved:
 		v, ok := value.(decimal.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetAppLocked(v)
+		m.SetAppReserved(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Stock field %s", name)
@@ -16700,8 +16700,8 @@ func (m *StockMutation) ClearedFields() []string {
 	if m.FieldCleared(stock.FieldSold) {
 		fields = append(fields, stock.FieldSold)
 	}
-	if m.FieldCleared(stock.FieldAppLocked) {
-		fields = append(fields, stock.FieldAppLocked)
+	if m.FieldCleared(stock.FieldAppReserved) {
+		fields = append(fields, stock.FieldAppReserved)
 	}
 	return fields
 }
@@ -16732,8 +16732,8 @@ func (m *StockMutation) ClearField(name string) error {
 	case stock.FieldSold:
 		m.ClearSold()
 		return nil
-	case stock.FieldAppLocked:
-		m.ClearAppLocked()
+	case stock.FieldAppReserved:
+		m.ClearAppReserved()
 		return nil
 	}
 	return fmt.Errorf("unknown Stock nullable field %s", name)
@@ -16770,8 +16770,8 @@ func (m *StockMutation) ResetField(name string) error {
 	case stock.FieldSold:
 		m.ResetSold()
 		return nil
-	case stock.FieldAppLocked:
-		m.ResetAppLocked()
+	case stock.FieldAppReserved:
+		m.ResetAppReserved()
 		return nil
 	}
 	return fmt.Errorf("unknown Stock field %s", name)

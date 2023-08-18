@@ -848,10 +848,10 @@ func init() {
 	stockDescSold := stockFields[6].Descriptor()
 	// stock.DefaultSold holds the default value on creation for the sold field.
 	stock.DefaultSold = stockDescSold.Default.(decimal.Decimal)
-	// stockDescAppLocked is the schema descriptor for app_locked field.
-	stockDescAppLocked := stockFields[7].Descriptor()
-	// stock.DefaultAppLocked holds the default value on creation for the app_locked field.
-	stock.DefaultAppLocked = stockDescAppLocked.Default.(decimal.Decimal)
+	// stockDescAppReserved is the schema descriptor for app_reserved field.
+	stockDescAppReserved := stockFields[7].Descriptor()
+	// stock.DefaultAppReserved holds the default value on creation for the app_reserved field.
+	stock.DefaultAppReserved = stockDescAppReserved.Default.(decimal.Decimal)
 	// stockDescID is the schema descriptor for id field.
 	stockDescID := stockFields[0].Descriptor()
 	// stock.DefaultID holds the default value on creation for the id field.
