@@ -10,6 +10,9 @@ import (
 	topmostgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
+	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	enttopmostgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/good"
 
@@ -67,14 +70,58 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 		)
 }
 
+func (h *queryHandler) queryJoinGood(s *sql.Selector) {
+	t := sql.Table(entgood.Table)
+	s.LeftJoin(t).
+		On(
+			s.C(enttopmostgood.FieldGoodID),
+			t.C(entgood.FieldID),
+		).
+		AppendSelect(
+			sql.As(t.C(entgood.FieldTitle), "good_name"),
+		)
+}
+
+func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
+	t := sql.Table(entappgood.Table)
+	s.LeftJoin(t).
+		On(
+			s.C(enttopmostgood.FieldAppGoodID),
+			t.C(entappgood.FieldID),
+		).
+		AppendSelect(
+			sql.As(t.C(entappgood.FieldGoodName), "app_good_name"),
+		)
+}
+
+func (h *queryHandler) queryJoinTopMost(s *sql.Selector) {
+	t := sql.Table(enttopmost.Table)
+	s.LeftJoin(t).
+		On(
+			s.C(enttopmostgood.FieldTopMostID),
+			t.C(enttopmost.FieldID),
+		).
+		AppendSelect(
+			sql.As(t.C(enttopmost.FieldTopMostType), "top_most_type"),
+			sql.As(t.C(enttopmost.FieldTitle), "top_most_title"),
+			sql.As(t.C(enttopmost.FieldMessage), "top_most_message"),
+		)
+}
+
 func (h *queryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
+		h.queryJoinGood(s)
+		h.queryJoinTopMost(s)
+		h.queryJoinAppGood(s)
 	})
 	if h.stmCount == nil {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
+		h.queryJoinGood(s)
+		h.queryJoinTopMost(s)
+		h.queryJoinAppGood(s)
 	})
 }
 

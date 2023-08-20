@@ -2,13 +2,10 @@ package topmostgood
 
 import (
 	"context"
-	"fmt"
 
-	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
 	topmostgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/good"
 )
 
@@ -32,14 +29,6 @@ func (h *updateHandler) updateTopMostGood(ctx context.Context, tx *ent.Tx) error
 }
 
 func (h *Handler) UpdateTopMostGood(ctx context.Context) (*npool.TopMostGood, error) {
-	key := fmt.Sprintf("%v:%v:%v:%v:%v", basetypes.Prefix_PrefixCreateTopMostGood, *h.AppID, *h.TopMostID, *h.GoodID, *h.AppGoodID)
-	if err := redis2.TryLock(key, 0); err != nil {
-		return nil, err
-	}
-	defer func() {
-		_ = redis2.Unlock(key)
-	}()
-
 	handler := &updateHandler{
 		Handler: h,
 	}

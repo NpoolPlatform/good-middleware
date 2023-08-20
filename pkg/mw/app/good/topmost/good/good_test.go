@@ -156,6 +156,12 @@ var ret = npool.TopMostGood{
 
 //nolint:funlen
 func setup(t *testing.T) func(*testing.T) {
+	ret.GoodName = good.Title
+	ret.AppGoodName = appgood.GoodName
+	ret.TopMostTypeStr = topmost.TopMostType.String()
+	ret.TopMostTitle = topmost.Title
+	ret.TopMostMessage = topmost.Message
+
 	h1, err := vendorbrand1.NewHandler(
 		context.Background(),
 		vendorbrand1.WithName(&good.VendorBrandName),

@@ -9,7 +9,7 @@ import (
 	enttopmostgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
 )
 
-func (h *Handler) ExistTopMostGood(ctx context.Context) (bool, error) {
+func (h *Handler) ExistDefault(ctx context.Context) (bool, error) {
 	exist := false
 	var err error
 
@@ -33,7 +33,7 @@ func (h *Handler) ExistTopMostGood(ctx context.Context) (bool, error) {
 	return exist, nil
 }
 
-func (h *Handler) ExistTopMostGoodConds(ctx context.Context) (bool, error) {
+func (h *Handler) ExistDefaultConds(ctx context.Context) (bool, error) {
 	exist := false
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
