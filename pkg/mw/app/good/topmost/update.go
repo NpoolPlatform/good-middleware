@@ -2,15 +2,10 @@ package topmost
 
 import (
 	"context"
-	"fmt"
 
-	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
 	topmostcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
-	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost"
 )
 
@@ -40,30 +35,6 @@ func (h *updateHandler) updateTopMost(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) UpdateTopMost(ctx context.Context) (*npool.TopMost, error) {
-	if h.TopMostType != nil {
-		key := fmt.Sprintf("%v:%v:%v", basetypes.Prefix_PrefixCreateTopMost, *h.AppID, h.TopMostType)
-		if err := redis2.TryLock(key, 0); err != nil {
-			return nil, err
-		}
-		defer func() {
-			_ = redis2.Unlock(key)
-		}()
-
-		if *h.TopMostType != types.GoodTopMostType_TopMostPromotion {
-			h.Conds = &topmostcrud.Conds{
-				AppID:       &cruder.Cond{Op: cruder.EQ, Val: *h.AppID},
-				TopMostType: &cruder.Cond{Op: cruder.EQ, Val: uint32(*h.TopMostType)},
-			}
-			exist, err := h.ExistTopMostConds(ctx)
-			if err != nil {
-				return nil, err
-			}
-			if exist {
-				return nil, fmt.Errorf("already exists")
-			}
-		}
-	}
-
 	handler := &updateHandler{
 		Handler: h,
 	}
