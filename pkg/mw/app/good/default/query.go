@@ -10,6 +10,8 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappdefaultgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
+	entappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
+	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/default"
 )
 
@@ -61,14 +63,42 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 		)
 }
 
+func (h *queryHandler) queryJoinGood(s *sql.Selector) {
+	t := sql.Table(entgood.Table)
+	s.LeftJoin(t).
+		On(
+			s.C(entappdefaultgood.FieldGoodID),
+			t.C(entgood.FieldID),
+		).
+		AppendSelect(
+			sql.As(t.C(entgood.FieldTitle), "good_name"),
+		)
+}
+
+func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
+	t := sql.Table(entappgood.Table)
+	s.LeftJoin(t).
+		On(
+			s.C(entappdefaultgood.FieldAppGoodID),
+			t.C(entappgood.FieldID),
+		).
+		AppendSelect(
+			sql.As(t.C(entappgood.FieldGoodName), "app_good_name"),
+		)
+}
+
 func (h *queryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
+		h.queryJoinGood(s)
+		h.queryJoinAppGood(s)
 	})
 	if h.stmCount == nil {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
+		h.queryJoinGood(s)
+		h.queryJoinAppGood(s)
 	})
 }
 

@@ -133,6 +133,9 @@ var ret = npool.Default{
 }
 
 func setup(t *testing.T) func(*testing.T) {
+	ret.GoodName = good.Title
+	ret.AppGoodName = appgood.GoodName
+
 	h1, err := vendorbrand1.NewHandler(
 		context.Background(),
 		vendorbrand1.WithName(&good.VendorBrandName),

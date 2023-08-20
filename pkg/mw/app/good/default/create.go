@@ -36,7 +36,7 @@ func (h *createHandler) createDefault(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) CreateDefault(ctx context.Context) (*npool.Default, error) {
-	key := fmt.Sprintf("%v:%v:%v:%v", basetypes.Prefix_PrefixCreateAppDefaultGood, *h.AppID, *h.GoodID, *h.AppGoodID)
+	key := fmt.Sprintf("%v:%v:%v", basetypes.Prefix_PrefixCreateAppDefaultGood, *h.AppID, *h.CoinTypeID)
 	if err := redis2.TryLock(key, 0); err != nil {
 		return nil, err
 	}
@@ -45,9 +45,8 @@ func (h *Handler) CreateDefault(ctx context.Context) (*npool.Default, error) {
 	}()
 
 	h.Conds = &appdefaultgoodcrud.Conds{
-		AppID:     &cruder.Cond{Op: cruder.EQ, Val: *h.AppID},
-		GoodID:    &cruder.Cond{Op: cruder.EQ, Val: *h.GoodID},
-		AppGoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.AppGoodID},
+		AppID:      &cruder.Cond{Op: cruder.EQ, Val: *h.AppID},
+		CoinTypeID: &cruder.Cond{Op: cruder.EQ, Val: *h.CoinTypeID},
 	}
 	exist, err := h.ExistDefaultConds(ctx)
 	if err != nil {
