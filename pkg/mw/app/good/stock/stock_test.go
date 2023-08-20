@@ -148,6 +148,9 @@ var ret = npool.Stock{
 }
 
 func setup(t *testing.T) func(*testing.T) {
+	ret.GoodName = good.Title
+	ret.AppGoodName = appgood.GoodName
+
 	h1, err := vendorbrand1.NewHandler(
 		context.Background(),
 		vendorbrand1.WithName(&good.VendorBrandName),
@@ -239,30 +242,12 @@ func setup(t *testing.T) func(*testing.T) {
 	}
 }
 
-func addReserved(t *testing.T) {
-	handler, err := NewHandler(
-		context.Background(),
-		WithID(&ret.ID, true),
-		WithAppID(&ret.AppID, true),
-		WithGoodID(&ret.GoodID, true),
-		WithAppGoodID(&ret.AppGoodID, true),
-		WithReserved(&ret.Reserved, true),
-	)
-	if assert.Nil(t, err) {
-		info, err := handler.AddReserved(context.Background())
-		if assert.Nil(t, err) {
-			ret.CreatedAt = info.CreatedAt
-			ret.UpdatedAt = info.UpdatedAt
-			assert.Equal(t, &ret, info)
-		}
-	}
-}
-
 func addStock(t *testing.T) {
 	ret.Locked = decimal.NewFromInt(10).String()
 	ret.InService = decimal.NewFromInt(0).String()
 	ret.WaitStart = decimal.NewFromInt(10).String()
 	ret.Sold = decimal.NewFromInt(10).String()
+
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
@@ -270,6 +255,7 @@ func addStock(t *testing.T) {
 		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
 		WithLocked(&ret.Locked, true),
+		WithReserved(&ret.Reserved, true),
 		WithInService(&ret.InService, true),
 		WithWaitStart(&ret.WaitStart, true),
 	)
@@ -285,12 +271,16 @@ func addStock(t *testing.T) {
 
 	ret.InService = ret.WaitStart
 	ret.WaitStart = decimal.NewFromInt(-10).String()
+	reserved := decimal.NewFromInt(200).String()
+	ret.Reserved = decimal.NewFromInt(300).String()
+	ret.SpotQuantity = decimal.NewFromInt(280).String()
 
 	handler, err = NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
+		WithReserved(&reserved, true),
 		WithAppGoodID(&ret.AppGoodID, true),
 		WithInService(&ret.InService, true),
 		WithWaitStart(&ret.WaitStart, true),
@@ -355,7 +345,7 @@ func subStock(t *testing.T) {
 			ret.InService = decimal.NewFromInt(0).String()
 			ret.WaitStart = decimal.NewFromInt(0).String()
 			ret.Sold = decimal.NewFromInt(0).String()
-			ret.SpotQuantity = decimal.NewFromInt(100).String()
+			ret.SpotQuantity = decimal.NewFromInt(300).String()
 			assert.Equal(t, &ret, info)
 		}
 	}
@@ -380,7 +370,6 @@ func TestStock(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
 
-	t.Run("addReserved", addReserved)
 	t.Run("addStock", addStock)
 	t.Run("subStock", subStock)
 }

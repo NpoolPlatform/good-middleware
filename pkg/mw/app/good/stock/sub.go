@@ -65,9 +65,17 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 		return fmt.Errorf("invalid sold")
 	}
 
+	appReserved := info.AppReserved
+	if h.Reserved != nil {
+		appReserved = h.Reserved.Sub(appReserved)
+	}
+	if appReserved.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid appreserved")
+	}
+
 	if locked.Add(inService).
 		Add(waitStart).
-		Add(info.AppReserved).
+		Add(appReserved).
 		Cmp(info.Total) > 0 {
 		return fmt.Errorf("invalid stock")
 	}
@@ -75,10 +83,11 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	if _, err := stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(info.ID),
 		&stockcrud.Req{
-			Locked:    &locked,
-			InService: &inService,
-			WaitStart: &waitStart,
-			Sold:      &sold,
+			Locked:      &locked,
+			InService:   &inService,
+			WaitStart:   &waitStart,
+			AppReserved: &appReserved,
+			Sold:        &sold,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -102,6 +111,7 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 	if info == nil {
 		return fmt.Errorf("stock not found")
 	}
+
 	h.GoodID = &info.GoodID
 	spotQuantity := info.SpotQuantity
 
@@ -135,19 +145,25 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 	if sold.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid sold")
 	}
+	reserved := info.Reserved
+	if h.Reserved != nil {
+		reserved = h.Reserved.Add(reserved)
+		spotQuantity = spotQuantity.Add(*h.Reserved)
+	}
 	if spotQuantity.Cmp(info.Reserved) > 0 {
 		return fmt.Errorf("invalid spotquantity")
 	}
 
 	if locked.Add(inService).
 		Add(waitStart).
-		Cmp(info.SpotQuantity) > 0 {
+		Cmp(spotQuantity) > 0 {
 		spotQuantity = decimal.NewFromInt(0)
 	}
 
 	if _, err := appstockcrud.UpdateSet(
 		tx.AppStock.UpdateOneID(info.ID),
 		&appstockcrud.Req{
+			Reserved:     &reserved,
 			SpotQuantity: &spotQuantity,
 			Locked:       &locked,
 			InService:    &inService,
@@ -166,10 +182,10 @@ func (h *Handler) SubStock(ctx context.Context) (*npool.Stock, error) {
 	}
 
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.subStock(ctx, tx); err != nil {
+		if err := handler.subAppStock(ctx, tx); err != nil {
 			return err
 		}
-		if err := handler.subAppStock(ctx, tx); err != nil {
+		if err := handler.subStock(ctx, tx); err != nil {
 			return err
 		}
 		return nil
