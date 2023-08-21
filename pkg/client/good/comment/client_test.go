@@ -100,7 +100,9 @@ var ret = npool.Comment{
 	UserID:    uuid.NewString(),
 	GoodID:    good.ID,
 	Content:   uuid.NewString(),
+	OrderID:   uuid.Nil.String(),
 	ReplyToID: comment.ID,
+	GoodName:  good.Title,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -183,8 +185,9 @@ func createComment(t *testing.T) {
 		Content:   &ret.Content,
 		ReplyToID: &ret.ReplyToID,
 	})
-	fmt.Printf("---------------- %v\n", err)
 	if assert.Nil(t, err) {
+		ret.CreatedAt = info.CreatedAt
+		ret.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, &ret, info)
 	}
 }
@@ -268,8 +271,8 @@ func TestComment(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createComment", createComment)
-	// t.Run("updateComment", updateComment)
-	// t.Run("getComments", getComments)
-	// t.Run("getCommentOnly", getCommentOnly)
-	// t.Run("deleteComment", deleteComment)
+	t.Run("updateComment", updateComment)
+	t.Run("getComments", getComments)
+	t.Run("getCommentOnly", getCommentOnly)
+	t.Run("deleteComment", deleteComment)
 }
