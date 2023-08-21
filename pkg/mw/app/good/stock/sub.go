@@ -95,6 +95,7 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
+//nolint:gocyclo
 func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.

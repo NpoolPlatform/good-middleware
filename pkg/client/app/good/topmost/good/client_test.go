@@ -242,6 +242,7 @@ func setup(t *testing.T) func(*testing.T) {
 		ThresholdPaymentAmount: &topmost.ThresholdPaymentAmount,
 		KycMust:                &topmost.KycMust,
 	})
+	assert.Nil(t, err)
 
 	ret.GoodName = good.Title
 	ret.AppGoodName = appgood.GoodName

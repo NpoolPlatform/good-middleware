@@ -234,6 +234,7 @@ func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
 }
 
+//nolint:funlen,gocyclo
 func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
 		_ = json.Unmarshal([]byte(info.DevicePostersStr), &info.DevicePosters)
