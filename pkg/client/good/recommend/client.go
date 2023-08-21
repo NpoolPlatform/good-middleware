@@ -113,10 +113,12 @@ func UpdateRecommend(ctx context.Context, in *npool.RecommendReq) (*npool.Recomm
 	return info.(*npool.Recommend), nil
 }
 
-func DeleteRecommend(ctx context.Context, in *npool.RecommendReq) (*npool.Recommend, error) {
+func DeleteRecommend(ctx context.Context, id string) (*npool.Recommend, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteRecommend(ctx, &npool.DeleteRecommendRequest{
-			Info: in,
+			Info: &npool.RecommendReq{
+				ID: &id,
+			},
 		})
 		if err != nil {
 			return nil, err

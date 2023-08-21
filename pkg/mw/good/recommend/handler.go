@@ -115,6 +115,7 @@ func WithMessage(s *string, must bool) func(context.Context, *Handler) error {
 			if must {
 				return fmt.Errorf("invalid message")
 			}
+			return nil
 		}
 		if len(*s) < leastMessageLen {
 			return fmt.Errorf("invalid message")
@@ -130,6 +131,7 @@ func WithRecommendIndex(s *string, must bool) func(context.Context, *Handler) er
 			if must {
 				return fmt.Errorf("invalid recommendindex")
 			}
+			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
