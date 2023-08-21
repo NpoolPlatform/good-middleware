@@ -279,7 +279,6 @@ func updateTopMostGood(t *testing.T) {
 		ID:        &ret.ID,
 		AppGoodID: &ret.AppGoodID,
 	})
-	fmt.Printf("-------------------------- %v\n", err)
 	if assert.Nil(t, err) {
 		ret.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, &ret, info)
@@ -351,8 +350,8 @@ func TestTopMostGood(t *testing.T) {
 
 	t.Run("createTopMostGood", createTopMostGood)
 	t.Run("updateTopMostGood", updateTopMostGood)
-	// t.Run("getTopMostGood", getTopMostGood)
-	// t.Run("getTopMostGoods", getTopMostGoods)
-	// t.Run("getTopMostGoodOnly", getTopMostGoodOnly)
-	// t.Run("deleteTopMostGood", deleteTopMostGood)
+	t.Run("getTopMostGood", getTopMostGood)
+	t.Run("getTopMostGoods", getTopMostGoods)
+	t.Run("getTopMostGoodOnly", getTopMostGoodOnly)
+	t.Run("deleteTopMostGood", deleteTopMostGood)
 }

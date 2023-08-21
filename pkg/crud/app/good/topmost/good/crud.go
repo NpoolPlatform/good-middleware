@@ -145,7 +145,7 @@ func SetQueryConds(q *ent.TopMostGoodQuery, conds *Conds) (*ent.TopMostGoodQuery
 		}
 		switch conds.TopMostID.Op {
 		case cruder.EQ:
-			q.Where(enttopmostgood.AppID(id))
+			q.Where(enttopmostgood.TopMostID(id))
 		default:
 			return nil, fmt.Errorf("invalid topmostgood field")
 		}
