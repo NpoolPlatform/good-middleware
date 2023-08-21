@@ -126,7 +126,7 @@ var appgood = appgoodmwpb.Good{
 
 var ret = npool.Default{
 	ID:         uuid.NewString(),
-	AppID:      uuid.NewString(),
+	AppID:      appgood.AppID,
 	GoodID:     good.ID,
 	AppGoodID:  appgood.ID,
 	CoinTypeID: good.CoinTypeID,
@@ -228,10 +228,7 @@ func createDefault(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
-		WithAppID(&ret.AppID, true),
-		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
-		WithCoinTypeID(&ret.CoinTypeID, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.CreateDefault(context.Background())
@@ -247,6 +244,7 @@ func updateDefault(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
+		WithAppGoodID(&ret.AppGoodID, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.UpdateDefault(context.Background())

@@ -17,8 +17,10 @@ func (h *updateHandler) updateDefault(ctx context.Context, tx *ent.Tx) error {
 	if _, err := appdefaultgoodcrud.UpdateSet(
 		tx.AppDefaultGood.UpdateOneID(*h.ID),
 		&appdefaultgoodcrud.Req{
-			GoodID:    h.GoodID,
-			AppGoodID: h.AppGoodID,
+			AppID:      h.AppID,
+			GoodID:     h.GoodID,
+			AppGoodID:  h.AppGoodID,
+			CoinTypeID: h.CoinTypeID,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -27,6 +29,10 @@ func (h *updateHandler) updateDefault(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) UpdateDefault(ctx context.Context) (*npool.Default, error) {
+	if err := h.GetAppGood(ctx); err != nil {
+		return nil, err
+	}
+
 	handler := &updateHandler{
 		Handler: h,
 	}

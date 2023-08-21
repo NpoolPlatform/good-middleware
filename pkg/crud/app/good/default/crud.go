@@ -39,11 +39,17 @@ func CreateSet(c *ent.AppDefaultGoodCreate, req *Req) *ent.AppDefaultGoodCreate 
 }
 
 func UpdateSet(u *ent.AppDefaultGoodUpdateOne, req *Req) *ent.AppDefaultGoodUpdateOne {
+	if req.AppID != nil {
+		u.SetAppID(*req.AppID)
+	}
 	if req.GoodID != nil {
 		u.SetGoodID(*req.GoodID)
 	}
 	if req.AppGoodID != nil {
 		u.SetAppGoodID(*req.AppGoodID)
+	}
+	if req.CoinTypeID != nil {
+		u.SetCoinTypeID(*req.CoinTypeID)
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)

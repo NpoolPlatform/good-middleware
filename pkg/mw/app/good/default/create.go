@@ -36,6 +36,10 @@ func (h *createHandler) createDefault(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) CreateDefault(ctx context.Context) (*npool.Default, error) {
+	if err := h.GetAppGood(ctx); err != nil {
+		return nil, err
+	}
+
 	key := fmt.Sprintf("%v:%v:%v", basetypes.Prefix_PrefixCreateAppDefaultGood, *h.AppID, *h.CoinTypeID)
 	if err := redis2.TryLock(key, 0); err != nil {
 		return nil, err
