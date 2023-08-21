@@ -67,7 +67,7 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 
 	appReserved := info.AppReserved
 	if h.Reserved != nil {
-		appReserved = h.Reserved.Sub(appReserved)
+		appReserved = appReserved.Sub(*h.Reserved)
 	}
 	if appReserved.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid appreserved")
@@ -147,11 +147,14 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 	}
 	reserved := info.Reserved
 	if h.Reserved != nil {
-		reserved = h.Reserved.Add(reserved)
-		spotQuantity = spotQuantity.Add(*h.Reserved)
+		reserved = reserved.Sub(*h.Reserved)
+		spotQuantity = spotQuantity.Sub(*h.Reserved)
 	}
-	if spotQuantity.Cmp(info.Reserved) > 0 {
+	if spotQuantity.Cmp(info.Reserved) > 0 || spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid spotquantity")
+	}
+	if reserved.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid reserved")
 	}
 
 	if locked.Add(inService).

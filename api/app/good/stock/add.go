@@ -25,9 +25,6 @@ func (s *Server) AddStock(ctx context.Context, in *npool.AddStockRequest) (*npoo
 	handler, err := appstock1.NewHandler(
 		ctx,
 		appstock1.WithID(req.ID, true),
-		appstock1.WithAppID(req.AppID, true),
-		appstock1.WithGoodID(req.GoodID, true),
-		appstock1.WithAppGoodID(req.AppGoodID, true),
 		appstock1.WithReserved(req.Reserved, false),
 		appstock1.WithLocked(req.Locked, false),
 		appstock1.WithWaitStart(req.WaitStart, false),

@@ -63,19 +63,3 @@ func SubStock(ctx context.Context, in *npool.StockReq) (*npool.Stock, error) {
 	}
 	return info.(*npool.Stock), nil
 }
-
-func AddReserved(ctx context.Context, in *npool.StockReq) (*npool.Stock, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.AddReserved(ctx, &npool.AddReservedRequest{
-			Info: in,
-		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
-	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Stock), nil
-}
