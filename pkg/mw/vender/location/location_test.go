@@ -9,6 +9,8 @@ import (
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
+	brand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
+	brandmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/brand"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -27,18 +29,37 @@ func init() {
 }
 
 var (
+	brand = brandmwpb.Brand{
+		ID:   uuid.NewString(),
+		Name: uuid.NewString(),
+		Logo: uuid.NewString(),
+	}
+
 	ret = npool.Location{
 		ID:       uuid.NewString(),
 		Country:  uuid.NewString(),
 		Province: uuid.NewString(),
 		City:     uuid.NewString(),
 		Address:  uuid.NewString(),
-		BrandID:  uuid.NewString(),
+		BrandID:  brand.ID,
 	}
 )
 
 func setup(t *testing.T) func(*testing.T) {
-	return func(*testing.T) {}
+	h1, err := brand1.NewHandler(
+		context.Background(),
+		brand1.WithID(&brand.ID),
+		brand1.WithName(&brand.Name),
+		brand1.WithLogo(&brand.Logo),
+	)
+	assert.Nil(t, err)
+
+	_, err = h1.CreateBrand(context.Background())
+	assert.Nil(t, err)
+
+	return func(*testing.T) {
+		_, _ = h1.DeleteBrand(context.Background())
+	}
 }
 
 func createLocation(t *testing.T) {

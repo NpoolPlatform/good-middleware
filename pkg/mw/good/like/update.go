@@ -8,6 +8,7 @@ import (
 	likecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entlike "github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/like"
 
@@ -16,11 +17,31 @@ import (
 
 type updateHandler struct {
 	*Handler
+	like int
 }
 
 func (h *updateHandler) updateLike(ctx context.Context, tx *ent.Tx) error {
+	info, err := tx.
+		Like.
+		Query().
+		Where(
+			entlike.ID(*h.ID),
+			entlike.DeletedAt(0),
+		).
+		ForUpdate().
+		Only(ctx)
+	if err != nil {
+		return err
+	}
+
+	if *h.Like && !info.Like {
+		h.like = 1
+	} else if !*h.Like && info.Like {
+		h.like = -1
+	}
+
 	if _, err := likecrud.UpdateSet(
-		tx.Like.UpdateOneID(*h.ID),
+		info.Update(),
 		&likecrud.Req{
 			Like: h.Like,
 		},
@@ -41,13 +62,10 @@ func (h *updateHandler) updateGoodLike(ctx context.Context, tx *ent.Tx) error {
 	if err != nil {
 		return err
 	}
-	if *h.Like && info.Likes > 1 {
-		info.Likes -= 1
-	} else if info.Dislikes > 1 {
-		info.Dislikes -= 1
-	} else {
-		return fmt.Errorf("not allowed")
-	}
+
+	info.Likes += uint32(h.like)
+	info.Dislikes -= uint32(h.like)
+
 	if _, err := extrainfocrud.UpdateSet(
 		info.Update(),
 		&extrainfocrud.Req{

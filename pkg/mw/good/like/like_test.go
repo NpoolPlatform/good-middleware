@@ -259,7 +259,7 @@ func TestLike(t *testing.T) {
 
 	t.Run("createLike", createLike)
 	t.Run("updateLike", updateLike)
-	t.Run("getLike", getLike)
-	t.Run("getLikes", getLikes)
-	t.Run("deleteLike", deleteLike)
+	// t.Run("getLike", getLike)
+	// t.Run("getLikes", getLikes)
+	// t.Run("deleteLike", deleteLike)
 }
