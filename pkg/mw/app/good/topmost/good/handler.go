@@ -7,6 +7,7 @@ import (
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	topmostgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good"
 	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
+	topmost1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/topmost"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/good"
@@ -96,11 +97,11 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 		if err != nil {
 			return err
 		}
-		info, err := handler.GetGood(ctx)
+		exist, err := handler.ExistGood(ctx)
 		if err != nil {
 			return err
 		}
-		if info == nil {
+		if !exist {
 			return fmt.Errorf("invalid appgood")
 		}
 		h.AppGoodID = handler.ID
@@ -110,17 +111,21 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 
 func WithTopMostID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		if id == nil {
-			if must {
-				return fmt.Errorf("invalid id")
-			}
-			return nil
-		}
-		_id, err := uuid.Parse(*id)
+		handler, err := topmost1.NewHandler(
+			ctx,
+			topmost1.WithID(id, true),
+		)
 		if err != nil {
 			return err
 		}
-		h.TopMostID = &_id
+		exist, err := handler.ExistTopMost(ctx)
+		if err != nil {
+			return err
+		}
+		if !exist {
+			return fmt.Errorf("invalid topmost")
+		}
+		h.TopMostID = handler.ID
 		return nil
 	}
 }
