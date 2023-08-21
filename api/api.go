@@ -8,9 +8,7 @@ import (
 	appstock "github.com/NpoolPlatform/good-middleware/api/app/good/stock"
 	topmost "github.com/NpoolPlatform/good-middleware/api/app/good/topmost"
 	topmostgood "github.com/NpoolPlatform/good-middleware/api/app/good/topmost/good"
-
-	goodmw "github.com/NpoolPlatform/message/npool/good/mw/v1"
-
+	"github.com/NpoolPlatform/good-middleware/api/deviceinfo"
 	"github.com/NpoolPlatform/good-middleware/api/good"
 	"github.com/NpoolPlatform/good-middleware/api/good/comment"
 	"github.com/NpoolPlatform/good-middleware/api/good/like"
@@ -19,9 +17,9 @@ import (
 	"github.com/NpoolPlatform/good-middleware/api/good/reward/history"
 	"github.com/NpoolPlatform/good-middleware/api/good/score"
 	"github.com/NpoolPlatform/good-middleware/api/good/stock"
-
 	"github.com/NpoolPlatform/good-middleware/api/vender/brand"
 	"github.com/NpoolPlatform/good-middleware/api/vender/location"
+	goodmw "github.com/NpoolPlatform/message/npool/good/mw/v1"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -38,7 +36,6 @@ func Register(server grpc.ServiceRegistrar) {
 	appstock.Register(server)
 	topmost.Register(server)
 	topmostgood.Register(server)
-
 	good.Register(server)
 	comment.Register(server)
 	like.Register(server)
@@ -47,7 +44,7 @@ func Register(server grpc.ServiceRegistrar) {
 	history.Register(server)
 	score.Register(server)
 	stock.Register(server)
-
+	deviceinfo.Register(server)
 	brand.Register(server)
 	location.Register(server)
 }

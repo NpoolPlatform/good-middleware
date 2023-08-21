@@ -113,10 +113,12 @@ func GetDeviceInfoOnly(ctx context.Context, conds *npool.Conds) (*npool.DeviceIn
 	return infos.([]*npool.DeviceInfo)[0], nil
 }
 
-func DeleteDeviceInfo(ctx context.Context, in *npool.DeviceInfoReq) (*npool.DeviceInfo, error) {
+func DeleteDeviceInfo(ctx context.Context, id string) (*npool.DeviceInfo, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteDeviceInfo(ctx, &npool.DeleteDeviceInfoRequest{
-			Info: in,
+			Info: &npool.DeviceInfoReq{
+				ID: &id,
+			},
 		})
 		if err != nil {
 			return nil, err

@@ -129,10 +129,12 @@ func UpdateBrand(ctx context.Context, in *npool.BrandReq) (*npool.Brand, error) 
 	return info.(*npool.Brand), nil
 }
 
-func DeleteBrand(ctx context.Context, in *npool.BrandReq) (*npool.Brand, error) {
+func DeleteBrand(ctx context.Context, id string) (*npool.Brand, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteBrand(ctx, &npool.DeleteBrandRequest{
-			Info: in,
+			Info: &npool.BrandReq{
+				ID: &id,
+			},
 		})
 		if err != nil {
 			return nil, err

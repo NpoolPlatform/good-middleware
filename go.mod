@@ -3,6 +3,7 @@ module github.com/NpoolPlatform/good-middleware
 go 1.17
 
 require (
+	bou.ke/monkey v1.0.2
 	entgo.io/ent v0.11.3
 	github.com/NpoolPlatform/basal-middleware v0.0.0-20230518061816-62bd589c0f63
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20230814035104-e1466b5c157e
