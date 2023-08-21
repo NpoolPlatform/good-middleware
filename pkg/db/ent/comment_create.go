@@ -89,6 +89,14 @@ func (cc *CommentCreate) SetOrderID(u uuid.UUID) *CommentCreate {
 	return cc
 }
 
+// SetNillableOrderID sets the "order_id" field if the given value is not nil.
+func (cc *CommentCreate) SetNillableOrderID(u *uuid.UUID) *CommentCreate {
+	if u != nil {
+		cc.SetOrderID(*u)
+	}
+	return cc
+}
+
 // SetContent sets the "content" field.
 func (cc *CommentCreate) SetContent(s string) *CommentCreate {
 	cc.mutation.SetContent(s)
@@ -231,6 +239,13 @@ func (cc *CommentCreate) defaults() error {
 		v := comment.DefaultDeletedAt()
 		cc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := cc.mutation.OrderID(); !ok {
+		if comment.DefaultOrderID == nil {
+			return fmt.Errorf("ent: uninitialized comment.DefaultOrderID (forgotten import ent/runtime?)")
+		}
+		v := comment.DefaultOrderID()
+		cc.mutation.SetOrderID(v)
+	}
 	if _, ok := cc.mutation.Content(); !ok {
 		v := comment.DefaultContent
 		cc.mutation.SetContent(v)
@@ -271,9 +286,6 @@ func (cc *CommentCreate) check() error {
 	}
 	if _, ok := cc.mutation.GoodID(); !ok {
 		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "Comment.good_id"`)}
-	}
-	if _, ok := cc.mutation.OrderID(); !ok {
-		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "Comment.order_id"`)}
 	}
 	return nil
 }
@@ -540,6 +552,12 @@ func (u *CommentUpsert) UpdateOrderID() *CommentUpsert {
 	return u
 }
 
+// ClearOrderID clears the value of the "order_id" field.
+func (u *CommentUpsert) ClearOrderID() *CommentUpsert {
+	u.SetNull(comment.FieldOrderID)
+	return u
+}
+
 // SetContent sets the "content" field.
 func (u *CommentUpsert) SetContent(v string) *CommentUpsert {
 	u.Set(comment.FieldContent, v)
@@ -742,6 +760,13 @@ func (u *CommentUpsertOne) SetOrderID(v uuid.UUID) *CommentUpsertOne {
 func (u *CommentUpsertOne) UpdateOrderID() *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.UpdateOrderID()
+	})
+}
+
+// ClearOrderID clears the value of the "order_id" field.
+func (u *CommentUpsertOne) ClearOrderID() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearOrderID()
 	})
 }
 
@@ -1119,6 +1144,13 @@ func (u *CommentUpsertBulk) SetOrderID(v uuid.UUID) *CommentUpsertBulk {
 func (u *CommentUpsertBulk) UpdateOrderID() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.UpdateOrderID()
+	})
+}
+
+// ClearOrderID clears the value of the "order_id" field.
+func (u *CommentUpsertBulk) ClearOrderID() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearOrderID()
 	})
 }
 

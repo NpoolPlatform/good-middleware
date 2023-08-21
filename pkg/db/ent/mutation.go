@@ -4883,9 +4883,22 @@ func (m *CommentMutation) OldOrderID(ctx context.Context) (v uuid.UUID, err erro
 	return oldValue.OrderID, nil
 }
 
+// ClearOrderID clears the value of the "order_id" field.
+func (m *CommentMutation) ClearOrderID() {
+	m.order_id = nil
+	m.clearedFields[comment.FieldOrderID] = struct{}{}
+}
+
+// OrderIDCleared returns if the "order_id" field was cleared in this mutation.
+func (m *CommentMutation) OrderIDCleared() bool {
+	_, ok := m.clearedFields[comment.FieldOrderID]
+	return ok
+}
+
 // ResetOrderID resets all changes to the "order_id" field.
 func (m *CommentMutation) ResetOrderID() {
 	m.order_id = nil
+	delete(m.clearedFields, comment.FieldOrderID)
 }
 
 // SetContent sets the "content" field.
@@ -5227,6 +5240,9 @@ func (m *CommentMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *CommentMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(comment.FieldOrderID) {
+		fields = append(fields, comment.FieldOrderID)
+	}
 	if m.FieldCleared(comment.FieldContent) {
 		fields = append(fields, comment.FieldContent)
 	}
@@ -5247,6 +5263,9 @@ func (m *CommentMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *CommentMutation) ClearField(name string) error {
 	switch name {
+	case comment.FieldOrderID:
+		m.ClearOrderID()
+		return nil
 	case comment.FieldContent:
 		m.ClearContent()
 		return nil

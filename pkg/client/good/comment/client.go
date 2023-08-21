@@ -113,10 +113,12 @@ func UpdateComment(ctx context.Context, in *npool.CommentReq) (*npool.Comment, e
 	return info.(*npool.Comment), nil
 }
 
-func DeleteComment(ctx context.Context, in *npool.CommentReq) (*npool.Comment, error) {
+func DeleteComment(ctx context.Context, id string) (*npool.Comment, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteComment(ctx, &npool.DeleteCommentRequest{
-			Info: in,
+			Info: &npool.CommentReq{
+				ID: &id,
+			},
 		})
 		if err != nil {
 			return nil, err

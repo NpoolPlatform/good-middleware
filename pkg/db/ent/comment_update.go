@@ -108,6 +108,20 @@ func (cu *CommentUpdate) SetOrderID(u uuid.UUID) *CommentUpdate {
 	return cu
 }
 
+// SetNillableOrderID sets the "order_id" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableOrderID(u *uuid.UUID) *CommentUpdate {
+	if u != nil {
+		cu.SetOrderID(*u)
+	}
+	return cu
+}
+
+// ClearOrderID clears the value of the "order_id" field.
+func (cu *CommentUpdate) ClearOrderID() *CommentUpdate {
+	cu.mutation.ClearOrderID()
+	return cu
+}
+
 // SetContent sets the "content" field.
 func (cu *CommentUpdate) SetContent(s string) *CommentUpdate {
 	cu.mutation.SetContent(s)
@@ -316,6 +330,12 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: comment.FieldOrderID,
 		})
 	}
+	if cu.mutation.OrderIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: comment.FieldOrderID,
+		})
+	}
 	if value, ok := cu.mutation.Content(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -439,6 +459,20 @@ func (cuo *CommentUpdateOne) SetGoodID(u uuid.UUID) *CommentUpdateOne {
 // SetOrderID sets the "order_id" field.
 func (cuo *CommentUpdateOne) SetOrderID(u uuid.UUID) *CommentUpdateOne {
 	cuo.mutation.SetOrderID(u)
+	return cuo
+}
+
+// SetNillableOrderID sets the "order_id" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableOrderID(u *uuid.UUID) *CommentUpdateOne {
+	if u != nil {
+		cuo.SetOrderID(*u)
+	}
+	return cuo
+}
+
+// ClearOrderID clears the value of the "order_id" field.
+func (cuo *CommentUpdateOne) ClearOrderID() *CommentUpdateOne {
+	cuo.mutation.ClearOrderID()
 	return cuo
 }
 
@@ -677,6 +711,12 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: comment.FieldOrderID,
+		})
+	}
+	if cuo.mutation.OrderIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: comment.FieldOrderID,
 		})
 	}

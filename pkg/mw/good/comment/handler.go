@@ -132,6 +132,7 @@ func WithContent(s *string, must bool) func(context.Context, *Handler) error {
 			if must {
 				return fmt.Errorf("invalid content")
 			}
+			return nil
 		}
 		if len(*s) < leastContentLen {
 			return fmt.Errorf("invalid content")
