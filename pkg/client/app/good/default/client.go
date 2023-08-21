@@ -113,10 +113,12 @@ func GetDefaultOnly(ctx context.Context, conds *npool.Conds) (*npool.Default, er
 	return infos.([]*npool.Default)[0], nil
 }
 
-func DeleteDefault(ctx context.Context, in *npool.DefaultReq) (*npool.Default, error) {
+func DeleteDefault(ctx context.Context, id string) (*npool.Default, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteDefault(ctx, &npool.DeleteDefaultRequest{
-			Info: in,
+			Info: &npool.DefaultReq{
+				ID: &id,
+			},
 		})
 		if err != nil {
 			return nil, err

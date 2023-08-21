@@ -19,9 +19,9 @@ import (
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/client/good"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/client/vender/brand"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/client/vender/location"
-	// "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
-	// basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
+	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/default"
 	deviceinfomwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
@@ -231,16 +231,15 @@ func createDefault(t *testing.T) {
 
 func updateDefault(t *testing.T) {
 	info, err := UpdateDefault(context.Background(), &npool.DefaultReq{
-		ID: &ret.ID,
+		ID:        &ret.ID,
+		AppGoodID: &ret.AppGoodID,
 	})
-	fmt.Printf("---------------------- %v\n", err)
 	if assert.Nil(t, err) {
 		ret.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, &ret, info)
 	}
 }
 
-/*
 func getDefault(t *testing.T) {
 	info, err := GetDefault(context.Background(), ret.ID)
 	if assert.Nil(t, err) {
@@ -250,11 +249,13 @@ func getDefault(t *testing.T) {
 
 func getDefaults(t *testing.T) {
 	infos, total, err := GetDefaults(context.Background(), &npool.Conds{
-		ID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-		AppID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
-		GoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-		GoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
-		AppIDs:  &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppID}},
+		ID:          &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		AppID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+		GoodID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
+		AppGoodID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+		CoinTypeID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.CoinTypeID},
+		GoodIDs:     &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
+		CoinTypeIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.CoinTypeID}},
 	}, int32(0), int32(2))
 	if assert.Nil(t, err) {
 		if assert.Equal(t, uint32(1), total) {
@@ -265,11 +266,13 @@ func getDefaults(t *testing.T) {
 
 func getDefaultOnly(t *testing.T) {
 	info, err := GetDefaultOnly(context.Background(), &npool.Conds{
-		ID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-		AppID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
-		GoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-		GoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
-		AppIDs:  &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppID}},
+		ID:          &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		AppID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+		GoodID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
+		AppGoodID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+		CoinTypeID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.CoinTypeID},
+		GoodIDs:     &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
+		CoinTypeIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.CoinTypeID}},
 	})
 	if assert.Nil(t, err) {
 		assert.Equal(t, &ret, info)
@@ -286,7 +289,6 @@ func deleteDefault(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }
-*/
 
 func TestDefault(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
@@ -307,10 +309,8 @@ func TestDefault(t *testing.T) {
 
 	t.Run("createDefault", createDefault)
 	t.Run("updateDefault", updateDefault)
-	/*
-		t.Run("getDefault", getDefault)
-		t.Run("getDefaults", getDefaults)
-		t.Run("getDefaultOnly", getDefaultOnly)
-		t.Run("deleteDefault", deleteDefault)
-	*/
+	t.Run("getDefault", getDefault)
+	t.Run("getDefaults", getDefaults)
+	t.Run("getDefaultOnly", getDefaultOnly)
+	t.Run("deleteDefault", deleteDefault)
 }
