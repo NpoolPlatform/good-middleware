@@ -28,6 +28,7 @@ func (s *Server) AddStock(ctx context.Context, in *npool.AddStockRequest) (*npoo
 		appstock1.WithAppID(req.AppID, true),
 		appstock1.WithGoodID(req.GoodID, true),
 		appstock1.WithAppGoodID(req.AppGoodID, true),
+		appstock1.WithReserved(req.Reserved, false),
 		appstock1.WithLocked(req.Locked, false),
 		appstock1.WithWaitStart(req.WaitStart, false),
 		appstock1.WithInService(req.InService, false),
@@ -52,47 +53,6 @@ func (s *Server) AddStock(ctx context.Context, in *npool.AddStockRequest) (*npoo
 	}
 
 	return &npool.AddStockResponse{
-		Info: info,
-	}, nil
-}
-
-func (s *Server) AddReserved(ctx context.Context, in *npool.AddReservedRequest) (*npool.AddReservedResponse, error) {
-	req := in.GetInfo()
-	if req == nil {
-		logger.Sugar().Errorw(
-			"AddReserved",
-			"In", in,
-		)
-		return &npool.AddReservedResponse{}, status.Error(codes.Aborted, "invalid argument")
-	}
-	handler, err := appstock1.NewHandler(
-		ctx,
-		appstock1.WithID(req.ID, true),
-		appstock1.WithAppID(req.AppID, true),
-		appstock1.WithGoodID(req.GoodID, true),
-		appstock1.WithAppGoodID(req.AppGoodID, true),
-		appstock1.WithReserved(req.Reserved, false),
-	)
-	if err != nil {
-		logger.Sugar().Errorw(
-			"AddReserved",
-			"In", in,
-			"Error", err,
-		)
-		return &npool.AddReservedResponse{}, status.Error(codes.Aborted, err.Error())
-	}
-
-	info, err := handler.AddReserved(ctx)
-	if err != nil {
-		logger.Sugar().Errorw(
-			"AddReserved",
-			"In", in,
-			"Error", err,
-		)
-		return &npool.AddReservedResponse{}, status.Error(codes.Aborted, err.Error())
-	}
-
-	return &npool.AddReservedResponse{
 		Info: info,
 	}, nil
 }

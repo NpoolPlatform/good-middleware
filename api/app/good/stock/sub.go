@@ -28,6 +28,7 @@ func (s *Server) SubStock(ctx context.Context, in *npool.SubStockRequest) (*npoo
 		appstock1.WithAppID(req.AppID, true),
 		appstock1.WithGoodID(req.GoodID, true),
 		appstock1.WithAppGoodID(req.AppGoodID, true),
+		appstock1.WithReserved(req.Reserved, false),
 		appstock1.WithLocked(req.Locked, false),
 		appstock1.WithWaitStart(req.WaitStart, false),
 		appstock1.WithInService(req.InService, false),
