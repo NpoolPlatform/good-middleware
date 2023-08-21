@@ -97,10 +97,12 @@ func GetScoreOnly(ctx context.Context, conds *npool.Conds) (*npool.Score, error)
 	return infos.([]*npool.Score)[0], nil
 }
 
-func DeleteScore(ctx context.Context, in *npool.ScoreReq) (*npool.Score, error) {
+func DeleteScore(ctx context.Context, id string) (*npool.Score, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteScore(ctx, &npool.DeleteScoreRequest{
-			Info: in,
+			Info: &npool.ScoreReq{
+				ID: &id,
+			},
 		})
 		if err != nil {
 			return nil, err
