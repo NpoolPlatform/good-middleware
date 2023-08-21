@@ -43,9 +43,9 @@ func (h *deleteHandler) subGoodLike(ctx context.Context, tx *ent.Tx, like bool) 
 	if err != nil {
 		return err
 	}
-	if like && info.Likes > 1 {
+	if like && info.Likes >= 1 {
 		info.Likes -= 1
-	} else if info.Dislikes > 1 {
+	} else if info.Dislikes >= 1 {
 		info.Dislikes -= 1
 	} else {
 		return fmt.Errorf("not allowed")

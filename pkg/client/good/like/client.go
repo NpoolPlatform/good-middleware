@@ -97,10 +97,12 @@ func GetLikeOnly(ctx context.Context, conds *npool.Conds) (*npool.Like, error) {
 	return infos.([]*npool.Like)[0], nil
 }
 
-func DeleteLike(ctx context.Context, in *npool.LikeReq) (*npool.Like, error) {
+func DeleteLike(ctx context.Context, id string) (*npool.Like, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteLike(ctx, &npool.DeleteLikeRequest{
-			Info: in,
+			Info: &npool.LikeReq{
+				ID: &id,
+			},
 		})
 		if err != nil {
 			return nil, err
