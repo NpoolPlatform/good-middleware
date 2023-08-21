@@ -17,7 +17,6 @@ func (h *updateHandler) updateTopMostGood(ctx context.Context, tx *ent.Tx) error
 	if _, err := topmostgoodcrud.UpdateSet(
 		tx.TopMostGood.UpdateOneID(*h.ID),
 		&topmostgoodcrud.Req{
-			TopMostID:    h.TopMostID,
 			DisplayIndex: h.DisplayIndex,
 			Posters:      h.Posters,
 			Price:        h.Price,

@@ -12,7 +12,7 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/good"
 )
 
-func (s *Server) GetTopMost(ctx context.Context, in *npool.GetTopMostGoodRequest) (*npool.GetTopMostGoodResponse, error) {
+func (s *Server) GetTopMostGood(ctx context.Context, in *npool.GetTopMostGoodRequest) (*npool.GetTopMostGoodResponse, error) {
 	handler, err := topmostgood1.NewHandler(
 		ctx,
 		topmostgood1.WithID(&in.ID, true),

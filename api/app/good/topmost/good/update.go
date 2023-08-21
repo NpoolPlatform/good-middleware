@@ -13,7 +13,7 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/good"
 )
 
-func (s *Server) UpdateTopMost(ctx context.Context, in *npool.UpdateTopMostGoodRequest) (*npool.UpdateTopMostGoodResponse, error) {
+func (s *Server) UpdateTopMostGood(ctx context.Context, in *npool.UpdateTopMostGoodRequest) (*npool.UpdateTopMostGoodResponse, error) {
 	req := in.GetInfo()
 	if req == nil {
 		logger.Sugar().Errorw(
@@ -25,10 +25,6 @@ func (s *Server) UpdateTopMost(ctx context.Context, in *npool.UpdateTopMostGoodR
 	handler, err := topmostgood1.NewHandler(
 		ctx,
 		topmostgood1.WithID(req.ID, true),
-		topmostgood1.WithAppID(req.AppID, true),
-		topmostgood1.WithGoodID(req.GoodID, true),
-		topmostgood1.WithAppGoodID(req.AppGoodID, true),
-		topmostgood1.WithTopMostID(req.TopMostID, true),
 		topmostgood1.WithDisplayIndex(req.DisplayIndex, false),
 		topmostgood1.WithPosters(req.Posters, false),
 		topmostgood1.WithPrice(req.Price, false),

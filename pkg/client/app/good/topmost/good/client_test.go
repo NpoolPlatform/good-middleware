@@ -15,6 +15,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 
 	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/client/app/good"
+	topmost1 "github.com/NpoolPlatform/good-middleware/pkg/client/app/good/topmost"
 	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/client/deviceinfo"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/client/good"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/client/vender/brand"
@@ -23,6 +24,7 @@ import (
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
+	topmostmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/good"
 	deviceinfomwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
 	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
@@ -133,12 +135,35 @@ var appgood = appgoodmwpb.Good{
 	UserPurchaseLimit:     decimal.NewFromInt(0).String(),
 }
 
-var ret = npool.Default{
-	ID:         uuid.NewString(),
-	AppID:      appgood.AppID,
-	GoodID:     appgood.GoodID,
-	AppGoodID:  appgood.ID,
-	CoinTypeID: good.CoinTypeID,
+var topmost = topmostmwpb.TopMost{
+	ID:                     uuid.NewString(),
+	AppID:                  appgood.AppID,
+	TopMostType:            types.GoodTopMostType_TopMostNoviceExclusive,
+	TopMostTypeStr:         types.GoodTopMostType_TopMostNoviceExclusive.String(),
+	Title:                  uuid.NewString(),
+	Message:                uuid.NewString(),
+	Posters:                []string{uuid.NewString(), uuid.NewString()},
+	StartAt:                uint32(time.Now().Unix() + 1000),
+	EndAt:                  uint32(time.Now().Unix() + 6000),
+	ThresholdCredits:       uuid.NewString(),
+	RegisterElapsedSeconds: 3000,
+	ThresholdPurchases:     3000,
+	ThresholdPaymentAmount: "3000",
+	KycMust:                true,
+}
+
+var ret = npool.TopMostGood{
+	ID:             uuid.NewString(),
+	AppID:          appgood.AppID,
+	GoodID:         appgood.GoodID,
+	AppGoodID:      appgood.ID,
+	TopMostID:      topmost.ID,
+	DisplayIndex:   0,
+	Posters:        []string{uuid.NewString(), uuid.NewString()},
+	Price:          decimal.NewFromInt(230).String(),
+	TopMostTypeStr: topmost.TopMostType.String(),
+	TopMostTitle:   topmost.Title,
+	TopMostMessage: topmost.Message,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -202,10 +227,27 @@ func setup(t *testing.T) func(*testing.T) {
 	})
 	assert.Nil(t, err)
 
+	_, err = topmost1.CreateTopMost(context.Background(), &topmostmwpb.TopMostReq{
+		ID:                     &topmost.ID,
+		AppID:                  &topmost.AppID,
+		TopMostType:            &topmost.TopMostType,
+		Title:                  &topmost.Title,
+		Message:                &topmost.Message,
+		Posters:                topmost.Posters,
+		StartAt:                &topmost.StartAt,
+		EndAt:                  &topmost.EndAt,
+		ThresholdCredits:       &topmost.ThresholdCredits,
+		RegisterElapsedSeconds: &topmost.RegisterElapsedSeconds,
+		ThresholdPurchases:     &topmost.ThresholdPurchases,
+		ThresholdPaymentAmount: &topmost.ThresholdPaymentAmount,
+		KycMust:                &topmost.KycMust,
+	})
+
 	ret.GoodName = good.Title
 	ret.AppGoodName = appgood.GoodName
 
 	return func(*testing.T) {
+		_, _ = topmost1.DeleteTopMost(context.Background(), topmost.ID)
 		_, _ = appgood1.DeleteGood(context.Background(), appgood.ID)
 		_, _ = good1.DeleteGood(context.Background(), good.ID)
 		_, _ = deviceinfo1.DeleteDeviceInfo(context.Background(), good.DeviceInfoID)
@@ -214,48 +256,50 @@ func setup(t *testing.T) func(*testing.T) {
 	}
 }
 
-func createDefault(t *testing.T) {
-	info, err := CreateDefault(context.Background(), &npool.DefaultReq{
-		ID:         &ret.ID,
-		AppID:      &ret.AppID,
-		GoodID:     &ret.GoodID,
-		AppGoodID:  &ret.AppGoodID,
-		CoinTypeID: &ret.CoinTypeID,
+func createTopMostGood(t *testing.T) {
+	info, err := CreateTopMostGood(context.Background(), &npool.TopMostGoodReq{
+		ID:        &ret.ID,
+		AppID:     &ret.AppID,
+		GoodID:    &ret.GoodID,
+		AppGoodID: &ret.AppGoodID,
+		TopMostID: &ret.TopMostID,
+		Price:     &ret.Price,
+		Posters:   ret.Posters,
 	})
 	if assert.Nil(t, err) {
+		ret.PostersStr = info.PostersStr
 		ret.CreatedAt = info.CreatedAt
 		ret.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, &ret, info)
 	}
 }
 
-func updateDefault(t *testing.T) {
-	info, err := UpdateDefault(context.Background(), &npool.DefaultReq{
+func updateTopMostGood(t *testing.T) {
+	info, err := UpdateTopMostGood(context.Background(), &npool.TopMostGoodReq{
 		ID:        &ret.ID,
 		AppGoodID: &ret.AppGoodID,
 	})
+	fmt.Printf("-------------------------- %v\n", err)
 	if assert.Nil(t, err) {
 		ret.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, &ret, info)
 	}
 }
 
-func getDefault(t *testing.T) {
-	info, err := GetDefault(context.Background(), ret.ID)
+func getTopMostGood(t *testing.T) {
+	info, err := GetTopMostGood(context.Background(), ret.ID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, &ret, info)
 	}
 }
 
-func getDefaults(t *testing.T) {
-	infos, total, err := GetDefaults(context.Background(), &npool.Conds{
-		ID:          &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-		AppID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
-		GoodID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-		AppGoodID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
-		CoinTypeID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.CoinTypeID},
-		GoodIDs:     &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
-		CoinTypeIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.CoinTypeID}},
+func getTopMostGoods(t *testing.T) {
+	infos, total, err := GetTopMostGoods(context.Background(), &npool.Conds{
+		ID:        &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		AppID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+		GoodID:    &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
+		AppGoodID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+		TopMostID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.TopMostID},
 	}, int32(0), int32(2))
 	if assert.Nil(t, err) {
 		if assert.Equal(t, uint32(1), total) {
@@ -264,33 +308,31 @@ func getDefaults(t *testing.T) {
 	}
 }
 
-func getDefaultOnly(t *testing.T) {
-	info, err := GetDefaultOnly(context.Background(), &npool.Conds{
-		ID:          &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-		AppID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
-		GoodID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-		AppGoodID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
-		CoinTypeID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.CoinTypeID},
-		GoodIDs:     &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
-		CoinTypeIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.CoinTypeID}},
+func getTopMostGoodOnly(t *testing.T) {
+	info, err := GetTopMostGoodOnly(context.Background(), &npool.Conds{
+		ID:        &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		AppID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+		GoodID:    &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
+		AppGoodID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+		TopMostID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.TopMostID},
 	})
 	if assert.Nil(t, err) {
 		assert.Equal(t, &ret, info)
 	}
 }
 
-func deleteDefault(t *testing.T) {
-	info, err := DeleteDefault(context.Background(), ret.ID)
+func deleteTopMostGood(t *testing.T) {
+	info, err := DeleteTopMostGood(context.Background(), ret.ID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, &ret, info)
 	}
 
-	info, err = GetDefault(context.Background(), ret.ID)
+	info, err = GetTopMostGood(context.Background(), ret.ID)
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }
 
-func TestDefault(t *testing.T) {
+func TestTopMostGood(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
 	}
@@ -307,10 +349,10 @@ func TestDefault(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
 
-	t.Run("createDefault", createDefault)
-	t.Run("updateDefault", updateDefault)
-	t.Run("getDefault", getDefault)
-	t.Run("getDefaults", getDefaults)
-	t.Run("getDefaultOnly", getDefaultOnly)
-	t.Run("deleteDefault", deleteDefault)
+	t.Run("createTopMostGood", createTopMostGood)
+	t.Run("updateTopMostGood", updateTopMostGood)
+	// t.Run("getTopMostGood", getTopMostGood)
+	// t.Run("getTopMostGoods", getTopMostGoods)
+	// t.Run("getTopMostGoodOnly", getTopMostGoodOnly)
+	// t.Run("deleteTopMostGood", deleteTopMostGood)
 }

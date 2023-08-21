@@ -39,6 +39,10 @@ func (h *createHandler) createTopMostGood(ctx context.Context, tx *ent.Tx) error
 }
 
 func (h *Handler) CreateTopMostGood(ctx context.Context) (*npool.TopMostGood, error) {
+	if err := h.GetAppGood(ctx); err != nil {
+		return nil, err
+	}
+
 	key := fmt.Sprintf("%v:%v:%v:%v", basetypes.Prefix_PrefixCreateTopMostGood, *h.AppID, *h.TopMostID, *h.AppGoodID)
 	if err := redis2.TryLock(key, 0); err != nil {
 		return nil, err

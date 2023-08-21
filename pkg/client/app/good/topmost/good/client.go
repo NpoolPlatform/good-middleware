@@ -113,10 +113,12 @@ func GetTopMostGoodOnly(ctx context.Context, conds *npool.Conds) (*npool.TopMost
 	return infos.([]*npool.TopMostGood)[0], nil
 }
 
-func DeleteTopMostGood(ctx context.Context, in *npool.TopMostGoodReq) (*npool.TopMostGood, error) {
+func DeleteTopMostGood(ctx context.Context, id string) (*npool.TopMostGood, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteTopMostGood(ctx, &npool.DeleteTopMostGoodRequest{
-			Info: in,
+			Info: &npool.TopMostGoodReq{
+				ID: &id,
+			},
 		})
 		if err != nil {
 			return nil, err
