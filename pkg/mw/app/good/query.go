@@ -294,6 +294,42 @@ func (h *queryHandler) formalize() {
 		for _, label := range labels {
 			info.Labels = append(info.Labels, types.GoodLabel(types.GoodLabel_value[label]))
 		}
+		amount, err = decimal.NewFromString(info.AppGoodReserved)
+		if err != nil {
+			info.AppGoodReserved = decimal.NewFromInt(0).String()
+		} else {
+			info.AppGoodReserved = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.AppSpotQuantity)
+		if err != nil {
+			info.AppSpotQuantity = decimal.NewFromInt(0).String()
+		} else {
+			info.AppSpotQuantity = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.AppGoodLocked)
+		if err != nil {
+			info.AppGoodLocked = decimal.NewFromInt(0).String()
+		} else {
+			info.AppGoodLocked = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.AppGoodWaitStart)
+		if err != nil {
+			info.AppGoodWaitStart = decimal.NewFromInt(0).String()
+		} else {
+			info.AppGoodWaitStart = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.AppGoodInService)
+		if err != nil {
+			info.AppGoodInService = decimal.NewFromInt(0).String()
+		} else {
+			info.AppGoodInService = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.AppGoodSold)
+		if err != nil {
+			info.AppGoodSold = decimal.NewFromInt(0).String()
+		} else {
+			info.AppGoodSold = amount.String()
+		}
 	}
 }
 

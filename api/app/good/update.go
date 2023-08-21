@@ -25,8 +25,6 @@ func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*
 	handler, err := appgood1.NewHandler(
 		ctx,
 		appgood1.WithID(req.ID, true),
-		appgood1.WithAppID(req.AppID, true),
-		appgood1.WithGoodID(req.GoodID, true),
 		appgood1.WithOnline(req.Online, false),
 		appgood1.WithVisible(req.Visible, false),
 		appgood1.WithGoodName(req.GoodName, false),

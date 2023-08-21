@@ -40,12 +40,12 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		appgood1.WithGoodBanner(req.GoodBanner, true),
 		appgood1.WithEnablePurchase(req.EnablePurchase, true),
 		appgood1.WithEnableProductPage(req.EnableProductPage, true),
-		appgood1.WithCancelMode(req.CancelMode, true),
-		appgood1.WithUserPurchaseLimit(req.UserPurchaseLimit, true),
-		appgood1.WithDisplayColors(req.DisplayColors, true),
-		appgood1.WithCancellableBeforeStart(req.CancellableBeforeStart, true),
+		appgood1.WithCancelMode(req.CancelMode, false),
+		appgood1.WithUserPurchaseLimit(req.UserPurchaseLimit, false),
+		appgood1.WithDisplayColors(req.DisplayColors, false),
+		appgood1.WithCancellableBeforeStart(req.CancellableBeforeStart, false),
 		appgood1.WithProductPage(req.ProductPage, true),
-		appgood1.WithEnableSetCommission(req.EnableSetCommission, true),
+		appgood1.WithEnableSetCommission(req.EnableSetCommission, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
