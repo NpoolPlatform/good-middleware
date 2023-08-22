@@ -71,9 +71,9 @@ func WithManufacturer(s *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithPowerComsuption(s *uint32) func(context.Context, *Handler) error {
+func WithPowerConsumption(s *uint32) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.PowerComsuption = s
+		h.PowerConsumption = s
 		return nil
 	}
 }

@@ -22,8 +22,8 @@ const (
 	FieldType = "type"
 	// FieldManufacturer holds the string denoting the manufacturer field in the database.
 	FieldManufacturer = "manufacturer"
-	// FieldPowerComsuption holds the string denoting the power_comsuption field in the database.
-	FieldPowerComsuption = "power_comsuption"
+	// FieldPowerConsumption holds the string denoting the power_consumption field in the database.
+	FieldPowerConsumption = "power_consumption"
 	// FieldShipmentAt holds the string denoting the shipment_at field in the database.
 	FieldShipmentAt = "shipment_at"
 	// FieldPosters holds the string denoting the posters field in the database.
@@ -40,7 +40,7 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldType,
 	FieldManufacturer,
-	FieldPowerComsuption,
+	FieldPowerConsumption,
 	FieldShipmentAt,
 	FieldPosters,
 }
@@ -80,8 +80,8 @@ var (
 	DefaultManufacturer string
 	// ManufacturerValidator is a validator for the "manufacturer" field. It is called by the builders before save.
 	ManufacturerValidator func(string) error
-	// DefaultPowerComsuption holds the default value on creation for the "power_comsuption" field.
-	DefaultPowerComsuption uint32
+	// DefaultPowerConsumption holds the default value on creation for the "power_consumption" field.
+	DefaultPowerConsumption uint32
 	// DefaultShipmentAt holds the default value on creation for the "shipment_at" field.
 	DefaultShipmentAt uint32
 	// DefaultPosters holds the default value on creation for the "posters" field.

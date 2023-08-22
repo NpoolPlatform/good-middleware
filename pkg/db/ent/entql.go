@@ -149,14 +149,14 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "DeviceInfo",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			deviceinfo.FieldCreatedAt:       {Type: field.TypeUint32, Column: deviceinfo.FieldCreatedAt},
-			deviceinfo.FieldUpdatedAt:       {Type: field.TypeUint32, Column: deviceinfo.FieldUpdatedAt},
-			deviceinfo.FieldDeletedAt:       {Type: field.TypeUint32, Column: deviceinfo.FieldDeletedAt},
-			deviceinfo.FieldType:            {Type: field.TypeString, Column: deviceinfo.FieldType},
-			deviceinfo.FieldManufacturer:    {Type: field.TypeString, Column: deviceinfo.FieldManufacturer},
-			deviceinfo.FieldPowerComsuption: {Type: field.TypeUint32, Column: deviceinfo.FieldPowerComsuption},
-			deviceinfo.FieldShipmentAt:      {Type: field.TypeUint32, Column: deviceinfo.FieldShipmentAt},
-			deviceinfo.FieldPosters:         {Type: field.TypeJSON, Column: deviceinfo.FieldPosters},
+			deviceinfo.FieldCreatedAt:        {Type: field.TypeUint32, Column: deviceinfo.FieldCreatedAt},
+			deviceinfo.FieldUpdatedAt:        {Type: field.TypeUint32, Column: deviceinfo.FieldUpdatedAt},
+			deviceinfo.FieldDeletedAt:        {Type: field.TypeUint32, Column: deviceinfo.FieldDeletedAt},
+			deviceinfo.FieldType:             {Type: field.TypeString, Column: deviceinfo.FieldType},
+			deviceinfo.FieldManufacturer:     {Type: field.TypeString, Column: deviceinfo.FieldManufacturer},
+			deviceinfo.FieldPowerConsumption: {Type: field.TypeUint32, Column: deviceinfo.FieldPowerConsumption},
+			deviceinfo.FieldShipmentAt:       {Type: field.TypeUint32, Column: deviceinfo.FieldShipmentAt},
+			deviceinfo.FieldPosters:          {Type: field.TypeJSON, Column: deviceinfo.FieldPosters},
 		},
 	}
 	graph.Nodes[5] = &sqlgraph.Node{
@@ -983,9 +983,9 @@ func (f *DeviceInfoFilter) WhereManufacturer(p entql.StringP) {
 	f.Where(p.Field(deviceinfo.FieldManufacturer))
 }
 
-// WherePowerComsuption applies the entql uint32 predicate on the power_comsuption field.
-func (f *DeviceInfoFilter) WherePowerComsuption(p entql.Uint32P) {
-	f.Where(p.Field(deviceinfo.FieldPowerComsuption))
+// WherePowerConsumption applies the entql uint32 predicate on the power_consumption field.
+func (f *DeviceInfoFilter) WherePowerConsumption(p entql.Uint32P) {
+	f.Where(p.Field(deviceinfo.FieldPowerConsumption))
 }
 
 // WhereShipmentAt applies the entql uint32 predicate on the shipment_at field.

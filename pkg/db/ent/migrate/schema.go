@@ -125,7 +125,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "type", Type: field.TypeString, Nullable: true, Size: 64, Default: ""},
 		{Name: "manufacturer", Type: field.TypeString, Nullable: true, Size: 64, Default: ""},
-		{Name: "power_comsuption", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "power_consumption", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "shipment_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "posters", Type: field.TypeJSON, Nullable: true},
 	}
@@ -193,13 +193,6 @@ var (
 		Name:       "goods",
 		Columns:    GoodsColumns,
 		PrimaryKey: []*schema.Column{GoodsColumns[0]},
-		Indexes: []*schema.Index{
-			{
-				Name:    "good_device_info_id_vendor_location_id_benefit_type_good_type",
-				Unique:  false,
-				Columns: []*schema.Column{GoodsColumns[4], GoodsColumns[8], GoodsColumns[10], GoodsColumns[11]},
-			},
-		},
 	}
 	// GoodRewardsColumns holds the columns for the "good_rewards" table.
 	GoodRewardsColumns = []*schema.Column{
@@ -227,7 +220,7 @@ var (
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1692607762},
+		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1692684376},
 		{Name: "tid", Type: field.TypeUUID, Nullable: true},
 		{Name: "amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "unit_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},

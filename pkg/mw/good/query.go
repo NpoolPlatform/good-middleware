@@ -160,7 +160,7 @@ func (h *queryHandler) queryJoinDeviceInfo(s *sql.Selector) {
 		AppendSelect(
 			sql.As(t.C(entdeviceinfo.FieldType), "device_type"),
 			sql.As(t.C(entdeviceinfo.FieldManufacturer), "device_manufacturer"),
-			sql.As(t.C(entdeviceinfo.FieldPowerComsuption), "device_power_comsuption"),
+			sql.As(t.C(entdeviceinfo.FieldPowerConsumption), "device_power_consumption"),
 			sql.As(t.C(entdeviceinfo.FieldShipmentAt), "device_shipment_at"),
 			sql.As(t.C(entdeviceinfo.FieldPosters), "device_posters"),
 		)

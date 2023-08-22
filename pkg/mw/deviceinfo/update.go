@@ -41,11 +41,11 @@ func (h *Handler) UpdateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 		if _, err := deviceinfocrud.UpdateSet(
 			cli.DeviceInfo.UpdateOneID(*h.ID),
 			&deviceinfocrud.Req{
-				Type:            h.Type,
-				Manufacturer:    h.Manufacturer,
-				PowerComsuption: h.PowerComsuption,
-				ShipmentAt:      h.ShipmentAt,
-				Posters:         h.Posters,
+				Type:             h.Type,
+				Manufacturer:     h.Manufacturer,
+				PowerConsumption: h.PowerConsumption,
+				ShipmentAt:       h.ShipmentAt,
+				Posters:          h.Posters,
 			},
 		).Save(_ctx); err != nil {
 			return err

@@ -93,16 +93,16 @@ func (dic *DeviceInfoCreate) SetNillableManufacturer(s *string) *DeviceInfoCreat
 	return dic
 }
 
-// SetPowerComsuption sets the "power_comsuption" field.
-func (dic *DeviceInfoCreate) SetPowerComsuption(u uint32) *DeviceInfoCreate {
-	dic.mutation.SetPowerComsuption(u)
+// SetPowerConsumption sets the "power_consumption" field.
+func (dic *DeviceInfoCreate) SetPowerConsumption(u uint32) *DeviceInfoCreate {
+	dic.mutation.SetPowerConsumption(u)
 	return dic
 }
 
-// SetNillablePowerComsuption sets the "power_comsuption" field if the given value is not nil.
-func (dic *DeviceInfoCreate) SetNillablePowerComsuption(u *uint32) *DeviceInfoCreate {
+// SetNillablePowerConsumption sets the "power_consumption" field if the given value is not nil.
+func (dic *DeviceInfoCreate) SetNillablePowerConsumption(u *uint32) *DeviceInfoCreate {
 	if u != nil {
-		dic.SetPowerComsuption(*u)
+		dic.SetPowerConsumption(*u)
 	}
 	return dic
 }
@@ -249,9 +249,9 @@ func (dic *DeviceInfoCreate) defaults() error {
 		v := deviceinfo.DefaultManufacturer
 		dic.mutation.SetManufacturer(v)
 	}
-	if _, ok := dic.mutation.PowerComsuption(); !ok {
-		v := deviceinfo.DefaultPowerComsuption
-		dic.mutation.SetPowerComsuption(v)
+	if _, ok := dic.mutation.PowerConsumption(); !ok {
+		v := deviceinfo.DefaultPowerConsumption
+		dic.mutation.SetPowerConsumption(v)
 	}
 	if _, ok := dic.mutation.ShipmentAt(); !ok {
 		v := deviceinfo.DefaultShipmentAt
@@ -369,13 +369,13 @@ func (dic *DeviceInfoCreate) createSpec() (*DeviceInfo, *sqlgraph.CreateSpec) {
 		})
 		_node.Manufacturer = value
 	}
-	if value, ok := dic.mutation.PowerComsuption(); ok {
+	if value, ok := dic.mutation.PowerConsumption(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: deviceinfo.FieldPowerComsuption,
+			Column: deviceinfo.FieldPowerConsumption,
 		})
-		_node.PowerComsuption = value
+		_node.PowerConsumption = value
 	}
 	if value, ok := dic.mutation.ShipmentAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -537,27 +537,27 @@ func (u *DeviceInfoUpsert) ClearManufacturer() *DeviceInfoUpsert {
 	return u
 }
 
-// SetPowerComsuption sets the "power_comsuption" field.
-func (u *DeviceInfoUpsert) SetPowerComsuption(v uint32) *DeviceInfoUpsert {
-	u.Set(deviceinfo.FieldPowerComsuption, v)
+// SetPowerConsumption sets the "power_consumption" field.
+func (u *DeviceInfoUpsert) SetPowerConsumption(v uint32) *DeviceInfoUpsert {
+	u.Set(deviceinfo.FieldPowerConsumption, v)
 	return u
 }
 
-// UpdatePowerComsuption sets the "power_comsuption" field to the value that was provided on create.
-func (u *DeviceInfoUpsert) UpdatePowerComsuption() *DeviceInfoUpsert {
-	u.SetExcluded(deviceinfo.FieldPowerComsuption)
+// UpdatePowerConsumption sets the "power_consumption" field to the value that was provided on create.
+func (u *DeviceInfoUpsert) UpdatePowerConsumption() *DeviceInfoUpsert {
+	u.SetExcluded(deviceinfo.FieldPowerConsumption)
 	return u
 }
 
-// AddPowerComsuption adds v to the "power_comsuption" field.
-func (u *DeviceInfoUpsert) AddPowerComsuption(v uint32) *DeviceInfoUpsert {
-	u.Add(deviceinfo.FieldPowerComsuption, v)
+// AddPowerConsumption adds v to the "power_consumption" field.
+func (u *DeviceInfoUpsert) AddPowerConsumption(v uint32) *DeviceInfoUpsert {
+	u.Add(deviceinfo.FieldPowerConsumption, v)
 	return u
 }
 
-// ClearPowerComsuption clears the value of the "power_comsuption" field.
-func (u *DeviceInfoUpsert) ClearPowerComsuption() *DeviceInfoUpsert {
-	u.SetNull(deviceinfo.FieldPowerComsuption)
+// ClearPowerConsumption clears the value of the "power_consumption" field.
+func (u *DeviceInfoUpsert) ClearPowerConsumption() *DeviceInfoUpsert {
+	u.SetNull(deviceinfo.FieldPowerConsumption)
 	return u
 }
 
@@ -758,31 +758,31 @@ func (u *DeviceInfoUpsertOne) ClearManufacturer() *DeviceInfoUpsertOne {
 	})
 }
 
-// SetPowerComsuption sets the "power_comsuption" field.
-func (u *DeviceInfoUpsertOne) SetPowerComsuption(v uint32) *DeviceInfoUpsertOne {
+// SetPowerConsumption sets the "power_consumption" field.
+func (u *DeviceInfoUpsertOne) SetPowerConsumption(v uint32) *DeviceInfoUpsertOne {
 	return u.Update(func(s *DeviceInfoUpsert) {
-		s.SetPowerComsuption(v)
+		s.SetPowerConsumption(v)
 	})
 }
 
-// AddPowerComsuption adds v to the "power_comsuption" field.
-func (u *DeviceInfoUpsertOne) AddPowerComsuption(v uint32) *DeviceInfoUpsertOne {
+// AddPowerConsumption adds v to the "power_consumption" field.
+func (u *DeviceInfoUpsertOne) AddPowerConsumption(v uint32) *DeviceInfoUpsertOne {
 	return u.Update(func(s *DeviceInfoUpsert) {
-		s.AddPowerComsuption(v)
+		s.AddPowerConsumption(v)
 	})
 }
 
-// UpdatePowerComsuption sets the "power_comsuption" field to the value that was provided on create.
-func (u *DeviceInfoUpsertOne) UpdatePowerComsuption() *DeviceInfoUpsertOne {
+// UpdatePowerConsumption sets the "power_consumption" field to the value that was provided on create.
+func (u *DeviceInfoUpsertOne) UpdatePowerConsumption() *DeviceInfoUpsertOne {
 	return u.Update(func(s *DeviceInfoUpsert) {
-		s.UpdatePowerComsuption()
+		s.UpdatePowerConsumption()
 	})
 }
 
-// ClearPowerComsuption clears the value of the "power_comsuption" field.
-func (u *DeviceInfoUpsertOne) ClearPowerComsuption() *DeviceInfoUpsertOne {
+// ClearPowerConsumption clears the value of the "power_consumption" field.
+func (u *DeviceInfoUpsertOne) ClearPowerConsumption() *DeviceInfoUpsertOne {
 	return u.Update(func(s *DeviceInfoUpsert) {
-		s.ClearPowerComsuption()
+		s.ClearPowerConsumption()
 	})
 }
 
@@ -1156,31 +1156,31 @@ func (u *DeviceInfoUpsertBulk) ClearManufacturer() *DeviceInfoUpsertBulk {
 	})
 }
 
-// SetPowerComsuption sets the "power_comsuption" field.
-func (u *DeviceInfoUpsertBulk) SetPowerComsuption(v uint32) *DeviceInfoUpsertBulk {
+// SetPowerConsumption sets the "power_consumption" field.
+func (u *DeviceInfoUpsertBulk) SetPowerConsumption(v uint32) *DeviceInfoUpsertBulk {
 	return u.Update(func(s *DeviceInfoUpsert) {
-		s.SetPowerComsuption(v)
+		s.SetPowerConsumption(v)
 	})
 }
 
-// AddPowerComsuption adds v to the "power_comsuption" field.
-func (u *DeviceInfoUpsertBulk) AddPowerComsuption(v uint32) *DeviceInfoUpsertBulk {
+// AddPowerConsumption adds v to the "power_consumption" field.
+func (u *DeviceInfoUpsertBulk) AddPowerConsumption(v uint32) *DeviceInfoUpsertBulk {
 	return u.Update(func(s *DeviceInfoUpsert) {
-		s.AddPowerComsuption(v)
+		s.AddPowerConsumption(v)
 	})
 }
 
-// UpdatePowerComsuption sets the "power_comsuption" field to the value that was provided on create.
-func (u *DeviceInfoUpsertBulk) UpdatePowerComsuption() *DeviceInfoUpsertBulk {
+// UpdatePowerConsumption sets the "power_consumption" field to the value that was provided on create.
+func (u *DeviceInfoUpsertBulk) UpdatePowerConsumption() *DeviceInfoUpsertBulk {
 	return u.Update(func(s *DeviceInfoUpsert) {
-		s.UpdatePowerComsuption()
+		s.UpdatePowerConsumption()
 	})
 }
 
-// ClearPowerComsuption clears the value of the "power_comsuption" field.
-func (u *DeviceInfoUpsertBulk) ClearPowerComsuption() *DeviceInfoUpsertBulk {
+// ClearPowerConsumption clears the value of the "power_consumption" field.
+func (u *DeviceInfoUpsertBulk) ClearPowerConsumption() *DeviceInfoUpsertBulk {
 	return u.Update(func(s *DeviceInfoUpsert) {
-		s.ClearPowerComsuption()
+		s.ClearPowerConsumption()
 	})
 }
 

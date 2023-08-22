@@ -141,7 +141,7 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 			sql.As(t1.C(entgood.FieldBenefitIntervalHours), "benefit_interval_hours"),
 			sql.As(t2.C(entdeviceinfo.FieldType), "device_type"),
 			sql.As(t2.C(entdeviceinfo.FieldManufacturer), "device_manufacturer"),
-			sql.As(t2.C(entdeviceinfo.FieldPowerComsuption), "device_power_comsuption"),
+			sql.As(t2.C(entdeviceinfo.FieldPowerConsumption), "device_power_consumption"),
 			sql.As(t2.C(entdeviceinfo.FieldShipmentAt), "device_shipment_at"),
 			sql.As(t2.C(entdeviceinfo.FieldPosters), "device_posters"),
 			sql.As(t3.C(entvendorlocation.FieldCountry), "vendor_location_country"),

@@ -38,7 +38,7 @@ func (DeviceInfo) Fields() []ent.Field {
 			Default("").
 			MaxLen(maxLen),
 		field.
-			Uint32("power_comsuption").
+			Uint32("power_consumption").
 			Optional().
 			Default(0),
 		field.

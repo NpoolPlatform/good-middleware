@@ -4,14 +4,11 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
-	"entgo.io/ent/schema/index"
-	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
-	"github.com/shopspring/decimal"
-
-	"github.com/google/uuid"
-
 	timeconst "github.com/NpoolPlatform/go-service-framework/pkg/const/time"
-	"github.com/NpoolPlatform/message/npool/good/mgr/v1/good"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
+	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // Good holds the schema definition for the Good entity.
@@ -60,11 +57,11 @@ func (Good) Fields() []ent.Field {
 		field.
 			String("benefit_type").
 			Optional().
-			Default(good.BenefitType_DefaultBenefitType.String()),
+			Default(types.BenefitType_DefaultBenefitType.String()),
 		field.
 			String("good_type").
 			Optional().
-			Default(good.GoodType_DefaultGoodType.String()),
+			Default(types.GoodType_DefaultGoodType.String()),
 		field.
 			String("title").
 			Optional().
@@ -113,7 +110,5 @@ func (Good) Edges() []ent.Edge {
 }
 
 func (Good) Indexes() []ent.Index {
-	return []ent.Index{
-		index.Fields("device_info_id", "vendor_location_id", "benefit_type", "good_type"),
-	}
+	return nil
 }

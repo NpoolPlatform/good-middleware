@@ -27,8 +27,8 @@ type DeviceInfo struct {
 	Type string `json:"type,omitempty"`
 	// Manufacturer holds the value of the "manufacturer" field.
 	Manufacturer string `json:"manufacturer,omitempty"`
-	// PowerComsuption holds the value of the "power_comsuption" field.
-	PowerComsuption uint32 `json:"power_comsuption,omitempty"`
+	// PowerConsumption holds the value of the "power_consumption" field.
+	PowerConsumption uint32 `json:"power_consumption,omitempty"`
 	// ShipmentAt holds the value of the "shipment_at" field.
 	ShipmentAt uint32 `json:"shipment_at,omitempty"`
 	// Posters holds the value of the "posters" field.
@@ -42,7 +42,7 @@ func (*DeviceInfo) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case deviceinfo.FieldPosters:
 			values[i] = new([]byte)
-		case deviceinfo.FieldCreatedAt, deviceinfo.FieldUpdatedAt, deviceinfo.FieldDeletedAt, deviceinfo.FieldPowerComsuption, deviceinfo.FieldShipmentAt:
+		case deviceinfo.FieldCreatedAt, deviceinfo.FieldUpdatedAt, deviceinfo.FieldDeletedAt, deviceinfo.FieldPowerConsumption, deviceinfo.FieldShipmentAt:
 			values[i] = new(sql.NullInt64)
 		case deviceinfo.FieldType, deviceinfo.FieldManufacturer:
 			values[i] = new(sql.NullString)
@@ -99,11 +99,11 @@ func (di *DeviceInfo) assignValues(columns []string, values []interface{}) error
 			} else if value.Valid {
 				di.Manufacturer = value.String
 			}
-		case deviceinfo.FieldPowerComsuption:
+		case deviceinfo.FieldPowerConsumption:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field power_comsuption", values[i])
+				return fmt.Errorf("unexpected type %T for field power_consumption", values[i])
 			} else if value.Valid {
-				di.PowerComsuption = uint32(value.Int64)
+				di.PowerConsumption = uint32(value.Int64)
 			}
 		case deviceinfo.FieldShipmentAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -162,8 +162,8 @@ func (di *DeviceInfo) String() string {
 	builder.WriteString("manufacturer=")
 	builder.WriteString(di.Manufacturer)
 	builder.WriteString(", ")
-	builder.WriteString("power_comsuption=")
-	builder.WriteString(fmt.Sprintf("%v", di.PowerComsuption))
+	builder.WriteString("power_consumption=")
+	builder.WriteString(fmt.Sprintf("%v", di.PowerConsumption))
 	builder.WriteString(", ")
 	builder.WriteString("shipment_at=")
 	builder.WriteString(fmt.Sprintf("%v", di.ShipmentAt))

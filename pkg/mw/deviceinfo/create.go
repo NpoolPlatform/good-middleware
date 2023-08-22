@@ -47,12 +47,12 @@ func (h *Handler) CreateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 		if _, err := deviceinfocrud.CreateSet(
 			cli.DeviceInfo.Create(),
 			&deviceinfocrud.Req{
-				ID:              h.ID,
-				Type:            h.Type,
-				Manufacturer:    h.Manufacturer,
-				PowerComsuption: h.PowerComsuption,
-				ShipmentAt:      h.ShipmentAt,
-				Posters:         h.Posters,
+				ID:               h.ID,
+				Type:             h.Type,
+				Manufacturer:     h.Manufacturer,
+				PowerConsumption: h.PowerConsumption,
+				ShipmentAt:       h.ShipmentAt,
+				Posters:          h.Posters,
 			},
 		).Save(_ctx); err != nil {
 			return err

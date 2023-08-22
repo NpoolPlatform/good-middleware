@@ -27,7 +27,7 @@ func (s *Server) CreateDeviceInfo(ctx context.Context, in *npool.CreateDeviceInf
 		deviceinfo1.WithID(req.ID),
 		deviceinfo1.WithType(req.Type),
 		deviceinfo1.WithManufacturer(req.Manufacturer),
-		deviceinfo1.WithPowerComsuption(req.PowerComsuption),
+		deviceinfo1.WithPowerConsumption(req.PowerConsumption),
 		deviceinfo1.WithShipmentAt(req.ShipmentAt),
 		deviceinfo1.WithPosters(req.Posters),
 	)

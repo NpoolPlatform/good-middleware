@@ -114,10 +114,10 @@ func Manufacturer(v string) predicate.DeviceInfo {
 	})
 }
 
-// PowerComsuption applies equality check predicate on the "power_comsuption" field. It's identical to PowerComsuptionEQ.
-func PowerComsuption(v uint32) predicate.DeviceInfo {
+// PowerConsumption applies equality check predicate on the "power_consumption" field. It's identical to PowerConsumptionEQ.
+func PowerConsumption(v uint32) predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPowerComsuption), v))
+		s.Where(sql.EQ(s.C(FieldPowerConsumption), v))
 	})
 }
 
@@ -546,81 +546,81 @@ func ManufacturerContainsFold(v string) predicate.DeviceInfo {
 	})
 }
 
-// PowerComsuptionEQ applies the EQ predicate on the "power_comsuption" field.
-func PowerComsuptionEQ(v uint32) predicate.DeviceInfo {
+// PowerConsumptionEQ applies the EQ predicate on the "power_consumption" field.
+func PowerConsumptionEQ(v uint32) predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPowerComsuption), v))
+		s.Where(sql.EQ(s.C(FieldPowerConsumption), v))
 	})
 }
 
-// PowerComsuptionNEQ applies the NEQ predicate on the "power_comsuption" field.
-func PowerComsuptionNEQ(v uint32) predicate.DeviceInfo {
+// PowerConsumptionNEQ applies the NEQ predicate on the "power_consumption" field.
+func PowerConsumptionNEQ(v uint32) predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldPowerComsuption), v))
+		s.Where(sql.NEQ(s.C(FieldPowerConsumption), v))
 	})
 }
 
-// PowerComsuptionIn applies the In predicate on the "power_comsuption" field.
-func PowerComsuptionIn(vs ...uint32) predicate.DeviceInfo {
+// PowerConsumptionIn applies the In predicate on the "power_consumption" field.
+func PowerConsumptionIn(vs ...uint32) predicate.DeviceInfo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldPowerComsuption), v...))
+		s.Where(sql.In(s.C(FieldPowerConsumption), v...))
 	})
 }
 
-// PowerComsuptionNotIn applies the NotIn predicate on the "power_comsuption" field.
-func PowerComsuptionNotIn(vs ...uint32) predicate.DeviceInfo {
+// PowerConsumptionNotIn applies the NotIn predicate on the "power_consumption" field.
+func PowerConsumptionNotIn(vs ...uint32) predicate.DeviceInfo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldPowerComsuption), v...))
+		s.Where(sql.NotIn(s.C(FieldPowerConsumption), v...))
 	})
 }
 
-// PowerComsuptionGT applies the GT predicate on the "power_comsuption" field.
-func PowerComsuptionGT(v uint32) predicate.DeviceInfo {
+// PowerConsumptionGT applies the GT predicate on the "power_consumption" field.
+func PowerConsumptionGT(v uint32) predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldPowerComsuption), v))
+		s.Where(sql.GT(s.C(FieldPowerConsumption), v))
 	})
 }
 
-// PowerComsuptionGTE applies the GTE predicate on the "power_comsuption" field.
-func PowerComsuptionGTE(v uint32) predicate.DeviceInfo {
+// PowerConsumptionGTE applies the GTE predicate on the "power_consumption" field.
+func PowerConsumptionGTE(v uint32) predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldPowerComsuption), v))
+		s.Where(sql.GTE(s.C(FieldPowerConsumption), v))
 	})
 }
 
-// PowerComsuptionLT applies the LT predicate on the "power_comsuption" field.
-func PowerComsuptionLT(v uint32) predicate.DeviceInfo {
+// PowerConsumptionLT applies the LT predicate on the "power_consumption" field.
+func PowerConsumptionLT(v uint32) predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldPowerComsuption), v))
+		s.Where(sql.LT(s.C(FieldPowerConsumption), v))
 	})
 }
 
-// PowerComsuptionLTE applies the LTE predicate on the "power_comsuption" field.
-func PowerComsuptionLTE(v uint32) predicate.DeviceInfo {
+// PowerConsumptionLTE applies the LTE predicate on the "power_consumption" field.
+func PowerConsumptionLTE(v uint32) predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldPowerComsuption), v))
+		s.Where(sql.LTE(s.C(FieldPowerConsumption), v))
 	})
 }
 
-// PowerComsuptionIsNil applies the IsNil predicate on the "power_comsuption" field.
-func PowerComsuptionIsNil() predicate.DeviceInfo {
+// PowerConsumptionIsNil applies the IsNil predicate on the "power_consumption" field.
+func PowerConsumptionIsNil() predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldPowerComsuption)))
+		s.Where(sql.IsNull(s.C(FieldPowerConsumption)))
 	})
 }
 
-// PowerComsuptionNotNil applies the NotNil predicate on the "power_comsuption" field.
-func PowerComsuptionNotNil() predicate.DeviceInfo {
+// PowerConsumptionNotNil applies the NotNil predicate on the "power_consumption" field.
+func PowerConsumptionNotNil() predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldPowerComsuption)))
+		s.Where(sql.NotNull(s.C(FieldPowerConsumption)))
 	})
 }
 

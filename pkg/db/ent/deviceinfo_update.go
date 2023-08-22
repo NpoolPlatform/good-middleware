@@ -123,30 +123,30 @@ func (diu *DeviceInfoUpdate) ClearManufacturer() *DeviceInfoUpdate {
 	return diu
 }
 
-// SetPowerComsuption sets the "power_comsuption" field.
-func (diu *DeviceInfoUpdate) SetPowerComsuption(u uint32) *DeviceInfoUpdate {
-	diu.mutation.ResetPowerComsuption()
-	diu.mutation.SetPowerComsuption(u)
+// SetPowerConsumption sets the "power_consumption" field.
+func (diu *DeviceInfoUpdate) SetPowerConsumption(u uint32) *DeviceInfoUpdate {
+	diu.mutation.ResetPowerConsumption()
+	diu.mutation.SetPowerConsumption(u)
 	return diu
 }
 
-// SetNillablePowerComsuption sets the "power_comsuption" field if the given value is not nil.
-func (diu *DeviceInfoUpdate) SetNillablePowerComsuption(u *uint32) *DeviceInfoUpdate {
+// SetNillablePowerConsumption sets the "power_consumption" field if the given value is not nil.
+func (diu *DeviceInfoUpdate) SetNillablePowerConsumption(u *uint32) *DeviceInfoUpdate {
 	if u != nil {
-		diu.SetPowerComsuption(*u)
+		diu.SetPowerConsumption(*u)
 	}
 	return diu
 }
 
-// AddPowerComsuption adds u to the "power_comsuption" field.
-func (diu *DeviceInfoUpdate) AddPowerComsuption(u int32) *DeviceInfoUpdate {
-	diu.mutation.AddPowerComsuption(u)
+// AddPowerConsumption adds u to the "power_consumption" field.
+func (diu *DeviceInfoUpdate) AddPowerConsumption(u int32) *DeviceInfoUpdate {
+	diu.mutation.AddPowerConsumption(u)
 	return diu
 }
 
-// ClearPowerComsuption clears the value of the "power_comsuption" field.
-func (diu *DeviceInfoUpdate) ClearPowerComsuption() *DeviceInfoUpdate {
-	diu.mutation.ClearPowerComsuption()
+// ClearPowerConsumption clears the value of the "power_consumption" field.
+func (diu *DeviceInfoUpdate) ClearPowerConsumption() *DeviceInfoUpdate {
+	diu.mutation.ClearPowerConsumption()
 	return diu
 }
 
@@ -376,24 +376,24 @@ func (diu *DeviceInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: deviceinfo.FieldManufacturer,
 		})
 	}
-	if value, ok := diu.mutation.PowerComsuption(); ok {
+	if value, ok := diu.mutation.PowerConsumption(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: deviceinfo.FieldPowerComsuption,
+			Column: deviceinfo.FieldPowerConsumption,
 		})
 	}
-	if value, ok := diu.mutation.AddedPowerComsuption(); ok {
+	if value, ok := diu.mutation.AddedPowerConsumption(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: deviceinfo.FieldPowerComsuption,
+			Column: deviceinfo.FieldPowerConsumption,
 		})
 	}
-	if diu.mutation.PowerComsuptionCleared() {
+	if diu.mutation.PowerConsumptionCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: deviceinfo.FieldPowerComsuption,
+			Column: deviceinfo.FieldPowerConsumption,
 		})
 	}
 	if value, ok := diu.mutation.ShipmentAt(); ok {
@@ -545,30 +545,30 @@ func (diuo *DeviceInfoUpdateOne) ClearManufacturer() *DeviceInfoUpdateOne {
 	return diuo
 }
 
-// SetPowerComsuption sets the "power_comsuption" field.
-func (diuo *DeviceInfoUpdateOne) SetPowerComsuption(u uint32) *DeviceInfoUpdateOne {
-	diuo.mutation.ResetPowerComsuption()
-	diuo.mutation.SetPowerComsuption(u)
+// SetPowerConsumption sets the "power_consumption" field.
+func (diuo *DeviceInfoUpdateOne) SetPowerConsumption(u uint32) *DeviceInfoUpdateOne {
+	diuo.mutation.ResetPowerConsumption()
+	diuo.mutation.SetPowerConsumption(u)
 	return diuo
 }
 
-// SetNillablePowerComsuption sets the "power_comsuption" field if the given value is not nil.
-func (diuo *DeviceInfoUpdateOne) SetNillablePowerComsuption(u *uint32) *DeviceInfoUpdateOne {
+// SetNillablePowerConsumption sets the "power_consumption" field if the given value is not nil.
+func (diuo *DeviceInfoUpdateOne) SetNillablePowerConsumption(u *uint32) *DeviceInfoUpdateOne {
 	if u != nil {
-		diuo.SetPowerComsuption(*u)
+		diuo.SetPowerConsumption(*u)
 	}
 	return diuo
 }
 
-// AddPowerComsuption adds u to the "power_comsuption" field.
-func (diuo *DeviceInfoUpdateOne) AddPowerComsuption(u int32) *DeviceInfoUpdateOne {
-	diuo.mutation.AddPowerComsuption(u)
+// AddPowerConsumption adds u to the "power_consumption" field.
+func (diuo *DeviceInfoUpdateOne) AddPowerConsumption(u int32) *DeviceInfoUpdateOne {
+	diuo.mutation.AddPowerConsumption(u)
 	return diuo
 }
 
-// ClearPowerComsuption clears the value of the "power_comsuption" field.
-func (diuo *DeviceInfoUpdateOne) ClearPowerComsuption() *DeviceInfoUpdateOne {
-	diuo.mutation.ClearPowerComsuption()
+// ClearPowerConsumption clears the value of the "power_consumption" field.
+func (diuo *DeviceInfoUpdateOne) ClearPowerConsumption() *DeviceInfoUpdateOne {
+	diuo.mutation.ClearPowerConsumption()
 	return diuo
 }
 
@@ -828,24 +828,24 @@ func (diuo *DeviceInfoUpdateOne) sqlSave(ctx context.Context) (_node *DeviceInfo
 			Column: deviceinfo.FieldManufacturer,
 		})
 	}
-	if value, ok := diuo.mutation.PowerComsuption(); ok {
+	if value, ok := diuo.mutation.PowerConsumption(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: deviceinfo.FieldPowerComsuption,
+			Column: deviceinfo.FieldPowerConsumption,
 		})
 	}
-	if value, ok := diuo.mutation.AddedPowerComsuption(); ok {
+	if value, ok := diuo.mutation.AddedPowerConsumption(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: deviceinfo.FieldPowerComsuption,
+			Column: deviceinfo.FieldPowerConsumption,
 		})
 	}
-	if diuo.mutation.PowerComsuptionCleared() {
+	if diuo.mutation.PowerConsumptionCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: deviceinfo.FieldPowerComsuption,
+			Column: deviceinfo.FieldPowerConsumption,
 		})
 	}
 	if value, ok := diuo.mutation.ShipmentAt(); ok {

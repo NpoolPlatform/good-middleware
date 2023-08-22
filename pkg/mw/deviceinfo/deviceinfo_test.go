@@ -30,12 +30,12 @@ func init() {
 
 var (
 	ret = npool.DeviceInfo{
-		ID:              uuid.NewString(),
-		Type:            uuid.NewString(),
-		Manufacturer:    uuid.NewString(),
-		PowerComsuption: 120,
-		ShipmentAt:      uint32(time.Now().Unix()),
-		Posters:         []string{uuid.NewString()},
+		ID:               uuid.NewString(),
+		Type:             uuid.NewString(),
+		Manufacturer:     uuid.NewString(),
+		PowerConsumption: 120,
+		ShipmentAt:       uint32(time.Now().Unix()),
+		Posters:          []string{uuid.NewString()},
 	}
 )
 
@@ -51,7 +51,7 @@ func createDeviceInfo(t *testing.T) {
 		WithID(&ret.ID),
 		WithType(&ret.Type),
 		WithManufacturer(&ret.Manufacturer),
-		WithPowerComsuption(&ret.PowerComsuption),
+		WithPowerConsumption(&ret.PowerConsumption),
 		WithShipmentAt(&ret.ShipmentAt),
 		WithPosters(ret.Posters),
 	)
@@ -71,7 +71,7 @@ func updateDeviceInfo(t *testing.T) {
 		WithID(&ret.ID),
 		WithType(&ret.Type),
 		WithManufacturer(&ret.Manufacturer),
-		WithPowerComsuption(&ret.PowerComsuption),
+		WithPowerConsumption(&ret.PowerConsumption),
 		WithShipmentAt(&ret.ShipmentAt),
 		WithPosters(ret.Posters),
 	)

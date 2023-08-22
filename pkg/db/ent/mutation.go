@@ -5362,26 +5362,26 @@ func (m *CommentMutation) ResetEdge(name string) error {
 // DeviceInfoMutation represents an operation that mutates the DeviceInfo nodes in the graph.
 type DeviceInfoMutation struct {
 	config
-	op                  Op
-	typ                 string
-	id                  *uuid.UUID
-	created_at          *uint32
-	addcreated_at       *int32
-	updated_at          *uint32
-	addupdated_at       *int32
-	deleted_at          *uint32
-	adddeleted_at       *int32
-	_type               *string
-	manufacturer        *string
-	power_comsuption    *uint32
-	addpower_comsuption *int32
-	shipment_at         *uint32
-	addshipment_at      *int32
-	posters             *[]string
-	clearedFields       map[string]struct{}
-	done                bool
-	oldValue            func(context.Context) (*DeviceInfo, error)
-	predicates          []predicate.DeviceInfo
+	op                   Op
+	typ                  string
+	id                   *uuid.UUID
+	created_at           *uint32
+	addcreated_at        *int32
+	updated_at           *uint32
+	addupdated_at        *int32
+	deleted_at           *uint32
+	adddeleted_at        *int32
+	_type                *string
+	manufacturer         *string
+	power_consumption    *uint32
+	addpower_consumption *int32
+	shipment_at          *uint32
+	addshipment_at       *int32
+	posters              *[]string
+	clearedFields        map[string]struct{}
+	done                 bool
+	oldValue             func(context.Context) (*DeviceInfo, error)
+	predicates           []predicate.DeviceInfo
 }
 
 var _ ent.Mutation = (*DeviceInfoMutation)(nil)
@@ -5754,74 +5754,74 @@ func (m *DeviceInfoMutation) ResetManufacturer() {
 	delete(m.clearedFields, deviceinfo.FieldManufacturer)
 }
 
-// SetPowerComsuption sets the "power_comsuption" field.
-func (m *DeviceInfoMutation) SetPowerComsuption(u uint32) {
-	m.power_comsuption = &u
-	m.addpower_comsuption = nil
+// SetPowerConsumption sets the "power_consumption" field.
+func (m *DeviceInfoMutation) SetPowerConsumption(u uint32) {
+	m.power_consumption = &u
+	m.addpower_consumption = nil
 }
 
-// PowerComsuption returns the value of the "power_comsuption" field in the mutation.
-func (m *DeviceInfoMutation) PowerComsuption() (r uint32, exists bool) {
-	v := m.power_comsuption
+// PowerConsumption returns the value of the "power_consumption" field in the mutation.
+func (m *DeviceInfoMutation) PowerConsumption() (r uint32, exists bool) {
+	v := m.power_consumption
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldPowerComsuption returns the old "power_comsuption" field's value of the DeviceInfo entity.
+// OldPowerConsumption returns the old "power_consumption" field's value of the DeviceInfo entity.
 // If the DeviceInfo object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DeviceInfoMutation) OldPowerComsuption(ctx context.Context) (v uint32, err error) {
+func (m *DeviceInfoMutation) OldPowerConsumption(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPowerComsuption is only allowed on UpdateOne operations")
+		return v, errors.New("OldPowerConsumption is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPowerComsuption requires an ID field in the mutation")
+		return v, errors.New("OldPowerConsumption requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPowerComsuption: %w", err)
+		return v, fmt.Errorf("querying old value for OldPowerConsumption: %w", err)
 	}
-	return oldValue.PowerComsuption, nil
+	return oldValue.PowerConsumption, nil
 }
 
-// AddPowerComsuption adds u to the "power_comsuption" field.
-func (m *DeviceInfoMutation) AddPowerComsuption(u int32) {
-	if m.addpower_comsuption != nil {
-		*m.addpower_comsuption += u
+// AddPowerConsumption adds u to the "power_consumption" field.
+func (m *DeviceInfoMutation) AddPowerConsumption(u int32) {
+	if m.addpower_consumption != nil {
+		*m.addpower_consumption += u
 	} else {
-		m.addpower_comsuption = &u
+		m.addpower_consumption = &u
 	}
 }
 
-// AddedPowerComsuption returns the value that was added to the "power_comsuption" field in this mutation.
-func (m *DeviceInfoMutation) AddedPowerComsuption() (r int32, exists bool) {
-	v := m.addpower_comsuption
+// AddedPowerConsumption returns the value that was added to the "power_consumption" field in this mutation.
+func (m *DeviceInfoMutation) AddedPowerConsumption() (r int32, exists bool) {
+	v := m.addpower_consumption
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ClearPowerComsuption clears the value of the "power_comsuption" field.
-func (m *DeviceInfoMutation) ClearPowerComsuption() {
-	m.power_comsuption = nil
-	m.addpower_comsuption = nil
-	m.clearedFields[deviceinfo.FieldPowerComsuption] = struct{}{}
+// ClearPowerConsumption clears the value of the "power_consumption" field.
+func (m *DeviceInfoMutation) ClearPowerConsumption() {
+	m.power_consumption = nil
+	m.addpower_consumption = nil
+	m.clearedFields[deviceinfo.FieldPowerConsumption] = struct{}{}
 }
 
-// PowerComsuptionCleared returns if the "power_comsuption" field was cleared in this mutation.
-func (m *DeviceInfoMutation) PowerComsuptionCleared() bool {
-	_, ok := m.clearedFields[deviceinfo.FieldPowerComsuption]
+// PowerConsumptionCleared returns if the "power_consumption" field was cleared in this mutation.
+func (m *DeviceInfoMutation) PowerConsumptionCleared() bool {
+	_, ok := m.clearedFields[deviceinfo.FieldPowerConsumption]
 	return ok
 }
 
-// ResetPowerComsuption resets all changes to the "power_comsuption" field.
-func (m *DeviceInfoMutation) ResetPowerComsuption() {
-	m.power_comsuption = nil
-	m.addpower_comsuption = nil
-	delete(m.clearedFields, deviceinfo.FieldPowerComsuption)
+// ResetPowerConsumption resets all changes to the "power_consumption" field.
+func (m *DeviceInfoMutation) ResetPowerConsumption() {
+	m.power_consumption = nil
+	m.addpower_consumption = nil
+	delete(m.clearedFields, deviceinfo.FieldPowerConsumption)
 }
 
 // SetShipmentAt sets the "shipment_at" field.
@@ -5978,8 +5978,8 @@ func (m *DeviceInfoMutation) Fields() []string {
 	if m.manufacturer != nil {
 		fields = append(fields, deviceinfo.FieldManufacturer)
 	}
-	if m.power_comsuption != nil {
-		fields = append(fields, deviceinfo.FieldPowerComsuption)
+	if m.power_consumption != nil {
+		fields = append(fields, deviceinfo.FieldPowerConsumption)
 	}
 	if m.shipment_at != nil {
 		fields = append(fields, deviceinfo.FieldShipmentAt)
@@ -6005,8 +6005,8 @@ func (m *DeviceInfoMutation) Field(name string) (ent.Value, bool) {
 		return m.GetType()
 	case deviceinfo.FieldManufacturer:
 		return m.Manufacturer()
-	case deviceinfo.FieldPowerComsuption:
-		return m.PowerComsuption()
+	case deviceinfo.FieldPowerConsumption:
+		return m.PowerConsumption()
 	case deviceinfo.FieldShipmentAt:
 		return m.ShipmentAt()
 	case deviceinfo.FieldPosters:
@@ -6030,8 +6030,8 @@ func (m *DeviceInfoMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldType(ctx)
 	case deviceinfo.FieldManufacturer:
 		return m.OldManufacturer(ctx)
-	case deviceinfo.FieldPowerComsuption:
-		return m.OldPowerComsuption(ctx)
+	case deviceinfo.FieldPowerConsumption:
+		return m.OldPowerConsumption(ctx)
 	case deviceinfo.FieldShipmentAt:
 		return m.OldShipmentAt(ctx)
 	case deviceinfo.FieldPosters:
@@ -6080,12 +6080,12 @@ func (m *DeviceInfoMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetManufacturer(v)
 		return nil
-	case deviceinfo.FieldPowerComsuption:
+	case deviceinfo.FieldPowerConsumption:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetPowerComsuption(v)
+		m.SetPowerConsumption(v)
 		return nil
 	case deviceinfo.FieldShipmentAt:
 		v, ok := value.(uint32)
@@ -6118,8 +6118,8 @@ func (m *DeviceInfoMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, deviceinfo.FieldDeletedAt)
 	}
-	if m.addpower_comsuption != nil {
-		fields = append(fields, deviceinfo.FieldPowerComsuption)
+	if m.addpower_consumption != nil {
+		fields = append(fields, deviceinfo.FieldPowerConsumption)
 	}
 	if m.addshipment_at != nil {
 		fields = append(fields, deviceinfo.FieldShipmentAt)
@@ -6138,8 +6138,8 @@ func (m *DeviceInfoMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdatedAt()
 	case deviceinfo.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case deviceinfo.FieldPowerComsuption:
-		return m.AddedPowerComsuption()
+	case deviceinfo.FieldPowerConsumption:
+		return m.AddedPowerConsumption()
 	case deviceinfo.FieldShipmentAt:
 		return m.AddedShipmentAt()
 	}
@@ -6172,12 +6172,12 @@ func (m *DeviceInfoMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddDeletedAt(v)
 		return nil
-	case deviceinfo.FieldPowerComsuption:
+	case deviceinfo.FieldPowerConsumption:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddPowerComsuption(v)
+		m.AddPowerConsumption(v)
 		return nil
 	case deviceinfo.FieldShipmentAt:
 		v, ok := value.(int32)
@@ -6200,8 +6200,8 @@ func (m *DeviceInfoMutation) ClearedFields() []string {
 	if m.FieldCleared(deviceinfo.FieldManufacturer) {
 		fields = append(fields, deviceinfo.FieldManufacturer)
 	}
-	if m.FieldCleared(deviceinfo.FieldPowerComsuption) {
-		fields = append(fields, deviceinfo.FieldPowerComsuption)
+	if m.FieldCleared(deviceinfo.FieldPowerConsumption) {
+		fields = append(fields, deviceinfo.FieldPowerConsumption)
 	}
 	if m.FieldCleared(deviceinfo.FieldShipmentAt) {
 		fields = append(fields, deviceinfo.FieldShipmentAt)
@@ -6229,8 +6229,8 @@ func (m *DeviceInfoMutation) ClearField(name string) error {
 	case deviceinfo.FieldManufacturer:
 		m.ClearManufacturer()
 		return nil
-	case deviceinfo.FieldPowerComsuption:
-		m.ClearPowerComsuption()
+	case deviceinfo.FieldPowerConsumption:
+		m.ClearPowerConsumption()
 		return nil
 	case deviceinfo.FieldShipmentAt:
 		m.ClearShipmentAt()
@@ -6261,8 +6261,8 @@ func (m *DeviceInfoMutation) ResetField(name string) error {
 	case deviceinfo.FieldManufacturer:
 		m.ResetManufacturer()
 		return nil
-	case deviceinfo.FieldPowerComsuption:
-		m.ResetPowerComsuption()
+	case deviceinfo.FieldPowerConsumption:
+		m.ResetPowerConsumption()
 		return nil
 	case deviceinfo.FieldShipmentAt:
 		m.ResetShipmentAt()

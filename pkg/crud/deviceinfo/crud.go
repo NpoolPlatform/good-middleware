@@ -11,13 +11,13 @@ import (
 )
 
 type Req struct {
-	ID              *uuid.UUID
-	Type            *string
-	Manufacturer    *string
-	PowerComsuption *uint32
-	ShipmentAt      *uint32
-	Posters         []string
-	DeletedAt       *uint32
+	ID               *uuid.UUID
+	Type             *string
+	Manufacturer     *string
+	PowerConsumption *uint32
+	ShipmentAt       *uint32
+	Posters          []string
+	DeletedAt        *uint32
 }
 
 func CreateSet(c *ent.DeviceInfoCreate, req *Req) *ent.DeviceInfoCreate {
@@ -30,8 +30,8 @@ func CreateSet(c *ent.DeviceInfoCreate, req *Req) *ent.DeviceInfoCreate {
 	if req.Manufacturer != nil {
 		c.SetManufacturer(*req.Manufacturer)
 	}
-	if req.PowerComsuption != nil {
-		c.SetPowerComsuption(*req.PowerComsuption)
+	if req.PowerConsumption != nil {
+		c.SetPowerConsumption(*req.PowerConsumption)
 	}
 	if req.ShipmentAt != nil {
 		c.SetShipmentAt(*req.ShipmentAt)
@@ -43,6 +43,18 @@ func CreateSet(c *ent.DeviceInfoCreate, req *Req) *ent.DeviceInfoCreate {
 }
 
 func UpdateSet(u *ent.DeviceInfoUpdateOne, req *Req) *ent.DeviceInfoUpdateOne {
+	if req.Type != nil {
+		u.SetType(*req.Type)
+	}
+	if req.Manufacturer != nil {
+		u.SetManufacturer(*req.Manufacturer)
+	}
+	if req.PowerConsumption != nil {
+		u.SetPowerConsumption(*req.PowerConsumption)
+	}
+	if req.ShipmentAt != nil {
+		u.SetShipmentAt(*req.ShipmentAt)
+	}
 	if len(req.Posters) > 0 {
 		u.SetPosters(req.Posters)
 	}
