@@ -259,7 +259,6 @@ var schemaGraph = func() *sqlgraph.Schema {
 			goodrewardhistory.FieldAmount:        {Type: field.TypeOther, Column: goodrewardhistory.FieldAmount},
 			goodrewardhistory.FieldUnitAmount:    {Type: field.TypeOther, Column: goodrewardhistory.FieldUnitAmount},
 			goodrewardhistory.FieldUnitNetAmount: {Type: field.TypeOther, Column: goodrewardhistory.FieldUnitNetAmount},
-			goodrewardhistory.FieldResult:        {Type: field.TypeString, Column: goodrewardhistory.FieldResult},
 		},
 	}
 	graph.Nodes[9] = &sqlgraph.Node{
@@ -1406,11 +1405,6 @@ func (f *GoodRewardHistoryFilter) WhereUnitAmount(p entql.OtherP) {
 // WhereUnitNetAmount applies the entql other predicate on the unit_net_amount field.
 func (f *GoodRewardHistoryFilter) WhereUnitNetAmount(p entql.OtherP) {
 	f.Where(p.Field(goodrewardhistory.FieldUnitNetAmount))
-}
-
-// WhereResult applies the entql string predicate on the result field.
-func (f *GoodRewardHistoryFilter) WhereResult(p entql.StringP) {
-	f.Where(p.Field(goodrewardhistory.FieldResult))
 }
 
 // addPredicate implements the predicateAdder interface.

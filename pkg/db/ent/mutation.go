@@ -10546,7 +10546,6 @@ type GoodRewardHistoryMutation struct {
 	amount          *decimal.Decimal
 	unit_amount     *decimal.Decimal
 	unit_net_amount *decimal.Decimal
-	result          *string
 	clearedFields   map[string]struct{}
 	done            bool
 	oldValue        func(context.Context) (*GoodRewardHistory, error)
@@ -11140,55 +11139,6 @@ func (m *GoodRewardHistoryMutation) ResetUnitNetAmount() {
 	delete(m.clearedFields, goodrewardhistory.FieldUnitNetAmount)
 }
 
-// SetResult sets the "result" field.
-func (m *GoodRewardHistoryMutation) SetResult(s string) {
-	m.result = &s
-}
-
-// Result returns the value of the "result" field in the mutation.
-func (m *GoodRewardHistoryMutation) Result() (r string, exists bool) {
-	v := m.result
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldResult returns the old "result" field's value of the GoodRewardHistory entity.
-// If the GoodRewardHistory object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodRewardHistoryMutation) OldResult(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldResult is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldResult requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldResult: %w", err)
-	}
-	return oldValue.Result, nil
-}
-
-// ClearResult clears the value of the "result" field.
-func (m *GoodRewardHistoryMutation) ClearResult() {
-	m.result = nil
-	m.clearedFields[goodrewardhistory.FieldResult] = struct{}{}
-}
-
-// ResultCleared returns if the "result" field was cleared in this mutation.
-func (m *GoodRewardHistoryMutation) ResultCleared() bool {
-	_, ok := m.clearedFields[goodrewardhistory.FieldResult]
-	return ok
-}
-
-// ResetResult resets all changes to the "result" field.
-func (m *GoodRewardHistoryMutation) ResetResult() {
-	m.result = nil
-	delete(m.clearedFields, goodrewardhistory.FieldResult)
-}
-
 // Where appends a list predicates to the GoodRewardHistoryMutation builder.
 func (m *GoodRewardHistoryMutation) Where(ps ...predicate.GoodRewardHistory) {
 	m.predicates = append(m.predicates, ps...)
@@ -11208,7 +11158,7 @@ func (m *GoodRewardHistoryMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *GoodRewardHistoryMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 9)
 	if m.created_at != nil {
 		fields = append(fields, goodrewardhistory.FieldCreatedAt)
 	}
@@ -11236,9 +11186,6 @@ func (m *GoodRewardHistoryMutation) Fields() []string {
 	if m.unit_net_amount != nil {
 		fields = append(fields, goodrewardhistory.FieldUnitNetAmount)
 	}
-	if m.result != nil {
-		fields = append(fields, goodrewardhistory.FieldResult)
-	}
 	return fields
 }
 
@@ -11265,8 +11212,6 @@ func (m *GoodRewardHistoryMutation) Field(name string) (ent.Value, bool) {
 		return m.UnitAmount()
 	case goodrewardhistory.FieldUnitNetAmount:
 		return m.UnitNetAmount()
-	case goodrewardhistory.FieldResult:
-		return m.Result()
 	}
 	return nil, false
 }
@@ -11294,8 +11239,6 @@ func (m *GoodRewardHistoryMutation) OldField(ctx context.Context, name string) (
 		return m.OldUnitAmount(ctx)
 	case goodrewardhistory.FieldUnitNetAmount:
 		return m.OldUnitNetAmount(ctx)
-	case goodrewardhistory.FieldResult:
-		return m.OldResult(ctx)
 	}
 	return nil, fmt.Errorf("unknown GoodRewardHistory field %s", name)
 }
@@ -11367,13 +11310,6 @@ func (m *GoodRewardHistoryMutation) SetField(name string, value ent.Value) error
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUnitNetAmount(v)
-		return nil
-	case goodrewardhistory.FieldResult:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetResult(v)
 		return nil
 	}
 	return fmt.Errorf("unknown GoodRewardHistory field %s", name)
@@ -11474,9 +11410,6 @@ func (m *GoodRewardHistoryMutation) ClearedFields() []string {
 	if m.FieldCleared(goodrewardhistory.FieldUnitNetAmount) {
 		fields = append(fields, goodrewardhistory.FieldUnitNetAmount)
 	}
-	if m.FieldCleared(goodrewardhistory.FieldResult) {
-		fields = append(fields, goodrewardhistory.FieldResult)
-	}
 	return fields
 }
 
@@ -11508,9 +11441,6 @@ func (m *GoodRewardHistoryMutation) ClearField(name string) error {
 		return nil
 	case goodrewardhistory.FieldUnitNetAmount:
 		m.ClearUnitNetAmount()
-		return nil
-	case goodrewardhistory.FieldResult:
-		m.ClearResult()
 		return nil
 	}
 	return fmt.Errorf("unknown GoodRewardHistory nullable field %s", name)
@@ -11546,9 +11476,6 @@ func (m *GoodRewardHistoryMutation) ResetField(name string) error {
 		return nil
 	case goodrewardhistory.FieldUnitNetAmount:
 		m.ResetUnitNetAmount()
-		return nil
-	case goodrewardhistory.FieldResult:
-		m.ResetResult()
 		return nil
 	}
 	return fmt.Errorf("unknown GoodRewardHistory field %s", name)

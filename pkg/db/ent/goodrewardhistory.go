@@ -35,8 +35,6 @@ type GoodRewardHistory struct {
 	UnitAmount decimal.Decimal `json:"unit_amount,omitempty"`
 	// UnitNetAmount holds the value of the "unit_net_amount" field.
 	UnitNetAmount decimal.Decimal `json:"unit_net_amount,omitempty"`
-	// Result holds the value of the "result" field.
-	Result string `json:"result,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -48,8 +46,6 @@ func (*GoodRewardHistory) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case goodrewardhistory.FieldCreatedAt, goodrewardhistory.FieldUpdatedAt, goodrewardhistory.FieldDeletedAt, goodrewardhistory.FieldRewardDate:
 			values[i] = new(sql.NullInt64)
-		case goodrewardhistory.FieldResult:
-			values[i] = new(sql.NullString)
 		case goodrewardhistory.FieldID, goodrewardhistory.FieldGoodID, goodrewardhistory.FieldTid:
 			values[i] = new(uuid.UUID)
 		default:
@@ -127,12 +123,6 @@ func (grh *GoodRewardHistory) assignValues(columns []string, values []interface{
 			} else if value != nil {
 				grh.UnitNetAmount = *value
 			}
-		case goodrewardhistory.FieldResult:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field result", values[i])
-			} else if value.Valid {
-				grh.Result = value.String
-			}
 		}
 	}
 	return nil
@@ -187,9 +177,6 @@ func (grh *GoodRewardHistory) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("unit_net_amount=")
 	builder.WriteString(fmt.Sprintf("%v", grh.UnitNetAmount))
-	builder.WriteString(", ")
-	builder.WriteString("result=")
-	builder.WriteString(grh.Result)
 	builder.WriteByte(')')
 	return builder.String()
 }

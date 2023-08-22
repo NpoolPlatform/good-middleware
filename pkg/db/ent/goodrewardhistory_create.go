@@ -150,20 +150,6 @@ func (grhc *GoodRewardHistoryCreate) SetNillableUnitNetAmount(d *decimal.Decimal
 	return grhc
 }
 
-// SetResult sets the "result" field.
-func (grhc *GoodRewardHistoryCreate) SetResult(s string) *GoodRewardHistoryCreate {
-	grhc.mutation.SetResult(s)
-	return grhc
-}
-
-// SetNillableResult sets the "result" field if the given value is not nil.
-func (grhc *GoodRewardHistoryCreate) SetNillableResult(s *string) *GoodRewardHistoryCreate {
-	if s != nil {
-		grhc.SetResult(*s)
-	}
-	return grhc
-}
-
 // SetID sets the "id" field.
 func (grhc *GoodRewardHistoryCreate) SetID(u uuid.UUID) *GoodRewardHistoryCreate {
 	grhc.mutation.SetID(u)
@@ -301,10 +287,6 @@ func (grhc *GoodRewardHistoryCreate) defaults() error {
 		v := goodrewardhistory.DefaultUnitNetAmount
 		grhc.mutation.SetUnitNetAmount(v)
 	}
-	if _, ok := grhc.mutation.Result(); !ok {
-		v := goodrewardhistory.DefaultResult
-		grhc.mutation.SetResult(v)
-	}
 	if _, ok := grhc.mutation.ID(); !ok {
 		if goodrewardhistory.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized goodrewardhistory.DefaultID (forgotten import ent/runtime?)")
@@ -434,14 +416,6 @@ func (grhc *GoodRewardHistoryCreate) createSpec() (*GoodRewardHistory, *sqlgraph
 			Column: goodrewardhistory.FieldUnitNetAmount,
 		})
 		_node.UnitNetAmount = value
-	}
-	if value, ok := grhc.mutation.Result(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: goodrewardhistory.FieldResult,
-		})
-		_node.Result = value
 	}
 	return _node, _spec
 }
@@ -662,24 +636,6 @@ func (u *GoodRewardHistoryUpsert) UpdateUnitNetAmount() *GoodRewardHistoryUpsert
 // ClearUnitNetAmount clears the value of the "unit_net_amount" field.
 func (u *GoodRewardHistoryUpsert) ClearUnitNetAmount() *GoodRewardHistoryUpsert {
 	u.SetNull(goodrewardhistory.FieldUnitNetAmount)
-	return u
-}
-
-// SetResult sets the "result" field.
-func (u *GoodRewardHistoryUpsert) SetResult(v string) *GoodRewardHistoryUpsert {
-	u.Set(goodrewardhistory.FieldResult, v)
-	return u
-}
-
-// UpdateResult sets the "result" field to the value that was provided on create.
-func (u *GoodRewardHistoryUpsert) UpdateResult() *GoodRewardHistoryUpsert {
-	u.SetExcluded(goodrewardhistory.FieldResult)
-	return u
-}
-
-// ClearResult clears the value of the "result" field.
-func (u *GoodRewardHistoryUpsert) ClearResult() *GoodRewardHistoryUpsert {
-	u.SetNull(goodrewardhistory.FieldResult)
 	return u
 }
 
@@ -926,27 +882,6 @@ func (u *GoodRewardHistoryUpsertOne) UpdateUnitNetAmount() *GoodRewardHistoryUps
 func (u *GoodRewardHistoryUpsertOne) ClearUnitNetAmount() *GoodRewardHistoryUpsertOne {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
 		s.ClearUnitNetAmount()
-	})
-}
-
-// SetResult sets the "result" field.
-func (u *GoodRewardHistoryUpsertOne) SetResult(v string) *GoodRewardHistoryUpsertOne {
-	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.SetResult(v)
-	})
-}
-
-// UpdateResult sets the "result" field to the value that was provided on create.
-func (u *GoodRewardHistoryUpsertOne) UpdateResult() *GoodRewardHistoryUpsertOne {
-	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.UpdateResult()
-	})
-}
-
-// ClearResult clears the value of the "result" field.
-func (u *GoodRewardHistoryUpsertOne) ClearResult() *GoodRewardHistoryUpsertOne {
-	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.ClearResult()
 	})
 }
 
@@ -1359,27 +1294,6 @@ func (u *GoodRewardHistoryUpsertBulk) UpdateUnitNetAmount() *GoodRewardHistoryUp
 func (u *GoodRewardHistoryUpsertBulk) ClearUnitNetAmount() *GoodRewardHistoryUpsertBulk {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
 		s.ClearUnitNetAmount()
-	})
-}
-
-// SetResult sets the "result" field.
-func (u *GoodRewardHistoryUpsertBulk) SetResult(v string) *GoodRewardHistoryUpsertBulk {
-	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.SetResult(v)
-	})
-}
-
-// UpdateResult sets the "result" field to the value that was provided on create.
-func (u *GoodRewardHistoryUpsertBulk) UpdateResult() *GoodRewardHistoryUpsertBulk {
-	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.UpdateResult()
-	})
-}
-
-// ClearResult clears the value of the "result" field.
-func (u *GoodRewardHistoryUpsertBulk) ClearResult() *GoodRewardHistoryUpsertBulk {
-	return u.Update(func(s *GoodRewardHistoryUpsert) {
-		s.ClearResult()
 	})
 }
 
