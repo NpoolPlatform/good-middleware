@@ -12,6 +12,35 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/recommend"
 )
 
+func (s *Server) GetRecommend(ctx context.Context, in *npool.GetRecommendRequest) (*npool.GetRecommendResponse, error) {
+	handler, err := recommend1.NewHandler(
+		ctx,
+		recommend1.WithID(&in.ID, true),
+	)
+	if err != nil {
+		logger.Sugar().Errorw(
+			"GetRecommend",
+			"In", in,
+			"Error", err,
+		)
+		return &npool.GetRecommendResponse{}, status.Error(codes.Aborted, err.Error())
+	}
+
+	info, err := handler.GetRecommend(ctx)
+	if err != nil {
+		logger.Sugar().Errorw(
+			"GetRecommend",
+			"In", in,
+			"Error", err,
+		)
+		return &npool.GetRecommendResponse{}, status.Error(codes.Aborted, err.Error())
+	}
+
+	return &npool.GetRecommendResponse{
+		Info: info,
+	}, nil
+}
+
 func (s *Server) GetRecommends(ctx context.Context, in *npool.GetRecommendsRequest) (*npool.GetRecommendsResponse, error) {
 	handler, err := recommend1.NewHandler(
 		ctx,

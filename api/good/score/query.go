@@ -12,6 +12,35 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/score"
 )
 
+func (s *Server) GetScore(ctx context.Context, in *npool.GetScoreRequest) (*npool.GetScoreResponse, error) {
+	handler, err := score1.NewHandler(
+		ctx,
+		score1.WithID(&in.ID, true),
+	)
+	if err != nil {
+		logger.Sugar().Errorw(
+			"GetScore",
+			"In", in,
+			"Error", err,
+		)
+		return &npool.GetScoreResponse{}, status.Error(codes.Aborted, err.Error())
+	}
+
+	info, err := handler.GetScore(ctx)
+	if err != nil {
+		logger.Sugar().Errorw(
+			"GetScore",
+			"In", in,
+			"Error", err,
+		)
+		return &npool.GetScoreResponse{}, status.Error(codes.Aborted, err.Error())
+	}
+
+	return &npool.GetScoreResponse{
+		Info: info,
+	}, nil
+}
+
 func (s *Server) GetScores(ctx context.Context, in *npool.GetScoresRequest) (*npool.GetScoresResponse, error) {
 	handler, err := score1.NewHandler(
 		ctx,

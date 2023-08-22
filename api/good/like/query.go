@@ -12,6 +12,35 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/like"
 )
 
+func (s *Server) GetLike(ctx context.Context, in *npool.GetLikeRequest) (*npool.GetLikeResponse, error) {
+	handler, err := like1.NewHandler(
+		ctx,
+		like1.WithID(&in.ID, true),
+	)
+	if err != nil {
+		logger.Sugar().Errorw(
+			"GetLike",
+			"In", in,
+			"Error", err,
+		)
+		return &npool.GetLikeResponse{}, status.Error(codes.Aborted, err.Error())
+	}
+
+	info, err := handler.GetLike(ctx)
+	if err != nil {
+		logger.Sugar().Errorw(
+			"GetLike",
+			"In", in,
+			"Error", err,
+		)
+		return &npool.GetLikeResponse{}, status.Error(codes.Aborted, err.Error())
+	}
+
+	return &npool.GetLikeResponse{
+		Info: info,
+	}, nil
+}
+
 func (s *Server) GetLikes(ctx context.Context, in *npool.GetLikesRequest) (*npool.GetLikesResponse, error) {
 	handler, err := like1.NewHandler(
 		ctx,
