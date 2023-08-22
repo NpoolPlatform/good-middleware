@@ -97,6 +97,22 @@ func GetCommentOnly(ctx context.Context, conds *npool.Conds) (*npool.Comment, er
 	return infos.([]*npool.Comment)[0], nil
 }
 
+func ExistCommentConds(ctx context.Context, conds *npool.Conds) (bool, error) {
+	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+		resp, err := cli.ExistCommentConds(ctx, &npool.ExistCommentCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return false, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
 func UpdateComment(ctx context.Context, in *npool.CommentReq) (*npool.Comment, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.UpdateComment(ctx, &npool.UpdateCommentRequest{

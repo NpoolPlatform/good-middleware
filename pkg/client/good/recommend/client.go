@@ -97,6 +97,22 @@ func GetRecommendOnly(ctx context.Context, conds *npool.Conds) (*npool.Recommend
 	return infos.([]*npool.Recommend)[0], nil
 }
 
+func ExistRecommendConds(ctx context.Context, conds *npool.Conds) (bool, error) {
+	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+		resp, err := cli.ExistRecommendConds(ctx, &npool.ExistRecommendCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return false, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
 func UpdateRecommend(ctx context.Context, in *npool.RecommendReq) (*npool.Recommend, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.UpdateRecommend(ctx, &npool.UpdateRecommendRequest{
