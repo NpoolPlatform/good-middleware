@@ -77,7 +77,7 @@ var (
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
 	// DefaultRewardDate holds the default value on creation for the "reward_date" field.
-	DefaultRewardDate uint32
+	DefaultRewardDate func() uint32
 	// DefaultTid holds the default value on creation for the "tid" field.
 	DefaultTid func() uuid.UUID
 	// DefaultAmount holds the default value on creation for the "amount" field.

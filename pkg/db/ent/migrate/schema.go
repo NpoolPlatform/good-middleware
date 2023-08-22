@@ -220,7 +220,7 @@ var (
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "reward_date", Type: field.TypeUint32, Nullable: true, Default: 1692692934},
+		{Name: "reward_date", Type: field.TypeUint32, Nullable: true},
 		{Name: "tid", Type: field.TypeUUID, Nullable: true},
 		{Name: "amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "unit_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},

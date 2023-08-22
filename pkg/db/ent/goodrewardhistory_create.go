@@ -265,7 +265,10 @@ func (grhc *GoodRewardHistoryCreate) defaults() error {
 		grhc.mutation.SetDeletedAt(v)
 	}
 	if _, ok := grhc.mutation.RewardDate(); !ok {
-		v := goodrewardhistory.DefaultRewardDate
+		if goodrewardhistory.DefaultRewardDate == nil {
+			return fmt.Errorf("ent: uninitialized goodrewardhistory.DefaultRewardDate (forgotten import ent/runtime?)")
+		}
+		v := goodrewardhistory.DefaultRewardDate()
 		grhc.mutation.SetRewardDate(v)
 	}
 	if _, ok := grhc.mutation.Tid(); !ok {

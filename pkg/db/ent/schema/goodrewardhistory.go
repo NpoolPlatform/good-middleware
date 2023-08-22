@@ -35,7 +35,9 @@ func (GoodRewardHistory) Fields() []ent.Field {
 		field.
 			Uint32("reward_date").
 			Optional().
-			Default(uint32(time.Now().Unix())),
+			DefaultFunc(func() uint32 {
+				return uint32(time.Now().Unix())
+			}),
 		field.
 			UUID("tid", uuid.UUID{}).
 			Optional().

@@ -575,7 +575,7 @@ func init() {
 	// goodrewardhistoryDescRewardDate is the schema descriptor for reward_date field.
 	goodrewardhistoryDescRewardDate := goodrewardhistoryFields[2].Descriptor()
 	// goodrewardhistory.DefaultRewardDate holds the default value on creation for the reward_date field.
-	goodrewardhistory.DefaultRewardDate = goodrewardhistoryDescRewardDate.Default.(uint32)
+	goodrewardhistory.DefaultRewardDate = goodrewardhistoryDescRewardDate.Default.(func() uint32)
 	// goodrewardhistoryDescTid is the schema descriptor for tid field.
 	goodrewardhistoryDescTid := goodrewardhistoryFields[3].Descriptor()
 	// goodrewardhistory.DefaultTid holds the default value on creation for the tid field.
