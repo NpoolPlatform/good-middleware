@@ -39,7 +39,7 @@ var ret = npool.Good{
 	DeviceInfoID:           uuid.NewString(),
 	DeviceType:             uuid.NewString(),
 	DeviceManufacturer:     uuid.NewString(),
-	DevicePowerComsuption:  120,
+	DevicePowerConsumption: 120,
 	DeviceShipmentAt:       uint32(time.Now().Unix() - 1000),
 	DevicePosters:          []string{uuid.NewString(), uuid.NewString()},
 	DurationDays:           14,
@@ -123,7 +123,7 @@ func setup(t *testing.T) func(*testing.T) {
 		deviceinfo1.WithID(&ret.DeviceInfoID),
 		deviceinfo1.WithType(&ret.DeviceType),
 		deviceinfo1.WithManufacturer(&ret.DeviceManufacturer),
-		deviceinfo1.WithPowerComsuption(&ret.DevicePowerComsuption),
+		deviceinfo1.WithPowerConsumption(&ret.DevicePowerConsumption),
 		deviceinfo1.WithShipmentAt(&ret.DeviceShipmentAt),
 		deviceinfo1.WithPosters(ret.DevicePosters),
 	)

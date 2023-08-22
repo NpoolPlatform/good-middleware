@@ -36,21 +36,21 @@ func init() {
 }
 
 var ret = &npool.DeviceInfo{
-	ID:              uuid.NewString(),
-	Type:            uuid.NewString(),
-	Manufacturer:    uuid.NewString(),
-	PowerComsuption: 123,
-	ShipmentAt:      uint32(time.Now().Unix()),
-	Posters:         []string{uuid.NewString(), uuid.NewString()},
+	ID:               uuid.NewString(),
+	Type:             uuid.NewString(),
+	Manufacturer:     uuid.NewString(),
+	PowerConsumption: 123,
+	ShipmentAt:       uint32(time.Now().Unix()),
+	Posters:          []string{uuid.NewString(), uuid.NewString()},
 }
 
 var req = &npool.DeviceInfoReq{
-	ID:              &ret.ID,
-	Type:            &ret.Type,
-	Manufacturer:    &ret.Manufacturer,
-	PowerComsuption: &ret.PowerComsuption,
-	ShipmentAt:      &ret.ShipmentAt,
-	Posters:         ret.Posters,
+	ID:               &ret.ID,
+	Type:             &ret.Type,
+	Manufacturer:     &ret.Manufacturer,
+	PowerConsumption: &ret.PowerConsumption,
+	ShipmentAt:       &ret.ShipmentAt,
+	Posters:          ret.Posters,
 }
 
 func createDeviceInfo(t *testing.T) {

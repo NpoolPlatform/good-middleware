@@ -46,7 +46,7 @@ var ret = npool.Good{
 	DeviceInfoID:           uuid.NewString(),
 	DeviceType:             uuid.NewString(),
 	DeviceManufacturer:     uuid.NewString(),
-	DevicePowerComsuption:  120,
+	DevicePowerConsumption: 120,
 	DeviceShipmentAt:       uint32(time.Now().Unix() - 1000),
 	DevicePosters:          []string{uuid.NewString(), uuid.NewString()},
 	DurationDays:           14,
@@ -109,12 +109,12 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = deviceinfo1.CreateDeviceInfo(context.Background(), &deviceinfomwpb.DeviceInfoReq{
-		ID:              &ret.DeviceInfoID,
-		Type:            &ret.DeviceType,
-		Manufacturer:    &ret.DeviceManufacturer,
-		PowerComsuption: &ret.DevicePowerComsuption,
-		ShipmentAt:      &ret.DeviceShipmentAt,
-		Posters:         ret.DevicePosters,
+		ID:               &ret.DeviceInfoID,
+		Type:             &ret.DeviceType,
+		Manufacturer:     &ret.DeviceManufacturer,
+		PowerConsumption: &ret.DevicePowerConsumption,
+		ShipmentAt:       &ret.DeviceShipmentAt,
+		Posters:          ret.DevicePosters,
 	})
 	assert.Nil(t, err)
 

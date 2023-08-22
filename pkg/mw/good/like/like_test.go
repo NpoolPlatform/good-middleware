@@ -39,7 +39,7 @@ var good = goodmwpb.Good{
 	DeviceInfoID:           uuid.NewString(),
 	DeviceType:             uuid.NewString(),
 	DeviceManufacturer:     uuid.NewString(),
-	DevicePowerComsuption:  120,
+	DevicePowerConsumption: 120,
 	DeviceShipmentAt:       uint32(time.Now().Unix() - 1000),
 	DevicePosters:          []string{uuid.NewString(), uuid.NewString()},
 	DurationDays:           14,
@@ -115,7 +115,7 @@ func setup(t *testing.T) func(*testing.T) {
 		deviceinfo1.WithID(&good.DeviceInfoID),
 		deviceinfo1.WithType(&good.DeviceType),
 		deviceinfo1.WithManufacturer(&good.DeviceManufacturer),
-		deviceinfo1.WithPowerComsuption(&good.DevicePowerComsuption),
+		deviceinfo1.WithPowerConsumption(&good.DevicePowerConsumption),
 		deviceinfo1.WithShipmentAt(&good.DeviceShipmentAt),
 		deviceinfo1.WithPosters(good.DevicePosters),
 	)

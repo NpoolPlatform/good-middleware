@@ -114,3 +114,19 @@ func DeleteScore(ctx context.Context, id string) (*npool.Score, error) {
 	}
 	return info.(*npool.Score), nil
 }
+
+func GetScore(ctx context.Context, id string) (*npool.Score, error) {
+	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+		resp, err := cli.GetScore(ctx, &npool.GetScoreRequest{
+			ID: id,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.Score), nil
+}

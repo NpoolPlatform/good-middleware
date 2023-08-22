@@ -49,7 +49,7 @@ var good = goodmwpb.Good{
 	DeviceInfoID:           uuid.NewString(),
 	DeviceType:             uuid.NewString(),
 	DeviceManufacturer:     uuid.NewString(),
-	DevicePowerComsuption:  120,
+	DevicePowerConsumption: 120,
 	DeviceShipmentAt:       uint32(time.Now().Unix() - 1000),
 	DevicePosters:          []string{uuid.NewString(), uuid.NewString()},
 	DurationDays:           14,
@@ -125,12 +125,12 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = deviceinfo1.CreateDeviceInfo(context.Background(), &deviceinfomwpb.DeviceInfoReq{
-		ID:              &good.DeviceInfoID,
-		Type:            &good.DeviceType,
-		Manufacturer:    &good.DeviceManufacturer,
-		PowerComsuption: &good.DevicePowerComsuption,
-		ShipmentAt:      &good.DeviceShipmentAt,
-		Posters:         good.DevicePosters,
+		ID:               &good.DeviceInfoID,
+		Type:             &good.DeviceType,
+		Manufacturer:     &good.DeviceManufacturer,
+		PowerConsumption: &good.DevicePowerConsumption,
+		ShipmentAt:       &good.DeviceShipmentAt,
+		Posters:          good.DevicePosters,
 	})
 	assert.Nil(t, err)
 

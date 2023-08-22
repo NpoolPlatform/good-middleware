@@ -114,3 +114,19 @@ func DeleteLike(ctx context.Context, id string) (*npool.Like, error) {
 	}
 	return info.(*npool.Like), nil
 }
+
+func GetLike(ctx context.Context, id string) (*npool.Like, error) {
+	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+		resp, err := cli.GetLike(ctx, &npool.GetLikeRequest{
+			ID: id,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.Like), nil
+}
