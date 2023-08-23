@@ -140,6 +140,7 @@ func (h *queryHandler) queryJoinStock(s *sql.Selector) {
 		AppendSelect(
 			sql.As(t.C(entstock.FieldID), "good_stock_id"),
 			sql.As(t.C(entstock.FieldTotal), "good_total"),
+			sql.As(t.C(entstock.FieldSpotQuantity), "good_spot_quantity"),
 			sql.As(t.C(entstock.FieldLocked), "good_locked"),
 			sql.As(t.C(entstock.FieldInService), "good_in_service"),
 			sql.As(t.C(entstock.FieldWaitStart), "good_wait_start"),
@@ -243,6 +244,12 @@ func (h *queryHandler) formalize() {
 			info.GoodTotal = decimal.NewFromInt(0).String()
 		} else {
 			info.GoodTotal = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.GoodSpotQuantity)
+		if err != nil {
+			info.GoodSpotQuantity = decimal.NewFromInt(0).String()
+		} else {
+			info.GoodSpotQuantity = amount.String()
 		}
 		amount, err = decimal.NewFromString(info.GoodLocked)
 		if err != nil {

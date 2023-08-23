@@ -12,15 +12,16 @@ import (
 )
 
 type Req struct {
-	ID          *uuid.UUID
-	GoodID      *uuid.UUID
-	Total       *decimal.Decimal
-	Locked      *decimal.Decimal
-	InService   *decimal.Decimal
-	WaitStart   *decimal.Decimal
-	Sold        *decimal.Decimal
-	AppReserved *decimal.Decimal
-	DeletedAt   *uint32
+	ID           *uuid.UUID
+	GoodID       *uuid.UUID
+	Total        *decimal.Decimal
+	SpotQuantity *decimal.Decimal
+	Locked       *decimal.Decimal
+	InService    *decimal.Decimal
+	WaitStart    *decimal.Decimal
+	Sold         *decimal.Decimal
+	AppReserved  *decimal.Decimal
+	DeletedAt    *uint32
 }
 
 func CreateSet(c *ent.StockCreate, req *Req) *ent.StockCreate {
@@ -33,6 +34,9 @@ func CreateSet(c *ent.StockCreate, req *Req) *ent.StockCreate {
 	if req.Total != nil {
 		c.SetTotal(*req.Total)
 	}
+	if req.SpotQuantity != nil {
+		c.SetSpotQuantity(*req.SpotQuantity)
+	}
 	c.SetLocked(decimal.NewFromInt(0))
 	c.SetInService(decimal.NewFromInt(0))
 	c.SetWaitStart(decimal.NewFromInt(0))
@@ -44,6 +48,9 @@ func CreateSet(c *ent.StockCreate, req *Req) *ent.StockCreate {
 func UpdateSet(u *ent.StockUpdateOne, req *Req) *ent.StockUpdateOne {
 	if req.Total != nil {
 		u.SetTotal(*req.Total)
+	}
+	if req.SpotQuantity != nil {
+		u.SetSpotQuantity(*req.SpotQuantity)
 	}
 	if req.Locked != nil {
 		u.SetLocked(*req.Locked)

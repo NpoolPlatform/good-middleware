@@ -12,6 +12,7 @@ import (
 	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
+
 	"github.com/shopspring/decimal"
 )
 
@@ -36,6 +37,7 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 		return fmt.Errorf("invalid stock")
 	}
 
+	spotQuantity := info.SpotQuantity
 	locked := info.Locked
 	if h.Locked != nil {
 		locked = h.Locked.Add(locked)
@@ -45,17 +47,23 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 	if h.InService != nil {
 		inService = h.InService.Add(inService)
 		sold = h.InService.Add(sold)
+		spotQuantity = spotQuantity.Sub(*h.InService)
 	}
 	waitStart := info.WaitStart
 	if h.WaitStart != nil {
 		waitStart = h.WaitStart.Add(waitStart)
 		sold = h.WaitStart.Add(sold)
+		spotQuantity = spotQuantity.Sub(*h.WaitStart)
 	}
 	appReserved := info.AppReserved
 	if h.Reserved != nil {
 		appReserved = h.Reserved.Add(appReserved)
+		spotQuantity = spotQuantity.Sub(*h.Reserved)
 	}
 
+	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid stock")
+	}
 	if locked.Add(inService).
 		Add(waitStart).
 		Add(appReserved).
@@ -66,11 +74,12 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 	if _, err := stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(info.ID),
 		&stockcrud.Req{
-			Locked:      &locked,
-			InService:   &inService,
-			WaitStart:   &waitStart,
-			AppReserved: &appReserved,
-			Sold:        &sold,
+			SpotQuantity: &spotQuantity,
+			Locked:       &locked,
+			InService:    &inService,
+			WaitStart:    &waitStart,
+			AppReserved:  &appReserved,
+			Sold:         &sold,
 		},
 	).Save(ctx); err != nil {
 		return err

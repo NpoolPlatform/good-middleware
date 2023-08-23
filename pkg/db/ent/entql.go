@@ -377,16 +377,17 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Stock",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			stock.FieldCreatedAt:   {Type: field.TypeUint32, Column: stock.FieldCreatedAt},
-			stock.FieldUpdatedAt:   {Type: field.TypeUint32, Column: stock.FieldUpdatedAt},
-			stock.FieldDeletedAt:   {Type: field.TypeUint32, Column: stock.FieldDeletedAt},
-			stock.FieldGoodID:      {Type: field.TypeUUID, Column: stock.FieldGoodID},
-			stock.FieldTotal:       {Type: field.TypeOther, Column: stock.FieldTotal},
-			stock.FieldLocked:      {Type: field.TypeOther, Column: stock.FieldLocked},
-			stock.FieldInService:   {Type: field.TypeOther, Column: stock.FieldInService},
-			stock.FieldWaitStart:   {Type: field.TypeOther, Column: stock.FieldWaitStart},
-			stock.FieldSold:        {Type: field.TypeOther, Column: stock.FieldSold},
-			stock.FieldAppReserved: {Type: field.TypeOther, Column: stock.FieldAppReserved},
+			stock.FieldCreatedAt:    {Type: field.TypeUint32, Column: stock.FieldCreatedAt},
+			stock.FieldUpdatedAt:    {Type: field.TypeUint32, Column: stock.FieldUpdatedAt},
+			stock.FieldDeletedAt:    {Type: field.TypeUint32, Column: stock.FieldDeletedAt},
+			stock.FieldGoodID:       {Type: field.TypeUUID, Column: stock.FieldGoodID},
+			stock.FieldTotal:        {Type: field.TypeOther, Column: stock.FieldTotal},
+			stock.FieldSpotQuantity: {Type: field.TypeOther, Column: stock.FieldSpotQuantity},
+			stock.FieldLocked:       {Type: field.TypeOther, Column: stock.FieldLocked},
+			stock.FieldInService:    {Type: field.TypeOther, Column: stock.FieldInService},
+			stock.FieldWaitStart:    {Type: field.TypeOther, Column: stock.FieldWaitStart},
+			stock.FieldSold:         {Type: field.TypeOther, Column: stock.FieldSold},
+			stock.FieldAppReserved:  {Type: field.TypeOther, Column: stock.FieldAppReserved},
 		},
 	}
 	graph.Nodes[15] = &sqlgraph.Node{
@@ -1871,6 +1872,11 @@ func (f *StockFilter) WhereGoodID(p entql.ValueP) {
 // WhereTotal applies the entql other predicate on the total field.
 func (f *StockFilter) WhereTotal(p entql.OtherP) {
 	f.Where(p.Field(stock.FieldTotal))
+}
+
+// WhereSpotQuantity applies the entql other predicate on the spot_quantity field.
+func (f *StockFilter) WhereSpotQuantity(p entql.OtherP) {
+	f.Where(p.Field(stock.FieldSpotQuantity))
 }
 
 // WhereLocked applies the entql other predicate on the locked field.

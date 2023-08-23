@@ -18,6 +18,8 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
+
+	"github.com/shopspring/decimal"
 )
 
 type updateHandler struct {
@@ -148,10 +150,21 @@ func (h *updateHandler) updateStock(ctx context.Context, tx *ent.Tx) error {
 		return err
 	}
 
+	if h.Total == nil {
+		return nil
+	}
+
+	sold := info.Total.Sub(info.SpotQuantity)
+	spotQuantity := h.Total.Sub(sold)
+	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid total")
+	}
+
 	if _, err := stockcrud.UpdateSet(
 		info.Update(),
 		&stockcrud.Req{
-			Total: h.Total,
+			Total:        h.Total,
+			SpotQuantity: &spotQuantity,
 		},
 	).Save(ctx); err != nil {
 		return err

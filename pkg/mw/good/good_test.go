@@ -95,6 +95,7 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.LastRewardAmount = decimal.NewFromInt(0).String()
 	ret.LastUnitRewardAmount = decimal.NewFromInt(0).String()
 	ret.TotalRewardAmount = decimal.NewFromInt(0).String()
+	ret.GoodSpotQuantity = ret.GoodTotal
 
 	h1, err := vendorbrand1.NewHandler(
 		context.Background(),
@@ -184,6 +185,7 @@ func createGood(t *testing.T) {
 func updateGood(t *testing.T) {
 	ret.UnitLockDeposit = decimal.NewFromInt(20).String()
 	ret.GoodTotal = decimal.NewFromInt(2000).String()
+	ret.GoodSpotQuantity = ret.GoodTotal
 
 	handler, err := NewHandler(
 		context.Background(),

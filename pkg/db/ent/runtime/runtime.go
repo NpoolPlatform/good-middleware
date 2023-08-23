@@ -836,24 +836,28 @@ func init() {
 	stockDescTotal := stockFields[2].Descriptor()
 	// stock.DefaultTotal holds the default value on creation for the total field.
 	stock.DefaultTotal = stockDescTotal.Default.(decimal.Decimal)
+	// stockDescSpotQuantity is the schema descriptor for spot_quantity field.
+	stockDescSpotQuantity := stockFields[3].Descriptor()
+	// stock.DefaultSpotQuantity holds the default value on creation for the spot_quantity field.
+	stock.DefaultSpotQuantity = stockDescSpotQuantity.Default.(decimal.Decimal)
 	// stockDescLocked is the schema descriptor for locked field.
-	stockDescLocked := stockFields[3].Descriptor()
+	stockDescLocked := stockFields[4].Descriptor()
 	// stock.DefaultLocked holds the default value on creation for the locked field.
 	stock.DefaultLocked = stockDescLocked.Default.(decimal.Decimal)
 	// stockDescInService is the schema descriptor for in_service field.
-	stockDescInService := stockFields[4].Descriptor()
+	stockDescInService := stockFields[5].Descriptor()
 	// stock.DefaultInService holds the default value on creation for the in_service field.
 	stock.DefaultInService = stockDescInService.Default.(decimal.Decimal)
 	// stockDescWaitStart is the schema descriptor for wait_start field.
-	stockDescWaitStart := stockFields[5].Descriptor()
+	stockDescWaitStart := stockFields[6].Descriptor()
 	// stock.DefaultWaitStart holds the default value on creation for the wait_start field.
 	stock.DefaultWaitStart = stockDescWaitStart.Default.(decimal.Decimal)
 	// stockDescSold is the schema descriptor for sold field.
-	stockDescSold := stockFields[6].Descriptor()
+	stockDescSold := stockFields[7].Descriptor()
 	// stock.DefaultSold holds the default value on creation for the sold field.
 	stock.DefaultSold = stockDescSold.Default.(decimal.Decimal)
 	// stockDescAppReserved is the schema descriptor for app_reserved field.
-	stockDescAppReserved := stockFields[7].Descriptor()
+	stockDescAppReserved := stockFields[8].Descriptor()
 	// stock.DefaultAppReserved holds the default value on creation for the app_reserved field.
 	stock.DefaultAppReserved = stockDescAppReserved.Default.(decimal.Decimal)
 	// stockDescID is the schema descriptor for id field.

@@ -56,8 +56,9 @@ func (h *createHandler) createStock(ctx context.Context, tx *ent.Tx) error {
 	if _, err := stockcrud.CreateSet(
 		tx.Stock.Create(),
 		&stockcrud.Req{
-			GoodID: h.ID,
-			Total:  h.Total,
+			GoodID:       h.ID,
+			Total:        h.Total,
+			SpotQuantity: h.Total,
 		},
 	).Save(ctx); err != nil {
 		return err

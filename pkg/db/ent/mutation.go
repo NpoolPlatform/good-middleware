@@ -15836,6 +15836,7 @@ type StockMutation struct {
 	adddeleted_at *int32
 	good_id       *uuid.UUID
 	total         *decimal.Decimal
+	spot_quantity *decimal.Decimal
 	locked        *decimal.Decimal
 	in_service    *decimal.Decimal
 	wait_start    *decimal.Decimal
@@ -16204,6 +16205,55 @@ func (m *StockMutation) ResetTotal() {
 	delete(m.clearedFields, stock.FieldTotal)
 }
 
+// SetSpotQuantity sets the "spot_quantity" field.
+func (m *StockMutation) SetSpotQuantity(d decimal.Decimal) {
+	m.spot_quantity = &d
+}
+
+// SpotQuantity returns the value of the "spot_quantity" field in the mutation.
+func (m *StockMutation) SpotQuantity() (r decimal.Decimal, exists bool) {
+	v := m.spot_quantity
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSpotQuantity returns the old "spot_quantity" field's value of the Stock entity.
+// If the Stock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StockMutation) OldSpotQuantity(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSpotQuantity is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSpotQuantity requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSpotQuantity: %w", err)
+	}
+	return oldValue.SpotQuantity, nil
+}
+
+// ClearSpotQuantity clears the value of the "spot_quantity" field.
+func (m *StockMutation) ClearSpotQuantity() {
+	m.spot_quantity = nil
+	m.clearedFields[stock.FieldSpotQuantity] = struct{}{}
+}
+
+// SpotQuantityCleared returns if the "spot_quantity" field was cleared in this mutation.
+func (m *StockMutation) SpotQuantityCleared() bool {
+	_, ok := m.clearedFields[stock.FieldSpotQuantity]
+	return ok
+}
+
+// ResetSpotQuantity resets all changes to the "spot_quantity" field.
+func (m *StockMutation) ResetSpotQuantity() {
+	m.spot_quantity = nil
+	delete(m.clearedFields, stock.FieldSpotQuantity)
+}
+
 // SetLocked sets the "locked" field.
 func (m *StockMutation) SetLocked(d decimal.Decimal) {
 	m.locked = &d
@@ -16468,7 +16518,7 @@ func (m *StockMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *StockMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, stock.FieldCreatedAt)
 	}
@@ -16483,6 +16533,9 @@ func (m *StockMutation) Fields() []string {
 	}
 	if m.total != nil {
 		fields = append(fields, stock.FieldTotal)
+	}
+	if m.spot_quantity != nil {
+		fields = append(fields, stock.FieldSpotQuantity)
 	}
 	if m.locked != nil {
 		fields = append(fields, stock.FieldLocked)
@@ -16517,6 +16570,8 @@ func (m *StockMutation) Field(name string) (ent.Value, bool) {
 		return m.GoodID()
 	case stock.FieldTotal:
 		return m.Total()
+	case stock.FieldSpotQuantity:
+		return m.SpotQuantity()
 	case stock.FieldLocked:
 		return m.Locked()
 	case stock.FieldInService:
@@ -16546,6 +16601,8 @@ func (m *StockMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldGoodID(ctx)
 	case stock.FieldTotal:
 		return m.OldTotal(ctx)
+	case stock.FieldSpotQuantity:
+		return m.OldSpotQuantity(ctx)
 	case stock.FieldLocked:
 		return m.OldLocked(ctx)
 	case stock.FieldInService:
@@ -16599,6 +16656,13 @@ func (m *StockMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetTotal(v)
+		return nil
+	case stock.FieldSpotQuantity:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSpotQuantity(v)
 		return nil
 	case stock.FieldLocked:
 		v, ok := value.(decimal.Decimal)
@@ -16707,6 +16771,9 @@ func (m *StockMutation) ClearedFields() []string {
 	if m.FieldCleared(stock.FieldTotal) {
 		fields = append(fields, stock.FieldTotal)
 	}
+	if m.FieldCleared(stock.FieldSpotQuantity) {
+		fields = append(fields, stock.FieldSpotQuantity)
+	}
 	if m.FieldCleared(stock.FieldLocked) {
 		fields = append(fields, stock.FieldLocked)
 	}
@@ -16738,6 +16805,9 @@ func (m *StockMutation) ClearField(name string) error {
 	switch name {
 	case stock.FieldTotal:
 		m.ClearTotal()
+		return nil
+	case stock.FieldSpotQuantity:
+		m.ClearSpotQuantity()
 		return nil
 	case stock.FieldLocked:
 		m.ClearLocked()
@@ -16776,6 +16846,9 @@ func (m *StockMutation) ResetField(name string) error {
 		return nil
 	case stock.FieldTotal:
 		m.ResetTotal()
+		return nil
+	case stock.FieldSpotQuantity:
+		m.ResetSpotQuantity()
 		return nil
 	case stock.FieldLocked:
 		m.ResetLocked()

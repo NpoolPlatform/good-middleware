@@ -106,10 +106,6 @@ var ret = npool.Good{
 	Labels:                 good.Labels,
 	BenefitIntervalHours:   good.BenefitIntervalHours,
 	GoodTotal:              good.GoodTotal,
-	GoodLocked:             good.GoodLocked,
-	GoodInService:          good.GoodInService,
-	GoodWaitStart:          good.GoodWaitStart,
-	GoodSold:               good.GoodSold,
 	CancelModeStr:          types.CancelMode_Uncancellable.String(),
 	PurchaseLimit:          3000,
 	EnableSetCommission:    true,
@@ -191,6 +187,8 @@ func setup(t *testing.T) func(*testing.T) {
 
 	_, err = h4.CreateGood(context.Background())
 	assert.Nil(t, err)
+
+	ret.GoodSpotQuantity = ret.GoodTotal
 
 	return func(*testing.T) {
 		_, _ = h4.DeleteGood(context.Background())

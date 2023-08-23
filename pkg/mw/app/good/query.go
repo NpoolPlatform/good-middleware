@@ -202,10 +202,7 @@ func (h *queryHandler) queryJoinStock(s *sql.Selector) {
 		).
 		AppendSelect(
 			sql.As(t.C(entstock.FieldTotal), "good_total"),
-			sql.As(t.C(entstock.FieldLocked), "good_locked"),
-			sql.As(t.C(entstock.FieldInService), "good_in_service"),
-			sql.As(t.C(entstock.FieldWaitStart), "good_wait_start"),
-			sql.As(t.C(entstock.FieldSold), "good_sold"),
+			sql.As(t.C(entstock.FieldSpotQuantity), "good_spot_quantity"),
 		)
 }
 
@@ -268,29 +265,11 @@ func (h *queryHandler) formalize() {
 		} else {
 			info.GoodTotal = amount.String()
 		}
-		amount, err = decimal.NewFromString(info.GoodLocked)
+		amount, err = decimal.NewFromString(info.GoodSpotQuantity)
 		if err != nil {
-			info.GoodLocked = decimal.NewFromInt(0).String()
+			info.GoodSpotQuantity = decimal.NewFromInt(0).String()
 		} else {
-			info.GoodLocked = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.GoodInService)
-		if err != nil {
-			info.GoodInService = decimal.NewFromInt(0).String()
-		} else {
-			info.GoodInService = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.GoodWaitStart)
-		if err != nil {
-			info.GoodWaitStart = decimal.NewFromInt(0).String()
-		} else {
-			info.GoodWaitStart = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.GoodSold)
-		if err != nil {
-			info.GoodSold = decimal.NewFromInt(0).String()
-		} else {
-			info.GoodSold = amount.String()
+			info.GoodSpotQuantity = amount.String()
 		}
 		amount, err = decimal.NewFromString(info.Price)
 		if err != nil {

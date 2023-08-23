@@ -27,6 +27,8 @@ type Stock struct {
 	GoodID uuid.UUID `json:"good_id,omitempty"`
 	// Total holds the value of the "total" field.
 	Total decimal.Decimal `json:"total,omitempty"`
+	// SpotQuantity holds the value of the "spot_quantity" field.
+	SpotQuantity decimal.Decimal `json:"spot_quantity,omitempty"`
 	// Locked holds the value of the "locked" field.
 	Locked decimal.Decimal `json:"locked,omitempty"`
 	// InService holds the value of the "in_service" field.
@@ -44,7 +46,7 @@ func (*Stock) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case stock.FieldTotal, stock.FieldLocked, stock.FieldInService, stock.FieldWaitStart, stock.FieldSold, stock.FieldAppReserved:
+		case stock.FieldTotal, stock.FieldSpotQuantity, stock.FieldLocked, stock.FieldInService, stock.FieldWaitStart, stock.FieldSold, stock.FieldAppReserved:
 			values[i] = new(decimal.Decimal)
 		case stock.FieldCreatedAt, stock.FieldUpdatedAt, stock.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
@@ -100,6 +102,12 @@ func (s *Stock) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field total", values[i])
 			} else if value != nil {
 				s.Total = *value
+			}
+		case stock.FieldSpotQuantity:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field spot_quantity", values[i])
+			} else if value != nil {
+				s.SpotQuantity = *value
 			}
 		case stock.FieldLocked:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
@@ -173,6 +181,9 @@ func (s *Stock) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("total=")
 	builder.WriteString(fmt.Sprintf("%v", s.Total))
+	builder.WriteString(", ")
+	builder.WriteString("spot_quantity=")
+	builder.WriteString(fmt.Sprintf("%v", s.SpotQuantity))
 	builder.WriteString(", ")
 	builder.WriteString("locked=")
 	builder.WriteString(fmt.Sprintf("%v", s.Locked))

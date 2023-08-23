@@ -115,6 +115,13 @@ func Total(v decimal.Decimal) predicate.Stock {
 	})
 }
 
+// SpotQuantity applies equality check predicate on the "spot_quantity" field. It's identical to SpotQuantityEQ.
+func SpotQuantity(v decimal.Decimal) predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSpotQuantity), v))
+	})
+}
+
 // Locked applies equality check predicate on the "locked" field. It's identical to LockedEQ.
 func Locked(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
@@ -481,6 +488,84 @@ func TotalIsNil() predicate.Stock {
 func TotalNotNil() predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldTotal)))
+	})
+}
+
+// SpotQuantityEQ applies the EQ predicate on the "spot_quantity" field.
+func SpotQuantityEQ(v decimal.Decimal) predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSpotQuantity), v))
+	})
+}
+
+// SpotQuantityNEQ applies the NEQ predicate on the "spot_quantity" field.
+func SpotQuantityNEQ(v decimal.Decimal) predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldSpotQuantity), v))
+	})
+}
+
+// SpotQuantityIn applies the In predicate on the "spot_quantity" field.
+func SpotQuantityIn(vs ...decimal.Decimal) predicate.Stock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldSpotQuantity), v...))
+	})
+}
+
+// SpotQuantityNotIn applies the NotIn predicate on the "spot_quantity" field.
+func SpotQuantityNotIn(vs ...decimal.Decimal) predicate.Stock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldSpotQuantity), v...))
+	})
+}
+
+// SpotQuantityGT applies the GT predicate on the "spot_quantity" field.
+func SpotQuantityGT(v decimal.Decimal) predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldSpotQuantity), v))
+	})
+}
+
+// SpotQuantityGTE applies the GTE predicate on the "spot_quantity" field.
+func SpotQuantityGTE(v decimal.Decimal) predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldSpotQuantity), v))
+	})
+}
+
+// SpotQuantityLT applies the LT predicate on the "spot_quantity" field.
+func SpotQuantityLT(v decimal.Decimal) predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldSpotQuantity), v))
+	})
+}
+
+// SpotQuantityLTE applies the LTE predicate on the "spot_quantity" field.
+func SpotQuantityLTE(v decimal.Decimal) predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldSpotQuantity), v))
+	})
+}
+
+// SpotQuantityIsNil applies the IsNil predicate on the "spot_quantity" field.
+func SpotQuantityIsNil() predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldSpotQuantity)))
+	})
+}
+
+// SpotQuantityNotNil applies the NotNil predicate on the "spot_quantity" field.
+func SpotQuantityNotNil() predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldSpotQuantity)))
 	})
 }
 

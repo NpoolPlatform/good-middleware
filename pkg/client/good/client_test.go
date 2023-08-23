@@ -72,6 +72,7 @@ var ret = npool.Good{
 		types.GoodLabel_GoodLabelNoviceExclusive,
 	},
 	GoodTotal:             decimal.NewFromInt(1000).String(),
+	GoodSpotQuantity:      decimal.NewFromInt(1000).String(),
 	GoodLocked:            decimal.NewFromInt(0).String(),
 	GoodInService:         decimal.NewFromInt(0).String(),
 	GoodWaitStart:         decimal.NewFromInt(0).String(),

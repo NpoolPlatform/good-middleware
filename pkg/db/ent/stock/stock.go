@@ -23,6 +23,8 @@ const (
 	FieldGoodID = "good_id"
 	// FieldTotal holds the string denoting the total field in the database.
 	FieldTotal = "total"
+	// FieldSpotQuantity holds the string denoting the spot_quantity field in the database.
+	FieldSpotQuantity = "spot_quantity"
 	// FieldLocked holds the string denoting the locked field in the database.
 	FieldLocked = "locked"
 	// FieldInService holds the string denoting the in_service field in the database.
@@ -45,6 +47,7 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldGoodID,
 	FieldTotal,
+	FieldSpotQuantity,
 	FieldLocked,
 	FieldInService,
 	FieldWaitStart,
@@ -81,6 +84,8 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultTotal holds the default value on creation for the "total" field.
 	DefaultTotal decimal.Decimal
+	// DefaultSpotQuantity holds the default value on creation for the "spot_quantity" field.
+	DefaultSpotQuantity decimal.Decimal
 	// DefaultLocked holds the default value on creation for the "locked" field.
 	DefaultLocked decimal.Decimal
 	// DefaultInService holds the default value on creation for the "in_service" field.

@@ -86,6 +86,20 @@ func (sc *StockCreate) SetNillableTotal(d *decimal.Decimal) *StockCreate {
 	return sc
 }
 
+// SetSpotQuantity sets the "spot_quantity" field.
+func (sc *StockCreate) SetSpotQuantity(d decimal.Decimal) *StockCreate {
+	sc.mutation.SetSpotQuantity(d)
+	return sc
+}
+
+// SetNillableSpotQuantity sets the "spot_quantity" field if the given value is not nil.
+func (sc *StockCreate) SetNillableSpotQuantity(d *decimal.Decimal) *StockCreate {
+	if d != nil {
+		sc.SetSpotQuantity(*d)
+	}
+	return sc
+}
+
 // SetLocked sets the "locked" field.
 func (sc *StockCreate) SetLocked(d decimal.Decimal) *StockCreate {
 	sc.mutation.SetLocked(d)
@@ -274,6 +288,10 @@ func (sc *StockCreate) defaults() error {
 		v := stock.DefaultTotal
 		sc.mutation.SetTotal(v)
 	}
+	if _, ok := sc.mutation.SpotQuantity(); !ok {
+		v := stock.DefaultSpotQuantity
+		sc.mutation.SetSpotQuantity(v)
+	}
 	if _, ok := sc.mutation.Locked(); !ok {
 		v := stock.DefaultLocked
 		sc.mutation.SetLocked(v)
@@ -394,6 +412,14 @@ func (sc *StockCreate) createSpec() (*Stock, *sqlgraph.CreateSpec) {
 			Column: stock.FieldTotal,
 		})
 		_node.Total = value
+	}
+	if value, ok := sc.mutation.SpotQuantity(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: stock.FieldSpotQuantity,
+		})
+		_node.SpotQuantity = value
 	}
 	if value, ok := sc.mutation.Locked(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -570,6 +596,24 @@ func (u *StockUpsert) UpdateTotal() *StockUpsert {
 // ClearTotal clears the value of the "total" field.
 func (u *StockUpsert) ClearTotal() *StockUpsert {
 	u.SetNull(stock.FieldTotal)
+	return u
+}
+
+// SetSpotQuantity sets the "spot_quantity" field.
+func (u *StockUpsert) SetSpotQuantity(v decimal.Decimal) *StockUpsert {
+	u.Set(stock.FieldSpotQuantity, v)
+	return u
+}
+
+// UpdateSpotQuantity sets the "spot_quantity" field to the value that was provided on create.
+func (u *StockUpsert) UpdateSpotQuantity() *StockUpsert {
+	u.SetExcluded(stock.FieldSpotQuantity)
+	return u
+}
+
+// ClearSpotQuantity clears the value of the "spot_quantity" field.
+func (u *StockUpsert) ClearSpotQuantity() *StockUpsert {
+	u.SetNull(stock.FieldSpotQuantity)
 	return u
 }
 
@@ -808,6 +852,27 @@ func (u *StockUpsertOne) UpdateTotal() *StockUpsertOne {
 func (u *StockUpsertOne) ClearTotal() *StockUpsertOne {
 	return u.Update(func(s *StockUpsert) {
 		s.ClearTotal()
+	})
+}
+
+// SetSpotQuantity sets the "spot_quantity" field.
+func (u *StockUpsertOne) SetSpotQuantity(v decimal.Decimal) *StockUpsertOne {
+	return u.Update(func(s *StockUpsert) {
+		s.SetSpotQuantity(v)
+	})
+}
+
+// UpdateSpotQuantity sets the "spot_quantity" field to the value that was provided on create.
+func (u *StockUpsertOne) UpdateSpotQuantity() *StockUpsertOne {
+	return u.Update(func(s *StockUpsert) {
+		s.UpdateSpotQuantity()
+	})
+}
+
+// ClearSpotQuantity clears the value of the "spot_quantity" field.
+func (u *StockUpsertOne) ClearSpotQuantity() *StockUpsertOne {
+	return u.Update(func(s *StockUpsert) {
+		s.ClearSpotQuantity()
 	})
 }
 
@@ -1227,6 +1292,27 @@ func (u *StockUpsertBulk) UpdateTotal() *StockUpsertBulk {
 func (u *StockUpsertBulk) ClearTotal() *StockUpsertBulk {
 	return u.Update(func(s *StockUpsert) {
 		s.ClearTotal()
+	})
+}
+
+// SetSpotQuantity sets the "spot_quantity" field.
+func (u *StockUpsertBulk) SetSpotQuantity(v decimal.Decimal) *StockUpsertBulk {
+	return u.Update(func(s *StockUpsert) {
+		s.SetSpotQuantity(v)
+	})
+}
+
+// UpdateSpotQuantity sets the "spot_quantity" field to the value that was provided on create.
+func (u *StockUpsertBulk) UpdateSpotQuantity() *StockUpsertBulk {
+	return u.Update(func(s *StockUpsert) {
+		s.UpdateSpotQuantity()
+	})
+}
+
+// ClearSpotQuantity clears the value of the "spot_quantity" field.
+func (u *StockUpsertBulk) ClearSpotQuantity() *StockUpsertBulk {
+	return u.Update(func(s *StockUpsert) {
+		s.ClearSpotQuantity()
 	})
 }
 
