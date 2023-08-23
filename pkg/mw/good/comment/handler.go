@@ -212,6 +212,16 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				Val: id,
 			}
 		}
+		if conds.OrderID != nil {
+			id, err := uuid.Parse(conds.GetOrderID().GetValue())
+			if err != nil {
+				return err
+			}
+			h.Conds.OrderID = &cruder.Cond{
+				Op:  conds.GetOrderID().GetOp(),
+				Val: id,
+			}
+		}
 		if conds.GoodIDs != nil {
 			ids := []uuid.UUID{}
 			for _, id := range conds.GetGoodIDs().GetValue() {
@@ -223,6 +233,20 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			}
 			h.Conds.GoodIDs = &cruder.Cond{
 				Op:  conds.GetGoodIDs().GetOp(),
+				Val: ids,
+			}
+		}
+		if conds.OrderIDs != nil {
+			ids := []uuid.UUID{}
+			for _, id := range conds.GetOrderIDs().GetValue() {
+				_id, err := uuid.Parse(id)
+				if err != nil {
+					return err
+				}
+				ids = append(ids, _id)
+			}
+			h.Conds.OrderIDs = &cruder.Cond{
+				Op:  conds.GetOrderIDs().GetOp(),
 				Val: ids,
 			}
 		}
