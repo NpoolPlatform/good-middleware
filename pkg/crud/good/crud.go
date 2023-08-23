@@ -167,6 +167,8 @@ func SetQueryConds(q *ent.GoodQuery, conds *Conds) (*ent.GoodQuery, error) {
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entgood.ID(id))
+		case cruder.NEQ:
+			q.Where(entgood.IDNEQ(id))
 		default:
 			return nil, fmt.Errorf("invalid good field")
 		}

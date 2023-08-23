@@ -210,6 +210,7 @@ func (h *Handler) UpdateGood(ctx context.Context) (*npool.Good, error) {
 		}()
 
 		h.Conds = &goodcrud.Conds{
+			ID:    &cruder.Cond{Op: cruder.NEQ, Val: *h.ID},
 			Title: &cruder.Cond{Op: cruder.EQ, Val: *h.Title},
 		}
 		exist, err := h.ExistGoodConds(ctx)
