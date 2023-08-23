@@ -135,7 +135,7 @@ func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error)
 	if conds.OrderIDs != nil {
 		ids, ok := conds.OrderIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid userids")
+			return nil, fmt.Errorf("invalid orderids")
 		}
 		switch conds.OrderIDs.Op {
 		case cruder.IN:
