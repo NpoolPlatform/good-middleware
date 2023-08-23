@@ -118,6 +118,7 @@ var ret = npool.Good{
 	GoodTypeStr:            good.GoodType.String(),
 	UserPurchaseLimit:      decimal.NewFromInt(0).String(),
 	LastRewardAmount:       decimal.NewFromInt(0).String(),
+	TotalRewardAmount:      decimal.NewFromInt(0).String(),
 	LastUnitRewardAmount:   decimal.NewFromInt(0).String(),
 }
 
