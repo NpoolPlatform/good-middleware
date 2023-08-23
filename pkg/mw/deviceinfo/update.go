@@ -17,27 +17,29 @@ func (h *Handler) UpdateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 		return nil, fmt.Errorf("invalid id")
 	}
 
-	key := h.lockKey()
-	if err := redis2.TryLock(key, 0); err != nil {
-		return nil, err
-	}
-	defer func() {
-		_ = redis2.Unlock(key)
-	}()
+	if h.Type != nil {
+		key := h.lockKey()
+		if err := redis2.TryLock(key, 0); err != nil {
+			return nil, err
+		}
+		defer func() {
+			_ = redis2.Unlock(key)
+		}()
 
-	h.Conds = &deviceinfocrud.Conds{
-		ID:   &cruder.Cond{Op: cruder.NEQ, Val: *h.ID},
-		Type: &cruder.Cond{Op: cruder.EQ, Val: *h.Type},
-	}
-	exist, err := h.ExistDeviceInfoConds(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if exist {
-		return nil, fmt.Errorf("arleady exists")
+		h.Conds = &deviceinfocrud.Conds{
+			ID:   &cruder.Cond{Op: cruder.NEQ, Val: *h.ID},
+			Type: &cruder.Cond{Op: cruder.EQ, Val: *h.Type},
+		}
+		exist, err := h.ExistDeviceInfoConds(ctx)
+		if err != nil {
+			return nil, err
+		}
+		if exist {
+			return nil, fmt.Errorf("arleady exists")
+		}
 	}
 
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if _, err := deviceinfocrud.UpdateSet(
 			cli.DeviceInfo.UpdateOneID(*h.ID),
 			&deviceinfocrud.Req{
