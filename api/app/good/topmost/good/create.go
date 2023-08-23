@@ -24,8 +24,6 @@ func (s *Server) CreateTopMostGood(ctx context.Context, in *npool.CreateTopMostG
 	handler, err := topmostgood1.NewHandler(
 		ctx,
 		topmostgood1.WithID(req.ID, true),
-		topmostgood1.WithAppID(req.AppID, true),
-		topmostgood1.WithGoodID(req.GoodID, true),
 		topmostgood1.WithAppGoodID(req.AppGoodID, true),
 		topmostgood1.WithTopMostID(req.TopMostID, true),
 		topmostgood1.WithDisplayIndex(req.DisplayIndex, true),
