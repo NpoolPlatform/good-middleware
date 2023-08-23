@@ -41,6 +41,7 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 	locked := info.Locked
 	if h.Locked != nil {
 		locked = h.Locked.Add(locked)
+		spotQuantity = spotQuantity.Sub(*h.Locked)
 	}
 	inService := info.InService
 	sold := info.Sold
@@ -110,7 +111,6 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 
 	if h.Reserved != nil {
 		reserved = h.Reserved.Add(reserved)
-		spotQuantity = h.Reserved.Add(spotQuantity)
 	}
 	if spotQuantity.Cmp(reserved) > 0 {
 		return fmt.Errorf("invalid reserved")
@@ -119,7 +119,6 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 	locked := info.Locked
 	if h.Locked != nil {
 		locked = h.Locked.Add(locked)
-		spotQuantity = spotQuantity.Sub(*h.Locked)
 	}
 
 	inService := info.InService
@@ -128,13 +127,11 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 	if h.InService != nil {
 		inService = h.InService.Add(inService)
 		sold = h.InService.Add(sold)
-		spotQuantity = spotQuantity.Sub(*h.InService)
 	}
 	waitStart := info.WaitStart
 	if h.WaitStart != nil {
 		waitStart = h.WaitStart.Add(waitStart)
 		sold = h.WaitStart.Add(sold)
-		spotQuantity = spotQuantity.Sub(*h.WaitStart)
 	}
 
 	if locked.Add(inService).

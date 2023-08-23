@@ -38,6 +38,7 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	locked := info.Locked
 	if h.Locked != nil {
 		locked = locked.Sub(*h.Locked)
+		spotQuantity = h.Locked.Add(spotQuantity)
 	}
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid locked")

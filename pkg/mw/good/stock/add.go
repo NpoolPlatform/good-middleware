@@ -38,6 +38,7 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 	locked := info.Locked
 	if h.Locked != nil {
 		locked = h.Locked.Add(locked)
+		spotQuantity = spotQuantity.Sub(*h.Locked)
 	}
 	inService := info.InService
 	sold := info.Sold
