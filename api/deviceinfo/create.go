@@ -24,12 +24,12 @@ func (s *Server) CreateDeviceInfo(ctx context.Context, in *npool.CreateDeviceInf
 	}
 	handler, err := deviceinfo1.NewHandler(
 		ctx,
-		deviceinfo1.WithID(req.ID),
-		deviceinfo1.WithType(req.Type),
-		deviceinfo1.WithManufacturer(req.Manufacturer),
-		deviceinfo1.WithPowerConsumption(req.PowerConsumption),
-		deviceinfo1.WithShipmentAt(req.ShipmentAt),
-		deviceinfo1.WithPosters(req.Posters),
+		deviceinfo1.WithID(req.ID, false),
+		deviceinfo1.WithType(req.Type, true),
+		deviceinfo1.WithManufacturer(req.Manufacturer, true),
+		deviceinfo1.WithPowerConsumption(req.PowerConsumption, true),
+		deviceinfo1.WithShipmentAt(req.ShipmentAt, true),
+		deviceinfo1.WithPosters(req.Posters, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

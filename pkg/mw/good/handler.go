@@ -73,7 +73,7 @@ func WithDeviceInfoID(id *string, must bool) func(context.Context, *Handler) err
 		}
 		handler, err := deviceinfo1.NewHandler(
 			ctx,
-			deviceinfo1.WithID(id),
+			deviceinfo1.WithID(id, true),
 		)
 		if err != nil {
 			return err

@@ -24,12 +24,12 @@ func (s *Server) UpdateDeviceInfo(ctx context.Context, in *npool.UpdateDeviceInf
 	}
 	handler, err := deviceinfo1.NewHandler(
 		ctx,
-		deviceinfo1.WithID(req.ID),
-		deviceinfo1.WithType(req.Type),
-		deviceinfo1.WithManufacturer(req.Manufacturer),
-		deviceinfo1.WithPowerConsumption(req.PowerConsumption),
-		deviceinfo1.WithShipmentAt(req.ShipmentAt),
-		deviceinfo1.WithPosters(req.Posters),
+		deviceinfo1.WithID(req.ID, true),
+		deviceinfo1.WithType(req.Type, false),
+		deviceinfo1.WithManufacturer(req.Manufacturer, false),
+		deviceinfo1.WithPowerConsumption(req.PowerConsumption, false),
+		deviceinfo1.WithShipmentAt(req.ShipmentAt, false),
+		deviceinfo1.WithPosters(req.Posters, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

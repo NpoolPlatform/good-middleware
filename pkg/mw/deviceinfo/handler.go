@@ -29,9 +29,12 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 	return handler, nil
 }
 
-func WithID(id *string) func(context.Context, *Handler) error {
+func WithID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
+			if must {
+				return fmt.Errorf("invalid id")
+			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
@@ -43,9 +46,12 @@ func WithID(id *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithType(s *string) func(context.Context, *Handler) error {
+func WithType(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
+			if must {
+				return fmt.Errorf("invalid type")
+			}
 			return nil
 		}
 		const leastTypeLen = 3
@@ -57,9 +63,12 @@ func WithType(s *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithManufacturer(s *string) func(context.Context, *Handler) error {
+func WithManufacturer(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
+			if must {
+				return fmt.Errorf("invalid manufacturer")
+			}
 			return nil
 		}
 		const leastManufacturerLen = 3
@@ -71,21 +80,21 @@ func WithManufacturer(s *string) func(context.Context, *Handler) error {
 	}
 }
 
-func WithPowerConsumption(s *uint32) func(context.Context, *Handler) error {
+func WithPowerConsumption(s *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.PowerConsumption = s
 		return nil
 	}
 }
 
-func WithShipmentAt(n *uint32) func(context.Context, *Handler) error {
+func WithShipmentAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.ShipmentAt = n
 		return nil
 	}
 }
 
-func WithPosters(ss []string) func(context.Context, *Handler) error {
+func WithPosters(ss []string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		for _, s := range ss {
 			if s == "" {

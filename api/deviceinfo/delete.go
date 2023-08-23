@@ -23,7 +23,7 @@ func (s *Server) DeleteDeviceInfo(ctx context.Context, in *npool.DeleteDeviceInf
 	}
 	handler, err := deviceinfo1.NewHandler(
 		ctx,
-		deviceinfo1.WithID(req.ID),
+		deviceinfo1.WithID(req.ID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
