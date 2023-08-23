@@ -62,6 +62,21 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 		return nil
 	}
 
+	stm, err := rewardhistorycrud.SetQueryConds(tx.GoodRewardHistory.Query(), &rewardhistorycrud.Conds{
+		GoodID:     &cruder.Cond{Op: cruder.EQ, Val: *h.ID},
+		RewardDate: &cruder.Cond{Op: cruder.EQ, Val: *h.RewardAt},
+	})
+	if err != nil {
+		return err
+	}
+	exist, err := stm.Exist(ctx)
+	if err != nil {
+		return err
+	}
+	if exist {
+		return fmt.Errorf("already exists")
+	}
+
 	info, err := tx.
 		GoodReward.
 		Query().
