@@ -146,3 +146,19 @@ func GetLike(ctx context.Context, id string) (*npool.Like, error) {
 	}
 	return info.(*npool.Like), nil
 }
+
+func UpdateLike(ctx context.Context, in *npool.LikeReq) (*npool.Like, error) {
+	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+		resp, err := cli.UpdateLike(ctx, &npool.UpdateLikeRequest{
+			Info: in,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.Like), nil
+}
