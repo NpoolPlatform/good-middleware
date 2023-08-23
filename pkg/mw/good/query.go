@@ -83,6 +83,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 		)
 }
 
+//nolint:dupl
 func (h *queryHandler) queryJoinExtraInfo(s *sql.Selector) {
 	t := sql.Table(entextrainfo.Table)
 	s.LeftJoin(t).
@@ -105,7 +106,6 @@ func (h *queryHandler) queryJoinExtraInfo(s *sql.Selector) {
 		)
 }
 
-//nolint:dupl
 func (h *queryHandler) queryJoinReward(s *sql.Selector) {
 	t := sql.Table(entgoodreward.Table)
 	s.LeftJoin(t).
@@ -127,6 +127,7 @@ func (h *queryHandler) queryJoinReward(s *sql.Selector) {
 		)
 }
 
+//nolint:dupl
 func (h *queryHandler) queryJoinStock(s *sql.Selector) {
 	t := sql.Table(entstock.Table)
 	s.LeftJoin(t).
@@ -149,7 +150,6 @@ func (h *queryHandler) queryJoinStock(s *sql.Selector) {
 		)
 }
 
-//nolint:dupl
 func (h *queryHandler) queryJoinDeviceInfo(s *sql.Selector) {
 	t := sql.Table(entdeviceinfo.Table)
 	s.LeftJoin(t).
@@ -226,6 +226,7 @@ func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
 }
 
+//nolint:funlen,gocyclo
 func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
 		_ = json.Unmarshal([]byte(info.DevicePostersStr), &info.DevicePosters)
