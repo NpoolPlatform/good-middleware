@@ -48,6 +48,7 @@ func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*
 		good1.WithLabels(req.Labels, false),
 		good1.WithBenefitType(req.BenefitType, false),
 		good1.WithTotal(req.Total, false),
+		good1.WithSupportCoinTypeIDs(req.SupportCoinTypeIDs, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
