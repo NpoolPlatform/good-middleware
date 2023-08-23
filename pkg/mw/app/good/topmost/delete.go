@@ -32,6 +32,9 @@ func (h *Handler) DeleteTopMost(ctx context.Context) (*npool.TopMost, error) {
 	if err != nil {
 		return nil, err
 	}
+	if info == nil {
+		return nil, nil
+	}
 
 	handler := &deleteHandler{
 		Handler: h,
