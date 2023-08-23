@@ -125,7 +125,7 @@ func SetQueryConds(q *ent.GoodRewardHistoryQuery, conds *Conds) (*ent.GoodReward
 		if !ok {
 			return nil, fmt.Errorf("invalid endat")
 		}
-		q.Where(entgoodrewardhistory.RewardDateGTE(date))
+		q.Where(entgoodrewardhistory.RewardDateLTE(date))
 	}
 	return q, nil
 }
