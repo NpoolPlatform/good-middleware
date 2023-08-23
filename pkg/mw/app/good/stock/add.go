@@ -127,10 +127,6 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 		reserved = h.Reserved.Add(reserved)
 		spotQuantity = h.Reserved.Add(spotQuantity)
 	}
-	if spotQuantity.Cmp(reserved) > 0 {
-		return fmt.Errorf("invalid reserved")
-	}
-
 	if h.Locked != nil {
 		locked = h.Locked.Add(locked)
 		spotQuantity = spotQuantity.Sub(*h.Locked)
@@ -145,9 +141,6 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 		waitStart = waitStart.Sub(*h.InService)
 	}
 
-	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
-	}
 	if spotQuantity.Cmp(reserved) > 0 {
 		return fmt.Errorf("invalid stock")
 	}

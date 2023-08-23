@@ -132,16 +132,15 @@ var stock = stockmwpb.Stock{
 }
 
 var ret = npool.Stock{
-	ID:           uuid.NewString(),
-	AppID:        appgood.AppID,
-	GoodID:       good.ID,
-	AppGoodID:    appgood.ID,
-	Reserved:     "100",
-	SpotQuantity: "100",
-	Locked:       decimal.NewFromInt(0).String(),
-	InService:    decimal.NewFromInt(0).String(),
-	WaitStart:    decimal.NewFromInt(0).String(),
-	Sold:         decimal.NewFromInt(0).String(),
+	ID:        uuid.NewString(),
+	AppID:     appgood.AppID,
+	GoodID:    good.ID,
+	AppGoodID: appgood.ID,
+	Reserved:  "100",
+	Locked:    decimal.NewFromInt(0).String(),
+	InService: decimal.NewFromInt(0).String(),
+	WaitStart: decimal.NewFromInt(0).String(),
+	Sold:      decimal.NewFromInt(0).String(),
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -240,10 +239,7 @@ func setup(t *testing.T) func(*testing.T) {
 }
 
 func addStock(t *testing.T) {
-	ret.Locked = decimal.NewFromInt(10).String()
-	ret.InService = decimal.NewFromInt(0).String()
-	ret.WaitStart = decimal.NewFromInt(10).String()
-	ret.Sold = decimal.NewFromInt(10).String()
+	ret.SpotQuantity = ret.Reserved
 
 	handler, err := NewHandler(
 		context.Background(),
@@ -251,44 +247,54 @@ func addStock(t *testing.T) {
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
-		WithLocked(&ret.Locked, true),
 		WithReserved(&ret.Reserved, true),
-		WithInService(&ret.InService, true),
-		WithWaitStart(&ret.WaitStart, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.AddStock(context.Background())
 		if assert.Nil(t, err) {
-			ret.SpotQuantity = decimal.NewFromInt(80).String()
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			assert.Equal(t, &ret, info)
 		}
 	}
 
-	ret.InService = ret.WaitStart
-	ret.WaitStart = decimal.NewFromInt(-10).String()
-	reserved := decimal.NewFromInt(200).String()
-	ret.Reserved = decimal.NewFromInt(300).String()
-	ret.SpotQuantity = decimal.NewFromInt(280).String()
+	ret.Locked = decimal.NewFromInt(10).String()
+	ret.SpotQuantity = decimal.NewFromInt(90).String()
 
 	handler, err = NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
-		WithReserved(&reserved, true),
 		WithAppGoodID(&ret.AppGoodID, true),
-		WithInService(&ret.InService, true),
+		WithLocked(&ret.Locked, true),
+	)
+	if assert.Nil(t, err) {
+		info, err := handler.AddStock(context.Background())
+		if assert.Nil(t, err) {
+			ret.CreatedAt = info.CreatedAt
+			ret.UpdatedAt = info.UpdatedAt
+			assert.Equal(t, &ret, info)
+		}
+	}
+
+	ret.WaitStart = ret.Locked
+	ret.Sold = ret.Locked
+	ret.Locked = decimal.NewFromInt(0).String()
+
+	handler, err = NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithAppID(&ret.AppID, true),
+		WithGoodID(&ret.GoodID, true),
 		WithWaitStart(&ret.WaitStart, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.AddStock(context.Background())
 		if assert.Nil(t, err) {
-			ret.WaitStart = decimal.NewFromInt(0).String()
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
-			// assert.Equal(t, &ret, info)
+			assert.Equal(t, &ret, info)
 		}
 	}
 
@@ -299,28 +305,27 @@ func addStock(t *testing.T) {
 	if assert.Nil(t, err) {
 		info, err := h1.GetGood(context.Background())
 		if assert.Nil(t, err) {
+			assert.Equal(t, decimal.NewFromInt(890).String(), info.GoodSpotQuantity)
 			assert.Equal(t, ret.Locked, info.GoodLocked)
-			// assert.Equal(t, ret.InService, info.GoodInService)
-			// assert.Equal(t, ret.WaitStart, info.GoodWaitStart)
-			// assert.Equal(t, ret.Sold, info.GoodSold)
+			assert.Equal(t, ret.InService, info.GoodInService)
+			assert.Equal(t, ret.WaitStart, info.GoodWaitStart)
+			assert.Equal(t, ret.Sold, info.GoodSold)
 		}
 	}
 
-	ret.Locked = decimal.NewFromInt(1999).String()
+	locked := decimal.NewFromInt(1999).String()
 	handler, err = NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
-		WithLocked(&ret.Locked, true),
+		WithLocked(&locked, true),
 	)
 	if assert.Nil(t, err) {
 		_, err := handler.AddStock(context.Background())
 		assert.NotNil(t, err)
 	}
-
-	ret.Locked = decimal.NewFromInt(10).String()
 }
 
 func subStock(t *testing.T) {
@@ -330,19 +335,14 @@ func subStock(t *testing.T) {
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
-		WithLocked(&ret.Locked, true),
-		WithInService(&ret.InService, true),
 		WithWaitStart(&ret.WaitStart, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.SubStock(context.Background())
 		if assert.Nil(t, err) {
-			ret.UpdatedAt = info.UpdatedAt
-			ret.Locked = decimal.NewFromInt(0).String()
-			ret.InService = decimal.NewFromInt(0).String()
 			ret.WaitStart = decimal.NewFromInt(0).String()
 			ret.Sold = decimal.NewFromInt(0).String()
-			ret.SpotQuantity = decimal.NewFromInt(300).String()
+			ret.UpdatedAt = info.UpdatedAt
 			assert.Equal(t, &ret, info)
 		}
 	}
@@ -354,7 +354,8 @@ func subStock(t *testing.T) {
 	if assert.Nil(t, err) {
 		info, err := h1.GetGood(context.Background())
 		if assert.Nil(t, err) {
-			assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodLocked)
+			assert.Equal(t, decimal.NewFromInt(900).String(), info.GoodSpotQuantity)
+			assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodWaitStart)
 		}
 	}
 }

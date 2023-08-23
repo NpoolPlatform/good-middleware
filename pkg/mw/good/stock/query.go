@@ -47,6 +47,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 		AppendSelect(
 			sql.As(t.C(entstock.FieldGoodID), "good_id"),
 			sql.As(t.C(entstock.FieldTotal), "total"),
+			sql.As(t.C(entstock.FieldSpotQuantity), "spot_quantity"),
 			sql.As(t.C(entstock.FieldLocked), "locked"),
 			sql.As(t.C(entstock.FieldInService), "in_service"),
 			sql.As(t.C(entstock.FieldWaitStart), "wait_start"),
@@ -93,6 +94,12 @@ func (h *queryHandler) formalize() {
 			info.Total = decimal.NewFromInt(0).String()
 		} else {
 			info.Total = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.SpotQuantity)
+		if err != nil {
+			info.SpotQuantity = decimal.NewFromInt(0).String()
+		} else {
+			info.SpotQuantity = amount.String()
 		}
 		amount, err = decimal.NewFromString(info.Locked)
 		if err != nil {

@@ -75,14 +75,15 @@ var good = goodmwpb.Good{
 }
 
 var ret = npool.Stock{
-	GoodID:      good.ID,
-	GoodName:    good.Title,
-	Total:       good.GoodTotal,
-	Locked:      decimal.NewFromInt(10).String(),
-	InService:   decimal.NewFromInt(0).String(),
-	WaitStart:   decimal.NewFromInt(0).String(),
-	Sold:        decimal.NewFromInt(0).String(),
-	AppReserved: decimal.NewFromInt(0).String(),
+	GoodID:       good.ID,
+	GoodName:     good.Title,
+	Total:        good.GoodTotal,
+	SpotQuantity: decimal.NewFromInt(990).String(),
+	Locked:       decimal.NewFromInt(10).String(),
+	InService:    decimal.NewFromInt(0).String(),
+	WaitStart:    decimal.NewFromInt(0).String(),
+	Sold:         decimal.NewFromInt(0).String(),
+	AppReserved:  decimal.NewFromInt(0).String(),
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -241,6 +242,7 @@ func addStock(t *testing.T) {
 
 func subStock(t *testing.T) {
 	ret.Sold = decimal.NewFromInt(0).String()
+	ret.SpotQuantity = good.GoodTotal
 
 	handler, err := NewHandler(
 		context.Background(),
