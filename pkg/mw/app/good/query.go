@@ -87,6 +87,9 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entappgood.FieldProductPage), "product_page"),
 			sql.As(t.C(entappgood.FieldEnableSetCommission), "enable_set_commission"),
 			sql.As(t.C(entappgood.FieldPosters), "app_good_posters"),
+			sql.As(t.C(entappgood.FieldTechnicalFeeRatio), "technical_fee_ratio"),
+			sql.As(t.C(entappgood.FieldElectricityFeeRatio), "electricity_fee_ratio"),
+			sql.As(t.C(entappgood.FieldPosters), "app_good_posters"),
 			sql.As(t.C(entappgood.FieldCreatedAt), "created_at"),
 			sql.As(t.C(entappgood.FieldUpdatedAt), "updated_at"),
 		)
@@ -349,6 +352,18 @@ func (h *queryHandler) formalize() {
 			info.LastUnitRewardAmount = decimal.NewFromInt(0).String()
 		} else {
 			info.LastUnitRewardAmount = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.TechnicalFeeRatio)
+		if err != nil {
+			info.TechnicalFeeRatio = decimal.NewFromInt(0).String()
+		} else {
+			info.TechnicalFeeRatio = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.ElectricityFeeRatio)
+		if err != nil {
+			info.ElectricityFeeRatio = decimal.NewFromInt(0).String()
+		} else {
+			info.ElectricityFeeRatio = amount.String()
 		}
 	}
 }

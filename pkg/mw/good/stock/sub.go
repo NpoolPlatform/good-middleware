@@ -1,3 +1,4 @@
+//nolint:dupl
 package stock
 
 import (
@@ -17,6 +18,7 @@ type subHandler struct {
 	*Handler
 }
 
+//nolint:gocyclo
 func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		Stock.

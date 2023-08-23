@@ -117,6 +117,7 @@ func WithCoinTypeID(id *string, must bool) func(context.Context, *Handler) error
 	}
 }
 
+//nolint:gocyclo
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Conds = &appdefaultgoodcrud.Conds{}
@@ -151,6 +152,54 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			h.Conds.CoinTypeID = &cruder.Cond{
 				Op:  conds.GetCoinTypeID().GetOp(),
 				Val: id,
+			}
+		}
+		if conds.GoodID != nil {
+			id, err := uuid.Parse(conds.GetGoodID().GetValue())
+			if err != nil {
+				return err
+			}
+			h.Conds.GoodID = &cruder.Cond{
+				Op:  conds.GetGoodID().GetOp(),
+				Val: id,
+			}
+		}
+		if conds.AppGoodID != nil {
+			id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
+			if err != nil {
+				return err
+			}
+			h.Conds.AppGoodID = &cruder.Cond{
+				Op:  conds.GetAppGoodID().GetOp(),
+				Val: id,
+			}
+		}
+		if conds.GoodIDs != nil {
+			ids := []uuid.UUID{}
+			for _, id := range conds.GetGoodIDs().GetValue() {
+				_id, err := uuid.Parse(id)
+				if err != nil {
+					return err
+				}
+				ids = append(ids, _id)
+			}
+			h.Conds.GoodIDs = &cruder.Cond{
+				Op:  conds.GetGoodIDs().GetOp(),
+				Val: ids,
+			}
+		}
+		if conds.CoinTypeIDs != nil {
+			ids := []uuid.UUID{}
+			for _, id := range conds.GetCoinTypeIDs().GetValue() {
+				_id, err := uuid.Parse(id)
+				if err != nil {
+					return err
+				}
+				ids = append(ids, _id)
+			}
+			h.Conds.CoinTypeIDs = &cruder.Cond{
+				Op:  conds.GetCoinTypeIDs().GetOp(),
+				Val: ids,
 			}
 		}
 		return nil
