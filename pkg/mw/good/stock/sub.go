@@ -36,28 +36,38 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 
 	spotQuantity := info.SpotQuantity
 	locked := info.Locked
+	inService := info.InService
+	sold := info.Sold
+	waitStart := info.WaitStart
+	appReserved := info.AppReserved
+
 	if h.Locked != nil {
 		locked = locked.Sub(*h.Locked)
 		spotQuantity = h.Locked.Add(spotQuantity)
 	}
-	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid locked")
-	}
-	inService := info.InService
-	sold := info.Sold
 	if h.InService != nil {
 		inService = inService.Sub(*h.InService)
 		sold = sold.Sub(*h.InService)
 		spotQuantity = h.InService.Add(spotQuantity)
 	}
-	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid inservice")
-	}
-	waitStart := info.WaitStart
 	if h.WaitStart != nil {
 		waitStart = waitStart.Sub(*h.WaitStart)
 		sold = sold.Sub(*h.WaitStart)
 		spotQuantity = h.WaitStart.Add(spotQuantity)
+	}
+	if h.AppReserved != nil {
+		appReserved = appReserved.Sub(*h.AppReserved)
+		spotQuantity = h.AppReserved.Add(spotQuantity)
+	}
+
+	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid stock")
+	}
+	if spotQuantity.Cmp(info.Total) > 0 {
+		return fmt.Errorf("invalid stock")
+	}
+	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid inservice")
 	}
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid waitstart")
@@ -65,22 +75,17 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	if sold.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid sold")
 	}
-	appReserved := info.AppReserved
-	if h.AppReserved != nil {
-		appReserved = appReserved.Sub(*h.AppReserved)
-		spotQuantity = h.AppReserved.Add(spotQuantity)
-	}
 	if appReserved.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid appreserved")
 	}
-
-	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid locked")
 	}
+
 	if locked.Add(inService).
 		Add(waitStart).
 		Add(appReserved).
-		Cmp(info.Total) > 0 {
+		Cmp(spotQuantity) > 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
@@ -101,6 +106,10 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) SubStock(ctx context.Context) (*npool.Stock, error) {
+	if err := h.validate(); err != nil {
+		return nil, err
+	}
+
 	handler := &subHandler{
 		Handler: h,
 	}

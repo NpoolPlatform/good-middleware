@@ -80,9 +80,9 @@ var ret = npool.Stock{
 	Total:       good.GoodTotal,
 	Locked:      decimal.NewFromInt(10).String(),
 	InService:   decimal.NewFromInt(0).String(),
-	WaitStart:   decimal.NewFromInt(10).String(),
-	Sold:        decimal.NewFromInt(10).String(),
-	AppReserved: decimal.NewFromInt(10).String(),
+	WaitStart:   decimal.NewFromInt(0).String(),
+	Sold:        decimal.NewFromInt(0).String(),
+	AppReserved: decimal.NewFromInt(0).String(),
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -167,9 +167,24 @@ func addStock(t *testing.T) {
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithLocked(&ret.Locked, true),
-		WithInService(&ret.InService, true),
+	)
+	if assert.Nil(t, err) {
+		info, err := handler.AddStock(context.Background())
+		if assert.Nil(t, err) {
+			ret.CreatedAt = info.CreatedAt
+			ret.UpdatedAt = info.UpdatedAt
+			assert.Equal(t, &ret, info)
+		}
+	}
+
+	ret.WaitStart = ret.Locked
+	ret.Sold = ret.Locked
+	ret.Locked = decimal.NewFromInt(0).String()
+
+	handler, err = NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
 		WithWaitStart(&ret.WaitStart, true),
-		WithAppReserved(&ret.AppReserved, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.AddStock(context.Background())
@@ -181,18 +196,16 @@ func addStock(t *testing.T) {
 	}
 
 	ret.InService = ret.WaitStart
-	ret.WaitStart = decimal.NewFromInt(-10).String()
+	ret.WaitStart = decimal.NewFromInt(0).String()
 
 	handler, err = NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithInService(&ret.InService, true),
-		WithWaitStart(&ret.WaitStart, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.AddStock(context.Background())
 		if assert.Nil(t, err) {
-			ret.WaitStart = decimal.NewFromInt(0).String()
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			assert.Equal(t, &ret, info)
@@ -214,38 +227,31 @@ func addStock(t *testing.T) {
 		}
 	}
 
-	ret.Locked = decimal.NewFromInt(1999).String()
+	locked := decimal.NewFromInt(1999).String()
 	handler, err = NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
-		WithLocked(&ret.Locked, true),
+		WithLocked(&locked, true),
 	)
 	if assert.Nil(t, err) {
 		_, err := handler.AddStock(context.Background())
 		assert.NotNil(t, err)
 	}
-
-	ret.Locked = decimal.NewFromInt(10).String()
 }
 
 func subStock(t *testing.T) {
+	ret.Sold = decimal.NewFromInt(0).String()
+
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
-		WithLocked(&ret.Locked, true),
 		WithInService(&ret.InService, true),
-		WithWaitStart(&ret.WaitStart, true),
-		WithAppReserved(&ret.AppReserved, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.SubStock(context.Background())
 		if assert.Nil(t, err) {
 			ret.UpdatedAt = info.UpdatedAt
-			ret.Locked = decimal.NewFromInt(0).String()
 			ret.InService = decimal.NewFromInt(0).String()
-			ret.WaitStart = decimal.NewFromInt(0).String()
-			ret.Sold = decimal.NewFromInt(0).String()
-			ret.AppReserved = decimal.NewFromInt(0).String()
 			assert.Equal(t, &ret, info)
 		}
 	}

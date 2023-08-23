@@ -75,6 +75,7 @@ var ret = npool.Good{
 	GoodAppReserved:      decimal.NewFromInt(0).String(),
 	UnitLockDeposit:      decimal.NewFromInt(1).String(),
 	Score:                decimal.NewFromInt(0).String(),
+	RewardState:          types.BenefitState_BenefitWait,
 }
 
 func setup(t *testing.T) func(*testing.T) {

@@ -36,24 +36,24 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 
 	spotQuantity := info.SpotQuantity
 	locked := info.Locked
+	inService := info.InService
+	sold := info.Sold
+	waitStart := info.WaitStart
+	appReserved := info.AppReserved
+
 	if h.Locked != nil {
 		locked = h.Locked.Add(locked)
 		spotQuantity = spotQuantity.Sub(*h.Locked)
 	}
-	inService := info.InService
-	sold := info.Sold
-	if h.InService != nil {
-		inService = h.InService.Add(inService)
-		sold = h.InService.Add(sold)
-		spotQuantity = spotQuantity.Sub(*h.InService)
-	}
-	waitStart := info.WaitStart
 	if h.WaitStart != nil {
 		waitStart = h.WaitStart.Add(waitStart)
+		locked = locked.Sub(*h.WaitStart)
 		sold = h.WaitStart.Add(sold)
-		spotQuantity = spotQuantity.Sub(*h.WaitStart)
 	}
-	appReserved := info.AppReserved
+	if h.InService != nil {
+		inService = h.InService.Add(inService)
+		waitStart = waitStart.Sub(*h.InService)
+	}
 	if h.AppReserved != nil {
 		appReserved = h.AppReserved.Add(appReserved)
 		spotQuantity = spotQuantity.Sub(*h.AppReserved)
@@ -62,10 +62,20 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("stock exhausted")
 	}
+	if spotQuantity.Cmp(info.Total) > 0 {
+		return fmt.Errorf("invalid stock")
+	}
+	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid stock")
+	}
+	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid stock")
+	}
+
 	if locked.Add(inService).
 		Add(waitStart).
 		Add(appReserved).
-		Cmp(info.Total) > 0 {
+		Cmp(spotQuantity) > 0 {
 		return fmt.Errorf("stock exhausted")
 	}
 
@@ -86,6 +96,10 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) AddStock(ctx context.Context) (*npool.Stock, error) {
+	if err := h.validate(); err != nil {
+		return nil, err
+	}
+
 	handler := &addHandler{
 		Handler: h,
 	}

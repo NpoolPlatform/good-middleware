@@ -117,7 +117,7 @@ func (h *queryHandler) queryJoinReward(s *sql.Selector) {
 			sql.EQ(t.C(entgoodreward.FieldDeletedAt), 0),
 		)
 
-	if h.Conds.RewardState != nil {
+	if h.Conds != nil && h.Conds.RewardState != nil {
 		s.Where(
 			sql.EQ(t.C(entgoodreward.FieldRewardState), h.Conds.RewardState.Val.(types.BenefitState).String()),
 		)
