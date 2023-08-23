@@ -5,6 +5,7 @@ package topmost
 import (
 	"entgo.io/ent"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 const (
@@ -106,13 +107,13 @@ var (
 	// DefaultEndAt holds the default value on creation for the "end_at" field.
 	DefaultEndAt uint32
 	// DefaultThresholdCredits holds the default value on creation for the "threshold_credits" field.
-	DefaultThresholdCredits string
+	DefaultThresholdCredits decimal.Decimal
 	// DefaultRegisterElapsedSeconds holds the default value on creation for the "register_elapsed_seconds" field.
 	DefaultRegisterElapsedSeconds uint32
 	// DefaultThresholdPurchases holds the default value on creation for the "threshold_purchases" field.
 	DefaultThresholdPurchases uint32
 	// DefaultThresholdPaymentAmount holds the default value on creation for the "threshold_payment_amount" field.
-	DefaultThresholdPaymentAmount string
+	DefaultThresholdPaymentAmount decimal.Decimal
 	// DefaultKycMust holds the default value on creation for the "kyc_must" field.
 	DefaultKycMust bool
 	// DefaultID holds the default value on creation for the "id" field.

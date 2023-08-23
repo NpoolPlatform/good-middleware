@@ -2,11 +2,12 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
-
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // TopMost holds the schema definition for the TopMost entity.
@@ -54,9 +55,12 @@ func (TopMost) Fields() []ent.Field {
 			Optional().
 			Default(0),
 		field.
-			String("threshold_credits").
+			Other("threshold_credits", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
 			Optional().
-			Default(""),
+			Default(decimal.Decimal{}),
 		field.
 			Uint32("register_elapsed_seconds").
 			Optional().
@@ -66,9 +70,12 @@ func (TopMost) Fields() []ent.Field {
 			Optional().
 			Default(0),
 		field.
-			String("threshold_payment_amount").
+			Other("threshold_payment_amount", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
 			Optional().
-			Default(""),
+			Default(decimal.Decimal{}),
 		field.
 			Bool("kyc_must").
 			Optional().

@@ -13,6 +13,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // TopMostUpdate is the builder for updating TopMost entities.
@@ -217,15 +218,15 @@ func (tmu *TopMostUpdate) ClearEndAt() *TopMostUpdate {
 }
 
 // SetThresholdCredits sets the "threshold_credits" field.
-func (tmu *TopMostUpdate) SetThresholdCredits(s string) *TopMostUpdate {
-	tmu.mutation.SetThresholdCredits(s)
+func (tmu *TopMostUpdate) SetThresholdCredits(d decimal.Decimal) *TopMostUpdate {
+	tmu.mutation.SetThresholdCredits(d)
 	return tmu
 }
 
 // SetNillableThresholdCredits sets the "threshold_credits" field if the given value is not nil.
-func (tmu *TopMostUpdate) SetNillableThresholdCredits(s *string) *TopMostUpdate {
-	if s != nil {
-		tmu.SetThresholdCredits(*s)
+func (tmu *TopMostUpdate) SetNillableThresholdCredits(d *decimal.Decimal) *TopMostUpdate {
+	if d != nil {
+		tmu.SetThresholdCredits(*d)
 	}
 	return tmu
 }
@@ -291,15 +292,15 @@ func (tmu *TopMostUpdate) ClearThresholdPurchases() *TopMostUpdate {
 }
 
 // SetThresholdPaymentAmount sets the "threshold_payment_amount" field.
-func (tmu *TopMostUpdate) SetThresholdPaymentAmount(s string) *TopMostUpdate {
-	tmu.mutation.SetThresholdPaymentAmount(s)
+func (tmu *TopMostUpdate) SetThresholdPaymentAmount(d decimal.Decimal) *TopMostUpdate {
+	tmu.mutation.SetThresholdPaymentAmount(d)
 	return tmu
 }
 
 // SetNillableThresholdPaymentAmount sets the "threshold_payment_amount" field if the given value is not nil.
-func (tmu *TopMostUpdate) SetNillableThresholdPaymentAmount(s *string) *TopMostUpdate {
-	if s != nil {
-		tmu.SetThresholdPaymentAmount(*s)
+func (tmu *TopMostUpdate) SetNillableThresholdPaymentAmount(d *decimal.Decimal) *TopMostUpdate {
+	if d != nil {
+		tmu.SetThresholdPaymentAmount(*d)
 	}
 	return tmu
 }
@@ -571,14 +572,14 @@ func (tmu *TopMostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tmu.mutation.ThresholdCredits(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: topmost.FieldThresholdCredits,
 		})
 	}
 	if tmu.mutation.ThresholdCreditsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeOther,
 			Column: topmost.FieldThresholdCredits,
 		})
 	}
@@ -624,14 +625,14 @@ func (tmu *TopMostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tmu.mutation.ThresholdPaymentAmount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: topmost.FieldThresholdPaymentAmount,
 		})
 	}
 	if tmu.mutation.ThresholdPaymentAmountCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeOther,
 			Column: topmost.FieldThresholdPaymentAmount,
 		})
 	}
@@ -857,15 +858,15 @@ func (tmuo *TopMostUpdateOne) ClearEndAt() *TopMostUpdateOne {
 }
 
 // SetThresholdCredits sets the "threshold_credits" field.
-func (tmuo *TopMostUpdateOne) SetThresholdCredits(s string) *TopMostUpdateOne {
-	tmuo.mutation.SetThresholdCredits(s)
+func (tmuo *TopMostUpdateOne) SetThresholdCredits(d decimal.Decimal) *TopMostUpdateOne {
+	tmuo.mutation.SetThresholdCredits(d)
 	return tmuo
 }
 
 // SetNillableThresholdCredits sets the "threshold_credits" field if the given value is not nil.
-func (tmuo *TopMostUpdateOne) SetNillableThresholdCredits(s *string) *TopMostUpdateOne {
-	if s != nil {
-		tmuo.SetThresholdCredits(*s)
+func (tmuo *TopMostUpdateOne) SetNillableThresholdCredits(d *decimal.Decimal) *TopMostUpdateOne {
+	if d != nil {
+		tmuo.SetThresholdCredits(*d)
 	}
 	return tmuo
 }
@@ -931,15 +932,15 @@ func (tmuo *TopMostUpdateOne) ClearThresholdPurchases() *TopMostUpdateOne {
 }
 
 // SetThresholdPaymentAmount sets the "threshold_payment_amount" field.
-func (tmuo *TopMostUpdateOne) SetThresholdPaymentAmount(s string) *TopMostUpdateOne {
-	tmuo.mutation.SetThresholdPaymentAmount(s)
+func (tmuo *TopMostUpdateOne) SetThresholdPaymentAmount(d decimal.Decimal) *TopMostUpdateOne {
+	tmuo.mutation.SetThresholdPaymentAmount(d)
 	return tmuo
 }
 
 // SetNillableThresholdPaymentAmount sets the "threshold_payment_amount" field if the given value is not nil.
-func (tmuo *TopMostUpdateOne) SetNillableThresholdPaymentAmount(s *string) *TopMostUpdateOne {
-	if s != nil {
-		tmuo.SetThresholdPaymentAmount(*s)
+func (tmuo *TopMostUpdateOne) SetNillableThresholdPaymentAmount(d *decimal.Decimal) *TopMostUpdateOne {
+	if d != nil {
+		tmuo.SetThresholdPaymentAmount(*d)
 	}
 	return tmuo
 }
@@ -1241,14 +1242,14 @@ func (tmuo *TopMostUpdateOne) sqlSave(ctx context.Context) (_node *TopMost, err 
 	}
 	if value, ok := tmuo.mutation.ThresholdCredits(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: topmost.FieldThresholdCredits,
 		})
 	}
 	if tmuo.mutation.ThresholdCreditsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeOther,
 			Column: topmost.FieldThresholdCredits,
 		})
 	}
@@ -1294,14 +1295,14 @@ func (tmuo *TopMostUpdateOne) sqlSave(ctx context.Context) (_node *TopMost, err 
 	}
 	if value, ok := tmuo.mutation.ThresholdPaymentAmount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: topmost.FieldThresholdPaymentAmount,
 		})
 	}
 	if tmuo.mutation.ThresholdPaymentAmountCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeOther,
 			Column: topmost.FieldThresholdPaymentAmount,
 		})
 	}

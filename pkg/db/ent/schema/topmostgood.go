@@ -5,9 +5,8 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
-	"github.com/shopspring/decimal"
-
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // TopMostGood holds the schema definition for the TopMostGood entity.

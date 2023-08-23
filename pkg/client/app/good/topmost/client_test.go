@@ -46,7 +46,7 @@ var ret = &npool.TopMost{
 	Posters:                []string{uuid.NewString(), uuid.NewString()},
 	StartAt:                uint32(time.Now().Unix() + 1000),
 	EndAt:                  uint32(time.Now().Unix() + 6000),
-	ThresholdCredits:       uuid.NewString(),
+	ThresholdCredits:       "0",
 	RegisterElapsedSeconds: 3000,
 	ThresholdPurchases:     3000,
 	ThresholdPaymentAmount: "3000",

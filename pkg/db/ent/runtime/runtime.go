@@ -919,7 +919,7 @@ func init() {
 	// topmostDescThresholdCredits is the schema descriptor for threshold_credits field.
 	topmostDescThresholdCredits := topmostFields[8].Descriptor()
 	// topmost.DefaultThresholdCredits holds the default value on creation for the threshold_credits field.
-	topmost.DefaultThresholdCredits = topmostDescThresholdCredits.Default.(string)
+	topmost.DefaultThresholdCredits = topmostDescThresholdCredits.Default.(decimal.Decimal)
 	// topmostDescRegisterElapsedSeconds is the schema descriptor for register_elapsed_seconds field.
 	topmostDescRegisterElapsedSeconds := topmostFields[9].Descriptor()
 	// topmost.DefaultRegisterElapsedSeconds holds the default value on creation for the register_elapsed_seconds field.
@@ -931,7 +931,7 @@ func init() {
 	// topmostDescThresholdPaymentAmount is the schema descriptor for threshold_payment_amount field.
 	topmostDescThresholdPaymentAmount := topmostFields[11].Descriptor()
 	// topmost.DefaultThresholdPaymentAmount holds the default value on creation for the threshold_payment_amount field.
-	topmost.DefaultThresholdPaymentAmount = topmostDescThresholdPaymentAmount.Default.(string)
+	topmost.DefaultThresholdPaymentAmount = topmostDescThresholdPaymentAmount.Default.(decimal.Decimal)
 	// topmostDescKycMust is the schema descriptor for kyc_must field.
 	topmostDescKycMust := topmostFields[12].Descriptor()
 	// topmost.DefaultKycMust holds the default value on creation for the kyc_must field.

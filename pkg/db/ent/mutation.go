@@ -16938,12 +16938,12 @@ type TopMostMutation struct {
 	addstart_at                 *int32
 	end_at                      *uint32
 	addend_at                   *int32
-	threshold_credits           *string
+	threshold_credits           *decimal.Decimal
 	register_elapsed_seconds    *uint32
 	addregister_elapsed_seconds *int32
 	threshold_purchases         *uint32
 	addthreshold_purchases      *int32
-	threshold_payment_amount    *string
+	threshold_payment_amount    *decimal.Decimal
 	kyc_must                    *bool
 	clearedFields               map[string]struct{}
 	done                        bool
@@ -17596,12 +17596,12 @@ func (m *TopMostMutation) ResetEndAt() {
 }
 
 // SetThresholdCredits sets the "threshold_credits" field.
-func (m *TopMostMutation) SetThresholdCredits(s string) {
-	m.threshold_credits = &s
+func (m *TopMostMutation) SetThresholdCredits(d decimal.Decimal) {
+	m.threshold_credits = &d
 }
 
 // ThresholdCredits returns the value of the "threshold_credits" field in the mutation.
-func (m *TopMostMutation) ThresholdCredits() (r string, exists bool) {
+func (m *TopMostMutation) ThresholdCredits() (r decimal.Decimal, exists bool) {
 	v := m.threshold_credits
 	if v == nil {
 		return
@@ -17612,7 +17612,7 @@ func (m *TopMostMutation) ThresholdCredits() (r string, exists bool) {
 // OldThresholdCredits returns the old "threshold_credits" field's value of the TopMost entity.
 // If the TopMost object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TopMostMutation) OldThresholdCredits(ctx context.Context) (v string, err error) {
+func (m *TopMostMutation) OldThresholdCredits(ctx context.Context) (v decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldThresholdCredits is only allowed on UpdateOne operations")
 	}
@@ -17785,12 +17785,12 @@ func (m *TopMostMutation) ResetThresholdPurchases() {
 }
 
 // SetThresholdPaymentAmount sets the "threshold_payment_amount" field.
-func (m *TopMostMutation) SetThresholdPaymentAmount(s string) {
-	m.threshold_payment_amount = &s
+func (m *TopMostMutation) SetThresholdPaymentAmount(d decimal.Decimal) {
+	m.threshold_payment_amount = &d
 }
 
 // ThresholdPaymentAmount returns the value of the "threshold_payment_amount" field in the mutation.
-func (m *TopMostMutation) ThresholdPaymentAmount() (r string, exists bool) {
+func (m *TopMostMutation) ThresholdPaymentAmount() (r decimal.Decimal, exists bool) {
 	v := m.threshold_payment_amount
 	if v == nil {
 		return
@@ -17801,7 +17801,7 @@ func (m *TopMostMutation) ThresholdPaymentAmount() (r string, exists bool) {
 // OldThresholdPaymentAmount returns the old "threshold_payment_amount" field's value of the TopMost entity.
 // If the TopMost object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TopMostMutation) OldThresholdPaymentAmount(ctx context.Context) (v string, err error) {
+func (m *TopMostMutation) OldThresholdPaymentAmount(ctx context.Context) (v decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldThresholdPaymentAmount is only allowed on UpdateOne operations")
 	}
@@ -18104,7 +18104,7 @@ func (m *TopMostMutation) SetField(name string, value ent.Value) error {
 		m.SetEndAt(v)
 		return nil
 	case topmost.FieldThresholdCredits:
-		v, ok := value.(string)
+		v, ok := value.(decimal.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -18125,7 +18125,7 @@ func (m *TopMostMutation) SetField(name string, value ent.Value) error {
 		m.SetThresholdPurchases(v)
 		return nil
 	case topmost.FieldThresholdPaymentAmount:
-		v, ok := value.(string)
+		v, ok := value.(decimal.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // TopMostCreate is the builder for creating a TopMost entity.
@@ -148,15 +149,15 @@ func (tmc *TopMostCreate) SetNillableEndAt(u *uint32) *TopMostCreate {
 }
 
 // SetThresholdCredits sets the "threshold_credits" field.
-func (tmc *TopMostCreate) SetThresholdCredits(s string) *TopMostCreate {
-	tmc.mutation.SetThresholdCredits(s)
+func (tmc *TopMostCreate) SetThresholdCredits(d decimal.Decimal) *TopMostCreate {
+	tmc.mutation.SetThresholdCredits(d)
 	return tmc
 }
 
 // SetNillableThresholdCredits sets the "threshold_credits" field if the given value is not nil.
-func (tmc *TopMostCreate) SetNillableThresholdCredits(s *string) *TopMostCreate {
-	if s != nil {
-		tmc.SetThresholdCredits(*s)
+func (tmc *TopMostCreate) SetNillableThresholdCredits(d *decimal.Decimal) *TopMostCreate {
+	if d != nil {
+		tmc.SetThresholdCredits(*d)
 	}
 	return tmc
 }
@@ -190,15 +191,15 @@ func (tmc *TopMostCreate) SetNillableThresholdPurchases(u *uint32) *TopMostCreat
 }
 
 // SetThresholdPaymentAmount sets the "threshold_payment_amount" field.
-func (tmc *TopMostCreate) SetThresholdPaymentAmount(s string) *TopMostCreate {
-	tmc.mutation.SetThresholdPaymentAmount(s)
+func (tmc *TopMostCreate) SetThresholdPaymentAmount(d decimal.Decimal) *TopMostCreate {
+	tmc.mutation.SetThresholdPaymentAmount(d)
 	return tmc
 }
 
 // SetNillableThresholdPaymentAmount sets the "threshold_payment_amount" field if the given value is not nil.
-func (tmc *TopMostCreate) SetNillableThresholdPaymentAmount(s *string) *TopMostCreate {
-	if s != nil {
-		tmc.SetThresholdPaymentAmount(*s)
+func (tmc *TopMostCreate) SetNillableThresholdPaymentAmount(d *decimal.Decimal) *TopMostCreate {
+	if d != nil {
+		tmc.SetThresholdPaymentAmount(*d)
 	}
 	return tmc
 }
@@ -518,7 +519,7 @@ func (tmc *TopMostCreate) createSpec() (*TopMost, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := tmc.mutation.ThresholdCredits(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: topmost.FieldThresholdCredits,
 		})
@@ -542,7 +543,7 @@ func (tmc *TopMostCreate) createSpec() (*TopMost, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := tmc.mutation.ThresholdPaymentAmount(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: topmost.FieldThresholdPaymentAmount,
 		})
@@ -797,7 +798,7 @@ func (u *TopMostUpsert) ClearEndAt() *TopMostUpsert {
 }
 
 // SetThresholdCredits sets the "threshold_credits" field.
-func (u *TopMostUpsert) SetThresholdCredits(v string) *TopMostUpsert {
+func (u *TopMostUpsert) SetThresholdCredits(v decimal.Decimal) *TopMostUpsert {
 	u.Set(topmost.FieldThresholdCredits, v)
 	return u
 }
@@ -863,7 +864,7 @@ func (u *TopMostUpsert) ClearThresholdPurchases() *TopMostUpsert {
 }
 
 // SetThresholdPaymentAmount sets the "threshold_payment_amount" field.
-func (u *TopMostUpsert) SetThresholdPaymentAmount(v string) *TopMostUpsert {
+func (u *TopMostUpsert) SetThresholdPaymentAmount(v decimal.Decimal) *TopMostUpsert {
 	u.Set(topmost.FieldThresholdPaymentAmount, v)
 	return u
 }
@@ -1166,7 +1167,7 @@ func (u *TopMostUpsertOne) ClearEndAt() *TopMostUpsertOne {
 }
 
 // SetThresholdCredits sets the "threshold_credits" field.
-func (u *TopMostUpsertOne) SetThresholdCredits(v string) *TopMostUpsertOne {
+func (u *TopMostUpsertOne) SetThresholdCredits(v decimal.Decimal) *TopMostUpsertOne {
 	return u.Update(func(s *TopMostUpsert) {
 		s.SetThresholdCredits(v)
 	})
@@ -1243,7 +1244,7 @@ func (u *TopMostUpsertOne) ClearThresholdPurchases() *TopMostUpsertOne {
 }
 
 // SetThresholdPaymentAmount sets the "threshold_payment_amount" field.
-func (u *TopMostUpsertOne) SetThresholdPaymentAmount(v string) *TopMostUpsertOne {
+func (u *TopMostUpsertOne) SetThresholdPaymentAmount(v decimal.Decimal) *TopMostUpsertOne {
 	return u.Update(func(s *TopMostUpsert) {
 		s.SetThresholdPaymentAmount(v)
 	})
@@ -1718,7 +1719,7 @@ func (u *TopMostUpsertBulk) ClearEndAt() *TopMostUpsertBulk {
 }
 
 // SetThresholdCredits sets the "threshold_credits" field.
-func (u *TopMostUpsertBulk) SetThresholdCredits(v string) *TopMostUpsertBulk {
+func (u *TopMostUpsertBulk) SetThresholdCredits(v decimal.Decimal) *TopMostUpsertBulk {
 	return u.Update(func(s *TopMostUpsert) {
 		s.SetThresholdCredits(v)
 	})
@@ -1795,7 +1796,7 @@ func (u *TopMostUpsertBulk) ClearThresholdPurchases() *TopMostUpsertBulk {
 }
 
 // SetThresholdPaymentAmount sets the "threshold_payment_amount" field.
-func (u *TopMostUpsertBulk) SetThresholdPaymentAmount(v string) *TopMostUpsertBulk {
+func (u *TopMostUpsertBulk) SetThresholdPaymentAmount(v decimal.Decimal) *TopMostUpsertBulk {
 	return u.Update(func(s *TopMostUpsert) {
 		s.SetThresholdPaymentAmount(v)
 	})

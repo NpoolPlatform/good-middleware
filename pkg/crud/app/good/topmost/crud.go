@@ -7,8 +7,8 @@ import (
 	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
-
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 type Req struct {
@@ -20,10 +20,10 @@ type Req struct {
 	Posters                []string
 	StartAt                *uint32
 	EndAt                  *uint32
-	ThresholdCredits       *string
+	ThresholdCredits       *decimal.Decimal
 	RegisterElapsedSeconds *uint32
 	ThresholdPurchases     *uint32
-	ThresholdPaymentAmount *string
+	ThresholdPaymentAmount *decimal.Decimal
 	KycMust                *bool
 	DeletedAt              *uint32
 }

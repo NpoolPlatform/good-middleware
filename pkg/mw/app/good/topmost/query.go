@@ -13,6 +13,8 @@ import (
 	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost"
+
+	"github.com/shopspring/decimal"
 )
 
 type queryHandler struct {
@@ -90,6 +92,18 @@ func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
 		info.TopMostType = types.GoodTopMostType(types.GoodTopMostType_value[info.TopMostTypeStr])
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
+		amount, err := decimal.NewFromString(info.ThresholdCredits)
+		if err != nil {
+			info.ThresholdCredits = decimal.NewFromInt(0).String()
+		} else {
+			info.ThresholdCredits = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.ThresholdPaymentAmount)
+		if err != nil {
+			info.ThresholdPaymentAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.ThresholdPaymentAmount = amount.String()
+		}
 	}
 }
 

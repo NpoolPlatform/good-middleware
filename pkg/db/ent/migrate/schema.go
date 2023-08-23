@@ -377,10 +377,10 @@ var (
 		{Name: "posters", Type: field.TypeJSON, Nullable: true},
 		{Name: "start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "end_at", Type: field.TypeUint32, Nullable: true, Default: 0},
-		{Name: "threshold_credits", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "threshold_credits", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "register_elapsed_seconds", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "threshold_purchases", Type: field.TypeUint32, Nullable: true, Default: 0},
-		{Name: "threshold_payment_amount", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "threshold_payment_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "kyc_must", Type: field.TypeBool, Nullable: true, Default: true},
 	}
 	// TopMostsTable holds the schema information for the "top_mosts" table.

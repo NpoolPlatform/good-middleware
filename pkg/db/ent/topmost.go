@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // TopMost is the model entity for the TopMost schema.
@@ -38,13 +39,13 @@ type TopMost struct {
 	// EndAt holds the value of the "end_at" field.
 	EndAt uint32 `json:"end_at,omitempty"`
 	// ThresholdCredits holds the value of the "threshold_credits" field.
-	ThresholdCredits string `json:"threshold_credits,omitempty"`
+	ThresholdCredits decimal.Decimal `json:"threshold_credits,omitempty"`
 	// RegisterElapsedSeconds holds the value of the "register_elapsed_seconds" field.
 	RegisterElapsedSeconds uint32 `json:"register_elapsed_seconds,omitempty"`
 	// ThresholdPurchases holds the value of the "threshold_purchases" field.
 	ThresholdPurchases uint32 `json:"threshold_purchases,omitempty"`
 	// ThresholdPaymentAmount holds the value of the "threshold_payment_amount" field.
-	ThresholdPaymentAmount string `json:"threshold_payment_amount,omitempty"`
+	ThresholdPaymentAmount decimal.Decimal `json:"threshold_payment_amount,omitempty"`
 	// KycMust holds the value of the "kyc_must" field.
 	KycMust bool `json:"kyc_must,omitempty"`
 }
@@ -56,11 +57,13 @@ func (*TopMost) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case topmost.FieldPosters:
 			values[i] = new([]byte)
+		case topmost.FieldThresholdCredits, topmost.FieldThresholdPaymentAmount:
+			values[i] = new(decimal.Decimal)
 		case topmost.FieldKycMust:
 			values[i] = new(sql.NullBool)
 		case topmost.FieldCreatedAt, topmost.FieldUpdatedAt, topmost.FieldDeletedAt, topmost.FieldStartAt, topmost.FieldEndAt, topmost.FieldRegisterElapsedSeconds, topmost.FieldThresholdPurchases:
 			values[i] = new(sql.NullInt64)
-		case topmost.FieldTopMostType, topmost.FieldTitle, topmost.FieldMessage, topmost.FieldThresholdCredits, topmost.FieldThresholdPaymentAmount:
+		case topmost.FieldTopMostType, topmost.FieldTitle, topmost.FieldMessage:
 			values[i] = new(sql.NullString)
 		case topmost.FieldID, topmost.FieldAppID:
 			values[i] = new(uuid.UUID)
@@ -148,10 +151,10 @@ func (tm *TopMost) assignValues(columns []string, values []interface{}) error {
 				tm.EndAt = uint32(value.Int64)
 			}
 		case topmost.FieldThresholdCredits:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*decimal.Decimal); !ok {
 				return fmt.Errorf("unexpected type %T for field threshold_credits", values[i])
-			} else if value.Valid {
-				tm.ThresholdCredits = value.String
+			} else if value != nil {
+				tm.ThresholdCredits = *value
 			}
 		case topmost.FieldRegisterElapsedSeconds:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -166,10 +169,10 @@ func (tm *TopMost) assignValues(columns []string, values []interface{}) error {
 				tm.ThresholdPurchases = uint32(value.Int64)
 			}
 		case topmost.FieldThresholdPaymentAmount:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*decimal.Decimal); !ok {
 				return fmt.Errorf("unexpected type %T for field threshold_payment_amount", values[i])
-			} else if value.Valid {
-				tm.ThresholdPaymentAmount = value.String
+			} else if value != nil {
+				tm.ThresholdPaymentAmount = *value
 			}
 		case topmost.FieldKycMust:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -236,7 +239,7 @@ func (tm *TopMost) String() string {
 	builder.WriteString(fmt.Sprintf("%v", tm.EndAt))
 	builder.WriteString(", ")
 	builder.WriteString("threshold_credits=")
-	builder.WriteString(tm.ThresholdCredits)
+	builder.WriteString(fmt.Sprintf("%v", tm.ThresholdCredits))
 	builder.WriteString(", ")
 	builder.WriteString("register_elapsed_seconds=")
 	builder.WriteString(fmt.Sprintf("%v", tm.RegisterElapsedSeconds))
@@ -245,7 +248,7 @@ func (tm *TopMost) String() string {
 	builder.WriteString(fmt.Sprintf("%v", tm.ThresholdPurchases))
 	builder.WriteString(", ")
 	builder.WriteString("threshold_payment_amount=")
-	builder.WriteString(tm.ThresholdPaymentAmount)
+	builder.WriteString(fmt.Sprintf("%v", tm.ThresholdPaymentAmount))
 	builder.WriteString(", ")
 	builder.WriteString("kyc_must=")
 	builder.WriteString(fmt.Sprintf("%v", tm.KycMust))

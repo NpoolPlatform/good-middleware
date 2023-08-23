@@ -411,10 +411,10 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmost.FieldPosters:                {Type: field.TypeJSON, Column: topmost.FieldPosters},
 			topmost.FieldStartAt:                {Type: field.TypeUint32, Column: topmost.FieldStartAt},
 			topmost.FieldEndAt:                  {Type: field.TypeUint32, Column: topmost.FieldEndAt},
-			topmost.FieldThresholdCredits:       {Type: field.TypeString, Column: topmost.FieldThresholdCredits},
+			topmost.FieldThresholdCredits:       {Type: field.TypeOther, Column: topmost.FieldThresholdCredits},
 			topmost.FieldRegisterElapsedSeconds: {Type: field.TypeUint32, Column: topmost.FieldRegisterElapsedSeconds},
 			topmost.FieldThresholdPurchases:     {Type: field.TypeUint32, Column: topmost.FieldThresholdPurchases},
-			topmost.FieldThresholdPaymentAmount: {Type: field.TypeString, Column: topmost.FieldThresholdPaymentAmount},
+			topmost.FieldThresholdPaymentAmount: {Type: field.TypeOther, Column: topmost.FieldThresholdPaymentAmount},
 			topmost.FieldKycMust:                {Type: field.TypeBool, Column: topmost.FieldKycMust},
 		},
 	}
@@ -1994,8 +1994,8 @@ func (f *TopMostFilter) WhereEndAt(p entql.Uint32P) {
 	f.Where(p.Field(topmost.FieldEndAt))
 }
 
-// WhereThresholdCredits applies the entql string predicate on the threshold_credits field.
-func (f *TopMostFilter) WhereThresholdCredits(p entql.StringP) {
+// WhereThresholdCredits applies the entql other predicate on the threshold_credits field.
+func (f *TopMostFilter) WhereThresholdCredits(p entql.OtherP) {
 	f.Where(p.Field(topmost.FieldThresholdCredits))
 }
 
@@ -2009,8 +2009,8 @@ func (f *TopMostFilter) WhereThresholdPurchases(p entql.Uint32P) {
 	f.Where(p.Field(topmost.FieldThresholdPurchases))
 }
 
-// WhereThresholdPaymentAmount applies the entql string predicate on the threshold_payment_amount field.
-func (f *TopMostFilter) WhereThresholdPaymentAmount(p entql.StringP) {
+// WhereThresholdPaymentAmount applies the entql other predicate on the threshold_payment_amount field.
+func (f *TopMostFilter) WhereThresholdPaymentAmount(p entql.OtherP) {
 	f.Where(p.Field(topmost.FieldThresholdPaymentAmount))
 }
 

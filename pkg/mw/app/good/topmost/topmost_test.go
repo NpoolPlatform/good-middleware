@@ -14,6 +14,7 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/testinit"
@@ -38,7 +39,7 @@ var ret = npool.TopMost{
 	Posters:                []string{uuid.NewString(), uuid.NewString()},
 	StartAt:                uint32(time.Now().Unix() + 1000),
 	EndAt:                  uint32(time.Now().Unix() + 6000),
-	ThresholdCredits:       uuid.NewString(),
+	ThresholdCredits:       decimal.NewFromInt(0).String(),
 	RegisterElapsedSeconds: 3000,
 	ThresholdPurchases:     3000,
 	ThresholdPaymentAmount: "3000",

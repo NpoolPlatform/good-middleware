@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // ID filters vertices based on their ID field.
@@ -143,7 +144,7 @@ func EndAt(v uint32) predicate.TopMost {
 }
 
 // ThresholdCredits applies equality check predicate on the "threshold_credits" field. It's identical to ThresholdCreditsEQ.
-func ThresholdCredits(v string) predicate.TopMost {
+func ThresholdCredits(v decimal.Decimal) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldThresholdCredits), v))
 	})
@@ -164,7 +165,7 @@ func ThresholdPurchases(v uint32) predicate.TopMost {
 }
 
 // ThresholdPaymentAmount applies equality check predicate on the "threshold_payment_amount" field. It's identical to ThresholdPaymentAmountEQ.
-func ThresholdPaymentAmount(v string) predicate.TopMost {
+func ThresholdPaymentAmount(v decimal.Decimal) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldThresholdPaymentAmount), v))
 	})
@@ -943,21 +944,21 @@ func EndAtNotNil() predicate.TopMost {
 }
 
 // ThresholdCreditsEQ applies the EQ predicate on the "threshold_credits" field.
-func ThresholdCreditsEQ(v string) predicate.TopMost {
+func ThresholdCreditsEQ(v decimal.Decimal) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldThresholdCredits), v))
 	})
 }
 
 // ThresholdCreditsNEQ applies the NEQ predicate on the "threshold_credits" field.
-func ThresholdCreditsNEQ(v string) predicate.TopMost {
+func ThresholdCreditsNEQ(v decimal.Decimal) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldThresholdCredits), v))
 	})
 }
 
 // ThresholdCreditsIn applies the In predicate on the "threshold_credits" field.
-func ThresholdCreditsIn(vs ...string) predicate.TopMost {
+func ThresholdCreditsIn(vs ...decimal.Decimal) predicate.TopMost {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -968,7 +969,7 @@ func ThresholdCreditsIn(vs ...string) predicate.TopMost {
 }
 
 // ThresholdCreditsNotIn applies the NotIn predicate on the "threshold_credits" field.
-func ThresholdCreditsNotIn(vs ...string) predicate.TopMost {
+func ThresholdCreditsNotIn(vs ...decimal.Decimal) predicate.TopMost {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -979,51 +980,30 @@ func ThresholdCreditsNotIn(vs ...string) predicate.TopMost {
 }
 
 // ThresholdCreditsGT applies the GT predicate on the "threshold_credits" field.
-func ThresholdCreditsGT(v string) predicate.TopMost {
+func ThresholdCreditsGT(v decimal.Decimal) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldThresholdCredits), v))
 	})
 }
 
 // ThresholdCreditsGTE applies the GTE predicate on the "threshold_credits" field.
-func ThresholdCreditsGTE(v string) predicate.TopMost {
+func ThresholdCreditsGTE(v decimal.Decimal) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldThresholdCredits), v))
 	})
 }
 
 // ThresholdCreditsLT applies the LT predicate on the "threshold_credits" field.
-func ThresholdCreditsLT(v string) predicate.TopMost {
+func ThresholdCreditsLT(v decimal.Decimal) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldThresholdCredits), v))
 	})
 }
 
 // ThresholdCreditsLTE applies the LTE predicate on the "threshold_credits" field.
-func ThresholdCreditsLTE(v string) predicate.TopMost {
+func ThresholdCreditsLTE(v decimal.Decimal) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldThresholdCredits), v))
-	})
-}
-
-// ThresholdCreditsContains applies the Contains predicate on the "threshold_credits" field.
-func ThresholdCreditsContains(v string) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldThresholdCredits), v))
-	})
-}
-
-// ThresholdCreditsHasPrefix applies the HasPrefix predicate on the "threshold_credits" field.
-func ThresholdCreditsHasPrefix(v string) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldThresholdCredits), v))
-	})
-}
-
-// ThresholdCreditsHasSuffix applies the HasSuffix predicate on the "threshold_credits" field.
-func ThresholdCreditsHasSuffix(v string) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldThresholdCredits), v))
 	})
 }
 
@@ -1038,20 +1018,6 @@ func ThresholdCreditsIsNil() predicate.TopMost {
 func ThresholdCreditsNotNil() predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldThresholdCredits)))
-	})
-}
-
-// ThresholdCreditsEqualFold applies the EqualFold predicate on the "threshold_credits" field.
-func ThresholdCreditsEqualFold(v string) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldThresholdCredits), v))
-	})
-}
-
-// ThresholdCreditsContainsFold applies the ContainsFold predicate on the "threshold_credits" field.
-func ThresholdCreditsContainsFold(v string) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldThresholdCredits), v))
 	})
 }
 
@@ -1212,21 +1178,21 @@ func ThresholdPurchasesNotNil() predicate.TopMost {
 }
 
 // ThresholdPaymentAmountEQ applies the EQ predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountEQ(v string) predicate.TopMost {
+func ThresholdPaymentAmountEQ(v decimal.Decimal) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldThresholdPaymentAmount), v))
 	})
 }
 
 // ThresholdPaymentAmountNEQ applies the NEQ predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountNEQ(v string) predicate.TopMost {
+func ThresholdPaymentAmountNEQ(v decimal.Decimal) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldThresholdPaymentAmount), v))
 	})
 }
 
 // ThresholdPaymentAmountIn applies the In predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountIn(vs ...string) predicate.TopMost {
+func ThresholdPaymentAmountIn(vs ...decimal.Decimal) predicate.TopMost {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -1237,7 +1203,7 @@ func ThresholdPaymentAmountIn(vs ...string) predicate.TopMost {
 }
 
 // ThresholdPaymentAmountNotIn applies the NotIn predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountNotIn(vs ...string) predicate.TopMost {
+func ThresholdPaymentAmountNotIn(vs ...decimal.Decimal) predicate.TopMost {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -1248,51 +1214,30 @@ func ThresholdPaymentAmountNotIn(vs ...string) predicate.TopMost {
 }
 
 // ThresholdPaymentAmountGT applies the GT predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountGT(v string) predicate.TopMost {
+func ThresholdPaymentAmountGT(v decimal.Decimal) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldThresholdPaymentAmount), v))
 	})
 }
 
 // ThresholdPaymentAmountGTE applies the GTE predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountGTE(v string) predicate.TopMost {
+func ThresholdPaymentAmountGTE(v decimal.Decimal) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldThresholdPaymentAmount), v))
 	})
 }
 
 // ThresholdPaymentAmountLT applies the LT predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountLT(v string) predicate.TopMost {
+func ThresholdPaymentAmountLT(v decimal.Decimal) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldThresholdPaymentAmount), v))
 	})
 }
 
 // ThresholdPaymentAmountLTE applies the LTE predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountLTE(v string) predicate.TopMost {
+func ThresholdPaymentAmountLTE(v decimal.Decimal) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldThresholdPaymentAmount), v))
-	})
-}
-
-// ThresholdPaymentAmountContains applies the Contains predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountContains(v string) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldThresholdPaymentAmount), v))
-	})
-}
-
-// ThresholdPaymentAmountHasPrefix applies the HasPrefix predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountHasPrefix(v string) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldThresholdPaymentAmount), v))
-	})
-}
-
-// ThresholdPaymentAmountHasSuffix applies the HasSuffix predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountHasSuffix(v string) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldThresholdPaymentAmount), v))
 	})
 }
 
@@ -1307,20 +1252,6 @@ func ThresholdPaymentAmountIsNil() predicate.TopMost {
 func ThresholdPaymentAmountNotNil() predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldThresholdPaymentAmount)))
-	})
-}
-
-// ThresholdPaymentAmountEqualFold applies the EqualFold predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountEqualFold(v string) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldThresholdPaymentAmount), v))
-	})
-}
-
-// ThresholdPaymentAmountContainsFold applies the ContainsFold predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountContainsFold(v string) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldThresholdPaymentAmount), v))
 	})
 }
 
