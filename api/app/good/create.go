@@ -23,7 +23,7 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 	}
 	handler, err := appgood1.NewHandler(
 		ctx,
-		appgood1.WithID(req.ID, true),
+		appgood1.WithID(req.ID, false),
 		appgood1.WithAppID(req.AppID, true),
 		appgood1.WithGoodID(req.GoodID, true),
 		appgood1.WithOnline(req.Online, true),
