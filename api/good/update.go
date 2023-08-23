@@ -44,6 +44,10 @@ func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*
 		good1.WithNextRewardStartAmount(req.NextRewardStartAmount, false),
 		good1.WithRewardAmount(req.RewardAmount, false),
 		good1.WithUnitRewardAmount(req.UnitRewardAmount, false),
+		good1.WithPosters(req.Posters, false),
+		good1.WithLabels(req.Labels, false),
+		good1.WithBenefitType(req.BenefitType, false),
+		good1.WithTotal(req.Total, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

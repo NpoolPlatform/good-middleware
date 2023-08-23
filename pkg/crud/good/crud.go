@@ -106,6 +106,9 @@ func UpdateSet(u *ent.GoodUpdateOne, req *Req) *ent.GoodUpdateOne {
 	if req.Price != nil {
 		u.SetPrice(*req.Price)
 	}
+	if req.BenefitType != nil {
+		u.SetBenefitType(req.BenefitType.String())
+	}
 	if req.Title != nil {
 		u.SetTitle(*req.Title)
 	}
