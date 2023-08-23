@@ -80,6 +80,7 @@ func WithLocked(s *string, must bool) func(context.Context, *Handler) error {
 			if must {
 				return fmt.Errorf("invalid locked")
 			}
+			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
@@ -96,6 +97,7 @@ func WithWaitStart(s *string, must bool) func(context.Context, *Handler) error {
 			if must {
 				return fmt.Errorf("invalid waitstart")
 			}
+			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
@@ -112,6 +114,7 @@ func WithInService(s *string, must bool) func(context.Context, *Handler) error {
 			if must {
 				return fmt.Errorf("invalid inservice")
 			}
+			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
@@ -128,6 +131,7 @@ func WithAppReserved(s *string, must bool) func(context.Context, *Handler) error
 			if must {
 				return fmt.Errorf("invalid appreserved")
 			}
+			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
