@@ -23,7 +23,7 @@ func (s *Server) CreateComment(ctx context.Context, in *npool.CreateCommentReque
 	}
 	handler, err := comment1.NewHandler(
 		ctx,
-		comment1.WithID(req.ID, true),
+		comment1.WithID(req.ID, false),
 		comment1.WithAppID(req.AppID, true),
 		comment1.WithUserID(req.UserID, true),
 		comment1.WithGoodID(req.GoodID, true),
