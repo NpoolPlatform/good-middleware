@@ -32,6 +32,9 @@ func (h *Handler) DeleteDefault(ctx context.Context) (*npool.Default, error) {
 	if err != nil {
 		return nil, err
 	}
+	if info == nil {
+		return nil, nil
+	}
 
 	handler := &deleteHandler{
 		Handler: h,
