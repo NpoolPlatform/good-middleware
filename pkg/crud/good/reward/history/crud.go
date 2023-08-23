@@ -51,6 +51,8 @@ type Conds struct {
 	GoodID     *cruder.Cond
 	GoodIDs    *cruder.Cond
 	RewardDate *cruder.Cond
+	StartAt    *cruder.Cond
+	EndAt      *cruder.Cond
 }
 
 //nolint:gocyclo
@@ -110,6 +112,20 @@ func SetQueryConds(q *ent.GoodRewardHistoryQuery, conds *Conds) (*ent.GoodReward
 		default:
 			return nil, fmt.Errorf("invalid goodrewardhistory field")
 		}
+	}
+	if conds.StartAt != nil {
+		date, ok := conds.StartAt.Val.(uint32)
+		if !ok {
+			return nil, fmt.Errorf("invalid startat")
+		}
+		q.Where(entgoodrewardhistory.RewardDateGTE(date))
+	}
+	if conds.EndAt != nil {
+		date, ok := conds.EndAt.Val.(uint32)
+		if !ok {
+			return nil, fmt.Errorf("invalid endat")
+		}
+		q.Where(entgoodrewardhistory.RewardDateGTE(date))
 	}
 	return q, nil
 }

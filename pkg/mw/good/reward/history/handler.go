@@ -73,6 +73,18 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				Val: conds.GetRewardDate().GetValue(),
 			}
 		}
+		if conds.StartAt != nil {
+			h.Conds.StartAt = &cruder.Cond{
+				Op:  conds.GetStartAt().GetOp(),
+				Val: conds.GetStartAt().GetValue(),
+			}
+		}
+		if conds.EndAt != nil {
+			h.Conds.EndAt = &cruder.Cond{
+				Op:  conds.GetEndAt().GetOp(),
+				Val: conds.GetEndAt().GetValue(),
+			}
+		}
 		return nil
 	}
 }
