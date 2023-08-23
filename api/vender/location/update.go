@@ -24,12 +24,12 @@ func (s *Server) UpdateLocation(ctx context.Context, in *npool.UpdateLocationReq
 	}
 	handler, err := location1.NewHandler(
 		ctx,
-		location1.WithID(req.ID),
-		location1.WithCountry(req.Country),
-		location1.WithProvince(req.Province),
-		location1.WithCity(req.City),
-		location1.WithAddress(req.Address),
-		location1.WithBrandID(req.BrandID),
+		location1.WithID(req.ID, true),
+		location1.WithCountry(req.Country, false),
+		location1.WithProvince(req.Province, false),
+		location1.WithCity(req.City, false),
+		location1.WithAddress(req.Address, false),
+		location1.WithBrandID(req.BrandID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

@@ -23,7 +23,7 @@ func (s *Server) DeleteLocation(ctx context.Context, in *npool.DeleteLocationReq
 	}
 	handler, err := location1.NewHandler(
 		ctx,
-		location1.WithID(req.ID),
+		location1.WithID(req.ID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

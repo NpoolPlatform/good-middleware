@@ -99,8 +99,8 @@ func setup(t *testing.T) func(*testing.T) {
 
 	h1, err := vendorbrand1.NewHandler(
 		context.Background(),
-		vendorbrand1.WithName(&ret.VendorBrandName),
-		vendorbrand1.WithLogo(&ret.VendorBrandLogo),
+		vendorbrand1.WithName(&ret.VendorBrandName, true),
+		vendorbrand1.WithLogo(&ret.VendorBrandLogo, true),
 	)
 	assert.Nil(t, err)
 
@@ -109,12 +109,12 @@ func setup(t *testing.T) func(*testing.T) {
 
 	h2, err := vendorlocation1.NewHandler(
 		context.Background(),
-		vendorlocation1.WithID(&ret.VendorLocationID),
-		vendorlocation1.WithCountry(&ret.VendorLocationCountry),
-		vendorlocation1.WithProvince(&ret.VendorLocationProvince),
-		vendorlocation1.WithCity(&ret.VendorLocationCity),
-		vendorlocation1.WithAddress(&ret.VendorLocationAddress),
-		vendorlocation1.WithBrandID(&info1.ID),
+		vendorlocation1.WithID(&ret.VendorLocationID, true),
+		vendorlocation1.WithCountry(&ret.VendorLocationCountry, true),
+		vendorlocation1.WithProvince(&ret.VendorLocationProvince, true),
+		vendorlocation1.WithCity(&ret.VendorLocationCity, true),
+		vendorlocation1.WithAddress(&ret.VendorLocationAddress, true),
+		vendorlocation1.WithBrandID(&info1.ID, true),
 	)
 	assert.Nil(t, err)
 
@@ -123,12 +123,12 @@ func setup(t *testing.T) func(*testing.T) {
 
 	h3, err := deviceinfo1.NewHandler(
 		context.Background(),
-		deviceinfo1.WithID(&ret.DeviceInfoID),
-		deviceinfo1.WithType(&ret.DeviceType),
-		deviceinfo1.WithManufacturer(&ret.DeviceManufacturer),
-		deviceinfo1.WithPowerConsumption(&ret.DevicePowerConsumption),
-		deviceinfo1.WithShipmentAt(&ret.DeviceShipmentAt),
-		deviceinfo1.WithPosters(ret.DevicePosters),
+		deviceinfo1.WithID(&ret.DeviceInfoID, true),
+		deviceinfo1.WithType(&ret.DeviceType, true),
+		deviceinfo1.WithManufacturer(&ret.DeviceManufacturer, true),
+		deviceinfo1.WithPowerConsumption(&ret.DevicePowerConsumption, true),
+		deviceinfo1.WithShipmentAt(&ret.DeviceShipmentAt, true),
+		deviceinfo1.WithPosters(ret.DevicePosters, true),
 	)
 	assert.Nil(t, err)
 

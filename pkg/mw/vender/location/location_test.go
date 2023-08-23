@@ -48,9 +48,9 @@ var (
 func setup(t *testing.T) func(*testing.T) {
 	h1, err := brand1.NewHandler(
 		context.Background(),
-		brand1.WithID(&brand.ID),
-		brand1.WithName(&brand.Name),
-		brand1.WithLogo(&brand.Logo),
+		brand1.WithID(&brand.ID, true),
+		brand1.WithName(&brand.Name, true),
+		brand1.WithLogo(&brand.Logo, true),
 	)
 	assert.Nil(t, err)
 
@@ -65,12 +65,12 @@ func setup(t *testing.T) func(*testing.T) {
 func createLocation(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID),
-		WithCountry(&ret.Country),
-		WithProvince(&ret.Province),
-		WithCity(&ret.City),
-		WithAddress(&ret.Address),
-		WithBrandID(&ret.BrandID),
+		WithID(&ret.ID, true),
+		WithCountry(&ret.Country, true),
+		WithProvince(&ret.Province, true),
+		WithCity(&ret.City, true),
+		WithAddress(&ret.Address, true),
+		WithBrandID(&ret.BrandID, true),
 	)
 	assert.Nil(t, err)
 
@@ -85,12 +85,12 @@ func createLocation(t *testing.T) {
 func updateLocation(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID),
-		WithCountry(&ret.Country),
-		WithProvince(&ret.Province),
-		WithCity(&ret.City),
-		WithAddress(&ret.Address),
-		WithBrandID(&ret.BrandID),
+		WithID(&ret.ID, true),
+		WithCountry(&ret.Country, true),
+		WithProvince(&ret.Province, true),
+		WithCity(&ret.City, true),
+		WithAddress(&ret.Address, true),
+		WithBrandID(&ret.BrandID, true),
 	)
 	assert.Nil(t, err)
 
@@ -104,7 +104,7 @@ func updateLocation(t *testing.T) {
 func getLocation(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID),
+		WithID(&ret.ID, true),
 	)
 	assert.Nil(t, err)
 
@@ -140,7 +140,7 @@ func getLocations(t *testing.T) {
 func deleteLocation(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID),
+		WithID(&ret.ID, true),
 	)
 	assert.Nil(t, err)
 

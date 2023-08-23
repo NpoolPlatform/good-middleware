@@ -57,6 +57,7 @@ func (h *updateHandler) updateExtraInfo(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
+//nolint:gocyclo
 func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 	if h.RewardState == nil {
 		return nil

@@ -125,8 +125,8 @@ var ret = npool.Good{
 func setup(t *testing.T) func(*testing.T) {
 	h1, err := vendorbrand1.NewHandler(
 		context.Background(),
-		vendorbrand1.WithName(&good.VendorBrandName),
-		vendorbrand1.WithLogo(&good.VendorBrandLogo),
+		vendorbrand1.WithName(&good.VendorBrandName, true),
+		vendorbrand1.WithLogo(&good.VendorBrandLogo, true),
 	)
 	assert.Nil(t, err)
 
@@ -135,12 +135,12 @@ func setup(t *testing.T) func(*testing.T) {
 
 	h2, err := vendorlocation1.NewHandler(
 		context.Background(),
-		vendorlocation1.WithID(&good.VendorLocationID),
-		vendorlocation1.WithCountry(&good.VendorLocationCountry),
-		vendorlocation1.WithProvince(&good.VendorLocationProvince),
-		vendorlocation1.WithCity(&good.VendorLocationCity),
-		vendorlocation1.WithAddress(&good.VendorLocationAddress),
-		vendorlocation1.WithBrandID(&info1.ID),
+		vendorlocation1.WithID(&good.VendorLocationID, true),
+		vendorlocation1.WithCountry(&good.VendorLocationCountry, true),
+		vendorlocation1.WithProvince(&good.VendorLocationProvince, true),
+		vendorlocation1.WithCity(&good.VendorLocationCity, true),
+		vendorlocation1.WithAddress(&good.VendorLocationAddress, true),
+		vendorlocation1.WithBrandID(&info1.ID, true),
 	)
 	assert.Nil(t, err)
 
@@ -149,12 +149,12 @@ func setup(t *testing.T) func(*testing.T) {
 
 	h3, err := deviceinfo1.NewHandler(
 		context.Background(),
-		deviceinfo1.WithID(&good.DeviceInfoID),
-		deviceinfo1.WithType(&good.DeviceType),
-		deviceinfo1.WithManufacturer(&good.DeviceManufacturer),
-		deviceinfo1.WithPowerConsumption(&good.DevicePowerConsumption),
-		deviceinfo1.WithShipmentAt(&good.DeviceShipmentAt),
-		deviceinfo1.WithPosters(good.DevicePosters),
+		deviceinfo1.WithID(&good.DeviceInfoID, true),
+		deviceinfo1.WithType(&good.DeviceType, true),
+		deviceinfo1.WithManufacturer(&good.DeviceManufacturer, true),
+		deviceinfo1.WithPowerConsumption(&good.DevicePowerConsumption, true),
+		deviceinfo1.WithShipmentAt(&good.DeviceShipmentAt, true),
+		deviceinfo1.WithPosters(good.DevicePosters, true),
 	)
 	assert.Nil(t, err)
 

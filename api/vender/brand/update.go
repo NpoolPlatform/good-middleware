@@ -24,9 +24,9 @@ func (s *Server) UpdateBrand(ctx context.Context, in *npool.UpdateBrandRequest) 
 	}
 	handler, err := brand1.NewHandler(
 		ctx,
-		brand1.WithID(req.ID),
-		brand1.WithName(req.Name),
-		brand1.WithLogo(req.Logo),
+		brand1.WithID(req.ID, true),
+		brand1.WithName(req.Name, false),
+		brand1.WithLogo(req.Logo, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

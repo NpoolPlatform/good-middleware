@@ -132,8 +132,8 @@ var ret = npool.Required{
 func setup(t *testing.T) func(*testing.T) {
 	h1, err := vendorbrand1.NewHandler(
 		context.Background(),
-		vendorbrand1.WithName(&mainGood.VendorBrandName),
-		vendorbrand1.WithLogo(&mainGood.VendorBrandLogo),
+		vendorbrand1.WithName(&mainGood.VendorBrandName, true),
+		vendorbrand1.WithLogo(&mainGood.VendorBrandLogo, true),
 	)
 	assert.Nil(t, err)
 
@@ -142,12 +142,12 @@ func setup(t *testing.T) func(*testing.T) {
 
 	h2, err := vendorlocation1.NewHandler(
 		context.Background(),
-		vendorlocation1.WithID(&mainGood.VendorLocationID),
-		vendorlocation1.WithCountry(&mainGood.VendorLocationCountry),
-		vendorlocation1.WithProvince(&mainGood.VendorLocationProvince),
-		vendorlocation1.WithCity(&mainGood.VendorLocationCity),
-		vendorlocation1.WithAddress(&mainGood.VendorLocationAddress),
-		vendorlocation1.WithBrandID(&info1.ID),
+		vendorlocation1.WithID(&mainGood.VendorLocationID, true),
+		vendorlocation1.WithCountry(&mainGood.VendorLocationCountry, true),
+		vendorlocation1.WithProvince(&mainGood.VendorLocationProvince, true),
+		vendorlocation1.WithCity(&mainGood.VendorLocationCity, true),
+		vendorlocation1.WithAddress(&mainGood.VendorLocationAddress, true),
+		vendorlocation1.WithBrandID(&info1.ID, true),
 	)
 	assert.Nil(t, err)
 
@@ -156,12 +156,12 @@ func setup(t *testing.T) func(*testing.T) {
 
 	h3, err := deviceinfo1.NewHandler(
 		context.Background(),
-		deviceinfo1.WithID(&mainGood.DeviceInfoID),
-		deviceinfo1.WithType(&mainGood.DeviceType),
-		deviceinfo1.WithManufacturer(&mainGood.DeviceManufacturer),
-		deviceinfo1.WithPowerConsumption(&mainGood.DevicePowerConsumption),
-		deviceinfo1.WithShipmentAt(&mainGood.DeviceShipmentAt),
-		deviceinfo1.WithPosters(mainGood.DevicePosters),
+		deviceinfo1.WithID(&mainGood.DeviceInfoID, true),
+		deviceinfo1.WithType(&mainGood.DeviceType, true),
+		deviceinfo1.WithManufacturer(&mainGood.DeviceManufacturer, true),
+		deviceinfo1.WithPowerConsumption(&mainGood.DevicePowerConsumption, true),
+		deviceinfo1.WithShipmentAt(&mainGood.DeviceShipmentAt, true),
+		deviceinfo1.WithPosters(mainGood.DevicePosters, true),
 	)
 	assert.Nil(t, err)
 
@@ -198,8 +198,8 @@ func setup(t *testing.T) func(*testing.T) {
 
 	h5, err := vendorbrand1.NewHandler(
 		context.Background(),
-		vendorbrand1.WithName(&requiredGood.VendorBrandName),
-		vendorbrand1.WithLogo(&requiredGood.VendorBrandLogo),
+		vendorbrand1.WithName(&requiredGood.VendorBrandName, true),
+		vendorbrand1.WithLogo(&requiredGood.VendorBrandLogo, true),
 	)
 	assert.Nil(t, err)
 
@@ -208,12 +208,12 @@ func setup(t *testing.T) func(*testing.T) {
 
 	h6, err := vendorlocation1.NewHandler(
 		context.Background(),
-		vendorlocation1.WithID(&requiredGood.VendorLocationID),
-		vendorlocation1.WithCountry(&requiredGood.VendorLocationCountry),
-		vendorlocation1.WithProvince(&requiredGood.VendorLocationProvince),
-		vendorlocation1.WithCity(&requiredGood.VendorLocationCity),
-		vendorlocation1.WithAddress(&requiredGood.VendorLocationAddress),
-		vendorlocation1.WithBrandID(&info2.ID),
+		vendorlocation1.WithID(&requiredGood.VendorLocationID, true),
+		vendorlocation1.WithCountry(&requiredGood.VendorLocationCountry, true),
+		vendorlocation1.WithProvince(&requiredGood.VendorLocationProvince, true),
+		vendorlocation1.WithCity(&requiredGood.VendorLocationCity, true),
+		vendorlocation1.WithAddress(&requiredGood.VendorLocationAddress, true),
+		vendorlocation1.WithBrandID(&info2.ID, true),
 	)
 	assert.Nil(t, err)
 
@@ -222,12 +222,12 @@ func setup(t *testing.T) func(*testing.T) {
 
 	h7, err := deviceinfo1.NewHandler(
 		context.Background(),
-		deviceinfo1.WithID(&requiredGood.DeviceInfoID),
-		deviceinfo1.WithType(&requiredGood.DeviceType),
-		deviceinfo1.WithManufacturer(&requiredGood.DeviceManufacturer),
-		deviceinfo1.WithPowerConsumption(&requiredGood.DevicePowerConsumption),
-		deviceinfo1.WithShipmentAt(&requiredGood.DeviceShipmentAt),
-		deviceinfo1.WithPosters(requiredGood.DevicePosters),
+		deviceinfo1.WithID(&requiredGood.DeviceInfoID, true),
+		deviceinfo1.WithType(&requiredGood.DeviceType, true),
+		deviceinfo1.WithManufacturer(&requiredGood.DeviceManufacturer, true),
+		deviceinfo1.WithPowerConsumption(&requiredGood.DevicePowerConsumption, true),
+		deviceinfo1.WithShipmentAt(&requiredGood.DeviceShipmentAt, true),
+		deviceinfo1.WithPosters(requiredGood.DevicePosters, true),
 	)
 	assert.Nil(t, err)
 

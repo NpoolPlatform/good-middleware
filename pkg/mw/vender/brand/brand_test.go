@@ -41,9 +41,9 @@ func setup(t *testing.T) func(*testing.T) {
 func createBrand(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID),
-		WithName(&ret.Name),
-		WithLogo(&ret.Logo),
+		WithID(&ret.ID, true),
+		WithName(&ret.Name, true),
+		WithLogo(&ret.Logo, true),
 	)
 	assert.Nil(t, err)
 
@@ -58,9 +58,9 @@ func createBrand(t *testing.T) {
 func updateBrand(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID),
-		WithName(&ret.Name),
-		WithLogo(&ret.Logo),
+		WithID(&ret.ID, true),
+		WithName(&ret.Name, true),
+		WithLogo(&ret.Logo, true),
 	)
 	assert.Nil(t, err)
 
@@ -74,7 +74,7 @@ func updateBrand(t *testing.T) {
 func getBrand(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID),
+		WithID(&ret.ID, true),
 	)
 	assert.Nil(t, err)
 
@@ -108,7 +108,7 @@ func getBrands(t *testing.T) {
 func deleteBrand(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID),
+		WithID(&ret.ID, true),
 	)
 	assert.Nil(t, err)
 

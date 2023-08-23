@@ -62,7 +62,6 @@ func WithID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-//nolint:dupl
 func WithDeviceInfoID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
@@ -120,18 +119,11 @@ func WithCoinTypeID(id *string, must bool) func(context.Context, *Handler) error
 	}
 }
 
-//nolint:dupl
 func WithVendorLocationID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		if id == nil {
-			if must {
-				return fmt.Errorf("invalid vendorlocationid")
-			}
-			return nil
-		}
 		handler, err := vendorlocation1.NewHandler(
 			ctx,
-			vendorlocation1.WithID(id),
+			vendorlocation1.WithID(id, true),
 		)
 		if err != nil {
 			return err
@@ -497,6 +489,7 @@ func WithUnitRewardAmount(s *string, must bool) func(context.Context, *Handler) 
 	}
 }
 
+//nolint:gocyclo
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Conds = &goodcrud.Conds{}

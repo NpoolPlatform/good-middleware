@@ -42,7 +42,7 @@ type Req struct {
 	ElectricityFeeRatio    *decimal.Decimal
 }
 
-//nolint:gocyclo
+//nolint:gocyclo,funlen
 func CreateSet(c *ent.AppGoodCreate, req *Req) *ent.AppGoodCreate {
 	if req.ID != nil {
 		c.SetID(*req.ID)

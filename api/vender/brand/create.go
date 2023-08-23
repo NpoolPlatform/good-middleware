@@ -24,9 +24,9 @@ func (s *Server) CreateBrand(ctx context.Context, in *npool.CreateBrandRequest) 
 	}
 	handler, err := brand1.NewHandler(
 		ctx,
-		brand1.WithID(req.ID),
-		brand1.WithName(req.Name),
-		brand1.WithLogo(req.Logo),
+		brand1.WithID(req.ID, false),
+		brand1.WithName(req.Name, true),
+		brand1.WithLogo(req.Logo, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

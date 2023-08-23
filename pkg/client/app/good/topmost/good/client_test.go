@@ -347,8 +347,8 @@ func TestTopMostGood(t *testing.T) {
 
 	t.Run("createTopMostGood", createTopMostGood)
 	t.Run("updateTopMostGood", updateTopMostGood)
-	// t.Run("getTopMostGood", getTopMostGood)
-	// t.Run("getTopMostGoods", getTopMostGoods)
-	// t.Run("getTopMostGoodOnly", getTopMostGoodOnly)
-	// t.Run("deleteTopMostGood", deleteTopMostGood)
+	t.Run("getTopMostGood", getTopMostGood)
+	t.Run("getTopMostGoods", getTopMostGoods)
+	t.Run("getTopMostGoodOnly", getTopMostGoodOnly)
+	t.Run("deleteTopMostGood", deleteTopMostGood)
 }

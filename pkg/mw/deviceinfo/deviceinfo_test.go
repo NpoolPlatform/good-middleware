@@ -48,12 +48,12 @@ func setup() func(*testing.T) {
 func createDeviceInfo(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID),
-		WithType(&ret.Type),
-		WithManufacturer(&ret.Manufacturer),
-		WithPowerConsumption(&ret.PowerConsumption),
-		WithShipmentAt(&ret.ShipmentAt),
-		WithPosters(ret.Posters),
+		WithID(&ret.ID, true),
+		WithType(&ret.Type, true),
+		WithManufacturer(&ret.Manufacturer, true),
+		WithPowerConsumption(&ret.PowerConsumption, true),
+		WithShipmentAt(&ret.ShipmentAt, true),
+		WithPosters(ret.Posters, true),
 	)
 	assert.Nil(t, err)
 
@@ -68,12 +68,12 @@ func createDeviceInfo(t *testing.T) {
 func updateDeviceInfo(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID),
-		WithType(&ret.Type),
-		WithManufacturer(&ret.Manufacturer),
-		WithPowerConsumption(&ret.PowerConsumption),
-		WithShipmentAt(&ret.ShipmentAt),
-		WithPosters(ret.Posters),
+		WithID(&ret.ID, true),
+		WithType(&ret.Type, false),
+		WithManufacturer(&ret.Manufacturer, false),
+		WithPowerConsumption(&ret.PowerConsumption, false),
+		WithShipmentAt(&ret.ShipmentAt, false),
+		WithPosters(ret.Posters, false),
 	)
 	assert.Nil(t, err)
 
@@ -87,7 +87,7 @@ func updateDeviceInfo(t *testing.T) {
 func getDeviceInfo(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID),
+		WithID(&ret.ID, true),
 	)
 	assert.Nil(t, err)
 
@@ -122,7 +122,7 @@ func getDeviceInfos(t *testing.T) {
 func deleteDeviceInfo(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID),
+		WithID(&ret.ID, true),
 	)
 	assert.Nil(t, err)
 

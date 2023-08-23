@@ -23,7 +23,7 @@ func (s *Server) DeleteBrand(ctx context.Context, in *npool.DeleteBrandRequest) 
 	}
 	handler, err := brand1.NewHandler(
 		ctx,
-		brand1.WithID(req.ID),
+		brand1.WithID(req.ID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
