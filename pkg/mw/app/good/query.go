@@ -86,7 +86,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entappgood.FieldCancellableBeforeStart), "cancellable_before_start"),
 			sql.As(t.C(entappgood.FieldProductPage), "product_page"),
 			sql.As(t.C(entappgood.FieldEnableSetCommission), "enable_set_commission"),
-			sql.As(t.C(entappgood.FieldPosters), "posters"),
+			sql.As(t.C(entappgood.FieldPosters), "app_good_posters"),
 			sql.As(t.C(entappgood.FieldCreatedAt), "created_at"),
 			sql.As(t.C(entappgood.FieldUpdatedAt), "updated_at"),
 		)
@@ -261,6 +261,7 @@ func (h *queryHandler) formalize() {
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
+		_ = json.Unmarshal([]byte(info.AppGoodPostersStr), &info.AppGoodPosters)
 		amount, err := decimal.NewFromString(info.GoodTotal)
 		if err != nil {
 			info.GoodTotal = decimal.NewFromInt(0).String()

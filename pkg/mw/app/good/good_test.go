@@ -102,6 +102,7 @@ var ret = npool.Good{
 	SupportCoinTypeIDs:     good.SupportCoinTypeIDs,
 	TestOnly:               good.TestOnly,
 	Posters:                good.Posters,
+	AppGoodPosters:         good.Posters,
 	Labels:                 good.Labels,
 	BenefitIntervalHours:   good.BenefitIntervalHours,
 	GoodTotal:              good.GoodTotal,
@@ -207,6 +208,7 @@ func createGood(t *testing.T) {
 		WithGoodID(&ret.GoodID, true),
 		WithPrice(&ret.Price, true),
 		WithGoodName(&ret.GoodName, true),
+		WithPosters(ret.AppGoodPosters, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.CreateGood(context.Background())
@@ -217,6 +219,7 @@ func createGood(t *testing.T) {
 			ret.DescriptionsStr = info.DescriptionsStr
 			ret.LabelsStr = info.LabelsStr
 			ret.PostersStr = info.PostersStr
+			ret.AppGoodPostersStr = info.AppGoodPostersStr
 			ret.SupportCoinTypeIDsStr = info.SupportCoinTypeIDsStr
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
