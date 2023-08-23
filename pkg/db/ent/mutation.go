@@ -14215,7 +14215,6 @@ type RequiredGoodMutation struct {
 	main_good_id     *uuid.UUID
 	required_good_id *uuid.UUID
 	must             *bool
-	commission       *bool
 	clearedFields    map[string]struct{}
 	done             bool
 	oldValue         func(context.Context) (*RequiredGood, error)
@@ -14615,55 +14614,6 @@ func (m *RequiredGoodMutation) ResetMust() {
 	delete(m.clearedFields, requiredgood.FieldMust)
 }
 
-// SetCommission sets the "commission" field.
-func (m *RequiredGoodMutation) SetCommission(b bool) {
-	m.commission = &b
-}
-
-// Commission returns the value of the "commission" field in the mutation.
-func (m *RequiredGoodMutation) Commission() (r bool, exists bool) {
-	v := m.commission
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCommission returns the old "commission" field's value of the RequiredGood entity.
-// If the RequiredGood object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RequiredGoodMutation) OldCommission(ctx context.Context) (v bool, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCommission is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCommission requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCommission: %w", err)
-	}
-	return oldValue.Commission, nil
-}
-
-// ClearCommission clears the value of the "commission" field.
-func (m *RequiredGoodMutation) ClearCommission() {
-	m.commission = nil
-	m.clearedFields[requiredgood.FieldCommission] = struct{}{}
-}
-
-// CommissionCleared returns if the "commission" field was cleared in this mutation.
-func (m *RequiredGoodMutation) CommissionCleared() bool {
-	_, ok := m.clearedFields[requiredgood.FieldCommission]
-	return ok
-}
-
-// ResetCommission resets all changes to the "commission" field.
-func (m *RequiredGoodMutation) ResetCommission() {
-	m.commission = nil
-	delete(m.clearedFields, requiredgood.FieldCommission)
-}
-
 // Where appends a list predicates to the RequiredGoodMutation builder.
 func (m *RequiredGoodMutation) Where(ps ...predicate.RequiredGood) {
 	m.predicates = append(m.predicates, ps...)
@@ -14683,7 +14633,7 @@ func (m *RequiredGoodMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RequiredGoodMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 6)
 	if m.created_at != nil {
 		fields = append(fields, requiredgood.FieldCreatedAt)
 	}
@@ -14701,9 +14651,6 @@ func (m *RequiredGoodMutation) Fields() []string {
 	}
 	if m.must != nil {
 		fields = append(fields, requiredgood.FieldMust)
-	}
-	if m.commission != nil {
-		fields = append(fields, requiredgood.FieldCommission)
 	}
 	return fields
 }
@@ -14725,8 +14672,6 @@ func (m *RequiredGoodMutation) Field(name string) (ent.Value, bool) {
 		return m.RequiredGoodID()
 	case requiredgood.FieldMust:
 		return m.Must()
-	case requiredgood.FieldCommission:
-		return m.Commission()
 	}
 	return nil, false
 }
@@ -14748,8 +14693,6 @@ func (m *RequiredGoodMutation) OldField(ctx context.Context, name string) (ent.V
 		return m.OldRequiredGoodID(ctx)
 	case requiredgood.FieldMust:
 		return m.OldMust(ctx)
-	case requiredgood.FieldCommission:
-		return m.OldCommission(ctx)
 	}
 	return nil, fmt.Errorf("unknown RequiredGood field %s", name)
 }
@@ -14800,13 +14743,6 @@ func (m *RequiredGoodMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetMust(v)
-		return nil
-	case requiredgood.FieldCommission:
-		v, ok := value.(bool)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCommission(v)
 		return nil
 	}
 	return fmt.Errorf("unknown RequiredGood field %s", name)
@@ -14880,9 +14816,6 @@ func (m *RequiredGoodMutation) ClearedFields() []string {
 	if m.FieldCleared(requiredgood.FieldMust) {
 		fields = append(fields, requiredgood.FieldMust)
 	}
-	if m.FieldCleared(requiredgood.FieldCommission) {
-		fields = append(fields, requiredgood.FieldCommission)
-	}
 	return fields
 }
 
@@ -14899,9 +14832,6 @@ func (m *RequiredGoodMutation) ClearField(name string) error {
 	switch name {
 	case requiredgood.FieldMust:
 		m.ClearMust()
-		return nil
-	case requiredgood.FieldCommission:
-		m.ClearCommission()
 		return nil
 	}
 	return fmt.Errorf("unknown RequiredGood nullable field %s", name)
@@ -14928,9 +14858,6 @@ func (m *RequiredGoodMutation) ResetField(name string) error {
 		return nil
 	case requiredgood.FieldMust:
 		m.ResetMust()
-		return nil
-	case requiredgood.FieldCommission:
-		m.ResetCommission()
 		return nil
 	}
 	return fmt.Errorf("unknown RequiredGood field %s", name)

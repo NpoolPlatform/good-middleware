@@ -116,26 +116,6 @@ func (rgu *RequiredGoodUpdate) ClearMust() *RequiredGoodUpdate {
 	return rgu
 }
 
-// SetCommission sets the "commission" field.
-func (rgu *RequiredGoodUpdate) SetCommission(b bool) *RequiredGoodUpdate {
-	rgu.mutation.SetCommission(b)
-	return rgu
-}
-
-// SetNillableCommission sets the "commission" field if the given value is not nil.
-func (rgu *RequiredGoodUpdate) SetNillableCommission(b *bool) *RequiredGoodUpdate {
-	if b != nil {
-		rgu.SetCommission(*b)
-	}
-	return rgu
-}
-
-// ClearCommission clears the value of the "commission" field.
-func (rgu *RequiredGoodUpdate) ClearCommission() *RequiredGoodUpdate {
-	rgu.mutation.ClearCommission()
-	return rgu
-}
-
 // Mutation returns the RequiredGoodMutation object of the builder.
 func (rgu *RequiredGoodUpdate) Mutation() *RequiredGoodMutation {
 	return rgu.mutation
@@ -303,19 +283,6 @@ func (rgu *RequiredGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: requiredgood.FieldMust,
 		})
 	}
-	if value, ok := rgu.mutation.Commission(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: requiredgood.FieldCommission,
-		})
-	}
-	if rgu.mutation.CommissionCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Column: requiredgood.FieldCommission,
-		})
-	}
 	_spec.Modifiers = rgu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, rgu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -421,26 +388,6 @@ func (rguo *RequiredGoodUpdateOne) SetNillableMust(b *bool) *RequiredGoodUpdateO
 // ClearMust clears the value of the "must" field.
 func (rguo *RequiredGoodUpdateOne) ClearMust() *RequiredGoodUpdateOne {
 	rguo.mutation.ClearMust()
-	return rguo
-}
-
-// SetCommission sets the "commission" field.
-func (rguo *RequiredGoodUpdateOne) SetCommission(b bool) *RequiredGoodUpdateOne {
-	rguo.mutation.SetCommission(b)
-	return rguo
-}
-
-// SetNillableCommission sets the "commission" field if the given value is not nil.
-func (rguo *RequiredGoodUpdateOne) SetNillableCommission(b *bool) *RequiredGoodUpdateOne {
-	if b != nil {
-		rguo.SetCommission(*b)
-	}
-	return rguo
-}
-
-// ClearCommission clears the value of the "commission" field.
-func (rguo *RequiredGoodUpdateOne) ClearCommission() *RequiredGoodUpdateOne {
-	rguo.mutation.ClearCommission()
 	return rguo
 }
 
@@ -639,19 +586,6 @@ func (rguo *RequiredGoodUpdateOne) sqlSave(ctx context.Context) (_node *Required
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Column: requiredgood.FieldMust,
-		})
-	}
-	if value, ok := rguo.mutation.Commission(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: requiredgood.FieldCommission,
-		})
-	}
-	if rguo.mutation.CommissionCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Column: requiredgood.FieldCommission,
 		})
 	}
 	_spec.Modifiers = rguo.modifiers

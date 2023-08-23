@@ -27,7 +27,6 @@ func (s *Server) CreateRequired(ctx context.Context, in *npool.CreateRequiredReq
 		required1.WithMainGoodID(req.MainGoodID, true),
 		required1.WithRequiredGoodID(req.RequiredGoodID, true),
 		required1.WithMust(req.Must, true),
-		required1.WithCommission(req.Commission, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

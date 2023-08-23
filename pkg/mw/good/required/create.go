@@ -60,7 +60,6 @@ func (h *Handler) CreateRequired(ctx context.Context) (*npool.Required, error) {
 				MainGoodID:     h.MainGoodID,
 				RequiredGoodID: h.RequiredGoodID,
 				Must:           h.Must,
-				Commission:     h.Commission,
 			},
 		).Save(_ctx); err != nil {
 			return err

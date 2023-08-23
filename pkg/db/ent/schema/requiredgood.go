@@ -34,10 +34,6 @@ func (RequiredGood) Fields() []ent.Field {
 			Bool("must").
 			Optional().
 			Default(false),
-		field.
-			Bool("commission").
-			Optional().
-			Default(false),
 	}
 }
 

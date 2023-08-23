@@ -24,8 +24,6 @@ const (
 	FieldRequiredGoodID = "required_good_id"
 	// FieldMust holds the string denoting the must field in the database.
 	FieldMust = "must"
-	// FieldCommission holds the string denoting the commission field in the database.
-	FieldCommission = "commission"
 	// Table holds the table name of the requiredgood in the database.
 	Table = "required_goods"
 )
@@ -39,7 +37,6 @@ var Columns = []string{
 	FieldMainGoodID,
 	FieldRequiredGoodID,
 	FieldMust,
-	FieldCommission,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -71,8 +68,6 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultMust holds the default value on creation for the "must" field.
 	DefaultMust bool
-	// DefaultCommission holds the default value on creation for the "commission" field.
-	DefaultCommission bool
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

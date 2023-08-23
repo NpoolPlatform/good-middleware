@@ -342,7 +342,6 @@ var schemaGraph = func() *sqlgraph.Schema {
 			requiredgood.FieldMainGoodID:     {Type: field.TypeUUID, Column: requiredgood.FieldMainGoodID},
 			requiredgood.FieldRequiredGoodID: {Type: field.TypeUUID, Column: requiredgood.FieldRequiredGoodID},
 			requiredgood.FieldMust:           {Type: field.TypeBool, Column: requiredgood.FieldMust},
-			requiredgood.FieldCommission:     {Type: field.TypeBool, Column: requiredgood.FieldCommission},
 		},
 	}
 	graph.Nodes[13] = &sqlgraph.Node{
@@ -1720,11 +1719,6 @@ func (f *RequiredGoodFilter) WhereRequiredGoodID(p entql.ValueP) {
 // WhereMust applies the entql bool predicate on the must field.
 func (f *RequiredGoodFilter) WhereMust(p entql.BoolP) {
 	f.Where(p.Field(requiredgood.FieldMust))
-}
-
-// WhereCommission applies the entql bool predicate on the commission field.
-func (f *RequiredGoodFilter) WhereCommission(p entql.BoolP) {
-	f.Where(p.Field(requiredgood.FieldCommission))
 }
 
 // addPredicate implements the predicateAdder interface.

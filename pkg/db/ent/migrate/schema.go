@@ -310,7 +310,6 @@ var (
 		{Name: "main_good_id", Type: field.TypeUUID},
 		{Name: "required_good_id", Type: field.TypeUUID},
 		{Name: "must", Type: field.TypeBool, Nullable: true, Default: false},
-		{Name: "commission", Type: field.TypeBool, Nullable: true, Default: false},
 	}
 	// RequiredGoodsTable holds the schema information for the "required_goods" table.
 	RequiredGoodsTable = &schema.Table{

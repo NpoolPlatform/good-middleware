@@ -14,8 +14,7 @@ func (h *Handler) UpdateRequired(ctx context.Context) (*npool.Required, error) {
 		if _, err := requiredcrud.UpdateSet(
 			cli.RequiredGood.UpdateOneID(*h.ID),
 			&requiredcrud.Req{
-				Must:       h.Must,
-				Commission: h.Commission,
+				Must: h.Must,
 			},
 		).Save(_ctx); err != nil {
 			return err

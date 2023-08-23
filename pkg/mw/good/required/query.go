@@ -56,7 +56,6 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entrequiredgood.FieldMainGoodID), "main_good_id"),
 			sql.As(t.C(entrequiredgood.FieldRequiredGoodID), "required_good_id"),
 			sql.As(t.C(entrequiredgood.FieldMust), "must"),
-			sql.As(t.C(entrequiredgood.FieldCommission), "commission"),
 			sql.As(t.C(entrequiredgood.FieldCreatedAt), "created_at"),
 			sql.As(t.C(entrequiredgood.FieldUpdatedAt), "updated_at"),
 		)

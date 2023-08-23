@@ -15,7 +15,6 @@ type Req struct {
 	MainGoodID     *uuid.UUID
 	RequiredGoodID *uuid.UUID
 	Must           *bool
-	Commission     *bool
 	DeletedAt      *uint32
 }
 
@@ -32,18 +31,12 @@ func CreateSet(c *ent.RequiredGoodCreate, req *Req) *ent.RequiredGoodCreate {
 	if req.Must != nil {
 		c.SetMust(*req.Must)
 	}
-	if req.Commission != nil {
-		c.SetCommission(*req.Commission)
-	}
 	return c
 }
 
 func UpdateSet(u *ent.RequiredGoodUpdateOne, req *Req) *ent.RequiredGoodUpdateOne {
 	if req.Must != nil {
 		u.SetMust(*req.Must)
-	}
-	if req.Commission != nil {
-		u.SetCommission(*req.Commission)
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)

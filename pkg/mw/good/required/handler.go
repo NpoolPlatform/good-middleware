@@ -96,13 +96,6 @@ func WithMust(b *bool, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithCommission(b *bool, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		h.Commission = b
-		return nil
-	}
-}
-
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Conds = &requiredcrud.Conds{}

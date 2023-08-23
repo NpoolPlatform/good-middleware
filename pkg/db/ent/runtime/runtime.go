@@ -756,10 +756,6 @@ func init() {
 	requiredgoodDescMust := requiredgoodFields[3].Descriptor()
 	// requiredgood.DefaultMust holds the default value on creation for the must field.
 	requiredgood.DefaultMust = requiredgoodDescMust.Default.(bool)
-	// requiredgoodDescCommission is the schema descriptor for commission field.
-	requiredgoodDescCommission := requiredgoodFields[4].Descriptor()
-	// requiredgood.DefaultCommission holds the default value on creation for the commission field.
-	requiredgood.DefaultCommission = requiredgoodDescCommission.Default.(bool)
 	// requiredgoodDescID is the schema descriptor for id field.
 	requiredgoodDescID := requiredgoodFields[0].Descriptor()
 	// requiredgood.DefaultID holds the default value on creation for the id field.

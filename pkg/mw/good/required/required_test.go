@@ -126,7 +126,6 @@ var ret = npool.Required{
 	RequiredGoodID:   requiredGood.ID,
 	RequiredGoodName: requiredGood.Title,
 	Must:             true,
-	Commission:       true,
 }
 
 //nolint:funlen
@@ -282,7 +281,6 @@ func createRequired(t *testing.T) {
 		WithMainGoodID(&ret.MainGoodID, true),
 		WithRequiredGoodID(&ret.RequiredGoodID, true),
 		WithMust(&ret.Must, true),
-		WithCommission(&ret.Commission, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.CreateRequired(context.Background())
@@ -296,13 +294,11 @@ func createRequired(t *testing.T) {
 
 func updateRequired(t *testing.T) {
 	ret.Must = false
-	ret.Commission = false
 
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithMust(&ret.Must, true),
-		WithCommission(&ret.Commission, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.UpdateRequired(context.Background())

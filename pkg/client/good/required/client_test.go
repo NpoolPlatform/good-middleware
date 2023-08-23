@@ -133,7 +133,6 @@ var ret = npool.Required{
 	MainGoodID:       _good1.ID,
 	RequiredGoodID:   _good2.ID,
 	Must:             true,
-	Commission:       true,
 	MainGoodName:     _good1.Title,
 	RequiredGoodName: _good2.Title,
 }
@@ -229,7 +228,6 @@ func createRequired(t *testing.T) {
 		MainGoodID:     &ret.MainGoodID,
 		RequiredGoodID: &ret.RequiredGoodID,
 		Must:           &ret.Must,
-		Commission:     &ret.Commission,
 	})
 	if assert.Nil(t, err) {
 		ret.CreatedAt = info.CreatedAt

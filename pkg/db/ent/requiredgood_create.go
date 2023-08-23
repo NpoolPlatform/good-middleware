@@ -91,20 +91,6 @@ func (rgc *RequiredGoodCreate) SetNillableMust(b *bool) *RequiredGoodCreate {
 	return rgc
 }
 
-// SetCommission sets the "commission" field.
-func (rgc *RequiredGoodCreate) SetCommission(b bool) *RequiredGoodCreate {
-	rgc.mutation.SetCommission(b)
-	return rgc
-}
-
-// SetNillableCommission sets the "commission" field if the given value is not nil.
-func (rgc *RequiredGoodCreate) SetNillableCommission(b *bool) *RequiredGoodCreate {
-	if b != nil {
-		rgc.SetCommission(*b)
-	}
-	return rgc
-}
-
 // SetID sets the "id" field.
 func (rgc *RequiredGoodCreate) SetID(u uuid.UUID) *RequiredGoodCreate {
 	rgc.mutation.SetID(u)
@@ -223,10 +209,6 @@ func (rgc *RequiredGoodCreate) defaults() error {
 		v := requiredgood.DefaultMust
 		rgc.mutation.SetMust(v)
 	}
-	if _, ok := rgc.mutation.Commission(); !ok {
-		v := requiredgood.DefaultCommission
-		rgc.mutation.SetCommission(v)
-	}
 	if _, ok := rgc.mutation.ID(); !ok {
 		if requiredgood.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized requiredgood.DefaultID (forgotten import ent/runtime?)")
@@ -338,14 +320,6 @@ func (rgc *RequiredGoodCreate) createSpec() (*RequiredGood, *sqlgraph.CreateSpec
 			Column: requiredgood.FieldMust,
 		})
 		_node.Must = value
-	}
-	if value, ok := rgc.mutation.Commission(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: requiredgood.FieldCommission,
-		})
-		_node.Commission = value
 	}
 	return _node, _spec
 }
@@ -494,24 +468,6 @@ func (u *RequiredGoodUpsert) UpdateMust() *RequiredGoodUpsert {
 // ClearMust clears the value of the "must" field.
 func (u *RequiredGoodUpsert) ClearMust() *RequiredGoodUpsert {
 	u.SetNull(requiredgood.FieldMust)
-	return u
-}
-
-// SetCommission sets the "commission" field.
-func (u *RequiredGoodUpsert) SetCommission(v bool) *RequiredGoodUpsert {
-	u.Set(requiredgood.FieldCommission, v)
-	return u
-}
-
-// UpdateCommission sets the "commission" field to the value that was provided on create.
-func (u *RequiredGoodUpsert) UpdateCommission() *RequiredGoodUpsert {
-	u.SetExcluded(requiredgood.FieldCommission)
-	return u
-}
-
-// ClearCommission clears the value of the "commission" field.
-func (u *RequiredGoodUpsert) ClearCommission() *RequiredGoodUpsert {
-	u.SetNull(requiredgood.FieldCommission)
 	return u
 }
 
@@ -674,27 +630,6 @@ func (u *RequiredGoodUpsertOne) UpdateMust() *RequiredGoodUpsertOne {
 func (u *RequiredGoodUpsertOne) ClearMust() *RequiredGoodUpsertOne {
 	return u.Update(func(s *RequiredGoodUpsert) {
 		s.ClearMust()
-	})
-}
-
-// SetCommission sets the "commission" field.
-func (u *RequiredGoodUpsertOne) SetCommission(v bool) *RequiredGoodUpsertOne {
-	return u.Update(func(s *RequiredGoodUpsert) {
-		s.SetCommission(v)
-	})
-}
-
-// UpdateCommission sets the "commission" field to the value that was provided on create.
-func (u *RequiredGoodUpsertOne) UpdateCommission() *RequiredGoodUpsertOne {
-	return u.Update(func(s *RequiredGoodUpsert) {
-		s.UpdateCommission()
-	})
-}
-
-// ClearCommission clears the value of the "commission" field.
-func (u *RequiredGoodUpsertOne) ClearCommission() *RequiredGoodUpsertOne {
-	return u.Update(func(s *RequiredGoodUpsert) {
-		s.ClearCommission()
 	})
 }
 
@@ -1023,27 +958,6 @@ func (u *RequiredGoodUpsertBulk) UpdateMust() *RequiredGoodUpsertBulk {
 func (u *RequiredGoodUpsertBulk) ClearMust() *RequiredGoodUpsertBulk {
 	return u.Update(func(s *RequiredGoodUpsert) {
 		s.ClearMust()
-	})
-}
-
-// SetCommission sets the "commission" field.
-func (u *RequiredGoodUpsertBulk) SetCommission(v bool) *RequiredGoodUpsertBulk {
-	return u.Update(func(s *RequiredGoodUpsert) {
-		s.SetCommission(v)
-	})
-}
-
-// UpdateCommission sets the "commission" field to the value that was provided on create.
-func (u *RequiredGoodUpsertBulk) UpdateCommission() *RequiredGoodUpsertBulk {
-	return u.Update(func(s *RequiredGoodUpsert) {
-		s.UpdateCommission()
-	})
-}
-
-// ClearCommission clears the value of the "commission" field.
-func (u *RequiredGoodUpsertBulk) ClearCommission() *RequiredGoodUpsertBulk {
-	return u.Update(func(s *RequiredGoodUpsert) {
-		s.ClearCommission()
 	})
 }
 

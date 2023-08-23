@@ -121,13 +121,6 @@ func Must(v bool) predicate.RequiredGood {
 	})
 }
 
-// Commission applies equality check predicate on the "commission" field. It's identical to CommissionEQ.
-func Commission(v bool) predicate.RequiredGood {
-	return predicate.RequiredGood(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCommission), v))
-	})
-}
-
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.RequiredGood {
 	return predicate.RequiredGood(func(s *sql.Selector) {
@@ -473,34 +466,6 @@ func MustIsNil() predicate.RequiredGood {
 func MustNotNil() predicate.RequiredGood {
 	return predicate.RequiredGood(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldMust)))
-	})
-}
-
-// CommissionEQ applies the EQ predicate on the "commission" field.
-func CommissionEQ(v bool) predicate.RequiredGood {
-	return predicate.RequiredGood(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCommission), v))
-	})
-}
-
-// CommissionNEQ applies the NEQ predicate on the "commission" field.
-func CommissionNEQ(v bool) predicate.RequiredGood {
-	return predicate.RequiredGood(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldCommission), v))
-	})
-}
-
-// CommissionIsNil applies the IsNil predicate on the "commission" field.
-func CommissionIsNil() predicate.RequiredGood {
-	return predicate.RequiredGood(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldCommission)))
-	})
-}
-
-// CommissionNotNil applies the NotNil predicate on the "commission" field.
-func CommissionNotNil() predicate.RequiredGood {
-	return predicate.RequiredGood(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldCommission)))
 	})
 }
 

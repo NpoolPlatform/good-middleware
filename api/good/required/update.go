@@ -25,7 +25,6 @@ func (s *Server) UpdateRequired(ctx context.Context, in *npool.UpdateRequiredReq
 		ctx,
 		required1.WithID(req.ID, true),
 		required1.WithMust(req.Must, false),
-		required1.WithCommission(req.Commission, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

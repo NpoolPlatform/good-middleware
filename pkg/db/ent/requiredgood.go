@@ -28,8 +28,6 @@ type RequiredGood struct {
 	RequiredGoodID uuid.UUID `json:"required_good_id,omitempty"`
 	// Must holds the value of the "must" field.
 	Must bool `json:"must,omitempty"`
-	// Commission holds the value of the "commission" field.
-	Commission bool `json:"commission,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -37,7 +35,7 @@ func (*RequiredGood) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case requiredgood.FieldMust, requiredgood.FieldCommission:
+		case requiredgood.FieldMust:
 			values[i] = new(sql.NullBool)
 		case requiredgood.FieldCreatedAt, requiredgood.FieldUpdatedAt, requiredgood.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
@@ -100,12 +98,6 @@ func (rg *RequiredGood) assignValues(columns []string, values []interface{}) err
 			} else if value.Valid {
 				rg.Must = value.Bool
 			}
-		case requiredgood.FieldCommission:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field commission", values[i])
-			} else if value.Valid {
-				rg.Commission = value.Bool
-			}
 		}
 	}
 	return nil
@@ -151,9 +143,6 @@ func (rg *RequiredGood) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("must=")
 	builder.WriteString(fmt.Sprintf("%v", rg.Must))
-	builder.WriteString(", ")
-	builder.WriteString("commission=")
-	builder.WriteString(fmt.Sprintf("%v", rg.Commission))
 	builder.WriteByte(')')
 	return builder.String()
 }
