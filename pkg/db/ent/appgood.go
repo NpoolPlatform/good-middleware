@@ -46,6 +46,10 @@ type AppGood struct {
 	SaleEndAt uint32 `json:"sale_end_at,omitempty"`
 	// ServiceStartAt holds the value of the "service_start_at" field.
 	ServiceStartAt uint32 `json:"service_start_at,omitempty"`
+	// TechnicalFeeRatio holds the value of the "technical_fee_ratio" field.
+	TechnicalFeeRatio decimal.Decimal `json:"technical_fee_ratio,omitempty"`
+	// ElectricityFeeRatio holds the value of the "electricity_fee_ratio" field.
+	ElectricityFeeRatio decimal.Decimal `json:"electricity_fee_ratio,omitempty"`
 	// Descriptions holds the value of the "descriptions" field.
 	Descriptions []string `json:"descriptions,omitempty"`
 	// GoodBanner holds the value of the "good_banner" field.
@@ -79,7 +83,7 @@ func (*AppGood) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appgood.FieldDescriptions, appgood.FieldDisplayNames, appgood.FieldDisplayColors, appgood.FieldPosters:
 			values[i] = new([]byte)
-		case appgood.FieldPrice, appgood.FieldUserPurchaseLimit:
+		case appgood.FieldPrice, appgood.FieldTechnicalFeeRatio, appgood.FieldElectricityFeeRatio, appgood.FieldUserPurchaseLimit:
 			values[i] = new(decimal.Decimal)
 		case appgood.FieldOnline, appgood.FieldVisible, appgood.FieldEnablePurchase, appgood.FieldEnableProductPage, appgood.FieldEnableSetCommission:
 			values[i] = new(sql.NullBool)
@@ -193,6 +197,18 @@ func (ag *AppGood) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field service_start_at", values[i])
 			} else if value.Valid {
 				ag.ServiceStartAt = uint32(value.Int64)
+			}
+		case appgood.FieldTechnicalFeeRatio:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field technical_fee_ratio", values[i])
+			} else if value != nil {
+				ag.TechnicalFeeRatio = *value
+			}
+		case appgood.FieldElectricityFeeRatio:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field electricity_fee_ratio", values[i])
+			} else if value != nil {
+				ag.ElectricityFeeRatio = *value
 			}
 		case appgood.FieldDescriptions:
 			if value, ok := values[i].(*[]byte); !ok {
@@ -343,6 +359,12 @@ func (ag *AppGood) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("service_start_at=")
 	builder.WriteString(fmt.Sprintf("%v", ag.ServiceStartAt))
+	builder.WriteString(", ")
+	builder.WriteString("technical_fee_ratio=")
+	builder.WriteString(fmt.Sprintf("%v", ag.TechnicalFeeRatio))
+	builder.WriteString(", ")
+	builder.WriteString("electricity_fee_ratio=")
+	builder.WriteString(fmt.Sprintf("%v", ag.ElectricityFeeRatio))
 	builder.WriteString(", ")
 	builder.WriteString("descriptions=")
 	builder.WriteString(fmt.Sprintf("%v", ag.Descriptions))

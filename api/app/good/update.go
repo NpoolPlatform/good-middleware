@@ -43,6 +43,8 @@ func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*
 		appgood1.WithCancellableBeforeStart(req.CancellableBeforeStart, false),
 		appgood1.WithProductPage(req.ProductPage, false),
 		appgood1.WithEnableSetCommission(req.EnableSetCommission, false),
+		appgood1.WithTechniqueFeeRatio(req.TechnicalFeeRatio, false),
+		appgood1.WithElectricityFeeRatio(req.ElectricityFeeRatio, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

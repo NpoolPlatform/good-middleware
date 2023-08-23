@@ -77,6 +77,8 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appgood.FieldSaleStartAt:            {Type: field.TypeUint32, Column: appgood.FieldSaleStartAt},
 			appgood.FieldSaleEndAt:              {Type: field.TypeUint32, Column: appgood.FieldSaleEndAt},
 			appgood.FieldServiceStartAt:         {Type: field.TypeUint32, Column: appgood.FieldServiceStartAt},
+			appgood.FieldTechnicalFeeRatio:      {Type: field.TypeOther, Column: appgood.FieldTechnicalFeeRatio},
+			appgood.FieldElectricityFeeRatio:    {Type: field.TypeOther, Column: appgood.FieldElectricityFeeRatio},
 			appgood.FieldDescriptions:           {Type: field.TypeJSON, Column: appgood.FieldDescriptions},
 			appgood.FieldGoodBanner:             {Type: field.TypeString, Column: appgood.FieldGoodBanner},
 			appgood.FieldDisplayNames:           {Type: field.TypeJSON, Column: appgood.FieldDisplayNames},
@@ -673,6 +675,16 @@ func (f *AppGoodFilter) WhereSaleEndAt(p entql.Uint32P) {
 // WhereServiceStartAt applies the entql uint32 predicate on the service_start_at field.
 func (f *AppGoodFilter) WhereServiceStartAt(p entql.Uint32P) {
 	f.Where(p.Field(appgood.FieldServiceStartAt))
+}
+
+// WhereTechnicalFeeRatio applies the entql other predicate on the technical_fee_ratio field.
+func (f *AppGoodFilter) WhereTechnicalFeeRatio(p entql.OtherP) {
+	f.Where(p.Field(appgood.FieldTechnicalFeeRatio))
+}
+
+// WhereElectricityFeeRatio applies the entql other predicate on the electricity_fee_ratio field.
+func (f *AppGoodFilter) WhereElectricityFeeRatio(p entql.OtherP) {
+	f.Where(p.Field(appgood.FieldElectricityFeeRatio))
 }
 
 // WhereDescriptions applies the entql json.RawMessage predicate on the descriptions field.

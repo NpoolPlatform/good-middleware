@@ -270,6 +270,47 @@ func WithPosters(ss []string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
+func WithDisplayNames(ss []string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.DisplayNames = ss
+		return nil
+	}
+}
+
+func WithTechniqueFeeRatio(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid techniquefeeratio")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.TechniqueFeeRatio = &amount
+		return nil
+	}
+}
+
+func WithElectricityFeeRatio(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid electricityfeeratio")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.ElectricityFeeRatio = &amount
+		return nil
+	}
+}
+
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Conds = &appgoodcrud.Conds{}

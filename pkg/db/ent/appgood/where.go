@@ -178,6 +178,20 @@ func ServiceStartAt(v uint32) predicate.AppGood {
 	})
 }
 
+// TechnicalFeeRatio applies equality check predicate on the "technical_fee_ratio" field. It's identical to TechnicalFeeRatioEQ.
+func TechnicalFeeRatio(v decimal.Decimal) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTechnicalFeeRatio), v))
+	})
+}
+
+// ElectricityFeeRatio applies equality check predicate on the "electricity_fee_ratio" field. It's identical to ElectricityFeeRatioEQ.
+func ElectricityFeeRatio(v decimal.Decimal) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldElectricityFeeRatio), v))
+	})
+}
+
 // GoodBanner applies equality check predicate on the "good_banner" field. It's identical to GoodBannerEQ.
 func GoodBanner(v string) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
@@ -1188,6 +1202,162 @@ func ServiceStartAtIsNil() predicate.AppGood {
 func ServiceStartAtNotNil() predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldServiceStartAt)))
+	})
+}
+
+// TechnicalFeeRatioEQ applies the EQ predicate on the "technical_fee_ratio" field.
+func TechnicalFeeRatioEQ(v decimal.Decimal) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTechnicalFeeRatio), v))
+	})
+}
+
+// TechnicalFeeRatioNEQ applies the NEQ predicate on the "technical_fee_ratio" field.
+func TechnicalFeeRatioNEQ(v decimal.Decimal) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldTechnicalFeeRatio), v))
+	})
+}
+
+// TechnicalFeeRatioIn applies the In predicate on the "technical_fee_ratio" field.
+func TechnicalFeeRatioIn(vs ...decimal.Decimal) predicate.AppGood {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldTechnicalFeeRatio), v...))
+	})
+}
+
+// TechnicalFeeRatioNotIn applies the NotIn predicate on the "technical_fee_ratio" field.
+func TechnicalFeeRatioNotIn(vs ...decimal.Decimal) predicate.AppGood {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldTechnicalFeeRatio), v...))
+	})
+}
+
+// TechnicalFeeRatioGT applies the GT predicate on the "technical_fee_ratio" field.
+func TechnicalFeeRatioGT(v decimal.Decimal) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldTechnicalFeeRatio), v))
+	})
+}
+
+// TechnicalFeeRatioGTE applies the GTE predicate on the "technical_fee_ratio" field.
+func TechnicalFeeRatioGTE(v decimal.Decimal) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldTechnicalFeeRatio), v))
+	})
+}
+
+// TechnicalFeeRatioLT applies the LT predicate on the "technical_fee_ratio" field.
+func TechnicalFeeRatioLT(v decimal.Decimal) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldTechnicalFeeRatio), v))
+	})
+}
+
+// TechnicalFeeRatioLTE applies the LTE predicate on the "technical_fee_ratio" field.
+func TechnicalFeeRatioLTE(v decimal.Decimal) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldTechnicalFeeRatio), v))
+	})
+}
+
+// TechnicalFeeRatioIsNil applies the IsNil predicate on the "technical_fee_ratio" field.
+func TechnicalFeeRatioIsNil() predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldTechnicalFeeRatio)))
+	})
+}
+
+// TechnicalFeeRatioNotNil applies the NotNil predicate on the "technical_fee_ratio" field.
+func TechnicalFeeRatioNotNil() predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldTechnicalFeeRatio)))
+	})
+}
+
+// ElectricityFeeRatioEQ applies the EQ predicate on the "electricity_fee_ratio" field.
+func ElectricityFeeRatioEQ(v decimal.Decimal) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldElectricityFeeRatio), v))
+	})
+}
+
+// ElectricityFeeRatioNEQ applies the NEQ predicate on the "electricity_fee_ratio" field.
+func ElectricityFeeRatioNEQ(v decimal.Decimal) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldElectricityFeeRatio), v))
+	})
+}
+
+// ElectricityFeeRatioIn applies the In predicate on the "electricity_fee_ratio" field.
+func ElectricityFeeRatioIn(vs ...decimal.Decimal) predicate.AppGood {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldElectricityFeeRatio), v...))
+	})
+}
+
+// ElectricityFeeRatioNotIn applies the NotIn predicate on the "electricity_fee_ratio" field.
+func ElectricityFeeRatioNotIn(vs ...decimal.Decimal) predicate.AppGood {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldElectricityFeeRatio), v...))
+	})
+}
+
+// ElectricityFeeRatioGT applies the GT predicate on the "electricity_fee_ratio" field.
+func ElectricityFeeRatioGT(v decimal.Decimal) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldElectricityFeeRatio), v))
+	})
+}
+
+// ElectricityFeeRatioGTE applies the GTE predicate on the "electricity_fee_ratio" field.
+func ElectricityFeeRatioGTE(v decimal.Decimal) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldElectricityFeeRatio), v))
+	})
+}
+
+// ElectricityFeeRatioLT applies the LT predicate on the "electricity_fee_ratio" field.
+func ElectricityFeeRatioLT(v decimal.Decimal) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldElectricityFeeRatio), v))
+	})
+}
+
+// ElectricityFeeRatioLTE applies the LTE predicate on the "electricity_fee_ratio" field.
+func ElectricityFeeRatioLTE(v decimal.Decimal) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldElectricityFeeRatio), v))
+	})
+}
+
+// ElectricityFeeRatioIsNil applies the IsNil predicate on the "electricity_fee_ratio" field.
+func ElectricityFeeRatioIsNil() predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldElectricityFeeRatio)))
+	})
+}
+
+// ElectricityFeeRatioNotNil applies the NotNil predicate on the "electricity_fee_ratio" field.
+func ElectricityFeeRatioNotNil() predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldElectricityFeeRatio)))
 	})
 }
 

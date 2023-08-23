@@ -38,6 +38,8 @@ type Req struct {
 	EnableSetCommission    *bool
 	Posters                []string
 	DeletedAt              *uint32
+	TechniqueFeeRatio      *decimal.Decimal
+	ElectricityFeeRatio    *decimal.Decimal
 }
 
 //nolint:gocyclo
@@ -114,6 +116,12 @@ func CreateSet(c *ent.AppGoodCreate, req *Req) *ent.AppGoodCreate {
 	if len(req.Posters) > 0 {
 		c.SetPosters(req.Posters)
 	}
+	if req.TechniqueFeeRatio != nil {
+		c.SetTechnicalFeeRatio(*req.TechniqueFeeRatio)
+	}
+	if req.ElectricityFeeRatio != nil {
+		c.SetElectricityFeeRatio(*req.ElectricityFeeRatio)
+	}
 	return c
 }
 
@@ -184,6 +192,12 @@ func UpdateSet(u *ent.AppGoodUpdateOne, req *Req) *ent.AppGoodUpdateOne {
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)
+	}
+	if req.TechniqueFeeRatio != nil {
+		u.SetTechnicalFeeRatio(*req.TechniqueFeeRatio)
+	}
+	if req.ElectricityFeeRatio != nil {
+		u.SetElectricityFeeRatio(*req.ElectricityFeeRatio)
 	}
 	return u
 }

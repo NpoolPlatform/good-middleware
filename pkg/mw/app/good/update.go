@@ -18,6 +18,8 @@ func (h *updateHandler) updateAppGood(ctx context.Context, tx *ent.Tx) error {
 		tx.AppGood.UpdateOneID(*h.ID),
 		&appgoodcrud.Req{
 			GoodName:               h.GoodName,
+			Online:                 h.Online,
+			Visible:                h.Visible,
 			Price:                  h.Price,
 			DisplayIndex:           h.DisplayIndex,
 			PurchaseLimit:          h.PurchaseLimit,
@@ -36,6 +38,8 @@ func (h *updateHandler) updateAppGood(ctx context.Context, tx *ent.Tx) error {
 			ProductPage:            h.ProductPage,
 			EnableSetCommission:    h.EnableSetCommission,
 			Posters:                h.Posters,
+			TechniqueFeeRatio:      h.TechniqueFeeRatio,
+			ElectricityFeeRatio:    h.ElectricityFeeRatio,
 		},
 	).Save(ctx); err != nil {
 		return err

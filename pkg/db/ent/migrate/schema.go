@@ -43,6 +43,8 @@ var (
 		{Name: "sale_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "sale_end_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "service_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "technical_fee_ratio", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "electricity_fee_ratio", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "descriptions", Type: field.TypeJSON, Nullable: true},
 		{Name: "good_banner", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "display_names", Type: field.TypeJSON, Nullable: true},

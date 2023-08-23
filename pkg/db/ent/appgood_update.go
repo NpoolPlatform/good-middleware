@@ -312,6 +312,46 @@ func (agu *AppGoodUpdate) ClearServiceStartAt() *AppGoodUpdate {
 	return agu
 }
 
+// SetTechnicalFeeRatio sets the "technical_fee_ratio" field.
+func (agu *AppGoodUpdate) SetTechnicalFeeRatio(d decimal.Decimal) *AppGoodUpdate {
+	agu.mutation.SetTechnicalFeeRatio(d)
+	return agu
+}
+
+// SetNillableTechnicalFeeRatio sets the "technical_fee_ratio" field if the given value is not nil.
+func (agu *AppGoodUpdate) SetNillableTechnicalFeeRatio(d *decimal.Decimal) *AppGoodUpdate {
+	if d != nil {
+		agu.SetTechnicalFeeRatio(*d)
+	}
+	return agu
+}
+
+// ClearTechnicalFeeRatio clears the value of the "technical_fee_ratio" field.
+func (agu *AppGoodUpdate) ClearTechnicalFeeRatio() *AppGoodUpdate {
+	agu.mutation.ClearTechnicalFeeRatio()
+	return agu
+}
+
+// SetElectricityFeeRatio sets the "electricity_fee_ratio" field.
+func (agu *AppGoodUpdate) SetElectricityFeeRatio(d decimal.Decimal) *AppGoodUpdate {
+	agu.mutation.SetElectricityFeeRatio(d)
+	return agu
+}
+
+// SetNillableElectricityFeeRatio sets the "electricity_fee_ratio" field if the given value is not nil.
+func (agu *AppGoodUpdate) SetNillableElectricityFeeRatio(d *decimal.Decimal) *AppGoodUpdate {
+	if d != nil {
+		agu.SetElectricityFeeRatio(*d)
+	}
+	return agu
+}
+
+// ClearElectricityFeeRatio clears the value of the "electricity_fee_ratio" field.
+func (agu *AppGoodUpdate) ClearElectricityFeeRatio() *AppGoodUpdate {
+	agu.mutation.ClearElectricityFeeRatio()
+	return agu
+}
+
 // SetDescriptions sets the "descriptions" field.
 func (agu *AppGoodUpdate) SetDescriptions(s []string) *AppGoodUpdate {
 	agu.mutation.SetDescriptions(s)
@@ -833,6 +873,32 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appgood.FieldServiceStartAt,
 		})
 	}
+	if value, ok := agu.mutation.TechnicalFeeRatio(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldTechnicalFeeRatio,
+		})
+	}
+	if agu.mutation.TechnicalFeeRatioCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appgood.FieldTechnicalFeeRatio,
+		})
+	}
+	if value, ok := agu.mutation.ElectricityFeeRatio(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldElectricityFeeRatio,
+		})
+	}
+	if agu.mutation.ElectricityFeeRatioCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appgood.FieldElectricityFeeRatio,
+		})
+	}
 	if value, ok := agu.mutation.Descriptions(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeJSON,
@@ -1296,6 +1362,46 @@ func (aguo *AppGoodUpdateOne) AddServiceStartAt(u int32) *AppGoodUpdateOne {
 // ClearServiceStartAt clears the value of the "service_start_at" field.
 func (aguo *AppGoodUpdateOne) ClearServiceStartAt() *AppGoodUpdateOne {
 	aguo.mutation.ClearServiceStartAt()
+	return aguo
+}
+
+// SetTechnicalFeeRatio sets the "technical_fee_ratio" field.
+func (aguo *AppGoodUpdateOne) SetTechnicalFeeRatio(d decimal.Decimal) *AppGoodUpdateOne {
+	aguo.mutation.SetTechnicalFeeRatio(d)
+	return aguo
+}
+
+// SetNillableTechnicalFeeRatio sets the "technical_fee_ratio" field if the given value is not nil.
+func (aguo *AppGoodUpdateOne) SetNillableTechnicalFeeRatio(d *decimal.Decimal) *AppGoodUpdateOne {
+	if d != nil {
+		aguo.SetTechnicalFeeRatio(*d)
+	}
+	return aguo
+}
+
+// ClearTechnicalFeeRatio clears the value of the "technical_fee_ratio" field.
+func (aguo *AppGoodUpdateOne) ClearTechnicalFeeRatio() *AppGoodUpdateOne {
+	aguo.mutation.ClearTechnicalFeeRatio()
+	return aguo
+}
+
+// SetElectricityFeeRatio sets the "electricity_fee_ratio" field.
+func (aguo *AppGoodUpdateOne) SetElectricityFeeRatio(d decimal.Decimal) *AppGoodUpdateOne {
+	aguo.mutation.SetElectricityFeeRatio(d)
+	return aguo
+}
+
+// SetNillableElectricityFeeRatio sets the "electricity_fee_ratio" field if the given value is not nil.
+func (aguo *AppGoodUpdateOne) SetNillableElectricityFeeRatio(d *decimal.Decimal) *AppGoodUpdateOne {
+	if d != nil {
+		aguo.SetElectricityFeeRatio(*d)
+	}
+	return aguo
+}
+
+// ClearElectricityFeeRatio clears the value of the "electricity_fee_ratio" field.
+func (aguo *AppGoodUpdateOne) ClearElectricityFeeRatio() *AppGoodUpdateOne {
+	aguo.mutation.ClearElectricityFeeRatio()
 	return aguo
 }
 
@@ -1848,6 +1954,32 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: appgood.FieldServiceStartAt,
+		})
+	}
+	if value, ok := aguo.mutation.TechnicalFeeRatio(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldTechnicalFeeRatio,
+		})
+	}
+	if aguo.mutation.TechnicalFeeRatioCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appgood.FieldTechnicalFeeRatio,
+		})
+	}
+	if value, ok := aguo.mutation.ElectricityFeeRatio(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldElectricityFeeRatio,
+		})
+	}
+	if aguo.mutation.ElectricityFeeRatioCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appgood.FieldElectricityFeeRatio,
 		})
 	}
 	if value, ok := aguo.mutation.Descriptions(); ok {

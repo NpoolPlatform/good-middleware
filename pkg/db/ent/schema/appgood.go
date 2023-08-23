@@ -74,6 +74,20 @@ func (AppGood) Fields() []ent.Field {
 			Optional().
 			Default(0),
 		field.
+			Other("technical_fee_ratio", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.Decimal{}),
+		field.
+			Other("electricity_fee_ratio", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.Decimal{}),
+		field.
 			JSON("descriptions", []string{}).
 			Optional().
 			Default([]string{}),

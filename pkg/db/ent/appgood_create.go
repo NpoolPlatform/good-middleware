@@ -204,6 +204,34 @@ func (agc *AppGoodCreate) SetNillableServiceStartAt(u *uint32) *AppGoodCreate {
 	return agc
 }
 
+// SetTechnicalFeeRatio sets the "technical_fee_ratio" field.
+func (agc *AppGoodCreate) SetTechnicalFeeRatio(d decimal.Decimal) *AppGoodCreate {
+	agc.mutation.SetTechnicalFeeRatio(d)
+	return agc
+}
+
+// SetNillableTechnicalFeeRatio sets the "technical_fee_ratio" field if the given value is not nil.
+func (agc *AppGoodCreate) SetNillableTechnicalFeeRatio(d *decimal.Decimal) *AppGoodCreate {
+	if d != nil {
+		agc.SetTechnicalFeeRatio(*d)
+	}
+	return agc
+}
+
+// SetElectricityFeeRatio sets the "electricity_fee_ratio" field.
+func (agc *AppGoodCreate) SetElectricityFeeRatio(d decimal.Decimal) *AppGoodCreate {
+	agc.mutation.SetElectricityFeeRatio(d)
+	return agc
+}
+
+// SetNillableElectricityFeeRatio sets the "electricity_fee_ratio" field if the given value is not nil.
+func (agc *AppGoodCreate) SetNillableElectricityFeeRatio(d *decimal.Decimal) *AppGoodCreate {
+	if d != nil {
+		agc.SetElectricityFeeRatio(*d)
+	}
+	return agc
+}
+
 // SetDescriptions sets the "descriptions" field.
 func (agc *AppGoodCreate) SetDescriptions(s []string) *AppGoodCreate {
 	agc.mutation.SetDescriptions(s)
@@ -490,6 +518,14 @@ func (agc *AppGoodCreate) defaults() error {
 		v := appgood.DefaultServiceStartAt
 		agc.mutation.SetServiceStartAt(v)
 	}
+	if _, ok := agc.mutation.TechnicalFeeRatio(); !ok {
+		v := appgood.DefaultTechnicalFeeRatio
+		agc.mutation.SetTechnicalFeeRatio(v)
+	}
+	if _, ok := agc.mutation.ElectricityFeeRatio(); !ok {
+		v := appgood.DefaultElectricityFeeRatio
+		agc.mutation.SetElectricityFeeRatio(v)
+	}
 	if _, ok := agc.mutation.Descriptions(); !ok {
 		v := appgood.DefaultDescriptions
 		agc.mutation.SetDescriptions(v)
@@ -713,6 +749,22 @@ func (agc *AppGoodCreate) createSpec() (*AppGood, *sqlgraph.CreateSpec) {
 			Column: appgood.FieldServiceStartAt,
 		})
 		_node.ServiceStartAt = value
+	}
+	if value, ok := agc.mutation.TechnicalFeeRatio(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldTechnicalFeeRatio,
+		})
+		_node.TechnicalFeeRatio = value
+	}
+	if value, ok := agc.mutation.ElectricityFeeRatio(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldElectricityFeeRatio,
+		})
+		_node.ElectricityFeeRatio = value
 	}
 	if value, ok := agc.mutation.Descriptions(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -1131,6 +1183,42 @@ func (u *AppGoodUpsert) AddServiceStartAt(v uint32) *AppGoodUpsert {
 // ClearServiceStartAt clears the value of the "service_start_at" field.
 func (u *AppGoodUpsert) ClearServiceStartAt() *AppGoodUpsert {
 	u.SetNull(appgood.FieldServiceStartAt)
+	return u
+}
+
+// SetTechnicalFeeRatio sets the "technical_fee_ratio" field.
+func (u *AppGoodUpsert) SetTechnicalFeeRatio(v decimal.Decimal) *AppGoodUpsert {
+	u.Set(appgood.FieldTechnicalFeeRatio, v)
+	return u
+}
+
+// UpdateTechnicalFeeRatio sets the "technical_fee_ratio" field to the value that was provided on create.
+func (u *AppGoodUpsert) UpdateTechnicalFeeRatio() *AppGoodUpsert {
+	u.SetExcluded(appgood.FieldTechnicalFeeRatio)
+	return u
+}
+
+// ClearTechnicalFeeRatio clears the value of the "technical_fee_ratio" field.
+func (u *AppGoodUpsert) ClearTechnicalFeeRatio() *AppGoodUpsert {
+	u.SetNull(appgood.FieldTechnicalFeeRatio)
+	return u
+}
+
+// SetElectricityFeeRatio sets the "electricity_fee_ratio" field.
+func (u *AppGoodUpsert) SetElectricityFeeRatio(v decimal.Decimal) *AppGoodUpsert {
+	u.Set(appgood.FieldElectricityFeeRatio, v)
+	return u
+}
+
+// UpdateElectricityFeeRatio sets the "electricity_fee_ratio" field to the value that was provided on create.
+func (u *AppGoodUpsert) UpdateElectricityFeeRatio() *AppGoodUpsert {
+	u.SetExcluded(appgood.FieldElectricityFeeRatio)
+	return u
+}
+
+// ClearElectricityFeeRatio clears the value of the "electricity_fee_ratio" field.
+func (u *AppGoodUpsert) ClearElectricityFeeRatio() *AppGoodUpsert {
+	u.SetNull(appgood.FieldElectricityFeeRatio)
 	return u
 }
 
@@ -1718,6 +1806,48 @@ func (u *AppGoodUpsertOne) UpdateServiceStartAt() *AppGoodUpsertOne {
 func (u *AppGoodUpsertOne) ClearServiceStartAt() *AppGoodUpsertOne {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.ClearServiceStartAt()
+	})
+}
+
+// SetTechnicalFeeRatio sets the "technical_fee_ratio" field.
+func (u *AppGoodUpsertOne) SetTechnicalFeeRatio(v decimal.Decimal) *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetTechnicalFeeRatio(v)
+	})
+}
+
+// UpdateTechnicalFeeRatio sets the "technical_fee_ratio" field to the value that was provided on create.
+func (u *AppGoodUpsertOne) UpdateTechnicalFeeRatio() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateTechnicalFeeRatio()
+	})
+}
+
+// ClearTechnicalFeeRatio clears the value of the "technical_fee_ratio" field.
+func (u *AppGoodUpsertOne) ClearTechnicalFeeRatio() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearTechnicalFeeRatio()
+	})
+}
+
+// SetElectricityFeeRatio sets the "electricity_fee_ratio" field.
+func (u *AppGoodUpsertOne) SetElectricityFeeRatio(v decimal.Decimal) *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetElectricityFeeRatio(v)
+	})
+}
+
+// UpdateElectricityFeeRatio sets the "electricity_fee_ratio" field to the value that was provided on create.
+func (u *AppGoodUpsertOne) UpdateElectricityFeeRatio() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateElectricityFeeRatio()
+	})
+}
+
+// ClearElectricityFeeRatio clears the value of the "electricity_fee_ratio" field.
+func (u *AppGoodUpsertOne) ClearElectricityFeeRatio() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearElectricityFeeRatio()
 	})
 }
 
@@ -2508,6 +2638,48 @@ func (u *AppGoodUpsertBulk) UpdateServiceStartAt() *AppGoodUpsertBulk {
 func (u *AppGoodUpsertBulk) ClearServiceStartAt() *AppGoodUpsertBulk {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.ClearServiceStartAt()
+	})
+}
+
+// SetTechnicalFeeRatio sets the "technical_fee_ratio" field.
+func (u *AppGoodUpsertBulk) SetTechnicalFeeRatio(v decimal.Decimal) *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetTechnicalFeeRatio(v)
+	})
+}
+
+// UpdateTechnicalFeeRatio sets the "technical_fee_ratio" field to the value that was provided on create.
+func (u *AppGoodUpsertBulk) UpdateTechnicalFeeRatio() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateTechnicalFeeRatio()
+	})
+}
+
+// ClearTechnicalFeeRatio clears the value of the "technical_fee_ratio" field.
+func (u *AppGoodUpsertBulk) ClearTechnicalFeeRatio() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearTechnicalFeeRatio()
+	})
+}
+
+// SetElectricityFeeRatio sets the "electricity_fee_ratio" field.
+func (u *AppGoodUpsertBulk) SetElectricityFeeRatio(v decimal.Decimal) *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetElectricityFeeRatio(v)
+	})
+}
+
+// UpdateElectricityFeeRatio sets the "electricity_fee_ratio" field to the value that was provided on create.
+func (u *AppGoodUpsertBulk) UpdateElectricityFeeRatio() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateElectricityFeeRatio()
+	})
+}
+
+// ClearElectricityFeeRatio clears the value of the "electricity_fee_ratio" field.
+func (u *AppGoodUpsertBulk) ClearElectricityFeeRatio() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearElectricityFeeRatio()
 	})
 }
 

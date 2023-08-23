@@ -41,6 +41,10 @@ const (
 	FieldSaleEndAt = "sale_end_at"
 	// FieldServiceStartAt holds the string denoting the service_start_at field in the database.
 	FieldServiceStartAt = "service_start_at"
+	// FieldTechnicalFeeRatio holds the string denoting the technical_fee_ratio field in the database.
+	FieldTechnicalFeeRatio = "technical_fee_ratio"
+	// FieldElectricityFeeRatio holds the string denoting the electricity_fee_ratio field in the database.
+	FieldElectricityFeeRatio = "electricity_fee_ratio"
 	// FieldDescriptions holds the string denoting the descriptions field in the database.
 	FieldDescriptions = "descriptions"
 	// FieldGoodBanner holds the string denoting the good_banner field in the database.
@@ -86,6 +90,8 @@ var Columns = []string{
 	FieldSaleStartAt,
 	FieldSaleEndAt,
 	FieldServiceStartAt,
+	FieldTechnicalFeeRatio,
+	FieldElectricityFeeRatio,
 	FieldDescriptions,
 	FieldGoodBanner,
 	FieldDisplayNames,
@@ -145,6 +151,10 @@ var (
 	DefaultSaleEndAt uint32
 	// DefaultServiceStartAt holds the default value on creation for the "service_start_at" field.
 	DefaultServiceStartAt uint32
+	// DefaultTechnicalFeeRatio holds the default value on creation for the "technical_fee_ratio" field.
+	DefaultTechnicalFeeRatio decimal.Decimal
+	// DefaultElectricityFeeRatio holds the default value on creation for the "electricity_fee_ratio" field.
+	DefaultElectricityFeeRatio decimal.Decimal
 	// DefaultDescriptions holds the default value on creation for the "descriptions" field.
 	DefaultDescriptions []string
 	// DefaultGoodBanner holds the default value on creation for the "good_banner" field.
