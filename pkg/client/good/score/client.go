@@ -49,6 +49,22 @@ func CreateScore(ctx context.Context, in *npool.ScoreReq) (*npool.Score, error) 
 	return info.(*npool.Score), nil
 }
 
+func UpdateScore(ctx context.Context, in *npool.ScoreReq) (*npool.Score, error) {
+	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+		resp, err := cli.UpdateScore(ctx, &npool.UpdateScoreRequest{
+			Info: in,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.Score), nil
+}
+
 func GetScores(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.Score, uint32, error) {
 	total := uint32(0)
 
