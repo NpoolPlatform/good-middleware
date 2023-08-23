@@ -151,6 +151,7 @@ type Conds struct {
 	GoodType         *cruder.Cond
 	IDs              *cruder.Cond
 	Title            *cruder.Cond
+	RewardState      *cruder.Cond
 }
 
 //nolint

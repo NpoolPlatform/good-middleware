@@ -115,16 +115,23 @@ func (h *queryHandler) queryJoinReward(s *sql.Selector) {
 		).
 		OnP(
 			sql.EQ(t.C(entgoodreward.FieldDeletedAt), 0),
-		).
-		AppendSelect(
-			sql.As(t.C(entgoodreward.FieldRewardState), "reward_state"),
-			sql.As(t.C(entgoodreward.FieldLastRewardAt), "last_reward_at"),
-			sql.As(t.C(entgoodreward.FieldRewardTid), "reward_tid"),
-			sql.As(t.C(entgoodreward.FieldNextRewardStartAmount), "next_reward_start_amount"),
-			sql.As(t.C(entgoodreward.FieldLastRewardAmount), "last_reward_amount"),
-			sql.As(t.C(entgoodreward.FieldLastUnitRewardAmount), "last_unit_reward_amount"),
-			sql.As(t.C(entgoodreward.FieldTotalRewardAmount), "total_reward_amount"),
 		)
+
+	if h.Conds.RewardState != nil {
+		s.Where(
+			sql.EQ(t.C(entgoodreward.FieldRewardState), h.Conds.RewardState.Val.(types.BenefitState).String()),
+		)
+	}
+
+	s.AppendSelect(
+		sql.As(t.C(entgoodreward.FieldRewardState), "reward_state"),
+		sql.As(t.C(entgoodreward.FieldLastRewardAt), "last_reward_at"),
+		sql.As(t.C(entgoodreward.FieldRewardTid), "reward_tid"),
+		sql.As(t.C(entgoodreward.FieldNextRewardStartAmount), "next_reward_start_amount"),
+		sql.As(t.C(entgoodreward.FieldLastRewardAmount), "last_reward_amount"),
+		sql.As(t.C(entgoodreward.FieldLastUnitRewardAmount), "last_unit_reward_amount"),
+		sql.As(t.C(entgoodreward.FieldTotalRewardAmount), "total_reward_amount"),
+	)
 }
 
 //nolint:dupl
@@ -232,6 +239,7 @@ func (h *queryHandler) formalize() {
 		_ = json.Unmarshal([]byte(info.DevicePostersStr), &info.DevicePosters)
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
+		info.RewardState = types.BenefitState(types.BenefitState_value[info.RewardStateStr])
 		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
 		amount, err := decimal.NewFromString(info.UnitLockDeposit)

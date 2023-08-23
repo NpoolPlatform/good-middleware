@@ -555,6 +555,12 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				Val: types.GoodType(conds.GetGoodType().GetValue()),
 			}
 		}
+		if conds.RewardState != nil {
+			h.Conds.RewardState = &cruder.Cond{
+				Op:  conds.GetRewardState().GetOp(),
+				Val: types.BenefitState(conds.GetRewardState().GetValue()),
+			}
+		}
 		if conds.IDs != nil {
 			ids := []uuid.UUID{}
 			for _, id := range conds.GetIDs().GetValue() {
