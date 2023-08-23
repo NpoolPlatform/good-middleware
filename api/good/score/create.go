@@ -23,7 +23,7 @@ func (s *Server) CreateScore(ctx context.Context, in *npool.CreateScoreRequest) 
 	}
 	handler, err := score1.NewHandler(
 		ctx,
-		score1.WithID(req.ID, true),
+		score1.WithID(req.ID, false),
 		score1.WithAppID(req.AppID, true),
 		score1.WithUserID(req.UserID, true),
 		score1.WithGoodID(req.GoodID, true),
