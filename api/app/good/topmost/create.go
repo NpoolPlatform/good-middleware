@@ -24,7 +24,7 @@ func (s *Server) CreateTopMost(ctx context.Context, in *npool.CreateTopMostReque
 	}
 	handler, err := topmost1.NewHandler(
 		ctx,
-		topmost1.WithID(req.ID, true),
+		topmost1.WithID(req.ID, false),
 		topmost1.WithAppID(req.AppID, true),
 		topmost1.WithTopMostType(req.TopMostType, true),
 		topmost1.WithTitle(req.Title, true),
