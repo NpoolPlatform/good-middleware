@@ -113,6 +113,7 @@ func WithScore(s *string, must bool) func(context.Context, *Handler) error {
 			if must {
 				return fmt.Errorf("invalid score")
 			}
+			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
