@@ -969,15 +969,15 @@ func init() {
 	// topmostgood.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	topmostgood.DefaultDeletedAt = topmostgoodDescDeletedAt.Default.(func() uint32)
 	// topmostgoodDescDisplayIndex is the schema descriptor for display_index field.
-	topmostgoodDescDisplayIndex := topmostgoodFields[5].Descriptor()
+	topmostgoodDescDisplayIndex := topmostgoodFields[6].Descriptor()
 	// topmostgood.DefaultDisplayIndex holds the default value on creation for the display_index field.
 	topmostgood.DefaultDisplayIndex = topmostgoodDescDisplayIndex.Default.(uint32)
 	// topmostgoodDescPosters is the schema descriptor for posters field.
-	topmostgoodDescPosters := topmostgoodFields[6].Descriptor()
+	topmostgoodDescPosters := topmostgoodFields[7].Descriptor()
 	// topmostgood.DefaultPosters holds the default value on creation for the posters field.
 	topmostgood.DefaultPosters = topmostgoodDescPosters.Default.([]string)
 	// topmostgoodDescPrice is the schema descriptor for price field.
-	topmostgoodDescPrice := topmostgoodFields[7].Descriptor()
+	topmostgoodDescPrice := topmostgoodFields[8].Descriptor()
 	// topmostgood.DefaultPrice holds the default value on creation for the price field.
 	topmostgood.DefaultPrice = topmostgoodDescPrice.Default.(decimal.Decimal)
 	// topmostgoodDescID is the schema descriptor for id field.

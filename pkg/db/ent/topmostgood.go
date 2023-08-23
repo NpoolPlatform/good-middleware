@@ -30,6 +30,8 @@ type TopMostGood struct {
 	GoodID uuid.UUID `json:"good_id,omitempty"`
 	// AppGoodID holds the value of the "app_good_id" field.
 	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
+	// CoinTypeID holds the value of the "coin_type_id" field.
+	CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
 	// TopMostID holds the value of the "top_most_id" field.
 	TopMostID uuid.UUID `json:"top_most_id,omitempty"`
 	// DisplayIndex holds the value of the "display_index" field.
@@ -51,7 +53,7 @@ func (*TopMostGood) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case topmostgood.FieldCreatedAt, topmostgood.FieldUpdatedAt, topmostgood.FieldDeletedAt, topmostgood.FieldDisplayIndex:
 			values[i] = new(sql.NullInt64)
-		case topmostgood.FieldID, topmostgood.FieldAppID, topmostgood.FieldGoodID, topmostgood.FieldAppGoodID, topmostgood.FieldTopMostID:
+		case topmostgood.FieldID, topmostgood.FieldAppID, topmostgood.FieldGoodID, topmostgood.FieldAppGoodID, topmostgood.FieldCoinTypeID, topmostgood.FieldTopMostID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type TopMostGood", columns[i])
@@ -109,6 +111,12 @@ func (tmg *TopMostGood) assignValues(columns []string, values []interface{}) err
 				return fmt.Errorf("unexpected type %T for field app_good_id", values[i])
 			} else if value != nil {
 				tmg.AppGoodID = *value
+			}
+		case topmostgood.FieldCoinTypeID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field coin_type_id", values[i])
+			} else if value != nil {
+				tmg.CoinTypeID = *value
 			}
 		case topmostgood.FieldTopMostID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -181,6 +189,9 @@ func (tmg *TopMostGood) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("app_good_id=")
 	builder.WriteString(fmt.Sprintf("%v", tmg.AppGoodID))
+	builder.WriteString(", ")
+	builder.WriteString("coin_type_id=")
+	builder.WriteString(fmt.Sprintf("%v", tmg.CoinTypeID))
 	builder.WriteString(", ")
 	builder.WriteString("top_most_id=")
 	builder.WriteString(fmt.Sprintf("%v", tmg.TopMostID))

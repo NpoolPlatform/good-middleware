@@ -435,6 +435,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostgood.FieldAppID:        {Type: field.TypeUUID, Column: topmostgood.FieldAppID},
 			topmostgood.FieldGoodID:       {Type: field.TypeUUID, Column: topmostgood.FieldGoodID},
 			topmostgood.FieldAppGoodID:    {Type: field.TypeUUID, Column: topmostgood.FieldAppGoodID},
+			topmostgood.FieldCoinTypeID:   {Type: field.TypeUUID, Column: topmostgood.FieldCoinTypeID},
 			topmostgood.FieldTopMostID:    {Type: field.TypeUUID, Column: topmostgood.FieldTopMostID},
 			topmostgood.FieldDisplayIndex: {Type: field.TypeUint32, Column: topmostgood.FieldDisplayIndex},
 			topmostgood.FieldPosters:      {Type: field.TypeJSON, Column: topmostgood.FieldPosters},
@@ -2087,6 +2088,11 @@ func (f *TopMostGoodFilter) WhereGoodID(p entql.ValueP) {
 // WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
 func (f *TopMostGoodFilter) WhereAppGoodID(p entql.ValueP) {
 	f.Where(p.Field(topmostgood.FieldAppGoodID))
+}
+
+// WhereCoinTypeID applies the entql [16]byte predicate on the coin_type_id field.
+func (f *TopMostGoodFilter) WhereCoinTypeID(p entql.ValueP) {
+	f.Where(p.Field(topmostgood.FieldCoinTypeID))
 }
 
 // WhereTopMostID applies the entql [16]byte predicate on the top_most_id field.

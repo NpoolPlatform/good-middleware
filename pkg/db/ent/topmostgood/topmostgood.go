@@ -25,6 +25,8 @@ const (
 	FieldGoodID = "good_id"
 	// FieldAppGoodID holds the string denoting the app_good_id field in the database.
 	FieldAppGoodID = "app_good_id"
+	// FieldCoinTypeID holds the string denoting the coin_type_id field in the database.
+	FieldCoinTypeID = "coin_type_id"
 	// FieldTopMostID holds the string denoting the top_most_id field in the database.
 	FieldTopMostID = "top_most_id"
 	// FieldDisplayIndex holds the string denoting the display_index field in the database.
@@ -46,6 +48,7 @@ var Columns = []string{
 	FieldAppID,
 	FieldGoodID,
 	FieldAppGoodID,
+	FieldCoinTypeID,
 	FieldTopMostID,
 	FieldDisplayIndex,
 	FieldPosters,

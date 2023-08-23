@@ -34,6 +34,8 @@ func (TopMostGood) Fields() []ent.Field {
 		field.
 			UUID("app_good_id", uuid.UUID{}),
 		field.
+			UUID("coin_type_id", uuid.UUID{}),
+		field.
 			UUID("top_most_id", uuid.UUID{}),
 		field.
 			Uint32("display_index").

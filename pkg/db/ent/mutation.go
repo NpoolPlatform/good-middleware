@@ -18455,6 +18455,7 @@ type TopMostGoodMutation struct {
 	app_id           *uuid.UUID
 	good_id          *uuid.UUID
 	app_good_id      *uuid.UUID
+	coin_type_id     *uuid.UUID
 	top_most_id      *uuid.UUID
 	display_index    *uint32
 	adddisplay_index *int32
@@ -18846,6 +18847,42 @@ func (m *TopMostGoodMutation) ResetAppGoodID() {
 	m.app_good_id = nil
 }
 
+// SetCoinTypeID sets the "coin_type_id" field.
+func (m *TopMostGoodMutation) SetCoinTypeID(u uuid.UUID) {
+	m.coin_type_id = &u
+}
+
+// CoinTypeID returns the value of the "coin_type_id" field in the mutation.
+func (m *TopMostGoodMutation) CoinTypeID() (r uuid.UUID, exists bool) {
+	v := m.coin_type_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCoinTypeID returns the old "coin_type_id" field's value of the TopMostGood entity.
+// If the TopMostGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodMutation) OldCoinTypeID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCoinTypeID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCoinTypeID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCoinTypeID: %w", err)
+	}
+	return oldValue.CoinTypeID, nil
+}
+
+// ResetCoinTypeID resets all changes to the "coin_type_id" field.
+func (m *TopMostGoodMutation) ResetCoinTypeID() {
+	m.coin_type_id = nil
+}
+
 // SetTopMostID sets the "top_most_id" field.
 func (m *TopMostGoodMutation) SetTopMostID(u uuid.UUID) {
 	m.top_most_id = &u
@@ -19069,7 +19106,7 @@ func (m *TopMostGoodMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TopMostGoodMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, topmostgood.FieldCreatedAt)
 	}
@@ -19087,6 +19124,9 @@ func (m *TopMostGoodMutation) Fields() []string {
 	}
 	if m.app_good_id != nil {
 		fields = append(fields, topmostgood.FieldAppGoodID)
+	}
+	if m.coin_type_id != nil {
+		fields = append(fields, topmostgood.FieldCoinTypeID)
 	}
 	if m.top_most_id != nil {
 		fields = append(fields, topmostgood.FieldTopMostID)
@@ -19120,6 +19160,8 @@ func (m *TopMostGoodMutation) Field(name string) (ent.Value, bool) {
 		return m.GoodID()
 	case topmostgood.FieldAppGoodID:
 		return m.AppGoodID()
+	case topmostgood.FieldCoinTypeID:
+		return m.CoinTypeID()
 	case topmostgood.FieldTopMostID:
 		return m.TopMostID()
 	case topmostgood.FieldDisplayIndex:
@@ -19149,6 +19191,8 @@ func (m *TopMostGoodMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldGoodID(ctx)
 	case topmostgood.FieldAppGoodID:
 		return m.OldAppGoodID(ctx)
+	case topmostgood.FieldCoinTypeID:
+		return m.OldCoinTypeID(ctx)
 	case topmostgood.FieldTopMostID:
 		return m.OldTopMostID(ctx)
 	case topmostgood.FieldDisplayIndex:
@@ -19207,6 +19251,13 @@ func (m *TopMostGoodMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAppGoodID(v)
+		return nil
+	case topmostgood.FieldCoinTypeID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCoinTypeID(v)
 		return nil
 	case topmostgood.FieldTopMostID:
 		v, ok := value.(uuid.UUID)
@@ -19374,6 +19425,9 @@ func (m *TopMostGoodMutation) ResetField(name string) error {
 		return nil
 	case topmostgood.FieldAppGoodID:
 		m.ResetAppGoodID()
+		return nil
+	case topmostgood.FieldCoinTypeID:
+		m.ResetCoinTypeID()
 		return nil
 	case topmostgood.FieldTopMostID:
 		m.ResetTopMostID()

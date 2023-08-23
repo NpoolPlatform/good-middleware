@@ -16,6 +16,7 @@ type Req struct {
 	AppID        *uuid.UUID
 	GoodID       *uuid.UUID
 	AppGoodID    *uuid.UUID
+	CoinTypeID   *uuid.UUID
 	TopMostID    *uuid.UUID
 	DisplayIndex *uint32
 	Posters      []string
@@ -35,6 +36,9 @@ func CreateSet(c *ent.TopMostGoodCreate, req *Req) *ent.TopMostGoodCreate {
 	}
 	if req.AppGoodID != nil {
 		c.SetAppGoodID(*req.AppGoodID)
+	}
+	if req.CoinTypeID != nil {
+		c.SetCoinTypeID(*req.CoinTypeID)
 	}
 	if req.TopMostID != nil {
 		c.SetTopMostID(*req.TopMostID)
@@ -57,6 +61,9 @@ func UpdateSet(u *ent.TopMostGoodUpdateOne, req *Req) *ent.TopMostGoodUpdateOne 
 	}
 	if req.AppGoodID != nil {
 		u.SetAppGoodID(*req.AppGoodID)
+	}
+	if req.CoinTypeID != nil {
+		u.SetCoinTypeID(*req.CoinTypeID)
 	}
 	if req.TopMostID != nil {
 		u.SetTopMostID(*req.TopMostID)

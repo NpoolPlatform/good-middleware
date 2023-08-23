@@ -133,7 +133,7 @@ var topmost = topmostmwpb.TopMost{
 	Posters:                []string{uuid.NewString(), uuid.NewString()},
 	StartAt:                uint32(time.Now().Unix() + 1000),
 	EndAt:                  uint32(time.Now().Unix() + 6000),
-	ThresholdCredits:       uuid.NewString(),
+	ThresholdCredits:       "0",
 	RegisterElapsedSeconds: 3000,
 	ThresholdPurchases:     3000,
 	ThresholdPaymentAmount: "3000",
@@ -273,8 +273,6 @@ func createTopMostGood(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
-		WithAppID(&ret.AppID, true),
-		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
 		WithTopMostID(&ret.TopMostID, true),
 		WithDisplayIndex(&ret.DisplayIndex, true),
@@ -297,8 +295,6 @@ func updateTopMostGood(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
-		WithAppID(&ret.AppID, true),
-		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
 		WithTopMostID(&ret.TopMostID, true),
 		WithDisplayIndex(&ret.DisplayIndex, true),

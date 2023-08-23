@@ -213,11 +213,8 @@ func setup(t *testing.T) func(*testing.T) {
 
 func createDefault(t *testing.T) {
 	info, err := CreateDefault(context.Background(), &npool.DefaultReq{
-		ID:         &ret.ID,
-		AppID:      &ret.AppID,
-		GoodID:     &ret.GoodID,
-		AppGoodID:  &ret.AppGoodID,
-		CoinTypeID: &ret.CoinTypeID,
+		ID:        &ret.ID,
+		AppGoodID: &ret.AppGoodID,
 	})
 	if assert.Nil(t, err) {
 		ret.CreatedAt = info.CreatedAt

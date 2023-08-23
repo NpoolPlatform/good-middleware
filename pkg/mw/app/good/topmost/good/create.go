@@ -28,6 +28,7 @@ func (h *createHandler) createTopMostGood(ctx context.Context, tx *ent.Tx) error
 			GoodID:       h.GoodID,
 			TopMostID:    h.TopMostID,
 			AppGoodID:    h.AppGoodID,
+			CoinTypeID:   h.CoinTypeID,
 			DisplayIndex: h.DisplayIndex,
 			Posters:      h.Posters,
 			Price:        h.Price,

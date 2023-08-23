@@ -398,6 +398,7 @@ var (
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "good_id", Type: field.TypeUUID},
 		{Name: "app_good_id", Type: field.TypeUUID},
+		{Name: "coin_type_id", Type: field.TypeUUID},
 		{Name: "top_most_id", Type: field.TypeUUID},
 		{Name: "display_index", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "posters", Type: field.TypeJSON, Nullable: true},

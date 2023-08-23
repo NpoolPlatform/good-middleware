@@ -84,6 +84,12 @@ func (tmgc *TopMostGoodCreate) SetAppGoodID(u uuid.UUID) *TopMostGoodCreate {
 	return tmgc
 }
 
+// SetCoinTypeID sets the "coin_type_id" field.
+func (tmgc *TopMostGoodCreate) SetCoinTypeID(u uuid.UUID) *TopMostGoodCreate {
+	tmgc.mutation.SetCoinTypeID(u)
+	return tmgc
+}
+
 // SetTopMostID sets the "top_most_id" field.
 func (tmgc *TopMostGoodCreate) SetTopMostID(u uuid.UUID) *TopMostGoodCreate {
 	tmgc.mutation.SetTopMostID(u)
@@ -280,6 +286,9 @@ func (tmgc *TopMostGoodCreate) check() error {
 	if _, ok := tmgc.mutation.AppGoodID(); !ok {
 		return &ValidationError{Name: "app_good_id", err: errors.New(`ent: missing required field "TopMostGood.app_good_id"`)}
 	}
+	if _, ok := tmgc.mutation.CoinTypeID(); !ok {
+		return &ValidationError{Name: "coin_type_id", err: errors.New(`ent: missing required field "TopMostGood.coin_type_id"`)}
+	}
 	if _, ok := tmgc.mutation.TopMostID(); !ok {
 		return &ValidationError{Name: "top_most_id", err: errors.New(`ent: missing required field "TopMostGood.top_most_id"`)}
 	}
@@ -367,6 +376,14 @@ func (tmgc *TopMostGoodCreate) createSpec() (*TopMostGood, *sqlgraph.CreateSpec)
 			Column: topmostgood.FieldAppGoodID,
 		})
 		_node.AppGoodID = value
+	}
+	if value, ok := tmgc.mutation.CoinTypeID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: topmostgood.FieldCoinTypeID,
+		})
+		_node.CoinTypeID = value
 	}
 	if value, ok := tmgc.mutation.TopMostID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -541,6 +558,18 @@ func (u *TopMostGoodUpsert) SetAppGoodID(v uuid.UUID) *TopMostGoodUpsert {
 // UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
 func (u *TopMostGoodUpsert) UpdateAppGoodID() *TopMostGoodUpsert {
 	u.SetExcluded(topmostgood.FieldAppGoodID)
+	return u
+}
+
+// SetCoinTypeID sets the "coin_type_id" field.
+func (u *TopMostGoodUpsert) SetCoinTypeID(v uuid.UUID) *TopMostGoodUpsert {
+	u.Set(topmostgood.FieldCoinTypeID, v)
+	return u
+}
+
+// UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
+func (u *TopMostGoodUpsert) UpdateCoinTypeID() *TopMostGoodUpsert {
+	u.SetExcluded(topmostgood.FieldCoinTypeID)
 	return u
 }
 
@@ -768,6 +797,20 @@ func (u *TopMostGoodUpsertOne) SetAppGoodID(v uuid.UUID) *TopMostGoodUpsertOne {
 func (u *TopMostGoodUpsertOne) UpdateAppGoodID() *TopMostGoodUpsertOne {
 	return u.Update(func(s *TopMostGoodUpsert) {
 		s.UpdateAppGoodID()
+	})
+}
+
+// SetCoinTypeID sets the "coin_type_id" field.
+func (u *TopMostGoodUpsertOne) SetCoinTypeID(v uuid.UUID) *TopMostGoodUpsertOne {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.SetCoinTypeID(v)
+	})
+}
+
+// UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
+func (u *TopMostGoodUpsertOne) UpdateCoinTypeID() *TopMostGoodUpsertOne {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.UpdateCoinTypeID()
 	})
 }
 
@@ -1173,6 +1216,20 @@ func (u *TopMostGoodUpsertBulk) SetAppGoodID(v uuid.UUID) *TopMostGoodUpsertBulk
 func (u *TopMostGoodUpsertBulk) UpdateAppGoodID() *TopMostGoodUpsertBulk {
 	return u.Update(func(s *TopMostGoodUpsert) {
 		s.UpdateAppGoodID()
+	})
+}
+
+// SetCoinTypeID sets the "coin_type_id" field.
+func (u *TopMostGoodUpsertBulk) SetCoinTypeID(v uuid.UUID) *TopMostGoodUpsertBulk {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.SetCoinTypeID(v)
+	})
+}
+
+// UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
+func (u *TopMostGoodUpsertBulk) UpdateCoinTypeID() *TopMostGoodUpsertBulk {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.UpdateCoinTypeID()
 	})
 }
 

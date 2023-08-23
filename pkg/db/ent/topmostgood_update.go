@@ -103,6 +103,12 @@ func (tmgu *TopMostGoodUpdate) SetAppGoodID(u uuid.UUID) *TopMostGoodUpdate {
 	return tmgu
 }
 
+// SetCoinTypeID sets the "coin_type_id" field.
+func (tmgu *TopMostGoodUpdate) SetCoinTypeID(u uuid.UUID) *TopMostGoodUpdate {
+	tmgu.mutation.SetCoinTypeID(u)
+	return tmgu
+}
+
 // SetTopMostID sets the "top_most_id" field.
 func (tmgu *TopMostGoodUpdate) SetTopMostID(u uuid.UUID) *TopMostGoodUpdate {
 	tmgu.mutation.SetTopMostID(u)
@@ -329,6 +335,13 @@ func (tmgu *TopMostGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: topmostgood.FieldAppGoodID,
 		})
 	}
+	if value, ok := tmgu.mutation.CoinTypeID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: topmostgood.FieldCoinTypeID,
+		})
+	}
 	if value, ok := tmgu.mutation.TopMostID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -473,6 +486,12 @@ func (tmguo *TopMostGoodUpdateOne) SetGoodID(u uuid.UUID) *TopMostGoodUpdateOne 
 // SetAppGoodID sets the "app_good_id" field.
 func (tmguo *TopMostGoodUpdateOne) SetAppGoodID(u uuid.UUID) *TopMostGoodUpdateOne {
 	tmguo.mutation.SetAppGoodID(u)
+	return tmguo
+}
+
+// SetCoinTypeID sets the "coin_type_id" field.
+func (tmguo *TopMostGoodUpdateOne) SetCoinTypeID(u uuid.UUID) *TopMostGoodUpdateOne {
+	tmguo.mutation.SetCoinTypeID(u)
 	return tmguo
 }
 
@@ -730,6 +749,13 @@ func (tmguo *TopMostGoodUpdateOne) sqlSave(ctx context.Context) (_node *TopMostG
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: topmostgood.FieldAppGoodID,
+		})
+	}
+	if value, ok := tmguo.mutation.CoinTypeID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: topmostgood.FieldCoinTypeID,
 		})
 	}
 	if value, ok := tmguo.mutation.TopMostID(); ok {
