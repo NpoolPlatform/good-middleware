@@ -126,6 +126,8 @@ var ret = npool.Good{
 	LastRewardAmount:       decimal.NewFromInt(0).String(),
 	TotalRewardAmount:      decimal.NewFromInt(0).String(),
 	LastUnitRewardAmount:   decimal.NewFromInt(0).String(),
+	TechnicalFeeRatio:      "0",
+	ElectricityFeeRatio:    "0",
 }
 
 func setup(t *testing.T) func(*testing.T) {
