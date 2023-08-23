@@ -32,10 +32,10 @@ func (s *Server) CreateTopMost(ctx context.Context, in *npool.CreateTopMostReque
 		topmost1.WithPosters(req.Posters, true),
 		topmost1.WithStartAt(req.StartAt, true),
 		topmost1.WithEndAt(req.EndAt, true),
-		topmost1.WithThresholdCredits(req.ThresholdCredits, true),
-		topmost1.WithRegisterElapsedSeconds(req.RegisterElapsedSeconds, true),
-		topmost1.WithThresholdPurchases(req.ThresholdPurchases, true),
-		topmost1.WithThresholdPaymentAmount(req.ThresholdPaymentAmount, true),
+		topmost1.WithThresholdCredits(req.ThresholdCredits, false),
+		topmost1.WithRegisterElapsedSeconds(req.RegisterElapsedSeconds, false),
+		topmost1.WithThresholdPurchases(req.ThresholdPurchases, false),
+		topmost1.WithThresholdPaymentAmount(req.ThresholdPaymentAmount, false),
 		topmost1.WithKycMust(req.KycMust, true),
 	)
 	if err != nil {
