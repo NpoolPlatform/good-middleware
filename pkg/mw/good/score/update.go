@@ -78,16 +78,16 @@ func (h *updateHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) UpdateScore(ctx context.Context) (*npool.Score, error) {
-	if h.Score == nil {
-		return nil, nil
-	}
-
 	info, err := h.GetScore(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if info == nil {
 		return nil, fmt.Errorf("invalid score")
+	}
+
+	if h.Score == nil {
+		return info, nil
 	}
 
 	goodID := uuid.MustParse(info.GoodID)

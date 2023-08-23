@@ -87,6 +87,10 @@ func (h *Handler) UpdateLike(ctx context.Context) (*npool.Like, error) {
 		return nil, fmt.Errorf("invalid like")
 	}
 
+	if h.Like == nil {
+		return info, nil
+	}
+
 	goodID := uuid.MustParse(info.GoodID)
 	h.GoodID = &goodID
 	handler := &updateHandler{
