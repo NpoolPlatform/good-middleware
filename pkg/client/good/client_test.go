@@ -91,6 +91,7 @@ var ret = npool.Good{
 	TotalRewardAmount:     decimal.NewFromInt(0).String(),
 	GoodTypeStr:           types.GoodType_PowerRenting.String(),
 	BenefitTypeStr:        types.BenefitType_BenefitTypePlatform.String(),
+	RewardState:           types.BenefitState_BenefitWait,
 }
 
 func setup(t *testing.T) func(*testing.T) {

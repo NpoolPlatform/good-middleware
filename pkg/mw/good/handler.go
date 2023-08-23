@@ -121,6 +121,12 @@ func WithCoinTypeID(id *string, must bool) func(context.Context, *Handler) error
 
 func WithVendorLocationID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid vendorlocationid")
+			}
+			return nil
+		}
 		handler, err := vendorlocation1.NewHandler(
 			ctx,
 			vendorlocation1.WithID(id, true),

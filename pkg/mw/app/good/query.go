@@ -259,7 +259,7 @@ func (h *queryHandler) formalize() {
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
-		_ = json.Unmarshal([]byte(info.DisplayNamesStr), &info.Posters)
+		_ = json.Unmarshal([]byte(info.DisplayNamesStr), &info.DisplayNames)
 		_ = json.Unmarshal([]byte(info.AppGoodPostersStr), &info.AppGoodPosters)
 		amount, err := decimal.NewFromString(info.GoodTotal)
 		if err != nil {
