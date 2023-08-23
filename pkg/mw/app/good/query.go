@@ -15,6 +15,7 @@ import (
 	entdeviceinfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	entextrainfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	entgoodreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	entvendorbrand "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	entvendorlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
@@ -150,6 +151,23 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 		)
 }
 
+func (h *queryHandler) queryJoinGoodReward(s *sql.Selector) {
+	t := sql.Table(entgoodreward.Table)
+	s.LeftJoin(t).
+		On(
+			s.C(entappgood.FieldGoodID),
+			t.C(entgoodreward.FieldGoodID),
+		).
+		OnP(
+			sql.EQ(t.C(entextrainfo.FieldDeletedAt), 0),
+		).
+		AppendSelect(
+			sql.As(t.C(entgoodreward.FieldLastRewardAt), "last_reward_at"),
+			sql.As(t.C(entgoodreward.FieldLastRewardAmount), "last_reward_amount"),
+			sql.As(t.C(entgoodreward.FieldLastUnitRewardAmount), "last_unit_reward_amount"),
+		)
+}
+
 func (h *queryHandler) queryJoinExtraInfo(s *sql.Selector) {
 	t := sql.Table(entextrainfo.Table)
 	s.LeftJoin(t).
@@ -216,6 +234,7 @@ func (h *queryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
 		h.queryJoinGood(s)
+		h.queryJoinGoodReward(s)
 		h.queryJoinExtraInfo(s)
 		h.queryJoinStock(s)
 		h.queryJoinAppStock(s)
@@ -224,7 +243,7 @@ func (h *queryHandler) queryJoin() {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
-		h.queryJoinGood(s)
+		h.queryJoinGoodReward(s)
 		h.queryJoinExtraInfo(s)
 		h.queryJoinStock(s)
 	})
@@ -330,6 +349,18 @@ func (h *queryHandler) formalize() {
 			info.AppGoodSold = decimal.NewFromInt(0).String()
 		} else {
 			info.AppGoodSold = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.LastRewardAmount)
+		if err != nil {
+			info.LastRewardAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.LastRewardAmount = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.LastUnitRewardAmount)
+		if err != nil {
+			info.LastUnitRewardAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.LastUnitRewardAmount = amount.String()
 		}
 	}
 }

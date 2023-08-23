@@ -198,6 +198,46 @@ func (gru *GoodRewardUpdate) ClearLastRewardAmount() *GoodRewardUpdate {
 	return gru
 }
 
+// SetLastUnitRewardAmount sets the "last_unit_reward_amount" field.
+func (gru *GoodRewardUpdate) SetLastUnitRewardAmount(d decimal.Decimal) *GoodRewardUpdate {
+	gru.mutation.SetLastUnitRewardAmount(d)
+	return gru
+}
+
+// SetNillableLastUnitRewardAmount sets the "last_unit_reward_amount" field if the given value is not nil.
+func (gru *GoodRewardUpdate) SetNillableLastUnitRewardAmount(d *decimal.Decimal) *GoodRewardUpdate {
+	if d != nil {
+		gru.SetLastUnitRewardAmount(*d)
+	}
+	return gru
+}
+
+// ClearLastUnitRewardAmount clears the value of the "last_unit_reward_amount" field.
+func (gru *GoodRewardUpdate) ClearLastUnitRewardAmount() *GoodRewardUpdate {
+	gru.mutation.ClearLastUnitRewardAmount()
+	return gru
+}
+
+// SetTotalRewardAmount sets the "total_reward_amount" field.
+func (gru *GoodRewardUpdate) SetTotalRewardAmount(d decimal.Decimal) *GoodRewardUpdate {
+	gru.mutation.SetTotalRewardAmount(d)
+	return gru
+}
+
+// SetNillableTotalRewardAmount sets the "total_reward_amount" field if the given value is not nil.
+func (gru *GoodRewardUpdate) SetNillableTotalRewardAmount(d *decimal.Decimal) *GoodRewardUpdate {
+	if d != nil {
+		gru.SetTotalRewardAmount(*d)
+	}
+	return gru
+}
+
+// ClearTotalRewardAmount clears the value of the "total_reward_amount" field.
+func (gru *GoodRewardUpdate) ClearTotalRewardAmount() *GoodRewardUpdate {
+	gru.mutation.ClearTotalRewardAmount()
+	return gru
+}
+
 // Mutation returns the GoodRewardMutation object of the builder.
 func (gru *GoodRewardUpdate) Mutation() *GoodRewardMutation {
 	return gru.mutation
@@ -417,6 +457,32 @@ func (gru *GoodRewardUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: goodreward.FieldLastRewardAmount,
 		})
 	}
+	if value, ok := gru.mutation.LastUnitRewardAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: goodreward.FieldLastUnitRewardAmount,
+		})
+	}
+	if gru.mutation.LastUnitRewardAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: goodreward.FieldLastUnitRewardAmount,
+		})
+	}
+	if value, ok := gru.mutation.TotalRewardAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: goodreward.FieldTotalRewardAmount,
+		})
+	}
+	if gru.mutation.TotalRewardAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: goodreward.FieldTotalRewardAmount,
+		})
+	}
 	_spec.Modifiers = gru.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, gru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -603,6 +669,46 @@ func (gruo *GoodRewardUpdateOne) SetNillableLastRewardAmount(d *decimal.Decimal)
 // ClearLastRewardAmount clears the value of the "last_reward_amount" field.
 func (gruo *GoodRewardUpdateOne) ClearLastRewardAmount() *GoodRewardUpdateOne {
 	gruo.mutation.ClearLastRewardAmount()
+	return gruo
+}
+
+// SetLastUnitRewardAmount sets the "last_unit_reward_amount" field.
+func (gruo *GoodRewardUpdateOne) SetLastUnitRewardAmount(d decimal.Decimal) *GoodRewardUpdateOne {
+	gruo.mutation.SetLastUnitRewardAmount(d)
+	return gruo
+}
+
+// SetNillableLastUnitRewardAmount sets the "last_unit_reward_amount" field if the given value is not nil.
+func (gruo *GoodRewardUpdateOne) SetNillableLastUnitRewardAmount(d *decimal.Decimal) *GoodRewardUpdateOne {
+	if d != nil {
+		gruo.SetLastUnitRewardAmount(*d)
+	}
+	return gruo
+}
+
+// ClearLastUnitRewardAmount clears the value of the "last_unit_reward_amount" field.
+func (gruo *GoodRewardUpdateOne) ClearLastUnitRewardAmount() *GoodRewardUpdateOne {
+	gruo.mutation.ClearLastUnitRewardAmount()
+	return gruo
+}
+
+// SetTotalRewardAmount sets the "total_reward_amount" field.
+func (gruo *GoodRewardUpdateOne) SetTotalRewardAmount(d decimal.Decimal) *GoodRewardUpdateOne {
+	gruo.mutation.SetTotalRewardAmount(d)
+	return gruo
+}
+
+// SetNillableTotalRewardAmount sets the "total_reward_amount" field if the given value is not nil.
+func (gruo *GoodRewardUpdateOne) SetNillableTotalRewardAmount(d *decimal.Decimal) *GoodRewardUpdateOne {
+	if d != nil {
+		gruo.SetTotalRewardAmount(*d)
+	}
+	return gruo
+}
+
+// ClearTotalRewardAmount clears the value of the "total_reward_amount" field.
+func (gruo *GoodRewardUpdateOne) ClearTotalRewardAmount() *GoodRewardUpdateOne {
+	gruo.mutation.ClearTotalRewardAmount()
 	return gruo
 }
 
@@ -853,6 +959,32 @@ func (gruo *GoodRewardUpdateOne) sqlSave(ctx context.Context) (_node *GoodReward
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: goodreward.FieldLastRewardAmount,
+		})
+	}
+	if value, ok := gruo.mutation.LastUnitRewardAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: goodreward.FieldLastUnitRewardAmount,
+		})
+	}
+	if gruo.mutation.LastUnitRewardAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: goodreward.FieldLastUnitRewardAmount,
+		})
+	}
+	if value, ok := gruo.mutation.TotalRewardAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: goodreward.FieldTotalRewardAmount,
+		})
+	}
+	if gruo.mutation.TotalRewardAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: goodreward.FieldTotalRewardAmount,
 		})
 	}
 	_spec.Modifiers = gruo.modifiers

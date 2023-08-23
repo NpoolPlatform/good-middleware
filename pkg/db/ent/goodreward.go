@@ -35,6 +35,10 @@ type GoodReward struct {
 	NextRewardStartAmount decimal.Decimal `json:"next_reward_start_amount,omitempty"`
 	// LastRewardAmount holds the value of the "last_reward_amount" field.
 	LastRewardAmount decimal.Decimal `json:"last_reward_amount,omitempty"`
+	// LastUnitRewardAmount holds the value of the "last_unit_reward_amount" field.
+	LastUnitRewardAmount decimal.Decimal `json:"last_unit_reward_amount,omitempty"`
+	// TotalRewardAmount holds the value of the "total_reward_amount" field.
+	TotalRewardAmount decimal.Decimal `json:"total_reward_amount,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -42,7 +46,7 @@ func (*GoodReward) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case goodreward.FieldNextRewardStartAmount, goodreward.FieldLastRewardAmount:
+		case goodreward.FieldNextRewardStartAmount, goodreward.FieldLastRewardAmount, goodreward.FieldLastUnitRewardAmount, goodreward.FieldTotalRewardAmount:
 			values[i] = new(decimal.Decimal)
 		case goodreward.FieldCreatedAt, goodreward.FieldUpdatedAt, goodreward.FieldDeletedAt, goodreward.FieldLastRewardAt:
 			values[i] = new(sql.NullInt64)
@@ -125,6 +129,18 @@ func (gr *GoodReward) assignValues(columns []string, values []interface{}) error
 			} else if value != nil {
 				gr.LastRewardAmount = *value
 			}
+		case goodreward.FieldLastUnitRewardAmount:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field last_unit_reward_amount", values[i])
+			} else if value != nil {
+				gr.LastUnitRewardAmount = *value
+			}
+		case goodreward.FieldTotalRewardAmount:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field total_reward_amount", values[i])
+			} else if value != nil {
+				gr.TotalRewardAmount = *value
+			}
 		}
 	}
 	return nil
@@ -179,6 +195,12 @@ func (gr *GoodReward) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("last_reward_amount=")
 	builder.WriteString(fmt.Sprintf("%v", gr.LastRewardAmount))
+	builder.WriteString(", ")
+	builder.WriteString("last_unit_reward_amount=")
+	builder.WriteString(fmt.Sprintf("%v", gr.LastUnitRewardAmount))
+	builder.WriteString(", ")
+	builder.WriteString("total_reward_amount=")
+	builder.WriteString(fmt.Sprintf("%v", gr.TotalRewardAmount))
 	builder.WriteByte(')')
 	return builder.String()
 }

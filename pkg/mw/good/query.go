@@ -122,6 +122,8 @@ func (h *queryHandler) queryJoinReward(s *sql.Selector) {
 			sql.As(t.C(entgoodreward.FieldRewardTid), "reward_tid"),
 			sql.As(t.C(entgoodreward.FieldNextRewardStartAmount), "next_reward_start_amount"),
 			sql.As(t.C(entgoodreward.FieldLastRewardAmount), "last_reward_amount"),
+			sql.As(t.C(entgoodreward.FieldLastUnitRewardAmount), "last_unit_reward_amount"),
+			sql.As(t.C(entgoodreward.FieldTotalRewardAmount), "total_reward_amount"),
 		)
 }
 
@@ -289,6 +291,18 @@ func (h *queryHandler) formalize() {
 			info.LastRewardAmount = decimal.NewFromInt(0).String()
 		} else {
 			info.LastRewardAmount = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.LastUnitRewardAmount)
+		if err != nil {
+			info.LastUnitRewardAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.LastUnitRewardAmount = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.TotalRewardAmount)
+		if err != nil {
+			info.TotalRewardAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.TotalRewardAmount = amount.String()
 		}
 		amount, err = decimal.NewFromString(info.Score)
 		if err != nil {

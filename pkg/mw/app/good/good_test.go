@@ -120,6 +120,8 @@ var ret = npool.Good{
 	BenefitTypeStr:         good.BenefitType.String(),
 	GoodTypeStr:            good.GoodType.String(),
 	UserPurchaseLimit:      decimal.NewFromInt(0).String(),
+	LastRewardAmount:       decimal.NewFromInt(0).String(),
+	LastUnitRewardAmount:   decimal.NewFromInt(0).String(),
 }
 
 func setup(t *testing.T) func(*testing.T) {

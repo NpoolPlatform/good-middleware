@@ -94,6 +94,11 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 		return fmt.Errorf("invalid rewardstate")
 	}
 
+	totalReward := info.TotalRewardAmount
+	if h.RewardAmount != nil {
+		totalReward = h.RewardAmount.Add(totalReward)
+	}
+
 	if _, err := rewardcrud.UpdateSet(
 		info.Update(),
 		&rewardcrud.Req{
@@ -102,6 +107,8 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 			RewardTID:             h.RewardTID,
 			NextRewardStartAmount: h.NextRewardStartAmount,
 			LastRewardAmount:      h.RewardAmount,
+			TotalRewardAmount:     &totalReward,
+			LastUnitRewardAmount:  h.UnitRewardAmount,
 		},
 	).Save(ctx); err != nil {
 		return err

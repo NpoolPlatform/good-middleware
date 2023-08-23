@@ -86,6 +86,8 @@ var ret = npool.Good{
 	RewardTID:             uuid.Nil.String(),
 	NextRewardStartAmount: decimal.NewFromInt(0).String(),
 	LastRewardAmount:      decimal.NewFromInt(0).String(),
+	LastUnitRewardAmount:  decimal.NewFromInt(0).String(),
+	TotalRewardAmount:     decimal.NewFromInt(0).String(),
 	GoodTypeStr:           types.GoodType_PowerRenting.String(),
 	BenefitTypeStr:        types.BenefitType_BenefitTypePlatform.String(),
 }

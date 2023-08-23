@@ -540,6 +540,14 @@ func init() {
 	goodrewardDescLastRewardAmount := goodrewardFields[6].Descriptor()
 	// goodreward.DefaultLastRewardAmount holds the default value on creation for the last_reward_amount field.
 	goodreward.DefaultLastRewardAmount = goodrewardDescLastRewardAmount.Default.(decimal.Decimal)
+	// goodrewardDescLastUnitRewardAmount is the schema descriptor for last_unit_reward_amount field.
+	goodrewardDescLastUnitRewardAmount := goodrewardFields[7].Descriptor()
+	// goodreward.DefaultLastUnitRewardAmount holds the default value on creation for the last_unit_reward_amount field.
+	goodreward.DefaultLastUnitRewardAmount = goodrewardDescLastUnitRewardAmount.Default.(decimal.Decimal)
+	// goodrewardDescTotalRewardAmount is the schema descriptor for total_reward_amount field.
+	goodrewardDescTotalRewardAmount := goodrewardFields[8].Descriptor()
+	// goodreward.DefaultTotalRewardAmount holds the default value on creation for the total_reward_amount field.
+	goodreward.DefaultTotalRewardAmount = goodrewardDescTotalRewardAmount.Default.(decimal.Decimal)
 	// goodrewardDescID is the schema descriptor for id field.
 	goodrewardDescID := goodrewardFields[0].Descriptor()
 	// goodreward.DefaultID holds the default value on creation for the id field.

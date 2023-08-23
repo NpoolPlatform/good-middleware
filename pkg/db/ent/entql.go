@@ -237,6 +237,8 @@ var schemaGraph = func() *sqlgraph.Schema {
 			goodreward.FieldRewardTid:             {Type: field.TypeUUID, Column: goodreward.FieldRewardTid},
 			goodreward.FieldNextRewardStartAmount: {Type: field.TypeOther, Column: goodreward.FieldNextRewardStartAmount},
 			goodreward.FieldLastRewardAmount:      {Type: field.TypeOther, Column: goodreward.FieldLastRewardAmount},
+			goodreward.FieldLastUnitRewardAmount:  {Type: field.TypeOther, Column: goodreward.FieldLastUnitRewardAmount},
+			goodreward.FieldTotalRewardAmount:     {Type: field.TypeOther, Column: goodreward.FieldTotalRewardAmount},
 		},
 	}
 	graph.Nodes[8] = &sqlgraph.Node{
@@ -1319,6 +1321,16 @@ func (f *GoodRewardFilter) WhereNextRewardStartAmount(p entql.OtherP) {
 // WhereLastRewardAmount applies the entql other predicate on the last_reward_amount field.
 func (f *GoodRewardFilter) WhereLastRewardAmount(p entql.OtherP) {
 	f.Where(p.Field(goodreward.FieldLastRewardAmount))
+}
+
+// WhereLastUnitRewardAmount applies the entql other predicate on the last_unit_reward_amount field.
+func (f *GoodRewardFilter) WhereLastUnitRewardAmount(p entql.OtherP) {
+	f.Where(p.Field(goodreward.FieldLastUnitRewardAmount))
+}
+
+// WhereTotalRewardAmount applies the entql other predicate on the total_reward_amount field.
+func (f *GoodRewardFilter) WhereTotalRewardAmount(p entql.OtherP) {
+	f.Where(p.Field(goodreward.FieldTotalRewardAmount))
 }
 
 // addPredicate implements the predicateAdder interface.

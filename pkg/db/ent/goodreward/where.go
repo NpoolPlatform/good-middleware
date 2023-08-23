@@ -143,6 +143,20 @@ func LastRewardAmount(v decimal.Decimal) predicate.GoodReward {
 	})
 }
 
+// LastUnitRewardAmount applies equality check predicate on the "last_unit_reward_amount" field. It's identical to LastUnitRewardAmountEQ.
+func LastUnitRewardAmount(v decimal.Decimal) predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldLastUnitRewardAmount), v))
+	})
+}
+
+// TotalRewardAmount applies equality check predicate on the "total_reward_amount" field. It's identical to TotalRewardAmountEQ.
+func TotalRewardAmount(v decimal.Decimal) predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTotalRewardAmount), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.GoodReward {
 	return predicate.GoodReward(func(s *sql.Selector) {
@@ -821,6 +835,162 @@ func LastRewardAmountIsNil() predicate.GoodReward {
 func LastRewardAmountNotNil() predicate.GoodReward {
 	return predicate.GoodReward(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldLastRewardAmount)))
+	})
+}
+
+// LastUnitRewardAmountEQ applies the EQ predicate on the "last_unit_reward_amount" field.
+func LastUnitRewardAmountEQ(v decimal.Decimal) predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldLastUnitRewardAmount), v))
+	})
+}
+
+// LastUnitRewardAmountNEQ applies the NEQ predicate on the "last_unit_reward_amount" field.
+func LastUnitRewardAmountNEQ(v decimal.Decimal) predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldLastUnitRewardAmount), v))
+	})
+}
+
+// LastUnitRewardAmountIn applies the In predicate on the "last_unit_reward_amount" field.
+func LastUnitRewardAmountIn(vs ...decimal.Decimal) predicate.GoodReward {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldLastUnitRewardAmount), v...))
+	})
+}
+
+// LastUnitRewardAmountNotIn applies the NotIn predicate on the "last_unit_reward_amount" field.
+func LastUnitRewardAmountNotIn(vs ...decimal.Decimal) predicate.GoodReward {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldLastUnitRewardAmount), v...))
+	})
+}
+
+// LastUnitRewardAmountGT applies the GT predicate on the "last_unit_reward_amount" field.
+func LastUnitRewardAmountGT(v decimal.Decimal) predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldLastUnitRewardAmount), v))
+	})
+}
+
+// LastUnitRewardAmountGTE applies the GTE predicate on the "last_unit_reward_amount" field.
+func LastUnitRewardAmountGTE(v decimal.Decimal) predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldLastUnitRewardAmount), v))
+	})
+}
+
+// LastUnitRewardAmountLT applies the LT predicate on the "last_unit_reward_amount" field.
+func LastUnitRewardAmountLT(v decimal.Decimal) predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldLastUnitRewardAmount), v))
+	})
+}
+
+// LastUnitRewardAmountLTE applies the LTE predicate on the "last_unit_reward_amount" field.
+func LastUnitRewardAmountLTE(v decimal.Decimal) predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldLastUnitRewardAmount), v))
+	})
+}
+
+// LastUnitRewardAmountIsNil applies the IsNil predicate on the "last_unit_reward_amount" field.
+func LastUnitRewardAmountIsNil() predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldLastUnitRewardAmount)))
+	})
+}
+
+// LastUnitRewardAmountNotNil applies the NotNil predicate on the "last_unit_reward_amount" field.
+func LastUnitRewardAmountNotNil() predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldLastUnitRewardAmount)))
+	})
+}
+
+// TotalRewardAmountEQ applies the EQ predicate on the "total_reward_amount" field.
+func TotalRewardAmountEQ(v decimal.Decimal) predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTotalRewardAmount), v))
+	})
+}
+
+// TotalRewardAmountNEQ applies the NEQ predicate on the "total_reward_amount" field.
+func TotalRewardAmountNEQ(v decimal.Decimal) predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldTotalRewardAmount), v))
+	})
+}
+
+// TotalRewardAmountIn applies the In predicate on the "total_reward_amount" field.
+func TotalRewardAmountIn(vs ...decimal.Decimal) predicate.GoodReward {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldTotalRewardAmount), v...))
+	})
+}
+
+// TotalRewardAmountNotIn applies the NotIn predicate on the "total_reward_amount" field.
+func TotalRewardAmountNotIn(vs ...decimal.Decimal) predicate.GoodReward {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldTotalRewardAmount), v...))
+	})
+}
+
+// TotalRewardAmountGT applies the GT predicate on the "total_reward_amount" field.
+func TotalRewardAmountGT(v decimal.Decimal) predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldTotalRewardAmount), v))
+	})
+}
+
+// TotalRewardAmountGTE applies the GTE predicate on the "total_reward_amount" field.
+func TotalRewardAmountGTE(v decimal.Decimal) predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldTotalRewardAmount), v))
+	})
+}
+
+// TotalRewardAmountLT applies the LT predicate on the "total_reward_amount" field.
+func TotalRewardAmountLT(v decimal.Decimal) predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldTotalRewardAmount), v))
+	})
+}
+
+// TotalRewardAmountLTE applies the LTE predicate on the "total_reward_amount" field.
+func TotalRewardAmountLTE(v decimal.Decimal) predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldTotalRewardAmount), v))
+	})
+}
+
+// TotalRewardAmountIsNil applies the IsNil predicate on the "total_reward_amount" field.
+func TotalRewardAmountIsNil() predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldTotalRewardAmount)))
+	})
+}
+
+// TotalRewardAmountNotNil applies the NotNil predicate on the "total_reward_amount" field.
+func TotalRewardAmountNotNil() predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldTotalRewardAmount)))
 	})
 }
 

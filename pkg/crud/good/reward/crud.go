@@ -20,6 +20,8 @@ type Req struct {
 	RewardTID             *uuid.UUID
 	NextRewardStartAmount *decimal.Decimal
 	LastRewardAmount      *decimal.Decimal
+	LastUnitRewardAmount  *decimal.Decimal
+	TotalRewardAmount     *decimal.Decimal
 	DeletedAt             *uint32
 }
 
@@ -49,6 +51,12 @@ func UpdateSet(u *ent.GoodRewardUpdateOne, req *Req) *ent.GoodRewardUpdateOne {
 	}
 	if req.LastRewardAmount != nil {
 		u.SetLastRewardAmount(*req.LastRewardAmount)
+	}
+	if req.LastUnitRewardAmount != nil {
+		u.SetLastUnitRewardAmount(*req.LastUnitRewardAmount)
+	}
+	if req.TotalRewardAmount != nil {
+		u.SetTotalRewardAmount(*req.TotalRewardAmount)
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)

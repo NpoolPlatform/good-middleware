@@ -93,6 +93,8 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.RewardTID = uuid.Nil.String()
 	ret.NextRewardStartAmount = decimal.NewFromInt(0).String()
 	ret.LastRewardAmount = decimal.NewFromInt(0).String()
+	ret.LastUnitRewardAmount = decimal.NewFromInt(0).String()
+	ret.TotalRewardAmount = decimal.NewFromInt(0).String()
 
 	h1, err := vendorbrand1.NewHandler(
 		context.Background(),

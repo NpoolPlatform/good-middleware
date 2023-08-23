@@ -9563,6 +9563,8 @@ type GoodRewardMutation struct {
 	reward_tid               *uuid.UUID
 	next_reward_start_amount *decimal.Decimal
 	last_reward_amount       *decimal.Decimal
+	last_unit_reward_amount  *decimal.Decimal
+	total_reward_amount      *decimal.Decimal
 	clearedFields            map[string]struct{}
 	done                     bool
 	oldValue                 func(context.Context) (*GoodReward, error)
@@ -10143,6 +10145,104 @@ func (m *GoodRewardMutation) ResetLastRewardAmount() {
 	delete(m.clearedFields, goodreward.FieldLastRewardAmount)
 }
 
+// SetLastUnitRewardAmount sets the "last_unit_reward_amount" field.
+func (m *GoodRewardMutation) SetLastUnitRewardAmount(d decimal.Decimal) {
+	m.last_unit_reward_amount = &d
+}
+
+// LastUnitRewardAmount returns the value of the "last_unit_reward_amount" field in the mutation.
+func (m *GoodRewardMutation) LastUnitRewardAmount() (r decimal.Decimal, exists bool) {
+	v := m.last_unit_reward_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLastUnitRewardAmount returns the old "last_unit_reward_amount" field's value of the GoodReward entity.
+// If the GoodReward object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodRewardMutation) OldLastUnitRewardAmount(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLastUnitRewardAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLastUnitRewardAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLastUnitRewardAmount: %w", err)
+	}
+	return oldValue.LastUnitRewardAmount, nil
+}
+
+// ClearLastUnitRewardAmount clears the value of the "last_unit_reward_amount" field.
+func (m *GoodRewardMutation) ClearLastUnitRewardAmount() {
+	m.last_unit_reward_amount = nil
+	m.clearedFields[goodreward.FieldLastUnitRewardAmount] = struct{}{}
+}
+
+// LastUnitRewardAmountCleared returns if the "last_unit_reward_amount" field was cleared in this mutation.
+func (m *GoodRewardMutation) LastUnitRewardAmountCleared() bool {
+	_, ok := m.clearedFields[goodreward.FieldLastUnitRewardAmount]
+	return ok
+}
+
+// ResetLastUnitRewardAmount resets all changes to the "last_unit_reward_amount" field.
+func (m *GoodRewardMutation) ResetLastUnitRewardAmount() {
+	m.last_unit_reward_amount = nil
+	delete(m.clearedFields, goodreward.FieldLastUnitRewardAmount)
+}
+
+// SetTotalRewardAmount sets the "total_reward_amount" field.
+func (m *GoodRewardMutation) SetTotalRewardAmount(d decimal.Decimal) {
+	m.total_reward_amount = &d
+}
+
+// TotalRewardAmount returns the value of the "total_reward_amount" field in the mutation.
+func (m *GoodRewardMutation) TotalRewardAmount() (r decimal.Decimal, exists bool) {
+	v := m.total_reward_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTotalRewardAmount returns the old "total_reward_amount" field's value of the GoodReward entity.
+// If the GoodReward object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodRewardMutation) OldTotalRewardAmount(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTotalRewardAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTotalRewardAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTotalRewardAmount: %w", err)
+	}
+	return oldValue.TotalRewardAmount, nil
+}
+
+// ClearTotalRewardAmount clears the value of the "total_reward_amount" field.
+func (m *GoodRewardMutation) ClearTotalRewardAmount() {
+	m.total_reward_amount = nil
+	m.clearedFields[goodreward.FieldTotalRewardAmount] = struct{}{}
+}
+
+// TotalRewardAmountCleared returns if the "total_reward_amount" field was cleared in this mutation.
+func (m *GoodRewardMutation) TotalRewardAmountCleared() bool {
+	_, ok := m.clearedFields[goodreward.FieldTotalRewardAmount]
+	return ok
+}
+
+// ResetTotalRewardAmount resets all changes to the "total_reward_amount" field.
+func (m *GoodRewardMutation) ResetTotalRewardAmount() {
+	m.total_reward_amount = nil
+	delete(m.clearedFields, goodreward.FieldTotalRewardAmount)
+}
+
 // Where appends a list predicates to the GoodRewardMutation builder.
 func (m *GoodRewardMutation) Where(ps ...predicate.GoodReward) {
 	m.predicates = append(m.predicates, ps...)
@@ -10162,7 +10262,7 @@ func (m *GoodRewardMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *GoodRewardMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, goodreward.FieldCreatedAt)
 	}
@@ -10190,6 +10290,12 @@ func (m *GoodRewardMutation) Fields() []string {
 	if m.last_reward_amount != nil {
 		fields = append(fields, goodreward.FieldLastRewardAmount)
 	}
+	if m.last_unit_reward_amount != nil {
+		fields = append(fields, goodreward.FieldLastUnitRewardAmount)
+	}
+	if m.total_reward_amount != nil {
+		fields = append(fields, goodreward.FieldTotalRewardAmount)
+	}
 	return fields
 }
 
@@ -10216,6 +10322,10 @@ func (m *GoodRewardMutation) Field(name string) (ent.Value, bool) {
 		return m.NextRewardStartAmount()
 	case goodreward.FieldLastRewardAmount:
 		return m.LastRewardAmount()
+	case goodreward.FieldLastUnitRewardAmount:
+		return m.LastUnitRewardAmount()
+	case goodreward.FieldTotalRewardAmount:
+		return m.TotalRewardAmount()
 	}
 	return nil, false
 }
@@ -10243,6 +10353,10 @@ func (m *GoodRewardMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldNextRewardStartAmount(ctx)
 	case goodreward.FieldLastRewardAmount:
 		return m.OldLastRewardAmount(ctx)
+	case goodreward.FieldLastUnitRewardAmount:
+		return m.OldLastUnitRewardAmount(ctx)
+	case goodreward.FieldTotalRewardAmount:
+		return m.OldTotalRewardAmount(ctx)
 	}
 	return nil, fmt.Errorf("unknown GoodReward field %s", name)
 }
@@ -10314,6 +10428,20 @@ func (m *GoodRewardMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetLastRewardAmount(v)
+		return nil
+	case goodreward.FieldLastUnitRewardAmount:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLastUnitRewardAmount(v)
+		return nil
+	case goodreward.FieldTotalRewardAmount:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTotalRewardAmount(v)
 		return nil
 	}
 	return fmt.Errorf("unknown GoodReward field %s", name)
@@ -10411,6 +10539,12 @@ func (m *GoodRewardMutation) ClearedFields() []string {
 	if m.FieldCleared(goodreward.FieldLastRewardAmount) {
 		fields = append(fields, goodreward.FieldLastRewardAmount)
 	}
+	if m.FieldCleared(goodreward.FieldLastUnitRewardAmount) {
+		fields = append(fields, goodreward.FieldLastUnitRewardAmount)
+	}
+	if m.FieldCleared(goodreward.FieldTotalRewardAmount) {
+		fields = append(fields, goodreward.FieldTotalRewardAmount)
+	}
 	return fields
 }
 
@@ -10439,6 +10573,12 @@ func (m *GoodRewardMutation) ClearField(name string) error {
 		return nil
 	case goodreward.FieldLastRewardAmount:
 		m.ClearLastRewardAmount()
+		return nil
+	case goodreward.FieldLastUnitRewardAmount:
+		m.ClearLastUnitRewardAmount()
+		return nil
+	case goodreward.FieldTotalRewardAmount:
+		m.ClearTotalRewardAmount()
 		return nil
 	}
 	return fmt.Errorf("unknown GoodReward nullable field %s", name)
@@ -10474,6 +10614,12 @@ func (m *GoodRewardMutation) ResetField(name string) error {
 		return nil
 	case goodreward.FieldLastRewardAmount:
 		m.ResetLastRewardAmount()
+		return nil
+	case goodreward.FieldLastUnitRewardAmount:
+		m.ResetLastUnitRewardAmount()
+		return nil
+	case goodreward.FieldTotalRewardAmount:
+		m.ResetTotalRewardAmount()
 		return nil
 	}
 	return fmt.Errorf("unknown GoodReward field %s", name)

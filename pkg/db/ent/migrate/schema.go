@@ -206,6 +206,8 @@ var (
 		{Name: "reward_tid", Type: field.TypeUUID, Nullable: true},
 		{Name: "next_reward_start_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "last_reward_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "last_unit_reward_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "total_reward_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}
 	// GoodRewardsTable holds the schema information for the "good_rewards" table.
 	GoodRewardsTable = &schema.Table{

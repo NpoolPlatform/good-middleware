@@ -142,6 +142,34 @@ func (grc *GoodRewardCreate) SetNillableLastRewardAmount(d *decimal.Decimal) *Go
 	return grc
 }
 
+// SetLastUnitRewardAmount sets the "last_unit_reward_amount" field.
+func (grc *GoodRewardCreate) SetLastUnitRewardAmount(d decimal.Decimal) *GoodRewardCreate {
+	grc.mutation.SetLastUnitRewardAmount(d)
+	return grc
+}
+
+// SetNillableLastUnitRewardAmount sets the "last_unit_reward_amount" field if the given value is not nil.
+func (grc *GoodRewardCreate) SetNillableLastUnitRewardAmount(d *decimal.Decimal) *GoodRewardCreate {
+	if d != nil {
+		grc.SetLastUnitRewardAmount(*d)
+	}
+	return grc
+}
+
+// SetTotalRewardAmount sets the "total_reward_amount" field.
+func (grc *GoodRewardCreate) SetTotalRewardAmount(d decimal.Decimal) *GoodRewardCreate {
+	grc.mutation.SetTotalRewardAmount(d)
+	return grc
+}
+
+// SetNillableTotalRewardAmount sets the "total_reward_amount" field if the given value is not nil.
+func (grc *GoodRewardCreate) SetNillableTotalRewardAmount(d *decimal.Decimal) *GoodRewardCreate {
+	if d != nil {
+		grc.SetTotalRewardAmount(*d)
+	}
+	return grc
+}
+
 // SetID sets the "id" field.
 func (grc *GoodRewardCreate) SetID(u uuid.UUID) *GoodRewardCreate {
 	grc.mutation.SetID(u)
@@ -279,6 +307,14 @@ func (grc *GoodRewardCreate) defaults() error {
 		v := goodreward.DefaultLastRewardAmount
 		grc.mutation.SetLastRewardAmount(v)
 	}
+	if _, ok := grc.mutation.LastUnitRewardAmount(); !ok {
+		v := goodreward.DefaultLastUnitRewardAmount
+		grc.mutation.SetLastUnitRewardAmount(v)
+	}
+	if _, ok := grc.mutation.TotalRewardAmount(); !ok {
+		v := goodreward.DefaultTotalRewardAmount
+		grc.mutation.SetTotalRewardAmount(v)
+	}
 	if _, ok := grc.mutation.ID(); !ok {
 		if goodreward.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized goodreward.DefaultID (forgotten import ent/runtime?)")
@@ -411,6 +447,22 @@ func (grc *GoodRewardCreate) createSpec() (*GoodReward, *sqlgraph.CreateSpec) {
 			Column: goodreward.FieldLastRewardAmount,
 		})
 		_node.LastRewardAmount = value
+	}
+	if value, ok := grc.mutation.LastUnitRewardAmount(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: goodreward.FieldLastUnitRewardAmount,
+		})
+		_node.LastUnitRewardAmount = value
+	}
+	if value, ok := grc.mutation.TotalRewardAmount(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: goodreward.FieldTotalRewardAmount,
+		})
+		_node.TotalRewardAmount = value
 	}
 	return _node, _spec
 }
@@ -625,6 +677,42 @@ func (u *GoodRewardUpsert) UpdateLastRewardAmount() *GoodRewardUpsert {
 // ClearLastRewardAmount clears the value of the "last_reward_amount" field.
 func (u *GoodRewardUpsert) ClearLastRewardAmount() *GoodRewardUpsert {
 	u.SetNull(goodreward.FieldLastRewardAmount)
+	return u
+}
+
+// SetLastUnitRewardAmount sets the "last_unit_reward_amount" field.
+func (u *GoodRewardUpsert) SetLastUnitRewardAmount(v decimal.Decimal) *GoodRewardUpsert {
+	u.Set(goodreward.FieldLastUnitRewardAmount, v)
+	return u
+}
+
+// UpdateLastUnitRewardAmount sets the "last_unit_reward_amount" field to the value that was provided on create.
+func (u *GoodRewardUpsert) UpdateLastUnitRewardAmount() *GoodRewardUpsert {
+	u.SetExcluded(goodreward.FieldLastUnitRewardAmount)
+	return u
+}
+
+// ClearLastUnitRewardAmount clears the value of the "last_unit_reward_amount" field.
+func (u *GoodRewardUpsert) ClearLastUnitRewardAmount() *GoodRewardUpsert {
+	u.SetNull(goodreward.FieldLastUnitRewardAmount)
+	return u
+}
+
+// SetTotalRewardAmount sets the "total_reward_amount" field.
+func (u *GoodRewardUpsert) SetTotalRewardAmount(v decimal.Decimal) *GoodRewardUpsert {
+	u.Set(goodreward.FieldTotalRewardAmount, v)
+	return u
+}
+
+// UpdateTotalRewardAmount sets the "total_reward_amount" field to the value that was provided on create.
+func (u *GoodRewardUpsert) UpdateTotalRewardAmount() *GoodRewardUpsert {
+	u.SetExcluded(goodreward.FieldTotalRewardAmount)
+	return u
+}
+
+// ClearTotalRewardAmount clears the value of the "total_reward_amount" field.
+func (u *GoodRewardUpsert) ClearTotalRewardAmount() *GoodRewardUpsert {
+	u.SetNull(goodreward.FieldTotalRewardAmount)
 	return u
 }
 
@@ -864,6 +952,48 @@ func (u *GoodRewardUpsertOne) UpdateLastRewardAmount() *GoodRewardUpsertOne {
 func (u *GoodRewardUpsertOne) ClearLastRewardAmount() *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
 		s.ClearLastRewardAmount()
+	})
+}
+
+// SetLastUnitRewardAmount sets the "last_unit_reward_amount" field.
+func (u *GoodRewardUpsertOne) SetLastUnitRewardAmount(v decimal.Decimal) *GoodRewardUpsertOne {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.SetLastUnitRewardAmount(v)
+	})
+}
+
+// UpdateLastUnitRewardAmount sets the "last_unit_reward_amount" field to the value that was provided on create.
+func (u *GoodRewardUpsertOne) UpdateLastUnitRewardAmount() *GoodRewardUpsertOne {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.UpdateLastUnitRewardAmount()
+	})
+}
+
+// ClearLastUnitRewardAmount clears the value of the "last_unit_reward_amount" field.
+func (u *GoodRewardUpsertOne) ClearLastUnitRewardAmount() *GoodRewardUpsertOne {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.ClearLastUnitRewardAmount()
+	})
+}
+
+// SetTotalRewardAmount sets the "total_reward_amount" field.
+func (u *GoodRewardUpsertOne) SetTotalRewardAmount(v decimal.Decimal) *GoodRewardUpsertOne {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.SetTotalRewardAmount(v)
+	})
+}
+
+// UpdateTotalRewardAmount sets the "total_reward_amount" field to the value that was provided on create.
+func (u *GoodRewardUpsertOne) UpdateTotalRewardAmount() *GoodRewardUpsertOne {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.UpdateTotalRewardAmount()
+	})
+}
+
+// ClearTotalRewardAmount clears the value of the "total_reward_amount" field.
+func (u *GoodRewardUpsertOne) ClearTotalRewardAmount() *GoodRewardUpsertOne {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.ClearTotalRewardAmount()
 	})
 }
 
@@ -1269,6 +1399,48 @@ func (u *GoodRewardUpsertBulk) UpdateLastRewardAmount() *GoodRewardUpsertBulk {
 func (u *GoodRewardUpsertBulk) ClearLastRewardAmount() *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
 		s.ClearLastRewardAmount()
+	})
+}
+
+// SetLastUnitRewardAmount sets the "last_unit_reward_amount" field.
+func (u *GoodRewardUpsertBulk) SetLastUnitRewardAmount(v decimal.Decimal) *GoodRewardUpsertBulk {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.SetLastUnitRewardAmount(v)
+	})
+}
+
+// UpdateLastUnitRewardAmount sets the "last_unit_reward_amount" field to the value that was provided on create.
+func (u *GoodRewardUpsertBulk) UpdateLastUnitRewardAmount() *GoodRewardUpsertBulk {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.UpdateLastUnitRewardAmount()
+	})
+}
+
+// ClearLastUnitRewardAmount clears the value of the "last_unit_reward_amount" field.
+func (u *GoodRewardUpsertBulk) ClearLastUnitRewardAmount() *GoodRewardUpsertBulk {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.ClearLastUnitRewardAmount()
+	})
+}
+
+// SetTotalRewardAmount sets the "total_reward_amount" field.
+func (u *GoodRewardUpsertBulk) SetTotalRewardAmount(v decimal.Decimal) *GoodRewardUpsertBulk {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.SetTotalRewardAmount(v)
+	})
+}
+
+// UpdateTotalRewardAmount sets the "total_reward_amount" field to the value that was provided on create.
+func (u *GoodRewardUpsertBulk) UpdateTotalRewardAmount() *GoodRewardUpsertBulk {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.UpdateTotalRewardAmount()
+	})
+}
+
+// ClearTotalRewardAmount clears the value of the "total_reward_amount" field.
+func (u *GoodRewardUpsertBulk) ClearTotalRewardAmount() *GoodRewardUpsertBulk {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.ClearTotalRewardAmount()
 	})
 }
 
