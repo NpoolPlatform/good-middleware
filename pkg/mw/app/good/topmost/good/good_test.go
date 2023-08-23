@@ -144,6 +144,7 @@ var ret = npool.TopMostGood{
 	ID:           uuid.NewString(),
 	AppID:        topmost.AppID,
 	GoodID:       good.ID,
+	CoinTypeID:   good.CoinTypeID,
 	AppGoodID:    appgood.ID,
 	TopMostID:    topmost.ID,
 	DisplayIndex: 1,

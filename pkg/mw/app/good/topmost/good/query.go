@@ -61,6 +61,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(enttopmostgood.FieldAppID), "app_id"),
 			sql.As(t.C(enttopmostgood.FieldGoodID), "good_id"),
 			sql.As(t.C(enttopmostgood.FieldAppGoodID), "app_good_id"),
+			sql.As(t.C(enttopmostgood.FieldCoinTypeID), "coin_type_id"),
 			sql.As(t.C(enttopmostgood.FieldTopMostID), "top_most_id"),
 			sql.As(t.C(enttopmostgood.FieldDisplayIndex), "display_index"),
 			sql.As(t.C(enttopmostgood.FieldPosters), "posters"),
