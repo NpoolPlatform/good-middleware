@@ -46,9 +46,9 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 
 	if h.Locked != nil {
 		locked = h.Locked.Add(locked)
-		spotQuantity = spotQuantity.Sub(*h.Locked)
 		appReserved = appReserved.Sub(*h.Locked)
 		if appReserved.Cmp(decimal.NewFromInt(0)) < 0 {
+			spotQuantity = spotQuantity.Add(appReserved)
 			appReserved = decimal.NewFromInt(0)
 		}
 	}

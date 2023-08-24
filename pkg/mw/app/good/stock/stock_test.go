@@ -305,7 +305,7 @@ func addStock(t *testing.T) {
 	if assert.Nil(t, err) {
 		info, err := h1.GetGood(context.Background())
 		if assert.Nil(t, err) {
-			assert.Equal(t, decimal.NewFromInt(890).String(), info.GoodSpotQuantity)
+			assert.Equal(t, decimal.NewFromInt(900).String(), info.GoodSpotQuantity)
 			assert.Equal(t, ret.Locked, info.GoodLocked)
 			assert.Equal(t, ret.InService, info.GoodInService)
 			assert.Equal(t, ret.WaitStart, info.GoodWaitStart)
@@ -354,7 +354,7 @@ func subStock(t *testing.T) {
 	if assert.Nil(t, err) {
 		info, err := h1.GetGood(context.Background())
 		if assert.Nil(t, err) {
-			assert.Equal(t, decimal.NewFromInt(900).String(), info.GoodSpotQuantity)
+			assert.Equal(t, decimal.NewFromInt(910).String(), info.GoodSpotQuantity)
 			assert.Equal(t, decimal.NewFromInt(0).String(), info.GoodWaitStart)
 		}
 	}
