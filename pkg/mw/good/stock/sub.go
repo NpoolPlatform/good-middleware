@@ -87,7 +87,8 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	if locked.Add(inService).
 		Add(waitStart).
 		Add(appReserved).
-		Cmp(spotQuantity) > 0 {
+		Add(spotQuantity).
+		Cmp(info.Total) > 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
