@@ -225,6 +225,8 @@ func SetQueryConds(q *ent.GoodQuery, conds *Conds) (*ent.GoodQuery, error) {
 		switch conds.BenefitType.Op {
 		case cruder.EQ:
 			q.Where(entgood.BenefitType(_type.String()))
+		case cruder.NEQ:
+			q.Where(entgood.BenefitTypeNEQ(_type.String()))
 		default:
 			return nil, fmt.Errorf("invalid good field")
 		}
