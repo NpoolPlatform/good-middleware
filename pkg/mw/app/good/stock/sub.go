@@ -57,7 +57,7 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	if h.InService != nil {
 		inService = inService.Sub(*h.InService)
 		sold = sold.Sub(*h.InService)
-		spotQuantity = h.WaitStart.Add(spotQuantity)
+		spotQuantity = h.InService.Add(spotQuantity)
 	}
 	if h.Reserved != nil {
 		appReserved = appReserved.Sub(*h.Reserved)
