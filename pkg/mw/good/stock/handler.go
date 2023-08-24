@@ -21,6 +21,7 @@ type Handler struct {
 	WaitStart   *decimal.Decimal
 	InService   *decimal.Decimal
 	AppReserved *decimal.Decimal
+	ChargeBack  *bool
 	Conds       *stockcrud.Conds
 	Offset      int32
 	Limit       int32
@@ -138,6 +139,13 @@ func WithAppReserved(s *string, must bool) func(context.Context, *Handler) error
 			return err
 		}
 		h.AppReserved = &amount
+		return nil
+	}
+}
+
+func WithChargeBack(b *bool, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.ChargeBack = b
 		return nil
 	}
 }

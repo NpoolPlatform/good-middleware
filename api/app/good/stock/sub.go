@@ -29,6 +29,7 @@ func (s *Server) SubStock(ctx context.Context, in *npool.SubStockRequest) (*npoo
 		appstock1.WithLocked(req.Locked, false),
 		appstock1.WithWaitStart(req.WaitStart, false),
 		appstock1.WithInService(req.InService, false),
+		appstock1.WithChargeBack(req.ChargeBack, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

@@ -17,9 +17,10 @@ import (
 
 type Handler struct {
 	appstockcrud.Req
-	Conds  *appstockcrud.Conds
-	Offset int32
-	Limit  int32
+	ChargeBack *bool
+	Conds      *appstockcrud.Conds
+	Offset     int32
+	Limit      int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -206,6 +207,13 @@ func WithSold(s *string, must bool) func(context.Context, *Handler) error {
 			return err
 		}
 		h.Sold = &amount
+		return nil
+	}
+}
+
+func WithChargeBack(b *bool, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.ChargeBack = b
 		return nil
 	}
 }
