@@ -343,6 +343,26 @@ func (gu *GoodUpdate) ClearStartAt() *GoodUpdate {
 	return gu
 }
 
+// SetStartMode sets the "start_mode" field.
+func (gu *GoodUpdate) SetStartMode(s string) *GoodUpdate {
+	gu.mutation.SetStartMode(s)
+	return gu
+}
+
+// SetNillableStartMode sets the "start_mode" field if the given value is not nil.
+func (gu *GoodUpdate) SetNillableStartMode(s *string) *GoodUpdate {
+	if s != nil {
+		gu.SetStartMode(*s)
+	}
+	return gu
+}
+
+// ClearStartMode clears the value of the "start_mode" field.
+func (gu *GoodUpdate) ClearStartMode() *GoodUpdate {
+	gu.mutation.ClearStartMode()
+	return gu
+}
+
 // SetTestOnly sets the "test_only" field.
 func (gu *GoodUpdate) SetTestOnly(b bool) *GoodUpdate {
 	gu.mutation.SetTestOnly(b)
@@ -742,6 +762,19 @@ func (gu *GoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: good.FieldStartAt,
 		})
 	}
+	if value, ok := gu.mutation.StartMode(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldStartMode,
+		})
+	}
+	if gu.mutation.StartModeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: good.FieldStartMode,
+		})
+	}
 	if value, ok := gu.mutation.TestOnly(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
@@ -1119,6 +1152,26 @@ func (guo *GoodUpdateOne) AddStartAt(u int32) *GoodUpdateOne {
 // ClearStartAt clears the value of the "start_at" field.
 func (guo *GoodUpdateOne) ClearStartAt() *GoodUpdateOne {
 	guo.mutation.ClearStartAt()
+	return guo
+}
+
+// SetStartMode sets the "start_mode" field.
+func (guo *GoodUpdateOne) SetStartMode(s string) *GoodUpdateOne {
+	guo.mutation.SetStartMode(s)
+	return guo
+}
+
+// SetNillableStartMode sets the "start_mode" field if the given value is not nil.
+func (guo *GoodUpdateOne) SetNillableStartMode(s *string) *GoodUpdateOne {
+	if s != nil {
+		guo.SetStartMode(*s)
+	}
+	return guo
+}
+
+// ClearStartMode clears the value of the "start_mode" field.
+func (guo *GoodUpdateOne) ClearStartMode() *GoodUpdateOne {
+	guo.mutation.ClearStartMode()
 	return guo
 }
 
@@ -1549,6 +1602,19 @@ func (guo *GoodUpdateOne) sqlSave(ctx context.Context) (_node *Good, err error) 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: good.FieldStartAt,
+		})
+	}
+	if value, ok := guo.mutation.StartMode(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldStartMode,
+		})
+	}
+	if guo.mutation.StartModeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: good.FieldStartMode,
 		})
 	}
 	if value, ok := guo.mutation.TestOnly(); ok {

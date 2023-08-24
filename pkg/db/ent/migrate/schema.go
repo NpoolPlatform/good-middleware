@@ -186,6 +186,7 @@ var (
 		{Name: "support_coin_type_ids", Type: field.TypeJSON, Nullable: true},
 		{Name: "delivery_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "start_mode", Type: field.TypeString, Nullable: true, Default: "GoodStartModeConfirmed"},
 		{Name: "test_only", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "benefit_interval_hours", Type: field.TypeUint32, Nullable: true, Default: 24},
 		{Name: "unit_lock_deposit", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},

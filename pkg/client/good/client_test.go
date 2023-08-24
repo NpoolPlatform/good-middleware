@@ -92,6 +92,8 @@ var ret = npool.Good{
 	GoodTypeStr:           types.GoodType_PowerRenting.String(),
 	BenefitTypeStr:        types.BenefitType_BenefitTypePlatform.String(),
 	RewardState:           types.BenefitState_BenefitWait,
+	StartMode:             types.GoodStartMode_GoodStartModeConfirmed,
+	StartModeStr:          types.GoodStartMode_GoodStartModeConfirmed.String(),
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -151,6 +153,7 @@ func createGood(t *testing.T) {
 		Total:                &ret.GoodTotal,
 		Posters:              ret.Posters,
 		Labels:               ret.Labels,
+		StartMode:            &ret.StartMode,
 	})
 	if assert.Nil(t, err) {
 		ret.GoodStockID = info.GoodStockID

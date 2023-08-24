@@ -230,6 +230,20 @@ func (gc *GoodCreate) SetNillableStartAt(u *uint32) *GoodCreate {
 	return gc
 }
 
+// SetStartMode sets the "start_mode" field.
+func (gc *GoodCreate) SetStartMode(s string) *GoodCreate {
+	gc.mutation.SetStartMode(s)
+	return gc
+}
+
+// SetNillableStartMode sets the "start_mode" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableStartMode(s *string) *GoodCreate {
+	if s != nil {
+		gc.SetStartMode(*s)
+	}
+	return gc
+}
+
 // SetTestOnly sets the "test_only" field.
 func (gc *GoodCreate) SetTestOnly(b bool) *GoodCreate {
 	gc.mutation.SetTestOnly(b)
@@ -432,6 +446,10 @@ func (gc *GoodCreate) defaults() error {
 	if _, ok := gc.mutation.StartAt(); !ok {
 		v := good.DefaultStartAt
 		gc.mutation.SetStartAt(v)
+	}
+	if _, ok := gc.mutation.StartMode(); !ok {
+		v := good.DefaultStartMode
+		gc.mutation.SetStartMode(v)
 	}
 	if _, ok := gc.mutation.TestOnly(); !ok {
 		v := good.DefaultTestOnly
@@ -647,6 +665,14 @@ func (gc *GoodCreate) createSpec() (*Good, *sqlgraph.CreateSpec) {
 			Column: good.FieldStartAt,
 		})
 		_node.StartAt = value
+	}
+	if value, ok := gc.mutation.StartMode(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldStartMode,
+		})
+		_node.StartMode = value
 	}
 	if value, ok := gc.mutation.TestOnly(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -1035,6 +1061,24 @@ func (u *GoodUpsert) AddStartAt(v uint32) *GoodUpsert {
 // ClearStartAt clears the value of the "start_at" field.
 func (u *GoodUpsert) ClearStartAt() *GoodUpsert {
 	u.SetNull(good.FieldStartAt)
+	return u
+}
+
+// SetStartMode sets the "start_mode" field.
+func (u *GoodUpsert) SetStartMode(v string) *GoodUpsert {
+	u.Set(good.FieldStartMode, v)
+	return u
+}
+
+// UpdateStartMode sets the "start_mode" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateStartMode() *GoodUpsert {
+	u.SetExcluded(good.FieldStartMode)
+	return u
+}
+
+// ClearStartMode clears the value of the "start_mode" field.
+func (u *GoodUpsert) ClearStartMode() *GoodUpsert {
+	u.SetNull(good.FieldStartMode)
 	return u
 }
 
@@ -1509,6 +1553,27 @@ func (u *GoodUpsertOne) UpdateStartAt() *GoodUpsertOne {
 func (u *GoodUpsertOne) ClearStartAt() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
 		s.ClearStartAt()
+	})
+}
+
+// SetStartMode sets the "start_mode" field.
+func (u *GoodUpsertOne) SetStartMode(v string) *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetStartMode(v)
+	})
+}
+
+// UpdateStartMode sets the "start_mode" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateStartMode() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateStartMode()
+	})
+}
+
+// ClearStartMode clears the value of the "start_mode" field.
+func (u *GoodUpsertOne) ClearStartMode() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearStartMode()
 	})
 }
 
@@ -2159,6 +2224,27 @@ func (u *GoodUpsertBulk) UpdateStartAt() *GoodUpsertBulk {
 func (u *GoodUpsertBulk) ClearStartAt() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
 		s.ClearStartAt()
+	})
+}
+
+// SetStartMode sets the "start_mode" field.
+func (u *GoodUpsertBulk) SetStartMode(v string) *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetStartMode(v)
+	})
+}
+
+// UpdateStartMode sets the "start_mode" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateStartMode() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateStartMode()
+	})
+}
+
+// ClearStartMode clears the value of the "start_mode" field.
+func (u *GoodUpsertBulk) ClearStartMode() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearStartMode()
 	})
 }
 

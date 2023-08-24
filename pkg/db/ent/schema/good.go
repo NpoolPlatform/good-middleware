@@ -87,6 +87,10 @@ func (Good) Fields() []ent.Field {
 			Optional().
 			Default(0),
 		field.
+			String("start_mode").
+			Optional().
+			Default(types.GoodStartMode_GoodStartModeConfirmed.String()),
+		field.
 			Bool("test_only").
 			Optional().
 			Default(false),

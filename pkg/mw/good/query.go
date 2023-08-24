@@ -75,6 +75,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entgood.FieldSupportCoinTypeIds), "support_coin_type_ids"),
 			sql.As(t.C(entgood.FieldDeliveryAt), "delivery_at"),
 			sql.As(t.C(entgood.FieldStartAt), "start_at"),
+			sql.As(t.C(entgood.FieldStartMode), "start_mode"),
 			sql.As(t.C(entgood.FieldTestOnly), "test_only"),
 			sql.As(t.C(entgood.FieldBenefitIntervalHours), "benefit_interval_hours"),
 			sql.As(t.C(entgood.FieldUnitLockDeposit), "unit_lock_deposit"),
@@ -238,6 +239,7 @@ func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
 		_ = json.Unmarshal([]byte(info.DevicePostersStr), &info.DevicePosters)
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
+		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.RewardState = types.BenefitState(types.BenefitState_value[info.RewardStateStr])
 		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)

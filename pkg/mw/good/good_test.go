@@ -76,6 +76,7 @@ var ret = npool.Good{
 	UnitLockDeposit:      decimal.NewFromInt(1).String(),
 	Score:                decimal.NewFromInt(0).String(),
 	RewardState:          types.BenefitState_BenefitWait,
+	StartMode:            types.GoodStartMode_GoodStartModeConfirmed,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -97,6 +98,7 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.LastUnitRewardAmount = decimal.NewFromInt(0).String()
 	ret.TotalRewardAmount = decimal.NewFromInt(0).String()
 	ret.GoodSpotQuantity = ret.GoodTotal
+	ret.StartModeStr = ret.StartMode.String()
 
 	h1, err := vendorbrand1.NewHandler(
 		context.Background(),

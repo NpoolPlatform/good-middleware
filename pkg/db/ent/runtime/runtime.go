@@ -484,16 +484,20 @@ func init() {
 	goodDescStartAt := goodFields[14].Descriptor()
 	// good.DefaultStartAt holds the default value on creation for the start_at field.
 	good.DefaultStartAt = goodDescStartAt.Default.(uint32)
+	// goodDescStartMode is the schema descriptor for start_mode field.
+	goodDescStartMode := goodFields[15].Descriptor()
+	// good.DefaultStartMode holds the default value on creation for the start_mode field.
+	good.DefaultStartMode = goodDescStartMode.Default.(string)
 	// goodDescTestOnly is the schema descriptor for test_only field.
-	goodDescTestOnly := goodFields[15].Descriptor()
+	goodDescTestOnly := goodFields[16].Descriptor()
 	// good.DefaultTestOnly holds the default value on creation for the test_only field.
 	good.DefaultTestOnly = goodDescTestOnly.Default.(bool)
 	// goodDescBenefitIntervalHours is the schema descriptor for benefit_interval_hours field.
-	goodDescBenefitIntervalHours := goodFields[16].Descriptor()
+	goodDescBenefitIntervalHours := goodFields[17].Descriptor()
 	// good.DefaultBenefitIntervalHours holds the default value on creation for the benefit_interval_hours field.
 	good.DefaultBenefitIntervalHours = goodDescBenefitIntervalHours.Default.(uint32)
 	// goodDescUnitLockDeposit is the schema descriptor for unit_lock_deposit field.
-	goodDescUnitLockDeposit := goodFields[17].Descriptor()
+	goodDescUnitLockDeposit := goodFields[18].Descriptor()
 	// good.DefaultUnitLockDeposit holds the default value on creation for the unit_lock_deposit field.
 	good.DefaultUnitLockDeposit = goodDescUnitLockDeposit.Default.(decimal.Decimal)
 	// goodDescID is the schema descriptor for id field.

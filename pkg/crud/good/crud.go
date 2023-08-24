@@ -20,6 +20,7 @@ type Req struct {
 	VendorLocationID     *uuid.UUID
 	Price                *decimal.Decimal
 	BenefitType          *types.BenefitType
+	StartMode            *types.GoodStartMode
 	GoodType             *types.GoodType
 	Title                *string
 	Unit                 *string
@@ -55,6 +56,9 @@ func CreateSet(c *ent.GoodCreate, req *Req) *ent.GoodCreate {
 	}
 	if req.BenefitType != nil {
 		c.SetBenefitType(req.BenefitType.String())
+	}
+	if req.StartMode != nil {
+		c.SetStartMode(req.StartMode.String())
 	}
 	if req.GoodType != nil {
 		c.SetGoodType(req.GoodType.String())
@@ -108,6 +112,9 @@ func UpdateSet(u *ent.GoodUpdateOne, req *Req) *ent.GoodUpdateOne {
 	}
 	if req.BenefitType != nil {
 		u.SetBenefitType(req.BenefitType.String())
+	}
+	if req.StartMode != nil {
+		u.SetStartMode(req.StartMode.String())
 	}
 	if req.Title != nil {
 		u.SetTitle(*req.Title)

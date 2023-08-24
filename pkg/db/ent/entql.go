@@ -214,6 +214,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			good.FieldSupportCoinTypeIds:   {Type: field.TypeJSON, Column: good.FieldSupportCoinTypeIds},
 			good.FieldDeliveryAt:           {Type: field.TypeUint32, Column: good.FieldDeliveryAt},
 			good.FieldStartAt:              {Type: field.TypeUint32, Column: good.FieldStartAt},
+			good.FieldStartMode:            {Type: field.TypeString, Column: good.FieldStartMode},
 			good.FieldTestOnly:             {Type: field.TypeBool, Column: good.FieldTestOnly},
 			good.FieldBenefitIntervalHours: {Type: field.TypeUint32, Column: good.FieldBenefitIntervalHours},
 			good.FieldUnitLockDeposit:      {Type: field.TypeOther, Column: good.FieldUnitLockDeposit},
@@ -1235,6 +1236,11 @@ func (f *GoodFilter) WhereDeliveryAt(p entql.Uint32P) {
 // WhereStartAt applies the entql uint32 predicate on the start_at field.
 func (f *GoodFilter) WhereStartAt(p entql.Uint32P) {
 	f.Where(p.Field(good.FieldStartAt))
+}
+
+// WhereStartMode applies the entql string predicate on the start_mode field.
+func (f *GoodFilter) WhereStartMode(p entql.StringP) {
+	f.Where(p.Field(good.FieldStartMode))
 }
 
 // WhereTestOnly applies the entql bool predicate on the test_only field.

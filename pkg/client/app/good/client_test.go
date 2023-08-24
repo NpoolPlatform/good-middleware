@@ -79,6 +79,8 @@ var good = goodmwpb.Good{
 	BenefitIntervalHours: 24,
 	GoodAppReserved:      decimal.NewFromInt(0).String(),
 	UnitLockDeposit:      decimal.NewFromInt(1).String(),
+	StartMode:            types.GoodStartMode_GoodStartModeConfirmed,
+	StartModeStr:         types.GoodStartMode_GoodStartModeConfirmed.String(),
 }
 
 var ret = npool.Good{
@@ -128,6 +130,8 @@ var ret = npool.Good{
 	LastUnitRewardAmount:   decimal.NewFromInt(0).String(),
 	TechnicalFeeRatio:      "0",
 	ElectricityFeeRatio:    "0",
+	StartMode:              types.GoodStartMode_GoodStartModeConfirmed,
+	StartModeStr:           types.GoodStartMode_GoodStartModeConfirmed.String(),
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -179,6 +183,7 @@ func setup(t *testing.T) func(*testing.T) {
 		Total:                &good.GoodTotal,
 		Posters:              good.Posters,
 		Labels:               good.Labels,
+		StartMode:            &good.StartMode,
 	})
 	assert.Nil(t, err)
 

@@ -34,6 +34,7 @@ func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*
 		good1.WithUnitAmount(req.UnitAmount, false),
 		good1.WithDeliveryAt(req.DeliveryAt, false),
 		good1.WithStartAt(req.StartAt, false),
+		good1.WithStartMode(req.StartMode, false),
 		good1.WithTestOnly(req.TestOnly, false),
 		good1.WithBenefitIntervalHours(req.BenefitIntervalHours, false),
 		good1.WithUnitLockDeposit(req.UnitLockDeposit, false),

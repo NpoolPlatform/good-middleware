@@ -192,6 +192,13 @@ func StartAt(v uint32) predicate.Good {
 	})
 }
 
+// StartMode applies equality check predicate on the "start_mode" field. It's identical to StartModeEQ.
+func StartMode(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldStartMode), v))
+	})
+}
+
 // TestOnly applies equality check predicate on the "test_only" field. It's identical to TestOnlyEQ.
 func TestOnly(v bool) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
@@ -1528,6 +1535,119 @@ func StartAtIsNil() predicate.Good {
 func StartAtNotNil() predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldStartAt)))
+	})
+}
+
+// StartModeEQ applies the EQ predicate on the "start_mode" field.
+func StartModeEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldStartMode), v))
+	})
+}
+
+// StartModeNEQ applies the NEQ predicate on the "start_mode" field.
+func StartModeNEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldStartMode), v))
+	})
+}
+
+// StartModeIn applies the In predicate on the "start_mode" field.
+func StartModeIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldStartMode), v...))
+	})
+}
+
+// StartModeNotIn applies the NotIn predicate on the "start_mode" field.
+func StartModeNotIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldStartMode), v...))
+	})
+}
+
+// StartModeGT applies the GT predicate on the "start_mode" field.
+func StartModeGT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldStartMode), v))
+	})
+}
+
+// StartModeGTE applies the GTE predicate on the "start_mode" field.
+func StartModeGTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldStartMode), v))
+	})
+}
+
+// StartModeLT applies the LT predicate on the "start_mode" field.
+func StartModeLT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldStartMode), v))
+	})
+}
+
+// StartModeLTE applies the LTE predicate on the "start_mode" field.
+func StartModeLTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldStartMode), v))
+	})
+}
+
+// StartModeContains applies the Contains predicate on the "start_mode" field.
+func StartModeContains(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldStartMode), v))
+	})
+}
+
+// StartModeHasPrefix applies the HasPrefix predicate on the "start_mode" field.
+func StartModeHasPrefix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldStartMode), v))
+	})
+}
+
+// StartModeHasSuffix applies the HasSuffix predicate on the "start_mode" field.
+func StartModeHasSuffix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldStartMode), v))
+	})
+}
+
+// StartModeIsNil applies the IsNil predicate on the "start_mode" field.
+func StartModeIsNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldStartMode)))
+	})
+}
+
+// StartModeNotNil applies the NotNil predicate on the "start_mode" field.
+func StartModeNotNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldStartMode)))
+	})
+}
+
+// StartModeEqualFold applies the EqualFold predicate on the "start_mode" field.
+func StartModeEqualFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldStartMode), v))
+	})
+}
+
+// StartModeContainsFold applies the ContainsFold predicate on the "start_mode" field.
+func StartModeContainsFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldStartMode), v))
 	})
 }
 

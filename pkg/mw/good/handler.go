@@ -294,6 +294,25 @@ func WithStartAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	}
 }
 
+func WithStartMode(e *types.GoodStartMode, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return fmt.Errorf("invalid goodstartmode")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodStartMode_GoodStartModeTBD:
+		case types.GoodStartMode_GoodStartModeConfirmed:
+		default:
+			return fmt.Errorf("invalid goodstartmode")
+		}
+		h.StartMode = e
+		return nil
+	}
+}
+
 func WithTestOnly(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.TestOnly = b

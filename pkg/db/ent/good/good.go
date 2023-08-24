@@ -47,6 +47,8 @@ const (
 	FieldDeliveryAt = "delivery_at"
 	// FieldStartAt holds the string denoting the start_at field in the database.
 	FieldStartAt = "start_at"
+	// FieldStartMode holds the string denoting the start_mode field in the database.
+	FieldStartMode = "start_mode"
 	// FieldTestOnly holds the string denoting the test_only field in the database.
 	FieldTestOnly = "test_only"
 	// FieldBenefitIntervalHours holds the string denoting the benefit_interval_hours field in the database.
@@ -77,6 +79,7 @@ var Columns = []string{
 	FieldSupportCoinTypeIds,
 	FieldDeliveryAt,
 	FieldStartAt,
+	FieldStartMode,
 	FieldTestOnly,
 	FieldBenefitIntervalHours,
 	FieldUnitLockDeposit,
@@ -131,6 +134,8 @@ var (
 	DefaultDeliveryAt uint32
 	// DefaultStartAt holds the default value on creation for the "start_at" field.
 	DefaultStartAt uint32
+	// DefaultStartMode holds the default value on creation for the "start_mode" field.
+	DefaultStartMode string
 	// DefaultTestOnly holds the default value on creation for the "test_only" field.
 	DefaultTestOnly bool
 	// DefaultBenefitIntervalHours holds the default value on creation for the "benefit_interval_hours" field.

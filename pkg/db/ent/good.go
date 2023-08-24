@@ -52,6 +52,8 @@ type Good struct {
 	DeliveryAt uint32 `json:"delivery_at,omitempty"`
 	// StartAt holds the value of the "start_at" field.
 	StartAt uint32 `json:"start_at,omitempty"`
+	// StartMode holds the value of the "start_mode" field.
+	StartMode string `json:"start_mode,omitempty"`
 	// TestOnly holds the value of the "test_only" field.
 	TestOnly bool `json:"test_only,omitempty"`
 	// BenefitIntervalHours holds the value of the "benefit_interval_hours" field.
@@ -73,7 +75,7 @@ func (*Good) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullBool)
 		case good.FieldCreatedAt, good.FieldUpdatedAt, good.FieldDeletedAt, good.FieldDurationDays, good.FieldUnitAmount, good.FieldDeliveryAt, good.FieldStartAt, good.FieldBenefitIntervalHours:
 			values[i] = new(sql.NullInt64)
-		case good.FieldBenefitType, good.FieldGoodType, good.FieldTitle, good.FieldUnit:
+		case good.FieldBenefitType, good.FieldGoodType, good.FieldTitle, good.FieldUnit, good.FieldStartMode:
 			values[i] = new(sql.NullString)
 		case good.FieldID, good.FieldDeviceInfoID, good.FieldCoinTypeID, good.FieldInheritFromGoodID, good.FieldVendorLocationID:
 			values[i] = new(uuid.UUID)
@@ -202,6 +204,12 @@ func (_go *Good) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				_go.StartAt = uint32(value.Int64)
 			}
+		case good.FieldStartMode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field start_mode", values[i])
+			} else if value.Valid {
+				_go.StartMode = value.String
+			}
 		case good.FieldTestOnly:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field test_only", values[i])
@@ -298,6 +306,9 @@ func (_go *Good) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("start_at=")
 	builder.WriteString(fmt.Sprintf("%v", _go.StartAt))
+	builder.WriteString(", ")
+	builder.WriteString("start_mode=")
+	builder.WriteString(_go.StartMode)
 	builder.WriteString(", ")
 	builder.WriteString("test_only=")
 	builder.WriteString(fmt.Sprintf("%v", _go.TestOnly))

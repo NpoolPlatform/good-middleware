@@ -208,6 +208,7 @@ func (h *updateHandler) updateGood(ctx context.Context, tx *ent.Tx) error {
 			SupportCoinTypeIDs:   h.SupportCoinTypeIDs,
 			DeliveryAt:           h.DeliveryAt,
 			StartAt:              h.StartAt,
+			StartMode:            h.StartMode,
 			TestOnly:             h.TestOnly,
 			BenefitIntervalHours: h.BenefitIntervalHours,
 			UnitLockDeposit:      h.UnitLockDeposit,

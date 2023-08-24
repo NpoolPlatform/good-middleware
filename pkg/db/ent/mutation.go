@@ -7836,6 +7836,7 @@ type GoodMutation struct {
 	adddelivery_at            *int32
 	start_at                  *uint32
 	addstart_at               *int32
+	start_mode                *string
 	test_only                 *bool
 	benefit_interval_hours    *uint32
 	addbenefit_interval_hours *int32
@@ -8849,6 +8850,55 @@ func (m *GoodMutation) ResetStartAt() {
 	delete(m.clearedFields, good.FieldStartAt)
 }
 
+// SetStartMode sets the "start_mode" field.
+func (m *GoodMutation) SetStartMode(s string) {
+	m.start_mode = &s
+}
+
+// StartMode returns the value of the "start_mode" field in the mutation.
+func (m *GoodMutation) StartMode() (r string, exists bool) {
+	v := m.start_mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStartMode returns the old "start_mode" field's value of the Good entity.
+// If the Good object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodMutation) OldStartMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStartMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStartMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStartMode: %w", err)
+	}
+	return oldValue.StartMode, nil
+}
+
+// ClearStartMode clears the value of the "start_mode" field.
+func (m *GoodMutation) ClearStartMode() {
+	m.start_mode = nil
+	m.clearedFields[good.FieldStartMode] = struct{}{}
+}
+
+// StartModeCleared returns if the "start_mode" field was cleared in this mutation.
+func (m *GoodMutation) StartModeCleared() bool {
+	_, ok := m.clearedFields[good.FieldStartMode]
+	return ok
+}
+
+// ResetStartMode resets all changes to the "start_mode" field.
+func (m *GoodMutation) ResetStartMode() {
+	m.start_mode = nil
+	delete(m.clearedFields, good.FieldStartMode)
+}
+
 // SetTestOnly sets the "test_only" field.
 func (m *GoodMutation) SetTestOnly(b bool) {
 	m.test_only = &b
@@ -9036,7 +9086,7 @@ func (m *GoodMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *GoodMutation) Fields() []string {
-	fields := make([]string, 0, 20)
+	fields := make([]string, 0, 21)
 	if m.created_at != nil {
 		fields = append(fields, good.FieldCreatedAt)
 	}
@@ -9087,6 +9137,9 @@ func (m *GoodMutation) Fields() []string {
 	}
 	if m.start_at != nil {
 		fields = append(fields, good.FieldStartAt)
+	}
+	if m.start_mode != nil {
+		fields = append(fields, good.FieldStartMode)
 	}
 	if m.test_only != nil {
 		fields = append(fields, good.FieldTestOnly)
@@ -9139,6 +9192,8 @@ func (m *GoodMutation) Field(name string) (ent.Value, bool) {
 		return m.DeliveryAt()
 	case good.FieldStartAt:
 		return m.StartAt()
+	case good.FieldStartMode:
+		return m.StartMode()
 	case good.FieldTestOnly:
 		return m.TestOnly()
 	case good.FieldBenefitIntervalHours:
@@ -9188,6 +9243,8 @@ func (m *GoodMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldDeliveryAt(ctx)
 	case good.FieldStartAt:
 		return m.OldStartAt(ctx)
+	case good.FieldStartMode:
+		return m.OldStartMode(ctx)
 	case good.FieldTestOnly:
 		return m.OldTestOnly(ctx)
 	case good.FieldBenefitIntervalHours:
@@ -9321,6 +9378,13 @@ func (m *GoodMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetStartAt(v)
+		return nil
+	case good.FieldStartMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStartMode(v)
 		return nil
 	case good.FieldTestOnly:
 		v, ok := value.(bool)
@@ -9505,6 +9569,9 @@ func (m *GoodMutation) ClearedFields() []string {
 	if m.FieldCleared(good.FieldStartAt) {
 		fields = append(fields, good.FieldStartAt)
 	}
+	if m.FieldCleared(good.FieldStartMode) {
+		fields = append(fields, good.FieldStartMode)
+	}
 	if m.FieldCleared(good.FieldTestOnly) {
 		fields = append(fields, good.FieldTestOnly)
 	}
@@ -9560,6 +9627,9 @@ func (m *GoodMutation) ClearField(name string) error {
 		return nil
 	case good.FieldStartAt:
 		m.ClearStartAt()
+		return nil
+	case good.FieldStartMode:
+		m.ClearStartMode()
 		return nil
 	case good.FieldTestOnly:
 		m.ClearTestOnly()
@@ -9628,6 +9698,9 @@ func (m *GoodMutation) ResetField(name string) error {
 		return nil
 	case good.FieldStartAt:
 		m.ResetStartAt()
+		return nil
+	case good.FieldStartMode:
+		m.ResetStartMode()
 		return nil
 	case good.FieldTestOnly:
 		m.ResetTestOnly()
