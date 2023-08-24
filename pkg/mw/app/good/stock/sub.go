@@ -90,7 +90,8 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	if locked.Add(inService).
 		Add(waitStart).
 		Add(appReserved).
-		Cmp(spotQuantity) > 0 {
+		Add(spotQuantity).
+		Cmp(info.Total) > 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
@@ -168,16 +169,10 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 		return fmt.Errorf("invalid spotquantity")
 	}
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid spotquantity")
+		spotQuantity = decimal.NewFromInt(0)
 	}
 	if reserved.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid reserved")
-	}
-
-	if locked.Add(inService).
-		Add(waitStart).
-		Cmp(spotQuantity) > 0 {
-		spotQuantity = decimal.NewFromInt(0)
 	}
 
 	if _, err := appstockcrud.UpdateSet(

@@ -78,7 +78,8 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 	if locked.Add(inService).
 		Add(waitStart).
 		Add(appReserved).
-		Cmp(spotQuantity) > 0 {
+		Add(spotQuantity).
+		Cmp(info.Total) > 0 {
 		return fmt.Errorf("stock exhausted")
 	}
 
@@ -144,17 +145,14 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 	if spotQuantity.Cmp(reserved) > 0 {
 		return fmt.Errorf("invalid stock")
 	}
+	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
+		spotQuantity = decimal.NewFromInt(0)
+	}
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
-	}
-
-	if locked.Add(inService).
-		Add(waitStart).
-		Cmp(spotQuantity) > 0 {
-		spotQuantity = decimal.NewFromInt(0)
 	}
 
 	if _, err := appstockcrud.UpdateSet(
