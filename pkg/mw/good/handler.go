@@ -175,6 +175,7 @@ func WithBenefitType(e *types.BenefitType, must bool) func(context.Context, *Han
 		switch *e {
 		case types.BenefitType_BenefitTypePlatform:
 		case types.BenefitType_BenefitTypePool:
+		case types.BenefitType_BenefitTypeOffline:
 		default:
 			return fmt.Errorf("invalid benefittype")
 		}
