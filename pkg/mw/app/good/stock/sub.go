@@ -56,7 +56,9 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	}
 	if h.InService != nil {
 		inService = inService.Sub(*h.InService)
-		sold = sold.Sub(*h.InService)
+		if h.ChargeBack != nil && *h.ChargeBack {
+			sold = sold.Sub(*h.InService)
+		}
 		spotQuantity = h.InService.Add(spotQuantity)
 	}
 	if h.Reserved != nil {
@@ -142,13 +144,18 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 	}
 	if h.InService != nil {
 		inService = inService.Sub(*h.InService)
-		sold = sold.Sub(*h.InService)
+		if h.ChargeBack != nil && *h.ChargeBack {
+			sold = sold.Sub(*h.InService)
+		}
 	}
 	if h.WaitStart != nil {
 		waitStart = waitStart.Sub(*h.WaitStart)
 		sold = sold.Sub(*h.WaitStart)
 	}
 	if h.Reserved != nil {
+		if h.Reserved.Cmp(spotQuantity) > 0 {
+			return fmt.Errorf("invalid reserved")
+		}
 		reserved = reserved.Sub(*h.Reserved)
 		spotQuantity = spotQuantity.Sub(*h.Reserved)
 	}

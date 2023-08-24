@@ -243,11 +243,13 @@ func addStock(t *testing.T) {
 func subStock(t *testing.T) {
 	ret.Sold = decimal.NewFromInt(0).String()
 	ret.SpotQuantity = good.GoodTotal
+	chargeBack := true
 
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithInService(&ret.InService, true),
+		WithChargeBack(&chargeBack, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.SubStock(context.Background())

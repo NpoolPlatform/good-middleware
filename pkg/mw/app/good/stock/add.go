@@ -47,6 +47,10 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 	if h.Locked != nil {
 		locked = h.Locked.Add(locked)
 		spotQuantity = spotQuantity.Sub(*h.Locked)
+		appReserved = appReserved.Sub(*h.Locked)
+		if appReserved.Cmp(decimal.NewFromInt(0)) < 0 {
+			appReserved = decimal.NewFromInt(0)
+		}
 	}
 	if h.WaitStart != nil {
 		waitStart = h.WaitStart.Add(waitStart)
