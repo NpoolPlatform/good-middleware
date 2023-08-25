@@ -16,6 +16,10 @@ import (
 )
 
 func (h *Handler) CreateRequired(ctx context.Context) (*npool.Required, error) {
+	if *h.MainGoodID == *h.RequiredGoodID {
+		return nil, fmt.Errorf("invalid goodid")
+	}
+
 	key := fmt.Sprintf("%v:%v:%v", basetypes.Prefix_PrefixCreateRequiredGood, *h.MainGoodID, *h.RequiredGoodID)
 	if err := redis2.TryLock(key, 0); err != nil {
 		return nil, err
