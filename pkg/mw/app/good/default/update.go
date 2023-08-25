@@ -29,6 +29,14 @@ func (h *updateHandler) updateDefault(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) UpdateDefault(ctx context.Context) (*npool.Default, error) {
+	info, err := h.GetDefault(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if h.AppGoodID == nil {
+		return info, nil
+	}
+
 	if err := h.GetAppGood(ctx); err != nil {
 		return nil, err
 	}
@@ -37,7 +45,7 @@ func (h *Handler) UpdateDefault(ctx context.Context) (*npool.Default, error) {
 		Handler: h,
 	}
 
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateDefault(_ctx, tx); err != nil {
 			return err
 		}

@@ -14,6 +14,7 @@ import (
 	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	enttopmostgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/good"
 
 	"github.com/shopspring/decimal"
@@ -139,6 +140,7 @@ func (h *queryHandler) formalize() {
 			info.Price = amount.String()
 		}
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
+		info.TopMostType = types.GoodTopMostType(types.GoodTopMostType_value[info.TopMostTypeStr])
 	}
 }
 
