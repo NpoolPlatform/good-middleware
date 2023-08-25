@@ -48,6 +48,7 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		appgood1.WithPosters(req.Posters, true),
 		appgood1.WithTechniqueFeeRatio(req.TechnicalFeeRatio, false),
 		appgood1.WithElectricityFeeRatio(req.ElectricityFeeRatio, false),
+		appgood1.WithDisplayNames(req.DisplayNames, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
