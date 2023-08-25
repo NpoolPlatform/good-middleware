@@ -116,6 +116,7 @@ type Conds struct {
 	StartEnd    *cruder.Cond
 }
 
+//nolint:funlen
 func SetQueryConds(q *ent.TopMostQuery, conds *Conds) (*ent.TopMostQuery, error) {
 	q.Where(enttopmost.DeletedAt(0))
 	if conds == nil {
