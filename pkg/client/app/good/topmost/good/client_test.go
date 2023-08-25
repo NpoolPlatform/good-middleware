@@ -160,6 +160,7 @@ var ret = npool.TopMostGood{
 	Posters:        []string{uuid.NewString(), uuid.NewString()},
 	Price:          decimal.NewFromInt(230).String(),
 	TopMostTypeStr: topmost.TopMostType.String(),
+	TopMostType:    topmost.TopMostType,
 	TopMostTitle:   topmost.Title,
 	TopMostMessage: topmost.Message,
 }

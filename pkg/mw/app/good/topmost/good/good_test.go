@@ -157,6 +157,7 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.GoodName = good.Title
 	ret.AppGoodName = appgood.GoodName
 	ret.TopMostTypeStr = topmost.TopMostType.String()
+	ret.TopMostType = topmost.TopMostType
 	ret.TopMostTitle = topmost.Title
 	ret.TopMostMessage = topmost.Message
 
