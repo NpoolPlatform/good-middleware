@@ -2,11 +2,14 @@ package appgood
 
 import (
 	"context"
+	"fmt"
 
 	appgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
+
+	"github.com/google/uuid"
 )
 
 type updateHandler struct {
@@ -48,6 +51,21 @@ func (h *updateHandler) updateAppGood(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) UpdateGood(ctx context.Context) (*npool.Good, error) {
+	info, err := h.GetGood(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if info == nil {
+		return nil, fmt.Errorf("invalid good")
+	}
+
+	goodID, err := uuid.Parse(info.GoodID)
+	if err != nil {
+		return nil, err
+	}
+
+	h.GoodID = &goodID
+
 	if err := h.checkPrice(ctx); err != nil {
 		return nil, err
 	}
@@ -56,7 +74,7 @@ func (h *Handler) UpdateGood(ctx context.Context) (*npool.Good, error) {
 		Handler: h,
 	}
 
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateAppGood(ctx, tx); err != nil {
 			return err
 		}
