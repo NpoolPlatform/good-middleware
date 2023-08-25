@@ -173,7 +173,7 @@ func SetQueryConds(q *ent.TopMostQuery, conds *Conds) (*ent.TopMostQuery, error)
 	}
 	if conds.StartEnd != nil {
 		ats, ok := conds.StartEnd.Val.([]uint32)
-		if !ok || len(ats) != 2 { //nolint
+		if !ok || len(ats) != 2 {
 			return nil, fmt.Errorf("invalid startend")
 		}
 		switch conds.StartEnd.Op {
