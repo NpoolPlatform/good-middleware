@@ -12,16 +12,20 @@ import (
 )
 
 func (h *Handler) checkPromotion(ctx context.Context) error {
-	if *h.TopMostType != types.GoodTopMostType_TopMostPromotion {
+	if h.TopMostType == nil || *h.TopMostType != types.GoodTopMostType_TopMostPromotion {
 		return nil
 	}
 
 	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := topmostcrud.SetQueryConds(cli.TopMost.Query(), &topmostcrud.Conds{
+		conds := &topmostcrud.Conds{
 			AppID:       &cruder.Cond{Op: cruder.EQ, Val: *h.AppID},
 			TopMostType: &cruder.Cond{Op: cruder.EQ, Val: *h.TopMostType},
 			StartEnd:    &cruder.Cond{Op: cruder.OVERLAP, Val: []uint32{*h.StartAt, *h.EndAt}},
-		})
+		}
+		if h.ID != nil {
+			conds.ID = &cruder.Cond{Op: cruder.NEQ, Val: *h.ID}
+		}
+		stm, err := topmostcrud.SetQueryConds(cli.TopMost.Query(), conds)
 		if err != nil {
 			return err
 		}

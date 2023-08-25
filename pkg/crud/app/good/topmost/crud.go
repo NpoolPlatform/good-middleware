@@ -129,6 +129,8 @@ func SetQueryConds(q *ent.TopMostQuery, conds *Conds) (*ent.TopMostQuery, error)
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(enttopmost.ID(id))
+		case cruder.NEQ:
+			q.Where(enttopmost.IDNEQ(id))
 		default:
 			return nil, fmt.Errorf("invalid topmostgood field")
 		}

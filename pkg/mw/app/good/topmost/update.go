@@ -35,7 +35,7 @@ func (h *updateHandler) updateTopMost(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) UpdateTopMost(ctx context.Context) (*npool.TopMost, error) {
-	if err := h.formalizeStartEnd(); err != nil {
+	if err := h.formalizeStartEnd(ctx); err != nil {
 		return nil, err
 	}
 	if err := h.checkPromotion(ctx); err != nil {
