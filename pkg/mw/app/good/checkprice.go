@@ -25,7 +25,7 @@ func (h *Handler) checkPrice(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
-		if h.Price.Cmp(info.Price) > 0 {
+		if h.Price.Cmp(info.Price) < 0 {
 			return fmt.Errorf("invalid price")
 		}
 		return nil
