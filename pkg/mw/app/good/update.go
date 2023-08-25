@@ -48,6 +48,10 @@ func (h *updateHandler) updateAppGood(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) UpdateGood(ctx context.Context) (*npool.Good, error) {
+	if err := h.checkPrice(ctx); err != nil {
+		return nil, err
+	}
+
 	handler := &updateHandler{
 		Handler: h,
 	}

@@ -71,6 +71,10 @@ func (h *createHandler) createAppGood(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) CreateGood(ctx context.Context) (*npool.Good, error) {
+	if err := h.checkPrice(ctx); err != nil {
+		return nil, err
+	}
+
 	handler := &createHandler{
 		Handler: h,
 	}
