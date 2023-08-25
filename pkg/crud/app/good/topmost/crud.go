@@ -113,6 +113,7 @@ type Conds struct {
 	AppID       *cruder.Cond
 	TopMostType *cruder.Cond
 	Title       *cruder.Cond
+	StartEnd    *cruder.Cond
 }
 
 func SetQueryConds(q *ent.TopMostQuery, conds *Conds) (*ent.TopMostQuery, error) {
@@ -164,6 +165,33 @@ func SetQueryConds(q *ent.TopMostQuery, conds *Conds) (*ent.TopMostQuery, error)
 		switch conds.Title.Op {
 		case cruder.EQ:
 			q.Where(enttopmost.Title(title))
+		default:
+			return nil, fmt.Errorf("invalid good field")
+		}
+	}
+	if conds.StartEnd != nil {
+		ats, ok := conds.StartEnd.Val.([]uint32)
+		if !ok || len(ats) != 2 { //nolint
+			return nil, fmt.Errorf("invalid startend")
+		}
+		switch conds.StartEnd.Op {
+		case cruder.OVERLAP:
+			q.Where(
+				enttopmost.Or(
+					enttopmost.And(
+						enttopmost.StartAtLTE(ats[0]),
+						enttopmost.EndAtGTE(ats[0]),
+					),
+					enttopmost.And(
+						enttopmost.StartAtLTE(ats[1]),
+						enttopmost.EndAtGTE(ats[1]),
+					),
+					enttopmost.And(
+						enttopmost.StartAtGTE(ats[0]),
+						enttopmost.EndAtLTE(ats[1]),
+					),
+				),
+			)
 		default:
 			return nil, fmt.Errorf("invalid good field")
 		}

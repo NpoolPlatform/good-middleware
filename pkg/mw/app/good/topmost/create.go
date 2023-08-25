@@ -3,7 +3,6 @@ package topmost
 import (
 	"context"
 	"fmt"
-	"time"
 
 	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
 	topmostcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost"
@@ -22,17 +21,6 @@ type createHandler struct {
 }
 
 func (h *createHandler) createTopMost(ctx context.Context, tx *ent.Tx) error {
-	if h.EndAt == nil {
-		return fmt.Errorf("invalid endat")
-	}
-	now := uint32(time.Now().Unix())
-	if h.StartAt == nil {
-		h.StartAt = &now
-	}
-	if *h.EndAt <= *h.StartAt {
-		return fmt.Errorf("invalid startend")
-	}
-
 	if _, err := topmostcrud.CreateSet(
 		tx.TopMost.Create(),
 		&topmostcrud.Req{
@@ -57,6 +45,13 @@ func (h *createHandler) createTopMost(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) CreateTopMost(ctx context.Context) (*npool.TopMost, error) {
+	if err := h.formalizeStartEnd(); err != nil {
+		return nil, err
+	}
+	if err := h.checkPromotion(ctx); err != nil {
+		return nil, err
+	}
+
 	key := fmt.Sprintf("%v:%v:%v", basetypes.Prefix_PrefixCreateTopMost, *h.AppID, h.TopMostType)
 	if err := redis2.TryLock(key, 0); err != nil {
 		return nil, err
