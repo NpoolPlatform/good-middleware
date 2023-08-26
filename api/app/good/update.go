@@ -34,6 +34,7 @@ func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*
 		appgood1.WithSaleEndAt(req.SaleEndAt, false),
 		appgood1.WithServiceStartAt(req.ServiceStartAt, false),
 		appgood1.WithDescriptions(req.Descriptions, false),
+		appgood1.WithPosters(req.Posters, false),
 		appgood1.WithGoodBanner(req.GoodBanner, false),
 		appgood1.WithEnablePurchase(req.EnablePurchase, false),
 		appgood1.WithEnableProductPage(req.EnableProductPage, false),
