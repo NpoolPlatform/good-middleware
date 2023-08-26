@@ -52,7 +52,7 @@ func (h *createHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 	score := info.Score.
 		Mul(decimal.NewFromInt(int64(info.ScoreCount))).
 		Add(*h.Score).
-		Mul(decimal.NewFromInt(int64(scoreCount)))
+		Div(decimal.NewFromInt(int64(scoreCount)))
 	if _, err := extrainfocrud.UpdateSet(
 		info.Update(),
 		&extrainfocrud.Req{
