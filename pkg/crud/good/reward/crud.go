@@ -68,6 +68,7 @@ type Conds struct {
 	ID          *cruder.Cond
 	GoodID      *cruder.Cond
 	RewardState *cruder.Cond
+	RewardAt    *cruder.Cond
 }
 
 func SetQueryConds(q *ent.GoodRewardQuery, conds *Conds) (*ent.GoodRewardQuery, error) {
@@ -107,6 +108,24 @@ func SetQueryConds(q *ent.GoodRewardQuery, conds *Conds) (*ent.GoodRewardQuery, 
 		switch conds.RewardState.Op {
 		case cruder.EQ:
 			q.Where(entgoodreward.RewardState(state.String()))
+		default:
+			return nil, fmt.Errorf("invalid goodreward field")
+		}
+	}
+	if conds.RewardAt != nil {
+		at, ok := conds.RewardAt.Val.(uint32)
+		if !ok {
+			return nil, fmt.Errorf("invalid rewardat")
+		}
+		switch conds.RewardAt.Op {
+		case cruder.EQ:
+			q.Where(entgoodreward.LastRewardAt(at))
+		case cruder.NEQ:
+			q.Where(entgoodreward.LastRewardAtNEQ(at))
+		case cruder.LT:
+			q.Where(entgoodreward.LastRewardAtLT(at))
+		case cruder.GT:
+			q.Where(entgoodreward.LastRewardAtGT(at))
 		default:
 			return nil, fmt.Errorf("invalid goodreward field")
 		}

@@ -17,6 +17,7 @@ import (
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	entvendorbrand "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	entvendorlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 
@@ -122,6 +123,14 @@ func (h *queryHandler) queryJoinReward(s *sql.Selector) {
 		s.Where(
 			sql.EQ(t.C(entgoodreward.FieldRewardState), h.Conds.RewardState.Val.(types.BenefitState).String()),
 		)
+	}
+	if h.Conds != nil && h.Conds.RewardAt != nil {
+		switch h.Conds.RewardAt.Op {
+		case cruder.EQ:
+			s.Where(sql.EQ(t.C(entgoodreward.FieldLastRewardAt), h.Conds.RewardAt.Val))
+		case cruder.NEQ:
+			s.Where(sql.NEQ(t.C(entgoodreward.FieldLastRewardAt), h.Conds.RewardAt.Val))
+		}
 	}
 
 	s.AppendSelect(

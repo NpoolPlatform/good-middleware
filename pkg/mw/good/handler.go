@@ -581,6 +581,12 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				Val: types.BenefitState(conds.GetRewardState().GetValue()),
 			}
 		}
+		if conds.RewardAt != nil {
+			h.Conds.RewardAt = &cruder.Cond{
+				Op:  conds.GetRewardAt().GetOp(),
+				Val: conds.GetRewardAt().GetValue(),
+			}
+		}
 		if conds.IDs != nil {
 			ids := []uuid.UUID{}
 			for _, id := range conds.GetIDs().GetValue() {
