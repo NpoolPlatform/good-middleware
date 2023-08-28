@@ -154,7 +154,7 @@ func setup(t *testing.T) func(*testing.T) {
 	_, err = h4.CreateGood(context.Background())
 	assert.Nil(t, err)
 
-	state := types.BenefitState_BenefitTransferring
+	state := types.BenefitState_BenefitCheckWait
 	h5, err := good1.NewHandler(
 		context.Background(),
 		good1.WithID(&good.ID, true),
@@ -165,7 +165,40 @@ func setup(t *testing.T) func(*testing.T) {
 	_, err = h5.UpdateGood(context.Background())
 	assert.Nil(t, err)
 
+	state = types.BenefitState_BenefitTransferring
+	h5, err = good1.NewHandler(
+		context.Background(),
+		good1.WithID(&good.ID, true),
+		good1.WithRewardState(&state, true),
+	)
+	assert.Nil(t, err)
+
+	_, err = h5.UpdateGood(context.Background())
+	assert.Nil(t, err)
+
+	state = types.BenefitState_BenefitCheckTransferring
+	h5, err = good1.NewHandler(
+		context.Background(),
+		good1.WithID(&good.ID, true),
+		good1.WithRewardState(&state, true),
+	)
+	assert.Nil(t, err)
+
+	_, err = h5.UpdateGood(context.Background())
+	assert.Nil(t, err)
+
 	state = types.BenefitState_BenefitBookKeeping
+	h5, err = good1.NewHandler(
+		context.Background(),
+		good1.WithID(&good.ID, true),
+		good1.WithRewardState(&state, true),
+	)
+	assert.Nil(t, err)
+
+	_, err = h5.UpdateGood(context.Background())
+	assert.Nil(t, err)
+
+	state = types.BenefitState_BenefitCheckBookKeeping
 	h5, err = good1.NewHandler(
 		context.Background(),
 		good1.WithID(&good.ID, true),
@@ -191,7 +224,29 @@ func setup(t *testing.T) func(*testing.T) {
 	_, err = h5.UpdateGood(context.Background())
 	assert.Nil(t, err)
 
+	state = types.BenefitState_BenefitCheckDone
+	h5, err = good1.NewHandler(
+		context.Background(),
+		good1.WithID(&good.ID, true),
+		good1.WithRewardState(&state, true),
+	)
+	assert.Nil(t, err)
+
+	_, err = h5.UpdateGood(context.Background())
+	assert.Nil(t, err)
+
 	state = types.BenefitState_BenefitWait
+	h5, err = good1.NewHandler(
+		context.Background(),
+		good1.WithID(&good.ID, true),
+		good1.WithRewardState(&state, true),
+	)
+	assert.Nil(t, err)
+
+	_, err = h5.UpdateGood(context.Background())
+	assert.Nil(t, err)
+
+	state = types.BenefitState_BenefitCheckWait
 	h5, err = good1.NewHandler(
 		context.Background(),
 		good1.WithID(&good.ID, true),
@@ -213,7 +268,29 @@ func setup(t *testing.T) func(*testing.T) {
 	_, err = h5.UpdateGood(context.Background())
 	assert.Nil(t, err)
 
+	state = types.BenefitState_BenefitCheckTransferring
+	h5, err = good1.NewHandler(
+		context.Background(),
+		good1.WithID(&good.ID, true),
+		good1.WithRewardState(&state, true),
+	)
+	assert.Nil(t, err)
+
+	_, err = h5.UpdateGood(context.Background())
+	assert.Nil(t, err)
+
 	state = types.BenefitState_BenefitBookKeeping
+	h5, err = good1.NewHandler(
+		context.Background(),
+		good1.WithID(&good.ID, true),
+		good1.WithRewardState(&state, true),
+	)
+	assert.Nil(t, err)
+
+	_, err = h5.UpdateGood(context.Background())
+	assert.Nil(t, err)
+
+	state = types.BenefitState_BenefitCheckBookKeeping
 	h5, err = good1.NewHandler(
 		context.Background(),
 		good1.WithID(&good.ID, true),

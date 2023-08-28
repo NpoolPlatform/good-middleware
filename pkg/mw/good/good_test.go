@@ -203,6 +203,7 @@ func updateGood(t *testing.T) {
 			info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
 			info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
 			info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
+			ret.UpdatedAt = info.UpdatedAt
 			assert.Equal(t, &ret, info)
 		}
 	}
