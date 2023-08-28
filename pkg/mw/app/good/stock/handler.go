@@ -18,6 +18,7 @@ import (
 type Handler struct {
 	appstockcrud.Req
 	ChargeBack *bool
+	Rollback   *bool
 	Conds      *appstockcrud.Conds
 	Offset     int32
 	Limit      int32
@@ -214,6 +215,13 @@ func WithSold(s *string, must bool) func(context.Context, *Handler) error {
 func WithChargeBack(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.ChargeBack = b
+		return nil
+	}
+}
+
+func WithRollback(b *bool, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.Rollback = b
 		return nil
 	}
 }
