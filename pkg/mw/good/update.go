@@ -78,18 +78,51 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 
 	switch info.RewardState {
 	case types.BenefitState_BenefitWait.String():
-		if *h.RewardState != types.BenefitState_BenefitTransferring {
+		if *h.RewardState != types.BenefitState_BenefitCheckWait {
+			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
+		}
+	case types.BenefitState_BenefitCheckWait.String():
+		switch *h.RewardState {
+		case types.BenefitState_BenefitTransferring:
+		case types.BenefitState_BenefitFail:
+		default:
 			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
 		}
 	case types.BenefitState_BenefitTransferring.String():
-		if *h.RewardState != types.BenefitState_BenefitBookKeeping {
+		if *h.RewardState != types.BenefitState_BenefitCheckTransferring {
+			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
+		}
+	case types.BenefitState_BenefitCheckTransferring.String():
+		switch *h.RewardState {
+		case types.BenefitState_BenefitBookKeeping:
+		case types.BenefitState_BenefitFail:
+		default:
 			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
 		}
 	case types.BenefitState_BenefitBookKeeping.String():
-		if *h.RewardState != types.BenefitState_BenefitDone {
+		if *h.RewardState != types.BenefitState_BenefitCheckBookKeeping {
+			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
+		}
+	case types.BenefitState_BenefitCheckBookKeeping.String():
+		switch *h.RewardState {
+		case types.BenefitState_BenefitDone:
+		case types.BenefitState_BenefitFail:
+		default:
 			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
 		}
 	case types.BenefitState_BenefitDone.String():
+		if *h.RewardState != types.BenefitState_BenefitCheckDone {
+			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
+		}
+	case types.BenefitState_BenefitCheckDone.String():
+		if *h.RewardState != types.BenefitState_BenefitWait {
+			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
+		}
+	case types.BenefitState_BenefitFail.String():
+		if *h.RewardState != types.BenefitState_BenefitCheckFail {
+			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
+		}
+	case types.BenefitState_BenefitCheckFail.String():
 		if *h.RewardState != types.BenefitState_BenefitWait {
 			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
 		}

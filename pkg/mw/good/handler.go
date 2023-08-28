@@ -424,9 +424,15 @@ func WithRewardState(e *types.BenefitState, must bool) func(context.Context, *Ha
 		}
 		switch *e {
 		case types.BenefitState_BenefitWait:
+		case types.BenefitState_BenefitCheckWait:
 		case types.BenefitState_BenefitTransferring:
+		case types.BenefitState_BenefitCheckTransferring:
 		case types.BenefitState_BenefitBookKeeping:
+		case types.BenefitState_BenefitCheckBookKeeping:
 		case types.BenefitState_BenefitDone:
+		case types.BenefitState_BenefitCheckDone:
+		case types.BenefitState_BenefitFail:
+		case types.BenefitState_BenefitCheckFail:
 		default:
 			return fmt.Errorf("invalid rewardstate")
 		}
