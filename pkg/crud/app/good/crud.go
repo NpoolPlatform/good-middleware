@@ -208,6 +208,7 @@ type Conds struct {
 	GoodID  *cruder.Cond
 	GoodIDs *cruder.Cond
 	AppIDs  *cruder.Cond
+	IDs     *cruder.Cond
 }
 
 //nolint:gocyclo
@@ -267,11 +268,23 @@ func SetQueryConds(q *ent.AppGoodQuery, conds *Conds) (*ent.AppGoodQuery, error)
 	if conds.AppIDs != nil {
 		ids, ok := conds.AppIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
+			return nil, fmt.Errorf("invalid appids")
 		}
 		switch conds.AppIDs.Op {
 		case cruder.IN:
 			q.Where(entappgood.AppIDIn(ids...))
+		default:
+			return nil, fmt.Errorf("invalid appgood field")
+		}
+	}
+	if conds.IDs != nil {
+		ids, ok := conds.IDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid ids")
+		}
+		switch conds.IDs.Op {
+		case cruder.IN:
+			q.Where(entappgood.IDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid appgood field")
 		}
