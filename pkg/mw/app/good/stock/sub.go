@@ -150,7 +150,16 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 	if h.Locked != nil {
 		locked = locked.Sub(*h.Locked)
 		if h.Rollback != nil && *h.Rollback {
-			spotQuantity = h.Locked.Add(spotQuantity)
+			if spotQuantity.Cmp(decimal.NewFromInt(0)) == 0 {
+				if reserved.Cmp(inService.Add(waitStart)) > 0 {
+					spotQuantity = reserved.Sub(inService.Add(waitStart))
+					if h.Locked.Cmp(spotQuantity) < 0 {
+						spotQuantity = *h.Locked
+					}
+				}
+			} else {
+				spotQuantity = h.Locked.Add(spotQuantity)
+			}
 		}
 	}
 	if h.WaitStart != nil {
