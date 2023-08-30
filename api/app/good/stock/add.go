@@ -26,6 +26,7 @@ func (s *Server) AddStock(ctx context.Context, in *npool.AddStockRequest) (*npoo
 		appstock1.WithID(req.ID, true),
 		appstock1.WithReserved(req.Reserved, false),
 		appstock1.WithLocked(req.Locked, false),
+		appstock1.WithAppSpotLocked(req.AppSpotLocked, false),
 		appstock1.WithWaitStart(req.WaitStart, false),
 		appstock1.WithInService(req.InService, false),
 	)

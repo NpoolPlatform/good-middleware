@@ -17,11 +17,12 @@ import (
 
 type Handler struct {
 	appstockcrud.Req
-	ChargeBack *bool
-	Rollback   *bool
-	Conds      *appstockcrud.Conds
-	Offset     int32
-	Limit      int32
+	AppSpotLocked *decimal.Decimal
+	ChargeBack    *bool
+	Rollback      *bool
+	Conds         *appstockcrud.Conds
+	Offset        int32
+	Limit         int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -114,7 +115,7 @@ func WithReserved(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid Reserved")
+				return fmt.Errorf("invalid reserved")
 			}
 			return nil
 		}
@@ -131,7 +132,7 @@ func WithSpotQuantity(s *string, must bool) func(context.Context, *Handler) erro
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid SpotQuantity")
+				return fmt.Errorf("invalid spotquantity")
 			}
 			return nil
 		}
@@ -148,7 +149,7 @@ func WithLocked(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid Locked")
+				return fmt.Errorf("invalid locked")
 			}
 			return nil
 		}
@@ -165,7 +166,7 @@ func WithInService(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid InService")
+				return fmt.Errorf("invalid inservice")
 			}
 			return nil
 		}
@@ -182,7 +183,7 @@ func WithWaitStart(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid WaitStart")
+				return fmt.Errorf("invalid waitstart")
 			}
 			return nil
 		}
@@ -199,7 +200,7 @@ func WithSold(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid Sold")
+				return fmt.Errorf("invalid sold")
 			}
 			return nil
 		}
@@ -208,6 +209,23 @@ func WithSold(s *string, must bool) func(context.Context, *Handler) error {
 			return err
 		}
 		h.Sold = &amount
+		return nil
+	}
+}
+
+func WithAppSpotLocked(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid appspotlocked")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.AppSpotLocked = &amount
 		return nil
 	}
 }

@@ -18,7 +18,6 @@ import (
 
 type subHandler struct {
 	*Handler
-	rollbackAppSpotQuantity decimal.Decimal
 }
 
 //nolint:gocyclo
@@ -49,8 +48,15 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	if h.Locked != nil {
 		locked = locked.Sub(*h.Locked)
 		if h.Rollback != nil && *h.Rollback {
-			spotQuantity = h.Locked.Add(spotQuantity).Sub(h.rollbackAppSpotQuantity)
-			appReserved = appReserved.Add(h.rollbackAppSpotQuantity)
+			platformLocked := decimal.NewFromInt(0)
+			if h.AppSpotLocked != nil {
+				platformLocked = h.Locked.Sub(*h.AppSpotLocked)
+				appReserved = h.AppSpotLocked.Add(appReserved)
+			}
+			if platformLocked.Cmp(decimal.NewFromInt(0)) < 0 {
+				return fmt.Errorf("invalid appspotlocked")
+			}
+			spotQuantity = platformLocked.Add(spotQuantity)
 		}
 	}
 	if h.WaitStart != nil {
@@ -154,17 +160,8 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 	if h.Locked != nil {
 		locked = locked.Sub(*h.Locked)
 		if h.Rollback != nil && *h.Rollback {
-			if spotQuantity.Cmp(decimal.NewFromInt(0)) == 0 {
-				if reserved.Cmp(inService.Add(waitStart)) > 0 {
-					spotQuantity = reserved.Sub(inService.Add(waitStart))
-					if h.Locked.Cmp(spotQuantity) < 0 {
-						spotQuantity = *h.Locked
-					} else {
-						h.rollbackAppSpotQuantity = h.Locked.Sub(spotQuantity)
-					}
-				}
-			} else {
-				spotQuantity = h.Locked.Add(spotQuantity)
+			if h.AppSpotLocked != nil {
+				spotQuantity = h.AppSpotLocked.Add(spotQuantity)
 			}
 		}
 	}

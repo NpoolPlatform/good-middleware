@@ -46,11 +46,18 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 
 	if h.Locked != nil {
 		locked = h.Locked.Add(locked)
-		appReserved = appReserved.Sub(*h.Locked)
-		if appReserved.Cmp(decimal.NewFromInt(0)) < 0 {
-			spotQuantity = spotQuantity.Add(appReserved)
-			appReserved = decimal.NewFromInt(0)
+		platformLocked := decimal.NewFromInt(0)
+		if h.AppSpotLocked != nil {
+			platformLocked = h.Locked.Sub(*h.AppSpotLocked)
+			appReserved = appReserved.Sub(*h.AppSpotLocked)
 		}
+		if platformLocked.Cmp(decimal.NewFromInt(0)) < 0 {
+			return fmt.Errorf("invalid appspotlockde")
+		}
+		if appReserved.Cmp(decimal.NewFromInt(0)) < 0 {
+			return fmt.Errorf("invalid appreserved")
+		}
+		spotQuantity = spotQuantity.Sub(platformLocked)
 	}
 	if h.WaitStart != nil {
 		waitStart = h.WaitStart.Add(waitStart)
@@ -134,7 +141,9 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 	}
 	if h.Locked != nil {
 		locked = h.Locked.Add(locked)
-		spotQuantity = spotQuantity.Sub(*h.Locked)
+		if h.AppSpotLocked != nil {
+			spotQuantity = spotQuantity.Sub(*h.AppSpotLocked)
+		}
 	}
 	if h.WaitStart != nil {
 		waitStart = h.WaitStart.Add(waitStart)
