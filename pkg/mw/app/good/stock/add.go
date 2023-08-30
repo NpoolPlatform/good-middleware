@@ -46,9 +46,9 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
 
 	if h.Locked != nil {
 		locked = h.Locked.Add(locked)
-		platformLocked := decimal.NewFromInt(0)
+		platformLocked := *h.Locked
 		if h.AppSpotLocked != nil {
-			platformLocked = h.Locked.Sub(*h.AppSpotLocked)
+			platformLocked = platformLocked.Sub(*h.AppSpotLocked)
 			appReserved = appReserved.Sub(*h.AppSpotLocked)
 		}
 		if platformLocked.Cmp(decimal.NewFromInt(0)) < 0 {
