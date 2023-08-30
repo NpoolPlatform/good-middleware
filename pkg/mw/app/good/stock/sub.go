@@ -18,6 +18,7 @@ import (
 
 type subHandler struct {
 	*Handler
+	rollbackAppSpotQuantity decimal.Decimal
 }
 
 //nolint:gocyclo
@@ -47,7 +48,9 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 
 	if h.Locked != nil {
 		locked = locked.Sub(*h.Locked)
-		spotQuantity = h.Locked.Add(spotQuantity)
+		if h.Rollback != nil && *h.Rollback {
+			spotQuantity = h.Locked.Add(spotQuantity).Sub(h.rollbackAppSpotQuantity)
+		}
 	}
 	if h.WaitStart != nil {
 		waitStart = waitStart.Sub(*h.WaitStart)
@@ -155,6 +158,8 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 					spotQuantity = reserved.Sub(inService.Add(waitStart))
 					if h.Locked.Cmp(spotQuantity) < 0 {
 						spotQuantity = *h.Locked
+					} else {
+						h.rollbackAppSpotQuantity = h.Locked.Sub(spotQuantity)
 					}
 				}
 			} else {
