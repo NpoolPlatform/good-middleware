@@ -48,9 +48,9 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	if h.Locked != nil {
 		locked = locked.Sub(*h.Locked)
 		if h.Rollback != nil && *h.Rollback {
-			platformLocked := decimal.NewFromInt(0)
+			platformLocked := *h.Locked
 			if h.AppSpotLocked != nil {
-				platformLocked = h.Locked.Sub(*h.AppSpotLocked)
+				platformLocked = platformLocked.Sub(*h.AppSpotLocked)
 				appReserved = h.AppSpotLocked.Add(appReserved)
 			}
 			if platformLocked.Cmp(decimal.NewFromInt(0)) < 0 {
