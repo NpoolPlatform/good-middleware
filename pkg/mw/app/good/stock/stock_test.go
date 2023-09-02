@@ -268,6 +268,7 @@ func addStock(t *testing.T) {
 		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
 		WithLocked(&ret.Locked, true),
+		WithAppSpotLocked(&ret.Locked, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.AddStock(context.Background())
