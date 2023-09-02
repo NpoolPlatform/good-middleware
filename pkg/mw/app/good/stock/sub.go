@@ -20,7 +20,7 @@ type subHandler struct {
 	*Handler
 }
 
-//nolint:gocyclo
+//nolint:gocyclo,funlen
 func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		Stock.

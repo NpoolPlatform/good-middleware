@@ -211,7 +211,7 @@ type Conds struct {
 	IDs     *cruder.Cond
 }
 
-//nolint:gocyclo
+//nolint:gocyclo,funlen
 func SetQueryConds(q *ent.AppGoodQuery, conds *Conds) (*ent.AppGoodQuery, error) {
 	q.Where(entappgood.DeletedAt(0))
 	if conds == nil {
