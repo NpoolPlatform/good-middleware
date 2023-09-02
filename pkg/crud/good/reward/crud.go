@@ -71,7 +71,7 @@ type Conds struct {
 	RewardAt    *cruder.Cond
 }
 
-func SetQueryConds(q *ent.GoodRewardQuery, conds *Conds) (*ent.GoodRewardQuery, error) {
+func SetQueryConds(q *ent.GoodRewardQuery, conds *Conds) (*ent.GoodRewardQuery, error) { //nolint:gocyclo
 	q.Where(entgoodreward.DeletedAt(0))
 	if conds == nil {
 		return q, nil

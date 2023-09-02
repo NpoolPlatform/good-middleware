@@ -20,12 +20,13 @@ type addHandler struct {
 	*Handler
 }
 
-func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error {
+func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error { //nolint:gocyclo
 	info, err := tx.
 		Stock.
 		Query().
 		Where(
 			entstock.GoodID(*h.GoodID),
+			entstock.AppGoodID(*h.AppGoodID),
 			entstock.DeletedAt(0),
 		).
 		ForUpdate().
