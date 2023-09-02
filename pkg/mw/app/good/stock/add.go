@@ -26,7 +26,6 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error { //nolint:
 		Query().
 		Where(
 			entstock.GoodID(*h.GoodID),
-			entstock.AppGoodID(*h.AppGoodID),
 			entstock.DeletedAt(0),
 		).
 		ForUpdate().
