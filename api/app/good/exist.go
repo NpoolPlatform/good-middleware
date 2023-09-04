@@ -12,6 +12,35 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 )
 
+func (s *Server) ExistGood(ctx context.Context, in *npool.ExistGoodRequest) (*npool.ExistGoodResponse, error) {
+	handler, err := appgood1.NewHandler(
+		ctx,
+		appgood1.WithID(&in.ID, true),
+	)
+	if err != nil {
+		logger.Sugar().Errorw(
+			"ExistGood",
+			"In", in,
+			"Error", err,
+		)
+		return &npool.ExistGoodResponse{}, status.Error(codes.Aborted, err.Error())
+	}
+
+	exist, err := handler.ExistGood(ctx)
+	if err != nil {
+		logger.Sugar().Errorw(
+			"ExistGood",
+			"In", in,
+			"Error", err,
+		)
+		return &npool.ExistGoodResponse{}, status.Error(codes.Aborted, err.Error())
+	}
+
+	return &npool.ExistGoodResponse{
+		Info: exist,
+	}, nil
+}
+
 func (s *Server) ExistGoodConds(ctx context.Context, in *npool.ExistGoodCondsRequest) (*npool.ExistGoodCondsResponse, error) {
 	handler, err := appgood1.NewHandler(
 		ctx,
