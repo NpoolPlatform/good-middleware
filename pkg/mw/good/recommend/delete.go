@@ -2,11 +2,14 @@ package recommend
 
 import (
 	"context"
+	"fmt"
 	"time"
 
+	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/extrainfo"
 	recommendcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/recommend"
 )
 
@@ -20,6 +23,34 @@ func (h *deleteHandler) deleteRecommend(ctx context.Context, tx *ent.Tx) error {
 		tx.Recommend.UpdateOneID(*h.ID),
 		&recommendcrud.Req{
 			DeletedAt: &now,
+		},
+	).Save(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (h *deleteHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
+	stm, err := extrainfocrud.SetQueryConds(tx.ExtraInfo.Query(), &extrainfocrud.Conds{
+		GoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.GoodID},
+	})
+	if err != nil {
+		return err
+	}
+	info, err := stm.Only(ctx)
+	if err != nil {
+		return err
+	}
+
+	if info.RecommendCount == 0 {
+		return fmt.Errorf("invalid recommendcount")
+	}
+	info.RecommendCount--
+
+	if _, err := extrainfocrud.UpdateSet(
+		info.Update(),
+		&extrainfocrud.Req{
+			RecommendCount: &info.RecommendCount,
 		},
 	).Save(ctx); err != nil {
 		return err
