@@ -9,6 +9,7 @@ import (
 	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
 	topmost1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/topmost"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/good"
 
 	"github.com/google/uuid"
@@ -176,6 +177,12 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			h.Conds.GoodID = &cruder.Cond{
 				Op:  conds.GetGoodID().GetOp(),
 				Val: id,
+			}
+		}
+		if conds.TopMostType != nil {
+			h.Conds.TopMostType = &cruder.Cond{
+				Op:  conds.GetTopMostType().GetOp(),
+				Val: types.GoodTopMostType(conds.GetTopMostType().GetValue()),
 			}
 		}
 		return nil

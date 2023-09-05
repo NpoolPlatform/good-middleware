@@ -108,6 +108,16 @@ func (h *queryHandler) queryJoinTopMost(s *sql.Selector) {
 			sql.As(t.C(enttopmost.FieldTitle), "top_most_title"),
 			sql.As(t.C(enttopmost.FieldMessage), "top_most_message"),
 		)
+
+	if h.Conds != nil && h.Conds.TopMostType != nil {
+		_type, ok := h.Conds.TopMostType.Val.(types.GoodTopMostType)
+		if !ok {
+			return
+		}
+		s.Where(
+			sql.EQ(t.C(enttopmost.FieldTopMostType), _type.String()),
+		)
+	}
 }
 
 func (h *queryHandler) queryJoin() {
