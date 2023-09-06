@@ -75,6 +75,9 @@ func (h *Handler) DeleteRecommend(ctx context.Context) (*npool.Recommend, error)
 		if err := handler.deleteRecommend(ctx, tx); err != nil {
 			return err
 		}
+		if err := handler.updateGoodScore(ctx, tx); err != nil {
+			return err
+		}
 		return nil
 	})
 	if err != nil {
