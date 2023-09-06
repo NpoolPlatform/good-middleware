@@ -262,6 +262,7 @@ func (h *queryHandler) formalize() {
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
+		info.CancelMode = types.CancelMode(types.CancelMode_value[info.CancelModeStr])
 		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
 		_ = json.Unmarshal([]byte(info.DisplayNamesStr), &info.DisplayNames)
