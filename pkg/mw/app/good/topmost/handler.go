@@ -1,0 +1,237 @@
+package topmost
+
+import (
+	"context"
+	"fmt"
+
+	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
+	topmostcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost"
+
+	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
+)
+
+type Handler struct {
+	topmostcrud.Req
+	Conds  *topmostcrud.Conds
+	Offset int32
+	Limit  int32
+}
+
+func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
+	handler := &Handler{}
+	for _, opt := range options {
+		if err := opt(ctx, handler); err != nil {
+			return nil, err
+		}
+	}
+	return handler, nil
+}
+
+func WithID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid id")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
+		if err != nil {
+			return err
+		}
+		h.ID = &_id
+		return nil
+	}
+}
+
+func WithAppID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid appid")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
+		if err != nil {
+			return err
+		}
+		h.AppID = &_id
+		return nil
+	}
+}
+
+func WithTopMostType(e *types.GoodTopMostType, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return fmt.Errorf("invalid topmosttype")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodTopMostType_TopMostPromotion:
+		case types.GoodTopMostType_TopMostNoviceExclusive:
+		case types.GoodTopMostType_TopMostBestOffer:
+		case types.GoodTopMostType_TopMostInnovationStarter:
+		case types.GoodTopMostType_TopMostLoyaltyExclusive:
+		default:
+			return fmt.Errorf("invalid topmosttype")
+		}
+		h.TopMostType = e
+		return nil
+	}
+}
+
+func WithTitle(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.Title = s
+		return nil
+	}
+}
+
+func WithMessage(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.Message = s
+		return nil
+	}
+}
+
+func WithPosters(ss []string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.Posters = ss
+		return nil
+	}
+}
+
+func WithStartAt(n *uint32, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.StartAt = n
+		return nil
+	}
+}
+
+func WithEndAt(n *uint32, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.EndAt = n
+		return nil
+	}
+}
+
+func WithThresholdCredits(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid thresholdcredits")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.ThresholdCredits = &amount
+		return nil
+	}
+}
+
+func WithRegisterElapsedSeconds(n *uint32, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.RegisterElapsedSeconds = n
+		return nil
+	}
+}
+
+func WithThresholdPurchases(n *uint32, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.ThresholdPurchases = n
+		return nil
+	}
+}
+
+func WithThresholdPaymentAmount(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid thresholdpaymentamount")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.ThresholdPaymentAmount = &amount
+		return nil
+	}
+}
+
+func WithKycMust(b *bool, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.KycMust = b
+		return nil
+	}
+}
+
+func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.Conds = &topmostcrud.Conds{}
+		if conds == nil {
+			return nil
+		}
+		if conds.ID != nil {
+			id, err := uuid.Parse(conds.GetID().GetValue())
+			if err != nil {
+				return err
+			}
+			h.Conds.ID = &cruder.Cond{
+				Op:  conds.GetID().GetOp(),
+				Val: id,
+			}
+		}
+		if conds.AppID != nil {
+			id, err := uuid.Parse(conds.GetAppID().GetValue())
+			if err != nil {
+				return err
+			}
+			h.Conds.AppID = &cruder.Cond{
+				Op:  conds.GetAppID().GetOp(),
+				Val: id,
+			}
+		}
+		if conds.TopMostType != nil {
+			h.Conds.TopMostType = &cruder.Cond{
+				Op:  conds.GetTopMostType().GetOp(),
+				Val: types.GoodTopMostType(conds.GetTopMostType().GetValue()),
+			}
+		}
+		if conds.Title != nil {
+			h.Conds.Title = &cruder.Cond{
+				Op:  conds.GetTitle().GetOp(),
+				Val: conds.GetTitle().GetValue(),
+			}
+		}
+		return nil
+	}
+}
+
+func WithOffset(value int32) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.Offset = value
+		return nil
+	}
+}
+
+func WithLimit(value int32) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if value == 0 {
+			value = constant.DefaultRowLimit
+		}
+		h.Limit = value
+		return nil
+	}
+}
