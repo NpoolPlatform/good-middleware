@@ -115,6 +115,7 @@ var ret = npool.Good{
 	GoodTotal:              good.GoodTotal,
 	GoodSpotQuantity:       good.GoodTotal,
 	CancelModeStr:          types.CancelMode_Uncancellable.String(),
+	CancelMode:             types.CancelMode_Uncancellable,
 	PurchaseLimit:          3000,
 	EnableSetCommission:    true,
 	EnablePurchase:         true,

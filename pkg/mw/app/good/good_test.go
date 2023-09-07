@@ -108,6 +108,7 @@ var ret = npool.Good{
 	BenefitIntervalHours:   good.BenefitIntervalHours,
 	GoodTotal:              good.GoodTotal,
 	CancelModeStr:          types.CancelMode_Uncancellable.String(),
+	CancelMode:             types.CancelMode_Uncancellable,
 	PurchaseLimit:          3000,
 	EnableSetCommission:    true,
 	EnablePurchase:         true,
