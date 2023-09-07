@@ -11,6 +11,8 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/recommend"
+
+	"github.com/google/uuid"
 )
 
 type deleteHandler struct {
@@ -67,6 +69,11 @@ func (h *Handler) DeleteRecommend(ctx context.Context) (*npool.Recommend, error)
 		return nil, nil
 	}
 
+	goodID, err := uuid.Parse(info.GoodID)
+	if err != nil {
+		return nil, err
+	}
+	h.GoodID = &goodID
 	handler := &deleteHandler{
 		Handler: h,
 	}

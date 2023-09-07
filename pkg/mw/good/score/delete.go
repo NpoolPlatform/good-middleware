@@ -12,6 +12,7 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/score"
 
+	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
 
@@ -80,6 +81,11 @@ func (h *Handler) DeleteScore(ctx context.Context) (*npool.Score, error) {
 		return nil, nil
 	}
 
+	goodID, err := uuid.Parse(info.GoodID)
+	if err != nil {
+		return nil, err
+	}
+	h.GoodID = &goodID
 	handler := &deleteHandler{
 		Handler: h,
 	}
