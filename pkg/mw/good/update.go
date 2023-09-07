@@ -131,8 +131,10 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 	}
 
 	totalReward := info.TotalRewardAmount
-	if h.RewardAmount != nil {
-		totalReward = h.RewardAmount.Add(totalReward)
+	if *h.RewardState == types.BenefitState_BenefitDone {
+		if h.RewardAmount != nil {
+			totalReward = h.RewardAmount.Add(totalReward)
+		}
 	}
 
 	if _, err := rewardcrud.UpdateSet(
