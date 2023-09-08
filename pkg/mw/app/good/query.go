@@ -282,6 +282,18 @@ func (h *queryHandler) formalize() {
 		} else {
 			info.GoodSpotQuantity = amount.String()
 		}
+		amount, err = decimal.NewFromString(info.GoodInService)
+		if err != nil {
+			info.GoodInService = decimal.NewFromInt(0).String()
+		} else {
+			info.GoodInService = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.GoodSold)
+		if err != nil {
+			info.GoodSold = decimal.NewFromInt(0).String()
+		} else {
+			info.GoodSold = amount.String()
+		}
 		amount, err = decimal.NewFromString(info.Price)
 		if err != nil {
 			info.Price = decimal.NewFromInt(0).String()

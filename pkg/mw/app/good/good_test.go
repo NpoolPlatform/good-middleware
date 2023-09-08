@@ -107,6 +107,8 @@ var ret = npool.Good{
 	Labels:                 good.Labels,
 	BenefitIntervalHours:   good.BenefitIntervalHours,
 	GoodTotal:              good.GoodTotal,
+	GoodInService:          decimal.NewFromInt(0).String(),
+	GoodSold:               decimal.NewFromInt(0).String(),
 	CancelModeStr:          types.CancelMode_Uncancellable.String(),
 	CancelMode:             types.CancelMode_Uncancellable,
 	PurchaseLimit:          3000,
