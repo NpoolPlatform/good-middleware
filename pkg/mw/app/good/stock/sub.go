@@ -4,12 +4,14 @@ package appstock
 import (
 	"context"
 	"fmt"
+	"time"
 
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
+	entappstocklock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 
@@ -158,6 +160,9 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 	spotQuantity := info.SpotQuantity
 
 	if h.Locked != nil {
+		if h.LockID == nil {
+			return fmt.Errorf("invalid lockid")
+		}
 		locked = locked.Sub(*h.Locked)
 		if h.Rollback != nil && *h.Rollback {
 			if h.AppSpotLocked != nil {
@@ -224,6 +229,34 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 	).Save(ctx); err != nil {
 		return err
 	}
+
+	if h.Locked == nil {
+		return nil
+	}
+
+	exist, err := tx.
+		AppStockLock.
+		Query().
+		Where(
+			entappstocklock.ID(*h.LockID),
+			entappstocklock.DeletedAt(0),
+		).
+		Exist(ctx)
+	if err != nil {
+		return err
+	}
+	if !exist {
+		return fmt.Errorf("lockid not exists")
+	}
+
+	if _, err := tx.
+		AppStockLock.
+		UpdateOneID(*h.LockID).
+		SetDeletedAt(uint32(time.Now().Unix())).
+		Save(ctx); err != nil {
+		return err
+	}
+
 	return nil
 }
 

@@ -15,6 +15,9 @@ type AppGood func(*sql.Selector)
 // AppStock is the predicate function for appstock builders.
 type AppStock func(*sql.Selector)
 
+// AppStockLock is the predicate function for appstocklock builders.
+type AppStockLock func(*sql.Selector)
+
 // Comment is the predicate function for comment builders.
 type Comment func(*sql.Selector)
 

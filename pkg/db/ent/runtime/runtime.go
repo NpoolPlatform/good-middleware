@@ -8,6 +8,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
@@ -248,6 +249,38 @@ func init() {
 	appstockDescID := appstockFields[0].Descriptor()
 	// appstock.DefaultID holds the default value on creation for the id field.
 	appstock.DefaultID = appstockDescID.Default.(func() uuid.UUID)
+	appstocklockMixin := schema.AppStockLock{}.Mixin()
+	appstocklock.Policy = privacy.NewPolicies(appstocklockMixin[0], schema.AppStockLock{})
+	appstocklock.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := appstocklock.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	appstocklockMixinFields0 := appstocklockMixin[0].Fields()
+	_ = appstocklockMixinFields0
+	appstocklockFields := schema.AppStockLock{}.Fields()
+	_ = appstocklockFields
+	// appstocklockDescCreatedAt is the schema descriptor for created_at field.
+	appstocklockDescCreatedAt := appstocklockMixinFields0[0].Descriptor()
+	// appstocklock.DefaultCreatedAt holds the default value on creation for the created_at field.
+	appstocklock.DefaultCreatedAt = appstocklockDescCreatedAt.Default.(func() uint32)
+	// appstocklockDescUpdatedAt is the schema descriptor for updated_at field.
+	appstocklockDescUpdatedAt := appstocklockMixinFields0[1].Descriptor()
+	// appstocklock.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	appstocklock.DefaultUpdatedAt = appstocklockDescUpdatedAt.Default.(func() uint32)
+	// appstocklock.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	appstocklock.UpdateDefaultUpdatedAt = appstocklockDescUpdatedAt.UpdateDefault.(func() uint32)
+	// appstocklockDescDeletedAt is the schema descriptor for deleted_at field.
+	appstocklockDescDeletedAt := appstocklockMixinFields0[2].Descriptor()
+	// appstocklock.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	appstocklock.DefaultDeletedAt = appstocklockDescDeletedAt.Default.(func() uint32)
+	// appstocklockDescID is the schema descriptor for id field.
+	appstocklockDescID := appstocklockFields[0].Descriptor()
+	// appstocklock.DefaultID holds the default value on creation for the id field.
+	appstocklock.DefaultID = appstocklockDescID.Default.(func() uuid.UUID)
 	commentMixin := schema.Comment{}.Mixin()
 	comment.Policy = privacy.NewPolicies(commentMixin[0], schema.Comment{})
 	comment.Hooks[0] = func(next ent.Mutator) ent.Mutator {

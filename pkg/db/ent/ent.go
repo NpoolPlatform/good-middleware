@@ -13,6 +13,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
@@ -52,6 +53,7 @@ func columnChecker(table string) func(string) error {
 		appdefaultgood.Table:    appdefaultgood.ValidColumn,
 		appgood.Table:           appgood.ValidColumn,
 		appstock.Table:          appstock.ValidColumn,
+		appstocklock.Table:      appstocklock.ValidColumn,
 		comment.Table:           comment.ValidColumn,
 		deviceinfo.Table:        deviceinfo.ValidColumn,
 		extrainfo.Table:         extrainfo.ValidColumn,

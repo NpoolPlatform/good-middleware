@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
+	appstocklockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/lock"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -140,6 +141,9 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 		spotQuantity = h.Reserved.Add(spotQuantity)
 	}
 	if h.Locked != nil {
+		if h.LockID == nil {
+			return fmt.Errorf("invalid lockid")
+		}
 		locked = h.Locked.Add(locked)
 		if h.AppSpotLocked != nil {
 			spotQuantity = spotQuantity.Sub(*h.AppSpotLocked)
@@ -181,6 +185,20 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 	).Save(ctx); err != nil {
 		return err
 	}
+
+	if h.Locked == nil {
+		return nil
+	}
+
+	if _, err := appstocklockcrud.CreateSet(
+		tx.AppStockLock.Create(),
+		&appstocklockcrud.Req{
+			ID: h.LockID,
+		},
+	).Save(ctx); err != nil {
+		return err
+	}
+
 	return nil
 }
 

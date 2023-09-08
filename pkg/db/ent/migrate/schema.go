@@ -93,6 +93,19 @@ var (
 		Columns:    AppStocksColumns,
 		PrimaryKey: []*schema.Column{AppStocksColumns[0]},
 	}
+	// AppStockLocksColumns holds the columns for the "app_stock_locks" table.
+	AppStockLocksColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+	}
+	// AppStockLocksTable holds the schema information for the "app_stock_locks" table.
+	AppStockLocksTable = &schema.Table{
+		Name:       "app_stock_locks",
+		Columns:    AppStockLocksColumns,
+		PrimaryKey: []*schema.Column{AppStockLocksColumns[0]},
+	}
 	// CommentsColumns holds the columns for the "comments" table.
 	CommentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -451,6 +464,7 @@ var (
 		AppDefaultGoodsTable,
 		AppGoodsTable,
 		AppStocksTable,
+		AppStockLocksTable,
 		CommentsTable,
 		DeviceInfosTable,
 		ExtraInfosTable,

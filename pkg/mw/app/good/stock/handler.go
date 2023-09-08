@@ -18,6 +18,7 @@ import (
 type Handler struct {
 	appstockcrud.Req
 	AppSpotLocked *decimal.Decimal
+	LockID        *uuid.UUID
 	ChargeBack    *bool
 	Rollback      *bool
 	Conds         *appstockcrud.Conds
@@ -240,6 +241,23 @@ func WithChargeBack(b *bool, must bool) func(context.Context, *Handler) error {
 func WithRollback(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Rollback = b
+		return nil
+	}
+}
+
+func WithLockID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid lockid")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
+		if err != nil {
+			return err
+		}
+		h.LockID = &_id
 		return nil
 	}
 }

@@ -222,6 +222,30 @@ func (f AppStockMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutati
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppStockMutation", m)
 }
 
+// The AppStockLockQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AppStockLockQueryRuleFunc func(context.Context, *ent.AppStockLockQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AppStockLockQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppStockLockQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppStockLockQuery", q)
+}
+
+// The AppStockLockMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AppStockLockMutationRuleFunc func(context.Context, *ent.AppStockLockMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AppStockLockMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppStockLockMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppStockLockMutation", m)
+}
+
 // The CommentQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type CommentQueryRuleFunc func(context.Context, *ent.CommentQuery) error
@@ -647,6 +671,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.AppStockQuery:
 		return q.Filter(), nil
+	case *ent.AppStockLockQuery:
+		return q.Filter(), nil
 	case *ent.CommentQuery:
 		return q.Filter(), nil
 	case *ent.DeviceInfoQuery:
@@ -691,6 +717,8 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	case *ent.AppGoodMutation:
 		return m.Filter(), nil
 	case *ent.AppStockMutation:
+		return m.Filter(), nil
+	case *ent.AppStockLockMutation:
 		return m.Filter(), nil
 	case *ent.CommentMutation:
 		return m.Filter(), nil

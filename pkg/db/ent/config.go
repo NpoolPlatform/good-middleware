@@ -31,6 +31,7 @@ type hooks struct {
 	AppDefaultGood    []ent.Hook
 	AppGood           []ent.Hook
 	AppStock          []ent.Hook
+	AppStockLock      []ent.Hook
 	Comment           []ent.Hook
 	DeviceInfo        []ent.Hook
 	ExtraInfo         []ent.Hook

@@ -48,6 +48,19 @@ func (f AppStockFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	return f(ctx, mv)
 }
 
+// The AppStockLockFunc type is an adapter to allow the use of ordinary
+// function as AppStockLock mutator.
+type AppStockLockFunc func(context.Context, *ent.AppStockLockMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppStockLockFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppStockLockMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppStockLockMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The CommentFunc type is an adapter to allow the use of ordinary
 // function as Comment mutator.
 type CommentFunc func(context.Context, *ent.CommentMutation) (ent.Value, error)

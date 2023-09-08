@@ -14,6 +14,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
@@ -46,6 +47,8 @@ type Client struct {
 	AppGood *AppGoodClient
 	// AppStock is the client for interacting with the AppStock builders.
 	AppStock *AppStockClient
+	// AppStockLock is the client for interacting with the AppStockLock builders.
+	AppStockLock *AppStockLockClient
 	// Comment is the client for interacting with the Comment builders.
 	Comment *CommentClient
 	// DeviceInfo is the client for interacting with the DeviceInfo builders.
@@ -94,6 +97,7 @@ func (c *Client) init() {
 	c.AppDefaultGood = NewAppDefaultGoodClient(c.config)
 	c.AppGood = NewAppGoodClient(c.config)
 	c.AppStock = NewAppStockClient(c.config)
+	c.AppStockLock = NewAppStockLockClient(c.config)
 	c.Comment = NewCommentClient(c.config)
 	c.DeviceInfo = NewDeviceInfoClient(c.config)
 	c.ExtraInfo = NewExtraInfoClient(c.config)
@@ -146,6 +150,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		AppDefaultGood:    NewAppDefaultGoodClient(cfg),
 		AppGood:           NewAppGoodClient(cfg),
 		AppStock:          NewAppStockClient(cfg),
+		AppStockLock:      NewAppStockLockClient(cfg),
 		Comment:           NewCommentClient(cfg),
 		DeviceInfo:        NewDeviceInfoClient(cfg),
 		ExtraInfo:         NewExtraInfoClient(cfg),
@@ -184,6 +189,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		AppDefaultGood:    NewAppDefaultGoodClient(cfg),
 		AppGood:           NewAppGoodClient(cfg),
 		AppStock:          NewAppStockClient(cfg),
+		AppStockLock:      NewAppStockLockClient(cfg),
 		Comment:           NewCommentClient(cfg),
 		DeviceInfo:        NewDeviceInfoClient(cfg),
 		ExtraInfo:         NewExtraInfoClient(cfg),
@@ -232,6 +238,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.AppDefaultGood.Use(hooks...)
 	c.AppGood.Use(hooks...)
 	c.AppStock.Use(hooks...)
+	c.AppStockLock.Use(hooks...)
 	c.Comment.Use(hooks...)
 	c.DeviceInfo.Use(hooks...)
 	c.ExtraInfo.Use(hooks...)
@@ -521,6 +528,97 @@ func (c *AppStockClient) GetX(ctx context.Context, id uuid.UUID) *AppStock {
 func (c *AppStockClient) Hooks() []Hook {
 	hooks := c.hooks.AppStock
 	return append(hooks[:len(hooks):len(hooks)], appstock.Hooks[:]...)
+}
+
+// AppStockLockClient is a client for the AppStockLock schema.
+type AppStockLockClient struct {
+	config
+}
+
+// NewAppStockLockClient returns a client for the AppStockLock from the given config.
+func NewAppStockLockClient(c config) *AppStockLockClient {
+	return &AppStockLockClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appstocklock.Hooks(f(g(h())))`.
+func (c *AppStockLockClient) Use(hooks ...Hook) {
+	c.hooks.AppStockLock = append(c.hooks.AppStockLock, hooks...)
+}
+
+// Create returns a builder for creating a AppStockLock entity.
+func (c *AppStockLockClient) Create() *AppStockLockCreate {
+	mutation := newAppStockLockMutation(c.config, OpCreate)
+	return &AppStockLockCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppStockLock entities.
+func (c *AppStockLockClient) CreateBulk(builders ...*AppStockLockCreate) *AppStockLockCreateBulk {
+	return &AppStockLockCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppStockLock.
+func (c *AppStockLockClient) Update() *AppStockLockUpdate {
+	mutation := newAppStockLockMutation(c.config, OpUpdate)
+	return &AppStockLockUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppStockLockClient) UpdateOne(asl *AppStockLock) *AppStockLockUpdateOne {
+	mutation := newAppStockLockMutation(c.config, OpUpdateOne, withAppStockLock(asl))
+	return &AppStockLockUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppStockLockClient) UpdateOneID(id uuid.UUID) *AppStockLockUpdateOne {
+	mutation := newAppStockLockMutation(c.config, OpUpdateOne, withAppStockLockID(id))
+	return &AppStockLockUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppStockLock.
+func (c *AppStockLockClient) Delete() *AppStockLockDelete {
+	mutation := newAppStockLockMutation(c.config, OpDelete)
+	return &AppStockLockDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppStockLockClient) DeleteOne(asl *AppStockLock) *AppStockLockDeleteOne {
+	return c.DeleteOneID(asl.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppStockLockClient) DeleteOneID(id uuid.UUID) *AppStockLockDeleteOne {
+	builder := c.Delete().Where(appstocklock.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppStockLockDeleteOne{builder}
+}
+
+// Query returns a query builder for AppStockLock.
+func (c *AppStockLockClient) Query() *AppStockLockQuery {
+	return &AppStockLockQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppStockLock entity by its id.
+func (c *AppStockLockClient) Get(ctx context.Context, id uuid.UUID) (*AppStockLock, error) {
+	return c.Query().Where(appstocklock.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppStockLockClient) GetX(ctx context.Context, id uuid.UUID) *AppStockLock {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppStockLockClient) Hooks() []Hook {
+	hooks := c.hooks.AppStockLock
+	return append(hooks[:len(hooks):len(hooks)], appstocklock.Hooks[:]...)
 }
 
 // CommentClient is a client for the Comment schema.
