@@ -9,6 +9,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // AppStockLock is the model entity for the AppStockLock schema.
@@ -22,6 +23,8 @@ type AppStockLock struct {
 	UpdatedAt uint32 `json:"updated_at,omitempty"`
 	// DeletedAt holds the value of the "deleted_at" field.
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
+	// Units holds the value of the "units" field.
+	Units decimal.Decimal `json:"units,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -29,6 +32,8 @@ func (*AppStockLock) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case appstocklock.FieldUnits:
+			values[i] = new(decimal.Decimal)
 		case appstocklock.FieldCreatedAt, appstocklock.FieldUpdatedAt, appstocklock.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
 		case appstocklock.FieldID:
@@ -72,6 +77,12 @@ func (asl *AppStockLock) assignValues(columns []string, values []interface{}) er
 			} else if value.Valid {
 				asl.DeletedAt = uint32(value.Int64)
 			}
+		case appstocklock.FieldUnits:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field units", values[i])
+			} else if value != nil {
+				asl.Units = *value
+			}
 		}
 	}
 	return nil
@@ -108,6 +119,9 @@ func (asl *AppStockLock) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("deleted_at=")
 	builder.WriteString(fmt.Sprintf("%v", asl.DeletedAt))
+	builder.WriteString(", ")
+	builder.WriteString("units=")
+	builder.WriteString(fmt.Sprintf("%v", asl.Units))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -133,7 +133,7 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-//nolint:gocyclo
+//nolint:gocyclo,funlen
 func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.
@@ -234,19 +234,19 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 		return nil
 	}
 
-	exist, err := tx.
+	lock, err := tx.
 		AppStockLock.
 		Query().
 		Where(
 			entappstocklock.ID(*h.LockID),
 			entappstocklock.DeletedAt(0),
 		).
-		Exist(ctx)
+		Only(ctx)
 	if err != nil {
 		return err
 	}
-	if !exist {
-		return fmt.Errorf("lockid not exists")
+	if lock.Units != *h.Locked {
+		return fmt.Errorf("invalid units")
 	}
 
 	if _, err := tx.

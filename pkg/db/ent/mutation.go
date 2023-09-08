@@ -4608,6 +4608,7 @@ type AppStockLockMutation struct {
 	addupdated_at *int32
 	deleted_at    *uint32
 	adddeleted_at *int32
+	units         *decimal.Decimal
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*AppStockLock, error)
@@ -4886,6 +4887,55 @@ func (m *AppStockLockMutation) ResetDeletedAt() {
 	m.adddeleted_at = nil
 }
 
+// SetUnits sets the "units" field.
+func (m *AppStockLockMutation) SetUnits(d decimal.Decimal) {
+	m.units = &d
+}
+
+// Units returns the value of the "units" field in the mutation.
+func (m *AppStockLockMutation) Units() (r decimal.Decimal, exists bool) {
+	v := m.units
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUnits returns the old "units" field's value of the AppStockLock entity.
+// If the AppStockLock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppStockLockMutation) OldUnits(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUnits is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUnits requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUnits: %w", err)
+	}
+	return oldValue.Units, nil
+}
+
+// ClearUnits clears the value of the "units" field.
+func (m *AppStockLockMutation) ClearUnits() {
+	m.units = nil
+	m.clearedFields[appstocklock.FieldUnits] = struct{}{}
+}
+
+// UnitsCleared returns if the "units" field was cleared in this mutation.
+func (m *AppStockLockMutation) UnitsCleared() bool {
+	_, ok := m.clearedFields[appstocklock.FieldUnits]
+	return ok
+}
+
+// ResetUnits resets all changes to the "units" field.
+func (m *AppStockLockMutation) ResetUnits() {
+	m.units = nil
+	delete(m.clearedFields, appstocklock.FieldUnits)
+}
+
 // Where appends a list predicates to the AppStockLockMutation builder.
 func (m *AppStockLockMutation) Where(ps ...predicate.AppStockLock) {
 	m.predicates = append(m.predicates, ps...)
@@ -4905,7 +4955,7 @@ func (m *AppStockLockMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppStockLockMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 4)
 	if m.created_at != nil {
 		fields = append(fields, appstocklock.FieldCreatedAt)
 	}
@@ -4914,6 +4964,9 @@ func (m *AppStockLockMutation) Fields() []string {
 	}
 	if m.deleted_at != nil {
 		fields = append(fields, appstocklock.FieldDeletedAt)
+	}
+	if m.units != nil {
+		fields = append(fields, appstocklock.FieldUnits)
 	}
 	return fields
 }
@@ -4929,6 +4982,8 @@ func (m *AppStockLockMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdatedAt()
 	case appstocklock.FieldDeletedAt:
 		return m.DeletedAt()
+	case appstocklock.FieldUnits:
+		return m.Units()
 	}
 	return nil, false
 }
@@ -4944,6 +4999,8 @@ func (m *AppStockLockMutation) OldField(ctx context.Context, name string) (ent.V
 		return m.OldUpdatedAt(ctx)
 	case appstocklock.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
+	case appstocklock.FieldUnits:
+		return m.OldUnits(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppStockLock field %s", name)
 }
@@ -4973,6 +5030,13 @@ func (m *AppStockLockMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDeletedAt(v)
+		return nil
+	case appstocklock.FieldUnits:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUnits(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppStockLock field %s", name)
@@ -5042,7 +5106,11 @@ func (m *AppStockLockMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *AppStockLockMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(appstocklock.FieldUnits) {
+		fields = append(fields, appstocklock.FieldUnits)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -5055,6 +5123,11 @@ func (m *AppStockLockMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *AppStockLockMutation) ClearField(name string) error {
+	switch name {
+	case appstocklock.FieldUnits:
+		m.ClearUnits()
+		return nil
+	}
 	return fmt.Errorf("unknown AppStockLock nullable field %s", name)
 }
 
@@ -5070,6 +5143,9 @@ func (m *AppStockLockMutation) ResetField(name string) error {
 		return nil
 	case appstocklock.FieldDeletedAt:
 		m.ResetDeletedAt()
+		return nil
+	case appstocklock.FieldUnits:
+		m.ResetUnits()
 		return nil
 	}
 	return fmt.Errorf("unknown AppStockLock field %s", name)

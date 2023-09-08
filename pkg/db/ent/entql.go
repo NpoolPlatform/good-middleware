@@ -133,6 +133,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appstocklock.FieldCreatedAt: {Type: field.TypeUint32, Column: appstocklock.FieldCreatedAt},
 			appstocklock.FieldUpdatedAt: {Type: field.TypeUint32, Column: appstocklock.FieldUpdatedAt},
 			appstocklock.FieldDeletedAt: {Type: field.TypeUint32, Column: appstocklock.FieldDeletedAt},
+			appstocklock.FieldUnits:     {Type: field.TypeOther, Column: appstocklock.FieldUnits},
 		},
 	}
 	graph.Nodes[4] = &sqlgraph.Node{
@@ -918,6 +919,11 @@ func (f *AppStockLockFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *AppStockLockFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(appstocklock.FieldDeletedAt))
+}
+
+// WhereUnits applies the entql other predicate on the units field.
+func (f *AppStockLockFilter) WhereUnits(p entql.OtherP) {
+	f.Where(p.Field(appstocklock.FieldUnits))
 }
 
 // addPredicate implements the predicateAdder interface.

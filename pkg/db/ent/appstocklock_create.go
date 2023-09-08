@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // AppStockLockCreate is the builder for creating a AppStockLock entity.
@@ -61,6 +62,20 @@ func (aslc *AppStockLockCreate) SetDeletedAt(u uint32) *AppStockLockCreate {
 func (aslc *AppStockLockCreate) SetNillableDeletedAt(u *uint32) *AppStockLockCreate {
 	if u != nil {
 		aslc.SetDeletedAt(*u)
+	}
+	return aslc
+}
+
+// SetUnits sets the "units" field.
+func (aslc *AppStockLockCreate) SetUnits(d decimal.Decimal) *AppStockLockCreate {
+	aslc.mutation.SetUnits(d)
+	return aslc
+}
+
+// SetNillableUnits sets the "units" field if the given value is not nil.
+func (aslc *AppStockLockCreate) SetNillableUnits(d *decimal.Decimal) *AppStockLockCreate {
+	if d != nil {
+		aslc.SetUnits(*d)
 	}
 	return aslc
 }
@@ -179,6 +194,10 @@ func (aslc *AppStockLockCreate) defaults() error {
 		v := appstocklock.DefaultDeletedAt()
 		aslc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := aslc.mutation.Units(); !ok {
+		v := appstocklock.DefaultUnits
+		aslc.mutation.SetUnits(v)
+	}
 	if _, ok := aslc.mutation.ID(); !ok {
 		if appstocklock.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized appstocklock.DefaultID (forgotten import ent/runtime?)")
@@ -260,6 +279,14 @@ func (aslc *AppStockLockCreate) createSpec() (*AppStockLock, *sqlgraph.CreateSpe
 			Column: appstocklock.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
+	}
+	if value, ok := aslc.mutation.Units(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appstocklock.FieldUnits,
+		})
+		_node.Units = value
 	}
 	return _node, _spec
 }
@@ -366,6 +393,24 @@ func (u *AppStockLockUpsert) UpdateDeletedAt() *AppStockLockUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *AppStockLockUpsert) AddDeletedAt(v uint32) *AppStockLockUpsert {
 	u.Add(appstocklock.FieldDeletedAt, v)
+	return u
+}
+
+// SetUnits sets the "units" field.
+func (u *AppStockLockUpsert) SetUnits(v decimal.Decimal) *AppStockLockUpsert {
+	u.Set(appstocklock.FieldUnits, v)
+	return u
+}
+
+// UpdateUnits sets the "units" field to the value that was provided on create.
+func (u *AppStockLockUpsert) UpdateUnits() *AppStockLockUpsert {
+	u.SetExcluded(appstocklock.FieldUnits)
+	return u
+}
+
+// ClearUnits clears the value of the "units" field.
+func (u *AppStockLockUpsert) ClearUnits() *AppStockLockUpsert {
+	u.SetNull(appstocklock.FieldUnits)
 	return u
 }
 
@@ -479,6 +524,27 @@ func (u *AppStockLockUpsertOne) AddDeletedAt(v uint32) *AppStockLockUpsertOne {
 func (u *AppStockLockUpsertOne) UpdateDeletedAt() *AppStockLockUpsertOne {
 	return u.Update(func(s *AppStockLockUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetUnits sets the "units" field.
+func (u *AppStockLockUpsertOne) SetUnits(v decimal.Decimal) *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetUnits(v)
+	})
+}
+
+// UpdateUnits sets the "units" field to the value that was provided on create.
+func (u *AppStockLockUpsertOne) UpdateUnits() *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateUnits()
+	})
+}
+
+// ClearUnits clears the value of the "units" field.
+func (u *AppStockLockUpsertOne) ClearUnits() *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.ClearUnits()
 	})
 }
 
@@ -758,6 +824,27 @@ func (u *AppStockLockUpsertBulk) AddDeletedAt(v uint32) *AppStockLockUpsertBulk 
 func (u *AppStockLockUpsertBulk) UpdateDeletedAt() *AppStockLockUpsertBulk {
 	return u.Update(func(s *AppStockLockUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetUnits sets the "units" field.
+func (u *AppStockLockUpsertBulk) SetUnits(v decimal.Decimal) *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetUnits(v)
+	})
+}
+
+// UpdateUnits sets the "units" field to the value that was provided on create.
+func (u *AppStockLockUpsertBulk) UpdateUnits() *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateUnits()
+	})
+}
+
+// ClearUnits clears the value of the "units" field.
+func (u *AppStockLockUpsertBulk) ClearUnits() *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.ClearUnits()
 	})
 }
 

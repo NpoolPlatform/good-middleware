@@ -5,6 +5,7 @@ package appstocklock
 import (
 	"entgo.io/ent"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 const (
@@ -18,6 +19,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
+	// FieldUnits holds the string denoting the units field in the database.
+	FieldUnits = "units"
 	// Table holds the table name of the appstocklock in the database.
 	Table = "app_stock_locks"
 )
@@ -28,6 +31,7 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
+	FieldUnits,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -57,6 +61,8 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// DefaultUnits holds the default value on creation for the "units" field.
+	DefaultUnits decimal.Decimal
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

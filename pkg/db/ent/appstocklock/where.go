@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // ID filters vertices based on their ID field.
@@ -97,6 +98,13 @@ func UpdatedAt(v uint32) predicate.AppStockLock {
 func DeletedAt(v uint32) predicate.AppStockLock {
 	return predicate.AppStockLock(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldDeletedAt), v))
+	})
+}
+
+// Units applies equality check predicate on the "units" field. It's identical to UnitsEQ.
+func Units(v decimal.Decimal) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUnits), v))
 	})
 }
 
@@ -289,6 +297,84 @@ func DeletedAtLT(v uint32) predicate.AppStockLock {
 func DeletedAtLTE(v uint32) predicate.AppStockLock {
 	return predicate.AppStockLock(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldDeletedAt), v))
+	})
+}
+
+// UnitsEQ applies the EQ predicate on the "units" field.
+func UnitsEQ(v decimal.Decimal) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUnits), v))
+	})
+}
+
+// UnitsNEQ applies the NEQ predicate on the "units" field.
+func UnitsNEQ(v decimal.Decimal) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUnits), v))
+	})
+}
+
+// UnitsIn applies the In predicate on the "units" field.
+func UnitsIn(vs ...decimal.Decimal) predicate.AppStockLock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldUnits), v...))
+	})
+}
+
+// UnitsNotIn applies the NotIn predicate on the "units" field.
+func UnitsNotIn(vs ...decimal.Decimal) predicate.AppStockLock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldUnits), v...))
+	})
+}
+
+// UnitsGT applies the GT predicate on the "units" field.
+func UnitsGT(v decimal.Decimal) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUnits), v))
+	})
+}
+
+// UnitsGTE applies the GTE predicate on the "units" field.
+func UnitsGTE(v decimal.Decimal) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUnits), v))
+	})
+}
+
+// UnitsLT applies the LT predicate on the "units" field.
+func UnitsLT(v decimal.Decimal) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUnits), v))
+	})
+}
+
+// UnitsLTE applies the LTE predicate on the "units" field.
+func UnitsLTE(v decimal.Decimal) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUnits), v))
+	})
+}
+
+// UnitsIsNil applies the IsNil predicate on the "units" field.
+func UnitsIsNil() predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldUnits)))
+	})
+}
+
+// UnitsNotNil applies the NotNil predicate on the "units" field.
+func UnitsNotNil() predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldUnits)))
 	})
 }
 

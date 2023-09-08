@@ -111,6 +111,7 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error { //nolint:
 	return nil
 }
 
+//nolint:gocyclo
 func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.
@@ -193,7 +194,8 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 	if _, err := appstocklockcrud.CreateSet(
 		tx.AppStockLock.Create(),
 		&appstocklockcrud.Req{
-			ID: h.LockID,
+			ID:    h.LockID,
+			Units: h.Locked,
 		},
 	).Save(ctx); err != nil {
 		return err
