@@ -260,6 +260,7 @@ func addStock(t *testing.T) {
 
 	ret.Locked = decimal.NewFromInt(10).String()
 	ret.SpotQuantity = decimal.NewFromInt(90).String()
+	id := uuid.NewString()
 
 	handler, err = NewHandler(
 		context.Background(),
@@ -268,6 +269,7 @@ func addStock(t *testing.T) {
 		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
 		WithLocked(&ret.Locked, true),
+		WithLockID(&id, true),
 		WithAppSpotLocked(&ret.Locked, true),
 	)
 	if assert.Nil(t, err) {
@@ -288,6 +290,7 @@ func addStock(t *testing.T) {
 		WithID(&ret.ID, true),
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
+		WithLockID(&id, true),
 		WithWaitStart(&ret.WaitStart, true),
 	)
 	if assert.Nil(t, err) {
