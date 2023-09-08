@@ -208,6 +208,8 @@ func (h *queryHandler) queryJoinStock(s *sql.Selector) {
 		AppendSelect(
 			sql.As(t.C(entstock.FieldTotal), "good_total"),
 			sql.As(t.C(entstock.FieldSpotQuantity), "good_spot_quantity"),
+			sql.As(t.C(entstock.FieldInService), "good_in_service"),
+			sql.As(t.C(entstock.FieldSold), "good_sold"),
 		)
 }
 
