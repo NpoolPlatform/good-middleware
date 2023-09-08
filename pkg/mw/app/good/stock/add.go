@@ -4,6 +4,7 @@ package appstock
 import (
 	"context"
 	"fmt"
+	"time"
 
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	appstocklockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/lock"
@@ -151,6 +152,9 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 		}
 	}
 	if h.WaitStart != nil {
+		if h.LockID == nil {
+			return fmt.Errorf("invalid lockid")
+		}
 		waitStart = h.WaitStart.Add(waitStart)
 		locked = locked.Sub(*h.WaitStart)
 		sold = h.WaitStart.Add(sold)
@@ -187,18 +191,26 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 		return err
 	}
 
-	if h.Locked == nil {
-		return nil
-	}
-
-	if _, err := appstocklockcrud.CreateSet(
-		tx.AppStockLock.Create(),
-		&appstocklockcrud.Req{
-			ID:    h.LockID,
-			Units: h.Locked,
-		},
-	).Save(ctx); err != nil {
-		return err
+	if h.Locked != nil {
+		if _, err := appstocklockcrud.CreateSet(
+			tx.AppStockLock.Create(),
+			&appstocklockcrud.Req{
+				ID:    h.LockID,
+				Units: h.Locked,
+			},
+		).Save(ctx); err != nil {
+			return err
+		}
+	} else if h.WaitStart != nil {
+		now := uint32(time.Now().Unix())
+		if _, err := appstocklockcrud.UpdateSet(
+			tx.AppStockLock.UpdateOneID(*h.LockID),
+			&appstocklockcrud.Req{
+				DeletedAt: &now,
+			},
+		).Save(ctx); err != nil {
+			return err
+		}
 	}
 
 	return nil
