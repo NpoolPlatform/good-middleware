@@ -12,6 +12,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
+	entappstocklock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 
@@ -201,16 +202,36 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 		).Save(ctx); err != nil {
 			return err
 		}
-	} else if h.WaitStart != nil {
-		now := uint32(time.Now().Unix())
-		if _, err := appstocklockcrud.UpdateSet(
-			tx.AppStockLock.UpdateOneID(*h.LockID),
-			&appstocklockcrud.Req{
-				DeletedAt: &now,
-			},
-		).Save(ctx); err != nil {
-			return err
-		}
+		return nil
+	}
+
+	if h.WaitStart == nil {
+		return nil
+	}
+
+	lock, err := tx.
+		AppStockLock.
+		Query().
+		Where(
+			entappstocklock.ID(*h.LockID),
+			entappstocklock.DeletedAt(0),
+		).
+		Only(ctx)
+	if err != nil {
+		return err
+	}
+	if h.WaitStart.Cmp(lock.Units) != 0 {
+		return fmt.Errorf("invalid units")
+	}
+
+	now := uint32(time.Now().Unix())
+	if _, err := appstocklockcrud.UpdateSet(
+		tx.AppStockLock.UpdateOneID(*h.LockID),
+		&appstocklockcrud.Req{
+			DeletedAt: &now,
+		},
+	).Save(ctx); err != nil {
+		return err
 	}
 
 	return nil
