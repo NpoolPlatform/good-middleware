@@ -113,7 +113,7 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error { //nolint:
 	return nil
 }
 
-//nolint:gocyclo
+//nolint:gocyclo,funlen
 func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.
