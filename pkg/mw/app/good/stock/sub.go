@@ -49,17 +49,15 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 
 	if h.Locked != nil {
 		locked = locked.Sub(*h.Locked)
-		if h.Rollback != nil && *h.Rollback {
-			platformLocked := *h.Locked
-			if h.AppSpotLocked != nil {
-				platformLocked = platformLocked.Sub(*h.AppSpotLocked)
-				appReserved = h.AppSpotLocked.Add(appReserved)
-			}
-			if platformLocked.Cmp(decimal.NewFromInt(0)) < 0 {
-				return fmt.Errorf("invalid appspotlocked")
-			}
-			spotQuantity = platformLocked.Add(spotQuantity)
+		platformLocked := *h.Locked
+		if h.AppSpotLocked != nil {
+			platformLocked = platformLocked.Sub(*h.AppSpotLocked)
+			appReserved = h.AppSpotLocked.Add(appReserved)
 		}
+		if platformLocked.Cmp(decimal.NewFromInt(0)) < 0 {
+			return fmt.Errorf("invalid appspotlocked")
+		}
+		spotQuantity = platformLocked.Add(spotQuantity)
 	}
 	if h.WaitStart != nil {
 		waitStart = waitStart.Sub(*h.WaitStart)
@@ -163,11 +161,12 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 		if h.LockID == nil {
 			return fmt.Errorf("invalid lockid")
 		}
-		locked = locked.Sub(*h.Locked)
 		if h.Rollback != nil && *h.Rollback {
-			if h.AppSpotLocked != nil {
-				spotQuantity = h.AppSpotLocked.Add(spotQuantity)
-			}
+			return fmt.Errorf("cannot rollback")
+		}
+		locked = locked.Sub(*h.Locked)
+		if h.AppSpotLocked != nil {
+			spotQuantity = h.AppSpotLocked.Add(spotQuantity)
 		}
 	}
 	if h.WaitStart != nil {
