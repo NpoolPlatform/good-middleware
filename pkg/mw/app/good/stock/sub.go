@@ -245,7 +245,7 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 	if err != nil {
 		return err
 	}
-	if lock.Units != *h.Locked {
+	if h.Locked.Cmp(lock.Units) != 0 {
 		return fmt.Errorf("invalid units")
 	}
 
