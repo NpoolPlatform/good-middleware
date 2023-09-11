@@ -132,7 +132,7 @@ func (h *subHandler) subStock(ctx context.Context, tx *ent.Tx) error {
 }
 
 //nolint:gocyclo,funlen
-func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
+func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) (bool, error) {
 	info, err := tx.
 		AppStock.
 		Query().
@@ -143,10 +143,10 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 		ForUpdate().
 		Only(ctx)
 	if err != nil {
-		return err
+		return false, err
 	}
 	if info == nil {
-		return fmt.Errorf("stock not found")
+		return false, fmt.Errorf("stock not found")
 	}
 
 	h.GoodID = &info.GoodID
@@ -159,10 +159,10 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 
 	if h.Locked != nil {
 		if h.LockID == nil {
-			return fmt.Errorf("invalid lockid")
+			return false, fmt.Errorf("invalid lockid")
 		}
 		if h.Rollback != nil && *h.Rollback {
-			return fmt.Errorf("cannot rollback")
+			return false, fmt.Errorf("cannot rollback")
 		}
 		locked = locked.Sub(*h.Locked)
 		if h.AppSpotLocked != nil {
@@ -187,32 +187,60 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 	}
 	if h.Reserved != nil {
 		if h.Reserved.Cmp(spotQuantity) > 0 {
-			return fmt.Errorf("invalid reserved")
+			return false, fmt.Errorf("invalid reserved")
 		}
 		reserved = reserved.Sub(*h.Reserved)
 		spotQuantity = spotQuantity.Sub(*h.Reserved)
 	}
 
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid locked")
+		return false, fmt.Errorf("invalid locked")
 	}
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid waitstart")
+		return false, fmt.Errorf("invalid waitstart")
 	}
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid inservice")
+		return false, fmt.Errorf("invalid inservice")
 	}
 	if sold.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid sold")
+		return false, fmt.Errorf("invalid sold")
 	}
 	if spotQuantity.Cmp(info.Reserved) > 0 {
-		return fmt.Errorf("invalid spotquantity")
+		return false, fmt.Errorf("invalid spotquantity")
 	}
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
 		spotQuantity = decimal.NewFromInt(0)
 	}
 	if reserved.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid reserved")
+		return false, fmt.Errorf("invalid reserved")
+	}
+
+	if h.Locked != nil {
+		lock, err := tx.
+			AppStockLock.
+			Query().
+			Where(
+				entappstocklock.ID(*h.LockID),
+				entappstocklock.DeletedAt(0),
+			).
+			Only(ctx)
+		if err != nil {
+			if ent.IsNotFound(err) {
+				return false, nil
+			}
+			return false, err
+		}
+		if h.Locked.Cmp(lock.Units) != 0 {
+			return false, fmt.Errorf("invalid units")
+		}
+
+		if _, err := tx.
+			AppStockLock.
+			UpdateOneID(*h.LockID).
+			SetDeletedAt(uint32(time.Now().Unix())).
+			Save(ctx); err != nil {
+			return false, err
+		}
 	}
 
 	if _, err := appstockcrud.UpdateSet(
@@ -226,37 +254,10 @@ func (h *subHandler) subAppStock(ctx context.Context, tx *ent.Tx) error {
 			Sold:         &sold,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return false, err
 	}
 
-	if h.Locked == nil {
-		return nil
-	}
-
-	lock, err := tx.
-		AppStockLock.
-		Query().
-		Where(
-			entappstocklock.ID(*h.LockID),
-			entappstocklock.DeletedAt(0),
-		).
-		Only(ctx)
-	if err != nil {
-		return err
-	}
-	if h.Locked.Cmp(lock.Units) != 0 {
-		return fmt.Errorf("invalid units")
-	}
-
-	if _, err := tx.
-		AppStockLock.
-		UpdateOneID(*h.LockID).
-		SetDeletedAt(uint32(time.Now().Unix())).
-		Save(ctx); err != nil {
-		return err
-	}
-
-	return nil
+	return true, nil
 }
 
 func (h *Handler) SubStock(ctx context.Context) (*npool.Stock, error) {
@@ -269,7 +270,7 @@ func (h *Handler) SubStock(ctx context.Context) (*npool.Stock, error) {
 	}
 
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.subAppStock(ctx, tx); err != nil {
+		if subed, err := handler.subAppStock(ctx, tx); err != nil || !subed {
 			return err
 		}
 		if err := handler.subStock(ctx, tx); err != nil {

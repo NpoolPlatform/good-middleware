@@ -114,7 +114,7 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error { //nolint:
 }
 
 //nolint:gocyclo,funlen
-func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
+func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) (bool, error) {
 	info, err := tx.
 		AppStock.
 		Query().
@@ -125,10 +125,10 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 		ForUpdate().
 		Only(ctx)
 	if err != nil {
-		return err
+		return false, err
 	}
 	if info == nil {
-		return fmt.Errorf("invalid appstock")
+		return false, fmt.Errorf("invalid appstock")
 	}
 
 	h.GoodID = &info.GoodID
@@ -145,7 +145,7 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 	}
 	if h.Locked != nil {
 		if h.LockID == nil {
-			return fmt.Errorf("invalid lockid")
+			return false, fmt.Errorf("invalid lockid")
 		}
 		locked = h.Locked.Add(locked)
 		if h.AppSpotLocked != nil {
@@ -154,7 +154,7 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 	}
 	if h.WaitStart != nil {
 		if h.LockID == nil {
-			return fmt.Errorf("invalid lockid")
+			return false, fmt.Errorf("invalid lockid")
 		}
 		waitStart = h.WaitStart.Add(waitStart)
 		locked = locked.Sub(*h.WaitStart)
@@ -166,16 +166,58 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 	}
 
 	if spotQuantity.Cmp(reserved) > 0 {
-		return fmt.Errorf("invalid stock")
+		return false, fmt.Errorf("invalid stock")
 	}
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
 		spotQuantity = decimal.NewFromInt(0)
 	}
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return false, fmt.Errorf("invalid stock")
 	}
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return false, fmt.Errorf("invalid stock")
+	}
+
+	if h.Locked != nil {
+		if _, err := appstocklockcrud.CreateSet(
+			tx.AppStockLock.Create(),
+			&appstocklockcrud.Req{
+				ID:    h.LockID,
+				Units: h.Locked,
+			},
+		).Save(ctx); err != nil {
+			return false, err
+		}
+	}
+
+	if h.WaitStart != nil {
+		lock, err := tx.
+			AppStockLock.
+			Query().
+			Where(
+				entappstocklock.ID(*h.LockID),
+				entappstocklock.DeletedAt(0),
+			).
+			Only(ctx)
+		if err != nil {
+			if ent.IsNotFound(err) {
+				return false, nil
+			}
+			return false, err
+		}
+		if h.WaitStart.Cmp(lock.Units) != 0 {
+			return false, fmt.Errorf("invalid units")
+		}
+
+		now := uint32(time.Now().Unix())
+		if _, err := appstocklockcrud.UpdateSet(
+			tx.AppStockLock.UpdateOneID(*h.LockID),
+			&appstocklockcrud.Req{
+				DeletedAt: &now,
+			},
+		).Save(ctx); err != nil {
+			return false, err
+		}
 	}
 
 	if _, err := appstockcrud.UpdateSet(
@@ -189,52 +231,10 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 			Sold:         &sold,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return false, err
 	}
 
-	if h.Locked != nil {
-		if _, err := appstocklockcrud.CreateSet(
-			tx.AppStockLock.Create(),
-			&appstocklockcrud.Req{
-				ID:    h.LockID,
-				Units: h.Locked,
-			},
-		).Save(ctx); err != nil {
-			return err
-		}
-		return nil
-	}
-
-	if h.WaitStart == nil {
-		return nil
-	}
-
-	lock, err := tx.
-		AppStockLock.
-		Query().
-		Where(
-			entappstocklock.ID(*h.LockID),
-			entappstocklock.DeletedAt(0),
-		).
-		Only(ctx)
-	if err != nil {
-		return err
-	}
-	if h.WaitStart.Cmp(lock.Units) != 0 {
-		return fmt.Errorf("invalid units")
-	}
-
-	now := uint32(time.Now().Unix())
-	if _, err := appstocklockcrud.UpdateSet(
-		tx.AppStockLock.UpdateOneID(*h.LockID),
-		&appstocklockcrud.Req{
-			DeletedAt: &now,
-		},
-	).Save(ctx); err != nil {
-		return err
-	}
-
-	return nil
+	return true, nil
 }
 
 func (h *Handler) AddStock(ctx context.Context) (*npool.Stock, error) {
@@ -246,7 +246,7 @@ func (h *Handler) AddStock(ctx context.Context) (*npool.Stock, error) {
 		Handler: h,
 	}
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.addAppStock(ctx, tx); err != nil {
+		if added, err := handler.addAppStock(ctx, tx); err != nil || !added {
 			return err
 		}
 		if err := handler.addStock(ctx, tx); err != nil {
