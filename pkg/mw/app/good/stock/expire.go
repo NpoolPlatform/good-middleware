@@ -17,11 +17,11 @@ import (
 	"github.com/shopspring/decimal"
 )
 
-type inServiceHandler struct {
+type expireHandler struct {
 	*lockopHandler
 }
 
-func (h *inServiceHandler) inServiceStock(ctx context.Context, tx *ent.Tx) error { //nolint:gocyclo
+func (h *expireHandler) expireStock(ctx context.Context, tx *ent.Tx) error { //nolint:gocyclo
 	info, err := tx.
 		Stock.
 		Query().
@@ -39,16 +39,12 @@ func (h *inServiceHandler) inServiceStock(ctx context.Context, tx *ent.Tx) error
 	}
 
 	inService := info.InService
-	waitStart := info.WaitStart
-
-	inService = h.lock.Units.Add(inService)
-	waitStart = waitStart.Sub(h.lock.Units)
-
-	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
+	inService = inService.Sub(h.lock.Units)
+	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
-	if waitStart.Add(inService).
+	if inService.Add(info.WaitStart).
 		Add(info.Locked).
 		Add(info.AppReserved).
 		Add(info.SpotQuantity).
@@ -60,7 +56,6 @@ func (h *inServiceHandler) inServiceStock(ctx context.Context, tx *ent.Tx) error
 		tx.Stock.UpdateOneID(info.ID),
 		&stockcrud.Req{
 			InService: &inService,
-			WaitStart: &waitStart,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -69,7 +64,7 @@ func (h *inServiceHandler) inServiceStock(ctx context.Context, tx *ent.Tx) error
 }
 
 //nolint:gocyclo,funlen
-func (h *inServiceHandler) inServiceAppStock(ctx context.Context, tx *ent.Tx) error {
+func (h *expireHandler) expireAppStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.
 		Query().
@@ -88,12 +83,8 @@ func (h *inServiceHandler) inServiceAppStock(ctx context.Context, tx *ent.Tx) er
 
 	h.GoodID = &info.GoodID
 	inService := info.InService
-	waitStart := info.WaitStart
-
-	inService = h.lock.Units.Add(inService)
-	waitStart = waitStart.Sub(h.lock.Units)
-
-	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
+	inService = inService.Sub(h.lock.Units)
+	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
@@ -101,7 +92,6 @@ func (h *inServiceHandler) inServiceAppStock(ctx context.Context, tx *ent.Tx) er
 		tx.AppStock.UpdateOneID(info.ID),
 		&appstockcrud.Req{
 			InService: &inService,
-			WaitStart: &waitStart,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -110,11 +100,11 @@ func (h *inServiceHandler) inServiceAppStock(ctx context.Context, tx *ent.Tx) er
 	return nil
 }
 
-func (h *Handler) InServiceStock(ctx context.Context) (*npool.Stock, error) {
-	handler := &inServiceHandler{
+func (h *Handler) ExpireStock(ctx context.Context) (*npool.Stock, error) {
+	handler := &expireHandler{
 		lockopHandler: &lockopHandler{
 			Handler: h,
-			state:   types.AppStockLockState_AppStockInService.Enum(),
+			state:   types.AppStockLockState_AppStockExpired.Enum(),
 		},
 	}
 
@@ -123,10 +113,10 @@ func (h *Handler) InServiceStock(ctx context.Context) (*npool.Stock, error) {
 	}
 
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.inServiceAppStock(ctx, tx); err != nil {
+		if err := handler.expireAppStock(ctx, tx); err != nil {
 			return err
 		}
-		if err := handler.inServiceStock(ctx, tx); err != nil {
+		if err := handler.expireStock(ctx, tx); err != nil {
 			return err
 		}
 		if err := handler.updateLock(ctx, tx); err != nil {
