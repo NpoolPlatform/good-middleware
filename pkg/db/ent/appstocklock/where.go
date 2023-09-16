@@ -101,10 +101,24 @@ func DeletedAt(v uint32) predicate.AppStockLock {
 	})
 }
 
+// AppStockID applies equality check predicate on the "app_stock_id" field. It's identical to AppStockIDEQ.
+func AppStockID(v uuid.UUID) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAppStockID), v))
+	})
+}
+
 // Units applies equality check predicate on the "units" field. It's identical to UnitsEQ.
 func Units(v decimal.Decimal) predicate.AppStockLock {
 	return predicate.AppStockLock(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUnits), v))
+	})
+}
+
+// AppSpotUnits applies equality check predicate on the "app_spot_units" field. It's identical to AppSpotUnitsEQ.
+func AppSpotUnits(v decimal.Decimal) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAppSpotUnits), v))
 	})
 }
 
@@ -300,6 +314,70 @@ func DeletedAtLTE(v uint32) predicate.AppStockLock {
 	})
 }
 
+// AppStockIDEQ applies the EQ predicate on the "app_stock_id" field.
+func AppStockIDEQ(v uuid.UUID) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAppStockID), v))
+	})
+}
+
+// AppStockIDNEQ applies the NEQ predicate on the "app_stock_id" field.
+func AppStockIDNEQ(v uuid.UUID) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAppStockID), v))
+	})
+}
+
+// AppStockIDIn applies the In predicate on the "app_stock_id" field.
+func AppStockIDIn(vs ...uuid.UUID) predicate.AppStockLock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldAppStockID), v...))
+	})
+}
+
+// AppStockIDNotIn applies the NotIn predicate on the "app_stock_id" field.
+func AppStockIDNotIn(vs ...uuid.UUID) predicate.AppStockLock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldAppStockID), v...))
+	})
+}
+
+// AppStockIDGT applies the GT predicate on the "app_stock_id" field.
+func AppStockIDGT(v uuid.UUID) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAppStockID), v))
+	})
+}
+
+// AppStockIDGTE applies the GTE predicate on the "app_stock_id" field.
+func AppStockIDGTE(v uuid.UUID) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAppStockID), v))
+	})
+}
+
+// AppStockIDLT applies the LT predicate on the "app_stock_id" field.
+func AppStockIDLT(v uuid.UUID) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAppStockID), v))
+	})
+}
+
+// AppStockIDLTE applies the LTE predicate on the "app_stock_id" field.
+func AppStockIDLTE(v uuid.UUID) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAppStockID), v))
+	})
+}
+
 // UnitsEQ applies the EQ predicate on the "units" field.
 func UnitsEQ(v decimal.Decimal) predicate.AppStockLock {
 	return predicate.AppStockLock(func(s *sql.Selector) {
@@ -375,6 +453,84 @@ func UnitsIsNil() predicate.AppStockLock {
 func UnitsNotNil() predicate.AppStockLock {
 	return predicate.AppStockLock(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldUnits)))
+	})
+}
+
+// AppSpotUnitsEQ applies the EQ predicate on the "app_spot_units" field.
+func AppSpotUnitsEQ(v decimal.Decimal) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAppSpotUnits), v))
+	})
+}
+
+// AppSpotUnitsNEQ applies the NEQ predicate on the "app_spot_units" field.
+func AppSpotUnitsNEQ(v decimal.Decimal) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAppSpotUnits), v))
+	})
+}
+
+// AppSpotUnitsIn applies the In predicate on the "app_spot_units" field.
+func AppSpotUnitsIn(vs ...decimal.Decimal) predicate.AppStockLock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldAppSpotUnits), v...))
+	})
+}
+
+// AppSpotUnitsNotIn applies the NotIn predicate on the "app_spot_units" field.
+func AppSpotUnitsNotIn(vs ...decimal.Decimal) predicate.AppStockLock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldAppSpotUnits), v...))
+	})
+}
+
+// AppSpotUnitsGT applies the GT predicate on the "app_spot_units" field.
+func AppSpotUnitsGT(v decimal.Decimal) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAppSpotUnits), v))
+	})
+}
+
+// AppSpotUnitsGTE applies the GTE predicate on the "app_spot_units" field.
+func AppSpotUnitsGTE(v decimal.Decimal) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAppSpotUnits), v))
+	})
+}
+
+// AppSpotUnitsLT applies the LT predicate on the "app_spot_units" field.
+func AppSpotUnitsLT(v decimal.Decimal) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAppSpotUnits), v))
+	})
+}
+
+// AppSpotUnitsLTE applies the LTE predicate on the "app_spot_units" field.
+func AppSpotUnitsLTE(v decimal.Decimal) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAppSpotUnits), v))
+	})
+}
+
+// AppSpotUnitsIsNil applies the IsNil predicate on the "app_spot_units" field.
+func AppSpotUnitsIsNil() predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAppSpotUnits)))
+	})
+}
+
+// AppSpotUnitsNotNil applies the NotNil predicate on the "app_spot_units" field.
+func AppSpotUnitsNotNil() predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAppSpotUnits)))
 	})
 }
 

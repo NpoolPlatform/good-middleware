@@ -17,7 +17,6 @@ import (
 	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
-	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -120,17 +119,6 @@ var appgood = appgoodmwpb.Good{
 	UserPurchaseLimit:      decimal.NewFromInt(0).String(),
 }
 
-var stock = stockmwpb.Stock{
-	GoodID:      good.ID,
-	GoodName:    good.Title,
-	Total:       good.GoodTotal,
-	Locked:      decimal.NewFromInt(10).String(),
-	InService:   decimal.NewFromInt(0).String(),
-	WaitStart:   decimal.NewFromInt(10).String(),
-	Sold:        decimal.NewFromInt(10).String(),
-	AppReserved: decimal.NewFromInt(100).String(),
-}
-
 var ret = npool.Stock{
 	ID:        uuid.NewString(),
 	AppID:     appgood.AppID,
@@ -212,8 +200,6 @@ func setup(t *testing.T) func(*testing.T) {
 
 	good, err := h4.CreateGood(context.Background())
 	assert.Nil(t, err)
-
-	stock.ID = good.GoodStockID
 
 	h5, err := appgood1.NewHandler(
 		context.Background(),

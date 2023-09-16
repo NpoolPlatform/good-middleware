@@ -28,7 +28,18 @@ func (AppStockLock) Fields() []ent.Field {
 			Default(uuid.New).
 			Unique(),
 		field.
+			UUID("app_stock_id", uuid.UUID{}).
+			Default(uuid.New).
+			Unique(),
+		field.
 			Other("units", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.Decimal{}),
+		field.
+			Other("app_spot_units", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).

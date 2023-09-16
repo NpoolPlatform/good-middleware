@@ -277,10 +277,18 @@ func init() {
 	appstocklockDescDeletedAt := appstocklockMixinFields0[2].Descriptor()
 	// appstocklock.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	appstocklock.DefaultDeletedAt = appstocklockDescDeletedAt.Default.(func() uint32)
+	// appstocklockDescAppStockID is the schema descriptor for app_stock_id field.
+	appstocklockDescAppStockID := appstocklockFields[1].Descriptor()
+	// appstocklock.DefaultAppStockID holds the default value on creation for the app_stock_id field.
+	appstocklock.DefaultAppStockID = appstocklockDescAppStockID.Default.(func() uuid.UUID)
 	// appstocklockDescUnits is the schema descriptor for units field.
-	appstocklockDescUnits := appstocklockFields[1].Descriptor()
+	appstocklockDescUnits := appstocklockFields[2].Descriptor()
 	// appstocklock.DefaultUnits holds the default value on creation for the units field.
 	appstocklock.DefaultUnits = appstocklockDescUnits.Default.(decimal.Decimal)
+	// appstocklockDescAppSpotUnits is the schema descriptor for app_spot_units field.
+	appstocklockDescAppSpotUnits := appstocklockFields[3].Descriptor()
+	// appstocklock.DefaultAppSpotUnits holds the default value on creation for the app_spot_units field.
+	appstocklock.DefaultAppSpotUnits = appstocklockDescAppSpotUnits.Default.(decimal.Decimal)
 	// appstocklockDescID is the schema descriptor for id field.
 	appstocklockDescID := appstocklockFields[0].Descriptor()
 	// appstocklock.DefaultID holds the default value on creation for the id field.

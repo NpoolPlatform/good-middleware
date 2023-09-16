@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
+	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
 
@@ -84,6 +85,20 @@ func (aslu *AppStockLockUpdate) AddDeletedAt(u int32) *AppStockLockUpdate {
 	return aslu
 }
 
+// SetAppStockID sets the "app_stock_id" field.
+func (aslu *AppStockLockUpdate) SetAppStockID(u uuid.UUID) *AppStockLockUpdate {
+	aslu.mutation.SetAppStockID(u)
+	return aslu
+}
+
+// SetNillableAppStockID sets the "app_stock_id" field if the given value is not nil.
+func (aslu *AppStockLockUpdate) SetNillableAppStockID(u *uuid.UUID) *AppStockLockUpdate {
+	if u != nil {
+		aslu.SetAppStockID(*u)
+	}
+	return aslu
+}
+
 // SetUnits sets the "units" field.
 func (aslu *AppStockLockUpdate) SetUnits(d decimal.Decimal) *AppStockLockUpdate {
 	aslu.mutation.SetUnits(d)
@@ -101,6 +116,26 @@ func (aslu *AppStockLockUpdate) SetNillableUnits(d *decimal.Decimal) *AppStockLo
 // ClearUnits clears the value of the "units" field.
 func (aslu *AppStockLockUpdate) ClearUnits() *AppStockLockUpdate {
 	aslu.mutation.ClearUnits()
+	return aslu
+}
+
+// SetAppSpotUnits sets the "app_spot_units" field.
+func (aslu *AppStockLockUpdate) SetAppSpotUnits(d decimal.Decimal) *AppStockLockUpdate {
+	aslu.mutation.SetAppSpotUnits(d)
+	return aslu
+}
+
+// SetNillableAppSpotUnits sets the "app_spot_units" field if the given value is not nil.
+func (aslu *AppStockLockUpdate) SetNillableAppSpotUnits(d *decimal.Decimal) *AppStockLockUpdate {
+	if d != nil {
+		aslu.SetAppSpotUnits(*d)
+	}
+	return aslu
+}
+
+// ClearAppSpotUnits clears the value of the "app_spot_units" field.
+func (aslu *AppStockLockUpdate) ClearAppSpotUnits() *AppStockLockUpdate {
+	aslu.mutation.ClearAppSpotUnits()
 	return aslu
 }
 
@@ -244,6 +279,13 @@ func (aslu *AppStockLockUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Column: appstocklock.FieldDeletedAt,
 		})
 	}
+	if value, ok := aslu.mutation.AppStockID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appstocklock.FieldAppStockID,
+		})
+	}
 	if value, ok := aslu.mutation.Units(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
@@ -255,6 +297,19 @@ func (aslu *AppStockLockUpdate) sqlSave(ctx context.Context) (n int, err error) 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: appstocklock.FieldUnits,
+		})
+	}
+	if value, ok := aslu.mutation.AppSpotUnits(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appstocklock.FieldAppSpotUnits,
+		})
+	}
+	if aslu.mutation.AppSpotUnitsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appstocklock.FieldAppSpotUnits,
 		})
 	}
 	_spec.Modifiers = aslu.modifiers
@@ -333,6 +388,20 @@ func (asluo *AppStockLockUpdateOne) AddDeletedAt(u int32) *AppStockLockUpdateOne
 	return asluo
 }
 
+// SetAppStockID sets the "app_stock_id" field.
+func (asluo *AppStockLockUpdateOne) SetAppStockID(u uuid.UUID) *AppStockLockUpdateOne {
+	asluo.mutation.SetAppStockID(u)
+	return asluo
+}
+
+// SetNillableAppStockID sets the "app_stock_id" field if the given value is not nil.
+func (asluo *AppStockLockUpdateOne) SetNillableAppStockID(u *uuid.UUID) *AppStockLockUpdateOne {
+	if u != nil {
+		asluo.SetAppStockID(*u)
+	}
+	return asluo
+}
+
 // SetUnits sets the "units" field.
 func (asluo *AppStockLockUpdateOne) SetUnits(d decimal.Decimal) *AppStockLockUpdateOne {
 	asluo.mutation.SetUnits(d)
@@ -350,6 +419,26 @@ func (asluo *AppStockLockUpdateOne) SetNillableUnits(d *decimal.Decimal) *AppSto
 // ClearUnits clears the value of the "units" field.
 func (asluo *AppStockLockUpdateOne) ClearUnits() *AppStockLockUpdateOne {
 	asluo.mutation.ClearUnits()
+	return asluo
+}
+
+// SetAppSpotUnits sets the "app_spot_units" field.
+func (asluo *AppStockLockUpdateOne) SetAppSpotUnits(d decimal.Decimal) *AppStockLockUpdateOne {
+	asluo.mutation.SetAppSpotUnits(d)
+	return asluo
+}
+
+// SetNillableAppSpotUnits sets the "app_spot_units" field if the given value is not nil.
+func (asluo *AppStockLockUpdateOne) SetNillableAppSpotUnits(d *decimal.Decimal) *AppStockLockUpdateOne {
+	if d != nil {
+		asluo.SetAppSpotUnits(*d)
+	}
+	return asluo
+}
+
+// ClearAppSpotUnits clears the value of the "app_spot_units" field.
+func (asluo *AppStockLockUpdateOne) ClearAppSpotUnits() *AppStockLockUpdateOne {
+	asluo.mutation.ClearAppSpotUnits()
 	return asluo
 }
 
@@ -523,6 +612,13 @@ func (asluo *AppStockLockUpdateOne) sqlSave(ctx context.Context) (_node *AppStoc
 			Column: appstocklock.FieldDeletedAt,
 		})
 	}
+	if value, ok := asluo.mutation.AppStockID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appstocklock.FieldAppStockID,
+		})
+	}
 	if value, ok := asluo.mutation.Units(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
@@ -534,6 +630,19 @@ func (asluo *AppStockLockUpdateOne) sqlSave(ctx context.Context) (_node *AppStoc
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: appstocklock.FieldUnits,
+		})
+	}
+	if value, ok := asluo.mutation.AppSpotUnits(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appstocklock.FieldAppSpotUnits,
+		})
+	}
+	if asluo.mutation.AppSpotUnitsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appstocklock.FieldAppSpotUnits,
 		})
 	}
 	_spec.Modifiers = asluo.modifiers

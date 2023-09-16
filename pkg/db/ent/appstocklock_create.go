@@ -66,6 +66,20 @@ func (aslc *AppStockLockCreate) SetNillableDeletedAt(u *uint32) *AppStockLockCre
 	return aslc
 }
 
+// SetAppStockID sets the "app_stock_id" field.
+func (aslc *AppStockLockCreate) SetAppStockID(u uuid.UUID) *AppStockLockCreate {
+	aslc.mutation.SetAppStockID(u)
+	return aslc
+}
+
+// SetNillableAppStockID sets the "app_stock_id" field if the given value is not nil.
+func (aslc *AppStockLockCreate) SetNillableAppStockID(u *uuid.UUID) *AppStockLockCreate {
+	if u != nil {
+		aslc.SetAppStockID(*u)
+	}
+	return aslc
+}
+
 // SetUnits sets the "units" field.
 func (aslc *AppStockLockCreate) SetUnits(d decimal.Decimal) *AppStockLockCreate {
 	aslc.mutation.SetUnits(d)
@@ -76,6 +90,20 @@ func (aslc *AppStockLockCreate) SetUnits(d decimal.Decimal) *AppStockLockCreate 
 func (aslc *AppStockLockCreate) SetNillableUnits(d *decimal.Decimal) *AppStockLockCreate {
 	if d != nil {
 		aslc.SetUnits(*d)
+	}
+	return aslc
+}
+
+// SetAppSpotUnits sets the "app_spot_units" field.
+func (aslc *AppStockLockCreate) SetAppSpotUnits(d decimal.Decimal) *AppStockLockCreate {
+	aslc.mutation.SetAppSpotUnits(d)
+	return aslc
+}
+
+// SetNillableAppSpotUnits sets the "app_spot_units" field if the given value is not nil.
+func (aslc *AppStockLockCreate) SetNillableAppSpotUnits(d *decimal.Decimal) *AppStockLockCreate {
+	if d != nil {
+		aslc.SetAppSpotUnits(*d)
 	}
 	return aslc
 }
@@ -194,9 +222,20 @@ func (aslc *AppStockLockCreate) defaults() error {
 		v := appstocklock.DefaultDeletedAt()
 		aslc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := aslc.mutation.AppStockID(); !ok {
+		if appstocklock.DefaultAppStockID == nil {
+			return fmt.Errorf("ent: uninitialized appstocklock.DefaultAppStockID (forgotten import ent/runtime?)")
+		}
+		v := appstocklock.DefaultAppStockID()
+		aslc.mutation.SetAppStockID(v)
+	}
 	if _, ok := aslc.mutation.Units(); !ok {
 		v := appstocklock.DefaultUnits
 		aslc.mutation.SetUnits(v)
+	}
+	if _, ok := aslc.mutation.AppSpotUnits(); !ok {
+		v := appstocklock.DefaultAppSpotUnits
+		aslc.mutation.SetAppSpotUnits(v)
 	}
 	if _, ok := aslc.mutation.ID(); !ok {
 		if appstocklock.DefaultID == nil {
@@ -218,6 +257,9 @@ func (aslc *AppStockLockCreate) check() error {
 	}
 	if _, ok := aslc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "AppStockLock.deleted_at"`)}
+	}
+	if _, ok := aslc.mutation.AppStockID(); !ok {
+		return &ValidationError{Name: "app_stock_id", err: errors.New(`ent: missing required field "AppStockLock.app_stock_id"`)}
 	}
 	return nil
 }
@@ -280,6 +322,14 @@ func (aslc *AppStockLockCreate) createSpec() (*AppStockLock, *sqlgraph.CreateSpe
 		})
 		_node.DeletedAt = value
 	}
+	if value, ok := aslc.mutation.AppStockID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appstocklock.FieldAppStockID,
+		})
+		_node.AppStockID = value
+	}
 	if value, ok := aslc.mutation.Units(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
@@ -287,6 +337,14 @@ func (aslc *AppStockLockCreate) createSpec() (*AppStockLock, *sqlgraph.CreateSpe
 			Column: appstocklock.FieldUnits,
 		})
 		_node.Units = value
+	}
+	if value, ok := aslc.mutation.AppSpotUnits(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appstocklock.FieldAppSpotUnits,
+		})
+		_node.AppSpotUnits = value
 	}
 	return _node, _spec
 }
@@ -396,6 +454,18 @@ func (u *AppStockLockUpsert) AddDeletedAt(v uint32) *AppStockLockUpsert {
 	return u
 }
 
+// SetAppStockID sets the "app_stock_id" field.
+func (u *AppStockLockUpsert) SetAppStockID(v uuid.UUID) *AppStockLockUpsert {
+	u.Set(appstocklock.FieldAppStockID, v)
+	return u
+}
+
+// UpdateAppStockID sets the "app_stock_id" field to the value that was provided on create.
+func (u *AppStockLockUpsert) UpdateAppStockID() *AppStockLockUpsert {
+	u.SetExcluded(appstocklock.FieldAppStockID)
+	return u
+}
+
 // SetUnits sets the "units" field.
 func (u *AppStockLockUpsert) SetUnits(v decimal.Decimal) *AppStockLockUpsert {
 	u.Set(appstocklock.FieldUnits, v)
@@ -411,6 +481,24 @@ func (u *AppStockLockUpsert) UpdateUnits() *AppStockLockUpsert {
 // ClearUnits clears the value of the "units" field.
 func (u *AppStockLockUpsert) ClearUnits() *AppStockLockUpsert {
 	u.SetNull(appstocklock.FieldUnits)
+	return u
+}
+
+// SetAppSpotUnits sets the "app_spot_units" field.
+func (u *AppStockLockUpsert) SetAppSpotUnits(v decimal.Decimal) *AppStockLockUpsert {
+	u.Set(appstocklock.FieldAppSpotUnits, v)
+	return u
+}
+
+// UpdateAppSpotUnits sets the "app_spot_units" field to the value that was provided on create.
+func (u *AppStockLockUpsert) UpdateAppSpotUnits() *AppStockLockUpsert {
+	u.SetExcluded(appstocklock.FieldAppSpotUnits)
+	return u
+}
+
+// ClearAppSpotUnits clears the value of the "app_spot_units" field.
+func (u *AppStockLockUpsert) ClearAppSpotUnits() *AppStockLockUpsert {
+	u.SetNull(appstocklock.FieldAppSpotUnits)
 	return u
 }
 
@@ -527,6 +615,20 @@ func (u *AppStockLockUpsertOne) UpdateDeletedAt() *AppStockLockUpsertOne {
 	})
 }
 
+// SetAppStockID sets the "app_stock_id" field.
+func (u *AppStockLockUpsertOne) SetAppStockID(v uuid.UUID) *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetAppStockID(v)
+	})
+}
+
+// UpdateAppStockID sets the "app_stock_id" field to the value that was provided on create.
+func (u *AppStockLockUpsertOne) UpdateAppStockID() *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateAppStockID()
+	})
+}
+
 // SetUnits sets the "units" field.
 func (u *AppStockLockUpsertOne) SetUnits(v decimal.Decimal) *AppStockLockUpsertOne {
 	return u.Update(func(s *AppStockLockUpsert) {
@@ -545,6 +647,27 @@ func (u *AppStockLockUpsertOne) UpdateUnits() *AppStockLockUpsertOne {
 func (u *AppStockLockUpsertOne) ClearUnits() *AppStockLockUpsertOne {
 	return u.Update(func(s *AppStockLockUpsert) {
 		s.ClearUnits()
+	})
+}
+
+// SetAppSpotUnits sets the "app_spot_units" field.
+func (u *AppStockLockUpsertOne) SetAppSpotUnits(v decimal.Decimal) *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetAppSpotUnits(v)
+	})
+}
+
+// UpdateAppSpotUnits sets the "app_spot_units" field to the value that was provided on create.
+func (u *AppStockLockUpsertOne) UpdateAppSpotUnits() *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateAppSpotUnits()
+	})
+}
+
+// ClearAppSpotUnits clears the value of the "app_spot_units" field.
+func (u *AppStockLockUpsertOne) ClearAppSpotUnits() *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.ClearAppSpotUnits()
 	})
 }
 
@@ -827,6 +950,20 @@ func (u *AppStockLockUpsertBulk) UpdateDeletedAt() *AppStockLockUpsertBulk {
 	})
 }
 
+// SetAppStockID sets the "app_stock_id" field.
+func (u *AppStockLockUpsertBulk) SetAppStockID(v uuid.UUID) *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetAppStockID(v)
+	})
+}
+
+// UpdateAppStockID sets the "app_stock_id" field to the value that was provided on create.
+func (u *AppStockLockUpsertBulk) UpdateAppStockID() *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateAppStockID()
+	})
+}
+
 // SetUnits sets the "units" field.
 func (u *AppStockLockUpsertBulk) SetUnits(v decimal.Decimal) *AppStockLockUpsertBulk {
 	return u.Update(func(s *AppStockLockUpsert) {
@@ -845,6 +982,27 @@ func (u *AppStockLockUpsertBulk) UpdateUnits() *AppStockLockUpsertBulk {
 func (u *AppStockLockUpsertBulk) ClearUnits() *AppStockLockUpsertBulk {
 	return u.Update(func(s *AppStockLockUpsert) {
 		s.ClearUnits()
+	})
+}
+
+// SetAppSpotUnits sets the "app_spot_units" field.
+func (u *AppStockLockUpsertBulk) SetAppSpotUnits(v decimal.Decimal) *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetAppSpotUnits(v)
+	})
+}
+
+// UpdateAppSpotUnits sets the "app_spot_units" field to the value that was provided on create.
+func (u *AppStockLockUpsertBulk) UpdateAppSpotUnits() *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateAppSpotUnits()
+	})
+}
+
+// ClearAppSpotUnits clears the value of the "app_spot_units" field.
+func (u *AppStockLockUpsertBulk) ClearAppSpotUnits() *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.ClearAppSpotUnits()
 	})
 }
 
