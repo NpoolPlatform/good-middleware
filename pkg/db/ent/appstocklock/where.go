@@ -392,6 +392,20 @@ func AppStockIDLTE(v uuid.UUID) predicate.AppStockLock {
 	})
 }
 
+// AppStockIDIsNil applies the IsNil predicate on the "app_stock_id" field.
+func AppStockIDIsNil() predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAppStockID)))
+	})
+}
+
+// AppStockIDNotNil applies the NotNil predicate on the "app_stock_id" field.
+func AppStockIDNotNil() predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAppStockID)))
+	})
+}
+
 // UnitsEQ applies the EQ predicate on the "units" field.
 func UnitsEQ(v decimal.Decimal) predicate.AppStockLock {
 	return predicate.AppStockLock(func(s *sql.Selector) {

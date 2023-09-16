@@ -4922,9 +4922,22 @@ func (m *AppStockLockMutation) OldAppStockID(ctx context.Context) (v uuid.UUID, 
 	return oldValue.AppStockID, nil
 }
 
+// ClearAppStockID clears the value of the "app_stock_id" field.
+func (m *AppStockLockMutation) ClearAppStockID() {
+	m.app_stock_id = nil
+	m.clearedFields[appstocklock.FieldAppStockID] = struct{}{}
+}
+
+// AppStockIDCleared returns if the "app_stock_id" field was cleared in this mutation.
+func (m *AppStockLockMutation) AppStockIDCleared() bool {
+	_, ok := m.clearedFields[appstocklock.FieldAppStockID]
+	return ok
+}
+
 // ResetAppStockID resets all changes to the "app_stock_id" field.
 func (m *AppStockLockMutation) ResetAppStockID() {
 	m.app_stock_id = nil
+	delete(m.clearedFields, appstocklock.FieldAppStockID)
 }
 
 // SetUnits sets the "units" field.
@@ -5350,6 +5363,9 @@ func (m *AppStockLockMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *AppStockLockMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(appstocklock.FieldAppStockID) {
+		fields = append(fields, appstocklock.FieldAppStockID)
+	}
 	if m.FieldCleared(appstocklock.FieldUnits) {
 		fields = append(fields, appstocklock.FieldUnits)
 	}
@@ -5376,6 +5392,9 @@ func (m *AppStockLockMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *AppStockLockMutation) ClearField(name string) error {
 	switch name {
+	case appstocklock.FieldAppStockID:
+		m.ClearAppStockID()
+		return nil
 	case appstocklock.FieldUnits:
 		m.ClearUnits()
 		return nil

@@ -34,7 +34,7 @@ func (h *lockHandler) lockStock(ctx context.Context, tx *ent.Tx) error { //nolin
 		return err
 	}
 	if info == nil {
-		return fmt.Errorf("invalid stock")
+		return fmt.Errorf("invalid stock 1")
 	}
 
 	spotQuantity := info.SpotQuantity
@@ -55,13 +55,13 @@ func (h *lockHandler) lockStock(ctx context.Context, tx *ent.Tx) error { //nolin
 	}
 	spotQuantity = spotQuantity.Sub(platformLocked)
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return fmt.Errorf("invalid stock 2")
 	}
 	if spotQuantity.Cmp(info.Total) > 0 {
-		return fmt.Errorf("invalid stock")
+		return fmt.Errorf("invalid stock 3")
 	}
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return fmt.Errorf("invalid stock 4")
 	}
 
 	if locked.Add(info.InService).
@@ -112,13 +112,13 @@ func (h *lockHandler) lockAppStock(ctx context.Context, tx *ent.Tx) error {
 		spotQuantity = spotQuantity.Sub(*h.AppSpotLocked)
 	}
 	if spotQuantity.Cmp(info.Reserved) > 0 {
-		return fmt.Errorf("invalid stock")
+		return fmt.Errorf("invalid stock 5")
 	}
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
 		spotQuantity = decimal.NewFromInt(0)
 	}
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return fmt.Errorf("invalid stock 6")
 	}
 
 	if _, err := appstockcrud.UpdateSet(

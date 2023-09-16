@@ -38,8 +38,10 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, tx *ent.Tx) err
 		return fmt.Errorf("invalid stock")
 	}
 
+	spotQuantity := info.SpotQuantity
 	inService := info.InService
 	waitStart := info.WaitStart
+	sold := info.Sold
 
 	switch h.lock.LockState {
 	case types.AppStockLockState_AppStockInService.String():
@@ -47,6 +49,8 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, tx *ent.Tx) err
 	case types.AppStockLockState_AppStockWaitStart.String():
 		waitStart = waitStart.Sub(h.lock.Units)
 	}
+	sold = sold.Sub(h.lock.Units)
+	spotQuantity = spotQuantity.Add(h.lock.Units)
 
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
@@ -54,11 +58,14 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, tx *ent.Tx) err
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
+	if sold.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid stock")
+	}
 
 	if inService.Add(waitStart).
 		Add(info.Locked).
 		Add(info.AppReserved).
-		Add(info.SpotQuantity).
+		Add(spotQuantity).
 		Cmp(info.Total) > 0 {
 		return fmt.Errorf("stock exhausted")
 	}
@@ -66,8 +73,10 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, tx *ent.Tx) err
 	if _, err := stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(info.ID),
 		&stockcrud.Req{
-			InService: &inService,
-			WaitStart: &waitStart,
+			SpotQuantity: &spotQuantity,
+			InService:    &inService,
+			WaitStart:    &waitStart,
+			Sold:         &sold,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -96,6 +105,7 @@ func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, tx *ent.Tx) 
 	h.GoodID = &info.GoodID
 	inService := info.InService
 	waitStart := info.WaitStart
+	sold := info.Sold
 
 	switch h.lock.LockState {
 	case types.AppStockLockState_AppStockInService.String():
@@ -103,11 +113,15 @@ func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, tx *ent.Tx) 
 	case types.AppStockLockState_AppStockWaitStart.String():
 		waitStart = waitStart.Sub(h.lock.Units)
 	}
+	sold = sold.Sub(h.lock.Units)
 
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid stock")
+	}
+	if sold.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
@@ -116,6 +130,7 @@ func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, tx *ent.Tx) 
 		&appstockcrud.Req{
 			InService: &inService,
 			WaitStart: &waitStart,
+			Sold:      &sold,
 		},
 	).Save(ctx); err != nil {
 		return err

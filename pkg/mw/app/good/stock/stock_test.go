@@ -226,7 +226,7 @@ func setup(t *testing.T) func(*testing.T) {
 	}
 }
 
-func addStock(t *testing.T) {
+func reserveStock(t *testing.T) {
 	ret.SpotQuantity = ret.Reserved
 
 	handler, err := NewHandler(
@@ -245,11 +245,13 @@ func addStock(t *testing.T) {
 			assert.Equal(t, &ret, info)
 		}
 	}
+}
 
+func lockStock(t *testing.T) {
 	ret.Locked = decimal.NewFromInt(10).String()
 	ret.SpotQuantity = decimal.NewFromInt(90).String()
 
-	handler, err = NewHandler(
+	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithAppID(&ret.AppID, true),
@@ -267,12 +269,14 @@ func addStock(t *testing.T) {
 			assert.Equal(t, &ret, info)
 		}
 	}
+}
 
+func waitStartStock(t *testing.T) {
 	ret.WaitStart = ret.Locked
 	ret.Sold = ret.Locked
 	ret.Locked = decimal.NewFromInt(0).String()
 
-	handler, err = NewHandler(
+	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithAppID(&ret.AppID, true),
@@ -303,9 +307,11 @@ func addStock(t *testing.T) {
 			assert.Equal(t, ret.Sold, info.GoodSold)
 		}
 	}
+}
 
+func lockFailStock(t *testing.T) {
 	locked := decimal.NewFromInt(1999).String()
-	handler, err = NewHandler(
+	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithAppID(&ret.AppID, true),
@@ -320,7 +326,7 @@ func addStock(t *testing.T) {
 	}
 }
 
-func subStock(t *testing.T) {
+func chargeBackStock(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
@@ -361,6 +367,9 @@ func TestStock(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
 
-	t.Run("addStock", addStock)
-	t.Run("subStock", subStock)
+	t.Run("reserveStock", reserveStock)
+	t.Run("lockStock", lockStock)
+	t.Run("waitStartStock", waitStartStock)
+	t.Run("lockFailStock", lockFailStock)
+	t.Run("chargeBackStock", chargeBackStock)
 }

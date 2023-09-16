@@ -91,11 +91,9 @@ func (h *reserveHandler) reserveAppStock(ctx context.Context, tx *ent.Tx) error 
 	h.GoodID = &info.GoodID
 	spotQuantity := info.SpotQuantity
 	reserved := info.Reserved
-
 	spotQuantity = h.Reserved.Add(spotQuantity)
 	reserved = h.Reserved.Add(reserved)
-
-	if spotQuantity.Cmp(info.Reserved) > 0 {
+	if spotQuantity.Cmp(reserved) > 0 {
 		return fmt.Errorf("invalid stock")
 	}
 

@@ -294,9 +294,6 @@ func (aslc *AppStockLockCreate) check() error {
 	if _, ok := aslc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "AppStockLock.deleted_at"`)}
 	}
-	if _, ok := aslc.mutation.AppStockID(); !ok {
-		return &ValidationError{Name: "app_stock_id", err: errors.New(`ent: missing required field "AppStockLock.app_stock_id"`)}
-	}
 	return nil
 }
 
@@ -518,6 +515,12 @@ func (u *AppStockLockUpsert) UpdateAppStockID() *AppStockLockUpsert {
 	return u
 }
 
+// ClearAppStockID clears the value of the "app_stock_id" field.
+func (u *AppStockLockUpsert) ClearAppStockID() *AppStockLockUpsert {
+	u.SetNull(appstocklock.FieldAppStockID)
+	return u
+}
+
 // SetUnits sets the "units" field.
 func (u *AppStockLockUpsert) SetUnits(v decimal.Decimal) *AppStockLockUpsert {
 	u.Set(appstocklock.FieldUnits, v)
@@ -714,6 +717,13 @@ func (u *AppStockLockUpsertOne) SetAppStockID(v uuid.UUID) *AppStockLockUpsertOn
 func (u *AppStockLockUpsertOne) UpdateAppStockID() *AppStockLockUpsertOne {
 	return u.Update(func(s *AppStockLockUpsert) {
 		s.UpdateAppStockID()
+	})
+}
+
+// ClearAppStockID clears the value of the "app_stock_id" field.
+func (u *AppStockLockUpsertOne) ClearAppStockID() *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.ClearAppStockID()
 	})
 }
 
@@ -1091,6 +1101,13 @@ func (u *AppStockLockUpsertBulk) SetAppStockID(v uuid.UUID) *AppStockLockUpsertB
 func (u *AppStockLockUpsertBulk) UpdateAppStockID() *AppStockLockUpsertBulk {
 	return u.Update(func(s *AppStockLockUpsert) {
 		s.UpdateAppStockID()
+	})
+}
+
+// ClearAppStockID clears the value of the "app_stock_id" field.
+func (u *AppStockLockUpsertBulk) ClearAppStockID() *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.ClearAppStockID()
 	})
 }
 
