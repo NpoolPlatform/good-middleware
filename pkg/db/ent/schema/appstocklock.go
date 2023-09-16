@@ -30,7 +30,9 @@ func (AppStockLock) Fields() []ent.Field {
 			Unique(),
 		field.
 			UUID("app_stock_id", uuid.UUID{}).
-			Default(uuid.New).
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}).
 			Unique(),
 		field.
 			Other("units", decimal.Decimal{}).

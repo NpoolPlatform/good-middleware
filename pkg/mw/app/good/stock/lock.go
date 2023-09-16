@@ -16,11 +16,11 @@ import (
 	"github.com/shopspring/decimal"
 )
 
-type addHandler struct {
+type lockHandler struct {
 	*lockopHandler
 }
 
-func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error { //nolint:gocyclo
+func (h *lockHandler) lockStock(ctx context.Context, tx *ent.Tx) error { //nolint:gocyclo
 	info, err := tx.
 		Stock.
 		Query().
@@ -86,7 +86,7 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error { //nolint:
 }
 
 //nolint:gocyclo,funlen
-func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
+func (h *lockHandler) lockAppStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.
 		Query().
@@ -134,17 +134,17 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *Handler) AddStock(ctx context.Context) (*npool.Stock, error) {
-	handler := &addHandler{
+func (h *Handler) LockStock(ctx context.Context) (*npool.Stock, error) {
+	handler := &lockHandler{
 		lockopHandler: &lockopHandler{
 			Handler: h,
 		},
 	}
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.addAppStock(ctx, tx); err != nil {
+		if err := handler.lockAppStock(ctx, tx); err != nil {
 			return err
 		}
-		if err := handler.addStock(ctx, tx); err != nil {
+		if err := handler.lockStock(ctx, tx); err != nil {
 			return err
 		}
 		if err := handler.createLock(ctx, tx); err != nil {
