@@ -286,6 +286,7 @@ func WithAppStockLockState(e *types.AppStockLockState, must bool) func(context.C
 		case types.AppStockLockState_AppStockExpired:
 		case types.AppStockLockState_AppStockChargeBack:
 		case types.AppStockLockState_AppStockRollback:
+		case types.AppStockLockState_AppStockCanceled:
 		default:
 			return fmt.Errorf("invalid appstocklockstate")
 		}

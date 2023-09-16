@@ -37,7 +37,11 @@ func (h *lockopHandler) getLock(ctx context.Context) error {
 
 func (h *lockopHandler) checkState() error {
 	stateMap := map[types.AppStockLockState][]types.AppStockLockState{
-		types.AppStockLockState_AppStockLocked:    {types.AppStockLockState_AppStockWaitStart, types.AppStockLockState_AppStockRollback},
+		types.AppStockLockState_AppStockLocked: {
+			types.AppStockLockState_AppStockWaitStart,
+			types.AppStockLockState_AppStockRollback,
+			types.AppStockLockState_AppStockCanceled,
+		},
 		types.AppStockLockState_AppStockWaitStart: {types.AppStockLockState_AppStockInService, types.AppStockLockState_AppStockChargeBack},
 		types.AppStockLockState_AppStockInService: {types.AppStockLockState_AppStockExpired, types.AppStockLockState_AppStockChargeBack},
 	}
