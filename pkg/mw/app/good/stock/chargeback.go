@@ -21,7 +21,7 @@ type chargeBackHandler struct {
 	*lockopHandler
 }
 
-func (h *chargeBackHandler) chargeBackStock(ctx context.Context, tx *ent.Tx) error { //nolint:gocyclo
+func (h *chargeBackHandler) chargeBackStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		Stock.
 		Query().
@@ -84,7 +84,6 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, tx *ent.Tx) err
 	return nil
 }
 
-//nolint:gocyclo,funlen
 func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.

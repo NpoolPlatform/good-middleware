@@ -21,7 +21,7 @@ type expireHandler struct {
 	*lockopHandler
 }
 
-func (h *expireHandler) expireStock(ctx context.Context, tx *ent.Tx) error { //nolint:gocyclo
+func (h *expireHandler) expireStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		Stock.
 		Query().
@@ -63,7 +63,6 @@ func (h *expireHandler) expireStock(ctx context.Context, tx *ent.Tx) error { //n
 	return nil
 }
 
-//nolint:gocyclo,funlen
 func (h *expireHandler) expireAppStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.

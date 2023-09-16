@@ -1,4 +1,3 @@
-//nolint:dupl
 package appstock
 
 import (
@@ -20,7 +19,7 @@ type reserveHandler struct {
 	*Handler
 }
 
-func (h *reserveHandler) reserveStock(ctx context.Context, tx *ent.Tx) error { //nolint:gocyclo
+func (h *reserveHandler) reserveStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		Stock.
 		Query().
@@ -70,7 +69,6 @@ func (h *reserveHandler) reserveStock(ctx context.Context, tx *ent.Tx) error { /
 	return nil
 }
 
-//nolint:gocyclo,funlen
 func (h *reserveHandler) reserveAppStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.

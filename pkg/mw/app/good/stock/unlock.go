@@ -1,4 +1,3 @@
-//nolint:dupl
 package appstock
 
 import (
@@ -21,7 +20,6 @@ type unlockHandler struct {
 	*lockopHandler
 }
 
-//nolint:gocyclo,funlen
 func (h *unlockHandler) unlockStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		Stock.
@@ -84,7 +82,6 @@ func (h *unlockHandler) unlockStock(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-//nolint:gocyclo,funlen
 func (h *unlockHandler) unlockAppStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.

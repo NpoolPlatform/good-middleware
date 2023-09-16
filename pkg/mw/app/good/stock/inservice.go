@@ -21,7 +21,7 @@ type inServiceHandler struct {
 	*lockopHandler
 }
 
-func (h *inServiceHandler) inServiceStock(ctx context.Context, tx *ent.Tx) error { //nolint:gocyclo
+func (h *inServiceHandler) inServiceStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		Stock.
 		Query().
@@ -68,7 +68,6 @@ func (h *inServiceHandler) inServiceStock(ctx context.Context, tx *ent.Tx) error
 	return nil
 }
 
-//nolint:gocyclo,funlen
 func (h *inServiceHandler) inServiceAppStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.

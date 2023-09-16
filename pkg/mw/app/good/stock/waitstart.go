@@ -21,7 +21,7 @@ type waitStartHandler struct {
 	*lockopHandler
 }
 
-func (h *waitStartHandler) waitStartStock(ctx context.Context, tx *ent.Tx) error { //nolint:gocyclo
+func (h *waitStartHandler) waitStartStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		Stock.
 		Query().
@@ -74,7 +74,6 @@ func (h *waitStartHandler) waitStartStock(ctx context.Context, tx *ent.Tx) error
 	return nil
 }
 
-//nolint:gocyclo,funlen
 func (h *waitStartHandler) waitStartAppStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.
