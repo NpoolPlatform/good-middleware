@@ -4,26 +4,23 @@ package appstock
 import (
 	"context"
 	"fmt"
-	"time"
 
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
-	appstocklockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/lock"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
-	entappstocklock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 
 	"github.com/shopspring/decimal"
 )
 
-type addHandler struct {
-	*Handler
+type waitStartHandler struct {
+	*lockopHandler
 }
 
-func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error { //nolint:gocyclo
+func (h *waitStartHandler) waitStartStock(ctx context.Context, tx *ent.Tx) error { //nolint:gocyclo
 	info, err := tx.
 		Stock.
 		Query().
@@ -40,48 +37,14 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error { //nolint:
 		return fmt.Errorf("invalid stock")
 	}
 
-	spotQuantity := info.SpotQuantity
 	locked := info.Locked
-	inService := info.InService
 	sold := info.Sold
 	waitStart := info.WaitStart
-	appReserved := info.AppReserved
 
-	if h.Locked != nil {
-		locked = h.Locked.Add(locked)
-		platformLocked := *h.Locked
-		if h.AppSpotLocked != nil {
-			platformLocked = platformLocked.Sub(*h.AppSpotLocked)
-			appReserved = appReserved.Sub(*h.AppSpotLocked)
-		}
-		if platformLocked.Cmp(decimal.NewFromInt(0)) < 0 {
-			return fmt.Errorf("invalid appspotlockde")
-		}
-		if appReserved.Cmp(decimal.NewFromInt(0)) < 0 {
-			return fmt.Errorf("invalid appreserved")
-		}
-		spotQuantity = spotQuantity.Sub(platformLocked)
-	}
-	if h.WaitStart != nil {
-		waitStart = h.WaitStart.Add(waitStart)
-		locked = locked.Sub(*h.WaitStart)
-		sold = h.WaitStart.Add(sold)
-	}
-	if h.InService != nil {
-		inService = h.InService.Add(inService)
-		waitStart = waitStart.Sub(*h.InService)
-	}
-	if h.Reserved != nil {
-		appReserved = h.Reserved.Add(appReserved)
-		spotQuantity = spotQuantity.Sub(*h.Reserved)
-	}
+	waitStart = h.lock.Units.Add(waitStart)
+	locked = locked.Sub(h.lock.Units)
+	sold = h.lock.Units.Add(sold)
 
-	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
-	}
-	if spotQuantity.Cmp(info.Total) > 0 {
-		return fmt.Errorf("invalid stock")
-	}
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
@@ -89,10 +52,10 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error { //nolint:
 		return fmt.Errorf("invalid stock")
 	}
 
-	if locked.Add(inService).
-		Add(waitStart).
-		Add(appReserved).
-		Add(spotQuantity).
+	if locked.Add(info.InService).
+		Add(info.WaitStart).
+		Add(info.AppReserved).
+		Add(info.SpotQuantity).
 		Cmp(info.Total) > 0 {
 		return fmt.Errorf("stock exhausted")
 	}
@@ -100,12 +63,9 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error { //nolint:
 	if _, err := stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(info.ID),
 		&stockcrud.Req{
-			SpotQuantity: &spotQuantity,
-			Locked:       &locked,
-			InService:    &inService,
-			WaitStart:    &waitStart,
-			AppReserved:  &appReserved,
-			Sold:         &sold,
+			Locked:    &locked,
+			WaitStart: &waitStart,
+			Sold:      &sold,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -114,7 +74,7 @@ func (h *addHandler) addStock(ctx context.Context, tx *ent.Tx) error { //nolint:
 }
 
 //nolint:gocyclo,funlen
-func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) (bool, error) {
+func (h *waitStartHandler) waitStartAppStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.
 		Query().
@@ -125,131 +85,61 @@ func (h *addHandler) addAppStock(ctx context.Context, tx *ent.Tx) (bool, error) 
 		ForUpdate().
 		Only(ctx)
 	if err != nil {
-		return false, err
+		return err
 	}
 	if info == nil {
-		return false, fmt.Errorf("invalid appstock")
+		return fmt.Errorf("invalid appstock")
 	}
 
 	h.GoodID = &info.GoodID
-	spotQuantity := info.SpotQuantity
-	reserved := info.Reserved
 	locked := info.Locked
-	inService := info.InService
 	sold := info.Sold
 	waitStart := info.WaitStart
 
-	if h.Reserved != nil {
-		reserved = h.Reserved.Add(reserved)
-		spotQuantity = h.Reserved.Add(spotQuantity)
-	}
-	if h.Locked != nil {
-		if h.LockID == nil {
-			return false, fmt.Errorf("invalid lockid")
-		}
-		locked = h.Locked.Add(locked)
-		if h.AppSpotLocked != nil {
-			spotQuantity = spotQuantity.Sub(*h.AppSpotLocked)
-		}
-	}
-	if h.WaitStart != nil {
-		if h.LockID == nil {
-			return false, fmt.Errorf("invalid lockid")
-		}
-		waitStart = h.WaitStart.Add(waitStart)
-		locked = locked.Sub(*h.WaitStart)
-		sold = h.WaitStart.Add(sold)
-	}
-	if h.InService != nil {
-		inService = h.InService.Add(inService)
-		waitStart = waitStart.Sub(*h.InService)
-	}
+	waitStart = h.lock.Units.Add(waitStart)
+	locked = locked.Sub(h.lock.Units)
+	sold = h.lock.Units.Add(sold)
 
-	if spotQuantity.Cmp(reserved) > 0 {
-		return false, fmt.Errorf("invalid stock")
-	}
-	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		spotQuantity = decimal.NewFromInt(0)
-	}
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return false, fmt.Errorf("invalid stock")
+		return fmt.Errorf("invalid stock")
 	}
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
-		return false, fmt.Errorf("invalid stock")
-	}
-
-	if h.Locked != nil {
-		if _, err := appstocklockcrud.CreateSet(
-			tx.AppStockLock.Create(),
-			&appstocklockcrud.Req{
-				ID:    h.LockID,
-				Units: h.Locked,
-			},
-		).Save(ctx); err != nil {
-			return false, err
-		}
-	}
-
-	if h.WaitStart != nil {
-		lock, err := tx.
-			AppStockLock.
-			Query().
-			Where(
-				entappstocklock.ID(*h.LockID),
-				entappstocklock.DeletedAt(0),
-			).
-			Only(ctx)
-		if err != nil {
-			if ent.IsNotFound(err) {
-				return false, nil
-			}
-			return false, err
-		}
-		if h.WaitStart.Cmp(lock.Units) != 0 {
-			return false, fmt.Errorf("invalid units")
-		}
-
-		now := uint32(time.Now().Unix())
-		if _, err := appstocklockcrud.UpdateSet(
-			tx.AppStockLock.UpdateOneID(*h.LockID),
-			&appstocklockcrud.Req{
-				DeletedAt: &now,
-			},
-		).Save(ctx); err != nil {
-			return false, err
-		}
+		return fmt.Errorf("invalid stock")
 	}
 
 	if _, err := appstockcrud.UpdateSet(
 		tx.AppStock.UpdateOneID(info.ID),
 		&appstockcrud.Req{
-			Reserved:     &reserved,
-			SpotQuantity: &spotQuantity,
-			Locked:       &locked,
-			InService:    &inService,
-			WaitStart:    &waitStart,
-			Sold:         &sold,
+			Locked:    &locked,
+			WaitStart: &waitStart,
+			Sold:      &sold,
 		},
 	).Save(ctx); err != nil {
-		return false, err
+		return err
 	}
 
-	return true, nil
+	return nil
 }
 
-func (h *Handler) AddStock(ctx context.Context) (*npool.Stock, error) {
-	if err := h.validate(); err != nil {
+func (h *Handler) WaitStartStock(ctx context.Context) (*npool.Stock, error) {
+	handler := &waitStartHandler{
+		lockopHandler: &lockopHandler{
+			Handler: h,
+		},
+	}
+
+	if err := handler.getLock(ctx); err != nil {
 		return nil, err
 	}
 
-	handler := &addHandler{
-		Handler: h,
-	}
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if added, err := handler.addAppStock(ctx, tx); err != nil || !added {
+		if err := handler.waitStartAppStock(ctx, tx); err != nil {
 			return err
 		}
-		if err := handler.addStock(ctx, tx); err != nil {
+		if err := handler.waitStartStock(ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.deleteLock(ctx, tx); err != nil {
 			return err
 		}
 		return nil
