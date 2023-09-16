@@ -289,6 +289,14 @@ func init() {
 	appstocklockDescAppSpotUnits := appstocklockFields[3].Descriptor()
 	// appstocklock.DefaultAppSpotUnits holds the default value on creation for the app_spot_units field.
 	appstocklock.DefaultAppSpotUnits = appstocklockDescAppSpotUnits.Default.(decimal.Decimal)
+	// appstocklockDescLockState is the schema descriptor for lock_state field.
+	appstocklockDescLockState := appstocklockFields[4].Descriptor()
+	// appstocklock.DefaultLockState holds the default value on creation for the lock_state field.
+	appstocklock.DefaultLockState = appstocklockDescLockState.Default.(string)
+	// appstocklockDescChargeBackState is the schema descriptor for charge_back_state field.
+	appstocklockDescChargeBackState := appstocklockFields[5].Descriptor()
+	// appstocklock.DefaultChargeBackState holds the default value on creation for the charge_back_state field.
+	appstocklock.DefaultChargeBackState = appstocklockDescChargeBackState.Default.(string)
 	// appstocklockDescID is the schema descriptor for id field.
 	appstocklockDescID := appstocklockFields[0].Descriptor()
 	// appstocklock.DefaultID holds the default value on creation for the id field.

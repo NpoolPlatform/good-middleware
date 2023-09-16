@@ -2,17 +2,19 @@ package appstocklock
 
 import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
 
 type Req struct {
-	ID           *uuid.UUID
-	AppStockID   *uuid.UUID
-	Units        *decimal.Decimal
-	AppSpotUnits *decimal.Decimal
-	DeletedAt    *uint32
+	ID                *uuid.UUID
+	AppStockID        *uuid.UUID
+	Units             *decimal.Decimal
+	AppSpotUnits      *decimal.Decimal
+	AppStockLockState *types.AppStockLockState
+	DeletedAt         *uint32
 }
 
 func CreateSet(c *ent.AppStockLockCreate, req *Req) *ent.AppStockLockCreate {
@@ -28,10 +30,16 @@ func CreateSet(c *ent.AppStockLockCreate, req *Req) *ent.AppStockLockCreate {
 	if req.AppSpotUnits != nil {
 		c.SetAppSpotUnits(*req.AppSpotUnits)
 	}
+	if req.AppStockLockState != nil {
+		c.SetLockState(req.AppStockLockState.String())
+	}
 	return c
 }
 
 func UpdateSet(u *ent.AppStockLockUpdateOne, req *Req) *ent.AppStockLockUpdateOne {
+	if req.AppStockLockState != nil {
+		u.SetLockState(req.AppStockLockState.String())
+	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)
 	}

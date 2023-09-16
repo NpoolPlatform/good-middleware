@@ -139,6 +139,46 @@ func (aslu *AppStockLockUpdate) ClearAppSpotUnits() *AppStockLockUpdate {
 	return aslu
 }
 
+// SetLockState sets the "lock_state" field.
+func (aslu *AppStockLockUpdate) SetLockState(s string) *AppStockLockUpdate {
+	aslu.mutation.SetLockState(s)
+	return aslu
+}
+
+// SetNillableLockState sets the "lock_state" field if the given value is not nil.
+func (aslu *AppStockLockUpdate) SetNillableLockState(s *string) *AppStockLockUpdate {
+	if s != nil {
+		aslu.SetLockState(*s)
+	}
+	return aslu
+}
+
+// ClearLockState clears the value of the "lock_state" field.
+func (aslu *AppStockLockUpdate) ClearLockState() *AppStockLockUpdate {
+	aslu.mutation.ClearLockState()
+	return aslu
+}
+
+// SetChargeBackState sets the "charge_back_state" field.
+func (aslu *AppStockLockUpdate) SetChargeBackState(s string) *AppStockLockUpdate {
+	aslu.mutation.SetChargeBackState(s)
+	return aslu
+}
+
+// SetNillableChargeBackState sets the "charge_back_state" field if the given value is not nil.
+func (aslu *AppStockLockUpdate) SetNillableChargeBackState(s *string) *AppStockLockUpdate {
+	if s != nil {
+		aslu.SetChargeBackState(*s)
+	}
+	return aslu
+}
+
+// ClearChargeBackState clears the value of the "charge_back_state" field.
+func (aslu *AppStockLockUpdate) ClearChargeBackState() *AppStockLockUpdate {
+	aslu.mutation.ClearChargeBackState()
+	return aslu
+}
+
 // Mutation returns the AppStockLockMutation object of the builder.
 func (aslu *AppStockLockUpdate) Mutation() *AppStockLockMutation {
 	return aslu.mutation
@@ -312,6 +352,32 @@ func (aslu *AppStockLockUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Column: appstocklock.FieldAppSpotUnits,
 		})
 	}
+	if value, ok := aslu.mutation.LockState(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appstocklock.FieldLockState,
+		})
+	}
+	if aslu.mutation.LockStateCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appstocklock.FieldLockState,
+		})
+	}
+	if value, ok := aslu.mutation.ChargeBackState(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appstocklock.FieldChargeBackState,
+		})
+	}
+	if aslu.mutation.ChargeBackStateCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appstocklock.FieldChargeBackState,
+		})
+	}
 	_spec.Modifiers = aslu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, aslu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -439,6 +505,46 @@ func (asluo *AppStockLockUpdateOne) SetNillableAppSpotUnits(d *decimal.Decimal) 
 // ClearAppSpotUnits clears the value of the "app_spot_units" field.
 func (asluo *AppStockLockUpdateOne) ClearAppSpotUnits() *AppStockLockUpdateOne {
 	asluo.mutation.ClearAppSpotUnits()
+	return asluo
+}
+
+// SetLockState sets the "lock_state" field.
+func (asluo *AppStockLockUpdateOne) SetLockState(s string) *AppStockLockUpdateOne {
+	asluo.mutation.SetLockState(s)
+	return asluo
+}
+
+// SetNillableLockState sets the "lock_state" field if the given value is not nil.
+func (asluo *AppStockLockUpdateOne) SetNillableLockState(s *string) *AppStockLockUpdateOne {
+	if s != nil {
+		asluo.SetLockState(*s)
+	}
+	return asluo
+}
+
+// ClearLockState clears the value of the "lock_state" field.
+func (asluo *AppStockLockUpdateOne) ClearLockState() *AppStockLockUpdateOne {
+	asluo.mutation.ClearLockState()
+	return asluo
+}
+
+// SetChargeBackState sets the "charge_back_state" field.
+func (asluo *AppStockLockUpdateOne) SetChargeBackState(s string) *AppStockLockUpdateOne {
+	asluo.mutation.SetChargeBackState(s)
+	return asluo
+}
+
+// SetNillableChargeBackState sets the "charge_back_state" field if the given value is not nil.
+func (asluo *AppStockLockUpdateOne) SetNillableChargeBackState(s *string) *AppStockLockUpdateOne {
+	if s != nil {
+		asluo.SetChargeBackState(*s)
+	}
+	return asluo
+}
+
+// ClearChargeBackState clears the value of the "charge_back_state" field.
+func (asluo *AppStockLockUpdateOne) ClearChargeBackState() *AppStockLockUpdateOne {
+	asluo.mutation.ClearChargeBackState()
 	return asluo
 }
 
@@ -643,6 +749,32 @@ func (asluo *AppStockLockUpdateOne) sqlSave(ctx context.Context) (_node *AppStoc
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: appstocklock.FieldAppSpotUnits,
+		})
+	}
+	if value, ok := asluo.mutation.LockState(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appstocklock.FieldLockState,
+		})
+	}
+	if asluo.mutation.LockStateCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appstocklock.FieldLockState,
+		})
+	}
+	if value, ok := asluo.mutation.ChargeBackState(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appstocklock.FieldChargeBackState,
+		})
+	}
+	if asluo.mutation.ChargeBackStateCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appstocklock.FieldChargeBackState,
 		})
 	}
 	_spec.Modifiers = asluo.modifiers

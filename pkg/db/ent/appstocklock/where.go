@@ -122,6 +122,20 @@ func AppSpotUnits(v decimal.Decimal) predicate.AppStockLock {
 	})
 }
 
+// LockState applies equality check predicate on the "lock_state" field. It's identical to LockStateEQ.
+func LockState(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldLockState), v))
+	})
+}
+
+// ChargeBackState applies equality check predicate on the "charge_back_state" field. It's identical to ChargeBackStateEQ.
+func ChargeBackState(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldChargeBackState), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.AppStockLock {
 	return predicate.AppStockLock(func(s *sql.Selector) {
@@ -531,6 +545,232 @@ func AppSpotUnitsIsNil() predicate.AppStockLock {
 func AppSpotUnitsNotNil() predicate.AppStockLock {
 	return predicate.AppStockLock(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldAppSpotUnits)))
+	})
+}
+
+// LockStateEQ applies the EQ predicate on the "lock_state" field.
+func LockStateEQ(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldLockState), v))
+	})
+}
+
+// LockStateNEQ applies the NEQ predicate on the "lock_state" field.
+func LockStateNEQ(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldLockState), v))
+	})
+}
+
+// LockStateIn applies the In predicate on the "lock_state" field.
+func LockStateIn(vs ...string) predicate.AppStockLock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldLockState), v...))
+	})
+}
+
+// LockStateNotIn applies the NotIn predicate on the "lock_state" field.
+func LockStateNotIn(vs ...string) predicate.AppStockLock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldLockState), v...))
+	})
+}
+
+// LockStateGT applies the GT predicate on the "lock_state" field.
+func LockStateGT(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldLockState), v))
+	})
+}
+
+// LockStateGTE applies the GTE predicate on the "lock_state" field.
+func LockStateGTE(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldLockState), v))
+	})
+}
+
+// LockStateLT applies the LT predicate on the "lock_state" field.
+func LockStateLT(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldLockState), v))
+	})
+}
+
+// LockStateLTE applies the LTE predicate on the "lock_state" field.
+func LockStateLTE(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldLockState), v))
+	})
+}
+
+// LockStateContains applies the Contains predicate on the "lock_state" field.
+func LockStateContains(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldLockState), v))
+	})
+}
+
+// LockStateHasPrefix applies the HasPrefix predicate on the "lock_state" field.
+func LockStateHasPrefix(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldLockState), v))
+	})
+}
+
+// LockStateHasSuffix applies the HasSuffix predicate on the "lock_state" field.
+func LockStateHasSuffix(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldLockState), v))
+	})
+}
+
+// LockStateIsNil applies the IsNil predicate on the "lock_state" field.
+func LockStateIsNil() predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldLockState)))
+	})
+}
+
+// LockStateNotNil applies the NotNil predicate on the "lock_state" field.
+func LockStateNotNil() predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldLockState)))
+	})
+}
+
+// LockStateEqualFold applies the EqualFold predicate on the "lock_state" field.
+func LockStateEqualFold(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldLockState), v))
+	})
+}
+
+// LockStateContainsFold applies the ContainsFold predicate on the "lock_state" field.
+func LockStateContainsFold(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldLockState), v))
+	})
+}
+
+// ChargeBackStateEQ applies the EQ predicate on the "charge_back_state" field.
+func ChargeBackStateEQ(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldChargeBackState), v))
+	})
+}
+
+// ChargeBackStateNEQ applies the NEQ predicate on the "charge_back_state" field.
+func ChargeBackStateNEQ(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldChargeBackState), v))
+	})
+}
+
+// ChargeBackStateIn applies the In predicate on the "charge_back_state" field.
+func ChargeBackStateIn(vs ...string) predicate.AppStockLock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldChargeBackState), v...))
+	})
+}
+
+// ChargeBackStateNotIn applies the NotIn predicate on the "charge_back_state" field.
+func ChargeBackStateNotIn(vs ...string) predicate.AppStockLock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldChargeBackState), v...))
+	})
+}
+
+// ChargeBackStateGT applies the GT predicate on the "charge_back_state" field.
+func ChargeBackStateGT(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldChargeBackState), v))
+	})
+}
+
+// ChargeBackStateGTE applies the GTE predicate on the "charge_back_state" field.
+func ChargeBackStateGTE(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldChargeBackState), v))
+	})
+}
+
+// ChargeBackStateLT applies the LT predicate on the "charge_back_state" field.
+func ChargeBackStateLT(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldChargeBackState), v))
+	})
+}
+
+// ChargeBackStateLTE applies the LTE predicate on the "charge_back_state" field.
+func ChargeBackStateLTE(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldChargeBackState), v))
+	})
+}
+
+// ChargeBackStateContains applies the Contains predicate on the "charge_back_state" field.
+func ChargeBackStateContains(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldChargeBackState), v))
+	})
+}
+
+// ChargeBackStateHasPrefix applies the HasPrefix predicate on the "charge_back_state" field.
+func ChargeBackStateHasPrefix(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldChargeBackState), v))
+	})
+}
+
+// ChargeBackStateHasSuffix applies the HasSuffix predicate on the "charge_back_state" field.
+func ChargeBackStateHasSuffix(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldChargeBackState), v))
+	})
+}
+
+// ChargeBackStateIsNil applies the IsNil predicate on the "charge_back_state" field.
+func ChargeBackStateIsNil() predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldChargeBackState)))
+	})
+}
+
+// ChargeBackStateNotNil applies the NotNil predicate on the "charge_back_state" field.
+func ChargeBackStateNotNil() predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldChargeBackState)))
+	})
+}
+
+// ChargeBackStateEqualFold applies the EqualFold predicate on the "charge_back_state" field.
+func ChargeBackStateEqualFold(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldChargeBackState), v))
+	})
+}
+
+// ChargeBackStateContainsFold applies the ContainsFold predicate on the "charge_back_state" field.
+func ChargeBackStateContainsFold(v string) predicate.AppStockLock {
+	return predicate.AppStockLock(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldChargeBackState), v))
 	})
 }
 

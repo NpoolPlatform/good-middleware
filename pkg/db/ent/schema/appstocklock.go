@@ -5,6 +5,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
@@ -45,6 +46,14 @@ func (AppStockLock) Fields() []ent.Field {
 			}).
 			Optional().
 			Default(decimal.Decimal{}),
+		field.
+			String("lock_state").
+			Optional().
+			Default(types.AppStockLockState_AppStockLocked.String()),
+		field.
+			String("charge_back_state").
+			Optional().
+			Default(types.AppStockLockState_DefaultAppStockLockState.String()),
 	}
 }
 

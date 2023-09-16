@@ -7,6 +7,7 @@ import (
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -14,9 +15,10 @@ import (
 
 type Handler struct {
 	appstockcrud.Req
-	AppSpotLocked *decimal.Decimal
-	LockID        *uuid.UUID
-	Rollback      *bool
+	AppSpotLocked     *decimal.Decimal
+	AppStockLockState *types.AppStockLockState
+	LockID            *uuid.UUID
+	Rollback          *bool
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -250,6 +252,28 @@ func WithLockID(id *string, must bool) func(context.Context, *Handler) error {
 func WithRollback(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Rollback = b
+		return nil
+	}
+}
+
+func WithAppStockLockState(e *types.AppStockLockState, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return fmt.Errorf("invalid appstocklockstate")
+			}
+		}
+		switch *e {
+		case types.AppStockLockState_AppStockLocked:
+		case types.AppStockLockState_AppStockWaitStart:
+		case types.AppStockLockState_AppStockInService:
+		case types.AppStockLockState_AppStockExpired:
+		case types.AppStockLockState_AppStockChargeBack:
+		case types.AppStockLockState_AppStockRollback:
+		default:
+			return fmt.Errorf("invalid appstocklockstate")
+		}
+		h.AppStockLockState = e
 		return nil
 	}
 }

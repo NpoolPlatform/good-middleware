@@ -108,6 +108,34 @@ func (aslc *AppStockLockCreate) SetNillableAppSpotUnits(d *decimal.Decimal) *App
 	return aslc
 }
 
+// SetLockState sets the "lock_state" field.
+func (aslc *AppStockLockCreate) SetLockState(s string) *AppStockLockCreate {
+	aslc.mutation.SetLockState(s)
+	return aslc
+}
+
+// SetNillableLockState sets the "lock_state" field if the given value is not nil.
+func (aslc *AppStockLockCreate) SetNillableLockState(s *string) *AppStockLockCreate {
+	if s != nil {
+		aslc.SetLockState(*s)
+	}
+	return aslc
+}
+
+// SetChargeBackState sets the "charge_back_state" field.
+func (aslc *AppStockLockCreate) SetChargeBackState(s string) *AppStockLockCreate {
+	aslc.mutation.SetChargeBackState(s)
+	return aslc
+}
+
+// SetNillableChargeBackState sets the "charge_back_state" field if the given value is not nil.
+func (aslc *AppStockLockCreate) SetNillableChargeBackState(s *string) *AppStockLockCreate {
+	if s != nil {
+		aslc.SetChargeBackState(*s)
+	}
+	return aslc
+}
+
 // SetID sets the "id" field.
 func (aslc *AppStockLockCreate) SetID(u uuid.UUID) *AppStockLockCreate {
 	aslc.mutation.SetID(u)
@@ -237,6 +265,14 @@ func (aslc *AppStockLockCreate) defaults() error {
 		v := appstocklock.DefaultAppSpotUnits
 		aslc.mutation.SetAppSpotUnits(v)
 	}
+	if _, ok := aslc.mutation.LockState(); !ok {
+		v := appstocklock.DefaultLockState
+		aslc.mutation.SetLockState(v)
+	}
+	if _, ok := aslc.mutation.ChargeBackState(); !ok {
+		v := appstocklock.DefaultChargeBackState
+		aslc.mutation.SetChargeBackState(v)
+	}
 	if _, ok := aslc.mutation.ID(); !ok {
 		if appstocklock.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized appstocklock.DefaultID (forgotten import ent/runtime?)")
@@ -345,6 +381,22 @@ func (aslc *AppStockLockCreate) createSpec() (*AppStockLock, *sqlgraph.CreateSpe
 			Column: appstocklock.FieldAppSpotUnits,
 		})
 		_node.AppSpotUnits = value
+	}
+	if value, ok := aslc.mutation.LockState(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appstocklock.FieldLockState,
+		})
+		_node.LockState = value
+	}
+	if value, ok := aslc.mutation.ChargeBackState(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appstocklock.FieldChargeBackState,
+		})
+		_node.ChargeBackState = value
 	}
 	return _node, _spec
 }
@@ -499,6 +551,42 @@ func (u *AppStockLockUpsert) UpdateAppSpotUnits() *AppStockLockUpsert {
 // ClearAppSpotUnits clears the value of the "app_spot_units" field.
 func (u *AppStockLockUpsert) ClearAppSpotUnits() *AppStockLockUpsert {
 	u.SetNull(appstocklock.FieldAppSpotUnits)
+	return u
+}
+
+// SetLockState sets the "lock_state" field.
+func (u *AppStockLockUpsert) SetLockState(v string) *AppStockLockUpsert {
+	u.Set(appstocklock.FieldLockState, v)
+	return u
+}
+
+// UpdateLockState sets the "lock_state" field to the value that was provided on create.
+func (u *AppStockLockUpsert) UpdateLockState() *AppStockLockUpsert {
+	u.SetExcluded(appstocklock.FieldLockState)
+	return u
+}
+
+// ClearLockState clears the value of the "lock_state" field.
+func (u *AppStockLockUpsert) ClearLockState() *AppStockLockUpsert {
+	u.SetNull(appstocklock.FieldLockState)
+	return u
+}
+
+// SetChargeBackState sets the "charge_back_state" field.
+func (u *AppStockLockUpsert) SetChargeBackState(v string) *AppStockLockUpsert {
+	u.Set(appstocklock.FieldChargeBackState, v)
+	return u
+}
+
+// UpdateChargeBackState sets the "charge_back_state" field to the value that was provided on create.
+func (u *AppStockLockUpsert) UpdateChargeBackState() *AppStockLockUpsert {
+	u.SetExcluded(appstocklock.FieldChargeBackState)
+	return u
+}
+
+// ClearChargeBackState clears the value of the "charge_back_state" field.
+func (u *AppStockLockUpsert) ClearChargeBackState() *AppStockLockUpsert {
+	u.SetNull(appstocklock.FieldChargeBackState)
 	return u
 }
 
@@ -668,6 +756,48 @@ func (u *AppStockLockUpsertOne) UpdateAppSpotUnits() *AppStockLockUpsertOne {
 func (u *AppStockLockUpsertOne) ClearAppSpotUnits() *AppStockLockUpsertOne {
 	return u.Update(func(s *AppStockLockUpsert) {
 		s.ClearAppSpotUnits()
+	})
+}
+
+// SetLockState sets the "lock_state" field.
+func (u *AppStockLockUpsertOne) SetLockState(v string) *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetLockState(v)
+	})
+}
+
+// UpdateLockState sets the "lock_state" field to the value that was provided on create.
+func (u *AppStockLockUpsertOne) UpdateLockState() *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateLockState()
+	})
+}
+
+// ClearLockState clears the value of the "lock_state" field.
+func (u *AppStockLockUpsertOne) ClearLockState() *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.ClearLockState()
+	})
+}
+
+// SetChargeBackState sets the "charge_back_state" field.
+func (u *AppStockLockUpsertOne) SetChargeBackState(v string) *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetChargeBackState(v)
+	})
+}
+
+// UpdateChargeBackState sets the "charge_back_state" field to the value that was provided on create.
+func (u *AppStockLockUpsertOne) UpdateChargeBackState() *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateChargeBackState()
+	})
+}
+
+// ClearChargeBackState clears the value of the "charge_back_state" field.
+func (u *AppStockLockUpsertOne) ClearChargeBackState() *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.ClearChargeBackState()
 	})
 }
 
@@ -1003,6 +1133,48 @@ func (u *AppStockLockUpsertBulk) UpdateAppSpotUnits() *AppStockLockUpsertBulk {
 func (u *AppStockLockUpsertBulk) ClearAppSpotUnits() *AppStockLockUpsertBulk {
 	return u.Update(func(s *AppStockLockUpsert) {
 		s.ClearAppSpotUnits()
+	})
+}
+
+// SetLockState sets the "lock_state" field.
+func (u *AppStockLockUpsertBulk) SetLockState(v string) *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetLockState(v)
+	})
+}
+
+// UpdateLockState sets the "lock_state" field to the value that was provided on create.
+func (u *AppStockLockUpsertBulk) UpdateLockState() *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateLockState()
+	})
+}
+
+// ClearLockState clears the value of the "lock_state" field.
+func (u *AppStockLockUpsertBulk) ClearLockState() *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.ClearLockState()
+	})
+}
+
+// SetChargeBackState sets the "charge_back_state" field.
+func (u *AppStockLockUpsertBulk) SetChargeBackState(v string) *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetChargeBackState(v)
+	})
+}
+
+// UpdateChargeBackState sets the "charge_back_state" field to the value that was provided on create.
+func (u *AppStockLockUpsertBulk) UpdateChargeBackState() *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateChargeBackState()
+	})
+}
+
+// ClearChargeBackState clears the value of the "charge_back_state" field.
+func (u *AppStockLockUpsertBulk) ClearChargeBackState() *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.ClearChargeBackState()
 	})
 }
 

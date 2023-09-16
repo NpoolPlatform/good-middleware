@@ -4,24 +4,26 @@ package appstock
 import (
 	"context"
 	"fmt"
+	"time"
 
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
+	appstocklockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/lock"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
+	entappstocklock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
-	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 
 	"github.com/shopspring/decimal"
 )
 
-type waitStartHandler struct {
-	*lockopHandler
+type inServiceHandler struct {
+	*Handler
 }
 
-func (h *waitStartHandler) waitStartStock(ctx context.Context, tx *ent.Tx) error { //nolint:gocyclo
+func (h *inServiceHandler) inServiceStock(ctx context.Context, tx *ent.Tx) error { //nolint:gocyclo
 	info, err := tx.
 		Stock.
 		Query().
@@ -38,23 +40,18 @@ func (h *waitStartHandler) waitStartStock(ctx context.Context, tx *ent.Tx) error
 		return fmt.Errorf("invalid stock")
 	}
 
-	locked := info.Locked
-	sold := info.Sold
+	inService := info.InService
 	waitStart := info.WaitStart
 
-	waitStart = h.lock.Units.Add(waitStart)
-	locked = locked.Sub(h.lock.Units)
-	sold = h.lock.Units.Add(sold)
+	inService = h.InService.Add(inService)
+	waitStart = waitStart.Sub(*h.InService)
 
-	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
-	}
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
-	if locked.Add(info.InService).
-		Add(info.WaitStart).
+	if waitStart.Add(inService).
+		Add(info.Locked).
 		Add(info.AppReserved).
 		Add(info.SpotQuantity).
 		Cmp(info.Total) > 0 {
@@ -64,9 +61,8 @@ func (h *waitStartHandler) waitStartStock(ctx context.Context, tx *ent.Tx) error
 	if _, err := stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(info.ID),
 		&stockcrud.Req{
-			Locked:    &locked,
+			InService: &inService,
 			WaitStart: &waitStart,
-			Sold:      &sold,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -75,7 +71,7 @@ func (h *waitStartHandler) waitStartStock(ctx context.Context, tx *ent.Tx) error
 }
 
 //nolint:gocyclo,funlen
-func (h *waitStartHandler) waitStartAppStock(ctx context.Context, tx *ent.Tx) error {
+func (h *inServiceHandler) inServiceAppStock(ctx context.Context, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.
 		Query().
@@ -93,17 +89,12 @@ func (h *waitStartHandler) waitStartAppStock(ctx context.Context, tx *ent.Tx) er
 	}
 
 	h.GoodID = &info.GoodID
-	locked := info.Locked
-	sold := info.Sold
+	inService := info.InService
 	waitStart := info.WaitStart
 
-	waitStart = h.lock.Units.Add(waitStart)
-	locked = locked.Sub(h.lock.Units)
-	sold = h.lock.Units.Add(sold)
+	inService = h.InService.Add(inService)
+	waitStart = waitStart.Sub(*h.InService)
 
-	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
-	}
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
@@ -111,9 +102,8 @@ func (h *waitStartHandler) waitStartAppStock(ctx context.Context, tx *ent.Tx) er
 	if _, err := appstockcrud.UpdateSet(
 		tx.AppStock.UpdateOneID(info.ID),
 		&appstockcrud.Req{
-			Locked:    &locked,
+			InService: &inService,
 			WaitStart: &waitStart,
-			Sold:      &sold,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -122,26 +112,15 @@ func (h *waitStartHandler) waitStartAppStock(ctx context.Context, tx *ent.Tx) er
 	return nil
 }
 
-func (h *Handler) WaitStartStock(ctx context.Context) (*npool.Stock, error) {
-	handler := &waitStartHandler{
-		lockopHandler: &lockopHandler{
-			Handler: h,
-			state:   types.AppStockLockState_AppStockWaitStart.Enum(),
-		},
+func (h *Handler) InServiceStock(ctx context.Context) (*npool.Stock, error) {
+	handler := &inServiceHandler{
+		Handler: h,
 	}
-
-	if err := handler.getLock(ctx); err != nil {
-		return nil, err
-	}
-
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.waitStartAppStock(ctx, tx); err != nil {
+		if err := handler.inServiceAppStock(ctx, tx); err != nil {
 			return err
 		}
-		if err := handler.waitStartStock(ctx, tx); err != nil {
-			return err
-		}
-		if err := handler.updateLock(ctx, tx); err != nil {
+		if err := handler.inServiceStock(ctx, tx); err != nil {
 			return err
 		}
 		return nil

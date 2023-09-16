@@ -25,6 +25,10 @@ const (
 	FieldUnits = "units"
 	// FieldAppSpotUnits holds the string denoting the app_spot_units field in the database.
 	FieldAppSpotUnits = "app_spot_units"
+	// FieldLockState holds the string denoting the lock_state field in the database.
+	FieldLockState = "lock_state"
+	// FieldChargeBackState holds the string denoting the charge_back_state field in the database.
+	FieldChargeBackState = "charge_back_state"
 	// Table holds the table name of the appstocklock in the database.
 	Table = "app_stock_locks"
 )
@@ -38,6 +42,8 @@ var Columns = []string{
 	FieldAppStockID,
 	FieldUnits,
 	FieldAppSpotUnits,
+	FieldLockState,
+	FieldChargeBackState,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -73,6 +79,10 @@ var (
 	DefaultUnits decimal.Decimal
 	// DefaultAppSpotUnits holds the default value on creation for the "app_spot_units" field.
 	DefaultAppSpotUnits decimal.Decimal
+	// DefaultLockState holds the default value on creation for the "lock_state" field.
+	DefaultLockState string
+	// DefaultChargeBackState holds the default value on creation for the "charge_back_state" field.
+	DefaultChargeBackState string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

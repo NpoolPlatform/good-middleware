@@ -11,6 +11,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 
 	"github.com/shopspring/decimal"
@@ -133,6 +134,7 @@ func (h *Handler) UnlockStock(ctx context.Context) (*npool.Stock, error) {
 	handler := &unlockHandler{
 		lockopHandler: &lockopHandler{
 			Handler: h,
+			state:   types.AppStockLockState_AppStockRollback.Enum(),
 		},
 	}
 
@@ -150,7 +152,7 @@ func (h *Handler) UnlockStock(ctx context.Context) (*npool.Stock, error) {
 		if err := handler.unlockStock(ctx, tx); err != nil {
 			return err
 		}
-		if err := handler.deleteLock(ctx, tx); err != nil {
+		if err := handler.updateLock(ctx, tx); err != nil {
 			return err
 		}
 		return nil

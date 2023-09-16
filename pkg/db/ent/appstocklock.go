@@ -29,6 +29,10 @@ type AppStockLock struct {
 	Units decimal.Decimal `json:"units,omitempty"`
 	// AppSpotUnits holds the value of the "app_spot_units" field.
 	AppSpotUnits decimal.Decimal `json:"app_spot_units,omitempty"`
+	// LockState holds the value of the "lock_state" field.
+	LockState string `json:"lock_state,omitempty"`
+	// ChargeBackState holds the value of the "charge_back_state" field.
+	ChargeBackState string `json:"charge_back_state,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -40,6 +44,8 @@ func (*AppStockLock) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case appstocklock.FieldCreatedAt, appstocklock.FieldUpdatedAt, appstocklock.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
+		case appstocklock.FieldLockState, appstocklock.FieldChargeBackState:
+			values[i] = new(sql.NullString)
 		case appstocklock.FieldID, appstocklock.FieldAppStockID:
 			values[i] = new(uuid.UUID)
 		default:
@@ -99,6 +105,18 @@ func (asl *AppStockLock) assignValues(columns []string, values []interface{}) er
 			} else if value != nil {
 				asl.AppSpotUnits = *value
 			}
+		case appstocklock.FieldLockState:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field lock_state", values[i])
+			} else if value.Valid {
+				asl.LockState = value.String
+			}
+		case appstocklock.FieldChargeBackState:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field charge_back_state", values[i])
+			} else if value.Valid {
+				asl.ChargeBackState = value.String
+			}
 		}
 	}
 	return nil
@@ -144,6 +162,12 @@ func (asl *AppStockLock) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("app_spot_units=")
 	builder.WriteString(fmt.Sprintf("%v", asl.AppSpotUnits))
+	builder.WriteString(", ")
+	builder.WriteString("lock_state=")
+	builder.WriteString(asl.LockState)
+	builder.WriteString(", ")
+	builder.WriteString("charge_back_state=")
+	builder.WriteString(asl.ChargeBackState)
 	builder.WriteByte(')')
 	return builder.String()
 }
