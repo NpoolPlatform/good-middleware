@@ -198,7 +198,7 @@ func setup(t *testing.T) func(*testing.T) {
 	)
 	assert.Nil(t, err)
 
-	good, err := h4.CreateGood(context.Background())
+	_, err := h4.CreateGood(context.Background())
 	assert.Nil(t, err)
 
 	h5, err := appgood1.NewHandler(

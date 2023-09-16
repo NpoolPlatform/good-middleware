@@ -119,6 +119,9 @@ func WithReserved(s *string, must bool) func(context.Context, *Handler) error {
 		if err != nil {
 			return err
 		}
+		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
+			return fmt.Errorf("invalid locked")
+		}
 		h.Reserved = &amount
 		return nil
 	}
@@ -135,6 +138,9 @@ func WithSpotQuantity(s *string, must bool) func(context.Context, *Handler) erro
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
 			return err
+		}
+		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
+			return fmt.Errorf("invalid locked")
 		}
 		h.SpotQuantity = &amount
 		return nil
@@ -173,6 +179,9 @@ func WithInService(s *string, must bool) func(context.Context, *Handler) error {
 		if err != nil {
 			return err
 		}
+		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
+			return fmt.Errorf("invalid locked")
+		}
 		h.InService = &amount
 		return nil
 	}
@@ -190,6 +199,9 @@ func WithWaitStart(s *string, must bool) func(context.Context, *Handler) error {
 		if err != nil {
 			return err
 		}
+		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
+			return fmt.Errorf("invalid locked")
+		}
 		h.WaitStart = &amount
 		return nil
 	}
@@ -206,6 +218,9 @@ func WithSold(s *string, must bool) func(context.Context, *Handler) error {
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
 			return err
+		}
+		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
+			return fmt.Errorf("invalid locked")
 		}
 		h.Sold = &amount
 		return nil
