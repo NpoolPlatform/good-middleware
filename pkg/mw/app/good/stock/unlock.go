@@ -142,6 +142,10 @@ func (h *Handler) UnlockStock(ctx context.Context) (*npool.Stock, error) {
 		return nil, err
 	}
 
+	if h.Rollback == nil || !*h.Rollback {
+		handler.state = types.AppStockLockState_AppStockCanceled.Enum()
+	}
+
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.unlockAppStock(ctx, tx); err != nil {
 			return err
