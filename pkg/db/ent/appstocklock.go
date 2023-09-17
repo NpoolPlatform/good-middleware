@@ -23,8 +23,16 @@ type AppStockLock struct {
 	UpdatedAt uint32 `json:"updated_at,omitempty"`
 	// DeletedAt holds the value of the "deleted_at" field.
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
+	// AppStockID holds the value of the "app_stock_id" field.
+	AppStockID uuid.UUID `json:"app_stock_id,omitempty"`
 	// Units holds the value of the "units" field.
 	Units decimal.Decimal `json:"units,omitempty"`
+	// AppSpotUnits holds the value of the "app_spot_units" field.
+	AppSpotUnits decimal.Decimal `json:"app_spot_units,omitempty"`
+	// LockState holds the value of the "lock_state" field.
+	LockState string `json:"lock_state,omitempty"`
+	// ChargeBackState holds the value of the "charge_back_state" field.
+	ChargeBackState string `json:"charge_back_state,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -32,11 +40,13 @@ func (*AppStockLock) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case appstocklock.FieldUnits:
+		case appstocklock.FieldUnits, appstocklock.FieldAppSpotUnits:
 			values[i] = new(decimal.Decimal)
 		case appstocklock.FieldCreatedAt, appstocklock.FieldUpdatedAt, appstocklock.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case appstocklock.FieldID:
+		case appstocklock.FieldLockState, appstocklock.FieldChargeBackState:
+			values[i] = new(sql.NullString)
+		case appstocklock.FieldID, appstocklock.FieldAppStockID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type AppStockLock", columns[i])
@@ -77,11 +87,35 @@ func (asl *AppStockLock) assignValues(columns []string, values []interface{}) er
 			} else if value.Valid {
 				asl.DeletedAt = uint32(value.Int64)
 			}
+		case appstocklock.FieldAppStockID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field app_stock_id", values[i])
+			} else if value != nil {
+				asl.AppStockID = *value
+			}
 		case appstocklock.FieldUnits:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
 				return fmt.Errorf("unexpected type %T for field units", values[i])
 			} else if value != nil {
 				asl.Units = *value
+			}
+		case appstocklock.FieldAppSpotUnits:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field app_spot_units", values[i])
+			} else if value != nil {
+				asl.AppSpotUnits = *value
+			}
+		case appstocklock.FieldLockState:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field lock_state", values[i])
+			} else if value.Valid {
+				asl.LockState = value.String
+			}
+		case appstocklock.FieldChargeBackState:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field charge_back_state", values[i])
+			} else if value.Valid {
+				asl.ChargeBackState = value.String
 			}
 		}
 	}
@@ -120,8 +154,20 @@ func (asl *AppStockLock) String() string {
 	builder.WriteString("deleted_at=")
 	builder.WriteString(fmt.Sprintf("%v", asl.DeletedAt))
 	builder.WriteString(", ")
+	builder.WriteString("app_stock_id=")
+	builder.WriteString(fmt.Sprintf("%v", asl.AppStockID))
+	builder.WriteString(", ")
 	builder.WriteString("units=")
 	builder.WriteString(fmt.Sprintf("%v", asl.Units))
+	builder.WriteString(", ")
+	builder.WriteString("app_spot_units=")
+	builder.WriteString(fmt.Sprintf("%v", asl.AppSpotUnits))
+	builder.WriteString(", ")
+	builder.WriteString("lock_state=")
+	builder.WriteString(asl.LockState)
+	builder.WriteString(", ")
+	builder.WriteString("charge_back_state=")
+	builder.WriteString(asl.ChargeBackState)
 	builder.WriteByte(')')
 	return builder.String()
 }

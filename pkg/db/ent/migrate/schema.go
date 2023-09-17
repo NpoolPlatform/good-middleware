@@ -99,7 +99,11 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "app_stock_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "units", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "app_spot_units", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "lock_state", Type: field.TypeString, Nullable: true, Default: "AppStockLocked"},
+		{Name: "charge_back_state", Type: field.TypeString, Nullable: true, Default: "DefaultAppStockLockState"},
 	}
 	// AppStockLocksTable holds the schema information for the "app_stock_locks" table.
 	AppStockLocksTable = &schema.Table{

@@ -130,10 +130,14 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppStockLock",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			appstocklock.FieldCreatedAt: {Type: field.TypeUint32, Column: appstocklock.FieldCreatedAt},
-			appstocklock.FieldUpdatedAt: {Type: field.TypeUint32, Column: appstocklock.FieldUpdatedAt},
-			appstocklock.FieldDeletedAt: {Type: field.TypeUint32, Column: appstocklock.FieldDeletedAt},
-			appstocklock.FieldUnits:     {Type: field.TypeOther, Column: appstocklock.FieldUnits},
+			appstocklock.FieldCreatedAt:       {Type: field.TypeUint32, Column: appstocklock.FieldCreatedAt},
+			appstocklock.FieldUpdatedAt:       {Type: field.TypeUint32, Column: appstocklock.FieldUpdatedAt},
+			appstocklock.FieldDeletedAt:       {Type: field.TypeUint32, Column: appstocklock.FieldDeletedAt},
+			appstocklock.FieldAppStockID:      {Type: field.TypeUUID, Column: appstocklock.FieldAppStockID},
+			appstocklock.FieldUnits:           {Type: field.TypeOther, Column: appstocklock.FieldUnits},
+			appstocklock.FieldAppSpotUnits:    {Type: field.TypeOther, Column: appstocklock.FieldAppSpotUnits},
+			appstocklock.FieldLockState:       {Type: field.TypeString, Column: appstocklock.FieldLockState},
+			appstocklock.FieldChargeBackState: {Type: field.TypeString, Column: appstocklock.FieldChargeBackState},
 		},
 	}
 	graph.Nodes[4] = &sqlgraph.Node{
@@ -921,9 +925,29 @@ func (f *AppStockLockFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(appstocklock.FieldDeletedAt))
 }
 
+// WhereAppStockID applies the entql [16]byte predicate on the app_stock_id field.
+func (f *AppStockLockFilter) WhereAppStockID(p entql.ValueP) {
+	f.Where(p.Field(appstocklock.FieldAppStockID))
+}
+
 // WhereUnits applies the entql other predicate on the units field.
 func (f *AppStockLockFilter) WhereUnits(p entql.OtherP) {
 	f.Where(p.Field(appstocklock.FieldUnits))
+}
+
+// WhereAppSpotUnits applies the entql other predicate on the app_spot_units field.
+func (f *AppStockLockFilter) WhereAppSpotUnits(p entql.OtherP) {
+	f.Where(p.Field(appstocklock.FieldAppSpotUnits))
+}
+
+// WhereLockState applies the entql string predicate on the lock_state field.
+func (f *AppStockLockFilter) WhereLockState(p entql.StringP) {
+	f.Where(p.Field(appstocklock.FieldLockState))
+}
+
+// WhereChargeBackState applies the entql string predicate on the charge_back_state field.
+func (f *AppStockLockFilter) WhereChargeBackState(p entql.StringP) {
+	f.Where(p.Field(appstocklock.FieldChargeBackState))
 }
 
 // addPredicate implements the predicateAdder interface.

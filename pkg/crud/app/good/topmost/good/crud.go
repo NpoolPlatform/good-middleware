@@ -90,9 +90,10 @@ type Conds struct {
 	AppGoodID   *cruder.Cond
 	TopMostID   *cruder.Cond
 	TopMostType *cruder.Cond
+	AppGoodIDs  *cruder.Cond
 }
 
-//nolint:gocyclo
+//nolint:gocyclo,funlen
 func SetQueryConds(q *ent.TopMostGoodQuery, conds *Conds) (*ent.TopMostGoodQuery, error) {
 	q.Where(enttopmostgood.DeletedAt(0))
 	if conds == nil {
@@ -142,6 +143,18 @@ func SetQueryConds(q *ent.TopMostGoodQuery, conds *Conds) (*ent.TopMostGoodQuery
 		switch conds.AppGoodID.Op {
 		case cruder.EQ:
 			q.Where(enttopmostgood.AppGoodID(id))
+		default:
+			return nil, fmt.Errorf("invalid topmostgood field")
+		}
+	}
+	if conds.AppGoodIDs != nil {
+		ids, ok := conds.AppGoodIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid appgoodids")
+		}
+		switch conds.AppGoodIDs.Op {
+		case cruder.IN:
+			q.Where(enttopmostgood.AppGoodIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid topmostgood field")
 		}

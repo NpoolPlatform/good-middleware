@@ -17,7 +17,6 @@ import (
 	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
-	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -120,17 +119,6 @@ var appgood = appgoodmwpb.Good{
 	UserPurchaseLimit:      decimal.NewFromInt(0).String(),
 }
 
-var stock = stockmwpb.Stock{
-	GoodID:      good.ID,
-	GoodName:    good.Title,
-	Total:       good.GoodTotal,
-	Locked:      decimal.NewFromInt(10).String(),
-	InService:   decimal.NewFromInt(0).String(),
-	WaitStart:   decimal.NewFromInt(10).String(),
-	Sold:        decimal.NewFromInt(10).String(),
-	AppReserved: decimal.NewFromInt(100).String(),
-}
-
 var ret = npool.Stock{
 	ID:        uuid.NewString(),
 	AppID:     appgood.AppID,
@@ -142,6 +130,8 @@ var ret = npool.Stock{
 	WaitStart: decimal.NewFromInt(0).String(),
 	Sold:      decimal.NewFromInt(0).String(),
 }
+
+var lockID = uuid.NewString()
 
 func setup(t *testing.T) func(*testing.T) {
 	ret.GoodName = good.Title
@@ -210,10 +200,8 @@ func setup(t *testing.T) func(*testing.T) {
 	)
 	assert.Nil(t, err)
 
-	good, err := h4.CreateGood(context.Background())
+	_, err = h4.CreateGood(context.Background())
 	assert.Nil(t, err)
-
-	stock.ID = good.GoodStockID
 
 	h5, err := appgood1.NewHandler(
 		context.Background(),
@@ -238,7 +226,7 @@ func setup(t *testing.T) func(*testing.T) {
 	}
 }
 
-func addStock(t *testing.T) {
+func reserveStock(t *testing.T) {
 	ret.SpotQuantity = ret.Reserved
 
 	handler, err := NewHandler(
@@ -250,51 +238,54 @@ func addStock(t *testing.T) {
 		WithReserved(&ret.Reserved, true),
 	)
 	if assert.Nil(t, err) {
-		info, err := handler.AddStock(context.Background())
+		info, err := handler.ReserveStock(context.Background())
 		if assert.Nil(t, err) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			assert.Equal(t, &ret, info)
 		}
 	}
+}
 
+func lockStock(t *testing.T) {
 	ret.Locked = decimal.NewFromInt(10).String()
 	ret.SpotQuantity = decimal.NewFromInt(90).String()
-	id := uuid.NewString()
 
-	handler, err = NewHandler(
+	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
 		WithLocked(&ret.Locked, true),
-		WithLockID(&id, true),
+		WithLockID(&lockID, true),
 		WithAppSpotLocked(&ret.Locked, true),
 	)
 	if assert.Nil(t, err) {
-		info, err := handler.AddStock(context.Background())
+		info, err := handler.LockStock(context.Background())
 		if assert.Nil(t, err) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			assert.Equal(t, &ret, info)
 		}
 	}
+}
 
+func waitStartStock(t *testing.T) {
 	ret.WaitStart = ret.Locked
 	ret.Sold = ret.Locked
 	ret.Locked = decimal.NewFromInt(0).String()
 
-	handler, err = NewHandler(
+	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
-		WithLockID(&id, true),
+		WithLockID(&lockID, true),
 		WithWaitStart(&ret.WaitStart, true),
 	)
 	if assert.Nil(t, err) {
-		info, err := handler.AddStock(context.Background())
+		info, err := handler.WaitStartStock(context.Background())
 		if assert.Nil(t, err) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
@@ -316,23 +307,26 @@ func addStock(t *testing.T) {
 			assert.Equal(t, ret.Sold, info.GoodSold)
 		}
 	}
+}
 
+func lockFailStock(t *testing.T) {
 	locked := decimal.NewFromInt(1999).String()
-	handler, err = NewHandler(
+	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
 		WithLocked(&locked, true),
+		WithLockID(&lockID, true),
 	)
 	if assert.Nil(t, err) {
-		_, err := handler.AddStock(context.Background())
+		_, err := handler.LockStock(context.Background())
 		assert.NotNil(t, err)
 	}
 }
 
-func subStock(t *testing.T) {
+func chargeBackStock(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
@@ -340,9 +334,10 @@ func subStock(t *testing.T) {
 		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
 		WithWaitStart(&ret.WaitStart, true),
+		WithLockID(&lockID, true),
 	)
 	if assert.Nil(t, err) {
-		info, err := handler.SubStock(context.Background())
+		info, err := handler.ChargeBackStock(context.Background())
 		if assert.Nil(t, err) {
 			ret.WaitStart = decimal.NewFromInt(0).String()
 			ret.Sold = decimal.NewFromInt(0).String()
@@ -372,6 +367,9 @@ func TestStock(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
 
-	t.Run("addStock", addStock)
-	t.Run("subStock", subStock)
+	t.Run("reserveStock", reserveStock)
+	t.Run("lockStock", lockStock)
+	t.Run("waitStartStock", waitStartStock)
+	t.Run("lockFailStock", lockFailStock)
+	t.Run("chargeBackStock", chargeBackStock)
 }

@@ -16,7 +16,6 @@ import (
 	"github.com/NpoolPlatform/good-middleware/api/good/required"
 	"github.com/NpoolPlatform/good-middleware/api/good/reward/history"
 	"github.com/NpoolPlatform/good-middleware/api/good/score"
-	"github.com/NpoolPlatform/good-middleware/api/good/stock"
 	"github.com/NpoolPlatform/good-middleware/api/vender/brand"
 	"github.com/NpoolPlatform/good-middleware/api/vender/location"
 	goodmw "github.com/NpoolPlatform/message/npool/good/mw/v1"
@@ -43,7 +42,6 @@ func Register(server grpc.ServiceRegistrar) {
 	required.Register(server)
 	history.Register(server)
 	score.Register(server)
-	stock.Register(server)
 	deviceinfo.Register(server)
 	brand.Register(server)
 	location.Register(server)

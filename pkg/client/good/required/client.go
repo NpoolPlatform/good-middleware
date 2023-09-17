@@ -146,3 +146,19 @@ func DeleteRequired(ctx context.Context, id string) (*npool.Required, error) {
 	}
 	return info.(*npool.Required), nil
 }
+
+func ExistRequiredConds(ctx context.Context, conds *npool.Conds) (bool, error) {
+	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+		resp, err := cli.ExistRequiredConds(ctx, &npool.ExistRequiredCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return false, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}

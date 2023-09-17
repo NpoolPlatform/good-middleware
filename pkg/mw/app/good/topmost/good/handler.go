@@ -123,6 +123,7 @@ func WithPrice(s *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
+//nolint:gocyclo
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Conds = &topmostgoodcrud.Conds{}
@@ -167,6 +168,20 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			h.Conds.AppGoodID = &cruder.Cond{
 				Op:  conds.GetAppGoodID().GetOp(),
 				Val: id,
+			}
+		}
+		if conds.AppGoodIDs != nil {
+			ids := []uuid.UUID{}
+			for _, id := range conds.GetAppGoodIDs().GetValue() {
+				_id, err := uuid.Parse(id)
+				if err != nil {
+					return err
+				}
+				ids = append(ids, _id)
+			}
+			h.Conds.AppGoodIDs = &cruder.Cond{
+				Op:  conds.GetAppGoodIDs().GetOp(),
+				Val: ids,
 			}
 		}
 		if conds.GoodID != nil {

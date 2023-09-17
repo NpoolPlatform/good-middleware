@@ -19,8 +19,16 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
+	// FieldAppStockID holds the string denoting the app_stock_id field in the database.
+	FieldAppStockID = "app_stock_id"
 	// FieldUnits holds the string denoting the units field in the database.
 	FieldUnits = "units"
+	// FieldAppSpotUnits holds the string denoting the app_spot_units field in the database.
+	FieldAppSpotUnits = "app_spot_units"
+	// FieldLockState holds the string denoting the lock_state field in the database.
+	FieldLockState = "lock_state"
+	// FieldChargeBackState holds the string denoting the charge_back_state field in the database.
+	FieldChargeBackState = "charge_back_state"
 	// Table holds the table name of the appstocklock in the database.
 	Table = "app_stock_locks"
 )
@@ -31,7 +39,11 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
+	FieldAppStockID,
 	FieldUnits,
+	FieldAppSpotUnits,
+	FieldLockState,
+	FieldChargeBackState,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -61,8 +73,16 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// DefaultAppStockID holds the default value on creation for the "app_stock_id" field.
+	DefaultAppStockID func() uuid.UUID
 	// DefaultUnits holds the default value on creation for the "units" field.
 	DefaultUnits decimal.Decimal
+	// DefaultAppSpotUnits holds the default value on creation for the "app_spot_units" field.
+	DefaultAppSpotUnits decimal.Decimal
+	// DefaultLockState holds the default value on creation for the "lock_state" field.
+	DefaultLockState string
+	// DefaultChargeBackState holds the default value on creation for the "charge_back_state" field.
+	DefaultChargeBackState string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
