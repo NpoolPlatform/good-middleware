@@ -39,7 +39,11 @@ func (h *expireHandler) expireStock(ctx context.Context, tx *ent.Tx) error {
 	}
 
 	inService := info.InService
+	spotQuantity := info.SpotQuantity
+
 	inService = inService.Sub(h.lock.Units)
+	spotQuantity = spotQuantity.Add(h.lock.Units)
+
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
@@ -55,7 +59,8 @@ func (h *expireHandler) expireStock(ctx context.Context, tx *ent.Tx) error {
 	if _, err := stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(info.ID),
 		&stockcrud.Req{
-			InService: &inService,
+			InService:    &inService,
+			SpotQuantity: &spotQuantity,
 		},
 	).Save(ctx); err != nil {
 		return err
