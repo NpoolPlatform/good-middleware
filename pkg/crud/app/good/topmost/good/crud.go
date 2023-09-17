@@ -93,7 +93,7 @@ type Conds struct {
 	AppGoodIDs  *cruder.Cond
 }
 
-//nolint:gocyclo
+//nolint:gocyclo,funlen
 func SetQueryConds(q *ent.TopMostGoodQuery, conds *Conds) (*ent.TopMostGoodQuery, error) {
 	q.Where(enttopmostgood.DeletedAt(0))
 	if conds == nil {
