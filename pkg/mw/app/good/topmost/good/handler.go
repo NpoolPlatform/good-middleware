@@ -169,6 +169,20 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				Val: id,
 			}
 		}
+		if conds.AppGoodIDs != nil {
+			ids := []uuid.UUID{}
+			for _, id := range conds.GetAppGoodIDs().GetValue() {
+				_id, err := uuid.Parse(id)
+				if err != nil {
+					return err
+				}
+				ids = append(ids, _id)
+			}
+			h.Conds.AppGoodIDs = &cruder.Cond{
+				Op:  conds.GetAppGoodIDs().GetOp(),
+				Val: ids,
+			}
+		}
 		if conds.GoodID != nil {
 			id, err := uuid.Parse(conds.GetGoodID().GetValue())
 			if err != nil {
