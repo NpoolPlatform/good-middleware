@@ -153,7 +153,7 @@ func ExistRequiredConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 			Conds: conds,
 		})
 		if err != nil {
-			return nil, err
+			return false, err
 		}
 		return resp.Info, nil
 	})
