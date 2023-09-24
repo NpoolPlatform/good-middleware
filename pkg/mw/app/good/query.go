@@ -268,7 +268,9 @@ func (h *queryHandler) formalize() {
 		info.CancelMode = types.CancelMode(types.CancelMode_value[info.CancelModeStr])
 		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
+		_ = json.Unmarshal([]byte(info.DescriptionsStr), &info.Descriptions)
 		_ = json.Unmarshal([]byte(info.DisplayNamesStr), &info.DisplayNames)
+		_ = json.Unmarshal([]byte(info.DisplayColorsStr), &info.DisplayColors)
 		_ = json.Unmarshal([]byte(info.AppGoodPostersStr), &info.AppGoodPosters)
 		amount, err := decimal.NewFromString(info.GoodTotal)
 		if err != nil {
