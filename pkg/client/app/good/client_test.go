@@ -219,8 +219,10 @@ func createGood(t *testing.T) {
 	if assert.Nil(t, err) {
 		ret.DevicePostersStr = info.DevicePostersStr
 		ret.DisplayColorsStr = info.DisplayColorsStr
+		ret.DisplayColors = info.DisplayColors
 		ret.DisplayNamesStr = info.DisplayNamesStr
 		ret.DescriptionsStr = info.DescriptionsStr
+		ret.Descriptions = info.Descriptions
 		ret.LabelsStr = info.LabelsStr
 		ret.PostersStr = info.PostersStr
 		ret.AppGoodPostersStr = info.AppGoodPostersStr
