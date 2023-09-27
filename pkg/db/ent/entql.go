@@ -305,6 +305,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			like.FieldAppID:     {Type: field.TypeUUID, Column: like.FieldAppID},
 			like.FieldUserID:    {Type: field.TypeUUID, Column: like.FieldUserID},
 			like.FieldGoodID:    {Type: field.TypeUUID, Column: like.FieldGoodID},
+			like.FieldAppGoodID: {Type: field.TypeUUID, Column: like.FieldAppGoodID},
 			like.FieldLike:      {Type: field.TypeBool, Column: like.FieldLike},
 		},
 	}
@@ -388,6 +389,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			score.FieldAppID:     {Type: field.TypeUUID, Column: score.FieldAppID},
 			score.FieldUserID:    {Type: field.TypeUUID, Column: score.FieldUserID},
 			score.FieldGoodID:    {Type: field.TypeUUID, Column: score.FieldGoodID},
+			score.FieldAppGoodID: {Type: field.TypeUUID, Column: score.FieldAppGoodID},
 			score.FieldScore:     {Type: field.TypeOther, Column: score.FieldScore},
 		},
 	}
@@ -1610,6 +1612,11 @@ func (f *LikeFilter) WhereGoodID(p entql.ValueP) {
 	f.Where(p.Field(like.FieldGoodID))
 }
 
+// WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
+func (f *LikeFilter) WhereAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(like.FieldAppGoodID))
+}
+
 // WhereLike applies the entql bool predicate on the like field.
 func (f *LikeFilter) WhereLike(p entql.BoolP) {
 	f.Where(p.Field(like.FieldLike))
@@ -1923,6 +1930,11 @@ func (f *ScoreFilter) WhereUserID(p entql.ValueP) {
 // WhereGoodID applies the entql [16]byte predicate on the good_id field.
 func (f *ScoreFilter) WhereGoodID(p entql.ValueP) {
 	f.Where(p.Field(score.FieldGoodID))
+}
+
+// WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
+func (f *ScoreFilter) WhereAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(score.FieldAppGoodID))
 }
 
 // WhereScore applies the entql other predicate on the score field.

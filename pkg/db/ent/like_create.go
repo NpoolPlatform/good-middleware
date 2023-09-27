@@ -83,6 +83,12 @@ func (lc *LikeCreate) SetGoodID(u uuid.UUID) *LikeCreate {
 	return lc
 }
 
+// SetAppGoodID sets the "app_good_id" field.
+func (lc *LikeCreate) SetAppGoodID(u uuid.UUID) *LikeCreate {
+	lc.mutation.SetAppGoodID(u)
+	return lc
+}
+
 // SetLike sets the "like" field.
 func (lc *LikeCreate) SetLike(b bool) *LikeCreate {
 	lc.mutation.SetLike(b)
@@ -233,6 +239,9 @@ func (lc *LikeCreate) check() error {
 	if _, ok := lc.mutation.GoodID(); !ok {
 		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "Like.good_id"`)}
 	}
+	if _, ok := lc.mutation.AppGoodID(); !ok {
+		return &ValidationError{Name: "app_good_id", err: errors.New(`ent: missing required field "Like.app_good_id"`)}
+	}
 	if _, ok := lc.mutation.Like(); !ok {
 		return &ValidationError{Name: "like", err: errors.New(`ent: missing required field "Like.like"`)}
 	}
@@ -320,6 +329,14 @@ func (lc *LikeCreate) createSpec() (*Like, *sqlgraph.CreateSpec) {
 			Column: like.FieldGoodID,
 		})
 		_node.GoodID = value
+	}
+	if value, ok := lc.mutation.AppGoodID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: like.FieldAppGoodID,
+		})
+		_node.AppGoodID = value
 	}
 	if value, ok := lc.mutation.Like(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -470,6 +487,18 @@ func (u *LikeUpsert) SetGoodID(v uuid.UUID) *LikeUpsert {
 // UpdateGoodID sets the "good_id" field to the value that was provided on create.
 func (u *LikeUpsert) UpdateGoodID() *LikeUpsert {
 	u.SetExcluded(like.FieldGoodID)
+	return u
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (u *LikeUpsert) SetAppGoodID(v uuid.UUID) *LikeUpsert {
+	u.Set(like.FieldAppGoodID, v)
+	return u
+}
+
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *LikeUpsert) UpdateAppGoodID() *LikeUpsert {
+	u.SetExcluded(like.FieldAppGoodID)
 	return u
 }
 
@@ -637,6 +666,20 @@ func (u *LikeUpsertOne) SetGoodID(v uuid.UUID) *LikeUpsertOne {
 func (u *LikeUpsertOne) UpdateGoodID() *LikeUpsertOne {
 	return u.Update(func(s *LikeUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (u *LikeUpsertOne) SetAppGoodID(v uuid.UUID) *LikeUpsertOne {
+	return u.Update(func(s *LikeUpsert) {
+		s.SetAppGoodID(v)
+	})
+}
+
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *LikeUpsertOne) UpdateAppGoodID() *LikeUpsertOne {
+	return u.Update(func(s *LikeUpsert) {
+		s.UpdateAppGoodID()
 	})
 }
 
@@ -972,6 +1015,20 @@ func (u *LikeUpsertBulk) SetGoodID(v uuid.UUID) *LikeUpsertBulk {
 func (u *LikeUpsertBulk) UpdateGoodID() *LikeUpsertBulk {
 	return u.Update(func(s *LikeUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (u *LikeUpsertBulk) SetAppGoodID(v uuid.UUID) *LikeUpsertBulk {
+	return u.Update(func(s *LikeUpsert) {
+		s.SetAppGoodID(v)
+	})
+}
+
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *LikeUpsertBulk) UpdateAppGoodID() *LikeUpsertBulk {
+	return u.Update(func(s *LikeUpsert) {
+		s.UpdateAppGoodID()
 	})
 }
 

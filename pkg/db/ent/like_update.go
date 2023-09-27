@@ -102,6 +102,12 @@ func (lu *LikeUpdate) SetGoodID(u uuid.UUID) *LikeUpdate {
 	return lu
 }
 
+// SetAppGoodID sets the "app_good_id" field.
+func (lu *LikeUpdate) SetAppGoodID(u uuid.UUID) *LikeUpdate {
+	lu.mutation.SetAppGoodID(u)
+	return lu
+}
+
 // SetLike sets the "like" field.
 func (lu *LikeUpdate) SetLike(b bool) *LikeUpdate {
 	lu.mutation.SetLike(b)
@@ -269,6 +275,13 @@ func (lu *LikeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: like.FieldGoodID,
 		})
 	}
+	if value, ok := lu.mutation.AppGoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: like.FieldAppGoodID,
+		})
+	}
 	if value, ok := lu.mutation.Like(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
@@ -367,6 +380,12 @@ func (luo *LikeUpdateOne) SetUserID(u uuid.UUID) *LikeUpdateOne {
 // SetGoodID sets the "good_id" field.
 func (luo *LikeUpdateOne) SetGoodID(u uuid.UUID) *LikeUpdateOne {
 	luo.mutation.SetGoodID(u)
+	return luo
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (luo *LikeUpdateOne) SetAppGoodID(u uuid.UUID) *LikeUpdateOne {
+	luo.mutation.SetAppGoodID(u)
 	return luo
 }
 
@@ -565,6 +584,13 @@ func (luo *LikeUpdateOne) sqlSave(ctx context.Context) (_node *Like, err error) 
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: like.FieldGoodID,
+		})
+	}
+	if value, ok := luo.mutation.AppGoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: like.FieldAppGoodID,
 		})
 	}
 	if value, ok := luo.mutation.Like(); ok {

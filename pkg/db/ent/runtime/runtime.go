@@ -862,7 +862,7 @@ func init() {
 	// score.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	score.DefaultDeletedAt = scoreDescDeletedAt.Default.(func() uint32)
 	// scoreDescScore is the schema descriptor for score field.
-	scoreDescScore := scoreFields[4].Descriptor()
+	scoreDescScore := scoreFields[5].Descriptor()
 	// score.DefaultScore holds the default value on creation for the score field.
 	score.DefaultScore = scoreDescScore.Default.(decimal.Decimal)
 	// scoreDescID is the schema descriptor for id field.

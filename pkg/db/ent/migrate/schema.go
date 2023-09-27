@@ -264,6 +264,7 @@ var (
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "good_id", Type: field.TypeUUID},
+		{Name: "app_good_id", Type: field.TypeUUID},
 		{Name: "like", Type: field.TypeBool},
 	}
 	// LikesTable holds the schema information for the "likes" table.
@@ -356,6 +357,7 @@ var (
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "good_id", Type: field.TypeUUID},
+		{Name: "app_good_id", Type: field.TypeUUID},
 		{Name: "score", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}
 	// ScoresTable holds the schema information for the "scores" table.

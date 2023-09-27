@@ -103,6 +103,12 @@ func (su *ScoreUpdate) SetGoodID(u uuid.UUID) *ScoreUpdate {
 	return su
 }
 
+// SetAppGoodID sets the "app_good_id" field.
+func (su *ScoreUpdate) SetAppGoodID(u uuid.UUID) *ScoreUpdate {
+	su.mutation.SetAppGoodID(u)
+	return su
+}
+
 // SetScore sets the "score" field.
 func (su *ScoreUpdate) SetScore(d decimal.Decimal) *ScoreUpdate {
 	su.mutation.SetScore(d)
@@ -284,6 +290,13 @@ func (su *ScoreUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: score.FieldGoodID,
 		})
 	}
+	if value, ok := su.mutation.AppGoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: score.FieldAppGoodID,
+		})
+	}
 	if value, ok := su.mutation.Score(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
@@ -388,6 +401,12 @@ func (suo *ScoreUpdateOne) SetUserID(u uuid.UUID) *ScoreUpdateOne {
 // SetGoodID sets the "good_id" field.
 func (suo *ScoreUpdateOne) SetGoodID(u uuid.UUID) *ScoreUpdateOne {
 	suo.mutation.SetGoodID(u)
+	return suo
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (suo *ScoreUpdateOne) SetAppGoodID(u uuid.UUID) *ScoreUpdateOne {
+	suo.mutation.SetAppGoodID(u)
 	return suo
 }
 
@@ -600,6 +619,13 @@ func (suo *ScoreUpdateOne) sqlSave(ctx context.Context) (_node *Score, err error
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: score.FieldGoodID,
+		})
+	}
+	if value, ok := suo.mutation.AppGoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: score.FieldAppGoodID,
 		})
 	}
 	if value, ok := suo.mutation.Score(); ok {
