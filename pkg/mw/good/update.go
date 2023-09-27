@@ -93,8 +93,13 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 		}
 	case types.BenefitState_BenefitBookKeeping.String():
 		switch *h.RewardState {
+		case types.BenefitState_BenefitUserBookKeeping:
+		default:
+			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
+		}
+	case types.BenefitState_BenefitUserBookKeeping.String():
+		switch *h.RewardState {
 		case types.BenefitState_BenefitDone:
-		case types.BenefitState_BenefitFail:
 		default:
 			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
 		}

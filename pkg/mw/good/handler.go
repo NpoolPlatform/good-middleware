@@ -426,6 +426,7 @@ func WithRewardState(e *types.BenefitState, must bool) func(context.Context, *Ha
 		case types.BenefitState_BenefitWait:
 		case types.BenefitState_BenefitTransferring:
 		case types.BenefitState_BenefitBookKeeping:
+		case types.BenefitState_BenefitUserBookKeeping:
 		case types.BenefitState_BenefitDone:
 		case types.BenefitState_BenefitFail:
 		default:
