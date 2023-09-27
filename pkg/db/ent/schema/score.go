@@ -34,6 +34,8 @@ func (Score) Fields() []ent.Field {
 		field.
 			UUID("good_id", uuid.UUID{}),
 		field.
+			UUID("app_good_id", uuid.UUID{}),
+		field.
 			Other("score", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",

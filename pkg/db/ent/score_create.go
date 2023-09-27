@@ -84,6 +84,12 @@ func (sc *ScoreCreate) SetGoodID(u uuid.UUID) *ScoreCreate {
 	return sc
 }
 
+// SetAppGoodID sets the "app_good_id" field.
+func (sc *ScoreCreate) SetAppGoodID(u uuid.UUID) *ScoreCreate {
+	sc.mutation.SetAppGoodID(u)
+	return sc
+}
+
 // SetScore sets the "score" field.
 func (sc *ScoreCreate) SetScore(d decimal.Decimal) *ScoreCreate {
 	sc.mutation.SetScore(d)
@@ -246,6 +252,9 @@ func (sc *ScoreCreate) check() error {
 	if _, ok := sc.mutation.GoodID(); !ok {
 		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "Score.good_id"`)}
 	}
+	if _, ok := sc.mutation.AppGoodID(); !ok {
+		return &ValidationError{Name: "app_good_id", err: errors.New(`ent: missing required field "Score.app_good_id"`)}
+	}
 	return nil
 }
 
@@ -330,6 +339,14 @@ func (sc *ScoreCreate) createSpec() (*Score, *sqlgraph.CreateSpec) {
 			Column: score.FieldGoodID,
 		})
 		_node.GoodID = value
+	}
+	if value, ok := sc.mutation.AppGoodID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: score.FieldAppGoodID,
+		})
+		_node.AppGoodID = value
 	}
 	if value, ok := sc.mutation.Score(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -480,6 +497,18 @@ func (u *ScoreUpsert) SetGoodID(v uuid.UUID) *ScoreUpsert {
 // UpdateGoodID sets the "good_id" field to the value that was provided on create.
 func (u *ScoreUpsert) UpdateGoodID() *ScoreUpsert {
 	u.SetExcluded(score.FieldGoodID)
+	return u
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (u *ScoreUpsert) SetAppGoodID(v uuid.UUID) *ScoreUpsert {
+	u.Set(score.FieldAppGoodID, v)
+	return u
+}
+
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *ScoreUpsert) UpdateAppGoodID() *ScoreUpsert {
+	u.SetExcluded(score.FieldAppGoodID)
 	return u
 }
 
@@ -653,6 +682,20 @@ func (u *ScoreUpsertOne) SetGoodID(v uuid.UUID) *ScoreUpsertOne {
 func (u *ScoreUpsertOne) UpdateGoodID() *ScoreUpsertOne {
 	return u.Update(func(s *ScoreUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (u *ScoreUpsertOne) SetAppGoodID(v uuid.UUID) *ScoreUpsertOne {
+	return u.Update(func(s *ScoreUpsert) {
+		s.SetAppGoodID(v)
+	})
+}
+
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *ScoreUpsertOne) UpdateAppGoodID() *ScoreUpsertOne {
+	return u.Update(func(s *ScoreUpsert) {
+		s.UpdateAppGoodID()
 	})
 }
 
@@ -995,6 +1038,20 @@ func (u *ScoreUpsertBulk) SetGoodID(v uuid.UUID) *ScoreUpsertBulk {
 func (u *ScoreUpsertBulk) UpdateGoodID() *ScoreUpsertBulk {
 	return u.Update(func(s *ScoreUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (u *ScoreUpsertBulk) SetAppGoodID(v uuid.UUID) *ScoreUpsertBulk {
+	return u.Update(func(s *ScoreUpsert) {
+		s.SetAppGoodID(v)
+	})
+}
+
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *ScoreUpsertBulk) UpdateAppGoodID() *ScoreUpsertBulk {
+	return u.Update(func(s *ScoreUpsert) {
+		s.UpdateAppGoodID()
 	})
 }
 

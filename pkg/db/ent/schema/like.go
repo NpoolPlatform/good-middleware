@@ -32,6 +32,8 @@ func (Like) Fields() []ent.Field {
 		field.
 			UUID("good_id", uuid.UUID{}),
 		field.
+			UUID("app_good_id", uuid.UUID{}),
+		field.
 			Bool("like"),
 	}
 }

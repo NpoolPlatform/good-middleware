@@ -25,6 +25,8 @@ const (
 	FieldUserID = "user_id"
 	// FieldGoodID holds the string denoting the good_id field in the database.
 	FieldGoodID = "good_id"
+	// FieldAppGoodID holds the string denoting the app_good_id field in the database.
+	FieldAppGoodID = "app_good_id"
 	// FieldScore holds the string denoting the score field in the database.
 	FieldScore = "score"
 	// Table holds the table name of the score in the database.
@@ -40,6 +42,7 @@ var Columns = []string{
 	FieldAppID,
 	FieldUserID,
 	FieldGoodID,
+	FieldAppGoodID,
 	FieldScore,
 }
 

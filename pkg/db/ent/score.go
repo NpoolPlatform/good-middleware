@@ -29,6 +29,8 @@ type Score struct {
 	UserID uuid.UUID `json:"user_id,omitempty"`
 	// GoodID holds the value of the "good_id" field.
 	GoodID uuid.UUID `json:"good_id,omitempty"`
+	// AppGoodID holds the value of the "app_good_id" field.
+	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// Score holds the value of the "score" field.
 	Score decimal.Decimal `json:"score,omitempty"`
 }
@@ -42,7 +44,7 @@ func (*Score) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case score.FieldCreatedAt, score.FieldUpdatedAt, score.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case score.FieldID, score.FieldAppID, score.FieldUserID, score.FieldGoodID:
+		case score.FieldID, score.FieldAppID, score.FieldUserID, score.FieldGoodID, score.FieldAppGoodID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Score", columns[i])
@@ -101,6 +103,12 @@ func (s *Score) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				s.GoodID = *value
 			}
+		case score.FieldAppGoodID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field app_good_id", values[i])
+			} else if value != nil {
+				s.AppGoodID = *value
+			}
 		case score.FieldScore:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
 				return fmt.Errorf("unexpected type %T for field score", values[i])
@@ -152,6 +160,9 @@ func (s *Score) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("good_id=")
 	builder.WriteString(fmt.Sprintf("%v", s.GoodID))
+	builder.WriteString(", ")
+	builder.WriteString("app_good_id=")
+	builder.WriteString(fmt.Sprintf("%v", s.AppGoodID))
 	builder.WriteString(", ")
 	builder.WriteString("score=")
 	builder.WriteString(fmt.Sprintf("%v", s.Score))
