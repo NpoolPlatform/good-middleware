@@ -97,7 +97,7 @@ var appgood = appgoodmwpb.Good{
 
 var ret = npool.Score{
 	ID:        uuid.NewString(),
-	AppID:     uuid.NewString(),
+	AppID:     appgood.AppID,
 	UserID:    uuid.NewString(),
 	AppGoodID: appgood.ID,
 	Score:     decimal.RequireFromString("4.7").String(),

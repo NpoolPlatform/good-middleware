@@ -88,7 +88,7 @@ var appgood = appgoodmwpb.Good{
 
 var ret = npool.Like{
 	ID:        uuid.NewString(),
-	AppID:     uuid.NewString(),
+	AppID:     appgood.AppID,
 	UserID:    uuid.NewString(),
 	AppGoodID: appgood.ID,
 	GoodName:  appgood.GoodName,
