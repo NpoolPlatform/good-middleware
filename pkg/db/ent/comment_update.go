@@ -102,6 +102,12 @@ func (cu *CommentUpdate) SetGoodID(u uuid.UUID) *CommentUpdate {
 	return cu
 }
 
+// SetAppGoodID sets the "app_good_id" field.
+func (cu *CommentUpdate) SetAppGoodID(u uuid.UUID) *CommentUpdate {
+	cu.mutation.SetAppGoodID(u)
+	return cu
+}
+
 // SetOrderID sets the "order_id" field.
 func (cu *CommentUpdate) SetOrderID(u uuid.UUID) *CommentUpdate {
 	cu.mutation.SetOrderID(u)
@@ -323,6 +329,13 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: comment.FieldGoodID,
 		})
 	}
+	if value, ok := cu.mutation.AppGoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: comment.FieldAppGoodID,
+		})
+	}
 	if value, ok := cu.mutation.OrderID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -453,6 +466,12 @@ func (cuo *CommentUpdateOne) SetUserID(u uuid.UUID) *CommentUpdateOne {
 // SetGoodID sets the "good_id" field.
 func (cuo *CommentUpdateOne) SetGoodID(u uuid.UUID) *CommentUpdateOne {
 	cuo.mutation.SetGoodID(u)
+	return cuo
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (cuo *CommentUpdateOne) SetAppGoodID(u uuid.UUID) *CommentUpdateOne {
+	cuo.mutation.SetAppGoodID(u)
 	return cuo
 }
 
@@ -705,6 +724,13 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: comment.FieldGoodID,
+		})
+	}
+	if value, ok := cuo.mutation.AppGoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: comment.FieldAppGoodID,
 		})
 	}
 	if value, ok := cuo.mutation.OrderID(); ok {

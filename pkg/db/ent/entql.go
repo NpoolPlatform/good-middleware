@@ -157,6 +157,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			comment.FieldAppID:     {Type: field.TypeUUID, Column: comment.FieldAppID},
 			comment.FieldUserID:    {Type: field.TypeUUID, Column: comment.FieldUserID},
 			comment.FieldGoodID:    {Type: field.TypeUUID, Column: comment.FieldGoodID},
+			comment.FieldAppGoodID: {Type: field.TypeUUID, Column: comment.FieldAppGoodID},
 			comment.FieldOrderID:   {Type: field.TypeUUID, Column: comment.FieldOrderID},
 			comment.FieldContent:   {Type: field.TypeString, Column: comment.FieldContent},
 			comment.FieldReplyToID: {Type: field.TypeUUID, Column: comment.FieldReplyToID},
@@ -1020,6 +1021,11 @@ func (f *CommentFilter) WhereUserID(p entql.ValueP) {
 // WhereGoodID applies the entql [16]byte predicate on the good_id field.
 func (f *CommentFilter) WhereGoodID(p entql.ValueP) {
 	f.Where(p.Field(comment.FieldGoodID))
+}
+
+// WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
+func (f *CommentFilter) WhereAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(comment.FieldAppGoodID))
 }
 
 // WhereOrderID applies the entql [16]byte predicate on the order_id field.

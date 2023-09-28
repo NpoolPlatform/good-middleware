@@ -5506,6 +5506,7 @@ type CommentMutation struct {
 	app_id        *uuid.UUID
 	user_id       *uuid.UUID
 	good_id       *uuid.UUID
+	app_good_id   *uuid.UUID
 	order_id      *uuid.UUID
 	content       *string
 	reply_to_id   *uuid.UUID
@@ -5895,6 +5896,42 @@ func (m *CommentMutation) ResetGoodID() {
 	m.good_id = nil
 }
 
+// SetAppGoodID sets the "app_good_id" field.
+func (m *CommentMutation) SetAppGoodID(u uuid.UUID) {
+	m.app_good_id = &u
+}
+
+// AppGoodID returns the value of the "app_good_id" field in the mutation.
+func (m *CommentMutation) AppGoodID() (r uuid.UUID, exists bool) {
+	v := m.app_good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppGoodID returns the old "app_good_id" field's value of the Comment entity.
+// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CommentMutation) OldAppGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppGoodID: %w", err)
+	}
+	return oldValue.AppGoodID, nil
+}
+
+// ResetAppGoodID resets all changes to the "app_good_id" field.
+func (m *CommentMutation) ResetAppGoodID() {
+	m.app_good_id = nil
+}
+
 // SetOrderID sets the "order_id" field.
 func (m *CommentMutation) SetOrderID(u uuid.UUID) {
 	m.order_id = &u
@@ -6061,7 +6098,7 @@ func (m *CommentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *CommentMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.created_at != nil {
 		fields = append(fields, comment.FieldCreatedAt)
 	}
@@ -6079,6 +6116,9 @@ func (m *CommentMutation) Fields() []string {
 	}
 	if m.good_id != nil {
 		fields = append(fields, comment.FieldGoodID)
+	}
+	if m.app_good_id != nil {
+		fields = append(fields, comment.FieldAppGoodID)
 	}
 	if m.order_id != nil {
 		fields = append(fields, comment.FieldOrderID)
@@ -6109,6 +6149,8 @@ func (m *CommentMutation) Field(name string) (ent.Value, bool) {
 		return m.UserID()
 	case comment.FieldGoodID:
 		return m.GoodID()
+	case comment.FieldAppGoodID:
+		return m.AppGoodID()
 	case comment.FieldOrderID:
 		return m.OrderID()
 	case comment.FieldContent:
@@ -6136,6 +6178,8 @@ func (m *CommentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldUserID(ctx)
 	case comment.FieldGoodID:
 		return m.OldGoodID(ctx)
+	case comment.FieldAppGoodID:
+		return m.OldAppGoodID(ctx)
 	case comment.FieldOrderID:
 		return m.OldOrderID(ctx)
 	case comment.FieldContent:
@@ -6192,6 +6236,13 @@ func (m *CommentMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetGoodID(v)
+		return nil
+	case comment.FieldAppGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppGoodID(v)
 		return nil
 	case comment.FieldOrderID:
 		v, ok := value.(uuid.UUID)
@@ -6340,6 +6391,9 @@ func (m *CommentMutation) ResetField(name string) error {
 		return nil
 	case comment.FieldGoodID:
 		m.ResetGoodID()
+		return nil
+	case comment.FieldAppGoodID:
+		m.ResetAppGoodID()
 		return nil
 	case comment.FieldOrderID:
 		m.ResetOrderID()

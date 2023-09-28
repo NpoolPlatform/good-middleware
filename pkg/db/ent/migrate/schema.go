@@ -120,6 +120,7 @@ var (
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "good_id", Type: field.TypeUUID},
+		{Name: "app_good_id", Type: field.TypeUUID},
 		{Name: "order_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "content", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "reply_to_id", Type: field.TypeUUID, Nullable: true},
@@ -133,7 +134,7 @@ var (
 			{
 				Name:    "comment_app_id_user_id_good_id_order_id",
 				Unique:  false,
-				Columns: []*schema.Column{CommentsColumns[4], CommentsColumns[5], CommentsColumns[6], CommentsColumns[7]},
+				Columns: []*schema.Column{CommentsColumns[4], CommentsColumns[5], CommentsColumns[6], CommentsColumns[8]},
 			},
 		},
 	}

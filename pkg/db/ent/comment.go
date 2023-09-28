@@ -28,6 +28,8 @@ type Comment struct {
 	UserID uuid.UUID `json:"user_id,omitempty"`
 	// GoodID holds the value of the "good_id" field.
 	GoodID uuid.UUID `json:"good_id,omitempty"`
+	// AppGoodID holds the value of the "app_good_id" field.
+	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// OrderID holds the value of the "order_id" field.
 	OrderID uuid.UUID `json:"order_id,omitempty"`
 	// Content holds the value of the "content" field.
@@ -45,7 +47,7 @@ func (*Comment) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case comment.FieldContent:
 			values[i] = new(sql.NullString)
-		case comment.FieldID, comment.FieldAppID, comment.FieldUserID, comment.FieldGoodID, comment.FieldOrderID, comment.FieldReplyToID:
+		case comment.FieldID, comment.FieldAppID, comment.FieldUserID, comment.FieldGoodID, comment.FieldAppGoodID, comment.FieldOrderID, comment.FieldReplyToID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Comment", columns[i])
@@ -103,6 +105,12 @@ func (c *Comment) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field good_id", values[i])
 			} else if value != nil {
 				c.GoodID = *value
+			}
+		case comment.FieldAppGoodID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field app_good_id", values[i])
+			} else if value != nil {
+				c.AppGoodID = *value
 			}
 		case comment.FieldOrderID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -167,6 +175,9 @@ func (c *Comment) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("good_id=")
 	builder.WriteString(fmt.Sprintf("%v", c.GoodID))
+	builder.WriteString(", ")
+	builder.WriteString("app_good_id=")
+	builder.WriteString(fmt.Sprintf("%v", c.AppGoodID))
 	builder.WriteString(", ")
 	builder.WriteString("order_id=")
 	builder.WriteString(fmt.Sprintf("%v", c.OrderID))

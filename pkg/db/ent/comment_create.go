@@ -83,6 +83,12 @@ func (cc *CommentCreate) SetGoodID(u uuid.UUID) *CommentCreate {
 	return cc
 }
 
+// SetAppGoodID sets the "app_good_id" field.
+func (cc *CommentCreate) SetAppGoodID(u uuid.UUID) *CommentCreate {
+	cc.mutation.SetAppGoodID(u)
+	return cc
+}
+
 // SetOrderID sets the "order_id" field.
 func (cc *CommentCreate) SetOrderID(u uuid.UUID) *CommentCreate {
 	cc.mutation.SetOrderID(u)
@@ -287,6 +293,9 @@ func (cc *CommentCreate) check() error {
 	if _, ok := cc.mutation.GoodID(); !ok {
 		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "Comment.good_id"`)}
 	}
+	if _, ok := cc.mutation.AppGoodID(); !ok {
+		return &ValidationError{Name: "app_good_id", err: errors.New(`ent: missing required field "Comment.app_good_id"`)}
+	}
 	return nil
 }
 
@@ -371,6 +380,14 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 			Column: comment.FieldGoodID,
 		})
 		_node.GoodID = value
+	}
+	if value, ok := cc.mutation.AppGoodID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: comment.FieldAppGoodID,
+		})
+		_node.AppGoodID = value
 	}
 	if value, ok := cc.mutation.OrderID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -537,6 +554,18 @@ func (u *CommentUpsert) SetGoodID(v uuid.UUID) *CommentUpsert {
 // UpdateGoodID sets the "good_id" field to the value that was provided on create.
 func (u *CommentUpsert) UpdateGoodID() *CommentUpsert {
 	u.SetExcluded(comment.FieldGoodID)
+	return u
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (u *CommentUpsert) SetAppGoodID(v uuid.UUID) *CommentUpsert {
+	u.Set(comment.FieldAppGoodID, v)
+	return u
+}
+
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *CommentUpsert) UpdateAppGoodID() *CommentUpsert {
+	u.SetExcluded(comment.FieldAppGoodID)
 	return u
 }
 
@@ -746,6 +775,20 @@ func (u *CommentUpsertOne) SetGoodID(v uuid.UUID) *CommentUpsertOne {
 func (u *CommentUpsertOne) UpdateGoodID() *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (u *CommentUpsertOne) SetAppGoodID(v uuid.UUID) *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetAppGoodID(v)
+	})
+}
+
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *CommentUpsertOne) UpdateAppGoodID() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateAppGoodID()
 	})
 }
 
@@ -1130,6 +1173,20 @@ func (u *CommentUpsertBulk) SetGoodID(v uuid.UUID) *CommentUpsertBulk {
 func (u *CommentUpsertBulk) UpdateGoodID() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (u *CommentUpsertBulk) SetAppGoodID(v uuid.UUID) *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetAppGoodID(v)
+	})
+}
+
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *CommentUpsertBulk) UpdateAppGoodID() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateAppGoodID()
 	})
 }
 
