@@ -88,11 +88,11 @@ var good = goodmwpb.Good{
 }
 
 var appgood = appgoodmwpb.Good{
-	ID:            uuid.NewString(),
-	AppID:         uuid.NewString(),
-	GoodID:        good.ID,
-	GoodName:      uuid.NewString(),
-	Price:         decimal.NewFromInt(123).String(),
+	ID:       uuid.NewString(),
+	AppID:    uuid.NewString(),
+	GoodID:   good.ID,
+	GoodName: uuid.NewString(),
+	Price:    decimal.NewFromInt(123).String(),
 }
 
 var comment = npool.Comment{
@@ -168,11 +168,11 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = appgood1.CreateGood(context.Background(), &appgoodmwpb.GoodReq{
-		ID:            &appgood.ID,
-		AppID:         &appgood.AppID,
-		GoodID:        &appgood.GoodID,
-		GoodName:      &appgood.GoodName,
-		Price:         &appgood.Price,
+		ID:       &appgood.ID,
+		AppID:    &appgood.AppID,
+		GoodID:   &appgood.GoodID,
+		GoodName: &appgood.GoodName,
+		Price:    &appgood.Price,
 	})
 	assert.Nil(t, err)
 
@@ -222,6 +222,7 @@ func updateComment(t *testing.T) {
 	}
 }
 
+//nolint
 func getComments(t *testing.T) {
 	infos, total, err := GetComments(context.Background(), &npool.Conds{
 		ID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
@@ -239,6 +240,7 @@ func getComments(t *testing.T) {
 	}
 }
 
+//nolint
 func getCommentOnly(t *testing.T) {
 	info, err := GetCommentOnly(context.Background(), &npool.Conds{
 		ID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
@@ -254,6 +256,7 @@ func getCommentOnly(t *testing.T) {
 	}
 }
 
+//nolint
 func deleteComment(t *testing.T) {
 	info, err := DeleteComment(context.Background(), ret.ID)
 	if assert.Nil(t, err) {
