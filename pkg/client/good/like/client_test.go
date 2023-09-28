@@ -14,6 +14,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
+	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/client/app/good"
 	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/client/deviceinfo"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/client/good"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/client/vender/brand"
@@ -21,6 +22,7 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
+	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	deviceinfomwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
 	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/like"
@@ -85,6 +87,13 @@ var good = goodmwpb.Good{
 	UnitLockDeposit:      decimal.NewFromInt(1).String(),
 }
 
+var appgood = appgoodmwpb.Good{
+	ID:       uuid.NewString(),
+	AppID:    uuid.NewString(),
+	GoodID:   good.ID,
+	GoodName: uuid.NewString(),
+}
+
 var ret = npool.Like{
 	ID:        uuid.NewString(),
 	AppID:     uuid.NewString(),
@@ -146,7 +155,17 @@ func setup(t *testing.T) func(*testing.T) {
 	})
 	assert.Nil(t, err)
 
+	_, err = appgood1.CreateGood(context.Background(), &appgoodmwpb.GoodReq{
+		ID:       &appgood.ID,
+		AppID:    &appgood.AppID,
+		GoodID:   &appgood.GoodID,
+		GoodName: &appgood.GoodName,
+		Price:    &appgood.Price,
+	})
+	assert.Nil(t, err)
+
 	return func(*testing.T) {
+		_, _ = appgood1.DeleteGood(context.Background(), appgood.ID)
 		_, _ = good1.DeleteGood(context.Background(), good.ID)
 		_, _ = deviceinfo1.DeleteDeviceInfo(context.Background(), good.DeviceInfoID)
 		_, _ = vendorlocation1.DeleteLocation(context.Background(), good.VendorLocationID)

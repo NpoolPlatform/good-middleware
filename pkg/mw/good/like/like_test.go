@@ -10,11 +10,13 @@ import (
 
 	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/mw/deviceinfo"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
+	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
+	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/like"
 
@@ -74,6 +76,14 @@ var good = goodmwpb.Good{
 	BenefitIntervalHours: 24,
 	GoodAppReserved:      decimal.NewFromInt(0).String(),
 	UnitLockDeposit:      decimal.NewFromInt(1).String(),
+}
+
+var appgood = appgoodmwpb.Good{
+	ID:       uuid.NewString(),
+	AppID:    uuid.NewString(),
+	GoodID:   good.ID,
+	GoodName: uuid.NewString(),
+	Price:    decimal.NewFromInt(123).String(),
 }
 
 var ret = npool.Like{
@@ -152,7 +162,20 @@ func setup(t *testing.T) func(*testing.T) {
 	_, err = h4.CreateGood(context.Background())
 	assert.Nil(t, err)
 
+	h5, err := appgood1.NewHandler(
+		context.Background(),
+		appgood1.WithID(&appgood.ID, true),
+		appgood1.WithAppID(&appgood.AppID, true),
+		appgood1.WithGoodID(&appgood.GoodID, true),
+		appgood1.WithGoodName(&appgood.GoodName, true),
+	)
+	assert.Nil(t, err)
+
+	_, err = h5.CreateGood(context.Background())
+	assert.Nil(t, err)
+
 	return func(*testing.T) {
+		_, _ = h5.DeleteGood(context.Background())
 		_, _ = h4.DeleteGood(context.Background())
 		_, _ = h3.DeleteDeviceInfo(context.Background())
 		_, _ = h2.DeleteLocation(context.Background())
