@@ -101,7 +101,7 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 			return err
 		}
 		if !exist {
-			return fmt.Errorf("invalid good")
+			return fmt.Errorf("invalid app good")
 		}
 		h.AppGoodID = handler.ID
 		return nil
