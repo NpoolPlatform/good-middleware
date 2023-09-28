@@ -86,12 +86,12 @@ var good = goodmwpb.Good{
 }
 
 var ret = npool.Like{
-	ID:       uuid.NewString(),
-	AppID:    uuid.NewString(),
-	UserID:   uuid.NewString(),
-	GoodID:   good.ID,
-	Like:     true,
-	GoodName: good.Title,
+	ID:        uuid.NewString(),
+	AppID:     uuid.NewString(),
+	UserID:    uuid.NewString(),
+	AppGoodID: good.ID,
+	Like:      true,
+	GoodName:  good.Title,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -156,11 +156,11 @@ func setup(t *testing.T) func(*testing.T) {
 
 func createLike(t *testing.T) {
 	info, err := CreateLike(context.Background(), &npool.LikeReq{
-		ID:     &ret.ID,
-		AppID:  &ret.AppID,
-		UserID: &ret.UserID,
-		GoodID: &ret.GoodID,
-		Like:   &ret.Like,
+		ID:        &ret.ID,
+		AppID:     &ret.AppID,
+		UserID:    &ret.UserID,
+		AppGoodID: &ret.AppGoodID,
+		Like:      &ret.Like,
 	})
 	if assert.Nil(t, err) {
 		ret.CreatedAt = info.CreatedAt
@@ -177,11 +177,11 @@ func createLike(t *testing.T) {
 
 func getLikes(t *testing.T) {
 	infos, total, err := GetLikes(context.Background(), &npool.Conds{
-		ID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-		AppID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
-		UserID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
-		GoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-		GoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
+		ID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		AppID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+		UserID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
+		AppGoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+		AppGoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppGoodID}},
 	}, int32(0), int32(2))
 	if assert.Nil(t, err) {
 		if assert.Equal(t, uint32(1), total) {
@@ -197,11 +197,11 @@ func deleteLike(t *testing.T) {
 	}
 
 	info, err = GetLikeOnly(context.Background(), &npool.Conds{
-		ID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-		AppID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
-		UserID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
-		GoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-		GoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
+		ID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		AppID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+		UserID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
+		AppGoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+		AppGoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppGoodID}},
 	})
 	assert.Nil(t, err)
 	assert.Nil(t, info)
