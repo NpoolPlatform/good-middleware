@@ -79,10 +79,11 @@ var good = goodmwpb.Good{
 }
 
 var appgood = appgoodmwpb.Good{
-	ID:     uuid.NewString(),
-	AppID:  uuid.NewString(),
-	GoodID: good.ID,
-    GoodName: uuid.NewString(),
+	ID:       uuid.NewString(),
+	AppID:    uuid.NewString(),
+	GoodID:   good.ID,
+	GoodName: uuid.NewString(),
+	Price:    decimal.NewFromInt(123).String(),
 }
 
 var ret = npool.Comment{
@@ -169,6 +170,7 @@ func setup(t *testing.T) func(*testing.T) {
 		appgood1.WithAppID(&appgood.AppID, true),
 		appgood1.WithGoodID(&appgood.GoodID, true),
 		appgood1.WithGoodName(&appgood.GoodName, true),
+		appgood1.WithPrice(&appgood.Price, true),
 	)
 	assert.Nil(t, err)
 
