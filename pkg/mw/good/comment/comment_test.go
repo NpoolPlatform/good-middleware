@@ -97,6 +97,7 @@ var ret = npool.Comment{
 	ReplyToID: uuid.NewString(),
 }
 
+//nolint
 func setup(t *testing.T) func(*testing.T) {
 	h1, err := vendorbrand1.NewHandler(
 		context.Background(),
