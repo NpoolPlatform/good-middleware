@@ -99,7 +99,7 @@ var ret = npool.Like{
 	ID:        uuid.NewString(),
 	AppID:     uuid.NewString(),
 	UserID:    uuid.NewString(),
-	AppGoodID: good.ID,
+	AppGoodID: appgood.ID,
 	Like:      true,
 	GoodName:  appgood.GoodName,
 }
