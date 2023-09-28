@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
 	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/mw/deviceinfo"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
@@ -15,6 +16,7 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
+	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
 
@@ -76,11 +78,17 @@ var good = goodmwpb.Good{
 	UnitLockDeposit:      decimal.NewFromInt(1).String(),
 }
 
+var appgood = appgoodmwpb.Good{
+	ID:     uuid.NewString(),
+	AppID:  uuid.NewString(),
+	GoodID: good.ID,
+}
+
 var ret = npool.Comment{
 	ID:        uuid.NewString(),
-	AppID:     uuid.NewString(),
+	AppID:     appgood.AppID,
 	UserID:    uuid.NewString(),
-	AppGoodID: good.ID,
+	AppGoodID: appgood.ID,
 	GoodName:  good.Title,
 	OrderID:   uuid.NewString(),
 	Content:   uuid.NewString(),
@@ -154,7 +162,18 @@ func setup(t *testing.T) func(*testing.T) {
 	_, err = h4.CreateGood(context.Background())
 	assert.Nil(t, err)
 
-	h5, err := NewHandler(
+	h5, err := appgood1.NewHandler(
+		context.Background(),
+		appgood1.WithID(&appgood.ID, true),
+		appgood1.WithAppID(&appgood.AppID, true),
+		appgood1.WithGoodID(&appgood.GoodID, true),
+	)
+	assert.Nil(t, err)
+
+	_, err = h5.CreateGood(context.Background())
+	assert.Nil(t, err)
+
+	h6, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ReplyToID, true),
 		WithAppID(&ret.AppID, true),
@@ -165,11 +184,12 @@ func setup(t *testing.T) func(*testing.T) {
 	)
 	assert.Nil(t, err)
 
-	_, err = h5.CreateComment(context.Background())
+	_, err = h6.CreateComment(context.Background())
 	assert.Nil(t, err)
 
 	return func(*testing.T) {
-		_, _ = h5.DeleteComment(context.Background())
+		_, _ = h6.DeleteComment(context.Background())
+		_, _ = h5.DeleteGood(context.Background())
 		_, _ = h4.DeleteGood(context.Background())
 		_, _ = h3.DeleteDeviceInfo(context.Background())
 		_, _ = h2.DeleteLocation(context.Background())
