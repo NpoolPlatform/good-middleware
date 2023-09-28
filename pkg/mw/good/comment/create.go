@@ -39,10 +39,11 @@ func (h *createHandler) createComment(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *createHandler) updateGoodComment(ctx context.Context, tx *ent.Tx) error {
+	appGood, _ := tx.AppGood.Get(ctx, *h.AppGoodID)
 	stm, err := extrainfocrud.SetQueryConds(
 		tx.ExtraInfo.Query(),
 		&extrainfocrud.Conds{
-			GoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.AppGoodID},
+			GoodID: &cruder.Cond{Op: cruder.EQ, Val: appGood.GoodID},
 		})
 	if err != nil {
 		return err
