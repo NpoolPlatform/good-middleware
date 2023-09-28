@@ -83,6 +83,14 @@ func (lc *LikeCreate) SetGoodID(u uuid.UUID) *LikeCreate {
 	return lc
 }
 
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (lc *LikeCreate) SetNillableGoodID(u *uuid.UUID) *LikeCreate {
+	if u != nil {
+		lc.SetGoodID(*u)
+	}
+	return lc
+}
+
 // SetAppGoodID sets the "app_good_id" field.
 func (lc *LikeCreate) SetAppGoodID(u uuid.UUID) *LikeCreate {
 	lc.mutation.SetAppGoodID(u)
@@ -209,6 +217,13 @@ func (lc *LikeCreate) defaults() error {
 		v := like.DefaultDeletedAt()
 		lc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := lc.mutation.GoodID(); !ok {
+		if like.DefaultGoodID == nil {
+			return fmt.Errorf("ent: uninitialized like.DefaultGoodID (forgotten import ent/runtime?)")
+		}
+		v := like.DefaultGoodID()
+		lc.mutation.SetGoodID(v)
+	}
 	if _, ok := lc.mutation.ID(); !ok {
 		if like.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized like.DefaultID (forgotten import ent/runtime?)")
@@ -235,9 +250,6 @@ func (lc *LikeCreate) check() error {
 	}
 	if _, ok := lc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Like.user_id"`)}
-	}
-	if _, ok := lc.mutation.GoodID(); !ok {
-		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "Like.good_id"`)}
 	}
 	if _, ok := lc.mutation.AppGoodID(); !ok {
 		return &ValidationError{Name: "app_good_id", err: errors.New(`ent: missing required field "Like.app_good_id"`)}
@@ -490,6 +502,12 @@ func (u *LikeUpsert) UpdateGoodID() *LikeUpsert {
 	return u
 }
 
+// ClearGoodID clears the value of the "good_id" field.
+func (u *LikeUpsert) ClearGoodID() *LikeUpsert {
+	u.SetNull(like.FieldGoodID)
+	return u
+}
+
 // SetAppGoodID sets the "app_good_id" field.
 func (u *LikeUpsert) SetAppGoodID(v uuid.UUID) *LikeUpsert {
 	u.Set(like.FieldAppGoodID, v)
@@ -666,6 +684,13 @@ func (u *LikeUpsertOne) SetGoodID(v uuid.UUID) *LikeUpsertOne {
 func (u *LikeUpsertOne) UpdateGoodID() *LikeUpsertOne {
 	return u.Update(func(s *LikeUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (u *LikeUpsertOne) ClearGoodID() *LikeUpsertOne {
+	return u.Update(func(s *LikeUpsert) {
+		s.ClearGoodID()
 	})
 }
 
@@ -1015,6 +1040,13 @@ func (u *LikeUpsertBulk) SetGoodID(v uuid.UUID) *LikeUpsertBulk {
 func (u *LikeUpsertBulk) UpdateGoodID() *LikeUpsertBulk {
 	return u.Update(func(s *LikeUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (u *LikeUpsertBulk) ClearGoodID() *LikeUpsertBulk {
+	return u.Update(func(s *LikeUpsert) {
+		s.ClearGoodID()
 	})
 }
 

@@ -102,6 +102,20 @@ func (lu *LikeUpdate) SetGoodID(u uuid.UUID) *LikeUpdate {
 	return lu
 }
 
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (lu *LikeUpdate) SetNillableGoodID(u *uuid.UUID) *LikeUpdate {
+	if u != nil {
+		lu.SetGoodID(*u)
+	}
+	return lu
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (lu *LikeUpdate) ClearGoodID() *LikeUpdate {
+	lu.mutation.ClearGoodID()
+	return lu
+}
+
 // SetAppGoodID sets the "app_good_id" field.
 func (lu *LikeUpdate) SetAppGoodID(u uuid.UUID) *LikeUpdate {
 	lu.mutation.SetAppGoodID(u)
@@ -275,6 +289,12 @@ func (lu *LikeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: like.FieldGoodID,
 		})
 	}
+	if lu.mutation.GoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: like.FieldGoodID,
+		})
+	}
 	if value, ok := lu.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -380,6 +400,20 @@ func (luo *LikeUpdateOne) SetUserID(u uuid.UUID) *LikeUpdateOne {
 // SetGoodID sets the "good_id" field.
 func (luo *LikeUpdateOne) SetGoodID(u uuid.UUID) *LikeUpdateOne {
 	luo.mutation.SetGoodID(u)
+	return luo
+}
+
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (luo *LikeUpdateOne) SetNillableGoodID(u *uuid.UUID) *LikeUpdateOne {
+	if u != nil {
+		luo.SetGoodID(*u)
+	}
+	return luo
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (luo *LikeUpdateOne) ClearGoodID() *LikeUpdateOne {
+	luo.mutation.ClearGoodID()
 	return luo
 }
 
@@ -583,6 +617,12 @@ func (luo *LikeUpdateOne) sqlSave(ctx context.Context) (_node *Like, err error) 
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: like.FieldGoodID,
+		})
+	}
+	if luo.mutation.GoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: like.FieldGoodID,
 		})
 	}

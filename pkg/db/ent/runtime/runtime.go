@@ -701,6 +701,10 @@ func init() {
 	likeDescDeletedAt := likeMixinFields0[2].Descriptor()
 	// like.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	like.DefaultDeletedAt = likeDescDeletedAt.Default.(func() uint32)
+	// likeDescGoodID is the schema descriptor for good_id field.
+	likeDescGoodID := likeFields[3].Descriptor()
+	// like.DefaultGoodID holds the default value on creation for the good_id field.
+	like.DefaultGoodID = likeDescGoodID.Default.(func() uuid.UUID)
 	// likeDescID is the schema descriptor for id field.
 	likeDescID := likeFields[0].Descriptor()
 	// like.DefaultID holds the default value on creation for the id field.
@@ -865,6 +869,10 @@ func init() {
 	scoreDescDeletedAt := scoreMixinFields0[2].Descriptor()
 	// score.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	score.DefaultDeletedAt = scoreDescDeletedAt.Default.(func() uint32)
+	// scoreDescGoodID is the schema descriptor for good_id field.
+	scoreDescGoodID := scoreFields[3].Descriptor()
+	// score.DefaultGoodID holds the default value on creation for the good_id field.
+	score.DefaultGoodID = scoreDescGoodID.Default.(func() uuid.UUID)
 	// scoreDescScore is the schema descriptor for score field.
 	scoreDescScore := scoreFields[5].Descriptor()
 	// score.DefaultScore holds the default value on creation for the score field.

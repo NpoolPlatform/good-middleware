@@ -99,9 +99,9 @@ var ret = npool.Score{
 	ID:        uuid.NewString(),
 	AppID:     uuid.NewString(),
 	UserID:    uuid.NewString(),
-	AppGoodID: good.ID,
+	AppGoodID: appgood.ID,
 	Score:     decimal.RequireFromString("4.7").String(),
-	GoodName:  good.Title,
+	GoodName:  appgood.GoodName,
 }
 
 func setup(t *testing.T) func(*testing.T) {

@@ -90,7 +90,7 @@ var ret = npool.Score{
 	ID:        uuid.NewString(),
 	AppID:     uuid.NewString(),
 	UserID:    uuid.NewString(),
-	AppGoodID: good.ID,
+	AppGoodID: appgood.ID,
 	GoodName:  good.Title,
 	Score:     decimal.RequireFromString("4.99").String(),
 }
@@ -166,7 +166,7 @@ func setup(t *testing.T) func(*testing.T) {
 		context.Background(),
 		appgood1.WithID(&appgood.ID, true),
 		appgood1.WithAppID(&appgood.AppID, true),
-		appgood1.WithGoodID(&appgood.GoodID, true),
+		appgood1.WithGoodID(&good.ID, true),
 		appgood1.WithGoodName(&appgood.GoodName, true),
 		appgood1.WithPrice(&appgood.Price, true),
 	)
