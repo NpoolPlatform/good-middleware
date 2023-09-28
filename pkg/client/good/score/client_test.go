@@ -86,12 +86,12 @@ var good = goodmwpb.Good{
 }
 
 var ret = npool.Score{
-	ID:       uuid.NewString(),
-	AppID:    uuid.NewString(),
-	UserID:   uuid.NewString(),
-	GoodID:   good.ID,
-	Score:    decimal.RequireFromString("4.7").String(),
-	GoodName: good.Title,
+	ID:        uuid.NewString(),
+	AppID:     uuid.NewString(),
+	UserID:    uuid.NewString(),
+	AppGoodID: good.ID,
+	Score:     decimal.RequireFromString("4.7").String(),
+	GoodName:  good.Title,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -156,11 +156,11 @@ func setup(t *testing.T) func(*testing.T) {
 
 func createScore(t *testing.T) {
 	info, err := CreateScore(context.Background(), &npool.ScoreReq{
-		ID:     &ret.ID,
-		AppID:  &ret.AppID,
-		UserID: &ret.UserID,
-		GoodID: &ret.GoodID,
-		Score:  &ret.Score,
+		ID:        &ret.ID,
+		AppID:     &ret.AppID,
+		UserID:    &ret.UserID,
+		AppGoodID: &ret.AppGoodID,
+		Score:     &ret.Score,
 	})
 	if assert.Nil(t, err) {
 		ret.CreatedAt = info.CreatedAt
@@ -177,11 +177,11 @@ func createScore(t *testing.T) {
 
 func getScores(t *testing.T) {
 	infos, total, err := GetScores(context.Background(), &npool.Conds{
-		ID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-		AppID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
-		UserID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
-		GoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-		GoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
+		ID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		AppID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+		UserID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
+		AppGoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+		AppGoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppGoodID}},
 	}, int32(0), int32(2))
 	if assert.Nil(t, err) {
 		if assert.Equal(t, uint32(1), total) {
@@ -197,11 +197,11 @@ func deleteScore(t *testing.T) {
 	}
 
 	info, err = GetScoreOnly(context.Background(), &npool.Conds{
-		ID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-		AppID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
-		UserID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
-		GoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-		GoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
+		ID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		AppID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+		UserID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
+		AppGoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+		AppGoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppGoodID}},
 	})
 	assert.Nil(t, err)
 	assert.Nil(t, info)
