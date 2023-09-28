@@ -92,6 +92,7 @@ var appgood = appgoodmwpb.Good{
 	AppID:    uuid.NewString(),
 	GoodID:   good.ID,
 	GoodName: uuid.NewString(),
+	Price:    decimal.NewFromInt(123).String(),
 }
 
 var ret = npool.Like{
@@ -100,7 +101,7 @@ var ret = npool.Like{
 	UserID:    uuid.NewString(),
 	AppGoodID: good.ID,
 	Like:      true,
-	GoodName:  good.Title,
+	GoodName:  appgood.GoodName,
 }
 
 func setup(t *testing.T) func(*testing.T) {

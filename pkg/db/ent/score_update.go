@@ -103,6 +103,20 @@ func (su *ScoreUpdate) SetGoodID(u uuid.UUID) *ScoreUpdate {
 	return su
 }
 
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (su *ScoreUpdate) SetNillableGoodID(u *uuid.UUID) *ScoreUpdate {
+	if u != nil {
+		su.SetGoodID(*u)
+	}
+	return su
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (su *ScoreUpdate) ClearGoodID() *ScoreUpdate {
+	su.mutation.ClearGoodID()
+	return su
+}
+
 // SetAppGoodID sets the "app_good_id" field.
 func (su *ScoreUpdate) SetAppGoodID(u uuid.UUID) *ScoreUpdate {
 	su.mutation.SetAppGoodID(u)
@@ -290,6 +304,12 @@ func (su *ScoreUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: score.FieldGoodID,
 		})
 	}
+	if su.mutation.GoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: score.FieldGoodID,
+		})
+	}
 	if value, ok := su.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -401,6 +421,20 @@ func (suo *ScoreUpdateOne) SetUserID(u uuid.UUID) *ScoreUpdateOne {
 // SetGoodID sets the "good_id" field.
 func (suo *ScoreUpdateOne) SetGoodID(u uuid.UUID) *ScoreUpdateOne {
 	suo.mutation.SetGoodID(u)
+	return suo
+}
+
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (suo *ScoreUpdateOne) SetNillableGoodID(u *uuid.UUID) *ScoreUpdateOne {
+	if u != nil {
+		suo.SetGoodID(*u)
+	}
+	return suo
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (suo *ScoreUpdateOne) ClearGoodID() *ScoreUpdateOne {
+	suo.mutation.ClearGoodID()
 	return suo
 }
 
@@ -618,6 +652,12 @@ func (suo *ScoreUpdateOne) sqlSave(ctx context.Context) (_node *Score, err error
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: score.FieldGoodID,
+		})
+	}
+	if suo.mutation.GoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: score.FieldGoodID,
 		})
 	}

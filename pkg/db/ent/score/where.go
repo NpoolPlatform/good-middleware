@@ -520,6 +520,20 @@ func GoodIDLTE(v uuid.UUID) predicate.Score {
 	})
 }
 
+// GoodIDIsNil applies the IsNil predicate on the "good_id" field.
+func GoodIDIsNil() predicate.Score {
+	return predicate.Score(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldGoodID)))
+	})
+}
+
+// GoodIDNotNil applies the NotNil predicate on the "good_id" field.
+func GoodIDNotNil() predicate.Score {
+	return predicate.Score(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldGoodID)))
+	})
+}
+
 // AppGoodIDEQ applies the EQ predicate on the "app_good_id" field.
 func AppGoodIDEQ(v uuid.UUID) predicate.Score {
 	return predicate.Score(func(s *sql.Selector) {

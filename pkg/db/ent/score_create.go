@@ -84,6 +84,14 @@ func (sc *ScoreCreate) SetGoodID(u uuid.UUID) *ScoreCreate {
 	return sc
 }
 
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (sc *ScoreCreate) SetNillableGoodID(u *uuid.UUID) *ScoreCreate {
+	if u != nil {
+		sc.SetGoodID(*u)
+	}
+	return sc
+}
+
 // SetAppGoodID sets the "app_good_id" field.
 func (sc *ScoreCreate) SetAppGoodID(u uuid.UUID) *ScoreCreate {
 	sc.mutation.SetAppGoodID(u)
@@ -218,6 +226,13 @@ func (sc *ScoreCreate) defaults() error {
 		v := score.DefaultDeletedAt()
 		sc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := sc.mutation.GoodID(); !ok {
+		if score.DefaultGoodID == nil {
+			return fmt.Errorf("ent: uninitialized score.DefaultGoodID (forgotten import ent/runtime?)")
+		}
+		v := score.DefaultGoodID()
+		sc.mutation.SetGoodID(v)
+	}
 	if _, ok := sc.mutation.Score(); !ok {
 		v := score.DefaultScore
 		sc.mutation.SetScore(v)
@@ -248,9 +263,6 @@ func (sc *ScoreCreate) check() error {
 	}
 	if _, ok := sc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Score.user_id"`)}
-	}
-	if _, ok := sc.mutation.GoodID(); !ok {
-		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "Score.good_id"`)}
 	}
 	if _, ok := sc.mutation.AppGoodID(); !ok {
 		return &ValidationError{Name: "app_good_id", err: errors.New(`ent: missing required field "Score.app_good_id"`)}
@@ -500,6 +512,12 @@ func (u *ScoreUpsert) UpdateGoodID() *ScoreUpsert {
 	return u
 }
 
+// ClearGoodID clears the value of the "good_id" field.
+func (u *ScoreUpsert) ClearGoodID() *ScoreUpsert {
+	u.SetNull(score.FieldGoodID)
+	return u
+}
+
 // SetAppGoodID sets the "app_good_id" field.
 func (u *ScoreUpsert) SetAppGoodID(v uuid.UUID) *ScoreUpsert {
 	u.Set(score.FieldAppGoodID, v)
@@ -682,6 +700,13 @@ func (u *ScoreUpsertOne) SetGoodID(v uuid.UUID) *ScoreUpsertOne {
 func (u *ScoreUpsertOne) UpdateGoodID() *ScoreUpsertOne {
 	return u.Update(func(s *ScoreUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (u *ScoreUpsertOne) ClearGoodID() *ScoreUpsertOne {
+	return u.Update(func(s *ScoreUpsert) {
+		s.ClearGoodID()
 	})
 }
 
@@ -1038,6 +1063,13 @@ func (u *ScoreUpsertBulk) SetGoodID(v uuid.UUID) *ScoreUpsertBulk {
 func (u *ScoreUpsertBulk) UpdateGoodID() *ScoreUpsertBulk {
 	return u.Update(func(s *ScoreUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (u *ScoreUpsertBulk) ClearGoodID() *ScoreUpsertBulk {
+	return u.Update(func(s *ScoreUpsert) {
+		s.ClearGoodID()
 	})
 }
 
