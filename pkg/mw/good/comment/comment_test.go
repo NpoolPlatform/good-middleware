@@ -213,6 +213,7 @@ func createComment(t *testing.T) {
 		if assert.Nil(t, err) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
+			ret.GoodName = info.GoodName
 			assert.Equal(t, &ret, info)
 		}
 	}
