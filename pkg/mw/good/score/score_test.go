@@ -91,7 +91,7 @@ var ret = npool.Score{
 	AppID:     uuid.NewString(),
 	UserID:    uuid.NewString(),
 	AppGoodID: appgood.ID,
-	GoodName:  good.Title,
+	GoodName:  appgood.GoodName,
 	Score:     decimal.RequireFromString("4.99").String(),
 }
 
