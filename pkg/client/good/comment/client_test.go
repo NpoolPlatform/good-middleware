@@ -93,8 +93,6 @@ var appgood = appgoodmwpb.Good{
 	GoodID:        good.ID,
 	GoodName:      uuid.NewString(),
 	Price:         decimal.NewFromInt(123).String(),
-	DisplayIndex:  100,
-	PurchaseLimit: 1000,
 }
 
 var comment = npool.Comment{
@@ -175,8 +173,6 @@ func setup(t *testing.T) func(*testing.T) {
 		GoodID:        &appgood.GoodID,
 		GoodName:      &appgood.GoodName,
 		Price:         &appgood.Price,
-		DisplayIndex:  &appgood.DisplayIndex,
-		PurchaseLimit: &appgood.PurchaseLimit,
 	})
 	assert.Nil(t, err)
 
