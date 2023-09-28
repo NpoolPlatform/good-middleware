@@ -82,6 +82,7 @@ var appgood = appgoodmwpb.Good{
 	ID:     uuid.NewString(),
 	AppID:  uuid.NewString(),
 	GoodID: good.ID,
+    GoodName: uuid.NewString(),
 }
 
 var ret = npool.Comment{
@@ -89,7 +90,7 @@ var ret = npool.Comment{
 	AppID:     appgood.AppID,
 	UserID:    uuid.NewString(),
 	AppGoodID: appgood.ID,
-	GoodName:  good.Title,
+	GoodName:  appgood.GoodName,
 	OrderID:   uuid.NewString(),
 	Content:   uuid.NewString(),
 	ReplyToID: uuid.NewString(),
@@ -167,6 +168,7 @@ func setup(t *testing.T) func(*testing.T) {
 		appgood1.WithID(&appgood.ID, true),
 		appgood1.WithAppID(&appgood.AppID, true),
 		appgood1.WithGoodID(&appgood.GoodID, true),
+		appgood1.WithGoodName(&appgood.GoodName, true),
 	)
 	assert.Nil(t, err)
 
@@ -213,7 +215,6 @@ func createComment(t *testing.T) {
 		if assert.Nil(t, err) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
-			ret.GoodName = info.GoodName
 			assert.Equal(t, &ret, info)
 		}
 	}
