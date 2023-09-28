@@ -17,7 +17,7 @@ type Handler struct {
 	ID        *uuid.UUID
 	AppID     *uuid.UUID
 	UserID    *uuid.UUID
-	GoodID    *uuid.UUID
+	AppGoodID *uuid.UUID
 	OrderID   *uuid.UUID
 	Content   *string
 	ReplyToID *uuid.UUID
@@ -87,7 +87,7 @@ func WithUserID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
+func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		handler, err := good1.NewHandler(
 			ctx,
@@ -103,7 +103,7 @@ func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
 		if !exist {
 			return fmt.Errorf("invalid good")
 		}
-		h.GoodID = handler.ID
+		h.AppGoodID = handler.ID
 		return nil
 	}
 }
@@ -203,13 +203,13 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				Val: id,
 			}
 		}
-		if conds.GoodID != nil {
-			id, err := uuid.Parse(conds.GetGoodID().GetValue())
+		if conds.AppGoodID != nil {
+			id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
 			if err != nil {
 				return err
 			}
-			h.Conds.GoodID = &cruder.Cond{
-				Op:  conds.GetGoodID().GetOp(),
+			h.Conds.AppGoodID = &cruder.Cond{
+				Op:  conds.GetAppGoodID().GetOp(),
 				Val: id,
 			}
 		}
@@ -223,17 +223,17 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				Val: id,
 			}
 		}
-		if conds.GoodIDs != nil {
+		if conds.AppGoodIDs != nil {
 			ids := []uuid.UUID{}
-			for _, id := range conds.GetGoodIDs().GetValue() {
+			for _, id := range conds.GetAppGoodIDs().GetValue() {
 				_id, err := uuid.Parse(id)
 				if err != nil {
 					return err
 				}
 				ids = append(ids, _id)
 			}
-			h.Conds.GoodIDs = &cruder.Cond{
-				Op:  conds.GetGoodIDs().GetOp(),
+			h.Conds.AppGoodIDs = &cruder.Cond{
+				Op:  conds.GetAppGoodIDs().GetOp(),
 				Val: ids,
 			}
 		}

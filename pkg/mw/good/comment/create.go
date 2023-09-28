@@ -27,7 +27,7 @@ func (h *createHandler) createComment(ctx context.Context, tx *ent.Tx) error {
 			ID:        h.ID,
 			AppID:     h.AppID,
 			UserID:    h.UserID,
-			GoodID:    h.GoodID,
+			AppGoodID: h.AppGoodID,
 			OrderID:   h.OrderID,
 			Content:   h.Content,
 			ReplyToID: h.ReplyToID,
@@ -39,9 +39,11 @@ func (h *createHandler) createComment(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *createHandler) updateGoodComment(ctx context.Context, tx *ent.Tx) error {
-	stm, err := extrainfocrud.SetQueryConds(tx.ExtraInfo.Query(), &extrainfocrud.Conds{
-		GoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.GoodID},
-	})
+	stm, err := extrainfocrud.SetQueryConds(
+		tx.ExtraInfo.Query(),
+		&extrainfocrud.Conds{
+			GoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.AppGoodID},
+		})
 	if err != nil {
 		return err
 	}
@@ -62,7 +64,7 @@ func (h *createHandler) updateGoodComment(ctx context.Context, tx *ent.Tx) error
 }
 
 func (h *Handler) CreateComment(ctx context.Context) (*npool.Comment, error) {
-	key := fmt.Sprintf("%v:%v:%v:%v", basetypes.Prefix_PrefixCommentGood, *h.AppID, *h.UserID, *h.GoodID)
+	key := fmt.Sprintf("%v:%v:%v:%v", basetypes.Prefix_PrefixCommentGood, *h.AppID, *h.UserID, *h.AppGoodID)
 	if err := redis2.TryLock(key, 0); err != nil {
 		return nil, err
 	}
