@@ -14,6 +14,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
+	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/client/app/good"
 	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/client/deviceinfo"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/client/good"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/client/vender/brand"
@@ -21,6 +22,7 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
+	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	deviceinfomwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
 	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
@@ -85,11 +87,21 @@ var good = goodmwpb.Good{
 	UnitLockDeposit:      decimal.NewFromInt(1).String(),
 }
 
+var appgood = appgoodmwpb.Good{
+	ID:            uuid.NewString(),
+	AppID:         uuid.NewString(),
+	GoodID:        good.ID,
+	GoodName:      uuid.NewString(),
+	Price:         decimal.NewFromInt(123).String(),
+	DisplayIndex:  100,
+	PurchaseLimit: 1000,
+}
+
 var comment = npool.Comment{
 	ID:        uuid.NewString(),
-	AppID:     uuid.NewString(),
+	AppID:     appgood.AppID,
 	UserID:    uuid.NewString(),
-	AppGoodID: good.ID,
+	AppGoodID: appgood.ID,
 	OrderID:   uuid.NewString(),
 	Content:   uuid.NewString(),
 }
@@ -98,11 +110,11 @@ var ret = npool.Comment{
 	ID:        uuid.NewString(),
 	AppID:     comment.AppID,
 	UserID:    uuid.NewString(),
-	AppGoodID: good.ID,
+	AppGoodID: appgood.ID,
 	Content:   uuid.NewString(),
 	OrderID:   uuid.Nil.String(),
 	ReplyToID: comment.ID,
-	GoodName:  good.Title,
+	GoodName:  appgood.GoodName,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -157,6 +169,17 @@ func setup(t *testing.T) func(*testing.T) {
 	})
 	assert.Nil(t, err)
 
+	_, err = appgood1.CreateGood(context.Background(), &appgoodmwpb.GoodReq{
+		ID:            &appgood.ID,
+		AppID:         &appgood.AppID,
+		GoodID:        &appgood.GoodID,
+		GoodName:      &appgood.GoodName,
+		Price:         &appgood.Price,
+		DisplayIndex:  &appgood.DisplayIndex,
+		PurchaseLimit: &appgood.PurchaseLimit,
+	})
+	assert.Nil(t, err)
+
 	_, err = CreateComment(context.Background(), &npool.CommentReq{
 		ID:        &comment.ID,
 		AppID:     &comment.AppID,
@@ -169,6 +192,7 @@ func setup(t *testing.T) func(*testing.T) {
 
 	return func(*testing.T) {
 		_, _ = DeleteComment(context.Background(), comment.ID)
+		_, _ = appgood1.DeleteGood(context.Background(), appgood.ID)
 		_, _ = good1.DeleteGood(context.Background(), good.ID)
 		_, _ = deviceinfo1.DeleteDeviceInfo(context.Background(), good.DeviceInfoID)
 		_, _ = vendorlocation1.DeleteLocation(context.Background(), good.VendorLocationID)
