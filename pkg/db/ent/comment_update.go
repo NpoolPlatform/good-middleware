@@ -102,6 +102,20 @@ func (cu *CommentUpdate) SetGoodID(u uuid.UUID) *CommentUpdate {
 	return cu
 }
 
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableGoodID(u *uuid.UUID) *CommentUpdate {
+	if u != nil {
+		cu.SetGoodID(*u)
+	}
+	return cu
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (cu *CommentUpdate) ClearGoodID() *CommentUpdate {
+	cu.mutation.ClearGoodID()
+	return cu
+}
+
 // SetAppGoodID sets the "app_good_id" field.
 func (cu *CommentUpdate) SetAppGoodID(u uuid.UUID) *CommentUpdate {
 	cu.mutation.SetAppGoodID(u)
@@ -329,6 +343,12 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: comment.FieldGoodID,
 		})
 	}
+	if cu.mutation.GoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: comment.FieldGoodID,
+		})
+	}
 	if value, ok := cu.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -466,6 +486,20 @@ func (cuo *CommentUpdateOne) SetUserID(u uuid.UUID) *CommentUpdateOne {
 // SetGoodID sets the "good_id" field.
 func (cuo *CommentUpdateOne) SetGoodID(u uuid.UUID) *CommentUpdateOne {
 	cuo.mutation.SetGoodID(u)
+	return cuo
+}
+
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableGoodID(u *uuid.UUID) *CommentUpdateOne {
+	if u != nil {
+		cuo.SetGoodID(*u)
+	}
+	return cuo
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (cuo *CommentUpdateOne) ClearGoodID() *CommentUpdateOne {
+	cuo.mutation.ClearGoodID()
 	return cuo
 }
 
@@ -723,6 +757,12 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: comment.FieldGoodID,
+		})
+	}
+	if cuo.mutation.GoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: comment.FieldGoodID,
 		})
 	}

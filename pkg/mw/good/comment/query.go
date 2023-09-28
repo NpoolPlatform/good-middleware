@@ -9,8 +9,8 @@ import (
 	commentcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
 	entcomment "github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
-	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
 )
 
@@ -65,14 +65,14 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 }
 
 func (h *queryHandler) queryJoinGood(s *sql.Selector) {
-	t := sql.Table(entgood.Table)
+	t := sql.Table(entappgood.Table)
 	s.LeftJoin(t).
 		On(
-			s.C(entcomment.FieldGoodID),
-			t.C(entgood.FieldID),
+			s.C(entcomment.FieldAppGoodID),
+			t.C(entappgood.FieldID),
 		).
 		AppendSelect(
-			sql.As(t.C(entgood.FieldTitle), "good_name"),
+			sql.As(t.C(entappgood.FieldGoodName), "good_name"),
 		)
 }
 

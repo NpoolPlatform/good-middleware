@@ -329,6 +329,10 @@ func init() {
 	commentDescDeletedAt := commentMixinFields0[2].Descriptor()
 	// comment.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	comment.DefaultDeletedAt = commentDescDeletedAt.Default.(func() uint32)
+	// commentDescGoodID is the schema descriptor for good_id field.
+	commentDescGoodID := commentFields[3].Descriptor()
+	// comment.DefaultGoodID holds the default value on creation for the good_id field.
+	comment.DefaultGoodID = commentDescGoodID.Default.(func() uuid.UUID)
 	// commentDescOrderID is the schema descriptor for order_id field.
 	commentDescOrderID := commentFields[5].Descriptor()
 	// comment.DefaultOrderID holds the default value on creation for the order_id field.

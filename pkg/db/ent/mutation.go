@@ -5891,9 +5891,22 @@ func (m *CommentMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error
 	return oldValue.GoodID, nil
 }
 
+// ClearGoodID clears the value of the "good_id" field.
+func (m *CommentMutation) ClearGoodID() {
+	m.good_id = nil
+	m.clearedFields[comment.FieldGoodID] = struct{}{}
+}
+
+// GoodIDCleared returns if the "good_id" field was cleared in this mutation.
+func (m *CommentMutation) GoodIDCleared() bool {
+	_, ok := m.clearedFields[comment.FieldGoodID]
+	return ok
+}
+
 // ResetGoodID resets all changes to the "good_id" field.
 func (m *CommentMutation) ResetGoodID() {
 	m.good_id = nil
+	delete(m.clearedFields, comment.FieldGoodID)
 }
 
 // SetAppGoodID sets the "app_good_id" field.
@@ -6334,6 +6347,9 @@ func (m *CommentMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *CommentMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(comment.FieldGoodID) {
+		fields = append(fields, comment.FieldGoodID)
+	}
 	if m.FieldCleared(comment.FieldOrderID) {
 		fields = append(fields, comment.FieldOrderID)
 	}
@@ -6357,6 +6373,9 @@ func (m *CommentMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *CommentMutation) ClearField(name string) error {
 	switch name {
+	case comment.FieldGoodID:
+		m.ClearGoodID()
+		return nil
 	case comment.FieldOrderID:
 		m.ClearOrderID()
 		return nil
