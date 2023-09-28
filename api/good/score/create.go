@@ -26,7 +26,7 @@ func (s *Server) CreateScore(ctx context.Context, in *npool.CreateScoreRequest) 
 		score1.WithID(req.ID, false),
 		score1.WithAppID(req.AppID, true),
 		score1.WithUserID(req.UserID, true),
-		score1.WithGoodID(req.GoodID, true),
+		score1.WithAppGoodID(req.AppGoodID, true),
 		score1.WithScore(req.Score, true),
 	)
 	if err != nil {

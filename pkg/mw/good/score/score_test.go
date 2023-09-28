@@ -77,12 +77,12 @@ var good = goodmwpb.Good{
 }
 
 var ret = npool.Score{
-	ID:       uuid.NewString(),
-	AppID:    uuid.NewString(),
-	UserID:   uuid.NewString(),
-	GoodID:   good.ID,
-	GoodName: good.Title,
-	Score:    decimal.RequireFromString("4.99").String(),
+	ID:        uuid.NewString(),
+	AppID:     uuid.NewString(),
+	UserID:    uuid.NewString(),
+	AppGoodID: good.ID,
+	GoodName:  good.Title,
+	Score:     decimal.RequireFromString("4.99").String(),
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -166,7 +166,7 @@ func createScore(t *testing.T) {
 		WithID(&ret.ID, true),
 		WithAppID(&ret.AppID, true),
 		WithUserID(&ret.UserID, true),
-		WithGoodID(&ret.GoodID, true),
+		WithAppGoodID(&ret.AppGoodID, true),
 		WithScore(&ret.Score, true),
 	)
 	if assert.Nil(t, err) {
@@ -207,11 +207,11 @@ func getScores(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithConds(&npool.Conds{
-			ID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-			AppID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
-			UserID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
-			GoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-			GoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
+			ID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+			AppID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+			UserID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
+			AppGoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+			AppGoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppGoodID}},
 		}),
 		WithOffset(0),
 		WithLimit(0),

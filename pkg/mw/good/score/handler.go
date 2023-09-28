@@ -6,7 +6,7 @@ import (
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	scorecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/score"
-	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
+	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/score"
 
@@ -15,14 +15,14 @@ import (
 )
 
 type Handler struct {
-	ID     *uuid.UUID
-	AppID  *uuid.UUID
-	UserID *uuid.UUID
-	GoodID *uuid.UUID
-	Score  *decimal.Decimal
-	Conds  *scorecrud.Conds
-	Offset int32
-	Limit  int32
+	ID        *uuid.UUID
+	AppID     *uuid.UUID
+	UserID    *uuid.UUID
+	AppGoodID *uuid.UUID
+	Score     *decimal.Decimal
+	Conds     *scorecrud.Conds
+	Offset    int32
+	Limit     int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -86,11 +86,11 @@ func WithUserID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
+func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		handler, err := good1.NewHandler(
+		handler, err := appgood1.NewHandler(
 			ctx,
-			good1.WithID(id, true),
+			appgood1.WithID(id, true),
 		)
 		if err != nil {
 			return err
@@ -102,7 +102,7 @@ func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
 		if !exist {
 			return fmt.Errorf("invalid good")
 		}
-		h.GoodID = handler.ID
+		h.AppGoodID = handler.ID
 		return nil
 	}
 }
@@ -160,27 +160,27 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				Val: id,
 			}
 		}
-		if conds.GoodID != nil {
-			id, err := uuid.Parse(conds.GetGoodID().GetValue())
+		if conds.AppGoodID != nil {
+			id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
 			if err != nil {
 				return err
 			}
-			h.Conds.GoodID = &cruder.Cond{
-				Op:  conds.GetGoodID().GetOp(),
+			h.Conds.AppGoodID = &cruder.Cond{
+				Op:  conds.GetAppGoodID().GetOp(),
 				Val: id,
 			}
 		}
-		if conds.GoodIDs != nil {
+		if conds.AppGoodIDs != nil {
 			ids := []uuid.UUID{}
-			for _, id := range conds.GetGoodIDs().GetValue() {
+			for _, id := range conds.GetAppGoodIDs().GetValue() {
 				_id, err := uuid.Parse(id)
 				if err != nil {
 					return err
 				}
 				ids = append(ids, _id)
 			}
-			h.Conds.GoodIDs = &cruder.Cond{
-				Op:  conds.GetGoodIDs().GetOp(),
+			h.Conds.AppGoodIDs = &cruder.Cond{
+				Op:  conds.GetAppGoodIDs().GetOp(),
 				Val: ids,
 			}
 		}

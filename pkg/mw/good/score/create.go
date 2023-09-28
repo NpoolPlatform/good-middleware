@@ -25,11 +25,11 @@ func (h *createHandler) createScore(ctx context.Context, tx *ent.Tx) error {
 	if _, err := scorecrud.CreateSet(
 		tx.Score.Create(),
 		&scorecrud.Req{
-			ID:     h.ID,
-			AppID:  h.AppID,
-			UserID: h.UserID,
-			GoodID: h.GoodID,
-			Score:  h.Score,
+			ID:        h.ID,
+			AppID:     h.AppID,
+			UserID:    h.UserID,
+			AppGoodID: h.AppGoodID,
+			Score:     h.Score,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -38,9 +38,19 @@ func (h *createHandler) createScore(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *createHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
-	stm, err := extrainfocrud.SetQueryConds(tx.ExtraInfo.Query(), &extrainfocrud.Conds{
-		GoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.GoodID},
-	})
+	appGood, err := tx.AppGood.Get(ctx, *h.AppGoodID)
+	if err != nil {
+		return err
+	}
+	if appGood == nil {
+		return fmt.Errorf("app good not found %v", *h.AppGoodID)
+	}
+
+	stm, err := extrainfocrud.SetQueryConds(
+		tx.ExtraInfo.Query(),
+		&extrainfocrud.Conds{
+			GoodID: &cruder.Cond{Op: cruder.EQ, Val: appGood.GoodID},
+		})
 	if err != nil {
 		return err
 	}
@@ -66,7 +76,7 @@ func (h *createHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) CreateScore(ctx context.Context) (*npool.Score, error) {
-	key := fmt.Sprintf("%v:%v:%v:%v", basetypes.Prefix_PrefixScoreGood, *h.AppID, *h.UserID, *h.GoodID)
+	key := fmt.Sprintf("%v:%v:%v:%v", basetypes.Prefix_PrefixScoreGood, *h.AppID, *h.UserID, *h.AppGoodID)
 	if err := redis2.TryLock(key, 0); err != nil {
 		return nil, err
 	}
@@ -75,9 +85,9 @@ func (h *Handler) CreateScore(ctx context.Context) (*npool.Score, error) {
 	}()
 
 	h.Conds = &scorecrud.Conds{
-		AppID:  &cruder.Cond{Op: cruder.EQ, Val: *h.AppID},
-		UserID: &cruder.Cond{Op: cruder.EQ, Val: *h.UserID},
-		GoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.GoodID},
+		AppID:     &cruder.Cond{Op: cruder.EQ, Val: *h.AppID},
+		UserID:    &cruder.Cond{Op: cruder.EQ, Val: *h.UserID},
+		AppGoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.AppGoodID},
 	}
 	exist, err := h.ExistScoreConds(ctx)
 	if err != nil {
