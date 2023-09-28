@@ -39,7 +39,13 @@ func (h *createHandler) createComment(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *createHandler) updateGoodComment(ctx context.Context, tx *ent.Tx) error {
-	appGood, _ := tx.AppGood.Get(ctx, *h.AppGoodID)
+	appGood, err := tx.AppGood.Get(ctx, *h.AppGoodID)
+	if err != nil {
+		return err
+	}
+	if appGood == nil {
+		return fmt.Errorf("app good not found %v", *h.AppGoodID)
+	}
 	stm, err := extrainfocrud.SetQueryConds(
 		tx.ExtraInfo.Query(),
 		&extrainfocrud.Conds{
