@@ -83,6 +83,14 @@ func (cc *CommentCreate) SetGoodID(u uuid.UUID) *CommentCreate {
 	return cc
 }
 
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (cc *CommentCreate) SetNillableGoodID(u *uuid.UUID) *CommentCreate {
+	if u != nil {
+		cc.SetGoodID(*u)
+	}
+	return cc
+}
+
 // SetAppGoodID sets the "app_good_id" field.
 func (cc *CommentCreate) SetAppGoodID(u uuid.UUID) *CommentCreate {
 	cc.mutation.SetAppGoodID(u)
@@ -245,6 +253,13 @@ func (cc *CommentCreate) defaults() error {
 		v := comment.DefaultDeletedAt()
 		cc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := cc.mutation.GoodID(); !ok {
+		if comment.DefaultGoodID == nil {
+			return fmt.Errorf("ent: uninitialized comment.DefaultGoodID (forgotten import ent/runtime?)")
+		}
+		v := comment.DefaultGoodID()
+		cc.mutation.SetGoodID(v)
+	}
 	if _, ok := cc.mutation.OrderID(); !ok {
 		if comment.DefaultOrderID == nil {
 			return fmt.Errorf("ent: uninitialized comment.DefaultOrderID (forgotten import ent/runtime?)")
@@ -289,9 +304,6 @@ func (cc *CommentCreate) check() error {
 	}
 	if _, ok := cc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Comment.user_id"`)}
-	}
-	if _, ok := cc.mutation.GoodID(); !ok {
-		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "Comment.good_id"`)}
 	}
 	if _, ok := cc.mutation.AppGoodID(); !ok {
 		return &ValidationError{Name: "app_good_id", err: errors.New(`ent: missing required field "Comment.app_good_id"`)}
@@ -557,6 +569,12 @@ func (u *CommentUpsert) UpdateGoodID() *CommentUpsert {
 	return u
 }
 
+// ClearGoodID clears the value of the "good_id" field.
+func (u *CommentUpsert) ClearGoodID() *CommentUpsert {
+	u.SetNull(comment.FieldGoodID)
+	return u
+}
+
 // SetAppGoodID sets the "app_good_id" field.
 func (u *CommentUpsert) SetAppGoodID(v uuid.UUID) *CommentUpsert {
 	u.Set(comment.FieldAppGoodID, v)
@@ -775,6 +793,13 @@ func (u *CommentUpsertOne) SetGoodID(v uuid.UUID) *CommentUpsertOne {
 func (u *CommentUpsertOne) UpdateGoodID() *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (u *CommentUpsertOne) ClearGoodID() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearGoodID()
 	})
 }
 
@@ -1173,6 +1198,13 @@ func (u *CommentUpsertBulk) SetGoodID(v uuid.UUID) *CommentUpsertBulk {
 func (u *CommentUpsertBulk) UpdateGoodID() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (u *CommentUpsertBulk) ClearGoodID() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearGoodID()
 	})
 }
 

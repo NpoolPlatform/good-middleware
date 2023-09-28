@@ -32,7 +32,11 @@ func (Comment) Fields() []ent.Field {
 		field.
 			UUID("user_id", uuid.UUID{}),
 		field.
-			UUID("good_id", uuid.UUID{}),
+			UUID("good_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
 			UUID("app_good_id", uuid.UUID{}),
 		field.
