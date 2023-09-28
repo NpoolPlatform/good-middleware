@@ -33,8 +33,16 @@ func (h *deleteHandler) deleteLike(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *deleteHandler) subGoodLike(ctx context.Context, tx *ent.Tx, like bool) error {
+	appGood, err := tx.AppGood.Get(ctx, *h.AppGoodID)
+	if err != nil {
+		return err
+	}
+	if appGood == nil {
+		return fmt.Errorf("app good not found %v", *h.AppGoodID)
+	}
+
 	stm, err := extrainfocrud.SetQueryConds(tx.ExtraInfo.Query(), &extrainfocrud.Conds{
-		GoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.GoodID},
+		GoodID: &cruder.Cond{Op: cruder.EQ, Val: appGood.GoodID},
 	})
 	if err != nil {
 		return err
@@ -71,8 +79,8 @@ func (h *Handler) DeleteLike(ctx context.Context) (*npool.Like, error) {
 		return nil, nil
 	}
 
-	goodID := uuid.MustParse(info.GoodID)
-	h.GoodID = &goodID
+	appGoodID := uuid.MustParse(info.AppGoodID)
+	h.AppGoodID = &appGoodID
 	handler := &deleteHandler{
 		Handler: h,
 	}
