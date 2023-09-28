@@ -176,17 +176,6 @@ func setup(t *testing.T) func(*testing.T) {
 	_, err = h5.UpdateGood(context.Background())
 	assert.Nil(t, err)
 
-	state = types.BenefitState_BenefitUserBookKeeping
-	h5, err = good1.NewHandler(
-		context.Background(),
-		good1.WithID(&good.ID, true),
-		good1.WithRewardState(&state, true),
-	)
-	assert.Nil(t, err)
-
-	_, err = h5.UpdateGood(context.Background())
-	assert.Nil(t, err)
-
 	state = types.BenefitState_BenefitDone
 	h5, err = good1.NewHandler(
 		context.Background(),
@@ -225,17 +214,6 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	state = types.BenefitState_BenefitBookKeeping
-	h5, err = good1.NewHandler(
-		context.Background(),
-		good1.WithID(&good.ID, true),
-		good1.WithRewardState(&state, true),
-	)
-	assert.Nil(t, err)
-
-	_, err = h5.UpdateGood(context.Background())
-	assert.Nil(t, err)
-
-	state = types.BenefitState_BenefitUserBookKeeping
 	h5, err = good1.NewHandler(
 		context.Background(),
 		good1.WithID(&good.ID, true),
