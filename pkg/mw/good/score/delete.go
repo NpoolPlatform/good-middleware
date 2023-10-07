@@ -43,9 +43,12 @@ func (h *deleteHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 		return fmt.Errorf("app good not found %v", *h.AppGoodID)
 	}
 
-	stm, err := extrainfocrud.SetQueryConds(tx.ExtraInfo.Query(), &extrainfocrud.Conds{
-		GoodID: &cruder.Cond{Op: cruder.EQ, Val: appGood.GoodID},
-	})
+	stm, err := extrainfocrud.SetQueryConds(
+		tx.ExtraInfo.Query(),
+		&extrainfocrud.Conds{
+			GoodID: &cruder.Cond{Op: cruder.EQ, Val: appGood.GoodID},
+		},
+	)
 	if err != nil {
 		return err
 	}

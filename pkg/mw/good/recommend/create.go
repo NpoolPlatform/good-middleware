@@ -38,9 +38,12 @@ func (h *createHandler) createRecommend(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *createHandler) updateGoodRecommend(ctx context.Context, tx *ent.Tx) error {
-	stm, err := extrainfocrud.SetQueryConds(tx.ExtraInfo.Query(), &extrainfocrud.Conds{
-		GoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.GoodID},
-	})
+	stm, err := extrainfocrud.SetQueryConds(
+		tx.ExtraInfo.Query(),
+		&extrainfocrud.Conds{
+			GoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.GoodID},
+		},
+	)
 	if err != nil {
 		return err
 	}
