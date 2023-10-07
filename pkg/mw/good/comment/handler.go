@@ -145,6 +145,9 @@ func WithContent(s *string, must bool) func(context.Context, *Handler) error {
 func WithReplyToID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
+			if must {
+				return fmt.Errorf("invalid replytoid")
+			}
 			return nil
 		}
 		handler, err := NewHandler(
