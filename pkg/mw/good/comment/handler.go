@@ -179,8 +179,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				return err
 			}
 			h.Conds.ID = &cruder.Cond{
-				Op:  conds.GetID().GetOp(),
-				Val: id,
+				Op: conds.GetID().GetOp(), Val: id,
 			}
 		}
 		if conds.AppID != nil {
@@ -189,8 +188,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				return err
 			}
 			h.Conds.AppID = &cruder.Cond{
-				Op:  conds.GetAppID().GetOp(),
-				Val: id,
+				Op: conds.GetAppID().GetOp(), Val: id,
 			}
 		}
 		if conds.UserID != nil {
@@ -199,8 +197,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				return err
 			}
 			h.Conds.UserID = &cruder.Cond{
-				Op:  conds.GetUserID().GetOp(),
-				Val: id,
+				Op: conds.GetUserID().GetOp(), Val: id,
 			}
 		}
 		if conds.AppGoodID != nil {
@@ -209,8 +206,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				return err
 			}
 			h.Conds.AppGoodID = &cruder.Cond{
-				Op:  conds.GetAppGoodID().GetOp(),
-				Val: id,
+				Op: conds.GetAppGoodID().GetOp(), Val: id,
 			}
 		}
 		if conds.OrderID != nil {
@@ -219,8 +215,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				return err
 			}
 			h.Conds.OrderID = &cruder.Cond{
-				Op:  conds.GetOrderID().GetOp(),
-				Val: id,
+				Op: conds.GetOrderID().GetOp(), Val: id,
 			}
 		}
 		if conds.AppGoodIDs != nil {
@@ -233,8 +228,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				ids = append(ids, _id)
 			}
 			h.Conds.AppGoodIDs = &cruder.Cond{
-				Op:  conds.GetAppGoodIDs().GetOp(),
-				Val: ids,
+				Op: conds.GetAppGoodIDs().GetOp(), Val: ids,
 			}
 		}
 		if conds.OrderIDs != nil {
@@ -247,8 +241,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				ids = append(ids, _id)
 			}
 			h.Conds.OrderIDs = &cruder.Cond{
-				Op:  conds.GetOrderIDs().GetOp(),
-				Val: ids,
+				Op: conds.GetOrderIDs().GetOp(), Val: ids,
 			}
 		}
 		return nil

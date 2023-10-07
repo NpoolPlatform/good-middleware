@@ -64,7 +64,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 		)
 }
 
-func (h *queryHandler) queryJoinGood(s *sql.Selector) {
+func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
 	t := sql.Table(entappgood.Table)
 	s.LeftJoin(t).
 		On(
@@ -79,13 +79,13 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 func (h *queryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
-		h.queryJoinGood(s)
+		h.queryJoinAppGood(s)
 	})
 	if h.stmCount == nil {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
-		h.queryJoinGood(s)
+		h.queryJoinAppGood(s)
 	})
 }
 

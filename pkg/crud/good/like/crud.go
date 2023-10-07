@@ -71,7 +71,7 @@ func SetQueryConds(q *ent.LikeQuery, conds *Conds) (*ent.LikeQuery, error) {
 		case cruder.EQ:
 			q.Where(entlike.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid like field")
+			return nil, fmt.Errorf("invalid id field")
 		}
 	}
 	if conds.AppID != nil {
@@ -83,7 +83,7 @@ func SetQueryConds(q *ent.LikeQuery, conds *Conds) (*ent.LikeQuery, error) {
 		case cruder.EQ:
 			q.Where(entlike.AppID(id))
 		default:
-			return nil, fmt.Errorf("invalid like field")
+			return nil, fmt.Errorf("invalid appid field")
 		}
 	}
 	if conds.UserID != nil {
@@ -95,7 +95,7 @@ func SetQueryConds(q *ent.LikeQuery, conds *Conds) (*ent.LikeQuery, error) {
 		case cruder.EQ:
 			q.Where(entlike.UserID(id))
 		default:
-			return nil, fmt.Errorf("invalid like field")
+			return nil, fmt.Errorf("invalid userid field")
 		}
 	}
 	if conds.AppGoodID != nil {
@@ -107,7 +107,7 @@ func SetQueryConds(q *ent.LikeQuery, conds *Conds) (*ent.LikeQuery, error) {
 		case cruder.EQ:
 			q.Where(entlike.AppGoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid like field")
+			return nil, fmt.Errorf("invalid appgoodid field")
 		}
 	}
 	if conds.AppGoodIDs != nil {
@@ -119,7 +119,7 @@ func SetQueryConds(q *ent.LikeQuery, conds *Conds) (*ent.LikeQuery, error) {
 		case cruder.IN:
 			q.Where(entlike.AppGoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid like field")
+			return nil, fmt.Errorf("invalid appgoodids field")
 		}
 	}
 	return q, nil

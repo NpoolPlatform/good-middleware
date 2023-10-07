@@ -102,13 +102,13 @@ func SetQueryConds(q *ent.ScoreQuery, conds *Conds) (*ent.ScoreQuery, error) {
 	if conds.AppGoodID != nil {
 		id, ok := conds.AppGoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
+			return nil, fmt.Errorf("invalid appgoodid")
 		}
 		switch conds.AppGoodID.Op {
 		case cruder.EQ:
 			q.Where(entscore.AppGoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid score field")
+			return nil, fmt.Errorf("invalid appgoodid field")
 		}
 	}
 	if conds.AppGoodIDs != nil {
@@ -120,7 +120,7 @@ func SetQueryConds(q *ent.ScoreQuery, conds *Conds) (*ent.ScoreQuery, error) {
 		case cruder.IN:
 			q.Where(entscore.AppGoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid score field")
+			return nil, fmt.Errorf("invalid appgoodids field")
 		}
 	}
 	return q, nil
