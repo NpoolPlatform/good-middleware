@@ -41,9 +41,12 @@ func (h *deleteHandler) subGoodLike(ctx context.Context, tx *ent.Tx, like bool) 
 		return fmt.Errorf("app good not found %v", *h.AppGoodID)
 	}
 
-	stm, err := extrainfocrud.SetQueryConds(tx.ExtraInfo.Query(), &extrainfocrud.Conds{
-		GoodID: &cruder.Cond{Op: cruder.EQ, Val: appGood.GoodID},
-	})
+	stm, err := extrainfocrud.SetQueryConds(
+		tx.ExtraInfo.Query(),
+		&extrainfocrud.Conds{
+			GoodID: &cruder.Cond{Op: cruder.EQ, Val: appGood.GoodID},
+		},
+	)
 	if err != nil {
 		return err
 	}
