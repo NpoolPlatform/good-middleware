@@ -5,10 +5,10 @@ go 1.17
 require (
 	bou.ke/monkey v1.0.2
 	entgo.io/ent v0.11.3
-	github.com/NpoolPlatform/basal-middleware v0.0.0-20230924051732-306a71d294ed
-	github.com/NpoolPlatform/go-service-framework v0.0.0-20230922114506-a65341cfbf48
-	github.com/NpoolPlatform/libent-cruder v0.0.0-20230825073905-d23e4d838f99
-	github.com/NpoolPlatform/message v0.0.0-20230927070400-c507e1c30f94
+	github.com/NpoolPlatform/basal-middleware v0.0.0-20231008011526-1485785555a7
+	github.com/NpoolPlatform/go-service-framework v0.0.0-20230930023319-e48074d9472e
+	github.com/NpoolPlatform/libent-cruder v0.0.0-20231008003000-d2536ff7d90f
+	github.com/NpoolPlatform/message v0.0.0-20231008030256-5d1912e2f3c7
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0
@@ -120,3 +120,5 @@ replace entgo.io/ent => entgo.io/ent v0.11.2
 replace ariga.io/atlas => ariga.io/atlas v0.5.1-0.20220717122844-8593d7eb1a8e
 
 replace github.com/ugorji/go => github.com/ugorji/go v0.0.0-20190204201341-e444a5086c43
+
+replace github.com/NpoolPlatform/libent-cruder => github.com/NpoolPlatform/libent-cruder v0.0.0-20230825073905-d23e4d838f99
