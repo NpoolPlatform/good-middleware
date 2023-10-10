@@ -28,9 +28,17 @@ func (Score) Fields() []ent.Field {
 			Default(uuid.New).
 			Unique(),
 		field.
-			UUID("app_id", uuid.UUID{}),
+			UUID("app_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
-			UUID("user_id", uuid.UUID{}),
+			UUID("user_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
 			UUID("good_id", uuid.UUID{}).
 			Optional().
@@ -38,7 +46,11 @@ func (Score) Fields() []ent.Field {
 				return uuid.Nil
 			}),
 		field.
-			UUID("app_good_id", uuid.UUID{}),
+			UUID("app_good_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
 			Other("score", decimal.Decimal{}).
 			SchemaType(map[string]string{

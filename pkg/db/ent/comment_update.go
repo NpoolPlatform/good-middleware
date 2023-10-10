@@ -90,9 +90,37 @@ func (cu *CommentUpdate) SetAppID(u uuid.UUID) *CommentUpdate {
 	return cu
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableAppID(u *uuid.UUID) *CommentUpdate {
+	if u != nil {
+		cu.SetAppID(*u)
+	}
+	return cu
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (cu *CommentUpdate) ClearAppID() *CommentUpdate {
+	cu.mutation.ClearAppID()
+	return cu
+}
+
 // SetUserID sets the "user_id" field.
 func (cu *CommentUpdate) SetUserID(u uuid.UUID) *CommentUpdate {
 	cu.mutation.SetUserID(u)
+	return cu
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableUserID(u *uuid.UUID) *CommentUpdate {
+	if u != nil {
+		cu.SetUserID(*u)
+	}
+	return cu
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (cu *CommentUpdate) ClearUserID() *CommentUpdate {
+	cu.mutation.ClearUserID()
 	return cu
 }
 
@@ -119,6 +147,20 @@ func (cu *CommentUpdate) ClearGoodID() *CommentUpdate {
 // SetAppGoodID sets the "app_good_id" field.
 func (cu *CommentUpdate) SetAppGoodID(u uuid.UUID) *CommentUpdate {
 	cu.mutation.SetAppGoodID(u)
+	return cu
+}
+
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableAppGoodID(u *uuid.UUID) *CommentUpdate {
+	if u != nil {
+		cu.SetAppGoodID(*u)
+	}
+	return cu
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (cu *CommentUpdate) ClearAppGoodID() *CommentUpdate {
+	cu.mutation.ClearAppGoodID()
 	return cu
 }
 
@@ -329,10 +371,22 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: comment.FieldAppID,
 		})
 	}
+	if cu.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: comment.FieldAppID,
+		})
+	}
 	if value, ok := cu.mutation.UserID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: comment.FieldUserID,
+		})
+	}
+	if cu.mutation.UserIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: comment.FieldUserID,
 		})
 	}
@@ -353,6 +407,12 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: comment.FieldAppGoodID,
+		})
+	}
+	if cu.mutation.AppGoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: comment.FieldAppGoodID,
 		})
 	}
@@ -477,9 +537,37 @@ func (cuo *CommentUpdateOne) SetAppID(u uuid.UUID) *CommentUpdateOne {
 	return cuo
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableAppID(u *uuid.UUID) *CommentUpdateOne {
+	if u != nil {
+		cuo.SetAppID(*u)
+	}
+	return cuo
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (cuo *CommentUpdateOne) ClearAppID() *CommentUpdateOne {
+	cuo.mutation.ClearAppID()
+	return cuo
+}
+
 // SetUserID sets the "user_id" field.
 func (cuo *CommentUpdateOne) SetUserID(u uuid.UUID) *CommentUpdateOne {
 	cuo.mutation.SetUserID(u)
+	return cuo
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableUserID(u *uuid.UUID) *CommentUpdateOne {
+	if u != nil {
+		cuo.SetUserID(*u)
+	}
+	return cuo
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (cuo *CommentUpdateOne) ClearUserID() *CommentUpdateOne {
+	cuo.mutation.ClearUserID()
 	return cuo
 }
 
@@ -506,6 +594,20 @@ func (cuo *CommentUpdateOne) ClearGoodID() *CommentUpdateOne {
 // SetAppGoodID sets the "app_good_id" field.
 func (cuo *CommentUpdateOne) SetAppGoodID(u uuid.UUID) *CommentUpdateOne {
 	cuo.mutation.SetAppGoodID(u)
+	return cuo
+}
+
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableAppGoodID(u *uuid.UUID) *CommentUpdateOne {
+	if u != nil {
+		cuo.SetAppGoodID(*u)
+	}
+	return cuo
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (cuo *CommentUpdateOne) ClearAppGoodID() *CommentUpdateOne {
+	cuo.mutation.ClearAppGoodID()
 	return cuo
 }
 
@@ -746,10 +848,22 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 			Column: comment.FieldAppID,
 		})
 	}
+	if cuo.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: comment.FieldAppID,
+		})
+	}
 	if value, ok := cuo.mutation.UserID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: comment.FieldUserID,
+		})
+	}
+	if cuo.mutation.UserIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: comment.FieldUserID,
 		})
 	}
@@ -770,6 +884,12 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: comment.FieldAppGoodID,
+		})
+	}
+	if cuo.mutation.AppGoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: comment.FieldAppGoodID,
 		})
 	}

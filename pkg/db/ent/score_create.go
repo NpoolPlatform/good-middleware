@@ -72,9 +72,25 @@ func (sc *ScoreCreate) SetAppID(u uuid.UUID) *ScoreCreate {
 	return sc
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (sc *ScoreCreate) SetNillableAppID(u *uuid.UUID) *ScoreCreate {
+	if u != nil {
+		sc.SetAppID(*u)
+	}
+	return sc
+}
+
 // SetUserID sets the "user_id" field.
 func (sc *ScoreCreate) SetUserID(u uuid.UUID) *ScoreCreate {
 	sc.mutation.SetUserID(u)
+	return sc
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (sc *ScoreCreate) SetNillableUserID(u *uuid.UUID) *ScoreCreate {
+	if u != nil {
+		sc.SetUserID(*u)
+	}
 	return sc
 }
 
@@ -95,6 +111,14 @@ func (sc *ScoreCreate) SetNillableGoodID(u *uuid.UUID) *ScoreCreate {
 // SetAppGoodID sets the "app_good_id" field.
 func (sc *ScoreCreate) SetAppGoodID(u uuid.UUID) *ScoreCreate {
 	sc.mutation.SetAppGoodID(u)
+	return sc
+}
+
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (sc *ScoreCreate) SetNillableAppGoodID(u *uuid.UUID) *ScoreCreate {
+	if u != nil {
+		sc.SetAppGoodID(*u)
+	}
 	return sc
 }
 
@@ -226,12 +250,33 @@ func (sc *ScoreCreate) defaults() error {
 		v := score.DefaultDeletedAt()
 		sc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := sc.mutation.AppID(); !ok {
+		if score.DefaultAppID == nil {
+			return fmt.Errorf("ent: uninitialized score.DefaultAppID (forgotten import ent/runtime?)")
+		}
+		v := score.DefaultAppID()
+		sc.mutation.SetAppID(v)
+	}
+	if _, ok := sc.mutation.UserID(); !ok {
+		if score.DefaultUserID == nil {
+			return fmt.Errorf("ent: uninitialized score.DefaultUserID (forgotten import ent/runtime?)")
+		}
+		v := score.DefaultUserID()
+		sc.mutation.SetUserID(v)
+	}
 	if _, ok := sc.mutation.GoodID(); !ok {
 		if score.DefaultGoodID == nil {
 			return fmt.Errorf("ent: uninitialized score.DefaultGoodID (forgotten import ent/runtime?)")
 		}
 		v := score.DefaultGoodID()
 		sc.mutation.SetGoodID(v)
+	}
+	if _, ok := sc.mutation.AppGoodID(); !ok {
+		if score.DefaultAppGoodID == nil {
+			return fmt.Errorf("ent: uninitialized score.DefaultAppGoodID (forgotten import ent/runtime?)")
+		}
+		v := score.DefaultAppGoodID()
+		sc.mutation.SetAppGoodID(v)
 	}
 	if _, ok := sc.mutation.Score(); !ok {
 		v := score.DefaultScore
@@ -257,15 +302,6 @@ func (sc *ScoreCreate) check() error {
 	}
 	if _, ok := sc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "Score.deleted_at"`)}
-	}
-	if _, ok := sc.mutation.AppID(); !ok {
-		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "Score.app_id"`)}
-	}
-	if _, ok := sc.mutation.UserID(); !ok {
-		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Score.user_id"`)}
-	}
-	if _, ok := sc.mutation.AppGoodID(); !ok {
-		return &ValidationError{Name: "app_good_id", err: errors.New(`ent: missing required field "Score.app_good_id"`)}
 	}
 	return nil
 }
@@ -488,6 +524,12 @@ func (u *ScoreUpsert) UpdateAppID() *ScoreUpsert {
 	return u
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *ScoreUpsert) ClearAppID() *ScoreUpsert {
+	u.SetNull(score.FieldAppID)
+	return u
+}
+
 // SetUserID sets the "user_id" field.
 func (u *ScoreUpsert) SetUserID(v uuid.UUID) *ScoreUpsert {
 	u.Set(score.FieldUserID, v)
@@ -497,6 +539,12 @@ func (u *ScoreUpsert) SetUserID(v uuid.UUID) *ScoreUpsert {
 // UpdateUserID sets the "user_id" field to the value that was provided on create.
 func (u *ScoreUpsert) UpdateUserID() *ScoreUpsert {
 	u.SetExcluded(score.FieldUserID)
+	return u
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *ScoreUpsert) ClearUserID() *ScoreUpsert {
+	u.SetNull(score.FieldUserID)
 	return u
 }
 
@@ -527,6 +575,12 @@ func (u *ScoreUpsert) SetAppGoodID(v uuid.UUID) *ScoreUpsert {
 // UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
 func (u *ScoreUpsert) UpdateAppGoodID() *ScoreUpsert {
 	u.SetExcluded(score.FieldAppGoodID)
+	return u
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *ScoreUpsert) ClearAppGoodID() *ScoreUpsert {
+	u.SetNull(score.FieldAppGoodID)
 	return u
 }
 
@@ -675,6 +729,13 @@ func (u *ScoreUpsertOne) UpdateAppID() *ScoreUpsertOne {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *ScoreUpsertOne) ClearAppID() *ScoreUpsertOne {
+	return u.Update(func(s *ScoreUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetUserID sets the "user_id" field.
 func (u *ScoreUpsertOne) SetUserID(v uuid.UUID) *ScoreUpsertOne {
 	return u.Update(func(s *ScoreUpsert) {
@@ -686,6 +747,13 @@ func (u *ScoreUpsertOne) SetUserID(v uuid.UUID) *ScoreUpsertOne {
 func (u *ScoreUpsertOne) UpdateUserID() *ScoreUpsertOne {
 	return u.Update(func(s *ScoreUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *ScoreUpsertOne) ClearUserID() *ScoreUpsertOne {
+	return u.Update(func(s *ScoreUpsert) {
+		s.ClearUserID()
 	})
 }
 
@@ -721,6 +789,13 @@ func (u *ScoreUpsertOne) SetAppGoodID(v uuid.UUID) *ScoreUpsertOne {
 func (u *ScoreUpsertOne) UpdateAppGoodID() *ScoreUpsertOne {
 	return u.Update(func(s *ScoreUpsert) {
 		s.UpdateAppGoodID()
+	})
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *ScoreUpsertOne) ClearAppGoodID() *ScoreUpsertOne {
+	return u.Update(func(s *ScoreUpsert) {
+		s.ClearAppGoodID()
 	})
 }
 
@@ -1038,6 +1113,13 @@ func (u *ScoreUpsertBulk) UpdateAppID() *ScoreUpsertBulk {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *ScoreUpsertBulk) ClearAppID() *ScoreUpsertBulk {
+	return u.Update(func(s *ScoreUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetUserID sets the "user_id" field.
 func (u *ScoreUpsertBulk) SetUserID(v uuid.UUID) *ScoreUpsertBulk {
 	return u.Update(func(s *ScoreUpsert) {
@@ -1049,6 +1131,13 @@ func (u *ScoreUpsertBulk) SetUserID(v uuid.UUID) *ScoreUpsertBulk {
 func (u *ScoreUpsertBulk) UpdateUserID() *ScoreUpsertBulk {
 	return u.Update(func(s *ScoreUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *ScoreUpsertBulk) ClearUserID() *ScoreUpsertBulk {
+	return u.Update(func(s *ScoreUpsert) {
+		s.ClearUserID()
 	})
 }
 
@@ -1084,6 +1173,13 @@ func (u *ScoreUpsertBulk) SetAppGoodID(v uuid.UUID) *ScoreUpsertBulk {
 func (u *ScoreUpsertBulk) UpdateAppGoodID() *ScoreUpsertBulk {
 	return u.Update(func(s *ScoreUpsert) {
 		s.UpdateAppGoodID()
+	})
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *ScoreUpsertBulk) ClearAppGoodID() *ScoreUpsertBulk {
+	return u.Update(func(s *ScoreUpsert) {
+		s.ClearAppGoodID()
 	})
 }
 

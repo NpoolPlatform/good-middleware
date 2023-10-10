@@ -405,6 +405,20 @@ func AppIDLTE(v uuid.UUID) predicate.Comment {
 	})
 }
 
+// AppIDIsNil applies the IsNil predicate on the "app_id" field.
+func AppIDIsNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAppID)))
+	})
+}
+
+// AppIDNotNil applies the NotNil predicate on the "app_id" field.
+func AppIDNotNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAppID)))
+	})
+}
+
 // UserIDEQ applies the EQ predicate on the "user_id" field.
 func UserIDEQ(v uuid.UUID) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
@@ -466,6 +480,20 @@ func UserIDLT(v uuid.UUID) predicate.Comment {
 func UserIDLTE(v uuid.UUID) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldUserID), v))
+	})
+}
+
+// UserIDIsNil applies the IsNil predicate on the "user_id" field.
+func UserIDIsNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldUserID)))
+	})
+}
+
+// UserIDNotNil applies the NotNil predicate on the "user_id" field.
+func UserIDNotNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldUserID)))
 	})
 }
 
@@ -608,6 +636,20 @@ func AppGoodIDLT(v uuid.UUID) predicate.Comment {
 func AppGoodIDLTE(v uuid.UUID) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldAppGoodID), v))
+	})
+}
+
+// AppGoodIDIsNil applies the IsNil predicate on the "app_good_id" field.
+func AppGoodIDIsNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAppGoodID)))
+	})
+}
+
+// AppGoodIDNotNil applies the NotNil predicate on the "app_good_id" field.
+func AppGoodIDNotNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAppGoodID)))
 	})
 }
 
