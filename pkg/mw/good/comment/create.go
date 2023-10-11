@@ -21,6 +21,18 @@ type createHandler struct {
 }
 
 func (h *createHandler) createComment(ctx context.Context, tx *ent.Tx) error {
+	if h.ReplyToID != nil {
+		comment, err := tx.Comment.Get(ctx, *h.ReplyToID)
+		if err != nil {
+			return err
+		}
+		if comment == nil {
+			return fmt.Errorf("comment not found")
+		}
+		if comment.AppGoodID != *h.AppGoodID {
+			return fmt.Errorf("appgoodid not matched")
+		}
+	}
 	if _, err := commentcrud.CreateSet(
 		tx.Comment.Create(),
 		&commentcrud.Req{
