@@ -99,9 +99,10 @@ var ret = npool.Like{
 	ID:        uuid.NewString(),
 	AppID:     appgood.AppID,
 	UserID:    uuid.NewString(),
+	GoodID:    appgood.GoodID,
 	AppGoodID: appgood.ID,
-	Like:      true,
 	GoodName:  appgood.GoodName,
+	Like:      true,
 }
 
 func setup(t *testing.T) func(*testing.T) {

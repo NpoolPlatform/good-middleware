@@ -90,6 +90,7 @@ var ret = npool.Comment{
 	ID:        uuid.NewString(),
 	AppID:     appgood.AppID,
 	UserID:    uuid.NewString(),
+	GoodID:    appgood.GoodID,
 	AppGoodID: appgood.ID,
 	GoodName:  appgood.GoodName,
 	OrderID:   uuid.NewString(),
