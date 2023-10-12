@@ -57,6 +57,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 		AppendSelect(
 			sql.As(t.C(entscore.FieldAppID), "app_id"),
 			sql.As(t.C(entscore.FieldUserID), "user_id"),
+			sql.As(t.C(entscore.FieldGoodID), "good_id"),
 			sql.As(t.C(entscore.FieldAppGoodID), "app_good_id"),
 			sql.As(t.C(entscore.FieldScore), "score"),
 			sql.As(t.C(entscore.FieldCreatedAt), "created_at"),
