@@ -19,6 +19,19 @@ import (
 
 type createHandler struct {
 	*Handler
+	appgood *ent.AppGood
+}
+
+func (h *createHandler) getAppGood(ctx context.Context, tx *ent.Tx) error {
+	appGood, err := tx.AppGood.Get(ctx, *h.AppGoodID)
+	if err != nil {
+		return err
+	}
+	if appGood == nil {
+		return fmt.Errorf("app good not found %v", *h.AppGoodID)
+	}
+	h.appgood = appGood
+	return nil
 }
 
 func (h *createHandler) createScore(ctx context.Context, tx *ent.Tx) error {
@@ -28,6 +41,7 @@ func (h *createHandler) createScore(ctx context.Context, tx *ent.Tx) error {
 			ID:        h.ID,
 			AppID:     h.AppID,
 			UserID:    h.UserID,
+			GoodID:    &h.appgood.GoodID,
 			AppGoodID: h.AppGoodID,
 			Score:     h.Score,
 		},
@@ -38,18 +52,10 @@ func (h *createHandler) createScore(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *createHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
-	appGood, err := tx.AppGood.Get(ctx, *h.AppGoodID)
-	if err != nil {
-		return err
-	}
-	if appGood == nil {
-		return fmt.Errorf("app good not found %v", *h.AppGoodID)
-	}
-
 	stm, err := extrainfocrud.SetQueryConds(
 		tx.ExtraInfo.Query(),
 		&extrainfocrud.Conds{
-			GoodID: &cruder.Cond{Op: cruder.EQ, Val: appGood.GoodID},
+			GoodID: &cruder.Cond{Op: cruder.EQ, Val: h.appgood.GoodID},
 		})
 	if err != nil {
 		return err
@@ -107,6 +113,9 @@ func (h *Handler) CreateScore(ctx context.Context) (*npool.Score, error) {
 	}
 
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		if err := handler.getAppGood(ctx, tx); err != nil {
+			return err
+		}
 		if err := handler.createScore(ctx, tx); err != nil {
 			return err
 		}
