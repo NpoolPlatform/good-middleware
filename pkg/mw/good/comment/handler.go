@@ -221,6 +221,15 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				Op: conds.GetOrderID().GetOp(), Val: id,
 			}
 		}
+		if conds.GoodID != nil {
+			id, err := uuid.Parse(conds.GetGoodID().GetValue())
+			if err != nil {
+				return err
+			}
+			h.Conds.GoodID = &cruder.Cond{
+				Op: conds.GetGoodID().GetOp(), Val: id,
+			}
+		}
 		if conds.AppGoodIDs != nil {
 			ids := []uuid.UUID{}
 			for _, id := range conds.GetAppGoodIDs().GetValue() {
