@@ -21,16 +21,18 @@ type createHandler struct {
 	appgood *ent.AppGood
 }
 
-func (h *createHandler) getAppGood(ctx context.Context, tx *ent.Tx) error {
-	appGood, err := tx.AppGood.Get(ctx, *h.AppGoodID)
-	if err != nil {
-		return err
-	}
-	if appGood == nil {
-		return fmt.Errorf("app good not found %v", *h.AppGoodID)
-	}
-	h.appgood = appGood
-	return nil
+func (h *createHandler) getAppGood(ctx context.Context) error {
+	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		appGood, err := cli.AppGood.Get(ctx, *h.AppGoodID)
+		if err != nil {
+			return err
+		}
+		if appGood == nil {
+			return fmt.Errorf("app good not found %v", *h.AppGoodID)
+		}
+		h.appgood = appGood
+		return nil
+	})
 }
 
 func (h *createHandler) createLike(ctx context.Context, tx *ent.Tx) error {
@@ -111,11 +113,11 @@ func (h *Handler) CreateLike(ctx context.Context) (*npool.Like, error) {
 	handler := &createHandler{
 		Handler: h,
 	}
+	if err := handler.getAppGood(ctx); err != nil {
+		return nil, err
+	}
 
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.getAppGood(ctx, tx); err != nil {
-			return err
-		}
 		if err := handler.createLike(ctx, tx); err != nil {
 			return err
 		}
