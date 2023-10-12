@@ -64,6 +64,7 @@ type Conds struct {
 	ID         *cruder.Cond
 	AppID      *cruder.Cond
 	UserID     *cruder.Cond
+	GoodID     *cruder.Cond
 	AppGoodID  *cruder.Cond
 	OrderID    *cruder.Cond
 	OrderIDs   *cruder.Cond
@@ -110,6 +111,18 @@ func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error)
 			q.Where(entcomment.UserID(id))
 		default:
 			return nil, fmt.Errorf("invalid comment field")
+		}
+	}
+	if conds.GoodID != nil {
+		id, ok := conds.GoodID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid goodid")
+		}
+		switch conds.GoodID.Op {
+		case cruder.EQ:
+			q.Where(entcomment.GoodID(id))
+		default:
+			return nil, fmt.Errorf("invalid goodid field")
 		}
 	}
 	if conds.AppGoodID != nil {

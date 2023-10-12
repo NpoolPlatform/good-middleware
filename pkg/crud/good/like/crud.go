@@ -56,6 +56,7 @@ type Conds struct {
 	ID         *cruder.Cond
 	AppID      *cruder.Cond
 	UserID     *cruder.Cond
+	GoodID     *cruder.Cond
 	AppGoodID  *cruder.Cond
 	AppGoodIDs *cruder.Cond
 }
@@ -100,6 +101,18 @@ func SetQueryConds(q *ent.LikeQuery, conds *Conds) (*ent.LikeQuery, error) {
 			q.Where(entlike.UserID(id))
 		default:
 			return nil, fmt.Errorf("invalid userid field")
+		}
+	}
+	if conds.GoodID != nil {
+		id, ok := conds.GoodID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid goodid")
+		}
+		switch conds.GoodID.Op {
+		case cruder.EQ:
+			q.Where(entlike.GoodID(id))
+		default:
+			return nil, fmt.Errorf("invalid goodid field")
 		}
 	}
 	if conds.AppGoodID != nil {

@@ -57,6 +57,7 @@ type Conds struct {
 	ID         *cruder.Cond
 	AppID      *cruder.Cond
 	UserID     *cruder.Cond
+	GoodID     *cruder.Cond
 	AppGoodID  *cruder.Cond
 	AppGoodIDs *cruder.Cond
 }
@@ -101,6 +102,18 @@ func SetQueryConds(q *ent.ScoreQuery, conds *Conds) (*ent.ScoreQuery, error) {
 			q.Where(entscore.UserID(id))
 		default:
 			return nil, fmt.Errorf("invalid score field")
+		}
+	}
+	if conds.GoodID != nil {
+		id, ok := conds.GoodID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid goodid")
+		}
+		switch conds.GoodID.Op {
+		case cruder.EQ:
+			q.Where(entscore.GoodID(id))
+		default:
+			return nil, fmt.Errorf("invalid goodid field")
 		}
 	}
 	if conds.AppGoodID != nil {
