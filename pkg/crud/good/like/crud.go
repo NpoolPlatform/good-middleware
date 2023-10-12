@@ -14,6 +14,7 @@ type Req struct {
 	ID        *uuid.UUID
 	AppID     *uuid.UUID
 	UserID    *uuid.UUID
+	GoodID    *uuid.UUID
 	AppGoodID *uuid.UUID
 	Like      *bool
 	DeletedAt *uint32
@@ -28,6 +29,9 @@ func CreateSet(c *ent.LikeCreate, req *Req) *ent.LikeCreate {
 	}
 	if req.UserID != nil {
 		c.SetUserID(*req.UserID)
+	}
+	if req.GoodID != nil {
+		c.SetGoodID(*req.GoodID)
 	}
 	if req.AppGoodID != nil {
 		c.SetAppGoodID(*req.AppGoodID)
