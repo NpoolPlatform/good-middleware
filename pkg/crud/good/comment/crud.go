@@ -14,6 +14,7 @@ type Req struct {
 	ID        *uuid.UUID
 	AppID     *uuid.UUID
 	UserID    *uuid.UUID
+	GoodID    *uuid.UUID
 	AppGoodID *uuid.UUID
 	OrderID   *uuid.UUID
 	Content   *string
@@ -30,6 +31,9 @@ func CreateSet(c *ent.CommentCreate, req *Req) *ent.CommentCreate {
 	}
 	if req.UserID != nil {
 		c.SetUserID(*req.UserID)
+	}
+	if req.GoodID != nil {
+		c.SetGoodID(*req.GoodID)
 	}
 	if req.AppGoodID != nil {
 		c.SetAppGoodID(*req.AppGoodID)
