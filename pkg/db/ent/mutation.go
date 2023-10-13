@@ -5506,6 +5506,7 @@ type CommentMutation struct {
 	app_id        *uuid.UUID
 	user_id       *uuid.UUID
 	good_id       *uuid.UUID
+	app_good_id   *uuid.UUID
 	order_id      *uuid.UUID
 	content       *string
 	reply_to_id   *uuid.UUID
@@ -5818,9 +5819,22 @@ func (m *CommentMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error)
 	return oldValue.AppID, nil
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (m *CommentMutation) ClearAppID() {
+	m.app_id = nil
+	m.clearedFields[comment.FieldAppID] = struct{}{}
+}
+
+// AppIDCleared returns if the "app_id" field was cleared in this mutation.
+func (m *CommentMutation) AppIDCleared() bool {
+	_, ok := m.clearedFields[comment.FieldAppID]
+	return ok
+}
+
 // ResetAppID resets all changes to the "app_id" field.
 func (m *CommentMutation) ResetAppID() {
 	m.app_id = nil
+	delete(m.clearedFields, comment.FieldAppID)
 }
 
 // SetUserID sets the "user_id" field.
@@ -5854,9 +5868,22 @@ func (m *CommentMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error
 	return oldValue.UserID, nil
 }
 
+// ClearUserID clears the value of the "user_id" field.
+func (m *CommentMutation) ClearUserID() {
+	m.user_id = nil
+	m.clearedFields[comment.FieldUserID] = struct{}{}
+}
+
+// UserIDCleared returns if the "user_id" field was cleared in this mutation.
+func (m *CommentMutation) UserIDCleared() bool {
+	_, ok := m.clearedFields[comment.FieldUserID]
+	return ok
+}
+
 // ResetUserID resets all changes to the "user_id" field.
 func (m *CommentMutation) ResetUserID() {
 	m.user_id = nil
+	delete(m.clearedFields, comment.FieldUserID)
 }
 
 // SetGoodID sets the "good_id" field.
@@ -5890,9 +5917,71 @@ func (m *CommentMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error
 	return oldValue.GoodID, nil
 }
 
+// ClearGoodID clears the value of the "good_id" field.
+func (m *CommentMutation) ClearGoodID() {
+	m.good_id = nil
+	m.clearedFields[comment.FieldGoodID] = struct{}{}
+}
+
+// GoodIDCleared returns if the "good_id" field was cleared in this mutation.
+func (m *CommentMutation) GoodIDCleared() bool {
+	_, ok := m.clearedFields[comment.FieldGoodID]
+	return ok
+}
+
 // ResetGoodID resets all changes to the "good_id" field.
 func (m *CommentMutation) ResetGoodID() {
 	m.good_id = nil
+	delete(m.clearedFields, comment.FieldGoodID)
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (m *CommentMutation) SetAppGoodID(u uuid.UUID) {
+	m.app_good_id = &u
+}
+
+// AppGoodID returns the value of the "app_good_id" field in the mutation.
+func (m *CommentMutation) AppGoodID() (r uuid.UUID, exists bool) {
+	v := m.app_good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppGoodID returns the old "app_good_id" field's value of the Comment entity.
+// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CommentMutation) OldAppGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppGoodID: %w", err)
+	}
+	return oldValue.AppGoodID, nil
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (m *CommentMutation) ClearAppGoodID() {
+	m.app_good_id = nil
+	m.clearedFields[comment.FieldAppGoodID] = struct{}{}
+}
+
+// AppGoodIDCleared returns if the "app_good_id" field was cleared in this mutation.
+func (m *CommentMutation) AppGoodIDCleared() bool {
+	_, ok := m.clearedFields[comment.FieldAppGoodID]
+	return ok
+}
+
+// ResetAppGoodID resets all changes to the "app_good_id" field.
+func (m *CommentMutation) ResetAppGoodID() {
+	m.app_good_id = nil
+	delete(m.clearedFields, comment.FieldAppGoodID)
 }
 
 // SetOrderID sets the "order_id" field.
@@ -6061,7 +6150,7 @@ func (m *CommentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *CommentMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.created_at != nil {
 		fields = append(fields, comment.FieldCreatedAt)
 	}
@@ -6079,6 +6168,9 @@ func (m *CommentMutation) Fields() []string {
 	}
 	if m.good_id != nil {
 		fields = append(fields, comment.FieldGoodID)
+	}
+	if m.app_good_id != nil {
+		fields = append(fields, comment.FieldAppGoodID)
 	}
 	if m.order_id != nil {
 		fields = append(fields, comment.FieldOrderID)
@@ -6109,6 +6201,8 @@ func (m *CommentMutation) Field(name string) (ent.Value, bool) {
 		return m.UserID()
 	case comment.FieldGoodID:
 		return m.GoodID()
+	case comment.FieldAppGoodID:
+		return m.AppGoodID()
 	case comment.FieldOrderID:
 		return m.OrderID()
 	case comment.FieldContent:
@@ -6136,6 +6230,8 @@ func (m *CommentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldUserID(ctx)
 	case comment.FieldGoodID:
 		return m.OldGoodID(ctx)
+	case comment.FieldAppGoodID:
+		return m.OldAppGoodID(ctx)
 	case comment.FieldOrderID:
 		return m.OldOrderID(ctx)
 	case comment.FieldContent:
@@ -6192,6 +6288,13 @@ func (m *CommentMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetGoodID(v)
+		return nil
+	case comment.FieldAppGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppGoodID(v)
 		return nil
 	case comment.FieldOrderID:
 		v, ok := value.(uuid.UUID)
@@ -6283,6 +6386,18 @@ func (m *CommentMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *CommentMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(comment.FieldAppID) {
+		fields = append(fields, comment.FieldAppID)
+	}
+	if m.FieldCleared(comment.FieldUserID) {
+		fields = append(fields, comment.FieldUserID)
+	}
+	if m.FieldCleared(comment.FieldGoodID) {
+		fields = append(fields, comment.FieldGoodID)
+	}
+	if m.FieldCleared(comment.FieldAppGoodID) {
+		fields = append(fields, comment.FieldAppGoodID)
+	}
 	if m.FieldCleared(comment.FieldOrderID) {
 		fields = append(fields, comment.FieldOrderID)
 	}
@@ -6306,6 +6421,18 @@ func (m *CommentMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *CommentMutation) ClearField(name string) error {
 	switch name {
+	case comment.FieldAppID:
+		m.ClearAppID()
+		return nil
+	case comment.FieldUserID:
+		m.ClearUserID()
+		return nil
+	case comment.FieldGoodID:
+		m.ClearGoodID()
+		return nil
+	case comment.FieldAppGoodID:
+		m.ClearAppGoodID()
+		return nil
 	case comment.FieldOrderID:
 		m.ClearOrderID()
 		return nil
@@ -6340,6 +6467,9 @@ func (m *CommentMutation) ResetField(name string) error {
 		return nil
 	case comment.FieldGoodID:
 		m.ResetGoodID()
+		return nil
+	case comment.FieldAppGoodID:
+		m.ResetAppGoodID()
 		return nil
 	case comment.FieldOrderID:
 		m.ResetOrderID()
@@ -12806,6 +12936,7 @@ type LikeMutation struct {
 	app_id        *uuid.UUID
 	user_id       *uuid.UUID
 	good_id       *uuid.UUID
+	app_good_id   *uuid.UUID
 	like          *bool
 	clearedFields map[string]struct{}
 	done          bool
@@ -13116,9 +13247,22 @@ func (m *LikeMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
 	return oldValue.AppID, nil
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (m *LikeMutation) ClearAppID() {
+	m.app_id = nil
+	m.clearedFields[like.FieldAppID] = struct{}{}
+}
+
+// AppIDCleared returns if the "app_id" field was cleared in this mutation.
+func (m *LikeMutation) AppIDCleared() bool {
+	_, ok := m.clearedFields[like.FieldAppID]
+	return ok
+}
+
 // ResetAppID resets all changes to the "app_id" field.
 func (m *LikeMutation) ResetAppID() {
 	m.app_id = nil
+	delete(m.clearedFields, like.FieldAppID)
 }
 
 // SetUserID sets the "user_id" field.
@@ -13152,9 +13296,22 @@ func (m *LikeMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
 	return oldValue.UserID, nil
 }
 
+// ClearUserID clears the value of the "user_id" field.
+func (m *LikeMutation) ClearUserID() {
+	m.user_id = nil
+	m.clearedFields[like.FieldUserID] = struct{}{}
+}
+
+// UserIDCleared returns if the "user_id" field was cleared in this mutation.
+func (m *LikeMutation) UserIDCleared() bool {
+	_, ok := m.clearedFields[like.FieldUserID]
+	return ok
+}
+
 // ResetUserID resets all changes to the "user_id" field.
 func (m *LikeMutation) ResetUserID() {
 	m.user_id = nil
+	delete(m.clearedFields, like.FieldUserID)
 }
 
 // SetGoodID sets the "good_id" field.
@@ -13188,9 +13345,71 @@ func (m *LikeMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error) {
 	return oldValue.GoodID, nil
 }
 
+// ClearGoodID clears the value of the "good_id" field.
+func (m *LikeMutation) ClearGoodID() {
+	m.good_id = nil
+	m.clearedFields[like.FieldGoodID] = struct{}{}
+}
+
+// GoodIDCleared returns if the "good_id" field was cleared in this mutation.
+func (m *LikeMutation) GoodIDCleared() bool {
+	_, ok := m.clearedFields[like.FieldGoodID]
+	return ok
+}
+
 // ResetGoodID resets all changes to the "good_id" field.
 func (m *LikeMutation) ResetGoodID() {
 	m.good_id = nil
+	delete(m.clearedFields, like.FieldGoodID)
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (m *LikeMutation) SetAppGoodID(u uuid.UUID) {
+	m.app_good_id = &u
+}
+
+// AppGoodID returns the value of the "app_good_id" field in the mutation.
+func (m *LikeMutation) AppGoodID() (r uuid.UUID, exists bool) {
+	v := m.app_good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppGoodID returns the old "app_good_id" field's value of the Like entity.
+// If the Like object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *LikeMutation) OldAppGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppGoodID: %w", err)
+	}
+	return oldValue.AppGoodID, nil
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (m *LikeMutation) ClearAppGoodID() {
+	m.app_good_id = nil
+	m.clearedFields[like.FieldAppGoodID] = struct{}{}
+}
+
+// AppGoodIDCleared returns if the "app_good_id" field was cleared in this mutation.
+func (m *LikeMutation) AppGoodIDCleared() bool {
+	_, ok := m.clearedFields[like.FieldAppGoodID]
+	return ok
+}
+
+// ResetAppGoodID resets all changes to the "app_good_id" field.
+func (m *LikeMutation) ResetAppGoodID() {
+	m.app_good_id = nil
+	delete(m.clearedFields, like.FieldAppGoodID)
 }
 
 // SetLike sets the "like" field.
@@ -13248,7 +13467,7 @@ func (m *LikeMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *LikeMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 8)
 	if m.created_at != nil {
 		fields = append(fields, like.FieldCreatedAt)
 	}
@@ -13266,6 +13485,9 @@ func (m *LikeMutation) Fields() []string {
 	}
 	if m.good_id != nil {
 		fields = append(fields, like.FieldGoodID)
+	}
+	if m.app_good_id != nil {
+		fields = append(fields, like.FieldAppGoodID)
 	}
 	if m.like != nil {
 		fields = append(fields, like.FieldLike)
@@ -13290,6 +13512,8 @@ func (m *LikeMutation) Field(name string) (ent.Value, bool) {
 		return m.UserID()
 	case like.FieldGoodID:
 		return m.GoodID()
+	case like.FieldAppGoodID:
+		return m.AppGoodID()
 	case like.FieldLike:
 		return m.Like()
 	}
@@ -13313,6 +13537,8 @@ func (m *LikeMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldUserID(ctx)
 	case like.FieldGoodID:
 		return m.OldGoodID(ctx)
+	case like.FieldAppGoodID:
+		return m.OldAppGoodID(ctx)
 	case like.FieldLike:
 		return m.OldLike(ctx)
 	}
@@ -13365,6 +13591,13 @@ func (m *LikeMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetGoodID(v)
+		return nil
+	case like.FieldAppGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppGoodID(v)
 		return nil
 	case like.FieldLike:
 		v, ok := value.(bool)
@@ -13441,7 +13674,20 @@ func (m *LikeMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *LikeMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(like.FieldAppID) {
+		fields = append(fields, like.FieldAppID)
+	}
+	if m.FieldCleared(like.FieldUserID) {
+		fields = append(fields, like.FieldUserID)
+	}
+	if m.FieldCleared(like.FieldGoodID) {
+		fields = append(fields, like.FieldGoodID)
+	}
+	if m.FieldCleared(like.FieldAppGoodID) {
+		fields = append(fields, like.FieldAppGoodID)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -13454,6 +13700,20 @@ func (m *LikeMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *LikeMutation) ClearField(name string) error {
+	switch name {
+	case like.FieldAppID:
+		m.ClearAppID()
+		return nil
+	case like.FieldUserID:
+		m.ClearUserID()
+		return nil
+	case like.FieldGoodID:
+		m.ClearGoodID()
+		return nil
+	case like.FieldAppGoodID:
+		m.ClearAppGoodID()
+		return nil
+	}
 	return fmt.Errorf("unknown Like nullable field %s", name)
 }
 
@@ -13478,6 +13738,9 @@ func (m *LikeMutation) ResetField(name string) error {
 		return nil
 	case like.FieldGoodID:
 		m.ResetGoodID()
+		return nil
+	case like.FieldAppGoodID:
+		m.ResetAppGoodID()
 		return nil
 	case like.FieldLike:
 		m.ResetLike()
@@ -16188,6 +16451,7 @@ type ScoreMutation struct {
 	app_id        *uuid.UUID
 	user_id       *uuid.UUID
 	good_id       *uuid.UUID
+	app_good_id   *uuid.UUID
 	score         *decimal.Decimal
 	clearedFields map[string]struct{}
 	done          bool
@@ -16498,9 +16762,22 @@ func (m *ScoreMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
 	return oldValue.AppID, nil
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (m *ScoreMutation) ClearAppID() {
+	m.app_id = nil
+	m.clearedFields[score.FieldAppID] = struct{}{}
+}
+
+// AppIDCleared returns if the "app_id" field was cleared in this mutation.
+func (m *ScoreMutation) AppIDCleared() bool {
+	_, ok := m.clearedFields[score.FieldAppID]
+	return ok
+}
+
 // ResetAppID resets all changes to the "app_id" field.
 func (m *ScoreMutation) ResetAppID() {
 	m.app_id = nil
+	delete(m.clearedFields, score.FieldAppID)
 }
 
 // SetUserID sets the "user_id" field.
@@ -16534,9 +16811,22 @@ func (m *ScoreMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) 
 	return oldValue.UserID, nil
 }
 
+// ClearUserID clears the value of the "user_id" field.
+func (m *ScoreMutation) ClearUserID() {
+	m.user_id = nil
+	m.clearedFields[score.FieldUserID] = struct{}{}
+}
+
+// UserIDCleared returns if the "user_id" field was cleared in this mutation.
+func (m *ScoreMutation) UserIDCleared() bool {
+	_, ok := m.clearedFields[score.FieldUserID]
+	return ok
+}
+
 // ResetUserID resets all changes to the "user_id" field.
 func (m *ScoreMutation) ResetUserID() {
 	m.user_id = nil
+	delete(m.clearedFields, score.FieldUserID)
 }
 
 // SetGoodID sets the "good_id" field.
@@ -16570,9 +16860,71 @@ func (m *ScoreMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error) 
 	return oldValue.GoodID, nil
 }
 
+// ClearGoodID clears the value of the "good_id" field.
+func (m *ScoreMutation) ClearGoodID() {
+	m.good_id = nil
+	m.clearedFields[score.FieldGoodID] = struct{}{}
+}
+
+// GoodIDCleared returns if the "good_id" field was cleared in this mutation.
+func (m *ScoreMutation) GoodIDCleared() bool {
+	_, ok := m.clearedFields[score.FieldGoodID]
+	return ok
+}
+
 // ResetGoodID resets all changes to the "good_id" field.
 func (m *ScoreMutation) ResetGoodID() {
 	m.good_id = nil
+	delete(m.clearedFields, score.FieldGoodID)
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (m *ScoreMutation) SetAppGoodID(u uuid.UUID) {
+	m.app_good_id = &u
+}
+
+// AppGoodID returns the value of the "app_good_id" field in the mutation.
+func (m *ScoreMutation) AppGoodID() (r uuid.UUID, exists bool) {
+	v := m.app_good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppGoodID returns the old "app_good_id" field's value of the Score entity.
+// If the Score object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ScoreMutation) OldAppGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppGoodID: %w", err)
+	}
+	return oldValue.AppGoodID, nil
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (m *ScoreMutation) ClearAppGoodID() {
+	m.app_good_id = nil
+	m.clearedFields[score.FieldAppGoodID] = struct{}{}
+}
+
+// AppGoodIDCleared returns if the "app_good_id" field was cleared in this mutation.
+func (m *ScoreMutation) AppGoodIDCleared() bool {
+	_, ok := m.clearedFields[score.FieldAppGoodID]
+	return ok
+}
+
+// ResetAppGoodID resets all changes to the "app_good_id" field.
+func (m *ScoreMutation) ResetAppGoodID() {
+	m.app_good_id = nil
+	delete(m.clearedFields, score.FieldAppGoodID)
 }
 
 // SetScore sets the "score" field.
@@ -16643,7 +16995,7 @@ func (m *ScoreMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ScoreMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 8)
 	if m.created_at != nil {
 		fields = append(fields, score.FieldCreatedAt)
 	}
@@ -16661,6 +17013,9 @@ func (m *ScoreMutation) Fields() []string {
 	}
 	if m.good_id != nil {
 		fields = append(fields, score.FieldGoodID)
+	}
+	if m.app_good_id != nil {
+		fields = append(fields, score.FieldAppGoodID)
 	}
 	if m.score != nil {
 		fields = append(fields, score.FieldScore)
@@ -16685,6 +17040,8 @@ func (m *ScoreMutation) Field(name string) (ent.Value, bool) {
 		return m.UserID()
 	case score.FieldGoodID:
 		return m.GoodID()
+	case score.FieldAppGoodID:
+		return m.AppGoodID()
 	case score.FieldScore:
 		return m.Score()
 	}
@@ -16708,6 +17065,8 @@ func (m *ScoreMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldUserID(ctx)
 	case score.FieldGoodID:
 		return m.OldGoodID(ctx)
+	case score.FieldAppGoodID:
+		return m.OldAppGoodID(ctx)
 	case score.FieldScore:
 		return m.OldScore(ctx)
 	}
@@ -16760,6 +17119,13 @@ func (m *ScoreMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetGoodID(v)
+		return nil
+	case score.FieldAppGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppGoodID(v)
 		return nil
 	case score.FieldScore:
 		v, ok := value.(decimal.Decimal)
@@ -16837,6 +17203,18 @@ func (m *ScoreMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *ScoreMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(score.FieldAppID) {
+		fields = append(fields, score.FieldAppID)
+	}
+	if m.FieldCleared(score.FieldUserID) {
+		fields = append(fields, score.FieldUserID)
+	}
+	if m.FieldCleared(score.FieldGoodID) {
+		fields = append(fields, score.FieldGoodID)
+	}
+	if m.FieldCleared(score.FieldAppGoodID) {
+		fields = append(fields, score.FieldAppGoodID)
+	}
 	if m.FieldCleared(score.FieldScore) {
 		fields = append(fields, score.FieldScore)
 	}
@@ -16854,6 +17232,18 @@ func (m *ScoreMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *ScoreMutation) ClearField(name string) error {
 	switch name {
+	case score.FieldAppID:
+		m.ClearAppID()
+		return nil
+	case score.FieldUserID:
+		m.ClearUserID()
+		return nil
+	case score.FieldGoodID:
+		m.ClearGoodID()
+		return nil
+	case score.FieldAppGoodID:
+		m.ClearAppGoodID()
+		return nil
 	case score.FieldScore:
 		m.ClearScore()
 		return nil
@@ -16882,6 +17272,9 @@ func (m *ScoreMutation) ResetField(name string) error {
 		return nil
 	case score.FieldGoodID:
 		m.ResetGoodID()
+		return nil
+	case score.FieldAppGoodID:
+		m.ResetAppGoodID()
 		return nil
 	case score.FieldScore:
 		m.ResetScore()

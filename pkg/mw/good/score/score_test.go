@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
 	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/mw/deviceinfo"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
@@ -15,6 +16,7 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
+	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/score"
 
@@ -76,13 +78,22 @@ var good = goodmwpb.Good{
 	UnitLockDeposit:      decimal.NewFromInt(1).String(),
 }
 
-var ret = npool.Score{
+var appgood = appgoodmwpb.Good{
 	ID:       uuid.NewString(),
 	AppID:    uuid.NewString(),
-	UserID:   uuid.NewString(),
 	GoodID:   good.ID,
-	GoodName: good.Title,
-	Score:    decimal.RequireFromString("4.99").String(),
+	GoodName: uuid.NewString(),
+	Price:    decimal.NewFromInt(123).String(),
+}
+
+var ret = npool.Score{
+	ID:        uuid.NewString(),
+	AppID:     appgood.AppID,
+	UserID:    uuid.NewString(),
+	GoodID:    appgood.GoodID,
+	AppGoodID: appgood.ID,
+	GoodName:  appgood.GoodName,
+	Score:     decimal.RequireFromString("4.99").String(),
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -152,7 +163,21 @@ func setup(t *testing.T) func(*testing.T) {
 	_, err = h4.CreateGood(context.Background())
 	assert.Nil(t, err)
 
+	h5, err := appgood1.NewHandler(
+		context.Background(),
+		appgood1.WithID(&appgood.ID, true),
+		appgood1.WithAppID(&appgood.AppID, true),
+		appgood1.WithGoodID(&good.ID, true),
+		appgood1.WithGoodName(&appgood.GoodName, true),
+		appgood1.WithPrice(&appgood.Price, true),
+	)
+	assert.Nil(t, err)
+
+	_, err = h5.CreateGood(context.Background())
+	assert.Nil(t, err)
+
 	return func(*testing.T) {
+		_, _ = h5.DeleteGood(context.Background())
 		_, _ = h4.DeleteGood(context.Background())
 		_, _ = h3.DeleteDeviceInfo(context.Background())
 		_, _ = h2.DeleteLocation(context.Background())
@@ -166,7 +191,7 @@ func createScore(t *testing.T) {
 		WithID(&ret.ID, true),
 		WithAppID(&ret.AppID, true),
 		WithUserID(&ret.UserID, true),
-		WithGoodID(&ret.GoodID, true),
+		WithAppGoodID(&ret.AppGoodID, true),
 		WithScore(&ret.Score, true),
 	)
 	if assert.Nil(t, err) {
@@ -207,11 +232,11 @@ func getScores(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithConds(&npool.Conds{
-			ID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-			AppID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
-			UserID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
-			GoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-			GoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
+			ID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+			AppID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+			UserID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
+			AppGoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+			AppGoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppGoodID}},
 		}),
 		WithOffset(0),
 		WithLimit(0),

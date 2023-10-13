@@ -1,4 +1,3 @@
-//nolint:dupl
 package comment
 
 import (
@@ -15,6 +14,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
+	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/client/app/good"
 	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/client/deviceinfo"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/client/good"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/client/vender/brand"
@@ -22,6 +22,7 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
+	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	deviceinfomwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
 	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
@@ -86,24 +87,34 @@ var good = goodmwpb.Good{
 	UnitLockDeposit:      decimal.NewFromInt(1).String(),
 }
 
+var appgood = appgoodmwpb.Good{
+	ID:       uuid.NewString(),
+	AppID:    uuid.NewString(),
+	GoodID:   good.ID,
+	GoodName: uuid.NewString(),
+	Price:    decimal.NewFromInt(123).String(),
+}
+
 var comment = npool.Comment{
-	ID:      uuid.NewString(),
-	AppID:   uuid.NewString(),
-	UserID:  uuid.NewString(),
-	GoodID:  good.ID,
-	OrderID: uuid.NewString(),
-	Content: uuid.NewString(),
+	ID:        uuid.NewString(),
+	AppID:     appgood.AppID,
+	UserID:    uuid.NewString(),
+	GoodID:    appgood.GoodID,
+	AppGoodID: appgood.ID,
+	OrderID:   uuid.NewString(),
+	Content:   uuid.NewString(),
 }
 
 var ret = npool.Comment{
 	ID:        uuid.NewString(),
 	AppID:     comment.AppID,
 	UserID:    uuid.NewString(),
-	GoodID:    good.ID,
+	GoodID:    appgood.GoodID,
+	AppGoodID: appgood.ID,
 	Content:   uuid.NewString(),
 	OrderID:   uuid.Nil.String(),
 	ReplyToID: comment.ID,
-	GoodName:  good.Title,
+	GoodName:  appgood.GoodName,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -158,18 +169,28 @@ func setup(t *testing.T) func(*testing.T) {
 	})
 	assert.Nil(t, err)
 
+	_, err = appgood1.CreateGood(context.Background(), &appgoodmwpb.GoodReq{
+		ID:       &appgood.ID,
+		AppID:    &appgood.AppID,
+		GoodID:   &appgood.GoodID,
+		GoodName: &appgood.GoodName,
+		Price:    &appgood.Price,
+	})
+	assert.Nil(t, err)
+
 	_, err = CreateComment(context.Background(), &npool.CommentReq{
-		ID:      &comment.ID,
-		AppID:   &comment.AppID,
-		UserID:  &comment.UserID,
-		GoodID:  &comment.GoodID,
-		OrderID: &comment.OrderID,
-		Content: &comment.Content,
+		ID:        &comment.ID,
+		AppID:     &comment.AppID,
+		UserID:    &comment.UserID,
+		AppGoodID: &comment.AppGoodID,
+		OrderID:   &comment.OrderID,
+		Content:   &comment.Content,
 	})
 	assert.Nil(t, err)
 
 	return func(*testing.T) {
 		_, _ = DeleteComment(context.Background(), comment.ID)
+		_, _ = appgood1.DeleteGood(context.Background(), appgood.ID)
 		_, _ = good1.DeleteGood(context.Background(), good.ID)
 		_, _ = deviceinfo1.DeleteDeviceInfo(context.Background(), good.DeviceInfoID)
 		_, _ = vendorlocation1.DeleteLocation(context.Background(), good.VendorLocationID)
@@ -182,7 +203,7 @@ func createComment(t *testing.T) {
 		ID:        &ret.ID,
 		AppID:     &ret.AppID,
 		UserID:    &ret.UserID,
-		GoodID:    &ret.GoodID,
+		AppGoodID: &ret.AppGoodID,
 		Content:   &ret.Content,
 		ReplyToID: &ret.ReplyToID,
 	})
@@ -203,15 +224,16 @@ func updateComment(t *testing.T) {
 	}
 }
 
+//nolint
 func getComments(t *testing.T) {
 	infos, total, err := GetComments(context.Background(), &npool.Conds{
-		ID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-		AppID:    &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
-		UserID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
-		GoodID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-		GoodIDs:  &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
-		OrderID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.OrderID},
-		OrderIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.OrderID}},
+		ID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		AppID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+		UserID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
+		AppGoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+		AppGoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppGoodID}},
+		OrderID:    &basetypes.StringVal{Op: cruder.EQ, Value: ret.OrderID},
+		OrderIDs:   &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.OrderID}},
 	}, int32(0), int32(2))
 	if assert.Nil(t, err) {
 		if assert.Equal(t, uint32(1), total) {
@@ -220,21 +242,23 @@ func getComments(t *testing.T) {
 	}
 }
 
+//nolint
 func getCommentOnly(t *testing.T) {
 	info, err := GetCommentOnly(context.Background(), &npool.Conds{
-		ID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-		AppID:    &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
-		UserID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
-		GoodID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-		GoodIDs:  &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
-		OrderID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.OrderID},
-		OrderIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.OrderID}},
+		ID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		AppID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+		UserID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
+		AppGoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+		AppGoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppGoodID}},
+		OrderID:    &basetypes.StringVal{Op: cruder.EQ, Value: ret.OrderID},
+		OrderIDs:   &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.OrderID}},
 	})
 	if assert.Nil(t, err) {
 		assert.Equal(t, &ret, info)
 	}
 }
 
+//nolint
 func deleteComment(t *testing.T) {
 	info, err := DeleteComment(context.Background(), ret.ID)
 	if assert.Nil(t, err) {
@@ -242,13 +266,13 @@ func deleteComment(t *testing.T) {
 	}
 
 	info, err = GetCommentOnly(context.Background(), &npool.Conds{
-		ID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-		AppID:    &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
-		UserID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
-		GoodID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-		GoodIDs:  &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
-		OrderID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.OrderID},
-		OrderIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.OrderID}},
+		ID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		AppID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+		UserID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
+		AppGoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+		AppGoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppGoodID}},
+		OrderID:    &basetypes.StringVal{Op: cruder.EQ, Value: ret.OrderID},
+		OrderIDs:   &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.OrderID}},
 	})
 	assert.Nil(t, err)
 	assert.Nil(t, info)

@@ -16,6 +16,7 @@ type Req struct {
 	AppID     *uuid.UUID
 	UserID    *uuid.UUID
 	GoodID    *uuid.UUID
+	AppGoodID *uuid.UUID
 	Score     *decimal.Decimal
 	DeletedAt *uint32
 }
@@ -32,6 +33,9 @@ func CreateSet(c *ent.ScoreCreate, req *Req) *ent.ScoreCreate {
 	}
 	if req.GoodID != nil {
 		c.SetGoodID(*req.GoodID)
+	}
+	if req.AppGoodID != nil {
+		c.SetAppGoodID(*req.AppGoodID)
 	}
 	if req.Score != nil {
 		c.SetScore(*req.Score)
@@ -50,14 +54,15 @@ func UpdateSet(u *ent.ScoreUpdateOne, req *Req) *ent.ScoreUpdateOne {
 }
 
 type Conds struct {
-	ID      *cruder.Cond
-	AppID   *cruder.Cond
-	UserID  *cruder.Cond
-	GoodID  *cruder.Cond
-	GoodIDs *cruder.Cond
+	ID         *cruder.Cond
+	AppID      *cruder.Cond
+	UserID     *cruder.Cond
+	GoodID     *cruder.Cond
+	AppGoodID  *cruder.Cond
+	AppGoodIDs *cruder.Cond
 }
 
-//nolint:gocyclo
+//nolint
 func SetQueryConds(q *ent.ScoreQuery, conds *Conds) (*ent.ScoreQuery, error) {
 	q.Where(entscore.DeletedAt(0))
 	if conds == nil {
@@ -108,19 +113,31 @@ func SetQueryConds(q *ent.ScoreQuery, conds *Conds) (*ent.ScoreQuery, error) {
 		case cruder.EQ:
 			q.Where(entscore.GoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid score field")
+			return nil, fmt.Errorf("invalid goodid field")
 		}
 	}
-	if conds.GoodIDs != nil {
-		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
+	if conds.AppGoodID != nil {
+		id, ok := conds.AppGoodID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid appgoodid")
+		}
+		switch conds.AppGoodID.Op {
+		case cruder.EQ:
+			q.Where(entscore.AppGoodID(id))
+		default:
+			return nil, fmt.Errorf("invalid appgoodid field")
+		}
+	}
+	if conds.AppGoodIDs != nil {
+		ids, ok := conds.AppGoodIDs.Val.([]uuid.UUID)
 		if !ok {
 			return nil, fmt.Errorf("invalid goodids")
 		}
-		switch conds.GoodIDs.Op {
+		switch conds.AppGoodIDs.Op {
 		case cruder.IN:
-			q.Where(entscore.GoodIDIn(ids...))
+			q.Where(entscore.AppGoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid score field")
+			return nil, fmt.Errorf("invalid appgoodids field")
 		}
 	}
 	return q, nil

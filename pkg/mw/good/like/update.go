@@ -52,9 +52,20 @@ func (h *updateHandler) updateLike(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *updateHandler) updateGoodLike(ctx context.Context, tx *ent.Tx) error {
-	stm, err := extrainfocrud.SetQueryConds(tx.ExtraInfo.Query(), &extrainfocrud.Conds{
-		GoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.GoodID},
-	})
+	appGood, err := tx.AppGood.Get(ctx, *h.AppGoodID)
+	if err != nil {
+		return err
+	}
+	if appGood == nil {
+		return fmt.Errorf("app good not found %v", *h.AppGoodID)
+	}
+
+	stm, err := extrainfocrud.SetQueryConds(
+		tx.ExtraInfo.Query(),
+		&extrainfocrud.Conds{
+			GoodID: &cruder.Cond{Op: cruder.EQ, Val: appGood.GoodID},
+		},
+	)
 	if err != nil {
 		return err
 	}
@@ -91,8 +102,8 @@ func (h *Handler) UpdateLike(ctx context.Context) (*npool.Like, error) {
 		return info, nil
 	}
 
-	goodID := uuid.MustParse(info.GoodID)
-	h.GoodID = &goodID
+	appGoodID := uuid.MustParse(info.AppGoodID)
+	h.AppGoodID = &appGoodID
 	handler := &updateHandler{
 		Handler: h,
 	}

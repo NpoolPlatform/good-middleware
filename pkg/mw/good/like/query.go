@@ -9,7 +9,7 @@ import (
 	likecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	entappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
 	entlike "github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/like"
 )
@@ -56,34 +56,35 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entlike.FieldAppID), "app_id"),
 			sql.As(t.C(entlike.FieldUserID), "user_id"),
 			sql.As(t.C(entlike.FieldGoodID), "good_id"),
+			sql.As(t.C(entlike.FieldAppGoodID), "app_good_id"),
 			sql.As(t.C(entlike.FieldLike), "like"),
 			sql.As(t.C(entlike.FieldCreatedAt), "created_at"),
 			sql.As(t.C(entlike.FieldUpdatedAt), "updated_at"),
 		)
 }
 
-func (h *queryHandler) queryJoinGood(s *sql.Selector) {
-	t := sql.Table(entgood.Table)
+func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
+	t := sql.Table(entappgood.Table)
 	s.LeftJoin(t).
 		On(
-			s.C(entlike.FieldGoodID),
-			t.C(entgood.FieldID),
+			s.C(entlike.FieldAppGoodID),
+			t.C(entappgood.FieldID),
 		).
 		AppendSelect(
-			sql.As(t.C(entgood.FieldTitle), "good_name"),
+			sql.As(t.C(entappgood.FieldGoodName), "good_name"),
 		)
 }
 
 func (h *queryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
-		h.queryJoinGood(s)
+		h.queryJoinAppGood(s)
 	})
 	if h.stmCount == nil {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
-		h.queryJoinGood(s)
+		h.queryJoinAppGood(s)
 	})
 }
 

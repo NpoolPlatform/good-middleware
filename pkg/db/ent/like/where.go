@@ -121,6 +121,13 @@ func GoodID(v uuid.UUID) predicate.Like {
 	})
 }
 
+// AppGoodID applies equality check predicate on the "app_good_id" field. It's identical to AppGoodIDEQ.
+func AppGoodID(v uuid.UUID) predicate.Like {
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAppGoodID), v))
+	})
+}
+
 // Like applies equality check predicate on the "like" field. It's identical to LikeEQ.
 func Like(v bool) predicate.Like {
 	return predicate.Like(func(s *sql.Selector) {
@@ -384,6 +391,20 @@ func AppIDLTE(v uuid.UUID) predicate.Like {
 	})
 }
 
+// AppIDIsNil applies the IsNil predicate on the "app_id" field.
+func AppIDIsNil() predicate.Like {
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAppID)))
+	})
+}
+
+// AppIDNotNil applies the NotNil predicate on the "app_id" field.
+func AppIDNotNil() predicate.Like {
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAppID)))
+	})
+}
+
 // UserIDEQ applies the EQ predicate on the "user_id" field.
 func UserIDEQ(v uuid.UUID) predicate.Like {
 	return predicate.Like(func(s *sql.Selector) {
@@ -448,6 +469,20 @@ func UserIDLTE(v uuid.UUID) predicate.Like {
 	})
 }
 
+// UserIDIsNil applies the IsNil predicate on the "user_id" field.
+func UserIDIsNil() predicate.Like {
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldUserID)))
+	})
+}
+
+// UserIDNotNil applies the NotNil predicate on the "user_id" field.
+func UserIDNotNil() predicate.Like {
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldUserID)))
+	})
+}
+
 // GoodIDEQ applies the EQ predicate on the "good_id" field.
 func GoodIDEQ(v uuid.UUID) predicate.Like {
 	return predicate.Like(func(s *sql.Selector) {
@@ -509,6 +544,98 @@ func GoodIDLT(v uuid.UUID) predicate.Like {
 func GoodIDLTE(v uuid.UUID) predicate.Like {
 	return predicate.Like(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldGoodID), v))
+	})
+}
+
+// GoodIDIsNil applies the IsNil predicate on the "good_id" field.
+func GoodIDIsNil() predicate.Like {
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldGoodID)))
+	})
+}
+
+// GoodIDNotNil applies the NotNil predicate on the "good_id" field.
+func GoodIDNotNil() predicate.Like {
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldGoodID)))
+	})
+}
+
+// AppGoodIDEQ applies the EQ predicate on the "app_good_id" field.
+func AppGoodIDEQ(v uuid.UUID) predicate.Like {
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAppGoodID), v))
+	})
+}
+
+// AppGoodIDNEQ applies the NEQ predicate on the "app_good_id" field.
+func AppGoodIDNEQ(v uuid.UUID) predicate.Like {
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAppGoodID), v))
+	})
+}
+
+// AppGoodIDIn applies the In predicate on the "app_good_id" field.
+func AppGoodIDIn(vs ...uuid.UUID) predicate.Like {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldAppGoodID), v...))
+	})
+}
+
+// AppGoodIDNotIn applies the NotIn predicate on the "app_good_id" field.
+func AppGoodIDNotIn(vs ...uuid.UUID) predicate.Like {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldAppGoodID), v...))
+	})
+}
+
+// AppGoodIDGT applies the GT predicate on the "app_good_id" field.
+func AppGoodIDGT(v uuid.UUID) predicate.Like {
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAppGoodID), v))
+	})
+}
+
+// AppGoodIDGTE applies the GTE predicate on the "app_good_id" field.
+func AppGoodIDGTE(v uuid.UUID) predicate.Like {
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAppGoodID), v))
+	})
+}
+
+// AppGoodIDLT applies the LT predicate on the "app_good_id" field.
+func AppGoodIDLT(v uuid.UUID) predicate.Like {
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAppGoodID), v))
+	})
+}
+
+// AppGoodIDLTE applies the LTE predicate on the "app_good_id" field.
+func AppGoodIDLTE(v uuid.UUID) predicate.Like {
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAppGoodID), v))
+	})
+}
+
+// AppGoodIDIsNil applies the IsNil predicate on the "app_good_id" field.
+func AppGoodIDIsNil() predicate.Like {
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAppGoodID)))
+	})
+}
+
+// AppGoodIDNotNil applies the NotNil predicate on the "app_good_id" field.
+func AppGoodIDNotNil() predicate.Like {
+	return predicate.Like(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAppGoodID)))
 	})
 }
 

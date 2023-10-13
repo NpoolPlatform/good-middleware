@@ -91,15 +91,77 @@ func (su *ScoreUpdate) SetAppID(u uuid.UUID) *ScoreUpdate {
 	return su
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (su *ScoreUpdate) SetNillableAppID(u *uuid.UUID) *ScoreUpdate {
+	if u != nil {
+		su.SetAppID(*u)
+	}
+	return su
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (su *ScoreUpdate) ClearAppID() *ScoreUpdate {
+	su.mutation.ClearAppID()
+	return su
+}
+
 // SetUserID sets the "user_id" field.
 func (su *ScoreUpdate) SetUserID(u uuid.UUID) *ScoreUpdate {
 	su.mutation.SetUserID(u)
 	return su
 }
 
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (su *ScoreUpdate) SetNillableUserID(u *uuid.UUID) *ScoreUpdate {
+	if u != nil {
+		su.SetUserID(*u)
+	}
+	return su
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (su *ScoreUpdate) ClearUserID() *ScoreUpdate {
+	su.mutation.ClearUserID()
+	return su
+}
+
 // SetGoodID sets the "good_id" field.
 func (su *ScoreUpdate) SetGoodID(u uuid.UUID) *ScoreUpdate {
 	su.mutation.SetGoodID(u)
+	return su
+}
+
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (su *ScoreUpdate) SetNillableGoodID(u *uuid.UUID) *ScoreUpdate {
+	if u != nil {
+		su.SetGoodID(*u)
+	}
+	return su
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (su *ScoreUpdate) ClearGoodID() *ScoreUpdate {
+	su.mutation.ClearGoodID()
+	return su
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (su *ScoreUpdate) SetAppGoodID(u uuid.UUID) *ScoreUpdate {
+	su.mutation.SetAppGoodID(u)
+	return su
+}
+
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (su *ScoreUpdate) SetNillableAppGoodID(u *uuid.UUID) *ScoreUpdate {
+	if u != nil {
+		su.SetAppGoodID(*u)
+	}
+	return su
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (su *ScoreUpdate) ClearAppGoodID() *ScoreUpdate {
+	su.mutation.ClearAppGoodID()
 	return su
 }
 
@@ -270,10 +332,22 @@ func (su *ScoreUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: score.FieldAppID,
 		})
 	}
+	if su.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: score.FieldAppID,
+		})
+	}
 	if value, ok := su.mutation.UserID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: score.FieldUserID,
+		})
+	}
+	if su.mutation.UserIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: score.FieldUserID,
 		})
 	}
@@ -282,6 +356,25 @@ func (su *ScoreUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: score.FieldGoodID,
+		})
+	}
+	if su.mutation.GoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: score.FieldGoodID,
+		})
+	}
+	if value, ok := su.mutation.AppGoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: score.FieldAppGoodID,
+		})
+	}
+	if su.mutation.AppGoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: score.FieldAppGoodID,
 		})
 	}
 	if value, ok := su.mutation.Score(); ok {
@@ -379,15 +472,77 @@ func (suo *ScoreUpdateOne) SetAppID(u uuid.UUID) *ScoreUpdateOne {
 	return suo
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (suo *ScoreUpdateOne) SetNillableAppID(u *uuid.UUID) *ScoreUpdateOne {
+	if u != nil {
+		suo.SetAppID(*u)
+	}
+	return suo
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (suo *ScoreUpdateOne) ClearAppID() *ScoreUpdateOne {
+	suo.mutation.ClearAppID()
+	return suo
+}
+
 // SetUserID sets the "user_id" field.
 func (suo *ScoreUpdateOne) SetUserID(u uuid.UUID) *ScoreUpdateOne {
 	suo.mutation.SetUserID(u)
 	return suo
 }
 
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (suo *ScoreUpdateOne) SetNillableUserID(u *uuid.UUID) *ScoreUpdateOne {
+	if u != nil {
+		suo.SetUserID(*u)
+	}
+	return suo
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (suo *ScoreUpdateOne) ClearUserID() *ScoreUpdateOne {
+	suo.mutation.ClearUserID()
+	return suo
+}
+
 // SetGoodID sets the "good_id" field.
 func (suo *ScoreUpdateOne) SetGoodID(u uuid.UUID) *ScoreUpdateOne {
 	suo.mutation.SetGoodID(u)
+	return suo
+}
+
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (suo *ScoreUpdateOne) SetNillableGoodID(u *uuid.UUID) *ScoreUpdateOne {
+	if u != nil {
+		suo.SetGoodID(*u)
+	}
+	return suo
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (suo *ScoreUpdateOne) ClearGoodID() *ScoreUpdateOne {
+	suo.mutation.ClearGoodID()
+	return suo
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (suo *ScoreUpdateOne) SetAppGoodID(u uuid.UUID) *ScoreUpdateOne {
+	suo.mutation.SetAppGoodID(u)
+	return suo
+}
+
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (suo *ScoreUpdateOne) SetNillableAppGoodID(u *uuid.UUID) *ScoreUpdateOne {
+	if u != nil {
+		suo.SetAppGoodID(*u)
+	}
+	return suo
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (suo *ScoreUpdateOne) ClearAppGoodID() *ScoreUpdateOne {
+	suo.mutation.ClearAppGoodID()
 	return suo
 }
 
@@ -588,10 +743,22 @@ func (suo *ScoreUpdateOne) sqlSave(ctx context.Context) (_node *Score, err error
 			Column: score.FieldAppID,
 		})
 	}
+	if suo.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: score.FieldAppID,
+		})
+	}
 	if value, ok := suo.mutation.UserID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: score.FieldUserID,
+		})
+	}
+	if suo.mutation.UserIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: score.FieldUserID,
 		})
 	}
@@ -600,6 +767,25 @@ func (suo *ScoreUpdateOne) sqlSave(ctx context.Context) (_node *Score, err error
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: score.FieldGoodID,
+		})
+	}
+	if suo.mutation.GoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: score.FieldGoodID,
+		})
+	}
+	if value, ok := suo.mutation.AppGoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: score.FieldAppGoodID,
+		})
+	}
+	if suo.mutation.AppGoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: score.FieldAppGoodID,
 		})
 	}
 	if value, ok := suo.mutation.Score(); ok {

@@ -329,16 +329,32 @@ func init() {
 	commentDescDeletedAt := commentMixinFields0[2].Descriptor()
 	// comment.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	comment.DefaultDeletedAt = commentDescDeletedAt.Default.(func() uint32)
+	// commentDescAppID is the schema descriptor for app_id field.
+	commentDescAppID := commentFields[1].Descriptor()
+	// comment.DefaultAppID holds the default value on creation for the app_id field.
+	comment.DefaultAppID = commentDescAppID.Default.(func() uuid.UUID)
+	// commentDescUserID is the schema descriptor for user_id field.
+	commentDescUserID := commentFields[2].Descriptor()
+	// comment.DefaultUserID holds the default value on creation for the user_id field.
+	comment.DefaultUserID = commentDescUserID.Default.(func() uuid.UUID)
+	// commentDescGoodID is the schema descriptor for good_id field.
+	commentDescGoodID := commentFields[3].Descriptor()
+	// comment.DefaultGoodID holds the default value on creation for the good_id field.
+	comment.DefaultGoodID = commentDescGoodID.Default.(func() uuid.UUID)
+	// commentDescAppGoodID is the schema descriptor for app_good_id field.
+	commentDescAppGoodID := commentFields[4].Descriptor()
+	// comment.DefaultAppGoodID holds the default value on creation for the app_good_id field.
+	comment.DefaultAppGoodID = commentDescAppGoodID.Default.(func() uuid.UUID)
 	// commentDescOrderID is the schema descriptor for order_id field.
-	commentDescOrderID := commentFields[4].Descriptor()
+	commentDescOrderID := commentFields[5].Descriptor()
 	// comment.DefaultOrderID holds the default value on creation for the order_id field.
 	comment.DefaultOrderID = commentDescOrderID.Default.(func() uuid.UUID)
 	// commentDescContent is the schema descriptor for content field.
-	commentDescContent := commentFields[5].Descriptor()
+	commentDescContent := commentFields[6].Descriptor()
 	// comment.DefaultContent holds the default value on creation for the content field.
 	comment.DefaultContent = commentDescContent.Default.(string)
 	// commentDescReplyToID is the schema descriptor for reply_to_id field.
-	commentDescReplyToID := commentFields[6].Descriptor()
+	commentDescReplyToID := commentFields[7].Descriptor()
 	// comment.DefaultReplyToID holds the default value on creation for the reply_to_id field.
 	comment.DefaultReplyToID = commentDescReplyToID.Default.(func() uuid.UUID)
 	// commentDescID is the schema descriptor for id field.
@@ -697,6 +713,22 @@ func init() {
 	likeDescDeletedAt := likeMixinFields0[2].Descriptor()
 	// like.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	like.DefaultDeletedAt = likeDescDeletedAt.Default.(func() uint32)
+	// likeDescAppID is the schema descriptor for app_id field.
+	likeDescAppID := likeFields[1].Descriptor()
+	// like.DefaultAppID holds the default value on creation for the app_id field.
+	like.DefaultAppID = likeDescAppID.Default.(func() uuid.UUID)
+	// likeDescUserID is the schema descriptor for user_id field.
+	likeDescUserID := likeFields[2].Descriptor()
+	// like.DefaultUserID holds the default value on creation for the user_id field.
+	like.DefaultUserID = likeDescUserID.Default.(func() uuid.UUID)
+	// likeDescGoodID is the schema descriptor for good_id field.
+	likeDescGoodID := likeFields[3].Descriptor()
+	// like.DefaultGoodID holds the default value on creation for the good_id field.
+	like.DefaultGoodID = likeDescGoodID.Default.(func() uuid.UUID)
+	// likeDescAppGoodID is the schema descriptor for app_good_id field.
+	likeDescAppGoodID := likeFields[4].Descriptor()
+	// like.DefaultAppGoodID holds the default value on creation for the app_good_id field.
+	like.DefaultAppGoodID = likeDescAppGoodID.Default.(func() uuid.UUID)
 	// likeDescID is the schema descriptor for id field.
 	likeDescID := likeFields[0].Descriptor()
 	// like.DefaultID holds the default value on creation for the id field.
@@ -861,8 +893,24 @@ func init() {
 	scoreDescDeletedAt := scoreMixinFields0[2].Descriptor()
 	// score.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	score.DefaultDeletedAt = scoreDescDeletedAt.Default.(func() uint32)
+	// scoreDescAppID is the schema descriptor for app_id field.
+	scoreDescAppID := scoreFields[1].Descriptor()
+	// score.DefaultAppID holds the default value on creation for the app_id field.
+	score.DefaultAppID = scoreDescAppID.Default.(func() uuid.UUID)
+	// scoreDescUserID is the schema descriptor for user_id field.
+	scoreDescUserID := scoreFields[2].Descriptor()
+	// score.DefaultUserID holds the default value on creation for the user_id field.
+	score.DefaultUserID = scoreDescUserID.Default.(func() uuid.UUID)
+	// scoreDescGoodID is the schema descriptor for good_id field.
+	scoreDescGoodID := scoreFields[3].Descriptor()
+	// score.DefaultGoodID holds the default value on creation for the good_id field.
+	score.DefaultGoodID = scoreDescGoodID.Default.(func() uuid.UUID)
+	// scoreDescAppGoodID is the schema descriptor for app_good_id field.
+	scoreDescAppGoodID := scoreFields[4].Descriptor()
+	// score.DefaultAppGoodID holds the default value on creation for the app_good_id field.
+	score.DefaultAppGoodID = scoreDescAppGoodID.Default.(func() uuid.UUID)
 	// scoreDescScore is the schema descriptor for score field.
-	scoreDescScore := scoreFields[4].Descriptor()
+	scoreDescScore := scoreFields[5].Descriptor()
 	// score.DefaultScore holds the default value on creation for the score field.
 	score.DefaultScore = scoreDescScore.Default.(decimal.Decimal)
 	// scoreDescID is the schema descriptor for id field.

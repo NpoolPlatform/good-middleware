@@ -6,7 +6,7 @@ import (
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	commentcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/comment"
-	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
+	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
 
@@ -17,7 +17,7 @@ type Handler struct {
 	ID        *uuid.UUID
 	AppID     *uuid.UUID
 	UserID    *uuid.UUID
-	GoodID    *uuid.UUID
+	AppGoodID *uuid.UUID
 	OrderID   *uuid.UUID
 	Content   *string
 	ReplyToID *uuid.UUID
@@ -87,11 +87,11 @@ func WithUserID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
+func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		handler, err := good1.NewHandler(
+		handler, err := appgood1.NewHandler(
 			ctx,
-			good1.WithID(id, true),
+			appgood1.WithID(id, true),
 		)
 		if err != nil {
 			return err
@@ -101,9 +101,9 @@ func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
 			return err
 		}
 		if !exist {
-			return fmt.Errorf("invalid good")
+			return fmt.Errorf("invalid app good")
 		}
-		h.GoodID = handler.ID
+		h.AppGoodID = handler.ID
 		return nil
 	}
 }
@@ -145,6 +145,9 @@ func WithContent(s *string, must bool) func(context.Context, *Handler) error {
 func WithReplyToID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
+			if must {
+				return fmt.Errorf("invalid replytoid")
+			}
 			return nil
 		}
 		handler, err := NewHandler(
@@ -179,8 +182,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				return err
 			}
 			h.Conds.ID = &cruder.Cond{
-				Op:  conds.GetID().GetOp(),
-				Val: id,
+				Op: conds.GetID().GetOp(), Val: id,
 			}
 		}
 		if conds.AppID != nil {
@@ -189,8 +191,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				return err
 			}
 			h.Conds.AppID = &cruder.Cond{
-				Op:  conds.GetAppID().GetOp(),
-				Val: id,
+				Op: conds.GetAppID().GetOp(), Val: id,
 			}
 		}
 		if conds.UserID != nil {
@@ -199,18 +200,16 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				return err
 			}
 			h.Conds.UserID = &cruder.Cond{
-				Op:  conds.GetUserID().GetOp(),
-				Val: id,
+				Op: conds.GetUserID().GetOp(), Val: id,
 			}
 		}
-		if conds.GoodID != nil {
-			id, err := uuid.Parse(conds.GetGoodID().GetValue())
+		if conds.AppGoodID != nil {
+			id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
 			if err != nil {
 				return err
 			}
-			h.Conds.GoodID = &cruder.Cond{
-				Op:  conds.GetGoodID().GetOp(),
-				Val: id,
+			h.Conds.AppGoodID = &cruder.Cond{
+				Op: conds.GetAppGoodID().GetOp(), Val: id,
 			}
 		}
 		if conds.OrderID != nil {
@@ -219,22 +218,29 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				return err
 			}
 			h.Conds.OrderID = &cruder.Cond{
-				Op:  conds.GetOrderID().GetOp(),
-				Val: id,
+				Op: conds.GetOrderID().GetOp(), Val: id,
 			}
 		}
-		if conds.GoodIDs != nil {
+		if conds.GoodID != nil {
+			id, err := uuid.Parse(conds.GetGoodID().GetValue())
+			if err != nil {
+				return err
+			}
+			h.Conds.GoodID = &cruder.Cond{
+				Op: conds.GetGoodID().GetOp(), Val: id,
+			}
+		}
+		if conds.AppGoodIDs != nil {
 			ids := []uuid.UUID{}
-			for _, id := range conds.GetGoodIDs().GetValue() {
+			for _, id := range conds.GetAppGoodIDs().GetValue() {
 				_id, err := uuid.Parse(id)
 				if err != nil {
 					return err
 				}
 				ids = append(ids, _id)
 			}
-			h.Conds.GoodIDs = &cruder.Cond{
-				Op:  conds.GetGoodIDs().GetOp(),
-				Val: ids,
+			h.Conds.AppGoodIDs = &cruder.Cond{
+				Op: conds.GetAppGoodIDs().GetOp(), Val: ids,
 			}
 		}
 		if conds.OrderIDs != nil {
@@ -247,8 +253,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				ids = append(ids, _id)
 			}
 			h.Conds.OrderIDs = &cruder.Cond{
-				Op:  conds.GetOrderIDs().GetOp(),
-				Val: ids,
+				Op: conds.GetOrderIDs().GetOp(), Val: ids,
 			}
 		}
 		return nil

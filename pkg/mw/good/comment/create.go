@@ -18,16 +18,44 @@ import (
 
 type createHandler struct {
 	*Handler
+	appgood *ent.AppGood
+}
+
+func (h *createHandler) getAppGood(ctx context.Context) error {
+	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		appGood, err := cli.AppGood.Get(ctx, *h.AppGoodID)
+		if err != nil {
+			return err
+		}
+		if appGood == nil {
+			return fmt.Errorf("app good not found %v", *h.AppGoodID)
+		}
+		h.appgood = appGood
+		return nil
+	})
 }
 
 func (h *createHandler) createComment(ctx context.Context, tx *ent.Tx) error {
+	if h.ReplyToID != nil {
+		comment, err := tx.Comment.Get(ctx, *h.ReplyToID)
+		if err != nil {
+			return err
+		}
+		if comment == nil {
+			return fmt.Errorf("comment not found")
+		}
+		if comment.AppGoodID != *h.AppGoodID {
+			return fmt.Errorf("appgoodid not matched")
+		}
+	}
 	if _, err := commentcrud.CreateSet(
 		tx.Comment.Create(),
 		&commentcrud.Req{
 			ID:        h.ID,
 			AppID:     h.AppID,
 			UserID:    h.UserID,
-			GoodID:    h.GoodID,
+			GoodID:    &h.appgood.GoodID,
+			AppGoodID: h.AppGoodID,
 			OrderID:   h.OrderID,
 			Content:   h.Content,
 			ReplyToID: h.ReplyToID,
@@ -39,9 +67,11 @@ func (h *createHandler) createComment(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *createHandler) updateGoodComment(ctx context.Context, tx *ent.Tx) error {
-	stm, err := extrainfocrud.SetQueryConds(tx.ExtraInfo.Query(), &extrainfocrud.Conds{
-		GoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.GoodID},
-	})
+	stm, err := extrainfocrud.SetQueryConds(
+		tx.ExtraInfo.Query(),
+		&extrainfocrud.Conds{
+			GoodID: &cruder.Cond{Op: cruder.EQ, Val: h.appgood.GoodID},
+		})
 	if err != nil {
 		return err
 	}
@@ -62,7 +92,7 @@ func (h *createHandler) updateGoodComment(ctx context.Context, tx *ent.Tx) error
 }
 
 func (h *Handler) CreateComment(ctx context.Context) (*npool.Comment, error) {
-	key := fmt.Sprintf("%v:%v:%v:%v", basetypes.Prefix_PrefixCommentGood, *h.AppID, *h.UserID, *h.GoodID)
+	key := fmt.Sprintf("%v:%v:%v:%v", basetypes.Prefix_PrefixCommentGood, *h.AppID, *h.UserID, *h.AppGoodID)
 	if err := redis2.TryLock(key, 0); err != nil {
 		return nil, err
 	}
@@ -77,6 +107,9 @@ func (h *Handler) CreateComment(ctx context.Context) (*npool.Comment, error) {
 
 	handler := &createHandler{
 		Handler: h,
+	}
+	if err := handler.getAppGood(ctx); err != nil {
+		return nil, err
 	}
 
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {

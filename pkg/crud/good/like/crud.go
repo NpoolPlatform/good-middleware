@@ -15,6 +15,7 @@ type Req struct {
 	AppID     *uuid.UUID
 	UserID    *uuid.UUID
 	GoodID    *uuid.UUID
+	AppGoodID *uuid.UUID
 	Like      *bool
 	DeletedAt *uint32
 }
@@ -31,6 +32,9 @@ func CreateSet(c *ent.LikeCreate, req *Req) *ent.LikeCreate {
 	}
 	if req.GoodID != nil {
 		c.SetGoodID(*req.GoodID)
+	}
+	if req.AppGoodID != nil {
+		c.SetAppGoodID(*req.AppGoodID)
 	}
 	if req.Like != nil {
 		c.SetLike(*req.Like)
@@ -49,14 +53,15 @@ func UpdateSet(u *ent.LikeUpdateOne, req *Req) *ent.LikeUpdateOne {
 }
 
 type Conds struct {
-	ID      *cruder.Cond
-	AppID   *cruder.Cond
-	UserID  *cruder.Cond
-	GoodID  *cruder.Cond
-	GoodIDs *cruder.Cond
+	ID         *cruder.Cond
+	AppID      *cruder.Cond
+	UserID     *cruder.Cond
+	GoodID     *cruder.Cond
+	AppGoodID  *cruder.Cond
+	AppGoodIDs *cruder.Cond
 }
 
-//nolint:gocyclo
+//nolint
 func SetQueryConds(q *ent.LikeQuery, conds *Conds) (*ent.LikeQuery, error) {
 	q.Where(entlike.DeletedAt(0))
 	if conds == nil {
@@ -71,7 +76,7 @@ func SetQueryConds(q *ent.LikeQuery, conds *Conds) (*ent.LikeQuery, error) {
 		case cruder.EQ:
 			q.Where(entlike.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid like field")
+			return nil, fmt.Errorf("invalid id field")
 		}
 	}
 	if conds.AppID != nil {
@@ -83,7 +88,7 @@ func SetQueryConds(q *ent.LikeQuery, conds *Conds) (*ent.LikeQuery, error) {
 		case cruder.EQ:
 			q.Where(entlike.AppID(id))
 		default:
-			return nil, fmt.Errorf("invalid like field")
+			return nil, fmt.Errorf("invalid appid field")
 		}
 	}
 	if conds.UserID != nil {
@@ -95,7 +100,7 @@ func SetQueryConds(q *ent.LikeQuery, conds *Conds) (*ent.LikeQuery, error) {
 		case cruder.EQ:
 			q.Where(entlike.UserID(id))
 		default:
-			return nil, fmt.Errorf("invalid like field")
+			return nil, fmt.Errorf("invalid userid field")
 		}
 	}
 	if conds.GoodID != nil {
@@ -107,19 +112,31 @@ func SetQueryConds(q *ent.LikeQuery, conds *Conds) (*ent.LikeQuery, error) {
 		case cruder.EQ:
 			q.Where(entlike.GoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid like field")
+			return nil, fmt.Errorf("invalid goodid field")
 		}
 	}
-	if conds.GoodIDs != nil {
-		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
+	if conds.AppGoodID != nil {
+		id, ok := conds.AppGoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
+			return nil, fmt.Errorf("invalid appgoodid")
 		}
-		switch conds.GoodIDs.Op {
-		case cruder.IN:
-			q.Where(entlike.GoodIDIn(ids...))
+		switch conds.AppGoodID.Op {
+		case cruder.EQ:
+			q.Where(entlike.AppGoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid like field")
+			return nil, fmt.Errorf("invalid appgoodid field")
+		}
+	}
+	if conds.AppGoodIDs != nil {
+		ids, ok := conds.AppGoodIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid appgoodids")
+		}
+		switch conds.AppGoodIDs.Op {
+		case cruder.IN:
+			q.Where(entlike.AppGoodIDIn(ids...))
+		default:
+			return nil, fmt.Errorf("invalid appgoodids field")
 		}
 	}
 	return q, nil
