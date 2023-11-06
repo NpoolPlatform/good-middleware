@@ -14,7 +14,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
-	"github.com/google/uuid"
 )
 
 // AppStockLockQuery is the builder for querying AppStockLock entities.
@@ -87,8 +86,8 @@ func (aslq *AppStockLockQuery) FirstX(ctx context.Context) *AppStockLock {
 
 // FirstID returns the first AppStockLock ID from the query.
 // Returns a *NotFoundError when no AppStockLock ID was found.
-func (aslq *AppStockLockQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (aslq *AppStockLockQuery) FirstID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = aslq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -100,7 +99,7 @@ func (aslq *AppStockLockQuery) FirstID(ctx context.Context) (id uuid.UUID, err e
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (aslq *AppStockLockQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (aslq *AppStockLockQuery) FirstIDX(ctx context.Context) uint32 {
 	id, err := aslq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -138,8 +137,8 @@ func (aslq *AppStockLockQuery) OnlyX(ctx context.Context) *AppStockLock {
 // OnlyID is like Only, but returns the only AppStockLock ID in the query.
 // Returns a *NotSingularError when more than one AppStockLock ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (aslq *AppStockLockQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (aslq *AppStockLockQuery) OnlyID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = aslq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -155,7 +154,7 @@ func (aslq *AppStockLockQuery) OnlyID(ctx context.Context) (id uuid.UUID, err er
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (aslq *AppStockLockQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (aslq *AppStockLockQuery) OnlyIDX(ctx context.Context) uint32 {
 	id, err := aslq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -181,8 +180,8 @@ func (aslq *AppStockLockQuery) AllX(ctx context.Context) []*AppStockLock {
 }
 
 // IDs executes the query and returns a list of AppStockLock IDs.
-func (aslq *AppStockLockQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	var ids []uuid.UUID
+func (aslq *AppStockLockQuery) IDs(ctx context.Context) ([]uint32, error) {
+	var ids []uint32
 	if err := aslq.Select(appstocklock.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -190,7 +189,7 @@ func (aslq *AppStockLockQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (aslq *AppStockLockQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (aslq *AppStockLockQuery) IDsX(ctx context.Context) []uint32 {
 	ids, err := aslq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -377,7 +376,7 @@ func (aslq *AppStockLockQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   appstocklock.Table,
 			Columns: appstocklock.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: appstocklock.FieldID,
 			},
 		},

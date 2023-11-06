@@ -4,7 +4,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
-
+	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
 	"github.com/google/uuid"
 )
 
@@ -16,6 +16,7 @@ type VendorLocation struct {
 func (VendorLocation) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.TimeMixin{},
+		crudermixin.AutoIDMixin{},
 	}
 }
 
@@ -24,9 +25,6 @@ func (VendorLocation) Fields() []ent.Field {
 	maxLen := 128
 	addressMaxLen := 256
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).
-			Default(uuid.New).
-			Unique(),
 		field.String("country").
 			Optional().
 			Default("").

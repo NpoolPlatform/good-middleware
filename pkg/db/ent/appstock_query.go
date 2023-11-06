@@ -14,7 +14,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
-	"github.com/google/uuid"
 )
 
 // AppStockQuery is the builder for querying AppStock entities.
@@ -87,8 +86,8 @@ func (asq *AppStockQuery) FirstX(ctx context.Context) *AppStock {
 
 // FirstID returns the first AppStock ID from the query.
 // Returns a *NotFoundError when no AppStock ID was found.
-func (asq *AppStockQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (asq *AppStockQuery) FirstID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = asq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -100,7 +99,7 @@ func (asq *AppStockQuery) FirstID(ctx context.Context) (id uuid.UUID, err error)
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (asq *AppStockQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (asq *AppStockQuery) FirstIDX(ctx context.Context) uint32 {
 	id, err := asq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -138,8 +137,8 @@ func (asq *AppStockQuery) OnlyX(ctx context.Context) *AppStock {
 // OnlyID is like Only, but returns the only AppStock ID in the query.
 // Returns a *NotSingularError when more than one AppStock ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (asq *AppStockQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (asq *AppStockQuery) OnlyID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = asq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -155,7 +154,7 @@ func (asq *AppStockQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) 
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (asq *AppStockQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (asq *AppStockQuery) OnlyIDX(ctx context.Context) uint32 {
 	id, err := asq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -181,8 +180,8 @@ func (asq *AppStockQuery) AllX(ctx context.Context) []*AppStock {
 }
 
 // IDs executes the query and returns a list of AppStock IDs.
-func (asq *AppStockQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	var ids []uuid.UUID
+func (asq *AppStockQuery) IDs(ctx context.Context) ([]uint32, error) {
+	var ids []uint32
 	if err := asq.Select(appstock.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -190,7 +189,7 @@ func (asq *AppStockQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (asq *AppStockQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (asq *AppStockQuery) IDsX(ctx context.Context) []uint32 {
 	ids, err := asq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -377,7 +376,7 @@ func (asq *AppStockQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   appstock.Table,
 			Columns: appstock.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: appstock.FieldID,
 			},
 		},

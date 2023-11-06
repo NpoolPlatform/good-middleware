@@ -85,6 +85,20 @@ func (eiu *ExtraInfoUpdate) AddDeletedAt(u int32) *ExtraInfoUpdate {
 	return eiu
 }
 
+// SetEntID sets the "ent_id" field.
+func (eiu *ExtraInfoUpdate) SetEntID(u uuid.UUID) *ExtraInfoUpdate {
+	eiu.mutation.SetEntID(u)
+	return eiu
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (eiu *ExtraInfoUpdate) SetNillableEntID(u *uuid.UUID) *ExtraInfoUpdate {
+	if u != nil {
+		eiu.SetEntID(*u)
+	}
+	return eiu
+}
+
 // SetGoodID sets the "good_id" field.
 func (eiu *ExtraInfoUpdate) SetGoodID(u uuid.UUID) *ExtraInfoUpdate {
 	eiu.mutation.SetGoodID(u)
@@ -356,7 +370,7 @@ func (eiu *ExtraInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   extrainfo.Table,
 			Columns: extrainfo.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: extrainfo.FieldID,
 			},
 		},
@@ -408,6 +422,13 @@ func (eiu *ExtraInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: extrainfo.FieldDeletedAt,
+		})
+	}
+	if value, ok := eiu.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: extrainfo.FieldEntID,
 		})
 	}
 	if value, ok := eiu.mutation.GoodID(); ok {
@@ -629,6 +650,20 @@ func (eiuo *ExtraInfoUpdateOne) SetNillableDeletedAt(u *uint32) *ExtraInfoUpdate
 // AddDeletedAt adds u to the "deleted_at" field.
 func (eiuo *ExtraInfoUpdateOne) AddDeletedAt(u int32) *ExtraInfoUpdateOne {
 	eiuo.mutation.AddDeletedAt(u)
+	return eiuo
+}
+
+// SetEntID sets the "ent_id" field.
+func (eiuo *ExtraInfoUpdateOne) SetEntID(u uuid.UUID) *ExtraInfoUpdateOne {
+	eiuo.mutation.SetEntID(u)
+	return eiuo
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (eiuo *ExtraInfoUpdateOne) SetNillableEntID(u *uuid.UUID) *ExtraInfoUpdateOne {
+	if u != nil {
+		eiuo.SetEntID(*u)
+	}
 	return eiuo
 }
 
@@ -916,7 +951,7 @@ func (eiuo *ExtraInfoUpdateOne) sqlSave(ctx context.Context) (_node *ExtraInfo, 
 			Table:   extrainfo.Table,
 			Columns: extrainfo.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: extrainfo.FieldID,
 			},
 		},
@@ -985,6 +1020,13 @@ func (eiuo *ExtraInfoUpdateOne) sqlSave(ctx context.Context) (_node *ExtraInfo, 
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: extrainfo.FieldDeletedAt,
+		})
+	}
+	if value, ok := eiuo.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: extrainfo.FieldEntID,
 		})
 	}
 	if value, ok := eiuo.mutation.GoodID(); ok {

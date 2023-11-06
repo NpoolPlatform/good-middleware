@@ -15,13 +15,15 @@ import (
 type RequiredGood struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID uuid.UUID `json:"id,omitempty"`
+	ID uint32 `json:"id,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt uint32 `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
 	UpdatedAt uint32 `json:"updated_at,omitempty"`
 	// DeletedAt holds the value of the "deleted_at" field.
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
+	// EntID holds the value of the "ent_id" field.
+	EntID uuid.UUID `json:"ent_id,omitempty"`
 	// MainGoodID holds the value of the "main_good_id" field.
 	MainGoodID uuid.UUID `json:"main_good_id,omitempty"`
 	// RequiredGoodID holds the value of the "required_good_id" field.
@@ -37,9 +39,9 @@ func (*RequiredGood) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case requiredgood.FieldMust:
 			values[i] = new(sql.NullBool)
-		case requiredgood.FieldCreatedAt, requiredgood.FieldUpdatedAt, requiredgood.FieldDeletedAt:
+		case requiredgood.FieldID, requiredgood.FieldCreatedAt, requiredgood.FieldUpdatedAt, requiredgood.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case requiredgood.FieldID, requiredgood.FieldMainGoodID, requiredgood.FieldRequiredGoodID:
+		case requiredgood.FieldEntID, requiredgood.FieldMainGoodID, requiredgood.FieldRequiredGoodID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type RequiredGood", columns[i])
@@ -57,11 +59,11 @@ func (rg *RequiredGood) assignValues(columns []string, values []interface{}) err
 	for i := range columns {
 		switch columns[i] {
 		case requiredgood.FieldID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value != nil {
-				rg.ID = *value
+			value, ok := values[i].(*sql.NullInt64)
+			if !ok {
+				return fmt.Errorf("unexpected type %T for field id", value)
 			}
+			rg.ID = uint32(value.Int64)
 		case requiredgood.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -79,6 +81,12 @@ func (rg *RequiredGood) assignValues(columns []string, values []interface{}) err
 				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
 				rg.DeletedAt = uint32(value.Int64)
+			}
+		case requiredgood.FieldEntID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field ent_id", values[i])
+			} else if value != nil {
+				rg.EntID = *value
 			}
 		case requiredgood.FieldMainGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -134,6 +142,9 @@ func (rg *RequiredGood) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("deleted_at=")
 	builder.WriteString(fmt.Sprintf("%v", rg.DeletedAt))
+	builder.WriteString(", ")
+	builder.WriteString("ent_id=")
+	builder.WriteString(fmt.Sprintf("%v", rg.EntID))
 	builder.WriteString(", ")
 	builder.WriteString("main_good_id=")
 	builder.WriteString(fmt.Sprintf("%v", rg.MainGoodID))

@@ -85,6 +85,20 @@ func (grhu *GoodRewardHistoryUpdate) AddDeletedAt(u int32) *GoodRewardHistoryUpd
 	return grhu
 }
 
+// SetEntID sets the "ent_id" field.
+func (grhu *GoodRewardHistoryUpdate) SetEntID(u uuid.UUID) *GoodRewardHistoryUpdate {
+	grhu.mutation.SetEntID(u)
+	return grhu
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (grhu *GoodRewardHistoryUpdate) SetNillableEntID(u *uuid.UUID) *GoodRewardHistoryUpdate {
+	if u != nil {
+		grhu.SetEntID(*u)
+	}
+	return grhu
+}
+
 // SetGoodID sets the "good_id" field.
 func (grhu *GoodRewardHistoryUpdate) SetGoodID(u uuid.UUID) *GoodRewardHistoryUpdate {
 	grhu.mutation.SetGoodID(u)
@@ -298,7 +312,7 @@ func (grhu *GoodRewardHistoryUpdate) sqlSave(ctx context.Context) (n int, err er
 			Table:   goodrewardhistory.Table,
 			Columns: goodrewardhistory.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: goodrewardhistory.FieldID,
 			},
 		},
@@ -350,6 +364,13 @@ func (grhu *GoodRewardHistoryUpdate) sqlSave(ctx context.Context) (n int, err er
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: goodrewardhistory.FieldDeletedAt,
+		})
+	}
+	if value, ok := grhu.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: goodrewardhistory.FieldEntID,
 		})
 	}
 	if value, ok := grhu.mutation.GoodID(); ok {
@@ -510,6 +531,20 @@ func (grhuo *GoodRewardHistoryUpdateOne) SetNillableDeletedAt(u *uint32) *GoodRe
 // AddDeletedAt adds u to the "deleted_at" field.
 func (grhuo *GoodRewardHistoryUpdateOne) AddDeletedAt(u int32) *GoodRewardHistoryUpdateOne {
 	grhuo.mutation.AddDeletedAt(u)
+	return grhuo
+}
+
+// SetEntID sets the "ent_id" field.
+func (grhuo *GoodRewardHistoryUpdateOne) SetEntID(u uuid.UUID) *GoodRewardHistoryUpdateOne {
+	grhuo.mutation.SetEntID(u)
+	return grhuo
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (grhuo *GoodRewardHistoryUpdateOne) SetNillableEntID(u *uuid.UUID) *GoodRewardHistoryUpdateOne {
+	if u != nil {
+		grhuo.SetEntID(*u)
+	}
 	return grhuo
 }
 
@@ -739,7 +774,7 @@ func (grhuo *GoodRewardHistoryUpdateOne) sqlSave(ctx context.Context) (_node *Go
 			Table:   goodrewardhistory.Table,
 			Columns: goodrewardhistory.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: goodrewardhistory.FieldID,
 			},
 		},
@@ -808,6 +843,13 @@ func (grhuo *GoodRewardHistoryUpdateOne) sqlSave(ctx context.Context) (_node *Go
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: goodrewardhistory.FieldDeletedAt,
+		})
+	}
+	if value, ok := grhuo.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: goodrewardhistory.FieldEntID,
 		})
 	}
 	if value, ok := grhuo.mutation.GoodID(); ok {

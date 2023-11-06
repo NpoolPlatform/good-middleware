@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -62,6 +61,20 @@ func (rc *RecommendCreate) SetDeletedAt(u uint32) *RecommendCreate {
 func (rc *RecommendCreate) SetNillableDeletedAt(u *uint32) *RecommendCreate {
 	if u != nil {
 		rc.SetDeletedAt(*u)
+	}
+	return rc
+}
+
+// SetEntID sets the "ent_id" field.
+func (rc *RecommendCreate) SetEntID(u uuid.UUID) *RecommendCreate {
+	rc.mutation.SetEntID(u)
+	return rc
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (rc *RecommendCreate) SetNillableEntID(u *uuid.UUID) *RecommendCreate {
+	if u != nil {
+		rc.SetEntID(*u)
 	}
 	return rc
 }
@@ -121,16 +134,8 @@ func (rc *RecommendCreate) SetNillableRecommendIndex(d *decimal.Decimal) *Recomm
 }
 
 // SetID sets the "id" field.
-func (rc *RecommendCreate) SetID(u uuid.UUID) *RecommendCreate {
+func (rc *RecommendCreate) SetID(u uint32) *RecommendCreate {
 	rc.mutation.SetID(u)
-	return rc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (rc *RecommendCreate) SetNillableID(u *uuid.UUID) *RecommendCreate {
-	if u != nil {
-		rc.SetID(*u)
-	}
 	return rc
 }
 
@@ -234,6 +239,13 @@ func (rc *RecommendCreate) defaults() error {
 		v := recommend.DefaultDeletedAt()
 		rc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := rc.mutation.EntID(); !ok {
+		if recommend.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized recommend.DefaultEntID (forgotten import ent/runtime?)")
+		}
+		v := recommend.DefaultEntID()
+		rc.mutation.SetEntID(v)
+	}
 	if _, ok := rc.mutation.RecommenderID(); !ok {
 		if recommend.DefaultRecommenderID == nil {
 			return fmt.Errorf("ent: uninitialized recommend.DefaultRecommenderID (forgotten import ent/runtime?)")
@@ -249,13 +261,6 @@ func (rc *RecommendCreate) defaults() error {
 		v := recommend.DefaultRecommendIndex
 		rc.mutation.SetRecommendIndex(v)
 	}
-	if _, ok := rc.mutation.ID(); !ok {
-		if recommend.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized recommend.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := recommend.DefaultID()
-		rc.mutation.SetID(v)
-	}
 	return nil
 }
 
@@ -269,6 +274,9 @@ func (rc *RecommendCreate) check() error {
 	}
 	if _, ok := rc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "Recommend.deleted_at"`)}
+	}
+	if _, ok := rc.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "Recommend.ent_id"`)}
 	}
 	if _, ok := rc.mutation.AppID(); !ok {
 		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "Recommend.app_id"`)}
@@ -287,12 +295,9 @@ func (rc *RecommendCreate) sqlSave(ctx context.Context) (*Recommend, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -303,7 +308,7 @@ func (rc *RecommendCreate) createSpec() (*Recommend, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: recommend.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: recommend.FieldID,
 			},
 		}
@@ -311,7 +316,7 @@ func (rc *RecommendCreate) createSpec() (*Recommend, *sqlgraph.CreateSpec) {
 	_spec.OnConflict = rc.conflict
 	if id, ok := rc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := rc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -336,6 +341,14 @@ func (rc *RecommendCreate) createSpec() (*Recommend, *sqlgraph.CreateSpec) {
 			Column: recommend.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
+	}
+	if value, ok := rc.mutation.EntID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: recommend.FieldEntID,
+		})
+		_node.EntID = value
 	}
 	if value, ok := rc.mutation.AppID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -482,6 +495,18 @@ func (u *RecommendUpsert) UpdateDeletedAt() *RecommendUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *RecommendUpsert) AddDeletedAt(v uint32) *RecommendUpsert {
 	u.Add(recommend.FieldDeletedAt, v)
+	return u
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *RecommendUpsert) SetEntID(v uuid.UUID) *RecommendUpsert {
+	u.Set(recommend.FieldEntID, v)
+	return u
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *RecommendUpsert) UpdateEntID() *RecommendUpsert {
+	u.SetExcluded(recommend.FieldEntID)
 	return u
 }
 
@@ -676,6 +701,20 @@ func (u *RecommendUpsertOne) UpdateDeletedAt() *RecommendUpsertOne {
 	})
 }
 
+// SetEntID sets the "ent_id" field.
+func (u *RecommendUpsertOne) SetEntID(v uuid.UUID) *RecommendUpsertOne {
+	return u.Update(func(s *RecommendUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *RecommendUpsertOne) UpdateEntID() *RecommendUpsertOne {
+	return u.Update(func(s *RecommendUpsert) {
+		s.UpdateEntID()
+	})
+}
+
 // SetAppID sets the "app_id" field.
 func (u *RecommendUpsertOne) SetAppID(v uuid.UUID) *RecommendUpsertOne {
 	return u.Update(func(s *RecommendUpsert) {
@@ -783,12 +822,7 @@ func (u *RecommendUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *RecommendUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: RecommendUpsertOne.ID is not supported by MySQL driver. Use RecommendUpsertOne.Exec instead")
-	}
+func (u *RecommendUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -797,7 +831,7 @@ func (u *RecommendUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *RecommendUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *RecommendUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -848,6 +882,10 @@ func (rcb *RecommendCreateBulk) Save(ctx context.Context) ([]*Recommend, error) 
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -1043,6 +1081,20 @@ func (u *RecommendUpsertBulk) AddDeletedAt(v uint32) *RecommendUpsertBulk {
 func (u *RecommendUpsertBulk) UpdateDeletedAt() *RecommendUpsertBulk {
 	return u.Update(func(s *RecommendUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *RecommendUpsertBulk) SetEntID(v uuid.UUID) *RecommendUpsertBulk {
+	return u.Update(func(s *RecommendUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *RecommendUpsertBulk) UpdateEntID() *RecommendUpsertBulk {
+	return u.Update(func(s *RecommendUpsert) {
+		s.UpdateEntID()
 	})
 }
 

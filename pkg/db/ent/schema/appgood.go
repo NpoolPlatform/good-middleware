@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
+	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -19,17 +20,14 @@ type AppGood struct {
 func (AppGood) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.TimeMixin{},
+		crudermixin.AutoIDMixin{},
 	}
 }
 
 //nolint:funlen
 func (AppGood) Fields() []ent.Field {
-	lDef := 3000
+	purchaseLimit := 3000
 	return []ent.Field{
-		field.
-			UUID("id", uuid.UUID{}).
-			Default(uuid.New).
-			Unique(),
 		field.
 			UUID("app_id", uuid.UUID{}),
 		field.
@@ -60,7 +58,7 @@ func (AppGood) Fields() []ent.Field {
 		field.
 			Int32("purchase_limit").
 			Optional().
-			Default(int32(lDef)),
+			Default(int32(purchaseLimit)),
 		field.
 			Uint32("sale_start_at").
 			Optional().

@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -62,6 +61,20 @@ func (grc *GoodRewardCreate) SetDeletedAt(u uint32) *GoodRewardCreate {
 func (grc *GoodRewardCreate) SetNillableDeletedAt(u *uint32) *GoodRewardCreate {
 	if u != nil {
 		grc.SetDeletedAt(*u)
+	}
+	return grc
+}
+
+// SetEntID sets the "ent_id" field.
+func (grc *GoodRewardCreate) SetEntID(u uuid.UUID) *GoodRewardCreate {
+	grc.mutation.SetEntID(u)
+	return grc
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (grc *GoodRewardCreate) SetNillableEntID(u *uuid.UUID) *GoodRewardCreate {
+	if u != nil {
+		grc.SetEntID(*u)
 	}
 	return grc
 }
@@ -171,16 +184,8 @@ func (grc *GoodRewardCreate) SetNillableTotalRewardAmount(d *decimal.Decimal) *G
 }
 
 // SetID sets the "id" field.
-func (grc *GoodRewardCreate) SetID(u uuid.UUID) *GoodRewardCreate {
+func (grc *GoodRewardCreate) SetID(u uint32) *GoodRewardCreate {
 	grc.mutation.SetID(u)
-	return grc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (grc *GoodRewardCreate) SetNillableID(u *uuid.UUID) *GoodRewardCreate {
-	if u != nil {
-		grc.SetID(*u)
-	}
 	return grc
 }
 
@@ -284,6 +289,13 @@ func (grc *GoodRewardCreate) defaults() error {
 		v := goodreward.DefaultDeletedAt()
 		grc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := grc.mutation.EntID(); !ok {
+		if goodreward.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized goodreward.DefaultEntID (forgotten import ent/runtime?)")
+		}
+		v := goodreward.DefaultEntID()
+		grc.mutation.SetEntID(v)
+	}
 	if _, ok := grc.mutation.RewardState(); !ok {
 		v := goodreward.DefaultRewardState
 		grc.mutation.SetRewardState(v)
@@ -315,13 +327,6 @@ func (grc *GoodRewardCreate) defaults() error {
 		v := goodreward.DefaultTotalRewardAmount
 		grc.mutation.SetTotalRewardAmount(v)
 	}
-	if _, ok := grc.mutation.ID(); !ok {
-		if goodreward.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized goodreward.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := goodreward.DefaultID()
-		grc.mutation.SetID(v)
-	}
 	return nil
 }
 
@@ -335,6 +340,9 @@ func (grc *GoodRewardCreate) check() error {
 	}
 	if _, ok := grc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "GoodReward.deleted_at"`)}
+	}
+	if _, ok := grc.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "GoodReward.ent_id"`)}
 	}
 	if _, ok := grc.mutation.GoodID(); !ok {
 		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "GoodReward.good_id"`)}
@@ -350,12 +358,9 @@ func (grc *GoodRewardCreate) sqlSave(ctx context.Context) (*GoodReward, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -366,7 +371,7 @@ func (grc *GoodRewardCreate) createSpec() (*GoodReward, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: goodreward.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: goodreward.FieldID,
 			},
 		}
@@ -374,7 +379,7 @@ func (grc *GoodRewardCreate) createSpec() (*GoodReward, *sqlgraph.CreateSpec) {
 	_spec.OnConflict = grc.conflict
 	if id, ok := grc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := grc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -399,6 +404,14 @@ func (grc *GoodRewardCreate) createSpec() (*GoodReward, *sqlgraph.CreateSpec) {
 			Column: goodreward.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
+	}
+	if value, ok := grc.mutation.EntID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: goodreward.FieldEntID,
+		})
+		_node.EntID = value
 	}
 	if value, ok := grc.mutation.GoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -569,6 +582,18 @@ func (u *GoodRewardUpsert) UpdateDeletedAt() *GoodRewardUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *GoodRewardUpsert) AddDeletedAt(v uint32) *GoodRewardUpsert {
 	u.Add(goodreward.FieldDeletedAt, v)
+	return u
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *GoodRewardUpsert) SetEntID(v uuid.UUID) *GoodRewardUpsert {
+	u.Set(goodreward.FieldEntID, v)
+	return u
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *GoodRewardUpsert) UpdateEntID() *GoodRewardUpsert {
+	u.SetExcluded(goodreward.FieldEntID)
 	return u
 }
 
@@ -829,6 +854,20 @@ func (u *GoodRewardUpsertOne) UpdateDeletedAt() *GoodRewardUpsertOne {
 	})
 }
 
+// SetEntID sets the "ent_id" field.
+func (u *GoodRewardUpsertOne) SetEntID(v uuid.UUID) *GoodRewardUpsertOne {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *GoodRewardUpsertOne) UpdateEntID() *GoodRewardUpsertOne {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.UpdateEntID()
+	})
+}
+
 // SetGoodID sets the "good_id" field.
 func (u *GoodRewardUpsertOne) SetGoodID(v uuid.UUID) *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
@@ -1013,12 +1052,7 @@ func (u *GoodRewardUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *GoodRewardUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: GoodRewardUpsertOne.ID is not supported by MySQL driver. Use GoodRewardUpsertOne.Exec instead")
-	}
+func (u *GoodRewardUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -1027,7 +1061,7 @@ func (u *GoodRewardUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) 
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *GoodRewardUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *GoodRewardUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -1078,6 +1112,10 @@ func (grcb *GoodRewardCreateBulk) Save(ctx context.Context) ([]*GoodReward, erro
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -1273,6 +1311,20 @@ func (u *GoodRewardUpsertBulk) AddDeletedAt(v uint32) *GoodRewardUpsertBulk {
 func (u *GoodRewardUpsertBulk) UpdateDeletedAt() *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *GoodRewardUpsertBulk) SetEntID(v uuid.UUID) *GoodRewardUpsertBulk {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *GoodRewardUpsertBulk) UpdateEntID() *GoodRewardUpsertBulk {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.UpdateEntID()
 	})
 }
 

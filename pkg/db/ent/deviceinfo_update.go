@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
+	"github.com/google/uuid"
 )
 
 // DeviceInfoUpdate is the builder for updating DeviceInfo entities.
@@ -80,6 +81,20 @@ func (diu *DeviceInfoUpdate) SetNillableDeletedAt(u *uint32) *DeviceInfoUpdate {
 // AddDeletedAt adds u to the "deleted_at" field.
 func (diu *DeviceInfoUpdate) AddDeletedAt(u int32) *DeviceInfoUpdate {
 	diu.mutation.AddDeletedAt(u)
+	return diu
+}
+
+// SetEntID sets the "ent_id" field.
+func (diu *DeviceInfoUpdate) SetEntID(u uuid.UUID) *DeviceInfoUpdate {
+	diu.mutation.SetEntID(u)
+	return diu
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (diu *DeviceInfoUpdate) SetNillableEntID(u *uuid.UUID) *DeviceInfoUpdate {
+	if u != nil {
+		diu.SetEntID(*u)
+	}
 	return diu
 }
 
@@ -296,7 +311,7 @@ func (diu *DeviceInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   deviceinfo.Table,
 			Columns: deviceinfo.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: deviceinfo.FieldID,
 			},
 		},
@@ -348,6 +363,13 @@ func (diu *DeviceInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: deviceinfo.FieldDeletedAt,
+		})
+	}
+	if value, ok := diu.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: deviceinfo.FieldEntID,
 		})
 	}
 	if value, ok := diu.mutation.GetType(); ok {
@@ -502,6 +524,20 @@ func (diuo *DeviceInfoUpdateOne) SetNillableDeletedAt(u *uint32) *DeviceInfoUpda
 // AddDeletedAt adds u to the "deleted_at" field.
 func (diuo *DeviceInfoUpdateOne) AddDeletedAt(u int32) *DeviceInfoUpdateOne {
 	diuo.mutation.AddDeletedAt(u)
+	return diuo
+}
+
+// SetEntID sets the "ent_id" field.
+func (diuo *DeviceInfoUpdateOne) SetEntID(u uuid.UUID) *DeviceInfoUpdateOne {
+	diuo.mutation.SetEntID(u)
+	return diuo
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (diuo *DeviceInfoUpdateOne) SetNillableEntID(u *uuid.UUID) *DeviceInfoUpdateOne {
+	if u != nil {
+		diuo.SetEntID(*u)
+	}
 	return diuo
 }
 
@@ -731,7 +767,7 @@ func (diuo *DeviceInfoUpdateOne) sqlSave(ctx context.Context) (_node *DeviceInfo
 			Table:   deviceinfo.Table,
 			Columns: deviceinfo.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: deviceinfo.FieldID,
 			},
 		},
@@ -800,6 +836,13 @@ func (diuo *DeviceInfoUpdateOne) sqlSave(ctx context.Context) (_node *DeviceInfo
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: deviceinfo.FieldDeletedAt,
+		})
+	}
+	if value, ok := diuo.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: deviceinfo.FieldEntID,
 		})
 	}
 	if value, ok := diuo.mutation.GetType(); ok {

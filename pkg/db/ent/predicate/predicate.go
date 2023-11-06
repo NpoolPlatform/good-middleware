@@ -39,9 +39,6 @@ type GoodRewardHistory func(*sql.Selector)
 // Like is the predicate function for like builders.
 type Like func(*sql.Selector)
 
-// Promotion is the predicate function for promotion builders.
-type Promotion func(*sql.Selector)
-
 // Recommend is the predicate function for recommend builders.
 type Recommend func(*sql.Selector)
 

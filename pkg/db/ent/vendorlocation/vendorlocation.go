@@ -18,6 +18,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
+	// FieldEntID holds the string denoting the ent_id field in the database.
+	FieldEntID = "ent_id"
 	// FieldCountry holds the string denoting the country field in the database.
 	FieldCountry = "country"
 	// FieldProvince holds the string denoting the province field in the database.
@@ -38,6 +40,7 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
+	FieldEntID,
 	FieldCountry,
 	FieldProvince,
 	FieldCity,
@@ -72,6 +75,8 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// DefaultEntID holds the default value on creation for the "ent_id" field.
+	DefaultEntID func() uuid.UUID
 	// DefaultCountry holds the default value on creation for the "country" field.
 	DefaultCountry string
 	// CountryValidator is a validator for the "country" field. It is called by the builders before save.
@@ -90,6 +95,4 @@ var (
 	AddressValidator func(string) error
 	// DefaultBrandID holds the default value on creation for the "brand_id" field.
 	DefaultBrandID func() uuid.UUID
-	// DefaultID holds the default value on creation for the "id" field.
-	DefaultID func() uuid.UUID
 )

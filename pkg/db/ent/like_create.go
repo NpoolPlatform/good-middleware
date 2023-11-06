@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -61,6 +60,20 @@ func (lc *LikeCreate) SetDeletedAt(u uint32) *LikeCreate {
 func (lc *LikeCreate) SetNillableDeletedAt(u *uint32) *LikeCreate {
 	if u != nil {
 		lc.SetDeletedAt(*u)
+	}
+	return lc
+}
+
+// SetEntID sets the "ent_id" field.
+func (lc *LikeCreate) SetEntID(u uuid.UUID) *LikeCreate {
+	lc.mutation.SetEntID(u)
+	return lc
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (lc *LikeCreate) SetNillableEntID(u *uuid.UUID) *LikeCreate {
+	if u != nil {
+		lc.SetEntID(*u)
 	}
 	return lc
 }
@@ -128,16 +141,8 @@ func (lc *LikeCreate) SetLike(b bool) *LikeCreate {
 }
 
 // SetID sets the "id" field.
-func (lc *LikeCreate) SetID(u uuid.UUID) *LikeCreate {
+func (lc *LikeCreate) SetID(u uint32) *LikeCreate {
 	lc.mutation.SetID(u)
-	return lc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (lc *LikeCreate) SetNillableID(u *uuid.UUID) *LikeCreate {
-	if u != nil {
-		lc.SetID(*u)
-	}
 	return lc
 }
 
@@ -241,6 +246,13 @@ func (lc *LikeCreate) defaults() error {
 		v := like.DefaultDeletedAt()
 		lc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := lc.mutation.EntID(); !ok {
+		if like.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized like.DefaultEntID (forgotten import ent/runtime?)")
+		}
+		v := like.DefaultEntID()
+		lc.mutation.SetEntID(v)
+	}
 	if _, ok := lc.mutation.AppID(); !ok {
 		if like.DefaultAppID == nil {
 			return fmt.Errorf("ent: uninitialized like.DefaultAppID (forgotten import ent/runtime?)")
@@ -269,13 +281,6 @@ func (lc *LikeCreate) defaults() error {
 		v := like.DefaultAppGoodID()
 		lc.mutation.SetAppGoodID(v)
 	}
-	if _, ok := lc.mutation.ID(); !ok {
-		if like.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized like.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := like.DefaultID()
-		lc.mutation.SetID(v)
-	}
 	return nil
 }
 
@@ -289,6 +294,9 @@ func (lc *LikeCreate) check() error {
 	}
 	if _, ok := lc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "Like.deleted_at"`)}
+	}
+	if _, ok := lc.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "Like.ent_id"`)}
 	}
 	if _, ok := lc.mutation.Like(); !ok {
 		return &ValidationError{Name: "like", err: errors.New(`ent: missing required field "Like.like"`)}
@@ -304,12 +312,9 @@ func (lc *LikeCreate) sqlSave(ctx context.Context) (*Like, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -320,7 +325,7 @@ func (lc *LikeCreate) createSpec() (*Like, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: like.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: like.FieldID,
 			},
 		}
@@ -328,7 +333,7 @@ func (lc *LikeCreate) createSpec() (*Like, *sqlgraph.CreateSpec) {
 	_spec.OnConflict = lc.conflict
 	if id, ok := lc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := lc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -353,6 +358,14 @@ func (lc *LikeCreate) createSpec() (*Like, *sqlgraph.CreateSpec) {
 			Column: like.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
+	}
+	if value, ok := lc.mutation.EntID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: like.FieldEntID,
+		})
+		_node.EntID = value
 	}
 	if value, ok := lc.mutation.AppID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -499,6 +512,18 @@ func (u *LikeUpsert) UpdateDeletedAt() *LikeUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *LikeUpsert) AddDeletedAt(v uint32) *LikeUpsert {
 	u.Add(like.FieldDeletedAt, v)
+	return u
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *LikeUpsert) SetEntID(v uuid.UUID) *LikeUpsert {
+	u.Set(like.FieldEntID, v)
+	return u
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *LikeUpsert) UpdateEntID() *LikeUpsert {
+	u.SetExcluded(like.FieldEntID)
 	return u
 }
 
@@ -699,6 +724,20 @@ func (u *LikeUpsertOne) UpdateDeletedAt() *LikeUpsertOne {
 	})
 }
 
+// SetEntID sets the "ent_id" field.
+func (u *LikeUpsertOne) SetEntID(v uuid.UUID) *LikeUpsertOne {
+	return u.Update(func(s *LikeUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *LikeUpsertOne) UpdateEntID() *LikeUpsertOne {
+	return u.Update(func(s *LikeUpsert) {
+		s.UpdateEntID()
+	})
+}
+
 // SetAppID sets the "app_id" field.
 func (u *LikeUpsertOne) SetAppID(v uuid.UUID) *LikeUpsertOne {
 	return u.Update(func(s *LikeUpsert) {
@@ -813,12 +852,7 @@ func (u *LikeUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *LikeUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: LikeUpsertOne.ID is not supported by MySQL driver. Use LikeUpsertOne.Exec instead")
-	}
+func (u *LikeUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -827,7 +861,7 @@ func (u *LikeUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *LikeUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *LikeUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -878,6 +912,10 @@ func (lcb *LikeCreateBulk) Save(ctx context.Context) ([]*Like, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -1073,6 +1111,20 @@ func (u *LikeUpsertBulk) AddDeletedAt(v uint32) *LikeUpsertBulk {
 func (u *LikeUpsertBulk) UpdateDeletedAt() *LikeUpsertBulk {
 	return u.Update(func(s *LikeUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *LikeUpsertBulk) SetEntID(v uuid.UUID) *LikeUpsertBulk {
+	return u.Update(func(s *LikeUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *LikeUpsertBulk) UpdateEntID() *LikeUpsertBulk {
+	return u.Update(func(s *LikeUpsert) {
+		s.UpdateEntID()
 	})
 }
 

@@ -85,6 +85,20 @@ func (aslu *AppStockLockUpdate) AddDeletedAt(u int32) *AppStockLockUpdate {
 	return aslu
 }
 
+// SetEntID sets the "ent_id" field.
+func (aslu *AppStockLockUpdate) SetEntID(u uuid.UUID) *AppStockLockUpdate {
+	aslu.mutation.SetEntID(u)
+	return aslu
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (aslu *AppStockLockUpdate) SetNillableEntID(u *uuid.UUID) *AppStockLockUpdate {
+	if u != nil {
+		aslu.SetEntID(*u)
+	}
+	return aslu
+}
+
 // SetAppStockID sets the "app_stock_id" field.
 func (aslu *AppStockLockUpdate) SetAppStockID(u uuid.UUID) *AppStockLockUpdate {
 	aslu.mutation.SetAppStockID(u)
@@ -271,7 +285,7 @@ func (aslu *AppStockLockUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Table:   appstocklock.Table,
 			Columns: appstocklock.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: appstocklock.FieldID,
 			},
 		},
@@ -323,6 +337,13 @@ func (aslu *AppStockLockUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: appstocklock.FieldDeletedAt,
+		})
+	}
+	if value, ok := aslu.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appstocklock.FieldEntID,
 		})
 	}
 	if value, ok := aslu.mutation.AppStockID(); ok {
@@ -463,6 +484,20 @@ func (asluo *AppStockLockUpdateOne) SetNillableDeletedAt(u *uint32) *AppStockLoc
 // AddDeletedAt adds u to the "deleted_at" field.
 func (asluo *AppStockLockUpdateOne) AddDeletedAt(u int32) *AppStockLockUpdateOne {
 	asluo.mutation.AddDeletedAt(u)
+	return asluo
+}
+
+// SetEntID sets the "ent_id" field.
+func (asluo *AppStockLockUpdateOne) SetEntID(u uuid.UUID) *AppStockLockUpdateOne {
+	asluo.mutation.SetEntID(u)
+	return asluo
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (asluo *AppStockLockUpdateOne) SetNillableEntID(u *uuid.UUID) *AppStockLockUpdateOne {
+	if u != nil {
+		asluo.SetEntID(*u)
+	}
 	return asluo
 }
 
@@ -665,7 +700,7 @@ func (asluo *AppStockLockUpdateOne) sqlSave(ctx context.Context) (_node *AppStoc
 			Table:   appstocklock.Table,
 			Columns: appstocklock.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: appstocklock.FieldID,
 			},
 		},
@@ -734,6 +769,13 @@ func (asluo *AppStockLockUpdateOne) sqlSave(ctx context.Context) (_node *AppStoc
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: appstocklock.FieldDeletedAt,
+		})
+	}
+	if value, ok := asluo.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appstocklock.FieldEntID,
 		})
 	}
 	if value, ok := asluo.mutation.AppStockID(); ok {

@@ -14,7 +14,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
-	"github.com/google/uuid"
 )
 
 // TopMostGoodQuery is the builder for querying TopMostGood entities.
@@ -87,8 +86,8 @@ func (tmgq *TopMostGoodQuery) FirstX(ctx context.Context) *TopMostGood {
 
 // FirstID returns the first TopMostGood ID from the query.
 // Returns a *NotFoundError when no TopMostGood ID was found.
-func (tmgq *TopMostGoodQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (tmgq *TopMostGoodQuery) FirstID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = tmgq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -100,7 +99,7 @@ func (tmgq *TopMostGoodQuery) FirstID(ctx context.Context) (id uuid.UUID, err er
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (tmgq *TopMostGoodQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (tmgq *TopMostGoodQuery) FirstIDX(ctx context.Context) uint32 {
 	id, err := tmgq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -138,8 +137,8 @@ func (tmgq *TopMostGoodQuery) OnlyX(ctx context.Context) *TopMostGood {
 // OnlyID is like Only, but returns the only TopMostGood ID in the query.
 // Returns a *NotSingularError when more than one TopMostGood ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (tmgq *TopMostGoodQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (tmgq *TopMostGoodQuery) OnlyID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = tmgq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -155,7 +154,7 @@ func (tmgq *TopMostGoodQuery) OnlyID(ctx context.Context) (id uuid.UUID, err err
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (tmgq *TopMostGoodQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (tmgq *TopMostGoodQuery) OnlyIDX(ctx context.Context) uint32 {
 	id, err := tmgq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -181,8 +180,8 @@ func (tmgq *TopMostGoodQuery) AllX(ctx context.Context) []*TopMostGood {
 }
 
 // IDs executes the query and returns a list of TopMostGood IDs.
-func (tmgq *TopMostGoodQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	var ids []uuid.UUID
+func (tmgq *TopMostGoodQuery) IDs(ctx context.Context) ([]uint32, error) {
+	var ids []uint32
 	if err := tmgq.Select(topmostgood.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -190,7 +189,7 @@ func (tmgq *TopMostGoodQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (tmgq *TopMostGoodQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (tmgq *TopMostGoodQuery) IDsX(ctx context.Context) []uint32 {
 	ids, err := tmgq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -377,7 +376,7 @@ func (tmgq *TopMostGoodQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   topmostgood.Table,
 			Columns: topmostgood.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: topmostgood.FieldID,
 			},
 		},

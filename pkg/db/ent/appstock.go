@@ -16,13 +16,15 @@ import (
 type AppStock struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID uuid.UUID `json:"id,omitempty"`
+	ID uint32 `json:"id,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt uint32 `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
 	UpdatedAt uint32 `json:"updated_at,omitempty"`
 	// DeletedAt holds the value of the "deleted_at" field.
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
+	// EntID holds the value of the "ent_id" field.
+	EntID uuid.UUID `json:"ent_id,omitempty"`
 	// AppID holds the value of the "app_id" field.
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// GoodID holds the value of the "good_id" field.
@@ -50,9 +52,9 @@ func (*AppStock) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appstock.FieldReserved, appstock.FieldSpotQuantity, appstock.FieldLocked, appstock.FieldInService, appstock.FieldWaitStart, appstock.FieldSold:
 			values[i] = new(decimal.Decimal)
-		case appstock.FieldCreatedAt, appstock.FieldUpdatedAt, appstock.FieldDeletedAt:
+		case appstock.FieldID, appstock.FieldCreatedAt, appstock.FieldUpdatedAt, appstock.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case appstock.FieldID, appstock.FieldAppID, appstock.FieldGoodID, appstock.FieldAppGoodID:
+		case appstock.FieldEntID, appstock.FieldAppID, appstock.FieldGoodID, appstock.FieldAppGoodID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type AppStock", columns[i])
@@ -70,11 +72,11 @@ func (as *AppStock) assignValues(columns []string, values []interface{}) error {
 	for i := range columns {
 		switch columns[i] {
 		case appstock.FieldID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value != nil {
-				as.ID = *value
+			value, ok := values[i].(*sql.NullInt64)
+			if !ok {
+				return fmt.Errorf("unexpected type %T for field id", value)
 			}
+			as.ID = uint32(value.Int64)
 		case appstock.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -92,6 +94,12 @@ func (as *AppStock) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
 				as.DeletedAt = uint32(value.Int64)
+			}
+		case appstock.FieldEntID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field ent_id", values[i])
+			} else if value != nil {
+				as.EntID = *value
 			}
 		case appstock.FieldAppID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -183,6 +191,9 @@ func (as *AppStock) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("deleted_at=")
 	builder.WriteString(fmt.Sprintf("%v", as.DeletedAt))
+	builder.WriteString(", ")
+	builder.WriteString("ent_id=")
+	builder.WriteString(fmt.Sprintf("%v", as.EntID))
 	builder.WriteString(", ")
 	builder.WriteString("app_id=")
 	builder.WriteString(fmt.Sprintf("%v", as.AppID))

@@ -84,6 +84,20 @@ func (rgu *RequiredGoodUpdate) AddDeletedAt(u int32) *RequiredGoodUpdate {
 	return rgu
 }
 
+// SetEntID sets the "ent_id" field.
+func (rgu *RequiredGoodUpdate) SetEntID(u uuid.UUID) *RequiredGoodUpdate {
+	rgu.mutation.SetEntID(u)
+	return rgu
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (rgu *RequiredGoodUpdate) SetNillableEntID(u *uuid.UUID) *RequiredGoodUpdate {
+	if u != nil {
+		rgu.SetEntID(*u)
+	}
+	return rgu
+}
+
 // SetMainGoodID sets the "main_good_id" field.
 func (rgu *RequiredGoodUpdate) SetMainGoodID(u uuid.UUID) *RequiredGoodUpdate {
 	rgu.mutation.SetMainGoodID(u)
@@ -202,7 +216,7 @@ func (rgu *RequiredGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   requiredgood.Table,
 			Columns: requiredgood.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: requiredgood.FieldID,
 			},
 		},
@@ -254,6 +268,13 @@ func (rgu *RequiredGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: requiredgood.FieldDeletedAt,
+		})
+	}
+	if value, ok := rgu.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: requiredgood.FieldEntID,
 		})
 	}
 	if value, ok := rgu.mutation.MainGoodID(); ok {
@@ -356,6 +377,20 @@ func (rguo *RequiredGoodUpdateOne) SetNillableDeletedAt(u *uint32) *RequiredGood
 // AddDeletedAt adds u to the "deleted_at" field.
 func (rguo *RequiredGoodUpdateOne) AddDeletedAt(u int32) *RequiredGoodUpdateOne {
 	rguo.mutation.AddDeletedAt(u)
+	return rguo
+}
+
+// SetEntID sets the "ent_id" field.
+func (rguo *RequiredGoodUpdateOne) SetEntID(u uuid.UUID) *RequiredGoodUpdateOne {
+	rguo.mutation.SetEntID(u)
+	return rguo
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (rguo *RequiredGoodUpdateOne) SetNillableEntID(u *uuid.UUID) *RequiredGoodUpdateOne {
+	if u != nil {
+		rguo.SetEntID(*u)
+	}
 	return rguo
 }
 
@@ -490,7 +525,7 @@ func (rguo *RequiredGoodUpdateOne) sqlSave(ctx context.Context) (_node *Required
 			Table:   requiredgood.Table,
 			Columns: requiredgood.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: requiredgood.FieldID,
 			},
 		},
@@ -559,6 +594,13 @@ func (rguo *RequiredGoodUpdateOne) sqlSave(ctx context.Context) (_node *Required
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: requiredgood.FieldDeletedAt,
+		})
+	}
+	if value, ok := rguo.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: requiredgood.FieldEntID,
 		})
 	}
 	if value, ok := rguo.mutation.MainGoodID(); ok {

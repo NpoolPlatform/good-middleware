@@ -414,30 +414,6 @@ func (f LikeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) 
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.LikeMutation", m)
 }
 
-// The PromotionQueryRuleFunc type is an adapter to allow the use of ordinary
-// functions as a query rule.
-type PromotionQueryRuleFunc func(context.Context, *ent.PromotionQuery) error
-
-// EvalQuery return f(ctx, q).
-func (f PromotionQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.PromotionQuery); ok {
-		return f(ctx, q)
-	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.PromotionQuery", q)
-}
-
-// The PromotionMutationRuleFunc type is an adapter to allow the use of ordinary
-// functions as a mutation rule.
-type PromotionMutationRuleFunc func(context.Context, *ent.PromotionMutation) error
-
-// EvalMutation calls f(ctx, m).
-func (f PromotionMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.PromotionMutation); ok {
-		return f(ctx, m)
-	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.PromotionMutation", m)
-}
-
 // The RecommendQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type RecommendQueryRuleFunc func(context.Context, *ent.RecommendQuery) error
@@ -687,8 +663,6 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.LikeQuery:
 		return q.Filter(), nil
-	case *ent.PromotionQuery:
-		return q.Filter(), nil
 	case *ent.RecommendQuery:
 		return q.Filter(), nil
 	case *ent.RequiredGoodQuery:
@@ -733,8 +707,6 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	case *ent.GoodRewardHistoryMutation:
 		return m.Filter(), nil
 	case *ent.LikeMutation:
-		return m.Filter(), nil
-	case *ent.PromotionMutation:
 		return m.Filter(), nil
 	case *ent.RecommendMutation:
 		return m.Filter(), nil

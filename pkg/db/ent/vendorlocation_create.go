@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -61,6 +60,20 @@ func (vlc *VendorLocationCreate) SetDeletedAt(u uint32) *VendorLocationCreate {
 func (vlc *VendorLocationCreate) SetNillableDeletedAt(u *uint32) *VendorLocationCreate {
 	if u != nil {
 		vlc.SetDeletedAt(*u)
+	}
+	return vlc
+}
+
+// SetEntID sets the "ent_id" field.
+func (vlc *VendorLocationCreate) SetEntID(u uuid.UUID) *VendorLocationCreate {
+	vlc.mutation.SetEntID(u)
+	return vlc
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (vlc *VendorLocationCreate) SetNillableEntID(u *uuid.UUID) *VendorLocationCreate {
+	if u != nil {
+		vlc.SetEntID(*u)
 	}
 	return vlc
 }
@@ -136,16 +149,8 @@ func (vlc *VendorLocationCreate) SetNillableBrandID(u *uuid.UUID) *VendorLocatio
 }
 
 // SetID sets the "id" field.
-func (vlc *VendorLocationCreate) SetID(u uuid.UUID) *VendorLocationCreate {
+func (vlc *VendorLocationCreate) SetID(u uint32) *VendorLocationCreate {
 	vlc.mutation.SetID(u)
-	return vlc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (vlc *VendorLocationCreate) SetNillableID(u *uuid.UUID) *VendorLocationCreate {
-	if u != nil {
-		vlc.SetID(*u)
-	}
 	return vlc
 }
 
@@ -249,6 +254,13 @@ func (vlc *VendorLocationCreate) defaults() error {
 		v := vendorlocation.DefaultDeletedAt()
 		vlc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := vlc.mutation.EntID(); !ok {
+		if vendorlocation.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized vendorlocation.DefaultEntID (forgotten import ent/runtime?)")
+		}
+		v := vendorlocation.DefaultEntID()
+		vlc.mutation.SetEntID(v)
+	}
 	if _, ok := vlc.mutation.Country(); !ok {
 		v := vendorlocation.DefaultCountry
 		vlc.mutation.SetCountry(v)
@@ -272,13 +284,6 @@ func (vlc *VendorLocationCreate) defaults() error {
 		v := vendorlocation.DefaultBrandID()
 		vlc.mutation.SetBrandID(v)
 	}
-	if _, ok := vlc.mutation.ID(); !ok {
-		if vendorlocation.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized vendorlocation.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := vendorlocation.DefaultID()
-		vlc.mutation.SetID(v)
-	}
 	return nil
 }
 
@@ -292,6 +297,9 @@ func (vlc *VendorLocationCreate) check() error {
 	}
 	if _, ok := vlc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "VendorLocation.deleted_at"`)}
+	}
+	if _, ok := vlc.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "VendorLocation.ent_id"`)}
 	}
 	if v, ok := vlc.mutation.Country(); ok {
 		if err := vendorlocation.CountryValidator(v); err != nil {
@@ -324,12 +332,9 @@ func (vlc *VendorLocationCreate) sqlSave(ctx context.Context) (*VendorLocation, 
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -340,7 +345,7 @@ func (vlc *VendorLocationCreate) createSpec() (*VendorLocation, *sqlgraph.Create
 		_spec = &sqlgraph.CreateSpec{
 			Table: vendorlocation.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: vendorlocation.FieldID,
 			},
 		}
@@ -348,7 +353,7 @@ func (vlc *VendorLocationCreate) createSpec() (*VendorLocation, *sqlgraph.Create
 	_spec.OnConflict = vlc.conflict
 	if id, ok := vlc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := vlc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -373,6 +378,14 @@ func (vlc *VendorLocationCreate) createSpec() (*VendorLocation, *sqlgraph.Create
 			Column: vendorlocation.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
+	}
+	if value, ok := vlc.mutation.EntID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: vendorlocation.FieldEntID,
+		})
+		_node.EntID = value
 	}
 	if value, ok := vlc.mutation.Country(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -519,6 +532,18 @@ func (u *VendorLocationUpsert) UpdateDeletedAt() *VendorLocationUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *VendorLocationUpsert) AddDeletedAt(v uint32) *VendorLocationUpsert {
 	u.Add(vendorlocation.FieldDeletedAt, v)
+	return u
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *VendorLocationUpsert) SetEntID(v uuid.UUID) *VendorLocationUpsert {
+	u.Set(vendorlocation.FieldEntID, v)
+	return u
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *VendorLocationUpsert) UpdateEntID() *VendorLocationUpsert {
+	u.SetExcluded(vendorlocation.FieldEntID)
 	return u
 }
 
@@ -725,6 +750,20 @@ func (u *VendorLocationUpsertOne) UpdateDeletedAt() *VendorLocationUpsertOne {
 	})
 }
 
+// SetEntID sets the "ent_id" field.
+func (u *VendorLocationUpsertOne) SetEntID(v uuid.UUID) *VendorLocationUpsertOne {
+	return u.Update(func(s *VendorLocationUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *VendorLocationUpsertOne) UpdateEntID() *VendorLocationUpsertOne {
+	return u.Update(func(s *VendorLocationUpsert) {
+		s.UpdateEntID()
+	})
+}
+
 // SetCountry sets the "country" field.
 func (u *VendorLocationUpsertOne) SetCountry(v string) *VendorLocationUpsertOne {
 	return u.Update(func(s *VendorLocationUpsert) {
@@ -846,12 +885,7 @@ func (u *VendorLocationUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *VendorLocationUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: VendorLocationUpsertOne.ID is not supported by MySQL driver. Use VendorLocationUpsertOne.Exec instead")
-	}
+func (u *VendorLocationUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -860,7 +894,7 @@ func (u *VendorLocationUpsertOne) ID(ctx context.Context) (id uuid.UUID, err err
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *VendorLocationUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *VendorLocationUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -911,6 +945,10 @@ func (vlcb *VendorLocationCreateBulk) Save(ctx context.Context) ([]*VendorLocati
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -1106,6 +1144,20 @@ func (u *VendorLocationUpsertBulk) AddDeletedAt(v uint32) *VendorLocationUpsertB
 func (u *VendorLocationUpsertBulk) UpdateDeletedAt() *VendorLocationUpsertBulk {
 	return u.Update(func(s *VendorLocationUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *VendorLocationUpsertBulk) SetEntID(v uuid.UUID) *VendorLocationUpsertBulk {
+	return u.Update(func(s *VendorLocationUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *VendorLocationUpsertBulk) UpdateEntID() *VendorLocationUpsertBulk {
+	return u.Update(func(s *VendorLocationUpsert) {
+		s.UpdateEntID()
 	})
 }
 

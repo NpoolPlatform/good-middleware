@@ -14,7 +14,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
-	"github.com/google/uuid"
 )
 
 // AppGoodQuery is the builder for querying AppGood entities.
@@ -87,8 +86,8 @@ func (agq *AppGoodQuery) FirstX(ctx context.Context) *AppGood {
 
 // FirstID returns the first AppGood ID from the query.
 // Returns a *NotFoundError when no AppGood ID was found.
-func (agq *AppGoodQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (agq *AppGoodQuery) FirstID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = agq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -100,7 +99,7 @@ func (agq *AppGoodQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) 
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (agq *AppGoodQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (agq *AppGoodQuery) FirstIDX(ctx context.Context) uint32 {
 	id, err := agq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -138,8 +137,8 @@ func (agq *AppGoodQuery) OnlyX(ctx context.Context) *AppGood {
 // OnlyID is like Only, but returns the only AppGood ID in the query.
 // Returns a *NotSingularError when more than one AppGood ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (agq *AppGoodQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (agq *AppGoodQuery) OnlyID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = agq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -155,7 +154,7 @@ func (agq *AppGoodQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (agq *AppGoodQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (agq *AppGoodQuery) OnlyIDX(ctx context.Context) uint32 {
 	id, err := agq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -181,8 +180,8 @@ func (agq *AppGoodQuery) AllX(ctx context.Context) []*AppGood {
 }
 
 // IDs executes the query and returns a list of AppGood IDs.
-func (agq *AppGoodQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	var ids []uuid.UUID
+func (agq *AppGoodQuery) IDs(ctx context.Context) ([]uint32, error) {
+	var ids []uint32
 	if err := agq.Select(appgood.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -190,7 +189,7 @@ func (agq *AppGoodQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (agq *AppGoodQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (agq *AppGoodQuery) IDsX(ctx context.Context) []uint32 {
 	ids, err := agq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -377,7 +376,7 @@ func (agq *AppGoodQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   appgood.Table,
 			Columns: appgood.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: appgood.FieldID,
 			},
 		},

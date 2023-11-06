@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -62,6 +61,20 @@ func (eic *ExtraInfoCreate) SetDeletedAt(u uint32) *ExtraInfoCreate {
 func (eic *ExtraInfoCreate) SetNillableDeletedAt(u *uint32) *ExtraInfoCreate {
 	if u != nil {
 		eic.SetDeletedAt(*u)
+	}
+	return eic
+}
+
+// SetEntID sets the "ent_id" field.
+func (eic *ExtraInfoCreate) SetEntID(u uuid.UUID) *ExtraInfoCreate {
+	eic.mutation.SetEntID(u)
+	return eic
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (eic *ExtraInfoCreate) SetNillableEntID(u *uuid.UUID) *ExtraInfoCreate {
+	if u != nil {
+		eic.SetEntID(*u)
 	}
 	return eic
 }
@@ -169,16 +182,8 @@ func (eic *ExtraInfoCreate) SetNillableScore(d *decimal.Decimal) *ExtraInfoCreat
 }
 
 // SetID sets the "id" field.
-func (eic *ExtraInfoCreate) SetID(u uuid.UUID) *ExtraInfoCreate {
+func (eic *ExtraInfoCreate) SetID(u uint32) *ExtraInfoCreate {
 	eic.mutation.SetID(u)
-	return eic
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (eic *ExtraInfoCreate) SetNillableID(u *uuid.UUID) *ExtraInfoCreate {
-	if u != nil {
-		eic.SetID(*u)
-	}
 	return eic
 }
 
@@ -282,6 +287,13 @@ func (eic *ExtraInfoCreate) defaults() error {
 		v := extrainfo.DefaultDeletedAt()
 		eic.mutation.SetDeletedAt(v)
 	}
+	if _, ok := eic.mutation.EntID(); !ok {
+		if extrainfo.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized extrainfo.DefaultEntID (forgotten import ent/runtime?)")
+		}
+		v := extrainfo.DefaultEntID()
+		eic.mutation.SetEntID(v)
+	}
 	if _, ok := eic.mutation.Posters(); !ok {
 		v := extrainfo.DefaultPosters
 		eic.mutation.SetPosters(v)
@@ -314,13 +326,6 @@ func (eic *ExtraInfoCreate) defaults() error {
 		v := extrainfo.DefaultScore
 		eic.mutation.SetScore(v)
 	}
-	if _, ok := eic.mutation.ID(); !ok {
-		if extrainfo.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized extrainfo.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := extrainfo.DefaultID()
-		eic.mutation.SetID(v)
-	}
 	return nil
 }
 
@@ -334,6 +339,9 @@ func (eic *ExtraInfoCreate) check() error {
 	}
 	if _, ok := eic.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "ExtraInfo.deleted_at"`)}
+	}
+	if _, ok := eic.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "ExtraInfo.ent_id"`)}
 	}
 	if _, ok := eic.mutation.GoodID(); !ok {
 		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "ExtraInfo.good_id"`)}
@@ -349,12 +357,9 @@ func (eic *ExtraInfoCreate) sqlSave(ctx context.Context) (*ExtraInfo, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -365,7 +370,7 @@ func (eic *ExtraInfoCreate) createSpec() (*ExtraInfo, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: extrainfo.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: extrainfo.FieldID,
 			},
 		}
@@ -373,7 +378,7 @@ func (eic *ExtraInfoCreate) createSpec() (*ExtraInfo, *sqlgraph.CreateSpec) {
 	_spec.OnConflict = eic.conflict
 	if id, ok := eic.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := eic.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -398,6 +403,14 @@ func (eic *ExtraInfoCreate) createSpec() (*ExtraInfo, *sqlgraph.CreateSpec) {
 			Column: extrainfo.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
+	}
+	if value, ok := eic.mutation.EntID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: extrainfo.FieldEntID,
+		})
+		_node.EntID = value
 	}
 	if value, ok := eic.mutation.GoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -576,6 +589,18 @@ func (u *ExtraInfoUpsert) UpdateDeletedAt() *ExtraInfoUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *ExtraInfoUpsert) AddDeletedAt(v uint32) *ExtraInfoUpsert {
 	u.Add(extrainfo.FieldDeletedAt, v)
+	return u
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *ExtraInfoUpsert) SetEntID(v uuid.UUID) *ExtraInfoUpsert {
+	u.Set(extrainfo.FieldEntID, v)
+	return u
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *ExtraInfoUpsert) UpdateEntID() *ExtraInfoUpsert {
+	u.SetExcluded(extrainfo.FieldEntID)
 	return u
 }
 
@@ -878,6 +903,20 @@ func (u *ExtraInfoUpsertOne) UpdateDeletedAt() *ExtraInfoUpsertOne {
 	})
 }
 
+// SetEntID sets the "ent_id" field.
+func (u *ExtraInfoUpsertOne) SetEntID(v uuid.UUID) *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *ExtraInfoUpsertOne) UpdateEntID() *ExtraInfoUpsertOne {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.UpdateEntID()
+	})
+}
+
 // SetGoodID sets the "good_id" field.
 func (u *ExtraInfoUpsertOne) SetGoodID(v uuid.UUID) *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
@@ -1111,12 +1150,7 @@ func (u *ExtraInfoUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *ExtraInfoUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: ExtraInfoUpsertOne.ID is not supported by MySQL driver. Use ExtraInfoUpsertOne.Exec instead")
-	}
+func (u *ExtraInfoUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -1125,7 +1159,7 @@ func (u *ExtraInfoUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *ExtraInfoUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *ExtraInfoUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -1176,6 +1210,10 @@ func (eicb *ExtraInfoCreateBulk) Save(ctx context.Context) ([]*ExtraInfo, error)
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -1371,6 +1409,20 @@ func (u *ExtraInfoUpsertBulk) AddDeletedAt(v uint32) *ExtraInfoUpsertBulk {
 func (u *ExtraInfoUpsertBulk) UpdateDeletedAt() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *ExtraInfoUpsertBulk) SetEntID(v uuid.UUID) *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *ExtraInfoUpsertBulk) UpdateEntID() *ExtraInfoUpsertBulk {
+	return u.Update(func(s *ExtraInfoUpsert) {
+		s.UpdateEntID()
 	})
 }
 

@@ -14,7 +14,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
-	"github.com/google/uuid"
 )
 
 // ExtraInfoQuery is the builder for querying ExtraInfo entities.
@@ -87,8 +86,8 @@ func (eiq *ExtraInfoQuery) FirstX(ctx context.Context) *ExtraInfo {
 
 // FirstID returns the first ExtraInfo ID from the query.
 // Returns a *NotFoundError when no ExtraInfo ID was found.
-func (eiq *ExtraInfoQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (eiq *ExtraInfoQuery) FirstID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = eiq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -100,7 +99,7 @@ func (eiq *ExtraInfoQuery) FirstID(ctx context.Context) (id uuid.UUID, err error
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (eiq *ExtraInfoQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (eiq *ExtraInfoQuery) FirstIDX(ctx context.Context) uint32 {
 	id, err := eiq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -138,8 +137,8 @@ func (eiq *ExtraInfoQuery) OnlyX(ctx context.Context) *ExtraInfo {
 // OnlyID is like Only, but returns the only ExtraInfo ID in the query.
 // Returns a *NotSingularError when more than one ExtraInfo ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (eiq *ExtraInfoQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (eiq *ExtraInfoQuery) OnlyID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = eiq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -155,7 +154,7 @@ func (eiq *ExtraInfoQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error)
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (eiq *ExtraInfoQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (eiq *ExtraInfoQuery) OnlyIDX(ctx context.Context) uint32 {
 	id, err := eiq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -181,8 +180,8 @@ func (eiq *ExtraInfoQuery) AllX(ctx context.Context) []*ExtraInfo {
 }
 
 // IDs executes the query and returns a list of ExtraInfo IDs.
-func (eiq *ExtraInfoQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	var ids []uuid.UUID
+func (eiq *ExtraInfoQuery) IDs(ctx context.Context) ([]uint32, error) {
+	var ids []uint32
 	if err := eiq.Select(extrainfo.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -190,7 +189,7 @@ func (eiq *ExtraInfoQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (eiq *ExtraInfoQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (eiq *ExtraInfoQuery) IDsX(ctx context.Context) []uint32 {
 	ids, err := eiq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -377,7 +376,7 @@ func (eiq *ExtraInfoQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   extrainfo.Table,
 			Columns: extrainfo.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: extrainfo.FieldID,
 			},
 		},

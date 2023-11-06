@@ -19,6 +19,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
+	// FieldEntID holds the string denoting the ent_id field in the database.
+	FieldEntID = "ent_id"
 	// FieldGoodID holds the string denoting the good_id field in the database.
 	FieldGoodID = "good_id"
 	// FieldRewardState holds the string denoting the reward_state field in the database.
@@ -45,6 +47,7 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
+	FieldEntID,
 	FieldGoodID,
 	FieldRewardState,
 	FieldLastRewardAt,
@@ -82,6 +85,8 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// DefaultEntID holds the default value on creation for the "ent_id" field.
+	DefaultEntID func() uuid.UUID
 	// DefaultRewardState holds the default value on creation for the "reward_state" field.
 	DefaultRewardState string
 	// DefaultLastRewardAt holds the default value on creation for the "last_reward_at" field.
@@ -96,6 +101,4 @@ var (
 	DefaultLastUnitRewardAmount decimal.Decimal
 	// DefaultTotalRewardAmount holds the default value on creation for the "total_reward_amount" field.
 	DefaultTotalRewardAmount decimal.Decimal
-	// DefaultID holds the default value on creation for the "id" field.
-	DefaultID func() uuid.UUID
 )

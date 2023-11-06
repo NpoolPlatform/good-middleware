@@ -85,6 +85,20 @@ func (ru *RecommendUpdate) AddDeletedAt(u int32) *RecommendUpdate {
 	return ru
 }
 
+// SetEntID sets the "ent_id" field.
+func (ru *RecommendUpdate) SetEntID(u uuid.UUID) *RecommendUpdate {
+	ru.mutation.SetEntID(u)
+	return ru
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (ru *RecommendUpdate) SetNillableEntID(u *uuid.UUID) *RecommendUpdate {
+	if u != nil {
+		ru.SetEntID(*u)
+	}
+	return ru
+}
+
 // SetAppID sets the "app_id" field.
 func (ru *RecommendUpdate) SetAppID(u uuid.UUID) *RecommendUpdate {
 	ru.mutation.SetAppID(u)
@@ -243,7 +257,7 @@ func (ru *RecommendUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   recommend.Table,
 			Columns: recommend.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: recommend.FieldID,
 			},
 		},
@@ -295,6 +309,13 @@ func (ru *RecommendUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: recommend.FieldDeletedAt,
+		})
+	}
+	if value, ok := ru.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: recommend.FieldEntID,
 		})
 	}
 	if value, ok := ru.mutation.AppID(); ok {
@@ -423,6 +444,20 @@ func (ruo *RecommendUpdateOne) SetNillableDeletedAt(u *uint32) *RecommendUpdateO
 // AddDeletedAt adds u to the "deleted_at" field.
 func (ruo *RecommendUpdateOne) AddDeletedAt(u int32) *RecommendUpdateOne {
 	ruo.mutation.AddDeletedAt(u)
+	return ruo
+}
+
+// SetEntID sets the "ent_id" field.
+func (ruo *RecommendUpdateOne) SetEntID(u uuid.UUID) *RecommendUpdateOne {
+	ruo.mutation.SetEntID(u)
+	return ruo
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (ruo *RecommendUpdateOne) SetNillableEntID(u *uuid.UUID) *RecommendUpdateOne {
+	if u != nil {
+		ruo.SetEntID(*u)
+	}
 	return ruo
 }
 
@@ -597,7 +632,7 @@ func (ruo *RecommendUpdateOne) sqlSave(ctx context.Context) (_node *Recommend, e
 			Table:   recommend.Table,
 			Columns: recommend.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: recommend.FieldID,
 			},
 		},
@@ -666,6 +701,13 @@ func (ruo *RecommendUpdateOne) sqlSave(ctx context.Context) (_node *Recommend, e
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: recommend.FieldDeletedAt,
+		})
+	}
+	if value, ok := ruo.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: recommend.FieldEntID,
 		})
 	}
 	if value, ok := ruo.mutation.AppID(); ok {

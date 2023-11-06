@@ -84,6 +84,20 @@ func (cu *CommentUpdate) AddDeletedAt(u int32) *CommentUpdate {
 	return cu
 }
 
+// SetEntID sets the "ent_id" field.
+func (cu *CommentUpdate) SetEntID(u uuid.UUID) *CommentUpdate {
+	cu.mutation.SetEntID(u)
+	return cu
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableEntID(u *uuid.UUID) *CommentUpdate {
+	if u != nil {
+		cu.SetEntID(*u)
+	}
+	return cu
+}
+
 // SetAppID sets the "app_id" field.
 func (cu *CommentUpdate) SetAppID(u uuid.UUID) *CommentUpdate {
 	cu.mutation.SetAppID(u)
@@ -310,7 +324,7 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   comment.Table,
 			Columns: comment.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: comment.FieldID,
 			},
 		},
@@ -362,6 +376,13 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: comment.FieldDeletedAt,
+		})
+	}
+	if value, ok := cu.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: comment.FieldEntID,
 		})
 	}
 	if value, ok := cu.mutation.AppID(); ok {
@@ -528,6 +549,20 @@ func (cuo *CommentUpdateOne) SetNillableDeletedAt(u *uint32) *CommentUpdateOne {
 // AddDeletedAt adds u to the "deleted_at" field.
 func (cuo *CommentUpdateOne) AddDeletedAt(u int32) *CommentUpdateOne {
 	cuo.mutation.AddDeletedAt(u)
+	return cuo
+}
+
+// SetEntID sets the "ent_id" field.
+func (cuo *CommentUpdateOne) SetEntID(u uuid.UUID) *CommentUpdateOne {
+	cuo.mutation.SetEntID(u)
+	return cuo
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableEntID(u *uuid.UUID) *CommentUpdateOne {
+	if u != nil {
+		cuo.SetEntID(*u)
+	}
 	return cuo
 }
 
@@ -770,7 +805,7 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 			Table:   comment.Table,
 			Columns: comment.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: comment.FieldID,
 			},
 		},
@@ -839,6 +874,13 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: comment.FieldDeletedAt,
+		})
+	}
+	if value, ok := cuo.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: comment.FieldEntID,
 		})
 	}
 	if value, ok := cuo.mutation.AppID(); ok {

@@ -72,7 +72,7 @@ func (rgd *RequiredGoodDelete) sqlExec(ctx context.Context) (int, error) {
 		Node: &sqlgraph.NodeSpec{
 			Table: requiredgood.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: requiredgood.FieldID,
 			},
 		},

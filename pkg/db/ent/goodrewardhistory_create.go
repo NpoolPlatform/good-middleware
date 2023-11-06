@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -62,6 +61,20 @@ func (grhc *GoodRewardHistoryCreate) SetDeletedAt(u uint32) *GoodRewardHistoryCr
 func (grhc *GoodRewardHistoryCreate) SetNillableDeletedAt(u *uint32) *GoodRewardHistoryCreate {
 	if u != nil {
 		grhc.SetDeletedAt(*u)
+	}
+	return grhc
+}
+
+// SetEntID sets the "ent_id" field.
+func (grhc *GoodRewardHistoryCreate) SetEntID(u uuid.UUID) *GoodRewardHistoryCreate {
+	grhc.mutation.SetEntID(u)
+	return grhc
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (grhc *GoodRewardHistoryCreate) SetNillableEntID(u *uuid.UUID) *GoodRewardHistoryCreate {
+	if u != nil {
+		grhc.SetEntID(*u)
 	}
 	return grhc
 }
@@ -151,16 +164,8 @@ func (grhc *GoodRewardHistoryCreate) SetNillableUnitNetAmount(d *decimal.Decimal
 }
 
 // SetID sets the "id" field.
-func (grhc *GoodRewardHistoryCreate) SetID(u uuid.UUID) *GoodRewardHistoryCreate {
+func (grhc *GoodRewardHistoryCreate) SetID(u uint32) *GoodRewardHistoryCreate {
 	grhc.mutation.SetID(u)
-	return grhc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (grhc *GoodRewardHistoryCreate) SetNillableID(u *uuid.UUID) *GoodRewardHistoryCreate {
-	if u != nil {
-		grhc.SetID(*u)
-	}
 	return grhc
 }
 
@@ -264,6 +269,13 @@ func (grhc *GoodRewardHistoryCreate) defaults() error {
 		v := goodrewardhistory.DefaultDeletedAt()
 		grhc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := grhc.mutation.EntID(); !ok {
+		if goodrewardhistory.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized goodrewardhistory.DefaultEntID (forgotten import ent/runtime?)")
+		}
+		v := goodrewardhistory.DefaultEntID()
+		grhc.mutation.SetEntID(v)
+	}
 	if _, ok := grhc.mutation.RewardDate(); !ok {
 		if goodrewardhistory.DefaultRewardDate == nil {
 			return fmt.Errorf("ent: uninitialized goodrewardhistory.DefaultRewardDate (forgotten import ent/runtime?)")
@@ -290,13 +302,6 @@ func (grhc *GoodRewardHistoryCreate) defaults() error {
 		v := goodrewardhistory.DefaultUnitNetAmount
 		grhc.mutation.SetUnitNetAmount(v)
 	}
-	if _, ok := grhc.mutation.ID(); !ok {
-		if goodrewardhistory.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized goodrewardhistory.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := goodrewardhistory.DefaultID()
-		grhc.mutation.SetID(v)
-	}
 	return nil
 }
 
@@ -311,6 +316,9 @@ func (grhc *GoodRewardHistoryCreate) check() error {
 	if _, ok := grhc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "GoodRewardHistory.deleted_at"`)}
 	}
+	if _, ok := grhc.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "GoodRewardHistory.ent_id"`)}
+	}
 	return nil
 }
 
@@ -322,12 +330,9 @@ func (grhc *GoodRewardHistoryCreate) sqlSave(ctx context.Context) (*GoodRewardHi
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -338,7 +343,7 @@ func (grhc *GoodRewardHistoryCreate) createSpec() (*GoodRewardHistory, *sqlgraph
 		_spec = &sqlgraph.CreateSpec{
 			Table: goodrewardhistory.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: goodrewardhistory.FieldID,
 			},
 		}
@@ -346,7 +351,7 @@ func (grhc *GoodRewardHistoryCreate) createSpec() (*GoodRewardHistory, *sqlgraph
 	_spec.OnConflict = grhc.conflict
 	if id, ok := grhc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := grhc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -371,6 +376,14 @@ func (grhc *GoodRewardHistoryCreate) createSpec() (*GoodRewardHistory, *sqlgraph
 			Column: goodrewardhistory.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
+	}
+	if value, ok := grhc.mutation.EntID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: goodrewardhistory.FieldEntID,
+		})
+		_node.EntID = value
 	}
 	if value, ok := grhc.mutation.GoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -525,6 +538,18 @@ func (u *GoodRewardHistoryUpsert) UpdateDeletedAt() *GoodRewardHistoryUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *GoodRewardHistoryUpsert) AddDeletedAt(v uint32) *GoodRewardHistoryUpsert {
 	u.Add(goodrewardhistory.FieldDeletedAt, v)
+	return u
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *GoodRewardHistoryUpsert) SetEntID(v uuid.UUID) *GoodRewardHistoryUpsert {
+	u.Set(goodrewardhistory.FieldEntID, v)
+	return u
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *GoodRewardHistoryUpsert) UpdateEntID() *GoodRewardHistoryUpsert {
+	u.SetExcluded(goodrewardhistory.FieldEntID)
 	return u
 }
 
@@ -755,6 +780,20 @@ func (u *GoodRewardHistoryUpsertOne) UpdateDeletedAt() *GoodRewardHistoryUpsertO
 	})
 }
 
+// SetEntID sets the "ent_id" field.
+func (u *GoodRewardHistoryUpsertOne) SetEntID(v uuid.UUID) *GoodRewardHistoryUpsertOne {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *GoodRewardHistoryUpsertOne) UpdateEntID() *GoodRewardHistoryUpsertOne {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.UpdateEntID()
+	})
+}
+
 // SetGoodID sets the "good_id" field.
 func (u *GoodRewardHistoryUpsertOne) SetGoodID(v uuid.UUID) *GoodRewardHistoryUpsertOne {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
@@ -904,12 +943,7 @@ func (u *GoodRewardHistoryUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *GoodRewardHistoryUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: GoodRewardHistoryUpsertOne.ID is not supported by MySQL driver. Use GoodRewardHistoryUpsertOne.Exec instead")
-	}
+func (u *GoodRewardHistoryUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -918,7 +952,7 @@ func (u *GoodRewardHistoryUpsertOne) ID(ctx context.Context) (id uuid.UUID, err 
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *GoodRewardHistoryUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *GoodRewardHistoryUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -969,6 +1003,10 @@ func (grhcb *GoodRewardHistoryCreateBulk) Save(ctx context.Context) ([]*GoodRewa
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -1164,6 +1202,20 @@ func (u *GoodRewardHistoryUpsertBulk) AddDeletedAt(v uint32) *GoodRewardHistoryU
 func (u *GoodRewardHistoryUpsertBulk) UpdateDeletedAt() *GoodRewardHistoryUpsertBulk {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *GoodRewardHistoryUpsertBulk) SetEntID(v uuid.UUID) *GoodRewardHistoryUpsertBulk {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *GoodRewardHistoryUpsertBulk) UpdateEntID() *GoodRewardHistoryUpsertBulk {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.UpdateEntID()
 	})
 }
 

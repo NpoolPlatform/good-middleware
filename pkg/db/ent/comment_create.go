@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -61,6 +60,20 @@ func (cc *CommentCreate) SetDeletedAt(u uint32) *CommentCreate {
 func (cc *CommentCreate) SetNillableDeletedAt(u *uint32) *CommentCreate {
 	if u != nil {
 		cc.SetDeletedAt(*u)
+	}
+	return cc
+}
+
+// SetEntID sets the "ent_id" field.
+func (cc *CommentCreate) SetEntID(u uuid.UUID) *CommentCreate {
+	cc.mutation.SetEntID(u)
+	return cc
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (cc *CommentCreate) SetNillableEntID(u *uuid.UUID) *CommentCreate {
+	if u != nil {
+		cc.SetEntID(*u)
 	}
 	return cc
 }
@@ -164,16 +177,8 @@ func (cc *CommentCreate) SetNillableReplyToID(u *uuid.UUID) *CommentCreate {
 }
 
 // SetID sets the "id" field.
-func (cc *CommentCreate) SetID(u uuid.UUID) *CommentCreate {
+func (cc *CommentCreate) SetID(u uint32) *CommentCreate {
 	cc.mutation.SetID(u)
-	return cc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (cc *CommentCreate) SetNillableID(u *uuid.UUID) *CommentCreate {
-	if u != nil {
-		cc.SetID(*u)
-	}
 	return cc
 }
 
@@ -277,6 +282,13 @@ func (cc *CommentCreate) defaults() error {
 		v := comment.DefaultDeletedAt()
 		cc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := cc.mutation.EntID(); !ok {
+		if comment.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized comment.DefaultEntID (forgotten import ent/runtime?)")
+		}
+		v := comment.DefaultEntID()
+		cc.mutation.SetEntID(v)
+	}
 	if _, ok := cc.mutation.AppID(); !ok {
 		if comment.DefaultAppID == nil {
 			return fmt.Errorf("ent: uninitialized comment.DefaultAppID (forgotten import ent/runtime?)")
@@ -323,13 +335,6 @@ func (cc *CommentCreate) defaults() error {
 		v := comment.DefaultReplyToID()
 		cc.mutation.SetReplyToID(v)
 	}
-	if _, ok := cc.mutation.ID(); !ok {
-		if comment.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized comment.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := comment.DefaultID()
-		cc.mutation.SetID(v)
-	}
 	return nil
 }
 
@@ -344,6 +349,9 @@ func (cc *CommentCreate) check() error {
 	if _, ok := cc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "Comment.deleted_at"`)}
 	}
+	if _, ok := cc.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "Comment.ent_id"`)}
+	}
 	return nil
 }
 
@@ -355,12 +363,9 @@ func (cc *CommentCreate) sqlSave(ctx context.Context) (*Comment, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -371,7 +376,7 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: comment.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: comment.FieldID,
 			},
 		}
@@ -379,7 +384,7 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 	_spec.OnConflict = cc.conflict
 	if id, ok := cc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := cc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -404,6 +409,14 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 			Column: comment.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
+	}
+	if value, ok := cc.mutation.EntID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: comment.FieldEntID,
+		})
+		_node.EntID = value
 	}
 	if value, ok := cc.mutation.AppID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -566,6 +579,18 @@ func (u *CommentUpsert) UpdateDeletedAt() *CommentUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *CommentUpsert) AddDeletedAt(v uint32) *CommentUpsert {
 	u.Add(comment.FieldDeletedAt, v)
+	return u
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *CommentUpsert) SetEntID(v uuid.UUID) *CommentUpsert {
+	u.Set(comment.FieldEntID, v)
+	return u
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *CommentUpsert) UpdateEntID() *CommentUpsert {
+	u.SetExcluded(comment.FieldEntID)
 	return u
 }
 
@@ -808,6 +833,20 @@ func (u *CommentUpsertOne) UpdateDeletedAt() *CommentUpsertOne {
 	})
 }
 
+// SetEntID sets the "ent_id" field.
+func (u *CommentUpsertOne) SetEntID(v uuid.UUID) *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *CommentUpsertOne) UpdateEntID() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateEntID()
+	})
+}
+
 // SetAppID sets the "app_id" field.
 func (u *CommentUpsertOne) SetAppID(v uuid.UUID) *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
@@ -971,12 +1010,7 @@ func (u *CommentUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *CommentUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: CommentUpsertOne.ID is not supported by MySQL driver. Use CommentUpsertOne.Exec instead")
-	}
+func (u *CommentUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -985,7 +1019,7 @@ func (u *CommentUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *CommentUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *CommentUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -1036,6 +1070,10 @@ func (ccb *CommentCreateBulk) Save(ctx context.Context) ([]*Comment, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -1231,6 +1269,20 @@ func (u *CommentUpsertBulk) AddDeletedAt(v uint32) *CommentUpsertBulk {
 func (u *CommentUpsertBulk) UpdateDeletedAt() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *CommentUpsertBulk) SetEntID(v uuid.UUID) *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *CommentUpsertBulk) UpdateEntID() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateEntID()
 	})
 }
 

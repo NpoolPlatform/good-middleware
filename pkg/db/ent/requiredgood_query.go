@@ -14,7 +14,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
-	"github.com/google/uuid"
 )
 
 // RequiredGoodQuery is the builder for querying RequiredGood entities.
@@ -87,8 +86,8 @@ func (rgq *RequiredGoodQuery) FirstX(ctx context.Context) *RequiredGood {
 
 // FirstID returns the first RequiredGood ID from the query.
 // Returns a *NotFoundError when no RequiredGood ID was found.
-func (rgq *RequiredGoodQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (rgq *RequiredGoodQuery) FirstID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = rgq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -100,7 +99,7 @@ func (rgq *RequiredGoodQuery) FirstID(ctx context.Context) (id uuid.UUID, err er
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (rgq *RequiredGoodQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (rgq *RequiredGoodQuery) FirstIDX(ctx context.Context) uint32 {
 	id, err := rgq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -138,8 +137,8 @@ func (rgq *RequiredGoodQuery) OnlyX(ctx context.Context) *RequiredGood {
 // OnlyID is like Only, but returns the only RequiredGood ID in the query.
 // Returns a *NotSingularError when more than one RequiredGood ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (rgq *RequiredGoodQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (rgq *RequiredGoodQuery) OnlyID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = rgq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -155,7 +154,7 @@ func (rgq *RequiredGoodQuery) OnlyID(ctx context.Context) (id uuid.UUID, err err
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (rgq *RequiredGoodQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (rgq *RequiredGoodQuery) OnlyIDX(ctx context.Context) uint32 {
 	id, err := rgq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -181,8 +180,8 @@ func (rgq *RequiredGoodQuery) AllX(ctx context.Context) []*RequiredGood {
 }
 
 // IDs executes the query and returns a list of RequiredGood IDs.
-func (rgq *RequiredGoodQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	var ids []uuid.UUID
+func (rgq *RequiredGoodQuery) IDs(ctx context.Context) ([]uint32, error) {
+	var ids []uint32
 	if err := rgq.Select(requiredgood.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -190,7 +189,7 @@ func (rgq *RequiredGoodQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (rgq *RequiredGoodQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (rgq *RequiredGoodQuery) IDsX(ctx context.Context) []uint32 {
 	ids, err := rgq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -377,7 +376,7 @@ func (rgq *RequiredGoodQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   requiredgood.Table,
 			Columns: requiredgood.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: requiredgood.FieldID,
 			},
 		},
