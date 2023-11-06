@@ -12,7 +12,7 @@ import (
 )
 
 type Req struct {
-	ID        *uuid.UUID
+	EntID     *uuid.UUID
 	AppID     *uuid.UUID
 	UserID    *uuid.UUID
 	GoodID    *uuid.UUID
@@ -22,8 +22,8 @@ type Req struct {
 }
 
 func CreateSet(c *ent.ScoreCreate, req *Req) *ent.ScoreCreate {
-	if req.ID != nil {
-		c.SetID(*req.ID)
+	if req.EntID != nil {
+		c.SetEntID(*req.EntID)
 	}
 	if req.AppID != nil {
 		c.SetAppID(*req.AppID)
@@ -54,7 +54,7 @@ func UpdateSet(u *ent.ScoreUpdateOne, req *Req) *ent.ScoreUpdateOne {
 }
 
 type Conds struct {
-	ID         *cruder.Cond
+	EntID      *cruder.Cond
 	AppID      *cruder.Cond
 	UserID     *cruder.Cond
 	GoodID     *cruder.Cond
@@ -68,14 +68,14 @@ func SetQueryConds(q *ent.ScoreQuery, conds *Conds) (*ent.ScoreQuery, error) {
 	if conds == nil {
 		return q, nil
 	}
-	if conds.ID != nil {
-		id, ok := conds.ID.Val.(uuid.UUID)
+	if conds.EntID != nil {
+		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
 			return nil, fmt.Errorf("invalid id")
 		}
-		switch conds.ID.Op {
+		switch conds.EntID.Op {
 		case cruder.EQ:
-			q.Where(entscore.ID(id))
+			q.Where(entscore.EntID(id))
 		default:
 			return nil, fmt.Errorf("invalid score field")
 		}

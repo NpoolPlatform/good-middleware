@@ -11,7 +11,7 @@ import (
 )
 
 type Req struct {
-	ID               *uuid.UUID
+	EntID            *uuid.UUID
 	Type             *string
 	Manufacturer     *string
 	PowerConsumption *uint32
@@ -21,8 +21,8 @@ type Req struct {
 }
 
 func CreateSet(c *ent.DeviceInfoCreate, req *Req) *ent.DeviceInfoCreate {
-	if req.ID != nil {
-		c.SetID(*req.ID)
+	if req.EntID != nil {
+		c.SetEntID(*req.EntID)
 	}
 	if req.Type != nil {
 		c.SetType(*req.Type)
@@ -65,7 +65,7 @@ func UpdateSet(u *ent.DeviceInfoUpdateOne, req *Req) *ent.DeviceInfoUpdateOne {
 }
 
 type Conds struct {
-	ID           *cruder.Cond
+	EntID        *cruder.Cond
 	Type         *cruder.Cond
 	Manufacturer *cruder.Cond
 }
@@ -75,16 +75,16 @@ func SetQueryConds(q *ent.DeviceInfoQuery, conds *Conds) (*ent.DeviceInfoQuery, 
 	if conds == nil {
 		return q, nil
 	}
-	if conds.ID != nil {
-		id, ok := conds.ID.Val.(uuid.UUID)
+	if conds.EntID != nil {
+		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
 			return nil, fmt.Errorf("invalid id")
 		}
-		switch conds.ID.Op {
+		switch conds.EntID.Op {
 		case cruder.EQ:
-			q.Where(entdeviceinfo.ID(id))
+			q.Where(entdeviceinfo.EntID(id))
 		case cruder.NEQ:
-			q.Where(entdeviceinfo.IDNEQ(id))
+			q.Where(entdeviceinfo.EntIDNEQ(id))
 		default:
 			return nil, fmt.Errorf("invalid deviceinfo field")
 		}
