@@ -30,7 +30,7 @@ func (h *createHandler) createExtraInfo(ctx context.Context, tx *ent.Tx) error {
 	if _, err := extrainfocrud.CreateSet(
 		tx.ExtraInfo.Create(),
 		&extrainfocrud.Req{
-			GoodID:  h.ID,
+			GoodID:  h.EntID,
 			Posters: h.Posters,
 			Labels:  labels,
 		},
@@ -44,7 +44,7 @@ func (h *createHandler) createReward(ctx context.Context, tx *ent.Tx) error {
 	if _, err := rewardcrud.CreateSet(
 		tx.GoodReward.Create(),
 		&rewardcrud.Req{
-			GoodID: h.ID,
+			GoodID: h.EntID,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -56,7 +56,7 @@ func (h *createHandler) createStock(ctx context.Context, tx *ent.Tx) error {
 	if _, err := stockcrud.CreateSet(
 		tx.Stock.Create(),
 		&stockcrud.Req{
-			GoodID:       h.ID,
+			GoodID:       h.EntID,
 			Total:        h.Total,
 			SpotQuantity: h.Total,
 		},
@@ -70,7 +70,7 @@ func (h *createHandler) createGood(ctx context.Context, tx *ent.Tx) error {
 	if _, err := goodcrud.CreateSet(
 		tx.Good.Create(),
 		&goodcrud.Req{
-			ID:                   h.ID,
+			EntID:                h.EntID,
 			DeviceInfoID:         h.DeviceInfoID,
 			DurationDays:         h.DurationDays,
 			CoinTypeID:           h.CoinTypeID,
@@ -116,8 +116,8 @@ func (h *Handler) CreateGood(ctx context.Context) (*npool.Good, error) {
 	}
 
 	id := uuid.New()
-	if h.ID == nil {
-		h.ID = &id
+	if h.EntID == nil {
+		h.EntID = &id
 	}
 
 	handler := &createHandler{

@@ -18,6 +18,7 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
+	"github.com/google/uuid"
 
 	"github.com/shopspring/decimal"
 )
@@ -36,7 +37,7 @@ func (h *updateHandler) updateExtraInfo(ctx context.Context, tx *ent.Tx) error {
 		ExtraInfo.
 		Query().
 		Where(
-			entextrainfo.GoodID(*h.ID),
+			entextrainfo.GoodID(*h.EntID),
 			entextrainfo.DeletedAt(0),
 		).
 		ForUpdate().
@@ -67,7 +68,7 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 		GoodReward.
 		Query().
 		Where(
-			entgoodreward.GoodID(*h.ID),
+			entgoodreward.GoodID(*h.EntID),
 			entgoodreward.DeletedAt(0),
 		).
 		ForUpdate().
@@ -143,7 +144,7 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 	}
 
 	stm, err := rewardhistorycrud.SetQueryConds(tx.GoodRewardHistory.Query(), &rewardhistorycrud.Conds{
-		GoodID:     &cruder.Cond{Op: cruder.EQ, Val: *h.ID},
+		GoodID:     &cruder.Cond{Op: cruder.EQ, Val: *h.EntID},
 		RewardDate: &cruder.Cond{Op: cruder.EQ, Val: *h.RewardAt},
 	})
 	if err != nil {
@@ -160,7 +161,7 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 	if _, err := rewardhistorycrud.CreateSet(
 		tx.GoodRewardHistory.Create(),
 		&rewardhistorycrud.Req{
-			GoodID:     h.ID,
+			GoodID:     h.EntID,
 			RewardDate: h.RewardAt,
 			TID:        h.RewardTID,
 			Amount:     h.RewardAmount,
@@ -178,7 +179,7 @@ func (h *updateHandler) updateStock(ctx context.Context, tx *ent.Tx) error {
 		Stock.
 		Query().
 		Where(
-			entstock.GoodID(*h.ID),
+			entstock.GoodID(*h.EntID),
 			entstock.DeletedAt(0),
 		).
 		ForUpdate().
@@ -263,8 +264,17 @@ func (h *Handler) UpdateGood(ctx context.Context) (*npool.Good, error) {
 	handler := &updateHandler{
 		Handler: h,
 	}
+	info, err := h.GetGood(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if info == nil {
+		return nil, nil
+	}
+	entID := uuid.MustParse(info.EntID)
+	h.EntID = &entID
 
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateExtraInfo(_ctx, tx); err != nil {
 			return err
 		}
