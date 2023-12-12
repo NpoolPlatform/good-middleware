@@ -24,7 +24,7 @@ func (h *createHandler) createRecommend(ctx context.Context, tx *ent.Tx) error {
 	if _, err := recommendcrud.CreateSet(
 		tx.Recommend.Create(),
 		&recommendcrud.Req{
-			ID:             h.ID,
+			EntID:          h.EntID,
 			AppID:          h.AppID,
 			RecommenderID:  h.RecommenderID,
 			GoodID:         h.GoodID,
@@ -73,8 +73,8 @@ func (h *Handler) CreateRecommend(ctx context.Context) (*npool.Recommend, error)
 	}()
 
 	id := uuid.New()
-	if h.ID == nil {
-		h.ID = &id
+	if h.EntID == nil {
+		h.EntID = &id
 	}
 
 	handler := &createHandler{

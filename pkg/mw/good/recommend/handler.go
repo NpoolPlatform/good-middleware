@@ -15,7 +15,8 @@ import (
 )
 
 type Handler struct {
-	ID             *uuid.UUID
+	ID             *uint32
+	EntID          *uuid.UUID
 	AppID          *uuid.UUID
 	RecommenderID  *uuid.UUID
 	GoodID         *uuid.UUID
@@ -36,7 +37,7 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 	return handler, nil
 }
 
-func WithID(id *string, must bool) func(context.Context, *Handler) error {
+func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
@@ -44,11 +45,24 @@ func WithID(id *string, must bool) func(context.Context, *Handler) error {
 			}
 			return nil
 		}
+		h.ID = id
+		return nil
+	}
+}
+
+func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid entid")
+			}
+			return nil
+		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
 			return err
 		}
-		h.ID = &_id
+		h.EntID = &_id
 		return nil
 	}
 }
@@ -91,7 +105,7 @@ func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		handler, err := good1.NewHandler(
 			ctx,
-			good1.WithID(id, true),
+			good1.WithEntID(id, true),
 		)
 		if err != nil {
 			return err
@@ -103,7 +117,7 @@ func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
 		if !exist {
 			return fmt.Errorf("invalid good")
 		}
-		h.GoodID = handler.ID
+		h.GoodID = handler.EntID
 		return nil
 	}
 }
@@ -148,15 +162,15 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if conds == nil {
 			return nil
 		}
-		if conds.ID != nil {
-			id, err := uuid.Parse(conds.GetID().GetValue())
+		if conds.EntID != nil {
+			id, err := uuid.Parse(conds.GetEntID().GetValue())
 			if err != nil {
 				return err
 			}
-			h.Conds.ID = &cruder.Cond{
-				Op:  conds.GetID().GetOp(),
-				Val: id,
-			}
+			h.Conds.EntID = &cruder.Cond{Op: conds.GetEntID().GetOp(), Val: id}
+		}
+		if conds.ID != nil {
+			h.Conds.ID = &cruder.Cond{Op: conds.GetID().GetOp(), Val: conds.GetID().GetValue()}
 		}
 		if conds.AppID != nil {
 			id, err := uuid.Parse(conds.GetAppID().GetValue())

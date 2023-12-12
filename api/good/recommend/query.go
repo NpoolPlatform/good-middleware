@@ -15,7 +15,7 @@ import (
 func (s *Server) GetRecommend(ctx context.Context, in *npool.GetRecommendRequest) (*npool.GetRecommendResponse, error) {
 	handler, err := recommend1.NewHandler(
 		ctx,
-		recommend1.WithID(&in.ID, true),
+		recommend1.WithEntID(&in.EntID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

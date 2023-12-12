@@ -45,7 +45,7 @@ func init() {
 }
 
 var good = goodmwpb.Good{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	DeviceInfoID:           uuid.NewString(),
 	DeviceType:             uuid.NewString(),
 	DeviceManufacturer:     uuid.NewString(),
@@ -87,10 +87,10 @@ var good = goodmwpb.Good{
 }
 
 var ret = npool.Recommend{
-	ID:             uuid.NewString(),
+	EntID:          uuid.NewString(),
 	AppID:          uuid.NewString(),
 	RecommenderID:  uuid.NewString(),
-	GoodID:         good.ID,
+	GoodID:         good.EntID,
 	RecommendIndex: decimal.RequireFromString("4.9").String(),
 	Message:        uuid.NewString(),
 	GoodName:       good.Title,
@@ -104,18 +104,18 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, info1)
 
-	_, err = vendorlocation1.CreateLocation(context.Background(), &vendorlocationmwpb.LocationReq{
-		ID:       &good.VendorLocationID,
+	vendorLocation, err := vendorlocation1.CreateLocation(context.Background(), &vendorlocationmwpb.LocationReq{
+		EntID:    &good.VendorLocationID,
 		Country:  &good.VendorLocationCountry,
 		Province: &good.VendorLocationProvince,
 		City:     &good.VendorLocationCity,
 		Address:  &good.VendorLocationAddress,
-		BrandID:  &info1.ID,
+		BrandID:  &info1.EntID,
 	})
 	assert.Nil(t, err)
 
-	_, err = deviceinfo1.CreateDeviceInfo(context.Background(), &deviceinfomwpb.DeviceInfoReq{
-		ID:               &good.DeviceInfoID,
+	device, err := deviceinfo1.CreateDeviceInfo(context.Background(), &deviceinfomwpb.DeviceInfoReq{
+		EntID:            &good.DeviceInfoID,
 		Type:             &good.DeviceType,
 		Manufacturer:     &good.DeviceManufacturer,
 		PowerConsumption: &good.DevicePowerConsumption,
@@ -125,7 +125,7 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = good1.CreateGood(context.Background(), &goodmwpb.GoodReq{
-		ID:                   &good.ID,
+		EntID:                &good.EntID,
 		DeviceInfoID:         &good.DeviceInfoID,
 		DurationDays:         &good.DurationDays,
 		CoinTypeID:           &good.CoinTypeID,
@@ -150,15 +150,15 @@ func setup(t *testing.T) func(*testing.T) {
 
 	return func(*testing.T) {
 		_, _ = good1.DeleteGood(context.Background(), good.ID)
-		_, _ = deviceinfo1.DeleteDeviceInfo(context.Background(), good.DeviceInfoID)
-		_, _ = vendorlocation1.DeleteLocation(context.Background(), good.VendorLocationID)
+		_, _ = deviceinfo1.DeleteDeviceInfo(context.Background(), device.ID)
+		_, _ = vendorlocation1.DeleteLocation(context.Background(), vendorLocation.ID)
 		_, _ = vendorbrand1.DeleteBrand(context.Background(), info1.ID)
 	}
 }
 
 func createRecommend(t *testing.T) {
 	info, err := CreateRecommend(context.Background(), &npool.RecommendReq{
-		ID:             &ret.ID,
+		EntID:          &ret.EntID,
 		AppID:          &ret.AppID,
 		RecommenderID:  &ret.RecommenderID,
 		GoodID:         &ret.GoodID,
@@ -168,6 +168,7 @@ func createRecommend(t *testing.T) {
 	if assert.Nil(t, err) {
 		ret.CreatedAt = info.CreatedAt
 		ret.UpdatedAt = info.UpdatedAt
+		ret.ID = info.ID
 		assert.Equal(t, &ret, info)
 	}
 }
@@ -186,7 +187,8 @@ func updateRecommend(t *testing.T) {
 
 func getRecommends(t *testing.T) {
 	infos, total, err := GetRecommends(context.Background(), &npool.Conds{
-		ID:            &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:            &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		AppID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
 		RecommenderID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.RecommenderID},
 		GoodID:        &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
@@ -201,7 +203,8 @@ func getRecommends(t *testing.T) {
 
 func getRecommendOnly(t *testing.T) {
 	info, err := GetRecommendOnly(context.Background(), &npool.Conds{
-		ID:            &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:            &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		AppID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
 		RecommenderID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.RecommenderID},
 		GoodID:        &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
@@ -219,7 +222,8 @@ func deleteRecommend(t *testing.T) {
 	}
 
 	info, err = GetRecommendOnly(context.Background(), &npool.Conds{
-		ID:            &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:            &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		AppID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
 		RecommenderID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.RecommenderID},
 		GoodID:        &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
