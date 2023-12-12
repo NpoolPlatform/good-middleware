@@ -26,15 +26,19 @@ func (h *queryHandler) selectLike(stm *ent.LikeQuery) *ent.LikeSelect {
 	return stm.Select(entlike.FieldID)
 }
 
-func (h *queryHandler) queryLike(cli *ent.Client) {
-	h.stmSelect = h.selectLike(
-		cli.Like.
-			Query().
-			Where(
-				entlike.ID(*h.ID),
-				entlike.DeletedAt(0),
-			),
-	)
+func (h *queryHandler) queryLike(cli *ent.Client) error {
+	if h.ID == nil && h.EntID == nil {
+		return fmt.Errorf("invalid id")
+	}
+	stm := cli.Like.Query().Where(entlike.DeletedAt(0))
+	if h.ID != nil {
+		stm.Where(entlike.ID(*h.ID))
+	}
+	if h.EntID != nil {
+		stm.Where(entlike.EntID(*h.EntID))
+	}
+	h.stmSelect = h.selectLike(stm)
+	return nil
 }
 
 func (h *queryHandler) queryLikes(cli *ent.Client) (*ent.LikeSelect, error) {
@@ -53,6 +57,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(entlike.FieldID),
 		).
 		AppendSelect(
+			sql.As(t.C(entlike.FieldEntID), "ent_id"),
 			sql.As(t.C(entlike.FieldAppID), "app_id"),
 			sql.As(t.C(entlike.FieldUserID), "user_id"),
 			sql.As(t.C(entlike.FieldGoodID), "good_id"),
@@ -68,7 +73,7 @@ func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
 	s.LeftJoin(t).
 		On(
 			s.C(entlike.FieldAppGoodID),
-			t.C(entappgood.FieldID),
+			t.C(entappgood.FieldEntID),
 		).
 		AppendSelect(
 			sql.As(t.C(entappgood.FieldGoodName), "good_name"),
@@ -98,7 +103,9 @@ func (h *Handler) GetLike(ctx context.Context) (*npool.Like, error) {
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.queryLike(cli)
+		if err := handler.queryLike(cli); err != nil {
+			return err
+		}
 		handler.queryJoin()
 		return handler.scan(ctx)
 	})

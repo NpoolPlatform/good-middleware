@@ -15,7 +15,7 @@ import (
 func (s *Server) GetLike(ctx context.Context, in *npool.GetLikeRequest) (*npool.GetLikeResponse, error) {
 	handler, err := like1.NewHandler(
 		ctx,
-		like1.WithID(&in.ID, true),
+		like1.WithEntID(&in.EntID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

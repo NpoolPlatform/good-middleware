@@ -113,7 +113,7 @@ func ExistLikeConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 	return info.(bool), nil
 }
 
-func DeleteLike(ctx context.Context, id string) (*npool.Like, error) {
+func DeleteLike(ctx context.Context, id uint32) (*npool.Like, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteLike(ctx, &npool.DeleteLikeRequest{
 			Info: &npool.LikeReq{
@@ -134,7 +134,7 @@ func DeleteLike(ctx context.Context, id string) (*npool.Like, error) {
 func GetLike(ctx context.Context, id string) (*npool.Like, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.GetLike(ctx, &npool.GetLikeRequest{
-			ID: id,
+			EntID: id,
 		})
 		if err != nil {
 			return nil, err
