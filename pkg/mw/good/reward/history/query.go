@@ -43,6 +43,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(enthistory.FieldID),
 		).
 		AppendSelect(
+			sql.As(t.C(enthistory.FieldEntID), "ent_id"),
 			sql.As(t.C(enthistory.FieldGoodID), "good_id"),
 			sql.As(t.C(enthistory.FieldRewardDate), "reward_date"),
 			sql.As(t.C(enthistory.FieldTid), "tid"),
@@ -58,7 +59,7 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 	s.LeftJoin(t).
 		On(
 			s.C(enthistory.FieldGoodID),
-			t.C(entgood.FieldID),
+			t.C(entgood.FieldEntID),
 		).
 		AppendSelect(
 			sql.As(t.C(entgood.FieldTitle), "good_name"),

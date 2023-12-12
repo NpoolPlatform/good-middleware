@@ -47,6 +47,7 @@ func UpdateSet(u *ent.GoodRewardHistoryUpdateOne, req *Req) *ent.GoodRewardHisto
 }
 
 type Conds struct {
+	ID         *cruder.Cond
 	EntID      *cruder.Cond
 	GoodID     *cruder.Cond
 	GoodIDs    *cruder.Cond
@@ -60,6 +61,18 @@ func SetQueryConds(q *ent.GoodRewardHistoryQuery, conds *Conds) (*ent.GoodReward
 	q.Where(entgoodrewardhistory.DeletedAt(0))
 	if conds == nil {
 		return q, nil
+	}
+	if conds.ID != nil {
+		id, ok := conds.ID.Val.(uint32)
+		if !ok {
+			return nil, fmt.Errorf("invalid id")
+		}
+		switch conds.ID.Op {
+		case cruder.EQ:
+			q.Where(entgoodrewardhistory.ID(id))
+		default:
+			return nil, fmt.Errorf("invalid goodrewardhistory field")
+		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
