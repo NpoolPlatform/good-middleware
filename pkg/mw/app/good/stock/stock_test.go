@@ -35,7 +35,7 @@ func init() {
 }
 
 var good = goodmwpb.Good{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	DeviceInfoID:           uuid.NewString(),
 	DeviceType:             uuid.NewString(),
 	DeviceManufacturer:     uuid.NewString(),
@@ -77,9 +77,9 @@ var good = goodmwpb.Good{
 }
 
 var appgood = appgoodmwpb.Good{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	AppID:                  uuid.NewString(),
-	GoodID:                 good.ID,
+	GoodID:                 good.EntID,
 	Online:                 false,
 	Visible:                false,
 	GoodName:               good.Title,
@@ -120,10 +120,10 @@ var appgood = appgoodmwpb.Good{
 }
 
 var ret = npool.Stock{
-	ID:        uuid.NewString(),
+	EntID:     uuid.NewString(),
 	AppID:     appgood.AppID,
-	GoodID:    good.ID,
-	AppGoodID: appgood.ID,
+	GoodID:    good.EntID,
+	AppGoodID: appgood.EntID,
 	Reserved:  "100",
 	Locked:    decimal.NewFromInt(0).String(),
 	InService: decimal.NewFromInt(0).String(),
@@ -146,24 +146,26 @@ func setup(t *testing.T) func(*testing.T) {
 
 	info1, err := h1.CreateBrand(context.Background())
 	assert.Nil(t, err)
+	h1.ID = &info1.ID
 
 	h2, err := vendorlocation1.NewHandler(
 		context.Background(),
-		vendorlocation1.WithID(&good.VendorLocationID, true),
+		vendorlocation1.WithEntID(&good.VendorLocationID, true),
 		vendorlocation1.WithCountry(&good.VendorLocationCountry, true),
 		vendorlocation1.WithProvince(&good.VendorLocationProvince, true),
 		vendorlocation1.WithCity(&good.VendorLocationCity, true),
 		vendorlocation1.WithAddress(&good.VendorLocationAddress, true),
-		vendorlocation1.WithBrandID(&info1.ID, true),
+		vendorlocation1.WithBrandID(&info1.EntID, true),
 	)
 	assert.Nil(t, err)
 
-	_, err = h2.CreateLocation(context.Background())
+	info2, err := h2.CreateLocation(context.Background())
 	assert.Nil(t, err)
+	h2.ID = &info2.ID
 
 	h3, err := deviceinfo1.NewHandler(
 		context.Background(),
-		deviceinfo1.WithID(&good.DeviceInfoID, true),
+		deviceinfo1.WithEntID(&good.DeviceInfoID, true),
 		deviceinfo1.WithType(&good.DeviceType, true),
 		deviceinfo1.WithManufacturer(&good.DeviceManufacturer, true),
 		deviceinfo1.WithPowerConsumption(&good.DevicePowerConsumption, true),
@@ -172,12 +174,13 @@ func setup(t *testing.T) func(*testing.T) {
 	)
 	assert.Nil(t, err)
 
-	_, err = h3.CreateDeviceInfo(context.Background())
+	info3, err := h3.CreateDeviceInfo(context.Background())
 	assert.Nil(t, err)
+	h3.ID = &info3.ID
 
 	h4, err := good1.NewHandler(
 		context.Background(),
-		good1.WithID(&good.ID, true),
+		good1.WithEntID(&good.EntID, true),
 		good1.WithDeviceInfoID(&good.DeviceInfoID, true),
 		good1.WithDurationDays(&good.DurationDays, true),
 		good1.WithCoinTypeID(&good.CoinTypeID, true),
@@ -200,12 +203,13 @@ func setup(t *testing.T) func(*testing.T) {
 	)
 	assert.Nil(t, err)
 
-	_, err = h4.CreateGood(context.Background())
+	info4, err := h4.CreateGood(context.Background())
 	assert.Nil(t, err)
+	h4.ID = &info4.ID
 
 	h5, err := appgood1.NewHandler(
 		context.Background(),
-		appgood1.WithID(&appgood.ID, true),
+		appgood1.WithEntID(&appgood.EntID, true),
 		appgood1.WithAppID(&appgood.AppID, true),
 		appgood1.WithGoodID(&appgood.GoodID, true),
 		appgood1.WithPrice(&appgood.Price, true),
@@ -215,7 +219,8 @@ func setup(t *testing.T) func(*testing.T) {
 
 	info5, err := h5.CreateGood(context.Background())
 	assert.Nil(t, err)
-	ret.ID = info5.AppGoodStockID
+	h5.ID = &info5.ID
+	ret.EntID = info5.AppGoodStockID
 
 	return func(*testing.T) {
 		_, _ = h5.DeleteGood(context.Background())
@@ -231,7 +236,7 @@ func reserveStock(t *testing.T) {
 
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
@@ -242,6 +247,7 @@ func reserveStock(t *testing.T) {
 		if assert.Nil(t, err) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
+			ret.ID = info.ID
 			assert.Equal(t, &ret, info)
 		}
 	}
@@ -253,7 +259,8 @@ func lockStock(t *testing.T) {
 
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
+		WithEntID(&ret.EntID, true),
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
@@ -295,7 +302,7 @@ func waitStartStock(t *testing.T) {
 
 	h1, err := good1.NewHandler(
 		context.Background(),
-		good1.WithID(&good.ID, true),
+		good1.WithEntID(&good.EntID, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := h1.GetGood(context.Background())
@@ -314,6 +321,7 @@ func lockFailStock(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
@@ -348,7 +356,7 @@ func chargeBackStock(t *testing.T) {
 
 	h1, err := good1.NewHandler(
 		context.Background(),
-		good1.WithID(&good.ID, true),
+		good1.WithEntID(&good.EntID, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := h1.GetGood(context.Background())

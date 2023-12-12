@@ -12,6 +12,7 @@ import (
 )
 
 type Req struct {
+	ID           *uint32
 	EntID        *uuid.UUID
 	AppID        *uuid.UUID
 	GoodID       *uuid.UUID
@@ -85,6 +86,7 @@ func UpdateSet(u *ent.AppStockUpdateOne, req *Req) *ent.AppStockUpdateOne {
 }
 
 type Conds struct {
+	ID         *cruder.Cond
 	EntID      *cruder.Cond
 	AppID      *cruder.Cond
 	GoodID     *cruder.Cond
@@ -99,6 +101,18 @@ func SetQueryConds(q *ent.AppStockQuery, conds *Conds) (*ent.AppStockQuery, erro
 	q.Where(entappstock.DeletedAt(0))
 	if conds == nil {
 		return q, nil
+	}
+	if conds.ID != nil {
+		id, ok := conds.ID.Val.(uint32)
+		if !ok {
+			return nil, fmt.Errorf("invalid id")
+		}
+		switch conds.ID.Op {
+		case cruder.EQ:
+			q.Where(entappstock.ID(id))
+		default:
+			return nil, fmt.Errorf("invalid appstock field")
+		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)

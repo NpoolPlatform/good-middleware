@@ -23,7 +23,7 @@ func (h *lockopHandler) getLock(ctx context.Context) error {
 			AppStockLock.
 			Query().
 			Where(
-				entappstocklock.ID(*h.LockID),
+				entappstocklock.EntID(*h.LockID),
 				entappstocklock.DeletedAt(0),
 			).
 			Only(ctx)
@@ -31,7 +31,7 @@ func (h *lockopHandler) getLock(ctx context.Context) error {
 			return err
 		}
 		h.lock = lock
-		h.ID = &lock.AppStockID
+		h.EntID = &lock.AppStockID
 		return nil
 	})
 }
@@ -78,8 +78,8 @@ func (h *lockopHandler) createLock(ctx context.Context, tx *ent.Tx) error {
 	if _, err := appstocklockcrud.CreateSet(
 		tx.AppStockLock.Create(),
 		&appstocklockcrud.Req{
-			ID:           h.LockID,
-			AppStockID:   h.ID,
+			EntID:        h.LockID,
+			AppStockID:   h.EntID,
 			Units:        h.Locked,
 			AppSpotUnits: h.AppSpotLocked,
 		},

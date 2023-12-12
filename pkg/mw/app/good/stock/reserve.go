@@ -112,7 +112,16 @@ func (h *Handler) ReserveStock(ctx context.Context) (*npool.Stock, error) {
 	handler := &reserveHandler{
 		Handler: h,
 	}
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	info, err := h.GetStock(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if info == nil {
+		return nil, fmt.Errorf("invalid appstock")
+	}
+	h.ID = &info.ID
+
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.reserveAppStock(ctx, tx); err != nil {
 			return err
 		}

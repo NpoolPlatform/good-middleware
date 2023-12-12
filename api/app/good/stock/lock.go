@@ -15,7 +15,7 @@ import (
 func (s *Server) Lock(ctx context.Context, in *npool.LockRequest) (*npool.LockResponse, error) {
 	handler, err := appstock1.NewHandler(
 		ctx,
-		appstock1.WithID(&in.ID, true),
+		appstock1.WithEntID(&in.EntID, true),
 		appstock1.WithAppID(&in.AppID, true),
 		appstock1.WithGoodID(&in.GoodID, true),
 		appstock1.WithAppGoodID(&in.AppGoodID, true),

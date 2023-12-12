@@ -79,7 +79,7 @@ func (h *waitStartHandler) waitStartAppStock(ctx context.Context, tx *ent.Tx) er
 		AppStock.
 		Query().
 		Where(
-			entappstock.ID(h.lock.AppStockID),
+			entappstock.EntID(h.lock.AppStockID),
 			entappstock.DeletedAt(0),
 		).
 		ForUpdate().
