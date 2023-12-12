@@ -11,6 +11,7 @@ import (
 )
 
 type Req struct {
+	ID             *uint32
 	EntID          *uuid.UUID
 	MainGoodID     *uuid.UUID
 	RequiredGoodID *uuid.UUID
@@ -45,6 +46,7 @@ func UpdateSet(u *ent.RequiredGoodUpdateOne, req *Req) *ent.RequiredGoodUpdateOn
 }
 
 type Conds struct {
+	ID             *cruder.Cond
 	EntID          *cruder.Cond
 	MainGoodID     *cruder.Cond
 	RequiredGoodID *cruder.Cond
@@ -52,11 +54,23 @@ type Conds struct {
 	GoodIDs        *cruder.Cond
 }
 
-//nolint:gocyclo
+//nolint:funlen,gocyclo
 func SetQueryConds(q *ent.RequiredGoodQuery, conds *Conds) (*ent.RequiredGoodQuery, error) {
 	q.Where(entrequiredgood.DeletedAt(0))
 	if conds == nil {
 		return q, nil
+	}
+	if conds.ID != nil {
+		id, ok := conds.ID.Val.(uint32)
+		if !ok {
+			return nil, fmt.Errorf("invalid id")
+		}
+		switch conds.ID.Op {
+		case cruder.EQ:
+			q.Where(entrequiredgood.ID(id))
+		default:
+			return nil, fmt.Errorf("invalid requiredgood field")
+		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)

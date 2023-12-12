@@ -23,7 +23,7 @@ func (s *Server) CreateRequired(ctx context.Context, in *npool.CreateRequiredReq
 	}
 	handler, err := required1.NewHandler(
 		ctx,
-		required1.WithID(req.ID, false),
+		required1.WithEntID(req.EntID, false),
 		required1.WithMainGoodID(req.MainGoodID, true),
 		required1.WithRequiredGoodID(req.RequiredGoodID, true),
 		required1.WithMust(req.Must, true),

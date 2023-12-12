@@ -45,7 +45,7 @@ func init() {
 }
 
 var _good1 = goodmwpb.Good{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	DeviceInfoID:           uuid.NewString(),
 	DeviceType:             uuid.NewString(),
 	DeviceManufacturer:     uuid.NewString(),
@@ -87,7 +87,7 @@ var _good1 = goodmwpb.Good{
 }
 
 var _good2 = goodmwpb.Good{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	DeviceInfoID:           _good1.DeviceInfoID,
 	DeviceType:             _good1.DeviceType,
 	DeviceManufacturer:     _good1.DeviceManufacturer,
@@ -129,9 +129,9 @@ var _good2 = goodmwpb.Good{
 }
 
 var ret = npool.Required{
-	ID:               uuid.NewString(),
-	MainGoodID:       _good1.ID,
-	RequiredGoodID:   _good2.ID,
+	EntID:            uuid.NewString(),
+	MainGoodID:       _good1.EntID,
+	RequiredGoodID:   _good2.EntID,
 	Must:             true,
 	MainGoodName:     _good1.Title,
 	RequiredGoodName: _good2.Title,
@@ -145,18 +145,18 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, info1)
 
-	_, err = vendorlocation1.CreateLocation(context.Background(), &vendorlocationmwpb.LocationReq{
-		ID:       &_good1.VendorLocationID,
+	vendorLocation, err := vendorlocation1.CreateLocation(context.Background(), &vendorlocationmwpb.LocationReq{
+		EntID:    &_good1.VendorLocationID,
 		Country:  &_good1.VendorLocationCountry,
 		Province: &_good1.VendorLocationProvince,
 		City:     &_good1.VendorLocationCity,
 		Address:  &_good1.VendorLocationAddress,
-		BrandID:  &info1.ID,
+		BrandID:  &info1.EntID,
 	})
 	assert.Nil(t, err)
 
-	_, err = deviceinfo1.CreateDeviceInfo(context.Background(), &deviceinfomwpb.DeviceInfoReq{
-		ID:               &_good1.DeviceInfoID,
+	device, err := deviceinfo1.CreateDeviceInfo(context.Background(), &deviceinfomwpb.DeviceInfoReq{
+		EntID:            &_good1.DeviceInfoID,
 		Type:             &_good1.DeviceType,
 		Manufacturer:     &_good1.DeviceManufacturer,
 		PowerConsumption: &_good1.DevicePowerConsumption,
@@ -166,7 +166,7 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = good1.CreateGood(context.Background(), &goodmwpb.GoodReq{
-		ID:                   &_good1.ID,
+		EntID:                &_good1.EntID,
 		DeviceInfoID:         &_good1.DeviceInfoID,
 		DurationDays:         &_good1.DurationDays,
 		CoinTypeID:           &_good1.CoinTypeID,
@@ -190,7 +190,7 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = good1.CreateGood(context.Background(), &goodmwpb.GoodReq{
-		ID:                   &_good2.ID,
+		EntID:                &_good2.EntID,
 		DeviceInfoID:         &_good2.DeviceInfoID,
 		DurationDays:         &_good2.DurationDays,
 		CoinTypeID:           &_good2.CoinTypeID,
@@ -216,15 +216,15 @@ func setup(t *testing.T) func(*testing.T) {
 	return func(*testing.T) {
 		_, _ = good1.DeleteGood(context.Background(), _good2.ID)
 		_, _ = good1.DeleteGood(context.Background(), _good1.ID)
-		_, _ = deviceinfo1.DeleteDeviceInfo(context.Background(), _good1.DeviceInfoID)
-		_, _ = vendorlocation1.DeleteLocation(context.Background(), _good1.VendorLocationID)
+		_, _ = deviceinfo1.DeleteDeviceInfo(context.Background(), device.ID)
+		_, _ = vendorlocation1.DeleteLocation(context.Background(), vendorLocation.ID)
 		_, _ = vendorbrand1.DeleteBrand(context.Background(), info1.ID)
 	}
 }
 
 func createRequired(t *testing.T) {
 	info, err := CreateRequired(context.Background(), &npool.RequiredReq{
-		ID:             &ret.ID,
+		EntID:          &ret.EntID,
 		MainGoodID:     &ret.MainGoodID,
 		RequiredGoodID: &ret.RequiredGoodID,
 		Must:           &ret.Must,
@@ -232,6 +232,7 @@ func createRequired(t *testing.T) {
 	if assert.Nil(t, err) {
 		ret.CreatedAt = info.CreatedAt
 		ret.UpdatedAt = info.UpdatedAt
+		ret.ID = info.ID
 		assert.Equal(t, &ret, info)
 	}
 }
@@ -249,7 +250,7 @@ func updateRequired(t *testing.T) {
 }
 
 func getRequired(t *testing.T) {
-	info, err := GetRequired(context.Background(), ret.ID)
+	info, err := GetRequired(context.Background(), ret.EntID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, &ret, info)
 	}
@@ -257,7 +258,8 @@ func getRequired(t *testing.T) {
 
 func getRequireds(t *testing.T) {
 	infos, total, err := GetRequireds(context.Background(), &npool.Conds{
-		ID:             &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:             &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:          &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		GoodID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.MainGoodID},
 		GoodIDs:        &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.MainGoodID, ret.RequiredGoodID}},
 		MainGoodID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.MainGoodID},
@@ -277,7 +279,8 @@ func deleteRequired(t *testing.T) {
 	}
 
 	info, err = GetRequiredOnly(context.Background(), &npool.Conds{
-		ID:             &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:             &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:          &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		GoodID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.MainGoodID},
 		GoodIDs:        &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.MainGoodID, ret.RequiredGoodID}},
 		MainGoodID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.MainGoodID},
