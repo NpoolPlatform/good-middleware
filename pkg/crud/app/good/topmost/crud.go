@@ -12,6 +12,7 @@ import (
 )
 
 type Req struct {
+	ID                     *uint32
 	EntID                  *uuid.UUID
 	AppID                  *uuid.UUID
 	TopMostType            *types.GoodTopMostType
@@ -109,6 +110,7 @@ func UpdateSet(u *ent.TopMostUpdateOne, req *Req) *ent.TopMostUpdateOne {
 }
 
 type Conds struct {
+	ID          *cruder.Cond
 	EntID       *cruder.Cond
 	AppID       *cruder.Cond
 	TopMostType *cruder.Cond
@@ -121,6 +123,20 @@ func SetQueryConds(q *ent.TopMostQuery, conds *Conds) (*ent.TopMostQuery, error)
 	q.Where(enttopmost.DeletedAt(0))
 	if conds == nil {
 		return q, nil
+	}
+	if conds.ID != nil {
+		id, ok := conds.ID.Val.(uint32)
+		if !ok {
+			return nil, fmt.Errorf("invalid id")
+		}
+		switch conds.ID.Op {
+		case cruder.EQ:
+			q.Where(enttopmost.ID(id))
+		case cruder.NEQ:
+			q.Where(enttopmost.IDNEQ(id))
+		default:
+			return nil, fmt.Errorf("invalid topmostgood field")
+		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)

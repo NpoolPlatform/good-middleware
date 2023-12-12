@@ -37,7 +37,7 @@ func init() {
 }
 
 var ret = &npool.TopMost{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	AppID:                  uuid.NewString(),
 	TopMostType:            types.GoodTopMostType_TopMostNoviceExclusive,
 	TopMostTypeStr:         types.GoodTopMostType_TopMostNoviceExclusive.String(),
@@ -54,7 +54,7 @@ var ret = &npool.TopMost{
 }
 
 var req = &npool.TopMostReq{
-	ID:                     &ret.ID,
+	EntID:                  &ret.EntID,
 	AppID:                  &ret.AppID,
 	TopMostType:            &ret.TopMostType,
 	Title:                  &ret.Title,
@@ -75,11 +75,13 @@ func createTopMost(t *testing.T) {
 		ret.PostersStr = info.PostersStr
 		ret.CreatedAt = info.CreatedAt
 		ret.UpdatedAt = info.UpdatedAt
+		ret.ID = info.ID
 		assert.Equal(t, ret, info)
 	}
 }
 
 func updateTopMost(t *testing.T) {
+	req.ID = &ret.ID
 	info, err := UpdateTopMost(context.Background(), req)
 	if assert.Nil(t, err) {
 		ret.UpdatedAt = info.UpdatedAt
@@ -88,7 +90,7 @@ func updateTopMost(t *testing.T) {
 }
 
 func getTopMost(t *testing.T) {
-	info, err := GetTopMost(context.Background(), ret.ID)
+	info, err := GetTopMost(context.Background(), ret.EntID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, ret, info)
 	}
@@ -96,7 +98,8 @@ func getTopMost(t *testing.T) {
 
 func getTopMosts(t *testing.T) {
 	infos, total, err := GetTopMosts(context.Background(), &npool.Conds{
-		ID:          &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:          &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		AppID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
 		TopMostType: &basetypes.Uint32Val{Op: cruder.EQ, Value: uint32(ret.TopMostType)},
 		Title:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.Title},
@@ -110,7 +113,8 @@ func getTopMosts(t *testing.T) {
 
 func getTopMostOnly(t *testing.T) {
 	info, err := GetTopMostOnly(context.Background(), &npool.Conds{
-		ID:          &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:          &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		AppID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
 		TopMostType: &basetypes.Uint32Val{Op: cruder.EQ, Value: uint32(ret.TopMostType)},
 		Title:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.Title},
@@ -126,7 +130,7 @@ func deleteTopMost(t *testing.T) {
 		assert.Equal(t, ret, info)
 	}
 
-	info, err = GetTopMost(context.Background(), ret.ID)
+	info, err = GetTopMost(context.Background(), ret.EntID)
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }

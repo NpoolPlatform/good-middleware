@@ -18,7 +18,7 @@ func (h *Handler) ExistTopMost(ctx context.Context) (bool, error) {
 			TopMost.
 			Query().
 			Where(
-				enttopmost.ID(*h.ID),
+				enttopmost.EntID(*h.EntID),
 				enttopmost.DeletedAt(0),
 			).
 			Exist(_ctx)
