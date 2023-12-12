@@ -26,15 +26,19 @@ func (h *queryHandler) selectComment(stm *ent.CommentQuery) *ent.CommentSelect {
 	return stm.Select(entcomment.FieldID)
 }
 
-func (h *queryHandler) queryComment(cli *ent.Client) {
-	h.stmSelect = h.selectComment(
-		cli.Comment.
-			Query().
-			Where(
-				entcomment.ID(*h.ID),
-				entcomment.DeletedAt(0),
-			),
-	)
+func (h *queryHandler) queryComment(cli *ent.Client) error {
+	if h.ID == nil && h.EntID == nil {
+		return fmt.Errorf("invalid id")
+	}
+	stm := cli.Comment.Query().Where(entcomment.DeletedAt(0))
+	if h.ID != nil {
+		stm.Where(entcomment.ID(*h.ID))
+	}
+	if h.EntID != nil {
+		stm.Where(entcomment.EntID(*h.EntID))
+	}
+	h.stmSelect = h.selectComment(stm)
+	return nil
 }
 
 func (h *queryHandler) queryComments(cli *ent.Client) (*ent.CommentSelect, error) {
@@ -53,6 +57,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(entcomment.FieldID),
 		).
 		AppendSelect(
+			sql.As(t.C(entcomment.FieldEntID), "ent_id"),
 			sql.As(t.C(entcomment.FieldAppID), "app_id"),
 			sql.As(t.C(entcomment.FieldUserID), "user_id"),
 			sql.As(t.C(entcomment.FieldGoodID), "good_id"),
@@ -70,7 +75,7 @@ func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
 	s.LeftJoin(t).
 		On(
 			s.C(entcomment.FieldAppGoodID),
-			t.C(entappgood.FieldID),
+			t.C(entappgood.FieldEntID),
 		).
 		AppendSelect(
 			sql.As(t.C(entappgood.FieldGoodName), "good_name"),
@@ -100,7 +105,9 @@ func (h *Handler) GetComment(ctx context.Context) (*npool.Comment, error) {
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.queryComment(cli)
+		if err := handler.queryComment(cli); err != nil {
+			return err
+		}
 		handler.queryJoin()
 		return handler.scan(ctx)
 	})

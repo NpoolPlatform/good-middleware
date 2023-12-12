@@ -9,8 +9,10 @@ import (
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
+	appgoodpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
 
 	"github.com/google/uuid"
@@ -18,43 +20,52 @@ import (
 
 type createHandler struct {
 	*Handler
-	appgood *ent.AppGood
+	appgood *appgoodpb.Good
 }
 
 func (h *createHandler) getAppGood(ctx context.Context) error {
-	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		appGood, err := cli.AppGood.Get(ctx, *h.AppGoodID)
-		if err != nil {
-			return err
-		}
-		if appGood == nil {
-			return fmt.Errorf("app good not found %v", *h.AppGoodID)
-		}
-		h.appgood = appGood
-		return nil
-	})
+	handler, err := appgood1.NewHandler(ctx)
+	if err != nil {
+		return err
+	}
+	handler.EntID = h.AppGoodID
+	info, err := handler.GetGood(ctx)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		return fmt.Errorf("app good not found %v", *h.AppGoodID)
+	}
+	h.appgood = info
+	return nil
 }
 
 func (h *createHandler) createComment(ctx context.Context, tx *ent.Tx) error {
 	if h.ReplyToID != nil {
-		comment, err := tx.Comment.Get(ctx, *h.ReplyToID)
+		handler, err := NewHandler(ctx)
+		if err != nil {
+			return err
+		}
+		handler.EntID = h.ReplyToID
+		comment, err := handler.GetComment(ctx)
 		if err != nil {
 			return err
 		}
 		if comment == nil {
 			return fmt.Errorf("comment not found")
 		}
-		if comment.AppGoodID != *h.AppGoodID {
+		if comment.AppGoodID != h.AppGoodID.String() {
 			return fmt.Errorf("appgoodid not matched")
 		}
 	}
+	goodid := uuid.MustParse(h.appgood.GoodID)
 	if _, err := commentcrud.CreateSet(
 		tx.Comment.Create(),
 		&commentcrud.Req{
-			ID:        h.ID,
+			EntID:     h.EntID,
 			AppID:     h.AppID,
 			UserID:    h.UserID,
-			GoodID:    &h.appgood.GoodID,
+			GoodID:    &goodid,
 			AppGoodID: h.AppGoodID,
 			OrderID:   h.OrderID,
 			Content:   h.Content,
@@ -67,10 +78,11 @@ func (h *createHandler) createComment(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *createHandler) updateGoodComment(ctx context.Context, tx *ent.Tx) error {
+	goodid := uuid.MustParse(h.appgood.GoodID)
 	stm, err := extrainfocrud.SetQueryConds(
 		tx.ExtraInfo.Query(),
 		&extrainfocrud.Conds{
-			GoodID: &cruder.Cond{Op: cruder.EQ, Val: h.appgood.GoodID},
+			GoodID: &cruder.Cond{Op: cruder.EQ, Val: goodid},
 		})
 	if err != nil {
 		return err
@@ -101,8 +113,8 @@ func (h *Handler) CreateComment(ctx context.Context) (*npool.Comment, error) {
 	}()
 
 	id := uuid.New()
-	if h.ID == nil {
-		h.ID = &id
+	if h.EntID == nil {
+		h.EntID = &id
 	}
 
 	handler := &createHandler{
