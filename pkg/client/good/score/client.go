@@ -129,7 +129,7 @@ func ExistScoreConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 	return info.(bool), nil
 }
 
-func DeleteScore(ctx context.Context, id string) (*npool.Score, error) {
+func DeleteScore(ctx context.Context, id uint32) (*npool.Score, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteScore(ctx, &npool.DeleteScoreRequest{
 			Info: &npool.ScoreReq{
@@ -150,7 +150,7 @@ func DeleteScore(ctx context.Context, id string) (*npool.Score, error) {
 func GetScore(ctx context.Context, id string) (*npool.Score, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.GetScore(ctx, &npool.GetScoreRequest{
-			ID: id,
+			EntID: id,
 		})
 		if err != nil {
 			return nil, err
