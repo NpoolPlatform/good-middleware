@@ -52,7 +52,7 @@ func CreateLocation(ctx context.Context, in *npool.LocationReq) (*npool.Location
 func GetLocation(ctx context.Context, id string) (*npool.Location, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.GetLocation(ctx, &npool.GetLocationRequest{
-			ID: id,
+			EntID: id,
 		})
 		if err != nil {
 			return nil, err
@@ -129,7 +129,7 @@ func UpdateLocation(ctx context.Context, in *npool.LocationReq) (*npool.Location
 	return info.(*npool.Location), nil
 }
 
-func DeleteLocation(ctx context.Context, id string) (*npool.Location, error) {
+func DeleteLocation(ctx context.Context, id uint32) (*npool.Location, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteLocation(ctx, &npool.DeleteLocationRequest{
 			Info: &npool.LocationReq{

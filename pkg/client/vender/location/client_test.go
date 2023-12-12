@@ -37,22 +37,22 @@ func init() {
 }
 
 var brand = &brandmwpb.Brand{
-	ID:   uuid.NewString(),
-	Name: uuid.NewString(),
-	Logo: uuid.NewString(),
+	EntID: uuid.NewString(),
+	Name:  uuid.NewString(),
+	Logo:  uuid.NewString(),
 }
 
 var ret = &npool.Location{
-	ID:       uuid.NewString(),
+	EntID:    uuid.NewString(),
 	Country:  uuid.NewString(),
 	Province: uuid.NewString(),
 	City:     uuid.NewString(),
 	Address:  uuid.NewString(),
-	BrandID:  brand.ID,
+	BrandID:  brand.EntID,
 }
 
 var req = &npool.LocationReq{
-	ID:       &ret.ID,
+	EntID:    &ret.EntID,
 	Country:  &ret.Country,
 	Province: &ret.Province,
 	City:     &ret.City,
@@ -61,12 +61,13 @@ var req = &npool.LocationReq{
 }
 
 func setup(t *testing.T) func(*testing.T) {
-	_, err := brand1.CreateBrand(context.Background(), &brandmwpb.BrandReq{
-		ID:   &brand.ID,
-		Name: &brand.Name,
-		Logo: &brand.Logo,
+	info, err := brand1.CreateBrand(context.Background(), &brandmwpb.BrandReq{
+		EntID: &brand.EntID,
+		Name:  &brand.Name,
+		Logo:  &brand.Logo,
 	})
 	assert.Nil(t, err)
+	brand.ID = info.ID
 
 	return func(*testing.T) {
 		_, _ = brand1.DeleteBrand(context.Background(), brand.ID)
@@ -78,11 +79,13 @@ func createLocation(t *testing.T) {
 	if assert.Nil(t, err) {
 		ret.CreatedAt = info.CreatedAt
 		ret.UpdatedAt = info.UpdatedAt
+		ret.ID = info.ID
 		assert.Equal(t, ret, info)
 	}
 }
 
 func updateLocation(t *testing.T) {
+	req.ID = &ret.ID
 	info, err := UpdateLocation(context.Background(), req)
 	if assert.Nil(t, err) {
 		ret.UpdatedAt = info.UpdatedAt
@@ -91,7 +94,7 @@ func updateLocation(t *testing.T) {
 }
 
 func getLocation(t *testing.T) {
-	info, err := GetLocation(context.Background(), ret.ID)
+	info, err := GetLocation(context.Background(), ret.EntID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, ret, info)
 	}
@@ -99,7 +102,8 @@ func getLocation(t *testing.T) {
 
 func getLocations(t *testing.T) {
 	infos, total, err := GetLocations(context.Background(), &npool.Conds{
-		ID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:       &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:    &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		Country:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.Country},
 		Province: &basetypes.StringVal{Op: cruder.EQ, Value: ret.Province},
 		BrandID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.BrandID},
@@ -113,7 +117,8 @@ func getLocations(t *testing.T) {
 
 func getLocationOnly(t *testing.T) {
 	info, err := GetLocationOnly(context.Background(), &npool.Conds{
-		ID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:       &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:    &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		Country:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.Country},
 		Province: &basetypes.StringVal{Op: cruder.EQ, Value: ret.Province},
 		BrandID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.BrandID},
@@ -129,7 +134,7 @@ func deleteLocation(t *testing.T) {
 		assert.Equal(t, ret, info)
 	}
 
-	info, err = GetLocation(context.Background(), ret.ID)
+	info, err = GetLocation(context.Background(), ret.EntID)
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }

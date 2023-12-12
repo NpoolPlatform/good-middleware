@@ -21,6 +21,7 @@ type queryHandler struct {
 func (h *queryHandler) selectVendorLocation(stm *ent.VendorLocationQuery) {
 	h.stmSelect = stm.Select(
 		entlocation.FieldID,
+		entlocation.FieldEntID,
 		entlocation.FieldCountry,
 		entlocation.FieldProvince,
 		entlocation.FieldCity,
@@ -31,15 +32,19 @@ func (h *queryHandler) selectVendorLocation(stm *ent.VendorLocationQuery) {
 	)
 }
 
-func (h *queryHandler) queryVendorLocation(cli *ent.Client) {
-	h.selectVendorLocation(
-		cli.VendorLocation.
-			Query().
-			Where(
-				entlocation.ID(*h.ID),
-				entlocation.DeletedAt(0),
-			),
-	)
+func (h *queryHandler) queryVendorLocation(cli *ent.Client) error {
+	if h.ID == nil && h.EntID == nil {
+		return fmt.Errorf("invalid id")
+	}
+	stm := cli.VendorLocation.Query().Where(entlocation.DeletedAt(0))
+	if h.ID != nil {
+		stm.Where(entlocation.ID(*h.ID))
+	}
+	if h.EntID != nil {
+		stm.Where(entlocation.EntID(*h.EntID))
+	}
+	h.selectVendorLocation(stm)
+	return nil
 }
 
 func (h *queryHandler) queryVendorLocations(ctx context.Context, cli *ent.Client) error {
@@ -61,16 +66,14 @@ func (h *queryHandler) scan(ctx context.Context) error {
 }
 
 func (h *Handler) GetLocation(ctx context.Context) (*npool.Location, error) {
-	if h.ID == nil {
-		return nil, fmt.Errorf("invalid id")
-	}
-
 	handler := &queryHandler{
 		Handler: h,
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.queryVendorLocation(cli)
+		if err := handler.queryVendorLocation(cli); err != nil {
+			return err
+		}
 		return handler.scan(_ctx)
 	})
 	if err != nil {

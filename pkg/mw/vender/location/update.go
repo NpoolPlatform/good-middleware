@@ -14,7 +14,6 @@ import (
 	"github.com/google/uuid"
 )
 
-//nolint:gocyclo
 func (h *Handler) UpdateLocation(ctx context.Context) (*npool.Location, error) {
 	if h.ID == nil {
 		return nil, fmt.Errorf("invalid id")
@@ -70,11 +69,6 @@ func (h *Handler) UpdateLocation(ctx context.Context) (*npool.Location, error) {
 	}
 	if exist {
 		return nil, fmt.Errorf("arleady exists")
-	}
-
-	id := uuid.New()
-	if h.ID == nil {
-		h.ID = &id
 	}
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {

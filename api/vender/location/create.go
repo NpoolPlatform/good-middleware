@@ -24,7 +24,7 @@ func (s *Server) CreateLocation(ctx context.Context, in *npool.CreateLocationReq
 	}
 	handler, err := location1.NewHandler(
 		ctx,
-		location1.WithID(req.ID, false),
+		location1.WithEntID(req.EntID, false),
 		location1.WithCountry(req.Country, true),
 		location1.WithProvince(req.Province, true),
 		location1.WithCity(req.City, true),

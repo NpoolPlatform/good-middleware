@@ -11,6 +11,7 @@ import (
 )
 
 type Req struct {
+	ID        *uint32
 	EntID     *uuid.UUID
 	Country   *string
 	Province  *string
@@ -67,6 +68,7 @@ func UpdateSet(u *ent.VendorLocationUpdateOne, req *Req) *ent.VendorLocationUpda
 }
 
 type Conds struct {
+	ID       *cruder.Cond
 	EntID    *cruder.Cond
 	Country  *cruder.Cond
 	Province *cruder.Cond
@@ -80,6 +82,20 @@ func SetQueryConds(q *ent.VendorLocationQuery, conds *Conds) (*ent.VendorLocatio
 	q.Where(entvendorlocation.DeletedAt(0))
 	if conds == nil {
 		return q, nil
+	}
+	if conds.ID != nil {
+		id, ok := conds.ID.Val.(uint32)
+		if !ok {
+			return nil, fmt.Errorf("invalid id")
+		}
+		switch conds.ID.Op {
+		case cruder.EQ:
+			q.Where(entvendorlocation.ID(id))
+		case cruder.NEQ:
+			q.Where(entvendorlocation.IDNEQ(id))
+		default:
+			return nil, fmt.Errorf("invalid vendorlocation field")
+		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)

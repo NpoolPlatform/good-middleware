@@ -30,25 +30,25 @@ func init() {
 
 var (
 	brand = brandmwpb.Brand{
-		ID:   uuid.NewString(),
-		Name: uuid.NewString(),
-		Logo: uuid.NewString(),
+		EntID: uuid.NewString(),
+		Name:  uuid.NewString(),
+		Logo:  uuid.NewString(),
 	}
 
 	ret = npool.Location{
-		ID:       uuid.NewString(),
+		EntID:    uuid.NewString(),
 		Country:  uuid.NewString(),
 		Province: uuid.NewString(),
 		City:     uuid.NewString(),
 		Address:  uuid.NewString(),
-		BrandID:  brand.ID,
+		BrandID:  brand.EntID,
 	}
 )
 
 func setup(t *testing.T) func(*testing.T) {
 	h1, err := brand1.NewHandler(
 		context.Background(),
-		brand1.WithID(&brand.ID, true),
+		brand1.WithEntID(&brand.EntID, true),
 		brand1.WithName(&brand.Name, true),
 		brand1.WithLogo(&brand.Logo, true),
 	)
@@ -65,7 +65,7 @@ func setup(t *testing.T) func(*testing.T) {
 func createLocation(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
 		WithCountry(&ret.Country, true),
 		WithProvince(&ret.Province, true),
 		WithCity(&ret.City, true),
@@ -78,6 +78,7 @@ func createLocation(t *testing.T) {
 	if assert.Nil(t, err) {
 		ret.CreatedAt = info.CreatedAt
 		ret.UpdatedAt = info.UpdatedAt
+		ret.ID = info.ID
 		assert.Equal(t, info, &ret)
 	}
 }
@@ -116,7 +117,8 @@ func getLocation(t *testing.T) {
 
 func getLocations(t *testing.T) {
 	conds := &npool.Conds{
-		ID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:       &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:    &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		Country:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.Country},
 		Province: &basetypes.StringVal{Op: cruder.EQ, Value: ret.Province},
 		BrandID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.BrandID},
