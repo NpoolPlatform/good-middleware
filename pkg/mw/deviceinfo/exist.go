@@ -11,8 +11,8 @@ import (
 )
 
 func (h *Handler) ExistDeviceInfo(ctx context.Context) (bool, error) {
-	if h.ID == nil {
-		return false, fmt.Errorf("invalid id")
+	if h.EntID == nil {
+		return false, fmt.Errorf("invalid entid")
 	}
 
 	exist := false
@@ -23,7 +23,7 @@ func (h *Handler) ExistDeviceInfo(ctx context.Context) (bool, error) {
 			DeviceInfo.
 			Query().
 			Where(
-				entdeviceinfo.ID(*h.ID),
+				entdeviceinfo.EntID(*h.EntID),
 				entdeviceinfo.DeletedAt(0),
 			).
 			Exist(_ctx)

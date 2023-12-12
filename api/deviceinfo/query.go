@@ -15,7 +15,7 @@ import (
 func (s *Server) GetDeviceInfo(ctx context.Context, in *npool.GetDeviceInfoRequest) (*npool.GetDeviceInfoResponse, error) {
 	handler, err := deviceinfo1.NewHandler(
 		ctx,
-		deviceinfo1.WithID(&in.ID, true),
+		deviceinfo1.WithEntID(&in.EntID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
