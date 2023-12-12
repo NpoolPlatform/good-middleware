@@ -18,7 +18,7 @@ func (h *Handler) checkPrice(ctx context.Context) error {
 			Good.
 			Query().
 			Where(
-				entgood.ID(*h.GoodID),
+				entgood.EntID(*h.GoodID),
 				entgood.DeletedAt(0),
 			).
 			Only(_ctx)

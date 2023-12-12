@@ -44,7 +44,7 @@ func init() {
 }
 
 var good = goodmwpb.Good{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	DeviceInfoID:           uuid.NewString(),
 	DeviceType:             uuid.NewString(),
 	DeviceManufacturer:     uuid.NewString(),
@@ -86,9 +86,9 @@ var good = goodmwpb.Good{
 }
 
 var ret = npool.Good{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	AppID:                  uuid.NewString(),
-	GoodID:                 good.ID,
+	GoodID:                 good.EntID,
 	Online:                 false,
 	Visible:                false,
 	GoodName:               good.Title,
@@ -147,18 +147,18 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, info1)
 
-	_, err = vendorlocation1.CreateLocation(context.Background(), &vendorlocationmwpb.LocationReq{
-		ID:       &good.VendorLocationID,
+	vendorLocation, err := vendorlocation1.CreateLocation(context.Background(), &vendorlocationmwpb.LocationReq{
+		EntID:    &good.VendorLocationID,
 		Country:  &good.VendorLocationCountry,
 		Province: &good.VendorLocationProvince,
 		City:     &good.VendorLocationCity,
 		Address:  &good.VendorLocationAddress,
-		BrandID:  &info1.ID,
+		BrandID:  &info1.EntID,
 	})
 	assert.Nil(t, err)
 
-	_, err = deviceinfo1.CreateDeviceInfo(context.Background(), &deviceinfomwpb.DeviceInfoReq{
-		ID:               &good.DeviceInfoID,
+	device, err := deviceinfo1.CreateDeviceInfo(context.Background(), &deviceinfomwpb.DeviceInfoReq{
+		EntID:            &good.DeviceInfoID,
 		Type:             &good.DeviceType,
 		Manufacturer:     &good.DeviceManufacturer,
 		PowerConsumption: &good.DevicePowerConsumption,
@@ -168,7 +168,7 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = good1.CreateGood(context.Background(), &goodmwpb.GoodReq{
-		ID:                   &good.ID,
+		EntID:                &good.EntID,
 		DeviceInfoID:         &good.DeviceInfoID,
 		DurationDays:         &good.DurationDays,
 		CoinTypeID:           &good.CoinTypeID,
@@ -201,15 +201,15 @@ func setup(t *testing.T) func(*testing.T) {
 
 	return func(*testing.T) {
 		_, _ = good1.DeleteGood(context.Background(), good.ID)
-		_, _ = deviceinfo1.DeleteDeviceInfo(context.Background(), good.DeviceInfoID)
-		_, _ = vendorlocation1.DeleteLocation(context.Background(), good.VendorLocationID)
+		_, _ = deviceinfo1.DeleteDeviceInfo(context.Background(), device.ID)
+		_, _ = vendorlocation1.DeleteLocation(context.Background(), vendorLocation.ID)
 		_, _ = vendorbrand1.DeleteBrand(context.Background(), info1.ID)
 	}
 }
 
 func createGood(t *testing.T) {
 	info, err := CreateGood(context.Background(), &npool.GoodReq{
-		ID:       &ret.ID,
+		EntID:    &ret.EntID,
 		AppID:    &ret.AppID,
 		GoodID:   &ret.GoodID,
 		Price:    &ret.Price,
@@ -230,6 +230,7 @@ func createGood(t *testing.T) {
 		ret.CreatedAt = info.CreatedAt
 		ret.UpdatedAt = info.UpdatedAt
 		ret.AppGoodStockID = info.AppGoodStockID
+		ret.ID = info.ID
 		assert.Equal(t, &ret, info)
 	}
 }
@@ -245,7 +246,7 @@ func updateGood(t *testing.T) {
 }
 
 func getGood(t *testing.T) {
-	info, err := GetGood(context.Background(), ret.ID)
+	info, err := GetGood(context.Background(), ret.EntID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, &ret, info)
 	}
@@ -253,7 +254,8 @@ func getGood(t *testing.T) {
 
 func getGoods(t *testing.T) {
 	infos, total, err := GetGoods(context.Background(), &npool.Conds{
-		ID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:      &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		AppID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
 		GoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
 		GoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
@@ -268,7 +270,8 @@ func getGoods(t *testing.T) {
 
 func getGoodOnly(t *testing.T) {
 	info, err := GetGoodOnly(context.Background(), &npool.Conds{
-		ID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:      &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		AppID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
 		GoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
 		GoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
@@ -285,7 +288,7 @@ func deleteGood(t *testing.T) {
 		assert.Equal(t, &ret, info)
 	}
 
-	info, err = GetGood(context.Background(), ret.ID)
+	info, err = GetGood(context.Background(), ret.EntID)
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }
