@@ -23,7 +23,7 @@ func (h *createHandler) createTopMostGood(ctx context.Context, tx *ent.Tx) error
 	if _, err := topmostgoodcrud.CreateSet(
 		tx.TopMostGood.Create(),
 		&topmostgoodcrud.Req{
-			ID:           h.ID,
+			EntID:        h.EntID,
 			AppID:        h.AppID,
 			GoodID:       h.GoodID,
 			TopMostID:    h.TopMostID,
@@ -66,8 +66,8 @@ func (h *Handler) CreateTopMostGood(ctx context.Context) (*npool.TopMostGood, er
 	}
 
 	id := uuid.New()
-	if h.ID == nil {
-		h.ID = &id
+	if h.EntID == nil {
+		h.EntID = &id
 	}
 
 	handler := &createHandler{

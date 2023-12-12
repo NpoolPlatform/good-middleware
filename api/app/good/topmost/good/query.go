@@ -15,7 +15,7 @@ import (
 func (s *Server) GetTopMostGood(ctx context.Context, in *npool.GetTopMostGoodRequest) (*npool.GetTopMostGoodResponse, error) {
 	handler, err := topmostgood1.NewHandler(
 		ctx,
-		topmostgood1.WithID(&in.ID, true),
+		topmostgood1.WithEntID(&in.EntID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

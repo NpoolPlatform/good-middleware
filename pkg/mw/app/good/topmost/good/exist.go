@@ -18,7 +18,7 @@ func (h *Handler) ExistDefault(ctx context.Context) (bool, error) {
 			TopMostGood.
 			Query().
 			Where(
-				enttopmostgood.ID(*h.ID),
+				enttopmostgood.EntID(*h.EntID),
 				enttopmostgood.DeletedAt(0),
 			).
 			Exist(_ctx)

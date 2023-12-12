@@ -48,7 +48,7 @@ func init() {
 }
 
 var good = goodmwpb.Good{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	DeviceInfoID:           uuid.NewString(),
 	DeviceType:             uuid.NewString(),
 	DeviceManufacturer:     uuid.NewString(),
@@ -90,9 +90,9 @@ var good = goodmwpb.Good{
 }
 
 var appgood = appgoodmwpb.Good{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	AppID:                  uuid.NewString(),
-	GoodID:                 good.ID,
+	GoodID:                 good.EntID,
 	Online:                 false,
 	Visible:                false,
 	GoodName:               good.Title,
@@ -133,7 +133,7 @@ var appgood = appgoodmwpb.Good{
 }
 
 var topmost = topmostmwpb.TopMost{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	AppID:                  appgood.AppID,
 	TopMostType:            types.GoodTopMostType_TopMostNoviceExclusive,
 	TopMostTypeStr:         types.GoodTopMostType_TopMostNoviceExclusive.String(),
@@ -150,12 +150,12 @@ var topmost = topmostmwpb.TopMost{
 }
 
 var ret = npool.TopMostGood{
-	ID:             uuid.NewString(),
+	EntID:          uuid.NewString(),
 	AppID:          appgood.AppID,
 	GoodID:         appgood.GoodID,
 	CoinTypeID:     appgood.CoinTypeID,
-	AppGoodID:      appgood.ID,
-	TopMostID:      topmost.ID,
+	AppGoodID:      appgood.EntID,
+	TopMostID:      topmost.EntID,
 	DisplayIndex:   0,
 	Posters:        []string{uuid.NewString(), uuid.NewString()},
 	Price:          decimal.NewFromInt(230).String(),
@@ -173,18 +173,18 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, info1)
 
-	_, err = vendorlocation1.CreateLocation(context.Background(), &vendorlocationmwpb.LocationReq{
-		ID:       &good.VendorLocationID,
+	vendorLocation, err := vendorlocation1.CreateLocation(context.Background(), &vendorlocationmwpb.LocationReq{
+		EntID:    &good.VendorLocationID,
 		Country:  &good.VendorLocationCountry,
 		Province: &good.VendorLocationProvince,
 		City:     &good.VendorLocationCity,
 		Address:  &good.VendorLocationAddress,
-		BrandID:  &info1.ID,
+		BrandID:  &info1.EntID,
 	})
 	assert.Nil(t, err)
 
-	_, err = deviceinfo1.CreateDeviceInfo(context.Background(), &deviceinfomwpb.DeviceInfoReq{
-		ID:               &good.DeviceInfoID,
+	device, err := deviceinfo1.CreateDeviceInfo(context.Background(), &deviceinfomwpb.DeviceInfoReq{
+		EntID:            &good.DeviceInfoID,
 		Type:             &good.DeviceType,
 		Manufacturer:     &good.DeviceManufacturer,
 		PowerConsumption: &good.DevicePowerConsumption,
@@ -194,7 +194,7 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = good1.CreateGood(context.Background(), &goodmwpb.GoodReq{
-		ID:                   &good.ID,
+		EntID:                &good.EntID,
 		DeviceInfoID:         &good.DeviceInfoID,
 		DurationDays:         &good.DurationDays,
 		CoinTypeID:           &good.CoinTypeID,
@@ -218,7 +218,7 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = appgood1.CreateGood(context.Background(), &appgoodmwpb.GoodReq{
-		ID:       &appgood.ID,
+		EntID:    &appgood.EntID,
 		AppID:    &appgood.AppID,
 		GoodID:   &appgood.GoodID,
 		Price:    &appgood.Price,
@@ -227,7 +227,7 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = topmost1.CreateTopMost(context.Background(), &topmostmwpb.TopMostReq{
-		ID:                     &topmost.ID,
+		EntID:                  &topmost.EntID,
 		AppID:                  &topmost.AppID,
 		TopMostType:            &topmost.TopMostType,
 		Title:                  &topmost.Title,
@@ -250,15 +250,15 @@ func setup(t *testing.T) func(*testing.T) {
 		_, _ = topmost1.DeleteTopMost(context.Background(), topmost.ID)
 		_, _ = appgood1.DeleteGood(context.Background(), appgood.ID)
 		_, _ = good1.DeleteGood(context.Background(), good.ID)
-		_, _ = deviceinfo1.DeleteDeviceInfo(context.Background(), good.DeviceInfoID)
-		_, _ = vendorlocation1.DeleteLocation(context.Background(), good.VendorLocationID)
+		_, _ = deviceinfo1.DeleteDeviceInfo(context.Background(), device.ID)
+		_, _ = vendorlocation1.DeleteLocation(context.Background(), vendorLocation.ID)
 		_, _ = vendorbrand1.DeleteBrand(context.Background(), info1.ID)
 	}
 }
 
 func createTopMostGood(t *testing.T) {
 	info, err := CreateTopMostGood(context.Background(), &npool.TopMostGoodReq{
-		ID:        &ret.ID,
+		EntID:     &ret.EntID,
 		AppGoodID: &ret.AppGoodID,
 		TopMostID: &ret.TopMostID,
 		Price:     &ret.Price,
@@ -268,6 +268,7 @@ func createTopMostGood(t *testing.T) {
 		ret.PostersStr = info.PostersStr
 		ret.CreatedAt = info.CreatedAt
 		ret.UpdatedAt = info.UpdatedAt
+		ret.ID = info.ID
 		assert.Equal(t, &ret, info)
 	}
 }
@@ -284,7 +285,7 @@ func updateTopMostGood(t *testing.T) {
 }
 
 func getTopMostGood(t *testing.T) {
-	info, err := GetTopMostGood(context.Background(), ret.ID)
+	info, err := GetTopMostGood(context.Background(), ret.EntID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, &ret, info)
 	}
@@ -292,7 +293,8 @@ func getTopMostGood(t *testing.T) {
 
 func getTopMostGoods(t *testing.T) {
 	infos, total, err := GetTopMostGoods(context.Background(), &npool.Conds{
-		ID:        &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:        &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		AppID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
 		GoodID:    &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
 		AppGoodID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
@@ -307,7 +309,8 @@ func getTopMostGoods(t *testing.T) {
 
 func getTopMostGoodOnly(t *testing.T) {
 	info, err := GetTopMostGoodOnly(context.Background(), &npool.Conds{
-		ID:        &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:        &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		AppID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
 		GoodID:    &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
 		AppGoodID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
@@ -324,7 +327,7 @@ func deleteTopMostGood(t *testing.T) {
 		assert.Equal(t, &ret, info)
 	}
 
-	info, err = GetTopMostGood(context.Background(), ret.ID)
+	info, err = GetTopMostGood(context.Background(), ret.EntID)
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }
