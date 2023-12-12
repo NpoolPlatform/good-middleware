@@ -15,7 +15,7 @@ func (h *Handler) GetAppGood(ctx context.Context) error {
 			AppGood.
 			Query().
 			Where(
-				entappgood.ID(*h.AppGoodID),
+				entappgood.EntID(*h.AppGoodID),
 				entappgood.DeletedAt(0),
 			).
 			Only(ctx)
@@ -27,7 +27,7 @@ func (h *Handler) GetAppGood(ctx context.Context) error {
 			Good.
 			Query().
 			Where(
-				entgood.ID(info.GoodID),
+				entgood.EntID(info.GoodID),
 				entgood.DeletedAt(0),
 			).
 			Only(ctx)
