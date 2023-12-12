@@ -35,15 +35,15 @@ func init() {
 }
 
 var ret = &npool.Brand{
-	ID:   uuid.NewString(),
-	Name: uuid.NewString(),
-	Logo: uuid.NewString(),
+	EntID: uuid.NewString(),
+	Name:  uuid.NewString(),
+	Logo:  uuid.NewString(),
 }
 
 var req = &npool.BrandReq{
-	ID:   &ret.ID,
-	Name: &ret.Name,
-	Logo: &ret.Logo,
+	EntID: &ret.EntID,
+	Name:  &ret.Name,
+	Logo:  &ret.Logo,
 }
 
 func createBrand(t *testing.T) {
@@ -51,11 +51,13 @@ func createBrand(t *testing.T) {
 	if assert.Nil(t, err) {
 		ret.CreatedAt = info.CreatedAt
 		ret.UpdatedAt = info.UpdatedAt
+		ret.ID = info.ID
 		assert.Equal(t, ret, info)
 	}
 }
 
 func updateBrand(t *testing.T) {
+	req.ID = &ret.ID
 	info, err := UpdateBrand(context.Background(), req)
 	if assert.Nil(t, err) {
 		ret.UpdatedAt = info.UpdatedAt
@@ -64,7 +66,7 @@ func updateBrand(t *testing.T) {
 }
 
 func getBrand(t *testing.T) {
-	info, err := GetBrand(context.Background(), ret.ID)
+	info, err := GetBrand(context.Background(), ret.EntID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, ret, info)
 	}
@@ -72,8 +74,9 @@ func getBrand(t *testing.T) {
 
 func getBrands(t *testing.T) {
 	infos, total, err := GetBrands(context.Background(), &npool.Conds{
-		ID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-		Name: &basetypes.StringVal{Op: cruder.EQ, Value: ret.Name},
+		ID:    &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
+		Name:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.Name},
 	}, int32(0), int32(2))
 	if assert.Nil(t, err) {
 		if assert.Equal(t, uint32(1), total) {
@@ -84,8 +87,9 @@ func getBrands(t *testing.T) {
 
 func getBrandOnly(t *testing.T) {
 	info, err := GetBrandOnly(context.Background(), &npool.Conds{
-		ID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-		Name: &basetypes.StringVal{Op: cruder.EQ, Value: ret.Name},
+		ID:    &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
+		Name:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.Name},
 	})
 	if assert.Nil(t, err) {
 		assert.Equal(t, ret, info)
@@ -98,7 +102,7 @@ func deleteBrand(t *testing.T) {
 		assert.Equal(t, ret, info)
 	}
 
-	info, err = GetBrand(context.Background(), ret.ID)
+	info, err = GetBrand(context.Background(), ret.EntID)
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }

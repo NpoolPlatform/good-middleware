@@ -39,17 +39,17 @@ func (h *Handler) CreateBrand(ctx context.Context) (*npool.Brand, error) {
 	}
 
 	id := uuid.New()
-	if h.ID == nil {
-		h.ID = &id
+	if h.EntID == nil {
+		h.EntID = &id
 	}
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if _, err := brandcrud.CreateSet(
 			cli.VendorBrand.Create(),
 			&brandcrud.Req{
-				ID:   h.ID,
-				Name: h.Name,
-				Logo: h.Logo,
+				EntID: h.EntID,
+				Name:  h.Name,
+				Logo:  h.Logo,
 			},
 		).Save(_ctx); err != nil {
 			return err

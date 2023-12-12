@@ -10,8 +10,6 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/brand"
-
-	"github.com/google/uuid"
 )
 
 func (h *Handler) UpdateBrand(ctx context.Context) (*npool.Brand, error) {
@@ -49,11 +47,6 @@ func (h *Handler) UpdateBrand(ctx context.Context) (*npool.Brand, error) {
 	}
 	if exist {
 		return nil, fmt.Errorf("arleady exists")
-	}
-
-	id := uuid.New()
-	if h.ID == nil {
-		h.ID = &id
 	}
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {

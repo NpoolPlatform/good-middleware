@@ -11,6 +11,7 @@ import (
 )
 
 type Req struct {
+	ID        *uint32
 	EntID     *uuid.UUID
 	Name      *string
 	Logo      *string
@@ -44,6 +45,7 @@ func UpdateSet(u *ent.VendorBrandUpdateOne, req *Req) *ent.VendorBrandUpdateOne 
 }
 
 type Conds struct {
+	ID    *cruder.Cond
 	EntID *cruder.Cond
 	Name  *cruder.Cond
 }
@@ -52,6 +54,20 @@ func SetQueryConds(q *ent.VendorBrandQuery, conds *Conds) (*ent.VendorBrandQuery
 	q.Where(entvendorbrand.DeletedAt(0))
 	if conds == nil {
 		return q, nil
+	}
+	if conds.ID != nil {
+		id, ok := conds.ID.Val.(uint32)
+		if !ok {
+			return nil, fmt.Errorf("invalid id")
+		}
+		switch conds.ID.Op {
+		case cruder.EQ:
+			q.Where(entvendorbrand.ID(id))
+		case cruder.NEQ:
+			q.Where(entvendorbrand.IDNEQ(id))
+		default:
+			return nil, fmt.Errorf("invalid vendorbrand field")
+		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)

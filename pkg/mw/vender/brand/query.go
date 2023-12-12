@@ -21,6 +21,7 @@ type queryHandler struct {
 func (h *queryHandler) selectVendorBrand(stm *ent.VendorBrandQuery) {
 	h.stmSelect = stm.Select(
 		entbrand.FieldID,
+		entbrand.FieldEntID,
 		entbrand.FieldName,
 		entbrand.FieldLogo,
 		entbrand.FieldCreatedAt,
@@ -28,15 +29,19 @@ func (h *queryHandler) selectVendorBrand(stm *ent.VendorBrandQuery) {
 	)
 }
 
-func (h *queryHandler) queryVendorBrand(cli *ent.Client) {
-	h.selectVendorBrand(
-		cli.VendorBrand.
-			Query().
-			Where(
-				entbrand.ID(*h.ID),
-				entbrand.DeletedAt(0),
-			),
-	)
+func (h *queryHandler) queryVendorBrand(cli *ent.Client) error {
+	if h.ID == nil && h.EntID == nil {
+		return fmt.Errorf("invalid id")
+	}
+	stm := cli.VendorBrand.Query().Where(entbrand.DeletedAt(0))
+	if h.ID != nil {
+		stm.Where(entbrand.ID(*h.ID))
+	}
+	if h.EntID != nil {
+		stm.Where(entbrand.EntID(*h.EntID))
+	}
+	h.selectVendorBrand(stm)
+	return nil
 }
 
 func (h *queryHandler) queryVendorBrands(ctx context.Context, cli *ent.Client) error {
@@ -58,16 +63,14 @@ func (h *queryHandler) scan(ctx context.Context) error {
 }
 
 func (h *Handler) GetBrand(ctx context.Context) (*npool.Brand, error) {
-	if h.ID == nil {
-		return nil, fmt.Errorf("invalid id")
-	}
-
 	handler := &queryHandler{
 		Handler: h,
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.queryVendorBrand(cli)
+		if err := handler.queryVendorBrand(cli); err != nil {
+			return err
+		}
 		return handler.scan(_ctx)
 	})
 	if err != nil {

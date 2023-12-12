@@ -52,7 +52,7 @@ func CreateBrand(ctx context.Context, in *npool.BrandReq) (*npool.Brand, error) 
 func GetBrand(ctx context.Context, id string) (*npool.Brand, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.GetBrand(ctx, &npool.GetBrandRequest{
-			ID: id,
+			EntID: id,
 		})
 		if err != nil {
 			return nil, err
@@ -129,7 +129,7 @@ func UpdateBrand(ctx context.Context, in *npool.BrandReq) (*npool.Brand, error) 
 	return info.(*npool.Brand), nil
 }
 
-func DeleteBrand(ctx context.Context, id string) (*npool.Brand, error) {
+func DeleteBrand(ctx context.Context, id uint32) (*npool.Brand, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteBrand(ctx, &npool.DeleteBrandRequest{
 			Info: &npool.BrandReq{
