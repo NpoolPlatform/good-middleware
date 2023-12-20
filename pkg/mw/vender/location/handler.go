@@ -130,6 +130,12 @@ func WithAddress(s *string, must bool) func(context.Context, *Handler) error {
 
 func WithBrandID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid brandid")
+			}
+			return nil
+		}
 		handler, err := brand1.NewHandler(
 			ctx,
 			brand1.WithEntID(id, true),
