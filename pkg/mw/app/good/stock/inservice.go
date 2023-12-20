@@ -73,7 +73,7 @@ func (h *inServiceHandler) inServiceAppStock(ctx context.Context, tx *ent.Tx) er
 		AppStock.
 		Query().
 		Where(
-			entappstock.ID(*h.ID),
+			entappstock.EntID(*h.EntID),
 			entappstock.DeletedAt(0),
 		).
 		ForUpdate().

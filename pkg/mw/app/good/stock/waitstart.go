@@ -92,6 +92,7 @@ func (h *waitStartHandler) waitStartAppStock(ctx context.Context, tx *ent.Tx) er
 	}
 
 	h.GoodID = &info.GoodID
+	h.ID = &info.ID
 	locked := info.Locked
 	sold := info.Sold
 	waitStart := info.WaitStart

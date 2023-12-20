@@ -73,7 +73,7 @@ func (h *expireHandler) expireAppStock(ctx context.Context, tx *ent.Tx) error {
 		AppStock.
 		Query().
 		Where(
-			entappstock.ID(*h.ID),
+			entappstock.EntID(*h.EntID),
 			entappstock.DeletedAt(0),
 		).
 		ForUpdate().

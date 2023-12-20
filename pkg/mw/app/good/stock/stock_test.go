@@ -260,7 +260,6 @@ func lockStock(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithEntID(&ret.EntID, true),
-		WithEntID(&ret.EntID, true),
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
@@ -285,11 +284,7 @@ func waitStartStock(t *testing.T) {
 
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID, true),
-		WithAppID(&ret.AppID, true),
-		WithGoodID(&ret.GoodID, true),
 		WithLockID(&lockID, true),
-		WithWaitStart(&ret.WaitStart, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.WaitStartStock(context.Background())
@@ -298,6 +293,7 @@ func waitStartStock(t *testing.T) {
 			ret.UpdatedAt = info.UpdatedAt
 			assert.Equal(t, &ret, info)
 		}
+		fmt.Println("wait info: ", info)
 	}
 
 	h1, err := good1.NewHandler(
@@ -337,11 +333,6 @@ func lockFailStock(t *testing.T) {
 func chargeBackStock(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID, true),
-		WithAppID(&ret.AppID, true),
-		WithGoodID(&ret.GoodID, true),
-		WithAppGoodID(&ret.AppGoodID, true),
-		WithWaitStart(&ret.WaitStart, true),
 		WithLockID(&lockID, true),
 	)
 	if assert.Nil(t, err) {
@@ -352,6 +343,7 @@ func chargeBackStock(t *testing.T) {
 			ret.UpdatedAt = info.UpdatedAt
 			assert.Equal(t, &ret, info)
 		}
+		fmt.Println("charge info: ", info)
 	}
 
 	h1, err := good1.NewHandler(
