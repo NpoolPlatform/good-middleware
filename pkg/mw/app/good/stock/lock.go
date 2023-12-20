@@ -101,7 +101,15 @@ func (h *lockHandler) lockAppStock(ctx context.Context, tx *ent.Tx) error {
 		return fmt.Errorf("invalid appstock")
 	}
 
-	h.GoodID = &info.GoodID
+	if *h.AppID != info.AppID {
+		return fmt.Errorf("invalid appid")
+	}
+	if *h.GoodID != info.GoodID {
+		return fmt.Errorf("invalid goodid")
+	}
+	if *h.AppGoodID != info.AppGoodID {
+		return fmt.Errorf("invalid appgoodid")
+	}
 	spotQuantity := info.SpotQuantity
 	locked := info.Locked
 
