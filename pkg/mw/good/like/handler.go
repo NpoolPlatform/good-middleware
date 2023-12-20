@@ -101,12 +101,18 @@ func WithUserID(id *string, must bool) func(context.Context, *Handler) error {
 
 func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid appgoodid")
+			}
+			return nil
+		}
 		handler, err := appgood1.NewHandler(
 			ctx,
 			appgood1.WithEntID(id, true),
 		)
 		if err != nil {
-			return err
+			return fmt.Errorf("invalid appgoodid")
 		}
 		exist, err := handler.ExistGood(ctx)
 		if err != nil {
