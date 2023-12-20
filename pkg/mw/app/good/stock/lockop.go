@@ -32,6 +32,7 @@ func (h *lockopHandler) getLock(ctx context.Context) error {
 		}
 		h.lock = lock
 		h.EntID = &lock.AppStockID
+		h.ID = &lock.ID
 		return nil
 	})
 }
