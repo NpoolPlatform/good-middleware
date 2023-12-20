@@ -135,7 +135,7 @@ func WithBrandID(id *string, must bool) func(context.Context, *Handler) error {
 			brand1.WithEntID(id, true),
 		)
 		if err != nil {
-			return err
+			return fmt.Errorf("invalid brandid")
 		}
 		exist, err := handler.ExistBrand(ctx)
 		if err != nil {
