@@ -108,7 +108,7 @@ func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
 			good1.WithEntID(id, true),
 		)
 		if err != nil {
-			return err
+			return fmt.Errorf("invalid goodid")
 		}
 		exist, err := handler.ExistGood(ctx)
 		if err != nil {
