@@ -15,7 +15,7 @@ import (
 func (s *Server) GetRequired(ctx context.Context, in *npool.GetRequiredRequest) (*npool.GetRequiredResponse, error) {
 	handler, err := required1.NewHandler(
 		ctx,
-		required1.WithID(&in.ID, true),
+		required1.WithEntID(&in.EntID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

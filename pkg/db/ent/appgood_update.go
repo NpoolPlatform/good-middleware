@@ -85,6 +85,20 @@ func (agu *AppGoodUpdate) AddDeletedAt(u int32) *AppGoodUpdate {
 	return agu
 }
 
+// SetEntID sets the "ent_id" field.
+func (agu *AppGoodUpdate) SetEntID(u uuid.UUID) *AppGoodUpdate {
+	agu.mutation.SetEntID(u)
+	return agu
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (agu *AppGoodUpdate) SetNillableEntID(u *uuid.UUID) *AppGoodUpdate {
+	if u != nil {
+		agu.SetEntID(*u)
+	}
+	return agu
+}
+
 // SetAppID sets the "app_id" field.
 func (agu *AppGoodUpdate) SetAppID(u uuid.UUID) *AppGoodUpdate {
 	agu.mutation.SetAppID(u)
@@ -653,7 +667,7 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   appgood.Table,
 			Columns: appgood.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: appgood.FieldID,
 			},
 		},
@@ -705,6 +719,13 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: appgood.FieldDeletedAt,
+		})
+	}
+	if value, ok := agu.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appgood.FieldEntID,
 		})
 	}
 	if value, ok := agu.mutation.AppID(); ok {
@@ -1135,6 +1156,20 @@ func (aguo *AppGoodUpdateOne) SetNillableDeletedAt(u *uint32) *AppGoodUpdateOne 
 // AddDeletedAt adds u to the "deleted_at" field.
 func (aguo *AppGoodUpdateOne) AddDeletedAt(u int32) *AppGoodUpdateOne {
 	aguo.mutation.AddDeletedAt(u)
+	return aguo
+}
+
+// SetEntID sets the "ent_id" field.
+func (aguo *AppGoodUpdateOne) SetEntID(u uuid.UUID) *AppGoodUpdateOne {
+	aguo.mutation.SetEntID(u)
+	return aguo
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (aguo *AppGoodUpdateOne) SetNillableEntID(u *uuid.UUID) *AppGoodUpdateOne {
+	if u != nil {
+		aguo.SetEntID(*u)
+	}
 	return aguo
 }
 
@@ -1719,7 +1754,7 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 			Table:   appgood.Table,
 			Columns: appgood.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: appgood.FieldID,
 			},
 		},
@@ -1788,6 +1823,13 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: appgood.FieldDeletedAt,
+		})
+	}
+	if value, ok := aguo.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appgood.FieldEntID,
 		})
 	}
 	if value, ok := aguo.mutation.AppID(); ok {

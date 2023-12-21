@@ -15,7 +15,7 @@ import (
 func (s *Server) GetComment(ctx context.Context, in *npool.GetCommentRequest) (*npool.GetCommentResponse, error) {
 	handler, err := comment1.NewHandler(
 		ctx,
-		comment1.WithID(&in.ID, true),
+		comment1.WithEntID(&in.EntID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

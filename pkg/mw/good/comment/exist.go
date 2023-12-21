@@ -18,7 +18,7 @@ func (h *Handler) ExistComment(ctx context.Context) (bool, error) {
 			Comment.
 			Query().
 			Where(
-				entcomment.ID(*h.ID),
+				entcomment.EntID(*h.EntID),
 				entcomment.DeletedAt(0),
 			).
 			Exist(_ctx)

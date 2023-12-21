@@ -23,7 +23,7 @@ func (s *Server) CreateLike(ctx context.Context, in *npool.CreateLikeRequest) (*
 	}
 	handler, err := like1.NewHandler(
 		ctx,
-		like1.WithID(req.ID, false),
+		like1.WithEntID(req.EntID, false),
 		like1.WithAppID(req.AppID, true),
 		like1.WithAppGoodID(req.AppGoodID, true),
 		like1.WithUserID(req.UserID, true),

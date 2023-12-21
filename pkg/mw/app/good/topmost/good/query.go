@@ -32,15 +32,19 @@ func (h *queryHandler) selectTopMostGood(stm *ent.TopMostGoodQuery) *ent.TopMost
 	return stm.Select(enttopmostgood.FieldID)
 }
 
-func (h *queryHandler) queryTopMostGood(cli *ent.Client) {
-	h.stmSelect = h.selectTopMostGood(
-		cli.TopMostGood.
-			Query().
-			Where(
-				enttopmostgood.ID(*h.ID),
-				enttopmostgood.DeletedAt(0),
-			),
-	)
+func (h *queryHandler) queryTopMostGood(cli *ent.Client) error {
+	if h.ID == nil && h.EntID == nil {
+		return fmt.Errorf("invalid id")
+	}
+	stm := cli.TopMostGood.Query().Where(enttopmostgood.DeletedAt(0))
+	if h.ID != nil {
+		stm.Where(enttopmostgood.ID(*h.ID))
+	}
+	if h.EntID != nil {
+		stm.Where(enttopmostgood.EntID(*h.EntID))
+	}
+	h.stmSelect = h.selectTopMostGood(stm)
+	return nil
 }
 
 func (h *queryHandler) queryTopMostGoods(cli *ent.Client) (*ent.TopMostGoodSelect, error) {
@@ -59,6 +63,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(enttopmostgood.FieldID),
 		).
 		AppendSelect(
+			sql.As(t.C(enttopmostgood.FieldEntID), "ent_id"),
 			sql.As(t.C(enttopmostgood.FieldAppID), "app_id"),
 			sql.As(t.C(enttopmostgood.FieldGoodID), "good_id"),
 			sql.As(t.C(enttopmostgood.FieldAppGoodID), "app_good_id"),
@@ -77,7 +82,7 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 	s.LeftJoin(t).
 		On(
 			s.C(enttopmostgood.FieldGoodID),
-			t.C(entgood.FieldID),
+			t.C(entgood.FieldEntID),
 		).
 		AppendSelect(
 			sql.As(t.C(entgood.FieldTitle), "good_name"),
@@ -89,7 +94,7 @@ func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
 	s.LeftJoin(t).
 		On(
 			s.C(enttopmostgood.FieldAppGoodID),
-			t.C(entappgood.FieldID),
+			t.C(entappgood.FieldEntID),
 		).
 		AppendSelect(
 			sql.As(t.C(entappgood.FieldGoodName), "app_good_name"),
@@ -101,7 +106,7 @@ func (h *queryHandler) queryJoinTopMost(s *sql.Selector) {
 	s.LeftJoin(t).
 		On(
 			s.C(enttopmostgood.FieldTopMostID),
-			t.C(enttopmost.FieldID),
+			t.C(enttopmost.FieldEntID),
 		).
 		AppendSelect(
 			sql.As(t.C(enttopmost.FieldTopMostType), "top_most_type"),
@@ -160,7 +165,9 @@ func (h *Handler) GetTopMostGood(ctx context.Context) (*npool.TopMostGood, error
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.queryTopMostGood(cli)
+		if err := handler.queryTopMostGood(cli); err != nil {
+			return err
+		}
 		handler.queryJoin()
 		return handler.scan(ctx)
 	})

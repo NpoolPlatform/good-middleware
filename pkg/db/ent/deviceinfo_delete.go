@@ -72,7 +72,7 @@ func (did *DeviceInfoDelete) sqlExec(ctx context.Context) (int, error) {
 		Node: &sqlgraph.NodeSpec{
 			Table: deviceinfo.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: deviceinfo.FieldID,
 			},
 		},

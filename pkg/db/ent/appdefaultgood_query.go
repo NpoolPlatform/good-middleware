@@ -14,7 +14,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
-	"github.com/google/uuid"
 )
 
 // AppDefaultGoodQuery is the builder for querying AppDefaultGood entities.
@@ -87,8 +86,8 @@ func (adgq *AppDefaultGoodQuery) FirstX(ctx context.Context) *AppDefaultGood {
 
 // FirstID returns the first AppDefaultGood ID from the query.
 // Returns a *NotFoundError when no AppDefaultGood ID was found.
-func (adgq *AppDefaultGoodQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (adgq *AppDefaultGoodQuery) FirstID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = adgq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -100,7 +99,7 @@ func (adgq *AppDefaultGoodQuery) FirstID(ctx context.Context) (id uuid.UUID, err
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (adgq *AppDefaultGoodQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (adgq *AppDefaultGoodQuery) FirstIDX(ctx context.Context) uint32 {
 	id, err := adgq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -138,8 +137,8 @@ func (adgq *AppDefaultGoodQuery) OnlyX(ctx context.Context) *AppDefaultGood {
 // OnlyID is like Only, but returns the only AppDefaultGood ID in the query.
 // Returns a *NotSingularError when more than one AppDefaultGood ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (adgq *AppDefaultGoodQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (adgq *AppDefaultGoodQuery) OnlyID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = adgq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -155,7 +154,7 @@ func (adgq *AppDefaultGoodQuery) OnlyID(ctx context.Context) (id uuid.UUID, err 
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (adgq *AppDefaultGoodQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (adgq *AppDefaultGoodQuery) OnlyIDX(ctx context.Context) uint32 {
 	id, err := adgq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -181,8 +180,8 @@ func (adgq *AppDefaultGoodQuery) AllX(ctx context.Context) []*AppDefaultGood {
 }
 
 // IDs executes the query and returns a list of AppDefaultGood IDs.
-func (adgq *AppDefaultGoodQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	var ids []uuid.UUID
+func (adgq *AppDefaultGoodQuery) IDs(ctx context.Context) ([]uint32, error) {
+	var ids []uint32
 	if err := adgq.Select(appdefaultgood.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -190,7 +189,7 @@ func (adgq *AppDefaultGoodQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (adgq *AppDefaultGoodQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (adgq *AppDefaultGoodQuery) IDsX(ctx context.Context) []uint32 {
 	ids, err := adgq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -377,7 +376,7 @@ func (adgq *AppDefaultGoodQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   appdefaultgood.Table,
 			Columns: appdefaultgood.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: appdefaultgood.FieldID,
 			},
 		},

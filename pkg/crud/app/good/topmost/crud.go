@@ -12,7 +12,8 @@ import (
 )
 
 type Req struct {
-	ID                     *uuid.UUID
+	ID                     *uint32
+	EntID                  *uuid.UUID
 	AppID                  *uuid.UUID
 	TopMostType            *types.GoodTopMostType
 	Title                  *string
@@ -29,8 +30,8 @@ type Req struct {
 }
 
 func CreateSet(c *ent.TopMostCreate, req *Req) *ent.TopMostCreate {
-	if req.ID != nil {
-		c.SetID(*req.ID)
+	if req.EntID != nil {
+		c.SetEntID(*req.EntID)
 	}
 	if req.AppID != nil {
 		c.SetAppID(*req.AppID)
@@ -110,6 +111,7 @@ func UpdateSet(u *ent.TopMostUpdateOne, req *Req) *ent.TopMostUpdateOne {
 
 type Conds struct {
 	ID          *cruder.Cond
+	EntID       *cruder.Cond
 	AppID       *cruder.Cond
 	TopMostType *cruder.Cond
 	Title       *cruder.Cond
@@ -123,7 +125,7 @@ func SetQueryConds(q *ent.TopMostQuery, conds *Conds) (*ent.TopMostQuery, error)
 		return q, nil
 	}
 	if conds.ID != nil {
-		id, ok := conds.ID.Val.(uuid.UUID)
+		id, ok := conds.ID.Val.(uint32)
 		if !ok {
 			return nil, fmt.Errorf("invalid id")
 		}
@@ -132,6 +134,20 @@ func SetQueryConds(q *ent.TopMostQuery, conds *Conds) (*ent.TopMostQuery, error)
 			q.Where(enttopmost.ID(id))
 		case cruder.NEQ:
 			q.Where(enttopmost.IDNEQ(id))
+		default:
+			return nil, fmt.Errorf("invalid topmostgood field")
+		}
+	}
+	if conds.EntID != nil {
+		id, ok := conds.EntID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid id")
+		}
+		switch conds.EntID.Op {
+		case cruder.EQ:
+			q.Where(enttopmost.EntID(id))
+		case cruder.NEQ:
+			q.Where(enttopmost.EntIDNEQ(id))
 		default:
 			return nil, fmt.Errorf("invalid topmostgood field")
 		}

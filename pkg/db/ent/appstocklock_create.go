@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -62,6 +61,20 @@ func (aslc *AppStockLockCreate) SetDeletedAt(u uint32) *AppStockLockCreate {
 func (aslc *AppStockLockCreate) SetNillableDeletedAt(u *uint32) *AppStockLockCreate {
 	if u != nil {
 		aslc.SetDeletedAt(*u)
+	}
+	return aslc
+}
+
+// SetEntID sets the "ent_id" field.
+func (aslc *AppStockLockCreate) SetEntID(u uuid.UUID) *AppStockLockCreate {
+	aslc.mutation.SetEntID(u)
+	return aslc
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (aslc *AppStockLockCreate) SetNillableEntID(u *uuid.UUID) *AppStockLockCreate {
+	if u != nil {
+		aslc.SetEntID(*u)
 	}
 	return aslc
 }
@@ -137,16 +150,8 @@ func (aslc *AppStockLockCreate) SetNillableChargeBackState(s *string) *AppStockL
 }
 
 // SetID sets the "id" field.
-func (aslc *AppStockLockCreate) SetID(u uuid.UUID) *AppStockLockCreate {
+func (aslc *AppStockLockCreate) SetID(u uint32) *AppStockLockCreate {
 	aslc.mutation.SetID(u)
-	return aslc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (aslc *AppStockLockCreate) SetNillableID(u *uuid.UUID) *AppStockLockCreate {
-	if u != nil {
-		aslc.SetID(*u)
-	}
 	return aslc
 }
 
@@ -250,6 +255,13 @@ func (aslc *AppStockLockCreate) defaults() error {
 		v := appstocklock.DefaultDeletedAt()
 		aslc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := aslc.mutation.EntID(); !ok {
+		if appstocklock.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized appstocklock.DefaultEntID (forgotten import ent/runtime?)")
+		}
+		v := appstocklock.DefaultEntID()
+		aslc.mutation.SetEntID(v)
+	}
 	if _, ok := aslc.mutation.AppStockID(); !ok {
 		if appstocklock.DefaultAppStockID == nil {
 			return fmt.Errorf("ent: uninitialized appstocklock.DefaultAppStockID (forgotten import ent/runtime?)")
@@ -273,13 +285,6 @@ func (aslc *AppStockLockCreate) defaults() error {
 		v := appstocklock.DefaultChargeBackState
 		aslc.mutation.SetChargeBackState(v)
 	}
-	if _, ok := aslc.mutation.ID(); !ok {
-		if appstocklock.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized appstocklock.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := appstocklock.DefaultID()
-		aslc.mutation.SetID(v)
-	}
 	return nil
 }
 
@@ -294,6 +299,9 @@ func (aslc *AppStockLockCreate) check() error {
 	if _, ok := aslc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "AppStockLock.deleted_at"`)}
 	}
+	if _, ok := aslc.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "AppStockLock.ent_id"`)}
+	}
 	return nil
 }
 
@@ -305,12 +313,9 @@ func (aslc *AppStockLockCreate) sqlSave(ctx context.Context) (*AppStockLock, err
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -321,7 +326,7 @@ func (aslc *AppStockLockCreate) createSpec() (*AppStockLock, *sqlgraph.CreateSpe
 		_spec = &sqlgraph.CreateSpec{
 			Table: appstocklock.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: appstocklock.FieldID,
 			},
 		}
@@ -329,7 +334,7 @@ func (aslc *AppStockLockCreate) createSpec() (*AppStockLock, *sqlgraph.CreateSpe
 	_spec.OnConflict = aslc.conflict
 	if id, ok := aslc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := aslc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -354,6 +359,14 @@ func (aslc *AppStockLockCreate) createSpec() (*AppStockLock, *sqlgraph.CreateSpe
 			Column: appstocklock.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
+	}
+	if value, ok := aslc.mutation.EntID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appstocklock.FieldEntID,
+		})
+		_node.EntID = value
 	}
 	if value, ok := aslc.mutation.AppStockID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -500,6 +513,18 @@ func (u *AppStockLockUpsert) UpdateDeletedAt() *AppStockLockUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *AppStockLockUpsert) AddDeletedAt(v uint32) *AppStockLockUpsert {
 	u.Add(appstocklock.FieldDeletedAt, v)
+	return u
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *AppStockLockUpsert) SetEntID(v uuid.UUID) *AppStockLockUpsert {
+	u.Set(appstocklock.FieldEntID, v)
+	return u
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *AppStockLockUpsert) UpdateEntID() *AppStockLockUpsert {
+	u.SetExcluded(appstocklock.FieldEntID)
 	return u
 }
 
@@ -706,6 +731,20 @@ func (u *AppStockLockUpsertOne) UpdateDeletedAt() *AppStockLockUpsertOne {
 	})
 }
 
+// SetEntID sets the "ent_id" field.
+func (u *AppStockLockUpsertOne) SetEntID(v uuid.UUID) *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *AppStockLockUpsertOne) UpdateEntID() *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateEntID()
+	})
+}
+
 // SetAppStockID sets the "app_stock_id" field.
 func (u *AppStockLockUpsertOne) SetAppStockID(v uuid.UUID) *AppStockLockUpsertOne {
 	return u.Update(func(s *AppStockLockUpsert) {
@@ -827,12 +866,7 @@ func (u *AppStockLockUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *AppStockLockUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: AppStockLockUpsertOne.ID is not supported by MySQL driver. Use AppStockLockUpsertOne.Exec instead")
-	}
+func (u *AppStockLockUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -841,7 +875,7 @@ func (u *AppStockLockUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *AppStockLockUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *AppStockLockUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -892,6 +926,10 @@ func (aslcb *AppStockLockCreateBulk) Save(ctx context.Context) ([]*AppStockLock,
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -1087,6 +1125,20 @@ func (u *AppStockLockUpsertBulk) AddDeletedAt(v uint32) *AppStockLockUpsertBulk 
 func (u *AppStockLockUpsertBulk) UpdateDeletedAt() *AppStockLockUpsertBulk {
 	return u.Update(func(s *AppStockLockUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *AppStockLockUpsertBulk) SetEntID(v uuid.UUID) *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *AppStockLockUpsertBulk) UpdateEntID() *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateEntID()
 	})
 }
 

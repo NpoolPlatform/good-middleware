@@ -9,8 +9,10 @@ import (
 	scorecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
+	appgoodpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/score"
 
 	"github.com/google/uuid"
@@ -19,31 +21,35 @@ import (
 
 type createHandler struct {
 	*Handler
-	appgood *ent.AppGood
+	appgood *appgoodpb.Good
 }
 
 func (h *createHandler) getAppGood(ctx context.Context) error {
-	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		appGood, err := cli.AppGood.Get(ctx, *h.AppGoodID)
-		if err != nil {
-			return err
-		}
-		if appGood == nil {
-			return fmt.Errorf("app good not found %v", *h.AppGoodID)
-		}
-		h.appgood = appGood
-		return nil
-	})
+	handler, err := appgood1.NewHandler(ctx)
+	if err != nil {
+		return err
+	}
+	handler.EntID = h.AppGoodID
+	info, err := handler.GetGood(ctx)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		return fmt.Errorf("app good not found %v", *h.AppGoodID)
+	}
+	h.appgood = info
+	return nil
 }
 
 func (h *createHandler) createScore(ctx context.Context, tx *ent.Tx) error {
+	goodid := uuid.MustParse(h.appgood.GoodID)
 	if _, err := scorecrud.CreateSet(
 		tx.Score.Create(),
 		&scorecrud.Req{
-			ID:        h.ID,
+			EntID:     h.EntID,
 			AppID:     h.AppID,
 			UserID:    h.UserID,
-			GoodID:    &h.appgood.GoodID,
+			GoodID:    &goodid,
 			AppGoodID: h.AppGoodID,
 			Score:     h.Score,
 		},
@@ -54,10 +60,11 @@ func (h *createHandler) createScore(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *createHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
+	goodid := uuid.MustParse(h.appgood.GoodID)
 	stm, err := extrainfocrud.SetQueryConds(
 		tx.ExtraInfo.Query(),
 		&extrainfocrud.Conds{
-			GoodID: &cruder.Cond{Op: cruder.EQ, Val: h.appgood.GoodID},
+			GoodID: &cruder.Cond{Op: cruder.EQ, Val: goodid},
 		})
 	if err != nil {
 		return err
@@ -106,8 +113,8 @@ func (h *Handler) CreateScore(ctx context.Context) (*npool.Score, error) {
 	}
 
 	id := uuid.New()
-	if h.ID == nil {
-		h.ID = &id
+	if h.EntID == nil {
+		h.EntID = &id
 	}
 
 	handler := &createHandler{

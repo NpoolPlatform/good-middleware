@@ -14,7 +14,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
-	"github.com/google/uuid"
 )
 
 // GoodRewardHistoryQuery is the builder for querying GoodRewardHistory entities.
@@ -87,8 +86,8 @@ func (grhq *GoodRewardHistoryQuery) FirstX(ctx context.Context) *GoodRewardHisto
 
 // FirstID returns the first GoodRewardHistory ID from the query.
 // Returns a *NotFoundError when no GoodRewardHistory ID was found.
-func (grhq *GoodRewardHistoryQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (grhq *GoodRewardHistoryQuery) FirstID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = grhq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -100,7 +99,7 @@ func (grhq *GoodRewardHistoryQuery) FirstID(ctx context.Context) (id uuid.UUID, 
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (grhq *GoodRewardHistoryQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (grhq *GoodRewardHistoryQuery) FirstIDX(ctx context.Context) uint32 {
 	id, err := grhq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -138,8 +137,8 @@ func (grhq *GoodRewardHistoryQuery) OnlyX(ctx context.Context) *GoodRewardHistor
 // OnlyID is like Only, but returns the only GoodRewardHistory ID in the query.
 // Returns a *NotSingularError when more than one GoodRewardHistory ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (grhq *GoodRewardHistoryQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (grhq *GoodRewardHistoryQuery) OnlyID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = grhq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -155,7 +154,7 @@ func (grhq *GoodRewardHistoryQuery) OnlyID(ctx context.Context) (id uuid.UUID, e
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (grhq *GoodRewardHistoryQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (grhq *GoodRewardHistoryQuery) OnlyIDX(ctx context.Context) uint32 {
 	id, err := grhq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -181,8 +180,8 @@ func (grhq *GoodRewardHistoryQuery) AllX(ctx context.Context) []*GoodRewardHisto
 }
 
 // IDs executes the query and returns a list of GoodRewardHistory IDs.
-func (grhq *GoodRewardHistoryQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	var ids []uuid.UUID
+func (grhq *GoodRewardHistoryQuery) IDs(ctx context.Context) ([]uint32, error) {
+	var ids []uint32
 	if err := grhq.Select(goodrewardhistory.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -190,7 +189,7 @@ func (grhq *GoodRewardHistoryQuery) IDs(ctx context.Context) ([]uuid.UUID, error
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (grhq *GoodRewardHistoryQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (grhq *GoodRewardHistoryQuery) IDsX(ctx context.Context) []uint32 {
 	ids, err := grhq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -377,7 +376,7 @@ func (grhq *GoodRewardHistoryQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   goodrewardhistory.Table,
 			Columns: goodrewardhistory.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: goodrewardhistory.FieldID,
 			},
 		},

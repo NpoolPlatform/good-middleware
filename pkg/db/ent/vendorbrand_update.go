@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
+	"github.com/google/uuid"
 )
 
 // VendorBrandUpdate is the builder for updating VendorBrand entities.
@@ -80,6 +81,20 @@ func (vbu *VendorBrandUpdate) SetNillableDeletedAt(u *uint32) *VendorBrandUpdate
 // AddDeletedAt adds u to the "deleted_at" field.
 func (vbu *VendorBrandUpdate) AddDeletedAt(u int32) *VendorBrandUpdate {
 	vbu.mutation.AddDeletedAt(u)
+	return vbu
+}
+
+// SetEntID sets the "ent_id" field.
+func (vbu *VendorBrandUpdate) SetEntID(u uuid.UUID) *VendorBrandUpdate {
+	vbu.mutation.SetEntID(u)
+	return vbu
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (vbu *VendorBrandUpdate) SetNillableEntID(u *uuid.UUID) *VendorBrandUpdate {
+	if u != nil {
+		vbu.SetEntID(*u)
+	}
 	return vbu
 }
 
@@ -230,7 +245,7 @@ func (vbu *VendorBrandUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   vendorbrand.Table,
 			Columns: vendorbrand.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: vendorbrand.FieldID,
 			},
 		},
@@ -282,6 +297,13 @@ func (vbu *VendorBrandUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: vendorbrand.FieldDeletedAt,
+		})
+	}
+	if value, ok := vbu.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: vendorbrand.FieldEntID,
 		})
 	}
 	if value, ok := vbu.mutation.Name(); ok {
@@ -383,6 +405,20 @@ func (vbuo *VendorBrandUpdateOne) SetNillableDeletedAt(u *uint32) *VendorBrandUp
 // AddDeletedAt adds u to the "deleted_at" field.
 func (vbuo *VendorBrandUpdateOne) AddDeletedAt(u int32) *VendorBrandUpdateOne {
 	vbuo.mutation.AddDeletedAt(u)
+	return vbuo
+}
+
+// SetEntID sets the "ent_id" field.
+func (vbuo *VendorBrandUpdateOne) SetEntID(u uuid.UUID) *VendorBrandUpdateOne {
+	vbuo.mutation.SetEntID(u)
+	return vbuo
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (vbuo *VendorBrandUpdateOne) SetNillableEntID(u *uuid.UUID) *VendorBrandUpdateOne {
+	if u != nil {
+		vbuo.SetEntID(*u)
+	}
 	return vbuo
 }
 
@@ -546,7 +582,7 @@ func (vbuo *VendorBrandUpdateOne) sqlSave(ctx context.Context) (_node *VendorBra
 			Table:   vendorbrand.Table,
 			Columns: vendorbrand.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: vendorbrand.FieldID,
 			},
 		},
@@ -615,6 +651,13 @@ func (vbuo *VendorBrandUpdateOne) sqlSave(ctx context.Context) (_node *VendorBra
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: vendorbrand.FieldDeletedAt,
+		})
+	}
+	if value, ok := vbuo.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: vendorbrand.FieldEntID,
 		})
 	}
 	if value, ok := vbuo.mutation.Name(); ok {

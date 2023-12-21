@@ -26,15 +26,19 @@ func (h *queryHandler) selectRequired(stm *ent.RequiredGoodQuery) *ent.RequiredG
 	return stm.Select(entrequiredgood.FieldID)
 }
 
-func (h *queryHandler) queryRequired(cli *ent.Client) {
-	h.stmSelect = h.selectRequired(
-		cli.RequiredGood.
-			Query().
-			Where(
-				entrequiredgood.ID(*h.ID),
-				entrequiredgood.DeletedAt(0),
-			),
-	)
+func (h *queryHandler) queryRequired(cli *ent.Client) error {
+	if h.ID == nil && h.EntID == nil {
+		return fmt.Errorf("invalid id")
+	}
+	stm := cli.RequiredGood.Query().Where(entrequiredgood.DeletedAt(0))
+	if h.ID != nil {
+		stm.Where(entrequiredgood.ID(*h.ID))
+	}
+	if h.EntID != nil {
+		stm.Where(entrequiredgood.EntID(*h.EntID))
+	}
+	h.stmSelect = h.selectRequired(stm)
+	return nil
 }
 
 func (h *queryHandler) queryRequireds(cli *ent.Client) (*ent.RequiredGoodSelect, error) {
@@ -53,6 +57,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(entrequiredgood.FieldID),
 		).
 		AppendSelect(
+			sql.As(t.C(entrequiredgood.FieldEntID), "ent_id"),
 			sql.As(t.C(entrequiredgood.FieldMainGoodID), "main_good_id"),
 			sql.As(t.C(entrequiredgood.FieldRequiredGoodID), "required_good_id"),
 			sql.As(t.C(entrequiredgood.FieldMust), "must"),
@@ -66,7 +71,7 @@ func (h *queryHandler) queryJoinMainGood(s *sql.Selector) {
 	s.LeftJoin(t).
 		On(
 			s.C(entrequiredgood.FieldMainGoodID),
-			t.C(entgood.FieldID),
+			t.C(entgood.FieldEntID),
 		).
 		AppendSelect(
 			sql.As(t.C(entgood.FieldTitle), "main_good_name"),
@@ -78,7 +83,7 @@ func (h *queryHandler) queryJoinRequiredGood(s *sql.Selector) {
 	s.LeftJoin(t).
 		On(
 			s.C(entrequiredgood.FieldRequiredGoodID),
-			t.C(entgood.FieldID),
+			t.C(entgood.FieldEntID),
 		).
 		AppendSelect(
 			sql.As(t.C(entgood.FieldTitle), "required_good_name"),
@@ -110,7 +115,9 @@ func (h *Handler) GetRequired(ctx context.Context) (*npool.Required, error) {
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.queryRequired(cli)
+		if err := handler.queryRequired(cli); err != nil {
+			return err
+		}
 		handler.queryJoin()
 		return handler.scan(ctx)
 	})

@@ -23,7 +23,7 @@ func (h *createHandler) createDefault(ctx context.Context, tx *ent.Tx) error {
 	if _, err := appdefaultgoodcrud.CreateSet(
 		tx.AppDefaultGood.Create(),
 		&appdefaultgoodcrud.Req{
-			ID:         h.ID,
+			EntID:      h.EntID,
 			AppID:      h.AppID,
 			GoodID:     h.GoodID,
 			AppGoodID:  h.AppGoodID,
@@ -61,8 +61,8 @@ func (h *Handler) CreateDefault(ctx context.Context) (*npool.Default, error) {
 	}
 
 	id := uuid.New()
-	if h.ID == nil {
-		h.ID = &id
+	if h.EntID == nil {
+		h.EntID = &id
 	}
 
 	handler := &createHandler{

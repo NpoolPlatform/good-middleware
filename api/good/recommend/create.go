@@ -23,7 +23,7 @@ func (s *Server) CreateRecommend(ctx context.Context, in *npool.CreateRecommendR
 	}
 	handler, err := recommend1.NewHandler(
 		ctx,
-		recommend1.WithID(req.ID, false),
+		recommend1.WithEntID(req.EntID, false),
 		recommend1.WithAppID(req.AppID, true),
 		recommend1.WithGoodID(req.GoodID, true),
 		recommend1.WithRecommenderID(req.RecommenderID, true),

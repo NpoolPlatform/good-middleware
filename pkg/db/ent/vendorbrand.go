@@ -15,13 +15,15 @@ import (
 type VendorBrand struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID uuid.UUID `json:"id,omitempty"`
+	ID uint32 `json:"id,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt uint32 `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
 	UpdatedAt uint32 `json:"updated_at,omitempty"`
 	// DeletedAt holds the value of the "deleted_at" field.
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
+	// EntID holds the value of the "ent_id" field.
+	EntID uuid.UUID `json:"ent_id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Logo holds the value of the "logo" field.
@@ -33,11 +35,11 @@ func (*VendorBrand) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case vendorbrand.FieldCreatedAt, vendorbrand.FieldUpdatedAt, vendorbrand.FieldDeletedAt:
+		case vendorbrand.FieldID, vendorbrand.FieldCreatedAt, vendorbrand.FieldUpdatedAt, vendorbrand.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
 		case vendorbrand.FieldName, vendorbrand.FieldLogo:
 			values[i] = new(sql.NullString)
-		case vendorbrand.FieldID:
+		case vendorbrand.FieldEntID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type VendorBrand", columns[i])
@@ -55,11 +57,11 @@ func (vb *VendorBrand) assignValues(columns []string, values []interface{}) erro
 	for i := range columns {
 		switch columns[i] {
 		case vendorbrand.FieldID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value != nil {
-				vb.ID = *value
+			value, ok := values[i].(*sql.NullInt64)
+			if !ok {
+				return fmt.Errorf("unexpected type %T for field id", value)
 			}
+			vb.ID = uint32(value.Int64)
 		case vendorbrand.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -77,6 +79,12 @@ func (vb *VendorBrand) assignValues(columns []string, values []interface{}) erro
 				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
 				vb.DeletedAt = uint32(value.Int64)
+			}
+		case vendorbrand.FieldEntID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field ent_id", values[i])
+			} else if value != nil {
+				vb.EntID = *value
 			}
 		case vendorbrand.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -126,6 +134,9 @@ func (vb *VendorBrand) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("deleted_at=")
 	builder.WriteString(fmt.Sprintf("%v", vb.DeletedAt))
+	builder.WriteString(", ")
+	builder.WriteString("ent_id=")
+	builder.WriteString(fmt.Sprintf("%v", vb.EntID))
 	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(vb.Name)

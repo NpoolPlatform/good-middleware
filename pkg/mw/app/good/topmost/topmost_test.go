@@ -30,7 +30,7 @@ func init() {
 }
 
 var ret = npool.TopMost{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	AppID:                  uuid.NewString(),
 	TopMostType:            types.GoodTopMostType_TopMostInnovationStarter,
 	TopMostTypeStr:         types.GoodTopMostType_TopMostInnovationStarter.String(),
@@ -49,7 +49,7 @@ var ret = npool.TopMost{
 func createTopMost(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
 		WithAppID(&ret.AppID, true),
 		WithTopMostType(&ret.TopMostType, true),
 		WithTitle(&ret.Title, true),
@@ -69,6 +69,7 @@ func createTopMost(t *testing.T) {
 			info.PostersStr = ret.PostersStr
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
+			ret.ID = info.ID
 			assert.Equal(t, &ret, info)
 		}
 	}
@@ -92,7 +93,7 @@ func updateTopMost(t *testing.T) {
 func getTopMost(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.GetTopMost(context.Background())
@@ -107,7 +108,8 @@ func getTopMosts(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithConds(&npool.Conds{
-			ID:          &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+			ID:          &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+			EntID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 			AppID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
 			TopMostType: &basetypes.Uint32Val{Op: cruder.EQ, Value: uint32(ret.TopMostType)},
 		}),

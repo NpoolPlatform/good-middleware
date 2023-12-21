@@ -52,15 +52,15 @@ func (h *Handler) CreateRequired(ctx context.Context) (*npool.Required, error) {
 	}
 
 	id := uuid.New()
-	if h.ID == nil {
-		h.ID = &id
+	if h.EntID == nil {
+		h.EntID = &id
 	}
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if _, err := requiredcrud.CreateSet(
 			cli.RequiredGood.Create(),
 			&requiredcrud.Req{
-				ID:             h.ID,
+				EntID:          h.EntID,
 				MainGoodID:     h.MainGoodID,
 				RequiredGoodID: h.RequiredGoodID,
 				Must:           h.Must,

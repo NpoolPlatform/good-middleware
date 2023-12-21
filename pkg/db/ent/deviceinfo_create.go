@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -61,6 +60,20 @@ func (dic *DeviceInfoCreate) SetDeletedAt(u uint32) *DeviceInfoCreate {
 func (dic *DeviceInfoCreate) SetNillableDeletedAt(u *uint32) *DeviceInfoCreate {
 	if u != nil {
 		dic.SetDeletedAt(*u)
+	}
+	return dic
+}
+
+// SetEntID sets the "ent_id" field.
+func (dic *DeviceInfoCreate) SetEntID(u uuid.UUID) *DeviceInfoCreate {
+	dic.mutation.SetEntID(u)
+	return dic
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (dic *DeviceInfoCreate) SetNillableEntID(u *uuid.UUID) *DeviceInfoCreate {
+	if u != nil {
+		dic.SetEntID(*u)
 	}
 	return dic
 }
@@ -128,16 +141,8 @@ func (dic *DeviceInfoCreate) SetPosters(s []string) *DeviceInfoCreate {
 }
 
 // SetID sets the "id" field.
-func (dic *DeviceInfoCreate) SetID(u uuid.UUID) *DeviceInfoCreate {
+func (dic *DeviceInfoCreate) SetID(u uint32) *DeviceInfoCreate {
 	dic.mutation.SetID(u)
-	return dic
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (dic *DeviceInfoCreate) SetNillableID(u *uuid.UUID) *DeviceInfoCreate {
-	if u != nil {
-		dic.SetID(*u)
-	}
 	return dic
 }
 
@@ -241,6 +246,13 @@ func (dic *DeviceInfoCreate) defaults() error {
 		v := deviceinfo.DefaultDeletedAt()
 		dic.mutation.SetDeletedAt(v)
 	}
+	if _, ok := dic.mutation.EntID(); !ok {
+		if deviceinfo.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized deviceinfo.DefaultEntID (forgotten import ent/runtime?)")
+		}
+		v := deviceinfo.DefaultEntID()
+		dic.mutation.SetEntID(v)
+	}
 	if _, ok := dic.mutation.GetType(); !ok {
 		v := deviceinfo.DefaultType
 		dic.mutation.SetType(v)
@@ -261,13 +273,6 @@ func (dic *DeviceInfoCreate) defaults() error {
 		v := deviceinfo.DefaultPosters
 		dic.mutation.SetPosters(v)
 	}
-	if _, ok := dic.mutation.ID(); !ok {
-		if deviceinfo.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized deviceinfo.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := deviceinfo.DefaultID()
-		dic.mutation.SetID(v)
-	}
 	return nil
 }
 
@@ -281,6 +286,9 @@ func (dic *DeviceInfoCreate) check() error {
 	}
 	if _, ok := dic.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "DeviceInfo.deleted_at"`)}
+	}
+	if _, ok := dic.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "DeviceInfo.ent_id"`)}
 	}
 	if v, ok := dic.mutation.GetType(); ok {
 		if err := deviceinfo.TypeValidator(v); err != nil {
@@ -303,12 +311,9 @@ func (dic *DeviceInfoCreate) sqlSave(ctx context.Context) (*DeviceInfo, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -319,7 +324,7 @@ func (dic *DeviceInfoCreate) createSpec() (*DeviceInfo, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: deviceinfo.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: deviceinfo.FieldID,
 			},
 		}
@@ -327,7 +332,7 @@ func (dic *DeviceInfoCreate) createSpec() (*DeviceInfo, *sqlgraph.CreateSpec) {
 	_spec.OnConflict = dic.conflict
 	if id, ok := dic.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := dic.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -352,6 +357,14 @@ func (dic *DeviceInfoCreate) createSpec() (*DeviceInfo, *sqlgraph.CreateSpec) {
 			Column: deviceinfo.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
+	}
+	if value, ok := dic.mutation.EntID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: deviceinfo.FieldEntID,
+		})
+		_node.EntID = value
 	}
 	if value, ok := dic.mutation.GetType(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -498,6 +511,18 @@ func (u *DeviceInfoUpsert) UpdateDeletedAt() *DeviceInfoUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *DeviceInfoUpsert) AddDeletedAt(v uint32) *DeviceInfoUpsert {
 	u.Add(deviceinfo.FieldDeletedAt, v)
+	return u
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *DeviceInfoUpsert) SetEntID(v uuid.UUID) *DeviceInfoUpsert {
+	u.Set(deviceinfo.FieldEntID, v)
+	return u
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *DeviceInfoUpsert) UpdateEntID() *DeviceInfoUpsert {
+	u.SetExcluded(deviceinfo.FieldEntID)
 	return u
 }
 
@@ -716,6 +741,20 @@ func (u *DeviceInfoUpsertOne) UpdateDeletedAt() *DeviceInfoUpsertOne {
 	})
 }
 
+// SetEntID sets the "ent_id" field.
+func (u *DeviceInfoUpsertOne) SetEntID(v uuid.UUID) *DeviceInfoUpsertOne {
+	return u.Update(func(s *DeviceInfoUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *DeviceInfoUpsertOne) UpdateEntID() *DeviceInfoUpsertOne {
+	return u.Update(func(s *DeviceInfoUpsert) {
+		s.UpdateEntID()
+	})
+}
+
 // SetType sets the "type" field.
 func (u *DeviceInfoUpsertOne) SetType(v string) *DeviceInfoUpsertOne {
 	return u.Update(func(s *DeviceInfoUpsert) {
@@ -851,12 +890,7 @@ func (u *DeviceInfoUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *DeviceInfoUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: DeviceInfoUpsertOne.ID is not supported by MySQL driver. Use DeviceInfoUpsertOne.Exec instead")
-	}
+func (u *DeviceInfoUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -865,7 +899,7 @@ func (u *DeviceInfoUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) 
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *DeviceInfoUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *DeviceInfoUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -916,6 +950,10 @@ func (dicb *DeviceInfoCreateBulk) Save(ctx context.Context) ([]*DeviceInfo, erro
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -1111,6 +1149,20 @@ func (u *DeviceInfoUpsertBulk) AddDeletedAt(v uint32) *DeviceInfoUpsertBulk {
 func (u *DeviceInfoUpsertBulk) UpdateDeletedAt() *DeviceInfoUpsertBulk {
 	return u.Update(func(s *DeviceInfoUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *DeviceInfoUpsertBulk) SetEntID(v uuid.UUID) *DeviceInfoUpsertBulk {
+	return u.Update(func(s *DeviceInfoUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *DeviceInfoUpsertBulk) UpdateEntID() *DeviceInfoUpsertBulk {
+	return u.Update(func(s *DeviceInfoUpsert) {
+		s.UpdateEntID()
 	})
 }
 

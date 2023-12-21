@@ -13,7 +13,8 @@ import (
 )
 
 type Req struct {
-	ID                     *uuid.UUID
+	ID                     *uint32
+	EntID                  *uuid.UUID
 	AppID                  *uuid.UUID
 	GoodID                 *uuid.UUID
 	Online                 *bool
@@ -44,8 +45,8 @@ type Req struct {
 
 //nolint:gocyclo,funlen
 func CreateSet(c *ent.AppGoodCreate, req *Req) *ent.AppGoodCreate {
-	if req.ID != nil {
-		c.SetID(*req.ID)
+	if req.EntID != nil {
+		c.SetEntID(*req.EntID)
 	}
 	if req.AppID != nil {
 		c.SetAppID(*req.AppID)
@@ -204,10 +205,12 @@ func UpdateSet(u *ent.AppGoodUpdateOne, req *Req) *ent.AppGoodUpdateOne {
 
 type Conds struct {
 	ID      *cruder.Cond
+	EntID   *cruder.Cond
 	AppID   *cruder.Cond
 	GoodID  *cruder.Cond
 	GoodIDs *cruder.Cond
 	AppIDs  *cruder.Cond
+	EntIDs  *cruder.Cond
 	IDs     *cruder.Cond
 }
 
@@ -218,13 +221,25 @@ func SetQueryConds(q *ent.AppGoodQuery, conds *Conds) (*ent.AppGoodQuery, error)
 		return q, nil
 	}
 	if conds.ID != nil {
-		id, ok := conds.ID.Val.(uuid.UUID)
+		id, ok := conds.ID.Val.(uint32)
 		if !ok {
 			return nil, fmt.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entappgood.ID(id))
+		default:
+			return nil, fmt.Errorf("invalid appgood field")
+		}
+	}
+	if conds.EntID != nil {
+		id, ok := conds.EntID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid id")
+		}
+		switch conds.EntID.Op {
+		case cruder.EQ:
+			q.Where(entappgood.EntID(id))
 		default:
 			return nil, fmt.Errorf("invalid appgood field")
 		}
@@ -277,8 +292,20 @@ func SetQueryConds(q *ent.AppGoodQuery, conds *Conds) (*ent.AppGoodQuery, error)
 			return nil, fmt.Errorf("invalid appgood field")
 		}
 	}
+	if conds.EntIDs != nil {
+		ids, ok := conds.EntIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid ids")
+		}
+		switch conds.EntIDs.Op {
+		case cruder.IN:
+			q.Where(entappgood.EntIDIn(ids...))
+		default:
+			return nil, fmt.Errorf("invalid appgood field")
+		}
+	}
 	if conds.IDs != nil {
-		ids, ok := conds.IDs.Val.([]uuid.UUID)
+		ids, ok := conds.IDs.Val.([]uint32)
 		if !ok {
 			return nil, fmt.Errorf("invalid ids")
 		}

@@ -85,6 +85,20 @@ func (gu *GoodUpdate) AddDeletedAt(u int32) *GoodUpdate {
 	return gu
 }
 
+// SetEntID sets the "ent_id" field.
+func (gu *GoodUpdate) SetEntID(u uuid.UUID) *GoodUpdate {
+	gu.mutation.SetEntID(u)
+	return gu
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (gu *GoodUpdate) SetNillableEntID(u *uuid.UUID) *GoodUpdate {
+	if u != nil {
+		gu.SetEntID(*u)
+	}
+	return gu
+}
+
 // SetDeviceInfoID sets the "device_info_id" field.
 func (gu *GoodUpdate) SetDeviceInfoID(u uuid.UUID) *GoodUpdate {
 	gu.mutation.SetDeviceInfoID(u)
@@ -516,7 +530,7 @@ func (gu *GoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   good.Table,
 			Columns: good.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: good.FieldID,
 			},
 		},
@@ -568,6 +582,13 @@ func (gu *GoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: good.FieldDeletedAt,
+		})
+	}
+	if value, ok := gu.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: good.FieldEntID,
 		})
 	}
 	if value, ok := gu.mutation.DeviceInfoID(); ok {
@@ -894,6 +915,20 @@ func (guo *GoodUpdateOne) SetNillableDeletedAt(u *uint32) *GoodUpdateOne {
 // AddDeletedAt adds u to the "deleted_at" field.
 func (guo *GoodUpdateOne) AddDeletedAt(u int32) *GoodUpdateOne {
 	guo.mutation.AddDeletedAt(u)
+	return guo
+}
+
+// SetEntID sets the "ent_id" field.
+func (guo *GoodUpdateOne) SetEntID(u uuid.UUID) *GoodUpdateOne {
+	guo.mutation.SetEntID(u)
+	return guo
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (guo *GoodUpdateOne) SetNillableEntID(u *uuid.UUID) *GoodUpdateOne {
+	if u != nil {
+		guo.SetEntID(*u)
+	}
 	return guo
 }
 
@@ -1341,7 +1376,7 @@ func (guo *GoodUpdateOne) sqlSave(ctx context.Context) (_node *Good, err error) 
 			Table:   good.Table,
 			Columns: good.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: good.FieldID,
 			},
 		},
@@ -1410,6 +1445,13 @@ func (guo *GoodUpdateOne) sqlSave(ctx context.Context) (_node *Good, err error) 
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: good.FieldDeletedAt,
+		})
+	}
+	if value, ok := guo.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: good.FieldEntID,
 		})
 	}
 	if value, ok := guo.mutation.DeviceInfoID(); ok {

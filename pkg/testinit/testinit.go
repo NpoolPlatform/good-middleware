@@ -1,6 +1,7 @@
 package testinit
 
 import (
+	"context"
 	"fmt"
 	"path"
 	"runtime"
@@ -13,6 +14,7 @@ import (
 	mysqlconst "github.com/NpoolPlatform/go-service-framework/pkg/mysql/const"
 	rabbitmqconst "github.com/NpoolPlatform/go-service-framework/pkg/rabbitmq/const"
 	redisconst "github.com/NpoolPlatform/go-service-framework/pkg/redis/const"
+	"github.com/NpoolPlatform/good-middleware/pkg/migrator"
 )
 
 func Init() error {
@@ -38,6 +40,9 @@ func Init() error {
 	)
 	if err != nil {
 		return fmt.Errorf("cannot init app stub: %v", err)
+	}
+	if err := migrator.Migrate(context.Background()); err != nil {
+		panic(fmt.Errorf("fail migrate db: %v", err))
 	}
 	if err := db.Init(); err != nil {
 		return err

@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -62,6 +61,20 @@ func (tmgc *TopMostGoodCreate) SetDeletedAt(u uint32) *TopMostGoodCreate {
 func (tmgc *TopMostGoodCreate) SetNillableDeletedAt(u *uint32) *TopMostGoodCreate {
 	if u != nil {
 		tmgc.SetDeletedAt(*u)
+	}
+	return tmgc
+}
+
+// SetEntID sets the "ent_id" field.
+func (tmgc *TopMostGoodCreate) SetEntID(u uuid.UUID) *TopMostGoodCreate {
+	tmgc.mutation.SetEntID(u)
+	return tmgc
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (tmgc *TopMostGoodCreate) SetNillableEntID(u *uuid.UUID) *TopMostGoodCreate {
+	if u != nil {
+		tmgc.SetEntID(*u)
 	}
 	return tmgc
 }
@@ -131,16 +144,8 @@ func (tmgc *TopMostGoodCreate) SetNillablePrice(d *decimal.Decimal) *TopMostGood
 }
 
 // SetID sets the "id" field.
-func (tmgc *TopMostGoodCreate) SetID(u uuid.UUID) *TopMostGoodCreate {
+func (tmgc *TopMostGoodCreate) SetID(u uint32) *TopMostGoodCreate {
 	tmgc.mutation.SetID(u)
-	return tmgc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (tmgc *TopMostGoodCreate) SetNillableID(u *uuid.UUID) *TopMostGoodCreate {
-	if u != nil {
-		tmgc.SetID(*u)
-	}
 	return tmgc
 }
 
@@ -244,6 +249,13 @@ func (tmgc *TopMostGoodCreate) defaults() error {
 		v := topmostgood.DefaultDeletedAt()
 		tmgc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := tmgc.mutation.EntID(); !ok {
+		if topmostgood.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized topmostgood.DefaultEntID (forgotten import ent/runtime?)")
+		}
+		v := topmostgood.DefaultEntID()
+		tmgc.mutation.SetEntID(v)
+	}
 	if _, ok := tmgc.mutation.DisplayIndex(); !ok {
 		v := topmostgood.DefaultDisplayIndex
 		tmgc.mutation.SetDisplayIndex(v)
@@ -255,13 +267,6 @@ func (tmgc *TopMostGoodCreate) defaults() error {
 	if _, ok := tmgc.mutation.Price(); !ok {
 		v := topmostgood.DefaultPrice
 		tmgc.mutation.SetPrice(v)
-	}
-	if _, ok := tmgc.mutation.ID(); !ok {
-		if topmostgood.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized topmostgood.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := topmostgood.DefaultID()
-		tmgc.mutation.SetID(v)
 	}
 	return nil
 }
@@ -276,6 +281,9 @@ func (tmgc *TopMostGoodCreate) check() error {
 	}
 	if _, ok := tmgc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "TopMostGood.deleted_at"`)}
+	}
+	if _, ok := tmgc.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "TopMostGood.ent_id"`)}
 	}
 	if _, ok := tmgc.mutation.AppID(); !ok {
 		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "TopMostGood.app_id"`)}
@@ -303,12 +311,9 @@ func (tmgc *TopMostGoodCreate) sqlSave(ctx context.Context) (*TopMostGood, error
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -319,7 +324,7 @@ func (tmgc *TopMostGoodCreate) createSpec() (*TopMostGood, *sqlgraph.CreateSpec)
 		_spec = &sqlgraph.CreateSpec{
 			Table: topmostgood.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: topmostgood.FieldID,
 			},
 		}
@@ -327,7 +332,7 @@ func (tmgc *TopMostGoodCreate) createSpec() (*TopMostGood, *sqlgraph.CreateSpec)
 	_spec.OnConflict = tmgc.conflict
 	if id, ok := tmgc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := tmgc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -352,6 +357,14 @@ func (tmgc *TopMostGoodCreate) createSpec() (*TopMostGood, *sqlgraph.CreateSpec)
 			Column: topmostgood.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
+	}
+	if value, ok := tmgc.mutation.EntID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: topmostgood.FieldEntID,
+		})
+		_node.EntID = value
 	}
 	if value, ok := tmgc.mutation.AppID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -522,6 +535,18 @@ func (u *TopMostGoodUpsert) UpdateDeletedAt() *TopMostGoodUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *TopMostGoodUpsert) AddDeletedAt(v uint32) *TopMostGoodUpsert {
 	u.Add(topmostgood.FieldDeletedAt, v)
+	return u
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *TopMostGoodUpsert) SetEntID(v uuid.UUID) *TopMostGoodUpsert {
+	u.Set(topmostgood.FieldEntID, v)
+	return u
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *TopMostGoodUpsert) UpdateEntID() *TopMostGoodUpsert {
+	u.SetExcluded(topmostgood.FieldEntID)
 	return u
 }
 
@@ -758,6 +783,20 @@ func (u *TopMostGoodUpsertOne) UpdateDeletedAt() *TopMostGoodUpsertOne {
 	})
 }
 
+// SetEntID sets the "ent_id" field.
+func (u *TopMostGoodUpsertOne) SetEntID(v uuid.UUID) *TopMostGoodUpsertOne {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *TopMostGoodUpsertOne) UpdateEntID() *TopMostGoodUpsertOne {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.UpdateEntID()
+	})
+}
+
 // SetAppID sets the "app_id" field.
 func (u *TopMostGoodUpsertOne) SetAppID(v uuid.UUID) *TopMostGoodUpsertOne {
 	return u.Update(func(s *TopMostGoodUpsert) {
@@ -914,12 +953,7 @@ func (u *TopMostGoodUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *TopMostGoodUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: TopMostGoodUpsertOne.ID is not supported by MySQL driver. Use TopMostGoodUpsertOne.Exec instead")
-	}
+func (u *TopMostGoodUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -928,7 +962,7 @@ func (u *TopMostGoodUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error)
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *TopMostGoodUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *TopMostGoodUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -979,6 +1013,10 @@ func (tmgcb *TopMostGoodCreateBulk) Save(ctx context.Context) ([]*TopMostGood, e
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -1174,6 +1212,20 @@ func (u *TopMostGoodUpsertBulk) AddDeletedAt(v uint32) *TopMostGoodUpsertBulk {
 func (u *TopMostGoodUpsertBulk) UpdateDeletedAt() *TopMostGoodUpsertBulk {
 	return u.Update(func(s *TopMostGoodUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *TopMostGoodUpsertBulk) SetEntID(v uuid.UUID) *TopMostGoodUpsertBulk {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *TopMostGoodUpsertBulk) UpdateEntID() *TopMostGoodUpsertBulk {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.UpdateEntID()
 	})
 }
 

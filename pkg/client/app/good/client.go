@@ -52,7 +52,7 @@ func CreateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 func GetGood(ctx context.Context, id string) (*npool.Good, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.GetGood(ctx, &npool.GetGoodRequest{
-			ID: id,
+			EntID: id,
 		})
 		if err != nil {
 			return nil, err
@@ -129,7 +129,7 @@ func UpdateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 	return info.(*npool.Good), nil
 }
 
-func DeleteGood(ctx context.Context, id string) (*npool.Good, error) {
+func DeleteGood(ctx context.Context, id uint32) (*npool.Good, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteGood(ctx, &npool.DeleteGoodRequest{
 			Info: &npool.GoodReq{
@@ -166,7 +166,7 @@ func ExistGoodConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 func ExistGood(ctx context.Context, id string) (bool, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.ExistGood(ctx, &npool.ExistGoodRequest{
-			ID: id,
+			EntID: id,
 		})
 		if err != nil {
 			return nil, err

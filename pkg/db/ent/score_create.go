@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -62,6 +61,20 @@ func (sc *ScoreCreate) SetDeletedAt(u uint32) *ScoreCreate {
 func (sc *ScoreCreate) SetNillableDeletedAt(u *uint32) *ScoreCreate {
 	if u != nil {
 		sc.SetDeletedAt(*u)
+	}
+	return sc
+}
+
+// SetEntID sets the "ent_id" field.
+func (sc *ScoreCreate) SetEntID(u uuid.UUID) *ScoreCreate {
+	sc.mutation.SetEntID(u)
+	return sc
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (sc *ScoreCreate) SetNillableEntID(u *uuid.UUID) *ScoreCreate {
+	if u != nil {
+		sc.SetEntID(*u)
 	}
 	return sc
 }
@@ -137,16 +150,8 @@ func (sc *ScoreCreate) SetNillableScore(d *decimal.Decimal) *ScoreCreate {
 }
 
 // SetID sets the "id" field.
-func (sc *ScoreCreate) SetID(u uuid.UUID) *ScoreCreate {
+func (sc *ScoreCreate) SetID(u uint32) *ScoreCreate {
 	sc.mutation.SetID(u)
-	return sc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (sc *ScoreCreate) SetNillableID(u *uuid.UUID) *ScoreCreate {
-	if u != nil {
-		sc.SetID(*u)
-	}
 	return sc
 }
 
@@ -250,6 +255,13 @@ func (sc *ScoreCreate) defaults() error {
 		v := score.DefaultDeletedAt()
 		sc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := sc.mutation.EntID(); !ok {
+		if score.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized score.DefaultEntID (forgotten import ent/runtime?)")
+		}
+		v := score.DefaultEntID()
+		sc.mutation.SetEntID(v)
+	}
 	if _, ok := sc.mutation.AppID(); !ok {
 		if score.DefaultAppID == nil {
 			return fmt.Errorf("ent: uninitialized score.DefaultAppID (forgotten import ent/runtime?)")
@@ -282,13 +294,6 @@ func (sc *ScoreCreate) defaults() error {
 		v := score.DefaultScore
 		sc.mutation.SetScore(v)
 	}
-	if _, ok := sc.mutation.ID(); !ok {
-		if score.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized score.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := score.DefaultID()
-		sc.mutation.SetID(v)
-	}
 	return nil
 }
 
@@ -303,6 +308,9 @@ func (sc *ScoreCreate) check() error {
 	if _, ok := sc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "Score.deleted_at"`)}
 	}
+	if _, ok := sc.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "Score.ent_id"`)}
+	}
 	return nil
 }
 
@@ -314,12 +322,9 @@ func (sc *ScoreCreate) sqlSave(ctx context.Context) (*Score, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -330,7 +335,7 @@ func (sc *ScoreCreate) createSpec() (*Score, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: score.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: score.FieldID,
 			},
 		}
@@ -338,7 +343,7 @@ func (sc *ScoreCreate) createSpec() (*Score, *sqlgraph.CreateSpec) {
 	_spec.OnConflict = sc.conflict
 	if id, ok := sc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := sc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -363,6 +368,14 @@ func (sc *ScoreCreate) createSpec() (*Score, *sqlgraph.CreateSpec) {
 			Column: score.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
+	}
+	if value, ok := sc.mutation.EntID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: score.FieldEntID,
+		})
+		_node.EntID = value
 	}
 	if value, ok := sc.mutation.AppID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -509,6 +522,18 @@ func (u *ScoreUpsert) UpdateDeletedAt() *ScoreUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *ScoreUpsert) AddDeletedAt(v uint32) *ScoreUpsert {
 	u.Add(score.FieldDeletedAt, v)
+	return u
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *ScoreUpsert) SetEntID(v uuid.UUID) *ScoreUpsert {
+	u.Set(score.FieldEntID, v)
+	return u
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *ScoreUpsert) UpdateEntID() *ScoreUpsert {
+	u.SetExcluded(score.FieldEntID)
 	return u
 }
 
@@ -715,6 +740,20 @@ func (u *ScoreUpsertOne) UpdateDeletedAt() *ScoreUpsertOne {
 	})
 }
 
+// SetEntID sets the "ent_id" field.
+func (u *ScoreUpsertOne) SetEntID(v uuid.UUID) *ScoreUpsertOne {
+	return u.Update(func(s *ScoreUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *ScoreUpsertOne) UpdateEntID() *ScoreUpsertOne {
+	return u.Update(func(s *ScoreUpsert) {
+		s.UpdateEntID()
+	})
+}
+
 // SetAppID sets the "app_id" field.
 func (u *ScoreUpsertOne) SetAppID(v uuid.UUID) *ScoreUpsertOne {
 	return u.Update(func(s *ScoreUpsert) {
@@ -836,12 +875,7 @@ func (u *ScoreUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *ScoreUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: ScoreUpsertOne.ID is not supported by MySQL driver. Use ScoreUpsertOne.Exec instead")
-	}
+func (u *ScoreUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -850,7 +884,7 @@ func (u *ScoreUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *ScoreUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *ScoreUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -901,6 +935,10 @@ func (scb *ScoreCreateBulk) Save(ctx context.Context) ([]*Score, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -1096,6 +1134,20 @@ func (u *ScoreUpsertBulk) AddDeletedAt(v uint32) *ScoreUpsertBulk {
 func (u *ScoreUpsertBulk) UpdateDeletedAt() *ScoreUpsertBulk {
 	return u.Update(func(s *ScoreUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *ScoreUpsertBulk) SetEntID(v uuid.UUID) *ScoreUpsertBulk {
+	return u.Update(func(s *ScoreUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *ScoreUpsertBulk) UpdateEntID() *ScoreUpsertBulk {
+	return u.Update(func(s *ScoreUpsert) {
+		s.UpdateEntID()
 	})
 }
 

@@ -15,7 +15,7 @@ import (
 func (s *Server) GetBrand(ctx context.Context, in *npool.GetBrandRequest) (*npool.GetBrandResponse, error) {
 	handler, err := brand1.NewHandler(
 		ctx,
-		brand1.WithID(&in.ID, true),
+		brand1.WithEntID(&in.EntID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

@@ -36,7 +36,7 @@ func init() {
 }
 
 var ret = &npool.DeviceInfo{
-	ID:               uuid.NewString(),
+	EntID:            uuid.NewString(),
 	Type:             uuid.NewString(),
 	Manufacturer:     uuid.NewString(),
 	PowerConsumption: 123,
@@ -45,7 +45,7 @@ var ret = &npool.DeviceInfo{
 }
 
 var req = &npool.DeviceInfoReq{
-	ID:               &ret.ID,
+	EntID:            &ret.EntID,
 	Type:             &ret.Type,
 	Manufacturer:     &ret.Manufacturer,
 	PowerConsumption: &ret.PowerConsumption,
@@ -59,11 +59,13 @@ func createDeviceInfo(t *testing.T) {
 		ret.PostersStr = info.PostersStr
 		ret.CreatedAt = info.CreatedAt
 		ret.UpdatedAt = info.UpdatedAt
+		ret.ID = info.ID
 		assert.Equal(t, ret, info)
 	}
 }
 
 func updateDeviceInfo(t *testing.T) {
+	req.ID = &ret.ID
 	info, err := UpdateDeviceInfo(context.Background(), req)
 	if assert.Nil(t, err) {
 		ret.UpdatedAt = info.UpdatedAt
@@ -72,7 +74,7 @@ func updateDeviceInfo(t *testing.T) {
 }
 
 func getDeviceInfo(t *testing.T) {
-	info, err := GetDeviceInfo(context.Background(), ret.ID)
+	info, err := GetDeviceInfo(context.Background(), ret.EntID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, ret, info)
 	}
@@ -80,7 +82,8 @@ func getDeviceInfo(t *testing.T) {
 
 func getDeviceInfos(t *testing.T) {
 	infos, total, err := GetDeviceInfos(context.Background(), &npool.Conds{
-		ID:           &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:           &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:        &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		Type:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.Type},
 		Manufacturer: &basetypes.StringVal{Op: cruder.EQ, Value: ret.Manufacturer},
 	}, int32(0), int32(2))
@@ -93,7 +96,8 @@ func getDeviceInfos(t *testing.T) {
 
 func getDeviceInfoOnly(t *testing.T) {
 	info, err := GetDeviceInfoOnly(context.Background(), &npool.Conds{
-		ID:           &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:           &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:        &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		Type:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.Type},
 		Manufacturer: &basetypes.StringVal{Op: cruder.EQ, Value: ret.Manufacturer},
 	})
@@ -108,7 +112,7 @@ func deleteDeviceInfo(t *testing.T) {
 		assert.Equal(t, ret, info)
 	}
 
-	info, err = GetDeviceInfo(context.Background(), ret.ID)
+	info, err = GetDeviceInfo(context.Background(), ret.EntID)
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }

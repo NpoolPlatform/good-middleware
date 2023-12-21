@@ -14,7 +14,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
-	"github.com/google/uuid"
 )
 
 // RecommendQuery is the builder for querying Recommend entities.
@@ -87,8 +86,8 @@ func (rq *RecommendQuery) FirstX(ctx context.Context) *Recommend {
 
 // FirstID returns the first Recommend ID from the query.
 // Returns a *NotFoundError when no Recommend ID was found.
-func (rq *RecommendQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (rq *RecommendQuery) FirstID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = rq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -100,7 +99,7 @@ func (rq *RecommendQuery) FirstID(ctx context.Context) (id uuid.UUID, err error)
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (rq *RecommendQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (rq *RecommendQuery) FirstIDX(ctx context.Context) uint32 {
 	id, err := rq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -138,8 +137,8 @@ func (rq *RecommendQuery) OnlyX(ctx context.Context) *Recommend {
 // OnlyID is like Only, but returns the only Recommend ID in the query.
 // Returns a *NotSingularError when more than one Recommend ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (rq *RecommendQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (rq *RecommendQuery) OnlyID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = rq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -155,7 +154,7 @@ func (rq *RecommendQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) 
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (rq *RecommendQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (rq *RecommendQuery) OnlyIDX(ctx context.Context) uint32 {
 	id, err := rq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -181,8 +180,8 @@ func (rq *RecommendQuery) AllX(ctx context.Context) []*Recommend {
 }
 
 // IDs executes the query and returns a list of Recommend IDs.
-func (rq *RecommendQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	var ids []uuid.UUID
+func (rq *RecommendQuery) IDs(ctx context.Context) ([]uint32, error) {
+	var ids []uint32
 	if err := rq.Select(recommend.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -190,7 +189,7 @@ func (rq *RecommendQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (rq *RecommendQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (rq *RecommendQuery) IDsX(ctx context.Context) []uint32 {
 	ids, err := rq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -377,7 +376,7 @@ func (rq *RecommendQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   recommend.Table,
 			Columns: recommend.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: recommend.FieldID,
 			},
 		},

@@ -11,15 +11,16 @@ import (
 )
 
 type Req struct {
-	ID        *uuid.UUID
+	ID        *uint32
+	EntID     *uuid.UUID
 	Name      *string
 	Logo      *string
 	DeletedAt *uint32
 }
 
 func CreateSet(c *ent.VendorBrandCreate, req *Req) *ent.VendorBrandCreate {
-	if req.ID != nil {
-		c.SetID(*req.ID)
+	if req.EntID != nil {
+		c.SetEntID(*req.EntID)
 	}
 	if req.Name != nil {
 		c.SetName(*req.Name)
@@ -44,8 +45,9 @@ func UpdateSet(u *ent.VendorBrandUpdateOne, req *Req) *ent.VendorBrandUpdateOne 
 }
 
 type Conds struct {
-	ID   *cruder.Cond
-	Name *cruder.Cond
+	ID    *cruder.Cond
+	EntID *cruder.Cond
+	Name  *cruder.Cond
 }
 
 func SetQueryConds(q *ent.VendorBrandQuery, conds *Conds) (*ent.VendorBrandQuery, error) {
@@ -54,7 +56,7 @@ func SetQueryConds(q *ent.VendorBrandQuery, conds *Conds) (*ent.VendorBrandQuery
 		return q, nil
 	}
 	if conds.ID != nil {
-		id, ok := conds.ID.Val.(uuid.UUID)
+		id, ok := conds.ID.Val.(uint32)
 		if !ok {
 			return nil, fmt.Errorf("invalid id")
 		}
@@ -63,6 +65,20 @@ func SetQueryConds(q *ent.VendorBrandQuery, conds *Conds) (*ent.VendorBrandQuery
 			q.Where(entvendorbrand.ID(id))
 		case cruder.NEQ:
 			q.Where(entvendorbrand.IDNEQ(id))
+		default:
+			return nil, fmt.Errorf("invalid vendorbrand field")
+		}
+	}
+	if conds.EntID != nil {
+		id, ok := conds.EntID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid id")
+		}
+		switch conds.EntID.Op {
+		case cruder.EQ:
+			q.Where(entvendorbrand.EntID(id))
+		case cruder.NEQ:
+			q.Where(entvendorbrand.EntIDNEQ(id))
 		default:
 			return nil, fmt.Errorf("invalid vendorbrand field")
 		}

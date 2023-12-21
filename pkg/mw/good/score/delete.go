@@ -9,7 +9,9 @@ import (
 	scorecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	appgoodpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/score"
 
 	"github.com/google/uuid"
@@ -18,7 +20,25 @@ import (
 
 type deleteHandler struct {
 	*Handler
-	score decimal.Decimal
+	score   decimal.Decimal
+	appgood *appgoodpb.Good
+}
+
+func (h *deleteHandler) getAppGood(ctx context.Context) error {
+	handler, err := appgood1.NewHandler(ctx)
+	if err != nil {
+		return err
+	}
+	handler.EntID = h.AppGoodID
+	info, err := handler.GetGood(ctx)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		return fmt.Errorf("app good not found %v", *h.AppGoodID)
+	}
+	h.appgood = info
+	return nil
 }
 
 func (h *deleteHandler) deleteScore(ctx context.Context, tx *ent.Tx) error {
@@ -35,18 +55,11 @@ func (h *deleteHandler) deleteScore(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *deleteHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
-	appGood, err := tx.AppGood.Get(ctx, *h.AppGoodID)
-	if err != nil {
-		return err
-	}
-	if appGood == nil {
-		return fmt.Errorf("app good not found %v", *h.AppGoodID)
-	}
-
+	goodid := uuid.MustParse(h.appgood.GoodID)
 	stm, err := extrainfocrud.SetQueryConds(
 		tx.ExtraInfo.Query(),
 		&extrainfocrud.Conds{
-			GoodID: &cruder.Cond{Op: cruder.EQ, Val: appGood.GoodID},
+			GoodID: &cruder.Cond{Op: cruder.EQ, Val: goodid},
 		},
 	)
 	if err != nil {
@@ -99,6 +112,9 @@ func (h *Handler) DeleteScore(ctx context.Context) (*npool.Score, error) {
 	h.AppGoodID = &appGoodID
 	handler := &deleteHandler{
 		Handler: h,
+	}
+	if err := handler.getAppGood(ctx); err != nil {
+		return nil, err
 	}
 
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {

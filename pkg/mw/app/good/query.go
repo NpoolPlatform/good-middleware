@@ -38,15 +38,19 @@ func (h *queryHandler) selectGood(stm *ent.AppGoodQuery) *ent.AppGoodSelect {
 	return stm.Select(entgood.FieldID)
 }
 
-func (h *queryHandler) queryGood(cli *ent.Client) {
-	h.stmSelect = h.selectGood(
-		cli.AppGood.
-			Query().
-			Where(
-				entappgood.ID(*h.ID),
-				entappgood.DeletedAt(0),
-			),
-	)
+func (h *queryHandler) queryGood(cli *ent.Client) error {
+	if h.ID == nil && h.EntID == nil {
+		return fmt.Errorf("invalid id")
+	}
+	stm := cli.AppGood.Query().Where(entappgood.DeletedAt(0))
+	if h.ID != nil {
+		stm.Where(entappgood.ID(*h.ID))
+	}
+	if h.EntID != nil {
+		stm.Where(entappgood.EntID(*h.EntID))
+	}
+	h.stmSelect = h.selectGood(stm)
+	return nil
 }
 
 func (h *queryHandler) queryGoods(cli *ent.Client) (*ent.AppGoodSelect, error) {
@@ -65,6 +69,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(entappgood.FieldID),
 		).
 		AppendSelect(
+			sql.As(t.C(entappgood.FieldEntID), "ent_id"),
 			sql.As(t.C(entappgood.FieldAppID), "app_id"),
 			sql.As(t.C(entappgood.FieldGoodID), "good_id"),
 			sql.As(t.C(entappgood.FieldOnline), "online"),
@@ -105,12 +110,12 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 	s.LeftJoin(t1).
 		On(
 			s.C(entappgood.FieldGoodID),
-			t1.C(entgood.FieldID),
+			t1.C(entgood.FieldEntID),
 		).
 		LeftJoin(t2).
 		On(
 			t1.C(entgood.FieldDeviceInfoID),
-			t2.C(entdeviceinfo.FieldID),
+			t2.C(entdeviceinfo.FieldEntID),
 		).
 		OnP(
 			sql.EQ(t2.C(entdeviceinfo.FieldDeletedAt), 0),
@@ -118,7 +123,7 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 		LeftJoin(t3).
 		On(
 			t1.C(entgood.FieldVendorLocationID),
-			t3.C(entvendorlocation.FieldID),
+			t3.C(entvendorlocation.FieldEntID),
 		).
 		OnP(
 			sql.EQ(t3.C(entvendorlocation.FieldDeletedAt), 0),
@@ -126,7 +131,7 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 		LeftJoin(t4).
 		On(
 			t3.C(entvendorlocation.FieldBrandID),
-			t4.C(entvendorbrand.FieldID),
+			t4.C(entvendorbrand.FieldEntID),
 		).
 		OnP(
 			sql.EQ(t4.C(entvendorbrand.FieldDeletedAt), 0),
@@ -218,14 +223,14 @@ func (h *queryHandler) queryJoinAppStock(s *sql.Selector) {
 	t := sql.Table(entappstock.Table)
 	s.LeftJoin(t).
 		On(
-			s.C(entappgood.FieldID),
+			s.C(entappgood.FieldEntID),
 			t.C(entappstock.FieldAppGoodID),
 		).
 		OnP(
 			sql.EQ(t.C(entappstock.FieldDeletedAt), 0),
 		).
 		AppendSelect(
-			sql.As(t.C(entappstock.FieldID), "app_good_stock_id"),
+			sql.As(t.C(entappstock.FieldEntID), "app_good_stock_id"),
 			sql.As(t.C(entappstock.FieldReserved), "app_good_reserved"),
 			sql.As(t.C(entappstock.FieldSpotQuantity), "app_spot_quantity"),
 			sql.As(t.C(entappstock.FieldLocked), "app_good_locked"),
@@ -394,7 +399,9 @@ func (h *Handler) GetGood(ctx context.Context) (*npool.Good, error) {
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.queryGood(cli)
+		if err := handler.queryGood(cli); err != nil {
+			return err
+		}
 		handler.queryJoin()
 		return handler.scan(_ctx)
 	})

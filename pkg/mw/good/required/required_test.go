@@ -36,7 +36,7 @@ func init() {
 }
 
 var mainGood = goodmwpb.Good{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	DeviceInfoID:           uuid.NewString(),
 	DeviceType:             uuid.NewString(),
 	DeviceManufacturer:     uuid.NewString(),
@@ -78,7 +78,7 @@ var mainGood = goodmwpb.Good{
 }
 
 var requiredGood = goodmwpb.Good{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	DeviceInfoID:           uuid.NewString(),
 	DeviceType:             uuid.NewString(),
 	DeviceManufacturer:     uuid.NewString(),
@@ -120,10 +120,10 @@ var requiredGood = goodmwpb.Good{
 }
 
 var ret = npool.Required{
-	ID:               uuid.NewString(),
-	MainGoodID:       mainGood.ID,
+	EntID:            uuid.NewString(),
+	MainGoodID:       mainGood.EntID,
 	MainGoodName:     mainGood.Title,
-	RequiredGoodID:   requiredGood.ID,
+	RequiredGoodID:   requiredGood.EntID,
 	RequiredGoodName: requiredGood.Title,
 	Must:             true,
 }
@@ -139,24 +139,26 @@ func setup(t *testing.T) func(*testing.T) {
 
 	info1, err := h1.CreateBrand(context.Background())
 	assert.Nil(t, err)
+	h1.ID = &info1.ID
 
 	h2, err := vendorlocation1.NewHandler(
 		context.Background(),
-		vendorlocation1.WithID(&mainGood.VendorLocationID, true),
+		vendorlocation1.WithEntID(&mainGood.VendorLocationID, true),
 		vendorlocation1.WithCountry(&mainGood.VendorLocationCountry, true),
 		vendorlocation1.WithProvince(&mainGood.VendorLocationProvince, true),
 		vendorlocation1.WithCity(&mainGood.VendorLocationCity, true),
 		vendorlocation1.WithAddress(&mainGood.VendorLocationAddress, true),
-		vendorlocation1.WithBrandID(&info1.ID, true),
+		vendorlocation1.WithBrandID(&info1.EntID, true),
 	)
 	assert.Nil(t, err)
 
-	_, err = h2.CreateLocation(context.Background())
+	info2, err := h2.CreateLocation(context.Background())
 	assert.Nil(t, err)
+	h2.ID = &info2.ID
 
 	h3, err := deviceinfo1.NewHandler(
 		context.Background(),
-		deviceinfo1.WithID(&mainGood.DeviceInfoID, true),
+		deviceinfo1.WithEntID(&mainGood.DeviceInfoID, true),
 		deviceinfo1.WithType(&mainGood.DeviceType, true),
 		deviceinfo1.WithManufacturer(&mainGood.DeviceManufacturer, true),
 		deviceinfo1.WithPowerConsumption(&mainGood.DevicePowerConsumption, true),
@@ -165,12 +167,13 @@ func setup(t *testing.T) func(*testing.T) {
 	)
 	assert.Nil(t, err)
 
-	_, err = h3.CreateDeviceInfo(context.Background())
+	info3, err := h3.CreateDeviceInfo(context.Background())
 	assert.Nil(t, err)
+	h3.ID = &info3.ID
 
 	h4, err := good1.NewHandler(
 		context.Background(),
-		good1.WithID(&mainGood.ID, true),
+		good1.WithEntID(&mainGood.EntID, true),
 		good1.WithDeviceInfoID(&mainGood.DeviceInfoID, true),
 		good1.WithDurationDays(&mainGood.DurationDays, true),
 		good1.WithCoinTypeID(&mainGood.CoinTypeID, true),
@@ -193,8 +196,9 @@ func setup(t *testing.T) func(*testing.T) {
 	)
 	assert.Nil(t, err)
 
-	_, err = h4.CreateGood(context.Background())
+	info4, err := h4.CreateGood(context.Background())
 	assert.Nil(t, err)
+	h4.ID = &info4.ID
 
 	h5, err := vendorbrand1.NewHandler(
 		context.Background(),
@@ -203,26 +207,28 @@ func setup(t *testing.T) func(*testing.T) {
 	)
 	assert.Nil(t, err)
 
-	info2, err := h5.CreateBrand(context.Background())
+	info5, err := h5.CreateBrand(context.Background())
 	assert.Nil(t, err)
+	h5.ID = &info5.ID
 
 	h6, err := vendorlocation1.NewHandler(
 		context.Background(),
-		vendorlocation1.WithID(&requiredGood.VendorLocationID, true),
+		vendorlocation1.WithEntID(&requiredGood.VendorLocationID, true),
 		vendorlocation1.WithCountry(&requiredGood.VendorLocationCountry, true),
 		vendorlocation1.WithProvince(&requiredGood.VendorLocationProvince, true),
 		vendorlocation1.WithCity(&requiredGood.VendorLocationCity, true),
 		vendorlocation1.WithAddress(&requiredGood.VendorLocationAddress, true),
-		vendorlocation1.WithBrandID(&info2.ID, true),
+		vendorlocation1.WithBrandID(&info5.EntID, true),
 	)
 	assert.Nil(t, err)
 
-	_, err = h6.CreateLocation(context.Background())
+	info6, err := h6.CreateLocation(context.Background())
 	assert.Nil(t, err)
+	h6.ID = &info6.ID
 
 	h7, err := deviceinfo1.NewHandler(
 		context.Background(),
-		deviceinfo1.WithID(&requiredGood.DeviceInfoID, true),
+		deviceinfo1.WithEntID(&requiredGood.DeviceInfoID, true),
 		deviceinfo1.WithType(&requiredGood.DeviceType, true),
 		deviceinfo1.WithManufacturer(&requiredGood.DeviceManufacturer, true),
 		deviceinfo1.WithPowerConsumption(&requiredGood.DevicePowerConsumption, true),
@@ -231,12 +237,13 @@ func setup(t *testing.T) func(*testing.T) {
 	)
 	assert.Nil(t, err)
 
-	_, err = h7.CreateDeviceInfo(context.Background())
+	info7, err := h7.CreateDeviceInfo(context.Background())
 	assert.Nil(t, err)
+	h7.ID = &info7.ID
 
 	h8, err := good1.NewHandler(
 		context.Background(),
-		good1.WithID(&requiredGood.ID, true),
+		good1.WithEntID(&requiredGood.EntID, true),
 		good1.WithDeviceInfoID(&requiredGood.DeviceInfoID, true),
 		good1.WithDurationDays(&requiredGood.DurationDays, true),
 		good1.WithCoinTypeID(&requiredGood.CoinTypeID, true),
@@ -259,8 +266,9 @@ func setup(t *testing.T) func(*testing.T) {
 	)
 	assert.Nil(t, err)
 
-	_, err = h8.CreateGood(context.Background())
+	info8, err := h8.CreateGood(context.Background())
 	assert.Nil(t, err)
+	h8.ID = &info8.ID
 
 	return func(*testing.T) {
 		_, _ = h8.DeleteGood(context.Background())
@@ -277,7 +285,7 @@ func setup(t *testing.T) func(*testing.T) {
 func createRequired(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
 		WithMainGoodID(&ret.MainGoodID, true),
 		WithRequiredGoodID(&ret.RequiredGoodID, true),
 		WithMust(&ret.Must, true),
@@ -287,6 +295,7 @@ func createRequired(t *testing.T) {
 		if assert.Nil(t, err) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
+			ret.ID = info.ID
 			assert.Equal(t, &ret, info)
 		}
 	}
@@ -326,7 +335,8 @@ func getRequireds(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithConds(&npool.Conds{
-			ID:             &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+			ID:             &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+			EntID:          &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 			MainGoodID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.MainGoodID},
 			RequiredGoodID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.RequiredGoodID},
 			GoodID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.MainGoodID},

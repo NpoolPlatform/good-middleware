@@ -84,6 +84,20 @@ func (lu *LikeUpdate) AddDeletedAt(u int32) *LikeUpdate {
 	return lu
 }
 
+// SetEntID sets the "ent_id" field.
+func (lu *LikeUpdate) SetEntID(u uuid.UUID) *LikeUpdate {
+	lu.mutation.SetEntID(u)
+	return lu
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (lu *LikeUpdate) SetNillableEntID(u *uuid.UUID) *LikeUpdate {
+	if u != nil {
+		lu.SetEntID(*u)
+	}
+	return lu
+}
+
 // SetAppID sets the "app_id" field.
 func (lu *LikeUpdate) SetAppID(u uuid.UUID) *LikeUpdate {
 	lu.mutation.SetAppID(u)
@@ -256,7 +270,7 @@ func (lu *LikeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   like.Table,
 			Columns: like.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: like.FieldID,
 			},
 		},
@@ -308,6 +322,13 @@ func (lu *LikeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: like.FieldDeletedAt,
+		})
+	}
+	if value, ok := lu.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: like.FieldEntID,
 		})
 	}
 	if value, ok := lu.mutation.AppID(); ok {
@@ -442,6 +463,20 @@ func (luo *LikeUpdateOne) SetNillableDeletedAt(u *uint32) *LikeUpdateOne {
 // AddDeletedAt adds u to the "deleted_at" field.
 func (luo *LikeUpdateOne) AddDeletedAt(u int32) *LikeUpdateOne {
 	luo.mutation.AddDeletedAt(u)
+	return luo
+}
+
+// SetEntID sets the "ent_id" field.
+func (luo *LikeUpdateOne) SetEntID(u uuid.UUID) *LikeUpdateOne {
+	luo.mutation.SetEntID(u)
+	return luo
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (luo *LikeUpdateOne) SetNillableEntID(u *uuid.UUID) *LikeUpdateOne {
+	if u != nil {
+		luo.SetEntID(*u)
+	}
 	return luo
 }
 
@@ -630,7 +665,7 @@ func (luo *LikeUpdateOne) sqlSave(ctx context.Context) (_node *Like, err error) 
 			Table:   like.Table,
 			Columns: like.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: like.FieldID,
 			},
 		},
@@ -699,6 +734,13 @@ func (luo *LikeUpdateOne) sqlSave(ctx context.Context) (_node *Like, err error) 
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: like.FieldDeletedAt,
+		})
+	}
+	if value, ok := luo.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: like.FieldEntID,
 		})
 	}
 	if value, ok := luo.mutation.AppID(); ok {

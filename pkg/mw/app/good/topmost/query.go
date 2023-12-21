@@ -29,15 +29,19 @@ func (h *queryHandler) selectTopMost(stm *ent.TopMostQuery) *ent.TopMostSelect {
 	return stm.Select(enttopmost.FieldID)
 }
 
-func (h *queryHandler) queryTopMost(cli *ent.Client) {
-	h.stmSelect = h.selectTopMost(
-		cli.TopMost.
-			Query().
-			Where(
-				enttopmost.ID(*h.ID),
-				enttopmost.DeletedAt(0),
-			),
-	)
+func (h *queryHandler) queryTopMost(cli *ent.Client) error {
+	if h.ID == nil && h.EntID == nil {
+		return fmt.Errorf("invalid id")
+	}
+	stm := cli.TopMost.Query().Where(enttopmost.DeletedAt(0))
+	if h.ID != nil {
+		stm.Where(enttopmost.ID(*h.ID))
+	}
+	if h.EntID != nil {
+		stm.Where(enttopmost.EntID(*h.EntID))
+	}
+	h.stmSelect = h.selectTopMost(stm)
+	return nil
 }
 
 func (h *queryHandler) queryTopMosts(cli *ent.Client) (*ent.TopMostSelect, error) {
@@ -56,6 +60,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(enttopmost.FieldID),
 		).
 		AppendSelect(
+			sql.As(t.C(enttopmost.FieldEntID), "ent_id"),
 			sql.As(t.C(enttopmost.FieldAppID), "app_id"),
 			sql.As(t.C(enttopmost.FieldTopMostType), "top_most_type"),
 			sql.As(t.C(enttopmost.FieldTitle), "title"),
@@ -113,7 +118,9 @@ func (h *Handler) GetTopMost(ctx context.Context) (*npool.TopMost, error) {
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.queryTopMost(cli)
+		if err := handler.queryTopMost(cli); err != nil {
+			return err
+		}
 		handler.queryJoin()
 		return handler.scan(ctx)
 	})

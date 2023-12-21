@@ -14,7 +14,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
-	"github.com/google/uuid"
 )
 
 // LikeQuery is the builder for querying Like entities.
@@ -87,8 +86,8 @@ func (lq *LikeQuery) FirstX(ctx context.Context) *Like {
 
 // FirstID returns the first Like ID from the query.
 // Returns a *NotFoundError when no Like ID was found.
-func (lq *LikeQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (lq *LikeQuery) FirstID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = lq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -100,7 +99,7 @@ func (lq *LikeQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (lq *LikeQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (lq *LikeQuery) FirstIDX(ctx context.Context) uint32 {
 	id, err := lq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -138,8 +137,8 @@ func (lq *LikeQuery) OnlyX(ctx context.Context) *Like {
 // OnlyID is like Only, but returns the only Like ID in the query.
 // Returns a *NotSingularError when more than one Like ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (lq *LikeQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (lq *LikeQuery) OnlyID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = lq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -155,7 +154,7 @@ func (lq *LikeQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (lq *LikeQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (lq *LikeQuery) OnlyIDX(ctx context.Context) uint32 {
 	id, err := lq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -181,8 +180,8 @@ func (lq *LikeQuery) AllX(ctx context.Context) []*Like {
 }
 
 // IDs executes the query and returns a list of Like IDs.
-func (lq *LikeQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	var ids []uuid.UUID
+func (lq *LikeQuery) IDs(ctx context.Context) ([]uint32, error) {
+	var ids []uint32
 	if err := lq.Select(like.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -190,7 +189,7 @@ func (lq *LikeQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (lq *LikeQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (lq *LikeQuery) IDsX(ctx context.Context) []uint32 {
 	ids, err := lq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -377,7 +376,7 @@ func (lq *LikeQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   like.Table,
 			Columns: like.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: like.FieldID,
 			},
 		},

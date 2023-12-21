@@ -129,7 +129,7 @@ func UpdateRecommend(ctx context.Context, in *npool.RecommendReq) (*npool.Recomm
 	return info.(*npool.Recommend), nil
 }
 
-func DeleteRecommend(ctx context.Context, id string) (*npool.Recommend, error) {
+func DeleteRecommend(ctx context.Context, id uint32) (*npool.Recommend, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteRecommend(ctx, &npool.DeleteRecommendRequest{
 			Info: &npool.RecommendReq{
@@ -150,7 +150,7 @@ func DeleteRecommend(ctx context.Context, id string) (*npool.Recommend, error) {
 func GetRecommend(ctx context.Context, id string) (*npool.Recommend, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.GetRecommend(ctx, &npool.GetRecommendRequest{
-			ID: id,
+			EntID: id,
 		})
 		if err != nil {
 			return nil, err

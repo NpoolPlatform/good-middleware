@@ -89,7 +89,7 @@ func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, tx *ent.Tx) 
 		AppStock.
 		Query().
 		Where(
-			entappstock.ID(*h.ID),
+			entappstock.EntID(*h.EntID),
 			entappstock.DeletedAt(0),
 		).
 		ForUpdate().

@@ -19,6 +19,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
+	// FieldEntID holds the string denoting the ent_id field in the database.
+	FieldEntID = "ent_id"
 	// FieldDeviceInfoID holds the string denoting the device_info_id field in the database.
 	FieldDeviceInfoID = "device_info_id"
 	// FieldDurationDays holds the string denoting the duration_days field in the database.
@@ -65,6 +67,7 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
+	FieldEntID,
 	FieldDeviceInfoID,
 	FieldDurationDays,
 	FieldCoinTypeID,
@@ -112,6 +115,8 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// DefaultEntID holds the default value on creation for the "ent_id" field.
+	DefaultEntID func() uuid.UUID
 	// DefaultDurationDays holds the default value on creation for the "duration_days" field.
 	DefaultDurationDays int32
 	// DefaultInheritFromGoodID holds the default value on creation for the "inherit_from_good_id" field.
@@ -142,6 +147,4 @@ var (
 	DefaultBenefitIntervalHours uint32
 	// DefaultUnitLockDeposit holds the default value on creation for the "unit_lock_deposit" field.
 	DefaultUnitLockDeposit decimal.Decimal
-	// DefaultID holds the default value on creation for the "id" field.
-	DefaultID func() uuid.UUID
 )

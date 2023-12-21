@@ -55,15 +55,15 @@ func (h *Handler) CreateLocation(ctx context.Context) (*npool.Location, error) {
 	}
 
 	id := uuid.New()
-	if h.ID == nil {
-		h.ID = &id
+	if h.EntID == nil {
+		h.EntID = &id
 	}
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if _, err := locationcrud.CreateSet(
 			cli.VendorLocation.Create(),
 			&locationcrud.Req{
-				ID:       h.ID,
+				EntID:    h.EntID,
 				Country:  h.Country,
 				Province: h.Province,
 				City:     h.City,

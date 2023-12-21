@@ -24,7 +24,7 @@ func (h *createHandler) createTopMost(ctx context.Context, tx *ent.Tx) error {
 	if _, err := topmostcrud.CreateSet(
 		tx.TopMost.Create(),
 		&topmostcrud.Req{
-			ID:                     h.ID,
+			EntID:                  h.EntID,
 			AppID:                  h.AppID,
 			TopMostType:            h.TopMostType,
 			Title:                  h.Title,
@@ -75,8 +75,8 @@ func (h *Handler) CreateTopMost(ctx context.Context) (*npool.TopMost, error) {
 	}
 
 	id := uuid.New()
-	if h.ID == nil {
-		h.ID = &id
+	if h.EntID == nil {
+		h.EntID = &id
 	}
 
 	handler := &createHandler{

@@ -52,7 +52,7 @@ func CreateDeviceInfo(ctx context.Context, in *npool.DeviceInfoReq) (*npool.Devi
 func GetDeviceInfo(ctx context.Context, id string) (*npool.DeviceInfo, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.GetDeviceInfo(ctx, &npool.GetDeviceInfoRequest{
-			ID: id,
+			EntID: id,
 		})
 		if err != nil {
 			return nil, err
@@ -113,7 +113,7 @@ func GetDeviceInfoOnly(ctx context.Context, conds *npool.Conds) (*npool.DeviceIn
 	return infos.([]*npool.DeviceInfo)[0], nil
 }
 
-func DeleteDeviceInfo(ctx context.Context, id string) (*npool.DeviceInfo, error) {
+func DeleteDeviceInfo(ctx context.Context, id uint32) (*npool.DeviceInfo, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteDeviceInfo(ctx, &npool.DeleteDeviceInfoRequest{
 			Info: &npool.DeviceInfoReq{

@@ -30,7 +30,7 @@ func init() {
 
 var (
 	ret = npool.DeviceInfo{
-		ID:               uuid.NewString(),
+		EntID:            uuid.NewString(),
 		Type:             uuid.NewString(),
 		Manufacturer:     uuid.NewString(),
 		PowerConsumption: 120,
@@ -48,7 +48,7 @@ func setup() func(*testing.T) {
 func createDeviceInfo(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
 		WithType(&ret.Type, true),
 		WithManufacturer(&ret.Manufacturer, true),
 		WithPowerConsumption(&ret.PowerConsumption, true),
@@ -61,6 +61,7 @@ func createDeviceInfo(t *testing.T) {
 	if assert.Nil(t, err) {
 		ret.CreatedAt = info.CreatedAt
 		ret.UpdatedAt = info.UpdatedAt
+		ret.ID = info.ID
 		assert.Equal(t, info, &ret)
 	}
 }
@@ -87,7 +88,7 @@ func updateDeviceInfo(t *testing.T) {
 func getDeviceInfo(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
 	)
 	assert.Nil(t, err)
 
@@ -99,7 +100,8 @@ func getDeviceInfo(t *testing.T) {
 
 func getDeviceInfos(t *testing.T) {
 	conds := &npool.Conds{
-		ID:           &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:           &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:        &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		Type:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.Type},
 		Manufacturer: &basetypes.StringVal{Op: cruder.EQ, Value: ret.Manufacturer},
 	}

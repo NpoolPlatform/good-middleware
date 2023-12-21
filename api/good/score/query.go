@@ -15,7 +15,7 @@ import (
 func (s *Server) GetScore(ctx context.Context, in *npool.GetScoreRequest) (*npool.GetScoreResponse, error) {
 	handler, err := score1.NewHandler(
 		ctx,
-		score1.WithID(&in.ID, true),
+		score1.WithEntID(&in.EntID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

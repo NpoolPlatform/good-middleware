@@ -22,6 +22,7 @@ type queryHandler struct {
 func (h *queryHandler) selectDeviceInfo(stm *ent.DeviceInfoQuery) {
 	h.stmSelect = stm.Select(
 		entdeviceinfo.FieldID,
+		entdeviceinfo.FieldEntID,
 		entdeviceinfo.FieldType,
 		entdeviceinfo.FieldManufacturer,
 		entdeviceinfo.FieldPowerConsumption,
@@ -32,15 +33,19 @@ func (h *queryHandler) selectDeviceInfo(stm *ent.DeviceInfoQuery) {
 	)
 }
 
-func (h *queryHandler) queryDeviceInfo(cli *ent.Client) {
-	h.selectDeviceInfo(
-		cli.DeviceInfo.
-			Query().
-			Where(
-				entdeviceinfo.ID(*h.ID),
-				entdeviceinfo.DeletedAt(0),
-			),
-	)
+func (h *queryHandler) queryDeviceInfo(cli *ent.Client) error {
+	if h.ID == nil && h.EntID == nil {
+		return fmt.Errorf("invalid id")
+	}
+	stm := cli.DeviceInfo.Query().Where(entdeviceinfo.DeletedAt(0))
+	if h.ID != nil {
+		stm.Where(entdeviceinfo.ID(*h.ID))
+	}
+	if h.EntID != nil {
+		stm.Where(entdeviceinfo.EntID(*h.EntID))
+	}
+	h.selectDeviceInfo(stm)
+	return nil
 }
 
 func (h *queryHandler) queryDeviceInfos(ctx context.Context, cli *ent.Client) error {
@@ -68,16 +73,14 @@ func (h *queryHandler) formalize() {
 }
 
 func (h *Handler) GetDeviceInfo(ctx context.Context) (*npool.DeviceInfo, error) {
-	if h.ID == nil {
-		return nil, fmt.Errorf("invalid id")
-	}
-
 	handler := &queryHandler{
 		Handler: h,
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.queryDeviceInfo(cli)
+		if err := handler.queryDeviceInfo(cli); err != nil {
+			return err
+		}
 		return handler.scan(_ctx)
 	})
 	if err != nil {

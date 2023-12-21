@@ -11,7 +11,8 @@ import (
 )
 
 type Req struct {
-	ID        *uuid.UUID
+	ID        *uint32
+	EntID     *uuid.UUID
 	Country   *string
 	Province  *string
 	City      *string
@@ -22,8 +23,8 @@ type Req struct {
 
 //nolint:dupl
 func CreateSet(c *ent.VendorLocationCreate, req *Req) *ent.VendorLocationCreate {
-	if req.ID != nil {
-		c.SetID(*req.ID)
+	if req.EntID != nil {
+		c.SetEntID(*req.EntID)
 	}
 	if req.Country != nil {
 		c.SetCountry(*req.Country)
@@ -68,6 +69,7 @@ func UpdateSet(u *ent.VendorLocationUpdateOne, req *Req) *ent.VendorLocationUpda
 
 type Conds struct {
 	ID       *cruder.Cond
+	EntID    *cruder.Cond
 	Country  *cruder.Cond
 	Province *cruder.Cond
 	City     *cruder.Cond
@@ -82,7 +84,7 @@ func SetQueryConds(q *ent.VendorLocationQuery, conds *Conds) (*ent.VendorLocatio
 		return q, nil
 	}
 	if conds.ID != nil {
-		id, ok := conds.ID.Val.(uuid.UUID)
+		id, ok := conds.ID.Val.(uint32)
 		if !ok {
 			return nil, fmt.Errorf("invalid id")
 		}
@@ -91,6 +93,20 @@ func SetQueryConds(q *ent.VendorLocationQuery, conds *Conds) (*ent.VendorLocatio
 			q.Where(entvendorlocation.ID(id))
 		case cruder.NEQ:
 			q.Where(entvendorlocation.IDNEQ(id))
+		default:
+			return nil, fmt.Errorf("invalid vendorlocation field")
+		}
+	}
+	if conds.EntID != nil {
+		id, ok := conds.EntID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid id")
+		}
+		switch conds.EntID.Op {
+		case cruder.EQ:
+			q.Where(entvendorlocation.EntID(id))
+		case cruder.NEQ:
+			q.Where(entvendorlocation.EntIDNEQ(id))
 		default:
 			return nil, fmt.Errorf("invalid vendorlocation field")
 		}

@@ -85,6 +85,20 @@ func (su *StockUpdate) AddDeletedAt(u int32) *StockUpdate {
 	return su
 }
 
+// SetEntID sets the "ent_id" field.
+func (su *StockUpdate) SetEntID(u uuid.UUID) *StockUpdate {
+	su.mutation.SetEntID(u)
+	return su
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (su *StockUpdate) SetNillableEntID(u *uuid.UUID) *StockUpdate {
+	if u != nil {
+		su.SetEntID(*u)
+	}
+	return su
+}
+
 // SetGoodID sets the "good_id" field.
 func (su *StockUpdate) SetGoodID(u uuid.UUID) *StockUpdate {
 	su.mutation.SetGoodID(u)
@@ -317,7 +331,7 @@ func (su *StockUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   stock.Table,
 			Columns: stock.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: stock.FieldID,
 			},
 		},
@@ -369,6 +383,13 @@ func (su *StockUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: stock.FieldDeletedAt,
+		})
+	}
+	if value, ok := su.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: stock.FieldEntID,
 		})
 	}
 	if value, ok := su.mutation.GoodID(); ok {
@@ -542,6 +563,20 @@ func (suo *StockUpdateOne) SetNillableDeletedAt(u *uint32) *StockUpdateOne {
 // AddDeletedAt adds u to the "deleted_at" field.
 func (suo *StockUpdateOne) AddDeletedAt(u int32) *StockUpdateOne {
 	suo.mutation.AddDeletedAt(u)
+	return suo
+}
+
+// SetEntID sets the "ent_id" field.
+func (suo *StockUpdateOne) SetEntID(u uuid.UUID) *StockUpdateOne {
+	suo.mutation.SetEntID(u)
+	return suo
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (suo *StockUpdateOne) SetNillableEntID(u *uuid.UUID) *StockUpdateOne {
+	if u != nil {
+		suo.SetEntID(*u)
+	}
 	return suo
 }
 
@@ -790,7 +825,7 @@ func (suo *StockUpdateOne) sqlSave(ctx context.Context) (_node *Stock, err error
 			Table:   stock.Table,
 			Columns: stock.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: stock.FieldID,
 			},
 		},
@@ -859,6 +894,13 @@ func (suo *StockUpdateOne) sqlSave(ctx context.Context) (_node *Stock, err error
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: stock.FieldDeletedAt,
+		})
+	}
+	if value, ok := suo.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: stock.FieldEntID,
 		})
 	}
 	if value, ok := suo.mutation.GoodID(); ok {

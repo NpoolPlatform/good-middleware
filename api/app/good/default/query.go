@@ -15,7 +15,7 @@ import (
 func (s *Server) GetDefault(ctx context.Context, in *npool.GetDefaultRequest) (*npool.GetDefaultResponse, error) {
 	handler, err := appdefaultgood1.NewHandler(
 		ctx,
-		appdefaultgood1.WithID(&in.ID, true),
+		appdefaultgood1.WithEntID(&in.EntID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

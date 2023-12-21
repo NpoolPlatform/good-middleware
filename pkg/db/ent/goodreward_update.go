@@ -85,6 +85,20 @@ func (gru *GoodRewardUpdate) AddDeletedAt(u int32) *GoodRewardUpdate {
 	return gru
 }
 
+// SetEntID sets the "ent_id" field.
+func (gru *GoodRewardUpdate) SetEntID(u uuid.UUID) *GoodRewardUpdate {
+	gru.mutation.SetEntID(u)
+	return gru
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (gru *GoodRewardUpdate) SetNillableEntID(u *uuid.UUID) *GoodRewardUpdate {
+	if u != nil {
+		gru.SetEntID(*u)
+	}
+	return gru
+}
+
 // SetGoodID sets the "good_id" field.
 func (gru *GoodRewardUpdate) SetGoodID(u uuid.UUID) *GoodRewardUpdate {
 	gru.mutation.SetGoodID(u)
@@ -324,7 +338,7 @@ func (gru *GoodRewardUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   goodreward.Table,
 			Columns: goodreward.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: goodreward.FieldID,
 			},
 		},
@@ -376,6 +390,13 @@ func (gru *GoodRewardUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: goodreward.FieldDeletedAt,
+		})
+	}
+	if value, ok := gru.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: goodreward.FieldEntID,
 		})
 	}
 	if value, ok := gru.mutation.GoodID(); ok {
@@ -556,6 +577,20 @@ func (gruo *GoodRewardUpdateOne) SetNillableDeletedAt(u *uint32) *GoodRewardUpda
 // AddDeletedAt adds u to the "deleted_at" field.
 func (gruo *GoodRewardUpdateOne) AddDeletedAt(u int32) *GoodRewardUpdateOne {
 	gruo.mutation.AddDeletedAt(u)
+	return gruo
+}
+
+// SetEntID sets the "ent_id" field.
+func (gruo *GoodRewardUpdateOne) SetEntID(u uuid.UUID) *GoodRewardUpdateOne {
+	gruo.mutation.SetEntID(u)
+	return gruo
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (gruo *GoodRewardUpdateOne) SetNillableEntID(u *uuid.UUID) *GoodRewardUpdateOne {
+	if u != nil {
+		gruo.SetEntID(*u)
+	}
 	return gruo
 }
 
@@ -811,7 +846,7 @@ func (gruo *GoodRewardUpdateOne) sqlSave(ctx context.Context) (_node *GoodReward
 			Table:   goodreward.Table,
 			Columns: goodreward.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: goodreward.FieldID,
 			},
 		},
@@ -880,6 +915,13 @@ func (gruo *GoodRewardUpdateOne) sqlSave(ctx context.Context) (_node *GoodReward
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: goodreward.FieldDeletedAt,
+		})
+	}
+	if value, ok := gruo.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: goodreward.FieldEntID,
 		})
 	}
 	if value, ok := gruo.mutation.GoodID(); ok {

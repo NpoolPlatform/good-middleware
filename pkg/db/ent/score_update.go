@@ -85,6 +85,20 @@ func (su *ScoreUpdate) AddDeletedAt(u int32) *ScoreUpdate {
 	return su
 }
 
+// SetEntID sets the "ent_id" field.
+func (su *ScoreUpdate) SetEntID(u uuid.UUID) *ScoreUpdate {
+	su.mutation.SetEntID(u)
+	return su
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (su *ScoreUpdate) SetNillableEntID(u *uuid.UUID) *ScoreUpdate {
+	if u != nil {
+		su.SetEntID(*u)
+	}
+	return su
+}
+
 // SetAppID sets the "app_id" field.
 func (su *ScoreUpdate) SetAppID(u uuid.UUID) *ScoreUpdate {
 	su.mutation.SetAppID(u)
@@ -271,7 +285,7 @@ func (su *ScoreUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   score.Table,
 			Columns: score.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: score.FieldID,
 			},
 		},
@@ -323,6 +337,13 @@ func (su *ScoreUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: score.FieldDeletedAt,
+		})
+	}
+	if value, ok := su.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: score.FieldEntID,
 		})
 	}
 	if value, ok := su.mutation.AppID(); ok {
@@ -463,6 +484,20 @@ func (suo *ScoreUpdateOne) SetNillableDeletedAt(u *uint32) *ScoreUpdateOne {
 // AddDeletedAt adds u to the "deleted_at" field.
 func (suo *ScoreUpdateOne) AddDeletedAt(u int32) *ScoreUpdateOne {
 	suo.mutation.AddDeletedAt(u)
+	return suo
+}
+
+// SetEntID sets the "ent_id" field.
+func (suo *ScoreUpdateOne) SetEntID(u uuid.UUID) *ScoreUpdateOne {
+	suo.mutation.SetEntID(u)
+	return suo
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (suo *ScoreUpdateOne) SetNillableEntID(u *uuid.UUID) *ScoreUpdateOne {
+	if u != nil {
+		suo.SetEntID(*u)
+	}
 	return suo
 }
 
@@ -665,7 +700,7 @@ func (suo *ScoreUpdateOne) sqlSave(ctx context.Context) (_node *Score, err error
 			Table:   score.Table,
 			Columns: score.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: score.FieldID,
 			},
 		},
@@ -734,6 +769,13 @@ func (suo *ScoreUpdateOne) sqlSave(ctx context.Context) (_node *Score, err error
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: score.FieldDeletedAt,
+		})
+	}
+	if value, ok := suo.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: score.FieldEntID,
 		})
 	}
 	if value, ok := suo.mutation.AppID(); ok {

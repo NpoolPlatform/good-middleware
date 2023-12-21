@@ -84,6 +84,20 @@ func (vlu *VendorLocationUpdate) AddDeletedAt(u int32) *VendorLocationUpdate {
 	return vlu
 }
 
+// SetEntID sets the "ent_id" field.
+func (vlu *VendorLocationUpdate) SetEntID(u uuid.UUID) *VendorLocationUpdate {
+	vlu.mutation.SetEntID(u)
+	return vlu
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (vlu *VendorLocationUpdate) SetNillableEntID(u *uuid.UUID) *VendorLocationUpdate {
+	if u != nil {
+		vlu.SetEntID(*u)
+	}
+	return vlu
+}
+
 // SetCountry sets the "country" field.
 func (vlu *VendorLocationUpdate) SetCountry(s string) *VendorLocationUpdate {
 	vlu.mutation.SetCountry(s)
@@ -301,7 +315,7 @@ func (vlu *VendorLocationUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Table:   vendorlocation.Table,
 			Columns: vendorlocation.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: vendorlocation.FieldID,
 			},
 		},
@@ -353,6 +367,13 @@ func (vlu *VendorLocationUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: vendorlocation.FieldDeletedAt,
+		})
+	}
+	if value, ok := vlu.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: vendorlocation.FieldEntID,
 		})
 	}
 	if value, ok := vlu.mutation.Country(); ok {
@@ -493,6 +514,20 @@ func (vluo *VendorLocationUpdateOne) SetNillableDeletedAt(u *uint32) *VendorLoca
 // AddDeletedAt adds u to the "deleted_at" field.
 func (vluo *VendorLocationUpdateOne) AddDeletedAt(u int32) *VendorLocationUpdateOne {
 	vluo.mutation.AddDeletedAt(u)
+	return vluo
+}
+
+// SetEntID sets the "ent_id" field.
+func (vluo *VendorLocationUpdateOne) SetEntID(u uuid.UUID) *VendorLocationUpdateOne {
+	vluo.mutation.SetEntID(u)
+	return vluo
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (vluo *VendorLocationUpdateOne) SetNillableEntID(u *uuid.UUID) *VendorLocationUpdateOne {
+	if u != nil {
+		vluo.SetEntID(*u)
+	}
 	return vluo
 }
 
@@ -726,7 +761,7 @@ func (vluo *VendorLocationUpdateOne) sqlSave(ctx context.Context) (_node *Vendor
 			Table:   vendorlocation.Table,
 			Columns: vendorlocation.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: vendorlocation.FieldID,
 			},
 		},
@@ -795,6 +830,13 @@ func (vluo *VendorLocationUpdateOne) sqlSave(ctx context.Context) (_node *Vendor
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: vendorlocation.FieldDeletedAt,
+		})
+	}
+	if value, ok := vluo.mutation.EntID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: vendorlocation.FieldEntID,
 		})
 	}
 	if value, ok := vluo.mutation.Country(); ok {

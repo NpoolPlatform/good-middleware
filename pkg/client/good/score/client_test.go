@@ -1,3 +1,4 @@
+//nolint:dupl
 package score
 
 import (
@@ -46,7 +47,7 @@ func init() {
 }
 
 var good = goodmwpb.Good{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	DeviceInfoID:           uuid.NewString(),
 	DeviceType:             uuid.NewString(),
 	DeviceManufacturer:     uuid.NewString(),
@@ -88,19 +89,19 @@ var good = goodmwpb.Good{
 }
 
 var appgood = appgoodmwpb.Good{
-	ID:       uuid.NewString(),
+	EntID:    uuid.NewString(),
 	AppID:    uuid.NewString(),
-	GoodID:   good.ID,
+	GoodID:   good.EntID,
 	GoodName: uuid.NewString(),
 	Price:    decimal.NewFromInt(123).String(),
 }
 
 var ret = npool.Score{
-	ID:        uuid.NewString(),
+	EntID:     uuid.NewString(),
 	AppID:     appgood.AppID,
 	UserID:    uuid.NewString(),
 	GoodID:    appgood.GoodID,
-	AppGoodID: appgood.ID,
+	AppGoodID: appgood.EntID,
 	GoodName:  appgood.GoodName,
 	Score:     decimal.RequireFromString("4.7").String(),
 }
@@ -113,18 +114,18 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, info1)
 
-	_, err = vendorlocation1.CreateLocation(context.Background(), &vendorlocationmwpb.LocationReq{
-		ID:       &good.VendorLocationID,
+	vendorLocation, err := vendorlocation1.CreateLocation(context.Background(), &vendorlocationmwpb.LocationReq{
+		EntID:    &good.VendorLocationID,
 		Country:  &good.VendorLocationCountry,
 		Province: &good.VendorLocationProvince,
 		City:     &good.VendorLocationCity,
 		Address:  &good.VendorLocationAddress,
-		BrandID:  &info1.ID,
+		BrandID:  &info1.EntID,
 	})
 	assert.Nil(t, err)
 
-	_, err = deviceinfo1.CreateDeviceInfo(context.Background(), &deviceinfomwpb.DeviceInfoReq{
-		ID:               &good.DeviceInfoID,
+	device, err := deviceinfo1.CreateDeviceInfo(context.Background(), &deviceinfomwpb.DeviceInfoReq{
+		EntID:            &good.DeviceInfoID,
 		Type:             &good.DeviceType,
 		Manufacturer:     &good.DeviceManufacturer,
 		PowerConsumption: &good.DevicePowerConsumption,
@@ -134,7 +135,7 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = good1.CreateGood(context.Background(), &goodmwpb.GoodReq{
-		ID:                   &good.ID,
+		EntID:                &good.EntID,
 		DeviceInfoID:         &good.DeviceInfoID,
 		DurationDays:         &good.DurationDays,
 		CoinTypeID:           &good.CoinTypeID,
@@ -158,7 +159,7 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = appgood1.CreateGood(context.Background(), &appgoodmwpb.GoodReq{
-		ID:       &appgood.ID,
+		EntID:    &appgood.EntID,
 		AppID:    &appgood.AppID,
 		GoodID:   &appgood.GoodID,
 		GoodName: &appgood.GoodName,
@@ -169,15 +170,15 @@ func setup(t *testing.T) func(*testing.T) {
 	return func(*testing.T) {
 		_, _ = appgood1.DeleteGood(context.Background(), appgood.ID)
 		_, _ = good1.DeleteGood(context.Background(), good.ID)
-		_, _ = deviceinfo1.DeleteDeviceInfo(context.Background(), good.DeviceInfoID)
-		_, _ = vendorlocation1.DeleteLocation(context.Background(), good.VendorLocationID)
+		_, _ = deviceinfo1.DeleteDeviceInfo(context.Background(), device.ID)
+		_, _ = vendorlocation1.DeleteLocation(context.Background(), vendorLocation.ID)
 		_, _ = vendorbrand1.DeleteBrand(context.Background(), info1.ID)
 	}
 }
 
 func createScore(t *testing.T) {
 	info, err := CreateScore(context.Background(), &npool.ScoreReq{
-		ID:        &ret.ID,
+		EntID:     &ret.EntID,
 		AppID:     &ret.AppID,
 		UserID:    &ret.UserID,
 		AppGoodID: &ret.AppGoodID,
@@ -186,10 +187,11 @@ func createScore(t *testing.T) {
 	if assert.Nil(t, err) {
 		ret.CreatedAt = info.CreatedAt
 		ret.UpdatedAt = info.UpdatedAt
+		ret.ID = info.ID
 		assert.Equal(t, &ret, info)
 	}
 
-	info1, err := good1.GetGood(context.Background(), good.ID)
+	info1, err := good1.GetGood(context.Background(), good.EntID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, "4.7", info1.Score)
 		assert.Equal(t, uint32(1), info1.ScoreCount)
@@ -198,7 +200,8 @@ func createScore(t *testing.T) {
 
 func getScores(t *testing.T) {
 	infos, total, err := GetScores(context.Background(), &npool.Conds{
-		ID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:         &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		AppID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
 		UserID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
 		AppGoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
@@ -218,7 +221,8 @@ func deleteScore(t *testing.T) {
 	}
 
 	info, err = GetScoreOnly(context.Background(), &npool.Conds{
-		ID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+		ID:         &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		AppID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
 		UserID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.UserID},
 		AppGoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},

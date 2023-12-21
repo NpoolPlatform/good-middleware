@@ -28,9 +28,9 @@ func init() {
 
 var (
 	ret = npool.Brand{
-		ID:   uuid.NewString(),
-		Name: uuid.NewString(),
-		Logo: uuid.NewString(),
+		EntID: uuid.NewString(),
+		Name:  uuid.NewString(),
+		Logo:  uuid.NewString(),
 	}
 )
 
@@ -41,7 +41,7 @@ func setup(t *testing.T) func(*testing.T) {
 func createBrand(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
 		WithName(&ret.Name, true),
 		WithLogo(&ret.Logo, true),
 	)
@@ -51,6 +51,7 @@ func createBrand(t *testing.T) {
 	if assert.Nil(t, err) {
 		ret.CreatedAt = info.CreatedAt
 		ret.UpdatedAt = info.UpdatedAt
+		ret.ID = info.ID
 		assert.Equal(t, info, &ret)
 	}
 }
@@ -74,7 +75,7 @@ func updateBrand(t *testing.T) {
 func getBrand(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
 	)
 	assert.Nil(t, err)
 
@@ -86,8 +87,9 @@ func getBrand(t *testing.T) {
 
 func getBrands(t *testing.T) {
 	conds := &npool.Conds{
-		ID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
-		Name: &basetypes.StringVal{Op: cruder.EQ, Value: ret.Name},
+		ID:    &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
+		Name:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.Name},
 	}
 
 	handler, err := NewHandler(

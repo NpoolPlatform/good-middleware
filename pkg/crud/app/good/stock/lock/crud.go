@@ -9,7 +9,7 @@ import (
 )
 
 type Req struct {
-	ID                *uuid.UUID
+	EntID             *uuid.UUID
 	AppStockID        *uuid.UUID
 	Units             *decimal.Decimal
 	AppSpotUnits      *decimal.Decimal
@@ -18,8 +18,8 @@ type Req struct {
 }
 
 func CreateSet(c *ent.AppStockLockCreate, req *Req) *ent.AppStockLockCreate {
-	if req.ID != nil {
-		c.SetID(*req.ID)
+	if req.EntID != nil {
+		c.SetEntID(*req.EntID)
 	}
 	if req.AppStockID != nil {
 		c.SetAppStockID(*req.AppStockID)

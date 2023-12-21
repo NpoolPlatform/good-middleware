@@ -15,7 +15,7 @@ import (
 func (s *Server) GetLocation(ctx context.Context, in *npool.GetLocationRequest) (*npool.GetLocationResponse, error) {
 	handler, err := location1.NewHandler(
 		ctx,
-		location1.WithID(&in.ID, true),
+		location1.WithEntID(&in.EntID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

@@ -72,7 +72,7 @@ func (grhd *GoodRewardHistoryDelete) sqlExec(ctx context.Context) (int, error) {
 		Node: &sqlgraph.NodeSpec{
 			Table: goodrewardhistory.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: goodrewardhistory.FieldID,
 			},
 		},

@@ -14,7 +14,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
-	"github.com/google/uuid"
 )
 
 // GoodQuery is the builder for querying Good entities.
@@ -87,8 +86,8 @@ func (gq *GoodQuery) FirstX(ctx context.Context) *Good {
 
 // FirstID returns the first Good ID from the query.
 // Returns a *NotFoundError when no Good ID was found.
-func (gq *GoodQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (gq *GoodQuery) FirstID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = gq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -100,7 +99,7 @@ func (gq *GoodQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (gq *GoodQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (gq *GoodQuery) FirstIDX(ctx context.Context) uint32 {
 	id, err := gq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -138,8 +137,8 @@ func (gq *GoodQuery) OnlyX(ctx context.Context) *Good {
 // OnlyID is like Only, but returns the only Good ID in the query.
 // Returns a *NotSingularError when more than one Good ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (gq *GoodQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (gq *GoodQuery) OnlyID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = gq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -155,7 +154,7 @@ func (gq *GoodQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (gq *GoodQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (gq *GoodQuery) OnlyIDX(ctx context.Context) uint32 {
 	id, err := gq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -181,8 +180,8 @@ func (gq *GoodQuery) AllX(ctx context.Context) []*Good {
 }
 
 // IDs executes the query and returns a list of Good IDs.
-func (gq *GoodQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	var ids []uuid.UUID
+func (gq *GoodQuery) IDs(ctx context.Context) ([]uint32, error) {
+	var ids []uint32
 	if err := gq.Select(good.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -190,7 +189,7 @@ func (gq *GoodQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (gq *GoodQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (gq *GoodQuery) IDsX(ctx context.Context) []uint32 {
 	ids, err := gq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -377,7 +376,7 @@ func (gq *GoodQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   good.Table,
 			Columns: good.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: good.FieldID,
 			},
 		},

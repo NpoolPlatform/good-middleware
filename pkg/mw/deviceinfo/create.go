@@ -39,15 +39,15 @@ func (h *Handler) CreateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 	}
 
 	id := uuid.New()
-	if h.ID == nil {
-		h.ID = &id
+	if h.EntID == nil {
+		h.EntID = &id
 	}
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if _, err := deviceinfocrud.CreateSet(
 			cli.DeviceInfo.Create(),
 			&deviceinfocrud.Req{
-				ID:               h.ID,
+				EntID:            h.EntID,
 				Type:             h.Type,
 				Manufacturer:     h.Manufacturer,
 				PowerConsumption: h.PowerConsumption,

@@ -16,7 +16,7 @@ import (
 func (s *Server) ExistGood(ctx context.Context, in *npool.ExistGoodRequest) (*npool.ExistGoodResponse, error) {
 	handler, err := appgood1.NewHandler(
 		ctx,
-		appgood1.WithID(&in.ID, true),
+		appgood1.WithEntID(&in.EntID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

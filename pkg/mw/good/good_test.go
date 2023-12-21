@@ -35,7 +35,7 @@ func init() {
 }
 
 var ret = npool.Good{
-	ID:                     uuid.NewString(),
+	EntID:                  uuid.NewString(),
 	DeviceInfoID:           uuid.NewString(),
 	DeviceType:             uuid.NewString(),
 	DeviceManufacturer:     uuid.NewString(),
@@ -109,24 +109,26 @@ func setup(t *testing.T) func(*testing.T) {
 
 	info1, err := h1.CreateBrand(context.Background())
 	assert.Nil(t, err)
+	h1.ID = &info1.ID
 
 	h2, err := vendorlocation1.NewHandler(
 		context.Background(),
-		vendorlocation1.WithID(&ret.VendorLocationID, true),
+		vendorlocation1.WithEntID(&ret.VendorLocationID, true),
 		vendorlocation1.WithCountry(&ret.VendorLocationCountry, true),
 		vendorlocation1.WithProvince(&ret.VendorLocationProvince, true),
 		vendorlocation1.WithCity(&ret.VendorLocationCity, true),
 		vendorlocation1.WithAddress(&ret.VendorLocationAddress, true),
-		vendorlocation1.WithBrandID(&info1.ID, true),
+		vendorlocation1.WithBrandID(&info1.EntID, true),
 	)
 	assert.Nil(t, err)
 
-	_, err = h2.CreateLocation(context.Background())
+	info2, err := h2.CreateLocation(context.Background())
 	assert.Nil(t, err)
+	h2.ID = &info2.ID
 
 	h3, err := deviceinfo1.NewHandler(
 		context.Background(),
-		deviceinfo1.WithID(&ret.DeviceInfoID, true),
+		deviceinfo1.WithEntID(&ret.DeviceInfoID, true),
 		deviceinfo1.WithType(&ret.DeviceType, true),
 		deviceinfo1.WithManufacturer(&ret.DeviceManufacturer, true),
 		deviceinfo1.WithPowerConsumption(&ret.DevicePowerConsumption, true),
@@ -135,8 +137,9 @@ func setup(t *testing.T) func(*testing.T) {
 	)
 	assert.Nil(t, err)
 
-	_, err = h3.CreateDeviceInfo(context.Background())
+	info3, err := h3.CreateDeviceInfo(context.Background())
 	assert.Nil(t, err)
+	h3.ID = &info3.ID
 
 	return func(*testing.T) {
 		_, _ = h3.DeleteDeviceInfo(context.Background())
@@ -148,7 +151,7 @@ func setup(t *testing.T) func(*testing.T) {
 func createGood(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
 		WithDeviceInfoID(&ret.DeviceInfoID, true),
 		WithDurationDays(&ret.DurationDays, true),
 		WithCoinTypeID(&ret.CoinTypeID, true),
@@ -180,6 +183,7 @@ func createGood(t *testing.T) {
 			ret.UpdatedAt = info.UpdatedAt
 			ret.GoodStockID = info.GoodStockID
 			ret.LabelsStr = info.LabelsStr
+			ret.ID = info.ID
 			assert.Equal(t, &ret, info)
 		}
 	}
@@ -230,13 +234,15 @@ func getGoods(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithConds(&npool.Conds{
-			ID:               &basetypes.StringVal{Op: cruder.EQ, Value: ret.ID},
+			ID:               &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+			EntID:            &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 			DeviceInfoID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.DeviceInfoID},
 			CoinTypeID:       &basetypes.StringVal{Op: cruder.EQ, Value: ret.CoinTypeID},
 			VendorLocationID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.VendorLocationID},
 			BenefitType:      &basetypes.Uint32Val{Op: cruder.EQ, Value: uint32(ret.BenefitType)},
 			GoodType:         &basetypes.Uint32Val{Op: cruder.EQ, Value: uint32(ret.GoodType)},
-			IDs:              &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.ID}},
+			IDs:              &basetypes.Uint32SliceVal{Op: cruder.IN, Value: []uint32{ret.ID}},
+			EntIDs:           &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.EntID}},
 		}),
 		WithOffset(0),
 		WithLimit(0),

@@ -25,7 +25,7 @@ func (h *createHandler) createStock(ctx context.Context, tx *ent.Tx) error {
 		&appstockcrud.Req{
 			AppID:     h.AppID,
 			GoodID:    h.GoodID,
-			AppGoodID: h.ID,
+			AppGoodID: h.EntID,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -37,7 +37,7 @@ func (h *createHandler) createAppGood(ctx context.Context, tx *ent.Tx) error {
 	if _, err := appgoodcrud.CreateSet(
 		tx.AppGood.Create(),
 		&appgoodcrud.Req{
-			ID:                     h.ID,
+			EntID:                  h.EntID,
 			AppID:                  h.AppID,
 			GoodID:                 h.GoodID,
 			GoodName:               h.GoodName,
@@ -88,8 +88,8 @@ func (h *Handler) CreateGood(ctx context.Context) (*npool.Good, error) {
 	}()
 
 	id := uuid.New()
-	if h.ID == nil {
-		h.ID = &id
+	if h.EntID == nil {
+		h.EntID = &id
 	}
 
 	// Here we do not need to check if app-good exists due to one good can authorized to one app multiple times

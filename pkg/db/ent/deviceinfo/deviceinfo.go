@@ -18,6 +18,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
+	// FieldEntID holds the string denoting the ent_id field in the database.
+	FieldEntID = "ent_id"
 	// FieldType holds the string denoting the type field in the database.
 	FieldType = "type"
 	// FieldManufacturer holds the string denoting the manufacturer field in the database.
@@ -38,6 +40,7 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
+	FieldEntID,
 	FieldType,
 	FieldManufacturer,
 	FieldPowerConsumption,
@@ -72,6 +75,8 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// DefaultEntID holds the default value on creation for the "ent_id" field.
+	DefaultEntID func() uuid.UUID
 	// DefaultType holds the default value on creation for the "type" field.
 	DefaultType string
 	// TypeValidator is a validator for the "type" field. It is called by the builders before save.
@@ -86,6 +91,4 @@ var (
 	DefaultShipmentAt uint32
 	// DefaultPosters holds the default value on creation for the "posters" field.
 	DefaultPosters []string
-	// DefaultID holds the default value on creation for the "id" field.
-	DefaultID func() uuid.UUID
 )

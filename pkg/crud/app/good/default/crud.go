@@ -12,7 +12,8 @@ import (
 )
 
 type Req struct {
-	ID         *uuid.UUID
+	ID         *uint32
+	EntID      *uuid.UUID
 	AppID      *uuid.UUID
 	AppGoodID  *uuid.UUID
 	CoinTypeID *uuid.UUID
@@ -21,8 +22,8 @@ type Req struct {
 }
 
 func CreateSet(c *ent.AppDefaultGoodCreate, req *Req) *ent.AppDefaultGoodCreate {
-	if req.ID != nil {
-		c.SetID(*req.ID)
+	if req.EntID != nil {
+		c.SetEntID(*req.EntID)
 	}
 	if req.AppID != nil {
 		c.SetAppID(*req.AppID)
@@ -60,6 +61,7 @@ func UpdateSet(u *ent.AppDefaultGoodUpdateOne, req *Req) *ent.AppDefaultGoodUpda
 
 type Conds struct {
 	ID          *cruder.Cond
+	EntID       *cruder.Cond
 	AppID       *cruder.Cond
 	GoodID      *cruder.Cond
 	AppGoodID   *cruder.Cond
@@ -75,13 +77,25 @@ func SetQueryConds(q *ent.AppDefaultGoodQuery, conds *Conds) (*ent.AppDefaultGoo
 		return q, nil
 	}
 	if conds.ID != nil {
-		id, ok := conds.ID.Val.(uuid.UUID)
+		id, ok := conds.ID.Val.(uint32)
 		if !ok {
 			return nil, fmt.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entappdefaultgood.ID(id))
+		default:
+			return nil, fmt.Errorf("invalid appdefaultgood field")
+		}
+	}
+	if conds.EntID != nil {
+		id, ok := conds.EntID.Val.(uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid id")
+		}
+		switch conds.EntID.Op {
+		case cruder.EQ:
+			q.Where(entappdefaultgood.EntID(id))
 		default:
 			return nil, fmt.Errorf("invalid appdefaultgood field")
 		}

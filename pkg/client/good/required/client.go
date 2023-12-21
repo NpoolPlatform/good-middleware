@@ -52,7 +52,7 @@ func CreateRequired(ctx context.Context, in *npool.RequiredReq) (*npool.Required
 func GetRequired(ctx context.Context, id string) (*npool.Required, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.GetRequired(ctx, &npool.GetRequiredRequest{
-			ID: id,
+			EntID: id,
 		})
 		if err != nil {
 			return nil, err
@@ -129,7 +129,7 @@ func UpdateRequired(ctx context.Context, in *npool.RequiredReq) (*npool.Required
 	return info.(*npool.Required), nil
 }
 
-func DeleteRequired(ctx context.Context, id string) (*npool.Required, error) {
+func DeleteRequired(ctx context.Context, id uint32) (*npool.Required, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.DeleteRequired(ctx, &npool.DeleteRequiredRequest{
 			Info: &npool.RequiredReq{

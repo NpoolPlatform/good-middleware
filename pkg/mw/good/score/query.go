@@ -28,15 +28,19 @@ func (h *queryHandler) selectScore(stm *ent.ScoreQuery) *ent.ScoreSelect {
 	return stm.Select(entscore.FieldID)
 }
 
-func (h *queryHandler) queryScore(cli *ent.Client) {
-	h.stmSelect = h.selectScore(
-		cli.Score.
-			Query().
-			Where(
-				entscore.ID(*h.ID),
-				entscore.DeletedAt(0),
-			),
-	)
+func (h *queryHandler) queryScore(cli *ent.Client) error {
+	if h.ID == nil && h.EntID == nil {
+		return fmt.Errorf("invalid id")
+	}
+	stm := cli.Score.Query().Where(entscore.DeletedAt(0))
+	if h.ID != nil {
+		stm.Where(entscore.ID(*h.ID))
+	}
+	if h.EntID != nil {
+		stm.Where(entscore.EntID(*h.EntID))
+	}
+	h.stmSelect = h.selectScore(stm)
+	return nil
 }
 
 func (h *queryHandler) queryScores(cli *ent.Client) (*ent.ScoreSelect, error) {
@@ -55,6 +59,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(entscore.FieldID),
 		).
 		AppendSelect(
+			sql.As(t.C(entscore.FieldEntID), "ent_id"),
 			sql.As(t.C(entscore.FieldAppID), "app_id"),
 			sql.As(t.C(entscore.FieldUserID), "user_id"),
 			sql.As(t.C(entscore.FieldGoodID), "good_id"),
@@ -70,7 +75,7 @@ func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
 	s.LeftJoin(t).
 		On(
 			s.C(entscore.FieldAppGoodID),
-			t.C(entappgood.FieldID),
+			t.C(entappgood.FieldEntID),
 		).
 		AppendSelect(
 			sql.As(t.C(entappgood.FieldGoodName), "good_name"),
@@ -111,7 +116,9 @@ func (h *Handler) GetScore(ctx context.Context) (*npool.Score, error) {
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.queryScore(cli)
+		if err := handler.queryScore(cli); err != nil {
+			return err
+		}
 		handler.queryJoin()
 		return handler.scan(ctx)
 	})

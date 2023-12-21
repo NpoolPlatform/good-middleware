@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -65,6 +64,20 @@ func (rgc *RequiredGoodCreate) SetNillableDeletedAt(u *uint32) *RequiredGoodCrea
 	return rgc
 }
 
+// SetEntID sets the "ent_id" field.
+func (rgc *RequiredGoodCreate) SetEntID(u uuid.UUID) *RequiredGoodCreate {
+	rgc.mutation.SetEntID(u)
+	return rgc
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (rgc *RequiredGoodCreate) SetNillableEntID(u *uuid.UUID) *RequiredGoodCreate {
+	if u != nil {
+		rgc.SetEntID(*u)
+	}
+	return rgc
+}
+
 // SetMainGoodID sets the "main_good_id" field.
 func (rgc *RequiredGoodCreate) SetMainGoodID(u uuid.UUID) *RequiredGoodCreate {
 	rgc.mutation.SetMainGoodID(u)
@@ -92,16 +105,8 @@ func (rgc *RequiredGoodCreate) SetNillableMust(b *bool) *RequiredGoodCreate {
 }
 
 // SetID sets the "id" field.
-func (rgc *RequiredGoodCreate) SetID(u uuid.UUID) *RequiredGoodCreate {
+func (rgc *RequiredGoodCreate) SetID(u uint32) *RequiredGoodCreate {
 	rgc.mutation.SetID(u)
-	return rgc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (rgc *RequiredGoodCreate) SetNillableID(u *uuid.UUID) *RequiredGoodCreate {
-	if u != nil {
-		rgc.SetID(*u)
-	}
 	return rgc
 }
 
@@ -205,16 +210,16 @@ func (rgc *RequiredGoodCreate) defaults() error {
 		v := requiredgood.DefaultDeletedAt()
 		rgc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := rgc.mutation.EntID(); !ok {
+		if requiredgood.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized requiredgood.DefaultEntID (forgotten import ent/runtime?)")
+		}
+		v := requiredgood.DefaultEntID()
+		rgc.mutation.SetEntID(v)
+	}
 	if _, ok := rgc.mutation.Must(); !ok {
 		v := requiredgood.DefaultMust
 		rgc.mutation.SetMust(v)
-	}
-	if _, ok := rgc.mutation.ID(); !ok {
-		if requiredgood.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized requiredgood.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := requiredgood.DefaultID()
-		rgc.mutation.SetID(v)
 	}
 	return nil
 }
@@ -229,6 +234,9 @@ func (rgc *RequiredGoodCreate) check() error {
 	}
 	if _, ok := rgc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "RequiredGood.deleted_at"`)}
+	}
+	if _, ok := rgc.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "RequiredGood.ent_id"`)}
 	}
 	if _, ok := rgc.mutation.MainGoodID(); !ok {
 		return &ValidationError{Name: "main_good_id", err: errors.New(`ent: missing required field "RequiredGood.main_good_id"`)}
@@ -247,12 +255,9 @@ func (rgc *RequiredGoodCreate) sqlSave(ctx context.Context) (*RequiredGood, erro
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -263,7 +268,7 @@ func (rgc *RequiredGoodCreate) createSpec() (*RequiredGood, *sqlgraph.CreateSpec
 		_spec = &sqlgraph.CreateSpec{
 			Table: requiredgood.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: requiredgood.FieldID,
 			},
 		}
@@ -271,7 +276,7 @@ func (rgc *RequiredGoodCreate) createSpec() (*RequiredGood, *sqlgraph.CreateSpec
 	_spec.OnConflict = rgc.conflict
 	if id, ok := rgc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := rgc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -296,6 +301,14 @@ func (rgc *RequiredGoodCreate) createSpec() (*RequiredGood, *sqlgraph.CreateSpec
 			Column: requiredgood.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
+	}
+	if value, ok := rgc.mutation.EntID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: requiredgood.FieldEntID,
+		})
+		_node.EntID = value
 	}
 	if value, ok := rgc.mutation.MainGoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -426,6 +439,18 @@ func (u *RequiredGoodUpsert) UpdateDeletedAt() *RequiredGoodUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *RequiredGoodUpsert) AddDeletedAt(v uint32) *RequiredGoodUpsert {
 	u.Add(requiredgood.FieldDeletedAt, v)
+	return u
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *RequiredGoodUpsert) SetEntID(v uuid.UUID) *RequiredGoodUpsert {
+	u.Set(requiredgood.FieldEntID, v)
+	return u
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *RequiredGoodUpsert) UpdateEntID() *RequiredGoodUpsert {
+	u.SetExcluded(requiredgood.FieldEntID)
 	return u
 }
 
@@ -584,6 +609,20 @@ func (u *RequiredGoodUpsertOne) UpdateDeletedAt() *RequiredGoodUpsertOne {
 	})
 }
 
+// SetEntID sets the "ent_id" field.
+func (u *RequiredGoodUpsertOne) SetEntID(v uuid.UUID) *RequiredGoodUpsertOne {
+	return u.Update(func(s *RequiredGoodUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *RequiredGoodUpsertOne) UpdateEntID() *RequiredGoodUpsertOne {
+	return u.Update(func(s *RequiredGoodUpsert) {
+		s.UpdateEntID()
+	})
+}
+
 // SetMainGoodID sets the "main_good_id" field.
 func (u *RequiredGoodUpsertOne) SetMainGoodID(v uuid.UUID) *RequiredGoodUpsertOne {
 	return u.Update(func(s *RequiredGoodUpsert) {
@@ -649,12 +688,7 @@ func (u *RequiredGoodUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *RequiredGoodUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: RequiredGoodUpsertOne.ID is not supported by MySQL driver. Use RequiredGoodUpsertOne.Exec instead")
-	}
+func (u *RequiredGoodUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -663,7 +697,7 @@ func (u *RequiredGoodUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *RequiredGoodUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *RequiredGoodUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -714,6 +748,10 @@ func (rgcb *RequiredGoodCreateBulk) Save(ctx context.Context) ([]*RequiredGood, 
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -909,6 +947,20 @@ func (u *RequiredGoodUpsertBulk) AddDeletedAt(v uint32) *RequiredGoodUpsertBulk 
 func (u *RequiredGoodUpsertBulk) UpdateDeletedAt() *RequiredGoodUpsertBulk {
 	return u.Update(func(s *RequiredGoodUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *RequiredGoodUpsertBulk) SetEntID(v uuid.UUID) *RequiredGoodUpsertBulk {
+	return u.Update(func(s *RequiredGoodUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *RequiredGoodUpsertBulk) UpdateEntID() *RequiredGoodUpsertBulk {
+	return u.Update(func(s *RequiredGoodUpsert) {
+		s.UpdateEntID()
 	})
 }
 

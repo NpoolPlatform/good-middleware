@@ -47,7 +47,7 @@ func (h *lockHandler) lockStock(ctx context.Context, tx *ent.Tx) error {
 		appReserved = appReserved.Sub(*h.AppSpotLocked)
 	}
 	if platformLocked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid appspotlockde")
+		return fmt.Errorf("invalid appspotlocked")
 	}
 	if appReserved.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid appreserved")
@@ -89,7 +89,7 @@ func (h *lockHandler) lockAppStock(ctx context.Context, tx *ent.Tx) error {
 		AppStock.
 		Query().
 		Where(
-			entappstock.ID(*h.ID),
+			entappstock.EntID(*h.EntID),
 			entappstock.DeletedAt(0),
 		).
 		ForUpdate().
@@ -101,7 +101,15 @@ func (h *lockHandler) lockAppStock(ctx context.Context, tx *ent.Tx) error {
 		return fmt.Errorf("invalid appstock")
 	}
 
-	h.GoodID = &info.GoodID
+	if *h.AppID != info.AppID {
+		return fmt.Errorf("invalid appid")
+	}
+	if *h.GoodID != info.GoodID {
+		return fmt.Errorf("invalid goodid")
+	}
+	if *h.AppGoodID != info.AppGoodID {
+		return fmt.Errorf("invalid appgoodid")
+	}
 	spotQuantity := info.SpotQuantity
 	locked := info.Locked
 

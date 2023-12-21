@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -65,6 +64,20 @@ func (vbc *VendorBrandCreate) SetNillableDeletedAt(u *uint32) *VendorBrandCreate
 	return vbc
 }
 
+// SetEntID sets the "ent_id" field.
+func (vbc *VendorBrandCreate) SetEntID(u uuid.UUID) *VendorBrandCreate {
+	vbc.mutation.SetEntID(u)
+	return vbc
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (vbc *VendorBrandCreate) SetNillableEntID(u *uuid.UUID) *VendorBrandCreate {
+	if u != nil {
+		vbc.SetEntID(*u)
+	}
+	return vbc
+}
+
 // SetName sets the "name" field.
 func (vbc *VendorBrandCreate) SetName(s string) *VendorBrandCreate {
 	vbc.mutation.SetName(s)
@@ -94,16 +107,8 @@ func (vbc *VendorBrandCreate) SetNillableLogo(s *string) *VendorBrandCreate {
 }
 
 // SetID sets the "id" field.
-func (vbc *VendorBrandCreate) SetID(u uuid.UUID) *VendorBrandCreate {
+func (vbc *VendorBrandCreate) SetID(u uint32) *VendorBrandCreate {
 	vbc.mutation.SetID(u)
-	return vbc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (vbc *VendorBrandCreate) SetNillableID(u *uuid.UUID) *VendorBrandCreate {
-	if u != nil {
-		vbc.SetID(*u)
-	}
 	return vbc
 }
 
@@ -207,6 +212,13 @@ func (vbc *VendorBrandCreate) defaults() error {
 		v := vendorbrand.DefaultDeletedAt()
 		vbc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := vbc.mutation.EntID(); !ok {
+		if vendorbrand.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized vendorbrand.DefaultEntID (forgotten import ent/runtime?)")
+		}
+		v := vendorbrand.DefaultEntID()
+		vbc.mutation.SetEntID(v)
+	}
 	if _, ok := vbc.mutation.Name(); !ok {
 		v := vendorbrand.DefaultName
 		vbc.mutation.SetName(v)
@@ -214,13 +226,6 @@ func (vbc *VendorBrandCreate) defaults() error {
 	if _, ok := vbc.mutation.Logo(); !ok {
 		v := vendorbrand.DefaultLogo
 		vbc.mutation.SetLogo(v)
-	}
-	if _, ok := vbc.mutation.ID(); !ok {
-		if vendorbrand.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized vendorbrand.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := vendorbrand.DefaultID()
-		vbc.mutation.SetID(v)
 	}
 	return nil
 }
@@ -235,6 +240,9 @@ func (vbc *VendorBrandCreate) check() error {
 	}
 	if _, ok := vbc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "VendorBrand.deleted_at"`)}
+	}
+	if _, ok := vbc.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "VendorBrand.ent_id"`)}
 	}
 	if v, ok := vbc.mutation.Name(); ok {
 		if err := vendorbrand.NameValidator(v); err != nil {
@@ -257,12 +265,9 @@ func (vbc *VendorBrandCreate) sqlSave(ctx context.Context) (*VendorBrand, error)
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -273,7 +278,7 @@ func (vbc *VendorBrandCreate) createSpec() (*VendorBrand, *sqlgraph.CreateSpec) 
 		_spec = &sqlgraph.CreateSpec{
 			Table: vendorbrand.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: vendorbrand.FieldID,
 			},
 		}
@@ -281,7 +286,7 @@ func (vbc *VendorBrandCreate) createSpec() (*VendorBrand, *sqlgraph.CreateSpec) 
 	_spec.OnConflict = vbc.conflict
 	if id, ok := vbc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := vbc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -306,6 +311,14 @@ func (vbc *VendorBrandCreate) createSpec() (*VendorBrand, *sqlgraph.CreateSpec) 
 			Column: vendorbrand.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
+	}
+	if value, ok := vbc.mutation.EntID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: vendorbrand.FieldEntID,
+		})
+		_node.EntID = value
 	}
 	if value, ok := vbc.mutation.Name(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -428,6 +441,18 @@ func (u *VendorBrandUpsert) UpdateDeletedAt() *VendorBrandUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *VendorBrandUpsert) AddDeletedAt(v uint32) *VendorBrandUpsert {
 	u.Add(vendorbrand.FieldDeletedAt, v)
+	return u
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *VendorBrandUpsert) SetEntID(v uuid.UUID) *VendorBrandUpsert {
+	u.Set(vendorbrand.FieldEntID, v)
+	return u
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *VendorBrandUpsert) UpdateEntID() *VendorBrandUpsert {
+	u.SetExcluded(vendorbrand.FieldEntID)
 	return u
 }
 
@@ -580,6 +605,20 @@ func (u *VendorBrandUpsertOne) UpdateDeletedAt() *VendorBrandUpsertOne {
 	})
 }
 
+// SetEntID sets the "ent_id" field.
+func (u *VendorBrandUpsertOne) SetEntID(v uuid.UUID) *VendorBrandUpsertOne {
+	return u.Update(func(s *VendorBrandUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *VendorBrandUpsertOne) UpdateEntID() *VendorBrandUpsertOne {
+	return u.Update(func(s *VendorBrandUpsert) {
+		s.UpdateEntID()
+	})
+}
+
 // SetName sets the "name" field.
 func (u *VendorBrandUpsertOne) SetName(v string) *VendorBrandUpsertOne {
 	return u.Update(func(s *VendorBrandUpsert) {
@@ -638,12 +677,7 @@ func (u *VendorBrandUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *VendorBrandUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: VendorBrandUpsertOne.ID is not supported by MySQL driver. Use VendorBrandUpsertOne.Exec instead")
-	}
+func (u *VendorBrandUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -652,7 +686,7 @@ func (u *VendorBrandUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error)
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *VendorBrandUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *VendorBrandUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -703,6 +737,10 @@ func (vbcb *VendorBrandCreateBulk) Save(ctx context.Context) ([]*VendorBrand, er
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -898,6 +936,20 @@ func (u *VendorBrandUpsertBulk) AddDeletedAt(v uint32) *VendorBrandUpsertBulk {
 func (u *VendorBrandUpsertBulk) UpdateDeletedAt() *VendorBrandUpsertBulk {
 	return u.Update(func(s *VendorBrandUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *VendorBrandUpsertBulk) SetEntID(v uuid.UUID) *VendorBrandUpsertBulk {
+	return u.Update(func(s *VendorBrandUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *VendorBrandUpsertBulk) UpdateEntID() *VendorBrandUpsertBulk {
+	return u.Update(func(s *VendorBrandUpsert) {
+		s.UpdateEntID()
 	})
 }
 

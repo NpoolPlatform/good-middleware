@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -61,6 +60,20 @@ func (adgc *AppDefaultGoodCreate) SetDeletedAt(u uint32) *AppDefaultGoodCreate {
 func (adgc *AppDefaultGoodCreate) SetNillableDeletedAt(u *uint32) *AppDefaultGoodCreate {
 	if u != nil {
 		adgc.SetDeletedAt(*u)
+	}
+	return adgc
+}
+
+// SetEntID sets the "ent_id" field.
+func (adgc *AppDefaultGoodCreate) SetEntID(u uuid.UUID) *AppDefaultGoodCreate {
+	adgc.mutation.SetEntID(u)
+	return adgc
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (adgc *AppDefaultGoodCreate) SetNillableEntID(u *uuid.UUID) *AppDefaultGoodCreate {
+	if u != nil {
+		adgc.SetEntID(*u)
 	}
 	return adgc
 }
@@ -122,16 +135,8 @@ func (adgc *AppDefaultGoodCreate) SetNillableCoinTypeID(u *uuid.UUID) *AppDefaul
 }
 
 // SetID sets the "id" field.
-func (adgc *AppDefaultGoodCreate) SetID(u uuid.UUID) *AppDefaultGoodCreate {
+func (adgc *AppDefaultGoodCreate) SetID(u uint32) *AppDefaultGoodCreate {
 	adgc.mutation.SetID(u)
-	return adgc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (adgc *AppDefaultGoodCreate) SetNillableID(u *uuid.UUID) *AppDefaultGoodCreate {
-	if u != nil {
-		adgc.SetID(*u)
-	}
 	return adgc
 }
 
@@ -235,12 +240,12 @@ func (adgc *AppDefaultGoodCreate) defaults() error {
 		v := appdefaultgood.DefaultDeletedAt()
 		adgc.mutation.SetDeletedAt(v)
 	}
-	if _, ok := adgc.mutation.ID(); !ok {
-		if appdefaultgood.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized appdefaultgood.DefaultID (forgotten import ent/runtime?)")
+	if _, ok := adgc.mutation.EntID(); !ok {
+		if appdefaultgood.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized appdefaultgood.DefaultEntID (forgotten import ent/runtime?)")
 		}
-		v := appdefaultgood.DefaultID()
-		adgc.mutation.SetID(v)
+		v := appdefaultgood.DefaultEntID()
+		adgc.mutation.SetEntID(v)
 	}
 	return nil
 }
@@ -256,6 +261,9 @@ func (adgc *AppDefaultGoodCreate) check() error {
 	if _, ok := adgc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "AppDefaultGood.deleted_at"`)}
 	}
+	if _, ok := adgc.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "AppDefaultGood.ent_id"`)}
+	}
 	return nil
 }
 
@@ -267,12 +275,9 @@ func (adgc *AppDefaultGoodCreate) sqlSave(ctx context.Context) (*AppDefaultGood,
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -283,7 +288,7 @@ func (adgc *AppDefaultGoodCreate) createSpec() (*AppDefaultGood, *sqlgraph.Creat
 		_spec = &sqlgraph.CreateSpec{
 			Table: appdefaultgood.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: appdefaultgood.FieldID,
 			},
 		}
@@ -291,7 +296,7 @@ func (adgc *AppDefaultGoodCreate) createSpec() (*AppDefaultGood, *sqlgraph.Creat
 	_spec.OnConflict = adgc.conflict
 	if id, ok := adgc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := adgc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -316,6 +321,14 @@ func (adgc *AppDefaultGoodCreate) createSpec() (*AppDefaultGood, *sqlgraph.Creat
 			Column: appdefaultgood.FieldDeletedAt,
 		})
 		_node.DeletedAt = value
+	}
+	if value, ok := adgc.mutation.EntID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appdefaultgood.FieldEntID,
+		})
+		_node.EntID = value
 	}
 	if value, ok := adgc.mutation.AppID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -454,6 +467,18 @@ func (u *AppDefaultGoodUpsert) UpdateDeletedAt() *AppDefaultGoodUpsert {
 // AddDeletedAt adds v to the "deleted_at" field.
 func (u *AppDefaultGoodUpsert) AddDeletedAt(v uint32) *AppDefaultGoodUpsert {
 	u.Add(appdefaultgood.FieldDeletedAt, v)
+	return u
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *AppDefaultGoodUpsert) SetEntID(v uuid.UUID) *AppDefaultGoodUpsert {
+	u.Set(appdefaultgood.FieldEntID, v)
+	return u
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *AppDefaultGoodUpsert) UpdateEntID() *AppDefaultGoodUpsert {
+	u.SetExcluded(appdefaultgood.FieldEntID)
 	return u
 }
 
@@ -642,6 +667,20 @@ func (u *AppDefaultGoodUpsertOne) UpdateDeletedAt() *AppDefaultGoodUpsertOne {
 	})
 }
 
+// SetEntID sets the "ent_id" field.
+func (u *AppDefaultGoodUpsertOne) SetEntID(v uuid.UUID) *AppDefaultGoodUpsertOne {
+	return u.Update(func(s *AppDefaultGoodUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *AppDefaultGoodUpsertOne) UpdateEntID() *AppDefaultGoodUpsertOne {
+	return u.Update(func(s *AppDefaultGoodUpsert) {
+		s.UpdateEntID()
+	})
+}
+
 // SetAppID sets the "app_id" field.
 func (u *AppDefaultGoodUpsertOne) SetAppID(v uuid.UUID) *AppDefaultGoodUpsertOne {
 	return u.Update(func(s *AppDefaultGoodUpsert) {
@@ -742,12 +781,7 @@ func (u *AppDefaultGoodUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *AppDefaultGoodUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: AppDefaultGoodUpsertOne.ID is not supported by MySQL driver. Use AppDefaultGoodUpsertOne.Exec instead")
-	}
+func (u *AppDefaultGoodUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -756,7 +790,7 @@ func (u *AppDefaultGoodUpsertOne) ID(ctx context.Context) (id uuid.UUID, err err
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *AppDefaultGoodUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *AppDefaultGoodUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -807,6 +841,10 @@ func (adgcb *AppDefaultGoodCreateBulk) Save(ctx context.Context) ([]*AppDefaultG
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -1002,6 +1040,20 @@ func (u *AppDefaultGoodUpsertBulk) AddDeletedAt(v uint32) *AppDefaultGoodUpsertB
 func (u *AppDefaultGoodUpsertBulk) UpdateDeletedAt() *AppDefaultGoodUpsertBulk {
 	return u.Update(func(s *AppDefaultGoodUpsert) {
 		s.UpdateDeletedAt()
+	})
+}
+
+// SetEntID sets the "ent_id" field.
+func (u *AppDefaultGoodUpsertBulk) SetEntID(v uuid.UUID) *AppDefaultGoodUpsertBulk {
+	return u.Update(func(s *AppDefaultGoodUpsert) {
+		s.SetEntID(v)
+	})
+}
+
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *AppDefaultGoodUpsertBulk) UpdateEntID() *AppDefaultGoodUpsertBulk {
+	return u.Update(func(s *AppDefaultGoodUpsert) {
+		s.UpdateEntID()
 	})
 }
 

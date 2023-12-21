@@ -24,7 +24,7 @@ func (s *Server) CreateDeviceInfo(ctx context.Context, in *npool.CreateDeviceInf
 	}
 	handler, err := deviceinfo1.NewHandler(
 		ctx,
-		deviceinfo1.WithID(req.ID, false),
+		deviceinfo1.WithEntID(req.EntID, false),
 		deviceinfo1.WithType(req.Type, true),
 		deviceinfo1.WithManufacturer(req.Manufacturer, true),
 		deviceinfo1.WithPowerConsumption(req.PowerConsumption, true),

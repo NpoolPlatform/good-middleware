@@ -152,19 +152,6 @@ func (f LikeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	return f(ctx, mv)
 }
 
-// The PromotionFunc type is an adapter to allow the use of ordinary
-// function as Promotion mutator.
-type PromotionFunc func(context.Context, *ent.PromotionMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f PromotionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.PromotionMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PromotionMutation", m)
-	}
-	return f(ctx, mv)
-}
-
 // The RecommendFunc type is an adapter to allow the use of ordinary
 // function as Recommend mutator.
 type RecommendFunc func(context.Context, *ent.RecommendMutation) (ent.Value, error)

@@ -10,6 +10,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
+	"github.com/google/uuid"
 )
 
 type deleteHandler struct {
@@ -21,7 +22,7 @@ func (h *deleteHandler) deleteStock(ctx context.Context, tx *ent.Tx) error {
 		AppStock.
 		Query().
 		Where(
-			entappstock.AppGoodID(*h.ID),
+			entappstock.AppGoodID(*h.EntID),
 			entappstock.DeletedAt(0),
 		).
 		ForUpdate().
@@ -63,6 +64,8 @@ func (h *Handler) DeleteGood(ctx context.Context) (*npool.Good, error) {
 	if info == nil {
 		return nil, nil
 	}
+	entID := uuid.MustParse(info.EntID)
+	h.EntID = &entID
 
 	handler := &deleteHandler{
 		Handler: h,

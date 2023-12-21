@@ -19,6 +19,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
+	// FieldEntID holds the string denoting the ent_id field in the database.
+	FieldEntID = "ent_id"
 	// FieldAppStockID holds the string denoting the app_stock_id field in the database.
 	FieldAppStockID = "app_stock_id"
 	// FieldUnits holds the string denoting the units field in the database.
@@ -39,6 +41,7 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
+	FieldEntID,
 	FieldAppStockID,
 	FieldUnits,
 	FieldAppSpotUnits,
@@ -73,6 +76,8 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// DefaultEntID holds the default value on creation for the "ent_id" field.
+	DefaultEntID func() uuid.UUID
 	// DefaultAppStockID holds the default value on creation for the "app_stock_id" field.
 	DefaultAppStockID func() uuid.UUID
 	// DefaultUnits holds the default value on creation for the "units" field.
@@ -83,6 +88,4 @@ var (
 	DefaultLockState string
 	// DefaultChargeBackState holds the default value on creation for the "charge_back_state" field.
 	DefaultChargeBackState string
-	// DefaultID holds the default value on creation for the "id" field.
-	DefaultID func() uuid.UUID
 )

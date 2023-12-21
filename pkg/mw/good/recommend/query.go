@@ -28,15 +28,19 @@ func (h *queryHandler) selectRecommend(stm *ent.RecommendQuery) *ent.RecommendSe
 	return stm.Select(entrecommend.FieldID)
 }
 
-func (h *queryHandler) queryRecommend(cli *ent.Client) {
-	h.stmSelect = h.selectRecommend(
-		cli.Recommend.
-			Query().
-			Where(
-				entrecommend.ID(*h.ID),
-				entrecommend.DeletedAt(0),
-			),
-	)
+func (h *queryHandler) queryRecommend(cli *ent.Client) error {
+	if h.ID == nil && h.EntID == nil {
+		return fmt.Errorf("invalid id")
+	}
+	stm := cli.Recommend.Query().Where(entrecommend.DeletedAt(0))
+	if h.ID != nil {
+		stm.Where(entrecommend.ID(*h.ID))
+	}
+	if h.EntID != nil {
+		stm.Where(entrecommend.EntID(*h.EntID))
+	}
+	h.stmSelect = h.selectRecommend(stm)
+	return nil
 }
 
 func (h *queryHandler) queryRecommends(cli *ent.Client) (*ent.RecommendSelect, error) {
@@ -55,6 +59,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(entrecommend.FieldID),
 		).
 		AppendSelect(
+			sql.As(t.C(entrecommend.FieldEntID), "ent_id"),
 			sql.As(t.C(entrecommend.FieldAppID), "app_id"),
 			sql.As(t.C(entrecommend.FieldRecommenderID), "recommender_id"),
 			sql.As(t.C(entrecommend.FieldGoodID), "good_id"),
@@ -70,7 +75,7 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 	s.LeftJoin(t).
 		On(
 			s.C(entrecommend.FieldGoodID),
-			t.C(entgood.FieldID),
+			t.C(entgood.FieldEntID),
 		).
 		AppendSelect(
 			sql.As(t.C(entgood.FieldTitle), "good_name"),
@@ -111,7 +116,9 @@ func (h *Handler) GetRecommend(ctx context.Context) (*npool.Recommend, error) {
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.queryRecommend(cli)
+		if err := handler.queryRecommend(cli); err != nil {
+			return err
+		}
 		handler.queryJoin()
 		return handler.scan(ctx)
 	})

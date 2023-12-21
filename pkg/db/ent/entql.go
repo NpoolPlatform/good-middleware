@@ -14,7 +14,6 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
-	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/promotion"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
@@ -32,13 +31,13 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 20)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 19)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   appdefaultgood.Table,
 			Columns: appdefaultgood.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: appdefaultgood.FieldID,
 			},
 		},
@@ -47,6 +46,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appdefaultgood.FieldCreatedAt:  {Type: field.TypeUint32, Column: appdefaultgood.FieldCreatedAt},
 			appdefaultgood.FieldUpdatedAt:  {Type: field.TypeUint32, Column: appdefaultgood.FieldUpdatedAt},
 			appdefaultgood.FieldDeletedAt:  {Type: field.TypeUint32, Column: appdefaultgood.FieldDeletedAt},
+			appdefaultgood.FieldEntID:      {Type: field.TypeUUID, Column: appdefaultgood.FieldEntID},
 			appdefaultgood.FieldAppID:      {Type: field.TypeUUID, Column: appdefaultgood.FieldAppID},
 			appdefaultgood.FieldGoodID:     {Type: field.TypeUUID, Column: appdefaultgood.FieldGoodID},
 			appdefaultgood.FieldAppGoodID:  {Type: field.TypeUUID, Column: appdefaultgood.FieldAppGoodID},
@@ -58,7 +58,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   appgood.Table,
 			Columns: appgood.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: appgood.FieldID,
 			},
 		},
@@ -67,6 +67,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appgood.FieldCreatedAt:              {Type: field.TypeUint32, Column: appgood.FieldCreatedAt},
 			appgood.FieldUpdatedAt:              {Type: field.TypeUint32, Column: appgood.FieldUpdatedAt},
 			appgood.FieldDeletedAt:              {Type: field.TypeUint32, Column: appgood.FieldDeletedAt},
+			appgood.FieldEntID:                  {Type: field.TypeUUID, Column: appgood.FieldEntID},
 			appgood.FieldAppID:                  {Type: field.TypeUUID, Column: appgood.FieldAppID},
 			appgood.FieldGoodID:                 {Type: field.TypeUUID, Column: appgood.FieldGoodID},
 			appgood.FieldOnline:                 {Type: field.TypeBool, Column: appgood.FieldOnline},
@@ -99,7 +100,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   appstock.Table,
 			Columns: appstock.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: appstock.FieldID,
 			},
 		},
@@ -108,6 +109,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appstock.FieldCreatedAt:    {Type: field.TypeUint32, Column: appstock.FieldCreatedAt},
 			appstock.FieldUpdatedAt:    {Type: field.TypeUint32, Column: appstock.FieldUpdatedAt},
 			appstock.FieldDeletedAt:    {Type: field.TypeUint32, Column: appstock.FieldDeletedAt},
+			appstock.FieldEntID:        {Type: field.TypeUUID, Column: appstock.FieldEntID},
 			appstock.FieldAppID:        {Type: field.TypeUUID, Column: appstock.FieldAppID},
 			appstock.FieldGoodID:       {Type: field.TypeUUID, Column: appstock.FieldGoodID},
 			appstock.FieldAppGoodID:    {Type: field.TypeUUID, Column: appstock.FieldAppGoodID},
@@ -124,7 +126,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   appstocklock.Table,
 			Columns: appstocklock.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: appstocklock.FieldID,
 			},
 		},
@@ -133,6 +135,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appstocklock.FieldCreatedAt:       {Type: field.TypeUint32, Column: appstocklock.FieldCreatedAt},
 			appstocklock.FieldUpdatedAt:       {Type: field.TypeUint32, Column: appstocklock.FieldUpdatedAt},
 			appstocklock.FieldDeletedAt:       {Type: field.TypeUint32, Column: appstocklock.FieldDeletedAt},
+			appstocklock.FieldEntID:           {Type: field.TypeUUID, Column: appstocklock.FieldEntID},
 			appstocklock.FieldAppStockID:      {Type: field.TypeUUID, Column: appstocklock.FieldAppStockID},
 			appstocklock.FieldUnits:           {Type: field.TypeOther, Column: appstocklock.FieldUnits},
 			appstocklock.FieldAppSpotUnits:    {Type: field.TypeOther, Column: appstocklock.FieldAppSpotUnits},
@@ -145,7 +148,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   comment.Table,
 			Columns: comment.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: comment.FieldID,
 			},
 		},
@@ -154,6 +157,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			comment.FieldCreatedAt: {Type: field.TypeUint32, Column: comment.FieldCreatedAt},
 			comment.FieldUpdatedAt: {Type: field.TypeUint32, Column: comment.FieldUpdatedAt},
 			comment.FieldDeletedAt: {Type: field.TypeUint32, Column: comment.FieldDeletedAt},
+			comment.FieldEntID:     {Type: field.TypeUUID, Column: comment.FieldEntID},
 			comment.FieldAppID:     {Type: field.TypeUUID, Column: comment.FieldAppID},
 			comment.FieldUserID:    {Type: field.TypeUUID, Column: comment.FieldUserID},
 			comment.FieldGoodID:    {Type: field.TypeUUID, Column: comment.FieldGoodID},
@@ -168,7 +172,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   deviceinfo.Table,
 			Columns: deviceinfo.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: deviceinfo.FieldID,
 			},
 		},
@@ -177,6 +181,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			deviceinfo.FieldCreatedAt:        {Type: field.TypeUint32, Column: deviceinfo.FieldCreatedAt},
 			deviceinfo.FieldUpdatedAt:        {Type: field.TypeUint32, Column: deviceinfo.FieldUpdatedAt},
 			deviceinfo.FieldDeletedAt:        {Type: field.TypeUint32, Column: deviceinfo.FieldDeletedAt},
+			deviceinfo.FieldEntID:            {Type: field.TypeUUID, Column: deviceinfo.FieldEntID},
 			deviceinfo.FieldType:             {Type: field.TypeString, Column: deviceinfo.FieldType},
 			deviceinfo.FieldManufacturer:     {Type: field.TypeString, Column: deviceinfo.FieldManufacturer},
 			deviceinfo.FieldPowerConsumption: {Type: field.TypeUint32, Column: deviceinfo.FieldPowerConsumption},
@@ -189,7 +194,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   extrainfo.Table,
 			Columns: extrainfo.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: extrainfo.FieldID,
 			},
 		},
@@ -198,6 +203,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			extrainfo.FieldCreatedAt:      {Type: field.TypeUint32, Column: extrainfo.FieldCreatedAt},
 			extrainfo.FieldUpdatedAt:      {Type: field.TypeUint32, Column: extrainfo.FieldUpdatedAt},
 			extrainfo.FieldDeletedAt:      {Type: field.TypeUint32, Column: extrainfo.FieldDeletedAt},
+			extrainfo.FieldEntID:          {Type: field.TypeUUID, Column: extrainfo.FieldEntID},
 			extrainfo.FieldGoodID:         {Type: field.TypeUUID, Column: extrainfo.FieldGoodID},
 			extrainfo.FieldPosters:        {Type: field.TypeJSON, Column: extrainfo.FieldPosters},
 			extrainfo.FieldLabels:         {Type: field.TypeJSON, Column: extrainfo.FieldLabels},
@@ -214,7 +220,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   good.Table,
 			Columns: good.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: good.FieldID,
 			},
 		},
@@ -223,6 +229,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			good.FieldCreatedAt:            {Type: field.TypeUint32, Column: good.FieldCreatedAt},
 			good.FieldUpdatedAt:            {Type: field.TypeUint32, Column: good.FieldUpdatedAt},
 			good.FieldDeletedAt:            {Type: field.TypeUint32, Column: good.FieldDeletedAt},
+			good.FieldEntID:                {Type: field.TypeUUID, Column: good.FieldEntID},
 			good.FieldDeviceInfoID:         {Type: field.TypeUUID, Column: good.FieldDeviceInfoID},
 			good.FieldDurationDays:         {Type: field.TypeInt32, Column: good.FieldDurationDays},
 			good.FieldCoinTypeID:           {Type: field.TypeUUID, Column: good.FieldCoinTypeID},
@@ -248,7 +255,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   goodreward.Table,
 			Columns: goodreward.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: goodreward.FieldID,
 			},
 		},
@@ -257,6 +264,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			goodreward.FieldCreatedAt:             {Type: field.TypeUint32, Column: goodreward.FieldCreatedAt},
 			goodreward.FieldUpdatedAt:             {Type: field.TypeUint32, Column: goodreward.FieldUpdatedAt},
 			goodreward.FieldDeletedAt:             {Type: field.TypeUint32, Column: goodreward.FieldDeletedAt},
+			goodreward.FieldEntID:                 {Type: field.TypeUUID, Column: goodreward.FieldEntID},
 			goodreward.FieldGoodID:                {Type: field.TypeUUID, Column: goodreward.FieldGoodID},
 			goodreward.FieldRewardState:           {Type: field.TypeString, Column: goodreward.FieldRewardState},
 			goodreward.FieldLastRewardAt:          {Type: field.TypeUint32, Column: goodreward.FieldLastRewardAt},
@@ -272,7 +280,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   goodrewardhistory.Table,
 			Columns: goodrewardhistory.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: goodrewardhistory.FieldID,
 			},
 		},
@@ -281,6 +289,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			goodrewardhistory.FieldCreatedAt:     {Type: field.TypeUint32, Column: goodrewardhistory.FieldCreatedAt},
 			goodrewardhistory.FieldUpdatedAt:     {Type: field.TypeUint32, Column: goodrewardhistory.FieldUpdatedAt},
 			goodrewardhistory.FieldDeletedAt:     {Type: field.TypeUint32, Column: goodrewardhistory.FieldDeletedAt},
+			goodrewardhistory.FieldEntID:         {Type: field.TypeUUID, Column: goodrewardhistory.FieldEntID},
 			goodrewardhistory.FieldGoodID:        {Type: field.TypeUUID, Column: goodrewardhistory.FieldGoodID},
 			goodrewardhistory.FieldRewardDate:    {Type: field.TypeUint32, Column: goodrewardhistory.FieldRewardDate},
 			goodrewardhistory.FieldTid:           {Type: field.TypeUUID, Column: goodrewardhistory.FieldTid},
@@ -294,7 +303,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   like.Table,
 			Columns: like.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: like.FieldID,
 			},
 		},
@@ -303,6 +312,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			like.FieldCreatedAt: {Type: field.TypeUint32, Column: like.FieldCreatedAt},
 			like.FieldUpdatedAt: {Type: field.TypeUint32, Column: like.FieldUpdatedAt},
 			like.FieldDeletedAt: {Type: field.TypeUint32, Column: like.FieldDeletedAt},
+			like.FieldEntID:     {Type: field.TypeUUID, Column: like.FieldEntID},
 			like.FieldAppID:     {Type: field.TypeUUID, Column: like.FieldAppID},
 			like.FieldUserID:    {Type: field.TypeUUID, Column: like.FieldUserID},
 			like.FieldGoodID:    {Type: field.TypeUUID, Column: like.FieldGoodID},
@@ -312,33 +322,10 @@ var schemaGraph = func() *sqlgraph.Schema {
 	}
 	graph.Nodes[11] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
-			Table:   promotion.Table,
-			Columns: promotion.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
-				Column: promotion.FieldID,
-			},
-		},
-		Type: "Promotion",
-		Fields: map[string]*sqlgraph.FieldSpec{
-			promotion.FieldCreatedAt: {Type: field.TypeUint32, Column: promotion.FieldCreatedAt},
-			promotion.FieldUpdatedAt: {Type: field.TypeUint32, Column: promotion.FieldUpdatedAt},
-			promotion.FieldDeletedAt: {Type: field.TypeUint32, Column: promotion.FieldDeletedAt},
-			promotion.FieldAppID:     {Type: field.TypeUUID, Column: promotion.FieldAppID},
-			promotion.FieldGoodID:    {Type: field.TypeUUID, Column: promotion.FieldGoodID},
-			promotion.FieldMessage:   {Type: field.TypeString, Column: promotion.FieldMessage},
-			promotion.FieldStartAt:   {Type: field.TypeUint32, Column: promotion.FieldStartAt},
-			promotion.FieldEndAt:     {Type: field.TypeUint32, Column: promotion.FieldEndAt},
-			promotion.FieldPrice:     {Type: field.TypeOther, Column: promotion.FieldPrice},
-			promotion.FieldPosters:   {Type: field.TypeJSON, Column: promotion.FieldPosters},
-		},
-	}
-	graph.Nodes[12] = &sqlgraph.Node{
-		NodeSpec: sqlgraph.NodeSpec{
 			Table:   recommend.Table,
 			Columns: recommend.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: recommend.FieldID,
 			},
 		},
@@ -347,6 +334,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			recommend.FieldCreatedAt:      {Type: field.TypeUint32, Column: recommend.FieldCreatedAt},
 			recommend.FieldUpdatedAt:      {Type: field.TypeUint32, Column: recommend.FieldUpdatedAt},
 			recommend.FieldDeletedAt:      {Type: field.TypeUint32, Column: recommend.FieldDeletedAt},
+			recommend.FieldEntID:          {Type: field.TypeUUID, Column: recommend.FieldEntID},
 			recommend.FieldAppID:          {Type: field.TypeUUID, Column: recommend.FieldAppID},
 			recommend.FieldGoodID:         {Type: field.TypeUUID, Column: recommend.FieldGoodID},
 			recommend.FieldRecommenderID:  {Type: field.TypeUUID, Column: recommend.FieldRecommenderID},
@@ -354,12 +342,12 @@ var schemaGraph = func() *sqlgraph.Schema {
 			recommend.FieldRecommendIndex: {Type: field.TypeOther, Column: recommend.FieldRecommendIndex},
 		},
 	}
-	graph.Nodes[13] = &sqlgraph.Node{
+	graph.Nodes[12] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   requiredgood.Table,
 			Columns: requiredgood.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: requiredgood.FieldID,
 			},
 		},
@@ -368,17 +356,18 @@ var schemaGraph = func() *sqlgraph.Schema {
 			requiredgood.FieldCreatedAt:      {Type: field.TypeUint32, Column: requiredgood.FieldCreatedAt},
 			requiredgood.FieldUpdatedAt:      {Type: field.TypeUint32, Column: requiredgood.FieldUpdatedAt},
 			requiredgood.FieldDeletedAt:      {Type: field.TypeUint32, Column: requiredgood.FieldDeletedAt},
+			requiredgood.FieldEntID:          {Type: field.TypeUUID, Column: requiredgood.FieldEntID},
 			requiredgood.FieldMainGoodID:     {Type: field.TypeUUID, Column: requiredgood.FieldMainGoodID},
 			requiredgood.FieldRequiredGoodID: {Type: field.TypeUUID, Column: requiredgood.FieldRequiredGoodID},
 			requiredgood.FieldMust:           {Type: field.TypeBool, Column: requiredgood.FieldMust},
 		},
 	}
-	graph.Nodes[14] = &sqlgraph.Node{
+	graph.Nodes[13] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   score.Table,
 			Columns: score.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: score.FieldID,
 			},
 		},
@@ -387,6 +376,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			score.FieldCreatedAt: {Type: field.TypeUint32, Column: score.FieldCreatedAt},
 			score.FieldUpdatedAt: {Type: field.TypeUint32, Column: score.FieldUpdatedAt},
 			score.FieldDeletedAt: {Type: field.TypeUint32, Column: score.FieldDeletedAt},
+			score.FieldEntID:     {Type: field.TypeUUID, Column: score.FieldEntID},
 			score.FieldAppID:     {Type: field.TypeUUID, Column: score.FieldAppID},
 			score.FieldUserID:    {Type: field.TypeUUID, Column: score.FieldUserID},
 			score.FieldGoodID:    {Type: field.TypeUUID, Column: score.FieldGoodID},
@@ -394,12 +384,12 @@ var schemaGraph = func() *sqlgraph.Schema {
 			score.FieldScore:     {Type: field.TypeOther, Column: score.FieldScore},
 		},
 	}
-	graph.Nodes[15] = &sqlgraph.Node{
+	graph.Nodes[14] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   stock.Table,
 			Columns: stock.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: stock.FieldID,
 			},
 		},
@@ -408,6 +398,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			stock.FieldCreatedAt:    {Type: field.TypeUint32, Column: stock.FieldCreatedAt},
 			stock.FieldUpdatedAt:    {Type: field.TypeUint32, Column: stock.FieldUpdatedAt},
 			stock.FieldDeletedAt:    {Type: field.TypeUint32, Column: stock.FieldDeletedAt},
+			stock.FieldEntID:        {Type: field.TypeUUID, Column: stock.FieldEntID},
 			stock.FieldGoodID:       {Type: field.TypeUUID, Column: stock.FieldGoodID},
 			stock.FieldTotal:        {Type: field.TypeOther, Column: stock.FieldTotal},
 			stock.FieldSpotQuantity: {Type: field.TypeOther, Column: stock.FieldSpotQuantity},
@@ -418,12 +409,12 @@ var schemaGraph = func() *sqlgraph.Schema {
 			stock.FieldAppReserved:  {Type: field.TypeOther, Column: stock.FieldAppReserved},
 		},
 	}
-	graph.Nodes[16] = &sqlgraph.Node{
+	graph.Nodes[15] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   topmost.Table,
 			Columns: topmost.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: topmost.FieldID,
 			},
 		},
@@ -432,6 +423,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmost.FieldCreatedAt:              {Type: field.TypeUint32, Column: topmost.FieldCreatedAt},
 			topmost.FieldUpdatedAt:              {Type: field.TypeUint32, Column: topmost.FieldUpdatedAt},
 			topmost.FieldDeletedAt:              {Type: field.TypeUint32, Column: topmost.FieldDeletedAt},
+			topmost.FieldEntID:                  {Type: field.TypeUUID, Column: topmost.FieldEntID},
 			topmost.FieldAppID:                  {Type: field.TypeUUID, Column: topmost.FieldAppID},
 			topmost.FieldTopMostType:            {Type: field.TypeString, Column: topmost.FieldTopMostType},
 			topmost.FieldTitle:                  {Type: field.TypeString, Column: topmost.FieldTitle},
@@ -446,12 +438,12 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmost.FieldKycMust:                {Type: field.TypeBool, Column: topmost.FieldKycMust},
 		},
 	}
-	graph.Nodes[17] = &sqlgraph.Node{
+	graph.Nodes[16] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   topmostgood.Table,
 			Columns: topmostgood.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: topmostgood.FieldID,
 			},
 		},
@@ -460,6 +452,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostgood.FieldCreatedAt:    {Type: field.TypeUint32, Column: topmostgood.FieldCreatedAt},
 			topmostgood.FieldUpdatedAt:    {Type: field.TypeUint32, Column: topmostgood.FieldUpdatedAt},
 			topmostgood.FieldDeletedAt:    {Type: field.TypeUint32, Column: topmostgood.FieldDeletedAt},
+			topmostgood.FieldEntID:        {Type: field.TypeUUID, Column: topmostgood.FieldEntID},
 			topmostgood.FieldAppID:        {Type: field.TypeUUID, Column: topmostgood.FieldAppID},
 			topmostgood.FieldGoodID:       {Type: field.TypeUUID, Column: topmostgood.FieldGoodID},
 			topmostgood.FieldAppGoodID:    {Type: field.TypeUUID, Column: topmostgood.FieldAppGoodID},
@@ -470,12 +463,12 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostgood.FieldPrice:        {Type: field.TypeOther, Column: topmostgood.FieldPrice},
 		},
 	}
-	graph.Nodes[18] = &sqlgraph.Node{
+	graph.Nodes[17] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   vendorbrand.Table,
 			Columns: vendorbrand.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: vendorbrand.FieldID,
 			},
 		},
@@ -484,16 +477,17 @@ var schemaGraph = func() *sqlgraph.Schema {
 			vendorbrand.FieldCreatedAt: {Type: field.TypeUint32, Column: vendorbrand.FieldCreatedAt},
 			vendorbrand.FieldUpdatedAt: {Type: field.TypeUint32, Column: vendorbrand.FieldUpdatedAt},
 			vendorbrand.FieldDeletedAt: {Type: field.TypeUint32, Column: vendorbrand.FieldDeletedAt},
+			vendorbrand.FieldEntID:     {Type: field.TypeUUID, Column: vendorbrand.FieldEntID},
 			vendorbrand.FieldName:      {Type: field.TypeString, Column: vendorbrand.FieldName},
 			vendorbrand.FieldLogo:      {Type: field.TypeString, Column: vendorbrand.FieldLogo},
 		},
 	}
-	graph.Nodes[19] = &sqlgraph.Node{
+	graph.Nodes[18] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   vendorlocation.Table,
 			Columns: vendorlocation.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: vendorlocation.FieldID,
 			},
 		},
@@ -502,6 +496,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			vendorlocation.FieldCreatedAt: {Type: field.TypeUint32, Column: vendorlocation.FieldCreatedAt},
 			vendorlocation.FieldUpdatedAt: {Type: field.TypeUint32, Column: vendorlocation.FieldUpdatedAt},
 			vendorlocation.FieldDeletedAt: {Type: field.TypeUint32, Column: vendorlocation.FieldDeletedAt},
+			vendorlocation.FieldEntID:     {Type: field.TypeUUID, Column: vendorlocation.FieldEntID},
 			vendorlocation.FieldCountry:   {Type: field.TypeString, Column: vendorlocation.FieldCountry},
 			vendorlocation.FieldProvince:  {Type: field.TypeString, Column: vendorlocation.FieldProvince},
 			vendorlocation.FieldCity:      {Type: field.TypeString, Column: vendorlocation.FieldCity},
@@ -553,8 +548,8 @@ func (f *AppDefaultGoodFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *AppDefaultGoodFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *AppDefaultGoodFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(appdefaultgood.FieldID))
 }
 
@@ -571,6 +566,11 @@ func (f *AppDefaultGoodFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *AppDefaultGoodFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(appdefaultgood.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *AppDefaultGoodFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(appdefaultgood.FieldEntID))
 }
 
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
@@ -628,8 +628,8 @@ func (f *AppGoodFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *AppGoodFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *AppGoodFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(appgood.FieldID))
 }
 
@@ -646,6 +646,11 @@ func (f *AppGoodFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *AppGoodFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(appgood.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *AppGoodFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(appgood.FieldEntID))
 }
 
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
@@ -808,8 +813,8 @@ func (f *AppStockFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *AppStockFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *AppStockFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(appstock.FieldID))
 }
 
@@ -826,6 +831,11 @@ func (f *AppStockFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *AppStockFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(appstock.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *AppStockFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(appstock.FieldEntID))
 }
 
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
@@ -908,8 +918,8 @@ func (f *AppStockLockFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *AppStockLockFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *AppStockLockFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(appstocklock.FieldID))
 }
 
@@ -926,6 +936,11 @@ func (f *AppStockLockFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *AppStockLockFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(appstocklock.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *AppStockLockFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(appstocklock.FieldEntID))
 }
 
 // WhereAppStockID applies the entql [16]byte predicate on the app_stock_id field.
@@ -988,8 +1003,8 @@ func (f *CommentFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *CommentFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *CommentFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(comment.FieldID))
 }
 
@@ -1006,6 +1021,11 @@ func (f *CommentFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *CommentFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(comment.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *CommentFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(comment.FieldEntID))
 }
 
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
@@ -1078,8 +1098,8 @@ func (f *DeviceInfoFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *DeviceInfoFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *DeviceInfoFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(deviceinfo.FieldID))
 }
 
@@ -1096,6 +1116,11 @@ func (f *DeviceInfoFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *DeviceInfoFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(deviceinfo.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *DeviceInfoFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(deviceinfo.FieldEntID))
 }
 
 // WhereType applies the entql string predicate on the type field.
@@ -1158,8 +1183,8 @@ func (f *ExtraInfoFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *ExtraInfoFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *ExtraInfoFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(extrainfo.FieldID))
 }
 
@@ -1176,6 +1201,11 @@ func (f *ExtraInfoFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *ExtraInfoFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(extrainfo.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *ExtraInfoFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(extrainfo.FieldEntID))
 }
 
 // WhereGoodID applies the entql [16]byte predicate on the good_id field.
@@ -1258,8 +1288,8 @@ func (f *GoodFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *GoodFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *GoodFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(good.FieldID))
 }
 
@@ -1276,6 +1306,11 @@ func (f *GoodFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *GoodFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(good.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *GoodFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(good.FieldEntID))
 }
 
 // WhereDeviceInfoID applies the entql [16]byte predicate on the device_info_id field.
@@ -1403,8 +1438,8 @@ func (f *GoodRewardFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *GoodRewardFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *GoodRewardFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(goodreward.FieldID))
 }
 
@@ -1421,6 +1456,11 @@ func (f *GoodRewardFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *GoodRewardFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(goodreward.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *GoodRewardFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(goodreward.FieldEntID))
 }
 
 // WhereGoodID applies the entql [16]byte predicate on the good_id field.
@@ -1498,8 +1538,8 @@ func (f *GoodRewardHistoryFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *GoodRewardHistoryFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *GoodRewardHistoryFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(goodrewardhistory.FieldID))
 }
 
@@ -1516,6 +1556,11 @@ func (f *GoodRewardHistoryFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *GoodRewardHistoryFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(goodrewardhistory.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *GoodRewardHistoryFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(goodrewardhistory.FieldEntID))
 }
 
 // WhereGoodID applies the entql [16]byte predicate on the good_id field.
@@ -1583,8 +1628,8 @@ func (f *LikeFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *LikeFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *LikeFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(like.FieldID))
 }
 
@@ -1601,6 +1646,11 @@ func (f *LikeFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *LikeFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(like.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *LikeFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(like.FieldEntID))
 }
 
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
@@ -1626,96 +1676,6 @@ func (f *LikeFilter) WhereAppGoodID(p entql.ValueP) {
 // WhereLike applies the entql bool predicate on the like field.
 func (f *LikeFilter) WhereLike(p entql.BoolP) {
 	f.Where(p.Field(like.FieldLike))
-}
-
-// addPredicate implements the predicateAdder interface.
-func (pq *PromotionQuery) addPredicate(pred func(s *sql.Selector)) {
-	pq.predicates = append(pq.predicates, pred)
-}
-
-// Filter returns a Filter implementation to apply filters on the PromotionQuery builder.
-func (pq *PromotionQuery) Filter() *PromotionFilter {
-	return &PromotionFilter{config: pq.config, predicateAdder: pq}
-}
-
-// addPredicate implements the predicateAdder interface.
-func (m *PromotionMutation) addPredicate(pred func(s *sql.Selector)) {
-	m.predicates = append(m.predicates, pred)
-}
-
-// Filter returns an entql.Where implementation to apply filters on the PromotionMutation builder.
-func (m *PromotionMutation) Filter() *PromotionFilter {
-	return &PromotionFilter{config: m.config, predicateAdder: m}
-}
-
-// PromotionFilter provides a generic filtering capability at runtime for PromotionQuery.
-type PromotionFilter struct {
-	predicateAdder
-	config
-}
-
-// Where applies the entql predicate on the query filter.
-func (f *PromotionFilter) Where(p entql.P) {
-	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[11].Type, p, s); err != nil {
-			s.AddError(err)
-		}
-	})
-}
-
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *PromotionFilter) WhereID(p entql.ValueP) {
-	f.Where(p.Field(promotion.FieldID))
-}
-
-// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
-func (f *PromotionFilter) WhereCreatedAt(p entql.Uint32P) {
-	f.Where(p.Field(promotion.FieldCreatedAt))
-}
-
-// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
-func (f *PromotionFilter) WhereUpdatedAt(p entql.Uint32P) {
-	f.Where(p.Field(promotion.FieldUpdatedAt))
-}
-
-// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
-func (f *PromotionFilter) WhereDeletedAt(p entql.Uint32P) {
-	f.Where(p.Field(promotion.FieldDeletedAt))
-}
-
-// WhereAppID applies the entql [16]byte predicate on the app_id field.
-func (f *PromotionFilter) WhereAppID(p entql.ValueP) {
-	f.Where(p.Field(promotion.FieldAppID))
-}
-
-// WhereGoodID applies the entql [16]byte predicate on the good_id field.
-func (f *PromotionFilter) WhereGoodID(p entql.ValueP) {
-	f.Where(p.Field(promotion.FieldGoodID))
-}
-
-// WhereMessage applies the entql string predicate on the message field.
-func (f *PromotionFilter) WhereMessage(p entql.StringP) {
-	f.Where(p.Field(promotion.FieldMessage))
-}
-
-// WhereStartAt applies the entql uint32 predicate on the start_at field.
-func (f *PromotionFilter) WhereStartAt(p entql.Uint32P) {
-	f.Where(p.Field(promotion.FieldStartAt))
-}
-
-// WhereEndAt applies the entql uint32 predicate on the end_at field.
-func (f *PromotionFilter) WhereEndAt(p entql.Uint32P) {
-	f.Where(p.Field(promotion.FieldEndAt))
-}
-
-// WherePrice applies the entql other predicate on the price field.
-func (f *PromotionFilter) WherePrice(p entql.OtherP) {
-	f.Where(p.Field(promotion.FieldPrice))
-}
-
-// WherePosters applies the entql json.RawMessage predicate on the posters field.
-func (f *PromotionFilter) WherePosters(p entql.BytesP) {
-	f.Where(p.Field(promotion.FieldPosters))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -1747,14 +1707,14 @@ type RecommendFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *RecommendFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[12].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[11].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *RecommendFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *RecommendFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(recommend.FieldID))
 }
 
@@ -1771,6 +1731,11 @@ func (f *RecommendFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *RecommendFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(recommend.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *RecommendFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(recommend.FieldEntID))
 }
 
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
@@ -1827,14 +1792,14 @@ type RequiredGoodFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *RequiredGoodFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[13].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[12].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *RequiredGoodFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *RequiredGoodFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(requiredgood.FieldID))
 }
 
@@ -1851,6 +1816,11 @@ func (f *RequiredGoodFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *RequiredGoodFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(requiredgood.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *RequiredGoodFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(requiredgood.FieldEntID))
 }
 
 // WhereMainGoodID applies the entql [16]byte predicate on the main_good_id field.
@@ -1897,14 +1867,14 @@ type ScoreFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *ScoreFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[14].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[13].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *ScoreFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *ScoreFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(score.FieldID))
 }
 
@@ -1921,6 +1891,11 @@ func (f *ScoreFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *ScoreFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(score.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *ScoreFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(score.FieldEntID))
 }
 
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
@@ -1977,14 +1952,14 @@ type StockFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *StockFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[15].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[14].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *StockFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *StockFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(stock.FieldID))
 }
 
@@ -2001,6 +1976,11 @@ func (f *StockFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *StockFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(stock.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *StockFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(stock.FieldEntID))
 }
 
 // WhereGoodID applies the entql [16]byte predicate on the good_id field.
@@ -2072,14 +2052,14 @@ type TopMostFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *TopMostFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[16].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[15].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *TopMostFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *TopMostFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(topmost.FieldID))
 }
 
@@ -2096,6 +2076,11 @@ func (f *TopMostFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *TopMostFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(topmost.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *TopMostFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(topmost.FieldEntID))
 }
 
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
@@ -2187,14 +2172,14 @@ type TopMostGoodFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *TopMostGoodFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[17].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[16].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *TopMostGoodFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *TopMostGoodFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(topmostgood.FieldID))
 }
 
@@ -2211,6 +2196,11 @@ func (f *TopMostGoodFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *TopMostGoodFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(topmostgood.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *TopMostGoodFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(topmostgood.FieldEntID))
 }
 
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
@@ -2282,14 +2272,14 @@ type VendorBrandFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *VendorBrandFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[18].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[17].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *VendorBrandFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *VendorBrandFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(vendorbrand.FieldID))
 }
 
@@ -2306,6 +2296,11 @@ func (f *VendorBrandFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *VendorBrandFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(vendorbrand.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *VendorBrandFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(vendorbrand.FieldEntID))
 }
 
 // WhereName applies the entql string predicate on the name field.
@@ -2347,14 +2342,14 @@ type VendorLocationFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *VendorLocationFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[19].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[18].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *VendorLocationFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *VendorLocationFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(vendorlocation.FieldID))
 }
 
@@ -2371,6 +2366,11 @@ func (f *VendorLocationFilter) WhereUpdatedAt(p entql.Uint32P) {
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
 func (f *VendorLocationFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(vendorlocation.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *VendorLocationFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(vendorlocation.FieldEntID))
 }
 
 // WhereCountry applies the entql string predicate on the country field.
