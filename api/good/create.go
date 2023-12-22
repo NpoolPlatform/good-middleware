@@ -34,7 +34,6 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		good1.WithTitle(req.Title, true),
 		good1.WithUnit(req.Unit, true),
 		good1.WithUnitAmount(req.UnitAmount, true),
-		good1.WithSupportCoinTypeIDs(req.SupportCoinTypeIDs, true),
 		good1.WithDeliveryAt(req.DeliveryAt, true),
 		good1.WithStartAt(req.StartAt, true),
 		good1.WithStartMode(req.StartMode, false),

@@ -145,7 +145,6 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 			sql.As(t1.C(entgood.FieldGoodType), "good_type"),
 			sql.As(t1.C(entgood.FieldUnit), "unit"),
 			sql.As(t1.C(entgood.FieldUnitAmount), "unit_amount"),
-			sql.As(t1.C(entgood.FieldSupportCoinTypeIds), "support_coin_type_ids"),
 			sql.As(t1.C(entgood.FieldStartAt), "start_at"),
 			sql.As(t1.C(entgood.FieldStartMode), "start_mode"),
 			sql.As(t1.C(entgood.FieldTestOnly), "test_only"),
@@ -271,7 +270,6 @@ func (h *queryHandler) formalize() {
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.CancelMode = types.CancelMode(types.CancelMode_value[info.CancelModeStr])
-		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
 		_ = json.Unmarshal([]byte(info.DescriptionsStr), &info.Descriptions)
 		_ = json.Unmarshal([]byte(info.DisplayNamesStr), &info.DisplayNames)

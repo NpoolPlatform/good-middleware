@@ -9233,9 +9233,11 @@ type GoodMutation struct {
 	good_type                 *string
 	title                     *string
 	unit                      *string
+	quantity_unit             *string
 	unit_amount               *int32
 	addunit_amount            *int32
-	support_coin_type_ids     *[]uuid.UUID
+	quantity_unit_amount      *uint32
+	addquantity_unit_amount   *int32
 	delivery_at               *uint32
 	adddelivery_at            *int32
 	start_at                  *uint32
@@ -9245,6 +9247,9 @@ type GoodMutation struct {
 	benefit_interval_hours    *uint32
 	addbenefit_interval_hours *int32
 	unit_lock_deposit         *decimal.Decimal
+	unit_type                 *string
+	unit_calculate_type       *string
+	unit_duration_type        *string
 	clearedFields             map[string]struct{}
 	done                      bool
 	oldValue                  func(context.Context) (*Good, error)
@@ -10031,6 +10036,55 @@ func (m *GoodMutation) ResetUnit() {
 	delete(m.clearedFields, good.FieldUnit)
 }
 
+// SetQuantityUnit sets the "quantity_unit" field.
+func (m *GoodMutation) SetQuantityUnit(s string) {
+	m.quantity_unit = &s
+}
+
+// QuantityUnit returns the value of the "quantity_unit" field in the mutation.
+func (m *GoodMutation) QuantityUnit() (r string, exists bool) {
+	v := m.quantity_unit
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldQuantityUnit returns the old "quantity_unit" field's value of the Good entity.
+// If the Good object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodMutation) OldQuantityUnit(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldQuantityUnit is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldQuantityUnit requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldQuantityUnit: %w", err)
+	}
+	return oldValue.QuantityUnit, nil
+}
+
+// ClearQuantityUnit clears the value of the "quantity_unit" field.
+func (m *GoodMutation) ClearQuantityUnit() {
+	m.quantity_unit = nil
+	m.clearedFields[good.FieldQuantityUnit] = struct{}{}
+}
+
+// QuantityUnitCleared returns if the "quantity_unit" field was cleared in this mutation.
+func (m *GoodMutation) QuantityUnitCleared() bool {
+	_, ok := m.clearedFields[good.FieldQuantityUnit]
+	return ok
+}
+
+// ResetQuantityUnit resets all changes to the "quantity_unit" field.
+func (m *GoodMutation) ResetQuantityUnit() {
+	m.quantity_unit = nil
+	delete(m.clearedFields, good.FieldQuantityUnit)
+}
+
 // SetUnitAmount sets the "unit_amount" field.
 func (m *GoodMutation) SetUnitAmount(i int32) {
 	m.unit_amount = &i
@@ -10101,53 +10155,74 @@ func (m *GoodMutation) ResetUnitAmount() {
 	delete(m.clearedFields, good.FieldUnitAmount)
 }
 
-// SetSupportCoinTypeIds sets the "support_coin_type_ids" field.
-func (m *GoodMutation) SetSupportCoinTypeIds(u []uuid.UUID) {
-	m.support_coin_type_ids = &u
+// SetQuantityUnitAmount sets the "quantity_unit_amount" field.
+func (m *GoodMutation) SetQuantityUnitAmount(u uint32) {
+	m.quantity_unit_amount = &u
+	m.addquantity_unit_amount = nil
 }
 
-// SupportCoinTypeIds returns the value of the "support_coin_type_ids" field in the mutation.
-func (m *GoodMutation) SupportCoinTypeIds() (r []uuid.UUID, exists bool) {
-	v := m.support_coin_type_ids
+// QuantityUnitAmount returns the value of the "quantity_unit_amount" field in the mutation.
+func (m *GoodMutation) QuantityUnitAmount() (r uint32, exists bool) {
+	v := m.quantity_unit_amount
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldSupportCoinTypeIds returns the old "support_coin_type_ids" field's value of the Good entity.
+// OldQuantityUnitAmount returns the old "quantity_unit_amount" field's value of the Good entity.
 // If the Good object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodMutation) OldSupportCoinTypeIds(ctx context.Context) (v []uuid.UUID, err error) {
+func (m *GoodMutation) OldQuantityUnitAmount(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldSupportCoinTypeIds is only allowed on UpdateOne operations")
+		return v, errors.New("OldQuantityUnitAmount is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldSupportCoinTypeIds requires an ID field in the mutation")
+		return v, errors.New("OldQuantityUnitAmount requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSupportCoinTypeIds: %w", err)
+		return v, fmt.Errorf("querying old value for OldQuantityUnitAmount: %w", err)
 	}
-	return oldValue.SupportCoinTypeIds, nil
+	return oldValue.QuantityUnitAmount, nil
 }
 
-// ClearSupportCoinTypeIds clears the value of the "support_coin_type_ids" field.
-func (m *GoodMutation) ClearSupportCoinTypeIds() {
-	m.support_coin_type_ids = nil
-	m.clearedFields[good.FieldSupportCoinTypeIds] = struct{}{}
+// AddQuantityUnitAmount adds u to the "quantity_unit_amount" field.
+func (m *GoodMutation) AddQuantityUnitAmount(u int32) {
+	if m.addquantity_unit_amount != nil {
+		*m.addquantity_unit_amount += u
+	} else {
+		m.addquantity_unit_amount = &u
+	}
 }
 
-// SupportCoinTypeIdsCleared returns if the "support_coin_type_ids" field was cleared in this mutation.
-func (m *GoodMutation) SupportCoinTypeIdsCleared() bool {
-	_, ok := m.clearedFields[good.FieldSupportCoinTypeIds]
+// AddedQuantityUnitAmount returns the value that was added to the "quantity_unit_amount" field in this mutation.
+func (m *GoodMutation) AddedQuantityUnitAmount() (r int32, exists bool) {
+	v := m.addquantity_unit_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearQuantityUnitAmount clears the value of the "quantity_unit_amount" field.
+func (m *GoodMutation) ClearQuantityUnitAmount() {
+	m.quantity_unit_amount = nil
+	m.addquantity_unit_amount = nil
+	m.clearedFields[good.FieldQuantityUnitAmount] = struct{}{}
+}
+
+// QuantityUnitAmountCleared returns if the "quantity_unit_amount" field was cleared in this mutation.
+func (m *GoodMutation) QuantityUnitAmountCleared() bool {
+	_, ok := m.clearedFields[good.FieldQuantityUnitAmount]
 	return ok
 }
 
-// ResetSupportCoinTypeIds resets all changes to the "support_coin_type_ids" field.
-func (m *GoodMutation) ResetSupportCoinTypeIds() {
-	m.support_coin_type_ids = nil
-	delete(m.clearedFields, good.FieldSupportCoinTypeIds)
+// ResetQuantityUnitAmount resets all changes to the "quantity_unit_amount" field.
+func (m *GoodMutation) ResetQuantityUnitAmount() {
+	m.quantity_unit_amount = nil
+	m.addquantity_unit_amount = nil
+	delete(m.clearedFields, good.FieldQuantityUnitAmount)
 }
 
 // SetDeliveryAt sets the "delivery_at" field.
@@ -10507,6 +10582,153 @@ func (m *GoodMutation) ResetUnitLockDeposit() {
 	delete(m.clearedFields, good.FieldUnitLockDeposit)
 }
 
+// SetUnitType sets the "unit_type" field.
+func (m *GoodMutation) SetUnitType(s string) {
+	m.unit_type = &s
+}
+
+// UnitType returns the value of the "unit_type" field in the mutation.
+func (m *GoodMutation) UnitType() (r string, exists bool) {
+	v := m.unit_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUnitType returns the old "unit_type" field's value of the Good entity.
+// If the Good object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodMutation) OldUnitType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUnitType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUnitType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUnitType: %w", err)
+	}
+	return oldValue.UnitType, nil
+}
+
+// ClearUnitType clears the value of the "unit_type" field.
+func (m *GoodMutation) ClearUnitType() {
+	m.unit_type = nil
+	m.clearedFields[good.FieldUnitType] = struct{}{}
+}
+
+// UnitTypeCleared returns if the "unit_type" field was cleared in this mutation.
+func (m *GoodMutation) UnitTypeCleared() bool {
+	_, ok := m.clearedFields[good.FieldUnitType]
+	return ok
+}
+
+// ResetUnitType resets all changes to the "unit_type" field.
+func (m *GoodMutation) ResetUnitType() {
+	m.unit_type = nil
+	delete(m.clearedFields, good.FieldUnitType)
+}
+
+// SetUnitCalculateType sets the "unit_calculate_type" field.
+func (m *GoodMutation) SetUnitCalculateType(s string) {
+	m.unit_calculate_type = &s
+}
+
+// UnitCalculateType returns the value of the "unit_calculate_type" field in the mutation.
+func (m *GoodMutation) UnitCalculateType() (r string, exists bool) {
+	v := m.unit_calculate_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUnitCalculateType returns the old "unit_calculate_type" field's value of the Good entity.
+// If the Good object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodMutation) OldUnitCalculateType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUnitCalculateType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUnitCalculateType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUnitCalculateType: %w", err)
+	}
+	return oldValue.UnitCalculateType, nil
+}
+
+// ClearUnitCalculateType clears the value of the "unit_calculate_type" field.
+func (m *GoodMutation) ClearUnitCalculateType() {
+	m.unit_calculate_type = nil
+	m.clearedFields[good.FieldUnitCalculateType] = struct{}{}
+}
+
+// UnitCalculateTypeCleared returns if the "unit_calculate_type" field was cleared in this mutation.
+func (m *GoodMutation) UnitCalculateTypeCleared() bool {
+	_, ok := m.clearedFields[good.FieldUnitCalculateType]
+	return ok
+}
+
+// ResetUnitCalculateType resets all changes to the "unit_calculate_type" field.
+func (m *GoodMutation) ResetUnitCalculateType() {
+	m.unit_calculate_type = nil
+	delete(m.clearedFields, good.FieldUnitCalculateType)
+}
+
+// SetUnitDurationType sets the "unit_duration_type" field.
+func (m *GoodMutation) SetUnitDurationType(s string) {
+	m.unit_duration_type = &s
+}
+
+// UnitDurationType returns the value of the "unit_duration_type" field in the mutation.
+func (m *GoodMutation) UnitDurationType() (r string, exists bool) {
+	v := m.unit_duration_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUnitDurationType returns the old "unit_duration_type" field's value of the Good entity.
+// If the Good object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodMutation) OldUnitDurationType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUnitDurationType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUnitDurationType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUnitDurationType: %w", err)
+	}
+	return oldValue.UnitDurationType, nil
+}
+
+// ClearUnitDurationType clears the value of the "unit_duration_type" field.
+func (m *GoodMutation) ClearUnitDurationType() {
+	m.unit_duration_type = nil
+	m.clearedFields[good.FieldUnitDurationType] = struct{}{}
+}
+
+// UnitDurationTypeCleared returns if the "unit_duration_type" field was cleared in this mutation.
+func (m *GoodMutation) UnitDurationTypeCleared() bool {
+	_, ok := m.clearedFields[good.FieldUnitDurationType]
+	return ok
+}
+
+// ResetUnitDurationType resets all changes to the "unit_duration_type" field.
+func (m *GoodMutation) ResetUnitDurationType() {
+	m.unit_duration_type = nil
+	delete(m.clearedFields, good.FieldUnitDurationType)
+}
+
 // Where appends a list predicates to the GoodMutation builder.
 func (m *GoodMutation) Where(ps ...predicate.Good) {
 	m.predicates = append(m.predicates, ps...)
@@ -10526,7 +10748,7 @@ func (m *GoodMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *GoodMutation) Fields() []string {
-	fields := make([]string, 0, 22)
+	fields := make([]string, 0, 26)
 	if m.created_at != nil {
 		fields = append(fields, good.FieldCreatedAt)
 	}
@@ -10569,11 +10791,14 @@ func (m *GoodMutation) Fields() []string {
 	if m.unit != nil {
 		fields = append(fields, good.FieldUnit)
 	}
+	if m.quantity_unit != nil {
+		fields = append(fields, good.FieldQuantityUnit)
+	}
 	if m.unit_amount != nil {
 		fields = append(fields, good.FieldUnitAmount)
 	}
-	if m.support_coin_type_ids != nil {
-		fields = append(fields, good.FieldSupportCoinTypeIds)
+	if m.quantity_unit_amount != nil {
+		fields = append(fields, good.FieldQuantityUnitAmount)
 	}
 	if m.delivery_at != nil {
 		fields = append(fields, good.FieldDeliveryAt)
@@ -10592,6 +10817,15 @@ func (m *GoodMutation) Fields() []string {
 	}
 	if m.unit_lock_deposit != nil {
 		fields = append(fields, good.FieldUnitLockDeposit)
+	}
+	if m.unit_type != nil {
+		fields = append(fields, good.FieldUnitType)
+	}
+	if m.unit_calculate_type != nil {
+		fields = append(fields, good.FieldUnitCalculateType)
+	}
+	if m.unit_duration_type != nil {
+		fields = append(fields, good.FieldUnitDurationType)
 	}
 	return fields
 }
@@ -10629,10 +10863,12 @@ func (m *GoodMutation) Field(name string) (ent.Value, bool) {
 		return m.Title()
 	case good.FieldUnit:
 		return m.Unit()
+	case good.FieldQuantityUnit:
+		return m.QuantityUnit()
 	case good.FieldUnitAmount:
 		return m.UnitAmount()
-	case good.FieldSupportCoinTypeIds:
-		return m.SupportCoinTypeIds()
+	case good.FieldQuantityUnitAmount:
+		return m.QuantityUnitAmount()
 	case good.FieldDeliveryAt:
 		return m.DeliveryAt()
 	case good.FieldStartAt:
@@ -10645,6 +10881,12 @@ func (m *GoodMutation) Field(name string) (ent.Value, bool) {
 		return m.BenefitIntervalHours()
 	case good.FieldUnitLockDeposit:
 		return m.UnitLockDeposit()
+	case good.FieldUnitType:
+		return m.UnitType()
+	case good.FieldUnitCalculateType:
+		return m.UnitCalculateType()
+	case good.FieldUnitDurationType:
+		return m.UnitDurationType()
 	}
 	return nil, false
 }
@@ -10682,10 +10924,12 @@ func (m *GoodMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldTitle(ctx)
 	case good.FieldUnit:
 		return m.OldUnit(ctx)
+	case good.FieldQuantityUnit:
+		return m.OldQuantityUnit(ctx)
 	case good.FieldUnitAmount:
 		return m.OldUnitAmount(ctx)
-	case good.FieldSupportCoinTypeIds:
-		return m.OldSupportCoinTypeIds(ctx)
+	case good.FieldQuantityUnitAmount:
+		return m.OldQuantityUnitAmount(ctx)
 	case good.FieldDeliveryAt:
 		return m.OldDeliveryAt(ctx)
 	case good.FieldStartAt:
@@ -10698,6 +10942,12 @@ func (m *GoodMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldBenefitIntervalHours(ctx)
 	case good.FieldUnitLockDeposit:
 		return m.OldUnitLockDeposit(ctx)
+	case good.FieldUnitType:
+		return m.OldUnitType(ctx)
+	case good.FieldUnitCalculateType:
+		return m.OldUnitCalculateType(ctx)
+	case good.FieldUnitDurationType:
+		return m.OldUnitDurationType(ctx)
 	}
 	return nil, fmt.Errorf("unknown Good field %s", name)
 }
@@ -10805,6 +11055,13 @@ func (m *GoodMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUnit(v)
 		return nil
+	case good.FieldQuantityUnit:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetQuantityUnit(v)
+		return nil
 	case good.FieldUnitAmount:
 		v, ok := value.(int32)
 		if !ok {
@@ -10812,12 +11069,12 @@ func (m *GoodMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUnitAmount(v)
 		return nil
-	case good.FieldSupportCoinTypeIds:
-		v, ok := value.([]uuid.UUID)
+	case good.FieldQuantityUnitAmount:
+		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetSupportCoinTypeIds(v)
+		m.SetQuantityUnitAmount(v)
 		return nil
 	case good.FieldDeliveryAt:
 		v, ok := value.(uint32)
@@ -10861,6 +11118,27 @@ func (m *GoodMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUnitLockDeposit(v)
 		return nil
+	case good.FieldUnitType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUnitType(v)
+		return nil
+	case good.FieldUnitCalculateType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUnitCalculateType(v)
+		return nil
+	case good.FieldUnitDurationType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUnitDurationType(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Good field %s", name)
 }
@@ -10883,6 +11161,9 @@ func (m *GoodMutation) AddedFields() []string {
 	}
 	if m.addunit_amount != nil {
 		fields = append(fields, good.FieldUnitAmount)
+	}
+	if m.addquantity_unit_amount != nil {
+		fields = append(fields, good.FieldQuantityUnitAmount)
 	}
 	if m.adddelivery_at != nil {
 		fields = append(fields, good.FieldDeliveryAt)
@@ -10911,6 +11192,8 @@ func (m *GoodMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedDurationDays()
 	case good.FieldUnitAmount:
 		return m.AddedUnitAmount()
+	case good.FieldQuantityUnitAmount:
+		return m.AddedQuantityUnitAmount()
 	case good.FieldDeliveryAt:
 		return m.AddedDeliveryAt()
 	case good.FieldStartAt:
@@ -10960,6 +11243,13 @@ func (m *GoodMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddUnitAmount(v)
+		return nil
+	case good.FieldQuantityUnitAmount:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddQuantityUnitAmount(v)
 		return nil
 	case good.FieldDeliveryAt:
 		v, ok := value.(int32)
@@ -11011,11 +11301,14 @@ func (m *GoodMutation) ClearedFields() []string {
 	if m.FieldCleared(good.FieldUnit) {
 		fields = append(fields, good.FieldUnit)
 	}
+	if m.FieldCleared(good.FieldQuantityUnit) {
+		fields = append(fields, good.FieldQuantityUnit)
+	}
 	if m.FieldCleared(good.FieldUnitAmount) {
 		fields = append(fields, good.FieldUnitAmount)
 	}
-	if m.FieldCleared(good.FieldSupportCoinTypeIds) {
-		fields = append(fields, good.FieldSupportCoinTypeIds)
+	if m.FieldCleared(good.FieldQuantityUnitAmount) {
+		fields = append(fields, good.FieldQuantityUnitAmount)
 	}
 	if m.FieldCleared(good.FieldDeliveryAt) {
 		fields = append(fields, good.FieldDeliveryAt)
@@ -11034,6 +11327,15 @@ func (m *GoodMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(good.FieldUnitLockDeposit) {
 		fields = append(fields, good.FieldUnitLockDeposit)
+	}
+	if m.FieldCleared(good.FieldUnitType) {
+		fields = append(fields, good.FieldUnitType)
+	}
+	if m.FieldCleared(good.FieldUnitCalculateType) {
+		fields = append(fields, good.FieldUnitCalculateType)
+	}
+	if m.FieldCleared(good.FieldUnitDurationType) {
+		fields = append(fields, good.FieldUnitDurationType)
 	}
 	return fields
 }
@@ -11070,11 +11372,14 @@ func (m *GoodMutation) ClearField(name string) error {
 	case good.FieldUnit:
 		m.ClearUnit()
 		return nil
+	case good.FieldQuantityUnit:
+		m.ClearQuantityUnit()
+		return nil
 	case good.FieldUnitAmount:
 		m.ClearUnitAmount()
 		return nil
-	case good.FieldSupportCoinTypeIds:
-		m.ClearSupportCoinTypeIds()
+	case good.FieldQuantityUnitAmount:
+		m.ClearQuantityUnitAmount()
 		return nil
 	case good.FieldDeliveryAt:
 		m.ClearDeliveryAt()
@@ -11093,6 +11398,15 @@ func (m *GoodMutation) ClearField(name string) error {
 		return nil
 	case good.FieldUnitLockDeposit:
 		m.ClearUnitLockDeposit()
+		return nil
+	case good.FieldUnitType:
+		m.ClearUnitType()
+		return nil
+	case good.FieldUnitCalculateType:
+		m.ClearUnitCalculateType()
+		return nil
+	case good.FieldUnitDurationType:
+		m.ClearUnitDurationType()
 		return nil
 	}
 	return fmt.Errorf("unknown Good nullable field %s", name)
@@ -11144,11 +11458,14 @@ func (m *GoodMutation) ResetField(name string) error {
 	case good.FieldUnit:
 		m.ResetUnit()
 		return nil
+	case good.FieldQuantityUnit:
+		m.ResetQuantityUnit()
+		return nil
 	case good.FieldUnitAmount:
 		m.ResetUnitAmount()
 		return nil
-	case good.FieldSupportCoinTypeIds:
-		m.ResetSupportCoinTypeIds()
+	case good.FieldQuantityUnitAmount:
+		m.ResetQuantityUnitAmount()
 		return nil
 	case good.FieldDeliveryAt:
 		m.ResetDeliveryAt()
@@ -11167,6 +11484,15 @@ func (m *GoodMutation) ResetField(name string) error {
 		return nil
 	case good.FieldUnitLockDeposit:
 		m.ResetUnitLockDeposit()
+		return nil
+	case good.FieldUnitType:
+		m.ResetUnitType()
+		return nil
+	case good.FieldUnitCalculateType:
+		m.ResetUnitCalculateType()
+		return nil
+	case good.FieldUnitDurationType:
+		m.ResetUnitDurationType()
 		return nil
 	}
 	return fmt.Errorf("unknown Good field %s", name)

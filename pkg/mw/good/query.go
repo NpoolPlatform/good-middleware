@@ -78,7 +78,6 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entgood.FieldTitle), "title"),
 			sql.As(t.C(entgood.FieldUnit), "unit"),
 			sql.As(t.C(entgood.FieldUnitAmount), "unit_amount"),
-			sql.As(t.C(entgood.FieldSupportCoinTypeIds), "support_coin_type_ids"),
 			sql.As(t.C(entgood.FieldDeliveryAt), "delivery_at"),
 			sql.As(t.C(entgood.FieldStartAt), "start_at"),
 			sql.As(t.C(entgood.FieldStartMode), "start_mode"),

@@ -252,14 +252,18 @@ var (
 		{Name: "good_type", Type: field.TypeString, Nullable: true, Default: "DefaultGoodType"},
 		{Name: "title", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "unit", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "quantity_unit", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "unit_amount", Type: field.TypeInt32, Nullable: true, Default: 0},
-		{Name: "support_coin_type_ids", Type: field.TypeJSON, Nullable: true},
+		{Name: "quantity_unit_amount", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "delivery_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "start_mode", Type: field.TypeString, Nullable: true, Default: "GoodStartModeConfirmed"},
 		{Name: "test_only", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "benefit_interval_hours", Type: field.TypeUint32, Nullable: true, Default: 24},
 		{Name: "unit_lock_deposit", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "unit_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitByDurationAndQuantity"},
+		{Name: "unit_calculate_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitCalculateBySelf"},
+		{Name: "unit_duration_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitDurationByYear"},
 	}
 	// GoodsTable holds the schema information for the "goods" table.
 	GoodsTable = &schema.Table{

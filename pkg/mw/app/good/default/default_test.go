@@ -59,7 +59,6 @@ var good = goodmwpb.Good{
 	Title:                  uuid.NewString(),
 	Unit:                   "TiB",
 	UnitAmount:             1,
-	SupportCoinTypeIDs:     []string{uuid.NewString(), uuid.NewString()},
 	TestOnly:               true,
 	Posters:                []string{uuid.NewString(), uuid.NewString()},
 	Labels: []types.GoodLabel{
@@ -101,7 +100,6 @@ var appgood = appgoodmwpb.Good{
 	GoodType:               good.GoodType,
 	Unit:                   good.Unit,
 	UnitAmount:             good.UnitAmount,
-	SupportCoinTypeIDs:     good.SupportCoinTypeIDs,
 	TestOnly:               good.TestOnly,
 	Posters:                good.Posters,
 	Labels:                 good.Labels,
@@ -187,7 +185,6 @@ func setup(t *testing.T) func(*testing.T) {
 		good1.WithTitle(&good.Title, true),
 		good1.WithUnit(&good.Unit, true),
 		good1.WithUnitAmount(&good.UnitAmount, true),
-		good1.WithSupportCoinTypeIDs(good.SupportCoinTypeIDs, false),
 		good1.WithDeliveryAt(&good.DeliveryAt, true),
 		good1.WithStartAt(&good.StartAt, true),
 		good1.WithTestOnly(&good.TestOnly, false),

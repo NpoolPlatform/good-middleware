@@ -556,38 +556,54 @@ func init() {
 	goodDescUnit := goodFields[9].Descriptor()
 	// good.DefaultUnit holds the default value on creation for the unit field.
 	good.DefaultUnit = goodDescUnit.Default.(string)
+	// goodDescQuantityUnit is the schema descriptor for quantity_unit field.
+	goodDescQuantityUnit := goodFields[10].Descriptor()
+	// good.DefaultQuantityUnit holds the default value on creation for the quantity_unit field.
+	good.DefaultQuantityUnit = goodDescQuantityUnit.Default.(string)
 	// goodDescUnitAmount is the schema descriptor for unit_amount field.
-	goodDescUnitAmount := goodFields[10].Descriptor()
+	goodDescUnitAmount := goodFields[11].Descriptor()
 	// good.DefaultUnitAmount holds the default value on creation for the unit_amount field.
 	good.DefaultUnitAmount = goodDescUnitAmount.Default.(int32)
-	// goodDescSupportCoinTypeIds is the schema descriptor for support_coin_type_ids field.
-	goodDescSupportCoinTypeIds := goodFields[11].Descriptor()
-	// good.DefaultSupportCoinTypeIds holds the default value on creation for the support_coin_type_ids field.
-	good.DefaultSupportCoinTypeIds = goodDescSupportCoinTypeIds.Default.([]uuid.UUID)
+	// goodDescQuantityUnitAmount is the schema descriptor for quantity_unit_amount field.
+	goodDescQuantityUnitAmount := goodFields[12].Descriptor()
+	// good.DefaultQuantityUnitAmount holds the default value on creation for the quantity_unit_amount field.
+	good.DefaultQuantityUnitAmount = goodDescQuantityUnitAmount.Default.(uint32)
 	// goodDescDeliveryAt is the schema descriptor for delivery_at field.
-	goodDescDeliveryAt := goodFields[12].Descriptor()
+	goodDescDeliveryAt := goodFields[13].Descriptor()
 	// good.DefaultDeliveryAt holds the default value on creation for the delivery_at field.
 	good.DefaultDeliveryAt = goodDescDeliveryAt.Default.(uint32)
 	// goodDescStartAt is the schema descriptor for start_at field.
-	goodDescStartAt := goodFields[13].Descriptor()
+	goodDescStartAt := goodFields[14].Descriptor()
 	// good.DefaultStartAt holds the default value on creation for the start_at field.
 	good.DefaultStartAt = goodDescStartAt.Default.(uint32)
 	// goodDescStartMode is the schema descriptor for start_mode field.
-	goodDescStartMode := goodFields[14].Descriptor()
+	goodDescStartMode := goodFields[15].Descriptor()
 	// good.DefaultStartMode holds the default value on creation for the start_mode field.
 	good.DefaultStartMode = goodDescStartMode.Default.(string)
 	// goodDescTestOnly is the schema descriptor for test_only field.
-	goodDescTestOnly := goodFields[15].Descriptor()
+	goodDescTestOnly := goodFields[16].Descriptor()
 	// good.DefaultTestOnly holds the default value on creation for the test_only field.
 	good.DefaultTestOnly = goodDescTestOnly.Default.(bool)
 	// goodDescBenefitIntervalHours is the schema descriptor for benefit_interval_hours field.
-	goodDescBenefitIntervalHours := goodFields[16].Descriptor()
+	goodDescBenefitIntervalHours := goodFields[17].Descriptor()
 	// good.DefaultBenefitIntervalHours holds the default value on creation for the benefit_interval_hours field.
 	good.DefaultBenefitIntervalHours = goodDescBenefitIntervalHours.Default.(uint32)
 	// goodDescUnitLockDeposit is the schema descriptor for unit_lock_deposit field.
-	goodDescUnitLockDeposit := goodFields[17].Descriptor()
+	goodDescUnitLockDeposit := goodFields[18].Descriptor()
 	// good.DefaultUnitLockDeposit holds the default value on creation for the unit_lock_deposit field.
 	good.DefaultUnitLockDeposit = goodDescUnitLockDeposit.Default.(decimal.Decimal)
+	// goodDescUnitType is the schema descriptor for unit_type field.
+	goodDescUnitType := goodFields[19].Descriptor()
+	// good.DefaultUnitType holds the default value on creation for the unit_type field.
+	good.DefaultUnitType = goodDescUnitType.Default.(string)
+	// goodDescUnitCalculateType is the schema descriptor for unit_calculate_type field.
+	goodDescUnitCalculateType := goodFields[20].Descriptor()
+	// good.DefaultUnitCalculateType holds the default value on creation for the unit_calculate_type field.
+	good.DefaultUnitCalculateType = goodDescUnitCalculateType.Default.(string)
+	// goodDescUnitDurationType is the schema descriptor for unit_duration_type field.
+	goodDescUnitDurationType := goodFields[21].Descriptor()
+	// good.DefaultUnitDurationType holds the default value on creation for the unit_duration_type field.
+	good.DefaultUnitDurationType = goodDescUnitDurationType.Default.(string)
 	goodrewardMixin := schema.GoodReward{}.Mixin()
 	goodreward.Policy = privacy.NewPolicies(goodrewardMixin[0], schema.GoodReward{})
 	goodreward.Hooks[0] = func(next ent.Mutator) ent.Mutator {

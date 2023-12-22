@@ -58,7 +58,6 @@ var mainGood = goodmwpb.Good{
 	Title:                  uuid.NewString(),
 	Unit:                   "TiB",
 	UnitAmount:             1,
-	SupportCoinTypeIDs:     []string{uuid.NewString(), uuid.NewString()},
 	TestOnly:               true,
 	Posters:                []string{uuid.NewString(), uuid.NewString()},
 	Labels: []types.GoodLabel{
@@ -100,7 +99,6 @@ var requiredGood = goodmwpb.Good{
 	Title:                  uuid.NewString(),
 	Unit:                   "TiB",
 	UnitAmount:             1,
-	SupportCoinTypeIDs:     []string{uuid.NewString(), uuid.NewString()},
 	TestOnly:               true,
 	Posters:                []string{uuid.NewString(), uuid.NewString()},
 	Labels: []types.GoodLabel{
@@ -184,7 +182,6 @@ func setup(t *testing.T) func(*testing.T) {
 		good1.WithTitle(&mainGood.Title, true),
 		good1.WithUnit(&mainGood.Unit, true),
 		good1.WithUnitAmount(&mainGood.UnitAmount, true),
-		good1.WithSupportCoinTypeIDs(mainGood.SupportCoinTypeIDs, false),
 		good1.WithDeliveryAt(&mainGood.DeliveryAt, true),
 		good1.WithStartAt(&mainGood.StartAt, true),
 		good1.WithTestOnly(&mainGood.TestOnly, false),
@@ -254,7 +251,6 @@ func setup(t *testing.T) func(*testing.T) {
 		good1.WithTitle(&requiredGood.Title, true),
 		good1.WithUnit(&requiredGood.Unit, true),
 		good1.WithUnitAmount(&requiredGood.UnitAmount, true),
-		good1.WithSupportCoinTypeIDs(requiredGood.SupportCoinTypeIDs, false),
 		good1.WithDeliveryAt(&requiredGood.DeliveryAt, true),
 		good1.WithStartAt(&requiredGood.StartAt, true),
 		good1.WithTestOnly(&requiredGood.TestOnly, false),

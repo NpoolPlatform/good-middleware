@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -46,10 +45,12 @@ type Good struct {
 	Title string `json:"title,omitempty"`
 	// Unit holds the value of the "unit" field.
 	Unit string `json:"unit,omitempty"`
+	// QuantityUnit holds the value of the "quantity_unit" field.
+	QuantityUnit string `json:"quantity_unit,omitempty"`
 	// UnitAmount holds the value of the "unit_amount" field.
 	UnitAmount int32 `json:"unit_amount,omitempty"`
-	// SupportCoinTypeIds holds the value of the "support_coin_type_ids" field.
-	SupportCoinTypeIds []uuid.UUID `json:"support_coin_type_ids,omitempty"`
+	// QuantityUnitAmount holds the value of the "quantity_unit_amount" field.
+	QuantityUnitAmount uint32 `json:"quantity_unit_amount,omitempty"`
 	// DeliveryAt holds the value of the "delivery_at" field.
 	DeliveryAt uint32 `json:"delivery_at,omitempty"`
 	// StartAt holds the value of the "start_at" field.
@@ -62,6 +63,12 @@ type Good struct {
 	BenefitIntervalHours uint32 `json:"benefit_interval_hours,omitempty"`
 	// UnitLockDeposit holds the value of the "unit_lock_deposit" field.
 	UnitLockDeposit decimal.Decimal `json:"unit_lock_deposit,omitempty"`
+	// UnitType holds the value of the "unit_type" field.
+	UnitType string `json:"unit_type,omitempty"`
+	// UnitCalculateType holds the value of the "unit_calculate_type" field.
+	UnitCalculateType string `json:"unit_calculate_type,omitempty"`
+	// UnitDurationType holds the value of the "unit_duration_type" field.
+	UnitDurationType string `json:"unit_duration_type,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -69,15 +76,13 @@ func (*Good) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case good.FieldSupportCoinTypeIds:
-			values[i] = new([]byte)
 		case good.FieldPrice, good.FieldUnitLockDeposit:
 			values[i] = new(decimal.Decimal)
 		case good.FieldTestOnly:
 			values[i] = new(sql.NullBool)
-		case good.FieldID, good.FieldCreatedAt, good.FieldUpdatedAt, good.FieldDeletedAt, good.FieldDurationDays, good.FieldUnitAmount, good.FieldDeliveryAt, good.FieldStartAt, good.FieldBenefitIntervalHours:
+		case good.FieldID, good.FieldCreatedAt, good.FieldUpdatedAt, good.FieldDeletedAt, good.FieldDurationDays, good.FieldUnitAmount, good.FieldQuantityUnitAmount, good.FieldDeliveryAt, good.FieldStartAt, good.FieldBenefitIntervalHours:
 			values[i] = new(sql.NullInt64)
-		case good.FieldBenefitType, good.FieldGoodType, good.FieldTitle, good.FieldUnit, good.FieldStartMode:
+		case good.FieldBenefitType, good.FieldGoodType, good.FieldTitle, good.FieldUnit, good.FieldQuantityUnit, good.FieldStartMode, good.FieldUnitType, good.FieldUnitCalculateType, good.FieldUnitDurationType:
 			values[i] = new(sql.NullString)
 		case good.FieldEntID, good.FieldDeviceInfoID, good.FieldCoinTypeID, good.FieldInheritFromGoodID, good.FieldVendorLocationID:
 			values[i] = new(uuid.UUID)
@@ -186,19 +191,23 @@ func (_go *Good) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				_go.Unit = value.String
 			}
+		case good.FieldQuantityUnit:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field quantity_unit", values[i])
+			} else if value.Valid {
+				_go.QuantityUnit = value.String
+			}
 		case good.FieldUnitAmount:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field unit_amount", values[i])
 			} else if value.Valid {
 				_go.UnitAmount = int32(value.Int64)
 			}
-		case good.FieldSupportCoinTypeIds:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field support_coin_type_ids", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &_go.SupportCoinTypeIds); err != nil {
-					return fmt.Errorf("unmarshal field support_coin_type_ids: %w", err)
-				}
+		case good.FieldQuantityUnitAmount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field quantity_unit_amount", values[i])
+			} else if value.Valid {
+				_go.QuantityUnitAmount = uint32(value.Int64)
 			}
 		case good.FieldDeliveryAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -235,6 +244,24 @@ func (_go *Good) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field unit_lock_deposit", values[i])
 			} else if value != nil {
 				_go.UnitLockDeposit = *value
+			}
+		case good.FieldUnitType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field unit_type", values[i])
+			} else if value.Valid {
+				_go.UnitType = value.String
+			}
+		case good.FieldUnitCalculateType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field unit_calculate_type", values[i])
+			} else if value.Valid {
+				_go.UnitCalculateType = value.String
+			}
+		case good.FieldUnitDurationType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field unit_duration_type", values[i])
+			} else if value.Valid {
+				_go.UnitDurationType = value.String
 			}
 		}
 	}
@@ -306,11 +333,14 @@ func (_go *Good) String() string {
 	builder.WriteString("unit=")
 	builder.WriteString(_go.Unit)
 	builder.WriteString(", ")
+	builder.WriteString("quantity_unit=")
+	builder.WriteString(_go.QuantityUnit)
+	builder.WriteString(", ")
 	builder.WriteString("unit_amount=")
 	builder.WriteString(fmt.Sprintf("%v", _go.UnitAmount))
 	builder.WriteString(", ")
-	builder.WriteString("support_coin_type_ids=")
-	builder.WriteString(fmt.Sprintf("%v", _go.SupportCoinTypeIds))
+	builder.WriteString("quantity_unit_amount=")
+	builder.WriteString(fmt.Sprintf("%v", _go.QuantityUnitAmount))
 	builder.WriteString(", ")
 	builder.WriteString("delivery_at=")
 	builder.WriteString(fmt.Sprintf("%v", _go.DeliveryAt))
@@ -329,6 +359,15 @@ func (_go *Good) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("unit_lock_deposit=")
 	builder.WriteString(fmt.Sprintf("%v", _go.UnitLockDeposit))
+	builder.WriteString(", ")
+	builder.WriteString("unit_type=")
+	builder.WriteString(_go.UnitType)
+	builder.WriteString(", ")
+	builder.WriteString("unit_calculate_type=")
+	builder.WriteString(_go.UnitCalculateType)
+	builder.WriteString(", ")
+	builder.WriteString("unit_duration_type=")
+	builder.WriteString(_go.UnitDurationType)
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -269,19 +269,6 @@ func WithUnitAmount(n *int32, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithSupportCoinTypeIDs(ss []string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		for _, s := range ss {
-			id, err := uuid.Parse(s)
-			if err != nil {
-				return err
-			}
-			h.SupportCoinTypeIDs = append(h.SupportCoinTypeIDs, id)
-		}
-		return nil
-	}
-}
-
 func WithDeliveryAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if n == nil {

@@ -264,6 +264,26 @@ func (gu *GoodUpdate) ClearUnit() *GoodUpdate {
 	return gu
 }
 
+// SetQuantityUnit sets the "quantity_unit" field.
+func (gu *GoodUpdate) SetQuantityUnit(s string) *GoodUpdate {
+	gu.mutation.SetQuantityUnit(s)
+	return gu
+}
+
+// SetNillableQuantityUnit sets the "quantity_unit" field if the given value is not nil.
+func (gu *GoodUpdate) SetNillableQuantityUnit(s *string) *GoodUpdate {
+	if s != nil {
+		gu.SetQuantityUnit(*s)
+	}
+	return gu
+}
+
+// ClearQuantityUnit clears the value of the "quantity_unit" field.
+func (gu *GoodUpdate) ClearQuantityUnit() *GoodUpdate {
+	gu.mutation.ClearQuantityUnit()
+	return gu
+}
+
 // SetUnitAmount sets the "unit_amount" field.
 func (gu *GoodUpdate) SetUnitAmount(i int32) *GoodUpdate {
 	gu.mutation.ResetUnitAmount()
@@ -291,15 +311,30 @@ func (gu *GoodUpdate) ClearUnitAmount() *GoodUpdate {
 	return gu
 }
 
-// SetSupportCoinTypeIds sets the "support_coin_type_ids" field.
-func (gu *GoodUpdate) SetSupportCoinTypeIds(u []uuid.UUID) *GoodUpdate {
-	gu.mutation.SetSupportCoinTypeIds(u)
+// SetQuantityUnitAmount sets the "quantity_unit_amount" field.
+func (gu *GoodUpdate) SetQuantityUnitAmount(u uint32) *GoodUpdate {
+	gu.mutation.ResetQuantityUnitAmount()
+	gu.mutation.SetQuantityUnitAmount(u)
 	return gu
 }
 
-// ClearSupportCoinTypeIds clears the value of the "support_coin_type_ids" field.
-func (gu *GoodUpdate) ClearSupportCoinTypeIds() *GoodUpdate {
-	gu.mutation.ClearSupportCoinTypeIds()
+// SetNillableQuantityUnitAmount sets the "quantity_unit_amount" field if the given value is not nil.
+func (gu *GoodUpdate) SetNillableQuantityUnitAmount(u *uint32) *GoodUpdate {
+	if u != nil {
+		gu.SetQuantityUnitAmount(*u)
+	}
+	return gu
+}
+
+// AddQuantityUnitAmount adds u to the "quantity_unit_amount" field.
+func (gu *GoodUpdate) AddQuantityUnitAmount(u int32) *GoodUpdate {
+	gu.mutation.AddQuantityUnitAmount(u)
+	return gu
+}
+
+// ClearQuantityUnitAmount clears the value of the "quantity_unit_amount" field.
+func (gu *GoodUpdate) ClearQuantityUnitAmount() *GoodUpdate {
+	gu.mutation.ClearQuantityUnitAmount()
 	return gu
 }
 
@@ -441,6 +476,66 @@ func (gu *GoodUpdate) SetNillableUnitLockDeposit(d *decimal.Decimal) *GoodUpdate
 // ClearUnitLockDeposit clears the value of the "unit_lock_deposit" field.
 func (gu *GoodUpdate) ClearUnitLockDeposit() *GoodUpdate {
 	gu.mutation.ClearUnitLockDeposit()
+	return gu
+}
+
+// SetUnitType sets the "unit_type" field.
+func (gu *GoodUpdate) SetUnitType(s string) *GoodUpdate {
+	gu.mutation.SetUnitType(s)
+	return gu
+}
+
+// SetNillableUnitType sets the "unit_type" field if the given value is not nil.
+func (gu *GoodUpdate) SetNillableUnitType(s *string) *GoodUpdate {
+	if s != nil {
+		gu.SetUnitType(*s)
+	}
+	return gu
+}
+
+// ClearUnitType clears the value of the "unit_type" field.
+func (gu *GoodUpdate) ClearUnitType() *GoodUpdate {
+	gu.mutation.ClearUnitType()
+	return gu
+}
+
+// SetUnitCalculateType sets the "unit_calculate_type" field.
+func (gu *GoodUpdate) SetUnitCalculateType(s string) *GoodUpdate {
+	gu.mutation.SetUnitCalculateType(s)
+	return gu
+}
+
+// SetNillableUnitCalculateType sets the "unit_calculate_type" field if the given value is not nil.
+func (gu *GoodUpdate) SetNillableUnitCalculateType(s *string) *GoodUpdate {
+	if s != nil {
+		gu.SetUnitCalculateType(*s)
+	}
+	return gu
+}
+
+// ClearUnitCalculateType clears the value of the "unit_calculate_type" field.
+func (gu *GoodUpdate) ClearUnitCalculateType() *GoodUpdate {
+	gu.mutation.ClearUnitCalculateType()
+	return gu
+}
+
+// SetUnitDurationType sets the "unit_duration_type" field.
+func (gu *GoodUpdate) SetUnitDurationType(s string) *GoodUpdate {
+	gu.mutation.SetUnitDurationType(s)
+	return gu
+}
+
+// SetNillableUnitDurationType sets the "unit_duration_type" field if the given value is not nil.
+func (gu *GoodUpdate) SetNillableUnitDurationType(s *string) *GoodUpdate {
+	if s != nil {
+		gu.SetUnitDurationType(*s)
+	}
+	return gu
+}
+
+// ClearUnitDurationType clears the value of the "unit_duration_type" field.
+func (gu *GoodUpdate) ClearUnitDurationType() *GoodUpdate {
+	gu.mutation.ClearUnitDurationType()
 	return gu
 }
 
@@ -710,6 +805,19 @@ func (gu *GoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: good.FieldUnit,
 		})
 	}
+	if value, ok := gu.mutation.QuantityUnit(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldQuantityUnit,
+		})
+	}
+	if gu.mutation.QuantityUnitCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: good.FieldQuantityUnit,
+		})
+	}
 	if value, ok := gu.mutation.UnitAmount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt32,
@@ -730,17 +838,24 @@ func (gu *GoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: good.FieldUnitAmount,
 		})
 	}
-	if value, ok := gu.mutation.SupportCoinTypeIds(); ok {
+	if value, ok := gu.mutation.QuantityUnitAmount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
+			Type:   field.TypeUint32,
 			Value:  value,
-			Column: good.FieldSupportCoinTypeIds,
+			Column: good.FieldQuantityUnitAmount,
 		})
 	}
-	if gu.mutation.SupportCoinTypeIdsCleared() {
+	if value, ok := gu.mutation.AddedQuantityUnitAmount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: good.FieldQuantityUnitAmount,
+		})
+	}
+	if gu.mutation.QuantityUnitAmountCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: good.FieldSupportCoinTypeIds,
+			Type:   field.TypeUint32,
+			Column: good.FieldQuantityUnitAmount,
 		})
 	}
 	if value, ok := gu.mutation.DeliveryAt(); ok {
@@ -840,6 +955,45 @@ func (gu *GoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: good.FieldUnitLockDeposit,
+		})
+	}
+	if value, ok := gu.mutation.UnitType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldUnitType,
+		})
+	}
+	if gu.mutation.UnitTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: good.FieldUnitType,
+		})
+	}
+	if value, ok := gu.mutation.UnitCalculateType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldUnitCalculateType,
+		})
+	}
+	if gu.mutation.UnitCalculateTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: good.FieldUnitCalculateType,
+		})
+	}
+	if value, ok := gu.mutation.UnitDurationType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldUnitDurationType,
+		})
+	}
+	if gu.mutation.UnitDurationTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: good.FieldUnitDurationType,
 		})
 	}
 	_spec.Modifiers = gu.modifiers
@@ -1097,6 +1251,26 @@ func (guo *GoodUpdateOne) ClearUnit() *GoodUpdateOne {
 	return guo
 }
 
+// SetQuantityUnit sets the "quantity_unit" field.
+func (guo *GoodUpdateOne) SetQuantityUnit(s string) *GoodUpdateOne {
+	guo.mutation.SetQuantityUnit(s)
+	return guo
+}
+
+// SetNillableQuantityUnit sets the "quantity_unit" field if the given value is not nil.
+func (guo *GoodUpdateOne) SetNillableQuantityUnit(s *string) *GoodUpdateOne {
+	if s != nil {
+		guo.SetQuantityUnit(*s)
+	}
+	return guo
+}
+
+// ClearQuantityUnit clears the value of the "quantity_unit" field.
+func (guo *GoodUpdateOne) ClearQuantityUnit() *GoodUpdateOne {
+	guo.mutation.ClearQuantityUnit()
+	return guo
+}
+
 // SetUnitAmount sets the "unit_amount" field.
 func (guo *GoodUpdateOne) SetUnitAmount(i int32) *GoodUpdateOne {
 	guo.mutation.ResetUnitAmount()
@@ -1124,15 +1298,30 @@ func (guo *GoodUpdateOne) ClearUnitAmount() *GoodUpdateOne {
 	return guo
 }
 
-// SetSupportCoinTypeIds sets the "support_coin_type_ids" field.
-func (guo *GoodUpdateOne) SetSupportCoinTypeIds(u []uuid.UUID) *GoodUpdateOne {
-	guo.mutation.SetSupportCoinTypeIds(u)
+// SetQuantityUnitAmount sets the "quantity_unit_amount" field.
+func (guo *GoodUpdateOne) SetQuantityUnitAmount(u uint32) *GoodUpdateOne {
+	guo.mutation.ResetQuantityUnitAmount()
+	guo.mutation.SetQuantityUnitAmount(u)
 	return guo
 }
 
-// ClearSupportCoinTypeIds clears the value of the "support_coin_type_ids" field.
-func (guo *GoodUpdateOne) ClearSupportCoinTypeIds() *GoodUpdateOne {
-	guo.mutation.ClearSupportCoinTypeIds()
+// SetNillableQuantityUnitAmount sets the "quantity_unit_amount" field if the given value is not nil.
+func (guo *GoodUpdateOne) SetNillableQuantityUnitAmount(u *uint32) *GoodUpdateOne {
+	if u != nil {
+		guo.SetQuantityUnitAmount(*u)
+	}
+	return guo
+}
+
+// AddQuantityUnitAmount adds u to the "quantity_unit_amount" field.
+func (guo *GoodUpdateOne) AddQuantityUnitAmount(u int32) *GoodUpdateOne {
+	guo.mutation.AddQuantityUnitAmount(u)
+	return guo
+}
+
+// ClearQuantityUnitAmount clears the value of the "quantity_unit_amount" field.
+func (guo *GoodUpdateOne) ClearQuantityUnitAmount() *GoodUpdateOne {
+	guo.mutation.ClearQuantityUnitAmount()
 	return guo
 }
 
@@ -1274,6 +1463,66 @@ func (guo *GoodUpdateOne) SetNillableUnitLockDeposit(d *decimal.Decimal) *GoodUp
 // ClearUnitLockDeposit clears the value of the "unit_lock_deposit" field.
 func (guo *GoodUpdateOne) ClearUnitLockDeposit() *GoodUpdateOne {
 	guo.mutation.ClearUnitLockDeposit()
+	return guo
+}
+
+// SetUnitType sets the "unit_type" field.
+func (guo *GoodUpdateOne) SetUnitType(s string) *GoodUpdateOne {
+	guo.mutation.SetUnitType(s)
+	return guo
+}
+
+// SetNillableUnitType sets the "unit_type" field if the given value is not nil.
+func (guo *GoodUpdateOne) SetNillableUnitType(s *string) *GoodUpdateOne {
+	if s != nil {
+		guo.SetUnitType(*s)
+	}
+	return guo
+}
+
+// ClearUnitType clears the value of the "unit_type" field.
+func (guo *GoodUpdateOne) ClearUnitType() *GoodUpdateOne {
+	guo.mutation.ClearUnitType()
+	return guo
+}
+
+// SetUnitCalculateType sets the "unit_calculate_type" field.
+func (guo *GoodUpdateOne) SetUnitCalculateType(s string) *GoodUpdateOne {
+	guo.mutation.SetUnitCalculateType(s)
+	return guo
+}
+
+// SetNillableUnitCalculateType sets the "unit_calculate_type" field if the given value is not nil.
+func (guo *GoodUpdateOne) SetNillableUnitCalculateType(s *string) *GoodUpdateOne {
+	if s != nil {
+		guo.SetUnitCalculateType(*s)
+	}
+	return guo
+}
+
+// ClearUnitCalculateType clears the value of the "unit_calculate_type" field.
+func (guo *GoodUpdateOne) ClearUnitCalculateType() *GoodUpdateOne {
+	guo.mutation.ClearUnitCalculateType()
+	return guo
+}
+
+// SetUnitDurationType sets the "unit_duration_type" field.
+func (guo *GoodUpdateOne) SetUnitDurationType(s string) *GoodUpdateOne {
+	guo.mutation.SetUnitDurationType(s)
+	return guo
+}
+
+// SetNillableUnitDurationType sets the "unit_duration_type" field if the given value is not nil.
+func (guo *GoodUpdateOne) SetNillableUnitDurationType(s *string) *GoodUpdateOne {
+	if s != nil {
+		guo.SetUnitDurationType(*s)
+	}
+	return guo
+}
+
+// ClearUnitDurationType clears the value of the "unit_duration_type" field.
+func (guo *GoodUpdateOne) ClearUnitDurationType() *GoodUpdateOne {
+	guo.mutation.ClearUnitDurationType()
 	return guo
 }
 
@@ -1573,6 +1822,19 @@ func (guo *GoodUpdateOne) sqlSave(ctx context.Context) (_node *Good, err error) 
 			Column: good.FieldUnit,
 		})
 	}
+	if value, ok := guo.mutation.QuantityUnit(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldQuantityUnit,
+		})
+	}
+	if guo.mutation.QuantityUnitCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: good.FieldQuantityUnit,
+		})
+	}
 	if value, ok := guo.mutation.UnitAmount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt32,
@@ -1593,17 +1855,24 @@ func (guo *GoodUpdateOne) sqlSave(ctx context.Context) (_node *Good, err error) 
 			Column: good.FieldUnitAmount,
 		})
 	}
-	if value, ok := guo.mutation.SupportCoinTypeIds(); ok {
+	if value, ok := guo.mutation.QuantityUnitAmount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
+			Type:   field.TypeUint32,
 			Value:  value,
-			Column: good.FieldSupportCoinTypeIds,
+			Column: good.FieldQuantityUnitAmount,
 		})
 	}
-	if guo.mutation.SupportCoinTypeIdsCleared() {
+	if value, ok := guo.mutation.AddedQuantityUnitAmount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: good.FieldQuantityUnitAmount,
+		})
+	}
+	if guo.mutation.QuantityUnitAmountCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: good.FieldSupportCoinTypeIds,
+			Type:   field.TypeUint32,
+			Column: good.FieldQuantityUnitAmount,
 		})
 	}
 	if value, ok := guo.mutation.DeliveryAt(); ok {
@@ -1703,6 +1972,45 @@ func (guo *GoodUpdateOne) sqlSave(ctx context.Context) (_node *Good, err error) 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: good.FieldUnitLockDeposit,
+		})
+	}
+	if value, ok := guo.mutation.UnitType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldUnitType,
+		})
+	}
+	if guo.mutation.UnitTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: good.FieldUnitType,
+		})
+	}
+	if value, ok := guo.mutation.UnitCalculateType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldUnitCalculateType,
+		})
+	}
+	if guo.mutation.UnitCalculateTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: good.FieldUnitCalculateType,
+		})
+	}
+	if value, ok := guo.mutation.UnitDurationType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldUnitDurationType,
+		})
+	}
+	if guo.mutation.UnitDurationTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: good.FieldUnitDurationType,
 		})
 	}
 	_spec.Modifiers = guo.modifiers

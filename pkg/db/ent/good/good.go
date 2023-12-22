@@ -41,10 +41,12 @@ const (
 	FieldTitle = "title"
 	// FieldUnit holds the string denoting the unit field in the database.
 	FieldUnit = "unit"
+	// FieldQuantityUnit holds the string denoting the quantity_unit field in the database.
+	FieldQuantityUnit = "quantity_unit"
 	// FieldUnitAmount holds the string denoting the unit_amount field in the database.
 	FieldUnitAmount = "unit_amount"
-	// FieldSupportCoinTypeIds holds the string denoting the support_coin_type_ids field in the database.
-	FieldSupportCoinTypeIds = "support_coin_type_ids"
+	// FieldQuantityUnitAmount holds the string denoting the quantity_unit_amount field in the database.
+	FieldQuantityUnitAmount = "quantity_unit_amount"
 	// FieldDeliveryAt holds the string denoting the delivery_at field in the database.
 	FieldDeliveryAt = "delivery_at"
 	// FieldStartAt holds the string denoting the start_at field in the database.
@@ -57,6 +59,12 @@ const (
 	FieldBenefitIntervalHours = "benefit_interval_hours"
 	// FieldUnitLockDeposit holds the string denoting the unit_lock_deposit field in the database.
 	FieldUnitLockDeposit = "unit_lock_deposit"
+	// FieldUnitType holds the string denoting the unit_type field in the database.
+	FieldUnitType = "unit_type"
+	// FieldUnitCalculateType holds the string denoting the unit_calculate_type field in the database.
+	FieldUnitCalculateType = "unit_calculate_type"
+	// FieldUnitDurationType holds the string denoting the unit_duration_type field in the database.
+	FieldUnitDurationType = "unit_duration_type"
 	// Table holds the table name of the good in the database.
 	Table = "goods"
 )
@@ -78,14 +86,18 @@ var Columns = []string{
 	FieldGoodType,
 	FieldTitle,
 	FieldUnit,
+	FieldQuantityUnit,
 	FieldUnitAmount,
-	FieldSupportCoinTypeIds,
+	FieldQuantityUnitAmount,
 	FieldDeliveryAt,
 	FieldStartAt,
 	FieldStartMode,
 	FieldTestOnly,
 	FieldBenefitIntervalHours,
 	FieldUnitLockDeposit,
+	FieldUnitType,
+	FieldUnitCalculateType,
+	FieldUnitDurationType,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -131,10 +143,12 @@ var (
 	DefaultTitle string
 	// DefaultUnit holds the default value on creation for the "unit" field.
 	DefaultUnit string
+	// DefaultQuantityUnit holds the default value on creation for the "quantity_unit" field.
+	DefaultQuantityUnit string
 	// DefaultUnitAmount holds the default value on creation for the "unit_amount" field.
 	DefaultUnitAmount int32
-	// DefaultSupportCoinTypeIds holds the default value on creation for the "support_coin_type_ids" field.
-	DefaultSupportCoinTypeIds []uuid.UUID
+	// DefaultQuantityUnitAmount holds the default value on creation for the "quantity_unit_amount" field.
+	DefaultQuantityUnitAmount uint32
 	// DefaultDeliveryAt holds the default value on creation for the "delivery_at" field.
 	DefaultDeliveryAt uint32
 	// DefaultStartAt holds the default value on creation for the "start_at" field.
@@ -147,4 +161,10 @@ var (
 	DefaultBenefitIntervalHours uint32
 	// DefaultUnitLockDeposit holds the default value on creation for the "unit_lock_deposit" field.
 	DefaultUnitLockDeposit decimal.Decimal
+	// DefaultUnitType holds the default value on creation for the "unit_type" field.
+	DefaultUnitType string
+	// DefaultUnitCalculateType holds the default value on creation for the "unit_calculate_type" field.
+	DefaultUnitCalculateType string
+	// DefaultUnitDurationType holds the default value on creation for the "unit_duration_type" field.
+	DefaultUnitDurationType string
 )

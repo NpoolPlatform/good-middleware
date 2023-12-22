@@ -26,7 +26,6 @@ type Req struct {
 	Title                *string
 	Unit                 *string
 	UnitAmount           *int32
-	SupportCoinTypeIDs   []uuid.UUID
 	DeliveryAt           *uint32
 	StartAt              *uint32
 	TestOnly             *bool
@@ -72,9 +71,6 @@ func CreateSet(c *ent.GoodCreate, req *Req) *ent.GoodCreate {
 	}
 	if req.UnitAmount != nil {
 		c.SetUnitAmount(*req.UnitAmount)
-	}
-	if len(req.SupportCoinTypeIDs) > 0 {
-		c.SetSupportCoinTypeIds(req.SupportCoinTypeIDs)
 	}
 	if req.DeliveryAt != nil {
 		c.SetDeliveryAt(*req.DeliveryAt)
@@ -125,9 +121,6 @@ func UpdateSet(u *ent.GoodUpdateOne, req *Req) *ent.GoodUpdateOne {
 	}
 	if req.UnitAmount != nil {
 		u.SetUnitAmount(*req.UnitAmount)
-	}
-	if len(req.SupportCoinTypeIDs) > 0 {
-		u.SetSupportCoinTypeIds(req.SupportCoinTypeIDs)
 	}
 	if req.DeliveryAt != nil {
 		u.SetDeliveryAt(*req.DeliveryAt)

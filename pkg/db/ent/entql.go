@@ -240,14 +240,18 @@ var schemaGraph = func() *sqlgraph.Schema {
 			good.FieldGoodType:             {Type: field.TypeString, Column: good.FieldGoodType},
 			good.FieldTitle:                {Type: field.TypeString, Column: good.FieldTitle},
 			good.FieldUnit:                 {Type: field.TypeString, Column: good.FieldUnit},
+			good.FieldQuantityUnit:         {Type: field.TypeString, Column: good.FieldQuantityUnit},
 			good.FieldUnitAmount:           {Type: field.TypeInt32, Column: good.FieldUnitAmount},
-			good.FieldSupportCoinTypeIds:   {Type: field.TypeJSON, Column: good.FieldSupportCoinTypeIds},
+			good.FieldQuantityUnitAmount:   {Type: field.TypeUint32, Column: good.FieldQuantityUnitAmount},
 			good.FieldDeliveryAt:           {Type: field.TypeUint32, Column: good.FieldDeliveryAt},
 			good.FieldStartAt:              {Type: field.TypeUint32, Column: good.FieldStartAt},
 			good.FieldStartMode:            {Type: field.TypeString, Column: good.FieldStartMode},
 			good.FieldTestOnly:             {Type: field.TypeBool, Column: good.FieldTestOnly},
 			good.FieldBenefitIntervalHours: {Type: field.TypeUint32, Column: good.FieldBenefitIntervalHours},
 			good.FieldUnitLockDeposit:      {Type: field.TypeOther, Column: good.FieldUnitLockDeposit},
+			good.FieldUnitType:             {Type: field.TypeString, Column: good.FieldUnitType},
+			good.FieldUnitCalculateType:    {Type: field.TypeString, Column: good.FieldUnitCalculateType},
+			good.FieldUnitDurationType:     {Type: field.TypeString, Column: good.FieldUnitDurationType},
 		},
 	}
 	graph.Nodes[8] = &sqlgraph.Node{
@@ -1363,14 +1367,19 @@ func (f *GoodFilter) WhereUnit(p entql.StringP) {
 	f.Where(p.Field(good.FieldUnit))
 }
 
+// WhereQuantityUnit applies the entql string predicate on the quantity_unit field.
+func (f *GoodFilter) WhereQuantityUnit(p entql.StringP) {
+	f.Where(p.Field(good.FieldQuantityUnit))
+}
+
 // WhereUnitAmount applies the entql int32 predicate on the unit_amount field.
 func (f *GoodFilter) WhereUnitAmount(p entql.Int32P) {
 	f.Where(p.Field(good.FieldUnitAmount))
 }
 
-// WhereSupportCoinTypeIds applies the entql json.RawMessage predicate on the support_coin_type_ids field.
-func (f *GoodFilter) WhereSupportCoinTypeIds(p entql.BytesP) {
-	f.Where(p.Field(good.FieldSupportCoinTypeIds))
+// WhereQuantityUnitAmount applies the entql uint32 predicate on the quantity_unit_amount field.
+func (f *GoodFilter) WhereQuantityUnitAmount(p entql.Uint32P) {
+	f.Where(p.Field(good.FieldQuantityUnitAmount))
 }
 
 // WhereDeliveryAt applies the entql uint32 predicate on the delivery_at field.
@@ -1401,6 +1410,21 @@ func (f *GoodFilter) WhereBenefitIntervalHours(p entql.Uint32P) {
 // WhereUnitLockDeposit applies the entql other predicate on the unit_lock_deposit field.
 func (f *GoodFilter) WhereUnitLockDeposit(p entql.OtherP) {
 	f.Where(p.Field(good.FieldUnitLockDeposit))
+}
+
+// WhereUnitType applies the entql string predicate on the unit_type field.
+func (f *GoodFilter) WhereUnitType(p entql.StringP) {
+	f.Where(p.Field(good.FieldUnitType))
+}
+
+// WhereUnitCalculateType applies the entql string predicate on the unit_calculate_type field.
+func (f *GoodFilter) WhereUnitCalculateType(p entql.StringP) {
+	f.Where(p.Field(good.FieldUnitCalculateType))
+}
+
+// WhereUnitDurationType applies the entql string predicate on the unit_duration_type field.
+func (f *GoodFilter) WhereUnitDurationType(p entql.StringP) {
+	f.Where(p.Field(good.FieldUnitDurationType))
 }
 
 // addPredicate implements the predicateAdder interface.

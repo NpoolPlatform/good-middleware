@@ -68,13 +68,17 @@ func (Good) Fields() []ent.Field {
 			Optional().
 			Default(""),
 		field.
+			String("quantity_unit").
+			Optional().
+			Default(""),
+		field.
 			Int32("unit_amount").
 			Optional().
 			Default(0),
 		field.
-			JSON("support_coin_type_ids", []uuid.UUID{}).
+			Uint32("quantity_unit_amount").
 			Optional().
-			Default([]uuid.UUID{}),
+			Default(0),
 		field.
 			Uint32("delivery_at").
 			Optional().
@@ -102,6 +106,18 @@ func (Good) Fields() []ent.Field {
 			}).
 			Optional().
 			Default(decimal.Decimal{}),
+		field.
+			String("unit_type").
+			Optional().
+			Default(types.GoodUnitType_GoodUnitByDurationAndQuantity.String()),
+		field.
+			String("unit_calculate_type").
+			Optional().
+			Default(types.GoodUnitCalculateType_GoodUnitCalculateBySelf.String()),
+		field.
+			String("unit_duration_type").
+			Optional().
+			Default(types.GoodUnitDurationType_GoodUnitDurationByYear.String()),
 	}
 }
 

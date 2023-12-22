@@ -224,7 +224,6 @@ func (h *updateHandler) updateGood(ctx context.Context, tx *ent.Tx) error {
 			Title:                h.Title,
 			Unit:                 h.Unit,
 			UnitAmount:           h.UnitAmount,
-			SupportCoinTypeIDs:   h.SupportCoinTypeIDs,
 			DeliveryAt:           h.DeliveryAt,
 			StartAt:              h.StartAt,
 			StartMode:            h.StartMode,

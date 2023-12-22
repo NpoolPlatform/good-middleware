@@ -57,7 +57,6 @@ var ret = npool.Good{
 	Title:                  uuid.NewString(),
 	Unit:                   "TiB",
 	UnitAmount:             1,
-	SupportCoinTypeIDs:     []string{uuid.NewString(), uuid.NewString()},
 	TestOnly:               true,
 	Posters:                []string{uuid.NewString(), uuid.NewString()},
 	Labels: []types.GoodLabel{
@@ -84,8 +83,6 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.LabelsStr = strings.ReplaceAll(string(b), " ", "")
 	b, _ = json.Marshal(ret.Posters)
 	ret.PostersStr = strings.ReplaceAll(string(b), " ", "")
-	b, _ = json.Marshal(ret.SupportCoinTypeIDs)
-	ret.SupportCoinTypeIDsStr = strings.ReplaceAll(string(b), " ", "")
 	b, _ = json.Marshal(ret.DevicePosters)
 	ret.DevicePostersStr = strings.ReplaceAll(string(b), " ", "")
 
@@ -162,7 +159,6 @@ func createGood(t *testing.T) {
 		WithTitle(&ret.Title, true),
 		WithUnit(&ret.Unit, true),
 		WithUnitAmount(&ret.UnitAmount, true),
-		WithSupportCoinTypeIDs(ret.SupportCoinTypeIDs, false),
 		WithDeliveryAt(&ret.DeliveryAt, true),
 		WithStartAt(&ret.StartAt, true),
 		WithTestOnly(&ret.TestOnly, false),
@@ -177,7 +173,6 @@ func createGood(t *testing.T) {
 		if assert.Nil(t, err) {
 			info.LabelsStr = strings.ReplaceAll(info.LabelsStr, " ", "")
 			info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
-			info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
 			info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
@@ -205,7 +200,6 @@ func updateGood(t *testing.T) {
 		if assert.Nil(t, err) {
 			info.LabelsStr = strings.ReplaceAll(info.LabelsStr, " ", "")
 			info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
-			info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
 			info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
 			ret.UpdatedAt = info.UpdatedAt
 			assert.Equal(t, &ret, info)
@@ -223,7 +217,6 @@ func getGood(t *testing.T) {
 		if assert.Nil(t, err) {
 			info.LabelsStr = strings.ReplaceAll(info.LabelsStr, " ", "")
 			info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
-			info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
 			info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
 			assert.Equal(t, &ret, info)
 		}
@@ -253,7 +246,6 @@ func getGoods(t *testing.T) {
 			if assert.Equal(t, uint32(1), total) {
 				infos[0].LabelsStr = strings.ReplaceAll(infos[0].LabelsStr, " ", "")
 				infos[0].PostersStr = strings.ReplaceAll(infos[0].PostersStr, " ", "")
-				infos[0].SupportCoinTypeIDsStr = strings.ReplaceAll(infos[0].SupportCoinTypeIDsStr, " ", "")
 				infos[0].DevicePostersStr = strings.ReplaceAll(infos[0].DevicePostersStr, " ", "")
 				assert.Equal(t, &ret, infos[0])
 			}
@@ -271,7 +263,6 @@ func deleteGood(t *testing.T) {
 		if assert.Nil(t, err) {
 			info.LabelsStr = strings.ReplaceAll(info.LabelsStr, " ", "")
 			info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
-			info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
 			info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
 			assert.Equal(t, &ret, info)
 		}
