@@ -46,7 +46,8 @@ var (
 		{Name: "online", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "visible", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "good_name", Type: field.TypeString, Nullable: true, Default: ""},
-		{Name: "price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "unit_price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "package_price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "display_index", Type: field.TypeInt32, Nullable: true, Default: 0},
 		{Name: "purchase_limit", Type: field.TypeInt32, Nullable: true, Default: 3000},
 		{Name: "sale_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
@@ -71,6 +72,7 @@ var (
 		{Name: "max_user_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "min_order_duration", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "max_order_duration", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "package_with_requireds", Type: field.TypeBool, Nullable: true, Default: true},
 	}
 	// AppGoodsTable holds the schema information for the "app_goods" table.
 	AppGoodsTable = &schema.Table{
@@ -252,7 +254,7 @@ var (
 		{Name: "coin_type_id", Type: field.TypeUUID},
 		{Name: "inherit_from_good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "vendor_location_id", Type: field.TypeUUID},
-		{Name: "price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "unit_price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "benefit_type", Type: field.TypeString, Nullable: true, Default: "DefaultBenefitType"},
 		{Name: "good_type", Type: field.TypeString, Nullable: true, Default: "DefaultGoodType"},
 		{Name: "title", Type: field.TypeString, Nullable: true, Default: ""},

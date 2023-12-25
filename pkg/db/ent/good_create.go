@@ -125,16 +125,16 @@ func (gc *GoodCreate) SetVendorLocationID(u uuid.UUID) *GoodCreate {
 	return gc
 }
 
-// SetPrice sets the "price" field.
-func (gc *GoodCreate) SetPrice(d decimal.Decimal) *GoodCreate {
-	gc.mutation.SetPrice(d)
+// SetUnitPrice sets the "unit_price" field.
+func (gc *GoodCreate) SetUnitPrice(d decimal.Decimal) *GoodCreate {
+	gc.mutation.SetUnitPrice(d)
 	return gc
 }
 
-// SetNillablePrice sets the "price" field if the given value is not nil.
-func (gc *GoodCreate) SetNillablePrice(d *decimal.Decimal) *GoodCreate {
+// SetNillableUnitPrice sets the "unit_price" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableUnitPrice(d *decimal.Decimal) *GoodCreate {
 	if d != nil {
-		gc.SetPrice(*d)
+		gc.SetUnitPrice(*d)
 	}
 	return gc
 }
@@ -501,9 +501,9 @@ func (gc *GoodCreate) defaults() error {
 		v := good.DefaultInheritFromGoodID()
 		gc.mutation.SetInheritFromGoodID(v)
 	}
-	if _, ok := gc.mutation.Price(); !ok {
-		v := good.DefaultPrice
-		gc.mutation.SetPrice(v)
+	if _, ok := gc.mutation.UnitPrice(); !ok {
+		v := good.DefaultUnitPrice
+		gc.mutation.SetUnitPrice(v)
 	}
 	if _, ok := gc.mutation.BenefitType(); !ok {
 		v := good.DefaultBenefitType
@@ -705,13 +705,13 @@ func (gc *GoodCreate) createSpec() (*Good, *sqlgraph.CreateSpec) {
 		})
 		_node.VendorLocationID = value
 	}
-	if value, ok := gc.mutation.Price(); ok {
+	if value, ok := gc.mutation.UnitPrice(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: good.FieldPrice,
+			Column: good.FieldUnitPrice,
 		})
-		_node.Price = value
+		_node.UnitPrice = value
 	}
 	if value, ok := gc.mutation.BenefitType(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -1047,21 +1047,21 @@ func (u *GoodUpsert) UpdateVendorLocationID() *GoodUpsert {
 	return u
 }
 
-// SetPrice sets the "price" field.
-func (u *GoodUpsert) SetPrice(v decimal.Decimal) *GoodUpsert {
-	u.Set(good.FieldPrice, v)
+// SetUnitPrice sets the "unit_price" field.
+func (u *GoodUpsert) SetUnitPrice(v decimal.Decimal) *GoodUpsert {
+	u.Set(good.FieldUnitPrice, v)
 	return u
 }
 
-// UpdatePrice sets the "price" field to the value that was provided on create.
-func (u *GoodUpsert) UpdatePrice() *GoodUpsert {
-	u.SetExcluded(good.FieldPrice)
+// UpdateUnitPrice sets the "unit_price" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateUnitPrice() *GoodUpsert {
+	u.SetExcluded(good.FieldUnitPrice)
 	return u
 }
 
-// ClearPrice clears the value of the "price" field.
-func (u *GoodUpsert) ClearPrice() *GoodUpsert {
-	u.SetNull(good.FieldPrice)
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (u *GoodUpsert) ClearUnitPrice() *GoodUpsert {
+	u.SetNull(good.FieldUnitPrice)
 	return u
 }
 
@@ -1613,24 +1613,24 @@ func (u *GoodUpsertOne) UpdateVendorLocationID() *GoodUpsertOne {
 	})
 }
 
-// SetPrice sets the "price" field.
-func (u *GoodUpsertOne) SetPrice(v decimal.Decimal) *GoodUpsertOne {
+// SetUnitPrice sets the "unit_price" field.
+func (u *GoodUpsertOne) SetUnitPrice(v decimal.Decimal) *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.SetPrice(v)
+		s.SetUnitPrice(v)
 	})
 }
 
-// UpdatePrice sets the "price" field to the value that was provided on create.
-func (u *GoodUpsertOne) UpdatePrice() *GoodUpsertOne {
+// UpdateUnitPrice sets the "unit_price" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateUnitPrice() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.UpdatePrice()
+		s.UpdateUnitPrice()
 	})
 }
 
-// ClearPrice clears the value of the "price" field.
-func (u *GoodUpsertOne) ClearPrice() *GoodUpsertOne {
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (u *GoodUpsertOne) ClearUnitPrice() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.ClearPrice()
+		s.ClearUnitPrice()
 	})
 }
 
@@ -2402,24 +2402,24 @@ func (u *GoodUpsertBulk) UpdateVendorLocationID() *GoodUpsertBulk {
 	})
 }
 
-// SetPrice sets the "price" field.
-func (u *GoodUpsertBulk) SetPrice(v decimal.Decimal) *GoodUpsertBulk {
+// SetUnitPrice sets the "unit_price" field.
+func (u *GoodUpsertBulk) SetUnitPrice(v decimal.Decimal) *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.SetPrice(v)
+		s.SetUnitPrice(v)
 	})
 }
 
-// UpdatePrice sets the "price" field to the value that was provided on create.
-func (u *GoodUpsertBulk) UpdatePrice() *GoodUpsertBulk {
+// UpdateUnitPrice sets the "unit_price" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateUnitPrice() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.UpdatePrice()
+		s.UpdateUnitPrice()
 	})
 }
 
-// ClearPrice clears the value of the "price" field.
-func (u *GoodUpsertBulk) ClearPrice() *GoodUpsertBulk {
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (u *GoodUpsertBulk) ClearUnitPrice() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.ClearPrice()
+		s.ClearUnitPrice()
 	})
 }
 

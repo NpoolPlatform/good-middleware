@@ -73,7 +73,8 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appgood.FieldOnline:                 {Type: field.TypeBool, Column: appgood.FieldOnline},
 			appgood.FieldVisible:                {Type: field.TypeBool, Column: appgood.FieldVisible},
 			appgood.FieldGoodName:               {Type: field.TypeString, Column: appgood.FieldGoodName},
-			appgood.FieldPrice:                  {Type: field.TypeOther, Column: appgood.FieldPrice},
+			appgood.FieldUnitPrice:              {Type: field.TypeOther, Column: appgood.FieldUnitPrice},
+			appgood.FieldPackagePrice:           {Type: field.TypeOther, Column: appgood.FieldPackagePrice},
 			appgood.FieldDisplayIndex:           {Type: field.TypeInt32, Column: appgood.FieldDisplayIndex},
 			appgood.FieldPurchaseLimit:          {Type: field.TypeInt32, Column: appgood.FieldPurchaseLimit},
 			appgood.FieldSaleStartAt:            {Type: field.TypeUint32, Column: appgood.FieldSaleStartAt},
@@ -98,6 +99,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appgood.FieldMaxUserAmount:          {Type: field.TypeOther, Column: appgood.FieldMaxUserAmount},
 			appgood.FieldMinOrderDuration:       {Type: field.TypeUint32, Column: appgood.FieldMinOrderDuration},
 			appgood.FieldMaxOrderDuration:       {Type: field.TypeUint32, Column: appgood.FieldMaxOrderDuration},
+			appgood.FieldPackageWithRequireds:   {Type: field.TypeBool, Column: appgood.FieldPackageWithRequireds},
 		},
 	}
 	graph.Nodes[2] = &sqlgraph.Node{
@@ -240,7 +242,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			good.FieldCoinTypeID:            {Type: field.TypeUUID, Column: good.FieldCoinTypeID},
 			good.FieldInheritFromGoodID:     {Type: field.TypeUUID, Column: good.FieldInheritFromGoodID},
 			good.FieldVendorLocationID:      {Type: field.TypeUUID, Column: good.FieldVendorLocationID},
-			good.FieldPrice:                 {Type: field.TypeOther, Column: good.FieldPrice},
+			good.FieldUnitPrice:             {Type: field.TypeOther, Column: good.FieldUnitPrice},
 			good.FieldBenefitType:           {Type: field.TypeString, Column: good.FieldBenefitType},
 			good.FieldGoodType:              {Type: field.TypeString, Column: good.FieldGoodType},
 			good.FieldTitle:                 {Type: field.TypeString, Column: good.FieldTitle},
@@ -688,9 +690,14 @@ func (f *AppGoodFilter) WhereGoodName(p entql.StringP) {
 	f.Where(p.Field(appgood.FieldGoodName))
 }
 
-// WherePrice applies the entql other predicate on the price field.
-func (f *AppGoodFilter) WherePrice(p entql.OtherP) {
-	f.Where(p.Field(appgood.FieldPrice))
+// WhereUnitPrice applies the entql other predicate on the unit_price field.
+func (f *AppGoodFilter) WhereUnitPrice(p entql.OtherP) {
+	f.Where(p.Field(appgood.FieldUnitPrice))
+}
+
+// WherePackagePrice applies the entql other predicate on the package_price field.
+func (f *AppGoodFilter) WherePackagePrice(p entql.OtherP) {
+	f.Where(p.Field(appgood.FieldPackagePrice))
 }
 
 // WhereDisplayIndex applies the entql int32 predicate on the display_index field.
@@ -811,6 +818,11 @@ func (f *AppGoodFilter) WhereMinOrderDuration(p entql.Uint32P) {
 // WhereMaxOrderDuration applies the entql uint32 predicate on the max_order_duration field.
 func (f *AppGoodFilter) WhereMaxOrderDuration(p entql.Uint32P) {
 	f.Where(p.Field(appgood.FieldMaxOrderDuration))
+}
+
+// WherePackageWithRequireds applies the entql bool predicate on the package_with_requireds field.
+func (f *AppGoodFilter) WherePackageWithRequireds(p entql.BoolP) {
+	f.Where(p.Field(appgood.FieldPackageWithRequireds))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -1373,9 +1385,9 @@ func (f *GoodFilter) WhereVendorLocationID(p entql.ValueP) {
 	f.Where(p.Field(good.FieldVendorLocationID))
 }
 
-// WherePrice applies the entql other predicate on the price field.
-func (f *GoodFilter) WherePrice(p entql.OtherP) {
-	f.Where(p.Field(good.FieldPrice))
+// WhereUnitPrice applies the entql other predicate on the unit_price field.
+func (f *GoodFilter) WhereUnitPrice(p entql.OtherP) {
+	f.Where(p.Field(good.FieldUnitPrice))
 }
 
 // WhereBenefitType applies the entql string predicate on the benefit_type field.

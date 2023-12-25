@@ -143,10 +143,10 @@ func VendorLocationID(v uuid.UUID) predicate.Good {
 	})
 }
 
-// Price applies equality check predicate on the "price" field. It's identical to PriceEQ.
-func Price(v decimal.Decimal) predicate.Good {
+// UnitPrice applies equality check predicate on the "unit_price" field. It's identical to UnitPriceEQ.
+func UnitPrice(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPrice), v))
+		s.Where(sql.EQ(s.C(FieldUnitPrice), v))
 	})
 }
 
@@ -873,81 +873,81 @@ func VendorLocationIDLTE(v uuid.UUID) predicate.Good {
 	})
 }
 
-// PriceEQ applies the EQ predicate on the "price" field.
-func PriceEQ(v decimal.Decimal) predicate.Good {
+// UnitPriceEQ applies the EQ predicate on the "unit_price" field.
+func UnitPriceEQ(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPrice), v))
+		s.Where(sql.EQ(s.C(FieldUnitPrice), v))
 	})
 }
 
-// PriceNEQ applies the NEQ predicate on the "price" field.
-func PriceNEQ(v decimal.Decimal) predicate.Good {
+// UnitPriceNEQ applies the NEQ predicate on the "unit_price" field.
+func UnitPriceNEQ(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldPrice), v))
+		s.Where(sql.NEQ(s.C(FieldUnitPrice), v))
 	})
 }
 
-// PriceIn applies the In predicate on the "price" field.
-func PriceIn(vs ...decimal.Decimal) predicate.Good {
+// UnitPriceIn applies the In predicate on the "unit_price" field.
+func UnitPriceIn(vs ...decimal.Decimal) predicate.Good {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldPrice), v...))
+		s.Where(sql.In(s.C(FieldUnitPrice), v...))
 	})
 }
 
-// PriceNotIn applies the NotIn predicate on the "price" field.
-func PriceNotIn(vs ...decimal.Decimal) predicate.Good {
+// UnitPriceNotIn applies the NotIn predicate on the "unit_price" field.
+func UnitPriceNotIn(vs ...decimal.Decimal) predicate.Good {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldPrice), v...))
+		s.Where(sql.NotIn(s.C(FieldUnitPrice), v...))
 	})
 }
 
-// PriceGT applies the GT predicate on the "price" field.
-func PriceGT(v decimal.Decimal) predicate.Good {
+// UnitPriceGT applies the GT predicate on the "unit_price" field.
+func UnitPriceGT(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldPrice), v))
+		s.Where(sql.GT(s.C(FieldUnitPrice), v))
 	})
 }
 
-// PriceGTE applies the GTE predicate on the "price" field.
-func PriceGTE(v decimal.Decimal) predicate.Good {
+// UnitPriceGTE applies the GTE predicate on the "unit_price" field.
+func UnitPriceGTE(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldPrice), v))
+		s.Where(sql.GTE(s.C(FieldUnitPrice), v))
 	})
 }
 
-// PriceLT applies the LT predicate on the "price" field.
-func PriceLT(v decimal.Decimal) predicate.Good {
+// UnitPriceLT applies the LT predicate on the "unit_price" field.
+func UnitPriceLT(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldPrice), v))
+		s.Where(sql.LT(s.C(FieldUnitPrice), v))
 	})
 }
 
-// PriceLTE applies the LTE predicate on the "price" field.
-func PriceLTE(v decimal.Decimal) predicate.Good {
+// UnitPriceLTE applies the LTE predicate on the "unit_price" field.
+func UnitPriceLTE(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldPrice), v))
+		s.Where(sql.LTE(s.C(FieldUnitPrice), v))
 	})
 }
 
-// PriceIsNil applies the IsNil predicate on the "price" field.
-func PriceIsNil() predicate.Good {
+// UnitPriceIsNil applies the IsNil predicate on the "unit_price" field.
+func UnitPriceIsNil() predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldPrice)))
+		s.Where(sql.IsNull(s.C(FieldUnitPrice)))
 	})
 }
 
-// PriceNotNil applies the NotNil predicate on the "price" field.
-func PriceNotNil() predicate.Good {
+// UnitPriceNotNil applies the NotNil predicate on the "unit_price" field.
+func UnitPriceNotNil() predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldPrice)))
+		s.Where(sql.NotNull(s.C(FieldUnitPrice)))
 	})
 }
 

@@ -958,7 +958,8 @@ type AppGoodMutation struct {
 	online                      *bool
 	visible                     *bool
 	good_name                   *string
-	price                       *decimal.Decimal
+	unit_price                  *decimal.Decimal
+	package_price               *decimal.Decimal
 	display_index               *int32
 	adddisplay_index            *int32
 	purchase_limit              *int32
@@ -991,6 +992,7 @@ type AppGoodMutation struct {
 	addmin_order_duration       *int32
 	max_order_duration          *uint32
 	addmax_order_duration       *int32
+	package_with_requireds      *bool
 	clearedFields               map[string]struct{}
 	done                        bool
 	oldValue                    func(context.Context) (*AppGood, error)
@@ -1524,53 +1526,102 @@ func (m *AppGoodMutation) ResetGoodName() {
 	delete(m.clearedFields, appgood.FieldGoodName)
 }
 
-// SetPrice sets the "price" field.
-func (m *AppGoodMutation) SetPrice(d decimal.Decimal) {
-	m.price = &d
+// SetUnitPrice sets the "unit_price" field.
+func (m *AppGoodMutation) SetUnitPrice(d decimal.Decimal) {
+	m.unit_price = &d
 }
 
-// Price returns the value of the "price" field in the mutation.
-func (m *AppGoodMutation) Price() (r decimal.Decimal, exists bool) {
-	v := m.price
+// UnitPrice returns the value of the "unit_price" field in the mutation.
+func (m *AppGoodMutation) UnitPrice() (r decimal.Decimal, exists bool) {
+	v := m.unit_price
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldPrice returns the old "price" field's value of the AppGood entity.
+// OldUnitPrice returns the old "unit_price" field's value of the AppGood entity.
 // If the AppGood object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppGoodMutation) OldPrice(ctx context.Context) (v decimal.Decimal, err error) {
+func (m *AppGoodMutation) OldUnitPrice(ctx context.Context) (v decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPrice is only allowed on UpdateOne operations")
+		return v, errors.New("OldUnitPrice is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPrice requires an ID field in the mutation")
+		return v, errors.New("OldUnitPrice requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPrice: %w", err)
+		return v, fmt.Errorf("querying old value for OldUnitPrice: %w", err)
 	}
-	return oldValue.Price, nil
+	return oldValue.UnitPrice, nil
 }
 
-// ClearPrice clears the value of the "price" field.
-func (m *AppGoodMutation) ClearPrice() {
-	m.price = nil
-	m.clearedFields[appgood.FieldPrice] = struct{}{}
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (m *AppGoodMutation) ClearUnitPrice() {
+	m.unit_price = nil
+	m.clearedFields[appgood.FieldUnitPrice] = struct{}{}
 }
 
-// PriceCleared returns if the "price" field was cleared in this mutation.
-func (m *AppGoodMutation) PriceCleared() bool {
-	_, ok := m.clearedFields[appgood.FieldPrice]
+// UnitPriceCleared returns if the "unit_price" field was cleared in this mutation.
+func (m *AppGoodMutation) UnitPriceCleared() bool {
+	_, ok := m.clearedFields[appgood.FieldUnitPrice]
 	return ok
 }
 
-// ResetPrice resets all changes to the "price" field.
-func (m *AppGoodMutation) ResetPrice() {
-	m.price = nil
-	delete(m.clearedFields, appgood.FieldPrice)
+// ResetUnitPrice resets all changes to the "unit_price" field.
+func (m *AppGoodMutation) ResetUnitPrice() {
+	m.unit_price = nil
+	delete(m.clearedFields, appgood.FieldUnitPrice)
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (m *AppGoodMutation) SetPackagePrice(d decimal.Decimal) {
+	m.package_price = &d
+}
+
+// PackagePrice returns the value of the "package_price" field in the mutation.
+func (m *AppGoodMutation) PackagePrice() (r decimal.Decimal, exists bool) {
+	v := m.package_price
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPackagePrice returns the old "package_price" field's value of the AppGood entity.
+// If the AppGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodMutation) OldPackagePrice(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPackagePrice is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPackagePrice requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPackagePrice: %w", err)
+	}
+	return oldValue.PackagePrice, nil
+}
+
+// ClearPackagePrice clears the value of the "package_price" field.
+func (m *AppGoodMutation) ClearPackagePrice() {
+	m.package_price = nil
+	m.clearedFields[appgood.FieldPackagePrice] = struct{}{}
+}
+
+// PackagePriceCleared returns if the "package_price" field was cleared in this mutation.
+func (m *AppGoodMutation) PackagePriceCleared() bool {
+	_, ok := m.clearedFields[appgood.FieldPackagePrice]
+	return ok
+}
+
+// ResetPackagePrice resets all changes to the "package_price" field.
+func (m *AppGoodMutation) ResetPackagePrice() {
+	m.package_price = nil
+	delete(m.clearedFields, appgood.FieldPackagePrice)
 }
 
 // SetDisplayIndex sets the "display_index" field.
@@ -2917,6 +2968,55 @@ func (m *AppGoodMutation) ResetMaxOrderDuration() {
 	delete(m.clearedFields, appgood.FieldMaxOrderDuration)
 }
 
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (m *AppGoodMutation) SetPackageWithRequireds(b bool) {
+	m.package_with_requireds = &b
+}
+
+// PackageWithRequireds returns the value of the "package_with_requireds" field in the mutation.
+func (m *AppGoodMutation) PackageWithRequireds() (r bool, exists bool) {
+	v := m.package_with_requireds
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPackageWithRequireds returns the old "package_with_requireds" field's value of the AppGood entity.
+// If the AppGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodMutation) OldPackageWithRequireds(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPackageWithRequireds is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPackageWithRequireds requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPackageWithRequireds: %w", err)
+	}
+	return oldValue.PackageWithRequireds, nil
+}
+
+// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
+func (m *AppGoodMutation) ClearPackageWithRequireds() {
+	m.package_with_requireds = nil
+	m.clearedFields[appgood.FieldPackageWithRequireds] = struct{}{}
+}
+
+// PackageWithRequiredsCleared returns if the "package_with_requireds" field was cleared in this mutation.
+func (m *AppGoodMutation) PackageWithRequiredsCleared() bool {
+	_, ok := m.clearedFields[appgood.FieldPackageWithRequireds]
+	return ok
+}
+
+// ResetPackageWithRequireds resets all changes to the "package_with_requireds" field.
+func (m *AppGoodMutation) ResetPackageWithRequireds() {
+	m.package_with_requireds = nil
+	delete(m.clearedFields, appgood.FieldPackageWithRequireds)
+}
+
 // Where appends a list predicates to the AppGoodMutation builder.
 func (m *AppGoodMutation) Where(ps ...predicate.AppGood) {
 	m.predicates = append(m.predicates, ps...)
@@ -2936,7 +3036,7 @@ func (m *AppGoodMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppGoodMutation) Fields() []string {
-	fields := make([]string, 0, 34)
+	fields := make([]string, 0, 36)
 	if m.created_at != nil {
 		fields = append(fields, appgood.FieldCreatedAt)
 	}
@@ -2964,8 +3064,11 @@ func (m *AppGoodMutation) Fields() []string {
 	if m.good_name != nil {
 		fields = append(fields, appgood.FieldGoodName)
 	}
-	if m.price != nil {
-		fields = append(fields, appgood.FieldPrice)
+	if m.unit_price != nil {
+		fields = append(fields, appgood.FieldUnitPrice)
+	}
+	if m.package_price != nil {
+		fields = append(fields, appgood.FieldPackagePrice)
 	}
 	if m.display_index != nil {
 		fields = append(fields, appgood.FieldDisplayIndex)
@@ -3039,6 +3142,9 @@ func (m *AppGoodMutation) Fields() []string {
 	if m.max_order_duration != nil {
 		fields = append(fields, appgood.FieldMaxOrderDuration)
 	}
+	if m.package_with_requireds != nil {
+		fields = append(fields, appgood.FieldPackageWithRequireds)
+	}
 	return fields
 }
 
@@ -3065,8 +3171,10 @@ func (m *AppGoodMutation) Field(name string) (ent.Value, bool) {
 		return m.Visible()
 	case appgood.FieldGoodName:
 		return m.GoodName()
-	case appgood.FieldPrice:
-		return m.Price()
+	case appgood.FieldUnitPrice:
+		return m.UnitPrice()
+	case appgood.FieldPackagePrice:
+		return m.PackagePrice()
 	case appgood.FieldDisplayIndex:
 		return m.DisplayIndex()
 	case appgood.FieldPurchaseLimit:
@@ -3115,6 +3223,8 @@ func (m *AppGoodMutation) Field(name string) (ent.Value, bool) {
 		return m.MinOrderDuration()
 	case appgood.FieldMaxOrderDuration:
 		return m.MaxOrderDuration()
+	case appgood.FieldPackageWithRequireds:
+		return m.PackageWithRequireds()
 	}
 	return nil, false
 }
@@ -3142,8 +3252,10 @@ func (m *AppGoodMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldVisible(ctx)
 	case appgood.FieldGoodName:
 		return m.OldGoodName(ctx)
-	case appgood.FieldPrice:
-		return m.OldPrice(ctx)
+	case appgood.FieldUnitPrice:
+		return m.OldUnitPrice(ctx)
+	case appgood.FieldPackagePrice:
+		return m.OldPackagePrice(ctx)
 	case appgood.FieldDisplayIndex:
 		return m.OldDisplayIndex(ctx)
 	case appgood.FieldPurchaseLimit:
@@ -3192,6 +3304,8 @@ func (m *AppGoodMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldMinOrderDuration(ctx)
 	case appgood.FieldMaxOrderDuration:
 		return m.OldMaxOrderDuration(ctx)
+	case appgood.FieldPackageWithRequireds:
+		return m.OldPackageWithRequireds(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppGood field %s", name)
 }
@@ -3264,12 +3378,19 @@ func (m *AppGoodMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetGoodName(v)
 		return nil
-	case appgood.FieldPrice:
+	case appgood.FieldUnitPrice:
 		v, ok := value.(decimal.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetPrice(v)
+		m.SetUnitPrice(v)
+		return nil
+	case appgood.FieldPackagePrice:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPackagePrice(v)
 		return nil
 	case appgood.FieldDisplayIndex:
 		v, ok := value.(int32)
@@ -3438,6 +3559,13 @@ func (m *AppGoodMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetMaxOrderDuration(v)
+		return nil
+	case appgood.FieldPackageWithRequireds:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPackageWithRequireds(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppGood field %s", name)
@@ -3613,8 +3741,11 @@ func (m *AppGoodMutation) ClearedFields() []string {
 	if m.FieldCleared(appgood.FieldGoodName) {
 		fields = append(fields, appgood.FieldGoodName)
 	}
-	if m.FieldCleared(appgood.FieldPrice) {
-		fields = append(fields, appgood.FieldPrice)
+	if m.FieldCleared(appgood.FieldUnitPrice) {
+		fields = append(fields, appgood.FieldUnitPrice)
+	}
+	if m.FieldCleared(appgood.FieldPackagePrice) {
+		fields = append(fields, appgood.FieldPackagePrice)
 	}
 	if m.FieldCleared(appgood.FieldDisplayIndex) {
 		fields = append(fields, appgood.FieldDisplayIndex)
@@ -3688,6 +3819,9 @@ func (m *AppGoodMutation) ClearedFields() []string {
 	if m.FieldCleared(appgood.FieldMaxOrderDuration) {
 		fields = append(fields, appgood.FieldMaxOrderDuration)
 	}
+	if m.FieldCleared(appgood.FieldPackageWithRequireds) {
+		fields = append(fields, appgood.FieldPackageWithRequireds)
+	}
 	return fields
 }
 
@@ -3711,8 +3845,11 @@ func (m *AppGoodMutation) ClearField(name string) error {
 	case appgood.FieldGoodName:
 		m.ClearGoodName()
 		return nil
-	case appgood.FieldPrice:
-		m.ClearPrice()
+	case appgood.FieldUnitPrice:
+		m.ClearUnitPrice()
+		return nil
+	case appgood.FieldPackagePrice:
+		m.ClearPackagePrice()
 		return nil
 	case appgood.FieldDisplayIndex:
 		m.ClearDisplayIndex()
@@ -3786,6 +3923,9 @@ func (m *AppGoodMutation) ClearField(name string) error {
 	case appgood.FieldMaxOrderDuration:
 		m.ClearMaxOrderDuration()
 		return nil
+	case appgood.FieldPackageWithRequireds:
+		m.ClearPackageWithRequireds()
+		return nil
 	}
 	return fmt.Errorf("unknown AppGood nullable field %s", name)
 }
@@ -3821,8 +3961,11 @@ func (m *AppGoodMutation) ResetField(name string) error {
 	case appgood.FieldGoodName:
 		m.ResetGoodName()
 		return nil
-	case appgood.FieldPrice:
-		m.ResetPrice()
+	case appgood.FieldUnitPrice:
+		m.ResetUnitPrice()
+		return nil
+	case appgood.FieldPackagePrice:
+		m.ResetPackagePrice()
 		return nil
 	case appgood.FieldDisplayIndex:
 		m.ResetDisplayIndex()
@@ -3895,6 +4038,9 @@ func (m *AppGoodMutation) ResetField(name string) error {
 		return nil
 	case appgood.FieldMaxOrderDuration:
 		m.ResetMaxOrderDuration()
+		return nil
+	case appgood.FieldPackageWithRequireds:
+		m.ResetPackageWithRequireds()
 		return nil
 	}
 	return fmt.Errorf("unknown AppGood field %s", name)
@@ -9661,7 +9807,7 @@ type GoodMutation struct {
 	coin_type_id              *uuid.UUID
 	inherit_from_good_id      *uuid.UUID
 	vendor_location_id        *uuid.UUID
-	price                     *decimal.Decimal
+	unit_price                *decimal.Decimal
 	benefit_type              *string
 	good_type                 *string
 	title                     *string
@@ -10224,53 +10370,53 @@ func (m *GoodMutation) ResetVendorLocationID() {
 	m.vendor_location_id = nil
 }
 
-// SetPrice sets the "price" field.
-func (m *GoodMutation) SetPrice(d decimal.Decimal) {
-	m.price = &d
+// SetUnitPrice sets the "unit_price" field.
+func (m *GoodMutation) SetUnitPrice(d decimal.Decimal) {
+	m.unit_price = &d
 }
 
-// Price returns the value of the "price" field in the mutation.
-func (m *GoodMutation) Price() (r decimal.Decimal, exists bool) {
-	v := m.price
+// UnitPrice returns the value of the "unit_price" field in the mutation.
+func (m *GoodMutation) UnitPrice() (r decimal.Decimal, exists bool) {
+	v := m.unit_price
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldPrice returns the old "price" field's value of the Good entity.
+// OldUnitPrice returns the old "unit_price" field's value of the Good entity.
 // If the Good object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodMutation) OldPrice(ctx context.Context) (v decimal.Decimal, err error) {
+func (m *GoodMutation) OldUnitPrice(ctx context.Context) (v decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPrice is only allowed on UpdateOne operations")
+		return v, errors.New("OldUnitPrice is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPrice requires an ID field in the mutation")
+		return v, errors.New("OldUnitPrice requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPrice: %w", err)
+		return v, fmt.Errorf("querying old value for OldUnitPrice: %w", err)
 	}
-	return oldValue.Price, nil
+	return oldValue.UnitPrice, nil
 }
 
-// ClearPrice clears the value of the "price" field.
-func (m *GoodMutation) ClearPrice() {
-	m.price = nil
-	m.clearedFields[good.FieldPrice] = struct{}{}
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (m *GoodMutation) ClearUnitPrice() {
+	m.unit_price = nil
+	m.clearedFields[good.FieldUnitPrice] = struct{}{}
 }
 
-// PriceCleared returns if the "price" field was cleared in this mutation.
-func (m *GoodMutation) PriceCleared() bool {
-	_, ok := m.clearedFields[good.FieldPrice]
+// UnitPriceCleared returns if the "unit_price" field was cleared in this mutation.
+func (m *GoodMutation) UnitPriceCleared() bool {
+	_, ok := m.clearedFields[good.FieldUnitPrice]
 	return ok
 }
 
-// ResetPrice resets all changes to the "price" field.
-func (m *GoodMutation) ResetPrice() {
-	m.price = nil
-	delete(m.clearedFields, good.FieldPrice)
+// ResetUnitPrice resets all changes to the "unit_price" field.
+func (m *GoodMutation) ResetUnitPrice() {
+	m.unit_price = nil
+	delete(m.clearedFields, good.FieldUnitPrice)
 }
 
 // SetBenefitType sets the "benefit_type" field.
@@ -11237,8 +11383,8 @@ func (m *GoodMutation) Fields() []string {
 	if m.vendor_location_id != nil {
 		fields = append(fields, good.FieldVendorLocationID)
 	}
-	if m.price != nil {
-		fields = append(fields, good.FieldPrice)
+	if m.unit_price != nil {
+		fields = append(fields, good.FieldUnitPrice)
 	}
 	if m.benefit_type != nil {
 		fields = append(fields, good.FieldBenefitType)
@@ -11317,8 +11463,8 @@ func (m *GoodMutation) Field(name string) (ent.Value, bool) {
 		return m.InheritFromGoodID()
 	case good.FieldVendorLocationID:
 		return m.VendorLocationID()
-	case good.FieldPrice:
-		return m.Price()
+	case good.FieldUnitPrice:
+		return m.UnitPrice()
 	case good.FieldBenefitType:
 		return m.BenefitType()
 	case good.FieldGoodType:
@@ -11380,8 +11526,8 @@ func (m *GoodMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldInheritFromGoodID(ctx)
 	case good.FieldVendorLocationID:
 		return m.OldVendorLocationID(ctx)
-	case good.FieldPrice:
-		return m.OldPrice(ctx)
+	case good.FieldUnitPrice:
+		return m.OldUnitPrice(ctx)
 	case good.FieldBenefitType:
 		return m.OldBenefitType(ctx)
 	case good.FieldGoodType:
@@ -11488,12 +11634,12 @@ func (m *GoodMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetVendorLocationID(v)
 		return nil
-	case good.FieldPrice:
+	case good.FieldUnitPrice:
 		v, ok := value.(decimal.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetPrice(v)
+		m.SetUnitPrice(v)
 		return nil
 	case good.FieldBenefitType:
 		v, ok := value.(string)
@@ -11749,8 +11895,8 @@ func (m *GoodMutation) ClearedFields() []string {
 	if m.FieldCleared(good.FieldInheritFromGoodID) {
 		fields = append(fields, good.FieldInheritFromGoodID)
 	}
-	if m.FieldCleared(good.FieldPrice) {
-		fields = append(fields, good.FieldPrice)
+	if m.FieldCleared(good.FieldUnitPrice) {
+		fields = append(fields, good.FieldUnitPrice)
 	}
 	if m.FieldCleared(good.FieldBenefitType) {
 		fields = append(fields, good.FieldBenefitType)
@@ -11823,8 +11969,8 @@ func (m *GoodMutation) ClearField(name string) error {
 	case good.FieldInheritFromGoodID:
 		m.ClearInheritFromGoodID()
 		return nil
-	case good.FieldPrice:
-		m.ClearPrice()
+	case good.FieldUnitPrice:
+		m.ClearUnitPrice()
 		return nil
 	case good.FieldBenefitType:
 		m.ClearBenefitType()
@@ -11912,8 +12058,8 @@ func (m *GoodMutation) ResetField(name string) error {
 	case good.FieldVendorLocationID:
 		m.ResetVendorLocationID()
 		return nil
-	case good.FieldPrice:
-		m.ResetPrice()
+	case good.FieldUnitPrice:
+		m.ResetUnitPrice()
 		return nil
 	case good.FieldBenefitType:
 		m.ResetBenefitType()

@@ -171,23 +171,43 @@ func (agu *AppGoodUpdate) ClearGoodName() *AppGoodUpdate {
 	return agu
 }
 
-// SetPrice sets the "price" field.
-func (agu *AppGoodUpdate) SetPrice(d decimal.Decimal) *AppGoodUpdate {
-	agu.mutation.SetPrice(d)
+// SetUnitPrice sets the "unit_price" field.
+func (agu *AppGoodUpdate) SetUnitPrice(d decimal.Decimal) *AppGoodUpdate {
+	agu.mutation.SetUnitPrice(d)
 	return agu
 }
 
-// SetNillablePrice sets the "price" field if the given value is not nil.
-func (agu *AppGoodUpdate) SetNillablePrice(d *decimal.Decimal) *AppGoodUpdate {
+// SetNillableUnitPrice sets the "unit_price" field if the given value is not nil.
+func (agu *AppGoodUpdate) SetNillableUnitPrice(d *decimal.Decimal) *AppGoodUpdate {
 	if d != nil {
-		agu.SetPrice(*d)
+		agu.SetUnitPrice(*d)
 	}
 	return agu
 }
 
-// ClearPrice clears the value of the "price" field.
-func (agu *AppGoodUpdate) ClearPrice() *AppGoodUpdate {
-	agu.mutation.ClearPrice()
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (agu *AppGoodUpdate) ClearUnitPrice() *AppGoodUpdate {
+	agu.mutation.ClearUnitPrice()
+	return agu
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (agu *AppGoodUpdate) SetPackagePrice(d decimal.Decimal) *AppGoodUpdate {
+	agu.mutation.SetPackagePrice(d)
+	return agu
+}
+
+// SetNillablePackagePrice sets the "package_price" field if the given value is not nil.
+func (agu *AppGoodUpdate) SetNillablePackagePrice(d *decimal.Decimal) *AppGoodUpdate {
+	if d != nil {
+		agu.SetPackagePrice(*d)
+	}
+	return agu
+}
+
+// ClearPackagePrice clears the value of the "package_price" field.
+func (agu *AppGoodUpdate) ClearPackagePrice() *AppGoodUpdate {
+	agu.mutation.ClearPackagePrice()
 	return agu
 }
 
@@ -695,6 +715,26 @@ func (agu *AppGoodUpdate) ClearMaxOrderDuration() *AppGoodUpdate {
 	return agu
 }
 
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (agu *AppGoodUpdate) SetPackageWithRequireds(b bool) *AppGoodUpdate {
+	agu.mutation.SetPackageWithRequireds(b)
+	return agu
+}
+
+// SetNillablePackageWithRequireds sets the "package_with_requireds" field if the given value is not nil.
+func (agu *AppGoodUpdate) SetNillablePackageWithRequireds(b *bool) *AppGoodUpdate {
+	if b != nil {
+		agu.SetPackageWithRequireds(*b)
+	}
+	return agu
+}
+
+// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
+func (agu *AppGoodUpdate) ClearPackageWithRequireds() *AppGoodUpdate {
+	agu.mutation.ClearPackageWithRequireds()
+	return agu
+}
+
 // Mutation returns the AppGoodMutation object of the builder.
 func (agu *AppGoodUpdate) Mutation() *AppGoodMutation {
 	return agu.mutation
@@ -895,17 +935,30 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appgood.FieldGoodName,
 		})
 	}
-	if value, ok := agu.mutation.Price(); ok {
+	if value, ok := agu.mutation.UnitPrice(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: appgood.FieldPrice,
+			Column: appgood.FieldUnitPrice,
 		})
 	}
-	if agu.mutation.PriceCleared() {
+	if agu.mutation.UnitPriceCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: appgood.FieldPrice,
+			Column: appgood.FieldUnitPrice,
+		})
+	}
+	if value, ok := agu.mutation.PackagePrice(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldPackagePrice,
+		})
+	}
+	if agu.mutation.PackagePriceCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appgood.FieldPackagePrice,
 		})
 	}
 	if value, ok := agu.mutation.DisplayIndex(); ok {
@@ -1276,6 +1329,19 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appgood.FieldMaxOrderDuration,
 		})
 	}
+	if value, ok := agu.mutation.PackageWithRequireds(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appgood.FieldPackageWithRequireds,
+		})
+	}
+	if agu.mutation.PackageWithRequiredsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: appgood.FieldPackageWithRequireds,
+		})
+	}
 	_spec.Modifiers = agu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, agu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -1438,23 +1504,43 @@ func (aguo *AppGoodUpdateOne) ClearGoodName() *AppGoodUpdateOne {
 	return aguo
 }
 
-// SetPrice sets the "price" field.
-func (aguo *AppGoodUpdateOne) SetPrice(d decimal.Decimal) *AppGoodUpdateOne {
-	aguo.mutation.SetPrice(d)
+// SetUnitPrice sets the "unit_price" field.
+func (aguo *AppGoodUpdateOne) SetUnitPrice(d decimal.Decimal) *AppGoodUpdateOne {
+	aguo.mutation.SetUnitPrice(d)
 	return aguo
 }
 
-// SetNillablePrice sets the "price" field if the given value is not nil.
-func (aguo *AppGoodUpdateOne) SetNillablePrice(d *decimal.Decimal) *AppGoodUpdateOne {
+// SetNillableUnitPrice sets the "unit_price" field if the given value is not nil.
+func (aguo *AppGoodUpdateOne) SetNillableUnitPrice(d *decimal.Decimal) *AppGoodUpdateOne {
 	if d != nil {
-		aguo.SetPrice(*d)
+		aguo.SetUnitPrice(*d)
 	}
 	return aguo
 }
 
-// ClearPrice clears the value of the "price" field.
-func (aguo *AppGoodUpdateOne) ClearPrice() *AppGoodUpdateOne {
-	aguo.mutation.ClearPrice()
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (aguo *AppGoodUpdateOne) ClearUnitPrice() *AppGoodUpdateOne {
+	aguo.mutation.ClearUnitPrice()
+	return aguo
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (aguo *AppGoodUpdateOne) SetPackagePrice(d decimal.Decimal) *AppGoodUpdateOne {
+	aguo.mutation.SetPackagePrice(d)
+	return aguo
+}
+
+// SetNillablePackagePrice sets the "package_price" field if the given value is not nil.
+func (aguo *AppGoodUpdateOne) SetNillablePackagePrice(d *decimal.Decimal) *AppGoodUpdateOne {
+	if d != nil {
+		aguo.SetPackagePrice(*d)
+	}
+	return aguo
+}
+
+// ClearPackagePrice clears the value of the "package_price" field.
+func (aguo *AppGoodUpdateOne) ClearPackagePrice() *AppGoodUpdateOne {
+	aguo.mutation.ClearPackagePrice()
 	return aguo
 }
 
@@ -1962,6 +2048,26 @@ func (aguo *AppGoodUpdateOne) ClearMaxOrderDuration() *AppGoodUpdateOne {
 	return aguo
 }
 
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (aguo *AppGoodUpdateOne) SetPackageWithRequireds(b bool) *AppGoodUpdateOne {
+	aguo.mutation.SetPackageWithRequireds(b)
+	return aguo
+}
+
+// SetNillablePackageWithRequireds sets the "package_with_requireds" field if the given value is not nil.
+func (aguo *AppGoodUpdateOne) SetNillablePackageWithRequireds(b *bool) *AppGoodUpdateOne {
+	if b != nil {
+		aguo.SetPackageWithRequireds(*b)
+	}
+	return aguo
+}
+
+// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
+func (aguo *AppGoodUpdateOne) ClearPackageWithRequireds() *AppGoodUpdateOne {
+	aguo.mutation.ClearPackageWithRequireds()
+	return aguo
+}
+
 // Mutation returns the AppGoodMutation object of the builder.
 func (aguo *AppGoodUpdateOne) Mutation() *AppGoodMutation {
 	return aguo.mutation
@@ -2192,17 +2298,30 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 			Column: appgood.FieldGoodName,
 		})
 	}
-	if value, ok := aguo.mutation.Price(); ok {
+	if value, ok := aguo.mutation.UnitPrice(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: appgood.FieldPrice,
+			Column: appgood.FieldUnitPrice,
 		})
 	}
-	if aguo.mutation.PriceCleared() {
+	if aguo.mutation.UnitPriceCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: appgood.FieldPrice,
+			Column: appgood.FieldUnitPrice,
+		})
+	}
+	if value, ok := aguo.mutation.PackagePrice(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldPackagePrice,
+		})
+	}
+	if aguo.mutation.PackagePriceCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appgood.FieldPackagePrice,
 		})
 	}
 	if value, ok := aguo.mutation.DisplayIndex(); ok {
@@ -2571,6 +2690,19 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: appgood.FieldMaxOrderDuration,
+		})
+	}
+	if value, ok := aguo.mutation.PackageWithRequireds(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appgood.FieldPackageWithRequireds,
+		})
+	}
+	if aguo.mutation.PackageWithRequiredsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: appgood.FieldPackageWithRequireds,
 		})
 	}
 	_spec.Modifiers = aguo.modifiers

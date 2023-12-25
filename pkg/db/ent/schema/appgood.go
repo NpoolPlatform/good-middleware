@@ -45,7 +45,14 @@ func (AppGood) Fields() []ent.Field {
 			Optional().
 			Default(""),
 		field.
-			Other("price", decimal.Decimal{}).
+			Other("unit_price", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.Decimal{}),
+		field.
+			Other("package_price", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).
@@ -165,6 +172,10 @@ func (AppGood) Fields() []ent.Field {
 			Uint32("max_order_duration").
 			Optional().
 			Default(0),
+		field.
+			Bool("package_with_requireds").
+			Optional().
+			Default(true),
 	}
 }
 

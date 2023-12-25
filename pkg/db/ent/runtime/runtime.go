@@ -116,106 +116,114 @@ func init() {
 	appgoodDescGoodName := appgoodFields[4].Descriptor()
 	// appgood.DefaultGoodName holds the default value on creation for the good_name field.
 	appgood.DefaultGoodName = appgoodDescGoodName.Default.(string)
-	// appgoodDescPrice is the schema descriptor for price field.
-	appgoodDescPrice := appgoodFields[5].Descriptor()
-	// appgood.DefaultPrice holds the default value on creation for the price field.
-	appgood.DefaultPrice = appgoodDescPrice.Default.(decimal.Decimal)
+	// appgoodDescUnitPrice is the schema descriptor for unit_price field.
+	appgoodDescUnitPrice := appgoodFields[5].Descriptor()
+	// appgood.DefaultUnitPrice holds the default value on creation for the unit_price field.
+	appgood.DefaultUnitPrice = appgoodDescUnitPrice.Default.(decimal.Decimal)
+	// appgoodDescPackagePrice is the schema descriptor for package_price field.
+	appgoodDescPackagePrice := appgoodFields[6].Descriptor()
+	// appgood.DefaultPackagePrice holds the default value on creation for the package_price field.
+	appgood.DefaultPackagePrice = appgoodDescPackagePrice.Default.(decimal.Decimal)
 	// appgoodDescDisplayIndex is the schema descriptor for display_index field.
-	appgoodDescDisplayIndex := appgoodFields[6].Descriptor()
+	appgoodDescDisplayIndex := appgoodFields[7].Descriptor()
 	// appgood.DefaultDisplayIndex holds the default value on creation for the display_index field.
 	appgood.DefaultDisplayIndex = appgoodDescDisplayIndex.Default.(int32)
 	// appgoodDescPurchaseLimit is the schema descriptor for purchase_limit field.
-	appgoodDescPurchaseLimit := appgoodFields[7].Descriptor()
+	appgoodDescPurchaseLimit := appgoodFields[8].Descriptor()
 	// appgood.DefaultPurchaseLimit holds the default value on creation for the purchase_limit field.
 	appgood.DefaultPurchaseLimit = appgoodDescPurchaseLimit.Default.(int32)
 	// appgoodDescSaleStartAt is the schema descriptor for sale_start_at field.
-	appgoodDescSaleStartAt := appgoodFields[8].Descriptor()
+	appgoodDescSaleStartAt := appgoodFields[9].Descriptor()
 	// appgood.DefaultSaleStartAt holds the default value on creation for the sale_start_at field.
 	appgood.DefaultSaleStartAt = appgoodDescSaleStartAt.Default.(uint32)
 	// appgoodDescSaleEndAt is the schema descriptor for sale_end_at field.
-	appgoodDescSaleEndAt := appgoodFields[9].Descriptor()
+	appgoodDescSaleEndAt := appgoodFields[10].Descriptor()
 	// appgood.DefaultSaleEndAt holds the default value on creation for the sale_end_at field.
 	appgood.DefaultSaleEndAt = appgoodDescSaleEndAt.Default.(uint32)
 	// appgoodDescServiceStartAt is the schema descriptor for service_start_at field.
-	appgoodDescServiceStartAt := appgoodFields[10].Descriptor()
+	appgoodDescServiceStartAt := appgoodFields[11].Descriptor()
 	// appgood.DefaultServiceStartAt holds the default value on creation for the service_start_at field.
 	appgood.DefaultServiceStartAt = appgoodDescServiceStartAt.Default.(uint32)
 	// appgoodDescTechnicalFeeRatio is the schema descriptor for technical_fee_ratio field.
-	appgoodDescTechnicalFeeRatio := appgoodFields[11].Descriptor()
+	appgoodDescTechnicalFeeRatio := appgoodFields[12].Descriptor()
 	// appgood.DefaultTechnicalFeeRatio holds the default value on creation for the technical_fee_ratio field.
 	appgood.DefaultTechnicalFeeRatio = appgoodDescTechnicalFeeRatio.Default.(decimal.Decimal)
 	// appgoodDescElectricityFeeRatio is the schema descriptor for electricity_fee_ratio field.
-	appgoodDescElectricityFeeRatio := appgoodFields[12].Descriptor()
+	appgoodDescElectricityFeeRatio := appgoodFields[13].Descriptor()
 	// appgood.DefaultElectricityFeeRatio holds the default value on creation for the electricity_fee_ratio field.
 	appgood.DefaultElectricityFeeRatio = appgoodDescElectricityFeeRatio.Default.(decimal.Decimal)
 	// appgoodDescDescriptions is the schema descriptor for descriptions field.
-	appgoodDescDescriptions := appgoodFields[13].Descriptor()
+	appgoodDescDescriptions := appgoodFields[14].Descriptor()
 	// appgood.DefaultDescriptions holds the default value on creation for the descriptions field.
 	appgood.DefaultDescriptions = appgoodDescDescriptions.Default.([]string)
 	// appgoodDescGoodBanner is the schema descriptor for good_banner field.
-	appgoodDescGoodBanner := appgoodFields[14].Descriptor()
+	appgoodDescGoodBanner := appgoodFields[15].Descriptor()
 	// appgood.DefaultGoodBanner holds the default value on creation for the good_banner field.
 	appgood.DefaultGoodBanner = appgoodDescGoodBanner.Default.(string)
 	// appgoodDescDisplayNames is the schema descriptor for display_names field.
-	appgoodDescDisplayNames := appgoodFields[15].Descriptor()
+	appgoodDescDisplayNames := appgoodFields[16].Descriptor()
 	// appgood.DefaultDisplayNames holds the default value on creation for the display_names field.
 	appgood.DefaultDisplayNames = appgoodDescDisplayNames.Default.([]string)
 	// appgoodDescEnablePurchase is the schema descriptor for enable_purchase field.
-	appgoodDescEnablePurchase := appgoodFields[16].Descriptor()
+	appgoodDescEnablePurchase := appgoodFields[17].Descriptor()
 	// appgood.DefaultEnablePurchase holds the default value on creation for the enable_purchase field.
 	appgood.DefaultEnablePurchase = appgoodDescEnablePurchase.Default.(bool)
 	// appgoodDescEnableProductPage is the schema descriptor for enable_product_page field.
-	appgoodDescEnableProductPage := appgoodFields[17].Descriptor()
+	appgoodDescEnableProductPage := appgoodFields[18].Descriptor()
 	// appgood.DefaultEnableProductPage holds the default value on creation for the enable_product_page field.
 	appgood.DefaultEnableProductPage = appgoodDescEnableProductPage.Default.(bool)
 	// appgoodDescCancelMode is the schema descriptor for cancel_mode field.
-	appgoodDescCancelMode := appgoodFields[18].Descriptor()
+	appgoodDescCancelMode := appgoodFields[19].Descriptor()
 	// appgood.DefaultCancelMode holds the default value on creation for the cancel_mode field.
 	appgood.DefaultCancelMode = appgoodDescCancelMode.Default.(string)
 	// appgoodDescUserPurchaseLimit is the schema descriptor for user_purchase_limit field.
-	appgoodDescUserPurchaseLimit := appgoodFields[19].Descriptor()
+	appgoodDescUserPurchaseLimit := appgoodFields[20].Descriptor()
 	// appgood.DefaultUserPurchaseLimit holds the default value on creation for the user_purchase_limit field.
 	appgood.DefaultUserPurchaseLimit = appgoodDescUserPurchaseLimit.Default.(decimal.Decimal)
 	// appgoodDescDisplayColors is the schema descriptor for display_colors field.
-	appgoodDescDisplayColors := appgoodFields[20].Descriptor()
+	appgoodDescDisplayColors := appgoodFields[21].Descriptor()
 	// appgood.DefaultDisplayColors holds the default value on creation for the display_colors field.
 	appgood.DefaultDisplayColors = appgoodDescDisplayColors.Default.([]string)
 	// appgoodDescCancellableBeforeStart is the schema descriptor for cancellable_before_start field.
-	appgoodDescCancellableBeforeStart := appgoodFields[21].Descriptor()
+	appgoodDescCancellableBeforeStart := appgoodFields[22].Descriptor()
 	// appgood.DefaultCancellableBeforeStart holds the default value on creation for the cancellable_before_start field.
 	appgood.DefaultCancellableBeforeStart = appgoodDescCancellableBeforeStart.Default.(uint32)
 	// appgoodDescProductPage is the schema descriptor for product_page field.
-	appgoodDescProductPage := appgoodFields[22].Descriptor()
+	appgoodDescProductPage := appgoodFields[23].Descriptor()
 	// appgood.DefaultProductPage holds the default value on creation for the product_page field.
 	appgood.DefaultProductPage = appgoodDescProductPage.Default.(string)
 	// appgoodDescEnableSetCommission is the schema descriptor for enable_set_commission field.
-	appgoodDescEnableSetCommission := appgoodFields[23].Descriptor()
+	appgoodDescEnableSetCommission := appgoodFields[24].Descriptor()
 	// appgood.DefaultEnableSetCommission holds the default value on creation for the enable_set_commission field.
 	appgood.DefaultEnableSetCommission = appgoodDescEnableSetCommission.Default.(bool)
 	// appgoodDescPosters is the schema descriptor for posters field.
-	appgoodDescPosters := appgoodFields[24].Descriptor()
+	appgoodDescPosters := appgoodFields[25].Descriptor()
 	// appgood.DefaultPosters holds the default value on creation for the posters field.
 	appgood.DefaultPosters = appgoodDescPosters.Default.([]string)
 	// appgoodDescMinOrderAmount is the schema descriptor for min_order_amount field.
-	appgoodDescMinOrderAmount := appgoodFields[25].Descriptor()
+	appgoodDescMinOrderAmount := appgoodFields[26].Descriptor()
 	// appgood.DefaultMinOrderAmount holds the default value on creation for the min_order_amount field.
 	appgood.DefaultMinOrderAmount = appgoodDescMinOrderAmount.Default.(decimal.Decimal)
 	// appgoodDescMaxOrderAmount is the schema descriptor for max_order_amount field.
-	appgoodDescMaxOrderAmount := appgoodFields[26].Descriptor()
+	appgoodDescMaxOrderAmount := appgoodFields[27].Descriptor()
 	// appgood.DefaultMaxOrderAmount holds the default value on creation for the max_order_amount field.
 	appgood.DefaultMaxOrderAmount = appgoodDescMaxOrderAmount.Default.(decimal.Decimal)
 	// appgoodDescMaxUserAmount is the schema descriptor for max_user_amount field.
-	appgoodDescMaxUserAmount := appgoodFields[27].Descriptor()
+	appgoodDescMaxUserAmount := appgoodFields[28].Descriptor()
 	// appgood.DefaultMaxUserAmount holds the default value on creation for the max_user_amount field.
 	appgood.DefaultMaxUserAmount = appgoodDescMaxUserAmount.Default.(decimal.Decimal)
 	// appgoodDescMinOrderDuration is the schema descriptor for min_order_duration field.
-	appgoodDescMinOrderDuration := appgoodFields[28].Descriptor()
+	appgoodDescMinOrderDuration := appgoodFields[29].Descriptor()
 	// appgood.DefaultMinOrderDuration holds the default value on creation for the min_order_duration field.
 	appgood.DefaultMinOrderDuration = appgoodDescMinOrderDuration.Default.(uint32)
 	// appgoodDescMaxOrderDuration is the schema descriptor for max_order_duration field.
-	appgoodDescMaxOrderDuration := appgoodFields[29].Descriptor()
+	appgoodDescMaxOrderDuration := appgoodFields[30].Descriptor()
 	// appgood.DefaultMaxOrderDuration holds the default value on creation for the max_order_duration field.
 	appgood.DefaultMaxOrderDuration = appgoodDescMaxOrderDuration.Default.(uint32)
+	// appgoodDescPackageWithRequireds is the schema descriptor for package_with_requireds field.
+	appgoodDescPackageWithRequireds := appgoodFields[31].Descriptor()
+	// appgood.DefaultPackageWithRequireds holds the default value on creation for the package_with_requireds field.
+	appgood.DefaultPackageWithRequireds = appgoodDescPackageWithRequireds.Default.(bool)
 	appstockMixin := schema.AppStock{}.Mixin()
 	appstock.Policy = privacy.NewPolicies(appstockMixin[0], schema.AppStock{})
 	appstock.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -556,10 +564,10 @@ func init() {
 	goodDescInheritFromGoodID := goodFields[3].Descriptor()
 	// good.DefaultInheritFromGoodID holds the default value on creation for the inherit_from_good_id field.
 	good.DefaultInheritFromGoodID = goodDescInheritFromGoodID.Default.(func() uuid.UUID)
-	// goodDescPrice is the schema descriptor for price field.
-	goodDescPrice := goodFields[5].Descriptor()
-	// good.DefaultPrice holds the default value on creation for the price field.
-	good.DefaultPrice = goodDescPrice.Default.(decimal.Decimal)
+	// goodDescUnitPrice is the schema descriptor for unit_price field.
+	goodDescUnitPrice := goodFields[5].Descriptor()
+	// good.DefaultUnitPrice holds the default value on creation for the unit_price field.
+	good.DefaultUnitPrice = goodDescUnitPrice.Default.(decimal.Decimal)
 	// goodDescBenefitType is the schema descriptor for benefit_type field.
 	goodDescBenefitType := goodFields[6].Descriptor()
 	// good.DefaultBenefitType holds the default value on creation for the benefit_type field.

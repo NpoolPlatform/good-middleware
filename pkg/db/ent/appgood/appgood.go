@@ -31,8 +31,10 @@ const (
 	FieldVisible = "visible"
 	// FieldGoodName holds the string denoting the good_name field in the database.
 	FieldGoodName = "good_name"
-	// FieldPrice holds the string denoting the price field in the database.
-	FieldPrice = "price"
+	// FieldUnitPrice holds the string denoting the unit_price field in the database.
+	FieldUnitPrice = "unit_price"
+	// FieldPackagePrice holds the string denoting the package_price field in the database.
+	FieldPackagePrice = "package_price"
 	// FieldDisplayIndex holds the string denoting the display_index field in the database.
 	FieldDisplayIndex = "display_index"
 	// FieldPurchaseLimit holds the string denoting the purchase_limit field in the database.
@@ -81,6 +83,8 @@ const (
 	FieldMinOrderDuration = "min_order_duration"
 	// FieldMaxOrderDuration holds the string denoting the max_order_duration field in the database.
 	FieldMaxOrderDuration = "max_order_duration"
+	// FieldPackageWithRequireds holds the string denoting the package_with_requireds field in the database.
+	FieldPackageWithRequireds = "package_with_requireds"
 	// Table holds the table name of the appgood in the database.
 	Table = "app_goods"
 )
@@ -97,7 +101,8 @@ var Columns = []string{
 	FieldOnline,
 	FieldVisible,
 	FieldGoodName,
-	FieldPrice,
+	FieldUnitPrice,
+	FieldPackagePrice,
 	FieldDisplayIndex,
 	FieldPurchaseLimit,
 	FieldSaleStartAt,
@@ -122,6 +127,7 @@ var Columns = []string{
 	FieldMaxUserAmount,
 	FieldMinOrderDuration,
 	FieldMaxOrderDuration,
+	FieldPackageWithRequireds,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -159,8 +165,10 @@ var (
 	DefaultVisible bool
 	// DefaultGoodName holds the default value on creation for the "good_name" field.
 	DefaultGoodName string
-	// DefaultPrice holds the default value on creation for the "price" field.
-	DefaultPrice decimal.Decimal
+	// DefaultUnitPrice holds the default value on creation for the "unit_price" field.
+	DefaultUnitPrice decimal.Decimal
+	// DefaultPackagePrice holds the default value on creation for the "package_price" field.
+	DefaultPackagePrice decimal.Decimal
 	// DefaultDisplayIndex holds the default value on creation for the "display_index" field.
 	DefaultDisplayIndex int32
 	// DefaultPurchaseLimit holds the default value on creation for the "purchase_limit" field.
@@ -209,4 +217,6 @@ var (
 	DefaultMinOrderDuration uint32
 	// DefaultMaxOrderDuration holds the default value on creation for the "max_order_duration" field.
 	DefaultMaxOrderDuration uint32
+	// DefaultPackageWithRequireds holds the default value on creation for the "package_with_requireds" field.
+	DefaultPackageWithRequireds bool
 )

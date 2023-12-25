@@ -45,7 +45,7 @@ func (Good) Fields() []ent.Field {
 		field.
 			UUID("vendor_location_id", uuid.UUID{}),
 		field.
-			Other("price", decimal.Decimal{}).
+			Other("unit_price", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).

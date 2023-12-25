@@ -133,16 +133,30 @@ func (agc *AppGoodCreate) SetNillableGoodName(s *string) *AppGoodCreate {
 	return agc
 }
 
-// SetPrice sets the "price" field.
-func (agc *AppGoodCreate) SetPrice(d decimal.Decimal) *AppGoodCreate {
-	agc.mutation.SetPrice(d)
+// SetUnitPrice sets the "unit_price" field.
+func (agc *AppGoodCreate) SetUnitPrice(d decimal.Decimal) *AppGoodCreate {
+	agc.mutation.SetUnitPrice(d)
 	return agc
 }
 
-// SetNillablePrice sets the "price" field if the given value is not nil.
-func (agc *AppGoodCreate) SetNillablePrice(d *decimal.Decimal) *AppGoodCreate {
+// SetNillableUnitPrice sets the "unit_price" field if the given value is not nil.
+func (agc *AppGoodCreate) SetNillableUnitPrice(d *decimal.Decimal) *AppGoodCreate {
 	if d != nil {
-		agc.SetPrice(*d)
+		agc.SetUnitPrice(*d)
+	}
+	return agc
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (agc *AppGoodCreate) SetPackagePrice(d decimal.Decimal) *AppGoodCreate {
+	agc.mutation.SetPackagePrice(d)
+	return agc
+}
+
+// SetNillablePackagePrice sets the "package_price" field if the given value is not nil.
+func (agc *AppGoodCreate) SetNillablePackagePrice(d *decimal.Decimal) *AppGoodCreate {
+	if d != nil {
+		agc.SetPackagePrice(*d)
 	}
 	return agc
 }
@@ -451,6 +465,20 @@ func (agc *AppGoodCreate) SetNillableMaxOrderDuration(u *uint32) *AppGoodCreate 
 	return agc
 }
 
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (agc *AppGoodCreate) SetPackageWithRequireds(b bool) *AppGoodCreate {
+	agc.mutation.SetPackageWithRequireds(b)
+	return agc
+}
+
+// SetNillablePackageWithRequireds sets the "package_with_requireds" field if the given value is not nil.
+func (agc *AppGoodCreate) SetNillablePackageWithRequireds(b *bool) *AppGoodCreate {
+	if b != nil {
+		agc.SetPackageWithRequireds(*b)
+	}
+	return agc
+}
+
 // SetID sets the "id" field.
 func (agc *AppGoodCreate) SetID(u uint32) *AppGoodCreate {
 	agc.mutation.SetID(u)
@@ -576,9 +604,13 @@ func (agc *AppGoodCreate) defaults() error {
 		v := appgood.DefaultGoodName
 		agc.mutation.SetGoodName(v)
 	}
-	if _, ok := agc.mutation.Price(); !ok {
-		v := appgood.DefaultPrice
-		agc.mutation.SetPrice(v)
+	if _, ok := agc.mutation.UnitPrice(); !ok {
+		v := appgood.DefaultUnitPrice
+		agc.mutation.SetUnitPrice(v)
+	}
+	if _, ok := agc.mutation.PackagePrice(); !ok {
+		v := appgood.DefaultPackagePrice
+		agc.mutation.SetPackagePrice(v)
 	}
 	if _, ok := agc.mutation.DisplayIndex(); !ok {
 		v := appgood.DefaultDisplayIndex
@@ -675,6 +707,10 @@ func (agc *AppGoodCreate) defaults() error {
 	if _, ok := agc.mutation.MaxOrderDuration(); !ok {
 		v := appgood.DefaultMaxOrderDuration
 		agc.mutation.SetMaxOrderDuration(v)
+	}
+	if _, ok := agc.mutation.PackageWithRequireds(); !ok {
+		v := appgood.DefaultPackageWithRequireds
+		agc.mutation.SetPackageWithRequireds(v)
 	}
 	return nil
 }
@@ -805,13 +841,21 @@ func (agc *AppGoodCreate) createSpec() (*AppGood, *sqlgraph.CreateSpec) {
 		})
 		_node.GoodName = value
 	}
-	if value, ok := agc.mutation.Price(); ok {
+	if value, ok := agc.mutation.UnitPrice(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: appgood.FieldPrice,
+			Column: appgood.FieldUnitPrice,
 		})
-		_node.Price = value
+		_node.UnitPrice = value
+	}
+	if value, ok := agc.mutation.PackagePrice(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldPackagePrice,
+		})
+		_node.PackagePrice = value
 	}
 	if value, ok := agc.mutation.DisplayIndex(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -1004,6 +1048,14 @@ func (agc *AppGoodCreate) createSpec() (*AppGood, *sqlgraph.CreateSpec) {
 			Column: appgood.FieldMaxOrderDuration,
 		})
 		_node.MaxOrderDuration = value
+	}
+	if value, ok := agc.mutation.PackageWithRequireds(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appgood.FieldPackageWithRequireds,
+		})
+		_node.PackageWithRequireds = value
 	}
 	return _node, _spec
 }
@@ -1203,21 +1255,39 @@ func (u *AppGoodUpsert) ClearGoodName() *AppGoodUpsert {
 	return u
 }
 
-// SetPrice sets the "price" field.
-func (u *AppGoodUpsert) SetPrice(v decimal.Decimal) *AppGoodUpsert {
-	u.Set(appgood.FieldPrice, v)
+// SetUnitPrice sets the "unit_price" field.
+func (u *AppGoodUpsert) SetUnitPrice(v decimal.Decimal) *AppGoodUpsert {
+	u.Set(appgood.FieldUnitPrice, v)
 	return u
 }
 
-// UpdatePrice sets the "price" field to the value that was provided on create.
-func (u *AppGoodUpsert) UpdatePrice() *AppGoodUpsert {
-	u.SetExcluded(appgood.FieldPrice)
+// UpdateUnitPrice sets the "unit_price" field to the value that was provided on create.
+func (u *AppGoodUpsert) UpdateUnitPrice() *AppGoodUpsert {
+	u.SetExcluded(appgood.FieldUnitPrice)
 	return u
 }
 
-// ClearPrice clears the value of the "price" field.
-func (u *AppGoodUpsert) ClearPrice() *AppGoodUpsert {
-	u.SetNull(appgood.FieldPrice)
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (u *AppGoodUpsert) ClearUnitPrice() *AppGoodUpsert {
+	u.SetNull(appgood.FieldUnitPrice)
+	return u
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (u *AppGoodUpsert) SetPackagePrice(v decimal.Decimal) *AppGoodUpsert {
+	u.Set(appgood.FieldPackagePrice, v)
+	return u
+}
+
+// UpdatePackagePrice sets the "package_price" field to the value that was provided on create.
+func (u *AppGoodUpsert) UpdatePackagePrice() *AppGoodUpsert {
+	u.SetExcluded(appgood.FieldPackagePrice)
+	return u
+}
+
+// ClearPackagePrice clears the value of the "package_price" field.
+func (u *AppGoodUpsert) ClearPackagePrice() *AppGoodUpsert {
+	u.SetNull(appgood.FieldPackagePrice)
 	return u
 }
 
@@ -1701,6 +1771,24 @@ func (u *AppGoodUpsert) ClearMaxOrderDuration() *AppGoodUpsert {
 	return u
 }
 
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (u *AppGoodUpsert) SetPackageWithRequireds(v bool) *AppGoodUpsert {
+	u.Set(appgood.FieldPackageWithRequireds, v)
+	return u
+}
+
+// UpdatePackageWithRequireds sets the "package_with_requireds" field to the value that was provided on create.
+func (u *AppGoodUpsert) UpdatePackageWithRequireds() *AppGoodUpsert {
+	u.SetExcluded(appgood.FieldPackageWithRequireds)
+	return u
+}
+
+// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
+func (u *AppGoodUpsert) ClearPackageWithRequireds() *AppGoodUpsert {
+	u.SetNull(appgood.FieldPackageWithRequireds)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
@@ -1919,24 +2007,45 @@ func (u *AppGoodUpsertOne) ClearGoodName() *AppGoodUpsertOne {
 	})
 }
 
-// SetPrice sets the "price" field.
-func (u *AppGoodUpsertOne) SetPrice(v decimal.Decimal) *AppGoodUpsertOne {
+// SetUnitPrice sets the "unit_price" field.
+func (u *AppGoodUpsertOne) SetUnitPrice(v decimal.Decimal) *AppGoodUpsertOne {
 	return u.Update(func(s *AppGoodUpsert) {
-		s.SetPrice(v)
+		s.SetUnitPrice(v)
 	})
 }
 
-// UpdatePrice sets the "price" field to the value that was provided on create.
-func (u *AppGoodUpsertOne) UpdatePrice() *AppGoodUpsertOne {
+// UpdateUnitPrice sets the "unit_price" field to the value that was provided on create.
+func (u *AppGoodUpsertOne) UpdateUnitPrice() *AppGoodUpsertOne {
 	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdatePrice()
+		s.UpdateUnitPrice()
 	})
 }
 
-// ClearPrice clears the value of the "price" field.
-func (u *AppGoodUpsertOne) ClearPrice() *AppGoodUpsertOne {
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (u *AppGoodUpsertOne) ClearUnitPrice() *AppGoodUpsertOne {
 	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearPrice()
+		s.ClearUnitPrice()
+	})
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (u *AppGoodUpsertOne) SetPackagePrice(v decimal.Decimal) *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetPackagePrice(v)
+	})
+}
+
+// UpdatePackagePrice sets the "package_price" field to the value that was provided on create.
+func (u *AppGoodUpsertOne) UpdatePackagePrice() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdatePackagePrice()
+	})
+}
+
+// ClearPackagePrice clears the value of the "package_price" field.
+func (u *AppGoodUpsertOne) ClearPackagePrice() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearPackagePrice()
 	})
 }
 
@@ -2500,6 +2609,27 @@ func (u *AppGoodUpsertOne) ClearMaxOrderDuration() *AppGoodUpsertOne {
 	})
 }
 
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (u *AppGoodUpsertOne) SetPackageWithRequireds(v bool) *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetPackageWithRequireds(v)
+	})
+}
+
+// UpdatePackageWithRequireds sets the "package_with_requireds" field to the value that was provided on create.
+func (u *AppGoodUpsertOne) UpdatePackageWithRequireds() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdatePackageWithRequireds()
+	})
+}
+
+// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
+func (u *AppGoodUpsertOne) ClearPackageWithRequireds() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearPackageWithRequireds()
+	})
+}
+
 // Exec executes the query.
 func (u *AppGoodUpsertOne) Exec(ctx context.Context) error {
 	if len(u.create.conflict) == 0 {
@@ -2883,24 +3013,45 @@ func (u *AppGoodUpsertBulk) ClearGoodName() *AppGoodUpsertBulk {
 	})
 }
 
-// SetPrice sets the "price" field.
-func (u *AppGoodUpsertBulk) SetPrice(v decimal.Decimal) *AppGoodUpsertBulk {
+// SetUnitPrice sets the "unit_price" field.
+func (u *AppGoodUpsertBulk) SetUnitPrice(v decimal.Decimal) *AppGoodUpsertBulk {
 	return u.Update(func(s *AppGoodUpsert) {
-		s.SetPrice(v)
+		s.SetUnitPrice(v)
 	})
 }
 
-// UpdatePrice sets the "price" field to the value that was provided on create.
-func (u *AppGoodUpsertBulk) UpdatePrice() *AppGoodUpsertBulk {
+// UpdateUnitPrice sets the "unit_price" field to the value that was provided on create.
+func (u *AppGoodUpsertBulk) UpdateUnitPrice() *AppGoodUpsertBulk {
 	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdatePrice()
+		s.UpdateUnitPrice()
 	})
 }
 
-// ClearPrice clears the value of the "price" field.
-func (u *AppGoodUpsertBulk) ClearPrice() *AppGoodUpsertBulk {
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (u *AppGoodUpsertBulk) ClearUnitPrice() *AppGoodUpsertBulk {
 	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearPrice()
+		s.ClearUnitPrice()
+	})
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (u *AppGoodUpsertBulk) SetPackagePrice(v decimal.Decimal) *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetPackagePrice(v)
+	})
+}
+
+// UpdatePackagePrice sets the "package_price" field to the value that was provided on create.
+func (u *AppGoodUpsertBulk) UpdatePackagePrice() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdatePackagePrice()
+	})
+}
+
+// ClearPackagePrice clears the value of the "package_price" field.
+func (u *AppGoodUpsertBulk) ClearPackagePrice() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearPackagePrice()
 	})
 }
 
@@ -3461,6 +3612,27 @@ func (u *AppGoodUpsertBulk) UpdateMaxOrderDuration() *AppGoodUpsertBulk {
 func (u *AppGoodUpsertBulk) ClearMaxOrderDuration() *AppGoodUpsertBulk {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.ClearMaxOrderDuration()
+	})
+}
+
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (u *AppGoodUpsertBulk) SetPackageWithRequireds(v bool) *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetPackageWithRequireds(v)
+	})
+}
+
+// UpdatePackageWithRequireds sets the "package_with_requireds" field to the value that was provided on create.
+func (u *AppGoodUpsertBulk) UpdatePackageWithRequireds() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdatePackageWithRequireds()
+	})
+}
+
+// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
+func (u *AppGoodUpsertBulk) ClearPackageWithRequireds() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearPackageWithRequireds()
 	})
 }
 

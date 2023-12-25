@@ -31,8 +31,8 @@ const (
 	FieldInheritFromGoodID = "inherit_from_good_id"
 	// FieldVendorLocationID holds the string denoting the vendor_location_id field in the database.
 	FieldVendorLocationID = "vendor_location_id"
-	// FieldPrice holds the string denoting the price field in the database.
-	FieldPrice = "price"
+	// FieldUnitPrice holds the string denoting the unit_price field in the database.
+	FieldUnitPrice = "unit_price"
 	// FieldBenefitType holds the string denoting the benefit_type field in the database.
 	FieldBenefitType = "benefit_type"
 	// FieldGoodType holds the string denoting the good_type field in the database.
@@ -83,7 +83,7 @@ var Columns = []string{
 	FieldCoinTypeID,
 	FieldInheritFromGoodID,
 	FieldVendorLocationID,
-	FieldPrice,
+	FieldUnitPrice,
 	FieldBenefitType,
 	FieldGoodType,
 	FieldTitle,
@@ -136,8 +136,8 @@ var (
 	DefaultDurationDays int32
 	// DefaultInheritFromGoodID holds the default value on creation for the "inherit_from_good_id" field.
 	DefaultInheritFromGoodID func() uuid.UUID
-	// DefaultPrice holds the default value on creation for the "price" field.
-	DefaultPrice decimal.Decimal
+	// DefaultUnitPrice holds the default value on creation for the "unit_price" field.
+	DefaultUnitPrice decimal.Decimal
 	// DefaultBenefitType holds the default value on creation for the "benefit_type" field.
 	DefaultBenefitType string
 	// DefaultGoodType holds the default value on creation for the "good_type" field.

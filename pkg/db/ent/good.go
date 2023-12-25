@@ -35,8 +35,8 @@ type Good struct {
 	InheritFromGoodID uuid.UUID `json:"inherit_from_good_id,omitempty"`
 	// VendorLocationID holds the value of the "vendor_location_id" field.
 	VendorLocationID uuid.UUID `json:"vendor_location_id,omitempty"`
-	// Price holds the value of the "price" field.
-	Price decimal.Decimal `json:"price,omitempty"`
+	// UnitPrice holds the value of the "unit_price" field.
+	UnitPrice decimal.Decimal `json:"unit_price,omitempty"`
 	// BenefitType holds the value of the "benefit_type" field.
 	BenefitType string `json:"benefit_type,omitempty"`
 	// GoodType holds the value of the "good_type" field.
@@ -78,7 +78,7 @@ func (*Good) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case good.FieldPrice, good.FieldQuantityUnitAmount, good.FieldUnitLockDeposit:
+		case good.FieldUnitPrice, good.FieldQuantityUnitAmount, good.FieldUnitLockDeposit:
 			values[i] = new(decimal.Decimal)
 		case good.FieldTestOnly:
 			values[i] = new(sql.NullBool)
@@ -163,11 +163,11 @@ func (_go *Good) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				_go.VendorLocationID = *value
 			}
-		case good.FieldPrice:
+		case good.FieldUnitPrice:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field price", values[i])
+				return fmt.Errorf("unexpected type %T for field unit_price", values[i])
 			} else if value != nil {
-				_go.Price = *value
+				_go.UnitPrice = *value
 			}
 		case good.FieldBenefitType:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -326,8 +326,8 @@ func (_go *Good) String() string {
 	builder.WriteString("vendor_location_id=")
 	builder.WriteString(fmt.Sprintf("%v", _go.VendorLocationID))
 	builder.WriteString(", ")
-	builder.WriteString("price=")
-	builder.WriteString(fmt.Sprintf("%v", _go.Price))
+	builder.WriteString("unit_price=")
+	builder.WriteString(fmt.Sprintf("%v", _go.UnitPrice))
 	builder.WriteString(", ")
 	builder.WriteString("benefit_type=")
 	builder.WriteString(_go.BenefitType)

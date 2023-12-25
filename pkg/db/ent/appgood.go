@@ -36,8 +36,10 @@ type AppGood struct {
 	Visible bool `json:"visible,omitempty"`
 	// GoodName holds the value of the "good_name" field.
 	GoodName string `json:"good_name,omitempty"`
-	// Price holds the value of the "price" field.
-	Price decimal.Decimal `json:"price,omitempty"`
+	// UnitPrice holds the value of the "unit_price" field.
+	UnitPrice decimal.Decimal `json:"unit_price,omitempty"`
+	// PackagePrice holds the value of the "package_price" field.
+	PackagePrice decimal.Decimal `json:"package_price,omitempty"`
 	// DisplayIndex holds the value of the "display_index" field.
 	DisplayIndex int32 `json:"display_index,omitempty"`
 	// PurchaseLimit holds the value of the "purchase_limit" field.
@@ -86,6 +88,8 @@ type AppGood struct {
 	MinOrderDuration uint32 `json:"min_order_duration,omitempty"`
 	// MaxOrderDuration holds the value of the "max_order_duration" field.
 	MaxOrderDuration uint32 `json:"max_order_duration,omitempty"`
+	// PackageWithRequireds holds the value of the "package_with_requireds" field.
+	PackageWithRequireds bool `json:"package_with_requireds,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -95,9 +99,9 @@ func (*AppGood) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appgood.FieldDescriptions, appgood.FieldDisplayNames, appgood.FieldDisplayColors, appgood.FieldPosters:
 			values[i] = new([]byte)
-		case appgood.FieldPrice, appgood.FieldTechnicalFeeRatio, appgood.FieldElectricityFeeRatio, appgood.FieldUserPurchaseLimit, appgood.FieldMinOrderAmount, appgood.FieldMaxOrderAmount, appgood.FieldMaxUserAmount:
+		case appgood.FieldUnitPrice, appgood.FieldPackagePrice, appgood.FieldTechnicalFeeRatio, appgood.FieldElectricityFeeRatio, appgood.FieldUserPurchaseLimit, appgood.FieldMinOrderAmount, appgood.FieldMaxOrderAmount, appgood.FieldMaxUserAmount:
 			values[i] = new(decimal.Decimal)
-		case appgood.FieldOnline, appgood.FieldVisible, appgood.FieldEnablePurchase, appgood.FieldEnableProductPage, appgood.FieldEnableSetCommission:
+		case appgood.FieldOnline, appgood.FieldVisible, appgood.FieldEnablePurchase, appgood.FieldEnableProductPage, appgood.FieldEnableSetCommission, appgood.FieldPackageWithRequireds:
 			values[i] = new(sql.NullBool)
 		case appgood.FieldID, appgood.FieldCreatedAt, appgood.FieldUpdatedAt, appgood.FieldDeletedAt, appgood.FieldDisplayIndex, appgood.FieldPurchaseLimit, appgood.FieldSaleStartAt, appgood.FieldSaleEndAt, appgood.FieldServiceStartAt, appgood.FieldCancellableBeforeStart, appgood.FieldMinOrderDuration, appgood.FieldMaxOrderDuration:
 			values[i] = new(sql.NullInt64)
@@ -180,11 +184,17 @@ func (ag *AppGood) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				ag.GoodName = value.String
 			}
-		case appgood.FieldPrice:
+		case appgood.FieldUnitPrice:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field price", values[i])
+				return fmt.Errorf("unexpected type %T for field unit_price", values[i])
 			} else if value != nil {
-				ag.Price = *value
+				ag.UnitPrice = *value
+			}
+		case appgood.FieldPackagePrice:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field package_price", values[i])
+			} else if value != nil {
+				ag.PackagePrice = *value
 			}
 		case appgood.FieldDisplayIndex:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -338,6 +348,12 @@ func (ag *AppGood) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				ag.MaxOrderDuration = uint32(value.Int64)
 			}
+		case appgood.FieldPackageWithRequireds:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field package_with_requireds", values[i])
+			} else if value.Valid {
+				ag.PackageWithRequireds = value.Bool
+			}
 		}
 	}
 	return nil
@@ -393,8 +409,11 @@ func (ag *AppGood) String() string {
 	builder.WriteString("good_name=")
 	builder.WriteString(ag.GoodName)
 	builder.WriteString(", ")
-	builder.WriteString("price=")
-	builder.WriteString(fmt.Sprintf("%v", ag.Price))
+	builder.WriteString("unit_price=")
+	builder.WriteString(fmt.Sprintf("%v", ag.UnitPrice))
+	builder.WriteString(", ")
+	builder.WriteString("package_price=")
+	builder.WriteString(fmt.Sprintf("%v", ag.PackagePrice))
 	builder.WriteString(", ")
 	builder.WriteString("display_index=")
 	builder.WriteString(fmt.Sprintf("%v", ag.DisplayIndex))
@@ -467,6 +486,9 @@ func (ag *AppGood) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("max_order_duration=")
 	builder.WriteString(fmt.Sprintf("%v", ag.MaxOrderDuration))
+	builder.WriteString(", ")
+	builder.WriteString("package_with_requireds=")
+	builder.WriteString(fmt.Sprintf("%v", ag.PackageWithRequireds))
 	builder.WriteByte(')')
 	return builder.String()
 }

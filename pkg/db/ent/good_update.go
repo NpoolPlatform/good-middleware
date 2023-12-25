@@ -164,23 +164,23 @@ func (gu *GoodUpdate) SetVendorLocationID(u uuid.UUID) *GoodUpdate {
 	return gu
 }
 
-// SetPrice sets the "price" field.
-func (gu *GoodUpdate) SetPrice(d decimal.Decimal) *GoodUpdate {
-	gu.mutation.SetPrice(d)
+// SetUnitPrice sets the "unit_price" field.
+func (gu *GoodUpdate) SetUnitPrice(d decimal.Decimal) *GoodUpdate {
+	gu.mutation.SetUnitPrice(d)
 	return gu
 }
 
-// SetNillablePrice sets the "price" field if the given value is not nil.
-func (gu *GoodUpdate) SetNillablePrice(d *decimal.Decimal) *GoodUpdate {
+// SetNillableUnitPrice sets the "unit_price" field if the given value is not nil.
+func (gu *GoodUpdate) SetNillableUnitPrice(d *decimal.Decimal) *GoodUpdate {
 	if d != nil {
-		gu.SetPrice(*d)
+		gu.SetUnitPrice(*d)
 	}
 	return gu
 }
 
-// ClearPrice clears the value of the "price" field.
-func (gu *GoodUpdate) ClearPrice() *GoodUpdate {
-	gu.mutation.ClearPrice()
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (gu *GoodUpdate) ClearUnitPrice() *GoodUpdate {
+	gu.mutation.ClearUnitPrice()
 	return gu
 }
 
@@ -753,17 +753,17 @@ func (gu *GoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: good.FieldVendorLocationID,
 		})
 	}
-	if value, ok := gu.mutation.Price(); ok {
+	if value, ok := gu.mutation.UnitPrice(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: good.FieldPrice,
+			Column: good.FieldUnitPrice,
 		})
 	}
-	if gu.mutation.PriceCleared() {
+	if gu.mutation.UnitPriceCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: good.FieldPrice,
+			Column: good.FieldUnitPrice,
 		})
 	}
 	if value, ok := gu.mutation.BenefitType(); ok {
@@ -1170,23 +1170,23 @@ func (guo *GoodUpdateOne) SetVendorLocationID(u uuid.UUID) *GoodUpdateOne {
 	return guo
 }
 
-// SetPrice sets the "price" field.
-func (guo *GoodUpdateOne) SetPrice(d decimal.Decimal) *GoodUpdateOne {
-	guo.mutation.SetPrice(d)
+// SetUnitPrice sets the "unit_price" field.
+func (guo *GoodUpdateOne) SetUnitPrice(d decimal.Decimal) *GoodUpdateOne {
+	guo.mutation.SetUnitPrice(d)
 	return guo
 }
 
-// SetNillablePrice sets the "price" field if the given value is not nil.
-func (guo *GoodUpdateOne) SetNillablePrice(d *decimal.Decimal) *GoodUpdateOne {
+// SetNillableUnitPrice sets the "unit_price" field if the given value is not nil.
+func (guo *GoodUpdateOne) SetNillableUnitPrice(d *decimal.Decimal) *GoodUpdateOne {
 	if d != nil {
-		guo.SetPrice(*d)
+		guo.SetUnitPrice(*d)
 	}
 	return guo
 }
 
-// ClearPrice clears the value of the "price" field.
-func (guo *GoodUpdateOne) ClearPrice() *GoodUpdateOne {
-	guo.mutation.ClearPrice()
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (guo *GoodUpdateOne) ClearUnitPrice() *GoodUpdateOne {
+	guo.mutation.ClearUnitPrice()
 	return guo
 }
 
@@ -1789,17 +1789,17 @@ func (guo *GoodUpdateOne) sqlSave(ctx context.Context) (_node *Good, err error) 
 			Column: good.FieldVendorLocationID,
 		})
 	}
-	if value, ok := guo.mutation.Price(); ok {
+	if value, ok := guo.mutation.UnitPrice(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: good.FieldPrice,
+			Column: good.FieldUnitPrice,
 		})
 	}
-	if guo.mutation.PriceCleared() {
+	if guo.mutation.UnitPriceCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: good.FieldPrice,
+			Column: good.FieldUnitPrice,
 		})
 	}
 	if value, ok := guo.mutation.BenefitType(); ok {
