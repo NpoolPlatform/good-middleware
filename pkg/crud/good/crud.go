@@ -25,6 +25,7 @@ type Req struct {
 	GoodType             *types.GoodType
 	Title                *string
 	Unit                 *string
+	QuantityUnit         *string
 	UnitAmount           *int32
 	DeliveryAt           *uint32
 	StartAt              *uint32

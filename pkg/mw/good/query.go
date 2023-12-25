@@ -255,7 +255,6 @@ func (h *queryHandler) formalize() {
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.RewardState = types.BenefitState(types.BenefitState_value[info.RewardStateStr])
-		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
 		amount, err := decimal.NewFromString(info.UnitLockDeposit)
 		if err != nil {
