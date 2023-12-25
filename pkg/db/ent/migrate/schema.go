@@ -254,7 +254,7 @@ var (
 		{Name: "unit", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "quantity_unit", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "unit_amount", Type: field.TypeInt32, Nullable: true, Default: 0},
-		{Name: "quantity_unit_amount", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "quantity_unit_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "delivery_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "start_mode", Type: field.TypeString, Nullable: true, Default: "GoodStartModeNextDay"},

@@ -151,7 +151,7 @@ var (
 	// DefaultUnitAmount holds the default value on creation for the "unit_amount" field.
 	DefaultUnitAmount int32
 	// DefaultQuantityUnitAmount holds the default value on creation for the "quantity_unit_amount" field.
-	DefaultQuantityUnitAmount uint32
+	DefaultQuantityUnitAmount decimal.Decimal
 	// DefaultDeliveryAt holds the default value on creation for the "delivery_at" field.
 	DefaultDeliveryAt uint32
 	// DefaultStartAt holds the default value on creation for the "start_at" field.

@@ -193,7 +193,7 @@ func UnitAmount(v int32) predicate.Good {
 }
 
 // QuantityUnitAmount applies equality check predicate on the "quantity_unit_amount" field. It's identical to QuantityUnitAmountEQ.
-func QuantityUnitAmount(v uint32) predicate.Good {
+func QuantityUnitAmount(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldQuantityUnitAmount), v))
 	})
@@ -1595,21 +1595,21 @@ func UnitAmountNotNil() predicate.Good {
 }
 
 // QuantityUnitAmountEQ applies the EQ predicate on the "quantity_unit_amount" field.
-func QuantityUnitAmountEQ(v uint32) predicate.Good {
+func QuantityUnitAmountEQ(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldQuantityUnitAmount), v))
 	})
 }
 
 // QuantityUnitAmountNEQ applies the NEQ predicate on the "quantity_unit_amount" field.
-func QuantityUnitAmountNEQ(v uint32) predicate.Good {
+func QuantityUnitAmountNEQ(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldQuantityUnitAmount), v))
 	})
 }
 
 // QuantityUnitAmountIn applies the In predicate on the "quantity_unit_amount" field.
-func QuantityUnitAmountIn(vs ...uint32) predicate.Good {
+func QuantityUnitAmountIn(vs ...decimal.Decimal) predicate.Good {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -1620,7 +1620,7 @@ func QuantityUnitAmountIn(vs ...uint32) predicate.Good {
 }
 
 // QuantityUnitAmountNotIn applies the NotIn predicate on the "quantity_unit_amount" field.
-func QuantityUnitAmountNotIn(vs ...uint32) predicate.Good {
+func QuantityUnitAmountNotIn(vs ...decimal.Decimal) predicate.Good {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -1631,28 +1631,28 @@ func QuantityUnitAmountNotIn(vs ...uint32) predicate.Good {
 }
 
 // QuantityUnitAmountGT applies the GT predicate on the "quantity_unit_amount" field.
-func QuantityUnitAmountGT(v uint32) predicate.Good {
+func QuantityUnitAmountGT(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldQuantityUnitAmount), v))
 	})
 }
 
 // QuantityUnitAmountGTE applies the GTE predicate on the "quantity_unit_amount" field.
-func QuantityUnitAmountGTE(v uint32) predicate.Good {
+func QuantityUnitAmountGTE(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldQuantityUnitAmount), v))
 	})
 }
 
 // QuantityUnitAmountLT applies the LT predicate on the "quantity_unit_amount" field.
-func QuantityUnitAmountLT(v uint32) predicate.Good {
+func QuantityUnitAmountLT(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldQuantityUnitAmount), v))
 	})
 }
 
 // QuantityUnitAmountLTE applies the LTE predicate on the "quantity_unit_amount" field.
-func QuantityUnitAmountLTE(v uint32) predicate.Good {
+func QuantityUnitAmountLTE(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldQuantityUnitAmount), v))
 	})

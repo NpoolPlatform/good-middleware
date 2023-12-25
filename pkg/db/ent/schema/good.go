@@ -76,9 +76,12 @@ func (Good) Fields() []ent.Field {
 			Optional().
 			Default(0),
 		field.
-			Uint32("quantity_unit_amount").
+			Other("quantity_unit_amount", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
 			Optional().
-			Default(0),
+			Default(decimal.Decimal{}),
 		field.
 			Uint32("delivery_at").
 			Optional().

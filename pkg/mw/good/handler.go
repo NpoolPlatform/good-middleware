@@ -239,7 +239,7 @@ func WithTitle(s *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithUnit(s *string, must bool) func(context.Context, *Handler) error {
+func WithQuantityUnit(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
@@ -251,20 +251,24 @@ func WithUnit(s *string, must bool) func(context.Context, *Handler) error {
 		if len(*s) < leastUnitLen {
 			return fmt.Errorf("invalid unit")
 		}
-		h.Unit = s
+		h.QuantityUnit = s
 		return nil
 	}
 }
 
-func WithUnitAmount(n *int32, must bool) func(context.Context, *Handler) error {
+func WithQuantityUnitAmount(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		if n == nil {
+		if s == nil {
 			if must {
 				return fmt.Errorf("invalid unitamount")
 			}
 			return nil
 		}
-		h.UnitAmount = n
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.QuantityUnitAmount = &amount
 		return nil
 	}
 }

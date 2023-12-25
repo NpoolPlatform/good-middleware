@@ -9236,8 +9236,7 @@ type GoodMutation struct {
 	quantity_unit             *string
 	unit_amount               *int32
 	addunit_amount            *int32
-	quantity_unit_amount      *uint32
-	addquantity_unit_amount   *int32
+	quantity_unit_amount      *decimal.Decimal
 	delivery_at               *uint32
 	adddelivery_at            *int32
 	start_at                  *uint32
@@ -10157,13 +10156,12 @@ func (m *GoodMutation) ResetUnitAmount() {
 }
 
 // SetQuantityUnitAmount sets the "quantity_unit_amount" field.
-func (m *GoodMutation) SetQuantityUnitAmount(u uint32) {
-	m.quantity_unit_amount = &u
-	m.addquantity_unit_amount = nil
+func (m *GoodMutation) SetQuantityUnitAmount(d decimal.Decimal) {
+	m.quantity_unit_amount = &d
 }
 
 // QuantityUnitAmount returns the value of the "quantity_unit_amount" field in the mutation.
-func (m *GoodMutation) QuantityUnitAmount() (r uint32, exists bool) {
+func (m *GoodMutation) QuantityUnitAmount() (r decimal.Decimal, exists bool) {
 	v := m.quantity_unit_amount
 	if v == nil {
 		return
@@ -10174,7 +10172,7 @@ func (m *GoodMutation) QuantityUnitAmount() (r uint32, exists bool) {
 // OldQuantityUnitAmount returns the old "quantity_unit_amount" field's value of the Good entity.
 // If the Good object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodMutation) OldQuantityUnitAmount(ctx context.Context) (v uint32, err error) {
+func (m *GoodMutation) OldQuantityUnitAmount(ctx context.Context) (v decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldQuantityUnitAmount is only allowed on UpdateOne operations")
 	}
@@ -10188,28 +10186,9 @@ func (m *GoodMutation) OldQuantityUnitAmount(ctx context.Context) (v uint32, err
 	return oldValue.QuantityUnitAmount, nil
 }
 
-// AddQuantityUnitAmount adds u to the "quantity_unit_amount" field.
-func (m *GoodMutation) AddQuantityUnitAmount(u int32) {
-	if m.addquantity_unit_amount != nil {
-		*m.addquantity_unit_amount += u
-	} else {
-		m.addquantity_unit_amount = &u
-	}
-}
-
-// AddedQuantityUnitAmount returns the value that was added to the "quantity_unit_amount" field in this mutation.
-func (m *GoodMutation) AddedQuantityUnitAmount() (r int32, exists bool) {
-	v := m.addquantity_unit_amount
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
 // ClearQuantityUnitAmount clears the value of the "quantity_unit_amount" field.
 func (m *GoodMutation) ClearQuantityUnitAmount() {
 	m.quantity_unit_amount = nil
-	m.addquantity_unit_amount = nil
 	m.clearedFields[good.FieldQuantityUnitAmount] = struct{}{}
 }
 
@@ -10222,7 +10201,6 @@ func (m *GoodMutation) QuantityUnitAmountCleared() bool {
 // ResetQuantityUnitAmount resets all changes to the "quantity_unit_amount" field.
 func (m *GoodMutation) ResetQuantityUnitAmount() {
 	m.quantity_unit_amount = nil
-	m.addquantity_unit_amount = nil
 	delete(m.clearedFields, good.FieldQuantityUnitAmount)
 }
 
@@ -11127,7 +11105,7 @@ func (m *GoodMutation) SetField(name string, value ent.Value) error {
 		m.SetUnitAmount(v)
 		return nil
 	case good.FieldQuantityUnitAmount:
-		v, ok := value.(uint32)
+		v, ok := value.(decimal.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -11226,9 +11204,6 @@ func (m *GoodMutation) AddedFields() []string {
 	if m.addunit_amount != nil {
 		fields = append(fields, good.FieldUnitAmount)
 	}
-	if m.addquantity_unit_amount != nil {
-		fields = append(fields, good.FieldQuantityUnitAmount)
-	}
 	if m.adddelivery_at != nil {
 		fields = append(fields, good.FieldDeliveryAt)
 	}
@@ -11256,8 +11231,6 @@ func (m *GoodMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedDurationDays()
 	case good.FieldUnitAmount:
 		return m.AddedUnitAmount()
-	case good.FieldQuantityUnitAmount:
-		return m.AddedQuantityUnitAmount()
 	case good.FieldDeliveryAt:
 		return m.AddedDeliveryAt()
 	case good.FieldStartAt:
@@ -11307,13 +11280,6 @@ func (m *GoodMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddUnitAmount(v)
-		return nil
-	case good.FieldQuantityUnitAmount:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddQuantityUnitAmount(v)
 		return nil
 	case good.FieldDeliveryAt:
 		v, ok := value.(int32)

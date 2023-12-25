@@ -50,7 +50,7 @@ type Good struct {
 	// UnitAmount holds the value of the "unit_amount" field.
 	UnitAmount int32 `json:"unit_amount,omitempty"`
 	// QuantityUnitAmount holds the value of the "quantity_unit_amount" field.
-	QuantityUnitAmount uint32 `json:"quantity_unit_amount,omitempty"`
+	QuantityUnitAmount decimal.Decimal `json:"quantity_unit_amount,omitempty"`
 	// DeliveryAt holds the value of the "delivery_at" field.
 	DeliveryAt uint32 `json:"delivery_at,omitempty"`
 	// StartAt holds the value of the "start_at" field.
@@ -78,11 +78,11 @@ func (*Good) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case good.FieldPrice, good.FieldUnitLockDeposit:
+		case good.FieldPrice, good.FieldQuantityUnitAmount, good.FieldUnitLockDeposit:
 			values[i] = new(decimal.Decimal)
 		case good.FieldTestOnly:
 			values[i] = new(sql.NullBool)
-		case good.FieldID, good.FieldCreatedAt, good.FieldUpdatedAt, good.FieldDeletedAt, good.FieldDurationDays, good.FieldUnitAmount, good.FieldQuantityUnitAmount, good.FieldDeliveryAt, good.FieldStartAt, good.FieldBenefitIntervalHours:
+		case good.FieldID, good.FieldCreatedAt, good.FieldUpdatedAt, good.FieldDeletedAt, good.FieldDurationDays, good.FieldUnitAmount, good.FieldDeliveryAt, good.FieldStartAt, good.FieldBenefitIntervalHours:
 			values[i] = new(sql.NullInt64)
 		case good.FieldBenefitType, good.FieldGoodType, good.FieldTitle, good.FieldUnit, good.FieldQuantityUnit, good.FieldStartMode, good.FieldUnitType, good.FieldQuantityCalculateType, good.FieldDurationType, good.FieldDurationCalculateType:
 			values[i] = new(sql.NullString)
@@ -206,10 +206,10 @@ func (_go *Good) assignValues(columns []string, values []interface{}) error {
 				_go.UnitAmount = int32(value.Int64)
 			}
 		case good.FieldQuantityUnitAmount:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*decimal.Decimal); !ok {
 				return fmt.Errorf("unexpected type %T for field quantity_unit_amount", values[i])
-			} else if value.Valid {
-				_go.QuantityUnitAmount = uint32(value.Int64)
+			} else if value != nil {
+				_go.QuantityUnitAmount = *value
 			}
 		case good.FieldDeliveryAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {

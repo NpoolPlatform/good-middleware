@@ -312,23 +312,16 @@ func (gu *GoodUpdate) ClearUnitAmount() *GoodUpdate {
 }
 
 // SetQuantityUnitAmount sets the "quantity_unit_amount" field.
-func (gu *GoodUpdate) SetQuantityUnitAmount(u uint32) *GoodUpdate {
-	gu.mutation.ResetQuantityUnitAmount()
-	gu.mutation.SetQuantityUnitAmount(u)
+func (gu *GoodUpdate) SetQuantityUnitAmount(d decimal.Decimal) *GoodUpdate {
+	gu.mutation.SetQuantityUnitAmount(d)
 	return gu
 }
 
 // SetNillableQuantityUnitAmount sets the "quantity_unit_amount" field if the given value is not nil.
-func (gu *GoodUpdate) SetNillableQuantityUnitAmount(u *uint32) *GoodUpdate {
-	if u != nil {
-		gu.SetQuantityUnitAmount(*u)
+func (gu *GoodUpdate) SetNillableQuantityUnitAmount(d *decimal.Decimal) *GoodUpdate {
+	if d != nil {
+		gu.SetQuantityUnitAmount(*d)
 	}
-	return gu
-}
-
-// AddQuantityUnitAmount adds u to the "quantity_unit_amount" field.
-func (gu *GoodUpdate) AddQuantityUnitAmount(u int32) *GoodUpdate {
-	gu.mutation.AddQuantityUnitAmount(u)
 	return gu
 }
 
@@ -860,21 +853,14 @@ func (gu *GoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := gu.mutation.QuantityUnitAmount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: good.FieldQuantityUnitAmount,
-		})
-	}
-	if value, ok := gu.mutation.AddedQuantityUnitAmount(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: good.FieldQuantityUnitAmount,
 		})
 	}
 	if gu.mutation.QuantityUnitAmountCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeOther,
 			Column: good.FieldQuantityUnitAmount,
 		})
 	}
@@ -1332,23 +1318,16 @@ func (guo *GoodUpdateOne) ClearUnitAmount() *GoodUpdateOne {
 }
 
 // SetQuantityUnitAmount sets the "quantity_unit_amount" field.
-func (guo *GoodUpdateOne) SetQuantityUnitAmount(u uint32) *GoodUpdateOne {
-	guo.mutation.ResetQuantityUnitAmount()
-	guo.mutation.SetQuantityUnitAmount(u)
+func (guo *GoodUpdateOne) SetQuantityUnitAmount(d decimal.Decimal) *GoodUpdateOne {
+	guo.mutation.SetQuantityUnitAmount(d)
 	return guo
 }
 
 // SetNillableQuantityUnitAmount sets the "quantity_unit_amount" field if the given value is not nil.
-func (guo *GoodUpdateOne) SetNillableQuantityUnitAmount(u *uint32) *GoodUpdateOne {
-	if u != nil {
-		guo.SetQuantityUnitAmount(*u)
+func (guo *GoodUpdateOne) SetNillableQuantityUnitAmount(d *decimal.Decimal) *GoodUpdateOne {
+	if d != nil {
+		guo.SetQuantityUnitAmount(*d)
 	}
-	return guo
-}
-
-// AddQuantityUnitAmount adds u to the "quantity_unit_amount" field.
-func (guo *GoodUpdateOne) AddQuantityUnitAmount(u int32) *GoodUpdateOne {
-	guo.mutation.AddQuantityUnitAmount(u)
 	return guo
 }
 
@@ -1910,21 +1889,14 @@ func (guo *GoodUpdateOne) sqlSave(ctx context.Context) (_node *Good, err error) 
 	}
 	if value, ok := guo.mutation.QuantityUnitAmount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: good.FieldQuantityUnitAmount,
-		})
-	}
-	if value, ok := guo.mutation.AddedQuantityUnitAmount(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: good.FieldQuantityUnitAmount,
 		})
 	}
 	if guo.mutation.QuantityUnitAmountCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeOther,
 			Column: good.FieldQuantityUnitAmount,
 		})
 	}

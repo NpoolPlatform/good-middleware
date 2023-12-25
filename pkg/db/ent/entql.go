@@ -242,7 +242,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			good.FieldUnit:                  {Type: field.TypeString, Column: good.FieldUnit},
 			good.FieldQuantityUnit:          {Type: field.TypeString, Column: good.FieldQuantityUnit},
 			good.FieldUnitAmount:            {Type: field.TypeInt32, Column: good.FieldUnitAmount},
-			good.FieldQuantityUnitAmount:    {Type: field.TypeUint32, Column: good.FieldQuantityUnitAmount},
+			good.FieldQuantityUnitAmount:    {Type: field.TypeOther, Column: good.FieldQuantityUnitAmount},
 			good.FieldDeliveryAt:            {Type: field.TypeUint32, Column: good.FieldDeliveryAt},
 			good.FieldStartAt:               {Type: field.TypeUint32, Column: good.FieldStartAt},
 			good.FieldStartMode:             {Type: field.TypeString, Column: good.FieldStartMode},
@@ -1378,8 +1378,8 @@ func (f *GoodFilter) WhereUnitAmount(p entql.Int32P) {
 	f.Where(p.Field(good.FieldUnitAmount))
 }
 
-// WhereQuantityUnitAmount applies the entql uint32 predicate on the quantity_unit_amount field.
-func (f *GoodFilter) WhereQuantityUnitAmount(p entql.Uint32P) {
+// WhereQuantityUnitAmount applies the entql other predicate on the quantity_unit_amount field.
+func (f *GoodFilter) WhereQuantityUnitAmount(p entql.OtherP) {
 	f.Where(p.Field(good.FieldQuantityUnitAmount))
 }
 

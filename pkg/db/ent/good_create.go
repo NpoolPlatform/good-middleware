@@ -224,15 +224,15 @@ func (gc *GoodCreate) SetNillableUnitAmount(i *int32) *GoodCreate {
 }
 
 // SetQuantityUnitAmount sets the "quantity_unit_amount" field.
-func (gc *GoodCreate) SetQuantityUnitAmount(u uint32) *GoodCreate {
-	gc.mutation.SetQuantityUnitAmount(u)
+func (gc *GoodCreate) SetQuantityUnitAmount(d decimal.Decimal) *GoodCreate {
+	gc.mutation.SetQuantityUnitAmount(d)
 	return gc
 }
 
 // SetNillableQuantityUnitAmount sets the "quantity_unit_amount" field if the given value is not nil.
-func (gc *GoodCreate) SetNillableQuantityUnitAmount(u *uint32) *GoodCreate {
-	if u != nil {
-		gc.SetQuantityUnitAmount(*u)
+func (gc *GoodCreate) SetNillableQuantityUnitAmount(d *decimal.Decimal) *GoodCreate {
+	if d != nil {
+		gc.SetQuantityUnitAmount(*d)
 	}
 	return gc
 }
@@ -763,7 +763,7 @@ func (gc *GoodCreate) createSpec() (*Good, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := gc.mutation.QuantityUnitAmount(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: good.FieldQuantityUnitAmount,
 		})
@@ -1180,7 +1180,7 @@ func (u *GoodUpsert) ClearUnitAmount() *GoodUpsert {
 }
 
 // SetQuantityUnitAmount sets the "quantity_unit_amount" field.
-func (u *GoodUpsert) SetQuantityUnitAmount(v uint32) *GoodUpsert {
+func (u *GoodUpsert) SetQuantityUnitAmount(v decimal.Decimal) *GoodUpsert {
 	u.Set(good.FieldQuantityUnitAmount, v)
 	return u
 }
@@ -1188,12 +1188,6 @@ func (u *GoodUpsert) SetQuantityUnitAmount(v uint32) *GoodUpsert {
 // UpdateQuantityUnitAmount sets the "quantity_unit_amount" field to the value that was provided on create.
 func (u *GoodUpsert) UpdateQuantityUnitAmount() *GoodUpsert {
 	u.SetExcluded(good.FieldQuantityUnitAmount)
-	return u
-}
-
-// AddQuantityUnitAmount adds v to the "quantity_unit_amount" field.
-func (u *GoodUpsert) AddQuantityUnitAmount(v uint32) *GoodUpsert {
-	u.Add(good.FieldQuantityUnitAmount, v)
 	return u
 }
 
@@ -1774,16 +1768,9 @@ func (u *GoodUpsertOne) ClearUnitAmount() *GoodUpsertOne {
 }
 
 // SetQuantityUnitAmount sets the "quantity_unit_amount" field.
-func (u *GoodUpsertOne) SetQuantityUnitAmount(v uint32) *GoodUpsertOne {
+func (u *GoodUpsertOne) SetQuantityUnitAmount(v decimal.Decimal) *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
 		s.SetQuantityUnitAmount(v)
-	})
-}
-
-// AddQuantityUnitAmount adds v to the "quantity_unit_amount" field.
-func (u *GoodUpsertOne) AddQuantityUnitAmount(v uint32) *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.AddQuantityUnitAmount(v)
 	})
 }
 
@@ -2570,16 +2557,9 @@ func (u *GoodUpsertBulk) ClearUnitAmount() *GoodUpsertBulk {
 }
 
 // SetQuantityUnitAmount sets the "quantity_unit_amount" field.
-func (u *GoodUpsertBulk) SetQuantityUnitAmount(v uint32) *GoodUpsertBulk {
+func (u *GoodUpsertBulk) SetQuantityUnitAmount(v decimal.Decimal) *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
 		s.SetQuantityUnitAmount(v)
-	})
-}
-
-// AddQuantityUnitAmount adds v to the "quantity_unit_amount" field.
-func (u *GoodUpsertBulk) AddQuantityUnitAmount(v uint32) *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.AddQuantityUnitAmount(v)
 	})
 }
 

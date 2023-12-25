@@ -24,9 +24,8 @@ type Req struct {
 	StartMode            *types.GoodStartMode
 	GoodType             *types.GoodType
 	Title                *string
-	Unit                 *string
 	QuantityUnit         *string
-	UnitAmount           *int32
+	QuantityUnitAmount   *decimal.Decimal
 	DeliveryAt           *uint32
 	StartAt              *uint32
 	TestOnly             *bool
@@ -67,11 +66,11 @@ func CreateSet(c *ent.GoodCreate, req *Req) *ent.GoodCreate {
 	if req.Title != nil {
 		c.SetTitle(*req.Title)
 	}
-	if req.Unit != nil {
-		c.SetUnit(*req.Unit)
+	if req.QuantityUnit != nil {
+		c.SetQuantityUnit(*req.QuantityUnit)
 	}
-	if req.UnitAmount != nil {
-		c.SetUnitAmount(*req.UnitAmount)
+	if req.QuantityUnitAmount != nil {
+		c.SetQuantityUnitAmount(*req.QuantityUnitAmount)
 	}
 	if req.DeliveryAt != nil {
 		c.SetDeliveryAt(*req.DeliveryAt)
@@ -117,11 +116,11 @@ func UpdateSet(u *ent.GoodUpdateOne, req *Req) *ent.GoodUpdateOne {
 	if req.Title != nil {
 		u.SetTitle(*req.Title)
 	}
-	if req.Unit != nil {
-		u.SetUnit(*req.Unit)
+	if req.QuantityUnit != nil {
+		u.SetQuantityUnit(*req.QuantityUnit)
 	}
-	if req.UnitAmount != nil {
-		u.SetUnitAmount(*req.UnitAmount)
+	if req.QuantityUnitAmount != nil {
+		u.SetQuantityUnitAmount(*req.QuantityUnitAmount)
 	}
 	if req.DeliveryAt != nil {
 		u.SetDeliveryAt(*req.DeliveryAt)

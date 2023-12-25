@@ -567,7 +567,7 @@ func init() {
 	// goodDescQuantityUnitAmount is the schema descriptor for quantity_unit_amount field.
 	goodDescQuantityUnitAmount := goodFields[12].Descriptor()
 	// good.DefaultQuantityUnitAmount holds the default value on creation for the quantity_unit_amount field.
-	good.DefaultQuantityUnitAmount = goodDescQuantityUnitAmount.Default.(uint32)
+	good.DefaultQuantityUnitAmount = goodDescQuantityUnitAmount.Default.(decimal.Decimal)
 	// goodDescDeliveryAt is the schema descriptor for delivery_at field.
 	goodDescDeliveryAt := goodFields[13].Descriptor()
 	// good.DefaultDeliveryAt holds the default value on creation for the delivery_at field.
