@@ -522,6 +522,85 @@ func WithUnitRewardAmount(s *string, must bool) func(context.Context, *Handler) 
 	}
 }
 
+func WithUnitType(e *types.GoodUnitType, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return fmt.Errorf("invalid unittype")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodUnitType_GoodUnitByDuration:
+		case types.GoodUnitType_GoodUnitByQuantity:
+		case types.GoodUnitType_GoodUnitByDurationAndQuantity:
+		default:
+			return fmt.Errorf("invalid unittype")
+		}
+		h.UnitType = e
+		return nil
+	}
+}
+
+func WithQuantityCalculateType(e *types.GoodUnitCalculateType, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return fmt.Errorf("invalid quantitycalculatetype")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodUnitCalculateType_GoodUnitCalculateBySelf:
+		case types.GoodUnitCalculateType_GoodUnitCalculateByParent:
+		default:
+			return fmt.Errorf("invalid quantitycalculatetype")
+		}
+		h.QuantityCalculateType = e
+		return nil
+	}
+}
+
+func WithDurationType(e *types.GoodDurationType, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return fmt.Errorf("invalid durationtype")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodDurationType_GoodDurationByHour:
+		case types.GoodDurationType_GoodDurationByDay:
+		case types.GoodDurationType_GoodDurationByMonth:
+		case types.GoodDurationType_GoodDurationByYear:
+		default:
+			return fmt.Errorf("invalid durationtype")
+		}
+		h.DurationType = e
+		return nil
+	}
+}
+
+func WithDurationCalculateType(e *types.GoodUnitCalculateType, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return fmt.Errorf("invalid durationcalculatetype")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodUnitCalculateType_GoodUnitCalculateBySelf:
+		case types.GoodUnitCalculateType_GoodUnitCalculateByParent:
+		default:
+			return fmt.Errorf("invalid durationcalculatetype")
+		}
+		h.DurationCalculateType = e
+		return nil
+	}
+}
+
 //nolint:gocyclo
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {

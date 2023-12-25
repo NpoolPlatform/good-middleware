@@ -76,8 +76,8 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entgood.FieldBenefitType), "benefit_type"),
 			sql.As(t.C(entgood.FieldGoodType), "good_type"),
 			sql.As(t.C(entgood.FieldTitle), "title"),
-			sql.As(t.C(entgood.FieldUnit), "quantity_unit"),
-			sql.As(t.C(entgood.FieldUnitAmount), "quantity_unit_amount"),
+			sql.As(t.C(entgood.FieldQuantityUnit), "quantity_unit"),
+			sql.As(t.C(entgood.FieldQuantityUnitAmount), "quantity_unit_amount"),
 			sql.As(t.C(entgood.FieldDeliveryAt), "delivery_at"),
 			sql.As(t.C(entgood.FieldStartAt), "start_at"),
 			sql.As(t.C(entgood.FieldStartMode), "start_mode"),
@@ -259,6 +259,10 @@ func (h *queryHandler) formalize() {
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.RewardState = types.BenefitState(types.BenefitState_value[info.RewardStateStr])
+		info.UnitType = types.GoodUnitType(types.GoodUnitType_value[info.UnitTypeStr])
+		info.QuantityCalculateType = types.GoodUnitCalculateType(types.GoodUnitCalculateType_value[info.QuantityCalculateTypeStr])
+		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
+		info.DurationCalculateType = types.GoodUnitCalculateType(types.GoodUnitCalculateType_value[info.DurationCalculateTypeStr])
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
 		amount, err := decimal.NewFromString(info.UnitLockDeposit)
 		if err != nil {
@@ -343,6 +347,12 @@ func (h *queryHandler) formalize() {
 			info.Score = decimal.NewFromInt(0).String()
 		} else {
 			info.Score = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.QuantityUnitAmount)
+		if err != nil {
+			info.QuantityUnitAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.QuantityUnitAmount = amount.String()
 		}
 		labels := []string{}
 		_ = json.Unmarshal([]byte(info.LabelsStr), &labels)

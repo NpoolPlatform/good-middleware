@@ -63,19 +63,23 @@ var ret = npool.Good{
 		types.GoodLabel_GoodLabelInnovationStarter,
 		types.GoodLabel_GoodLabelNoviceExclusive,
 	},
-	GoodTotal:            decimal.NewFromInt(1000).String(),
-	GoodLocked:           decimal.NewFromInt(0).String(),
-	GoodInService:        decimal.NewFromInt(0).String(),
-	GoodWaitStart:        decimal.NewFromInt(0).String(),
-	GoodSold:             decimal.NewFromInt(0).String(),
-	DeliveryAt:           uint32(time.Now().Unix() + 1000),
-	StartAt:              uint32(time.Now().Unix() + 1000),
-	BenefitIntervalHours: 24,
-	GoodAppReserved:      decimal.NewFromInt(0).String(),
-	UnitLockDeposit:      decimal.NewFromInt(1).String(),
-	Score:                decimal.NewFromInt(0).String(),
-	RewardState:          types.BenefitState_BenefitWait,
-	StartMode:            types.GoodStartMode_GoodStartModeConfirmed,
+	GoodTotal:             decimal.NewFromInt(1000).String(),
+	GoodLocked:            decimal.NewFromInt(0).String(),
+	GoodInService:         decimal.NewFromInt(0).String(),
+	GoodWaitStart:         decimal.NewFromInt(0).String(),
+	GoodSold:              decimal.NewFromInt(0).String(),
+	DeliveryAt:            uint32(time.Now().Unix() + 1000),
+	StartAt:               uint32(time.Now().Unix() + 1000),
+	BenefitIntervalHours:  24,
+	GoodAppReserved:       decimal.NewFromInt(0).String(),
+	UnitLockDeposit:       decimal.NewFromInt(1).String(),
+	Score:                 decimal.NewFromInt(0).String(),
+	RewardState:           types.BenefitState_BenefitWait,
+	StartMode:             types.GoodStartMode_GoodStartModeNextDay,
+	UnitType:              types.GoodUnitType_GoodUnitByDurationAndQuantity,
+	QuantityCalculateType: types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
+	DurationType:          types.GoodDurationType_GoodDurationByYear,
+	DurationCalculateType: types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -89,6 +93,10 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.BenefitTypeStr = ret.BenefitType.String()
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.RewardStateStr = types.BenefitState_BenefitWait.String()
+	ret.UnitTypeStr = ret.UnitType.String()
+	ret.QuantityCalculateTypeStr = ret.QuantityCalculateType.String()
+	ret.DurationTypeStr = ret.DurationType.String()
+	ret.DurationCalculateTypeStr = ret.DurationCalculateType.String()
 	ret.RewardTID = uuid.Nil.String()
 	ret.NextRewardStartAmount = decimal.NewFromInt(0).String()
 	ret.LastRewardAmount = decimal.NewFromInt(0).String()
@@ -164,6 +172,10 @@ func createGood(t *testing.T) {
 		WithTestOnly(&ret.TestOnly, false),
 		WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
 		WithUnitLockDeposit(&ret.UnitLockDeposit, false),
+		WithUnitType(&ret.UnitType, false),
+		WithQuantityCalculateType(&ret.QuantityCalculateType, false),
+		WithDurationType(&ret.DurationType, false),
+		WithDurationCalculateType(&ret.DurationCalculateType, false),
 		WithTotal(&ret.GoodTotal, true),
 		WithPosters(ret.Posters, false),
 		WithLabels(ret.Labels, false),
