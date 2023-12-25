@@ -143,12 +143,16 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 			sql.As(t1.C(entgood.FieldCoinTypeID), "coin_type_id"),
 			sql.As(t1.C(entgood.FieldBenefitType), "benefit_type"),
 			sql.As(t1.C(entgood.FieldGoodType), "good_type"),
-			sql.As(t1.C(entgood.FieldUnit), "unit"),
-			sql.As(t1.C(entgood.FieldUnitAmount), "unit_amount"),
+			sql.As(t1.C(entgood.FieldQuantityUnit), "quantity_unit"),
+			sql.As(t1.C(entgood.FieldQuantityUnitAmount), "quantity_unit_amount"),
 			sql.As(t1.C(entgood.FieldStartAt), "start_at"),
 			sql.As(t1.C(entgood.FieldStartMode), "start_mode"),
 			sql.As(t1.C(entgood.FieldTestOnly), "test_only"),
 			sql.As(t1.C(entgood.FieldBenefitIntervalHours), "benefit_interval_hours"),
+			sql.As(t1.C(entgood.FieldUnitType), "unit_type"),
+			sql.As(t1.C(entgood.FieldQuantityCalculateType), "quantity_calculate_type"),
+			sql.As(t1.C(entgood.FieldDurationType), "duration_type"),
+			sql.As(t1.C(entgood.FieldDurationCalculateType), "duration_calculate_type"),
 			sql.As(t2.C(entdeviceinfo.FieldType), "device_type"),
 			sql.As(t2.C(entdeviceinfo.FieldManufacturer), "device_manufacturer"),
 			sql.As(t2.C(entdeviceinfo.FieldPowerConsumption), "device_power_consumption"),
@@ -270,6 +274,10 @@ func (h *queryHandler) formalize() {
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.CancelMode = types.CancelMode(types.CancelMode_value[info.CancelModeStr])
+		info.UnitType = types.GoodUnitType(types.GoodUnitType_value[info.UnitTypeStr])
+		info.QuantityCalculateType = types.GoodUnitCalculateType(types.GoodUnitCalculateType_value[info.QuantityCalculateTypeStr])
+		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
+		info.DurationCalculateType = types.GoodUnitCalculateType(types.GoodUnitCalculateType_value[info.DurationCalculateTypeStr])
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
 		_ = json.Unmarshal([]byte(info.DescriptionsStr), &info.Descriptions)
 		_ = json.Unmarshal([]byte(info.DisplayNamesStr), &info.DisplayNames)
@@ -387,6 +395,12 @@ func (h *queryHandler) formalize() {
 			info.ElectricityFeeRatio = decimal.NewFromInt(0).String()
 		} else {
 			info.ElectricityFeeRatio = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.QuantityUnitAmount)
+		if err != nil {
+			info.QuantityUnitAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.QuantityUnitAmount = amount.String()
 		}
 	}
 }
