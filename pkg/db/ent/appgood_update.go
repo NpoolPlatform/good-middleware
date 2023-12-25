@@ -642,16 +642,23 @@ func (agu *AppGoodUpdate) ClearMaxUserAmount() *AppGoodUpdate {
 }
 
 // SetMinOrderDuration sets the "min_order_duration" field.
-func (agu *AppGoodUpdate) SetMinOrderDuration(d decimal.Decimal) *AppGoodUpdate {
-	agu.mutation.SetMinOrderDuration(d)
+func (agu *AppGoodUpdate) SetMinOrderDuration(u uint32) *AppGoodUpdate {
+	agu.mutation.ResetMinOrderDuration()
+	agu.mutation.SetMinOrderDuration(u)
 	return agu
 }
 
 // SetNillableMinOrderDuration sets the "min_order_duration" field if the given value is not nil.
-func (agu *AppGoodUpdate) SetNillableMinOrderDuration(d *decimal.Decimal) *AppGoodUpdate {
-	if d != nil {
-		agu.SetMinOrderDuration(*d)
+func (agu *AppGoodUpdate) SetNillableMinOrderDuration(u *uint32) *AppGoodUpdate {
+	if u != nil {
+		agu.SetMinOrderDuration(*u)
 	}
+	return agu
+}
+
+// AddMinOrderDuration adds u to the "min_order_duration" field.
+func (agu *AppGoodUpdate) AddMinOrderDuration(u int32) *AppGoodUpdate {
+	agu.mutation.AddMinOrderDuration(u)
 	return agu
 }
 
@@ -662,16 +669,23 @@ func (agu *AppGoodUpdate) ClearMinOrderDuration() *AppGoodUpdate {
 }
 
 // SetMaxOrderDuration sets the "max_order_duration" field.
-func (agu *AppGoodUpdate) SetMaxOrderDuration(d decimal.Decimal) *AppGoodUpdate {
-	agu.mutation.SetMaxOrderDuration(d)
+func (agu *AppGoodUpdate) SetMaxOrderDuration(u uint32) *AppGoodUpdate {
+	agu.mutation.ResetMaxOrderDuration()
+	agu.mutation.SetMaxOrderDuration(u)
 	return agu
 }
 
 // SetNillableMaxOrderDuration sets the "max_order_duration" field if the given value is not nil.
-func (agu *AppGoodUpdate) SetNillableMaxOrderDuration(d *decimal.Decimal) *AppGoodUpdate {
-	if d != nil {
-		agu.SetMaxOrderDuration(*d)
+func (agu *AppGoodUpdate) SetNillableMaxOrderDuration(u *uint32) *AppGoodUpdate {
+	if u != nil {
+		agu.SetMaxOrderDuration(*u)
 	}
+	return agu
+}
+
+// AddMaxOrderDuration adds u to the "max_order_duration" field.
+func (agu *AppGoodUpdate) AddMaxOrderDuration(u int32) *AppGoodUpdate {
+	agu.mutation.AddMaxOrderDuration(u)
 	return agu
 }
 
@@ -1224,27 +1238,41 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := agu.mutation.MinOrderDuration(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appgood.FieldMinOrderDuration,
+		})
+	}
+	if value, ok := agu.mutation.AddedMinOrderDuration(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
 			Value:  value,
 			Column: appgood.FieldMinOrderDuration,
 		})
 	}
 	if agu.mutation.MinOrderDurationCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeUint32,
 			Column: appgood.FieldMinOrderDuration,
 		})
 	}
 	if value, ok := agu.mutation.MaxOrderDuration(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appgood.FieldMaxOrderDuration,
+		})
+	}
+	if value, ok := agu.mutation.AddedMaxOrderDuration(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
 			Value:  value,
 			Column: appgood.FieldMaxOrderDuration,
 		})
 	}
 	if agu.mutation.MaxOrderDurationCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeUint32,
 			Column: appgood.FieldMaxOrderDuration,
 		})
 	}
@@ -1881,16 +1909,23 @@ func (aguo *AppGoodUpdateOne) ClearMaxUserAmount() *AppGoodUpdateOne {
 }
 
 // SetMinOrderDuration sets the "min_order_duration" field.
-func (aguo *AppGoodUpdateOne) SetMinOrderDuration(d decimal.Decimal) *AppGoodUpdateOne {
-	aguo.mutation.SetMinOrderDuration(d)
+func (aguo *AppGoodUpdateOne) SetMinOrderDuration(u uint32) *AppGoodUpdateOne {
+	aguo.mutation.ResetMinOrderDuration()
+	aguo.mutation.SetMinOrderDuration(u)
 	return aguo
 }
 
 // SetNillableMinOrderDuration sets the "min_order_duration" field if the given value is not nil.
-func (aguo *AppGoodUpdateOne) SetNillableMinOrderDuration(d *decimal.Decimal) *AppGoodUpdateOne {
-	if d != nil {
-		aguo.SetMinOrderDuration(*d)
+func (aguo *AppGoodUpdateOne) SetNillableMinOrderDuration(u *uint32) *AppGoodUpdateOne {
+	if u != nil {
+		aguo.SetMinOrderDuration(*u)
 	}
+	return aguo
+}
+
+// AddMinOrderDuration adds u to the "min_order_duration" field.
+func (aguo *AppGoodUpdateOne) AddMinOrderDuration(u int32) *AppGoodUpdateOne {
+	aguo.mutation.AddMinOrderDuration(u)
 	return aguo
 }
 
@@ -1901,16 +1936,23 @@ func (aguo *AppGoodUpdateOne) ClearMinOrderDuration() *AppGoodUpdateOne {
 }
 
 // SetMaxOrderDuration sets the "max_order_duration" field.
-func (aguo *AppGoodUpdateOne) SetMaxOrderDuration(d decimal.Decimal) *AppGoodUpdateOne {
-	aguo.mutation.SetMaxOrderDuration(d)
+func (aguo *AppGoodUpdateOne) SetMaxOrderDuration(u uint32) *AppGoodUpdateOne {
+	aguo.mutation.ResetMaxOrderDuration()
+	aguo.mutation.SetMaxOrderDuration(u)
 	return aguo
 }
 
 // SetNillableMaxOrderDuration sets the "max_order_duration" field if the given value is not nil.
-func (aguo *AppGoodUpdateOne) SetNillableMaxOrderDuration(d *decimal.Decimal) *AppGoodUpdateOne {
-	if d != nil {
-		aguo.SetMaxOrderDuration(*d)
+func (aguo *AppGoodUpdateOne) SetNillableMaxOrderDuration(u *uint32) *AppGoodUpdateOne {
+	if u != nil {
+		aguo.SetMaxOrderDuration(*u)
 	}
+	return aguo
+}
+
+// AddMaxOrderDuration adds u to the "max_order_duration" field.
+func (aguo *AppGoodUpdateOne) AddMaxOrderDuration(u int32) *AppGoodUpdateOne {
+	aguo.mutation.AddMaxOrderDuration(u)
 	return aguo
 }
 
@@ -2493,27 +2535,41 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 	}
 	if value, ok := aguo.mutation.MinOrderDuration(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appgood.FieldMinOrderDuration,
+		})
+	}
+	if value, ok := aguo.mutation.AddedMinOrderDuration(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
 			Value:  value,
 			Column: appgood.FieldMinOrderDuration,
 		})
 	}
 	if aguo.mutation.MinOrderDurationCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeUint32,
 			Column: appgood.FieldMinOrderDuration,
 		})
 	}
 	if value, ok := aguo.mutation.MaxOrderDuration(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appgood.FieldMaxOrderDuration,
+		})
+	}
+	if value, ok := aguo.mutation.AddedMaxOrderDuration(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
 			Value:  value,
 			Column: appgood.FieldMaxOrderDuration,
 		})
 	}
 	if aguo.mutation.MaxOrderDurationCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeUint32,
 			Column: appgood.FieldMaxOrderDuration,
 		})
 	}

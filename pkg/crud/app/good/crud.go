@@ -41,6 +41,11 @@ type Req struct {
 	DeletedAt              *uint32
 	TechniqueFeeRatio      *decimal.Decimal
 	ElectricityFeeRatio    *decimal.Decimal
+	MinOrderAmount         *decimal.Decimal
+	MaxOrderAmount         *decimal.Decimal
+	MaxUserAmount          *decimal.Decimal
+	MinOrderDuration       *uint32
+	MaxOrderDuration       *uint32
 }
 
 //nolint:gocyclo,funlen
@@ -123,10 +128,25 @@ func CreateSet(c *ent.AppGoodCreate, req *Req) *ent.AppGoodCreate {
 	if req.ElectricityFeeRatio != nil {
 		c.SetElectricityFeeRatio(*req.ElectricityFeeRatio)
 	}
+	if req.MinOrderAmount != nil {
+		c.SetMinOrderAmount(*req.MinOrderAmount)
+	}
+	if req.MaxOrderAmount != nil {
+		c.SetMaxOrderAmount(*req.MaxOrderAmount)
+	}
+	if req.MaxUserAmount != nil {
+		c.SetMaxUserAmount(*req.MaxUserAmount)
+	}
+	if req.MinOrderDuration != nil {
+		c.SetMinOrderDuration(*req.MinOrderDuration)
+	}
+	if req.MaxOrderDuration != nil {
+		c.SetMaxOrderDuration(*req.MaxOrderDuration)
+	}
 	return c
 }
 
-//nolint:gocyclo
+//nolint:gocyclo,funlen
 func UpdateSet(u *ent.AppGoodUpdateOne, req *Req) *ent.AppGoodUpdateOne {
 	if req.Online != nil {
 		u.SetOnline(*req.Online)
@@ -199,6 +219,21 @@ func UpdateSet(u *ent.AppGoodUpdateOne, req *Req) *ent.AppGoodUpdateOne {
 	}
 	if req.ElectricityFeeRatio != nil {
 		u.SetElectricityFeeRatio(*req.ElectricityFeeRatio)
+	}
+	if req.MinOrderAmount != nil {
+		u.SetMinOrderAmount(*req.MinOrderAmount)
+	}
+	if req.MaxOrderAmount != nil {
+		u.SetMaxOrderAmount(*req.MaxOrderAmount)
+	}
+	if req.MaxUserAmount != nil {
+		u.SetMaxUserAmount(*req.MaxUserAmount)
+	}
+	if req.MinOrderDuration != nil {
+		u.SetMinOrderDuration(*req.MinOrderDuration)
+	}
+	if req.MaxOrderDuration != nil {
+		u.SetMaxOrderDuration(*req.MaxOrderDuration)
 	}
 	return u
 }

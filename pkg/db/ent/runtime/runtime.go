@@ -211,11 +211,11 @@ func init() {
 	// appgoodDescMinOrderDuration is the schema descriptor for min_order_duration field.
 	appgoodDescMinOrderDuration := appgoodFields[28].Descriptor()
 	// appgood.DefaultMinOrderDuration holds the default value on creation for the min_order_duration field.
-	appgood.DefaultMinOrderDuration = appgoodDescMinOrderDuration.Default.(decimal.Decimal)
+	appgood.DefaultMinOrderDuration = appgoodDescMinOrderDuration.Default.(uint32)
 	// appgoodDescMaxOrderDuration is the schema descriptor for max_order_duration field.
 	appgoodDescMaxOrderDuration := appgoodFields[29].Descriptor()
 	// appgood.DefaultMaxOrderDuration holds the default value on creation for the max_order_duration field.
-	appgood.DefaultMaxOrderDuration = appgoodDescMaxOrderDuration.Default.(decimal.Decimal)
+	appgood.DefaultMaxOrderDuration = appgoodDescMaxOrderDuration.Default.(uint32)
 	appstockMixin := schema.AppStock{}.Mixin()
 	appstock.Policy = privacy.NewPolicies(appstockMixin[0], schema.AppStock{})
 	appstock.Hooks[0] = func(next ent.Mutator) ent.Mutator {

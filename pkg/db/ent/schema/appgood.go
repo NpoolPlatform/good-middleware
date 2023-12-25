@@ -158,19 +158,13 @@ func (AppGood) Fields() []ent.Field {
 			Optional().
 			Default(decimal.NewFromInt(0)),
 		field.
-			Other("min_order_duration", decimal.Decimal{}).
-			SchemaType(map[string]string{
-				dialect.MySQL: "decimal(37,18)",
-			}).
+			Uint32("min_order_duration").
 			Optional().
-			Default(decimal.NewFromInt(0)),
+			Default(0),
 		field.
-			Other("max_order_duration", decimal.Decimal{}).
-			SchemaType(map[string]string{
-				dialect.MySQL: "decimal(37,18)",
-			}).
+			Uint32("max_order_duration").
 			Optional().
-			Default(decimal.NewFromInt(0)),
+			Default(0),
 	}
 }
 

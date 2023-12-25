@@ -96,6 +96,11 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entappgood.FieldTechnicalFeeRatio), "technical_fee_ratio"),
 			sql.As(t.C(entappgood.FieldElectricityFeeRatio), "electricity_fee_ratio"),
 			sql.As(t.C(entappgood.FieldPosters), "app_good_posters"),
+			sql.As(t.C(entappgood.FieldMinOrderAmount), "min_order_amount"),
+			sql.As(t.C(entappgood.FieldMaxOrderAmount), "max_order_amount"),
+			sql.As(t.C(entappgood.FieldMaxUserAmount), "max_user_amount"),
+			sql.As(t.C(entappgood.FieldMinOrderDuration), "min_order_duration"),
+			sql.As(t.C(entappgood.FieldMaxOrderDuration), "max_order_duration"),
 			sql.As(t.C(entappgood.FieldCreatedAt), "created_at"),
 			sql.As(t.C(entappgood.FieldUpdatedAt), "updated_at"),
 		)
@@ -401,6 +406,24 @@ func (h *queryHandler) formalize() {
 			info.QuantityUnitAmount = decimal.NewFromInt(0).String()
 		} else {
 			info.QuantityUnitAmount = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.MinOrderAmount)
+		if err != nil {
+			info.MinOrderAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.MinOrderAmount = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.MaxOrderAmount)
+		if err != nil {
+			info.MaxOrderAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.MaxOrderAmount = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.MaxUserAmount)
+		if err != nil {
+			info.MaxUserAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.MaxUserAmount = amount.String()
 		}
 	}
 }

@@ -96,8 +96,8 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appgood.FieldMinOrderAmount:         {Type: field.TypeOther, Column: appgood.FieldMinOrderAmount},
 			appgood.FieldMaxOrderAmount:         {Type: field.TypeOther, Column: appgood.FieldMaxOrderAmount},
 			appgood.FieldMaxUserAmount:          {Type: field.TypeOther, Column: appgood.FieldMaxUserAmount},
-			appgood.FieldMinOrderDuration:       {Type: field.TypeOther, Column: appgood.FieldMinOrderDuration},
-			appgood.FieldMaxOrderDuration:       {Type: field.TypeOther, Column: appgood.FieldMaxOrderDuration},
+			appgood.FieldMinOrderDuration:       {Type: field.TypeUint32, Column: appgood.FieldMinOrderDuration},
+			appgood.FieldMaxOrderDuration:       {Type: field.TypeUint32, Column: appgood.FieldMaxOrderDuration},
 		},
 	}
 	graph.Nodes[2] = &sqlgraph.Node{
@@ -803,13 +803,13 @@ func (f *AppGoodFilter) WhereMaxUserAmount(p entql.OtherP) {
 	f.Where(p.Field(appgood.FieldMaxUserAmount))
 }
 
-// WhereMinOrderDuration applies the entql other predicate on the min_order_duration field.
-func (f *AppGoodFilter) WhereMinOrderDuration(p entql.OtherP) {
+// WhereMinOrderDuration applies the entql uint32 predicate on the min_order_duration field.
+func (f *AppGoodFilter) WhereMinOrderDuration(p entql.Uint32P) {
 	f.Where(p.Field(appgood.FieldMinOrderDuration))
 }
 
-// WhereMaxOrderDuration applies the entql other predicate on the max_order_duration field.
-func (f *AppGoodFilter) WhereMaxOrderDuration(p entql.OtherP) {
+// WhereMaxOrderDuration applies the entql uint32 predicate on the max_order_duration field.
+func (f *AppGoodFilter) WhereMaxOrderDuration(p entql.Uint32P) {
 	f.Where(p.Field(appgood.FieldMaxOrderDuration))
 }
 

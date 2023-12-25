@@ -83,9 +83,9 @@ type AppGood struct {
 	// MaxUserAmount holds the value of the "max_user_amount" field.
 	MaxUserAmount decimal.Decimal `json:"max_user_amount,omitempty"`
 	// MinOrderDuration holds the value of the "min_order_duration" field.
-	MinOrderDuration decimal.Decimal `json:"min_order_duration,omitempty"`
+	MinOrderDuration uint32 `json:"min_order_duration,omitempty"`
 	// MaxOrderDuration holds the value of the "max_order_duration" field.
-	MaxOrderDuration decimal.Decimal `json:"max_order_duration,omitempty"`
+	MaxOrderDuration uint32 `json:"max_order_duration,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -95,11 +95,11 @@ func (*AppGood) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appgood.FieldDescriptions, appgood.FieldDisplayNames, appgood.FieldDisplayColors, appgood.FieldPosters:
 			values[i] = new([]byte)
-		case appgood.FieldPrice, appgood.FieldTechnicalFeeRatio, appgood.FieldElectricityFeeRatio, appgood.FieldUserPurchaseLimit, appgood.FieldMinOrderAmount, appgood.FieldMaxOrderAmount, appgood.FieldMaxUserAmount, appgood.FieldMinOrderDuration, appgood.FieldMaxOrderDuration:
+		case appgood.FieldPrice, appgood.FieldTechnicalFeeRatio, appgood.FieldElectricityFeeRatio, appgood.FieldUserPurchaseLimit, appgood.FieldMinOrderAmount, appgood.FieldMaxOrderAmount, appgood.FieldMaxUserAmount:
 			values[i] = new(decimal.Decimal)
 		case appgood.FieldOnline, appgood.FieldVisible, appgood.FieldEnablePurchase, appgood.FieldEnableProductPage, appgood.FieldEnableSetCommission:
 			values[i] = new(sql.NullBool)
-		case appgood.FieldID, appgood.FieldCreatedAt, appgood.FieldUpdatedAt, appgood.FieldDeletedAt, appgood.FieldDisplayIndex, appgood.FieldPurchaseLimit, appgood.FieldSaleStartAt, appgood.FieldSaleEndAt, appgood.FieldServiceStartAt, appgood.FieldCancellableBeforeStart:
+		case appgood.FieldID, appgood.FieldCreatedAt, appgood.FieldUpdatedAt, appgood.FieldDeletedAt, appgood.FieldDisplayIndex, appgood.FieldPurchaseLimit, appgood.FieldSaleStartAt, appgood.FieldSaleEndAt, appgood.FieldServiceStartAt, appgood.FieldCancellableBeforeStart, appgood.FieldMinOrderDuration, appgood.FieldMaxOrderDuration:
 			values[i] = new(sql.NullInt64)
 		case appgood.FieldGoodName, appgood.FieldGoodBanner, appgood.FieldCancelMode, appgood.FieldProductPage:
 			values[i] = new(sql.NullString)
@@ -327,16 +327,16 @@ func (ag *AppGood) assignValues(columns []string, values []interface{}) error {
 				ag.MaxUserAmount = *value
 			}
 		case appgood.FieldMinOrderDuration:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field min_order_duration", values[i])
-			} else if value != nil {
-				ag.MinOrderDuration = *value
+			} else if value.Valid {
+				ag.MinOrderDuration = uint32(value.Int64)
 			}
 		case appgood.FieldMaxOrderDuration:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field max_order_duration", values[i])
-			} else if value != nil {
-				ag.MaxOrderDuration = *value
+			} else if value.Valid {
+				ag.MaxOrderDuration = uint32(value.Int64)
 			}
 		}
 	}

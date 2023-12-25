@@ -987,8 +987,10 @@ type AppGoodMutation struct {
 	min_order_amount            *decimal.Decimal
 	max_order_amount            *decimal.Decimal
 	max_user_amount             *decimal.Decimal
-	min_order_duration          *decimal.Decimal
-	max_order_duration          *decimal.Decimal
+	min_order_duration          *uint32
+	addmin_order_duration       *int32
+	max_order_duration          *uint32
+	addmax_order_duration       *int32
 	clearedFields               map[string]struct{}
 	done                        bool
 	oldValue                    func(context.Context) (*AppGood, error)
@@ -2776,12 +2778,13 @@ func (m *AppGoodMutation) ResetMaxUserAmount() {
 }
 
 // SetMinOrderDuration sets the "min_order_duration" field.
-func (m *AppGoodMutation) SetMinOrderDuration(d decimal.Decimal) {
-	m.min_order_duration = &d
+func (m *AppGoodMutation) SetMinOrderDuration(u uint32) {
+	m.min_order_duration = &u
+	m.addmin_order_duration = nil
 }
 
 // MinOrderDuration returns the value of the "min_order_duration" field in the mutation.
-func (m *AppGoodMutation) MinOrderDuration() (r decimal.Decimal, exists bool) {
+func (m *AppGoodMutation) MinOrderDuration() (r uint32, exists bool) {
 	v := m.min_order_duration
 	if v == nil {
 		return
@@ -2792,7 +2795,7 @@ func (m *AppGoodMutation) MinOrderDuration() (r decimal.Decimal, exists bool) {
 // OldMinOrderDuration returns the old "min_order_duration" field's value of the AppGood entity.
 // If the AppGood object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppGoodMutation) OldMinOrderDuration(ctx context.Context) (v decimal.Decimal, err error) {
+func (m *AppGoodMutation) OldMinOrderDuration(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldMinOrderDuration is only allowed on UpdateOne operations")
 	}
@@ -2806,9 +2809,28 @@ func (m *AppGoodMutation) OldMinOrderDuration(ctx context.Context) (v decimal.De
 	return oldValue.MinOrderDuration, nil
 }
 
+// AddMinOrderDuration adds u to the "min_order_duration" field.
+func (m *AppGoodMutation) AddMinOrderDuration(u int32) {
+	if m.addmin_order_duration != nil {
+		*m.addmin_order_duration += u
+	} else {
+		m.addmin_order_duration = &u
+	}
+}
+
+// AddedMinOrderDuration returns the value that was added to the "min_order_duration" field in this mutation.
+func (m *AppGoodMutation) AddedMinOrderDuration() (r int32, exists bool) {
+	v := m.addmin_order_duration
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ClearMinOrderDuration clears the value of the "min_order_duration" field.
 func (m *AppGoodMutation) ClearMinOrderDuration() {
 	m.min_order_duration = nil
+	m.addmin_order_duration = nil
 	m.clearedFields[appgood.FieldMinOrderDuration] = struct{}{}
 }
 
@@ -2821,16 +2843,18 @@ func (m *AppGoodMutation) MinOrderDurationCleared() bool {
 // ResetMinOrderDuration resets all changes to the "min_order_duration" field.
 func (m *AppGoodMutation) ResetMinOrderDuration() {
 	m.min_order_duration = nil
+	m.addmin_order_duration = nil
 	delete(m.clearedFields, appgood.FieldMinOrderDuration)
 }
 
 // SetMaxOrderDuration sets the "max_order_duration" field.
-func (m *AppGoodMutation) SetMaxOrderDuration(d decimal.Decimal) {
-	m.max_order_duration = &d
+func (m *AppGoodMutation) SetMaxOrderDuration(u uint32) {
+	m.max_order_duration = &u
+	m.addmax_order_duration = nil
 }
 
 // MaxOrderDuration returns the value of the "max_order_duration" field in the mutation.
-func (m *AppGoodMutation) MaxOrderDuration() (r decimal.Decimal, exists bool) {
+func (m *AppGoodMutation) MaxOrderDuration() (r uint32, exists bool) {
 	v := m.max_order_duration
 	if v == nil {
 		return
@@ -2841,7 +2865,7 @@ func (m *AppGoodMutation) MaxOrderDuration() (r decimal.Decimal, exists bool) {
 // OldMaxOrderDuration returns the old "max_order_duration" field's value of the AppGood entity.
 // If the AppGood object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppGoodMutation) OldMaxOrderDuration(ctx context.Context) (v decimal.Decimal, err error) {
+func (m *AppGoodMutation) OldMaxOrderDuration(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldMaxOrderDuration is only allowed on UpdateOne operations")
 	}
@@ -2855,9 +2879,28 @@ func (m *AppGoodMutation) OldMaxOrderDuration(ctx context.Context) (v decimal.De
 	return oldValue.MaxOrderDuration, nil
 }
 
+// AddMaxOrderDuration adds u to the "max_order_duration" field.
+func (m *AppGoodMutation) AddMaxOrderDuration(u int32) {
+	if m.addmax_order_duration != nil {
+		*m.addmax_order_duration += u
+	} else {
+		m.addmax_order_duration = &u
+	}
+}
+
+// AddedMaxOrderDuration returns the value that was added to the "max_order_duration" field in this mutation.
+func (m *AppGoodMutation) AddedMaxOrderDuration() (r int32, exists bool) {
+	v := m.addmax_order_duration
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ClearMaxOrderDuration clears the value of the "max_order_duration" field.
 func (m *AppGoodMutation) ClearMaxOrderDuration() {
 	m.max_order_duration = nil
+	m.addmax_order_duration = nil
 	m.clearedFields[appgood.FieldMaxOrderDuration] = struct{}{}
 }
 
@@ -2870,6 +2913,7 @@ func (m *AppGoodMutation) MaxOrderDurationCleared() bool {
 // ResetMaxOrderDuration resets all changes to the "max_order_duration" field.
 func (m *AppGoodMutation) ResetMaxOrderDuration() {
 	m.max_order_duration = nil
+	m.addmax_order_duration = nil
 	delete(m.clearedFields, appgood.FieldMaxOrderDuration)
 }
 
@@ -3382,14 +3426,14 @@ func (m *AppGoodMutation) SetField(name string, value ent.Value) error {
 		m.SetMaxUserAmount(v)
 		return nil
 	case appgood.FieldMinOrderDuration:
-		v, ok := value.(decimal.Decimal)
+		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetMinOrderDuration(v)
 		return nil
 	case appgood.FieldMaxOrderDuration:
-		v, ok := value.(decimal.Decimal)
+		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -3430,6 +3474,12 @@ func (m *AppGoodMutation) AddedFields() []string {
 	if m.addcancellable_before_start != nil {
 		fields = append(fields, appgood.FieldCancellableBeforeStart)
 	}
+	if m.addmin_order_duration != nil {
+		fields = append(fields, appgood.FieldMinOrderDuration)
+	}
+	if m.addmax_order_duration != nil {
+		fields = append(fields, appgood.FieldMaxOrderDuration)
+	}
 	return fields
 }
 
@@ -3456,6 +3506,10 @@ func (m *AppGoodMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedServiceStartAt()
 	case appgood.FieldCancellableBeforeStart:
 		return m.AddedCancellableBeforeStart()
+	case appgood.FieldMinOrderDuration:
+		return m.AddedMinOrderDuration()
+	case appgood.FieldMaxOrderDuration:
+		return m.AddedMaxOrderDuration()
 	}
 	return nil, false
 }
@@ -3527,6 +3581,20 @@ func (m *AppGoodMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddCancellableBeforeStart(v)
+		return nil
+	case appgood.FieldMinOrderDuration:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddMinOrderDuration(v)
+		return nil
+	case appgood.FieldMaxOrderDuration:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddMaxOrderDuration(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppGood numeric field %s", name)

@@ -424,29 +424,29 @@ func (agc *AppGoodCreate) SetNillableMaxUserAmount(d *decimal.Decimal) *AppGoodC
 }
 
 // SetMinOrderDuration sets the "min_order_duration" field.
-func (agc *AppGoodCreate) SetMinOrderDuration(d decimal.Decimal) *AppGoodCreate {
-	agc.mutation.SetMinOrderDuration(d)
+func (agc *AppGoodCreate) SetMinOrderDuration(u uint32) *AppGoodCreate {
+	agc.mutation.SetMinOrderDuration(u)
 	return agc
 }
 
 // SetNillableMinOrderDuration sets the "min_order_duration" field if the given value is not nil.
-func (agc *AppGoodCreate) SetNillableMinOrderDuration(d *decimal.Decimal) *AppGoodCreate {
-	if d != nil {
-		agc.SetMinOrderDuration(*d)
+func (agc *AppGoodCreate) SetNillableMinOrderDuration(u *uint32) *AppGoodCreate {
+	if u != nil {
+		agc.SetMinOrderDuration(*u)
 	}
 	return agc
 }
 
 // SetMaxOrderDuration sets the "max_order_duration" field.
-func (agc *AppGoodCreate) SetMaxOrderDuration(d decimal.Decimal) *AppGoodCreate {
-	agc.mutation.SetMaxOrderDuration(d)
+func (agc *AppGoodCreate) SetMaxOrderDuration(u uint32) *AppGoodCreate {
+	agc.mutation.SetMaxOrderDuration(u)
 	return agc
 }
 
 // SetNillableMaxOrderDuration sets the "max_order_duration" field if the given value is not nil.
-func (agc *AppGoodCreate) SetNillableMaxOrderDuration(d *decimal.Decimal) *AppGoodCreate {
-	if d != nil {
-		agc.SetMaxOrderDuration(*d)
+func (agc *AppGoodCreate) SetNillableMaxOrderDuration(u *uint32) *AppGoodCreate {
+	if u != nil {
+		agc.SetMaxOrderDuration(*u)
 	}
 	return agc
 }
@@ -991,7 +991,7 @@ func (agc *AppGoodCreate) createSpec() (*AppGood, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := agc.mutation.MinOrderDuration(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeUint32,
 			Value:  value,
 			Column: appgood.FieldMinOrderDuration,
 		})
@@ -999,7 +999,7 @@ func (agc *AppGoodCreate) createSpec() (*AppGood, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := agc.mutation.MaxOrderDuration(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeUint32,
 			Value:  value,
 			Column: appgood.FieldMaxOrderDuration,
 		})
@@ -1654,7 +1654,7 @@ func (u *AppGoodUpsert) ClearMaxUserAmount() *AppGoodUpsert {
 }
 
 // SetMinOrderDuration sets the "min_order_duration" field.
-func (u *AppGoodUpsert) SetMinOrderDuration(v decimal.Decimal) *AppGoodUpsert {
+func (u *AppGoodUpsert) SetMinOrderDuration(v uint32) *AppGoodUpsert {
 	u.Set(appgood.FieldMinOrderDuration, v)
 	return u
 }
@@ -1665,6 +1665,12 @@ func (u *AppGoodUpsert) UpdateMinOrderDuration() *AppGoodUpsert {
 	return u
 }
 
+// AddMinOrderDuration adds v to the "min_order_duration" field.
+func (u *AppGoodUpsert) AddMinOrderDuration(v uint32) *AppGoodUpsert {
+	u.Add(appgood.FieldMinOrderDuration, v)
+	return u
+}
+
 // ClearMinOrderDuration clears the value of the "min_order_duration" field.
 func (u *AppGoodUpsert) ClearMinOrderDuration() *AppGoodUpsert {
 	u.SetNull(appgood.FieldMinOrderDuration)
@@ -1672,7 +1678,7 @@ func (u *AppGoodUpsert) ClearMinOrderDuration() *AppGoodUpsert {
 }
 
 // SetMaxOrderDuration sets the "max_order_duration" field.
-func (u *AppGoodUpsert) SetMaxOrderDuration(v decimal.Decimal) *AppGoodUpsert {
+func (u *AppGoodUpsert) SetMaxOrderDuration(v uint32) *AppGoodUpsert {
 	u.Set(appgood.FieldMaxOrderDuration, v)
 	return u
 }
@@ -1680,6 +1686,12 @@ func (u *AppGoodUpsert) SetMaxOrderDuration(v decimal.Decimal) *AppGoodUpsert {
 // UpdateMaxOrderDuration sets the "max_order_duration" field to the value that was provided on create.
 func (u *AppGoodUpsert) UpdateMaxOrderDuration() *AppGoodUpsert {
 	u.SetExcluded(appgood.FieldMaxOrderDuration)
+	return u
+}
+
+// AddMaxOrderDuration adds v to the "max_order_duration" field.
+func (u *AppGoodUpsert) AddMaxOrderDuration(v uint32) *AppGoodUpsert {
+	u.Add(appgood.FieldMaxOrderDuration, v)
 	return u
 }
 
@@ -2433,9 +2445,16 @@ func (u *AppGoodUpsertOne) ClearMaxUserAmount() *AppGoodUpsertOne {
 }
 
 // SetMinOrderDuration sets the "min_order_duration" field.
-func (u *AppGoodUpsertOne) SetMinOrderDuration(v decimal.Decimal) *AppGoodUpsertOne {
+func (u *AppGoodUpsertOne) SetMinOrderDuration(v uint32) *AppGoodUpsertOne {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.SetMinOrderDuration(v)
+	})
+}
+
+// AddMinOrderDuration adds v to the "min_order_duration" field.
+func (u *AppGoodUpsertOne) AddMinOrderDuration(v uint32) *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.AddMinOrderDuration(v)
 	})
 }
 
@@ -2454,9 +2473,16 @@ func (u *AppGoodUpsertOne) ClearMinOrderDuration() *AppGoodUpsertOne {
 }
 
 // SetMaxOrderDuration sets the "max_order_duration" field.
-func (u *AppGoodUpsertOne) SetMaxOrderDuration(v decimal.Decimal) *AppGoodUpsertOne {
+func (u *AppGoodUpsertOne) SetMaxOrderDuration(v uint32) *AppGoodUpsertOne {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.SetMaxOrderDuration(v)
+	})
+}
+
+// AddMaxOrderDuration adds v to the "max_order_duration" field.
+func (u *AppGoodUpsertOne) AddMaxOrderDuration(v uint32) *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.AddMaxOrderDuration(v)
 	})
 }
 
@@ -3383,9 +3409,16 @@ func (u *AppGoodUpsertBulk) ClearMaxUserAmount() *AppGoodUpsertBulk {
 }
 
 // SetMinOrderDuration sets the "min_order_duration" field.
-func (u *AppGoodUpsertBulk) SetMinOrderDuration(v decimal.Decimal) *AppGoodUpsertBulk {
+func (u *AppGoodUpsertBulk) SetMinOrderDuration(v uint32) *AppGoodUpsertBulk {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.SetMinOrderDuration(v)
+	})
+}
+
+// AddMinOrderDuration adds v to the "min_order_duration" field.
+func (u *AppGoodUpsertBulk) AddMinOrderDuration(v uint32) *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.AddMinOrderDuration(v)
 	})
 }
 
@@ -3404,9 +3437,16 @@ func (u *AppGoodUpsertBulk) ClearMinOrderDuration() *AppGoodUpsertBulk {
 }
 
 // SetMaxOrderDuration sets the "max_order_duration" field.
-func (u *AppGoodUpsertBulk) SetMaxOrderDuration(v decimal.Decimal) *AppGoodUpsertBulk {
+func (u *AppGoodUpsertBulk) SetMaxOrderDuration(v uint32) *AppGoodUpsertBulk {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.SetMaxOrderDuration(v)
+	})
+}
+
+// AddMaxOrderDuration adds v to the "max_order_duration" field.
+func (u *AppGoodUpsertBulk) AddMaxOrderDuration(v uint32) *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.AddMaxOrderDuration(v)
 	})
 }
 

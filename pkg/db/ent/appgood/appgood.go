@@ -206,7 +206,7 @@ var (
 	// DefaultMaxUserAmount holds the default value on creation for the "max_user_amount" field.
 	DefaultMaxUserAmount decimal.Decimal
 	// DefaultMinOrderDuration holds the default value on creation for the "min_order_duration" field.
-	DefaultMinOrderDuration decimal.Decimal
+	DefaultMinOrderDuration uint32
 	// DefaultMaxOrderDuration holds the default value on creation for the "max_order_duration" field.
-	DefaultMaxOrderDuration decimal.Decimal
+	DefaultMaxOrderDuration uint32
 )

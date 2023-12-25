@@ -277,14 +277,14 @@ func MaxUserAmount(v decimal.Decimal) predicate.AppGood {
 }
 
 // MinOrderDuration applies equality check predicate on the "min_order_duration" field. It's identical to MinOrderDurationEQ.
-func MinOrderDuration(v decimal.Decimal) predicate.AppGood {
+func MinOrderDuration(v uint32) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldMinOrderDuration), v))
 	})
 }
 
 // MaxOrderDuration applies equality check predicate on the "max_order_duration" field. It's identical to MaxOrderDurationEQ.
-func MaxOrderDuration(v decimal.Decimal) predicate.AppGood {
+func MaxOrderDuration(v uint32) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldMaxOrderDuration), v))
 	})
@@ -2337,21 +2337,21 @@ func MaxUserAmountNotNil() predicate.AppGood {
 }
 
 // MinOrderDurationEQ applies the EQ predicate on the "min_order_duration" field.
-func MinOrderDurationEQ(v decimal.Decimal) predicate.AppGood {
+func MinOrderDurationEQ(v uint32) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldMinOrderDuration), v))
 	})
 }
 
 // MinOrderDurationNEQ applies the NEQ predicate on the "min_order_duration" field.
-func MinOrderDurationNEQ(v decimal.Decimal) predicate.AppGood {
+func MinOrderDurationNEQ(v uint32) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldMinOrderDuration), v))
 	})
 }
 
 // MinOrderDurationIn applies the In predicate on the "min_order_duration" field.
-func MinOrderDurationIn(vs ...decimal.Decimal) predicate.AppGood {
+func MinOrderDurationIn(vs ...uint32) predicate.AppGood {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -2362,7 +2362,7 @@ func MinOrderDurationIn(vs ...decimal.Decimal) predicate.AppGood {
 }
 
 // MinOrderDurationNotIn applies the NotIn predicate on the "min_order_duration" field.
-func MinOrderDurationNotIn(vs ...decimal.Decimal) predicate.AppGood {
+func MinOrderDurationNotIn(vs ...uint32) predicate.AppGood {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -2373,28 +2373,28 @@ func MinOrderDurationNotIn(vs ...decimal.Decimal) predicate.AppGood {
 }
 
 // MinOrderDurationGT applies the GT predicate on the "min_order_duration" field.
-func MinOrderDurationGT(v decimal.Decimal) predicate.AppGood {
+func MinOrderDurationGT(v uint32) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldMinOrderDuration), v))
 	})
 }
 
 // MinOrderDurationGTE applies the GTE predicate on the "min_order_duration" field.
-func MinOrderDurationGTE(v decimal.Decimal) predicate.AppGood {
+func MinOrderDurationGTE(v uint32) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldMinOrderDuration), v))
 	})
 }
 
 // MinOrderDurationLT applies the LT predicate on the "min_order_duration" field.
-func MinOrderDurationLT(v decimal.Decimal) predicate.AppGood {
+func MinOrderDurationLT(v uint32) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldMinOrderDuration), v))
 	})
 }
 
 // MinOrderDurationLTE applies the LTE predicate on the "min_order_duration" field.
-func MinOrderDurationLTE(v decimal.Decimal) predicate.AppGood {
+func MinOrderDurationLTE(v uint32) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldMinOrderDuration), v))
 	})
@@ -2415,21 +2415,21 @@ func MinOrderDurationNotNil() predicate.AppGood {
 }
 
 // MaxOrderDurationEQ applies the EQ predicate on the "max_order_duration" field.
-func MaxOrderDurationEQ(v decimal.Decimal) predicate.AppGood {
+func MaxOrderDurationEQ(v uint32) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldMaxOrderDuration), v))
 	})
 }
 
 // MaxOrderDurationNEQ applies the NEQ predicate on the "max_order_duration" field.
-func MaxOrderDurationNEQ(v decimal.Decimal) predicate.AppGood {
+func MaxOrderDurationNEQ(v uint32) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldMaxOrderDuration), v))
 	})
 }
 
 // MaxOrderDurationIn applies the In predicate on the "max_order_duration" field.
-func MaxOrderDurationIn(vs ...decimal.Decimal) predicate.AppGood {
+func MaxOrderDurationIn(vs ...uint32) predicate.AppGood {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -2440,7 +2440,7 @@ func MaxOrderDurationIn(vs ...decimal.Decimal) predicate.AppGood {
 }
 
 // MaxOrderDurationNotIn applies the NotIn predicate on the "max_order_duration" field.
-func MaxOrderDurationNotIn(vs ...decimal.Decimal) predicate.AppGood {
+func MaxOrderDurationNotIn(vs ...uint32) predicate.AppGood {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -2451,28 +2451,28 @@ func MaxOrderDurationNotIn(vs ...decimal.Decimal) predicate.AppGood {
 }
 
 // MaxOrderDurationGT applies the GT predicate on the "max_order_duration" field.
-func MaxOrderDurationGT(v decimal.Decimal) predicate.AppGood {
+func MaxOrderDurationGT(v uint32) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldMaxOrderDuration), v))
 	})
 }
 
 // MaxOrderDurationGTE applies the GTE predicate on the "max_order_duration" field.
-func MaxOrderDurationGTE(v decimal.Decimal) predicate.AppGood {
+func MaxOrderDurationGTE(v uint32) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldMaxOrderDuration), v))
 	})
 }
 
 // MaxOrderDurationLT applies the LT predicate on the "max_order_duration" field.
-func MaxOrderDurationLT(v decimal.Decimal) predicate.AppGood {
+func MaxOrderDurationLT(v uint32) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldMaxOrderDuration), v))
 	})
 }
 
 // MaxOrderDurationLTE applies the LTE predicate on the "max_order_duration" field.
-func MaxOrderDurationLTE(v decimal.Decimal) predicate.AppGood {
+func MaxOrderDurationLTE(v uint32) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldMaxOrderDuration), v))
 	})
