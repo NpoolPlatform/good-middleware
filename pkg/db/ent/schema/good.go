@@ -90,7 +90,7 @@ func (Good) Fields() []ent.Field {
 		field.
 			String("start_mode").
 			Optional().
-			Default(types.GoodStartMode_GoodStartModeConfirmed.String()),
+			Default(types.GoodStartMode_GoodStartModeNextDay.String()),
 		field.
 			Bool("test_only").
 			Optional().
@@ -117,7 +117,7 @@ func (Good) Fields() []ent.Field {
 		field.
 			String("duration_type").
 			Optional().
-			Default(types.GoodUnitDurationType_GoodUnitDurationByYear.String()),
+			Default(types.GoodDurationType_GoodDurationByYear.String()),
 		field.
 			String("duration_calculate_type").
 			Optional().
