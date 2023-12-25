@@ -71,6 +71,16 @@ const (
 	FieldEnableSetCommission = "enable_set_commission"
 	// FieldPosters holds the string denoting the posters field in the database.
 	FieldPosters = "posters"
+	// FieldMinOrderAmount holds the string denoting the min_order_amount field in the database.
+	FieldMinOrderAmount = "min_order_amount"
+	// FieldMaxOrderAmount holds the string denoting the max_order_amount field in the database.
+	FieldMaxOrderAmount = "max_order_amount"
+	// FieldMaxUserAmount holds the string denoting the max_user_amount field in the database.
+	FieldMaxUserAmount = "max_user_amount"
+	// FieldMinOrderDuration holds the string denoting the min_order_duration field in the database.
+	FieldMinOrderDuration = "min_order_duration"
+	// FieldMaxOrderDuration holds the string denoting the max_order_duration field in the database.
+	FieldMaxOrderDuration = "max_order_duration"
 	// Table holds the table name of the appgood in the database.
 	Table = "app_goods"
 )
@@ -107,6 +117,11 @@ var Columns = []string{
 	FieldProductPage,
 	FieldEnableSetCommission,
 	FieldPosters,
+	FieldMinOrderAmount,
+	FieldMaxOrderAmount,
+	FieldMaxUserAmount,
+	FieldMinOrderDuration,
+	FieldMaxOrderDuration,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -184,4 +199,14 @@ var (
 	DefaultEnableSetCommission bool
 	// DefaultPosters holds the default value on creation for the "posters" field.
 	DefaultPosters []string
+	// DefaultMinOrderAmount holds the default value on creation for the "min_order_amount" field.
+	DefaultMinOrderAmount decimal.Decimal
+	// DefaultMaxOrderAmount holds the default value on creation for the "max_order_amount" field.
+	DefaultMaxOrderAmount decimal.Decimal
+	// DefaultMaxUserAmount holds the default value on creation for the "max_user_amount" field.
+	DefaultMaxUserAmount decimal.Decimal
+	// DefaultMinOrderDuration holds the default value on creation for the "min_order_duration" field.
+	DefaultMinOrderDuration decimal.Decimal
+	// DefaultMaxOrderDuration holds the default value on creation for the "max_order_duration" field.
+	DefaultMaxOrderDuration decimal.Decimal
 )

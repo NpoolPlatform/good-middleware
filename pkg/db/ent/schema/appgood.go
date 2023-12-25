@@ -136,6 +136,41 @@ func (AppGood) Fields() []ent.Field {
 			JSON("posters", []string{}).
 			Optional().
 			Default([]string{}),
+		field.
+			Other("min_order_amount", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.NewFromInt(0)),
+		field.
+			Other("max_order_amount", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.NewFromInt(0)),
+		field.
+			Other("max_user_amount", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.NewFromInt(0)),
+		field.
+			Other("min_order_duration", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.NewFromInt(0)),
+		field.
+			Other("max_order_duration", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.NewFromInt(0)),
 	}
 }
 

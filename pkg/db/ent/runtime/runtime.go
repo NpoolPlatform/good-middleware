@@ -196,6 +196,26 @@ func init() {
 	appgoodDescPosters := appgoodFields[24].Descriptor()
 	// appgood.DefaultPosters holds the default value on creation for the posters field.
 	appgood.DefaultPosters = appgoodDescPosters.Default.([]string)
+	// appgoodDescMinOrderAmount is the schema descriptor for min_order_amount field.
+	appgoodDescMinOrderAmount := appgoodFields[25].Descriptor()
+	// appgood.DefaultMinOrderAmount holds the default value on creation for the min_order_amount field.
+	appgood.DefaultMinOrderAmount = appgoodDescMinOrderAmount.Default.(decimal.Decimal)
+	// appgoodDescMaxOrderAmount is the schema descriptor for max_order_amount field.
+	appgoodDescMaxOrderAmount := appgoodFields[26].Descriptor()
+	// appgood.DefaultMaxOrderAmount holds the default value on creation for the max_order_amount field.
+	appgood.DefaultMaxOrderAmount = appgoodDescMaxOrderAmount.Default.(decimal.Decimal)
+	// appgoodDescMaxUserAmount is the schema descriptor for max_user_amount field.
+	appgoodDescMaxUserAmount := appgoodFields[27].Descriptor()
+	// appgood.DefaultMaxUserAmount holds the default value on creation for the max_user_amount field.
+	appgood.DefaultMaxUserAmount = appgoodDescMaxUserAmount.Default.(decimal.Decimal)
+	// appgoodDescMinOrderDuration is the schema descriptor for min_order_duration field.
+	appgoodDescMinOrderDuration := appgoodFields[28].Descriptor()
+	// appgood.DefaultMinOrderDuration holds the default value on creation for the min_order_duration field.
+	appgood.DefaultMinOrderDuration = appgoodDescMinOrderDuration.Default.(decimal.Decimal)
+	// appgoodDescMaxOrderDuration is the schema descriptor for max_order_duration field.
+	appgoodDescMaxOrderDuration := appgoodFields[29].Descriptor()
+	// appgood.DefaultMaxOrderDuration holds the default value on creation for the max_order_duration field.
+	appgood.DefaultMaxOrderDuration = appgoodDescMaxOrderDuration.Default.(decimal.Decimal)
 	appstockMixin := schema.AppStock{}.Mixin()
 	appstock.Policy = privacy.NewPolicies(appstockMixin[0], schema.AppStock{})
 	appstock.Hooks[0] = func(next ent.Mutator) ent.Mutator {

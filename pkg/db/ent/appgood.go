@@ -76,6 +76,16 @@ type AppGood struct {
 	EnableSetCommission bool `json:"enable_set_commission,omitempty"`
 	// Posters holds the value of the "posters" field.
 	Posters []string `json:"posters,omitempty"`
+	// MinOrderAmount holds the value of the "min_order_amount" field.
+	MinOrderAmount decimal.Decimal `json:"min_order_amount,omitempty"`
+	// MaxOrderAmount holds the value of the "max_order_amount" field.
+	MaxOrderAmount decimal.Decimal `json:"max_order_amount,omitempty"`
+	// MaxUserAmount holds the value of the "max_user_amount" field.
+	MaxUserAmount decimal.Decimal `json:"max_user_amount,omitempty"`
+	// MinOrderDuration holds the value of the "min_order_duration" field.
+	MinOrderDuration decimal.Decimal `json:"min_order_duration,omitempty"`
+	// MaxOrderDuration holds the value of the "max_order_duration" field.
+	MaxOrderDuration decimal.Decimal `json:"max_order_duration,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -85,7 +95,7 @@ func (*AppGood) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appgood.FieldDescriptions, appgood.FieldDisplayNames, appgood.FieldDisplayColors, appgood.FieldPosters:
 			values[i] = new([]byte)
-		case appgood.FieldPrice, appgood.FieldTechnicalFeeRatio, appgood.FieldElectricityFeeRatio, appgood.FieldUserPurchaseLimit:
+		case appgood.FieldPrice, appgood.FieldTechnicalFeeRatio, appgood.FieldElectricityFeeRatio, appgood.FieldUserPurchaseLimit, appgood.FieldMinOrderAmount, appgood.FieldMaxOrderAmount, appgood.FieldMaxUserAmount, appgood.FieldMinOrderDuration, appgood.FieldMaxOrderDuration:
 			values[i] = new(decimal.Decimal)
 		case appgood.FieldOnline, appgood.FieldVisible, appgood.FieldEnablePurchase, appgood.FieldEnableProductPage, appgood.FieldEnableSetCommission:
 			values[i] = new(sql.NullBool)
@@ -298,6 +308,36 @@ func (ag *AppGood) assignValues(columns []string, values []interface{}) error {
 					return fmt.Errorf("unmarshal field posters: %w", err)
 				}
 			}
+		case appgood.FieldMinOrderAmount:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field min_order_amount", values[i])
+			} else if value != nil {
+				ag.MinOrderAmount = *value
+			}
+		case appgood.FieldMaxOrderAmount:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field max_order_amount", values[i])
+			} else if value != nil {
+				ag.MaxOrderAmount = *value
+			}
+		case appgood.FieldMaxUserAmount:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field max_user_amount", values[i])
+			} else if value != nil {
+				ag.MaxUserAmount = *value
+			}
+		case appgood.FieldMinOrderDuration:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field min_order_duration", values[i])
+			} else if value != nil {
+				ag.MinOrderDuration = *value
+			}
+		case appgood.FieldMaxOrderDuration:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field max_order_duration", values[i])
+			} else if value != nil {
+				ag.MaxOrderDuration = *value
+			}
 		}
 	}
 	return nil
@@ -412,6 +452,21 @@ func (ag *AppGood) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("posters=")
 	builder.WriteString(fmt.Sprintf("%v", ag.Posters))
+	builder.WriteString(", ")
+	builder.WriteString("min_order_amount=")
+	builder.WriteString(fmt.Sprintf("%v", ag.MinOrderAmount))
+	builder.WriteString(", ")
+	builder.WriteString("max_order_amount=")
+	builder.WriteString(fmt.Sprintf("%v", ag.MaxOrderAmount))
+	builder.WriteString(", ")
+	builder.WriteString("max_user_amount=")
+	builder.WriteString(fmt.Sprintf("%v", ag.MaxUserAmount))
+	builder.WriteString(", ")
+	builder.WriteString("min_order_duration=")
+	builder.WriteString(fmt.Sprintf("%v", ag.MinOrderDuration))
+	builder.WriteString(", ")
+	builder.WriteString("max_order_duration=")
+	builder.WriteString(fmt.Sprintf("%v", ag.MaxOrderDuration))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -984,6 +984,11 @@ type AppGoodMutation struct {
 	product_page                *string
 	enable_set_commission       *bool
 	posters                     *[]string
+	min_order_amount            *decimal.Decimal
+	max_order_amount            *decimal.Decimal
+	max_user_amount             *decimal.Decimal
+	min_order_duration          *decimal.Decimal
+	max_order_duration          *decimal.Decimal
 	clearedFields               map[string]struct{}
 	done                        bool
 	oldValue                    func(context.Context) (*AppGood, error)
@@ -2623,6 +2628,251 @@ func (m *AppGoodMutation) ResetPosters() {
 	delete(m.clearedFields, appgood.FieldPosters)
 }
 
+// SetMinOrderAmount sets the "min_order_amount" field.
+func (m *AppGoodMutation) SetMinOrderAmount(d decimal.Decimal) {
+	m.min_order_amount = &d
+}
+
+// MinOrderAmount returns the value of the "min_order_amount" field in the mutation.
+func (m *AppGoodMutation) MinOrderAmount() (r decimal.Decimal, exists bool) {
+	v := m.min_order_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMinOrderAmount returns the old "min_order_amount" field's value of the AppGood entity.
+// If the AppGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodMutation) OldMinOrderAmount(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMinOrderAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMinOrderAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMinOrderAmount: %w", err)
+	}
+	return oldValue.MinOrderAmount, nil
+}
+
+// ClearMinOrderAmount clears the value of the "min_order_amount" field.
+func (m *AppGoodMutation) ClearMinOrderAmount() {
+	m.min_order_amount = nil
+	m.clearedFields[appgood.FieldMinOrderAmount] = struct{}{}
+}
+
+// MinOrderAmountCleared returns if the "min_order_amount" field was cleared in this mutation.
+func (m *AppGoodMutation) MinOrderAmountCleared() bool {
+	_, ok := m.clearedFields[appgood.FieldMinOrderAmount]
+	return ok
+}
+
+// ResetMinOrderAmount resets all changes to the "min_order_amount" field.
+func (m *AppGoodMutation) ResetMinOrderAmount() {
+	m.min_order_amount = nil
+	delete(m.clearedFields, appgood.FieldMinOrderAmount)
+}
+
+// SetMaxOrderAmount sets the "max_order_amount" field.
+func (m *AppGoodMutation) SetMaxOrderAmount(d decimal.Decimal) {
+	m.max_order_amount = &d
+}
+
+// MaxOrderAmount returns the value of the "max_order_amount" field in the mutation.
+func (m *AppGoodMutation) MaxOrderAmount() (r decimal.Decimal, exists bool) {
+	v := m.max_order_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMaxOrderAmount returns the old "max_order_amount" field's value of the AppGood entity.
+// If the AppGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodMutation) OldMaxOrderAmount(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMaxOrderAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMaxOrderAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMaxOrderAmount: %w", err)
+	}
+	return oldValue.MaxOrderAmount, nil
+}
+
+// ClearMaxOrderAmount clears the value of the "max_order_amount" field.
+func (m *AppGoodMutation) ClearMaxOrderAmount() {
+	m.max_order_amount = nil
+	m.clearedFields[appgood.FieldMaxOrderAmount] = struct{}{}
+}
+
+// MaxOrderAmountCleared returns if the "max_order_amount" field was cleared in this mutation.
+func (m *AppGoodMutation) MaxOrderAmountCleared() bool {
+	_, ok := m.clearedFields[appgood.FieldMaxOrderAmount]
+	return ok
+}
+
+// ResetMaxOrderAmount resets all changes to the "max_order_amount" field.
+func (m *AppGoodMutation) ResetMaxOrderAmount() {
+	m.max_order_amount = nil
+	delete(m.clearedFields, appgood.FieldMaxOrderAmount)
+}
+
+// SetMaxUserAmount sets the "max_user_amount" field.
+func (m *AppGoodMutation) SetMaxUserAmount(d decimal.Decimal) {
+	m.max_user_amount = &d
+}
+
+// MaxUserAmount returns the value of the "max_user_amount" field in the mutation.
+func (m *AppGoodMutation) MaxUserAmount() (r decimal.Decimal, exists bool) {
+	v := m.max_user_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMaxUserAmount returns the old "max_user_amount" field's value of the AppGood entity.
+// If the AppGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodMutation) OldMaxUserAmount(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMaxUserAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMaxUserAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMaxUserAmount: %w", err)
+	}
+	return oldValue.MaxUserAmount, nil
+}
+
+// ClearMaxUserAmount clears the value of the "max_user_amount" field.
+func (m *AppGoodMutation) ClearMaxUserAmount() {
+	m.max_user_amount = nil
+	m.clearedFields[appgood.FieldMaxUserAmount] = struct{}{}
+}
+
+// MaxUserAmountCleared returns if the "max_user_amount" field was cleared in this mutation.
+func (m *AppGoodMutation) MaxUserAmountCleared() bool {
+	_, ok := m.clearedFields[appgood.FieldMaxUserAmount]
+	return ok
+}
+
+// ResetMaxUserAmount resets all changes to the "max_user_amount" field.
+func (m *AppGoodMutation) ResetMaxUserAmount() {
+	m.max_user_amount = nil
+	delete(m.clearedFields, appgood.FieldMaxUserAmount)
+}
+
+// SetMinOrderDuration sets the "min_order_duration" field.
+func (m *AppGoodMutation) SetMinOrderDuration(d decimal.Decimal) {
+	m.min_order_duration = &d
+}
+
+// MinOrderDuration returns the value of the "min_order_duration" field in the mutation.
+func (m *AppGoodMutation) MinOrderDuration() (r decimal.Decimal, exists bool) {
+	v := m.min_order_duration
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMinOrderDuration returns the old "min_order_duration" field's value of the AppGood entity.
+// If the AppGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodMutation) OldMinOrderDuration(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMinOrderDuration is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMinOrderDuration requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMinOrderDuration: %w", err)
+	}
+	return oldValue.MinOrderDuration, nil
+}
+
+// ClearMinOrderDuration clears the value of the "min_order_duration" field.
+func (m *AppGoodMutation) ClearMinOrderDuration() {
+	m.min_order_duration = nil
+	m.clearedFields[appgood.FieldMinOrderDuration] = struct{}{}
+}
+
+// MinOrderDurationCleared returns if the "min_order_duration" field was cleared in this mutation.
+func (m *AppGoodMutation) MinOrderDurationCleared() bool {
+	_, ok := m.clearedFields[appgood.FieldMinOrderDuration]
+	return ok
+}
+
+// ResetMinOrderDuration resets all changes to the "min_order_duration" field.
+func (m *AppGoodMutation) ResetMinOrderDuration() {
+	m.min_order_duration = nil
+	delete(m.clearedFields, appgood.FieldMinOrderDuration)
+}
+
+// SetMaxOrderDuration sets the "max_order_duration" field.
+func (m *AppGoodMutation) SetMaxOrderDuration(d decimal.Decimal) {
+	m.max_order_duration = &d
+}
+
+// MaxOrderDuration returns the value of the "max_order_duration" field in the mutation.
+func (m *AppGoodMutation) MaxOrderDuration() (r decimal.Decimal, exists bool) {
+	v := m.max_order_duration
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMaxOrderDuration returns the old "max_order_duration" field's value of the AppGood entity.
+// If the AppGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodMutation) OldMaxOrderDuration(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMaxOrderDuration is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMaxOrderDuration requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMaxOrderDuration: %w", err)
+	}
+	return oldValue.MaxOrderDuration, nil
+}
+
+// ClearMaxOrderDuration clears the value of the "max_order_duration" field.
+func (m *AppGoodMutation) ClearMaxOrderDuration() {
+	m.max_order_duration = nil
+	m.clearedFields[appgood.FieldMaxOrderDuration] = struct{}{}
+}
+
+// MaxOrderDurationCleared returns if the "max_order_duration" field was cleared in this mutation.
+func (m *AppGoodMutation) MaxOrderDurationCleared() bool {
+	_, ok := m.clearedFields[appgood.FieldMaxOrderDuration]
+	return ok
+}
+
+// ResetMaxOrderDuration resets all changes to the "max_order_duration" field.
+func (m *AppGoodMutation) ResetMaxOrderDuration() {
+	m.max_order_duration = nil
+	delete(m.clearedFields, appgood.FieldMaxOrderDuration)
+}
+
 // Where appends a list predicates to the AppGoodMutation builder.
 func (m *AppGoodMutation) Where(ps ...predicate.AppGood) {
 	m.predicates = append(m.predicates, ps...)
@@ -2642,7 +2892,7 @@ func (m *AppGoodMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppGoodMutation) Fields() []string {
-	fields := make([]string, 0, 29)
+	fields := make([]string, 0, 34)
 	if m.created_at != nil {
 		fields = append(fields, appgood.FieldCreatedAt)
 	}
@@ -2730,6 +2980,21 @@ func (m *AppGoodMutation) Fields() []string {
 	if m.posters != nil {
 		fields = append(fields, appgood.FieldPosters)
 	}
+	if m.min_order_amount != nil {
+		fields = append(fields, appgood.FieldMinOrderAmount)
+	}
+	if m.max_order_amount != nil {
+		fields = append(fields, appgood.FieldMaxOrderAmount)
+	}
+	if m.max_user_amount != nil {
+		fields = append(fields, appgood.FieldMaxUserAmount)
+	}
+	if m.min_order_duration != nil {
+		fields = append(fields, appgood.FieldMinOrderDuration)
+	}
+	if m.max_order_duration != nil {
+		fields = append(fields, appgood.FieldMaxOrderDuration)
+	}
 	return fields
 }
 
@@ -2796,6 +3061,16 @@ func (m *AppGoodMutation) Field(name string) (ent.Value, bool) {
 		return m.EnableSetCommission()
 	case appgood.FieldPosters:
 		return m.Posters()
+	case appgood.FieldMinOrderAmount:
+		return m.MinOrderAmount()
+	case appgood.FieldMaxOrderAmount:
+		return m.MaxOrderAmount()
+	case appgood.FieldMaxUserAmount:
+		return m.MaxUserAmount()
+	case appgood.FieldMinOrderDuration:
+		return m.MinOrderDuration()
+	case appgood.FieldMaxOrderDuration:
+		return m.MaxOrderDuration()
 	}
 	return nil, false
 }
@@ -2863,6 +3138,16 @@ func (m *AppGoodMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldEnableSetCommission(ctx)
 	case appgood.FieldPosters:
 		return m.OldPosters(ctx)
+	case appgood.FieldMinOrderAmount:
+		return m.OldMinOrderAmount(ctx)
+	case appgood.FieldMaxOrderAmount:
+		return m.OldMaxOrderAmount(ctx)
+	case appgood.FieldMaxUserAmount:
+		return m.OldMaxUserAmount(ctx)
+	case appgood.FieldMinOrderDuration:
+		return m.OldMinOrderDuration(ctx)
+	case appgood.FieldMaxOrderDuration:
+		return m.OldMaxOrderDuration(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppGood field %s", name)
 }
@@ -3075,6 +3360,41 @@ func (m *AppGoodMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetPosters(v)
 		return nil
+	case appgood.FieldMinOrderAmount:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMinOrderAmount(v)
+		return nil
+	case appgood.FieldMaxOrderAmount:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMaxOrderAmount(v)
+		return nil
+	case appgood.FieldMaxUserAmount:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMaxUserAmount(v)
+		return nil
+	case appgood.FieldMinOrderDuration:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMinOrderDuration(v)
+		return nil
+	case appgood.FieldMaxOrderDuration:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMaxOrderDuration(v)
+		return nil
 	}
 	return fmt.Errorf("unknown AppGood field %s", name)
 }
@@ -3285,6 +3605,21 @@ func (m *AppGoodMutation) ClearedFields() []string {
 	if m.FieldCleared(appgood.FieldPosters) {
 		fields = append(fields, appgood.FieldPosters)
 	}
+	if m.FieldCleared(appgood.FieldMinOrderAmount) {
+		fields = append(fields, appgood.FieldMinOrderAmount)
+	}
+	if m.FieldCleared(appgood.FieldMaxOrderAmount) {
+		fields = append(fields, appgood.FieldMaxOrderAmount)
+	}
+	if m.FieldCleared(appgood.FieldMaxUserAmount) {
+		fields = append(fields, appgood.FieldMaxUserAmount)
+	}
+	if m.FieldCleared(appgood.FieldMinOrderDuration) {
+		fields = append(fields, appgood.FieldMinOrderDuration)
+	}
+	if m.FieldCleared(appgood.FieldMaxOrderDuration) {
+		fields = append(fields, appgood.FieldMaxOrderDuration)
+	}
 	return fields
 }
 
@@ -3367,6 +3702,21 @@ func (m *AppGoodMutation) ClearField(name string) error {
 		return nil
 	case appgood.FieldPosters:
 		m.ClearPosters()
+		return nil
+	case appgood.FieldMinOrderAmount:
+		m.ClearMinOrderAmount()
+		return nil
+	case appgood.FieldMaxOrderAmount:
+		m.ClearMaxOrderAmount()
+		return nil
+	case appgood.FieldMaxUserAmount:
+		m.ClearMaxUserAmount()
+		return nil
+	case appgood.FieldMinOrderDuration:
+		m.ClearMinOrderDuration()
+		return nil
+	case appgood.FieldMaxOrderDuration:
+		m.ClearMaxOrderDuration()
 		return nil
 	}
 	return fmt.Errorf("unknown AppGood nullable field %s", name)
@@ -3462,6 +3812,21 @@ func (m *AppGoodMutation) ResetField(name string) error {
 		return nil
 	case appgood.FieldPosters:
 		m.ResetPosters()
+		return nil
+	case appgood.FieldMinOrderAmount:
+		m.ResetMinOrderAmount()
+		return nil
+	case appgood.FieldMaxOrderAmount:
+		m.ResetMaxOrderAmount()
+		return nil
+	case appgood.FieldMaxUserAmount:
+		m.ResetMaxUserAmount()
+		return nil
+	case appgood.FieldMinOrderDuration:
+		m.ResetMinOrderDuration()
+		return nil
+	case appgood.FieldMaxOrderDuration:
+		m.ResetMaxOrderDuration()
 		return nil
 	}
 	return fmt.Errorf("unknown AppGood field %s", name)

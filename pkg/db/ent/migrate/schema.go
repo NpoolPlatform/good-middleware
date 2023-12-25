@@ -66,6 +66,11 @@ var (
 		{Name: "product_page", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "enable_set_commission", Type: field.TypeBool, Nullable: true, Default: true},
 		{Name: "posters", Type: field.TypeJSON, Nullable: true},
+		{Name: "min_order_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "max_order_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "max_user_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "min_order_duration", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "max_order_duration", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}
 	// AppGoodsTable holds the schema information for the "app_goods" table.
 	AppGoodsTable = &schema.Table{

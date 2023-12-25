@@ -381,6 +381,76 @@ func (agc *AppGoodCreate) SetPosters(s []string) *AppGoodCreate {
 	return agc
 }
 
+// SetMinOrderAmount sets the "min_order_amount" field.
+func (agc *AppGoodCreate) SetMinOrderAmount(d decimal.Decimal) *AppGoodCreate {
+	agc.mutation.SetMinOrderAmount(d)
+	return agc
+}
+
+// SetNillableMinOrderAmount sets the "min_order_amount" field if the given value is not nil.
+func (agc *AppGoodCreate) SetNillableMinOrderAmount(d *decimal.Decimal) *AppGoodCreate {
+	if d != nil {
+		agc.SetMinOrderAmount(*d)
+	}
+	return agc
+}
+
+// SetMaxOrderAmount sets the "max_order_amount" field.
+func (agc *AppGoodCreate) SetMaxOrderAmount(d decimal.Decimal) *AppGoodCreate {
+	agc.mutation.SetMaxOrderAmount(d)
+	return agc
+}
+
+// SetNillableMaxOrderAmount sets the "max_order_amount" field if the given value is not nil.
+func (agc *AppGoodCreate) SetNillableMaxOrderAmount(d *decimal.Decimal) *AppGoodCreate {
+	if d != nil {
+		agc.SetMaxOrderAmount(*d)
+	}
+	return agc
+}
+
+// SetMaxUserAmount sets the "max_user_amount" field.
+func (agc *AppGoodCreate) SetMaxUserAmount(d decimal.Decimal) *AppGoodCreate {
+	agc.mutation.SetMaxUserAmount(d)
+	return agc
+}
+
+// SetNillableMaxUserAmount sets the "max_user_amount" field if the given value is not nil.
+func (agc *AppGoodCreate) SetNillableMaxUserAmount(d *decimal.Decimal) *AppGoodCreate {
+	if d != nil {
+		agc.SetMaxUserAmount(*d)
+	}
+	return agc
+}
+
+// SetMinOrderDuration sets the "min_order_duration" field.
+func (agc *AppGoodCreate) SetMinOrderDuration(d decimal.Decimal) *AppGoodCreate {
+	agc.mutation.SetMinOrderDuration(d)
+	return agc
+}
+
+// SetNillableMinOrderDuration sets the "min_order_duration" field if the given value is not nil.
+func (agc *AppGoodCreate) SetNillableMinOrderDuration(d *decimal.Decimal) *AppGoodCreate {
+	if d != nil {
+		agc.SetMinOrderDuration(*d)
+	}
+	return agc
+}
+
+// SetMaxOrderDuration sets the "max_order_duration" field.
+func (agc *AppGoodCreate) SetMaxOrderDuration(d decimal.Decimal) *AppGoodCreate {
+	agc.mutation.SetMaxOrderDuration(d)
+	return agc
+}
+
+// SetNillableMaxOrderDuration sets the "max_order_duration" field if the given value is not nil.
+func (agc *AppGoodCreate) SetNillableMaxOrderDuration(d *decimal.Decimal) *AppGoodCreate {
+	if d != nil {
+		agc.SetMaxOrderDuration(*d)
+	}
+	return agc
+}
+
 // SetID sets the "id" field.
 func (agc *AppGoodCreate) SetID(u uint32) *AppGoodCreate {
 	agc.mutation.SetID(u)
@@ -585,6 +655,26 @@ func (agc *AppGoodCreate) defaults() error {
 	if _, ok := agc.mutation.Posters(); !ok {
 		v := appgood.DefaultPosters
 		agc.mutation.SetPosters(v)
+	}
+	if _, ok := agc.mutation.MinOrderAmount(); !ok {
+		v := appgood.DefaultMinOrderAmount
+		agc.mutation.SetMinOrderAmount(v)
+	}
+	if _, ok := agc.mutation.MaxOrderAmount(); !ok {
+		v := appgood.DefaultMaxOrderAmount
+		agc.mutation.SetMaxOrderAmount(v)
+	}
+	if _, ok := agc.mutation.MaxUserAmount(); !ok {
+		v := appgood.DefaultMaxUserAmount
+		agc.mutation.SetMaxUserAmount(v)
+	}
+	if _, ok := agc.mutation.MinOrderDuration(); !ok {
+		v := appgood.DefaultMinOrderDuration
+		agc.mutation.SetMinOrderDuration(v)
+	}
+	if _, ok := agc.mutation.MaxOrderDuration(); !ok {
+		v := appgood.DefaultMaxOrderDuration
+		agc.mutation.SetMaxOrderDuration(v)
 	}
 	return nil
 }
@@ -874,6 +964,46 @@ func (agc *AppGoodCreate) createSpec() (*AppGood, *sqlgraph.CreateSpec) {
 			Column: appgood.FieldPosters,
 		})
 		_node.Posters = value
+	}
+	if value, ok := agc.mutation.MinOrderAmount(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldMinOrderAmount,
+		})
+		_node.MinOrderAmount = value
+	}
+	if value, ok := agc.mutation.MaxOrderAmount(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldMaxOrderAmount,
+		})
+		_node.MaxOrderAmount = value
+	}
+	if value, ok := agc.mutation.MaxUserAmount(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldMaxUserAmount,
+		})
+		_node.MaxUserAmount = value
+	}
+	if value, ok := agc.mutation.MinOrderDuration(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldMinOrderDuration,
+		})
+		_node.MinOrderDuration = value
+	}
+	if value, ok := agc.mutation.MaxOrderDuration(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldMaxOrderDuration,
+		})
+		_node.MaxOrderDuration = value
 	}
 	return _node, _spec
 }
@@ -1466,6 +1596,96 @@ func (u *AppGoodUpsert) UpdatePosters() *AppGoodUpsert {
 // ClearPosters clears the value of the "posters" field.
 func (u *AppGoodUpsert) ClearPosters() *AppGoodUpsert {
 	u.SetNull(appgood.FieldPosters)
+	return u
+}
+
+// SetMinOrderAmount sets the "min_order_amount" field.
+func (u *AppGoodUpsert) SetMinOrderAmount(v decimal.Decimal) *AppGoodUpsert {
+	u.Set(appgood.FieldMinOrderAmount, v)
+	return u
+}
+
+// UpdateMinOrderAmount sets the "min_order_amount" field to the value that was provided on create.
+func (u *AppGoodUpsert) UpdateMinOrderAmount() *AppGoodUpsert {
+	u.SetExcluded(appgood.FieldMinOrderAmount)
+	return u
+}
+
+// ClearMinOrderAmount clears the value of the "min_order_amount" field.
+func (u *AppGoodUpsert) ClearMinOrderAmount() *AppGoodUpsert {
+	u.SetNull(appgood.FieldMinOrderAmount)
+	return u
+}
+
+// SetMaxOrderAmount sets the "max_order_amount" field.
+func (u *AppGoodUpsert) SetMaxOrderAmount(v decimal.Decimal) *AppGoodUpsert {
+	u.Set(appgood.FieldMaxOrderAmount, v)
+	return u
+}
+
+// UpdateMaxOrderAmount sets the "max_order_amount" field to the value that was provided on create.
+func (u *AppGoodUpsert) UpdateMaxOrderAmount() *AppGoodUpsert {
+	u.SetExcluded(appgood.FieldMaxOrderAmount)
+	return u
+}
+
+// ClearMaxOrderAmount clears the value of the "max_order_amount" field.
+func (u *AppGoodUpsert) ClearMaxOrderAmount() *AppGoodUpsert {
+	u.SetNull(appgood.FieldMaxOrderAmount)
+	return u
+}
+
+// SetMaxUserAmount sets the "max_user_amount" field.
+func (u *AppGoodUpsert) SetMaxUserAmount(v decimal.Decimal) *AppGoodUpsert {
+	u.Set(appgood.FieldMaxUserAmount, v)
+	return u
+}
+
+// UpdateMaxUserAmount sets the "max_user_amount" field to the value that was provided on create.
+func (u *AppGoodUpsert) UpdateMaxUserAmount() *AppGoodUpsert {
+	u.SetExcluded(appgood.FieldMaxUserAmount)
+	return u
+}
+
+// ClearMaxUserAmount clears the value of the "max_user_amount" field.
+func (u *AppGoodUpsert) ClearMaxUserAmount() *AppGoodUpsert {
+	u.SetNull(appgood.FieldMaxUserAmount)
+	return u
+}
+
+// SetMinOrderDuration sets the "min_order_duration" field.
+func (u *AppGoodUpsert) SetMinOrderDuration(v decimal.Decimal) *AppGoodUpsert {
+	u.Set(appgood.FieldMinOrderDuration, v)
+	return u
+}
+
+// UpdateMinOrderDuration sets the "min_order_duration" field to the value that was provided on create.
+func (u *AppGoodUpsert) UpdateMinOrderDuration() *AppGoodUpsert {
+	u.SetExcluded(appgood.FieldMinOrderDuration)
+	return u
+}
+
+// ClearMinOrderDuration clears the value of the "min_order_duration" field.
+func (u *AppGoodUpsert) ClearMinOrderDuration() *AppGoodUpsert {
+	u.SetNull(appgood.FieldMinOrderDuration)
+	return u
+}
+
+// SetMaxOrderDuration sets the "max_order_duration" field.
+func (u *AppGoodUpsert) SetMaxOrderDuration(v decimal.Decimal) *AppGoodUpsert {
+	u.Set(appgood.FieldMaxOrderDuration, v)
+	return u
+}
+
+// UpdateMaxOrderDuration sets the "max_order_duration" field to the value that was provided on create.
+func (u *AppGoodUpsert) UpdateMaxOrderDuration() *AppGoodUpsert {
+	u.SetExcluded(appgood.FieldMaxOrderDuration)
+	return u
+}
+
+// ClearMaxOrderDuration clears the value of the "max_order_duration" field.
+func (u *AppGoodUpsert) ClearMaxOrderDuration() *AppGoodUpsert {
+	u.SetNull(appgood.FieldMaxOrderDuration)
 	return u
 }
 
@@ -2146,6 +2366,111 @@ func (u *AppGoodUpsertOne) UpdatePosters() *AppGoodUpsertOne {
 func (u *AppGoodUpsertOne) ClearPosters() *AppGoodUpsertOne {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.ClearPosters()
+	})
+}
+
+// SetMinOrderAmount sets the "min_order_amount" field.
+func (u *AppGoodUpsertOne) SetMinOrderAmount(v decimal.Decimal) *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetMinOrderAmount(v)
+	})
+}
+
+// UpdateMinOrderAmount sets the "min_order_amount" field to the value that was provided on create.
+func (u *AppGoodUpsertOne) UpdateMinOrderAmount() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateMinOrderAmount()
+	})
+}
+
+// ClearMinOrderAmount clears the value of the "min_order_amount" field.
+func (u *AppGoodUpsertOne) ClearMinOrderAmount() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearMinOrderAmount()
+	})
+}
+
+// SetMaxOrderAmount sets the "max_order_amount" field.
+func (u *AppGoodUpsertOne) SetMaxOrderAmount(v decimal.Decimal) *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetMaxOrderAmount(v)
+	})
+}
+
+// UpdateMaxOrderAmount sets the "max_order_amount" field to the value that was provided on create.
+func (u *AppGoodUpsertOne) UpdateMaxOrderAmount() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateMaxOrderAmount()
+	})
+}
+
+// ClearMaxOrderAmount clears the value of the "max_order_amount" field.
+func (u *AppGoodUpsertOne) ClearMaxOrderAmount() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearMaxOrderAmount()
+	})
+}
+
+// SetMaxUserAmount sets the "max_user_amount" field.
+func (u *AppGoodUpsertOne) SetMaxUserAmount(v decimal.Decimal) *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetMaxUserAmount(v)
+	})
+}
+
+// UpdateMaxUserAmount sets the "max_user_amount" field to the value that was provided on create.
+func (u *AppGoodUpsertOne) UpdateMaxUserAmount() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateMaxUserAmount()
+	})
+}
+
+// ClearMaxUserAmount clears the value of the "max_user_amount" field.
+func (u *AppGoodUpsertOne) ClearMaxUserAmount() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearMaxUserAmount()
+	})
+}
+
+// SetMinOrderDuration sets the "min_order_duration" field.
+func (u *AppGoodUpsertOne) SetMinOrderDuration(v decimal.Decimal) *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetMinOrderDuration(v)
+	})
+}
+
+// UpdateMinOrderDuration sets the "min_order_duration" field to the value that was provided on create.
+func (u *AppGoodUpsertOne) UpdateMinOrderDuration() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateMinOrderDuration()
+	})
+}
+
+// ClearMinOrderDuration clears the value of the "min_order_duration" field.
+func (u *AppGoodUpsertOne) ClearMinOrderDuration() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearMinOrderDuration()
+	})
+}
+
+// SetMaxOrderDuration sets the "max_order_duration" field.
+func (u *AppGoodUpsertOne) SetMaxOrderDuration(v decimal.Decimal) *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetMaxOrderDuration(v)
+	})
+}
+
+// UpdateMaxOrderDuration sets the "max_order_duration" field to the value that was provided on create.
+func (u *AppGoodUpsertOne) UpdateMaxOrderDuration() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateMaxOrderDuration()
+	})
+}
+
+// ClearMaxOrderDuration clears the value of the "max_order_duration" field.
+func (u *AppGoodUpsertOne) ClearMaxOrderDuration() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearMaxOrderDuration()
 	})
 }
 
@@ -2991,6 +3316,111 @@ func (u *AppGoodUpsertBulk) UpdatePosters() *AppGoodUpsertBulk {
 func (u *AppGoodUpsertBulk) ClearPosters() *AppGoodUpsertBulk {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.ClearPosters()
+	})
+}
+
+// SetMinOrderAmount sets the "min_order_amount" field.
+func (u *AppGoodUpsertBulk) SetMinOrderAmount(v decimal.Decimal) *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetMinOrderAmount(v)
+	})
+}
+
+// UpdateMinOrderAmount sets the "min_order_amount" field to the value that was provided on create.
+func (u *AppGoodUpsertBulk) UpdateMinOrderAmount() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateMinOrderAmount()
+	})
+}
+
+// ClearMinOrderAmount clears the value of the "min_order_amount" field.
+func (u *AppGoodUpsertBulk) ClearMinOrderAmount() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearMinOrderAmount()
+	})
+}
+
+// SetMaxOrderAmount sets the "max_order_amount" field.
+func (u *AppGoodUpsertBulk) SetMaxOrderAmount(v decimal.Decimal) *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetMaxOrderAmount(v)
+	})
+}
+
+// UpdateMaxOrderAmount sets the "max_order_amount" field to the value that was provided on create.
+func (u *AppGoodUpsertBulk) UpdateMaxOrderAmount() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateMaxOrderAmount()
+	})
+}
+
+// ClearMaxOrderAmount clears the value of the "max_order_amount" field.
+func (u *AppGoodUpsertBulk) ClearMaxOrderAmount() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearMaxOrderAmount()
+	})
+}
+
+// SetMaxUserAmount sets the "max_user_amount" field.
+func (u *AppGoodUpsertBulk) SetMaxUserAmount(v decimal.Decimal) *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetMaxUserAmount(v)
+	})
+}
+
+// UpdateMaxUserAmount sets the "max_user_amount" field to the value that was provided on create.
+func (u *AppGoodUpsertBulk) UpdateMaxUserAmount() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateMaxUserAmount()
+	})
+}
+
+// ClearMaxUserAmount clears the value of the "max_user_amount" field.
+func (u *AppGoodUpsertBulk) ClearMaxUserAmount() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearMaxUserAmount()
+	})
+}
+
+// SetMinOrderDuration sets the "min_order_duration" field.
+func (u *AppGoodUpsertBulk) SetMinOrderDuration(v decimal.Decimal) *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetMinOrderDuration(v)
+	})
+}
+
+// UpdateMinOrderDuration sets the "min_order_duration" field to the value that was provided on create.
+func (u *AppGoodUpsertBulk) UpdateMinOrderDuration() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateMinOrderDuration()
+	})
+}
+
+// ClearMinOrderDuration clears the value of the "min_order_duration" field.
+func (u *AppGoodUpsertBulk) ClearMinOrderDuration() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearMinOrderDuration()
+	})
+}
+
+// SetMaxOrderDuration sets the "max_order_duration" field.
+func (u *AppGoodUpsertBulk) SetMaxOrderDuration(v decimal.Decimal) *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetMaxOrderDuration(v)
+	})
+}
+
+// UpdateMaxOrderDuration sets the "max_order_duration" field to the value that was provided on create.
+func (u *AppGoodUpsertBulk) UpdateMaxOrderDuration() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateMaxOrderDuration()
+	})
+}
+
+// ClearMaxOrderDuration clears the value of the "max_order_duration" field.
+func (u *AppGoodUpsertBulk) ClearMaxOrderDuration() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearMaxOrderDuration()
 	})
 }
 

@@ -93,6 +93,11 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appgood.FieldProductPage:            {Type: field.TypeString, Column: appgood.FieldProductPage},
 			appgood.FieldEnableSetCommission:    {Type: field.TypeBool, Column: appgood.FieldEnableSetCommission},
 			appgood.FieldPosters:                {Type: field.TypeJSON, Column: appgood.FieldPosters},
+			appgood.FieldMinOrderAmount:         {Type: field.TypeOther, Column: appgood.FieldMinOrderAmount},
+			appgood.FieldMaxOrderAmount:         {Type: field.TypeOther, Column: appgood.FieldMaxOrderAmount},
+			appgood.FieldMaxUserAmount:          {Type: field.TypeOther, Column: appgood.FieldMaxUserAmount},
+			appgood.FieldMinOrderDuration:       {Type: field.TypeOther, Column: appgood.FieldMinOrderDuration},
+			appgood.FieldMaxOrderDuration:       {Type: field.TypeOther, Column: appgood.FieldMaxOrderDuration},
 		},
 	}
 	graph.Nodes[2] = &sqlgraph.Node{
@@ -781,6 +786,31 @@ func (f *AppGoodFilter) WhereEnableSetCommission(p entql.BoolP) {
 // WherePosters applies the entql json.RawMessage predicate on the posters field.
 func (f *AppGoodFilter) WherePosters(p entql.BytesP) {
 	f.Where(p.Field(appgood.FieldPosters))
+}
+
+// WhereMinOrderAmount applies the entql other predicate on the min_order_amount field.
+func (f *AppGoodFilter) WhereMinOrderAmount(p entql.OtherP) {
+	f.Where(p.Field(appgood.FieldMinOrderAmount))
+}
+
+// WhereMaxOrderAmount applies the entql other predicate on the max_order_amount field.
+func (f *AppGoodFilter) WhereMaxOrderAmount(p entql.OtherP) {
+	f.Where(p.Field(appgood.FieldMaxOrderAmount))
+}
+
+// WhereMaxUserAmount applies the entql other predicate on the max_user_amount field.
+func (f *AppGoodFilter) WhereMaxUserAmount(p entql.OtherP) {
+	f.Where(p.Field(appgood.FieldMaxUserAmount))
+}
+
+// WhereMinOrderDuration applies the entql other predicate on the min_order_duration field.
+func (f *AppGoodFilter) WhereMinOrderDuration(p entql.OtherP) {
+	f.Where(p.Field(appgood.FieldMinOrderDuration))
+}
+
+// WhereMaxOrderDuration applies the entql other predicate on the max_order_duration field.
+func (f *AppGoodFilter) WhereMaxOrderDuration(p entql.OtherP) {
+	f.Where(p.Field(appgood.FieldMaxOrderDuration))
 }
 
 // addPredicate implements the predicateAdder interface.
