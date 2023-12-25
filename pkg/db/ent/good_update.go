@@ -499,43 +499,63 @@ func (gu *GoodUpdate) ClearUnitType() *GoodUpdate {
 	return gu
 }
 
-// SetUnitCalculateType sets the "unit_calculate_type" field.
-func (gu *GoodUpdate) SetUnitCalculateType(s string) *GoodUpdate {
-	gu.mutation.SetUnitCalculateType(s)
+// SetQuantityCalculateType sets the "quantity_calculate_type" field.
+func (gu *GoodUpdate) SetQuantityCalculateType(s string) *GoodUpdate {
+	gu.mutation.SetQuantityCalculateType(s)
 	return gu
 }
 
-// SetNillableUnitCalculateType sets the "unit_calculate_type" field if the given value is not nil.
-func (gu *GoodUpdate) SetNillableUnitCalculateType(s *string) *GoodUpdate {
+// SetNillableQuantityCalculateType sets the "quantity_calculate_type" field if the given value is not nil.
+func (gu *GoodUpdate) SetNillableQuantityCalculateType(s *string) *GoodUpdate {
 	if s != nil {
-		gu.SetUnitCalculateType(*s)
+		gu.SetQuantityCalculateType(*s)
 	}
 	return gu
 }
 
-// ClearUnitCalculateType clears the value of the "unit_calculate_type" field.
-func (gu *GoodUpdate) ClearUnitCalculateType() *GoodUpdate {
-	gu.mutation.ClearUnitCalculateType()
+// ClearQuantityCalculateType clears the value of the "quantity_calculate_type" field.
+func (gu *GoodUpdate) ClearQuantityCalculateType() *GoodUpdate {
+	gu.mutation.ClearQuantityCalculateType()
 	return gu
 }
 
-// SetUnitDurationType sets the "unit_duration_type" field.
-func (gu *GoodUpdate) SetUnitDurationType(s string) *GoodUpdate {
-	gu.mutation.SetUnitDurationType(s)
+// SetDurationType sets the "duration_type" field.
+func (gu *GoodUpdate) SetDurationType(s string) *GoodUpdate {
+	gu.mutation.SetDurationType(s)
 	return gu
 }
 
-// SetNillableUnitDurationType sets the "unit_duration_type" field if the given value is not nil.
-func (gu *GoodUpdate) SetNillableUnitDurationType(s *string) *GoodUpdate {
+// SetNillableDurationType sets the "duration_type" field if the given value is not nil.
+func (gu *GoodUpdate) SetNillableDurationType(s *string) *GoodUpdate {
 	if s != nil {
-		gu.SetUnitDurationType(*s)
+		gu.SetDurationType(*s)
 	}
 	return gu
 }
 
-// ClearUnitDurationType clears the value of the "unit_duration_type" field.
-func (gu *GoodUpdate) ClearUnitDurationType() *GoodUpdate {
-	gu.mutation.ClearUnitDurationType()
+// ClearDurationType clears the value of the "duration_type" field.
+func (gu *GoodUpdate) ClearDurationType() *GoodUpdate {
+	gu.mutation.ClearDurationType()
+	return gu
+}
+
+// SetDurationCalculateType sets the "duration_calculate_type" field.
+func (gu *GoodUpdate) SetDurationCalculateType(s string) *GoodUpdate {
+	gu.mutation.SetDurationCalculateType(s)
+	return gu
+}
+
+// SetNillableDurationCalculateType sets the "duration_calculate_type" field if the given value is not nil.
+func (gu *GoodUpdate) SetNillableDurationCalculateType(s *string) *GoodUpdate {
+	if s != nil {
+		gu.SetDurationCalculateType(*s)
+	}
+	return gu
+}
+
+// ClearDurationCalculateType clears the value of the "duration_calculate_type" field.
+func (gu *GoodUpdate) ClearDurationCalculateType() *GoodUpdate {
+	gu.mutation.ClearDurationCalculateType()
 	return gu
 }
 
@@ -970,30 +990,43 @@ func (gu *GoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: good.FieldUnitType,
 		})
 	}
-	if value, ok := gu.mutation.UnitCalculateType(); ok {
+	if value, ok := gu.mutation.QuantityCalculateType(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: good.FieldUnitCalculateType,
+			Column: good.FieldQuantityCalculateType,
 		})
 	}
-	if gu.mutation.UnitCalculateTypeCleared() {
+	if gu.mutation.QuantityCalculateTypeCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: good.FieldUnitCalculateType,
+			Column: good.FieldQuantityCalculateType,
 		})
 	}
-	if value, ok := gu.mutation.UnitDurationType(); ok {
+	if value, ok := gu.mutation.DurationType(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: good.FieldUnitDurationType,
+			Column: good.FieldDurationType,
 		})
 	}
-	if gu.mutation.UnitDurationTypeCleared() {
+	if gu.mutation.DurationTypeCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: good.FieldUnitDurationType,
+			Column: good.FieldDurationType,
+		})
+	}
+	if value, ok := gu.mutation.DurationCalculateType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldDurationCalculateType,
+		})
+	}
+	if gu.mutation.DurationCalculateTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: good.FieldDurationCalculateType,
 		})
 	}
 	_spec.Modifiers = gu.modifiers
@@ -1486,43 +1519,63 @@ func (guo *GoodUpdateOne) ClearUnitType() *GoodUpdateOne {
 	return guo
 }
 
-// SetUnitCalculateType sets the "unit_calculate_type" field.
-func (guo *GoodUpdateOne) SetUnitCalculateType(s string) *GoodUpdateOne {
-	guo.mutation.SetUnitCalculateType(s)
+// SetQuantityCalculateType sets the "quantity_calculate_type" field.
+func (guo *GoodUpdateOne) SetQuantityCalculateType(s string) *GoodUpdateOne {
+	guo.mutation.SetQuantityCalculateType(s)
 	return guo
 }
 
-// SetNillableUnitCalculateType sets the "unit_calculate_type" field if the given value is not nil.
-func (guo *GoodUpdateOne) SetNillableUnitCalculateType(s *string) *GoodUpdateOne {
+// SetNillableQuantityCalculateType sets the "quantity_calculate_type" field if the given value is not nil.
+func (guo *GoodUpdateOne) SetNillableQuantityCalculateType(s *string) *GoodUpdateOne {
 	if s != nil {
-		guo.SetUnitCalculateType(*s)
+		guo.SetQuantityCalculateType(*s)
 	}
 	return guo
 }
 
-// ClearUnitCalculateType clears the value of the "unit_calculate_type" field.
-func (guo *GoodUpdateOne) ClearUnitCalculateType() *GoodUpdateOne {
-	guo.mutation.ClearUnitCalculateType()
+// ClearQuantityCalculateType clears the value of the "quantity_calculate_type" field.
+func (guo *GoodUpdateOne) ClearQuantityCalculateType() *GoodUpdateOne {
+	guo.mutation.ClearQuantityCalculateType()
 	return guo
 }
 
-// SetUnitDurationType sets the "unit_duration_type" field.
-func (guo *GoodUpdateOne) SetUnitDurationType(s string) *GoodUpdateOne {
-	guo.mutation.SetUnitDurationType(s)
+// SetDurationType sets the "duration_type" field.
+func (guo *GoodUpdateOne) SetDurationType(s string) *GoodUpdateOne {
+	guo.mutation.SetDurationType(s)
 	return guo
 }
 
-// SetNillableUnitDurationType sets the "unit_duration_type" field if the given value is not nil.
-func (guo *GoodUpdateOne) SetNillableUnitDurationType(s *string) *GoodUpdateOne {
+// SetNillableDurationType sets the "duration_type" field if the given value is not nil.
+func (guo *GoodUpdateOne) SetNillableDurationType(s *string) *GoodUpdateOne {
 	if s != nil {
-		guo.SetUnitDurationType(*s)
+		guo.SetDurationType(*s)
 	}
 	return guo
 }
 
-// ClearUnitDurationType clears the value of the "unit_duration_type" field.
-func (guo *GoodUpdateOne) ClearUnitDurationType() *GoodUpdateOne {
-	guo.mutation.ClearUnitDurationType()
+// ClearDurationType clears the value of the "duration_type" field.
+func (guo *GoodUpdateOne) ClearDurationType() *GoodUpdateOne {
+	guo.mutation.ClearDurationType()
+	return guo
+}
+
+// SetDurationCalculateType sets the "duration_calculate_type" field.
+func (guo *GoodUpdateOne) SetDurationCalculateType(s string) *GoodUpdateOne {
+	guo.mutation.SetDurationCalculateType(s)
+	return guo
+}
+
+// SetNillableDurationCalculateType sets the "duration_calculate_type" field if the given value is not nil.
+func (guo *GoodUpdateOne) SetNillableDurationCalculateType(s *string) *GoodUpdateOne {
+	if s != nil {
+		guo.SetDurationCalculateType(*s)
+	}
+	return guo
+}
+
+// ClearDurationCalculateType clears the value of the "duration_calculate_type" field.
+func (guo *GoodUpdateOne) ClearDurationCalculateType() *GoodUpdateOne {
+	guo.mutation.ClearDurationCalculateType()
 	return guo
 }
 
@@ -1987,30 +2040,43 @@ func (guo *GoodUpdateOne) sqlSave(ctx context.Context) (_node *Good, err error) 
 			Column: good.FieldUnitType,
 		})
 	}
-	if value, ok := guo.mutation.UnitCalculateType(); ok {
+	if value, ok := guo.mutation.QuantityCalculateType(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: good.FieldUnitCalculateType,
+			Column: good.FieldQuantityCalculateType,
 		})
 	}
-	if guo.mutation.UnitCalculateTypeCleared() {
+	if guo.mutation.QuantityCalculateTypeCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: good.FieldUnitCalculateType,
+			Column: good.FieldQuantityCalculateType,
 		})
 	}
-	if value, ok := guo.mutation.UnitDurationType(); ok {
+	if value, ok := guo.mutation.DurationType(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: good.FieldUnitDurationType,
+			Column: good.FieldDurationType,
 		})
 	}
-	if guo.mutation.UnitDurationTypeCleared() {
+	if guo.mutation.DurationTypeCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: good.FieldUnitDurationType,
+			Column: good.FieldDurationType,
+		})
+	}
+	if value, ok := guo.mutation.DurationCalculateType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldDurationCalculateType,
+		})
+	}
+	if guo.mutation.DurationCalculateTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: good.FieldDurationCalculateType,
 		})
 	}
 	_spec.Modifiers = guo.modifiers

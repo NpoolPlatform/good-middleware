@@ -9248,8 +9248,9 @@ type GoodMutation struct {
 	addbenefit_interval_hours *int32
 	unit_lock_deposit         *decimal.Decimal
 	unit_type                 *string
-	unit_calculate_type       *string
-	unit_duration_type        *string
+	quantity_calculate_type   *string
+	duration_type             *string
+	duration_calculate_type   *string
 	clearedFields             map[string]struct{}
 	done                      bool
 	oldValue                  func(context.Context) (*Good, error)
@@ -10631,102 +10632,151 @@ func (m *GoodMutation) ResetUnitType() {
 	delete(m.clearedFields, good.FieldUnitType)
 }
 
-// SetUnitCalculateType sets the "unit_calculate_type" field.
-func (m *GoodMutation) SetUnitCalculateType(s string) {
-	m.unit_calculate_type = &s
+// SetQuantityCalculateType sets the "quantity_calculate_type" field.
+func (m *GoodMutation) SetQuantityCalculateType(s string) {
+	m.quantity_calculate_type = &s
 }
 
-// UnitCalculateType returns the value of the "unit_calculate_type" field in the mutation.
-func (m *GoodMutation) UnitCalculateType() (r string, exists bool) {
-	v := m.unit_calculate_type
+// QuantityCalculateType returns the value of the "quantity_calculate_type" field in the mutation.
+func (m *GoodMutation) QuantityCalculateType() (r string, exists bool) {
+	v := m.quantity_calculate_type
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldUnitCalculateType returns the old "unit_calculate_type" field's value of the Good entity.
+// OldQuantityCalculateType returns the old "quantity_calculate_type" field's value of the Good entity.
 // If the Good object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodMutation) OldUnitCalculateType(ctx context.Context) (v string, err error) {
+func (m *GoodMutation) OldQuantityCalculateType(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUnitCalculateType is only allowed on UpdateOne operations")
+		return v, errors.New("OldQuantityCalculateType is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUnitCalculateType requires an ID field in the mutation")
+		return v, errors.New("OldQuantityCalculateType requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUnitCalculateType: %w", err)
+		return v, fmt.Errorf("querying old value for OldQuantityCalculateType: %w", err)
 	}
-	return oldValue.UnitCalculateType, nil
+	return oldValue.QuantityCalculateType, nil
 }
 
-// ClearUnitCalculateType clears the value of the "unit_calculate_type" field.
-func (m *GoodMutation) ClearUnitCalculateType() {
-	m.unit_calculate_type = nil
-	m.clearedFields[good.FieldUnitCalculateType] = struct{}{}
+// ClearQuantityCalculateType clears the value of the "quantity_calculate_type" field.
+func (m *GoodMutation) ClearQuantityCalculateType() {
+	m.quantity_calculate_type = nil
+	m.clearedFields[good.FieldQuantityCalculateType] = struct{}{}
 }
 
-// UnitCalculateTypeCleared returns if the "unit_calculate_type" field was cleared in this mutation.
-func (m *GoodMutation) UnitCalculateTypeCleared() bool {
-	_, ok := m.clearedFields[good.FieldUnitCalculateType]
+// QuantityCalculateTypeCleared returns if the "quantity_calculate_type" field was cleared in this mutation.
+func (m *GoodMutation) QuantityCalculateTypeCleared() bool {
+	_, ok := m.clearedFields[good.FieldQuantityCalculateType]
 	return ok
 }
 
-// ResetUnitCalculateType resets all changes to the "unit_calculate_type" field.
-func (m *GoodMutation) ResetUnitCalculateType() {
-	m.unit_calculate_type = nil
-	delete(m.clearedFields, good.FieldUnitCalculateType)
+// ResetQuantityCalculateType resets all changes to the "quantity_calculate_type" field.
+func (m *GoodMutation) ResetQuantityCalculateType() {
+	m.quantity_calculate_type = nil
+	delete(m.clearedFields, good.FieldQuantityCalculateType)
 }
 
-// SetUnitDurationType sets the "unit_duration_type" field.
-func (m *GoodMutation) SetUnitDurationType(s string) {
-	m.unit_duration_type = &s
+// SetDurationType sets the "duration_type" field.
+func (m *GoodMutation) SetDurationType(s string) {
+	m.duration_type = &s
 }
 
-// UnitDurationType returns the value of the "unit_duration_type" field in the mutation.
-func (m *GoodMutation) UnitDurationType() (r string, exists bool) {
-	v := m.unit_duration_type
+// DurationType returns the value of the "duration_type" field in the mutation.
+func (m *GoodMutation) DurationType() (r string, exists bool) {
+	v := m.duration_type
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldUnitDurationType returns the old "unit_duration_type" field's value of the Good entity.
+// OldDurationType returns the old "duration_type" field's value of the Good entity.
 // If the Good object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodMutation) OldUnitDurationType(ctx context.Context) (v string, err error) {
+func (m *GoodMutation) OldDurationType(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUnitDurationType is only allowed on UpdateOne operations")
+		return v, errors.New("OldDurationType is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUnitDurationType requires an ID field in the mutation")
+		return v, errors.New("OldDurationType requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUnitDurationType: %w", err)
+		return v, fmt.Errorf("querying old value for OldDurationType: %w", err)
 	}
-	return oldValue.UnitDurationType, nil
+	return oldValue.DurationType, nil
 }
 
-// ClearUnitDurationType clears the value of the "unit_duration_type" field.
-func (m *GoodMutation) ClearUnitDurationType() {
-	m.unit_duration_type = nil
-	m.clearedFields[good.FieldUnitDurationType] = struct{}{}
+// ClearDurationType clears the value of the "duration_type" field.
+func (m *GoodMutation) ClearDurationType() {
+	m.duration_type = nil
+	m.clearedFields[good.FieldDurationType] = struct{}{}
 }
 
-// UnitDurationTypeCleared returns if the "unit_duration_type" field was cleared in this mutation.
-func (m *GoodMutation) UnitDurationTypeCleared() bool {
-	_, ok := m.clearedFields[good.FieldUnitDurationType]
+// DurationTypeCleared returns if the "duration_type" field was cleared in this mutation.
+func (m *GoodMutation) DurationTypeCleared() bool {
+	_, ok := m.clearedFields[good.FieldDurationType]
 	return ok
 }
 
-// ResetUnitDurationType resets all changes to the "unit_duration_type" field.
-func (m *GoodMutation) ResetUnitDurationType() {
-	m.unit_duration_type = nil
-	delete(m.clearedFields, good.FieldUnitDurationType)
+// ResetDurationType resets all changes to the "duration_type" field.
+func (m *GoodMutation) ResetDurationType() {
+	m.duration_type = nil
+	delete(m.clearedFields, good.FieldDurationType)
+}
+
+// SetDurationCalculateType sets the "duration_calculate_type" field.
+func (m *GoodMutation) SetDurationCalculateType(s string) {
+	m.duration_calculate_type = &s
+}
+
+// DurationCalculateType returns the value of the "duration_calculate_type" field in the mutation.
+func (m *GoodMutation) DurationCalculateType() (r string, exists bool) {
+	v := m.duration_calculate_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDurationCalculateType returns the old "duration_calculate_type" field's value of the Good entity.
+// If the Good object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodMutation) OldDurationCalculateType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDurationCalculateType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDurationCalculateType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDurationCalculateType: %w", err)
+	}
+	return oldValue.DurationCalculateType, nil
+}
+
+// ClearDurationCalculateType clears the value of the "duration_calculate_type" field.
+func (m *GoodMutation) ClearDurationCalculateType() {
+	m.duration_calculate_type = nil
+	m.clearedFields[good.FieldDurationCalculateType] = struct{}{}
+}
+
+// DurationCalculateTypeCleared returns if the "duration_calculate_type" field was cleared in this mutation.
+func (m *GoodMutation) DurationCalculateTypeCleared() bool {
+	_, ok := m.clearedFields[good.FieldDurationCalculateType]
+	return ok
+}
+
+// ResetDurationCalculateType resets all changes to the "duration_calculate_type" field.
+func (m *GoodMutation) ResetDurationCalculateType() {
+	m.duration_calculate_type = nil
+	delete(m.clearedFields, good.FieldDurationCalculateType)
 }
 
 // Where appends a list predicates to the GoodMutation builder.
@@ -10748,7 +10798,7 @@ func (m *GoodMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *GoodMutation) Fields() []string {
-	fields := make([]string, 0, 26)
+	fields := make([]string, 0, 27)
 	if m.created_at != nil {
 		fields = append(fields, good.FieldCreatedAt)
 	}
@@ -10821,11 +10871,14 @@ func (m *GoodMutation) Fields() []string {
 	if m.unit_type != nil {
 		fields = append(fields, good.FieldUnitType)
 	}
-	if m.unit_calculate_type != nil {
-		fields = append(fields, good.FieldUnitCalculateType)
+	if m.quantity_calculate_type != nil {
+		fields = append(fields, good.FieldQuantityCalculateType)
 	}
-	if m.unit_duration_type != nil {
-		fields = append(fields, good.FieldUnitDurationType)
+	if m.duration_type != nil {
+		fields = append(fields, good.FieldDurationType)
+	}
+	if m.duration_calculate_type != nil {
+		fields = append(fields, good.FieldDurationCalculateType)
 	}
 	return fields
 }
@@ -10883,10 +10936,12 @@ func (m *GoodMutation) Field(name string) (ent.Value, bool) {
 		return m.UnitLockDeposit()
 	case good.FieldUnitType:
 		return m.UnitType()
-	case good.FieldUnitCalculateType:
-		return m.UnitCalculateType()
-	case good.FieldUnitDurationType:
-		return m.UnitDurationType()
+	case good.FieldQuantityCalculateType:
+		return m.QuantityCalculateType()
+	case good.FieldDurationType:
+		return m.DurationType()
+	case good.FieldDurationCalculateType:
+		return m.DurationCalculateType()
 	}
 	return nil, false
 }
@@ -10944,10 +10999,12 @@ func (m *GoodMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldUnitLockDeposit(ctx)
 	case good.FieldUnitType:
 		return m.OldUnitType(ctx)
-	case good.FieldUnitCalculateType:
-		return m.OldUnitCalculateType(ctx)
-	case good.FieldUnitDurationType:
-		return m.OldUnitDurationType(ctx)
+	case good.FieldQuantityCalculateType:
+		return m.OldQuantityCalculateType(ctx)
+	case good.FieldDurationType:
+		return m.OldDurationType(ctx)
+	case good.FieldDurationCalculateType:
+		return m.OldDurationCalculateType(ctx)
 	}
 	return nil, fmt.Errorf("unknown Good field %s", name)
 }
@@ -11125,19 +11182,26 @@ func (m *GoodMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUnitType(v)
 		return nil
-	case good.FieldUnitCalculateType:
+	case good.FieldQuantityCalculateType:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetUnitCalculateType(v)
+		m.SetQuantityCalculateType(v)
 		return nil
-	case good.FieldUnitDurationType:
+	case good.FieldDurationType:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetUnitDurationType(v)
+		m.SetDurationType(v)
+		return nil
+	case good.FieldDurationCalculateType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDurationCalculateType(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Good field %s", name)
@@ -11331,11 +11395,14 @@ func (m *GoodMutation) ClearedFields() []string {
 	if m.FieldCleared(good.FieldUnitType) {
 		fields = append(fields, good.FieldUnitType)
 	}
-	if m.FieldCleared(good.FieldUnitCalculateType) {
-		fields = append(fields, good.FieldUnitCalculateType)
+	if m.FieldCleared(good.FieldQuantityCalculateType) {
+		fields = append(fields, good.FieldQuantityCalculateType)
 	}
-	if m.FieldCleared(good.FieldUnitDurationType) {
-		fields = append(fields, good.FieldUnitDurationType)
+	if m.FieldCleared(good.FieldDurationType) {
+		fields = append(fields, good.FieldDurationType)
+	}
+	if m.FieldCleared(good.FieldDurationCalculateType) {
+		fields = append(fields, good.FieldDurationCalculateType)
 	}
 	return fields
 }
@@ -11402,11 +11469,14 @@ func (m *GoodMutation) ClearField(name string) error {
 	case good.FieldUnitType:
 		m.ClearUnitType()
 		return nil
-	case good.FieldUnitCalculateType:
-		m.ClearUnitCalculateType()
+	case good.FieldQuantityCalculateType:
+		m.ClearQuantityCalculateType()
 		return nil
-	case good.FieldUnitDurationType:
-		m.ClearUnitDurationType()
+	case good.FieldDurationType:
+		m.ClearDurationType()
+		return nil
+	case good.FieldDurationCalculateType:
+		m.ClearDurationCalculateType()
 		return nil
 	}
 	return fmt.Errorf("unknown Good nullable field %s", name)
@@ -11488,11 +11558,14 @@ func (m *GoodMutation) ResetField(name string) error {
 	case good.FieldUnitType:
 		m.ResetUnitType()
 		return nil
-	case good.FieldUnitCalculateType:
-		m.ResetUnitCalculateType()
+	case good.FieldQuantityCalculateType:
+		m.ResetQuantityCalculateType()
 		return nil
-	case good.FieldUnitDurationType:
-		m.ResetUnitDurationType()
+	case good.FieldDurationType:
+		m.ResetDurationType()
+		return nil
+	case good.FieldDurationCalculateType:
+		m.ResetDurationCalculateType()
 		return nil
 	}
 	return fmt.Errorf("unknown Good field %s", name)

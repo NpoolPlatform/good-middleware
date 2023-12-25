@@ -111,13 +111,17 @@ func (Good) Fields() []ent.Field {
 			Optional().
 			Default(types.GoodUnitType_GoodUnitByDurationAndQuantity.String()),
 		field.
-			String("unit_calculate_type").
+			String("quantity_calculate_type").
 			Optional().
 			Default(types.GoodUnitCalculateType_GoodUnitCalculateBySelf.String()),
 		field.
-			String("unit_duration_type").
+			String("duration_type").
 			Optional().
 			Default(types.GoodUnitDurationType_GoodUnitDurationByYear.String()),
+		field.
+			String("duration_calculate_type").
+			Optional().
+			Default(types.GoodUnitCalculateType_GoodUnitCalculateBySelf.String()),
 	}
 }
 

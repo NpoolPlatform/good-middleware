@@ -61,10 +61,12 @@ const (
 	FieldUnitLockDeposit = "unit_lock_deposit"
 	// FieldUnitType holds the string denoting the unit_type field in the database.
 	FieldUnitType = "unit_type"
-	// FieldUnitCalculateType holds the string denoting the unit_calculate_type field in the database.
-	FieldUnitCalculateType = "unit_calculate_type"
-	// FieldUnitDurationType holds the string denoting the unit_duration_type field in the database.
-	FieldUnitDurationType = "unit_duration_type"
+	// FieldQuantityCalculateType holds the string denoting the quantity_calculate_type field in the database.
+	FieldQuantityCalculateType = "quantity_calculate_type"
+	// FieldDurationType holds the string denoting the duration_type field in the database.
+	FieldDurationType = "duration_type"
+	// FieldDurationCalculateType holds the string denoting the duration_calculate_type field in the database.
+	FieldDurationCalculateType = "duration_calculate_type"
 	// Table holds the table name of the good in the database.
 	Table = "goods"
 )
@@ -96,8 +98,9 @@ var Columns = []string{
 	FieldBenefitIntervalHours,
 	FieldUnitLockDeposit,
 	FieldUnitType,
-	FieldUnitCalculateType,
-	FieldUnitDurationType,
+	FieldQuantityCalculateType,
+	FieldDurationType,
+	FieldDurationCalculateType,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -163,8 +166,10 @@ var (
 	DefaultUnitLockDeposit decimal.Decimal
 	// DefaultUnitType holds the default value on creation for the "unit_type" field.
 	DefaultUnitType string
-	// DefaultUnitCalculateType holds the default value on creation for the "unit_calculate_type" field.
-	DefaultUnitCalculateType string
-	// DefaultUnitDurationType holds the default value on creation for the "unit_duration_type" field.
-	DefaultUnitDurationType string
+	// DefaultQuantityCalculateType holds the default value on creation for the "quantity_calculate_type" field.
+	DefaultQuantityCalculateType string
+	// DefaultDurationType holds the default value on creation for the "duration_type" field.
+	DefaultDurationType string
+	// DefaultDurationCalculateType holds the default value on creation for the "duration_calculate_type" field.
+	DefaultDurationCalculateType string
 )

@@ -226,32 +226,33 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Good",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			good.FieldCreatedAt:            {Type: field.TypeUint32, Column: good.FieldCreatedAt},
-			good.FieldUpdatedAt:            {Type: field.TypeUint32, Column: good.FieldUpdatedAt},
-			good.FieldDeletedAt:            {Type: field.TypeUint32, Column: good.FieldDeletedAt},
-			good.FieldEntID:                {Type: field.TypeUUID, Column: good.FieldEntID},
-			good.FieldDeviceInfoID:         {Type: field.TypeUUID, Column: good.FieldDeviceInfoID},
-			good.FieldDurationDays:         {Type: field.TypeInt32, Column: good.FieldDurationDays},
-			good.FieldCoinTypeID:           {Type: field.TypeUUID, Column: good.FieldCoinTypeID},
-			good.FieldInheritFromGoodID:    {Type: field.TypeUUID, Column: good.FieldInheritFromGoodID},
-			good.FieldVendorLocationID:     {Type: field.TypeUUID, Column: good.FieldVendorLocationID},
-			good.FieldPrice:                {Type: field.TypeOther, Column: good.FieldPrice},
-			good.FieldBenefitType:          {Type: field.TypeString, Column: good.FieldBenefitType},
-			good.FieldGoodType:             {Type: field.TypeString, Column: good.FieldGoodType},
-			good.FieldTitle:                {Type: field.TypeString, Column: good.FieldTitle},
-			good.FieldUnit:                 {Type: field.TypeString, Column: good.FieldUnit},
-			good.FieldQuantityUnit:         {Type: field.TypeString, Column: good.FieldQuantityUnit},
-			good.FieldUnitAmount:           {Type: field.TypeInt32, Column: good.FieldUnitAmount},
-			good.FieldQuantityUnitAmount:   {Type: field.TypeUint32, Column: good.FieldQuantityUnitAmount},
-			good.FieldDeliveryAt:           {Type: field.TypeUint32, Column: good.FieldDeliveryAt},
-			good.FieldStartAt:              {Type: field.TypeUint32, Column: good.FieldStartAt},
-			good.FieldStartMode:            {Type: field.TypeString, Column: good.FieldStartMode},
-			good.FieldTestOnly:             {Type: field.TypeBool, Column: good.FieldTestOnly},
-			good.FieldBenefitIntervalHours: {Type: field.TypeUint32, Column: good.FieldBenefitIntervalHours},
-			good.FieldUnitLockDeposit:      {Type: field.TypeOther, Column: good.FieldUnitLockDeposit},
-			good.FieldUnitType:             {Type: field.TypeString, Column: good.FieldUnitType},
-			good.FieldUnitCalculateType:    {Type: field.TypeString, Column: good.FieldUnitCalculateType},
-			good.FieldUnitDurationType:     {Type: field.TypeString, Column: good.FieldUnitDurationType},
+			good.FieldCreatedAt:             {Type: field.TypeUint32, Column: good.FieldCreatedAt},
+			good.FieldUpdatedAt:             {Type: field.TypeUint32, Column: good.FieldUpdatedAt},
+			good.FieldDeletedAt:             {Type: field.TypeUint32, Column: good.FieldDeletedAt},
+			good.FieldEntID:                 {Type: field.TypeUUID, Column: good.FieldEntID},
+			good.FieldDeviceInfoID:          {Type: field.TypeUUID, Column: good.FieldDeviceInfoID},
+			good.FieldDurationDays:          {Type: field.TypeInt32, Column: good.FieldDurationDays},
+			good.FieldCoinTypeID:            {Type: field.TypeUUID, Column: good.FieldCoinTypeID},
+			good.FieldInheritFromGoodID:     {Type: field.TypeUUID, Column: good.FieldInheritFromGoodID},
+			good.FieldVendorLocationID:      {Type: field.TypeUUID, Column: good.FieldVendorLocationID},
+			good.FieldPrice:                 {Type: field.TypeOther, Column: good.FieldPrice},
+			good.FieldBenefitType:           {Type: field.TypeString, Column: good.FieldBenefitType},
+			good.FieldGoodType:              {Type: field.TypeString, Column: good.FieldGoodType},
+			good.FieldTitle:                 {Type: field.TypeString, Column: good.FieldTitle},
+			good.FieldUnit:                  {Type: field.TypeString, Column: good.FieldUnit},
+			good.FieldQuantityUnit:          {Type: field.TypeString, Column: good.FieldQuantityUnit},
+			good.FieldUnitAmount:            {Type: field.TypeInt32, Column: good.FieldUnitAmount},
+			good.FieldQuantityUnitAmount:    {Type: field.TypeUint32, Column: good.FieldQuantityUnitAmount},
+			good.FieldDeliveryAt:            {Type: field.TypeUint32, Column: good.FieldDeliveryAt},
+			good.FieldStartAt:               {Type: field.TypeUint32, Column: good.FieldStartAt},
+			good.FieldStartMode:             {Type: field.TypeString, Column: good.FieldStartMode},
+			good.FieldTestOnly:              {Type: field.TypeBool, Column: good.FieldTestOnly},
+			good.FieldBenefitIntervalHours:  {Type: field.TypeUint32, Column: good.FieldBenefitIntervalHours},
+			good.FieldUnitLockDeposit:       {Type: field.TypeOther, Column: good.FieldUnitLockDeposit},
+			good.FieldUnitType:              {Type: field.TypeString, Column: good.FieldUnitType},
+			good.FieldQuantityCalculateType: {Type: field.TypeString, Column: good.FieldQuantityCalculateType},
+			good.FieldDurationType:          {Type: field.TypeString, Column: good.FieldDurationType},
+			good.FieldDurationCalculateType: {Type: field.TypeString, Column: good.FieldDurationCalculateType},
 		},
 	}
 	graph.Nodes[8] = &sqlgraph.Node{
@@ -1417,14 +1418,19 @@ func (f *GoodFilter) WhereUnitType(p entql.StringP) {
 	f.Where(p.Field(good.FieldUnitType))
 }
 
-// WhereUnitCalculateType applies the entql string predicate on the unit_calculate_type field.
-func (f *GoodFilter) WhereUnitCalculateType(p entql.StringP) {
-	f.Where(p.Field(good.FieldUnitCalculateType))
+// WhereQuantityCalculateType applies the entql string predicate on the quantity_calculate_type field.
+func (f *GoodFilter) WhereQuantityCalculateType(p entql.StringP) {
+	f.Where(p.Field(good.FieldQuantityCalculateType))
 }
 
-// WhereUnitDurationType applies the entql string predicate on the unit_duration_type field.
-func (f *GoodFilter) WhereUnitDurationType(p entql.StringP) {
-	f.Where(p.Field(good.FieldUnitDurationType))
+// WhereDurationType applies the entql string predicate on the duration_type field.
+func (f *GoodFilter) WhereDurationType(p entql.StringP) {
+	f.Where(p.Field(good.FieldDurationType))
+}
+
+// WhereDurationCalculateType applies the entql string predicate on the duration_calculate_type field.
+func (f *GoodFilter) WhereDurationCalculateType(p entql.StringP) {
+	f.Where(p.Field(good.FieldDurationCalculateType))
 }
 
 // addPredicate implements the predicateAdder interface.

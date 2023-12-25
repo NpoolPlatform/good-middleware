@@ -262,8 +262,9 @@ var (
 		{Name: "benefit_interval_hours", Type: field.TypeUint32, Nullable: true, Default: 24},
 		{Name: "unit_lock_deposit", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "unit_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitByDurationAndQuantity"},
-		{Name: "unit_calculate_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitCalculateBySelf"},
-		{Name: "unit_duration_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitDurationByYear"},
+		{Name: "quantity_calculate_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitCalculateBySelf"},
+		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitDurationByYear"},
+		{Name: "duration_calculate_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitCalculateBySelf"},
 	}
 	// GoodsTable holds the schema information for the "goods" table.
 	GoodsTable = &schema.Table{

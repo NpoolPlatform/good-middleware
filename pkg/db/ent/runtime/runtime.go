@@ -596,14 +596,18 @@ func init() {
 	goodDescUnitType := goodFields[19].Descriptor()
 	// good.DefaultUnitType holds the default value on creation for the unit_type field.
 	good.DefaultUnitType = goodDescUnitType.Default.(string)
-	// goodDescUnitCalculateType is the schema descriptor for unit_calculate_type field.
-	goodDescUnitCalculateType := goodFields[20].Descriptor()
-	// good.DefaultUnitCalculateType holds the default value on creation for the unit_calculate_type field.
-	good.DefaultUnitCalculateType = goodDescUnitCalculateType.Default.(string)
-	// goodDescUnitDurationType is the schema descriptor for unit_duration_type field.
-	goodDescUnitDurationType := goodFields[21].Descriptor()
-	// good.DefaultUnitDurationType holds the default value on creation for the unit_duration_type field.
-	good.DefaultUnitDurationType = goodDescUnitDurationType.Default.(string)
+	// goodDescQuantityCalculateType is the schema descriptor for quantity_calculate_type field.
+	goodDescQuantityCalculateType := goodFields[20].Descriptor()
+	// good.DefaultQuantityCalculateType holds the default value on creation for the quantity_calculate_type field.
+	good.DefaultQuantityCalculateType = goodDescQuantityCalculateType.Default.(string)
+	// goodDescDurationType is the schema descriptor for duration_type field.
+	goodDescDurationType := goodFields[21].Descriptor()
+	// good.DefaultDurationType holds the default value on creation for the duration_type field.
+	good.DefaultDurationType = goodDescDurationType.Default.(string)
+	// goodDescDurationCalculateType is the schema descriptor for duration_calculate_type field.
+	goodDescDurationCalculateType := goodFields[22].Descriptor()
+	// good.DefaultDurationCalculateType holds the default value on creation for the duration_calculate_type field.
+	good.DefaultDurationCalculateType = goodDescDurationCalculateType.Default.(string)
 	goodrewardMixin := schema.GoodReward{}.Mixin()
 	goodreward.Policy = privacy.NewPolicies(goodrewardMixin[0], schema.GoodReward{})
 	goodreward.Hooks[0] = func(next ent.Mutator) ent.Mutator {

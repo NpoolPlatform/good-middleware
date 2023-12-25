@@ -335,30 +335,44 @@ func (gc *GoodCreate) SetNillableUnitType(s *string) *GoodCreate {
 	return gc
 }
 
-// SetUnitCalculateType sets the "unit_calculate_type" field.
-func (gc *GoodCreate) SetUnitCalculateType(s string) *GoodCreate {
-	gc.mutation.SetUnitCalculateType(s)
+// SetQuantityCalculateType sets the "quantity_calculate_type" field.
+func (gc *GoodCreate) SetQuantityCalculateType(s string) *GoodCreate {
+	gc.mutation.SetQuantityCalculateType(s)
 	return gc
 }
 
-// SetNillableUnitCalculateType sets the "unit_calculate_type" field if the given value is not nil.
-func (gc *GoodCreate) SetNillableUnitCalculateType(s *string) *GoodCreate {
+// SetNillableQuantityCalculateType sets the "quantity_calculate_type" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableQuantityCalculateType(s *string) *GoodCreate {
 	if s != nil {
-		gc.SetUnitCalculateType(*s)
+		gc.SetQuantityCalculateType(*s)
 	}
 	return gc
 }
 
-// SetUnitDurationType sets the "unit_duration_type" field.
-func (gc *GoodCreate) SetUnitDurationType(s string) *GoodCreate {
-	gc.mutation.SetUnitDurationType(s)
+// SetDurationType sets the "duration_type" field.
+func (gc *GoodCreate) SetDurationType(s string) *GoodCreate {
+	gc.mutation.SetDurationType(s)
 	return gc
 }
 
-// SetNillableUnitDurationType sets the "unit_duration_type" field if the given value is not nil.
-func (gc *GoodCreate) SetNillableUnitDurationType(s *string) *GoodCreate {
+// SetNillableDurationType sets the "duration_type" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableDurationType(s *string) *GoodCreate {
 	if s != nil {
-		gc.SetUnitDurationType(*s)
+		gc.SetDurationType(*s)
+	}
+	return gc
+}
+
+// SetDurationCalculateType sets the "duration_calculate_type" field.
+func (gc *GoodCreate) SetDurationCalculateType(s string) *GoodCreate {
+	gc.mutation.SetDurationCalculateType(s)
+	return gc
+}
+
+// SetNillableDurationCalculateType sets the "duration_calculate_type" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableDurationCalculateType(s *string) *GoodCreate {
+	if s != nil {
+		gc.SetDurationCalculateType(*s)
 	}
 	return gc
 }
@@ -547,13 +561,17 @@ func (gc *GoodCreate) defaults() error {
 		v := good.DefaultUnitType
 		gc.mutation.SetUnitType(v)
 	}
-	if _, ok := gc.mutation.UnitCalculateType(); !ok {
-		v := good.DefaultUnitCalculateType
-		gc.mutation.SetUnitCalculateType(v)
+	if _, ok := gc.mutation.QuantityCalculateType(); !ok {
+		v := good.DefaultQuantityCalculateType
+		gc.mutation.SetQuantityCalculateType(v)
 	}
-	if _, ok := gc.mutation.UnitDurationType(); !ok {
-		v := good.DefaultUnitDurationType
-		gc.mutation.SetUnitDurationType(v)
+	if _, ok := gc.mutation.DurationType(); !ok {
+		v := good.DefaultDurationType
+		gc.mutation.SetDurationType(v)
+	}
+	if _, ok := gc.mutation.DurationCalculateType(); !ok {
+		v := good.DefaultDurationCalculateType
+		gc.mutation.SetDurationCalculateType(v)
 	}
 	return nil
 }
@@ -807,21 +825,29 @@ func (gc *GoodCreate) createSpec() (*Good, *sqlgraph.CreateSpec) {
 		})
 		_node.UnitType = value
 	}
-	if value, ok := gc.mutation.UnitCalculateType(); ok {
+	if value, ok := gc.mutation.QuantityCalculateType(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: good.FieldUnitCalculateType,
+			Column: good.FieldQuantityCalculateType,
 		})
-		_node.UnitCalculateType = value
+		_node.QuantityCalculateType = value
 	}
-	if value, ok := gc.mutation.UnitDurationType(); ok {
+	if value, ok := gc.mutation.DurationType(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: good.FieldUnitDurationType,
+			Column: good.FieldDurationType,
 		})
-		_node.UnitDurationType = value
+		_node.DurationType = value
+	}
+	if value, ok := gc.mutation.DurationCalculateType(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldDurationCalculateType,
+		})
+		_node.DurationCalculateType = value
 	}
 	return _node, _spec
 }
@@ -1321,39 +1347,57 @@ func (u *GoodUpsert) ClearUnitType() *GoodUpsert {
 	return u
 }
 
-// SetUnitCalculateType sets the "unit_calculate_type" field.
-func (u *GoodUpsert) SetUnitCalculateType(v string) *GoodUpsert {
-	u.Set(good.FieldUnitCalculateType, v)
+// SetQuantityCalculateType sets the "quantity_calculate_type" field.
+func (u *GoodUpsert) SetQuantityCalculateType(v string) *GoodUpsert {
+	u.Set(good.FieldQuantityCalculateType, v)
 	return u
 }
 
-// UpdateUnitCalculateType sets the "unit_calculate_type" field to the value that was provided on create.
-func (u *GoodUpsert) UpdateUnitCalculateType() *GoodUpsert {
-	u.SetExcluded(good.FieldUnitCalculateType)
+// UpdateQuantityCalculateType sets the "quantity_calculate_type" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateQuantityCalculateType() *GoodUpsert {
+	u.SetExcluded(good.FieldQuantityCalculateType)
 	return u
 }
 
-// ClearUnitCalculateType clears the value of the "unit_calculate_type" field.
-func (u *GoodUpsert) ClearUnitCalculateType() *GoodUpsert {
-	u.SetNull(good.FieldUnitCalculateType)
+// ClearQuantityCalculateType clears the value of the "quantity_calculate_type" field.
+func (u *GoodUpsert) ClearQuantityCalculateType() *GoodUpsert {
+	u.SetNull(good.FieldQuantityCalculateType)
 	return u
 }
 
-// SetUnitDurationType sets the "unit_duration_type" field.
-func (u *GoodUpsert) SetUnitDurationType(v string) *GoodUpsert {
-	u.Set(good.FieldUnitDurationType, v)
+// SetDurationType sets the "duration_type" field.
+func (u *GoodUpsert) SetDurationType(v string) *GoodUpsert {
+	u.Set(good.FieldDurationType, v)
 	return u
 }
 
-// UpdateUnitDurationType sets the "unit_duration_type" field to the value that was provided on create.
-func (u *GoodUpsert) UpdateUnitDurationType() *GoodUpsert {
-	u.SetExcluded(good.FieldUnitDurationType)
+// UpdateDurationType sets the "duration_type" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateDurationType() *GoodUpsert {
+	u.SetExcluded(good.FieldDurationType)
 	return u
 }
 
-// ClearUnitDurationType clears the value of the "unit_duration_type" field.
-func (u *GoodUpsert) ClearUnitDurationType() *GoodUpsert {
-	u.SetNull(good.FieldUnitDurationType)
+// ClearDurationType clears the value of the "duration_type" field.
+func (u *GoodUpsert) ClearDurationType() *GoodUpsert {
+	u.SetNull(good.FieldDurationType)
+	return u
+}
+
+// SetDurationCalculateType sets the "duration_calculate_type" field.
+func (u *GoodUpsert) SetDurationCalculateType(v string) *GoodUpsert {
+	u.Set(good.FieldDurationCalculateType, v)
+	return u
+}
+
+// UpdateDurationCalculateType sets the "duration_calculate_type" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateDurationCalculateType() *GoodUpsert {
+	u.SetExcluded(good.FieldDurationCalculateType)
+	return u
+}
+
+// ClearDurationCalculateType clears the value of the "duration_calculate_type" field.
+func (u *GoodUpsert) ClearDurationCalculateType() *GoodUpsert {
+	u.SetNull(good.FieldDurationCalculateType)
 	return u
 }
 
@@ -1925,45 +1969,66 @@ func (u *GoodUpsertOne) ClearUnitType() *GoodUpsertOne {
 	})
 }
 
-// SetUnitCalculateType sets the "unit_calculate_type" field.
-func (u *GoodUpsertOne) SetUnitCalculateType(v string) *GoodUpsertOne {
+// SetQuantityCalculateType sets the "quantity_calculate_type" field.
+func (u *GoodUpsertOne) SetQuantityCalculateType(v string) *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.SetUnitCalculateType(v)
+		s.SetQuantityCalculateType(v)
 	})
 }
 
-// UpdateUnitCalculateType sets the "unit_calculate_type" field to the value that was provided on create.
-func (u *GoodUpsertOne) UpdateUnitCalculateType() *GoodUpsertOne {
+// UpdateQuantityCalculateType sets the "quantity_calculate_type" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateQuantityCalculateType() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.UpdateUnitCalculateType()
+		s.UpdateQuantityCalculateType()
 	})
 }
 
-// ClearUnitCalculateType clears the value of the "unit_calculate_type" field.
-func (u *GoodUpsertOne) ClearUnitCalculateType() *GoodUpsertOne {
+// ClearQuantityCalculateType clears the value of the "quantity_calculate_type" field.
+func (u *GoodUpsertOne) ClearQuantityCalculateType() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.ClearUnitCalculateType()
+		s.ClearQuantityCalculateType()
 	})
 }
 
-// SetUnitDurationType sets the "unit_duration_type" field.
-func (u *GoodUpsertOne) SetUnitDurationType(v string) *GoodUpsertOne {
+// SetDurationType sets the "duration_type" field.
+func (u *GoodUpsertOne) SetDurationType(v string) *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.SetUnitDurationType(v)
+		s.SetDurationType(v)
 	})
 }
 
-// UpdateUnitDurationType sets the "unit_duration_type" field to the value that was provided on create.
-func (u *GoodUpsertOne) UpdateUnitDurationType() *GoodUpsertOne {
+// UpdateDurationType sets the "duration_type" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateDurationType() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.UpdateUnitDurationType()
+		s.UpdateDurationType()
 	})
 }
 
-// ClearUnitDurationType clears the value of the "unit_duration_type" field.
-func (u *GoodUpsertOne) ClearUnitDurationType() *GoodUpsertOne {
+// ClearDurationType clears the value of the "duration_type" field.
+func (u *GoodUpsertOne) ClearDurationType() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.ClearUnitDurationType()
+		s.ClearDurationType()
+	})
+}
+
+// SetDurationCalculateType sets the "duration_calculate_type" field.
+func (u *GoodUpsertOne) SetDurationCalculateType(v string) *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetDurationCalculateType(v)
+	})
+}
+
+// UpdateDurationCalculateType sets the "duration_calculate_type" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateDurationCalculateType() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateDurationCalculateType()
+	})
+}
+
+// ClearDurationCalculateType clears the value of the "duration_calculate_type" field.
+func (u *GoodUpsertOne) ClearDurationCalculateType() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearDurationCalculateType()
 	})
 }
 
@@ -2700,45 +2765,66 @@ func (u *GoodUpsertBulk) ClearUnitType() *GoodUpsertBulk {
 	})
 }
 
-// SetUnitCalculateType sets the "unit_calculate_type" field.
-func (u *GoodUpsertBulk) SetUnitCalculateType(v string) *GoodUpsertBulk {
+// SetQuantityCalculateType sets the "quantity_calculate_type" field.
+func (u *GoodUpsertBulk) SetQuantityCalculateType(v string) *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.SetUnitCalculateType(v)
+		s.SetQuantityCalculateType(v)
 	})
 }
 
-// UpdateUnitCalculateType sets the "unit_calculate_type" field to the value that was provided on create.
-func (u *GoodUpsertBulk) UpdateUnitCalculateType() *GoodUpsertBulk {
+// UpdateQuantityCalculateType sets the "quantity_calculate_type" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateQuantityCalculateType() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.UpdateUnitCalculateType()
+		s.UpdateQuantityCalculateType()
 	})
 }
 
-// ClearUnitCalculateType clears the value of the "unit_calculate_type" field.
-func (u *GoodUpsertBulk) ClearUnitCalculateType() *GoodUpsertBulk {
+// ClearQuantityCalculateType clears the value of the "quantity_calculate_type" field.
+func (u *GoodUpsertBulk) ClearQuantityCalculateType() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.ClearUnitCalculateType()
+		s.ClearQuantityCalculateType()
 	})
 }
 
-// SetUnitDurationType sets the "unit_duration_type" field.
-func (u *GoodUpsertBulk) SetUnitDurationType(v string) *GoodUpsertBulk {
+// SetDurationType sets the "duration_type" field.
+func (u *GoodUpsertBulk) SetDurationType(v string) *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.SetUnitDurationType(v)
+		s.SetDurationType(v)
 	})
 }
 
-// UpdateUnitDurationType sets the "unit_duration_type" field to the value that was provided on create.
-func (u *GoodUpsertBulk) UpdateUnitDurationType() *GoodUpsertBulk {
+// UpdateDurationType sets the "duration_type" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateDurationType() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.UpdateUnitDurationType()
+		s.UpdateDurationType()
 	})
 }
 
-// ClearUnitDurationType clears the value of the "unit_duration_type" field.
-func (u *GoodUpsertBulk) ClearUnitDurationType() *GoodUpsertBulk {
+// ClearDurationType clears the value of the "duration_type" field.
+func (u *GoodUpsertBulk) ClearDurationType() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.ClearUnitDurationType()
+		s.ClearDurationType()
+	})
+}
+
+// SetDurationCalculateType sets the "duration_calculate_type" field.
+func (u *GoodUpsertBulk) SetDurationCalculateType(v string) *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetDurationCalculateType(v)
+	})
+}
+
+// UpdateDurationCalculateType sets the "duration_calculate_type" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateDurationCalculateType() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateDurationCalculateType()
+	})
+}
+
+// ClearDurationCalculateType clears the value of the "duration_calculate_type" field.
+func (u *GoodUpsertBulk) ClearDurationCalculateType() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearDurationCalculateType()
 	})
 }
 
