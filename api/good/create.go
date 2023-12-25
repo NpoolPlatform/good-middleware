@@ -32,8 +32,8 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		good1.WithBenefitType(req.BenefitType, true),
 		good1.WithGoodType(req.GoodType, true),
 		good1.WithTitle(req.Title, true),
-		good1.WithUnit(req.Unit, true),
-		good1.WithUnitAmount(req.UnitAmount, true),
+		good1.WithQuantityUnit(req.QuantityUnit, true),
+		good1.WithQuantityUnitAmount(req.QuantityUnitAmount, true),
 		good1.WithDeliveryAt(req.DeliveryAt, true),
 		good1.WithStartAt(req.StartAt, true),
 		good1.WithStartMode(req.StartMode, false),
@@ -43,6 +43,10 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		good1.WithLabels(req.Labels, true),
 		good1.WithBenefitIntervalHours(req.BenefitIntervalHours, true),
 		good1.WithUnitLockDeposit(req.UnitLockDeposit, true),
+		good1.WithUnitType(req.UnitType, false),
+		good1.WithQuantityCalculateType(req.QuantityCalculateType, false),
+		good1.WithDurationType(req.DurationType, false),
+		good1.WithDurationCalculateType(req.DurationCalculateType, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
