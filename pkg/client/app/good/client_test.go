@@ -64,9 +64,8 @@ var good = goodmwpb.Good{
 	BenefitType:            types.BenefitType_BenefitTypePlatform,
 	Price:                  decimal.NewFromInt(123).String(),
 	Title:                  uuid.NewString(),
-	Unit:                   "TiB",
-	UnitAmount:             1,
-	SupportCoinTypeIDs:     []string{uuid.NewString(), uuid.NewString()},
+	QuantityUnit:           "TiB",
+	QuantityUnitAmount:     "1",
 	TestOnly:               true,
 	Posters:                []string{uuid.NewString(), uuid.NewString()},
 	Labels: []types.GoodLabel{
@@ -106,9 +105,8 @@ var ret = npool.Good{
 	VendorBrandName:        good.VendorBrandName,
 	VendorBrandLogo:        good.VendorBrandLogo,
 	GoodType:               good.GoodType,
-	Unit:                   good.Unit,
-	UnitAmount:             good.UnitAmount,
-	SupportCoinTypeIDs:     good.SupportCoinTypeIDs,
+	QuantityUnit:           good.QuantityUnit,
+	QuantityUnitAmount:     good.QuantityUnitAmount,
 	TestOnly:               good.TestOnly,
 	Posters:                good.Posters,
 	AppGoodPosters:         good.Posters,
@@ -177,9 +175,8 @@ func setup(t *testing.T) func(*testing.T) {
 		BenefitType:          &good.BenefitType,
 		GoodType:             &good.GoodType,
 		Title:                &good.Title,
-		Unit:                 &good.Unit,
-		UnitAmount:           &good.UnitAmount,
-		SupportCoinTypeIDs:   good.SupportCoinTypeIDs,
+		QuantityUnit:         &good.QuantityUnit,
+		QuantityUnitAmount:   &good.QuantityUnitAmount,
 		DeliveryAt:           &good.DeliveryAt,
 		StartAt:              &good.StartAt,
 		TestOnly:             &good.TestOnly,
@@ -226,7 +223,6 @@ func createGood(t *testing.T) {
 		ret.LabelsStr = info.LabelsStr
 		ret.PostersStr = info.PostersStr
 		ret.AppGoodPostersStr = info.AppGoodPostersStr
-		ret.SupportCoinTypeIDsStr = info.SupportCoinTypeIDsStr
 		ret.CreatedAt = info.CreatedAt
 		ret.UpdatedAt = info.UpdatedAt
 		ret.AppGoodStockID = info.AppGoodStockID
