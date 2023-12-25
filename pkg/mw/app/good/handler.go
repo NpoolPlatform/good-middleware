@@ -324,6 +324,71 @@ func WithElectricityFeeRatio(s *string, must bool) func(context.Context, *Handle
 	}
 }
 
+func WithMinOrderAmount(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid minorderamount")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.MinOrderAmount = &amount
+		return nil
+	}
+}
+
+func WithMaxOrderAmount(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid maxorderamount")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.MaxOrderAmount = &amount
+		return nil
+	}
+}
+
+func WithMaxUserAmount(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid price")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.MaxUserAmount = &amount
+		return nil
+	}
+}
+
+func WithMinOrderDuration(n *uint32, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.MinOrderDuration = n
+		return nil
+	}
+}
+
+func WithMaxOrderDuration(n *uint32, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.MaxOrderDuration = n
+		return nil
+	}
+}
+
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error { //nolint:gocyclo
 	return func(ctx context.Context, h *Handler) error {
 		h.Conds = &appgoodcrud.Conds{}

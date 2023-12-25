@@ -151,6 +151,9 @@ var ret = npool.Good{
 	DurationTypeStr:          types.GoodDurationType_GoodDurationByYear.String(),
 	DurationCalculateType:    types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
 	DurationCalculateTypeStr: types.GoodUnitCalculateType_GoodUnitCalculateBySelf.String(),
+	MinOrderAmount:           "0",
+	MaxOrderAmount:           "0",
+	MaxUserAmount:            "0",
 }
 
 func setup(t *testing.T) func(*testing.T) {

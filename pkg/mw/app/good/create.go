@@ -63,6 +63,11 @@ func (h *createHandler) createAppGood(ctx context.Context, tx *ent.Tx) error {
 			Posters:                h.Posters,
 			TechniqueFeeRatio:      h.TechniqueFeeRatio,
 			ElectricityFeeRatio:    h.ElectricityFeeRatio,
+			MinOrderAmount:         h.MinOrderAmount,
+			MaxOrderAmount:         h.MaxOrderAmount,
+			MaxUserAmount:          h.MaxUserAmount,
+			MinOrderDuration:       h.MinOrderDuration,
+			MaxOrderDuration:       h.MaxOrderDuration,
 		},
 	).Save(ctx); err != nil {
 		return err

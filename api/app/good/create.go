@@ -49,6 +49,11 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		appgood1.WithTechniqueFeeRatio(req.TechnicalFeeRatio, false),
 		appgood1.WithElectricityFeeRatio(req.ElectricityFeeRatio, false),
 		appgood1.WithDisplayNames(req.DisplayNames, false),
+		appgood1.WithMinOrderAmount(req.MinOrderAmount, false),
+		appgood1.WithMaxOrderAmount(req.MaxOrderAmount, false),
+		appgood1.WithMaxUserAmount(req.MaxUserAmount, false),
+		appgood1.WithMinOrderDuration(req.MinOrderDuration, false),
+		appgood1.WithMaxOrderDuration(req.MaxOrderDuration, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
