@@ -21,7 +21,8 @@ type Req struct {
 	TopMostID    *uuid.UUID
 	DisplayIndex *uint32
 	Posters      []string
-	Price        *decimal.Decimal
+	UnitPrice    *decimal.Decimal
+	PackagePrice *decimal.Decimal
 	DeletedAt    *uint32
 }
 
@@ -50,8 +51,11 @@ func CreateSet(c *ent.TopMostGoodCreate, req *Req) *ent.TopMostGoodCreate {
 	if len(req.Posters) > 0 {
 		c.SetPosters(req.Posters)
 	}
-	if req.Price != nil {
-		c.SetPrice(*req.Price)
+	if req.UnitPrice != nil {
+		c.SetUnitPrice(*req.UnitPrice)
+	}
+	if req.PackagePrice != nil {
+		c.SetPackagePrice(*req.PackagePrice)
 	}
 	return c
 }
@@ -72,8 +76,11 @@ func UpdateSet(u *ent.TopMostGoodUpdateOne, req *Req) *ent.TopMostGoodUpdateOne 
 	if req.DisplayIndex != nil {
 		u.SetDisplayIndex(*req.DisplayIndex)
 	}
-	if req.Price != nil {
-		u.SetPrice(*req.Price)
+	if req.UnitPrice != nil {
+		u.SetUnitPrice(*req.UnitPrice)
+	}
+	if req.PackagePrice != nil {
+		u.SetPackagePrice(*req.PackagePrice)
 	}
 	if len(req.Posters) > 0 {
 		u.SetPosters(req.Posters)

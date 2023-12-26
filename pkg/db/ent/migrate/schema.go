@@ -530,7 +530,8 @@ var (
 		{Name: "top_most_id", Type: field.TypeUUID},
 		{Name: "display_index", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "posters", Type: field.TypeJSON, Nullable: true},
-		{Name: "price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "unit_price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "package_price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}
 	// TopMostGoodsTable holds the schema information for the "top_most_goods" table.
 	TopMostGoodsTable = &schema.Table{

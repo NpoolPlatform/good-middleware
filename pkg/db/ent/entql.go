@@ -472,7 +472,8 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostgood.FieldTopMostID:    {Type: field.TypeUUID, Column: topmostgood.FieldTopMostID},
 			topmostgood.FieldDisplayIndex: {Type: field.TypeUint32, Column: topmostgood.FieldDisplayIndex},
 			topmostgood.FieldPosters:      {Type: field.TypeJSON, Column: topmostgood.FieldPosters},
-			topmostgood.FieldPrice:        {Type: field.TypeOther, Column: topmostgood.FieldPrice},
+			topmostgood.FieldUnitPrice:    {Type: field.TypeOther, Column: topmostgood.FieldUnitPrice},
+			topmostgood.FieldPackagePrice: {Type: field.TypeOther, Column: topmostgood.FieldPackagePrice},
 		},
 	}
 	graph.Nodes[17] = &sqlgraph.Node{
@@ -2310,9 +2311,14 @@ func (f *TopMostGoodFilter) WherePosters(p entql.BytesP) {
 	f.Where(p.Field(topmostgood.FieldPosters))
 }
 
-// WherePrice applies the entql other predicate on the price field.
-func (f *TopMostGoodFilter) WherePrice(p entql.OtherP) {
-	f.Where(p.Field(topmostgood.FieldPrice))
+// WhereUnitPrice applies the entql other predicate on the unit_price field.
+func (f *TopMostGoodFilter) WhereUnitPrice(p entql.OtherP) {
+	f.Where(p.Field(topmostgood.FieldUnitPrice))
+}
+
+// WherePackagePrice applies the entql other predicate on the package_price field.
+func (f *TopMostGoodFilter) WherePackagePrice(p entql.OtherP) {
+	f.Where(p.Field(topmostgood.FieldPackagePrice))
 }
 
 // addPredicate implements the predicateAdder interface.

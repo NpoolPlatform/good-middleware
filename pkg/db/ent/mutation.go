@@ -20705,7 +20705,8 @@ type TopMostGoodMutation struct {
 	display_index    *uint32
 	adddisplay_index *int32
 	posters          *[]string
-	price            *decimal.Decimal
+	unit_price       *decimal.Decimal
+	package_price    *decimal.Decimal
 	clearedFields    map[string]struct{}
 	done             bool
 	oldValue         func(context.Context) (*TopMostGood, error)
@@ -21319,53 +21320,102 @@ func (m *TopMostGoodMutation) ResetPosters() {
 	delete(m.clearedFields, topmostgood.FieldPosters)
 }
 
-// SetPrice sets the "price" field.
-func (m *TopMostGoodMutation) SetPrice(d decimal.Decimal) {
-	m.price = &d
+// SetUnitPrice sets the "unit_price" field.
+func (m *TopMostGoodMutation) SetUnitPrice(d decimal.Decimal) {
+	m.unit_price = &d
 }
 
-// Price returns the value of the "price" field in the mutation.
-func (m *TopMostGoodMutation) Price() (r decimal.Decimal, exists bool) {
-	v := m.price
+// UnitPrice returns the value of the "unit_price" field in the mutation.
+func (m *TopMostGoodMutation) UnitPrice() (r decimal.Decimal, exists bool) {
+	v := m.unit_price
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldPrice returns the old "price" field's value of the TopMostGood entity.
+// OldUnitPrice returns the old "unit_price" field's value of the TopMostGood entity.
 // If the TopMostGood object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TopMostGoodMutation) OldPrice(ctx context.Context) (v decimal.Decimal, err error) {
+func (m *TopMostGoodMutation) OldUnitPrice(ctx context.Context) (v decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPrice is only allowed on UpdateOne operations")
+		return v, errors.New("OldUnitPrice is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPrice requires an ID field in the mutation")
+		return v, errors.New("OldUnitPrice requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPrice: %w", err)
+		return v, fmt.Errorf("querying old value for OldUnitPrice: %w", err)
 	}
-	return oldValue.Price, nil
+	return oldValue.UnitPrice, nil
 }
 
-// ClearPrice clears the value of the "price" field.
-func (m *TopMostGoodMutation) ClearPrice() {
-	m.price = nil
-	m.clearedFields[topmostgood.FieldPrice] = struct{}{}
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (m *TopMostGoodMutation) ClearUnitPrice() {
+	m.unit_price = nil
+	m.clearedFields[topmostgood.FieldUnitPrice] = struct{}{}
 }
 
-// PriceCleared returns if the "price" field was cleared in this mutation.
-func (m *TopMostGoodMutation) PriceCleared() bool {
-	_, ok := m.clearedFields[topmostgood.FieldPrice]
+// UnitPriceCleared returns if the "unit_price" field was cleared in this mutation.
+func (m *TopMostGoodMutation) UnitPriceCleared() bool {
+	_, ok := m.clearedFields[topmostgood.FieldUnitPrice]
 	return ok
 }
 
-// ResetPrice resets all changes to the "price" field.
-func (m *TopMostGoodMutation) ResetPrice() {
-	m.price = nil
-	delete(m.clearedFields, topmostgood.FieldPrice)
+// ResetUnitPrice resets all changes to the "unit_price" field.
+func (m *TopMostGoodMutation) ResetUnitPrice() {
+	m.unit_price = nil
+	delete(m.clearedFields, topmostgood.FieldUnitPrice)
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (m *TopMostGoodMutation) SetPackagePrice(d decimal.Decimal) {
+	m.package_price = &d
+}
+
+// PackagePrice returns the value of the "package_price" field in the mutation.
+func (m *TopMostGoodMutation) PackagePrice() (r decimal.Decimal, exists bool) {
+	v := m.package_price
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPackagePrice returns the old "package_price" field's value of the TopMostGood entity.
+// If the TopMostGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodMutation) OldPackagePrice(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPackagePrice is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPackagePrice requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPackagePrice: %w", err)
+	}
+	return oldValue.PackagePrice, nil
+}
+
+// ClearPackagePrice clears the value of the "package_price" field.
+func (m *TopMostGoodMutation) ClearPackagePrice() {
+	m.package_price = nil
+	m.clearedFields[topmostgood.FieldPackagePrice] = struct{}{}
+}
+
+// PackagePriceCleared returns if the "package_price" field was cleared in this mutation.
+func (m *TopMostGoodMutation) PackagePriceCleared() bool {
+	_, ok := m.clearedFields[topmostgood.FieldPackagePrice]
+	return ok
+}
+
+// ResetPackagePrice resets all changes to the "package_price" field.
+func (m *TopMostGoodMutation) ResetPackagePrice() {
+	m.package_price = nil
+	delete(m.clearedFields, topmostgood.FieldPackagePrice)
 }
 
 // Where appends a list predicates to the TopMostGoodMutation builder.
@@ -21387,7 +21437,7 @@ func (m *TopMostGoodMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TopMostGoodMutation) Fields() []string {
-	fields := make([]string, 0, 12)
+	fields := make([]string, 0, 13)
 	if m.created_at != nil {
 		fields = append(fields, topmostgood.FieldCreatedAt)
 	}
@@ -21421,8 +21471,11 @@ func (m *TopMostGoodMutation) Fields() []string {
 	if m.posters != nil {
 		fields = append(fields, topmostgood.FieldPosters)
 	}
-	if m.price != nil {
-		fields = append(fields, topmostgood.FieldPrice)
+	if m.unit_price != nil {
+		fields = append(fields, topmostgood.FieldUnitPrice)
+	}
+	if m.package_price != nil {
+		fields = append(fields, topmostgood.FieldPackagePrice)
 	}
 	return fields
 }
@@ -21454,8 +21507,10 @@ func (m *TopMostGoodMutation) Field(name string) (ent.Value, bool) {
 		return m.DisplayIndex()
 	case topmostgood.FieldPosters:
 		return m.Posters()
-	case topmostgood.FieldPrice:
-		return m.Price()
+	case topmostgood.FieldUnitPrice:
+		return m.UnitPrice()
+	case topmostgood.FieldPackagePrice:
+		return m.PackagePrice()
 	}
 	return nil, false
 }
@@ -21487,8 +21542,10 @@ func (m *TopMostGoodMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldDisplayIndex(ctx)
 	case topmostgood.FieldPosters:
 		return m.OldPosters(ctx)
-	case topmostgood.FieldPrice:
-		return m.OldPrice(ctx)
+	case topmostgood.FieldUnitPrice:
+		return m.OldUnitPrice(ctx)
+	case topmostgood.FieldPackagePrice:
+		return m.OldPackagePrice(ctx)
 	}
 	return nil, fmt.Errorf("unknown TopMostGood field %s", name)
 }
@@ -21575,12 +21632,19 @@ func (m *TopMostGoodMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetPosters(v)
 		return nil
-	case topmostgood.FieldPrice:
+	case topmostgood.FieldUnitPrice:
 		v, ok := value.(decimal.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetPrice(v)
+		m.SetUnitPrice(v)
+		return nil
+	case topmostgood.FieldPackagePrice:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPackagePrice(v)
 		return nil
 	}
 	return fmt.Errorf("unknown TopMostGood field %s", name)
@@ -21669,8 +21733,11 @@ func (m *TopMostGoodMutation) ClearedFields() []string {
 	if m.FieldCleared(topmostgood.FieldPosters) {
 		fields = append(fields, topmostgood.FieldPosters)
 	}
-	if m.FieldCleared(topmostgood.FieldPrice) {
-		fields = append(fields, topmostgood.FieldPrice)
+	if m.FieldCleared(topmostgood.FieldUnitPrice) {
+		fields = append(fields, topmostgood.FieldUnitPrice)
+	}
+	if m.FieldCleared(topmostgood.FieldPackagePrice) {
+		fields = append(fields, topmostgood.FieldPackagePrice)
 	}
 	return fields
 }
@@ -21692,8 +21759,11 @@ func (m *TopMostGoodMutation) ClearField(name string) error {
 	case topmostgood.FieldPosters:
 		m.ClearPosters()
 		return nil
-	case topmostgood.FieldPrice:
-		m.ClearPrice()
+	case topmostgood.FieldUnitPrice:
+		m.ClearUnitPrice()
+		return nil
+	case topmostgood.FieldPackagePrice:
+		m.ClearPackagePrice()
 		return nil
 	}
 	return fmt.Errorf("unknown TopMostGood nullable field %s", name)
@@ -21736,8 +21806,11 @@ func (m *TopMostGoodMutation) ResetField(name string) error {
 	case topmostgood.FieldPosters:
 		m.ResetPosters()
 		return nil
-	case topmostgood.FieldPrice:
-		m.ResetPrice()
+	case topmostgood.FieldUnitPrice:
+		m.ResetUnitPrice()
+		return nil
+	case topmostgood.FieldPackagePrice:
+		m.ResetPackagePrice()
 		return nil
 	}
 	return fmt.Errorf("unknown TopMostGood field %s", name)

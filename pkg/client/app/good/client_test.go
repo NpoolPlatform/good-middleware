@@ -62,7 +62,7 @@ var good = goodmwpb.Good{
 	VendorBrandLogo:        uuid.NewString(),
 	GoodType:               types.GoodType_PowerRenting,
 	BenefitType:            types.BenefitType_BenefitTypePlatform,
-	Price:                  decimal.NewFromInt(123).String(),
+	UnitPrice:              decimal.NewFromInt(123).String(),
 	Title:                  uuid.NewString(),
 	QuantityUnit:           "TiB",
 	QuantityUnitAmount:     "1",
@@ -99,7 +99,8 @@ var ret = npool.Good{
 	Online:                   false,
 	Visible:                  false,
 	GoodName:                 good.Title,
-	Price:                    decimal.NewFromInt(125).String(),
+	UnitPrice:                decimal.NewFromInt(125).String(),
+	PackagePrice:             decimal.NewFromInt(125).String(),
 	DeviceInfoID:             good.DeviceInfoID,
 	DeviceType:               good.DeviceType,
 	DeviceManufacturer:       good.DeviceManufacturer,
@@ -154,6 +155,7 @@ var ret = npool.Good{
 	MinOrderAmount:           "0",
 	MaxOrderAmount:           "0",
 	MaxUserAmount:            "0",
+	PackageWithRequireds:     true,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -190,7 +192,7 @@ func setup(t *testing.T) func(*testing.T) {
 		DurationDays:         &good.DurationDays,
 		CoinTypeID:           &good.CoinTypeID,
 		VendorLocationID:     &good.VendorLocationID,
-		Price:                &good.Price,
+		UnitPrice:            &good.UnitPrice,
 		BenefitType:          &good.BenefitType,
 		GoodType:             &good.GoodType,
 		Title:                &good.Title,
@@ -225,12 +227,13 @@ func setup(t *testing.T) func(*testing.T) {
 
 func createGood(t *testing.T) {
 	info, err := CreateGood(context.Background(), &npool.GoodReq{
-		EntID:    &ret.EntID,
-		AppID:    &ret.AppID,
-		GoodID:   &ret.GoodID,
-		Price:    &ret.Price,
-		GoodName: &ret.GoodName,
-		Posters:  ret.Posters,
+		EntID:        &ret.EntID,
+		AppID:        &ret.AppID,
+		GoodID:       &ret.GoodID,
+		UnitPrice:    &ret.UnitPrice,
+		PackagePrice: &ret.PackagePrice,
+		GoodName:     &ret.GoodName,
+		Posters:      ret.Posters,
 	})
 	if assert.Nil(t, err) {
 		ret.DevicePostersStr = info.DevicePostersStr

@@ -35,8 +35,10 @@ const (
 	FieldDisplayIndex = "display_index"
 	// FieldPosters holds the string denoting the posters field in the database.
 	FieldPosters = "posters"
-	// FieldPrice holds the string denoting the price field in the database.
-	FieldPrice = "price"
+	// FieldUnitPrice holds the string denoting the unit_price field in the database.
+	FieldUnitPrice = "unit_price"
+	// FieldPackagePrice holds the string denoting the package_price field in the database.
+	FieldPackagePrice = "package_price"
 	// Table holds the table name of the topmostgood in the database.
 	Table = "top_most_goods"
 )
@@ -55,7 +57,8 @@ var Columns = []string{
 	FieldTopMostID,
 	FieldDisplayIndex,
 	FieldPosters,
-	FieldPrice,
+	FieldUnitPrice,
+	FieldPackagePrice,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -91,6 +94,8 @@ var (
 	DefaultDisplayIndex uint32
 	// DefaultPosters holds the default value on creation for the "posters" field.
 	DefaultPosters []string
-	// DefaultPrice holds the default value on creation for the "price" field.
-	DefaultPrice decimal.Decimal
+	// DefaultUnitPrice holds the default value on creation for the "unit_price" field.
+	DefaultUnitPrice decimal.Decimal
+	// DefaultPackagePrice holds the default value on creation for the "package_price" field.
+	DefaultPackagePrice decimal.Decimal
 )

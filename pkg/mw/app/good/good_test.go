@@ -53,7 +53,7 @@ var good = goodmwpb.Good{
 	VendorBrandLogo:        uuid.NewString(),
 	GoodType:               types.GoodType_PowerRenting,
 	BenefitType:            types.BenefitType_BenefitTypePlatform,
-	Price:                  decimal.NewFromInt(123).String(),
+	UnitPrice:              decimal.NewFromInt(123).String(),
 	Title:                  uuid.NewString(),
 	QuantityUnit:           "TiB",
 	QuantityUnitAmount:     "1",
@@ -87,7 +87,8 @@ var ret = npool.Good{
 	Online:                 false,
 	Visible:                false,
 	GoodName:               good.Title,
-	Price:                  decimal.NewFromInt(125).String(),
+	UnitPrice:              decimal.NewFromInt(125).String(),
+	PackagePrice:           decimal.NewFromInt(125).String(),
 	DeviceInfoID:           good.DeviceInfoID,
 	DeviceType:             good.DeviceType,
 	DeviceManufacturer:     good.DeviceManufacturer,
@@ -137,6 +138,7 @@ var ret = npool.Good{
 	MinOrderAmount:         "0",
 	MaxOrderAmount:         "0",
 	MaxUserAmount:          "0",
+	PackageWithRequireds:   true,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -188,7 +190,7 @@ func setup(t *testing.T) func(*testing.T) {
 		good1.WithDurationDays(&good.DurationDays, true),
 		good1.WithCoinTypeID(&good.CoinTypeID, true),
 		good1.WithVendorLocationID(&good.VendorLocationID, true),
-		good1.WithPrice(&good.Price, true),
+		good1.WithUnitPrice(&good.UnitPrice, true),
 		good1.WithBenefitType(&good.BenefitType, true),
 		good1.WithGoodType(&good.GoodType, true),
 		good1.WithTitle(&good.Title, true),
@@ -230,7 +232,8 @@ func createGood(t *testing.T) {
 		WithEntID(&ret.EntID, true),
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
-		WithPrice(&ret.Price, true),
+		WithUnitPrice(&ret.UnitPrice, true),
+		WithPackagePrice(&ret.PackagePrice, true),
 		WithGoodName(&ret.GoodName, true),
 		WithPosters(ret.AppGoodPosters, true),
 	)

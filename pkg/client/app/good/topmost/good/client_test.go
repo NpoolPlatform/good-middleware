@@ -66,7 +66,7 @@ var good = goodmwpb.Good{
 	VendorBrandLogo:        uuid.NewString(),
 	GoodType:               types.GoodType_PowerRenting,
 	BenefitType:            types.BenefitType_BenefitTypePlatform,
-	Price:                  decimal.NewFromInt(123).String(),
+	UnitPrice:              decimal.NewFromInt(123).String(),
 	Title:                  uuid.NewString(),
 	QuantityUnit:           "TiB",
 	QuantityUnitAmount:     "1",
@@ -95,7 +95,8 @@ var appgood = appgoodmwpb.Good{
 	Online:                 false,
 	Visible:                false,
 	GoodName:               good.Title,
-	Price:                  decimal.NewFromInt(125).String(),
+	UnitPrice:              decimal.NewFromInt(125).String(),
+	PackagePrice:           decimal.NewFromInt(125).String(),
 	DeviceInfoID:           good.DeviceInfoID,
 	DeviceType:             good.DeviceType,
 	DeviceManufacturer:     good.DeviceManufacturer,
@@ -156,7 +157,8 @@ var ret = npool.TopMostGood{
 	TopMostID:      topmost.EntID,
 	DisplayIndex:   0,
 	Posters:        []string{uuid.NewString(), uuid.NewString()},
-	Price:          decimal.NewFromInt(230).String(),
+	UnitPrice:      decimal.NewFromInt(230).String(),
+	PackagePrice:   decimal.NewFromInt(230).String(),
 	TopMostTypeStr: topmost.TopMostType.String(),
 	TopMostType:    topmost.TopMostType,
 	TopMostTitle:   topmost.Title,
@@ -197,7 +199,7 @@ func setup(t *testing.T) func(*testing.T) {
 		DurationDays:         &good.DurationDays,
 		CoinTypeID:           &good.CoinTypeID,
 		VendorLocationID:     &good.VendorLocationID,
-		Price:                &good.Price,
+		UnitPrice:            &good.UnitPrice,
 		BenefitType:          &good.BenefitType,
 		GoodType:             &good.GoodType,
 		Title:                &good.Title,
@@ -215,11 +217,12 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = appgood1.CreateGood(context.Background(), &appgoodmwpb.GoodReq{
-		EntID:    &appgood.EntID,
-		AppID:    &appgood.AppID,
-		GoodID:   &appgood.GoodID,
-		Price:    &appgood.Price,
-		GoodName: &appgood.GoodName,
+		EntID:        &appgood.EntID,
+		AppID:        &appgood.AppID,
+		GoodID:       &appgood.GoodID,
+		UnitPrice:    &appgood.UnitPrice,
+		PackagePrice: &appgood.PackagePrice,
+		GoodName:     &appgood.GoodName,
 	})
 	assert.Nil(t, err)
 
@@ -255,11 +258,12 @@ func setup(t *testing.T) func(*testing.T) {
 
 func createTopMostGood(t *testing.T) {
 	info, err := CreateTopMostGood(context.Background(), &npool.TopMostGoodReq{
-		EntID:     &ret.EntID,
-		AppGoodID: &ret.AppGoodID,
-		TopMostID: &ret.TopMostID,
-		Price:     &ret.Price,
-		Posters:   ret.Posters,
+		EntID:        &ret.EntID,
+		AppGoodID:    &ret.AppGoodID,
+		TopMostID:    &ret.TopMostID,
+		UnitPrice:    &ret.UnitPrice,
+		PackagePrice: &ret.PackagePrice,
+		Posters:      ret.Posters,
 	})
 	if assert.Nil(t, err) {
 		ret.PostersStr = info.PostersStr

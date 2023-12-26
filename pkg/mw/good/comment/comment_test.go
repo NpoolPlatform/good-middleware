@@ -55,7 +55,7 @@ var good = goodmwpb.Good{
 	VendorBrandLogo:        uuid.NewString(),
 	GoodType:               types.GoodType_PowerRenting,
 	BenefitType:            types.BenefitType_BenefitTypePlatform,
-	Price:                  decimal.NewFromInt(123).String(),
+	UnitPrice:              decimal.NewFromInt(123).String(),
 	Title:                  uuid.NewString(),
 	QuantityUnit:           "TiB",
 	QuantityUnitAmount:     "1",
@@ -78,11 +78,12 @@ var good = goodmwpb.Good{
 }
 
 var appgood = appgoodmwpb.Good{
-	EntID:    uuid.NewString(),
-	AppID:    uuid.NewString(),
-	GoodID:   good.EntID,
-	GoodName: uuid.NewString(),
-	Price:    decimal.NewFromInt(123).String(),
+	EntID:        uuid.NewString(),
+	AppID:        uuid.NewString(),
+	GoodID:       good.EntID,
+	GoodName:     uuid.NewString(),
+	UnitPrice:    decimal.NewFromInt(123).String(),
+	PackagePrice: decimal.NewFromInt(123).String(),
 }
 
 var ret = npool.Comment{
@@ -147,7 +148,7 @@ func setup(t *testing.T) func(*testing.T) {
 		good1.WithDurationDays(&good.DurationDays, true),
 		good1.WithCoinTypeID(&good.CoinTypeID, true),
 		good1.WithVendorLocationID(&good.VendorLocationID, true),
-		good1.WithPrice(&good.Price, true),
+		good1.WithUnitPrice(&good.UnitPrice, true),
 		good1.WithBenefitType(&good.BenefitType, true),
 		good1.WithGoodType(&good.GoodType, true),
 		good1.WithTitle(&good.Title, true),
@@ -174,7 +175,8 @@ func setup(t *testing.T) func(*testing.T) {
 		appgood1.WithAppID(&appgood.AppID, true),
 		appgood1.WithGoodID(&appgood.GoodID, true),
 		appgood1.WithGoodName(&appgood.GoodName, true),
-		appgood1.WithPrice(&appgood.Price, true),
+		appgood1.WithUnitPrice(&appgood.UnitPrice, true),
+		appgood1.WithPackagePrice(&appgood.PackagePrice, true),
 	)
 	assert.Nil(t, err)
 

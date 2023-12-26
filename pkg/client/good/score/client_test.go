@@ -65,7 +65,7 @@ var good = goodmwpb.Good{
 	VendorBrandLogo:        uuid.NewString(),
 	GoodType:               types.GoodType_PowerRenting,
 	BenefitType:            types.BenefitType_BenefitTypePlatform,
-	Price:                  decimal.NewFromInt(123).String(),
+	UnitPrice:              decimal.NewFromInt(123).String(),
 	Title:                  uuid.NewString(),
 	QuantityUnit:           "TiB",
 	QuantityUnitAmount:     "1",
@@ -88,11 +88,12 @@ var good = goodmwpb.Good{
 }
 
 var appgood = appgoodmwpb.Good{
-	EntID:    uuid.NewString(),
-	AppID:    uuid.NewString(),
-	GoodID:   good.EntID,
-	GoodName: uuid.NewString(),
-	Price:    decimal.NewFromInt(123).String(),
+	EntID:        uuid.NewString(),
+	AppID:        uuid.NewString(),
+	GoodID:       good.EntID,
+	GoodName:     uuid.NewString(),
+	UnitPrice:    decimal.NewFromInt(123).String(),
+	PackagePrice: decimal.NewFromInt(123).String(),
 }
 
 var ret = npool.Score{
@@ -139,7 +140,7 @@ func setup(t *testing.T) func(*testing.T) {
 		DurationDays:         &good.DurationDays,
 		CoinTypeID:           &good.CoinTypeID,
 		VendorLocationID:     &good.VendorLocationID,
-		Price:                &good.Price,
+		UnitPrice:            &good.UnitPrice,
 		BenefitType:          &good.BenefitType,
 		GoodType:             &good.GoodType,
 		Title:                &good.Title,
@@ -157,11 +158,12 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = appgood1.CreateGood(context.Background(), &appgoodmwpb.GoodReq{
-		EntID:    &appgood.EntID,
-		AppID:    &appgood.AppID,
-		GoodID:   &appgood.GoodID,
-		GoodName: &appgood.GoodName,
-		Price:    &appgood.Price,
+		EntID:        &appgood.EntID,
+		AppID:        &appgood.AppID,
+		GoodID:       &appgood.GoodID,
+		GoodName:     &appgood.GoodName,
+		UnitPrice:    &appgood.UnitPrice,
+		PackagePrice: &appgood.PackagePrice,
 	})
 	assert.Nil(t, err)
 

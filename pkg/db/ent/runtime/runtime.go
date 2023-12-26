@@ -1122,10 +1122,14 @@ func init() {
 	topmostgoodDescPosters := topmostgoodFields[6].Descriptor()
 	// topmostgood.DefaultPosters holds the default value on creation for the posters field.
 	topmostgood.DefaultPosters = topmostgoodDescPosters.Default.([]string)
-	// topmostgoodDescPrice is the schema descriptor for price field.
-	topmostgoodDescPrice := topmostgoodFields[7].Descriptor()
-	// topmostgood.DefaultPrice holds the default value on creation for the price field.
-	topmostgood.DefaultPrice = topmostgoodDescPrice.Default.(decimal.Decimal)
+	// topmostgoodDescUnitPrice is the schema descriptor for unit_price field.
+	topmostgoodDescUnitPrice := topmostgoodFields[7].Descriptor()
+	// topmostgood.DefaultUnitPrice holds the default value on creation for the unit_price field.
+	topmostgood.DefaultUnitPrice = topmostgoodDescUnitPrice.Default.(decimal.Decimal)
+	// topmostgoodDescPackagePrice is the schema descriptor for package_price field.
+	topmostgoodDescPackagePrice := topmostgoodFields[8].Descriptor()
+	// topmostgood.DefaultPackagePrice holds the default value on creation for the package_price field.
+	topmostgood.DefaultPackagePrice = topmostgoodDescPackagePrice.Default.(decimal.Decimal)
 	vendorbrandMixin := schema.VendorBrand{}.Mixin()
 	vendorbrand.Policy = privacy.NewPolicies(vendorbrandMixin[0], schema.VendorBrand{})
 	vendorbrand.Hooks[0] = func(next ent.Mutator) ent.Mutator {
