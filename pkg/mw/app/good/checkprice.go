@@ -9,8 +9,8 @@ import (
 	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 )
 
-func (h *Handler) checkPrice(ctx context.Context) error {
-	if h.Price == nil {
+func (h *Handler) checkUnitPrice(ctx context.Context) error {
+	if h.UnitPrice == nil {
 		return nil
 	}
 	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -25,9 +25,11 @@ func (h *Handler) checkPrice(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
-		if h.Price.Cmp(info.Price) < 0 {
+		if h.UnitPrice.Cmp(info.UnitPrice) < 0 {
 			return fmt.Errorf("invalid price")
 		}
 		return nil
 	})
 }
+
+// TODO: we also need to check package price

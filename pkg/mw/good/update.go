@@ -218,7 +218,7 @@ func (h *updateHandler) updateGood(ctx context.Context, tx *ent.Tx) error {
 			DurationDays:         h.DurationDays,
 			CoinTypeID:           h.CoinTypeID,
 			VendorLocationID:     h.VendorLocationID,
-			Price:                h.Price,
+			UnitPrice:            h.UnitPrice,
 			BenefitType:          h.BenefitType,
 			GoodType:             h.GoodType,
 			Title:                h.Title,

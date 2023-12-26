@@ -20,7 +20,8 @@ type Req struct {
 	Online                 *bool
 	Visible                *bool
 	GoodName               *string
-	Price                  *decimal.Decimal
+	UnitPrice              *decimal.Decimal
+	PackagePrice           *decimal.Decimal
 	DisplayIndex           *int32
 	PurchaseLimit          *int32
 	SaleStartAt            *uint32
@@ -46,6 +47,7 @@ type Req struct {
 	MaxUserAmount          *decimal.Decimal
 	MinOrderDuration       *uint32
 	MaxOrderDuration       *uint32
+	PackageWithRequireds   *bool
 }
 
 //nolint:gocyclo,funlen
@@ -68,8 +70,11 @@ func CreateSet(c *ent.AppGoodCreate, req *Req) *ent.AppGoodCreate {
 	if req.GoodName != nil {
 		c.SetGoodName(*req.GoodName)
 	}
-	if req.Price != nil {
-		c.SetPrice(*req.Price)
+	if req.UnitPrice != nil {
+		c.SetUnitPrice(*req.UnitPrice)
+	}
+	if req.PackagePrice != nil {
+		c.SetPackagePrice(*req.PackagePrice)
 	}
 	if req.DisplayIndex != nil {
 		c.SetDisplayIndex(*req.DisplayIndex)
@@ -143,6 +148,9 @@ func CreateSet(c *ent.AppGoodCreate, req *Req) *ent.AppGoodCreate {
 	if req.MaxOrderDuration != nil {
 		c.SetMaxOrderDuration(*req.MaxOrderDuration)
 	}
+	if req.PackageWithRequireds != nil {
+		c.SetPackageWithRequireds(*req.PackageWithRequireds)
+	}
 	return c
 }
 
@@ -157,8 +165,11 @@ func UpdateSet(u *ent.AppGoodUpdateOne, req *Req) *ent.AppGoodUpdateOne {
 	if req.GoodName != nil {
 		u.SetGoodName(*req.GoodName)
 	}
-	if req.Price != nil {
-		u.SetPrice(*req.Price)
+	if req.UnitPrice != nil {
+		u.SetUnitPrice(*req.UnitPrice)
+	}
+	if req.PackagePrice != nil {
+		u.SetPackagePrice(*req.PackagePrice)
 	}
 	if req.DisplayIndex != nil {
 		u.SetDisplayIndex(*req.DisplayIndex)
@@ -234,6 +245,9 @@ func UpdateSet(u *ent.AppGoodUpdateOne, req *Req) *ent.AppGoodUpdateOne {
 	}
 	if req.MaxOrderDuration != nil {
 		u.SetMaxOrderDuration(*req.MaxOrderDuration)
+	}
+	if req.PackageWithRequireds != nil {
+		u.SetPackageWithRequireds(*req.PackageWithRequireds)
 	}
 	return u
 }

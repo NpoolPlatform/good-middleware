@@ -72,7 +72,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entgood.FieldDurationDays), "duration_days"),
 			sql.As(t.C(entgood.FieldCoinTypeID), "coin_type_id"),
 			sql.As(t.C(entgood.FieldVendorLocationID), "vendor_location_id"),
-			sql.As(t.C(entgood.FieldPrice), "price"),
+			sql.As(t.C(entgood.FieldUnitPrice), "unit_price"),
 			sql.As(t.C(entgood.FieldBenefitType), "benefit_type"),
 			sql.As(t.C(entgood.FieldGoodType), "good_type"),
 			sql.As(t.C(entgood.FieldTitle), "title"),
@@ -312,11 +312,11 @@ func (h *queryHandler) formalize() {
 		} else {
 			info.GoodAppReserved = amount.String()
 		}
-		amount, err = decimal.NewFromString(info.Price)
+		amount, err = decimal.NewFromString(info.UnitPrice)
 		if err != nil {
-			info.Price = decimal.NewFromInt(0).String()
+			info.UnitPrice = decimal.NewFromInt(0).String()
 		} else {
-			info.Price = amount.String()
+			info.UnitPrice = amount.String()
 		}
 		amount, err = decimal.NewFromString(info.NextRewardStartAmount)
 		if err != nil {

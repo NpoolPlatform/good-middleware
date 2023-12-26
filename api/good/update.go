@@ -28,7 +28,7 @@ func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*
 		good1.WithDurationDays(req.DurationDays, false),
 		good1.WithCoinTypeID(req.CoinTypeID, false),
 		good1.WithVendorLocationID(req.VendorLocationID, false),
-		good1.WithPrice(req.Price, false),
+		good1.WithUnitPrice(req.UnitPrice, false),
 		good1.WithTitle(req.Title, false),
 		good1.WithQuantityUnit(req.QuantityUnit, false),
 		good1.WithQuantityUnitAmount(req.QuantityUnitAmount, false),

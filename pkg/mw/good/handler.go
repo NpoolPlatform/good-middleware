@@ -160,11 +160,11 @@ func WithVendorLocationID(id *string, must bool) func(context.Context, *Handler)
 	}
 }
 
-func WithPrice(s *string, must bool) func(context.Context, *Handler) error {
+func WithUnitPrice(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid price")
+				return fmt.Errorf("invalid unitprice")
 			}
 			return nil
 		}
@@ -172,7 +172,7 @@ func WithPrice(s *string, must bool) func(context.Context, *Handler) error {
 		if err != nil {
 			return err
 		}
-		h.Price = &amount
+		h.UnitPrice = &amount
 		return nil
 	}
 }

@@ -23,7 +23,8 @@ func (h *updateHandler) updateAppGood(ctx context.Context, tx *ent.Tx) error {
 			GoodName:               h.GoodName,
 			Online:                 h.Online,
 			Visible:                h.Visible,
-			Price:                  h.Price,
+			UnitPrice:              h.UnitPrice,
+			PackagePrice:           h.PackagePrice,
 			DisplayIndex:           h.DisplayIndex,
 			PurchaseLimit:          h.PurchaseLimit,
 			SaleStartAt:            h.SaleStartAt,
@@ -48,6 +49,7 @@ func (h *updateHandler) updateAppGood(ctx context.Context, tx *ent.Tx) error {
 			MaxUserAmount:          h.MaxUserAmount,
 			MinOrderDuration:       h.MinOrderDuration,
 			MaxOrderDuration:       h.MaxOrderDuration,
+			PackageWithRequireds:   h.PackageWithRequireds,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -71,9 +73,10 @@ func (h *Handler) UpdateGood(ctx context.Context) (*npool.Good, error) {
 
 	h.GoodID = &goodID
 
-	if err := h.checkPrice(ctx); err != nil {
+	if err := h.checkUnitPrice(ctx); err != nil {
 		return nil, err
 	}
+	// TODO: check package price
 
 	handler := &updateHandler{
 		Handler: h,

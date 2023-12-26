@@ -28,7 +28,7 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		good1.WithDurationDays(req.DurationDays, true),
 		good1.WithCoinTypeID(req.CoinTypeID, true),
 		good1.WithVendorLocationID(req.VendorLocationID, true),
-		good1.WithPrice(req.Price, true),
+		good1.WithUnitPrice(req.UnitPrice, true),
 		good1.WithBenefitType(req.BenefitType, true),
 		good1.WithGoodType(req.GoodType, true),
 		good1.WithTitle(req.Title, true),

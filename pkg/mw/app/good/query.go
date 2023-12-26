@@ -75,7 +75,8 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entappgood.FieldOnline), "online"),
 			sql.As(t.C(entappgood.FieldVisible), "visible"),
 			sql.As(t.C(entappgood.FieldGoodName), "good_name"),
-			sql.As(t.C(entappgood.FieldPrice), "price"),
+			sql.As(t.C(entappgood.FieldUnitPrice), "unit_price"),
+			sql.As(t.C(entappgood.FieldPackagePrice), "package_price"),
 			sql.As(t.C(entappgood.FieldDisplayIndex), "display_index"),
 			sql.As(t.C(entappgood.FieldPurchaseLimit), "purchase_limit"),
 			sql.As(t.C(entappgood.FieldSaleStartAt), "sale_start_at"),
@@ -101,6 +102,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entappgood.FieldMaxUserAmount), "max_user_amount"),
 			sql.As(t.C(entappgood.FieldMinOrderDuration), "min_order_duration"),
 			sql.As(t.C(entappgood.FieldMaxOrderDuration), "max_order_duration"),
+			sql.As(t.C(entappgood.FieldPackageWithRequireds), "package_with_requireds"),
 			sql.As(t.C(entappgood.FieldCreatedAt), "created_at"),
 			sql.As(t.C(entappgood.FieldUpdatedAt), "updated_at"),
 		)
@@ -312,11 +314,17 @@ func (h *queryHandler) formalize() {
 		} else {
 			info.GoodSold = amount.String()
 		}
-		amount, err = decimal.NewFromString(info.Price)
+		amount, err = decimal.NewFromString(info.UnitPrice)
 		if err != nil {
-			info.Price = decimal.NewFromInt(0).String()
+			info.UnitPrice = decimal.NewFromInt(0).String()
 		} else {
-			info.Price = amount.String()
+			info.UnitPrice = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.PackagePrice)
+		if err != nil {
+			info.PackagePrice = decimal.NewFromInt(0).String()
+		} else {
+			info.PackagePrice = amount.String()
 		}
 		amount, err = decimal.NewFromString(info.Score)
 		if err != nil {

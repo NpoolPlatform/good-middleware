@@ -19,7 +19,7 @@ type Req struct {
 	DurationDays          *int32
 	CoinTypeID            *uuid.UUID
 	VendorLocationID      *uuid.UUID
-	Price                 *decimal.Decimal
+	UnitPrice             *decimal.Decimal
 	BenefitType           *types.BenefitType
 	StartMode             *types.GoodStartMode
 	GoodType              *types.GoodType
@@ -55,8 +55,8 @@ func CreateSet(c *ent.GoodCreate, req *Req) *ent.GoodCreate {
 	if req.VendorLocationID != nil {
 		c.SetVendorLocationID(*req.VendorLocationID)
 	}
-	if req.Price != nil {
-		c.SetPrice(*req.Price)
+	if req.UnitPrice != nil {
+		c.SetUnitPrice(*req.UnitPrice)
 	}
 	if req.BenefitType != nil {
 		c.SetBenefitType(req.BenefitType.String())
@@ -120,8 +120,8 @@ func UpdateSet(u *ent.GoodUpdateOne, req *Req) *ent.GoodUpdateOne {
 	if req.VendorLocationID != nil {
 		u.SetVendorLocationID(*req.VendorLocationID)
 	}
-	if req.Price != nil {
-		u.SetPrice(*req.Price)
+	if req.UnitPrice != nil {
+		u.SetUnitPrice(*req.UnitPrice)
 	}
 	if req.BenefitType != nil {
 		u.SetBenefitType(req.BenefitType.String())

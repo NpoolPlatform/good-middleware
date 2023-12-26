@@ -29,7 +29,8 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		appgood1.WithOnline(req.Online, true),
 		appgood1.WithVisible(req.Visible, true),
 		appgood1.WithGoodName(req.GoodName, true),
-		appgood1.WithPrice(req.Price, true),
+		appgood1.WithUnitPrice(req.UnitPrice, true),
+		appgood1.WithPackagePrice(req.PackagePrice, true),
 		appgood1.WithDisplayIndex(req.DisplayIndex, true),
 		appgood1.WithPurchaseLimit(req.PurchaseLimit, true),
 		appgood1.WithSaleStartAt(req.SaleStartAt, true),
@@ -54,6 +55,7 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		appgood1.WithMaxUserAmount(req.MaxUserAmount, false),
 		appgood1.WithMinOrderDuration(req.MinOrderDuration, false),
 		appgood1.WithMaxOrderDuration(req.MaxOrderDuration, false),
+		appgood1.WithPackageWithRequireds(req.PackageWithRequireds, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

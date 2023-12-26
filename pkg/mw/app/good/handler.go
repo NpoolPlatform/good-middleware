@@ -131,11 +131,11 @@ func WithGoodName(s *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithPrice(s *string, must bool) func(context.Context, *Handler) error {
+func WithUnitPrice(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid price")
+				return fmt.Errorf("invalid unitprice")
 			}
 			return nil
 		}
@@ -143,7 +143,24 @@ func WithPrice(s *string, must bool) func(context.Context, *Handler) error {
 		if err != nil {
 			return err
 		}
-		h.Price = &amount
+		h.UnitPrice = &amount
+		return nil
+	}
+}
+
+func WithPackagePrice(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid packageprice")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.PackagePrice = &amount
 		return nil
 	}
 }
@@ -385,6 +402,13 @@ func WithMinOrderDuration(n *uint32, must bool) func(context.Context, *Handler) 
 func WithMaxOrderDuration(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.MaxOrderDuration = n
+		return nil
+	}
+}
+
+func WithPackageWithRequireds(b *bool, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.PackageWithRequireds = b
 		return nil
 	}
 }
