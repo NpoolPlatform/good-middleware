@@ -269,6 +269,13 @@ func DurationCalculateType(v string) predicate.Good {
 	})
 }
 
+// SettlementType applies equality check predicate on the "settlement_type" field. It's identical to SettlementTypeEQ.
+func SettlementType(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSettlementType), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
@@ -2574,6 +2581,119 @@ func DurationCalculateTypeEqualFold(v string) predicate.Good {
 func DurationCalculateTypeContainsFold(v string) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldDurationCalculateType), v))
+	})
+}
+
+// SettlementTypeEQ applies the EQ predicate on the "settlement_type" field.
+func SettlementTypeEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeNEQ applies the NEQ predicate on the "settlement_type" field.
+func SettlementTypeNEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeIn applies the In predicate on the "settlement_type" field.
+func SettlementTypeIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldSettlementType), v...))
+	})
+}
+
+// SettlementTypeNotIn applies the NotIn predicate on the "settlement_type" field.
+func SettlementTypeNotIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldSettlementType), v...))
+	})
+}
+
+// SettlementTypeGT applies the GT predicate on the "settlement_type" field.
+func SettlementTypeGT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeGTE applies the GTE predicate on the "settlement_type" field.
+func SettlementTypeGTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeLT applies the LT predicate on the "settlement_type" field.
+func SettlementTypeLT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeLTE applies the LTE predicate on the "settlement_type" field.
+func SettlementTypeLTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeContains applies the Contains predicate on the "settlement_type" field.
+func SettlementTypeContains(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeHasPrefix applies the HasPrefix predicate on the "settlement_type" field.
+func SettlementTypeHasPrefix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeHasSuffix applies the HasSuffix predicate on the "settlement_type" field.
+func SettlementTypeHasSuffix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeIsNil applies the IsNil predicate on the "settlement_type" field.
+func SettlementTypeIsNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldSettlementType)))
+	})
+}
+
+// SettlementTypeNotNil applies the NotNil predicate on the "settlement_type" field.
+func SettlementTypeNotNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldSettlementType)))
+	})
+}
+
+// SettlementTypeEqualFold applies the EqualFold predicate on the "settlement_type" field.
+func SettlementTypeEqualFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeContainsFold applies the ContainsFold predicate on the "settlement_type" field.
+func SettlementTypeContainsFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldSettlementType), v))
 	})
 }
 

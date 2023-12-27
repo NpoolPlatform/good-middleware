@@ -88,6 +88,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entgood.FieldQuantityCalculateType), "quantity_calculate_type"),
 			sql.As(t.C(entgood.FieldDurationType), "duration_type"),
 			sql.As(t.C(entgood.FieldDurationCalculateType), "duration_calculate_type"),
+			sql.As(t.C(entgood.FieldSettlementType), "settlement_type"),
 			sql.As(t.C(entgood.FieldCreatedAt), "created_at"),
 			sql.As(t.C(entgood.FieldUpdatedAt), "updated_at"),
 		)
@@ -262,6 +263,7 @@ func (h *queryHandler) formalize() {
 		info.UnitType = types.GoodUnitType(types.GoodUnitType_value[info.UnitTypeStr])
 		info.QuantityCalculateType = types.GoodUnitCalculateType(types.GoodUnitCalculateType_value[info.QuantityCalculateTypeStr])
 		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
+		info.SettlementType = types.GoodSettlementType(types.GoodSettlementType_value[info.SettlementTypeStr])
 		info.DurationCalculateType = types.GoodUnitCalculateType(types.GoodUnitCalculateType_value[info.DurationCalculateTypeStr])
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
 		amount, err := decimal.NewFromString(info.UnitLockDeposit)

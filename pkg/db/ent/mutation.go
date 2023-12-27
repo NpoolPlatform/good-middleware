@@ -9829,6 +9829,7 @@ type GoodMutation struct {
 	quantity_calculate_type   *string
 	duration_type             *string
 	duration_calculate_type   *string
+	settlement_type           *string
 	clearedFields             map[string]struct{}
 	done                      bool
 	oldValue                  func(context.Context) (*Good, error)
@@ -11336,6 +11337,55 @@ func (m *GoodMutation) ResetDurationCalculateType() {
 	delete(m.clearedFields, good.FieldDurationCalculateType)
 }
 
+// SetSettlementType sets the "settlement_type" field.
+func (m *GoodMutation) SetSettlementType(s string) {
+	m.settlement_type = &s
+}
+
+// SettlementType returns the value of the "settlement_type" field in the mutation.
+func (m *GoodMutation) SettlementType() (r string, exists bool) {
+	v := m.settlement_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSettlementType returns the old "settlement_type" field's value of the Good entity.
+// If the Good object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodMutation) OldSettlementType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSettlementType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSettlementType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSettlementType: %w", err)
+	}
+	return oldValue.SettlementType, nil
+}
+
+// ClearSettlementType clears the value of the "settlement_type" field.
+func (m *GoodMutation) ClearSettlementType() {
+	m.settlement_type = nil
+	m.clearedFields[good.FieldSettlementType] = struct{}{}
+}
+
+// SettlementTypeCleared returns if the "settlement_type" field was cleared in this mutation.
+func (m *GoodMutation) SettlementTypeCleared() bool {
+	_, ok := m.clearedFields[good.FieldSettlementType]
+	return ok
+}
+
+// ResetSettlementType resets all changes to the "settlement_type" field.
+func (m *GoodMutation) ResetSettlementType() {
+	m.settlement_type = nil
+	delete(m.clearedFields, good.FieldSettlementType)
+}
+
 // Where appends a list predicates to the GoodMutation builder.
 func (m *GoodMutation) Where(ps ...predicate.Good) {
 	m.predicates = append(m.predicates, ps...)
@@ -11355,7 +11405,7 @@ func (m *GoodMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *GoodMutation) Fields() []string {
-	fields := make([]string, 0, 27)
+	fields := make([]string, 0, 28)
 	if m.created_at != nil {
 		fields = append(fields, good.FieldCreatedAt)
 	}
@@ -11437,6 +11487,9 @@ func (m *GoodMutation) Fields() []string {
 	if m.duration_calculate_type != nil {
 		fields = append(fields, good.FieldDurationCalculateType)
 	}
+	if m.settlement_type != nil {
+		fields = append(fields, good.FieldSettlementType)
+	}
 	return fields
 }
 
@@ -11499,6 +11552,8 @@ func (m *GoodMutation) Field(name string) (ent.Value, bool) {
 		return m.DurationType()
 	case good.FieldDurationCalculateType:
 		return m.DurationCalculateType()
+	case good.FieldSettlementType:
+		return m.SettlementType()
 	}
 	return nil, false
 }
@@ -11562,6 +11617,8 @@ func (m *GoodMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldDurationType(ctx)
 	case good.FieldDurationCalculateType:
 		return m.OldDurationCalculateType(ctx)
+	case good.FieldSettlementType:
+		return m.OldSettlementType(ctx)
 	}
 	return nil, fmt.Errorf("unknown Good field %s", name)
 }
@@ -11760,6 +11817,13 @@ func (m *GoodMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDurationCalculateType(v)
 		return nil
+	case good.FieldSettlementType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSettlementType(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Good field %s", name)
 }
@@ -11949,6 +12013,9 @@ func (m *GoodMutation) ClearedFields() []string {
 	if m.FieldCleared(good.FieldDurationCalculateType) {
 		fields = append(fields, good.FieldDurationCalculateType)
 	}
+	if m.FieldCleared(good.FieldSettlementType) {
+		fields = append(fields, good.FieldSettlementType)
+	}
 	return fields
 }
 
@@ -12022,6 +12089,9 @@ func (m *GoodMutation) ClearField(name string) error {
 		return nil
 	case good.FieldDurationCalculateType:
 		m.ClearDurationCalculateType()
+		return nil
+	case good.FieldSettlementType:
+		m.ClearSettlementType()
 		return nil
 	}
 	return fmt.Errorf("unknown Good nullable field %s", name)
@@ -12111,6 +12181,9 @@ func (m *GoodMutation) ResetField(name string) error {
 		return nil
 	case good.FieldDurationCalculateType:
 		m.ResetDurationCalculateType()
+		return nil
+	case good.FieldSettlementType:
+		m.ResetSettlementType()
 		return nil
 	}
 	return fmt.Errorf("unknown Good field %s", name)

@@ -377,6 +377,20 @@ func (gc *GoodCreate) SetNillableDurationCalculateType(s *string) *GoodCreate {
 	return gc
 }
 
+// SetSettlementType sets the "settlement_type" field.
+func (gc *GoodCreate) SetSettlementType(s string) *GoodCreate {
+	gc.mutation.SetSettlementType(s)
+	return gc
+}
+
+// SetNillableSettlementType sets the "settlement_type" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableSettlementType(s *string) *GoodCreate {
+	if s != nil {
+		gc.SetSettlementType(*s)
+	}
+	return gc
+}
+
 // SetID sets the "id" field.
 func (gc *GoodCreate) SetID(u uint32) *GoodCreate {
 	gc.mutation.SetID(u)
@@ -572,6 +586,10 @@ func (gc *GoodCreate) defaults() error {
 	if _, ok := gc.mutation.DurationCalculateType(); !ok {
 		v := good.DefaultDurationCalculateType
 		gc.mutation.SetDurationCalculateType(v)
+	}
+	if _, ok := gc.mutation.SettlementType(); !ok {
+		v := good.DefaultSettlementType
+		gc.mutation.SetSettlementType(v)
 	}
 	return nil
 }
@@ -848,6 +866,14 @@ func (gc *GoodCreate) createSpec() (*Good, *sqlgraph.CreateSpec) {
 			Column: good.FieldDurationCalculateType,
 		})
 		_node.DurationCalculateType = value
+	}
+	if value, ok := gc.mutation.SettlementType(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldSettlementType,
+		})
+		_node.SettlementType = value
 	}
 	return _node, _spec
 }
@@ -1392,6 +1418,24 @@ func (u *GoodUpsert) UpdateDurationCalculateType() *GoodUpsert {
 // ClearDurationCalculateType clears the value of the "duration_calculate_type" field.
 func (u *GoodUpsert) ClearDurationCalculateType() *GoodUpsert {
 	u.SetNull(good.FieldDurationCalculateType)
+	return u
+}
+
+// SetSettlementType sets the "settlement_type" field.
+func (u *GoodUpsert) SetSettlementType(v string) *GoodUpsert {
+	u.Set(good.FieldSettlementType, v)
+	return u
+}
+
+// UpdateSettlementType sets the "settlement_type" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateSettlementType() *GoodUpsert {
+	u.SetExcluded(good.FieldSettlementType)
+	return u
+}
+
+// ClearSettlementType clears the value of the "settlement_type" field.
+func (u *GoodUpsert) ClearSettlementType() *GoodUpsert {
+	u.SetNull(good.FieldSettlementType)
 	return u
 }
 
@@ -2016,6 +2060,27 @@ func (u *GoodUpsertOne) UpdateDurationCalculateType() *GoodUpsertOne {
 func (u *GoodUpsertOne) ClearDurationCalculateType() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
 		s.ClearDurationCalculateType()
+	})
+}
+
+// SetSettlementType sets the "settlement_type" field.
+func (u *GoodUpsertOne) SetSettlementType(v string) *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetSettlementType(v)
+	})
+}
+
+// UpdateSettlementType sets the "settlement_type" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateSettlementType() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateSettlementType()
+	})
+}
+
+// ClearSettlementType clears the value of the "settlement_type" field.
+func (u *GoodUpsertOne) ClearSettlementType() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearSettlementType()
 	})
 }
 
@@ -2805,6 +2870,27 @@ func (u *GoodUpsertBulk) UpdateDurationCalculateType() *GoodUpsertBulk {
 func (u *GoodUpsertBulk) ClearDurationCalculateType() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
 		s.ClearDurationCalculateType()
+	})
+}
+
+// SetSettlementType sets the "settlement_type" field.
+func (u *GoodUpsertBulk) SetSettlementType(v string) *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetSettlementType(v)
+	})
+}
+
+// UpdateSettlementType sets the "settlement_type" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateSettlementType() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateSettlementType()
+	})
+}
+
+// ClearSettlementType clears the value of the "settlement_type" field.
+func (u *GoodUpsertBulk) ClearSettlementType() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearSettlementType()
 	})
 }
 

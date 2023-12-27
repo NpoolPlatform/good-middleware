@@ -90,6 +90,8 @@ var good = goodmwpb.Good{
 	DurationTypeStr:          types.GoodDurationType_GoodDurationByYear.String(),
 	DurationCalculateType:    types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
 	DurationCalculateTypeStr: types.GoodUnitCalculateType_GoodUnitCalculateBySelf.String(),
+	SettlementType:           types.GoodSettlementType_GoodSettledByCash,
+	SettlementTypeStr:        types.GoodSettlementType_GoodSettledByCash.String(),
 }
 
 var ret = npool.Good{
@@ -152,6 +154,8 @@ var ret = npool.Good{
 	DurationTypeStr:          types.GoodDurationType_GoodDurationByYear.String(),
 	DurationCalculateType:    types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
 	DurationCalculateTypeStr: types.GoodUnitCalculateType_GoodUnitCalculateBySelf.String(),
+	SettlementType:           types.GoodSettlementType_GoodSettledByCash,
+	SettlementTypeStr:        types.GoodSettlementType_GoodSettledByCash.String(),
 	MinOrderAmount:           "0",
 	MaxOrderAmount:           "0",
 	MaxUserAmount:            "0",

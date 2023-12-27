@@ -71,6 +71,8 @@ type Good struct {
 	DurationType string `json:"duration_type,omitempty"`
 	// DurationCalculateType holds the value of the "duration_calculate_type" field.
 	DurationCalculateType string `json:"duration_calculate_type,omitempty"`
+	// SettlementType holds the value of the "settlement_type" field.
+	SettlementType string `json:"settlement_type,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -84,7 +86,7 @@ func (*Good) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullBool)
 		case good.FieldID, good.FieldCreatedAt, good.FieldUpdatedAt, good.FieldDeletedAt, good.FieldDurationDays, good.FieldUnitAmount, good.FieldDeliveryAt, good.FieldStartAt, good.FieldBenefitIntervalHours:
 			values[i] = new(sql.NullInt64)
-		case good.FieldBenefitType, good.FieldGoodType, good.FieldTitle, good.FieldUnit, good.FieldQuantityUnit, good.FieldStartMode, good.FieldUnitType, good.FieldQuantityCalculateType, good.FieldDurationType, good.FieldDurationCalculateType:
+		case good.FieldBenefitType, good.FieldGoodType, good.FieldTitle, good.FieldUnit, good.FieldQuantityUnit, good.FieldStartMode, good.FieldUnitType, good.FieldQuantityCalculateType, good.FieldDurationType, good.FieldDurationCalculateType, good.FieldSettlementType:
 			values[i] = new(sql.NullString)
 		case good.FieldEntID, good.FieldDeviceInfoID, good.FieldCoinTypeID, good.FieldInheritFromGoodID, good.FieldVendorLocationID:
 			values[i] = new(uuid.UUID)
@@ -271,6 +273,12 @@ func (_go *Good) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				_go.DurationCalculateType = value.String
 			}
+		case good.FieldSettlementType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field settlement_type", values[i])
+			} else if value.Valid {
+				_go.SettlementType = value.String
+			}
 		}
 	}
 	return nil
@@ -379,6 +387,9 @@ func (_go *Good) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("duration_calculate_type=")
 	builder.WriteString(_go.DurationCalculateType)
+	builder.WriteString(", ")
+	builder.WriteString("settlement_type=")
+	builder.WriteString(_go.SettlementType)
 	builder.WriteByte(')')
 	return builder.String()
 }

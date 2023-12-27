@@ -159,6 +159,7 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 			sql.As(t1.C(entgood.FieldUnitType), "unit_type"),
 			sql.As(t1.C(entgood.FieldQuantityCalculateType), "quantity_calculate_type"),
 			sql.As(t1.C(entgood.FieldDurationType), "duration_type"),
+			sql.As(t1.C(entgood.FieldSettlementType), "settlement_type"),
 			sql.As(t1.C(entgood.FieldDurationCalculateType), "duration_calculate_type"),
 			sql.As(t2.C(entdeviceinfo.FieldType), "device_type"),
 			sql.As(t2.C(entdeviceinfo.FieldManufacturer), "device_manufacturer"),
@@ -284,6 +285,7 @@ func (h *queryHandler) formalize() {
 		info.UnitType = types.GoodUnitType(types.GoodUnitType_value[info.UnitTypeStr])
 		info.QuantityCalculateType = types.GoodUnitCalculateType(types.GoodUnitCalculateType_value[info.QuantityCalculateTypeStr])
 		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
+		info.SettlementType = types.GoodSettlementType(types.GoodSettlementType_value[info.SettlementTypeStr])
 		info.DurationCalculateType = types.GoodUnitCalculateType(types.GoodUnitCalculateType_value[info.DurationCalculateTypeStr])
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
 		_ = json.Unmarshal([]byte(info.DescriptionsStr), &info.Descriptions)

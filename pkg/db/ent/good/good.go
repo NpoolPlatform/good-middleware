@@ -67,6 +67,8 @@ const (
 	FieldDurationType = "duration_type"
 	// FieldDurationCalculateType holds the string denoting the duration_calculate_type field in the database.
 	FieldDurationCalculateType = "duration_calculate_type"
+	// FieldSettlementType holds the string denoting the settlement_type field in the database.
+	FieldSettlementType = "settlement_type"
 	// Table holds the table name of the good in the database.
 	Table = "goods"
 )
@@ -101,6 +103,7 @@ var Columns = []string{
 	FieldQuantityCalculateType,
 	FieldDurationType,
 	FieldDurationCalculateType,
+	FieldSettlementType,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -172,4 +175,6 @@ var (
 	DefaultDurationType string
 	// DefaultDurationCalculateType holds the default value on creation for the "duration_calculate_type" field.
 	DefaultDurationCalculateType string
+	// DefaultSettlementType holds the default value on creation for the "settlement_type" field.
+	DefaultSettlementType string
 )

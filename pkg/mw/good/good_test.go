@@ -80,6 +80,7 @@ var ret = npool.Good{
 	QuantityCalculateType: types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
 	DurationType:          types.GoodDurationType_GoodDurationByYear,
 	DurationCalculateType: types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
+	SettlementType:        types.GoodSettlementType_GoodSettledByCash,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -96,6 +97,7 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.UnitTypeStr = ret.UnitType.String()
 	ret.QuantityCalculateTypeStr = ret.QuantityCalculateType.String()
 	ret.DurationTypeStr = ret.DurationType.String()
+	ret.SettlementTypeStr = ret.SettlementType.String()
 	ret.DurationCalculateTypeStr = ret.DurationCalculateType.String()
 	ret.RewardTID = uuid.Nil.String()
 	ret.NextRewardStartAmount = decimal.NewFromInt(0).String()
@@ -175,6 +177,7 @@ func createGood(t *testing.T) {
 		WithUnitType(&ret.UnitType, false),
 		WithQuantityCalculateType(&ret.QuantityCalculateType, false),
 		WithDurationType(&ret.DurationType, false),
+		WithSettlementType(&ret.SettlementType, false),
 		WithDurationCalculateType(&ret.DurationCalculateType, false),
 		WithTotal(&ret.GoodTotal, true),
 		WithPosters(ret.Posters, false),

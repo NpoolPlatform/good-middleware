@@ -260,6 +260,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			good.FieldQuantityCalculateType: {Type: field.TypeString, Column: good.FieldQuantityCalculateType},
 			good.FieldDurationType:          {Type: field.TypeString, Column: good.FieldDurationType},
 			good.FieldDurationCalculateType: {Type: field.TypeString, Column: good.FieldDurationCalculateType},
+			good.FieldSettlementType:        {Type: field.TypeString, Column: good.FieldSettlementType},
 		},
 	}
 	graph.Nodes[8] = &sqlgraph.Node{
@@ -1474,6 +1475,11 @@ func (f *GoodFilter) WhereDurationType(p entql.StringP) {
 // WhereDurationCalculateType applies the entql string predicate on the duration_calculate_type field.
 func (f *GoodFilter) WhereDurationCalculateType(p entql.StringP) {
 	f.Where(p.Field(good.FieldDurationCalculateType))
+}
+
+// WhereSettlementType applies the entql string predicate on the settlement_type field.
+func (f *GoodFilter) WhereSettlementType(p entql.StringP) {
+	f.Where(p.Field(good.FieldSettlementType))
 }
 
 // addPredicate implements the predicateAdder interface.

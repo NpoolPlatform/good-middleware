@@ -552,6 +552,26 @@ func (gu *GoodUpdate) ClearDurationCalculateType() *GoodUpdate {
 	return gu
 }
 
+// SetSettlementType sets the "settlement_type" field.
+func (gu *GoodUpdate) SetSettlementType(s string) *GoodUpdate {
+	gu.mutation.SetSettlementType(s)
+	return gu
+}
+
+// SetNillableSettlementType sets the "settlement_type" field if the given value is not nil.
+func (gu *GoodUpdate) SetNillableSettlementType(s *string) *GoodUpdate {
+	if s != nil {
+		gu.SetSettlementType(*s)
+	}
+	return gu
+}
+
+// ClearSettlementType clears the value of the "settlement_type" field.
+func (gu *GoodUpdate) ClearSettlementType() *GoodUpdate {
+	gu.mutation.ClearSettlementType()
+	return gu
+}
+
 // Mutation returns the GoodMutation object of the builder.
 func (gu *GoodUpdate) Mutation() *GoodMutation {
 	return gu.mutation
@@ -1013,6 +1033,19 @@ func (gu *GoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: good.FieldDurationCalculateType,
+		})
+	}
+	if value, ok := gu.mutation.SettlementType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldSettlementType,
+		})
+	}
+	if gu.mutation.SettlementTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: good.FieldSettlementType,
 		})
 	}
 	_spec.Modifiers = gu.modifiers
@@ -1558,6 +1591,26 @@ func (guo *GoodUpdateOne) ClearDurationCalculateType() *GoodUpdateOne {
 	return guo
 }
 
+// SetSettlementType sets the "settlement_type" field.
+func (guo *GoodUpdateOne) SetSettlementType(s string) *GoodUpdateOne {
+	guo.mutation.SetSettlementType(s)
+	return guo
+}
+
+// SetNillableSettlementType sets the "settlement_type" field if the given value is not nil.
+func (guo *GoodUpdateOne) SetNillableSettlementType(s *string) *GoodUpdateOne {
+	if s != nil {
+		guo.SetSettlementType(*s)
+	}
+	return guo
+}
+
+// ClearSettlementType clears the value of the "settlement_type" field.
+func (guo *GoodUpdateOne) ClearSettlementType() *GoodUpdateOne {
+	guo.mutation.ClearSettlementType()
+	return guo
+}
+
 // Mutation returns the GoodMutation object of the builder.
 func (guo *GoodUpdateOne) Mutation() *GoodMutation {
 	return guo.mutation
@@ -2049,6 +2102,19 @@ func (guo *GoodUpdateOne) sqlSave(ctx context.Context) (_node *Good, err error) 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: good.FieldDurationCalculateType,
+		})
+	}
+	if value, ok := guo.mutation.SettlementType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldSettlementType,
+		})
+	}
+	if guo.mutation.SettlementTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: good.FieldSettlementType,
 		})
 	}
 	_spec.Modifiers = guo.modifiers

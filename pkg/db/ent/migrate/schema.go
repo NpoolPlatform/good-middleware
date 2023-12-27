@@ -272,6 +272,7 @@ var (
 		{Name: "quantity_calculate_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitCalculateBySelf"},
 		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByYear"},
 		{Name: "duration_calculate_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitCalculateBySelf"},
+		{Name: "settlement_type", Type: field.TypeString, Nullable: true, Default: "GoodSettledByCash"},
 	}
 	// GoodsTable holds the schema information for the "goods" table.
 	GoodsTable = &schema.Table{

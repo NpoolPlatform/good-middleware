@@ -636,6 +636,10 @@ func init() {
 	goodDescDurationCalculateType := goodFields[22].Descriptor()
 	// good.DefaultDurationCalculateType holds the default value on creation for the duration_calculate_type field.
 	good.DefaultDurationCalculateType = goodDescDurationCalculateType.Default.(string)
+	// goodDescSettlementType is the schema descriptor for settlement_type field.
+	goodDescSettlementType := goodFields[23].Descriptor()
+	// good.DefaultSettlementType holds the default value on creation for the settlement_type field.
+	good.DefaultSettlementType = goodDescSettlementType.Default.(string)
 	goodrewardMixin := schema.GoodReward{}.Mixin()
 	goodreward.Policy = privacy.NewPolicies(goodrewardMixin[0], schema.GoodReward{})
 	goodreward.Hooks[0] = func(next ent.Mutator) ent.Mutator {

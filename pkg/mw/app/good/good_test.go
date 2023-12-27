@@ -78,6 +78,7 @@ var good = goodmwpb.Good{
 	QuantityCalculateType: types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
 	DurationType:          types.GoodDurationType_GoodDurationByYear,
 	DurationCalculateType: types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
+	SettlementType:        types.GoodSettlementType_GoodSettledByCash,
 }
 
 var ret = npool.Good{
@@ -135,6 +136,7 @@ var ret = npool.Good{
 	QuantityCalculateType:  types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
 	DurationType:           types.GoodDurationType_GoodDurationByYear,
 	DurationCalculateType:  types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
+	SettlementType:         types.GoodSettlementType_GoodSettledByCash,
 	MinOrderAmount:         "0",
 	MaxOrderAmount:         "0",
 	MaxUserAmount:          "0",
@@ -216,6 +218,7 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.UnitTypeStr = ret.UnitType.String()
 	ret.QuantityCalculateTypeStr = ret.QuantityCalculateType.String()
 	ret.DurationTypeStr = ret.DurationType.String()
+	ret.SettlementTypeStr = ret.SettlementType.String()
 	ret.DurationCalculateTypeStr = ret.DurationCalculateType.String()
 
 	return func(*testing.T) {

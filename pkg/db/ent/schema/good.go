@@ -25,6 +25,7 @@ func (Good) Mixin() []ent.Mixin {
 }
 
 // Fields of the Good.
+// nolint:funlen
 func (Good) Fields() []ent.Field {
 	const benefitHours = 24
 	return []ent.Field{
@@ -125,6 +126,10 @@ func (Good) Fields() []ent.Field {
 			String("duration_calculate_type").
 			Optional().
 			Default(types.GoodUnitCalculateType_GoodUnitCalculateBySelf.String()),
+		field.
+			String("settlement_type").
+			Optional().
+			Default(types.GoodSettlementType_GoodSettledByCash.String()),
 	}
 }
 

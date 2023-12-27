@@ -585,6 +585,25 @@ func WithDurationType(e *types.GoodDurationType, must bool) func(context.Context
 	}
 }
 
+func WithSettlementType(e *types.GoodSettlementType, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return fmt.Errorf("invalid settlementtype")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodSettlementType_GoodSettledByCash:
+		case types.GoodSettlementType_GoodSettledByProfit:
+		default:
+			return fmt.Errorf("invalid settlementtype")
+		}
+		h.SettlementType = e
+		return nil
+	}
+}
+
 func WithDurationCalculateType(e *types.GoodUnitCalculateType, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {

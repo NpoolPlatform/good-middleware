@@ -35,6 +35,7 @@ type Req struct {
 	QuantityCalculateType *types.GoodUnitCalculateType
 	DurationType          *types.GoodDurationType
 	DurationCalculateType *types.GoodUnitCalculateType
+	SettlementType        *types.GoodSettlementType
 	DeletedAt             *uint32
 }
 
@@ -100,6 +101,9 @@ func CreateSet(c *ent.GoodCreate, req *Req) *ent.GoodCreate {
 	if req.DurationType != nil {
 		c.SetDurationType(req.DurationType.String())
 	}
+	if req.SettlementType != nil {
+		c.SetSettlementType(req.SettlementType.String())
+	}
 	if req.DurationCalculateType != nil {
 		c.SetDurationCalculateType(req.DurationCalculateType.String())
 	}
@@ -161,6 +165,9 @@ func UpdateSet(u *ent.GoodUpdateOne, req *Req) *ent.GoodUpdateOne {
 	}
 	if req.DurationType != nil {
 		u.SetDurationType(req.DurationType.String())
+	}
+	if req.SettlementType != nil {
+		u.SetSettlementType(req.SettlementType.String())
 	}
 	if req.DurationCalculateType != nil {
 		u.SetDurationCalculateType(req.DurationCalculateType.String())
