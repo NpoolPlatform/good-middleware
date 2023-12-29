@@ -215,7 +215,6 @@ func (h *updateHandler) updateGood(ctx context.Context, tx *ent.Tx) error {
 		tx.Good.UpdateOneID(*h.ID),
 		&goodcrud.Req{
 			DeviceInfoID:          h.DeviceInfoID,
-			DurationDays:          h.DurationDays,
 			CoinTypeID:            h.CoinTypeID,
 			VendorLocationID:      h.VendorLocationID,
 			UnitPrice:             h.UnitPrice,

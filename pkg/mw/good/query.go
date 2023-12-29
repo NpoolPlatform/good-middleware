@@ -69,7 +69,6 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 		AppendSelect(
 			sql.As(t.C(entgood.FieldEntID), "ent_id"),
 			sql.As(t.C(entgood.FieldDeviceInfoID), "device_info_id"),
-			sql.As(t.C(entgood.FieldDurationDays), "duration_days"),
 			sql.As(t.C(entgood.FieldCoinTypeID), "coin_type_id"),
 			sql.As(t.C(entgood.FieldVendorLocationID), "vendor_location_id"),
 			sql.As(t.C(entgood.FieldUnitPrice), "unit_price"),

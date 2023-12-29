@@ -238,33 +238,6 @@ func (agu *AppGoodUpdate) ClearDisplayIndex() *AppGoodUpdate {
 	return agu
 }
 
-// SetPurchaseLimit sets the "purchase_limit" field.
-func (agu *AppGoodUpdate) SetPurchaseLimit(i int32) *AppGoodUpdate {
-	agu.mutation.ResetPurchaseLimit()
-	agu.mutation.SetPurchaseLimit(i)
-	return agu
-}
-
-// SetNillablePurchaseLimit sets the "purchase_limit" field if the given value is not nil.
-func (agu *AppGoodUpdate) SetNillablePurchaseLimit(i *int32) *AppGoodUpdate {
-	if i != nil {
-		agu.SetPurchaseLimit(*i)
-	}
-	return agu
-}
-
-// AddPurchaseLimit adds i to the "purchase_limit" field.
-func (agu *AppGoodUpdate) AddPurchaseLimit(i int32) *AppGoodUpdate {
-	agu.mutation.AddPurchaseLimit(i)
-	return agu
-}
-
-// ClearPurchaseLimit clears the value of the "purchase_limit" field.
-func (agu *AppGoodUpdate) ClearPurchaseLimit() *AppGoodUpdate {
-	agu.mutation.ClearPurchaseLimit()
-	return agu
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (agu *AppGoodUpdate) SetSaleStartAt(u uint32) *AppGoodUpdate {
 	agu.mutation.ResetSaleStartAt()
@@ -487,26 +460,6 @@ func (agu *AppGoodUpdate) SetNillableCancelMode(s *string) *AppGoodUpdate {
 // ClearCancelMode clears the value of the "cancel_mode" field.
 func (agu *AppGoodUpdate) ClearCancelMode() *AppGoodUpdate {
 	agu.mutation.ClearCancelMode()
-	return agu
-}
-
-// SetUserPurchaseLimit sets the "user_purchase_limit" field.
-func (agu *AppGoodUpdate) SetUserPurchaseLimit(d decimal.Decimal) *AppGoodUpdate {
-	agu.mutation.SetUserPurchaseLimit(d)
-	return agu
-}
-
-// SetNillableUserPurchaseLimit sets the "user_purchase_limit" field if the given value is not nil.
-func (agu *AppGoodUpdate) SetNillableUserPurchaseLimit(d *decimal.Decimal) *AppGoodUpdate {
-	if d != nil {
-		agu.SetUserPurchaseLimit(*d)
-	}
-	return agu
-}
-
-// ClearUserPurchaseLimit clears the value of the "user_purchase_limit" field.
-func (agu *AppGoodUpdate) ClearUserPurchaseLimit() *AppGoodUpdate {
-	agu.mutation.ClearUserPurchaseLimit()
 	return agu
 }
 
@@ -981,26 +934,6 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appgood.FieldDisplayIndex,
 		})
 	}
-	if value, ok := agu.mutation.PurchaseLimit(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: appgood.FieldPurchaseLimit,
-		})
-	}
-	if value, ok := agu.mutation.AddedPurchaseLimit(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: appgood.FieldPurchaseLimit,
-		})
-	}
-	if agu.mutation.PurchaseLimitCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Column: appgood.FieldPurchaseLimit,
-		})
-	}
 	if value, ok := agu.mutation.SaleStartAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -1163,19 +1096,6 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: appgood.FieldCancelMode,
-		})
-	}
-	if value, ok := agu.mutation.UserPurchaseLimit(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: appgood.FieldUserPurchaseLimit,
-		})
-	}
-	if agu.mutation.UserPurchaseLimitCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: appgood.FieldUserPurchaseLimit,
 		})
 	}
 	if value, ok := agu.mutation.DisplayColors(); ok {
@@ -1571,33 +1491,6 @@ func (aguo *AppGoodUpdateOne) ClearDisplayIndex() *AppGoodUpdateOne {
 	return aguo
 }
 
-// SetPurchaseLimit sets the "purchase_limit" field.
-func (aguo *AppGoodUpdateOne) SetPurchaseLimit(i int32) *AppGoodUpdateOne {
-	aguo.mutation.ResetPurchaseLimit()
-	aguo.mutation.SetPurchaseLimit(i)
-	return aguo
-}
-
-// SetNillablePurchaseLimit sets the "purchase_limit" field if the given value is not nil.
-func (aguo *AppGoodUpdateOne) SetNillablePurchaseLimit(i *int32) *AppGoodUpdateOne {
-	if i != nil {
-		aguo.SetPurchaseLimit(*i)
-	}
-	return aguo
-}
-
-// AddPurchaseLimit adds i to the "purchase_limit" field.
-func (aguo *AppGoodUpdateOne) AddPurchaseLimit(i int32) *AppGoodUpdateOne {
-	aguo.mutation.AddPurchaseLimit(i)
-	return aguo
-}
-
-// ClearPurchaseLimit clears the value of the "purchase_limit" field.
-func (aguo *AppGoodUpdateOne) ClearPurchaseLimit() *AppGoodUpdateOne {
-	aguo.mutation.ClearPurchaseLimit()
-	return aguo
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (aguo *AppGoodUpdateOne) SetSaleStartAt(u uint32) *AppGoodUpdateOne {
 	aguo.mutation.ResetSaleStartAt()
@@ -1820,26 +1713,6 @@ func (aguo *AppGoodUpdateOne) SetNillableCancelMode(s *string) *AppGoodUpdateOne
 // ClearCancelMode clears the value of the "cancel_mode" field.
 func (aguo *AppGoodUpdateOne) ClearCancelMode() *AppGoodUpdateOne {
 	aguo.mutation.ClearCancelMode()
-	return aguo
-}
-
-// SetUserPurchaseLimit sets the "user_purchase_limit" field.
-func (aguo *AppGoodUpdateOne) SetUserPurchaseLimit(d decimal.Decimal) *AppGoodUpdateOne {
-	aguo.mutation.SetUserPurchaseLimit(d)
-	return aguo
-}
-
-// SetNillableUserPurchaseLimit sets the "user_purchase_limit" field if the given value is not nil.
-func (aguo *AppGoodUpdateOne) SetNillableUserPurchaseLimit(d *decimal.Decimal) *AppGoodUpdateOne {
-	if d != nil {
-		aguo.SetUserPurchaseLimit(*d)
-	}
-	return aguo
-}
-
-// ClearUserPurchaseLimit clears the value of the "user_purchase_limit" field.
-func (aguo *AppGoodUpdateOne) ClearUserPurchaseLimit() *AppGoodUpdateOne {
-	aguo.mutation.ClearUserPurchaseLimit()
 	return aguo
 }
 
@@ -2344,26 +2217,6 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 			Column: appgood.FieldDisplayIndex,
 		})
 	}
-	if value, ok := aguo.mutation.PurchaseLimit(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: appgood.FieldPurchaseLimit,
-		})
-	}
-	if value, ok := aguo.mutation.AddedPurchaseLimit(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: appgood.FieldPurchaseLimit,
-		})
-	}
-	if aguo.mutation.PurchaseLimitCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Column: appgood.FieldPurchaseLimit,
-		})
-	}
 	if value, ok := aguo.mutation.SaleStartAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -2526,19 +2379,6 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: appgood.FieldCancelMode,
-		})
-	}
-	if value, ok := aguo.mutation.UserPurchaseLimit(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: appgood.FieldUserPurchaseLimit,
-		})
-	}
-	if aguo.mutation.UserPurchaseLimitCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: appgood.FieldUserPurchaseLimit,
 		})
 	}
 	if value, ok := aguo.mutation.DisplayColors(); ok {

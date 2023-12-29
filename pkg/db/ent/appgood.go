@@ -42,8 +42,6 @@ type AppGood struct {
 	PackagePrice decimal.Decimal `json:"package_price,omitempty"`
 	// DisplayIndex holds the value of the "display_index" field.
 	DisplayIndex int32 `json:"display_index,omitempty"`
-	// PurchaseLimit holds the value of the "purchase_limit" field.
-	PurchaseLimit int32 `json:"purchase_limit,omitempty"`
 	// SaleStartAt holds the value of the "sale_start_at" field.
 	SaleStartAt uint32 `json:"sale_start_at,omitempty"`
 	// SaleEndAt holds the value of the "sale_end_at" field.
@@ -66,8 +64,6 @@ type AppGood struct {
 	EnableProductPage bool `json:"enable_product_page,omitempty"`
 	// CancelMode holds the value of the "cancel_mode" field.
 	CancelMode string `json:"cancel_mode,omitempty"`
-	// UserPurchaseLimit holds the value of the "user_purchase_limit" field.
-	UserPurchaseLimit decimal.Decimal `json:"user_purchase_limit,omitempty"`
 	// DisplayColors holds the value of the "display_colors" field.
 	DisplayColors []string `json:"display_colors,omitempty"`
 	// CancellableBeforeStart holds the value of the "cancellable_before_start" field.
@@ -99,11 +95,11 @@ func (*AppGood) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appgood.FieldDescriptions, appgood.FieldDisplayNames, appgood.FieldDisplayColors, appgood.FieldPosters:
 			values[i] = new([]byte)
-		case appgood.FieldUnitPrice, appgood.FieldPackagePrice, appgood.FieldTechnicalFeeRatio, appgood.FieldElectricityFeeRatio, appgood.FieldUserPurchaseLimit, appgood.FieldMinOrderAmount, appgood.FieldMaxOrderAmount, appgood.FieldMaxUserAmount:
+		case appgood.FieldUnitPrice, appgood.FieldPackagePrice, appgood.FieldTechnicalFeeRatio, appgood.FieldElectricityFeeRatio, appgood.FieldMinOrderAmount, appgood.FieldMaxOrderAmount, appgood.FieldMaxUserAmount:
 			values[i] = new(decimal.Decimal)
 		case appgood.FieldOnline, appgood.FieldVisible, appgood.FieldEnablePurchase, appgood.FieldEnableProductPage, appgood.FieldEnableSetCommission, appgood.FieldPackageWithRequireds:
 			values[i] = new(sql.NullBool)
-		case appgood.FieldID, appgood.FieldCreatedAt, appgood.FieldUpdatedAt, appgood.FieldDeletedAt, appgood.FieldDisplayIndex, appgood.FieldPurchaseLimit, appgood.FieldSaleStartAt, appgood.FieldSaleEndAt, appgood.FieldServiceStartAt, appgood.FieldCancellableBeforeStart, appgood.FieldMinOrderDuration, appgood.FieldMaxOrderDuration:
+		case appgood.FieldID, appgood.FieldCreatedAt, appgood.FieldUpdatedAt, appgood.FieldDeletedAt, appgood.FieldDisplayIndex, appgood.FieldSaleStartAt, appgood.FieldSaleEndAt, appgood.FieldServiceStartAt, appgood.FieldCancellableBeforeStart, appgood.FieldMinOrderDuration, appgood.FieldMaxOrderDuration:
 			values[i] = new(sql.NullInt64)
 		case appgood.FieldGoodName, appgood.FieldGoodBanner, appgood.FieldCancelMode, appgood.FieldProductPage:
 			values[i] = new(sql.NullString)
@@ -202,12 +198,6 @@ func (ag *AppGood) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				ag.DisplayIndex = int32(value.Int64)
 			}
-		case appgood.FieldPurchaseLimit:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field purchase_limit", values[i])
-			} else if value.Valid {
-				ag.PurchaseLimit = int32(value.Int64)
-			}
 		case appgood.FieldSaleStartAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field sale_start_at", values[i])
@@ -277,12 +267,6 @@ func (ag *AppGood) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field cancel_mode", values[i])
 			} else if value.Valid {
 				ag.CancelMode = value.String
-			}
-		case appgood.FieldUserPurchaseLimit:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field user_purchase_limit", values[i])
-			} else if value != nil {
-				ag.UserPurchaseLimit = *value
 			}
 		case appgood.FieldDisplayColors:
 			if value, ok := values[i].(*[]byte); !ok {
@@ -418,9 +402,6 @@ func (ag *AppGood) String() string {
 	builder.WriteString("display_index=")
 	builder.WriteString(fmt.Sprintf("%v", ag.DisplayIndex))
 	builder.WriteString(", ")
-	builder.WriteString("purchase_limit=")
-	builder.WriteString(fmt.Sprintf("%v", ag.PurchaseLimit))
-	builder.WriteString(", ")
 	builder.WriteString("sale_start_at=")
 	builder.WriteString(fmt.Sprintf("%v", ag.SaleStartAt))
 	builder.WriteString(", ")
@@ -453,9 +434,6 @@ func (ag *AppGood) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("cancel_mode=")
 	builder.WriteString(ag.CancelMode)
-	builder.WriteString(", ")
-	builder.WriteString("user_purchase_limit=")
-	builder.WriteString(fmt.Sprintf("%v", ag.UserPurchaseLimit))
 	builder.WriteString(", ")
 	builder.WriteString("display_colors=")
 	builder.WriteString(fmt.Sprintf("%v", ag.DisplayColors))

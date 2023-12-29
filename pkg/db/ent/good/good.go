@@ -23,8 +23,6 @@ const (
 	FieldEntID = "ent_id"
 	// FieldDeviceInfoID holds the string denoting the device_info_id field in the database.
 	FieldDeviceInfoID = "device_info_id"
-	// FieldDurationDays holds the string denoting the duration_days field in the database.
-	FieldDurationDays = "duration_days"
 	// FieldCoinTypeID holds the string denoting the coin_type_id field in the database.
 	FieldCoinTypeID = "coin_type_id"
 	// FieldInheritFromGoodID holds the string denoting the inherit_from_good_id field in the database.
@@ -81,7 +79,6 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldEntID,
 	FieldDeviceInfoID,
-	FieldDurationDays,
 	FieldCoinTypeID,
 	FieldInheritFromGoodID,
 	FieldVendorLocationID,
@@ -135,8 +132,6 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultEntID holds the default value on creation for the "ent_id" field.
 	DefaultEntID func() uuid.UUID
-	// DefaultDurationDays holds the default value on creation for the "duration_days" field.
-	DefaultDurationDays int32
 	// DefaultInheritFromGoodID holds the default value on creation for the "inherit_from_good_id" field.
 	DefaultInheritFromGoodID func() uuid.UUID
 	// DefaultUnitPrice holds the default value on creation for the "unit_price" field.

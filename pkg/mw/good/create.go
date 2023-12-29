@@ -72,7 +72,6 @@ func (h *createHandler) createGood(ctx context.Context, tx *ent.Tx) error {
 		&goodcrud.Req{
 			EntID:                 h.EntID,
 			DeviceInfoID:          h.DeviceInfoID,
-			DurationDays:          h.DurationDays,
 			CoinTypeID:            h.CoinTypeID,
 			VendorLocationID:      h.VendorLocationID,
 			UnitPrice:             h.UnitPrice,

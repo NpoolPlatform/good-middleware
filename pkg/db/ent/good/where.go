@@ -115,13 +115,6 @@ func DeviceInfoID(v uuid.UUID) predicate.Good {
 	})
 }
 
-// DurationDays applies equality check predicate on the "duration_days" field. It's identical to DurationDaysEQ.
-func DurationDays(v int32) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDurationDays), v))
-	})
-}
-
 // CoinTypeID applies equality check predicate on the "coin_type_id" field. It's identical to CoinTypeIDEQ.
 func CoinTypeID(v uuid.UUID) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
@@ -593,84 +586,6 @@ func DeviceInfoIDLT(v uuid.UUID) predicate.Good {
 func DeviceInfoIDLTE(v uuid.UUID) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldDeviceInfoID), v))
-	})
-}
-
-// DurationDaysEQ applies the EQ predicate on the "duration_days" field.
-func DurationDaysEQ(v int32) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDurationDays), v))
-	})
-}
-
-// DurationDaysNEQ applies the NEQ predicate on the "duration_days" field.
-func DurationDaysNEQ(v int32) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDurationDays), v))
-	})
-}
-
-// DurationDaysIn applies the In predicate on the "duration_days" field.
-func DurationDaysIn(vs ...int32) predicate.Good {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldDurationDays), v...))
-	})
-}
-
-// DurationDaysNotIn applies the NotIn predicate on the "duration_days" field.
-func DurationDaysNotIn(vs ...int32) predicate.Good {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldDurationDays), v...))
-	})
-}
-
-// DurationDaysGT applies the GT predicate on the "duration_days" field.
-func DurationDaysGT(v int32) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDurationDays), v))
-	})
-}
-
-// DurationDaysGTE applies the GTE predicate on the "duration_days" field.
-func DurationDaysGTE(v int32) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDurationDays), v))
-	})
-}
-
-// DurationDaysLT applies the LT predicate on the "duration_days" field.
-func DurationDaysLT(v int32) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDurationDays), v))
-	})
-}
-
-// DurationDaysLTE applies the LTE predicate on the "duration_days" field.
-func DurationDaysLTE(v int32) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDurationDays), v))
-	})
-}
-
-// DurationDaysIsNil applies the IsNil predicate on the "duration_days" field.
-func DurationDaysIsNil() predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldDurationDays)))
-	})
-}
-
-// DurationDaysNotNil applies the NotNil predicate on the "duration_days" field.
-func DurationDaysNotNil() predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldDurationDays)))
 	})
 }
 

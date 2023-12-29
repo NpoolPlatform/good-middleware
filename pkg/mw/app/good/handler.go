@@ -172,13 +172,6 @@ func WithDisplayIndex(n *int32, must bool) func(context.Context, *Handler) error
 	}
 }
 
-func WithPurchaseLimit(n *int32, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		h.PurchaseLimit = n
-		return nil
-	}
-}
-
 func WithSaleStartAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.SaleStartAt = n
@@ -244,23 +237,6 @@ func WithCancelMode(e *types.CancelMode, must bool) func(context.Context, *Handl
 			return fmt.Errorf("invalid cancelmode")
 		}
 		h.CancelMode = e
-		return nil
-	}
-}
-
-func WithUserPurchaseLimit(s *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return fmt.Errorf("invalid purchaselimit")
-			}
-			return nil
-		}
-		amount, err := decimal.NewFromString(*s)
-		if err != nil {
-			return err
-		}
-		h.UserPurchaseLimit = &amount
 		return nil
 	}
 }

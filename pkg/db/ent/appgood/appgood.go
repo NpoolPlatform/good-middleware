@@ -37,8 +37,6 @@ const (
 	FieldPackagePrice = "package_price"
 	// FieldDisplayIndex holds the string denoting the display_index field in the database.
 	FieldDisplayIndex = "display_index"
-	// FieldPurchaseLimit holds the string denoting the purchase_limit field in the database.
-	FieldPurchaseLimit = "purchase_limit"
 	// FieldSaleStartAt holds the string denoting the sale_start_at field in the database.
 	FieldSaleStartAt = "sale_start_at"
 	// FieldSaleEndAt holds the string denoting the sale_end_at field in the database.
@@ -61,8 +59,6 @@ const (
 	FieldEnableProductPage = "enable_product_page"
 	// FieldCancelMode holds the string denoting the cancel_mode field in the database.
 	FieldCancelMode = "cancel_mode"
-	// FieldUserPurchaseLimit holds the string denoting the user_purchase_limit field in the database.
-	FieldUserPurchaseLimit = "user_purchase_limit"
 	// FieldDisplayColors holds the string denoting the display_colors field in the database.
 	FieldDisplayColors = "display_colors"
 	// FieldCancellableBeforeStart holds the string denoting the cancellable_before_start field in the database.
@@ -104,7 +100,6 @@ var Columns = []string{
 	FieldUnitPrice,
 	FieldPackagePrice,
 	FieldDisplayIndex,
-	FieldPurchaseLimit,
 	FieldSaleStartAt,
 	FieldSaleEndAt,
 	FieldServiceStartAt,
@@ -116,7 +111,6 @@ var Columns = []string{
 	FieldEnablePurchase,
 	FieldEnableProductPage,
 	FieldCancelMode,
-	FieldUserPurchaseLimit,
 	FieldDisplayColors,
 	FieldCancellableBeforeStart,
 	FieldProductPage,
@@ -171,8 +165,6 @@ var (
 	DefaultPackagePrice decimal.Decimal
 	// DefaultDisplayIndex holds the default value on creation for the "display_index" field.
 	DefaultDisplayIndex int32
-	// DefaultPurchaseLimit holds the default value on creation for the "purchase_limit" field.
-	DefaultPurchaseLimit int32
 	// DefaultSaleStartAt holds the default value on creation for the "sale_start_at" field.
 	DefaultSaleStartAt uint32
 	// DefaultSaleEndAt holds the default value on creation for the "sale_end_at" field.
@@ -195,8 +187,6 @@ var (
 	DefaultEnableProductPage bool
 	// DefaultCancelMode holds the default value on creation for the "cancel_mode" field.
 	DefaultCancelMode string
-	// DefaultUserPurchaseLimit holds the default value on creation for the "user_purchase_limit" field.
-	DefaultUserPurchaseLimit decimal.Decimal
 	// DefaultDisplayColors holds the default value on creation for the "display_colors" field.
 	DefaultDisplayColors []string
 	// DefaultCancellableBeforeStart holds the default value on creation for the "cancellable_before_start" field.

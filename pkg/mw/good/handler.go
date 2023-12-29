@@ -103,19 +103,6 @@ func WithDeviceInfoID(id *string, must bool) func(context.Context, *Handler) err
 	}
 }
 
-func WithDurationDays(n *int32, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if n == nil {
-			if must {
-				return fmt.Errorf("invalid durationdays")
-			}
-			return nil
-		}
-		h.DurationDays = n
-		return nil
-	}
-}
-
 func WithCoinTypeID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {

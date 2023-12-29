@@ -44,7 +44,6 @@ var good = goodmwpb.Good{
 	DevicePowerConsumption: 120,
 	DeviceShipmentAt:       uint32(time.Now().Unix() - 1000),
 	DevicePosters:          []string{uuid.NewString(), uuid.NewString()},
-	DurationDays:           14,
 	CoinTypeID:             uuid.NewString(),
 	VendorLocationID:       uuid.NewString(),
 	VendorLocationCountry:  uuid.NewString(),
@@ -92,7 +91,6 @@ var appgood = appgoodmwpb.Good{
 	DevicePowerConsumption: good.DevicePowerConsumption,
 	DevicePosters:          good.DevicePosters,
 	DeviceShipmentAt:       good.DeviceShipmentAt,
-	DurationDays:           good.DurationDays,
 	CoinTypeID:             good.CoinTypeID,
 	VendorLocationID:       good.VendorLocationID,
 	VendorLocationCountry:  good.VendorLocationCountry,
@@ -108,7 +106,6 @@ var appgood = appgoodmwpb.Good{
 	GoodTotal:              good.GoodTotal,
 	GoodSpotQuantity:       good.GoodTotal,
 	CancelModeStr:          types.CancelMode_Uncancellable.String(),
-	PurchaseLimit:          3000,
 	EnableSetCommission:    true,
 	EnablePurchase:         true,
 	EnableProductPage:      true,
@@ -117,7 +114,6 @@ var appgood = appgoodmwpb.Good{
 	BenefitType:            good.BenefitType,
 	BenefitTypeStr:         good.BenefitType.String(),
 	GoodTypeStr:            good.GoodType.String(),
-	UserPurchaseLimit:      decimal.NewFromInt(0).String(),
 }
 
 var ret = npool.Default{
@@ -177,7 +173,6 @@ func setup(t *testing.T) func(*testing.T) {
 		context.Background(),
 		good1.WithEntID(&good.EntID, true),
 		good1.WithDeviceInfoID(&good.DeviceInfoID, true),
-		good1.WithDurationDays(&good.DurationDays, true),
 		good1.WithCoinTypeID(&good.CoinTypeID, true),
 		good1.WithVendorLocationID(&good.VendorLocationID, true),
 		good1.WithUnitPrice(&good.UnitPrice, true),

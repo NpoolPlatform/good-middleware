@@ -175,20 +175,6 @@ func (agc *AppGoodCreate) SetNillableDisplayIndex(i *int32) *AppGoodCreate {
 	return agc
 }
 
-// SetPurchaseLimit sets the "purchase_limit" field.
-func (agc *AppGoodCreate) SetPurchaseLimit(i int32) *AppGoodCreate {
-	agc.mutation.SetPurchaseLimit(i)
-	return agc
-}
-
-// SetNillablePurchaseLimit sets the "purchase_limit" field if the given value is not nil.
-func (agc *AppGoodCreate) SetNillablePurchaseLimit(i *int32) *AppGoodCreate {
-	if i != nil {
-		agc.SetPurchaseLimit(*i)
-	}
-	return agc
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (agc *AppGoodCreate) SetSaleStartAt(u uint32) *AppGoodCreate {
 	agc.mutation.SetSaleStartAt(u)
@@ -323,20 +309,6 @@ func (agc *AppGoodCreate) SetCancelMode(s string) *AppGoodCreate {
 func (agc *AppGoodCreate) SetNillableCancelMode(s *string) *AppGoodCreate {
 	if s != nil {
 		agc.SetCancelMode(*s)
-	}
-	return agc
-}
-
-// SetUserPurchaseLimit sets the "user_purchase_limit" field.
-func (agc *AppGoodCreate) SetUserPurchaseLimit(d decimal.Decimal) *AppGoodCreate {
-	agc.mutation.SetUserPurchaseLimit(d)
-	return agc
-}
-
-// SetNillableUserPurchaseLimit sets the "user_purchase_limit" field if the given value is not nil.
-func (agc *AppGoodCreate) SetNillableUserPurchaseLimit(d *decimal.Decimal) *AppGoodCreate {
-	if d != nil {
-		agc.SetUserPurchaseLimit(*d)
 	}
 	return agc
 }
@@ -616,10 +588,6 @@ func (agc *AppGoodCreate) defaults() error {
 		v := appgood.DefaultDisplayIndex
 		agc.mutation.SetDisplayIndex(v)
 	}
-	if _, ok := agc.mutation.PurchaseLimit(); !ok {
-		v := appgood.DefaultPurchaseLimit
-		agc.mutation.SetPurchaseLimit(v)
-	}
 	if _, ok := agc.mutation.SaleStartAt(); !ok {
 		v := appgood.DefaultSaleStartAt
 		agc.mutation.SetSaleStartAt(v)
@@ -663,10 +631,6 @@ func (agc *AppGoodCreate) defaults() error {
 	if _, ok := agc.mutation.CancelMode(); !ok {
 		v := appgood.DefaultCancelMode
 		agc.mutation.SetCancelMode(v)
-	}
-	if _, ok := agc.mutation.UserPurchaseLimit(); !ok {
-		v := appgood.DefaultUserPurchaseLimit
-		agc.mutation.SetUserPurchaseLimit(v)
 	}
 	if _, ok := agc.mutation.DisplayColors(); !ok {
 		v := appgood.DefaultDisplayColors
@@ -865,14 +829,6 @@ func (agc *AppGoodCreate) createSpec() (*AppGood, *sqlgraph.CreateSpec) {
 		})
 		_node.DisplayIndex = value
 	}
-	if value, ok := agc.mutation.PurchaseLimit(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: appgood.FieldPurchaseLimit,
-		})
-		_node.PurchaseLimit = value
-	}
 	if value, ok := agc.mutation.SaleStartAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -960,14 +916,6 @@ func (agc *AppGoodCreate) createSpec() (*AppGood, *sqlgraph.CreateSpec) {
 			Column: appgood.FieldCancelMode,
 		})
 		_node.CancelMode = value
-	}
-	if value, ok := agc.mutation.UserPurchaseLimit(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: appgood.FieldUserPurchaseLimit,
-		})
-		_node.UserPurchaseLimit = value
 	}
 	if value, ok := agc.mutation.DisplayColors(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -1315,30 +1263,6 @@ func (u *AppGoodUpsert) ClearDisplayIndex() *AppGoodUpsert {
 	return u
 }
 
-// SetPurchaseLimit sets the "purchase_limit" field.
-func (u *AppGoodUpsert) SetPurchaseLimit(v int32) *AppGoodUpsert {
-	u.Set(appgood.FieldPurchaseLimit, v)
-	return u
-}
-
-// UpdatePurchaseLimit sets the "purchase_limit" field to the value that was provided on create.
-func (u *AppGoodUpsert) UpdatePurchaseLimit() *AppGoodUpsert {
-	u.SetExcluded(appgood.FieldPurchaseLimit)
-	return u
-}
-
-// AddPurchaseLimit adds v to the "purchase_limit" field.
-func (u *AppGoodUpsert) AddPurchaseLimit(v int32) *AppGoodUpsert {
-	u.Add(appgood.FieldPurchaseLimit, v)
-	return u
-}
-
-// ClearPurchaseLimit clears the value of the "purchase_limit" field.
-func (u *AppGoodUpsert) ClearPurchaseLimit() *AppGoodUpsert {
-	u.SetNull(appgood.FieldPurchaseLimit)
-	return u
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (u *AppGoodUpsert) SetSaleStartAt(v uint32) *AppGoodUpsert {
 	u.Set(appgood.FieldSaleStartAt, v)
@@ -1552,24 +1476,6 @@ func (u *AppGoodUpsert) UpdateCancelMode() *AppGoodUpsert {
 // ClearCancelMode clears the value of the "cancel_mode" field.
 func (u *AppGoodUpsert) ClearCancelMode() *AppGoodUpsert {
 	u.SetNull(appgood.FieldCancelMode)
-	return u
-}
-
-// SetUserPurchaseLimit sets the "user_purchase_limit" field.
-func (u *AppGoodUpsert) SetUserPurchaseLimit(v decimal.Decimal) *AppGoodUpsert {
-	u.Set(appgood.FieldUserPurchaseLimit, v)
-	return u
-}
-
-// UpdateUserPurchaseLimit sets the "user_purchase_limit" field to the value that was provided on create.
-func (u *AppGoodUpsert) UpdateUserPurchaseLimit() *AppGoodUpsert {
-	u.SetExcluded(appgood.FieldUserPurchaseLimit)
-	return u
-}
-
-// ClearUserPurchaseLimit clears the value of the "user_purchase_limit" field.
-func (u *AppGoodUpsert) ClearUserPurchaseLimit() *AppGoodUpsert {
-	u.SetNull(appgood.FieldUserPurchaseLimit)
 	return u
 }
 
@@ -2077,34 +1983,6 @@ func (u *AppGoodUpsertOne) ClearDisplayIndex() *AppGoodUpsertOne {
 	})
 }
 
-// SetPurchaseLimit sets the "purchase_limit" field.
-func (u *AppGoodUpsertOne) SetPurchaseLimit(v int32) *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.SetPurchaseLimit(v)
-	})
-}
-
-// AddPurchaseLimit adds v to the "purchase_limit" field.
-func (u *AppGoodUpsertOne) AddPurchaseLimit(v int32) *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.AddPurchaseLimit(v)
-	})
-}
-
-// UpdatePurchaseLimit sets the "purchase_limit" field to the value that was provided on create.
-func (u *AppGoodUpsertOne) UpdatePurchaseLimit() *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdatePurchaseLimit()
-	})
-}
-
-// ClearPurchaseLimit clears the value of the "purchase_limit" field.
-func (u *AppGoodUpsertOne) ClearPurchaseLimit() *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearPurchaseLimit()
-	})
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (u *AppGoodUpsertOne) SetSaleStartAt(v uint32) *AppGoodUpsertOne {
 	return u.Update(func(s *AppGoodUpsert) {
@@ -2354,27 +2232,6 @@ func (u *AppGoodUpsertOne) UpdateCancelMode() *AppGoodUpsertOne {
 func (u *AppGoodUpsertOne) ClearCancelMode() *AppGoodUpsertOne {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.ClearCancelMode()
-	})
-}
-
-// SetUserPurchaseLimit sets the "user_purchase_limit" field.
-func (u *AppGoodUpsertOne) SetUserPurchaseLimit(v decimal.Decimal) *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.SetUserPurchaseLimit(v)
-	})
-}
-
-// UpdateUserPurchaseLimit sets the "user_purchase_limit" field to the value that was provided on create.
-func (u *AppGoodUpsertOne) UpdateUserPurchaseLimit() *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdateUserPurchaseLimit()
-	})
-}
-
-// ClearUserPurchaseLimit clears the value of the "user_purchase_limit" field.
-func (u *AppGoodUpsertOne) ClearUserPurchaseLimit() *AppGoodUpsertOne {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearUserPurchaseLimit()
 	})
 }
 
@@ -3083,34 +2940,6 @@ func (u *AppGoodUpsertBulk) ClearDisplayIndex() *AppGoodUpsertBulk {
 	})
 }
 
-// SetPurchaseLimit sets the "purchase_limit" field.
-func (u *AppGoodUpsertBulk) SetPurchaseLimit(v int32) *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.SetPurchaseLimit(v)
-	})
-}
-
-// AddPurchaseLimit adds v to the "purchase_limit" field.
-func (u *AppGoodUpsertBulk) AddPurchaseLimit(v int32) *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.AddPurchaseLimit(v)
-	})
-}
-
-// UpdatePurchaseLimit sets the "purchase_limit" field to the value that was provided on create.
-func (u *AppGoodUpsertBulk) UpdatePurchaseLimit() *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdatePurchaseLimit()
-	})
-}
-
-// ClearPurchaseLimit clears the value of the "purchase_limit" field.
-func (u *AppGoodUpsertBulk) ClearPurchaseLimit() *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearPurchaseLimit()
-	})
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (u *AppGoodUpsertBulk) SetSaleStartAt(v uint32) *AppGoodUpsertBulk {
 	return u.Update(func(s *AppGoodUpsert) {
@@ -3360,27 +3189,6 @@ func (u *AppGoodUpsertBulk) UpdateCancelMode() *AppGoodUpsertBulk {
 func (u *AppGoodUpsertBulk) ClearCancelMode() *AppGoodUpsertBulk {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.ClearCancelMode()
-	})
-}
-
-// SetUserPurchaseLimit sets the "user_purchase_limit" field.
-func (u *AppGoodUpsertBulk) SetUserPurchaseLimit(v decimal.Decimal) *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.SetUserPurchaseLimit(v)
-	})
-}
-
-// UpdateUserPurchaseLimit sets the "user_purchase_limit" field to the value that was provided on create.
-func (u *AppGoodUpsertBulk) UpdateUserPurchaseLimit() *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.UpdateUserPurchaseLimit()
-	})
-}
-
-// ClearUserPurchaseLimit clears the value of the "user_purchase_limit" field.
-func (u *AppGoodUpsertBulk) ClearUserPurchaseLimit() *AppGoodUpsertBulk {
-	return u.Update(func(s *AppGoodUpsert) {
-		s.ClearUserPurchaseLimit()
 	})
 }
 

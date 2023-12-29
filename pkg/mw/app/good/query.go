@@ -78,7 +78,6 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entappgood.FieldUnitPrice), "unit_price"),
 			sql.As(t.C(entappgood.FieldPackagePrice), "package_price"),
 			sql.As(t.C(entappgood.FieldDisplayIndex), "display_index"),
-			sql.As(t.C(entappgood.FieldPurchaseLimit), "purchase_limit"),
 			sql.As(t.C(entappgood.FieldSaleStartAt), "sale_start_at"),
 			sql.As(t.C(entappgood.FieldSaleEndAt), "sale_end_at"),
 			sql.As(t.C(entappgood.FieldServiceStartAt), "service_start_at"),
@@ -88,7 +87,6 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entappgood.FieldEnablePurchase), "enable_purchase"),
 			sql.As(t.C(entappgood.FieldEnableProductPage), "enable_product_page"),
 			sql.As(t.C(entappgood.FieldCancelMode), "cancel_mode"),
-			sql.As(t.C(entappgood.FieldUserPurchaseLimit), "user_purchase_limit"),
 			sql.As(t.C(entappgood.FieldDisplayColors), "display_colors"),
 			sql.As(t.C(entappgood.FieldCancellableBeforeStart), "cancellable_before_start"),
 			sql.As(t.C(entappgood.FieldProductPage), "product_page"),
@@ -146,7 +144,6 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 		AppendSelect(
 			sql.As(t1.C(entgood.FieldDeviceInfoID), "device_info_id"),
 			sql.As(t1.C(entgood.FieldVendorLocationID), "vendor_location_id"),
-			sql.As(t1.C(entgood.FieldDurationDays), "duration_days"),
 			sql.As(t1.C(entgood.FieldCoinTypeID), "coin_type_id"),
 			sql.As(t1.C(entgood.FieldBenefitType), "benefit_type"),
 			sql.As(t1.C(entgood.FieldGoodType), "good_type"),
@@ -333,12 +330,6 @@ func (h *queryHandler) formalize() {
 			info.Score = decimal.NewFromInt(0).String()
 		} else {
 			info.Score = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.UserPurchaseLimit)
-		if err != nil {
-			info.UserPurchaseLimit = decimal.NewFromInt(0).String()
-		} else {
-			info.UserPurchaseLimit = amount.String()
 		}
 		labels := []string{}
 		_ = json.Unmarshal([]byte(info.LabelsStr), &labels)

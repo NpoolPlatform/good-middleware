@@ -23,7 +23,6 @@ type Req struct {
 	UnitPrice              *decimal.Decimal
 	PackagePrice           *decimal.Decimal
 	DisplayIndex           *int32
-	PurchaseLimit          *int32
 	SaleStartAt            *uint32
 	SaleEndAt              *uint32
 	ServiceStartAt         *uint32
@@ -33,7 +32,6 @@ type Req struct {
 	EnablePurchase         *bool
 	EnableProductPage      *bool
 	CancelMode             *types.CancelMode
-	UserPurchaseLimit      *decimal.Decimal // Single order purchase limit
 	DisplayColors          []string
 	CancellableBeforeStart *uint32 // Only could be canceled x seconds before start
 	ProductPage            *string
@@ -79,9 +77,6 @@ func CreateSet(c *ent.AppGoodCreate, req *Req) *ent.AppGoodCreate {
 	if req.DisplayIndex != nil {
 		c.SetDisplayIndex(*req.DisplayIndex)
 	}
-	if req.PurchaseLimit != nil {
-		c.SetPurchaseLimit(*req.PurchaseLimit)
-	}
 	if req.SaleStartAt != nil {
 		c.SetSaleStartAt(*req.SaleStartAt)
 	}
@@ -108,9 +103,6 @@ func CreateSet(c *ent.AppGoodCreate, req *Req) *ent.AppGoodCreate {
 	}
 	if req.CancelMode != nil {
 		c.SetCancelMode(req.CancelMode.String())
-	}
-	if req.UserPurchaseLimit != nil {
-		c.SetUserPurchaseLimit(*req.UserPurchaseLimit)
 	}
 	if len(req.DisplayColors) > 0 {
 		c.SetDisplayColors(req.DisplayColors)
@@ -174,9 +166,6 @@ func UpdateSet(u *ent.AppGoodUpdateOne, req *Req) *ent.AppGoodUpdateOne {
 	if req.DisplayIndex != nil {
 		u.SetDisplayIndex(*req.DisplayIndex)
 	}
-	if req.PurchaseLimit != nil {
-		u.SetPurchaseLimit(*req.PurchaseLimit)
-	}
 	if req.SaleStartAt != nil {
 		u.SetSaleStartAt(*req.SaleStartAt)
 	}
@@ -203,9 +192,6 @@ func UpdateSet(u *ent.AppGoodUpdateOne, req *Req) *ent.AppGoodUpdateOne {
 	}
 	if req.CancelMode != nil {
 		u.SetCancelMode(req.CancelMode.String())
-	}
-	if req.UserPurchaseLimit != nil {
-		u.SetUserPurchaseLimit(*req.UserPurchaseLimit)
 	}
 	if req.DisplayColors != nil {
 		u.SetDisplayColors(req.DisplayColors)

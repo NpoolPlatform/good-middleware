@@ -4,7 +4,6 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
-	timeconst "github.com/NpoolPlatform/go-service-framework/pkg/const/time"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -25,16 +24,11 @@ func (Good) Mixin() []ent.Mixin {
 }
 
 // Fields of the Good.
-// nolint:funlen
 func (Good) Fields() []ent.Field {
 	const benefitHours = 24
 	return []ent.Field{
 		field.
 			UUID("device_info_id", uuid.UUID{}),
-		field.
-			Int32("duration_days").
-			Optional().
-			Default(timeconst.DaysPerYear),
 		field.
 			UUID("coin_type_id", uuid.UUID{}),
 		field.

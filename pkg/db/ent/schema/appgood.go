@@ -26,7 +26,6 @@ func (AppGood) Mixin() []ent.Mixin {
 
 //nolint:funlen
 func (AppGood) Fields() []ent.Field {
-	purchaseLimit := 3000
 	return []ent.Field{
 		field.
 			UUID("app_id", uuid.UUID{}),
@@ -62,10 +61,6 @@ func (AppGood) Fields() []ent.Field {
 			Int32("display_index").
 			Optional().
 			Default(0),
-		field.
-			Int32("purchase_limit").
-			Optional().
-			Default(int32(purchaseLimit)),
 		field.
 			Uint32("sale_start_at").
 			Optional().
@@ -116,13 +111,6 @@ func (AppGood) Fields() []ent.Field {
 			String("cancel_mode").
 			Optional().
 			Default(types.CancelMode_Uncancellable.String()),
-		field.
-			Other("user_purchase_limit", decimal.Decimal{}).
-			SchemaType(map[string]string{
-				dialect.MySQL: "decimal(37,18)",
-			}).
-			Optional().
-			Default(decimal.NewFromInt(0)),
 		field.
 			JSON("display_colors", []string{}).
 			Optional().

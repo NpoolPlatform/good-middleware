@@ -85,20 +85,6 @@ func (gc *GoodCreate) SetDeviceInfoID(u uuid.UUID) *GoodCreate {
 	return gc
 }
 
-// SetDurationDays sets the "duration_days" field.
-func (gc *GoodCreate) SetDurationDays(i int32) *GoodCreate {
-	gc.mutation.SetDurationDays(i)
-	return gc
-}
-
-// SetNillableDurationDays sets the "duration_days" field if the given value is not nil.
-func (gc *GoodCreate) SetNillableDurationDays(i *int32) *GoodCreate {
-	if i != nil {
-		gc.SetDurationDays(*i)
-	}
-	return gc
-}
-
 // SetCoinTypeID sets the "coin_type_id" field.
 func (gc *GoodCreate) SetCoinTypeID(u uuid.UUID) *GoodCreate {
 	gc.mutation.SetCoinTypeID(u)
@@ -504,10 +490,6 @@ func (gc *GoodCreate) defaults() error {
 		v := good.DefaultEntID()
 		gc.mutation.SetEntID(v)
 	}
-	if _, ok := gc.mutation.DurationDays(); !ok {
-		v := good.DefaultDurationDays
-		gc.mutation.SetDurationDays(v)
-	}
 	if _, ok := gc.mutation.InheritFromGoodID(); !ok {
 		if good.DefaultInheritFromGoodID == nil {
 			return fmt.Errorf("ent: uninitialized good.DefaultInheritFromGoodID (forgotten import ent/runtime?)")
@@ -690,14 +672,6 @@ func (gc *GoodCreate) createSpec() (*Good, *sqlgraph.CreateSpec) {
 			Column: good.FieldDeviceInfoID,
 		})
 		_node.DeviceInfoID = value
-	}
-	if value, ok := gc.mutation.DurationDays(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: good.FieldDurationDays,
-		})
-		_node.DurationDays = value
 	}
 	if value, ok := gc.mutation.CoinTypeID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -1004,30 +978,6 @@ func (u *GoodUpsert) SetDeviceInfoID(v uuid.UUID) *GoodUpsert {
 // UpdateDeviceInfoID sets the "device_info_id" field to the value that was provided on create.
 func (u *GoodUpsert) UpdateDeviceInfoID() *GoodUpsert {
 	u.SetExcluded(good.FieldDeviceInfoID)
-	return u
-}
-
-// SetDurationDays sets the "duration_days" field.
-func (u *GoodUpsert) SetDurationDays(v int32) *GoodUpsert {
-	u.Set(good.FieldDurationDays, v)
-	return u
-}
-
-// UpdateDurationDays sets the "duration_days" field to the value that was provided on create.
-func (u *GoodUpsert) UpdateDurationDays() *GoodUpsert {
-	u.SetExcluded(good.FieldDurationDays)
-	return u
-}
-
-// AddDurationDays adds v to the "duration_days" field.
-func (u *GoodUpsert) AddDurationDays(v int32) *GoodUpsert {
-	u.Add(good.FieldDurationDays, v)
-	return u
-}
-
-// ClearDurationDays clears the value of the "duration_days" field.
-func (u *GoodUpsert) ClearDurationDays() *GoodUpsert {
-	u.SetNull(good.FieldDurationDays)
 	return u
 }
 
@@ -1577,34 +1527,6 @@ func (u *GoodUpsertOne) SetDeviceInfoID(v uuid.UUID) *GoodUpsertOne {
 func (u *GoodUpsertOne) UpdateDeviceInfoID() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
 		s.UpdateDeviceInfoID()
-	})
-}
-
-// SetDurationDays sets the "duration_days" field.
-func (u *GoodUpsertOne) SetDurationDays(v int32) *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.SetDurationDays(v)
-	})
-}
-
-// AddDurationDays adds v to the "duration_days" field.
-func (u *GoodUpsertOne) AddDurationDays(v int32) *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.AddDurationDays(v)
-	})
-}
-
-// UpdateDurationDays sets the "duration_days" field to the value that was provided on create.
-func (u *GoodUpsertOne) UpdateDurationDays() *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.UpdateDurationDays()
-	})
-}
-
-// ClearDurationDays clears the value of the "duration_days" field.
-func (u *GoodUpsertOne) ClearDurationDays() *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.ClearDurationDays()
 	})
 }
 
@@ -2387,34 +2309,6 @@ func (u *GoodUpsertBulk) SetDeviceInfoID(v uuid.UUID) *GoodUpsertBulk {
 func (u *GoodUpsertBulk) UpdateDeviceInfoID() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
 		s.UpdateDeviceInfoID()
-	})
-}
-
-// SetDurationDays sets the "duration_days" field.
-func (u *GoodUpsertBulk) SetDurationDays(v int32) *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.SetDurationDays(v)
-	})
-}
-
-// AddDurationDays adds v to the "duration_days" field.
-func (u *GoodUpsertBulk) AddDurationDays(v int32) *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.AddDurationDays(v)
-	})
-}
-
-// UpdateDurationDays sets the "duration_days" field to the value that was provided on create.
-func (u *GoodUpsertBulk) UpdateDurationDays() *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.UpdateDurationDays()
-	})
-}
-
-// ClearDurationDays clears the value of the "duration_days" field.
-func (u *GoodUpsertBulk) ClearDurationDays() *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.ClearDurationDays()
 	})
 }
 

@@ -105,33 +105,6 @@ func (gu *GoodUpdate) SetDeviceInfoID(u uuid.UUID) *GoodUpdate {
 	return gu
 }
 
-// SetDurationDays sets the "duration_days" field.
-func (gu *GoodUpdate) SetDurationDays(i int32) *GoodUpdate {
-	gu.mutation.ResetDurationDays()
-	gu.mutation.SetDurationDays(i)
-	return gu
-}
-
-// SetNillableDurationDays sets the "duration_days" field if the given value is not nil.
-func (gu *GoodUpdate) SetNillableDurationDays(i *int32) *GoodUpdate {
-	if i != nil {
-		gu.SetDurationDays(*i)
-	}
-	return gu
-}
-
-// AddDurationDays adds i to the "duration_days" field.
-func (gu *GoodUpdate) AddDurationDays(i int32) *GoodUpdate {
-	gu.mutation.AddDurationDays(i)
-	return gu
-}
-
-// ClearDurationDays clears the value of the "duration_days" field.
-func (gu *GoodUpdate) ClearDurationDays() *GoodUpdate {
-	gu.mutation.ClearDurationDays()
-	return gu
-}
-
 // SetCoinTypeID sets the "coin_type_id" field.
 func (gu *GoodUpdate) SetCoinTypeID(u uuid.UUID) *GoodUpdate {
 	gu.mutation.SetCoinTypeID(u)
@@ -726,26 +699,6 @@ func (gu *GoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: good.FieldDeviceInfoID,
 		})
 	}
-	if value, ok := gu.mutation.DurationDays(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: good.FieldDurationDays,
-		})
-	}
-	if value, ok := gu.mutation.AddedDurationDays(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: good.FieldDurationDays,
-		})
-	}
-	if gu.mutation.DurationDaysCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Column: good.FieldDurationDays,
-		})
-	}
 	if value, ok := gu.mutation.CoinTypeID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -1141,33 +1094,6 @@ func (guo *GoodUpdateOne) SetNillableEntID(u *uuid.UUID) *GoodUpdateOne {
 // SetDeviceInfoID sets the "device_info_id" field.
 func (guo *GoodUpdateOne) SetDeviceInfoID(u uuid.UUID) *GoodUpdateOne {
 	guo.mutation.SetDeviceInfoID(u)
-	return guo
-}
-
-// SetDurationDays sets the "duration_days" field.
-func (guo *GoodUpdateOne) SetDurationDays(i int32) *GoodUpdateOne {
-	guo.mutation.ResetDurationDays()
-	guo.mutation.SetDurationDays(i)
-	return guo
-}
-
-// SetNillableDurationDays sets the "duration_days" field if the given value is not nil.
-func (guo *GoodUpdateOne) SetNillableDurationDays(i *int32) *GoodUpdateOne {
-	if i != nil {
-		guo.SetDurationDays(*i)
-	}
-	return guo
-}
-
-// AddDurationDays adds i to the "duration_days" field.
-func (guo *GoodUpdateOne) AddDurationDays(i int32) *GoodUpdateOne {
-	guo.mutation.AddDurationDays(i)
-	return guo
-}
-
-// ClearDurationDays clears the value of the "duration_days" field.
-func (guo *GoodUpdateOne) ClearDurationDays() *GoodUpdateOne {
-	guo.mutation.ClearDurationDays()
 	return guo
 }
 
@@ -1793,26 +1719,6 @@ func (guo *GoodUpdateOne) sqlSave(ctx context.Context) (_node *Good, err error) 
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: good.FieldDeviceInfoID,
-		})
-	}
-	if value, ok := guo.mutation.DurationDays(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: good.FieldDurationDays,
-		})
-	}
-	if value, ok := guo.mutation.AddedDurationDays(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: good.FieldDurationDays,
-		})
-	}
-	if guo.mutation.DurationDaysCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Column: good.FieldDurationDays,
 		})
 	}
 	if value, ok := guo.mutation.CoinTypeID(); ok {

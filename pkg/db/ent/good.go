@@ -27,8 +27,6 @@ type Good struct {
 	EntID uuid.UUID `json:"ent_id,omitempty"`
 	// DeviceInfoID holds the value of the "device_info_id" field.
 	DeviceInfoID uuid.UUID `json:"device_info_id,omitempty"`
-	// DurationDays holds the value of the "duration_days" field.
-	DurationDays int32 `json:"duration_days,omitempty"`
 	// CoinTypeID holds the value of the "coin_type_id" field.
 	CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
 	// InheritFromGoodID holds the value of the "inherit_from_good_id" field.
@@ -84,7 +82,7 @@ func (*Good) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case good.FieldTestOnly:
 			values[i] = new(sql.NullBool)
-		case good.FieldID, good.FieldCreatedAt, good.FieldUpdatedAt, good.FieldDeletedAt, good.FieldDurationDays, good.FieldUnitAmount, good.FieldDeliveryAt, good.FieldStartAt, good.FieldBenefitIntervalHours:
+		case good.FieldID, good.FieldCreatedAt, good.FieldUpdatedAt, good.FieldDeletedAt, good.FieldUnitAmount, good.FieldDeliveryAt, good.FieldStartAt, good.FieldBenefitIntervalHours:
 			values[i] = new(sql.NullInt64)
 		case good.FieldBenefitType, good.FieldGoodType, good.FieldTitle, good.FieldUnit, good.FieldQuantityUnit, good.FieldStartMode, good.FieldUnitType, good.FieldQuantityCalculateType, good.FieldDurationType, good.FieldDurationCalculateType, good.FieldSettlementType:
 			values[i] = new(sql.NullString)
@@ -140,12 +138,6 @@ func (_go *Good) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field device_info_id", values[i])
 			} else if value != nil {
 				_go.DeviceInfoID = *value
-			}
-		case good.FieldDurationDays:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field duration_days", values[i])
-			} else if value.Valid {
-				_go.DurationDays = int32(value.Int64)
 			}
 		case good.FieldCoinTypeID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -321,9 +313,6 @@ func (_go *Good) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("device_info_id=")
 	builder.WriteString(fmt.Sprintf("%v", _go.DeviceInfoID))
-	builder.WriteString(", ")
-	builder.WriteString("duration_days=")
-	builder.WriteString(fmt.Sprintf("%v", _go.DurationDays))
 	builder.WriteString(", ")
 	builder.WriteString("coin_type_id=")
 	builder.WriteString(fmt.Sprintf("%v", _go.CoinTypeID))

@@ -49,7 +49,6 @@ var ret = npool.Good{
 	DevicePowerConsumption: 120,
 	DeviceShipmentAt:       uint32(time.Now().Unix() - 1000),
 	DevicePosters:          []string{uuid.NewString(), uuid.NewString()},
-	DurationDays:           14,
 	CoinTypeID:             uuid.NewString(),
 	VendorLocationID:       uuid.NewString(),
 	VendorLocationCountry:  uuid.NewString(),
@@ -144,7 +143,6 @@ func createGood(t *testing.T) {
 	info, err := CreateGood(context.Background(), &npool.GoodReq{
 		EntID:                &ret.EntID,
 		DeviceInfoID:         &ret.DeviceInfoID,
-		DurationDays:         &ret.DurationDays,
 		CoinTypeID:           &ret.CoinTypeID,
 		VendorLocationID:     &ret.VendorLocationID,
 		UnitPrice:            &ret.UnitPrice,

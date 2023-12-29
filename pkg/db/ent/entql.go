@@ -76,7 +76,6 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appgood.FieldUnitPrice:              {Type: field.TypeOther, Column: appgood.FieldUnitPrice},
 			appgood.FieldPackagePrice:           {Type: field.TypeOther, Column: appgood.FieldPackagePrice},
 			appgood.FieldDisplayIndex:           {Type: field.TypeInt32, Column: appgood.FieldDisplayIndex},
-			appgood.FieldPurchaseLimit:          {Type: field.TypeInt32, Column: appgood.FieldPurchaseLimit},
 			appgood.FieldSaleStartAt:            {Type: field.TypeUint32, Column: appgood.FieldSaleStartAt},
 			appgood.FieldSaleEndAt:              {Type: field.TypeUint32, Column: appgood.FieldSaleEndAt},
 			appgood.FieldServiceStartAt:         {Type: field.TypeUint32, Column: appgood.FieldServiceStartAt},
@@ -88,7 +87,6 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appgood.FieldEnablePurchase:         {Type: field.TypeBool, Column: appgood.FieldEnablePurchase},
 			appgood.FieldEnableProductPage:      {Type: field.TypeBool, Column: appgood.FieldEnableProductPage},
 			appgood.FieldCancelMode:             {Type: field.TypeString, Column: appgood.FieldCancelMode},
-			appgood.FieldUserPurchaseLimit:      {Type: field.TypeOther, Column: appgood.FieldUserPurchaseLimit},
 			appgood.FieldDisplayColors:          {Type: field.TypeJSON, Column: appgood.FieldDisplayColors},
 			appgood.FieldCancellableBeforeStart: {Type: field.TypeUint32, Column: appgood.FieldCancellableBeforeStart},
 			appgood.FieldProductPage:            {Type: field.TypeString, Column: appgood.FieldProductPage},
@@ -238,7 +236,6 @@ var schemaGraph = func() *sqlgraph.Schema {
 			good.FieldDeletedAt:             {Type: field.TypeUint32, Column: good.FieldDeletedAt},
 			good.FieldEntID:                 {Type: field.TypeUUID, Column: good.FieldEntID},
 			good.FieldDeviceInfoID:          {Type: field.TypeUUID, Column: good.FieldDeviceInfoID},
-			good.FieldDurationDays:          {Type: field.TypeInt32, Column: good.FieldDurationDays},
 			good.FieldCoinTypeID:            {Type: field.TypeUUID, Column: good.FieldCoinTypeID},
 			good.FieldInheritFromGoodID:     {Type: field.TypeUUID, Column: good.FieldInheritFromGoodID},
 			good.FieldVendorLocationID:      {Type: field.TypeUUID, Column: good.FieldVendorLocationID},
@@ -707,11 +704,6 @@ func (f *AppGoodFilter) WhereDisplayIndex(p entql.Int32P) {
 	f.Where(p.Field(appgood.FieldDisplayIndex))
 }
 
-// WherePurchaseLimit applies the entql int32 predicate on the purchase_limit field.
-func (f *AppGoodFilter) WherePurchaseLimit(p entql.Int32P) {
-	f.Where(p.Field(appgood.FieldPurchaseLimit))
-}
-
 // WhereSaleStartAt applies the entql uint32 predicate on the sale_start_at field.
 func (f *AppGoodFilter) WhereSaleStartAt(p entql.Uint32P) {
 	f.Where(p.Field(appgood.FieldSaleStartAt))
@@ -765,11 +757,6 @@ func (f *AppGoodFilter) WhereEnableProductPage(p entql.BoolP) {
 // WhereCancelMode applies the entql string predicate on the cancel_mode field.
 func (f *AppGoodFilter) WhereCancelMode(p entql.StringP) {
 	f.Where(p.Field(appgood.FieldCancelMode))
-}
-
-// WhereUserPurchaseLimit applies the entql other predicate on the user_purchase_limit field.
-func (f *AppGoodFilter) WhereUserPurchaseLimit(p entql.OtherP) {
-	f.Where(p.Field(appgood.FieldUserPurchaseLimit))
 }
 
 // WhereDisplayColors applies the entql json.RawMessage predicate on the display_colors field.
@@ -1365,11 +1352,6 @@ func (f *GoodFilter) WhereEntID(p entql.ValueP) {
 // WhereDeviceInfoID applies the entql [16]byte predicate on the device_info_id field.
 func (f *GoodFilter) WhereDeviceInfoID(p entql.ValueP) {
 	f.Where(p.Field(good.FieldDeviceInfoID))
-}
-
-// WhereDurationDays applies the entql int32 predicate on the duration_days field.
-func (f *GoodFilter) WhereDurationDays(p entql.Int32P) {
-	f.Where(p.Field(good.FieldDurationDays))
 }
 
 // WhereCoinTypeID applies the entql [16]byte predicate on the coin_type_id field.

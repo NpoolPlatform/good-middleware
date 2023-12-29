@@ -52,7 +52,6 @@ var _good1 = goodmwpb.Good{
 	DevicePowerConsumption: 120,
 	DeviceShipmentAt:       uint32(time.Now().Unix() - 1000),
 	DevicePosters:          []string{uuid.NewString(), uuid.NewString()},
-	DurationDays:           14,
 	CoinTypeID:             uuid.NewString(),
 	VendorLocationID:       uuid.NewString(),
 	VendorLocationCountry:  uuid.NewString(),
@@ -93,7 +92,6 @@ var _good2 = goodmwpb.Good{
 	DevicePowerConsumption: _good1.DevicePowerConsumption,
 	DeviceShipmentAt:       _good1.DeviceShipmentAt,
 	DevicePosters:          _good1.DevicePosters,
-	DurationDays:           14,
 	CoinTypeID:             uuid.NewString(),
 	VendorLocationID:       _good1.VendorLocationID,
 	VendorLocationCountry:  _good1.VendorLocationCountry,
@@ -166,7 +164,6 @@ func setup(t *testing.T) func(*testing.T) {
 	_, err = good1.CreateGood(context.Background(), &goodmwpb.GoodReq{
 		EntID:                &_good1.EntID,
 		DeviceInfoID:         &_good1.DeviceInfoID,
-		DurationDays:         &_good1.DurationDays,
 		CoinTypeID:           &_good1.CoinTypeID,
 		VendorLocationID:     &_good1.VendorLocationID,
 		UnitPrice:            &_good1.UnitPrice,
@@ -189,7 +186,6 @@ func setup(t *testing.T) func(*testing.T) {
 	_, err = good1.CreateGood(context.Background(), &goodmwpb.GoodReq{
 		EntID:                &_good2.EntID,
 		DeviceInfoID:         &_good2.DeviceInfoID,
-		DurationDays:         &_good2.DurationDays,
 		CoinTypeID:           &_good2.CoinTypeID,
 		VendorLocationID:     &_good2.VendorLocationID,
 		UnitPrice:            &_good2.UnitPrice,

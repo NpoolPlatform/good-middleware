@@ -16,7 +16,6 @@ type Req struct {
 	ID                    *uint32
 	EntID                 *uuid.UUID
 	DeviceInfoID          *uuid.UUID
-	DurationDays          *int32
 	CoinTypeID            *uuid.UUID
 	VendorLocationID      *uuid.UUID
 	UnitPrice             *decimal.Decimal
@@ -46,9 +45,6 @@ func CreateSet(c *ent.GoodCreate, req *Req) *ent.GoodCreate {
 	}
 	if req.DeviceInfoID != nil {
 		c.SetDeviceInfoID(*req.DeviceInfoID)
-	}
-	if req.DurationDays != nil {
-		c.SetDurationDays(*req.DurationDays)
 	}
 	if req.CoinTypeID != nil {
 		c.SetCoinTypeID(*req.CoinTypeID)
@@ -114,9 +110,6 @@ func CreateSet(c *ent.GoodCreate, req *Req) *ent.GoodCreate {
 func UpdateSet(u *ent.GoodUpdateOne, req *Req) *ent.GoodUpdateOne {
 	if req.DeviceInfoID != nil {
 		u.SetDeviceInfoID(*req.DeviceInfoID)
-	}
-	if req.DurationDays != nil {
-		u.SetDurationDays(*req.DurationDays)
 	}
 	if req.CoinTypeID != nil {
 		u.SetCoinTypeID(*req.CoinTypeID)
