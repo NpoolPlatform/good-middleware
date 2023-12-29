@@ -267,7 +267,7 @@ var (
 		{Name: "unit_lock_deposit", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "unit_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitByDurationAndQuantity"},
 		{Name: "quantity_calculate_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitCalculateBySelf"},
-		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByYear"},
+		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
 		{Name: "duration_calculate_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitCalculateBySelf"},
 		{Name: "settlement_type", Type: field.TypeString, Nullable: true, Default: "GoodSettledByCash"},
 	}

@@ -115,7 +115,7 @@ func (Good) Fields() []ent.Field {
 		field.
 			String("duration_type").
 			Optional().
-			Default(types.GoodDurationType_GoodDurationByYear.String()),
+			Default(types.GoodDurationType_GoodDurationByDay.String()),
 		field.
 			String("duration_calculate_type").
 			Optional().

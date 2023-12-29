@@ -77,7 +77,7 @@ var ret = npool.Good{
 	StartMode:             types.GoodStartMode_GoodStartModeNextDay,
 	UnitType:              types.GoodUnitType_GoodUnitByDurationAndQuantity,
 	QuantityCalculateType: types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
-	DurationType:          types.GoodDurationType_GoodDurationByYear,
+	DurationType:          types.GoodDurationType_GoodDurationByDay,
 	DurationCalculateType: types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
 	SettlementType:        types.GoodSettlementType_GoodSettledByCash,
 }
