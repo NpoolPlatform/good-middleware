@@ -169,6 +169,12 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				Val: ids,
 			}
 		}
+		if conds.Must != nil {
+			h.Conds.Must = &cruder.Cond{
+				Op:  conds.GetMust().GetOp(),
+				Val: conds.GetMust().GetValue(),
+			}
+		}
 		return nil
 	}
 }
