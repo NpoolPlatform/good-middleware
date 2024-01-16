@@ -10,6 +10,7 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 type updateHandler struct {
@@ -70,13 +71,37 @@ func (h *Handler) UpdateGood(ctx context.Context) (*npool.Good, error) {
 	}
 
 	h.GoodID = &goodID
-	h.MinOrderDuration = &info.MinOrderDuration
-	h.MaxOrderDuration = &info.MaxOrderDuration
+	if h.MinOrderDuration == nil {
+		h.MinOrderDuration = &info.MinOrderDuration
+	}
+	if h.MaxOrderDuration == nil {
+		h.MaxOrderDuration = &info.MaxOrderDuration
+	}
+	if h.MinOrderAmount == nil {
+		amount, err := decimal.NewFromString(info.MinOrderAmount)
+		if err != nil {
+			return nil, err
+		}
+		h.MinOrderAmount = &amount
+	}
+	if h.MaxOrderAmount == nil {
+		amount, err := decimal.NewFromString(info.MaxOrderAmount)
+		if err != nil {
+			return nil, err
+		}
+		h.MaxOrderAmount = &amount
+	}
 
 	if err := h.checkUnitPrice(ctx); err != nil {
 		return nil, err
 	}
 	if err := h.checkPackagePrice(ctx); err != nil {
+		return nil, err
+	}
+	if err := h.checkDuration(); err != nil {
+		return nil, err
+	}
+	if err := h.checkOrderAmount(); err != nil {
 		return nil, err
 	}
 
