@@ -70,11 +70,15 @@ func (h *Handler) UpdateGood(ctx context.Context) (*npool.Good, error) {
 	}
 
 	h.GoodID = &goodID
+	h.MinOrderDuration = &info.MinOrderDuration
+	h.MaxOrderDuration = &info.MaxOrderDuration
 
 	if err := h.checkUnitPrice(ctx); err != nil {
 		return nil, err
 	}
-	// TODO: check package price
+	if err := h.checkPackagePrice(ctx); err != nil {
+		return nil, err
+	}
 
 	handler := &updateHandler{
 		Handler: h,

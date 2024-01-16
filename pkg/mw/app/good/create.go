@@ -79,7 +79,9 @@ func (h *Handler) CreateGood(ctx context.Context) (*npool.Good, error) {
 	if err := h.checkUnitPrice(ctx); err != nil {
 		return nil, err
 	}
-	// TODO: check package price
+	if err := h.checkPackagePrice(ctx); err != nil {
+		return nil, err
+	}
 
 	handler := &createHandler{
 		Handler: h,
