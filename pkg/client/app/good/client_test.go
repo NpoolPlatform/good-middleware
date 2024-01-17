@@ -226,13 +226,15 @@ func setup(t *testing.T) func(*testing.T) {
 
 func createGood(t *testing.T) {
 	info, err := CreateGood(context.Background(), &npool.GoodReq{
-		EntID:        &ret.EntID,
-		AppID:        &ret.AppID,
-		GoodID:       &ret.GoodID,
-		UnitPrice:    &ret.UnitPrice,
-		PackagePrice: &ret.PackagePrice,
-		GoodName:     &ret.GoodName,
-		Posters:      ret.Posters,
+		EntID:            &ret.EntID,
+		AppID:            &ret.AppID,
+		GoodID:           &ret.GoodID,
+		UnitPrice:        &ret.UnitPrice,
+		PackagePrice:     &ret.PackagePrice,
+		MinOrderDuration: &ret.MinOrderDuration,
+		MaxOrderDuration: &ret.MaxOrderDuration,
+		GoodName:         &ret.GoodName,
+		Posters:          ret.Posters,
 	})
 	if assert.Nil(t, err) {
 		ret.DevicePostersStr = info.DevicePostersStr

@@ -175,6 +175,8 @@ func setup(t *testing.T) func(*testing.T) {
 		appgood1.WithGoodName(&appgood.GoodName, true),
 		appgood1.WithUnitPrice(&appgood.UnitPrice, true),
 		appgood1.WithPackagePrice(&appgood.PackagePrice, true),
+		appgood1.WithMinOrderDuration(&appgood.MinOrderDuration, true),
+		appgood1.WithMaxOrderDuration(&appgood.MaxOrderDuration, true),
 	)
 	assert.Nil(t, err)
 

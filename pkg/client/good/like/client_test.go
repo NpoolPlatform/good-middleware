@@ -156,12 +156,14 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	_, err = appgood1.CreateGood(context.Background(), &appgoodmwpb.GoodReq{
-		EntID:        &appgood.EntID,
-		AppID:        &appgood.AppID,
-		GoodID:       &appgood.GoodID,
-		GoodName:     &appgood.GoodName,
-		UnitPrice:    &appgood.UnitPrice,
-		PackagePrice: &appgood.PackagePrice,
+		EntID:            &appgood.EntID,
+		AppID:            &appgood.AppID,
+		GoodID:           &appgood.GoodID,
+		GoodName:         &appgood.GoodName,
+		UnitPrice:        &appgood.UnitPrice,
+		PackagePrice:     &appgood.PackagePrice,
+		MinOrderDuration: &appgood.MinOrderDuration,
+		MaxOrderDuration: &appgood.MaxOrderDuration,
 	})
 	assert.Nil(t, err)
 

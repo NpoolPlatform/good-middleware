@@ -232,6 +232,8 @@ func createGood(t *testing.T) {
 		WithGoodID(&ret.GoodID, true),
 		WithUnitPrice(&ret.UnitPrice, true),
 		WithPackagePrice(&ret.PackagePrice, true),
+		WithMinOrderDuration(&ret.MinOrderDuration, true),
+		WithMaxOrderDuration(&ret.MaxOrderDuration, true),
 		WithGoodName(&ret.GoodName, true),
 		WithPosters(ret.AppGoodPosters, true),
 	)
