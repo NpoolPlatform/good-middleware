@@ -56,6 +56,7 @@ func (h *updateHandler) updateAppGood(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
+//nolint:gocyclo
 func (h *Handler) UpdateGood(ctx context.Context) (*npool.Good, error) {
 	info, err := h.GetGood(ctx)
 	if err != nil {
