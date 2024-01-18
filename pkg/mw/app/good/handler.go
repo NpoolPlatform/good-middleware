@@ -131,6 +131,7 @@ func WithGoodName(s *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
+//nolint:dupl
 func WithUnitPrice(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
@@ -151,6 +152,7 @@ func WithUnitPrice(s *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
+//nolint:dupl
 func WithPackagePrice(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
