@@ -30,7 +30,7 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		appgood1.WithVisible(req.Visible, true),
 		appgood1.WithGoodName(req.GoodName, true),
 		appgood1.WithUnitPrice(req.UnitPrice, true),
-		appgood1.WithPackagePrice(req.PackagePrice, true),
+		appgood1.WithPackagePrice(req.PackagePrice, false),
 		appgood1.WithDisplayIndex(req.DisplayIndex, true),
 		appgood1.WithSaleStartAt(req.SaleStartAt, true),
 		appgood1.WithSaleEndAt(req.SaleEndAt, true),
