@@ -75,9 +75,9 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entappgood.FieldOnline), "online"),
 			sql.As(t.C(entappgood.FieldVisible), "visible"),
 			sql.As(t.C(entappgood.FieldGoodName), "good_name"),
-			sql.As(t.C(entappgood.FieldPrice), "price"),
+			sql.As(t.C(entappgood.FieldUnitPrice), "unit_price"),
+			sql.As(t.C(entappgood.FieldPackagePrice), "package_price"),
 			sql.As(t.C(entappgood.FieldDisplayIndex), "display_index"),
-			sql.As(t.C(entappgood.FieldPurchaseLimit), "purchase_limit"),
 			sql.As(t.C(entappgood.FieldSaleStartAt), "sale_start_at"),
 			sql.As(t.C(entappgood.FieldSaleEndAt), "sale_end_at"),
 			sql.As(t.C(entappgood.FieldServiceStartAt), "service_start_at"),
@@ -87,7 +87,6 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entappgood.FieldEnablePurchase), "enable_purchase"),
 			sql.As(t.C(entappgood.FieldEnableProductPage), "enable_product_page"),
 			sql.As(t.C(entappgood.FieldCancelMode), "cancel_mode"),
-			sql.As(t.C(entappgood.FieldUserPurchaseLimit), "user_purchase_limit"),
 			sql.As(t.C(entappgood.FieldDisplayColors), "display_colors"),
 			sql.As(t.C(entappgood.FieldCancellableBeforeStart), "cancellable_before_start"),
 			sql.As(t.C(entappgood.FieldProductPage), "product_page"),
@@ -96,6 +95,12 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entappgood.FieldTechnicalFeeRatio), "technical_fee_ratio"),
 			sql.As(t.C(entappgood.FieldElectricityFeeRatio), "electricity_fee_ratio"),
 			sql.As(t.C(entappgood.FieldPosters), "app_good_posters"),
+			sql.As(t.C(entappgood.FieldMinOrderAmount), "min_order_amount"),
+			sql.As(t.C(entappgood.FieldMaxOrderAmount), "max_order_amount"),
+			sql.As(t.C(entappgood.FieldMaxUserAmount), "max_user_amount"),
+			sql.As(t.C(entappgood.FieldMinOrderDuration), "min_order_duration"),
+			sql.As(t.C(entappgood.FieldMaxOrderDuration), "max_order_duration"),
+			sql.As(t.C(entappgood.FieldPackageWithRequireds), "package_with_requireds"),
 			sql.As(t.C(entappgood.FieldCreatedAt), "created_at"),
 			sql.As(t.C(entappgood.FieldUpdatedAt), "updated_at"),
 		)
@@ -139,17 +144,20 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 		AppendSelect(
 			sql.As(t1.C(entgood.FieldDeviceInfoID), "device_info_id"),
 			sql.As(t1.C(entgood.FieldVendorLocationID), "vendor_location_id"),
-			sql.As(t1.C(entgood.FieldDurationDays), "duration_days"),
 			sql.As(t1.C(entgood.FieldCoinTypeID), "coin_type_id"),
 			sql.As(t1.C(entgood.FieldBenefitType), "benefit_type"),
 			sql.As(t1.C(entgood.FieldGoodType), "good_type"),
-			sql.As(t1.C(entgood.FieldUnit), "unit"),
-			sql.As(t1.C(entgood.FieldUnitAmount), "unit_amount"),
-			sql.As(t1.C(entgood.FieldSupportCoinTypeIds), "support_coin_type_ids"),
+			sql.As(t1.C(entgood.FieldQuantityUnit), "quantity_unit"),
+			sql.As(t1.C(entgood.FieldQuantityUnitAmount), "quantity_unit_amount"),
 			sql.As(t1.C(entgood.FieldStartAt), "start_at"),
 			sql.As(t1.C(entgood.FieldStartMode), "start_mode"),
 			sql.As(t1.C(entgood.FieldTestOnly), "test_only"),
 			sql.As(t1.C(entgood.FieldBenefitIntervalHours), "benefit_interval_hours"),
+			sql.As(t1.C(entgood.FieldUnitType), "unit_type"),
+			sql.As(t1.C(entgood.FieldQuantityCalculateType), "quantity_calculate_type"),
+			sql.As(t1.C(entgood.FieldDurationType), "duration_type"),
+			sql.As(t1.C(entgood.FieldSettlementType), "settlement_type"),
+			sql.As(t1.C(entgood.FieldDurationCalculateType), "duration_calculate_type"),
 			sql.As(t2.C(entdeviceinfo.FieldType), "device_type"),
 			sql.As(t2.C(entdeviceinfo.FieldManufacturer), "device_manufacturer"),
 			sql.As(t2.C(entdeviceinfo.FieldPowerConsumption), "device_power_consumption"),
@@ -271,7 +279,11 @@ func (h *queryHandler) formalize() {
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.CancelMode = types.CancelMode(types.CancelMode_value[info.CancelModeStr])
-		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
+		info.UnitType = types.GoodUnitType(types.GoodUnitType_value[info.UnitTypeStr])
+		info.QuantityCalculateType = types.GoodUnitCalculateType(types.GoodUnitCalculateType_value[info.QuantityCalculateTypeStr])
+		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
+		info.SettlementType = types.GoodSettlementType(types.GoodSettlementType_value[info.SettlementTypeStr])
+		info.DurationCalculateType = types.GoodUnitCalculateType(types.GoodUnitCalculateType_value[info.DurationCalculateTypeStr])
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
 		_ = json.Unmarshal([]byte(info.DescriptionsStr), &info.Descriptions)
 		_ = json.Unmarshal([]byte(info.DisplayNamesStr), &info.DisplayNames)
@@ -301,23 +313,23 @@ func (h *queryHandler) formalize() {
 		} else {
 			info.GoodSold = amount.String()
 		}
-		amount, err = decimal.NewFromString(info.Price)
+		amount, err = decimal.NewFromString(info.UnitPrice)
 		if err != nil {
-			info.Price = decimal.NewFromInt(0).String()
+			info.UnitPrice = decimal.NewFromInt(0).String()
 		} else {
-			info.Price = amount.String()
+			info.UnitPrice = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.PackagePrice)
+		if err != nil {
+			info.PackagePrice = decimal.NewFromInt(0).String()
+		} else {
+			info.PackagePrice = amount.String()
 		}
 		amount, err = decimal.NewFromString(info.Score)
 		if err != nil {
 			info.Score = decimal.NewFromInt(0).String()
 		} else {
 			info.Score = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.UserPurchaseLimit)
-		if err != nil {
-			info.UserPurchaseLimit = decimal.NewFromInt(0).String()
-		} else {
-			info.UserPurchaseLimit = amount.String()
 		}
 		labels := []string{}
 		_ = json.Unmarshal([]byte(info.LabelsStr), &labels)
@@ -389,6 +401,30 @@ func (h *queryHandler) formalize() {
 			info.ElectricityFeeRatio = decimal.NewFromInt(0).String()
 		} else {
 			info.ElectricityFeeRatio = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.QuantityUnitAmount)
+		if err != nil {
+			info.QuantityUnitAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.QuantityUnitAmount = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.MinOrderAmount)
+		if err != nil {
+			info.MinOrderAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.MinOrderAmount = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.MaxOrderAmount)
+		if err != nil {
+			info.MaxOrderAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.MaxOrderAmount = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.MaxUserAmount)
+		if err != nil {
+			info.MaxUserAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.MaxUserAmount = amount.String()
 		}
 	}
 }

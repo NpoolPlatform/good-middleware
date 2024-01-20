@@ -69,22 +69,25 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 		AppendSelect(
 			sql.As(t.C(entgood.FieldEntID), "ent_id"),
 			sql.As(t.C(entgood.FieldDeviceInfoID), "device_info_id"),
-			sql.As(t.C(entgood.FieldDurationDays), "duration_days"),
 			sql.As(t.C(entgood.FieldCoinTypeID), "coin_type_id"),
 			sql.As(t.C(entgood.FieldVendorLocationID), "vendor_location_id"),
-			sql.As(t.C(entgood.FieldPrice), "price"),
+			sql.As(t.C(entgood.FieldUnitPrice), "unit_price"),
 			sql.As(t.C(entgood.FieldBenefitType), "benefit_type"),
 			sql.As(t.C(entgood.FieldGoodType), "good_type"),
 			sql.As(t.C(entgood.FieldTitle), "title"),
-			sql.As(t.C(entgood.FieldUnit), "unit"),
-			sql.As(t.C(entgood.FieldUnitAmount), "unit_amount"),
-			sql.As(t.C(entgood.FieldSupportCoinTypeIds), "support_coin_type_ids"),
+			sql.As(t.C(entgood.FieldQuantityUnit), "quantity_unit"),
+			sql.As(t.C(entgood.FieldQuantityUnitAmount), "quantity_unit_amount"),
 			sql.As(t.C(entgood.FieldDeliveryAt), "delivery_at"),
 			sql.As(t.C(entgood.FieldStartAt), "start_at"),
 			sql.As(t.C(entgood.FieldStartMode), "start_mode"),
 			sql.As(t.C(entgood.FieldTestOnly), "test_only"),
 			sql.As(t.C(entgood.FieldBenefitIntervalHours), "benefit_interval_hours"),
 			sql.As(t.C(entgood.FieldUnitLockDeposit), "unit_lock_deposit"),
+			sql.As(t.C(entgood.FieldUnitType), "unit_type"),
+			sql.As(t.C(entgood.FieldQuantityCalculateType), "quantity_calculate_type"),
+			sql.As(t.C(entgood.FieldDurationType), "duration_type"),
+			sql.As(t.C(entgood.FieldDurationCalculateType), "duration_calculate_type"),
+			sql.As(t.C(entgood.FieldSettlementType), "settlement_type"),
 			sql.As(t.C(entgood.FieldCreatedAt), "created_at"),
 			sql.As(t.C(entgood.FieldUpdatedAt), "updated_at"),
 		)
@@ -256,7 +259,11 @@ func (h *queryHandler) formalize() {
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.RewardState = types.BenefitState(types.BenefitState_value[info.RewardStateStr])
-		_ = json.Unmarshal([]byte(info.SupportCoinTypeIDsStr), &info.SupportCoinTypeIDs)
+		info.UnitType = types.GoodUnitType(types.GoodUnitType_value[info.UnitTypeStr])
+		info.QuantityCalculateType = types.GoodUnitCalculateType(types.GoodUnitCalculateType_value[info.QuantityCalculateTypeStr])
+		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
+		info.SettlementType = types.GoodSettlementType(types.GoodSettlementType_value[info.SettlementTypeStr])
+		info.DurationCalculateType = types.GoodUnitCalculateType(types.GoodUnitCalculateType_value[info.DurationCalculateTypeStr])
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
 		amount, err := decimal.NewFromString(info.UnitLockDeposit)
 		if err != nil {
@@ -306,11 +313,11 @@ func (h *queryHandler) formalize() {
 		} else {
 			info.GoodAppReserved = amount.String()
 		}
-		amount, err = decimal.NewFromString(info.Price)
+		amount, err = decimal.NewFromString(info.UnitPrice)
 		if err != nil {
-			info.Price = decimal.NewFromInt(0).String()
+			info.UnitPrice = decimal.NewFromInt(0).String()
 		} else {
-			info.Price = amount.String()
+			info.UnitPrice = amount.String()
 		}
 		amount, err = decimal.NewFromString(info.NextRewardStartAmount)
 		if err != nil {
@@ -341,6 +348,12 @@ func (h *queryHandler) formalize() {
 			info.Score = decimal.NewFromInt(0).String()
 		} else {
 			info.Score = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.QuantityUnitAmount)
+		if err != nil {
+			info.QuantityUnitAmount = decimal.NewFromInt(0).String()
+		} else {
+			info.QuantityUnitAmount = amount.String()
 		}
 		labels := []string{}
 		_ = json.Unmarshal([]byte(info.LabelsStr), &labels)

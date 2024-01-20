@@ -129,16 +129,30 @@ func (tmgc *TopMostGoodCreate) SetPosters(s []string) *TopMostGoodCreate {
 	return tmgc
 }
 
-// SetPrice sets the "price" field.
-func (tmgc *TopMostGoodCreate) SetPrice(d decimal.Decimal) *TopMostGoodCreate {
-	tmgc.mutation.SetPrice(d)
+// SetUnitPrice sets the "unit_price" field.
+func (tmgc *TopMostGoodCreate) SetUnitPrice(d decimal.Decimal) *TopMostGoodCreate {
+	tmgc.mutation.SetUnitPrice(d)
 	return tmgc
 }
 
-// SetNillablePrice sets the "price" field if the given value is not nil.
-func (tmgc *TopMostGoodCreate) SetNillablePrice(d *decimal.Decimal) *TopMostGoodCreate {
+// SetNillableUnitPrice sets the "unit_price" field if the given value is not nil.
+func (tmgc *TopMostGoodCreate) SetNillableUnitPrice(d *decimal.Decimal) *TopMostGoodCreate {
 	if d != nil {
-		tmgc.SetPrice(*d)
+		tmgc.SetUnitPrice(*d)
+	}
+	return tmgc
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (tmgc *TopMostGoodCreate) SetPackagePrice(d decimal.Decimal) *TopMostGoodCreate {
+	tmgc.mutation.SetPackagePrice(d)
+	return tmgc
+}
+
+// SetNillablePackagePrice sets the "package_price" field if the given value is not nil.
+func (tmgc *TopMostGoodCreate) SetNillablePackagePrice(d *decimal.Decimal) *TopMostGoodCreate {
+	if d != nil {
+		tmgc.SetPackagePrice(*d)
 	}
 	return tmgc
 }
@@ -264,9 +278,13 @@ func (tmgc *TopMostGoodCreate) defaults() error {
 		v := topmostgood.DefaultPosters
 		tmgc.mutation.SetPosters(v)
 	}
-	if _, ok := tmgc.mutation.Price(); !ok {
-		v := topmostgood.DefaultPrice
-		tmgc.mutation.SetPrice(v)
+	if _, ok := tmgc.mutation.UnitPrice(); !ok {
+		v := topmostgood.DefaultUnitPrice
+		tmgc.mutation.SetUnitPrice(v)
+	}
+	if _, ok := tmgc.mutation.PackagePrice(); !ok {
+		v := topmostgood.DefaultPackagePrice
+		tmgc.mutation.SetPackagePrice(v)
 	}
 	return nil
 }
@@ -422,13 +440,21 @@ func (tmgc *TopMostGoodCreate) createSpec() (*TopMostGood, *sqlgraph.CreateSpec)
 		})
 		_node.Posters = value
 	}
-	if value, ok := tmgc.mutation.Price(); ok {
+	if value, ok := tmgc.mutation.UnitPrice(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: topmostgood.FieldPrice,
+			Column: topmostgood.FieldUnitPrice,
 		})
-		_node.Price = value
+		_node.UnitPrice = value
+	}
+	if value, ok := tmgc.mutation.PackagePrice(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: topmostgood.FieldPackagePrice,
+		})
+		_node.PackagePrice = value
 	}
 	return _node, _spec
 }
@@ -652,21 +678,39 @@ func (u *TopMostGoodUpsert) ClearPosters() *TopMostGoodUpsert {
 	return u
 }
 
-// SetPrice sets the "price" field.
-func (u *TopMostGoodUpsert) SetPrice(v decimal.Decimal) *TopMostGoodUpsert {
-	u.Set(topmostgood.FieldPrice, v)
+// SetUnitPrice sets the "unit_price" field.
+func (u *TopMostGoodUpsert) SetUnitPrice(v decimal.Decimal) *TopMostGoodUpsert {
+	u.Set(topmostgood.FieldUnitPrice, v)
 	return u
 }
 
-// UpdatePrice sets the "price" field to the value that was provided on create.
-func (u *TopMostGoodUpsert) UpdatePrice() *TopMostGoodUpsert {
-	u.SetExcluded(topmostgood.FieldPrice)
+// UpdateUnitPrice sets the "unit_price" field to the value that was provided on create.
+func (u *TopMostGoodUpsert) UpdateUnitPrice() *TopMostGoodUpsert {
+	u.SetExcluded(topmostgood.FieldUnitPrice)
 	return u
 }
 
-// ClearPrice clears the value of the "price" field.
-func (u *TopMostGoodUpsert) ClearPrice() *TopMostGoodUpsert {
-	u.SetNull(topmostgood.FieldPrice)
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (u *TopMostGoodUpsert) ClearUnitPrice() *TopMostGoodUpsert {
+	u.SetNull(topmostgood.FieldUnitPrice)
+	return u
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (u *TopMostGoodUpsert) SetPackagePrice(v decimal.Decimal) *TopMostGoodUpsert {
+	u.Set(topmostgood.FieldPackagePrice, v)
+	return u
+}
+
+// UpdatePackagePrice sets the "package_price" field to the value that was provided on create.
+func (u *TopMostGoodUpsert) UpdatePackagePrice() *TopMostGoodUpsert {
+	u.SetExcluded(topmostgood.FieldPackagePrice)
+	return u
+}
+
+// ClearPackagePrice clears the value of the "package_price" field.
+func (u *TopMostGoodUpsert) ClearPackagePrice() *TopMostGoodUpsert {
+	u.SetNull(topmostgood.FieldPackagePrice)
 	return u
 }
 
@@ -916,24 +960,45 @@ func (u *TopMostGoodUpsertOne) ClearPosters() *TopMostGoodUpsertOne {
 	})
 }
 
-// SetPrice sets the "price" field.
-func (u *TopMostGoodUpsertOne) SetPrice(v decimal.Decimal) *TopMostGoodUpsertOne {
+// SetUnitPrice sets the "unit_price" field.
+func (u *TopMostGoodUpsertOne) SetUnitPrice(v decimal.Decimal) *TopMostGoodUpsertOne {
 	return u.Update(func(s *TopMostGoodUpsert) {
-		s.SetPrice(v)
+		s.SetUnitPrice(v)
 	})
 }
 
-// UpdatePrice sets the "price" field to the value that was provided on create.
-func (u *TopMostGoodUpsertOne) UpdatePrice() *TopMostGoodUpsertOne {
+// UpdateUnitPrice sets the "unit_price" field to the value that was provided on create.
+func (u *TopMostGoodUpsertOne) UpdateUnitPrice() *TopMostGoodUpsertOne {
 	return u.Update(func(s *TopMostGoodUpsert) {
-		s.UpdatePrice()
+		s.UpdateUnitPrice()
 	})
 }
 
-// ClearPrice clears the value of the "price" field.
-func (u *TopMostGoodUpsertOne) ClearPrice() *TopMostGoodUpsertOne {
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (u *TopMostGoodUpsertOne) ClearUnitPrice() *TopMostGoodUpsertOne {
 	return u.Update(func(s *TopMostGoodUpsert) {
-		s.ClearPrice()
+		s.ClearUnitPrice()
+	})
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (u *TopMostGoodUpsertOne) SetPackagePrice(v decimal.Decimal) *TopMostGoodUpsertOne {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.SetPackagePrice(v)
+	})
+}
+
+// UpdatePackagePrice sets the "package_price" field to the value that was provided on create.
+func (u *TopMostGoodUpsertOne) UpdatePackagePrice() *TopMostGoodUpsertOne {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.UpdatePackagePrice()
+	})
+}
+
+// ClearPackagePrice clears the value of the "package_price" field.
+func (u *TopMostGoodUpsertOne) ClearPackagePrice() *TopMostGoodUpsertOne {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.ClearPackagePrice()
 	})
 }
 
@@ -1348,24 +1413,45 @@ func (u *TopMostGoodUpsertBulk) ClearPosters() *TopMostGoodUpsertBulk {
 	})
 }
 
-// SetPrice sets the "price" field.
-func (u *TopMostGoodUpsertBulk) SetPrice(v decimal.Decimal) *TopMostGoodUpsertBulk {
+// SetUnitPrice sets the "unit_price" field.
+func (u *TopMostGoodUpsertBulk) SetUnitPrice(v decimal.Decimal) *TopMostGoodUpsertBulk {
 	return u.Update(func(s *TopMostGoodUpsert) {
-		s.SetPrice(v)
+		s.SetUnitPrice(v)
 	})
 }
 
-// UpdatePrice sets the "price" field to the value that was provided on create.
-func (u *TopMostGoodUpsertBulk) UpdatePrice() *TopMostGoodUpsertBulk {
+// UpdateUnitPrice sets the "unit_price" field to the value that was provided on create.
+func (u *TopMostGoodUpsertBulk) UpdateUnitPrice() *TopMostGoodUpsertBulk {
 	return u.Update(func(s *TopMostGoodUpsert) {
-		s.UpdatePrice()
+		s.UpdateUnitPrice()
 	})
 }
 
-// ClearPrice clears the value of the "price" field.
-func (u *TopMostGoodUpsertBulk) ClearPrice() *TopMostGoodUpsertBulk {
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (u *TopMostGoodUpsertBulk) ClearUnitPrice() *TopMostGoodUpsertBulk {
 	return u.Update(func(s *TopMostGoodUpsert) {
-		s.ClearPrice()
+		s.ClearUnitPrice()
+	})
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (u *TopMostGoodUpsertBulk) SetPackagePrice(v decimal.Decimal) *TopMostGoodUpsertBulk {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.SetPackagePrice(v)
+	})
+}
+
+// UpdatePackagePrice sets the "package_price" field to the value that was provided on create.
+func (u *TopMostGoodUpsertBulk) UpdatePackagePrice() *TopMostGoodUpsertBulk {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.UpdatePackagePrice()
+	})
+}
+
+// ClearPackagePrice clears the value of the "package_price" field.
+func (u *TopMostGoodUpsertBulk) ClearPackagePrice() *TopMostGoodUpsertBulk {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.ClearPackagePrice()
 	})
 }
 

@@ -40,8 +40,10 @@ type TopMostGood struct {
 	DisplayIndex uint32 `json:"display_index,omitempty"`
 	// Posters holds the value of the "posters" field.
 	Posters []string `json:"posters,omitempty"`
-	// Price holds the value of the "price" field.
-	Price decimal.Decimal `json:"price,omitempty"`
+	// UnitPrice holds the value of the "unit_price" field.
+	UnitPrice decimal.Decimal `json:"unit_price,omitempty"`
+	// PackagePrice holds the value of the "package_price" field.
+	PackagePrice decimal.Decimal `json:"package_price,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -51,7 +53,7 @@ func (*TopMostGood) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case topmostgood.FieldPosters:
 			values[i] = new([]byte)
-		case topmostgood.FieldPrice:
+		case topmostgood.FieldUnitPrice, topmostgood.FieldPackagePrice:
 			values[i] = new(decimal.Decimal)
 		case topmostgood.FieldID, topmostgood.FieldCreatedAt, topmostgood.FieldUpdatedAt, topmostgood.FieldDeletedAt, topmostgood.FieldDisplayIndex:
 			values[i] = new(sql.NullInt64)
@@ -146,11 +148,17 @@ func (tmg *TopMostGood) assignValues(columns []string, values []interface{}) err
 					return fmt.Errorf("unmarshal field posters: %w", err)
 				}
 			}
-		case topmostgood.FieldPrice:
+		case topmostgood.FieldUnitPrice:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field price", values[i])
+				return fmt.Errorf("unexpected type %T for field unit_price", values[i])
 			} else if value != nil {
-				tmg.Price = *value
+				tmg.UnitPrice = *value
+			}
+		case topmostgood.FieldPackagePrice:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field package_price", values[i])
+			} else if value != nil {
+				tmg.PackagePrice = *value
 			}
 		}
 	}
@@ -213,8 +221,11 @@ func (tmg *TopMostGood) String() string {
 	builder.WriteString("posters=")
 	builder.WriteString(fmt.Sprintf("%v", tmg.Posters))
 	builder.WriteString(", ")
-	builder.WriteString("price=")
-	builder.WriteString(fmt.Sprintf("%v", tmg.Price))
+	builder.WriteString("unit_price=")
+	builder.WriteString(fmt.Sprintf("%v", tmg.UnitPrice))
+	builder.WriteString(", ")
+	builder.WriteString("package_price=")
+	builder.WriteString(fmt.Sprintf("%v", tmg.PackagePrice))
 	builder.WriteByte(')')
 	return builder.String()
 }

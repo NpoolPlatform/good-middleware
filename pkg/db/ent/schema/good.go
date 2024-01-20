@@ -4,7 +4,6 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
-	timeconst "github.com/NpoolPlatform/go-service-framework/pkg/const/time"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -31,10 +30,6 @@ func (Good) Fields() []ent.Field {
 		field.
 			UUID("device_info_id", uuid.UUID{}),
 		field.
-			Int32("duration_days").
-			Optional().
-			Default(timeconst.DaysPerYear),
-		field.
 			UUID("coin_type_id", uuid.UUID{}),
 		field.
 			UUID("inherit_from_good_id", uuid.UUID{}).
@@ -45,7 +40,7 @@ func (Good) Fields() []ent.Field {
 		field.
 			UUID("vendor_location_id", uuid.UUID{}),
 		field.
-			Other("price", decimal.Decimal{}).
+			Other("unit_price", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).
@@ -68,13 +63,20 @@ func (Good) Fields() []ent.Field {
 			Optional().
 			Default(""),
 		field.
+			String("quantity_unit").
+			Optional().
+			Default(""),
+		field.
 			Int32("unit_amount").
 			Optional().
 			Default(0),
 		field.
-			JSON("support_coin_type_ids", []uuid.UUID{}).
+			Other("quantity_unit_amount", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
 			Optional().
-			Default([]uuid.UUID{}),
+			Default(decimal.Decimal{}),
 		field.
 			Uint32("delivery_at").
 			Optional().
@@ -86,7 +88,7 @@ func (Good) Fields() []ent.Field {
 		field.
 			String("start_mode").
 			Optional().
-			Default(types.GoodStartMode_GoodStartModeConfirmed.String()),
+			Default(types.GoodStartMode_GoodStartModeNextDay.String()),
 		field.
 			Bool("test_only").
 			Optional().
@@ -102,6 +104,26 @@ func (Good) Fields() []ent.Field {
 			}).
 			Optional().
 			Default(decimal.Decimal{}),
+		field.
+			String("unit_type").
+			Optional().
+			Default(types.GoodUnitType_GoodUnitByDurationAndQuantity.String()),
+		field.
+			String("quantity_calculate_type").
+			Optional().
+			Default(types.GoodUnitCalculateType_GoodUnitCalculateBySelf.String()),
+		field.
+			String("duration_type").
+			Optional().
+			Default(types.GoodDurationType_GoodDurationByDay.String()),
+		field.
+			String("duration_calculate_type").
+			Optional().
+			Default(types.GoodUnitCalculateType_GoodUnitCalculateBySelf.String()),
+		field.
+			String("settlement_type").
+			Optional().
+			Default(types.GoodSettlementType_GoodSettledByCash.String()),
 	}
 }
 

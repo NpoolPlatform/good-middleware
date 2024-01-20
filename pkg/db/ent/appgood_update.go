@@ -171,23 +171,43 @@ func (agu *AppGoodUpdate) ClearGoodName() *AppGoodUpdate {
 	return agu
 }
 
-// SetPrice sets the "price" field.
-func (agu *AppGoodUpdate) SetPrice(d decimal.Decimal) *AppGoodUpdate {
-	agu.mutation.SetPrice(d)
+// SetUnitPrice sets the "unit_price" field.
+func (agu *AppGoodUpdate) SetUnitPrice(d decimal.Decimal) *AppGoodUpdate {
+	agu.mutation.SetUnitPrice(d)
 	return agu
 }
 
-// SetNillablePrice sets the "price" field if the given value is not nil.
-func (agu *AppGoodUpdate) SetNillablePrice(d *decimal.Decimal) *AppGoodUpdate {
+// SetNillableUnitPrice sets the "unit_price" field if the given value is not nil.
+func (agu *AppGoodUpdate) SetNillableUnitPrice(d *decimal.Decimal) *AppGoodUpdate {
 	if d != nil {
-		agu.SetPrice(*d)
+		agu.SetUnitPrice(*d)
 	}
 	return agu
 }
 
-// ClearPrice clears the value of the "price" field.
-func (agu *AppGoodUpdate) ClearPrice() *AppGoodUpdate {
-	agu.mutation.ClearPrice()
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (agu *AppGoodUpdate) ClearUnitPrice() *AppGoodUpdate {
+	agu.mutation.ClearUnitPrice()
+	return agu
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (agu *AppGoodUpdate) SetPackagePrice(d decimal.Decimal) *AppGoodUpdate {
+	agu.mutation.SetPackagePrice(d)
+	return agu
+}
+
+// SetNillablePackagePrice sets the "package_price" field if the given value is not nil.
+func (agu *AppGoodUpdate) SetNillablePackagePrice(d *decimal.Decimal) *AppGoodUpdate {
+	if d != nil {
+		agu.SetPackagePrice(*d)
+	}
+	return agu
+}
+
+// ClearPackagePrice clears the value of the "package_price" field.
+func (agu *AppGoodUpdate) ClearPackagePrice() *AppGoodUpdate {
+	agu.mutation.ClearPackagePrice()
 	return agu
 }
 
@@ -215,33 +235,6 @@ func (agu *AppGoodUpdate) AddDisplayIndex(i int32) *AppGoodUpdate {
 // ClearDisplayIndex clears the value of the "display_index" field.
 func (agu *AppGoodUpdate) ClearDisplayIndex() *AppGoodUpdate {
 	agu.mutation.ClearDisplayIndex()
-	return agu
-}
-
-// SetPurchaseLimit sets the "purchase_limit" field.
-func (agu *AppGoodUpdate) SetPurchaseLimit(i int32) *AppGoodUpdate {
-	agu.mutation.ResetPurchaseLimit()
-	agu.mutation.SetPurchaseLimit(i)
-	return agu
-}
-
-// SetNillablePurchaseLimit sets the "purchase_limit" field if the given value is not nil.
-func (agu *AppGoodUpdate) SetNillablePurchaseLimit(i *int32) *AppGoodUpdate {
-	if i != nil {
-		agu.SetPurchaseLimit(*i)
-	}
-	return agu
-}
-
-// AddPurchaseLimit adds i to the "purchase_limit" field.
-func (agu *AppGoodUpdate) AddPurchaseLimit(i int32) *AppGoodUpdate {
-	agu.mutation.AddPurchaseLimit(i)
-	return agu
-}
-
-// ClearPurchaseLimit clears the value of the "purchase_limit" field.
-func (agu *AppGoodUpdate) ClearPurchaseLimit() *AppGoodUpdate {
-	agu.mutation.ClearPurchaseLimit()
 	return agu
 }
 
@@ -470,26 +463,6 @@ func (agu *AppGoodUpdate) ClearCancelMode() *AppGoodUpdate {
 	return agu
 }
 
-// SetUserPurchaseLimit sets the "user_purchase_limit" field.
-func (agu *AppGoodUpdate) SetUserPurchaseLimit(d decimal.Decimal) *AppGoodUpdate {
-	agu.mutation.SetUserPurchaseLimit(d)
-	return agu
-}
-
-// SetNillableUserPurchaseLimit sets the "user_purchase_limit" field if the given value is not nil.
-func (agu *AppGoodUpdate) SetNillableUserPurchaseLimit(d *decimal.Decimal) *AppGoodUpdate {
-	if d != nil {
-		agu.SetUserPurchaseLimit(*d)
-	}
-	return agu
-}
-
-// ClearUserPurchaseLimit clears the value of the "user_purchase_limit" field.
-func (agu *AppGoodUpdate) ClearUserPurchaseLimit() *AppGoodUpdate {
-	agu.mutation.ClearUserPurchaseLimit()
-	return agu
-}
-
 // SetDisplayColors sets the "display_colors" field.
 func (agu *AppGoodUpdate) SetDisplayColors(s []string) *AppGoodUpdate {
 	agu.mutation.SetDisplayColors(s)
@@ -578,6 +551,140 @@ func (agu *AppGoodUpdate) SetPosters(s []string) *AppGoodUpdate {
 // ClearPosters clears the value of the "posters" field.
 func (agu *AppGoodUpdate) ClearPosters() *AppGoodUpdate {
 	agu.mutation.ClearPosters()
+	return agu
+}
+
+// SetMinOrderAmount sets the "min_order_amount" field.
+func (agu *AppGoodUpdate) SetMinOrderAmount(d decimal.Decimal) *AppGoodUpdate {
+	agu.mutation.SetMinOrderAmount(d)
+	return agu
+}
+
+// SetNillableMinOrderAmount sets the "min_order_amount" field if the given value is not nil.
+func (agu *AppGoodUpdate) SetNillableMinOrderAmount(d *decimal.Decimal) *AppGoodUpdate {
+	if d != nil {
+		agu.SetMinOrderAmount(*d)
+	}
+	return agu
+}
+
+// ClearMinOrderAmount clears the value of the "min_order_amount" field.
+func (agu *AppGoodUpdate) ClearMinOrderAmount() *AppGoodUpdate {
+	agu.mutation.ClearMinOrderAmount()
+	return agu
+}
+
+// SetMaxOrderAmount sets the "max_order_amount" field.
+func (agu *AppGoodUpdate) SetMaxOrderAmount(d decimal.Decimal) *AppGoodUpdate {
+	agu.mutation.SetMaxOrderAmount(d)
+	return agu
+}
+
+// SetNillableMaxOrderAmount sets the "max_order_amount" field if the given value is not nil.
+func (agu *AppGoodUpdate) SetNillableMaxOrderAmount(d *decimal.Decimal) *AppGoodUpdate {
+	if d != nil {
+		agu.SetMaxOrderAmount(*d)
+	}
+	return agu
+}
+
+// ClearMaxOrderAmount clears the value of the "max_order_amount" field.
+func (agu *AppGoodUpdate) ClearMaxOrderAmount() *AppGoodUpdate {
+	agu.mutation.ClearMaxOrderAmount()
+	return agu
+}
+
+// SetMaxUserAmount sets the "max_user_amount" field.
+func (agu *AppGoodUpdate) SetMaxUserAmount(d decimal.Decimal) *AppGoodUpdate {
+	agu.mutation.SetMaxUserAmount(d)
+	return agu
+}
+
+// SetNillableMaxUserAmount sets the "max_user_amount" field if the given value is not nil.
+func (agu *AppGoodUpdate) SetNillableMaxUserAmount(d *decimal.Decimal) *AppGoodUpdate {
+	if d != nil {
+		agu.SetMaxUserAmount(*d)
+	}
+	return agu
+}
+
+// ClearMaxUserAmount clears the value of the "max_user_amount" field.
+func (agu *AppGoodUpdate) ClearMaxUserAmount() *AppGoodUpdate {
+	agu.mutation.ClearMaxUserAmount()
+	return agu
+}
+
+// SetMinOrderDuration sets the "min_order_duration" field.
+func (agu *AppGoodUpdate) SetMinOrderDuration(u uint32) *AppGoodUpdate {
+	agu.mutation.ResetMinOrderDuration()
+	agu.mutation.SetMinOrderDuration(u)
+	return agu
+}
+
+// SetNillableMinOrderDuration sets the "min_order_duration" field if the given value is not nil.
+func (agu *AppGoodUpdate) SetNillableMinOrderDuration(u *uint32) *AppGoodUpdate {
+	if u != nil {
+		agu.SetMinOrderDuration(*u)
+	}
+	return agu
+}
+
+// AddMinOrderDuration adds u to the "min_order_duration" field.
+func (agu *AppGoodUpdate) AddMinOrderDuration(u int32) *AppGoodUpdate {
+	agu.mutation.AddMinOrderDuration(u)
+	return agu
+}
+
+// ClearMinOrderDuration clears the value of the "min_order_duration" field.
+func (agu *AppGoodUpdate) ClearMinOrderDuration() *AppGoodUpdate {
+	agu.mutation.ClearMinOrderDuration()
+	return agu
+}
+
+// SetMaxOrderDuration sets the "max_order_duration" field.
+func (agu *AppGoodUpdate) SetMaxOrderDuration(u uint32) *AppGoodUpdate {
+	agu.mutation.ResetMaxOrderDuration()
+	agu.mutation.SetMaxOrderDuration(u)
+	return agu
+}
+
+// SetNillableMaxOrderDuration sets the "max_order_duration" field if the given value is not nil.
+func (agu *AppGoodUpdate) SetNillableMaxOrderDuration(u *uint32) *AppGoodUpdate {
+	if u != nil {
+		agu.SetMaxOrderDuration(*u)
+	}
+	return agu
+}
+
+// AddMaxOrderDuration adds u to the "max_order_duration" field.
+func (agu *AppGoodUpdate) AddMaxOrderDuration(u int32) *AppGoodUpdate {
+	agu.mutation.AddMaxOrderDuration(u)
+	return agu
+}
+
+// ClearMaxOrderDuration clears the value of the "max_order_duration" field.
+func (agu *AppGoodUpdate) ClearMaxOrderDuration() *AppGoodUpdate {
+	agu.mutation.ClearMaxOrderDuration()
+	return agu
+}
+
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (agu *AppGoodUpdate) SetPackageWithRequireds(b bool) *AppGoodUpdate {
+	agu.mutation.SetPackageWithRequireds(b)
+	return agu
+}
+
+// SetNillablePackageWithRequireds sets the "package_with_requireds" field if the given value is not nil.
+func (agu *AppGoodUpdate) SetNillablePackageWithRequireds(b *bool) *AppGoodUpdate {
+	if b != nil {
+		agu.SetPackageWithRequireds(*b)
+	}
+	return agu
+}
+
+// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
+func (agu *AppGoodUpdate) ClearPackageWithRequireds() *AppGoodUpdate {
+	agu.mutation.ClearPackageWithRequireds()
 	return agu
 }
 
@@ -781,17 +888,30 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appgood.FieldGoodName,
 		})
 	}
-	if value, ok := agu.mutation.Price(); ok {
+	if value, ok := agu.mutation.UnitPrice(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: appgood.FieldPrice,
+			Column: appgood.FieldUnitPrice,
 		})
 	}
-	if agu.mutation.PriceCleared() {
+	if agu.mutation.UnitPriceCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: appgood.FieldPrice,
+			Column: appgood.FieldUnitPrice,
+		})
+	}
+	if value, ok := agu.mutation.PackagePrice(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldPackagePrice,
+		})
+	}
+	if agu.mutation.PackagePriceCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appgood.FieldPackagePrice,
 		})
 	}
 	if value, ok := agu.mutation.DisplayIndex(); ok {
@@ -812,26 +932,6 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt32,
 			Column: appgood.FieldDisplayIndex,
-		})
-	}
-	if value, ok := agu.mutation.PurchaseLimit(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: appgood.FieldPurchaseLimit,
-		})
-	}
-	if value, ok := agu.mutation.AddedPurchaseLimit(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: appgood.FieldPurchaseLimit,
-		})
-	}
-	if agu.mutation.PurchaseLimitCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Column: appgood.FieldPurchaseLimit,
 		})
 	}
 	if value, ok := agu.mutation.SaleStartAt(); ok {
@@ -998,19 +1098,6 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appgood.FieldCancelMode,
 		})
 	}
-	if value, ok := agu.mutation.UserPurchaseLimit(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: appgood.FieldUserPurchaseLimit,
-		})
-	}
-	if agu.mutation.UserPurchaseLimitCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: appgood.FieldUserPurchaseLimit,
-		})
-	}
 	if value, ok := agu.mutation.DisplayColors(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeJSON,
@@ -1081,6 +1168,98 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeJSON,
 			Column: appgood.FieldPosters,
+		})
+	}
+	if value, ok := agu.mutation.MinOrderAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldMinOrderAmount,
+		})
+	}
+	if agu.mutation.MinOrderAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appgood.FieldMinOrderAmount,
+		})
+	}
+	if value, ok := agu.mutation.MaxOrderAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldMaxOrderAmount,
+		})
+	}
+	if agu.mutation.MaxOrderAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appgood.FieldMaxOrderAmount,
+		})
+	}
+	if value, ok := agu.mutation.MaxUserAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldMaxUserAmount,
+		})
+	}
+	if agu.mutation.MaxUserAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appgood.FieldMaxUserAmount,
+		})
+	}
+	if value, ok := agu.mutation.MinOrderDuration(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appgood.FieldMinOrderDuration,
+		})
+	}
+	if value, ok := agu.mutation.AddedMinOrderDuration(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appgood.FieldMinOrderDuration,
+		})
+	}
+	if agu.mutation.MinOrderDurationCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: appgood.FieldMinOrderDuration,
+		})
+	}
+	if value, ok := agu.mutation.MaxOrderDuration(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appgood.FieldMaxOrderDuration,
+		})
+	}
+	if value, ok := agu.mutation.AddedMaxOrderDuration(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appgood.FieldMaxOrderDuration,
+		})
+	}
+	if agu.mutation.MaxOrderDurationCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: appgood.FieldMaxOrderDuration,
+		})
+	}
+	if value, ok := agu.mutation.PackageWithRequireds(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appgood.FieldPackageWithRequireds,
+		})
+	}
+	if agu.mutation.PackageWithRequiredsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: appgood.FieldPackageWithRequireds,
 		})
 	}
 	_spec.Modifiers = agu.modifiers
@@ -1245,23 +1424,43 @@ func (aguo *AppGoodUpdateOne) ClearGoodName() *AppGoodUpdateOne {
 	return aguo
 }
 
-// SetPrice sets the "price" field.
-func (aguo *AppGoodUpdateOne) SetPrice(d decimal.Decimal) *AppGoodUpdateOne {
-	aguo.mutation.SetPrice(d)
+// SetUnitPrice sets the "unit_price" field.
+func (aguo *AppGoodUpdateOne) SetUnitPrice(d decimal.Decimal) *AppGoodUpdateOne {
+	aguo.mutation.SetUnitPrice(d)
 	return aguo
 }
 
-// SetNillablePrice sets the "price" field if the given value is not nil.
-func (aguo *AppGoodUpdateOne) SetNillablePrice(d *decimal.Decimal) *AppGoodUpdateOne {
+// SetNillableUnitPrice sets the "unit_price" field if the given value is not nil.
+func (aguo *AppGoodUpdateOne) SetNillableUnitPrice(d *decimal.Decimal) *AppGoodUpdateOne {
 	if d != nil {
-		aguo.SetPrice(*d)
+		aguo.SetUnitPrice(*d)
 	}
 	return aguo
 }
 
-// ClearPrice clears the value of the "price" field.
-func (aguo *AppGoodUpdateOne) ClearPrice() *AppGoodUpdateOne {
-	aguo.mutation.ClearPrice()
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (aguo *AppGoodUpdateOne) ClearUnitPrice() *AppGoodUpdateOne {
+	aguo.mutation.ClearUnitPrice()
+	return aguo
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (aguo *AppGoodUpdateOne) SetPackagePrice(d decimal.Decimal) *AppGoodUpdateOne {
+	aguo.mutation.SetPackagePrice(d)
+	return aguo
+}
+
+// SetNillablePackagePrice sets the "package_price" field if the given value is not nil.
+func (aguo *AppGoodUpdateOne) SetNillablePackagePrice(d *decimal.Decimal) *AppGoodUpdateOne {
+	if d != nil {
+		aguo.SetPackagePrice(*d)
+	}
+	return aguo
+}
+
+// ClearPackagePrice clears the value of the "package_price" field.
+func (aguo *AppGoodUpdateOne) ClearPackagePrice() *AppGoodUpdateOne {
+	aguo.mutation.ClearPackagePrice()
 	return aguo
 }
 
@@ -1289,33 +1488,6 @@ func (aguo *AppGoodUpdateOne) AddDisplayIndex(i int32) *AppGoodUpdateOne {
 // ClearDisplayIndex clears the value of the "display_index" field.
 func (aguo *AppGoodUpdateOne) ClearDisplayIndex() *AppGoodUpdateOne {
 	aguo.mutation.ClearDisplayIndex()
-	return aguo
-}
-
-// SetPurchaseLimit sets the "purchase_limit" field.
-func (aguo *AppGoodUpdateOne) SetPurchaseLimit(i int32) *AppGoodUpdateOne {
-	aguo.mutation.ResetPurchaseLimit()
-	aguo.mutation.SetPurchaseLimit(i)
-	return aguo
-}
-
-// SetNillablePurchaseLimit sets the "purchase_limit" field if the given value is not nil.
-func (aguo *AppGoodUpdateOne) SetNillablePurchaseLimit(i *int32) *AppGoodUpdateOne {
-	if i != nil {
-		aguo.SetPurchaseLimit(*i)
-	}
-	return aguo
-}
-
-// AddPurchaseLimit adds i to the "purchase_limit" field.
-func (aguo *AppGoodUpdateOne) AddPurchaseLimit(i int32) *AppGoodUpdateOne {
-	aguo.mutation.AddPurchaseLimit(i)
-	return aguo
-}
-
-// ClearPurchaseLimit clears the value of the "purchase_limit" field.
-func (aguo *AppGoodUpdateOne) ClearPurchaseLimit() *AppGoodUpdateOne {
-	aguo.mutation.ClearPurchaseLimit()
 	return aguo
 }
 
@@ -1544,26 +1716,6 @@ func (aguo *AppGoodUpdateOne) ClearCancelMode() *AppGoodUpdateOne {
 	return aguo
 }
 
-// SetUserPurchaseLimit sets the "user_purchase_limit" field.
-func (aguo *AppGoodUpdateOne) SetUserPurchaseLimit(d decimal.Decimal) *AppGoodUpdateOne {
-	aguo.mutation.SetUserPurchaseLimit(d)
-	return aguo
-}
-
-// SetNillableUserPurchaseLimit sets the "user_purchase_limit" field if the given value is not nil.
-func (aguo *AppGoodUpdateOne) SetNillableUserPurchaseLimit(d *decimal.Decimal) *AppGoodUpdateOne {
-	if d != nil {
-		aguo.SetUserPurchaseLimit(*d)
-	}
-	return aguo
-}
-
-// ClearUserPurchaseLimit clears the value of the "user_purchase_limit" field.
-func (aguo *AppGoodUpdateOne) ClearUserPurchaseLimit() *AppGoodUpdateOne {
-	aguo.mutation.ClearUserPurchaseLimit()
-	return aguo
-}
-
 // SetDisplayColors sets the "display_colors" field.
 func (aguo *AppGoodUpdateOne) SetDisplayColors(s []string) *AppGoodUpdateOne {
 	aguo.mutation.SetDisplayColors(s)
@@ -1652,6 +1804,140 @@ func (aguo *AppGoodUpdateOne) SetPosters(s []string) *AppGoodUpdateOne {
 // ClearPosters clears the value of the "posters" field.
 func (aguo *AppGoodUpdateOne) ClearPosters() *AppGoodUpdateOne {
 	aguo.mutation.ClearPosters()
+	return aguo
+}
+
+// SetMinOrderAmount sets the "min_order_amount" field.
+func (aguo *AppGoodUpdateOne) SetMinOrderAmount(d decimal.Decimal) *AppGoodUpdateOne {
+	aguo.mutation.SetMinOrderAmount(d)
+	return aguo
+}
+
+// SetNillableMinOrderAmount sets the "min_order_amount" field if the given value is not nil.
+func (aguo *AppGoodUpdateOne) SetNillableMinOrderAmount(d *decimal.Decimal) *AppGoodUpdateOne {
+	if d != nil {
+		aguo.SetMinOrderAmount(*d)
+	}
+	return aguo
+}
+
+// ClearMinOrderAmount clears the value of the "min_order_amount" field.
+func (aguo *AppGoodUpdateOne) ClearMinOrderAmount() *AppGoodUpdateOne {
+	aguo.mutation.ClearMinOrderAmount()
+	return aguo
+}
+
+// SetMaxOrderAmount sets the "max_order_amount" field.
+func (aguo *AppGoodUpdateOne) SetMaxOrderAmount(d decimal.Decimal) *AppGoodUpdateOne {
+	aguo.mutation.SetMaxOrderAmount(d)
+	return aguo
+}
+
+// SetNillableMaxOrderAmount sets the "max_order_amount" field if the given value is not nil.
+func (aguo *AppGoodUpdateOne) SetNillableMaxOrderAmount(d *decimal.Decimal) *AppGoodUpdateOne {
+	if d != nil {
+		aguo.SetMaxOrderAmount(*d)
+	}
+	return aguo
+}
+
+// ClearMaxOrderAmount clears the value of the "max_order_amount" field.
+func (aguo *AppGoodUpdateOne) ClearMaxOrderAmount() *AppGoodUpdateOne {
+	aguo.mutation.ClearMaxOrderAmount()
+	return aguo
+}
+
+// SetMaxUserAmount sets the "max_user_amount" field.
+func (aguo *AppGoodUpdateOne) SetMaxUserAmount(d decimal.Decimal) *AppGoodUpdateOne {
+	aguo.mutation.SetMaxUserAmount(d)
+	return aguo
+}
+
+// SetNillableMaxUserAmount sets the "max_user_amount" field if the given value is not nil.
+func (aguo *AppGoodUpdateOne) SetNillableMaxUserAmount(d *decimal.Decimal) *AppGoodUpdateOne {
+	if d != nil {
+		aguo.SetMaxUserAmount(*d)
+	}
+	return aguo
+}
+
+// ClearMaxUserAmount clears the value of the "max_user_amount" field.
+func (aguo *AppGoodUpdateOne) ClearMaxUserAmount() *AppGoodUpdateOne {
+	aguo.mutation.ClearMaxUserAmount()
+	return aguo
+}
+
+// SetMinOrderDuration sets the "min_order_duration" field.
+func (aguo *AppGoodUpdateOne) SetMinOrderDuration(u uint32) *AppGoodUpdateOne {
+	aguo.mutation.ResetMinOrderDuration()
+	aguo.mutation.SetMinOrderDuration(u)
+	return aguo
+}
+
+// SetNillableMinOrderDuration sets the "min_order_duration" field if the given value is not nil.
+func (aguo *AppGoodUpdateOne) SetNillableMinOrderDuration(u *uint32) *AppGoodUpdateOne {
+	if u != nil {
+		aguo.SetMinOrderDuration(*u)
+	}
+	return aguo
+}
+
+// AddMinOrderDuration adds u to the "min_order_duration" field.
+func (aguo *AppGoodUpdateOne) AddMinOrderDuration(u int32) *AppGoodUpdateOne {
+	aguo.mutation.AddMinOrderDuration(u)
+	return aguo
+}
+
+// ClearMinOrderDuration clears the value of the "min_order_duration" field.
+func (aguo *AppGoodUpdateOne) ClearMinOrderDuration() *AppGoodUpdateOne {
+	aguo.mutation.ClearMinOrderDuration()
+	return aguo
+}
+
+// SetMaxOrderDuration sets the "max_order_duration" field.
+func (aguo *AppGoodUpdateOne) SetMaxOrderDuration(u uint32) *AppGoodUpdateOne {
+	aguo.mutation.ResetMaxOrderDuration()
+	aguo.mutation.SetMaxOrderDuration(u)
+	return aguo
+}
+
+// SetNillableMaxOrderDuration sets the "max_order_duration" field if the given value is not nil.
+func (aguo *AppGoodUpdateOne) SetNillableMaxOrderDuration(u *uint32) *AppGoodUpdateOne {
+	if u != nil {
+		aguo.SetMaxOrderDuration(*u)
+	}
+	return aguo
+}
+
+// AddMaxOrderDuration adds u to the "max_order_duration" field.
+func (aguo *AppGoodUpdateOne) AddMaxOrderDuration(u int32) *AppGoodUpdateOne {
+	aguo.mutation.AddMaxOrderDuration(u)
+	return aguo
+}
+
+// ClearMaxOrderDuration clears the value of the "max_order_duration" field.
+func (aguo *AppGoodUpdateOne) ClearMaxOrderDuration() *AppGoodUpdateOne {
+	aguo.mutation.ClearMaxOrderDuration()
+	return aguo
+}
+
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (aguo *AppGoodUpdateOne) SetPackageWithRequireds(b bool) *AppGoodUpdateOne {
+	aguo.mutation.SetPackageWithRequireds(b)
+	return aguo
+}
+
+// SetNillablePackageWithRequireds sets the "package_with_requireds" field if the given value is not nil.
+func (aguo *AppGoodUpdateOne) SetNillablePackageWithRequireds(b *bool) *AppGoodUpdateOne {
+	if b != nil {
+		aguo.SetPackageWithRequireds(*b)
+	}
+	return aguo
+}
+
+// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
+func (aguo *AppGoodUpdateOne) ClearPackageWithRequireds() *AppGoodUpdateOne {
+	aguo.mutation.ClearPackageWithRequireds()
 	return aguo
 }
 
@@ -1885,17 +2171,30 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 			Column: appgood.FieldGoodName,
 		})
 	}
-	if value, ok := aguo.mutation.Price(); ok {
+	if value, ok := aguo.mutation.UnitPrice(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: appgood.FieldPrice,
+			Column: appgood.FieldUnitPrice,
 		})
 	}
-	if aguo.mutation.PriceCleared() {
+	if aguo.mutation.UnitPriceCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: appgood.FieldPrice,
+			Column: appgood.FieldUnitPrice,
+		})
+	}
+	if value, ok := aguo.mutation.PackagePrice(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldPackagePrice,
+		})
+	}
+	if aguo.mutation.PackagePriceCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appgood.FieldPackagePrice,
 		})
 	}
 	if value, ok := aguo.mutation.DisplayIndex(); ok {
@@ -1916,26 +2215,6 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt32,
 			Column: appgood.FieldDisplayIndex,
-		})
-	}
-	if value, ok := aguo.mutation.PurchaseLimit(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: appgood.FieldPurchaseLimit,
-		})
-	}
-	if value, ok := aguo.mutation.AddedPurchaseLimit(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: appgood.FieldPurchaseLimit,
-		})
-	}
-	if aguo.mutation.PurchaseLimitCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Column: appgood.FieldPurchaseLimit,
 		})
 	}
 	if value, ok := aguo.mutation.SaleStartAt(); ok {
@@ -2102,19 +2381,6 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 			Column: appgood.FieldCancelMode,
 		})
 	}
-	if value, ok := aguo.mutation.UserPurchaseLimit(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: appgood.FieldUserPurchaseLimit,
-		})
-	}
-	if aguo.mutation.UserPurchaseLimitCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: appgood.FieldUserPurchaseLimit,
-		})
-	}
 	if value, ok := aguo.mutation.DisplayColors(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeJSON,
@@ -2185,6 +2451,98 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeJSON,
 			Column: appgood.FieldPosters,
+		})
+	}
+	if value, ok := aguo.mutation.MinOrderAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldMinOrderAmount,
+		})
+	}
+	if aguo.mutation.MinOrderAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appgood.FieldMinOrderAmount,
+		})
+	}
+	if value, ok := aguo.mutation.MaxOrderAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldMaxOrderAmount,
+		})
+	}
+	if aguo.mutation.MaxOrderAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appgood.FieldMaxOrderAmount,
+		})
+	}
+	if value, ok := aguo.mutation.MaxUserAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appgood.FieldMaxUserAmount,
+		})
+	}
+	if aguo.mutation.MaxUserAmountCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appgood.FieldMaxUserAmount,
+		})
+	}
+	if value, ok := aguo.mutation.MinOrderDuration(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appgood.FieldMinOrderDuration,
+		})
+	}
+	if value, ok := aguo.mutation.AddedMinOrderDuration(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appgood.FieldMinOrderDuration,
+		})
+	}
+	if aguo.mutation.MinOrderDurationCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: appgood.FieldMinOrderDuration,
+		})
+	}
+	if value, ok := aguo.mutation.MaxOrderDuration(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appgood.FieldMaxOrderDuration,
+		})
+	}
+	if value, ok := aguo.mutation.AddedMaxOrderDuration(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appgood.FieldMaxOrderDuration,
+		})
+	}
+	if aguo.mutation.MaxOrderDurationCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: appgood.FieldMaxOrderDuration,
+		})
+	}
+	if value, ok := aguo.mutation.PackageWithRequireds(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appgood.FieldPackageWithRequireds,
+		})
+	}
+	if aguo.mutation.PackageWithRequiredsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: appgood.FieldPackageWithRequireds,
 		})
 	}
 	_spec.Modifiers = aguo.modifiers

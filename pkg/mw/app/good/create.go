@@ -43,9 +43,9 @@ func (h *createHandler) createAppGood(ctx context.Context, tx *ent.Tx) error {
 			GoodName:               h.GoodName,
 			Online:                 h.Online,
 			Visible:                h.Visible,
-			Price:                  h.Price,
+			UnitPrice:              h.UnitPrice,
+			PackagePrice:           h.PackagePrice,
 			DisplayIndex:           h.DisplayIndex,
-			PurchaseLimit:          h.PurchaseLimit,
 			SaleStartAt:            h.SaleStartAt,
 			SaleEndAt:              h.SaleEndAt,
 			ServiceStartAt:         h.ServiceStartAt,
@@ -55,7 +55,6 @@ func (h *createHandler) createAppGood(ctx context.Context, tx *ent.Tx) error {
 			EnablePurchase:         h.EnablePurchase,
 			EnableProductPage:      h.EnableProductPage,
 			CancelMode:             h.CancelMode,
-			UserPurchaseLimit:      h.UserPurchaseLimit,
 			DisplayColors:          h.DisplayColors,
 			CancellableBeforeStart: h.CancellableBeforeStart,
 			ProductPage:            h.ProductPage,
@@ -63,6 +62,12 @@ func (h *createHandler) createAppGood(ctx context.Context, tx *ent.Tx) error {
 			Posters:                h.Posters,
 			TechniqueFeeRatio:      h.TechniqueFeeRatio,
 			ElectricityFeeRatio:    h.ElectricityFeeRatio,
+			MinOrderAmount:         h.MinOrderAmount,
+			MaxOrderAmount:         h.MaxOrderAmount,
+			MaxUserAmount:          h.MaxUserAmount,
+			MinOrderDuration:       h.MinOrderDuration,
+			MaxOrderDuration:       h.MaxOrderDuration,
+			PackageWithRequireds:   h.PackageWithRequireds,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -71,7 +76,16 @@ func (h *createHandler) createAppGood(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) CreateGood(ctx context.Context) (*npool.Good, error) {
-	if err := h.checkPrice(ctx); err != nil {
+	if err := h.checkUnitPrice(ctx); err != nil {
+		return nil, err
+	}
+	if err := h.checkPackagePrice(ctx); err != nil {
+		return nil, err
+	}
+	if err := h.checkDuration(); err != nil {
+		return nil, err
+	}
+	if err := h.checkOrderAmount(); err != nil {
 		return nil, err
 	}
 

@@ -131,11 +131,12 @@ func WithGoodName(s *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithPrice(s *string, must bool) func(context.Context, *Handler) error {
+//nolint:dupl
+func WithUnitPrice(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid price")
+				return fmt.Errorf("invalid unitprice")
 			}
 			return nil
 		}
@@ -143,7 +144,31 @@ func WithPrice(s *string, must bool) func(context.Context, *Handler) error {
 		if err != nil {
 			return err
 		}
-		h.Price = &amount
+		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
+			return fmt.Errorf("invalid unitprice")
+		}
+		h.UnitPrice = &amount
+		return nil
+	}
+}
+
+//nolint:dupl
+func WithPackagePrice(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid packageprice")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
+			return fmt.Errorf("invalid packageprice")
+		}
+		h.PackagePrice = &amount
 		return nil
 	}
 }
@@ -151,13 +176,6 @@ func WithPrice(s *string, must bool) func(context.Context, *Handler) error {
 func WithDisplayIndex(n *int32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.DisplayIndex = n
-		return nil
-	}
-}
-
-func WithPurchaseLimit(n *int32, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		h.PurchaseLimit = n
 		return nil
 	}
 }
@@ -227,23 +245,6 @@ func WithCancelMode(e *types.CancelMode, must bool) func(context.Context, *Handl
 			return fmt.Errorf("invalid cancelmode")
 		}
 		h.CancelMode = e
-		return nil
-	}
-}
-
-func WithUserPurchaseLimit(s *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return fmt.Errorf("invalid purchaselimit")
-			}
-			return nil
-		}
-		amount, err := decimal.NewFromString(*s)
-		if err != nil {
-			return err
-		}
-		h.UserPurchaseLimit = &amount
 		return nil
 	}
 }
@@ -320,6 +321,78 @@ func WithElectricityFeeRatio(s *string, must bool) func(context.Context, *Handle
 			return err
 		}
 		h.ElectricityFeeRatio = &amount
+		return nil
+	}
+}
+
+func WithMinOrderAmount(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid minorderamount")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.MinOrderAmount = &amount
+		return nil
+	}
+}
+
+func WithMaxOrderAmount(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid maxorderamount")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.MaxOrderAmount = &amount
+		return nil
+	}
+}
+
+func WithMaxUserAmount(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid price")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.MaxUserAmount = &amount
+		return nil
+	}
+}
+
+func WithMinOrderDuration(n *uint32, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.MinOrderDuration = n
+		return nil
+	}
+}
+
+func WithMaxOrderDuration(n *uint32, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.MaxOrderDuration = n
+		return nil
+	}
+}
+
+func WithPackageWithRequireds(b *bool, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.PackageWithRequireds = b
 		return nil
 	}
 }

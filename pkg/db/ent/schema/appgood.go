@@ -26,7 +26,6 @@ func (AppGood) Mixin() []ent.Mixin {
 
 //nolint:funlen
 func (AppGood) Fields() []ent.Field {
-	purchaseLimit := 3000
 	return []ent.Field{
 		field.
 			UUID("app_id", uuid.UUID{}),
@@ -45,7 +44,14 @@ func (AppGood) Fields() []ent.Field {
 			Optional().
 			Default(""),
 		field.
-			Other("price", decimal.Decimal{}).
+			Other("unit_price", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.Decimal{}),
+		field.
+			Other("package_price", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).
@@ -55,10 +61,6 @@ func (AppGood) Fields() []ent.Field {
 			Int32("display_index").
 			Optional().
 			Default(0),
-		field.
-			Int32("purchase_limit").
-			Optional().
-			Default(int32(purchaseLimit)),
 		field.
 			Uint32("sale_start_at").
 			Optional().
@@ -110,13 +112,6 @@ func (AppGood) Fields() []ent.Field {
 			Optional().
 			Default(types.CancelMode_Uncancellable.String()),
 		field.
-			Other("user_purchase_limit", decimal.Decimal{}).
-			SchemaType(map[string]string{
-				dialect.MySQL: "decimal(37,18)",
-			}).
-			Optional().
-			Default(decimal.NewFromInt(0)),
-		field.
 			JSON("display_colors", []string{}).
 			Optional().
 			Default([]string{}),
@@ -136,6 +131,39 @@ func (AppGood) Fields() []ent.Field {
 			JSON("posters", []string{}).
 			Optional().
 			Default([]string{}),
+		field.
+			Other("min_order_amount", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.NewFromInt(0)),
+		field.
+			Other("max_order_amount", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.NewFromInt(0)),
+		field.
+			Other("max_user_amount", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.NewFromInt(0)),
+		field.
+			Uint32("min_order_duration").
+			Optional().
+			Default(0),
+		field.
+			Uint32("max_order_duration").
+			Optional().
+			Default(0),
+		field.
+			Bool("package_with_requireds").
+			Optional().
+			Default(true),
 	}
 }
 

@@ -168,23 +168,43 @@ func (tmgu *TopMostGoodUpdate) ClearPosters() *TopMostGoodUpdate {
 	return tmgu
 }
 
-// SetPrice sets the "price" field.
-func (tmgu *TopMostGoodUpdate) SetPrice(d decimal.Decimal) *TopMostGoodUpdate {
-	tmgu.mutation.SetPrice(d)
+// SetUnitPrice sets the "unit_price" field.
+func (tmgu *TopMostGoodUpdate) SetUnitPrice(d decimal.Decimal) *TopMostGoodUpdate {
+	tmgu.mutation.SetUnitPrice(d)
 	return tmgu
 }
 
-// SetNillablePrice sets the "price" field if the given value is not nil.
-func (tmgu *TopMostGoodUpdate) SetNillablePrice(d *decimal.Decimal) *TopMostGoodUpdate {
+// SetNillableUnitPrice sets the "unit_price" field if the given value is not nil.
+func (tmgu *TopMostGoodUpdate) SetNillableUnitPrice(d *decimal.Decimal) *TopMostGoodUpdate {
 	if d != nil {
-		tmgu.SetPrice(*d)
+		tmgu.SetUnitPrice(*d)
 	}
 	return tmgu
 }
 
-// ClearPrice clears the value of the "price" field.
-func (tmgu *TopMostGoodUpdate) ClearPrice() *TopMostGoodUpdate {
-	tmgu.mutation.ClearPrice()
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (tmgu *TopMostGoodUpdate) ClearUnitPrice() *TopMostGoodUpdate {
+	tmgu.mutation.ClearUnitPrice()
+	return tmgu
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (tmgu *TopMostGoodUpdate) SetPackagePrice(d decimal.Decimal) *TopMostGoodUpdate {
+	tmgu.mutation.SetPackagePrice(d)
+	return tmgu
+}
+
+// SetNillablePackagePrice sets the "package_price" field if the given value is not nil.
+func (tmgu *TopMostGoodUpdate) SetNillablePackagePrice(d *decimal.Decimal) *TopMostGoodUpdate {
+	if d != nil {
+		tmgu.SetPackagePrice(*d)
+	}
+	return tmgu
+}
+
+// ClearPackagePrice clears the value of the "package_price" field.
+func (tmgu *TopMostGoodUpdate) ClearPackagePrice() *TopMostGoodUpdate {
+	tmgu.mutation.ClearPackagePrice()
 	return tmgu
 }
 
@@ -403,17 +423,30 @@ func (tmgu *TopMostGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: topmostgood.FieldPosters,
 		})
 	}
-	if value, ok := tmgu.mutation.Price(); ok {
+	if value, ok := tmgu.mutation.UnitPrice(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: topmostgood.FieldPrice,
+			Column: topmostgood.FieldUnitPrice,
 		})
 	}
-	if tmgu.mutation.PriceCleared() {
+	if tmgu.mutation.UnitPriceCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: topmostgood.FieldPrice,
+			Column: topmostgood.FieldUnitPrice,
+		})
+	}
+	if value, ok := tmgu.mutation.PackagePrice(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: topmostgood.FieldPackagePrice,
+		})
+	}
+	if tmgu.mutation.PackagePriceCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: topmostgood.FieldPackagePrice,
 		})
 	}
 	_spec.Modifiers = tmgu.modifiers
@@ -575,23 +608,43 @@ func (tmguo *TopMostGoodUpdateOne) ClearPosters() *TopMostGoodUpdateOne {
 	return tmguo
 }
 
-// SetPrice sets the "price" field.
-func (tmguo *TopMostGoodUpdateOne) SetPrice(d decimal.Decimal) *TopMostGoodUpdateOne {
-	tmguo.mutation.SetPrice(d)
+// SetUnitPrice sets the "unit_price" field.
+func (tmguo *TopMostGoodUpdateOne) SetUnitPrice(d decimal.Decimal) *TopMostGoodUpdateOne {
+	tmguo.mutation.SetUnitPrice(d)
 	return tmguo
 }
 
-// SetNillablePrice sets the "price" field if the given value is not nil.
-func (tmguo *TopMostGoodUpdateOne) SetNillablePrice(d *decimal.Decimal) *TopMostGoodUpdateOne {
+// SetNillableUnitPrice sets the "unit_price" field if the given value is not nil.
+func (tmguo *TopMostGoodUpdateOne) SetNillableUnitPrice(d *decimal.Decimal) *TopMostGoodUpdateOne {
 	if d != nil {
-		tmguo.SetPrice(*d)
+		tmguo.SetUnitPrice(*d)
 	}
 	return tmguo
 }
 
-// ClearPrice clears the value of the "price" field.
-func (tmguo *TopMostGoodUpdateOne) ClearPrice() *TopMostGoodUpdateOne {
-	tmguo.mutation.ClearPrice()
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (tmguo *TopMostGoodUpdateOne) ClearUnitPrice() *TopMostGoodUpdateOne {
+	tmguo.mutation.ClearUnitPrice()
+	return tmguo
+}
+
+// SetPackagePrice sets the "package_price" field.
+func (tmguo *TopMostGoodUpdateOne) SetPackagePrice(d decimal.Decimal) *TopMostGoodUpdateOne {
+	tmguo.mutation.SetPackagePrice(d)
+	return tmguo
+}
+
+// SetNillablePackagePrice sets the "package_price" field if the given value is not nil.
+func (tmguo *TopMostGoodUpdateOne) SetNillablePackagePrice(d *decimal.Decimal) *TopMostGoodUpdateOne {
+	if d != nil {
+		tmguo.SetPackagePrice(*d)
+	}
+	return tmguo
+}
+
+// ClearPackagePrice clears the value of the "package_price" field.
+func (tmguo *TopMostGoodUpdateOne) ClearPackagePrice() *TopMostGoodUpdateOne {
+	tmguo.mutation.ClearPackagePrice()
 	return tmguo
 }
 
@@ -840,17 +893,30 @@ func (tmguo *TopMostGoodUpdateOne) sqlSave(ctx context.Context) (_node *TopMostG
 			Column: topmostgood.FieldPosters,
 		})
 	}
-	if value, ok := tmguo.mutation.Price(); ok {
+	if value, ok := tmguo.mutation.UnitPrice(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: topmostgood.FieldPrice,
+			Column: topmostgood.FieldUnitPrice,
 		})
 	}
-	if tmguo.mutation.PriceCleared() {
+	if tmguo.mutation.UnitPriceCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
-			Column: topmostgood.FieldPrice,
+			Column: topmostgood.FieldUnitPrice,
+		})
+	}
+	if value, ok := tmguo.mutation.PackagePrice(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: topmostgood.FieldPackagePrice,
+		})
+	}
+	if tmguo.mutation.PackagePriceCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: topmostgood.FieldPackagePrice,
 		})
 	}
 	_spec.Modifiers = tmguo.modifiers

@@ -42,7 +42,6 @@ var ret = npool.Good{
 	DevicePowerConsumption: 120,
 	DeviceShipmentAt:       uint32(time.Now().Unix() - 1000),
 	DevicePosters:          []string{uuid.NewString(), uuid.NewString()},
-	DurationDays:           14,
 	CoinTypeID:             uuid.NewString(),
 	VendorLocationID:       uuid.NewString(),
 	VendorLocationCountry:  uuid.NewString(),
@@ -53,30 +52,34 @@ var ret = npool.Good{
 	VendorBrandLogo:        uuid.NewString(),
 	GoodType:               types.GoodType_PowerRenting,
 	BenefitType:            types.BenefitType_BenefitTypePlatform,
-	Price:                  decimal.NewFromInt(123).String(),
+	UnitPrice:              decimal.NewFromInt(123).String(),
 	Title:                  uuid.NewString(),
-	Unit:                   "TiB",
-	UnitAmount:             1,
-	SupportCoinTypeIDs:     []string{uuid.NewString(), uuid.NewString()},
+	QuantityUnit:           "TiB",
+	QuantityUnitAmount:     "1",
 	TestOnly:               true,
 	Posters:                []string{uuid.NewString(), uuid.NewString()},
 	Labels: []types.GoodLabel{
 		types.GoodLabel_GoodLabelInnovationStarter,
 		types.GoodLabel_GoodLabelNoviceExclusive,
 	},
-	GoodTotal:            decimal.NewFromInt(1000).String(),
-	GoodLocked:           decimal.NewFromInt(0).String(),
-	GoodInService:        decimal.NewFromInt(0).String(),
-	GoodWaitStart:        decimal.NewFromInt(0).String(),
-	GoodSold:             decimal.NewFromInt(0).String(),
-	DeliveryAt:           uint32(time.Now().Unix() + 1000),
-	StartAt:              uint32(time.Now().Unix() + 1000),
-	BenefitIntervalHours: 24,
-	GoodAppReserved:      decimal.NewFromInt(0).String(),
-	UnitLockDeposit:      decimal.NewFromInt(1).String(),
-	Score:                decimal.NewFromInt(0).String(),
-	RewardState:          types.BenefitState_BenefitWait,
-	StartMode:            types.GoodStartMode_GoodStartModeConfirmed,
+	GoodTotal:             decimal.NewFromInt(1000).String(),
+	GoodLocked:            decimal.NewFromInt(0).String(),
+	GoodInService:         decimal.NewFromInt(0).String(),
+	GoodWaitStart:         decimal.NewFromInt(0).String(),
+	GoodSold:              decimal.NewFromInt(0).String(),
+	DeliveryAt:            uint32(time.Now().Unix() + 1000),
+	StartAt:               uint32(time.Now().Unix() + 1000),
+	BenefitIntervalHours:  24,
+	GoodAppReserved:       decimal.NewFromInt(0).String(),
+	UnitLockDeposit:       decimal.NewFromInt(1).String(),
+	Score:                 decimal.NewFromInt(0).String(),
+	RewardState:           types.BenefitState_BenefitWait,
+	StartMode:             types.GoodStartMode_GoodStartModeNextDay,
+	UnitType:              types.GoodUnitType_GoodUnitByDurationAndQuantity,
+	QuantityCalculateType: types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
+	DurationType:          types.GoodDurationType_GoodDurationByDay,
+	DurationCalculateType: types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
+	SettlementType:        types.GoodSettlementType_GoodSettledByCash,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -84,14 +87,17 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.LabelsStr = strings.ReplaceAll(string(b), " ", "")
 	b, _ = json.Marshal(ret.Posters)
 	ret.PostersStr = strings.ReplaceAll(string(b), " ", "")
-	b, _ = json.Marshal(ret.SupportCoinTypeIDs)
-	ret.SupportCoinTypeIDsStr = strings.ReplaceAll(string(b), " ", "")
 	b, _ = json.Marshal(ret.DevicePosters)
 	ret.DevicePostersStr = strings.ReplaceAll(string(b), " ", "")
 
 	ret.BenefitTypeStr = ret.BenefitType.String()
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.RewardStateStr = types.BenefitState_BenefitWait.String()
+	ret.UnitTypeStr = ret.UnitType.String()
+	ret.QuantityCalculateTypeStr = ret.QuantityCalculateType.String()
+	ret.DurationTypeStr = ret.DurationType.String()
+	ret.SettlementTypeStr = ret.SettlementType.String()
+	ret.DurationCalculateTypeStr = ret.DurationCalculateType.String()
 	ret.RewardTID = uuid.Nil.String()
 	ret.NextRewardStartAmount = decimal.NewFromInt(0).String()
 	ret.LastRewardAmount = decimal.NewFromInt(0).String()
@@ -153,21 +159,24 @@ func createGood(t *testing.T) {
 		context.Background(),
 		WithEntID(&ret.EntID, true),
 		WithDeviceInfoID(&ret.DeviceInfoID, true),
-		WithDurationDays(&ret.DurationDays, true),
 		WithCoinTypeID(&ret.CoinTypeID, true),
 		WithVendorLocationID(&ret.VendorLocationID, true),
-		WithPrice(&ret.Price, true),
+		WithUnitPrice(&ret.UnitPrice, true),
 		WithBenefitType(&ret.BenefitType, true),
 		WithGoodType(&ret.GoodType, true),
 		WithTitle(&ret.Title, true),
-		WithUnit(&ret.Unit, true),
-		WithUnitAmount(&ret.UnitAmount, true),
-		WithSupportCoinTypeIDs(ret.SupportCoinTypeIDs, false),
+		WithQuantityUnit(&ret.QuantityUnit, true),
+		WithQuantityUnitAmount(&ret.QuantityUnitAmount, true),
 		WithDeliveryAt(&ret.DeliveryAt, true),
 		WithStartAt(&ret.StartAt, true),
 		WithTestOnly(&ret.TestOnly, false),
 		WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
 		WithUnitLockDeposit(&ret.UnitLockDeposit, false),
+		WithUnitType(&ret.UnitType, false),
+		WithQuantityCalculateType(&ret.QuantityCalculateType, false),
+		WithDurationType(&ret.DurationType, false),
+		WithSettlementType(&ret.SettlementType, false),
+		WithDurationCalculateType(&ret.DurationCalculateType, false),
 		WithTotal(&ret.GoodTotal, true),
 		WithPosters(ret.Posters, false),
 		WithLabels(ret.Labels, false),
@@ -177,7 +186,6 @@ func createGood(t *testing.T) {
 		if assert.Nil(t, err) {
 			info.LabelsStr = strings.ReplaceAll(info.LabelsStr, " ", "")
 			info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
-			info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
 			info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
@@ -205,7 +213,6 @@ func updateGood(t *testing.T) {
 		if assert.Nil(t, err) {
 			info.LabelsStr = strings.ReplaceAll(info.LabelsStr, " ", "")
 			info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
-			info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
 			info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
 			ret.UpdatedAt = info.UpdatedAt
 			assert.Equal(t, &ret, info)
@@ -223,7 +230,6 @@ func getGood(t *testing.T) {
 		if assert.Nil(t, err) {
 			info.LabelsStr = strings.ReplaceAll(info.LabelsStr, " ", "")
 			info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
-			info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
 			info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
 			assert.Equal(t, &ret, info)
 		}
@@ -253,7 +259,6 @@ func getGoods(t *testing.T) {
 			if assert.Equal(t, uint32(1), total) {
 				infos[0].LabelsStr = strings.ReplaceAll(infos[0].LabelsStr, " ", "")
 				infos[0].PostersStr = strings.ReplaceAll(infos[0].PostersStr, " ", "")
-				infos[0].SupportCoinTypeIDsStr = strings.ReplaceAll(infos[0].SupportCoinTypeIDsStr, " ", "")
 				infos[0].DevicePostersStr = strings.ReplaceAll(infos[0].DevicePostersStr, " ", "")
 				assert.Equal(t, &ret, infos[0])
 			}
@@ -271,7 +276,6 @@ func deleteGood(t *testing.T) {
 		if assert.Nil(t, err) {
 			info.LabelsStr = strings.ReplaceAll(info.LabelsStr, " ", "")
 			info.PostersStr = strings.ReplaceAll(info.PostersStr, " ", "")
-			info.SupportCoinTypeIDsStr = strings.ReplaceAll(info.SupportCoinTypeIDsStr, " ", "")
 			info.DevicePostersStr = strings.ReplaceAll(info.DevicePostersStr, " ", "")
 			assert.Equal(t, &ret, info)
 		}

@@ -23,16 +23,14 @@ const (
 	FieldEntID = "ent_id"
 	// FieldDeviceInfoID holds the string denoting the device_info_id field in the database.
 	FieldDeviceInfoID = "device_info_id"
-	// FieldDurationDays holds the string denoting the duration_days field in the database.
-	FieldDurationDays = "duration_days"
 	// FieldCoinTypeID holds the string denoting the coin_type_id field in the database.
 	FieldCoinTypeID = "coin_type_id"
 	// FieldInheritFromGoodID holds the string denoting the inherit_from_good_id field in the database.
 	FieldInheritFromGoodID = "inherit_from_good_id"
 	// FieldVendorLocationID holds the string denoting the vendor_location_id field in the database.
 	FieldVendorLocationID = "vendor_location_id"
-	// FieldPrice holds the string denoting the price field in the database.
-	FieldPrice = "price"
+	// FieldUnitPrice holds the string denoting the unit_price field in the database.
+	FieldUnitPrice = "unit_price"
 	// FieldBenefitType holds the string denoting the benefit_type field in the database.
 	FieldBenefitType = "benefit_type"
 	// FieldGoodType holds the string denoting the good_type field in the database.
@@ -41,10 +39,12 @@ const (
 	FieldTitle = "title"
 	// FieldUnit holds the string denoting the unit field in the database.
 	FieldUnit = "unit"
+	// FieldQuantityUnit holds the string denoting the quantity_unit field in the database.
+	FieldQuantityUnit = "quantity_unit"
 	// FieldUnitAmount holds the string denoting the unit_amount field in the database.
 	FieldUnitAmount = "unit_amount"
-	// FieldSupportCoinTypeIds holds the string denoting the support_coin_type_ids field in the database.
-	FieldSupportCoinTypeIds = "support_coin_type_ids"
+	// FieldQuantityUnitAmount holds the string denoting the quantity_unit_amount field in the database.
+	FieldQuantityUnitAmount = "quantity_unit_amount"
 	// FieldDeliveryAt holds the string denoting the delivery_at field in the database.
 	FieldDeliveryAt = "delivery_at"
 	// FieldStartAt holds the string denoting the start_at field in the database.
@@ -57,6 +57,16 @@ const (
 	FieldBenefitIntervalHours = "benefit_interval_hours"
 	// FieldUnitLockDeposit holds the string denoting the unit_lock_deposit field in the database.
 	FieldUnitLockDeposit = "unit_lock_deposit"
+	// FieldUnitType holds the string denoting the unit_type field in the database.
+	FieldUnitType = "unit_type"
+	// FieldQuantityCalculateType holds the string denoting the quantity_calculate_type field in the database.
+	FieldQuantityCalculateType = "quantity_calculate_type"
+	// FieldDurationType holds the string denoting the duration_type field in the database.
+	FieldDurationType = "duration_type"
+	// FieldDurationCalculateType holds the string denoting the duration_calculate_type field in the database.
+	FieldDurationCalculateType = "duration_calculate_type"
+	// FieldSettlementType holds the string denoting the settlement_type field in the database.
+	FieldSettlementType = "settlement_type"
 	// Table holds the table name of the good in the database.
 	Table = "goods"
 )
@@ -69,23 +79,28 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldEntID,
 	FieldDeviceInfoID,
-	FieldDurationDays,
 	FieldCoinTypeID,
 	FieldInheritFromGoodID,
 	FieldVendorLocationID,
-	FieldPrice,
+	FieldUnitPrice,
 	FieldBenefitType,
 	FieldGoodType,
 	FieldTitle,
 	FieldUnit,
+	FieldQuantityUnit,
 	FieldUnitAmount,
-	FieldSupportCoinTypeIds,
+	FieldQuantityUnitAmount,
 	FieldDeliveryAt,
 	FieldStartAt,
 	FieldStartMode,
 	FieldTestOnly,
 	FieldBenefitIntervalHours,
 	FieldUnitLockDeposit,
+	FieldUnitType,
+	FieldQuantityCalculateType,
+	FieldDurationType,
+	FieldDurationCalculateType,
+	FieldSettlementType,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -117,12 +132,10 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultEntID holds the default value on creation for the "ent_id" field.
 	DefaultEntID func() uuid.UUID
-	// DefaultDurationDays holds the default value on creation for the "duration_days" field.
-	DefaultDurationDays int32
 	// DefaultInheritFromGoodID holds the default value on creation for the "inherit_from_good_id" field.
 	DefaultInheritFromGoodID func() uuid.UUID
-	// DefaultPrice holds the default value on creation for the "price" field.
-	DefaultPrice decimal.Decimal
+	// DefaultUnitPrice holds the default value on creation for the "unit_price" field.
+	DefaultUnitPrice decimal.Decimal
 	// DefaultBenefitType holds the default value on creation for the "benefit_type" field.
 	DefaultBenefitType string
 	// DefaultGoodType holds the default value on creation for the "good_type" field.
@@ -131,10 +144,12 @@ var (
 	DefaultTitle string
 	// DefaultUnit holds the default value on creation for the "unit" field.
 	DefaultUnit string
+	// DefaultQuantityUnit holds the default value on creation for the "quantity_unit" field.
+	DefaultQuantityUnit string
 	// DefaultUnitAmount holds the default value on creation for the "unit_amount" field.
 	DefaultUnitAmount int32
-	// DefaultSupportCoinTypeIds holds the default value on creation for the "support_coin_type_ids" field.
-	DefaultSupportCoinTypeIds []uuid.UUID
+	// DefaultQuantityUnitAmount holds the default value on creation for the "quantity_unit_amount" field.
+	DefaultQuantityUnitAmount decimal.Decimal
 	// DefaultDeliveryAt holds the default value on creation for the "delivery_at" field.
 	DefaultDeliveryAt uint32
 	// DefaultStartAt holds the default value on creation for the "start_at" field.
@@ -147,4 +162,14 @@ var (
 	DefaultBenefitIntervalHours uint32
 	// DefaultUnitLockDeposit holds the default value on creation for the "unit_lock_deposit" field.
 	DefaultUnitLockDeposit decimal.Decimal
+	// DefaultUnitType holds the default value on creation for the "unit_type" field.
+	DefaultUnitType string
+	// DefaultQuantityCalculateType holds the default value on creation for the "quantity_calculate_type" field.
+	DefaultQuantityCalculateType string
+	// DefaultDurationType holds the default value on creation for the "duration_type" field.
+	DefaultDurationType string
+	// DefaultDurationCalculateType holds the default value on creation for the "duration_calculate_type" field.
+	DefaultDurationCalculateType string
+	// DefaultSettlementType holds the default value on creation for the "settlement_type" field.
+	DefaultSettlementType string
 )

@@ -29,9 +29,9 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		appgood1.WithOnline(req.Online, true),
 		appgood1.WithVisible(req.Visible, true),
 		appgood1.WithGoodName(req.GoodName, true),
-		appgood1.WithPrice(req.Price, true),
+		appgood1.WithUnitPrice(req.UnitPrice, true),
+		appgood1.WithPackagePrice(req.PackagePrice, false),
 		appgood1.WithDisplayIndex(req.DisplayIndex, true),
-		appgood1.WithPurchaseLimit(req.PurchaseLimit, true),
 		appgood1.WithSaleStartAt(req.SaleStartAt, true),
 		appgood1.WithSaleEndAt(req.SaleEndAt, true),
 		appgood1.WithServiceStartAt(req.ServiceStartAt, true),
@@ -40,7 +40,6 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		appgood1.WithEnablePurchase(req.EnablePurchase, true),
 		appgood1.WithEnableProductPage(req.EnableProductPage, true),
 		appgood1.WithCancelMode(req.CancelMode, false),
-		appgood1.WithUserPurchaseLimit(req.UserPurchaseLimit, false),
 		appgood1.WithDisplayColors(req.DisplayColors, false),
 		appgood1.WithCancellableBeforeStart(req.CancellableBeforeStart, false),
 		appgood1.WithProductPage(req.ProductPage, true),
@@ -49,6 +48,12 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		appgood1.WithTechniqueFeeRatio(req.TechnicalFeeRatio, false),
 		appgood1.WithElectricityFeeRatio(req.ElectricityFeeRatio, false),
 		appgood1.WithDisplayNames(req.DisplayNames, false),
+		appgood1.WithMinOrderAmount(req.MinOrderAmount, false),
+		appgood1.WithMaxOrderAmount(req.MaxOrderAmount, false),
+		appgood1.WithMaxUserAmount(req.MaxUserAmount, false),
+		appgood1.WithMinOrderDuration(req.MinOrderDuration, false),
+		appgood1.WithMaxOrderDuration(req.MaxOrderDuration, false),
+		appgood1.WithPackageWithRequireds(req.PackageWithRequireds, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

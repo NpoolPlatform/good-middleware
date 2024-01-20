@@ -115,13 +115,6 @@ func DeviceInfoID(v uuid.UUID) predicate.Good {
 	})
 }
 
-// DurationDays applies equality check predicate on the "duration_days" field. It's identical to DurationDaysEQ.
-func DurationDays(v int32) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDurationDays), v))
-	})
-}
-
 // CoinTypeID applies equality check predicate on the "coin_type_id" field. It's identical to CoinTypeIDEQ.
 func CoinTypeID(v uuid.UUID) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
@@ -143,10 +136,10 @@ func VendorLocationID(v uuid.UUID) predicate.Good {
 	})
 }
 
-// Price applies equality check predicate on the "price" field. It's identical to PriceEQ.
-func Price(v decimal.Decimal) predicate.Good {
+// UnitPrice applies equality check predicate on the "unit_price" field. It's identical to UnitPriceEQ.
+func UnitPrice(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPrice), v))
+		s.Where(sql.EQ(s.C(FieldUnitPrice), v))
 	})
 }
 
@@ -178,10 +171,24 @@ func Unit(v string) predicate.Good {
 	})
 }
 
+// QuantityUnit applies equality check predicate on the "quantity_unit" field. It's identical to QuantityUnitEQ.
+func QuantityUnit(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldQuantityUnit), v))
+	})
+}
+
 // UnitAmount applies equality check predicate on the "unit_amount" field. It's identical to UnitAmountEQ.
 func UnitAmount(v int32) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUnitAmount), v))
+	})
+}
+
+// QuantityUnitAmount applies equality check predicate on the "quantity_unit_amount" field. It's identical to QuantityUnitAmountEQ.
+func QuantityUnitAmount(v decimal.Decimal) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldQuantityUnitAmount), v))
 	})
 }
 
@@ -224,6 +231,41 @@ func BenefitIntervalHours(v uint32) predicate.Good {
 func UnitLockDeposit(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUnitLockDeposit), v))
+	})
+}
+
+// UnitType applies equality check predicate on the "unit_type" field. It's identical to UnitTypeEQ.
+func UnitType(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUnitType), v))
+	})
+}
+
+// QuantityCalculateType applies equality check predicate on the "quantity_calculate_type" field. It's identical to QuantityCalculateTypeEQ.
+func QuantityCalculateType(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldQuantityCalculateType), v))
+	})
+}
+
+// DurationType applies equality check predicate on the "duration_type" field. It's identical to DurationTypeEQ.
+func DurationType(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDurationType), v))
+	})
+}
+
+// DurationCalculateType applies equality check predicate on the "duration_calculate_type" field. It's identical to DurationCalculateTypeEQ.
+func DurationCalculateType(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDurationCalculateType), v))
+	})
+}
+
+// SettlementType applies equality check predicate on the "settlement_type" field. It's identical to SettlementTypeEQ.
+func SettlementType(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSettlementType), v))
 	})
 }
 
@@ -547,84 +589,6 @@ func DeviceInfoIDLTE(v uuid.UUID) predicate.Good {
 	})
 }
 
-// DurationDaysEQ applies the EQ predicate on the "duration_days" field.
-func DurationDaysEQ(v int32) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDurationDays), v))
-	})
-}
-
-// DurationDaysNEQ applies the NEQ predicate on the "duration_days" field.
-func DurationDaysNEQ(v int32) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDurationDays), v))
-	})
-}
-
-// DurationDaysIn applies the In predicate on the "duration_days" field.
-func DurationDaysIn(vs ...int32) predicate.Good {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldDurationDays), v...))
-	})
-}
-
-// DurationDaysNotIn applies the NotIn predicate on the "duration_days" field.
-func DurationDaysNotIn(vs ...int32) predicate.Good {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldDurationDays), v...))
-	})
-}
-
-// DurationDaysGT applies the GT predicate on the "duration_days" field.
-func DurationDaysGT(v int32) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDurationDays), v))
-	})
-}
-
-// DurationDaysGTE applies the GTE predicate on the "duration_days" field.
-func DurationDaysGTE(v int32) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDurationDays), v))
-	})
-}
-
-// DurationDaysLT applies the LT predicate on the "duration_days" field.
-func DurationDaysLT(v int32) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDurationDays), v))
-	})
-}
-
-// DurationDaysLTE applies the LTE predicate on the "duration_days" field.
-func DurationDaysLTE(v int32) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDurationDays), v))
-	})
-}
-
-// DurationDaysIsNil applies the IsNil predicate on the "duration_days" field.
-func DurationDaysIsNil() predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldDurationDays)))
-	})
-}
-
-// DurationDaysNotNil applies the NotNil predicate on the "duration_days" field.
-func DurationDaysNotNil() predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldDurationDays)))
-	})
-}
-
 // CoinTypeIDEQ applies the EQ predicate on the "coin_type_id" field.
 func CoinTypeIDEQ(v uuid.UUID) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
@@ -831,81 +795,81 @@ func VendorLocationIDLTE(v uuid.UUID) predicate.Good {
 	})
 }
 
-// PriceEQ applies the EQ predicate on the "price" field.
-func PriceEQ(v decimal.Decimal) predicate.Good {
+// UnitPriceEQ applies the EQ predicate on the "unit_price" field.
+func UnitPriceEQ(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPrice), v))
+		s.Where(sql.EQ(s.C(FieldUnitPrice), v))
 	})
 }
 
-// PriceNEQ applies the NEQ predicate on the "price" field.
-func PriceNEQ(v decimal.Decimal) predicate.Good {
+// UnitPriceNEQ applies the NEQ predicate on the "unit_price" field.
+func UnitPriceNEQ(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldPrice), v))
+		s.Where(sql.NEQ(s.C(FieldUnitPrice), v))
 	})
 }
 
-// PriceIn applies the In predicate on the "price" field.
-func PriceIn(vs ...decimal.Decimal) predicate.Good {
+// UnitPriceIn applies the In predicate on the "unit_price" field.
+func UnitPriceIn(vs ...decimal.Decimal) predicate.Good {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldPrice), v...))
+		s.Where(sql.In(s.C(FieldUnitPrice), v...))
 	})
 }
 
-// PriceNotIn applies the NotIn predicate on the "price" field.
-func PriceNotIn(vs ...decimal.Decimal) predicate.Good {
+// UnitPriceNotIn applies the NotIn predicate on the "unit_price" field.
+func UnitPriceNotIn(vs ...decimal.Decimal) predicate.Good {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldPrice), v...))
+		s.Where(sql.NotIn(s.C(FieldUnitPrice), v...))
 	})
 }
 
-// PriceGT applies the GT predicate on the "price" field.
-func PriceGT(v decimal.Decimal) predicate.Good {
+// UnitPriceGT applies the GT predicate on the "unit_price" field.
+func UnitPriceGT(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldPrice), v))
+		s.Where(sql.GT(s.C(FieldUnitPrice), v))
 	})
 }
 
-// PriceGTE applies the GTE predicate on the "price" field.
-func PriceGTE(v decimal.Decimal) predicate.Good {
+// UnitPriceGTE applies the GTE predicate on the "unit_price" field.
+func UnitPriceGTE(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldPrice), v))
+		s.Where(sql.GTE(s.C(FieldUnitPrice), v))
 	})
 }
 
-// PriceLT applies the LT predicate on the "price" field.
-func PriceLT(v decimal.Decimal) predicate.Good {
+// UnitPriceLT applies the LT predicate on the "unit_price" field.
+func UnitPriceLT(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldPrice), v))
+		s.Where(sql.LT(s.C(FieldUnitPrice), v))
 	})
 }
 
-// PriceLTE applies the LTE predicate on the "price" field.
-func PriceLTE(v decimal.Decimal) predicate.Good {
+// UnitPriceLTE applies the LTE predicate on the "unit_price" field.
+func UnitPriceLTE(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldPrice), v))
+		s.Where(sql.LTE(s.C(FieldUnitPrice), v))
 	})
 }
 
-// PriceIsNil applies the IsNil predicate on the "price" field.
-func PriceIsNil() predicate.Good {
+// UnitPriceIsNil applies the IsNil predicate on the "unit_price" field.
+func UnitPriceIsNil() predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldPrice)))
+		s.Where(sql.IsNull(s.C(FieldUnitPrice)))
 	})
 }
 
-// PriceNotNil applies the NotNil predicate on the "price" field.
-func PriceNotNil() predicate.Good {
+// UnitPriceNotNil applies the NotNil predicate on the "unit_price" field.
+func UnitPriceNotNil() predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldPrice)))
+		s.Where(sql.NotNull(s.C(FieldUnitPrice)))
 	})
 }
 
@@ -1361,6 +1325,119 @@ func UnitContainsFold(v string) predicate.Good {
 	})
 }
 
+// QuantityUnitEQ applies the EQ predicate on the "quantity_unit" field.
+func QuantityUnitEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldQuantityUnit), v))
+	})
+}
+
+// QuantityUnitNEQ applies the NEQ predicate on the "quantity_unit" field.
+func QuantityUnitNEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldQuantityUnit), v))
+	})
+}
+
+// QuantityUnitIn applies the In predicate on the "quantity_unit" field.
+func QuantityUnitIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldQuantityUnit), v...))
+	})
+}
+
+// QuantityUnitNotIn applies the NotIn predicate on the "quantity_unit" field.
+func QuantityUnitNotIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldQuantityUnit), v...))
+	})
+}
+
+// QuantityUnitGT applies the GT predicate on the "quantity_unit" field.
+func QuantityUnitGT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldQuantityUnit), v))
+	})
+}
+
+// QuantityUnitGTE applies the GTE predicate on the "quantity_unit" field.
+func QuantityUnitGTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldQuantityUnit), v))
+	})
+}
+
+// QuantityUnitLT applies the LT predicate on the "quantity_unit" field.
+func QuantityUnitLT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldQuantityUnit), v))
+	})
+}
+
+// QuantityUnitLTE applies the LTE predicate on the "quantity_unit" field.
+func QuantityUnitLTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldQuantityUnit), v))
+	})
+}
+
+// QuantityUnitContains applies the Contains predicate on the "quantity_unit" field.
+func QuantityUnitContains(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldQuantityUnit), v))
+	})
+}
+
+// QuantityUnitHasPrefix applies the HasPrefix predicate on the "quantity_unit" field.
+func QuantityUnitHasPrefix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldQuantityUnit), v))
+	})
+}
+
+// QuantityUnitHasSuffix applies the HasSuffix predicate on the "quantity_unit" field.
+func QuantityUnitHasSuffix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldQuantityUnit), v))
+	})
+}
+
+// QuantityUnitIsNil applies the IsNil predicate on the "quantity_unit" field.
+func QuantityUnitIsNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldQuantityUnit)))
+	})
+}
+
+// QuantityUnitNotNil applies the NotNil predicate on the "quantity_unit" field.
+func QuantityUnitNotNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldQuantityUnit)))
+	})
+}
+
+// QuantityUnitEqualFold applies the EqualFold predicate on the "quantity_unit" field.
+func QuantityUnitEqualFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldQuantityUnit), v))
+	})
+}
+
+// QuantityUnitContainsFold applies the ContainsFold predicate on the "quantity_unit" field.
+func QuantityUnitContainsFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldQuantityUnit), v))
+	})
+}
+
 // UnitAmountEQ applies the EQ predicate on the "unit_amount" field.
 func UnitAmountEQ(v int32) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
@@ -1439,17 +1516,81 @@ func UnitAmountNotNil() predicate.Good {
 	})
 }
 
-// SupportCoinTypeIdsIsNil applies the IsNil predicate on the "support_coin_type_ids" field.
-func SupportCoinTypeIdsIsNil() predicate.Good {
+// QuantityUnitAmountEQ applies the EQ predicate on the "quantity_unit_amount" field.
+func QuantityUnitAmountEQ(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldSupportCoinTypeIds)))
+		s.Where(sql.EQ(s.C(FieldQuantityUnitAmount), v))
 	})
 }
 
-// SupportCoinTypeIdsNotNil applies the NotNil predicate on the "support_coin_type_ids" field.
-func SupportCoinTypeIdsNotNil() predicate.Good {
+// QuantityUnitAmountNEQ applies the NEQ predicate on the "quantity_unit_amount" field.
+func QuantityUnitAmountNEQ(v decimal.Decimal) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldSupportCoinTypeIds)))
+		s.Where(sql.NEQ(s.C(FieldQuantityUnitAmount), v))
+	})
+}
+
+// QuantityUnitAmountIn applies the In predicate on the "quantity_unit_amount" field.
+func QuantityUnitAmountIn(vs ...decimal.Decimal) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldQuantityUnitAmount), v...))
+	})
+}
+
+// QuantityUnitAmountNotIn applies the NotIn predicate on the "quantity_unit_amount" field.
+func QuantityUnitAmountNotIn(vs ...decimal.Decimal) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldQuantityUnitAmount), v...))
+	})
+}
+
+// QuantityUnitAmountGT applies the GT predicate on the "quantity_unit_amount" field.
+func QuantityUnitAmountGT(v decimal.Decimal) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldQuantityUnitAmount), v))
+	})
+}
+
+// QuantityUnitAmountGTE applies the GTE predicate on the "quantity_unit_amount" field.
+func QuantityUnitAmountGTE(v decimal.Decimal) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldQuantityUnitAmount), v))
+	})
+}
+
+// QuantityUnitAmountLT applies the LT predicate on the "quantity_unit_amount" field.
+func QuantityUnitAmountLT(v decimal.Decimal) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldQuantityUnitAmount), v))
+	})
+}
+
+// QuantityUnitAmountLTE applies the LTE predicate on the "quantity_unit_amount" field.
+func QuantityUnitAmountLTE(v decimal.Decimal) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldQuantityUnitAmount), v))
+	})
+}
+
+// QuantityUnitAmountIsNil applies the IsNil predicate on the "quantity_unit_amount" field.
+func QuantityUnitAmountIsNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldQuantityUnitAmount)))
+	})
+}
+
+// QuantityUnitAmountNotNil applies the NotNil predicate on the "quantity_unit_amount" field.
+func QuantityUnitAmountNotNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldQuantityUnitAmount)))
 	})
 }
 
@@ -1903,6 +2044,571 @@ func UnitLockDepositIsNil() predicate.Good {
 func UnitLockDepositNotNil() predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldUnitLockDeposit)))
+	})
+}
+
+// UnitTypeEQ applies the EQ predicate on the "unit_type" field.
+func UnitTypeEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUnitType), v))
+	})
+}
+
+// UnitTypeNEQ applies the NEQ predicate on the "unit_type" field.
+func UnitTypeNEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUnitType), v))
+	})
+}
+
+// UnitTypeIn applies the In predicate on the "unit_type" field.
+func UnitTypeIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldUnitType), v...))
+	})
+}
+
+// UnitTypeNotIn applies the NotIn predicate on the "unit_type" field.
+func UnitTypeNotIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldUnitType), v...))
+	})
+}
+
+// UnitTypeGT applies the GT predicate on the "unit_type" field.
+func UnitTypeGT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUnitType), v))
+	})
+}
+
+// UnitTypeGTE applies the GTE predicate on the "unit_type" field.
+func UnitTypeGTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUnitType), v))
+	})
+}
+
+// UnitTypeLT applies the LT predicate on the "unit_type" field.
+func UnitTypeLT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUnitType), v))
+	})
+}
+
+// UnitTypeLTE applies the LTE predicate on the "unit_type" field.
+func UnitTypeLTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUnitType), v))
+	})
+}
+
+// UnitTypeContains applies the Contains predicate on the "unit_type" field.
+func UnitTypeContains(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldUnitType), v))
+	})
+}
+
+// UnitTypeHasPrefix applies the HasPrefix predicate on the "unit_type" field.
+func UnitTypeHasPrefix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldUnitType), v))
+	})
+}
+
+// UnitTypeHasSuffix applies the HasSuffix predicate on the "unit_type" field.
+func UnitTypeHasSuffix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldUnitType), v))
+	})
+}
+
+// UnitTypeIsNil applies the IsNil predicate on the "unit_type" field.
+func UnitTypeIsNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldUnitType)))
+	})
+}
+
+// UnitTypeNotNil applies the NotNil predicate on the "unit_type" field.
+func UnitTypeNotNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldUnitType)))
+	})
+}
+
+// UnitTypeEqualFold applies the EqualFold predicate on the "unit_type" field.
+func UnitTypeEqualFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldUnitType), v))
+	})
+}
+
+// UnitTypeContainsFold applies the ContainsFold predicate on the "unit_type" field.
+func UnitTypeContainsFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldUnitType), v))
+	})
+}
+
+// QuantityCalculateTypeEQ applies the EQ predicate on the "quantity_calculate_type" field.
+func QuantityCalculateTypeEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldQuantityCalculateType), v))
+	})
+}
+
+// QuantityCalculateTypeNEQ applies the NEQ predicate on the "quantity_calculate_type" field.
+func QuantityCalculateTypeNEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldQuantityCalculateType), v))
+	})
+}
+
+// QuantityCalculateTypeIn applies the In predicate on the "quantity_calculate_type" field.
+func QuantityCalculateTypeIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldQuantityCalculateType), v...))
+	})
+}
+
+// QuantityCalculateTypeNotIn applies the NotIn predicate on the "quantity_calculate_type" field.
+func QuantityCalculateTypeNotIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldQuantityCalculateType), v...))
+	})
+}
+
+// QuantityCalculateTypeGT applies the GT predicate on the "quantity_calculate_type" field.
+func QuantityCalculateTypeGT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldQuantityCalculateType), v))
+	})
+}
+
+// QuantityCalculateTypeGTE applies the GTE predicate on the "quantity_calculate_type" field.
+func QuantityCalculateTypeGTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldQuantityCalculateType), v))
+	})
+}
+
+// QuantityCalculateTypeLT applies the LT predicate on the "quantity_calculate_type" field.
+func QuantityCalculateTypeLT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldQuantityCalculateType), v))
+	})
+}
+
+// QuantityCalculateTypeLTE applies the LTE predicate on the "quantity_calculate_type" field.
+func QuantityCalculateTypeLTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldQuantityCalculateType), v))
+	})
+}
+
+// QuantityCalculateTypeContains applies the Contains predicate on the "quantity_calculate_type" field.
+func QuantityCalculateTypeContains(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldQuantityCalculateType), v))
+	})
+}
+
+// QuantityCalculateTypeHasPrefix applies the HasPrefix predicate on the "quantity_calculate_type" field.
+func QuantityCalculateTypeHasPrefix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldQuantityCalculateType), v))
+	})
+}
+
+// QuantityCalculateTypeHasSuffix applies the HasSuffix predicate on the "quantity_calculate_type" field.
+func QuantityCalculateTypeHasSuffix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldQuantityCalculateType), v))
+	})
+}
+
+// QuantityCalculateTypeIsNil applies the IsNil predicate on the "quantity_calculate_type" field.
+func QuantityCalculateTypeIsNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldQuantityCalculateType)))
+	})
+}
+
+// QuantityCalculateTypeNotNil applies the NotNil predicate on the "quantity_calculate_type" field.
+func QuantityCalculateTypeNotNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldQuantityCalculateType)))
+	})
+}
+
+// QuantityCalculateTypeEqualFold applies the EqualFold predicate on the "quantity_calculate_type" field.
+func QuantityCalculateTypeEqualFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldQuantityCalculateType), v))
+	})
+}
+
+// QuantityCalculateTypeContainsFold applies the ContainsFold predicate on the "quantity_calculate_type" field.
+func QuantityCalculateTypeContainsFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldQuantityCalculateType), v))
+	})
+}
+
+// DurationTypeEQ applies the EQ predicate on the "duration_type" field.
+func DurationTypeEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDurationType), v))
+	})
+}
+
+// DurationTypeNEQ applies the NEQ predicate on the "duration_type" field.
+func DurationTypeNEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDurationType), v))
+	})
+}
+
+// DurationTypeIn applies the In predicate on the "duration_type" field.
+func DurationTypeIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldDurationType), v...))
+	})
+}
+
+// DurationTypeNotIn applies the NotIn predicate on the "duration_type" field.
+func DurationTypeNotIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldDurationType), v...))
+	})
+}
+
+// DurationTypeGT applies the GT predicate on the "duration_type" field.
+func DurationTypeGT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDurationType), v))
+	})
+}
+
+// DurationTypeGTE applies the GTE predicate on the "duration_type" field.
+func DurationTypeGTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDurationType), v))
+	})
+}
+
+// DurationTypeLT applies the LT predicate on the "duration_type" field.
+func DurationTypeLT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDurationType), v))
+	})
+}
+
+// DurationTypeLTE applies the LTE predicate on the "duration_type" field.
+func DurationTypeLTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDurationType), v))
+	})
+}
+
+// DurationTypeContains applies the Contains predicate on the "duration_type" field.
+func DurationTypeContains(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldDurationType), v))
+	})
+}
+
+// DurationTypeHasPrefix applies the HasPrefix predicate on the "duration_type" field.
+func DurationTypeHasPrefix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldDurationType), v))
+	})
+}
+
+// DurationTypeHasSuffix applies the HasSuffix predicate on the "duration_type" field.
+func DurationTypeHasSuffix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldDurationType), v))
+	})
+}
+
+// DurationTypeIsNil applies the IsNil predicate on the "duration_type" field.
+func DurationTypeIsNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldDurationType)))
+	})
+}
+
+// DurationTypeNotNil applies the NotNil predicate on the "duration_type" field.
+func DurationTypeNotNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldDurationType)))
+	})
+}
+
+// DurationTypeEqualFold applies the EqualFold predicate on the "duration_type" field.
+func DurationTypeEqualFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldDurationType), v))
+	})
+}
+
+// DurationTypeContainsFold applies the ContainsFold predicate on the "duration_type" field.
+func DurationTypeContainsFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldDurationType), v))
+	})
+}
+
+// DurationCalculateTypeEQ applies the EQ predicate on the "duration_calculate_type" field.
+func DurationCalculateTypeEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDurationCalculateType), v))
+	})
+}
+
+// DurationCalculateTypeNEQ applies the NEQ predicate on the "duration_calculate_type" field.
+func DurationCalculateTypeNEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDurationCalculateType), v))
+	})
+}
+
+// DurationCalculateTypeIn applies the In predicate on the "duration_calculate_type" field.
+func DurationCalculateTypeIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldDurationCalculateType), v...))
+	})
+}
+
+// DurationCalculateTypeNotIn applies the NotIn predicate on the "duration_calculate_type" field.
+func DurationCalculateTypeNotIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldDurationCalculateType), v...))
+	})
+}
+
+// DurationCalculateTypeGT applies the GT predicate on the "duration_calculate_type" field.
+func DurationCalculateTypeGT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDurationCalculateType), v))
+	})
+}
+
+// DurationCalculateTypeGTE applies the GTE predicate on the "duration_calculate_type" field.
+func DurationCalculateTypeGTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDurationCalculateType), v))
+	})
+}
+
+// DurationCalculateTypeLT applies the LT predicate on the "duration_calculate_type" field.
+func DurationCalculateTypeLT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDurationCalculateType), v))
+	})
+}
+
+// DurationCalculateTypeLTE applies the LTE predicate on the "duration_calculate_type" field.
+func DurationCalculateTypeLTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDurationCalculateType), v))
+	})
+}
+
+// DurationCalculateTypeContains applies the Contains predicate on the "duration_calculate_type" field.
+func DurationCalculateTypeContains(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldDurationCalculateType), v))
+	})
+}
+
+// DurationCalculateTypeHasPrefix applies the HasPrefix predicate on the "duration_calculate_type" field.
+func DurationCalculateTypeHasPrefix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldDurationCalculateType), v))
+	})
+}
+
+// DurationCalculateTypeHasSuffix applies the HasSuffix predicate on the "duration_calculate_type" field.
+func DurationCalculateTypeHasSuffix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldDurationCalculateType), v))
+	})
+}
+
+// DurationCalculateTypeIsNil applies the IsNil predicate on the "duration_calculate_type" field.
+func DurationCalculateTypeIsNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldDurationCalculateType)))
+	})
+}
+
+// DurationCalculateTypeNotNil applies the NotNil predicate on the "duration_calculate_type" field.
+func DurationCalculateTypeNotNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldDurationCalculateType)))
+	})
+}
+
+// DurationCalculateTypeEqualFold applies the EqualFold predicate on the "duration_calculate_type" field.
+func DurationCalculateTypeEqualFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldDurationCalculateType), v))
+	})
+}
+
+// DurationCalculateTypeContainsFold applies the ContainsFold predicate on the "duration_calculate_type" field.
+func DurationCalculateTypeContainsFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldDurationCalculateType), v))
+	})
+}
+
+// SettlementTypeEQ applies the EQ predicate on the "settlement_type" field.
+func SettlementTypeEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeNEQ applies the NEQ predicate on the "settlement_type" field.
+func SettlementTypeNEQ(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeIn applies the In predicate on the "settlement_type" field.
+func SettlementTypeIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldSettlementType), v...))
+	})
+}
+
+// SettlementTypeNotIn applies the NotIn predicate on the "settlement_type" field.
+func SettlementTypeNotIn(vs ...string) predicate.Good {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldSettlementType), v...))
+	})
+}
+
+// SettlementTypeGT applies the GT predicate on the "settlement_type" field.
+func SettlementTypeGT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeGTE applies the GTE predicate on the "settlement_type" field.
+func SettlementTypeGTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeLT applies the LT predicate on the "settlement_type" field.
+func SettlementTypeLT(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeLTE applies the LTE predicate on the "settlement_type" field.
+func SettlementTypeLTE(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeContains applies the Contains predicate on the "settlement_type" field.
+func SettlementTypeContains(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeHasPrefix applies the HasPrefix predicate on the "settlement_type" field.
+func SettlementTypeHasPrefix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeHasSuffix applies the HasSuffix predicate on the "settlement_type" field.
+func SettlementTypeHasSuffix(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeIsNil applies the IsNil predicate on the "settlement_type" field.
+func SettlementTypeIsNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldSettlementType)))
+	})
+}
+
+// SettlementTypeNotNil applies the NotNil predicate on the "settlement_type" field.
+func SettlementTypeNotNil() predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldSettlementType)))
+	})
+}
+
+// SettlementTypeEqualFold applies the EqualFold predicate on the "settlement_type" field.
+func SettlementTypeEqualFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldSettlementType), v))
+	})
+}
+
+// SettlementTypeContainsFold applies the ContainsFold predicate on the "settlement_type" field.
+func SettlementTypeContainsFold(v string) predicate.Good {
+	return predicate.Good(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldSettlementType), v))
 	})
 }
 

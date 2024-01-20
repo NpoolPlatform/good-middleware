@@ -52,6 +52,7 @@ type Conds struct {
 	RequiredGoodID *cruder.Cond
 	GoodID         *cruder.Cond
 	GoodIDs        *cruder.Cond
+	Must           *cruder.Cond
 }
 
 //nolint:funlen,gocyclo
@@ -138,6 +139,18 @@ func SetQueryConds(q *ent.RequiredGoodQuery, conds *Conds) (*ent.RequiredGoodQue
 					entrequiredgood.RequiredGoodIDIn(ids...),
 				),
 			)
+		default:
+			return nil, fmt.Errorf("invalid requiredgood field")
+		}
+	}
+	if conds.Must != nil {
+		must, ok := conds.Must.Val.(bool)
+		if !ok {
+			return nil, fmt.Errorf("invalid must")
+		}
+		switch conds.Must.Op {
+		case cruder.EQ:
+			q.Where(entrequiredgood.MustEQ(must))
 		default:
 			return nil, fmt.Errorf("invalid requiredgood field")
 		}

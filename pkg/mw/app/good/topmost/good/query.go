@@ -71,7 +71,8 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(enttopmostgood.FieldTopMostID), "top_most_id"),
 			sql.As(t.C(enttopmostgood.FieldDisplayIndex), "display_index"),
 			sql.As(t.C(enttopmostgood.FieldPosters), "posters"),
-			sql.As(t.C(enttopmostgood.FieldPrice), "price"),
+			sql.As(t.C(enttopmostgood.FieldUnitPrice), "unit_price"),
+			sql.As(t.C(enttopmostgood.FieldPackagePrice), "package_price"),
 			sql.As(t.C(enttopmostgood.FieldCreatedAt), "created_at"),
 			sql.As(t.C(enttopmostgood.FieldUpdatedAt), "updated_at"),
 		)
@@ -148,11 +149,17 @@ func (h *queryHandler) scan(ctx context.Context) error {
 
 func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
-		amount, err := decimal.NewFromString(info.Price)
+		amount, err := decimal.NewFromString(info.UnitPrice)
 		if err != nil {
-			info.Price = decimal.NewFromInt(0).String()
+			info.UnitPrice = decimal.NewFromInt(0).String()
 		} else {
-			info.Price = amount.String()
+			info.UnitPrice = amount.String()
+		}
+		amount, err = decimal.NewFromString(info.PackagePrice)
+		if err != nil {
+			info.PackagePrice = decimal.NewFromInt(0).String()
+		} else {
+			info.PackagePrice = amount.String()
 		}
 		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
 		info.TopMostType = types.GoodTopMostType(types.GoodTopMostType_value[info.TopMostTypeStr])

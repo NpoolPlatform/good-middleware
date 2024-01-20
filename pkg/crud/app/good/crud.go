@@ -20,9 +20,9 @@ type Req struct {
 	Online                 *bool
 	Visible                *bool
 	GoodName               *string
-	Price                  *decimal.Decimal
+	UnitPrice              *decimal.Decimal
+	PackagePrice           *decimal.Decimal
 	DisplayIndex           *int32
-	PurchaseLimit          *int32
 	SaleStartAt            *uint32
 	SaleEndAt              *uint32
 	ServiceStartAt         *uint32
@@ -32,7 +32,6 @@ type Req struct {
 	EnablePurchase         *bool
 	EnableProductPage      *bool
 	CancelMode             *types.CancelMode
-	UserPurchaseLimit      *decimal.Decimal // Single order purchase limit
 	DisplayColors          []string
 	CancellableBeforeStart *uint32 // Only could be canceled x seconds before start
 	ProductPage            *string
@@ -41,6 +40,12 @@ type Req struct {
 	DeletedAt              *uint32
 	TechniqueFeeRatio      *decimal.Decimal
 	ElectricityFeeRatio    *decimal.Decimal
+	MinOrderAmount         *decimal.Decimal
+	MaxOrderAmount         *decimal.Decimal
+	MaxUserAmount          *decimal.Decimal
+	MinOrderDuration       *uint32
+	MaxOrderDuration       *uint32
+	PackageWithRequireds   *bool
 }
 
 //nolint:gocyclo,funlen
@@ -63,14 +68,14 @@ func CreateSet(c *ent.AppGoodCreate, req *Req) *ent.AppGoodCreate {
 	if req.GoodName != nil {
 		c.SetGoodName(*req.GoodName)
 	}
-	if req.Price != nil {
-		c.SetPrice(*req.Price)
+	if req.UnitPrice != nil {
+		c.SetUnitPrice(*req.UnitPrice)
+	}
+	if req.PackagePrice != nil {
+		c.SetPackagePrice(*req.PackagePrice)
 	}
 	if req.DisplayIndex != nil {
 		c.SetDisplayIndex(*req.DisplayIndex)
-	}
-	if req.PurchaseLimit != nil {
-		c.SetPurchaseLimit(*req.PurchaseLimit)
 	}
 	if req.SaleStartAt != nil {
 		c.SetSaleStartAt(*req.SaleStartAt)
@@ -99,9 +104,6 @@ func CreateSet(c *ent.AppGoodCreate, req *Req) *ent.AppGoodCreate {
 	if req.CancelMode != nil {
 		c.SetCancelMode(req.CancelMode.String())
 	}
-	if req.UserPurchaseLimit != nil {
-		c.SetUserPurchaseLimit(*req.UserPurchaseLimit)
-	}
 	if len(req.DisplayColors) > 0 {
 		c.SetDisplayColors(req.DisplayColors)
 	}
@@ -123,10 +125,28 @@ func CreateSet(c *ent.AppGoodCreate, req *Req) *ent.AppGoodCreate {
 	if req.ElectricityFeeRatio != nil {
 		c.SetElectricityFeeRatio(*req.ElectricityFeeRatio)
 	}
+	if req.MinOrderAmount != nil {
+		c.SetMinOrderAmount(*req.MinOrderAmount)
+	}
+	if req.MaxOrderAmount != nil {
+		c.SetMaxOrderAmount(*req.MaxOrderAmount)
+	}
+	if req.MaxUserAmount != nil {
+		c.SetMaxUserAmount(*req.MaxUserAmount)
+	}
+	if req.MinOrderDuration != nil {
+		c.SetMinOrderDuration(*req.MinOrderDuration)
+	}
+	if req.MaxOrderDuration != nil {
+		c.SetMaxOrderDuration(*req.MaxOrderDuration)
+	}
+	if req.PackageWithRequireds != nil {
+		c.SetPackageWithRequireds(*req.PackageWithRequireds)
+	}
 	return c
 }
 
-//nolint:gocyclo
+//nolint:gocyclo,funlen
 func UpdateSet(u *ent.AppGoodUpdateOne, req *Req) *ent.AppGoodUpdateOne {
 	if req.Online != nil {
 		u.SetOnline(*req.Online)
@@ -137,14 +157,14 @@ func UpdateSet(u *ent.AppGoodUpdateOne, req *Req) *ent.AppGoodUpdateOne {
 	if req.GoodName != nil {
 		u.SetGoodName(*req.GoodName)
 	}
-	if req.Price != nil {
-		u.SetPrice(*req.Price)
+	if req.UnitPrice != nil {
+		u.SetUnitPrice(*req.UnitPrice)
+	}
+	if req.PackagePrice != nil {
+		u.SetPackagePrice(*req.PackagePrice)
 	}
 	if req.DisplayIndex != nil {
 		u.SetDisplayIndex(*req.DisplayIndex)
-	}
-	if req.PurchaseLimit != nil {
-		u.SetPurchaseLimit(*req.PurchaseLimit)
 	}
 	if req.SaleStartAt != nil {
 		u.SetSaleStartAt(*req.SaleStartAt)
@@ -173,9 +193,6 @@ func UpdateSet(u *ent.AppGoodUpdateOne, req *Req) *ent.AppGoodUpdateOne {
 	if req.CancelMode != nil {
 		u.SetCancelMode(req.CancelMode.String())
 	}
-	if req.UserPurchaseLimit != nil {
-		u.SetUserPurchaseLimit(*req.UserPurchaseLimit)
-	}
 	if req.DisplayColors != nil {
 		u.SetDisplayColors(req.DisplayColors)
 	}
@@ -199,6 +216,24 @@ func UpdateSet(u *ent.AppGoodUpdateOne, req *Req) *ent.AppGoodUpdateOne {
 	}
 	if req.ElectricityFeeRatio != nil {
 		u.SetElectricityFeeRatio(*req.ElectricityFeeRatio)
+	}
+	if req.MinOrderAmount != nil {
+		u.SetMinOrderAmount(*req.MinOrderAmount)
+	}
+	if req.MaxOrderAmount != nil {
+		u.SetMaxOrderAmount(*req.MaxOrderAmount)
+	}
+	if req.MaxUserAmount != nil {
+		u.SetMaxUserAmount(*req.MaxUserAmount)
+	}
+	if req.MinOrderDuration != nil {
+		u.SetMinOrderDuration(*req.MinOrderDuration)
+	}
+	if req.MaxOrderDuration != nil {
+		u.SetMaxOrderDuration(*req.MaxOrderDuration)
+	}
+	if req.PackageWithRequireds != nil {
+		u.SetPackageWithRequireds(*req.PackageWithRequireds)
 	}
 	return u
 }

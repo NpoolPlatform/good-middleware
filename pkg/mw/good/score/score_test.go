@@ -44,7 +44,6 @@ var good = goodmwpb.Good{
 	DevicePowerConsumption: 120,
 	DeviceShipmentAt:       uint32(time.Now().Unix() - 1000),
 	DevicePosters:          []string{uuid.NewString(), uuid.NewString()},
-	DurationDays:           14,
 	CoinTypeID:             uuid.NewString(),
 	VendorLocationID:       uuid.NewString(),
 	VendorLocationCountry:  uuid.NewString(),
@@ -55,11 +54,10 @@ var good = goodmwpb.Good{
 	VendorBrandLogo:        uuid.NewString(),
 	GoodType:               types.GoodType_PowerRenting,
 	BenefitType:            types.BenefitType_BenefitTypePlatform,
-	Price:                  decimal.NewFromInt(123).String(),
+	UnitPrice:              decimal.NewFromInt(123).String(),
 	Title:                  uuid.NewString(),
-	Unit:                   "TiB",
-	UnitAmount:             1,
-	SupportCoinTypeIDs:     []string{uuid.NewString(), uuid.NewString()},
+	QuantityUnit:           "TiB",
+	QuantityUnitAmount:     "1",
 	TestOnly:               true,
 	Posters:                []string{uuid.NewString(), uuid.NewString()},
 	Labels: []types.GoodLabel{
@@ -79,11 +77,12 @@ var good = goodmwpb.Good{
 }
 
 var appgood = appgoodmwpb.Good{
-	EntID:    uuid.NewString(),
-	AppID:    uuid.NewString(),
-	GoodID:   good.EntID,
-	GoodName: uuid.NewString(),
-	Price:    decimal.NewFromInt(123).String(),
+	EntID:        uuid.NewString(),
+	AppID:        uuid.NewString(),
+	GoodID:       good.EntID,
+	GoodName:     uuid.NewString(),
+	UnitPrice:    decimal.NewFromInt(123).String(),
+	PackagePrice: decimal.NewFromInt(123).String(),
 }
 
 var ret = npool.Score{
@@ -142,16 +141,14 @@ func setup(t *testing.T) func(*testing.T) {
 		context.Background(),
 		good1.WithEntID(&good.EntID, true),
 		good1.WithDeviceInfoID(&good.DeviceInfoID, true),
-		good1.WithDurationDays(&good.DurationDays, true),
 		good1.WithCoinTypeID(&good.CoinTypeID, true),
 		good1.WithVendorLocationID(&good.VendorLocationID, true),
-		good1.WithPrice(&good.Price, true),
+		good1.WithUnitPrice(&good.UnitPrice, true),
 		good1.WithBenefitType(&good.BenefitType, true),
 		good1.WithGoodType(&good.GoodType, true),
 		good1.WithTitle(&good.Title, true),
-		good1.WithUnit(&good.Unit, true),
-		good1.WithUnitAmount(&good.UnitAmount, true),
-		good1.WithSupportCoinTypeIDs(good.SupportCoinTypeIDs, false),
+		good1.WithQuantityUnit(&good.QuantityUnit, true),
+		good1.WithQuantityUnitAmount(&good.QuantityUnitAmount, true),
 		good1.WithDeliveryAt(&good.DeliveryAt, true),
 		good1.WithStartAt(&good.StartAt, true),
 		good1.WithTestOnly(&good.TestOnly, false),
@@ -173,7 +170,10 @@ func setup(t *testing.T) func(*testing.T) {
 		appgood1.WithAppID(&appgood.AppID, true),
 		appgood1.WithGoodID(&good.EntID, true),
 		appgood1.WithGoodName(&appgood.GoodName, true),
-		appgood1.WithPrice(&appgood.Price, true),
+		appgood1.WithUnitPrice(&appgood.UnitPrice, true),
+		appgood1.WithPackagePrice(&appgood.PackagePrice, true),
+		appgood1.WithMinOrderDuration(&appgood.MinOrderDuration, true),
+		appgood1.WithMaxOrderDuration(&appgood.MaxOrderDuration, true),
 	)
 	assert.Nil(t, err)
 

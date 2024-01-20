@@ -73,9 +73,9 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appgood.FieldOnline:                 {Type: field.TypeBool, Column: appgood.FieldOnline},
 			appgood.FieldVisible:                {Type: field.TypeBool, Column: appgood.FieldVisible},
 			appgood.FieldGoodName:               {Type: field.TypeString, Column: appgood.FieldGoodName},
-			appgood.FieldPrice:                  {Type: field.TypeOther, Column: appgood.FieldPrice},
+			appgood.FieldUnitPrice:              {Type: field.TypeOther, Column: appgood.FieldUnitPrice},
+			appgood.FieldPackagePrice:           {Type: field.TypeOther, Column: appgood.FieldPackagePrice},
 			appgood.FieldDisplayIndex:           {Type: field.TypeInt32, Column: appgood.FieldDisplayIndex},
-			appgood.FieldPurchaseLimit:          {Type: field.TypeInt32, Column: appgood.FieldPurchaseLimit},
 			appgood.FieldSaleStartAt:            {Type: field.TypeUint32, Column: appgood.FieldSaleStartAt},
 			appgood.FieldSaleEndAt:              {Type: field.TypeUint32, Column: appgood.FieldSaleEndAt},
 			appgood.FieldServiceStartAt:         {Type: field.TypeUint32, Column: appgood.FieldServiceStartAt},
@@ -87,12 +87,17 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appgood.FieldEnablePurchase:         {Type: field.TypeBool, Column: appgood.FieldEnablePurchase},
 			appgood.FieldEnableProductPage:      {Type: field.TypeBool, Column: appgood.FieldEnableProductPage},
 			appgood.FieldCancelMode:             {Type: field.TypeString, Column: appgood.FieldCancelMode},
-			appgood.FieldUserPurchaseLimit:      {Type: field.TypeOther, Column: appgood.FieldUserPurchaseLimit},
 			appgood.FieldDisplayColors:          {Type: field.TypeJSON, Column: appgood.FieldDisplayColors},
 			appgood.FieldCancellableBeforeStart: {Type: field.TypeUint32, Column: appgood.FieldCancellableBeforeStart},
 			appgood.FieldProductPage:            {Type: field.TypeString, Column: appgood.FieldProductPage},
 			appgood.FieldEnableSetCommission:    {Type: field.TypeBool, Column: appgood.FieldEnableSetCommission},
 			appgood.FieldPosters:                {Type: field.TypeJSON, Column: appgood.FieldPosters},
+			appgood.FieldMinOrderAmount:         {Type: field.TypeOther, Column: appgood.FieldMinOrderAmount},
+			appgood.FieldMaxOrderAmount:         {Type: field.TypeOther, Column: appgood.FieldMaxOrderAmount},
+			appgood.FieldMaxUserAmount:          {Type: field.TypeOther, Column: appgood.FieldMaxUserAmount},
+			appgood.FieldMinOrderDuration:       {Type: field.TypeUint32, Column: appgood.FieldMinOrderDuration},
+			appgood.FieldMaxOrderDuration:       {Type: field.TypeUint32, Column: appgood.FieldMaxOrderDuration},
+			appgood.FieldPackageWithRequireds:   {Type: field.TypeBool, Column: appgood.FieldPackageWithRequireds},
 		},
 	}
 	graph.Nodes[2] = &sqlgraph.Node{
@@ -226,28 +231,33 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Good",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			good.FieldCreatedAt:            {Type: field.TypeUint32, Column: good.FieldCreatedAt},
-			good.FieldUpdatedAt:            {Type: field.TypeUint32, Column: good.FieldUpdatedAt},
-			good.FieldDeletedAt:            {Type: field.TypeUint32, Column: good.FieldDeletedAt},
-			good.FieldEntID:                {Type: field.TypeUUID, Column: good.FieldEntID},
-			good.FieldDeviceInfoID:         {Type: field.TypeUUID, Column: good.FieldDeviceInfoID},
-			good.FieldDurationDays:         {Type: field.TypeInt32, Column: good.FieldDurationDays},
-			good.FieldCoinTypeID:           {Type: field.TypeUUID, Column: good.FieldCoinTypeID},
-			good.FieldInheritFromGoodID:    {Type: field.TypeUUID, Column: good.FieldInheritFromGoodID},
-			good.FieldVendorLocationID:     {Type: field.TypeUUID, Column: good.FieldVendorLocationID},
-			good.FieldPrice:                {Type: field.TypeOther, Column: good.FieldPrice},
-			good.FieldBenefitType:          {Type: field.TypeString, Column: good.FieldBenefitType},
-			good.FieldGoodType:             {Type: field.TypeString, Column: good.FieldGoodType},
-			good.FieldTitle:                {Type: field.TypeString, Column: good.FieldTitle},
-			good.FieldUnit:                 {Type: field.TypeString, Column: good.FieldUnit},
-			good.FieldUnitAmount:           {Type: field.TypeInt32, Column: good.FieldUnitAmount},
-			good.FieldSupportCoinTypeIds:   {Type: field.TypeJSON, Column: good.FieldSupportCoinTypeIds},
-			good.FieldDeliveryAt:           {Type: field.TypeUint32, Column: good.FieldDeliveryAt},
-			good.FieldStartAt:              {Type: field.TypeUint32, Column: good.FieldStartAt},
-			good.FieldStartMode:            {Type: field.TypeString, Column: good.FieldStartMode},
-			good.FieldTestOnly:             {Type: field.TypeBool, Column: good.FieldTestOnly},
-			good.FieldBenefitIntervalHours: {Type: field.TypeUint32, Column: good.FieldBenefitIntervalHours},
-			good.FieldUnitLockDeposit:      {Type: field.TypeOther, Column: good.FieldUnitLockDeposit},
+			good.FieldCreatedAt:             {Type: field.TypeUint32, Column: good.FieldCreatedAt},
+			good.FieldUpdatedAt:             {Type: field.TypeUint32, Column: good.FieldUpdatedAt},
+			good.FieldDeletedAt:             {Type: field.TypeUint32, Column: good.FieldDeletedAt},
+			good.FieldEntID:                 {Type: field.TypeUUID, Column: good.FieldEntID},
+			good.FieldDeviceInfoID:          {Type: field.TypeUUID, Column: good.FieldDeviceInfoID},
+			good.FieldCoinTypeID:            {Type: field.TypeUUID, Column: good.FieldCoinTypeID},
+			good.FieldInheritFromGoodID:     {Type: field.TypeUUID, Column: good.FieldInheritFromGoodID},
+			good.FieldVendorLocationID:      {Type: field.TypeUUID, Column: good.FieldVendorLocationID},
+			good.FieldUnitPrice:             {Type: field.TypeOther, Column: good.FieldUnitPrice},
+			good.FieldBenefitType:           {Type: field.TypeString, Column: good.FieldBenefitType},
+			good.FieldGoodType:              {Type: field.TypeString, Column: good.FieldGoodType},
+			good.FieldTitle:                 {Type: field.TypeString, Column: good.FieldTitle},
+			good.FieldUnit:                  {Type: field.TypeString, Column: good.FieldUnit},
+			good.FieldQuantityUnit:          {Type: field.TypeString, Column: good.FieldQuantityUnit},
+			good.FieldUnitAmount:            {Type: field.TypeInt32, Column: good.FieldUnitAmount},
+			good.FieldQuantityUnitAmount:    {Type: field.TypeOther, Column: good.FieldQuantityUnitAmount},
+			good.FieldDeliveryAt:            {Type: field.TypeUint32, Column: good.FieldDeliveryAt},
+			good.FieldStartAt:               {Type: field.TypeUint32, Column: good.FieldStartAt},
+			good.FieldStartMode:             {Type: field.TypeString, Column: good.FieldStartMode},
+			good.FieldTestOnly:              {Type: field.TypeBool, Column: good.FieldTestOnly},
+			good.FieldBenefitIntervalHours:  {Type: field.TypeUint32, Column: good.FieldBenefitIntervalHours},
+			good.FieldUnitLockDeposit:       {Type: field.TypeOther, Column: good.FieldUnitLockDeposit},
+			good.FieldUnitType:              {Type: field.TypeString, Column: good.FieldUnitType},
+			good.FieldQuantityCalculateType: {Type: field.TypeString, Column: good.FieldQuantityCalculateType},
+			good.FieldDurationType:          {Type: field.TypeString, Column: good.FieldDurationType},
+			good.FieldDurationCalculateType: {Type: field.TypeString, Column: good.FieldDurationCalculateType},
+			good.FieldSettlementType:        {Type: field.TypeString, Column: good.FieldSettlementType},
 		},
 	}
 	graph.Nodes[8] = &sqlgraph.Node{
@@ -460,7 +470,8 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostgood.FieldTopMostID:    {Type: field.TypeUUID, Column: topmostgood.FieldTopMostID},
 			topmostgood.FieldDisplayIndex: {Type: field.TypeUint32, Column: topmostgood.FieldDisplayIndex},
 			topmostgood.FieldPosters:      {Type: field.TypeJSON, Column: topmostgood.FieldPosters},
-			topmostgood.FieldPrice:        {Type: field.TypeOther, Column: topmostgood.FieldPrice},
+			topmostgood.FieldUnitPrice:    {Type: field.TypeOther, Column: topmostgood.FieldUnitPrice},
+			topmostgood.FieldPackagePrice: {Type: field.TypeOther, Column: topmostgood.FieldPackagePrice},
 		},
 	}
 	graph.Nodes[17] = &sqlgraph.Node{
@@ -678,19 +689,19 @@ func (f *AppGoodFilter) WhereGoodName(p entql.StringP) {
 	f.Where(p.Field(appgood.FieldGoodName))
 }
 
-// WherePrice applies the entql other predicate on the price field.
-func (f *AppGoodFilter) WherePrice(p entql.OtherP) {
-	f.Where(p.Field(appgood.FieldPrice))
+// WhereUnitPrice applies the entql other predicate on the unit_price field.
+func (f *AppGoodFilter) WhereUnitPrice(p entql.OtherP) {
+	f.Where(p.Field(appgood.FieldUnitPrice))
+}
+
+// WherePackagePrice applies the entql other predicate on the package_price field.
+func (f *AppGoodFilter) WherePackagePrice(p entql.OtherP) {
+	f.Where(p.Field(appgood.FieldPackagePrice))
 }
 
 // WhereDisplayIndex applies the entql int32 predicate on the display_index field.
 func (f *AppGoodFilter) WhereDisplayIndex(p entql.Int32P) {
 	f.Where(p.Field(appgood.FieldDisplayIndex))
-}
-
-// WherePurchaseLimit applies the entql int32 predicate on the purchase_limit field.
-func (f *AppGoodFilter) WherePurchaseLimit(p entql.Int32P) {
-	f.Where(p.Field(appgood.FieldPurchaseLimit))
 }
 
 // WhereSaleStartAt applies the entql uint32 predicate on the sale_start_at field.
@@ -748,11 +759,6 @@ func (f *AppGoodFilter) WhereCancelMode(p entql.StringP) {
 	f.Where(p.Field(appgood.FieldCancelMode))
 }
 
-// WhereUserPurchaseLimit applies the entql other predicate on the user_purchase_limit field.
-func (f *AppGoodFilter) WhereUserPurchaseLimit(p entql.OtherP) {
-	f.Where(p.Field(appgood.FieldUserPurchaseLimit))
-}
-
 // WhereDisplayColors applies the entql json.RawMessage predicate on the display_colors field.
 func (f *AppGoodFilter) WhereDisplayColors(p entql.BytesP) {
 	f.Where(p.Field(appgood.FieldDisplayColors))
@@ -776,6 +782,36 @@ func (f *AppGoodFilter) WhereEnableSetCommission(p entql.BoolP) {
 // WherePosters applies the entql json.RawMessage predicate on the posters field.
 func (f *AppGoodFilter) WherePosters(p entql.BytesP) {
 	f.Where(p.Field(appgood.FieldPosters))
+}
+
+// WhereMinOrderAmount applies the entql other predicate on the min_order_amount field.
+func (f *AppGoodFilter) WhereMinOrderAmount(p entql.OtherP) {
+	f.Where(p.Field(appgood.FieldMinOrderAmount))
+}
+
+// WhereMaxOrderAmount applies the entql other predicate on the max_order_amount field.
+func (f *AppGoodFilter) WhereMaxOrderAmount(p entql.OtherP) {
+	f.Where(p.Field(appgood.FieldMaxOrderAmount))
+}
+
+// WhereMaxUserAmount applies the entql other predicate on the max_user_amount field.
+func (f *AppGoodFilter) WhereMaxUserAmount(p entql.OtherP) {
+	f.Where(p.Field(appgood.FieldMaxUserAmount))
+}
+
+// WhereMinOrderDuration applies the entql uint32 predicate on the min_order_duration field.
+func (f *AppGoodFilter) WhereMinOrderDuration(p entql.Uint32P) {
+	f.Where(p.Field(appgood.FieldMinOrderDuration))
+}
+
+// WhereMaxOrderDuration applies the entql uint32 predicate on the max_order_duration field.
+func (f *AppGoodFilter) WhereMaxOrderDuration(p entql.Uint32P) {
+	f.Where(p.Field(appgood.FieldMaxOrderDuration))
+}
+
+// WherePackageWithRequireds applies the entql bool predicate on the package_with_requireds field.
+func (f *AppGoodFilter) WherePackageWithRequireds(p entql.BoolP) {
+	f.Where(p.Field(appgood.FieldPackageWithRequireds))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -1318,11 +1354,6 @@ func (f *GoodFilter) WhereDeviceInfoID(p entql.ValueP) {
 	f.Where(p.Field(good.FieldDeviceInfoID))
 }
 
-// WhereDurationDays applies the entql int32 predicate on the duration_days field.
-func (f *GoodFilter) WhereDurationDays(p entql.Int32P) {
-	f.Where(p.Field(good.FieldDurationDays))
-}
-
 // WhereCoinTypeID applies the entql [16]byte predicate on the coin_type_id field.
 func (f *GoodFilter) WhereCoinTypeID(p entql.ValueP) {
 	f.Where(p.Field(good.FieldCoinTypeID))
@@ -1338,9 +1369,9 @@ func (f *GoodFilter) WhereVendorLocationID(p entql.ValueP) {
 	f.Where(p.Field(good.FieldVendorLocationID))
 }
 
-// WherePrice applies the entql other predicate on the price field.
-func (f *GoodFilter) WherePrice(p entql.OtherP) {
-	f.Where(p.Field(good.FieldPrice))
+// WhereUnitPrice applies the entql other predicate on the unit_price field.
+func (f *GoodFilter) WhereUnitPrice(p entql.OtherP) {
+	f.Where(p.Field(good.FieldUnitPrice))
 }
 
 // WhereBenefitType applies the entql string predicate on the benefit_type field.
@@ -1363,14 +1394,19 @@ func (f *GoodFilter) WhereUnit(p entql.StringP) {
 	f.Where(p.Field(good.FieldUnit))
 }
 
+// WhereQuantityUnit applies the entql string predicate on the quantity_unit field.
+func (f *GoodFilter) WhereQuantityUnit(p entql.StringP) {
+	f.Where(p.Field(good.FieldQuantityUnit))
+}
+
 // WhereUnitAmount applies the entql int32 predicate on the unit_amount field.
 func (f *GoodFilter) WhereUnitAmount(p entql.Int32P) {
 	f.Where(p.Field(good.FieldUnitAmount))
 }
 
-// WhereSupportCoinTypeIds applies the entql json.RawMessage predicate on the support_coin_type_ids field.
-func (f *GoodFilter) WhereSupportCoinTypeIds(p entql.BytesP) {
-	f.Where(p.Field(good.FieldSupportCoinTypeIds))
+// WhereQuantityUnitAmount applies the entql other predicate on the quantity_unit_amount field.
+func (f *GoodFilter) WhereQuantityUnitAmount(p entql.OtherP) {
+	f.Where(p.Field(good.FieldQuantityUnitAmount))
 }
 
 // WhereDeliveryAt applies the entql uint32 predicate on the delivery_at field.
@@ -1401,6 +1437,31 @@ func (f *GoodFilter) WhereBenefitIntervalHours(p entql.Uint32P) {
 // WhereUnitLockDeposit applies the entql other predicate on the unit_lock_deposit field.
 func (f *GoodFilter) WhereUnitLockDeposit(p entql.OtherP) {
 	f.Where(p.Field(good.FieldUnitLockDeposit))
+}
+
+// WhereUnitType applies the entql string predicate on the unit_type field.
+func (f *GoodFilter) WhereUnitType(p entql.StringP) {
+	f.Where(p.Field(good.FieldUnitType))
+}
+
+// WhereQuantityCalculateType applies the entql string predicate on the quantity_calculate_type field.
+func (f *GoodFilter) WhereQuantityCalculateType(p entql.StringP) {
+	f.Where(p.Field(good.FieldQuantityCalculateType))
+}
+
+// WhereDurationType applies the entql string predicate on the duration_type field.
+func (f *GoodFilter) WhereDurationType(p entql.StringP) {
+	f.Where(p.Field(good.FieldDurationType))
+}
+
+// WhereDurationCalculateType applies the entql string predicate on the duration_calculate_type field.
+func (f *GoodFilter) WhereDurationCalculateType(p entql.StringP) {
+	f.Where(p.Field(good.FieldDurationCalculateType))
+}
+
+// WhereSettlementType applies the entql string predicate on the settlement_type field.
+func (f *GoodFilter) WhereSettlementType(p entql.StringP) {
+	f.Where(p.Field(good.FieldSettlementType))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -2238,9 +2299,14 @@ func (f *TopMostGoodFilter) WherePosters(p entql.BytesP) {
 	f.Where(p.Field(topmostgood.FieldPosters))
 }
 
-// WherePrice applies the entql other predicate on the price field.
-func (f *TopMostGoodFilter) WherePrice(p entql.OtherP) {
-	f.Where(p.Field(topmostgood.FieldPrice))
+// WhereUnitPrice applies the entql other predicate on the unit_price field.
+func (f *TopMostGoodFilter) WhereUnitPrice(p entql.OtherP) {
+	f.Where(p.Field(topmostgood.FieldUnitPrice))
+}
+
+// WherePackagePrice applies the entql other predicate on the package_price field.
+func (f *TopMostGoodFilter) WherePackagePrice(p entql.OtherP) {
+	f.Where(p.Field(topmostgood.FieldPackagePrice))
 }
 
 // addPredicate implements the predicateAdder interface.

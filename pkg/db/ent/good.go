@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -28,16 +27,14 @@ type Good struct {
 	EntID uuid.UUID `json:"ent_id,omitempty"`
 	// DeviceInfoID holds the value of the "device_info_id" field.
 	DeviceInfoID uuid.UUID `json:"device_info_id,omitempty"`
-	// DurationDays holds the value of the "duration_days" field.
-	DurationDays int32 `json:"duration_days,omitempty"`
 	// CoinTypeID holds the value of the "coin_type_id" field.
 	CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
 	// InheritFromGoodID holds the value of the "inherit_from_good_id" field.
 	InheritFromGoodID uuid.UUID `json:"inherit_from_good_id,omitempty"`
 	// VendorLocationID holds the value of the "vendor_location_id" field.
 	VendorLocationID uuid.UUID `json:"vendor_location_id,omitempty"`
-	// Price holds the value of the "price" field.
-	Price decimal.Decimal `json:"price,omitempty"`
+	// UnitPrice holds the value of the "unit_price" field.
+	UnitPrice decimal.Decimal `json:"unit_price,omitempty"`
 	// BenefitType holds the value of the "benefit_type" field.
 	BenefitType string `json:"benefit_type,omitempty"`
 	// GoodType holds the value of the "good_type" field.
@@ -46,10 +43,12 @@ type Good struct {
 	Title string `json:"title,omitempty"`
 	// Unit holds the value of the "unit" field.
 	Unit string `json:"unit,omitempty"`
+	// QuantityUnit holds the value of the "quantity_unit" field.
+	QuantityUnit string `json:"quantity_unit,omitempty"`
 	// UnitAmount holds the value of the "unit_amount" field.
 	UnitAmount int32 `json:"unit_amount,omitempty"`
-	// SupportCoinTypeIds holds the value of the "support_coin_type_ids" field.
-	SupportCoinTypeIds []uuid.UUID `json:"support_coin_type_ids,omitempty"`
+	// QuantityUnitAmount holds the value of the "quantity_unit_amount" field.
+	QuantityUnitAmount decimal.Decimal `json:"quantity_unit_amount,omitempty"`
 	// DeliveryAt holds the value of the "delivery_at" field.
 	DeliveryAt uint32 `json:"delivery_at,omitempty"`
 	// StartAt holds the value of the "start_at" field.
@@ -62,6 +61,16 @@ type Good struct {
 	BenefitIntervalHours uint32 `json:"benefit_interval_hours,omitempty"`
 	// UnitLockDeposit holds the value of the "unit_lock_deposit" field.
 	UnitLockDeposit decimal.Decimal `json:"unit_lock_deposit,omitempty"`
+	// UnitType holds the value of the "unit_type" field.
+	UnitType string `json:"unit_type,omitempty"`
+	// QuantityCalculateType holds the value of the "quantity_calculate_type" field.
+	QuantityCalculateType string `json:"quantity_calculate_type,omitempty"`
+	// DurationType holds the value of the "duration_type" field.
+	DurationType string `json:"duration_type,omitempty"`
+	// DurationCalculateType holds the value of the "duration_calculate_type" field.
+	DurationCalculateType string `json:"duration_calculate_type,omitempty"`
+	// SettlementType holds the value of the "settlement_type" field.
+	SettlementType string `json:"settlement_type,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -69,15 +78,13 @@ func (*Good) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case good.FieldSupportCoinTypeIds:
-			values[i] = new([]byte)
-		case good.FieldPrice, good.FieldUnitLockDeposit:
+		case good.FieldUnitPrice, good.FieldQuantityUnitAmount, good.FieldUnitLockDeposit:
 			values[i] = new(decimal.Decimal)
 		case good.FieldTestOnly:
 			values[i] = new(sql.NullBool)
-		case good.FieldID, good.FieldCreatedAt, good.FieldUpdatedAt, good.FieldDeletedAt, good.FieldDurationDays, good.FieldUnitAmount, good.FieldDeliveryAt, good.FieldStartAt, good.FieldBenefitIntervalHours:
+		case good.FieldID, good.FieldCreatedAt, good.FieldUpdatedAt, good.FieldDeletedAt, good.FieldUnitAmount, good.FieldDeliveryAt, good.FieldStartAt, good.FieldBenefitIntervalHours:
 			values[i] = new(sql.NullInt64)
-		case good.FieldBenefitType, good.FieldGoodType, good.FieldTitle, good.FieldUnit, good.FieldStartMode:
+		case good.FieldBenefitType, good.FieldGoodType, good.FieldTitle, good.FieldUnit, good.FieldQuantityUnit, good.FieldStartMode, good.FieldUnitType, good.FieldQuantityCalculateType, good.FieldDurationType, good.FieldDurationCalculateType, good.FieldSettlementType:
 			values[i] = new(sql.NullString)
 		case good.FieldEntID, good.FieldDeviceInfoID, good.FieldCoinTypeID, good.FieldInheritFromGoodID, good.FieldVendorLocationID:
 			values[i] = new(uuid.UUID)
@@ -132,12 +139,6 @@ func (_go *Good) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				_go.DeviceInfoID = *value
 			}
-		case good.FieldDurationDays:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field duration_days", values[i])
-			} else if value.Valid {
-				_go.DurationDays = int32(value.Int64)
-			}
 		case good.FieldCoinTypeID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field coin_type_id", values[i])
@@ -156,11 +157,11 @@ func (_go *Good) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				_go.VendorLocationID = *value
 			}
-		case good.FieldPrice:
+		case good.FieldUnitPrice:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field price", values[i])
+				return fmt.Errorf("unexpected type %T for field unit_price", values[i])
 			} else if value != nil {
-				_go.Price = *value
+				_go.UnitPrice = *value
 			}
 		case good.FieldBenefitType:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -186,19 +187,23 @@ func (_go *Good) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				_go.Unit = value.String
 			}
+		case good.FieldQuantityUnit:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field quantity_unit", values[i])
+			} else if value.Valid {
+				_go.QuantityUnit = value.String
+			}
 		case good.FieldUnitAmount:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field unit_amount", values[i])
 			} else if value.Valid {
 				_go.UnitAmount = int32(value.Int64)
 			}
-		case good.FieldSupportCoinTypeIds:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field support_coin_type_ids", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &_go.SupportCoinTypeIds); err != nil {
-					return fmt.Errorf("unmarshal field support_coin_type_ids: %w", err)
-				}
+		case good.FieldQuantityUnitAmount:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field quantity_unit_amount", values[i])
+			} else if value != nil {
+				_go.QuantityUnitAmount = *value
 			}
 		case good.FieldDeliveryAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -235,6 +240,36 @@ func (_go *Good) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field unit_lock_deposit", values[i])
 			} else if value != nil {
 				_go.UnitLockDeposit = *value
+			}
+		case good.FieldUnitType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field unit_type", values[i])
+			} else if value.Valid {
+				_go.UnitType = value.String
+			}
+		case good.FieldQuantityCalculateType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field quantity_calculate_type", values[i])
+			} else if value.Valid {
+				_go.QuantityCalculateType = value.String
+			}
+		case good.FieldDurationType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field duration_type", values[i])
+			} else if value.Valid {
+				_go.DurationType = value.String
+			}
+		case good.FieldDurationCalculateType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field duration_calculate_type", values[i])
+			} else if value.Valid {
+				_go.DurationCalculateType = value.String
+			}
+		case good.FieldSettlementType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field settlement_type", values[i])
+			} else if value.Valid {
+				_go.SettlementType = value.String
 			}
 		}
 	}
@@ -279,9 +314,6 @@ func (_go *Good) String() string {
 	builder.WriteString("device_info_id=")
 	builder.WriteString(fmt.Sprintf("%v", _go.DeviceInfoID))
 	builder.WriteString(", ")
-	builder.WriteString("duration_days=")
-	builder.WriteString(fmt.Sprintf("%v", _go.DurationDays))
-	builder.WriteString(", ")
 	builder.WriteString("coin_type_id=")
 	builder.WriteString(fmt.Sprintf("%v", _go.CoinTypeID))
 	builder.WriteString(", ")
@@ -291,8 +323,8 @@ func (_go *Good) String() string {
 	builder.WriteString("vendor_location_id=")
 	builder.WriteString(fmt.Sprintf("%v", _go.VendorLocationID))
 	builder.WriteString(", ")
-	builder.WriteString("price=")
-	builder.WriteString(fmt.Sprintf("%v", _go.Price))
+	builder.WriteString("unit_price=")
+	builder.WriteString(fmt.Sprintf("%v", _go.UnitPrice))
 	builder.WriteString(", ")
 	builder.WriteString("benefit_type=")
 	builder.WriteString(_go.BenefitType)
@@ -306,11 +338,14 @@ func (_go *Good) String() string {
 	builder.WriteString("unit=")
 	builder.WriteString(_go.Unit)
 	builder.WriteString(", ")
+	builder.WriteString("quantity_unit=")
+	builder.WriteString(_go.QuantityUnit)
+	builder.WriteString(", ")
 	builder.WriteString("unit_amount=")
 	builder.WriteString(fmt.Sprintf("%v", _go.UnitAmount))
 	builder.WriteString(", ")
-	builder.WriteString("support_coin_type_ids=")
-	builder.WriteString(fmt.Sprintf("%v", _go.SupportCoinTypeIds))
+	builder.WriteString("quantity_unit_amount=")
+	builder.WriteString(fmt.Sprintf("%v", _go.QuantityUnitAmount))
 	builder.WriteString(", ")
 	builder.WriteString("delivery_at=")
 	builder.WriteString(fmt.Sprintf("%v", _go.DeliveryAt))
@@ -329,6 +364,21 @@ func (_go *Good) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("unit_lock_deposit=")
 	builder.WriteString(fmt.Sprintf("%v", _go.UnitLockDeposit))
+	builder.WriteString(", ")
+	builder.WriteString("unit_type=")
+	builder.WriteString(_go.UnitType)
+	builder.WriteString(", ")
+	builder.WriteString("quantity_calculate_type=")
+	builder.WriteString(_go.QuantityCalculateType)
+	builder.WriteString(", ")
+	builder.WriteString("duration_type=")
+	builder.WriteString(_go.DurationType)
+	builder.WriteString(", ")
+	builder.WriteString("duration_calculate_type=")
+	builder.WriteString(_go.DurationCalculateType)
+	builder.WriteString(", ")
+	builder.WriteString("settlement_type=")
+	builder.WriteString(_go.SettlementType)
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -31,7 +31,8 @@ func (h *createHandler) createTopMostGood(ctx context.Context, tx *ent.Tx) error
 			CoinTypeID:   h.CoinTypeID,
 			DisplayIndex: h.DisplayIndex,
 			Posters:      h.Posters,
-			Price:        h.Price,
+			UnitPrice:    h.UnitPrice,
+			PackagePrice: h.PackagePrice,
 		},
 	).Save(ctx); err != nil {
 		return err

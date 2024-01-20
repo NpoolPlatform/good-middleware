@@ -42,7 +42,6 @@ var good = goodmwpb.Good{
 	DevicePowerConsumption: 120,
 	DeviceShipmentAt:       uint32(time.Now().Unix() - 1000),
 	DevicePosters:          []string{uuid.NewString(), uuid.NewString()},
-	DurationDays:           14,
 	CoinTypeID:             uuid.NewString(),
 	VendorLocationID:       uuid.NewString(),
 	VendorLocationCountry:  uuid.NewString(),
@@ -53,28 +52,32 @@ var good = goodmwpb.Good{
 	VendorBrandLogo:        uuid.NewString(),
 	GoodType:               types.GoodType_PowerRenting,
 	BenefitType:            types.BenefitType_BenefitTypePlatform,
-	Price:                  decimal.NewFromInt(123).String(),
+	UnitPrice:              decimal.NewFromInt(123).String(),
 	Title:                  uuid.NewString(),
-	Unit:                   "TiB",
-	UnitAmount:             1,
-	SupportCoinTypeIDs:     []string{uuid.NewString(), uuid.NewString()},
+	QuantityUnit:           "TiB",
+	QuantityUnitAmount:     "1",
 	TestOnly:               true,
 	Posters:                []string{uuid.NewString(), uuid.NewString()},
 	Labels: []types.GoodLabel{
 		types.GoodLabel_GoodLabelInnovationStarter,
 		types.GoodLabel_GoodLabelNoviceExclusive,
 	},
-	GoodTotal:            decimal.NewFromInt(1000).String(),
-	GoodLocked:           decimal.NewFromInt(0).String(),
-	GoodInService:        decimal.NewFromInt(0).String(),
-	GoodWaitStart:        decimal.NewFromInt(0).String(),
-	GoodSold:             decimal.NewFromInt(0).String(),
-	DeliveryAt:           uint32(time.Now().Unix() + 1000),
-	StartAt:              uint32(time.Now().Unix() + 1000),
-	BenefitIntervalHours: 24,
-	GoodAppReserved:      decimal.NewFromInt(0).String(),
-	UnitLockDeposit:      decimal.NewFromInt(1).String(),
-	StartMode:            types.GoodStartMode_GoodStartModeConfirmed,
+	GoodTotal:             decimal.NewFromInt(1000).String(),
+	GoodLocked:            decimal.NewFromInt(0).String(),
+	GoodInService:         decimal.NewFromInt(0).String(),
+	GoodWaitStart:         decimal.NewFromInt(0).String(),
+	GoodSold:              decimal.NewFromInt(0).String(),
+	DeliveryAt:            uint32(time.Now().Unix() + 1000),
+	StartAt:               uint32(time.Now().Unix() + 1000),
+	BenefitIntervalHours:  24,
+	GoodAppReserved:       decimal.NewFromInt(0).String(),
+	UnitLockDeposit:       decimal.NewFromInt(1).String(),
+	StartMode:             types.GoodStartMode_GoodStartModeNextDay,
+	UnitType:              types.GoodUnitType_GoodUnitByDurationAndQuantity,
+	QuantityCalculateType: types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
+	DurationType:          types.GoodDurationType_GoodDurationByDay,
+	DurationCalculateType: types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
+	SettlementType:        types.GoodSettlementType_GoodSettledByCash,
 }
 
 var ret = npool.Good{
@@ -84,23 +87,22 @@ var ret = npool.Good{
 	Online:                 false,
 	Visible:                false,
 	GoodName:               good.Title,
-	Price:                  decimal.NewFromInt(125).String(),
+	UnitPrice:              decimal.NewFromInt(125).String(),
+	PackagePrice:           decimal.NewFromInt(125).String(),
 	DeviceInfoID:           good.DeviceInfoID,
 	DeviceType:             good.DeviceType,
 	DeviceManufacturer:     good.DeviceManufacturer,
 	DevicePowerConsumption: good.DevicePowerConsumption,
 	DevicePosters:          good.DevicePosters,
 	DeviceShipmentAt:       good.DeviceShipmentAt,
-	DurationDays:           good.DurationDays,
 	CoinTypeID:             good.CoinTypeID,
 	VendorLocationID:       good.VendorLocationID,
 	VendorLocationCountry:  good.VendorLocationCountry,
 	VendorBrandName:        good.VendorBrandName,
 	VendorBrandLogo:        good.VendorBrandLogo,
 	GoodType:               good.GoodType,
-	Unit:                   good.Unit,
-	UnitAmount:             good.UnitAmount,
-	SupportCoinTypeIDs:     good.SupportCoinTypeIDs,
+	QuantityUnit:           good.QuantityUnit,
+	QuantityUnitAmount:     good.QuantityUnitAmount,
 	TestOnly:               good.TestOnly,
 	Posters:                good.Posters,
 	AppGoodPosters:         good.Posters,
@@ -111,7 +113,6 @@ var ret = npool.Good{
 	GoodSold:               decimal.NewFromInt(0).String(),
 	CancelModeStr:          types.CancelMode_Uncancellable.String(),
 	CancelMode:             types.CancelMode_Uncancellable,
-	PurchaseLimit:          3000,
 	EnableSetCommission:    true,
 	EnablePurchase:         true,
 	EnableProductPage:      true,
@@ -120,14 +121,22 @@ var ret = npool.Good{
 	BenefitType:            good.BenefitType,
 	BenefitTypeStr:         good.BenefitType.String(),
 	GoodTypeStr:            good.GoodType.String(),
-	UserPurchaseLimit:      decimal.NewFromInt(0).String(),
 	LastRewardAmount:       decimal.NewFromInt(0).String(),
 	TotalRewardAmount:      decimal.NewFromInt(0).String(),
 	LastUnitRewardAmount:   decimal.NewFromInt(0).String(),
 	DisplayNames:           []string{},
 	TechnicalFeeRatio:      "0",
 	ElectricityFeeRatio:    "0",
-	StartMode:              types.GoodStartMode_GoodStartModeConfirmed,
+	StartMode:              types.GoodStartMode_GoodStartModeNextDay,
+	UnitType:               types.GoodUnitType_GoodUnitByDurationAndQuantity,
+	QuantityCalculateType:  types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
+	DurationType:           types.GoodDurationType_GoodDurationByDay,
+	DurationCalculateType:  types.GoodUnitCalculateType_GoodUnitCalculateBySelf,
+	SettlementType:         types.GoodSettlementType_GoodSettledByCash,
+	MinOrderAmount:         "0",
+	MaxOrderAmount:         "0",
+	MaxUserAmount:          "0",
+	PackageWithRequireds:   true,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -176,16 +185,14 @@ func setup(t *testing.T) func(*testing.T) {
 		context.Background(),
 		good1.WithEntID(&good.EntID, true),
 		good1.WithDeviceInfoID(&good.DeviceInfoID, true),
-		good1.WithDurationDays(&good.DurationDays, true),
 		good1.WithCoinTypeID(&good.CoinTypeID, true),
 		good1.WithVendorLocationID(&good.VendorLocationID, true),
-		good1.WithPrice(&good.Price, true),
+		good1.WithUnitPrice(&good.UnitPrice, true),
 		good1.WithBenefitType(&good.BenefitType, true),
 		good1.WithGoodType(&good.GoodType, true),
 		good1.WithTitle(&good.Title, true),
-		good1.WithUnit(&good.Unit, true),
-		good1.WithUnitAmount(&good.UnitAmount, true),
-		good1.WithSupportCoinTypeIDs(good.SupportCoinTypeIDs, false),
+		good1.WithQuantityUnit(&good.QuantityUnit, true),
+		good1.WithQuantityUnitAmount(&good.QuantityUnitAmount, true),
 		good1.WithDeliveryAt(&good.DeliveryAt, true),
 		good1.WithStartAt(&good.StartAt, true),
 		good1.WithTestOnly(&good.TestOnly, false),
@@ -203,6 +210,11 @@ func setup(t *testing.T) func(*testing.T) {
 
 	ret.GoodSpotQuantity = ret.GoodTotal
 	ret.StartModeStr = ret.StartMode.String()
+	ret.UnitTypeStr = ret.UnitType.String()
+	ret.QuantityCalculateTypeStr = ret.QuantityCalculateType.String()
+	ret.DurationTypeStr = ret.DurationType.String()
+	ret.SettlementTypeStr = ret.SettlementType.String()
+	ret.DurationCalculateTypeStr = ret.DurationCalculateType.String()
 
 	return func(*testing.T) {
 		_, _ = h4.DeleteGood(context.Background())
@@ -218,7 +230,10 @@ func createGood(t *testing.T) {
 		WithEntID(&ret.EntID, true),
 		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
-		WithPrice(&ret.Price, true),
+		WithUnitPrice(&ret.UnitPrice, true),
+		WithPackagePrice(&ret.PackagePrice, true),
+		WithMinOrderDuration(&ret.MinOrderDuration, true),
+		WithMaxOrderDuration(&ret.MaxOrderDuration, true),
 		WithGoodName(&ret.GoodName, true),
 		WithPosters(ret.AppGoodPosters, true),
 	)
@@ -234,7 +249,6 @@ func createGood(t *testing.T) {
 			ret.LabelsStr = info.LabelsStr
 			ret.PostersStr = info.PostersStr
 			ret.AppGoodPostersStr = info.AppGoodPostersStr
-			ret.SupportCoinTypeIDsStr = info.SupportCoinTypeIDsStr
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			ret.AppGoodStockID = info.AppGoodStockID

@@ -85,20 +85,6 @@ func (gc *GoodCreate) SetDeviceInfoID(u uuid.UUID) *GoodCreate {
 	return gc
 }
 
-// SetDurationDays sets the "duration_days" field.
-func (gc *GoodCreate) SetDurationDays(i int32) *GoodCreate {
-	gc.mutation.SetDurationDays(i)
-	return gc
-}
-
-// SetNillableDurationDays sets the "duration_days" field if the given value is not nil.
-func (gc *GoodCreate) SetNillableDurationDays(i *int32) *GoodCreate {
-	if i != nil {
-		gc.SetDurationDays(*i)
-	}
-	return gc
-}
-
 // SetCoinTypeID sets the "coin_type_id" field.
 func (gc *GoodCreate) SetCoinTypeID(u uuid.UUID) *GoodCreate {
 	gc.mutation.SetCoinTypeID(u)
@@ -125,16 +111,16 @@ func (gc *GoodCreate) SetVendorLocationID(u uuid.UUID) *GoodCreate {
 	return gc
 }
 
-// SetPrice sets the "price" field.
-func (gc *GoodCreate) SetPrice(d decimal.Decimal) *GoodCreate {
-	gc.mutation.SetPrice(d)
+// SetUnitPrice sets the "unit_price" field.
+func (gc *GoodCreate) SetUnitPrice(d decimal.Decimal) *GoodCreate {
+	gc.mutation.SetUnitPrice(d)
 	return gc
 }
 
-// SetNillablePrice sets the "price" field if the given value is not nil.
-func (gc *GoodCreate) SetNillablePrice(d *decimal.Decimal) *GoodCreate {
+// SetNillableUnitPrice sets the "unit_price" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableUnitPrice(d *decimal.Decimal) *GoodCreate {
 	if d != nil {
-		gc.SetPrice(*d)
+		gc.SetUnitPrice(*d)
 	}
 	return gc
 }
@@ -195,6 +181,20 @@ func (gc *GoodCreate) SetNillableUnit(s *string) *GoodCreate {
 	return gc
 }
 
+// SetQuantityUnit sets the "quantity_unit" field.
+func (gc *GoodCreate) SetQuantityUnit(s string) *GoodCreate {
+	gc.mutation.SetQuantityUnit(s)
+	return gc
+}
+
+// SetNillableQuantityUnit sets the "quantity_unit" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableQuantityUnit(s *string) *GoodCreate {
+	if s != nil {
+		gc.SetQuantityUnit(*s)
+	}
+	return gc
+}
+
 // SetUnitAmount sets the "unit_amount" field.
 func (gc *GoodCreate) SetUnitAmount(i int32) *GoodCreate {
 	gc.mutation.SetUnitAmount(i)
@@ -209,9 +209,17 @@ func (gc *GoodCreate) SetNillableUnitAmount(i *int32) *GoodCreate {
 	return gc
 }
 
-// SetSupportCoinTypeIds sets the "support_coin_type_ids" field.
-func (gc *GoodCreate) SetSupportCoinTypeIds(u []uuid.UUID) *GoodCreate {
-	gc.mutation.SetSupportCoinTypeIds(u)
+// SetQuantityUnitAmount sets the "quantity_unit_amount" field.
+func (gc *GoodCreate) SetQuantityUnitAmount(d decimal.Decimal) *GoodCreate {
+	gc.mutation.SetQuantityUnitAmount(d)
+	return gc
+}
+
+// SetNillableQuantityUnitAmount sets the "quantity_unit_amount" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableQuantityUnitAmount(d *decimal.Decimal) *GoodCreate {
+	if d != nil {
+		gc.SetQuantityUnitAmount(*d)
+	}
 	return gc
 }
 
@@ -295,6 +303,76 @@ func (gc *GoodCreate) SetUnitLockDeposit(d decimal.Decimal) *GoodCreate {
 func (gc *GoodCreate) SetNillableUnitLockDeposit(d *decimal.Decimal) *GoodCreate {
 	if d != nil {
 		gc.SetUnitLockDeposit(*d)
+	}
+	return gc
+}
+
+// SetUnitType sets the "unit_type" field.
+func (gc *GoodCreate) SetUnitType(s string) *GoodCreate {
+	gc.mutation.SetUnitType(s)
+	return gc
+}
+
+// SetNillableUnitType sets the "unit_type" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableUnitType(s *string) *GoodCreate {
+	if s != nil {
+		gc.SetUnitType(*s)
+	}
+	return gc
+}
+
+// SetQuantityCalculateType sets the "quantity_calculate_type" field.
+func (gc *GoodCreate) SetQuantityCalculateType(s string) *GoodCreate {
+	gc.mutation.SetQuantityCalculateType(s)
+	return gc
+}
+
+// SetNillableQuantityCalculateType sets the "quantity_calculate_type" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableQuantityCalculateType(s *string) *GoodCreate {
+	if s != nil {
+		gc.SetQuantityCalculateType(*s)
+	}
+	return gc
+}
+
+// SetDurationType sets the "duration_type" field.
+func (gc *GoodCreate) SetDurationType(s string) *GoodCreate {
+	gc.mutation.SetDurationType(s)
+	return gc
+}
+
+// SetNillableDurationType sets the "duration_type" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableDurationType(s *string) *GoodCreate {
+	if s != nil {
+		gc.SetDurationType(*s)
+	}
+	return gc
+}
+
+// SetDurationCalculateType sets the "duration_calculate_type" field.
+func (gc *GoodCreate) SetDurationCalculateType(s string) *GoodCreate {
+	gc.mutation.SetDurationCalculateType(s)
+	return gc
+}
+
+// SetNillableDurationCalculateType sets the "duration_calculate_type" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableDurationCalculateType(s *string) *GoodCreate {
+	if s != nil {
+		gc.SetDurationCalculateType(*s)
+	}
+	return gc
+}
+
+// SetSettlementType sets the "settlement_type" field.
+func (gc *GoodCreate) SetSettlementType(s string) *GoodCreate {
+	gc.mutation.SetSettlementType(s)
+	return gc
+}
+
+// SetNillableSettlementType sets the "settlement_type" field if the given value is not nil.
+func (gc *GoodCreate) SetNillableSettlementType(s *string) *GoodCreate {
+	if s != nil {
+		gc.SetSettlementType(*s)
 	}
 	return gc
 }
@@ -412,10 +490,6 @@ func (gc *GoodCreate) defaults() error {
 		v := good.DefaultEntID()
 		gc.mutation.SetEntID(v)
 	}
-	if _, ok := gc.mutation.DurationDays(); !ok {
-		v := good.DefaultDurationDays
-		gc.mutation.SetDurationDays(v)
-	}
 	if _, ok := gc.mutation.InheritFromGoodID(); !ok {
 		if good.DefaultInheritFromGoodID == nil {
 			return fmt.Errorf("ent: uninitialized good.DefaultInheritFromGoodID (forgotten import ent/runtime?)")
@@ -423,9 +497,9 @@ func (gc *GoodCreate) defaults() error {
 		v := good.DefaultInheritFromGoodID()
 		gc.mutation.SetInheritFromGoodID(v)
 	}
-	if _, ok := gc.mutation.Price(); !ok {
-		v := good.DefaultPrice
-		gc.mutation.SetPrice(v)
+	if _, ok := gc.mutation.UnitPrice(); !ok {
+		v := good.DefaultUnitPrice
+		gc.mutation.SetUnitPrice(v)
 	}
 	if _, ok := gc.mutation.BenefitType(); !ok {
 		v := good.DefaultBenefitType
@@ -443,13 +517,17 @@ func (gc *GoodCreate) defaults() error {
 		v := good.DefaultUnit
 		gc.mutation.SetUnit(v)
 	}
+	if _, ok := gc.mutation.QuantityUnit(); !ok {
+		v := good.DefaultQuantityUnit
+		gc.mutation.SetQuantityUnit(v)
+	}
 	if _, ok := gc.mutation.UnitAmount(); !ok {
 		v := good.DefaultUnitAmount
 		gc.mutation.SetUnitAmount(v)
 	}
-	if _, ok := gc.mutation.SupportCoinTypeIds(); !ok {
-		v := good.DefaultSupportCoinTypeIds
-		gc.mutation.SetSupportCoinTypeIds(v)
+	if _, ok := gc.mutation.QuantityUnitAmount(); !ok {
+		v := good.DefaultQuantityUnitAmount
+		gc.mutation.SetQuantityUnitAmount(v)
 	}
 	if _, ok := gc.mutation.DeliveryAt(); !ok {
 		v := good.DefaultDeliveryAt
@@ -474,6 +552,26 @@ func (gc *GoodCreate) defaults() error {
 	if _, ok := gc.mutation.UnitLockDeposit(); !ok {
 		v := good.DefaultUnitLockDeposit
 		gc.mutation.SetUnitLockDeposit(v)
+	}
+	if _, ok := gc.mutation.UnitType(); !ok {
+		v := good.DefaultUnitType
+		gc.mutation.SetUnitType(v)
+	}
+	if _, ok := gc.mutation.QuantityCalculateType(); !ok {
+		v := good.DefaultQuantityCalculateType
+		gc.mutation.SetQuantityCalculateType(v)
+	}
+	if _, ok := gc.mutation.DurationType(); !ok {
+		v := good.DefaultDurationType
+		gc.mutation.SetDurationType(v)
+	}
+	if _, ok := gc.mutation.DurationCalculateType(); !ok {
+		v := good.DefaultDurationCalculateType
+		gc.mutation.SetDurationCalculateType(v)
+	}
+	if _, ok := gc.mutation.SettlementType(); !ok {
+		v := good.DefaultSettlementType
+		gc.mutation.SetSettlementType(v)
 	}
 	return nil
 }
@@ -575,14 +673,6 @@ func (gc *GoodCreate) createSpec() (*Good, *sqlgraph.CreateSpec) {
 		})
 		_node.DeviceInfoID = value
 	}
-	if value, ok := gc.mutation.DurationDays(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt32,
-			Value:  value,
-			Column: good.FieldDurationDays,
-		})
-		_node.DurationDays = value
-	}
 	if value, ok := gc.mutation.CoinTypeID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -607,13 +697,13 @@ func (gc *GoodCreate) createSpec() (*Good, *sqlgraph.CreateSpec) {
 		})
 		_node.VendorLocationID = value
 	}
-	if value, ok := gc.mutation.Price(); ok {
+	if value, ok := gc.mutation.UnitPrice(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Value:  value,
-			Column: good.FieldPrice,
+			Column: good.FieldUnitPrice,
 		})
-		_node.Price = value
+		_node.UnitPrice = value
 	}
 	if value, ok := gc.mutation.BenefitType(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -647,6 +737,14 @@ func (gc *GoodCreate) createSpec() (*Good, *sqlgraph.CreateSpec) {
 		})
 		_node.Unit = value
 	}
+	if value, ok := gc.mutation.QuantityUnit(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldQuantityUnit,
+		})
+		_node.QuantityUnit = value
+	}
 	if value, ok := gc.mutation.UnitAmount(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt32,
@@ -655,13 +753,13 @@ func (gc *GoodCreate) createSpec() (*Good, *sqlgraph.CreateSpec) {
 		})
 		_node.UnitAmount = value
 	}
-	if value, ok := gc.mutation.SupportCoinTypeIds(); ok {
+	if value, ok := gc.mutation.QuantityUnitAmount(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
+			Type:   field.TypeOther,
 			Value:  value,
-			Column: good.FieldSupportCoinTypeIds,
+			Column: good.FieldQuantityUnitAmount,
 		})
-		_node.SupportCoinTypeIds = value
+		_node.QuantityUnitAmount = value
 	}
 	if value, ok := gc.mutation.DeliveryAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -710,6 +808,46 @@ func (gc *GoodCreate) createSpec() (*Good, *sqlgraph.CreateSpec) {
 			Column: good.FieldUnitLockDeposit,
 		})
 		_node.UnitLockDeposit = value
+	}
+	if value, ok := gc.mutation.UnitType(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldUnitType,
+		})
+		_node.UnitType = value
+	}
+	if value, ok := gc.mutation.QuantityCalculateType(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldQuantityCalculateType,
+		})
+		_node.QuantityCalculateType = value
+	}
+	if value, ok := gc.mutation.DurationType(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldDurationType,
+		})
+		_node.DurationType = value
+	}
+	if value, ok := gc.mutation.DurationCalculateType(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldDurationCalculateType,
+		})
+		_node.DurationCalculateType = value
+	}
+	if value, ok := gc.mutation.SettlementType(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: good.FieldSettlementType,
+		})
+		_node.SettlementType = value
 	}
 	return _node, _spec
 }
@@ -843,30 +981,6 @@ func (u *GoodUpsert) UpdateDeviceInfoID() *GoodUpsert {
 	return u
 }
 
-// SetDurationDays sets the "duration_days" field.
-func (u *GoodUpsert) SetDurationDays(v int32) *GoodUpsert {
-	u.Set(good.FieldDurationDays, v)
-	return u
-}
-
-// UpdateDurationDays sets the "duration_days" field to the value that was provided on create.
-func (u *GoodUpsert) UpdateDurationDays() *GoodUpsert {
-	u.SetExcluded(good.FieldDurationDays)
-	return u
-}
-
-// AddDurationDays adds v to the "duration_days" field.
-func (u *GoodUpsert) AddDurationDays(v int32) *GoodUpsert {
-	u.Add(good.FieldDurationDays, v)
-	return u
-}
-
-// ClearDurationDays clears the value of the "duration_days" field.
-func (u *GoodUpsert) ClearDurationDays() *GoodUpsert {
-	u.SetNull(good.FieldDurationDays)
-	return u
-}
-
 // SetCoinTypeID sets the "coin_type_id" field.
 func (u *GoodUpsert) SetCoinTypeID(v uuid.UUID) *GoodUpsert {
 	u.Set(good.FieldCoinTypeID, v)
@@ -909,21 +1023,21 @@ func (u *GoodUpsert) UpdateVendorLocationID() *GoodUpsert {
 	return u
 }
 
-// SetPrice sets the "price" field.
-func (u *GoodUpsert) SetPrice(v decimal.Decimal) *GoodUpsert {
-	u.Set(good.FieldPrice, v)
+// SetUnitPrice sets the "unit_price" field.
+func (u *GoodUpsert) SetUnitPrice(v decimal.Decimal) *GoodUpsert {
+	u.Set(good.FieldUnitPrice, v)
 	return u
 }
 
-// UpdatePrice sets the "price" field to the value that was provided on create.
-func (u *GoodUpsert) UpdatePrice() *GoodUpsert {
-	u.SetExcluded(good.FieldPrice)
+// UpdateUnitPrice sets the "unit_price" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateUnitPrice() *GoodUpsert {
+	u.SetExcluded(good.FieldUnitPrice)
 	return u
 }
 
-// ClearPrice clears the value of the "price" field.
-func (u *GoodUpsert) ClearPrice() *GoodUpsert {
-	u.SetNull(good.FieldPrice)
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (u *GoodUpsert) ClearUnitPrice() *GoodUpsert {
+	u.SetNull(good.FieldUnitPrice)
 	return u
 }
 
@@ -999,6 +1113,24 @@ func (u *GoodUpsert) ClearUnit() *GoodUpsert {
 	return u
 }
 
+// SetQuantityUnit sets the "quantity_unit" field.
+func (u *GoodUpsert) SetQuantityUnit(v string) *GoodUpsert {
+	u.Set(good.FieldQuantityUnit, v)
+	return u
+}
+
+// UpdateQuantityUnit sets the "quantity_unit" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateQuantityUnit() *GoodUpsert {
+	u.SetExcluded(good.FieldQuantityUnit)
+	return u
+}
+
+// ClearQuantityUnit clears the value of the "quantity_unit" field.
+func (u *GoodUpsert) ClearQuantityUnit() *GoodUpsert {
+	u.SetNull(good.FieldQuantityUnit)
+	return u
+}
+
 // SetUnitAmount sets the "unit_amount" field.
 func (u *GoodUpsert) SetUnitAmount(v int32) *GoodUpsert {
 	u.Set(good.FieldUnitAmount, v)
@@ -1023,21 +1155,21 @@ func (u *GoodUpsert) ClearUnitAmount() *GoodUpsert {
 	return u
 }
 
-// SetSupportCoinTypeIds sets the "support_coin_type_ids" field.
-func (u *GoodUpsert) SetSupportCoinTypeIds(v []uuid.UUID) *GoodUpsert {
-	u.Set(good.FieldSupportCoinTypeIds, v)
+// SetQuantityUnitAmount sets the "quantity_unit_amount" field.
+func (u *GoodUpsert) SetQuantityUnitAmount(v decimal.Decimal) *GoodUpsert {
+	u.Set(good.FieldQuantityUnitAmount, v)
 	return u
 }
 
-// UpdateSupportCoinTypeIds sets the "support_coin_type_ids" field to the value that was provided on create.
-func (u *GoodUpsert) UpdateSupportCoinTypeIds() *GoodUpsert {
-	u.SetExcluded(good.FieldSupportCoinTypeIds)
+// UpdateQuantityUnitAmount sets the "quantity_unit_amount" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateQuantityUnitAmount() *GoodUpsert {
+	u.SetExcluded(good.FieldQuantityUnitAmount)
 	return u
 }
 
-// ClearSupportCoinTypeIds clears the value of the "support_coin_type_ids" field.
-func (u *GoodUpsert) ClearSupportCoinTypeIds() *GoodUpsert {
-	u.SetNull(good.FieldSupportCoinTypeIds)
+// ClearQuantityUnitAmount clears the value of the "quantity_unit_amount" field.
+func (u *GoodUpsert) ClearQuantityUnitAmount() *GoodUpsert {
+	u.SetNull(good.FieldQuantityUnitAmount)
 	return u
 }
 
@@ -1164,6 +1296,96 @@ func (u *GoodUpsert) UpdateUnitLockDeposit() *GoodUpsert {
 // ClearUnitLockDeposit clears the value of the "unit_lock_deposit" field.
 func (u *GoodUpsert) ClearUnitLockDeposit() *GoodUpsert {
 	u.SetNull(good.FieldUnitLockDeposit)
+	return u
+}
+
+// SetUnitType sets the "unit_type" field.
+func (u *GoodUpsert) SetUnitType(v string) *GoodUpsert {
+	u.Set(good.FieldUnitType, v)
+	return u
+}
+
+// UpdateUnitType sets the "unit_type" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateUnitType() *GoodUpsert {
+	u.SetExcluded(good.FieldUnitType)
+	return u
+}
+
+// ClearUnitType clears the value of the "unit_type" field.
+func (u *GoodUpsert) ClearUnitType() *GoodUpsert {
+	u.SetNull(good.FieldUnitType)
+	return u
+}
+
+// SetQuantityCalculateType sets the "quantity_calculate_type" field.
+func (u *GoodUpsert) SetQuantityCalculateType(v string) *GoodUpsert {
+	u.Set(good.FieldQuantityCalculateType, v)
+	return u
+}
+
+// UpdateQuantityCalculateType sets the "quantity_calculate_type" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateQuantityCalculateType() *GoodUpsert {
+	u.SetExcluded(good.FieldQuantityCalculateType)
+	return u
+}
+
+// ClearQuantityCalculateType clears the value of the "quantity_calculate_type" field.
+func (u *GoodUpsert) ClearQuantityCalculateType() *GoodUpsert {
+	u.SetNull(good.FieldQuantityCalculateType)
+	return u
+}
+
+// SetDurationType sets the "duration_type" field.
+func (u *GoodUpsert) SetDurationType(v string) *GoodUpsert {
+	u.Set(good.FieldDurationType, v)
+	return u
+}
+
+// UpdateDurationType sets the "duration_type" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateDurationType() *GoodUpsert {
+	u.SetExcluded(good.FieldDurationType)
+	return u
+}
+
+// ClearDurationType clears the value of the "duration_type" field.
+func (u *GoodUpsert) ClearDurationType() *GoodUpsert {
+	u.SetNull(good.FieldDurationType)
+	return u
+}
+
+// SetDurationCalculateType sets the "duration_calculate_type" field.
+func (u *GoodUpsert) SetDurationCalculateType(v string) *GoodUpsert {
+	u.Set(good.FieldDurationCalculateType, v)
+	return u
+}
+
+// UpdateDurationCalculateType sets the "duration_calculate_type" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateDurationCalculateType() *GoodUpsert {
+	u.SetExcluded(good.FieldDurationCalculateType)
+	return u
+}
+
+// ClearDurationCalculateType clears the value of the "duration_calculate_type" field.
+func (u *GoodUpsert) ClearDurationCalculateType() *GoodUpsert {
+	u.SetNull(good.FieldDurationCalculateType)
+	return u
+}
+
+// SetSettlementType sets the "settlement_type" field.
+func (u *GoodUpsert) SetSettlementType(v string) *GoodUpsert {
+	u.Set(good.FieldSettlementType, v)
+	return u
+}
+
+// UpdateSettlementType sets the "settlement_type" field to the value that was provided on create.
+func (u *GoodUpsert) UpdateSettlementType() *GoodUpsert {
+	u.SetExcluded(good.FieldSettlementType)
+	return u
+}
+
+// ClearSettlementType clears the value of the "settlement_type" field.
+func (u *GoodUpsert) ClearSettlementType() *GoodUpsert {
+	u.SetNull(good.FieldSettlementType)
 	return u
 }
 
@@ -1308,34 +1530,6 @@ func (u *GoodUpsertOne) UpdateDeviceInfoID() *GoodUpsertOne {
 	})
 }
 
-// SetDurationDays sets the "duration_days" field.
-func (u *GoodUpsertOne) SetDurationDays(v int32) *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.SetDurationDays(v)
-	})
-}
-
-// AddDurationDays adds v to the "duration_days" field.
-func (u *GoodUpsertOne) AddDurationDays(v int32) *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.AddDurationDays(v)
-	})
-}
-
-// UpdateDurationDays sets the "duration_days" field to the value that was provided on create.
-func (u *GoodUpsertOne) UpdateDurationDays() *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.UpdateDurationDays()
-	})
-}
-
-// ClearDurationDays clears the value of the "duration_days" field.
-func (u *GoodUpsertOne) ClearDurationDays() *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.ClearDurationDays()
-	})
-}
-
 // SetCoinTypeID sets the "coin_type_id" field.
 func (u *GoodUpsertOne) SetCoinTypeID(v uuid.UUID) *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
@@ -1385,24 +1579,24 @@ func (u *GoodUpsertOne) UpdateVendorLocationID() *GoodUpsertOne {
 	})
 }
 
-// SetPrice sets the "price" field.
-func (u *GoodUpsertOne) SetPrice(v decimal.Decimal) *GoodUpsertOne {
+// SetUnitPrice sets the "unit_price" field.
+func (u *GoodUpsertOne) SetUnitPrice(v decimal.Decimal) *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.SetPrice(v)
+		s.SetUnitPrice(v)
 	})
 }
 
-// UpdatePrice sets the "price" field to the value that was provided on create.
-func (u *GoodUpsertOne) UpdatePrice() *GoodUpsertOne {
+// UpdateUnitPrice sets the "unit_price" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateUnitPrice() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.UpdatePrice()
+		s.UpdateUnitPrice()
 	})
 }
 
-// ClearPrice clears the value of the "price" field.
-func (u *GoodUpsertOne) ClearPrice() *GoodUpsertOne {
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (u *GoodUpsertOne) ClearUnitPrice() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.ClearPrice()
+		s.ClearUnitPrice()
 	})
 }
 
@@ -1490,6 +1684,27 @@ func (u *GoodUpsertOne) ClearUnit() *GoodUpsertOne {
 	})
 }
 
+// SetQuantityUnit sets the "quantity_unit" field.
+func (u *GoodUpsertOne) SetQuantityUnit(v string) *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetQuantityUnit(v)
+	})
+}
+
+// UpdateQuantityUnit sets the "quantity_unit" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateQuantityUnit() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateQuantityUnit()
+	})
+}
+
+// ClearQuantityUnit clears the value of the "quantity_unit" field.
+func (u *GoodUpsertOne) ClearQuantityUnit() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearQuantityUnit()
+	})
+}
+
 // SetUnitAmount sets the "unit_amount" field.
 func (u *GoodUpsertOne) SetUnitAmount(v int32) *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
@@ -1518,24 +1733,24 @@ func (u *GoodUpsertOne) ClearUnitAmount() *GoodUpsertOne {
 	})
 }
 
-// SetSupportCoinTypeIds sets the "support_coin_type_ids" field.
-func (u *GoodUpsertOne) SetSupportCoinTypeIds(v []uuid.UUID) *GoodUpsertOne {
+// SetQuantityUnitAmount sets the "quantity_unit_amount" field.
+func (u *GoodUpsertOne) SetQuantityUnitAmount(v decimal.Decimal) *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.SetSupportCoinTypeIds(v)
+		s.SetQuantityUnitAmount(v)
 	})
 }
 
-// UpdateSupportCoinTypeIds sets the "support_coin_type_ids" field to the value that was provided on create.
-func (u *GoodUpsertOne) UpdateSupportCoinTypeIds() *GoodUpsertOne {
+// UpdateQuantityUnitAmount sets the "quantity_unit_amount" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateQuantityUnitAmount() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.UpdateSupportCoinTypeIds()
+		s.UpdateQuantityUnitAmount()
 	})
 }
 
-// ClearSupportCoinTypeIds clears the value of the "support_coin_type_ids" field.
-func (u *GoodUpsertOne) ClearSupportCoinTypeIds() *GoodUpsertOne {
+// ClearQuantityUnitAmount clears the value of the "quantity_unit_amount" field.
+func (u *GoodUpsertOne) ClearQuantityUnitAmount() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
-		s.ClearSupportCoinTypeIds()
+		s.ClearQuantityUnitAmount()
 	})
 }
 
@@ -1683,6 +1898,111 @@ func (u *GoodUpsertOne) UpdateUnitLockDeposit() *GoodUpsertOne {
 func (u *GoodUpsertOne) ClearUnitLockDeposit() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
 		s.ClearUnitLockDeposit()
+	})
+}
+
+// SetUnitType sets the "unit_type" field.
+func (u *GoodUpsertOne) SetUnitType(v string) *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetUnitType(v)
+	})
+}
+
+// UpdateUnitType sets the "unit_type" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateUnitType() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateUnitType()
+	})
+}
+
+// ClearUnitType clears the value of the "unit_type" field.
+func (u *GoodUpsertOne) ClearUnitType() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearUnitType()
+	})
+}
+
+// SetQuantityCalculateType sets the "quantity_calculate_type" field.
+func (u *GoodUpsertOne) SetQuantityCalculateType(v string) *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetQuantityCalculateType(v)
+	})
+}
+
+// UpdateQuantityCalculateType sets the "quantity_calculate_type" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateQuantityCalculateType() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateQuantityCalculateType()
+	})
+}
+
+// ClearQuantityCalculateType clears the value of the "quantity_calculate_type" field.
+func (u *GoodUpsertOne) ClearQuantityCalculateType() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearQuantityCalculateType()
+	})
+}
+
+// SetDurationType sets the "duration_type" field.
+func (u *GoodUpsertOne) SetDurationType(v string) *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetDurationType(v)
+	})
+}
+
+// UpdateDurationType sets the "duration_type" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateDurationType() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateDurationType()
+	})
+}
+
+// ClearDurationType clears the value of the "duration_type" field.
+func (u *GoodUpsertOne) ClearDurationType() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearDurationType()
+	})
+}
+
+// SetDurationCalculateType sets the "duration_calculate_type" field.
+func (u *GoodUpsertOne) SetDurationCalculateType(v string) *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetDurationCalculateType(v)
+	})
+}
+
+// UpdateDurationCalculateType sets the "duration_calculate_type" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateDurationCalculateType() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateDurationCalculateType()
+	})
+}
+
+// ClearDurationCalculateType clears the value of the "duration_calculate_type" field.
+func (u *GoodUpsertOne) ClearDurationCalculateType() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearDurationCalculateType()
+	})
+}
+
+// SetSettlementType sets the "settlement_type" field.
+func (u *GoodUpsertOne) SetSettlementType(v string) *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetSettlementType(v)
+	})
+}
+
+// UpdateSettlementType sets the "settlement_type" field to the value that was provided on create.
+func (u *GoodUpsertOne) UpdateSettlementType() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateSettlementType()
+	})
+}
+
+// ClearSettlementType clears the value of the "settlement_type" field.
+func (u *GoodUpsertOne) ClearSettlementType() *GoodUpsertOne {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearSettlementType()
 	})
 }
 
@@ -1992,34 +2312,6 @@ func (u *GoodUpsertBulk) UpdateDeviceInfoID() *GoodUpsertBulk {
 	})
 }
 
-// SetDurationDays sets the "duration_days" field.
-func (u *GoodUpsertBulk) SetDurationDays(v int32) *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.SetDurationDays(v)
-	})
-}
-
-// AddDurationDays adds v to the "duration_days" field.
-func (u *GoodUpsertBulk) AddDurationDays(v int32) *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.AddDurationDays(v)
-	})
-}
-
-// UpdateDurationDays sets the "duration_days" field to the value that was provided on create.
-func (u *GoodUpsertBulk) UpdateDurationDays() *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.UpdateDurationDays()
-	})
-}
-
-// ClearDurationDays clears the value of the "duration_days" field.
-func (u *GoodUpsertBulk) ClearDurationDays() *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.ClearDurationDays()
-	})
-}
-
 // SetCoinTypeID sets the "coin_type_id" field.
 func (u *GoodUpsertBulk) SetCoinTypeID(v uuid.UUID) *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
@@ -2069,24 +2361,24 @@ func (u *GoodUpsertBulk) UpdateVendorLocationID() *GoodUpsertBulk {
 	})
 }
 
-// SetPrice sets the "price" field.
-func (u *GoodUpsertBulk) SetPrice(v decimal.Decimal) *GoodUpsertBulk {
+// SetUnitPrice sets the "unit_price" field.
+func (u *GoodUpsertBulk) SetUnitPrice(v decimal.Decimal) *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.SetPrice(v)
+		s.SetUnitPrice(v)
 	})
 }
 
-// UpdatePrice sets the "price" field to the value that was provided on create.
-func (u *GoodUpsertBulk) UpdatePrice() *GoodUpsertBulk {
+// UpdateUnitPrice sets the "unit_price" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateUnitPrice() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.UpdatePrice()
+		s.UpdateUnitPrice()
 	})
 }
 
-// ClearPrice clears the value of the "price" field.
-func (u *GoodUpsertBulk) ClearPrice() *GoodUpsertBulk {
+// ClearUnitPrice clears the value of the "unit_price" field.
+func (u *GoodUpsertBulk) ClearUnitPrice() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.ClearPrice()
+		s.ClearUnitPrice()
 	})
 }
 
@@ -2174,6 +2466,27 @@ func (u *GoodUpsertBulk) ClearUnit() *GoodUpsertBulk {
 	})
 }
 
+// SetQuantityUnit sets the "quantity_unit" field.
+func (u *GoodUpsertBulk) SetQuantityUnit(v string) *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetQuantityUnit(v)
+	})
+}
+
+// UpdateQuantityUnit sets the "quantity_unit" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateQuantityUnit() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateQuantityUnit()
+	})
+}
+
+// ClearQuantityUnit clears the value of the "quantity_unit" field.
+func (u *GoodUpsertBulk) ClearQuantityUnit() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearQuantityUnit()
+	})
+}
+
 // SetUnitAmount sets the "unit_amount" field.
 func (u *GoodUpsertBulk) SetUnitAmount(v int32) *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
@@ -2202,24 +2515,24 @@ func (u *GoodUpsertBulk) ClearUnitAmount() *GoodUpsertBulk {
 	})
 }
 
-// SetSupportCoinTypeIds sets the "support_coin_type_ids" field.
-func (u *GoodUpsertBulk) SetSupportCoinTypeIds(v []uuid.UUID) *GoodUpsertBulk {
+// SetQuantityUnitAmount sets the "quantity_unit_amount" field.
+func (u *GoodUpsertBulk) SetQuantityUnitAmount(v decimal.Decimal) *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.SetSupportCoinTypeIds(v)
+		s.SetQuantityUnitAmount(v)
 	})
 }
 
-// UpdateSupportCoinTypeIds sets the "support_coin_type_ids" field to the value that was provided on create.
-func (u *GoodUpsertBulk) UpdateSupportCoinTypeIds() *GoodUpsertBulk {
+// UpdateQuantityUnitAmount sets the "quantity_unit_amount" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateQuantityUnitAmount() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.UpdateSupportCoinTypeIds()
+		s.UpdateQuantityUnitAmount()
 	})
 }
 
-// ClearSupportCoinTypeIds clears the value of the "support_coin_type_ids" field.
-func (u *GoodUpsertBulk) ClearSupportCoinTypeIds() *GoodUpsertBulk {
+// ClearQuantityUnitAmount clears the value of the "quantity_unit_amount" field.
+func (u *GoodUpsertBulk) ClearQuantityUnitAmount() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
-		s.ClearSupportCoinTypeIds()
+		s.ClearQuantityUnitAmount()
 	})
 }
 
@@ -2367,6 +2680,111 @@ func (u *GoodUpsertBulk) UpdateUnitLockDeposit() *GoodUpsertBulk {
 func (u *GoodUpsertBulk) ClearUnitLockDeposit() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
 		s.ClearUnitLockDeposit()
+	})
+}
+
+// SetUnitType sets the "unit_type" field.
+func (u *GoodUpsertBulk) SetUnitType(v string) *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetUnitType(v)
+	})
+}
+
+// UpdateUnitType sets the "unit_type" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateUnitType() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateUnitType()
+	})
+}
+
+// ClearUnitType clears the value of the "unit_type" field.
+func (u *GoodUpsertBulk) ClearUnitType() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearUnitType()
+	})
+}
+
+// SetQuantityCalculateType sets the "quantity_calculate_type" field.
+func (u *GoodUpsertBulk) SetQuantityCalculateType(v string) *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetQuantityCalculateType(v)
+	})
+}
+
+// UpdateQuantityCalculateType sets the "quantity_calculate_type" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateQuantityCalculateType() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateQuantityCalculateType()
+	})
+}
+
+// ClearQuantityCalculateType clears the value of the "quantity_calculate_type" field.
+func (u *GoodUpsertBulk) ClearQuantityCalculateType() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearQuantityCalculateType()
+	})
+}
+
+// SetDurationType sets the "duration_type" field.
+func (u *GoodUpsertBulk) SetDurationType(v string) *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetDurationType(v)
+	})
+}
+
+// UpdateDurationType sets the "duration_type" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateDurationType() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateDurationType()
+	})
+}
+
+// ClearDurationType clears the value of the "duration_type" field.
+func (u *GoodUpsertBulk) ClearDurationType() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearDurationType()
+	})
+}
+
+// SetDurationCalculateType sets the "duration_calculate_type" field.
+func (u *GoodUpsertBulk) SetDurationCalculateType(v string) *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetDurationCalculateType(v)
+	})
+}
+
+// UpdateDurationCalculateType sets the "duration_calculate_type" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateDurationCalculateType() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateDurationCalculateType()
+	})
+}
+
+// ClearDurationCalculateType clears the value of the "duration_calculate_type" field.
+func (u *GoodUpsertBulk) ClearDurationCalculateType() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearDurationCalculateType()
+	})
+}
+
+// SetSettlementType sets the "settlement_type" field.
+func (u *GoodUpsertBulk) SetSettlementType(v string) *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.SetSettlementType(v)
+	})
+}
+
+// UpdateSettlementType sets the "settlement_type" field to the value that was provided on create.
+func (u *GoodUpsertBulk) UpdateSettlementType() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.UpdateSettlementType()
+	})
+}
+
+// ClearSettlementType clears the value of the "settlement_type" field.
+func (u *GoodUpsertBulk) ClearSettlementType() *GoodUpsertBulk {
+	return u.Update(func(s *GoodUpsert) {
+		s.ClearSettlementType()
 	})
 }
 

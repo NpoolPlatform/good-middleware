@@ -13,26 +13,29 @@ import (
 )
 
 type Req struct {
-	ID                   *uint32
-	EntID                *uuid.UUID
-	DeviceInfoID         *uuid.UUID
-	DurationDays         *int32
-	CoinTypeID           *uuid.UUID
-	VendorLocationID     *uuid.UUID
-	Price                *decimal.Decimal
-	BenefitType          *types.BenefitType
-	StartMode            *types.GoodStartMode
-	GoodType             *types.GoodType
-	Title                *string
-	Unit                 *string
-	UnitAmount           *int32
-	SupportCoinTypeIDs   []uuid.UUID
-	DeliveryAt           *uint32
-	StartAt              *uint32
-	TestOnly             *bool
-	BenefitIntervalHours *uint32
-	UnitLockDeposit      *decimal.Decimal
-	DeletedAt            *uint32
+	ID                    *uint32
+	EntID                 *uuid.UUID
+	DeviceInfoID          *uuid.UUID
+	CoinTypeID            *uuid.UUID
+	VendorLocationID      *uuid.UUID
+	UnitPrice             *decimal.Decimal
+	BenefitType           *types.BenefitType
+	StartMode             *types.GoodStartMode
+	GoodType              *types.GoodType
+	Title                 *string
+	QuantityUnit          *string
+	QuantityUnitAmount    *decimal.Decimal
+	DeliveryAt            *uint32
+	StartAt               *uint32
+	TestOnly              *bool
+	BenefitIntervalHours  *uint32
+	UnitLockDeposit       *decimal.Decimal
+	UnitType              *types.GoodUnitType
+	QuantityCalculateType *types.GoodUnitCalculateType
+	DurationType          *types.GoodDurationType
+	DurationCalculateType *types.GoodUnitCalculateType
+	SettlementType        *types.GoodSettlementType
+	DeletedAt             *uint32
 }
 
 //nolint:gocyclo
@@ -43,17 +46,14 @@ func CreateSet(c *ent.GoodCreate, req *Req) *ent.GoodCreate {
 	if req.DeviceInfoID != nil {
 		c.SetDeviceInfoID(*req.DeviceInfoID)
 	}
-	if req.DurationDays != nil {
-		c.SetDurationDays(*req.DurationDays)
-	}
 	if req.CoinTypeID != nil {
 		c.SetCoinTypeID(*req.CoinTypeID)
 	}
 	if req.VendorLocationID != nil {
 		c.SetVendorLocationID(*req.VendorLocationID)
 	}
-	if req.Price != nil {
-		c.SetPrice(*req.Price)
+	if req.UnitPrice != nil {
+		c.SetUnitPrice(*req.UnitPrice)
 	}
 	if req.BenefitType != nil {
 		c.SetBenefitType(req.BenefitType.String())
@@ -67,14 +67,11 @@ func CreateSet(c *ent.GoodCreate, req *Req) *ent.GoodCreate {
 	if req.Title != nil {
 		c.SetTitle(*req.Title)
 	}
-	if req.Unit != nil {
-		c.SetUnit(*req.Unit)
+	if req.QuantityUnit != nil {
+		c.SetQuantityUnit(*req.QuantityUnit)
 	}
-	if req.UnitAmount != nil {
-		c.SetUnitAmount(*req.UnitAmount)
-	}
-	if len(req.SupportCoinTypeIDs) > 0 {
-		c.SetSupportCoinTypeIds(req.SupportCoinTypeIDs)
+	if req.QuantityUnitAmount != nil {
+		c.SetQuantityUnitAmount(*req.QuantityUnitAmount)
 	}
 	if req.DeliveryAt != nil {
 		c.SetDeliveryAt(*req.DeliveryAt)
@@ -91,6 +88,21 @@ func CreateSet(c *ent.GoodCreate, req *Req) *ent.GoodCreate {
 	if req.UnitLockDeposit != nil {
 		c.SetUnitLockDeposit(*req.UnitLockDeposit)
 	}
+	if req.UnitType != nil {
+		c.SetUnitType(req.UnitType.String())
+	}
+	if req.QuantityCalculateType != nil {
+		c.SetQuantityCalculateType(req.QuantityCalculateType.String())
+	}
+	if req.DurationType != nil {
+		c.SetDurationType(req.DurationType.String())
+	}
+	if req.SettlementType != nil {
+		c.SetSettlementType(req.SettlementType.String())
+	}
+	if req.DurationCalculateType != nil {
+		c.SetDurationCalculateType(req.DurationCalculateType.String())
+	}
 	return c
 }
 
@@ -99,17 +111,14 @@ func UpdateSet(u *ent.GoodUpdateOne, req *Req) *ent.GoodUpdateOne {
 	if req.DeviceInfoID != nil {
 		u.SetDeviceInfoID(*req.DeviceInfoID)
 	}
-	if req.DurationDays != nil {
-		u.SetDurationDays(*req.DurationDays)
-	}
 	if req.CoinTypeID != nil {
 		u.SetCoinTypeID(*req.CoinTypeID)
 	}
 	if req.VendorLocationID != nil {
 		u.SetVendorLocationID(*req.VendorLocationID)
 	}
-	if req.Price != nil {
-		u.SetPrice(*req.Price)
+	if req.UnitPrice != nil {
+		u.SetUnitPrice(*req.UnitPrice)
 	}
 	if req.BenefitType != nil {
 		u.SetBenefitType(req.BenefitType.String())
@@ -120,14 +129,11 @@ func UpdateSet(u *ent.GoodUpdateOne, req *Req) *ent.GoodUpdateOne {
 	if req.Title != nil {
 		u.SetTitle(*req.Title)
 	}
-	if req.Unit != nil {
-		u.SetUnit(*req.Unit)
+	if req.QuantityUnit != nil {
+		u.SetQuantityUnit(*req.QuantityUnit)
 	}
-	if req.UnitAmount != nil {
-		u.SetUnitAmount(*req.UnitAmount)
-	}
-	if len(req.SupportCoinTypeIDs) > 0 {
-		u.SetSupportCoinTypeIds(req.SupportCoinTypeIDs)
+	if req.QuantityUnitAmount != nil {
+		u.SetQuantityUnitAmount(*req.QuantityUnitAmount)
 	}
 	if req.DeliveryAt != nil {
 		u.SetDeliveryAt(*req.DeliveryAt)
@@ -143,6 +149,21 @@ func UpdateSet(u *ent.GoodUpdateOne, req *Req) *ent.GoodUpdateOne {
 	}
 	if req.UnitLockDeposit != nil {
 		u.SetUnitLockDeposit(*req.UnitLockDeposit)
+	}
+	if req.UnitType != nil {
+		u.SetUnitType(req.UnitType.String())
+	}
+	if req.QuantityCalculateType != nil {
+		u.SetQuantityCalculateType(req.QuantityCalculateType.String())
+	}
+	if req.DurationType != nil {
+		u.SetDurationType(req.DurationType.String())
+	}
+	if req.SettlementType != nil {
+		u.SetSettlementType(req.SettlementType.String())
+	}
+	if req.DurationCalculateType != nil {
+		u.SetDurationCalculateType(req.DurationCalculateType.String())
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)

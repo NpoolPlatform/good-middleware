@@ -28,7 +28,8 @@ func (s *Server) CreateTopMostGood(ctx context.Context, in *npool.CreateTopMostG
 		topmostgood1.WithTopMostID(req.TopMostID, true),
 		topmostgood1.WithDisplayIndex(req.DisplayIndex, true),
 		topmostgood1.WithPosters(req.Posters, true),
-		topmostgood1.WithPrice(req.Price, true),
+		topmostgood1.WithUnitPrice(req.UnitPrice, true),
+		topmostgood1.WithPackagePrice(req.PackagePrice, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
