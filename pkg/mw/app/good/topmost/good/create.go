@@ -41,6 +41,10 @@ func (h *createHandler) createTopMostGood(ctx context.Context, tx *ent.Tx) error
 }
 
 func (h *Handler) CreateTopMostGood(ctx context.Context) (*npool.TopMostGood, error) {
+	if h.UnitPrice == nil && h.PackagePrice == nil {
+		return nil, fmt.Errorf("invalid topmostgood price")
+	}
+
 	if err := h.GetAppGood(ctx); err != nil {
 		return nil, err
 	}
