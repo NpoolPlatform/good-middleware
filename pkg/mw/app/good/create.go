@@ -68,6 +68,7 @@ func (h *createHandler) createAppGood(ctx context.Context, tx *ent.Tx) error {
 			MinOrderDuration:       h.MinOrderDuration,
 			MaxOrderDuration:       h.MaxOrderDuration,
 			PackageWithRequireds:   h.PackageWithRequireds,
+			EnableSimulate:         h.EnableSimulate,
 		},
 	).Save(ctx); err != nil {
 		return err

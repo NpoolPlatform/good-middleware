@@ -54,6 +54,7 @@ func (s *Server) CreateGood(ctx context.Context, in *npool.CreateGoodRequest) (*
 		appgood1.WithMinOrderDuration(req.MinOrderDuration, false),
 		appgood1.WithMaxOrderDuration(req.MaxOrderDuration, false),
 		appgood1.WithPackageWithRequireds(req.PackageWithRequireds, false),
+		appgood1.WithEnableSimulate(req.EnableSimulate, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

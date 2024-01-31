@@ -137,6 +137,7 @@ var ret = npool.Good{
 	MaxOrderAmount:         "0",
 	MaxUserAmount:          "0",
 	PackageWithRequireds:   true,
+	EnableSimulate:         false,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -236,6 +237,7 @@ func createGood(t *testing.T) {
 		WithMaxOrderDuration(&ret.MaxOrderDuration, true),
 		WithGoodName(&ret.GoodName, true),
 		WithPosters(ret.AppGoodPosters, true),
+		WithEnableSimulate(&ret.EnableSimulate, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.CreateGood(context.Background())

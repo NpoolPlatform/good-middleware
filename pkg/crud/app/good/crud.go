@@ -46,6 +46,7 @@ type Req struct {
 	MinOrderDuration       *uint32
 	MaxOrderDuration       *uint32
 	PackageWithRequireds   *bool
+	EnableSimulate         *bool
 }
 
 //nolint:gocyclo,funlen
@@ -143,6 +144,9 @@ func CreateSet(c *ent.AppGoodCreate, req *Req) *ent.AppGoodCreate {
 	if req.PackageWithRequireds != nil {
 		c.SetPackageWithRequireds(*req.PackageWithRequireds)
 	}
+	if req.EnableSimulate != nil {
+		c.SetEnableSimulate(*req.EnableSimulate)
+	}
 	return c
 }
 
@@ -235,18 +239,22 @@ func UpdateSet(u *ent.AppGoodUpdateOne, req *Req) *ent.AppGoodUpdateOne {
 	if req.PackageWithRequireds != nil {
 		u.SetPackageWithRequireds(*req.PackageWithRequireds)
 	}
+	if req.EnableSimulate != nil {
+		u.SetEnableSimulate(*req.EnableSimulate)
+	}
 	return u
 }
 
 type Conds struct {
-	ID      *cruder.Cond
-	EntID   *cruder.Cond
-	AppID   *cruder.Cond
-	GoodID  *cruder.Cond
-	GoodIDs *cruder.Cond
-	AppIDs  *cruder.Cond
-	EntIDs  *cruder.Cond
-	IDs     *cruder.Cond
+	ID             *cruder.Cond
+	EntID          *cruder.Cond
+	AppID          *cruder.Cond
+	GoodID         *cruder.Cond
+	GoodIDs        *cruder.Cond
+	AppIDs         *cruder.Cond
+	EntIDs         *cruder.Cond
+	IDs            *cruder.Cond
+	EnableSimulate *cruder.Cond
 }
 
 //nolint:gocyclo,funlen
@@ -351,5 +359,18 @@ func SetQueryConds(q *ent.AppGoodQuery, conds *Conds) (*ent.AppGoodQuery, error)
 			return nil, fmt.Errorf("invalid appgood field")
 		}
 	}
+	if conds.EnableSimulate != nil {
+		value, ok := conds.EnableSimulate.Val.(bool)
+		if !ok {
+			return nil, fmt.Errorf("invalid enablesimulate")
+		}
+		switch conds.EnableSimulate.Op {
+		case cruder.EQ:
+			q.Where(entappgood.EnableSimulate(value))
+		default:
+			return nil, fmt.Errorf("invalid appgood field")
+		}
+	}
+
 	return q, nil
 }
