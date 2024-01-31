@@ -101,6 +101,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entappgood.FieldMinOrderDuration), "min_order_duration"),
 			sql.As(t.C(entappgood.FieldMaxOrderDuration), "max_order_duration"),
 			sql.As(t.C(entappgood.FieldPackageWithRequireds), "package_with_requireds"),
+			sql.As(t.C(entappgood.FieldEnableSimulate), "enable_simulate"),
 			sql.As(t.C(entappgood.FieldCreatedAt), "created_at"),
 			sql.As(t.C(entappgood.FieldUpdatedAt), "updated_at"),
 		)
