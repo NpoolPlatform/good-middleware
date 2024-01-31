@@ -451,6 +451,20 @@ func (agc *AppGoodCreate) SetNillablePackageWithRequireds(b *bool) *AppGoodCreat
 	return agc
 }
 
+// SetEnableSimulate sets the "enable_simulate" field.
+func (agc *AppGoodCreate) SetEnableSimulate(b bool) *AppGoodCreate {
+	agc.mutation.SetEnableSimulate(b)
+	return agc
+}
+
+// SetNillableEnableSimulate sets the "enable_simulate" field if the given value is not nil.
+func (agc *AppGoodCreate) SetNillableEnableSimulate(b *bool) *AppGoodCreate {
+	if b != nil {
+		agc.SetEnableSimulate(*b)
+	}
+	return agc
+}
+
 // SetID sets the "id" field.
 func (agc *AppGoodCreate) SetID(u uint32) *AppGoodCreate {
 	agc.mutation.SetID(u)
@@ -675,6 +689,10 @@ func (agc *AppGoodCreate) defaults() error {
 	if _, ok := agc.mutation.PackageWithRequireds(); !ok {
 		v := appgood.DefaultPackageWithRequireds
 		agc.mutation.SetPackageWithRequireds(v)
+	}
+	if _, ok := agc.mutation.EnableSimulate(); !ok {
+		v := appgood.DefaultEnableSimulate
+		agc.mutation.SetEnableSimulate(v)
 	}
 	return nil
 }
@@ -1004,6 +1022,14 @@ func (agc *AppGoodCreate) createSpec() (*AppGood, *sqlgraph.CreateSpec) {
 			Column: appgood.FieldPackageWithRequireds,
 		})
 		_node.PackageWithRequireds = value
+	}
+	if value, ok := agc.mutation.EnableSimulate(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appgood.FieldEnableSimulate,
+		})
+		_node.EnableSimulate = value
 	}
 	return _node, _spec
 }
@@ -1692,6 +1718,24 @@ func (u *AppGoodUpsert) UpdatePackageWithRequireds() *AppGoodUpsert {
 // ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
 func (u *AppGoodUpsert) ClearPackageWithRequireds() *AppGoodUpsert {
 	u.SetNull(appgood.FieldPackageWithRequireds)
+	return u
+}
+
+// SetEnableSimulate sets the "enable_simulate" field.
+func (u *AppGoodUpsert) SetEnableSimulate(v bool) *AppGoodUpsert {
+	u.Set(appgood.FieldEnableSimulate, v)
+	return u
+}
+
+// UpdateEnableSimulate sets the "enable_simulate" field to the value that was provided on create.
+func (u *AppGoodUpsert) UpdateEnableSimulate() *AppGoodUpsert {
+	u.SetExcluded(appgood.FieldEnableSimulate)
+	return u
+}
+
+// ClearEnableSimulate clears the value of the "enable_simulate" field.
+func (u *AppGoodUpsert) ClearEnableSimulate() *AppGoodUpsert {
+	u.SetNull(appgood.FieldEnableSimulate)
 	return u
 }
 
@@ -2484,6 +2528,27 @@ func (u *AppGoodUpsertOne) UpdatePackageWithRequireds() *AppGoodUpsertOne {
 func (u *AppGoodUpsertOne) ClearPackageWithRequireds() *AppGoodUpsertOne {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.ClearPackageWithRequireds()
+	})
+}
+
+// SetEnableSimulate sets the "enable_simulate" field.
+func (u *AppGoodUpsertOne) SetEnableSimulate(v bool) *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetEnableSimulate(v)
+	})
+}
+
+// UpdateEnableSimulate sets the "enable_simulate" field to the value that was provided on create.
+func (u *AppGoodUpsertOne) UpdateEnableSimulate() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateEnableSimulate()
+	})
+}
+
+// ClearEnableSimulate clears the value of the "enable_simulate" field.
+func (u *AppGoodUpsertOne) ClearEnableSimulate() *AppGoodUpsertOne {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearEnableSimulate()
 	})
 }
 
@@ -3441,6 +3506,27 @@ func (u *AppGoodUpsertBulk) UpdatePackageWithRequireds() *AppGoodUpsertBulk {
 func (u *AppGoodUpsertBulk) ClearPackageWithRequireds() *AppGoodUpsertBulk {
 	return u.Update(func(s *AppGoodUpsert) {
 		s.ClearPackageWithRequireds()
+	})
+}
+
+// SetEnableSimulate sets the "enable_simulate" field.
+func (u *AppGoodUpsertBulk) SetEnableSimulate(v bool) *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.SetEnableSimulate(v)
+	})
+}
+
+// UpdateEnableSimulate sets the "enable_simulate" field to the value that was provided on create.
+func (u *AppGoodUpsertBulk) UpdateEnableSimulate() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.UpdateEnableSimulate()
+	})
+}
+
+// ClearEnableSimulate clears the value of the "enable_simulate" field.
+func (u *AppGoodUpsertBulk) ClearEnableSimulate() *AppGoodUpsertBulk {
+	return u.Update(func(s *AppGoodUpsert) {
+		s.ClearEnableSimulate()
 	})
 }
 

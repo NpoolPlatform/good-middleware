@@ -990,6 +990,7 @@ type AppGoodMutation struct {
 	max_order_duration          *uint32
 	addmax_order_duration       *int32
 	package_with_requireds      *bool
+	enable_simulate             *bool
 	clearedFields               map[string]struct{}
 	done                        bool
 	oldValue                    func(context.Context) (*AppGood, error)
@@ -2895,6 +2896,55 @@ func (m *AppGoodMutation) ResetPackageWithRequireds() {
 	delete(m.clearedFields, appgood.FieldPackageWithRequireds)
 }
 
+// SetEnableSimulate sets the "enable_simulate" field.
+func (m *AppGoodMutation) SetEnableSimulate(b bool) {
+	m.enable_simulate = &b
+}
+
+// EnableSimulate returns the value of the "enable_simulate" field in the mutation.
+func (m *AppGoodMutation) EnableSimulate() (r bool, exists bool) {
+	v := m.enable_simulate
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEnableSimulate returns the old "enable_simulate" field's value of the AppGood entity.
+// If the AppGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodMutation) OldEnableSimulate(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEnableSimulate is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEnableSimulate requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEnableSimulate: %w", err)
+	}
+	return oldValue.EnableSimulate, nil
+}
+
+// ClearEnableSimulate clears the value of the "enable_simulate" field.
+func (m *AppGoodMutation) ClearEnableSimulate() {
+	m.enable_simulate = nil
+	m.clearedFields[appgood.FieldEnableSimulate] = struct{}{}
+}
+
+// EnableSimulateCleared returns if the "enable_simulate" field was cleared in this mutation.
+func (m *AppGoodMutation) EnableSimulateCleared() bool {
+	_, ok := m.clearedFields[appgood.FieldEnableSimulate]
+	return ok
+}
+
+// ResetEnableSimulate resets all changes to the "enable_simulate" field.
+func (m *AppGoodMutation) ResetEnableSimulate() {
+	m.enable_simulate = nil
+	delete(m.clearedFields, appgood.FieldEnableSimulate)
+}
+
 // Where appends a list predicates to the AppGoodMutation builder.
 func (m *AppGoodMutation) Where(ps ...predicate.AppGood) {
 	m.predicates = append(m.predicates, ps...)
@@ -2914,7 +2964,7 @@ func (m *AppGoodMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppGoodMutation) Fields() []string {
-	fields := make([]string, 0, 34)
+	fields := make([]string, 0, 35)
 	if m.created_at != nil {
 		fields = append(fields, appgood.FieldCreatedAt)
 	}
@@ -3017,6 +3067,9 @@ func (m *AppGoodMutation) Fields() []string {
 	if m.package_with_requireds != nil {
 		fields = append(fields, appgood.FieldPackageWithRequireds)
 	}
+	if m.enable_simulate != nil {
+		fields = append(fields, appgood.FieldEnableSimulate)
+	}
 	return fields
 }
 
@@ -3093,6 +3146,8 @@ func (m *AppGoodMutation) Field(name string) (ent.Value, bool) {
 		return m.MaxOrderDuration()
 	case appgood.FieldPackageWithRequireds:
 		return m.PackageWithRequireds()
+	case appgood.FieldEnableSimulate:
+		return m.EnableSimulate()
 	}
 	return nil, false
 }
@@ -3170,6 +3225,8 @@ func (m *AppGoodMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldMaxOrderDuration(ctx)
 	case appgood.FieldPackageWithRequireds:
 		return m.OldPackageWithRequireds(ctx)
+	case appgood.FieldEnableSimulate:
+		return m.OldEnableSimulate(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppGood field %s", name)
 }
@@ -3417,6 +3474,13 @@ func (m *AppGoodMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetPackageWithRequireds(v)
 		return nil
+	case appgood.FieldEnableSimulate:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEnableSimulate(v)
+		return nil
 	}
 	return fmt.Errorf("unknown AppGood field %s", name)
 }
@@ -3654,6 +3718,9 @@ func (m *AppGoodMutation) ClearedFields() []string {
 	if m.FieldCleared(appgood.FieldPackageWithRequireds) {
 		fields = append(fields, appgood.FieldPackageWithRequireds)
 	}
+	if m.FieldCleared(appgood.FieldEnableSimulate) {
+		fields = append(fields, appgood.FieldEnableSimulate)
+	}
 	return fields
 }
 
@@ -3751,6 +3818,9 @@ func (m *AppGoodMutation) ClearField(name string) error {
 		return nil
 	case appgood.FieldPackageWithRequireds:
 		m.ClearPackageWithRequireds()
+		return nil
+	case appgood.FieldEnableSimulate:
+		m.ClearEnableSimulate()
 		return nil
 	}
 	return fmt.Errorf("unknown AppGood nullable field %s", name)
@@ -3861,6 +3931,9 @@ func (m *AppGoodMutation) ResetField(name string) error {
 		return nil
 	case appgood.FieldPackageWithRequireds:
 		m.ResetPackageWithRequireds()
+		return nil
+	case appgood.FieldEnableSimulate:
+		m.ResetEnableSimulate()
 		return nil
 	}
 	return fmt.Errorf("unknown AppGood field %s", name)

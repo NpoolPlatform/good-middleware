@@ -71,6 +71,7 @@ var (
 		{Name: "min_order_duration", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "max_order_duration", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "package_with_requireds", Type: field.TypeBool, Nullable: true, Default: true},
+		{Name: "enable_simulate", Type: field.TypeBool, Nullable: true, Default: false},
 	}
 	// AppGoodsTable holds the schema information for the "app_goods" table.
 	AppGoodsTable = &schema.Table{

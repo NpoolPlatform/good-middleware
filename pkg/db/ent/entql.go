@@ -98,6 +98,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appgood.FieldMinOrderDuration:       {Type: field.TypeUint32, Column: appgood.FieldMinOrderDuration},
 			appgood.FieldMaxOrderDuration:       {Type: field.TypeUint32, Column: appgood.FieldMaxOrderDuration},
 			appgood.FieldPackageWithRequireds:   {Type: field.TypeBool, Column: appgood.FieldPackageWithRequireds},
+			appgood.FieldEnableSimulate:         {Type: field.TypeBool, Column: appgood.FieldEnableSimulate},
 		},
 	}
 	graph.Nodes[2] = &sqlgraph.Node{
@@ -812,6 +813,11 @@ func (f *AppGoodFilter) WhereMaxOrderDuration(p entql.Uint32P) {
 // WherePackageWithRequireds applies the entql bool predicate on the package_with_requireds field.
 func (f *AppGoodFilter) WherePackageWithRequireds(p entql.BoolP) {
 	f.Where(p.Field(appgood.FieldPackageWithRequireds))
+}
+
+// WhereEnableSimulate applies the entql bool predicate on the enable_simulate field.
+func (f *AppGoodFilter) WhereEnableSimulate(p entql.BoolP) {
+	f.Where(p.Field(appgood.FieldEnableSimulate))
 }
 
 // addPredicate implements the predicateAdder interface.

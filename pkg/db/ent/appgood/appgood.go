@@ -81,6 +81,8 @@ const (
 	FieldMaxOrderDuration = "max_order_duration"
 	// FieldPackageWithRequireds holds the string denoting the package_with_requireds field in the database.
 	FieldPackageWithRequireds = "package_with_requireds"
+	// FieldEnableSimulate holds the string denoting the enable_simulate field in the database.
+	FieldEnableSimulate = "enable_simulate"
 	// Table holds the table name of the appgood in the database.
 	Table = "app_goods"
 )
@@ -122,6 +124,7 @@ var Columns = []string{
 	FieldMinOrderDuration,
 	FieldMaxOrderDuration,
 	FieldPackageWithRequireds,
+	FieldEnableSimulate,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -209,4 +212,6 @@ var (
 	DefaultMaxOrderDuration uint32
 	// DefaultPackageWithRequireds holds the default value on creation for the "package_with_requireds" field.
 	DefaultPackageWithRequireds bool
+	// DefaultEnableSimulate holds the default value on creation for the "enable_simulate" field.
+	DefaultEnableSimulate bool
 )

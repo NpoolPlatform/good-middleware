@@ -216,6 +216,10 @@ func init() {
 	appgoodDescPackageWithRequireds := appgoodFields[29].Descriptor()
 	// appgood.DefaultPackageWithRequireds holds the default value on creation for the package_with_requireds field.
 	appgood.DefaultPackageWithRequireds = appgoodDescPackageWithRequireds.Default.(bool)
+	// appgoodDescEnableSimulate is the schema descriptor for enable_simulate field.
+	appgoodDescEnableSimulate := appgoodFields[30].Descriptor()
+	// appgood.DefaultEnableSimulate holds the default value on creation for the enable_simulate field.
+	appgood.DefaultEnableSimulate = appgoodDescEnableSimulate.Default.(bool)
 	appstockMixin := schema.AppStock{}.Mixin()
 	appstock.Policy = privacy.NewPolicies(appstockMixin[0], schema.AppStock{})
 	appstock.Hooks[0] = func(next ent.Mutator) ent.Mutator {

@@ -290,6 +290,13 @@ func PackageWithRequireds(v bool) predicate.AppGood {
 	})
 }
 
+// EnableSimulate applies equality check predicate on the "enable_simulate" field. It's identical to EnableSimulateEQ.
+func EnableSimulate(v bool) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEnableSimulate), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
@@ -2439,6 +2446,34 @@ func PackageWithRequiredsIsNil() predicate.AppGood {
 func PackageWithRequiredsNotNil() predicate.AppGood {
 	return predicate.AppGood(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldPackageWithRequireds)))
+	})
+}
+
+// EnableSimulateEQ applies the EQ predicate on the "enable_simulate" field.
+func EnableSimulateEQ(v bool) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEnableSimulate), v))
+	})
+}
+
+// EnableSimulateNEQ applies the NEQ predicate on the "enable_simulate" field.
+func EnableSimulateNEQ(v bool) predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldEnableSimulate), v))
+	})
+}
+
+// EnableSimulateIsNil applies the IsNil predicate on the "enable_simulate" field.
+func EnableSimulateIsNil() predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldEnableSimulate)))
+	})
+}
+
+// EnableSimulateNotNil applies the NotNil predicate on the "enable_simulate" field.
+func EnableSimulateNotNil() predicate.AppGood {
+	return predicate.AppGood(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldEnableSimulate)))
 	})
 }
 
