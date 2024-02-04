@@ -149,6 +149,20 @@ func (aslc *AppStockLockCreate) SetNillableChargeBackState(s *string) *AppStockL
 	return aslc
 }
 
+// SetExLockID sets the "ex_lock_id" field.
+func (aslc *AppStockLockCreate) SetExLockID(u uuid.UUID) *AppStockLockCreate {
+	aslc.mutation.SetExLockID(u)
+	return aslc
+}
+
+// SetNillableExLockID sets the "ex_lock_id" field if the given value is not nil.
+func (aslc *AppStockLockCreate) SetNillableExLockID(u *uuid.UUID) *AppStockLockCreate {
+	if u != nil {
+		aslc.SetExLockID(*u)
+	}
+	return aslc
+}
+
 // SetID sets the "id" field.
 func (aslc *AppStockLockCreate) SetID(u uint32) *AppStockLockCreate {
 	aslc.mutation.SetID(u)
@@ -285,6 +299,13 @@ func (aslc *AppStockLockCreate) defaults() error {
 		v := appstocklock.DefaultChargeBackState
 		aslc.mutation.SetChargeBackState(v)
 	}
+	if _, ok := aslc.mutation.ExLockID(); !ok {
+		if appstocklock.DefaultExLockID == nil {
+			return fmt.Errorf("ent: uninitialized appstocklock.DefaultExLockID (forgotten import ent/runtime?)")
+		}
+		v := appstocklock.DefaultExLockID()
+		aslc.mutation.SetExLockID(v)
+	}
 	return nil
 }
 
@@ -407,6 +428,14 @@ func (aslc *AppStockLockCreate) createSpec() (*AppStockLock, *sqlgraph.CreateSpe
 			Column: appstocklock.FieldChargeBackState,
 		})
 		_node.ChargeBackState = value
+	}
+	if value, ok := aslc.mutation.ExLockID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appstocklock.FieldExLockID,
+		})
+		_node.ExLockID = value
 	}
 	return _node, _spec
 }
@@ -615,6 +644,24 @@ func (u *AppStockLockUpsert) UpdateChargeBackState() *AppStockLockUpsert {
 // ClearChargeBackState clears the value of the "charge_back_state" field.
 func (u *AppStockLockUpsert) ClearChargeBackState() *AppStockLockUpsert {
 	u.SetNull(appstocklock.FieldChargeBackState)
+	return u
+}
+
+// SetExLockID sets the "ex_lock_id" field.
+func (u *AppStockLockUpsert) SetExLockID(v uuid.UUID) *AppStockLockUpsert {
+	u.Set(appstocklock.FieldExLockID, v)
+	return u
+}
+
+// UpdateExLockID sets the "ex_lock_id" field to the value that was provided on create.
+func (u *AppStockLockUpsert) UpdateExLockID() *AppStockLockUpsert {
+	u.SetExcluded(appstocklock.FieldExLockID)
+	return u
+}
+
+// ClearExLockID clears the value of the "ex_lock_id" field.
+func (u *AppStockLockUpsert) ClearExLockID() *AppStockLockUpsert {
+	u.SetNull(appstocklock.FieldExLockID)
 	return u
 }
 
@@ -847,6 +894,27 @@ func (u *AppStockLockUpsertOne) UpdateChargeBackState() *AppStockLockUpsertOne {
 func (u *AppStockLockUpsertOne) ClearChargeBackState() *AppStockLockUpsertOne {
 	return u.Update(func(s *AppStockLockUpsert) {
 		s.ClearChargeBackState()
+	})
+}
+
+// SetExLockID sets the "ex_lock_id" field.
+func (u *AppStockLockUpsertOne) SetExLockID(v uuid.UUID) *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetExLockID(v)
+	})
+}
+
+// UpdateExLockID sets the "ex_lock_id" field to the value that was provided on create.
+func (u *AppStockLockUpsertOne) UpdateExLockID() *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateExLockID()
+	})
+}
+
+// ClearExLockID clears the value of the "ex_lock_id" field.
+func (u *AppStockLockUpsertOne) ClearExLockID() *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.ClearExLockID()
 	})
 }
 
@@ -1244,6 +1312,27 @@ func (u *AppStockLockUpsertBulk) UpdateChargeBackState() *AppStockLockUpsertBulk
 func (u *AppStockLockUpsertBulk) ClearChargeBackState() *AppStockLockUpsertBulk {
 	return u.Update(func(s *AppStockLockUpsert) {
 		s.ClearChargeBackState()
+	})
+}
+
+// SetExLockID sets the "ex_lock_id" field.
+func (u *AppStockLockUpsertBulk) SetExLockID(v uuid.UUID) *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetExLockID(v)
+	})
+}
+
+// UpdateExLockID sets the "ex_lock_id" field to the value that was provided on create.
+func (u *AppStockLockUpsertBulk) UpdateExLockID() *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateExLockID()
+	})
+}
+
+// ClearExLockID clears the value of the "ex_lock_id" field.
+func (u *AppStockLockUpsertBulk) ClearExLockID() *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.ClearExLockID()
 	})
 }
 

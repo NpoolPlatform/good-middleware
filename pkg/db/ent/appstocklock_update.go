@@ -199,6 +199,26 @@ func (aslu *AppStockLockUpdate) ClearChargeBackState() *AppStockLockUpdate {
 	return aslu
 }
 
+// SetExLockID sets the "ex_lock_id" field.
+func (aslu *AppStockLockUpdate) SetExLockID(u uuid.UUID) *AppStockLockUpdate {
+	aslu.mutation.SetExLockID(u)
+	return aslu
+}
+
+// SetNillableExLockID sets the "ex_lock_id" field if the given value is not nil.
+func (aslu *AppStockLockUpdate) SetNillableExLockID(u *uuid.UUID) *AppStockLockUpdate {
+	if u != nil {
+		aslu.SetExLockID(*u)
+	}
+	return aslu
+}
+
+// ClearExLockID clears the value of the "ex_lock_id" field.
+func (aslu *AppStockLockUpdate) ClearExLockID() *AppStockLockUpdate {
+	aslu.mutation.ClearExLockID()
+	return aslu
+}
+
 // Mutation returns the AppStockLockMutation object of the builder.
 func (aslu *AppStockLockUpdate) Mutation() *AppStockLockMutation {
 	return aslu.mutation
@@ -411,6 +431,19 @@ func (aslu *AppStockLockUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Column: appstocklock.FieldChargeBackState,
 		})
 	}
+	if value, ok := aslu.mutation.ExLockID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appstocklock.FieldExLockID,
+		})
+	}
+	if aslu.mutation.ExLockIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appstocklock.FieldExLockID,
+		})
+	}
 	_spec.Modifiers = aslu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, aslu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -598,6 +631,26 @@ func (asluo *AppStockLockUpdateOne) SetNillableChargeBackState(s *string) *AppSt
 // ClearChargeBackState clears the value of the "charge_back_state" field.
 func (asluo *AppStockLockUpdateOne) ClearChargeBackState() *AppStockLockUpdateOne {
 	asluo.mutation.ClearChargeBackState()
+	return asluo
+}
+
+// SetExLockID sets the "ex_lock_id" field.
+func (asluo *AppStockLockUpdateOne) SetExLockID(u uuid.UUID) *AppStockLockUpdateOne {
+	asluo.mutation.SetExLockID(u)
+	return asluo
+}
+
+// SetNillableExLockID sets the "ex_lock_id" field if the given value is not nil.
+func (asluo *AppStockLockUpdateOne) SetNillableExLockID(u *uuid.UUID) *AppStockLockUpdateOne {
+	if u != nil {
+		asluo.SetExLockID(*u)
+	}
+	return asluo
+}
+
+// ClearExLockID clears the value of the "ex_lock_id" field.
+func (asluo *AppStockLockUpdateOne) ClearExLockID() *AppStockLockUpdateOne {
+	asluo.mutation.ClearExLockID()
 	return asluo
 }
 
@@ -841,6 +894,19 @@ func (asluo *AppStockLockUpdateOne) sqlSave(ctx context.Context) (_node *AppStoc
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: appstocklock.FieldChargeBackState,
+		})
+	}
+	if value, ok := asluo.mutation.ExLockID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appstocklock.FieldExLockID,
+		})
+	}
+	if asluo.mutation.ExLockIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appstocklock.FieldExLockID,
 		})
 	}
 	_spec.Modifiers = asluo.modifiers

@@ -9,7 +9,18 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappstocklock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
+
+	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
+
+type LockStock struct {
+	EntID        *uuid.UUID
+	GoodID       *uuid.UUID
+	AppGoodID    *uuid.UUID
+	Units        *decimal.Decimal
+	AppSpotUnits *decimal.Decimal
+}
 
 type lockopHandler struct {
 	*Handler

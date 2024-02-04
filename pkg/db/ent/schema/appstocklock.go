@@ -54,6 +54,12 @@ func (AppStockLock) Fields() []ent.Field {
 			String("charge_back_state").
 			Optional().
 			Default(types.AppStockLockState_DefaultAppStockLockState.String()),
+		field.
+			UUID("ex_lock_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 	}
 }
 
