@@ -22,6 +22,7 @@ type Handler struct {
 	LockID            *uuid.UUID
 	Rollback          *bool
 	Stocks            []*LockStock
+	EntIDs            []uuid.UUID
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -307,13 +308,13 @@ func WithStocks(stocks []*npool.LocksRequest_XStock, must bool) func(context.Con
 			if err != nil {
 				return err
 			}
-			_stock.Units = &units
+			_stock.Locked = &units
 
 			appSpotUnits, err := decimal.NewFromString(stock.AppSpotUnits)
 			if err != nil {
 				return err
 			}
-			_stock.AppSpotUnits = &appSpotUnits
+			_stock.AppSpotLocked = &appSpotUnits
 
 			h.Stocks = append(h.Stocks, _stock)
 		}

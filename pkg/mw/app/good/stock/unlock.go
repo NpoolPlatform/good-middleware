@@ -20,7 +20,7 @@ type unlockHandler struct {
 	*lockopHandler
 }
 
-func (h *unlockHandler) unlockStock(ctx context.Context, tx *ent.Tx) error {
+func (h *unlockHandler) unlockStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	info, err := tx.
 		Stock.
 		Query().
@@ -41,9 +41,9 @@ func (h *unlockHandler) unlockStock(ctx context.Context, tx *ent.Tx) error {
 	locked := info.Locked
 	appReserved := info.AppReserved
 
-	locked = locked.Sub(h.lock.Units)
-	platformLocked := h.lock.Units.Sub(h.lock.AppSpotUnits)
-	appReserved = h.lock.AppSpotUnits.Add(appReserved)
+	locked = locked.Sub(lock.Units)
+	platformLocked := lock.Units.Sub(lock.AppSpotUnits)
+	appReserved = lock.AppSpotUnits.Add(appReserved)
 	if platformLocked.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid appspotlocked")
 	}
@@ -82,7 +82,7 @@ func (h *unlockHandler) unlockStock(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *unlockHandler) unlockAppStock(ctx context.Context, tx *ent.Tx) error {
+func (h *unlockHandler) unlockAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.
 		Query().
@@ -103,8 +103,8 @@ func (h *unlockHandler) unlockAppStock(ctx context.Context, tx *ent.Tx) error {
 	locked := info.Locked
 	spotQuantity := info.SpotQuantity
 
-	locked = locked.Sub(h.lock.Units)
-	spotQuantity = h.lock.AppSpotUnits.Add(spotQuantity)
+	locked = locked.Sub(lock.Units)
+	spotQuantity = lock.AppSpotUnits.Add(spotQuantity)
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid locked")
 	}
@@ -135,7 +135,7 @@ func (h *Handler) UnlockStock(ctx context.Context) (*npool.Stock, error) {
 		},
 	}
 
-	if err := handler.getLock(ctx); err != nil {
+	if err := handler.getLocks(ctx); err != nil {
 		if ent.IsNotFound(err) && h.Rollback != nil && *h.Rollback {
 			return nil, nil
 		}
@@ -147,13 +147,15 @@ func (h *Handler) UnlockStock(ctx context.Context) (*npool.Stock, error) {
 	}
 
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.unlockAppStock(ctx, tx); err != nil {
-			return err
+		for _, lock := range handler.lockopHandler.locks {
+			if err := handler.unlockAppStock(ctx, lock, tx); err != nil {
+				return err
+			}
+			if err := handler.unlockStock(ctx, lock, tx); err != nil {
+				return err
+			}
 		}
-		if err := handler.unlockStock(ctx, tx); err != nil {
-			return err
-		}
-		if err := handler.updateLock(ctx, tx); err != nil {
+		if err := handler.updateLocks(ctx, tx); err != nil {
 			return err
 		}
 		return nil

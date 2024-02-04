@@ -6,11 +6,13 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
+	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
 	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 
 	"github.com/shopspring/decimal"
@@ -21,6 +23,7 @@ type queryHandler struct {
 	stmSelect *ent.AppStockSelect
 	stmCount  *ent.AppStockSelect
 	infos     []*npool.Stock
+	total     uint32
 }
 
 func (h *queryHandler) selectStock(stm *ent.AppStockQuery) *ent.AppStockSelect {
@@ -40,6 +43,16 @@ func (h *queryHandler) queryStock(cli *ent.Client) error {
 	}
 	h.stmSelect = h.selectStock(stm)
 	return nil
+}
+
+func (h *queryHandler) queryStocks(cli *ent.Client) (*ent.AppStockSelect, error) {
+	stm, err := appstockcrud.SetQueryConds(cli.AppStock.Query(), &appstockcrud.Conds{
+		EntIDs: &cruder.Cond{Op: cruder.IN, Val: h.EntIDs},
+	})
+	if err != nil {
+		return nil, err
+	}
+	return h.selectStock(stm), nil
 }
 
 func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
@@ -174,4 +187,42 @@ func (h *Handler) GetStock(ctx context.Context) (*npool.Stock, error) {
 	handler.formalize()
 
 	return handler.infos[0], nil
+}
+
+func (h *Handler) GetStocks(ctx context.Context) ([]*npool.Stock, uint32, error) {
+	handler := &queryHandler{
+		Handler: h,
+	}
+
+	var err error
+
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		handler.stmSelect, err = handler.queryStocks(cli)
+		if err != nil {
+			return err
+		}
+		handler.stmCount, err = handler.queryStocks(cli)
+		if err != nil {
+			return err
+		}
+
+		handler.queryJoin()
+
+		total, err := handler.stmCount.Count(_ctx)
+		if err != nil {
+			return err
+		}
+		handler.total = uint32(total)
+
+		handler.stmSelect.
+			Limit(len(h.EntIDs))
+		return handler.scan(_ctx)
+	})
+	if err != nil {
+		return nil, 0, err
+	}
+
+	handler.formalize()
+
+	return handler.infos, handler.total, nil
 }

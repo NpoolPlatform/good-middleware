@@ -21,7 +21,7 @@ type waitStartHandler struct {
 	*lockopHandler
 }
 
-func (h *waitStartHandler) waitStartStock(ctx context.Context, tx *ent.Tx) error {
+func (h *waitStartHandler) waitStartStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	info, err := tx.
 		Stock.
 		Query().
@@ -42,9 +42,9 @@ func (h *waitStartHandler) waitStartStock(ctx context.Context, tx *ent.Tx) error
 	sold := info.Sold
 	waitStart := info.WaitStart
 
-	waitStart = h.lock.Units.Add(waitStart)
-	locked = locked.Sub(h.lock.Units)
-	sold = h.lock.Units.Add(sold)
+	waitStart = lock.Units.Add(waitStart)
+	locked = locked.Sub(lock.Units)
+	sold = lock.Units.Add(sold)
 
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
@@ -74,12 +74,12 @@ func (h *waitStartHandler) waitStartStock(ctx context.Context, tx *ent.Tx) error
 	return nil
 }
 
-func (h *waitStartHandler) waitStartAppStock(ctx context.Context, tx *ent.Tx) error {
+func (h *waitStartHandler) waitStartAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.
 		Query().
 		Where(
-			entappstock.EntID(h.lock.AppStockID),
+			entappstock.EntID(lock.AppStockID),
 			entappstock.DeletedAt(0),
 		).
 		ForUpdate().
@@ -97,9 +97,9 @@ func (h *waitStartHandler) waitStartAppStock(ctx context.Context, tx *ent.Tx) er
 	sold := info.Sold
 	waitStart := info.WaitStart
 
-	waitStart = h.lock.Units.Add(waitStart)
-	locked = locked.Sub(h.lock.Units)
-	sold = h.lock.Units.Add(sold)
+	waitStart = lock.Units.Add(waitStart)
+	locked = locked.Sub(lock.Units)
+	sold = lock.Units.Add(sold)
 
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
@@ -130,18 +130,20 @@ func (h *Handler) WaitStartStock(ctx context.Context) (*npool.Stock, error) {
 		},
 	}
 
-	if err := handler.getLock(ctx); err != nil {
+	if err := handler.getLocks(ctx); err != nil {
 		return nil, err
 	}
 
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.waitStartAppStock(ctx, tx); err != nil {
-			return err
+		for _, lock := range handler.lockopHandler.locks {
+			if err := handler.waitStartAppStock(ctx, lock, tx); err != nil {
+				return err
+			}
+			if err := handler.waitStartStock(ctx, lock, tx); err != nil {
+				return err
+			}
 		}
-		if err := handler.waitStartStock(ctx, tx); err != nil {
-			return err
-		}
-		if err := handler.updateLock(ctx, tx); err != nil {
+		if err := handler.updateLocks(ctx, tx); err != nil {
 			return err
 		}
 		return nil

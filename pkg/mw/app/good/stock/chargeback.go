@@ -21,7 +21,7 @@ type chargeBackHandler struct {
 	*lockopHandler
 }
 
-func (h *chargeBackHandler) chargeBackStock(ctx context.Context, tx *ent.Tx) error {
+func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	info, err := tx.
 		Stock.
 		Query().
@@ -43,14 +43,14 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, tx *ent.Tx) err
 	waitStart := info.WaitStart
 	sold := info.Sold
 
-	switch h.lock.LockState {
+	switch lock.LockState {
 	case types.AppStockLockState_AppStockInService.String():
-		inService = inService.Sub(h.lock.Units)
+		inService = inService.Sub(lock.Units)
 	case types.AppStockLockState_AppStockWaitStart.String():
-		waitStart = waitStart.Sub(h.lock.Units)
+		waitStart = waitStart.Sub(lock.Units)
 	}
-	sold = sold.Sub(h.lock.Units)
-	spotQuantity = spotQuantity.Add(h.lock.Units)
+	sold = sold.Sub(lock.Units)
+	spotQuantity = spotQuantity.Add(lock.Units)
 
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
@@ -84,7 +84,7 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, tx *ent.Tx) err
 	return nil
 }
 
-func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, tx *ent.Tx) error {
+func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.
 		Query().
@@ -106,13 +106,13 @@ func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, tx *ent.Tx) 
 	waitStart := info.WaitStart
 	sold := info.Sold
 
-	switch h.lock.LockState {
+	switch lock.LockState {
 	case types.AppStockLockState_AppStockInService.String():
-		inService = inService.Sub(h.lock.Units)
+		inService = inService.Sub(lock.Units)
 	case types.AppStockLockState_AppStockWaitStart.String():
-		waitStart = waitStart.Sub(h.lock.Units)
+		waitStart = waitStart.Sub(lock.Units)
 	}
-	sold = sold.Sub(h.lock.Units)
+	sold = sold.Sub(lock.Units)
 
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
@@ -146,18 +146,20 @@ func (h *Handler) ChargeBackStock(ctx context.Context) (*npool.Stock, error) {
 		},
 	}
 
-	if err := handler.getLock(ctx); err != nil {
+	if err := handler.getLocks(ctx); err != nil {
 		return nil, err
 	}
 
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.chargeBackAppStock(ctx, tx); err != nil {
-			return err
+		for _, lock := range handler.lockopHandler.locks {
+			if err := handler.chargeBackAppStock(ctx, lock, tx); err != nil {
+				return err
+			}
+			if err := handler.chargeBackStock(ctx, lock, tx); err != nil {
+				return err
+			}
 		}
-		if err := handler.chargeBackStock(ctx, tx); err != nil {
-			return err
-		}
-		if err := handler.updateLock(ctx, tx); err != nil {
+		if err := handler.updateLocks(ctx, tx); err != nil {
 			return err
 		}
 		return nil
