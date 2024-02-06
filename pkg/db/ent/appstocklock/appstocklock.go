@@ -31,6 +31,8 @@ const (
 	FieldLockState = "lock_state"
 	// FieldChargeBackState holds the string denoting the charge_back_state field in the database.
 	FieldChargeBackState = "charge_back_state"
+	// FieldExLockID holds the string denoting the ex_lock_id field in the database.
+	FieldExLockID = "ex_lock_id"
 	// Table holds the table name of the appstocklock in the database.
 	Table = "app_stock_locks"
 )
@@ -47,6 +49,7 @@ var Columns = []string{
 	FieldAppSpotUnits,
 	FieldLockState,
 	FieldChargeBackState,
+	FieldExLockID,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -88,4 +91,6 @@ var (
 	DefaultLockState string
 	// DefaultChargeBackState holds the default value on creation for the "charge_back_state" field.
 	DefaultChargeBackState string
+	// DefaultExLockID holds the default value on creation for the "ex_lock_id" field.
+	DefaultExLockID func() uuid.UUID
 )

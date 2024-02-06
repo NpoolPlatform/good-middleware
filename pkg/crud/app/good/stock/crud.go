@@ -88,6 +88,7 @@ func UpdateSet(u *ent.AppStockUpdateOne, req *Req) *ent.AppStockUpdateOne {
 type Conds struct {
 	ID         *cruder.Cond
 	EntID      *cruder.Cond
+	EntIDs     *cruder.Cond
 	AppID      *cruder.Cond
 	GoodID     *cruder.Cond
 	GoodIDs    *cruder.Cond
@@ -122,6 +123,18 @@ func SetQueryConds(q *ent.AppStockQuery, conds *Conds) (*ent.AppStockQuery, erro
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(entappstock.EntID(id))
+		default:
+			return nil, fmt.Errorf("invalid appstock field")
+		}
+	}
+	if conds.EntIDs != nil {
+		ids, ok := conds.EntIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid entids")
+		}
+		switch conds.EntIDs.Op {
+		case cruder.IN:
+			q.Where(entappstock.EntIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid appstock field")
 		}
@@ -189,7 +202,7 @@ func SetQueryConds(q *ent.AppStockQuery, conds *Conds) (*ent.AppStockQuery, erro
 	if conds.AppIDs != nil {
 		ids, ok := conds.AppIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
+			return nil, fmt.Errorf("invalid appids")
 		}
 		switch conds.AppIDs.Op {
 		case cruder.IN:

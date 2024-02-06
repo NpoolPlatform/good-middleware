@@ -19,12 +19,12 @@ type lockHandler struct {
 	*lockopHandler
 }
 
-func (h *lockHandler) lockStock(ctx context.Context, tx *ent.Tx) error {
+func (h *lockHandler) lockStock(ctx context.Context, stock *LockStock, tx *ent.Tx) error {
 	info, err := tx.
 		Stock.
 		Query().
 		Where(
-			entstock.GoodID(*h.GoodID),
+			entstock.GoodID(*stock.GoodID),
 			entstock.DeletedAt(0),
 		).
 		ForUpdate().
@@ -40,11 +40,11 @@ func (h *lockHandler) lockStock(ctx context.Context, tx *ent.Tx) error {
 	locked := info.Locked
 	appReserved := info.AppReserved
 
-	locked = h.Locked.Add(locked)
-	platformLocked := *h.Locked
-	if h.AppSpotLocked != nil {
-		platformLocked = platformLocked.Sub(*h.AppSpotLocked)
-		appReserved = appReserved.Sub(*h.AppSpotLocked)
+	locked = stock.Locked.Add(locked)
+	platformLocked := *stock.Locked
+	if stock.AppSpotLocked != nil {
+		platformLocked = platformLocked.Sub(*stock.AppSpotLocked)
+		appReserved = appReserved.Sub(*stock.AppSpotLocked)
 	}
 	if platformLocked.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid appspotlocked")
@@ -84,12 +84,12 @@ func (h *lockHandler) lockStock(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *lockHandler) lockAppStock(ctx context.Context, tx *ent.Tx) error {
+func (h *lockHandler) lockAppStock(ctx context.Context, stock *LockStock, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.
 		Query().
 		Where(
-			entappstock.EntID(*h.EntID),
+			entappstock.EntID(*stock.EntID),
 			entappstock.DeletedAt(0),
 		).
 		ForUpdate().
@@ -104,18 +104,18 @@ func (h *lockHandler) lockAppStock(ctx context.Context, tx *ent.Tx) error {
 	if *h.AppID != info.AppID {
 		return fmt.Errorf("invalid appid")
 	}
-	if *h.GoodID != info.GoodID {
+	if *stock.GoodID != info.GoodID {
 		return fmt.Errorf("invalid goodid")
 	}
-	if *h.AppGoodID != info.AppGoodID {
+	if *stock.AppGoodID != info.AppGoodID {
 		return fmt.Errorf("invalid appgoodid")
 	}
 	spotQuantity := info.SpotQuantity
 	locked := info.Locked
 
-	locked = h.Locked.Add(locked)
-	if h.AppSpotLocked != nil {
-		spotQuantity = spotQuantity.Sub(*h.AppSpotLocked)
+	locked = stock.Locked.Add(locked)
+	if stock.AppSpotLocked != nil {
+		spotQuantity = spotQuantity.Sub(*stock.AppSpotLocked)
 	}
 	if spotQuantity.Cmp(info.Reserved) > 0 {
 		return fmt.Errorf("invalid stock")
@@ -147,13 +147,20 @@ func (h *Handler) LockStock(ctx context.Context) (*npool.Stock, error) {
 		},
 	}
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.lockAppStock(ctx, tx); err != nil {
+		stock := &LockStock{
+			EntID:         h.EntID,
+			GoodID:        h.GoodID,
+			AppGoodID:     h.AppGoodID,
+			Locked:        h.Locked,
+			AppSpotLocked: h.AppSpotLocked,
+		}
+		if err := handler.lockAppStock(ctx, stock, tx); err != nil {
 			return err
 		}
-		if err := handler.lockStock(ctx, tx); err != nil {
+		if err := handler.lockStock(ctx, stock, tx); err != nil {
 			return err
 		}
-		if err := handler.createLock(ctx, tx); err != nil {
+		if err := handler.createLocks(ctx, tx); err != nil {
 			return err
 		}
 		return nil
@@ -163,4 +170,36 @@ func (h *Handler) LockStock(ctx context.Context) (*npool.Stock, error) {
 	}
 
 	return h.GetStock(ctx)
+}
+
+func (h *Handler) LockStocks(ctx context.Context) ([]*npool.Stock, error) {
+	handler := &lockHandler{
+		lockopHandler: &lockopHandler{
+			Handler: h,
+		},
+	}
+	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		for _, stock := range h.Stocks {
+			h.EntIDs = append(h.EntIDs, *stock.EntID)
+			if err := handler.lockAppStock(ctx, stock, tx); err != nil {
+				return err
+			}
+			if err := handler.lockStock(ctx, stock, tx); err != nil {
+				return err
+			}
+		}
+		if err := handler.createLocks(ctx, tx); err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	stocks, _, err := h.GetStocks(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return stocks, nil
 }

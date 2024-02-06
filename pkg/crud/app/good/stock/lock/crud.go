@@ -14,6 +14,7 @@ type Req struct {
 	Units             *decimal.Decimal
 	AppSpotUnits      *decimal.Decimal
 	AppStockLockState *types.AppStockLockState
+	ExLockID          *uuid.UUID
 	DeletedAt         *uint32
 }
 
@@ -32,6 +33,9 @@ func CreateSet(c *ent.AppStockLockCreate, req *Req) *ent.AppStockLockCreate {
 	}
 	if req.AppStockLockState != nil {
 		c.SetLockState(req.AppStockLockState.String())
+	}
+	if req.ExLockID != nil {
+		c.SetExLockID(*req.ExLockID)
 	}
 	return c
 }

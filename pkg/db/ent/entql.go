@@ -146,6 +146,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appstocklock.FieldAppSpotUnits:    {Type: field.TypeOther, Column: appstocklock.FieldAppSpotUnits},
 			appstocklock.FieldLockState:       {Type: field.TypeString, Column: appstocklock.FieldLockState},
 			appstocklock.FieldChargeBackState: {Type: field.TypeString, Column: appstocklock.FieldChargeBackState},
+			appstocklock.FieldExLockID:        {Type: field.TypeUUID, Column: appstocklock.FieldExLockID},
 		},
 	}
 	graph.Nodes[4] = &sqlgraph.Node{
@@ -1002,6 +1003,11 @@ func (f *AppStockLockFilter) WhereLockState(p entql.StringP) {
 // WhereChargeBackState applies the entql string predicate on the charge_back_state field.
 func (f *AppStockLockFilter) WhereChargeBackState(p entql.StringP) {
 	f.Where(p.Field(appstocklock.FieldChargeBackState))
+}
+
+// WhereExLockID applies the entql [16]byte predicate on the ex_lock_id field.
+func (f *AppStockLockFilter) WhereExLockID(p entql.ValueP) {
+	f.Where(p.Field(appstocklock.FieldExLockID))
 }
 
 // addPredicate implements the predicateAdder interface.

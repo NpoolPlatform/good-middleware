@@ -328,6 +328,10 @@ func init() {
 	appstocklockDescChargeBackState := appstocklockFields[4].Descriptor()
 	// appstocklock.DefaultChargeBackState holds the default value on creation for the charge_back_state field.
 	appstocklock.DefaultChargeBackState = appstocklockDescChargeBackState.Default.(string)
+	// appstocklockDescExLockID is the schema descriptor for ex_lock_id field.
+	appstocklockDescExLockID := appstocklockFields[5].Descriptor()
+	// appstocklock.DefaultExLockID holds the default value on creation for the ex_lock_id field.
+	appstocklock.DefaultExLockID = appstocklockDescExLockID.Default.(func() uuid.UUID)
 	commentMixin := schema.Comment{}.Mixin()
 	comment.Policy = privacy.NewPolicies(commentMixin[0], schema.Comment{})
 	comment.Hooks[0] = func(next ent.Mutator) ent.Mutator {

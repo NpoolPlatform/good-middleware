@@ -5173,6 +5173,7 @@ type AppStockLockMutation struct {
 	app_spot_units    *decimal.Decimal
 	lock_state        *string
 	charge_back_state *string
+	ex_lock_id        *uuid.UUID
 	clearedFields     map[string]struct{}
 	done              bool
 	oldValue          func(context.Context) (*AppStockLock, error)
@@ -5732,6 +5733,55 @@ func (m *AppStockLockMutation) ResetChargeBackState() {
 	delete(m.clearedFields, appstocklock.FieldChargeBackState)
 }
 
+// SetExLockID sets the "ex_lock_id" field.
+func (m *AppStockLockMutation) SetExLockID(u uuid.UUID) {
+	m.ex_lock_id = &u
+}
+
+// ExLockID returns the value of the "ex_lock_id" field in the mutation.
+func (m *AppStockLockMutation) ExLockID() (r uuid.UUID, exists bool) {
+	v := m.ex_lock_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldExLockID returns the old "ex_lock_id" field's value of the AppStockLock entity.
+// If the AppStockLock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppStockLockMutation) OldExLockID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldExLockID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldExLockID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldExLockID: %w", err)
+	}
+	return oldValue.ExLockID, nil
+}
+
+// ClearExLockID clears the value of the "ex_lock_id" field.
+func (m *AppStockLockMutation) ClearExLockID() {
+	m.ex_lock_id = nil
+	m.clearedFields[appstocklock.FieldExLockID] = struct{}{}
+}
+
+// ExLockIDCleared returns if the "ex_lock_id" field was cleared in this mutation.
+func (m *AppStockLockMutation) ExLockIDCleared() bool {
+	_, ok := m.clearedFields[appstocklock.FieldExLockID]
+	return ok
+}
+
+// ResetExLockID resets all changes to the "ex_lock_id" field.
+func (m *AppStockLockMutation) ResetExLockID() {
+	m.ex_lock_id = nil
+	delete(m.clearedFields, appstocklock.FieldExLockID)
+}
+
 // Where appends a list predicates to the AppStockLockMutation builder.
 func (m *AppStockLockMutation) Where(ps ...predicate.AppStockLock) {
 	m.predicates = append(m.predicates, ps...)
@@ -5751,7 +5801,7 @@ func (m *AppStockLockMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppStockLockMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.created_at != nil {
 		fields = append(fields, appstocklock.FieldCreatedAt)
 	}
@@ -5779,6 +5829,9 @@ func (m *AppStockLockMutation) Fields() []string {
 	if m.charge_back_state != nil {
 		fields = append(fields, appstocklock.FieldChargeBackState)
 	}
+	if m.ex_lock_id != nil {
+		fields = append(fields, appstocklock.FieldExLockID)
+	}
 	return fields
 }
 
@@ -5805,6 +5858,8 @@ func (m *AppStockLockMutation) Field(name string) (ent.Value, bool) {
 		return m.LockState()
 	case appstocklock.FieldChargeBackState:
 		return m.ChargeBackState()
+	case appstocklock.FieldExLockID:
+		return m.ExLockID()
 	}
 	return nil, false
 }
@@ -5832,6 +5887,8 @@ func (m *AppStockLockMutation) OldField(ctx context.Context, name string) (ent.V
 		return m.OldLockState(ctx)
 	case appstocklock.FieldChargeBackState:
 		return m.OldChargeBackState(ctx)
+	case appstocklock.FieldExLockID:
+		return m.OldExLockID(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppStockLock field %s", name)
 }
@@ -5903,6 +5960,13 @@ func (m *AppStockLockMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetChargeBackState(v)
+		return nil
+	case appstocklock.FieldExLockID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetExLockID(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppStockLock field %s", name)
@@ -5988,6 +6052,9 @@ func (m *AppStockLockMutation) ClearedFields() []string {
 	if m.FieldCleared(appstocklock.FieldChargeBackState) {
 		fields = append(fields, appstocklock.FieldChargeBackState)
 	}
+	if m.FieldCleared(appstocklock.FieldExLockID) {
+		fields = append(fields, appstocklock.FieldExLockID)
+	}
 	return fields
 }
 
@@ -6016,6 +6083,9 @@ func (m *AppStockLockMutation) ClearField(name string) error {
 		return nil
 	case appstocklock.FieldChargeBackState:
 		m.ClearChargeBackState()
+		return nil
+	case appstocklock.FieldExLockID:
+		m.ClearExLockID()
 		return nil
 	}
 	return fmt.Errorf("unknown AppStockLock nullable field %s", name)
@@ -6051,6 +6121,9 @@ func (m *AppStockLockMutation) ResetField(name string) error {
 		return nil
 	case appstocklock.FieldChargeBackState:
 		m.ResetChargeBackState()
+		return nil
+	case appstocklock.FieldExLockID:
+		m.ResetExLockID()
 		return nil
 	}
 	return fmt.Errorf("unknown AppStockLock field %s", name)
