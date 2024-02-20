@@ -40,6 +40,8 @@ const (
 	FieldTrialUser = "trial_user"
 	// FieldPurchasedUser holds the string denoting the purchased_user field in the database.
 	FieldPurchasedUser = "purchased_user"
+	// FieldOrderFirstComment holds the string denoting the order_first_comment field in the database.
+	FieldOrderFirstComment = "order_first_comment"
 	// Table holds the table name of the comment in the database.
 	Table = "comments"
 )
@@ -61,6 +63,7 @@ var Columns = []string{
 	FieldAnonymous,
 	FieldTrialUser,
 	FieldPurchasedUser,
+	FieldOrderFirstComment,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -112,4 +115,6 @@ var (
 	DefaultTrialUser bool
 	// DefaultPurchasedUser holds the default value on creation for the "purchased_user" field.
 	DefaultPurchasedUser bool
+	// DefaultOrderFirstComment holds the default value on creation for the "order_first_comment" field.
+	DefaultOrderFirstComment bool
 )

@@ -218,6 +218,20 @@ func (cc *CommentCreate) SetNillablePurchasedUser(b *bool) *CommentCreate {
 	return cc
 }
 
+// SetOrderFirstComment sets the "order_first_comment" field.
+func (cc *CommentCreate) SetOrderFirstComment(b bool) *CommentCreate {
+	cc.mutation.SetOrderFirstComment(b)
+	return cc
+}
+
+// SetNillableOrderFirstComment sets the "order_first_comment" field if the given value is not nil.
+func (cc *CommentCreate) SetNillableOrderFirstComment(b *bool) *CommentCreate {
+	if b != nil {
+		cc.SetOrderFirstComment(*b)
+	}
+	return cc
+}
+
 // SetID sets the "id" field.
 func (cc *CommentCreate) SetID(u uint32) *CommentCreate {
 	cc.mutation.SetID(u)
@@ -389,6 +403,10 @@ func (cc *CommentCreate) defaults() error {
 		v := comment.DefaultPurchasedUser
 		cc.mutation.SetPurchasedUser(v)
 	}
+	if _, ok := cc.mutation.OrderFirstComment(); !ok {
+		v := comment.DefaultOrderFirstComment
+		cc.mutation.SetOrderFirstComment(v)
+	}
 	return nil
 }
 
@@ -551,6 +569,14 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 			Column: comment.FieldPurchasedUser,
 		})
 		_node.PurchasedUser = value
+	}
+	if value, ok := cc.mutation.OrderFirstComment(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: comment.FieldOrderFirstComment,
+		})
+		_node.OrderFirstComment = value
 	}
 	return _node, _spec
 }
@@ -849,6 +875,24 @@ func (u *CommentUpsert) UpdatePurchasedUser() *CommentUpsert {
 // ClearPurchasedUser clears the value of the "purchased_user" field.
 func (u *CommentUpsert) ClearPurchasedUser() *CommentUpsert {
 	u.SetNull(comment.FieldPurchasedUser)
+	return u
+}
+
+// SetOrderFirstComment sets the "order_first_comment" field.
+func (u *CommentUpsert) SetOrderFirstComment(v bool) *CommentUpsert {
+	u.Set(comment.FieldOrderFirstComment, v)
+	return u
+}
+
+// UpdateOrderFirstComment sets the "order_first_comment" field to the value that was provided on create.
+func (u *CommentUpsert) UpdateOrderFirstComment() *CommentUpsert {
+	u.SetExcluded(comment.FieldOrderFirstComment)
+	return u
+}
+
+// ClearOrderFirstComment clears the value of the "order_first_comment" field.
+func (u *CommentUpsert) ClearOrderFirstComment() *CommentUpsert {
+	u.SetNull(comment.FieldOrderFirstComment)
 	return u
 }
 
@@ -1186,6 +1230,27 @@ func (u *CommentUpsertOne) UpdatePurchasedUser() *CommentUpsertOne {
 func (u *CommentUpsertOne) ClearPurchasedUser() *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.ClearPurchasedUser()
+	})
+}
+
+// SetOrderFirstComment sets the "order_first_comment" field.
+func (u *CommentUpsertOne) SetOrderFirstComment(v bool) *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetOrderFirstComment(v)
+	})
+}
+
+// UpdateOrderFirstComment sets the "order_first_comment" field to the value that was provided on create.
+func (u *CommentUpsertOne) UpdateOrderFirstComment() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateOrderFirstComment()
+	})
+}
+
+// ClearOrderFirstComment clears the value of the "order_first_comment" field.
+func (u *CommentUpsertOne) ClearOrderFirstComment() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearOrderFirstComment()
 	})
 }
 
@@ -1688,6 +1753,27 @@ func (u *CommentUpsertBulk) UpdatePurchasedUser() *CommentUpsertBulk {
 func (u *CommentUpsertBulk) ClearPurchasedUser() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.ClearPurchasedUser()
+	})
+}
+
+// SetOrderFirstComment sets the "order_first_comment" field.
+func (u *CommentUpsertBulk) SetOrderFirstComment(v bool) *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetOrderFirstComment(v)
+	})
+}
+
+// UpdateOrderFirstComment sets the "order_first_comment" field to the value that was provided on create.
+func (u *CommentUpsertBulk) UpdateOrderFirstComment() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateOrderFirstComment()
+	})
+}
+
+// ClearOrderFirstComment clears the value of the "order_first_comment" field.
+func (u *CommentUpsertBulk) ClearOrderFirstComment() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearOrderFirstComment()
 	})
 }
 

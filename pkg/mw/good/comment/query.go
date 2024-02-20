@@ -68,6 +68,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entcomment.FieldAnonymous), "anonymous"),
 			sql.As(t.C(entcomment.FieldPurchasedUser), "purchased_user"),
 			sql.As(t.C(entcomment.FieldTrialUser), "trial_user"),
+			sql.As(t.C(entcomment.FieldOrderFirstComment), "order_first_comment"),
 			sql.As(t.C(entcomment.FieldCreatedAt), "created_at"),
 			sql.As(t.C(entcomment.FieldUpdatedAt), "updated_at"),
 		)

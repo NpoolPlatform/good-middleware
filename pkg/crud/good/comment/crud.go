@@ -11,18 +11,19 @@ import (
 )
 
 type Req struct {
-	EntID         *uuid.UUID
-	AppID         *uuid.UUID
-	UserID        *uuid.UUID
-	GoodID        *uuid.UUID
-	AppGoodID     *uuid.UUID
-	OrderID       *uuid.UUID
-	Content       *string
-	ReplyToID     *uuid.UUID
-	Anonymous     *bool
-	PurchasedUser *bool
-	TrialUser     *bool
-	DeletedAt     *uint32
+	EntID             *uuid.UUID
+	AppID             *uuid.UUID
+	UserID            *uuid.UUID
+	GoodID            *uuid.UUID
+	AppGoodID         *uuid.UUID
+	OrderID           *uuid.UUID
+	Content           *string
+	ReplyToID         *uuid.UUID
+	Anonymous         *bool
+	PurchasedUser     *bool
+	TrialUser         *bool
+	OrderFirstComment *bool
+	DeletedAt         *uint32
 }
 
 func CreateSet(c *ent.CommentCreate, req *Req) *ent.CommentCreate {
@@ -58,6 +59,9 @@ func CreateSet(c *ent.CommentCreate, req *Req) *ent.CommentCreate {
 	}
 	if req.TrialUser != nil {
 		c.SetTrialUser(*req.TrialUser)
+	}
+	if req.OrderFirstComment != nil {
+		c.SetOrderFirstComment(*req.OrderFirstComment)
 	}
 	return c
 }

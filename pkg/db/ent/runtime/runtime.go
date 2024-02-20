@@ -406,6 +406,10 @@ func init() {
 	commentDescPurchasedUser := commentFields[9].Descriptor()
 	// comment.DefaultPurchasedUser holds the default value on creation for the purchased_user field.
 	comment.DefaultPurchasedUser = commentDescPurchasedUser.Default.(bool)
+	// commentDescOrderFirstComment is the schema descriptor for order_first_comment field.
+	commentDescOrderFirstComment := commentFields[10].Descriptor()
+	// comment.DefaultOrderFirstComment holds the default value on creation for the order_first_comment field.
+	comment.DefaultOrderFirstComment = commentDescOrderFirstComment.Default.(bool)
 	deviceinfoMixin := schema.DeviceInfo{}.Mixin()
 	deviceinfo.Policy = privacy.NewPolicies(deviceinfoMixin[0], schema.DeviceInfo{})
 	deviceinfo.Hooks[0] = func(next ent.Mutator) ent.Mutator {

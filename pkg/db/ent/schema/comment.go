@@ -76,6 +76,10 @@ func (Comment) Fields() []ent.Field {
 			Bool("purchased_user").
 			Optional().
 			Default(false),
+		field.
+			Bool("order_first_comment").
+			Optional().
+			Default(false),
 	}
 }
 

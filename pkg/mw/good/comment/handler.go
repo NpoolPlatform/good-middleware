@@ -14,20 +14,21 @@ import (
 )
 
 type Handler struct {
-	ID            *uint32
-	EntID         *uuid.UUID
-	AppID         *uuid.UUID
-	UserID        *uuid.UUID
-	AppGoodID     *uuid.UUID
-	OrderID       *uuid.UUID
-	Content       *string
-	ReplyToID     *uuid.UUID
-	Anonymous     *bool
-	PurchasedUser *bool
-	TrialUser     *bool
-	Conds         *commentcrud.Conds
-	Offset        int32
-	Limit         int32
+	ID                *uint32
+	EntID             *uuid.UUID
+	AppID             *uuid.UUID
+	UserID            *uuid.UUID
+	AppGoodID         *uuid.UUID
+	OrderID           *uuid.UUID
+	Content           *string
+	ReplyToID         *uuid.UUID
+	Anonymous         *bool
+	PurchasedUser     *bool
+	TrialUser         *bool
+	OrderFirstComment *bool
+	Conds             *commentcrud.Conds
+	Offset            int32
+	Limit             int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -203,6 +204,13 @@ func WithPurchasedUser(b *bool, must bool) func(context.Context, *Handler) error
 func WithTrialUser(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.TrialUser = b
+		return nil
+	}
+}
+
+func WithOrderFirstComment(b *bool, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.OrderFirstComment = b
 		return nil
 	}
 }
