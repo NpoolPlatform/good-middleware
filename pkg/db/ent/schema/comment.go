@@ -64,6 +64,18 @@ func (Comment) Fields() []ent.Field {
 			Default(func() uuid.UUID {
 				return uuid.UUID{}
 			}),
+		field.
+			Bool("anonymous").
+			Optional().
+			Default(false),
+		field.
+			Bool("trial_user").
+			Optional().
+			Default(false),
+		field.
+			Bool("purchased_user").
+			Optional().
+			Default(false),
 	}
 }
 

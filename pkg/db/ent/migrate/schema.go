@@ -161,6 +161,9 @@ var (
 		{Name: "order_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "content", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "reply_to_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "anonymous", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "trial_user", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "purchased_user", Type: field.TypeBool, Nullable: true, Default: false},
 	}
 	// CommentsTable holds the schema information for the "comments" table.
 	CommentsTable = &schema.Table{

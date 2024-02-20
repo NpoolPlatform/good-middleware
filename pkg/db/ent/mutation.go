@@ -6180,27 +6180,30 @@ func (m *AppStockLockMutation) ResetEdge(name string) error {
 // CommentMutation represents an operation that mutates the Comment nodes in the graph.
 type CommentMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uint32
-	created_at    *uint32
-	addcreated_at *int32
-	updated_at    *uint32
-	addupdated_at *int32
-	deleted_at    *uint32
-	adddeleted_at *int32
-	ent_id        *uuid.UUID
-	app_id        *uuid.UUID
-	user_id       *uuid.UUID
-	good_id       *uuid.UUID
-	app_good_id   *uuid.UUID
-	order_id      *uuid.UUID
-	content       *string
-	reply_to_id   *uuid.UUID
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*Comment, error)
-	predicates    []predicate.Comment
+	op             Op
+	typ            string
+	id             *uint32
+	created_at     *uint32
+	addcreated_at  *int32
+	updated_at     *uint32
+	addupdated_at  *int32
+	deleted_at     *uint32
+	adddeleted_at  *int32
+	ent_id         *uuid.UUID
+	app_id         *uuid.UUID
+	user_id        *uuid.UUID
+	good_id        *uuid.UUID
+	app_good_id    *uuid.UUID
+	order_id       *uuid.UUID
+	content        *string
+	reply_to_id    *uuid.UUID
+	anonymous      *bool
+	trial_user     *bool
+	purchased_user *bool
+	clearedFields  map[string]struct{}
+	done           bool
+	oldValue       func(context.Context) (*Comment, error)
+	predicates     []predicate.Comment
 }
 
 var _ ent.Mutation = (*CommentMutation)(nil)
@@ -6854,6 +6857,153 @@ func (m *CommentMutation) ResetReplyToID() {
 	delete(m.clearedFields, comment.FieldReplyToID)
 }
 
+// SetAnonymous sets the "anonymous" field.
+func (m *CommentMutation) SetAnonymous(b bool) {
+	m.anonymous = &b
+}
+
+// Anonymous returns the value of the "anonymous" field in the mutation.
+func (m *CommentMutation) Anonymous() (r bool, exists bool) {
+	v := m.anonymous
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAnonymous returns the old "anonymous" field's value of the Comment entity.
+// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CommentMutation) OldAnonymous(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAnonymous is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAnonymous requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAnonymous: %w", err)
+	}
+	return oldValue.Anonymous, nil
+}
+
+// ClearAnonymous clears the value of the "anonymous" field.
+func (m *CommentMutation) ClearAnonymous() {
+	m.anonymous = nil
+	m.clearedFields[comment.FieldAnonymous] = struct{}{}
+}
+
+// AnonymousCleared returns if the "anonymous" field was cleared in this mutation.
+func (m *CommentMutation) AnonymousCleared() bool {
+	_, ok := m.clearedFields[comment.FieldAnonymous]
+	return ok
+}
+
+// ResetAnonymous resets all changes to the "anonymous" field.
+func (m *CommentMutation) ResetAnonymous() {
+	m.anonymous = nil
+	delete(m.clearedFields, comment.FieldAnonymous)
+}
+
+// SetTrialUser sets the "trial_user" field.
+func (m *CommentMutation) SetTrialUser(b bool) {
+	m.trial_user = &b
+}
+
+// TrialUser returns the value of the "trial_user" field in the mutation.
+func (m *CommentMutation) TrialUser() (r bool, exists bool) {
+	v := m.trial_user
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTrialUser returns the old "trial_user" field's value of the Comment entity.
+// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CommentMutation) OldTrialUser(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTrialUser is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTrialUser requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTrialUser: %w", err)
+	}
+	return oldValue.TrialUser, nil
+}
+
+// ClearTrialUser clears the value of the "trial_user" field.
+func (m *CommentMutation) ClearTrialUser() {
+	m.trial_user = nil
+	m.clearedFields[comment.FieldTrialUser] = struct{}{}
+}
+
+// TrialUserCleared returns if the "trial_user" field was cleared in this mutation.
+func (m *CommentMutation) TrialUserCleared() bool {
+	_, ok := m.clearedFields[comment.FieldTrialUser]
+	return ok
+}
+
+// ResetTrialUser resets all changes to the "trial_user" field.
+func (m *CommentMutation) ResetTrialUser() {
+	m.trial_user = nil
+	delete(m.clearedFields, comment.FieldTrialUser)
+}
+
+// SetPurchasedUser sets the "purchased_user" field.
+func (m *CommentMutation) SetPurchasedUser(b bool) {
+	m.purchased_user = &b
+}
+
+// PurchasedUser returns the value of the "purchased_user" field in the mutation.
+func (m *CommentMutation) PurchasedUser() (r bool, exists bool) {
+	v := m.purchased_user
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPurchasedUser returns the old "purchased_user" field's value of the Comment entity.
+// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CommentMutation) OldPurchasedUser(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPurchasedUser is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPurchasedUser requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPurchasedUser: %w", err)
+	}
+	return oldValue.PurchasedUser, nil
+}
+
+// ClearPurchasedUser clears the value of the "purchased_user" field.
+func (m *CommentMutation) ClearPurchasedUser() {
+	m.purchased_user = nil
+	m.clearedFields[comment.FieldPurchasedUser] = struct{}{}
+}
+
+// PurchasedUserCleared returns if the "purchased_user" field was cleared in this mutation.
+func (m *CommentMutation) PurchasedUserCleared() bool {
+	_, ok := m.clearedFields[comment.FieldPurchasedUser]
+	return ok
+}
+
+// ResetPurchasedUser resets all changes to the "purchased_user" field.
+func (m *CommentMutation) ResetPurchasedUser() {
+	m.purchased_user = nil
+	delete(m.clearedFields, comment.FieldPurchasedUser)
+}
+
 // Where appends a list predicates to the CommentMutation builder.
 func (m *CommentMutation) Where(ps ...predicate.Comment) {
 	m.predicates = append(m.predicates, ps...)
@@ -6873,7 +7023,7 @@ func (m *CommentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *CommentMutation) Fields() []string {
-	fields := make([]string, 0, 11)
+	fields := make([]string, 0, 14)
 	if m.created_at != nil {
 		fields = append(fields, comment.FieldCreatedAt)
 	}
@@ -6907,6 +7057,15 @@ func (m *CommentMutation) Fields() []string {
 	if m.reply_to_id != nil {
 		fields = append(fields, comment.FieldReplyToID)
 	}
+	if m.anonymous != nil {
+		fields = append(fields, comment.FieldAnonymous)
+	}
+	if m.trial_user != nil {
+		fields = append(fields, comment.FieldTrialUser)
+	}
+	if m.purchased_user != nil {
+		fields = append(fields, comment.FieldPurchasedUser)
+	}
 	return fields
 }
 
@@ -6937,6 +7096,12 @@ func (m *CommentMutation) Field(name string) (ent.Value, bool) {
 		return m.Content()
 	case comment.FieldReplyToID:
 		return m.ReplyToID()
+	case comment.FieldAnonymous:
+		return m.Anonymous()
+	case comment.FieldTrialUser:
+		return m.TrialUser()
+	case comment.FieldPurchasedUser:
+		return m.PurchasedUser()
 	}
 	return nil, false
 }
@@ -6968,6 +7133,12 @@ func (m *CommentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldContent(ctx)
 	case comment.FieldReplyToID:
 		return m.OldReplyToID(ctx)
+	case comment.FieldAnonymous:
+		return m.OldAnonymous(ctx)
+	case comment.FieldTrialUser:
+		return m.OldTrialUser(ctx)
+	case comment.FieldPurchasedUser:
+		return m.OldPurchasedUser(ctx)
 	}
 	return nil, fmt.Errorf("unknown Comment field %s", name)
 }
@@ -7053,6 +7224,27 @@ func (m *CommentMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetReplyToID(v)
+		return nil
+	case comment.FieldAnonymous:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAnonymous(v)
+		return nil
+	case comment.FieldTrialUser:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTrialUser(v)
+		return nil
+	case comment.FieldPurchasedUser:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPurchasedUser(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Comment field %s", name)
@@ -7144,6 +7336,15 @@ func (m *CommentMutation) ClearedFields() []string {
 	if m.FieldCleared(comment.FieldReplyToID) {
 		fields = append(fields, comment.FieldReplyToID)
 	}
+	if m.FieldCleared(comment.FieldAnonymous) {
+		fields = append(fields, comment.FieldAnonymous)
+	}
+	if m.FieldCleared(comment.FieldTrialUser) {
+		fields = append(fields, comment.FieldTrialUser)
+	}
+	if m.FieldCleared(comment.FieldPurchasedUser) {
+		fields = append(fields, comment.FieldPurchasedUser)
+	}
 	return fields
 }
 
@@ -7178,6 +7379,15 @@ func (m *CommentMutation) ClearField(name string) error {
 		return nil
 	case comment.FieldReplyToID:
 		m.ClearReplyToID()
+		return nil
+	case comment.FieldAnonymous:
+		m.ClearAnonymous()
+		return nil
+	case comment.FieldTrialUser:
+		m.ClearTrialUser()
+		return nil
+	case comment.FieldPurchasedUser:
+		m.ClearPurchasedUser()
 		return nil
 	}
 	return fmt.Errorf("unknown Comment nullable field %s", name)
@@ -7219,6 +7429,15 @@ func (m *CommentMutation) ResetField(name string) error {
 		return nil
 	case comment.FieldReplyToID:
 		m.ResetReplyToID()
+		return nil
+	case comment.FieldAnonymous:
+		m.ResetAnonymous()
+		return nil
+	case comment.FieldTrialUser:
+		m.ResetTrialUser()
+		return nil
+	case comment.FieldPurchasedUser:
+		m.ResetPurchasedUser()
 		return nil
 	}
 	return fmt.Errorf("unknown Comment field %s", name)

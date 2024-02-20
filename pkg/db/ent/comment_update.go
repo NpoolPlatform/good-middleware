@@ -238,6 +238,66 @@ func (cu *CommentUpdate) ClearReplyToID() *CommentUpdate {
 	return cu
 }
 
+// SetAnonymous sets the "anonymous" field.
+func (cu *CommentUpdate) SetAnonymous(b bool) *CommentUpdate {
+	cu.mutation.SetAnonymous(b)
+	return cu
+}
+
+// SetNillableAnonymous sets the "anonymous" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableAnonymous(b *bool) *CommentUpdate {
+	if b != nil {
+		cu.SetAnonymous(*b)
+	}
+	return cu
+}
+
+// ClearAnonymous clears the value of the "anonymous" field.
+func (cu *CommentUpdate) ClearAnonymous() *CommentUpdate {
+	cu.mutation.ClearAnonymous()
+	return cu
+}
+
+// SetTrialUser sets the "trial_user" field.
+func (cu *CommentUpdate) SetTrialUser(b bool) *CommentUpdate {
+	cu.mutation.SetTrialUser(b)
+	return cu
+}
+
+// SetNillableTrialUser sets the "trial_user" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableTrialUser(b *bool) *CommentUpdate {
+	if b != nil {
+		cu.SetTrialUser(*b)
+	}
+	return cu
+}
+
+// ClearTrialUser clears the value of the "trial_user" field.
+func (cu *CommentUpdate) ClearTrialUser() *CommentUpdate {
+	cu.mutation.ClearTrialUser()
+	return cu
+}
+
+// SetPurchasedUser sets the "purchased_user" field.
+func (cu *CommentUpdate) SetPurchasedUser(b bool) *CommentUpdate {
+	cu.mutation.SetPurchasedUser(b)
+	return cu
+}
+
+// SetNillablePurchasedUser sets the "purchased_user" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillablePurchasedUser(b *bool) *CommentUpdate {
+	if b != nil {
+		cu.SetPurchasedUser(*b)
+	}
+	return cu
+}
+
+// ClearPurchasedUser clears the value of the "purchased_user" field.
+func (cu *CommentUpdate) ClearPurchasedUser() *CommentUpdate {
+	cu.mutation.ClearPurchasedUser()
+	return cu
+}
+
 // Mutation returns the CommentMutation object of the builder.
 func (cu *CommentUpdate) Mutation() *CommentMutation {
 	return cu.mutation
@@ -476,6 +536,45 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: comment.FieldReplyToID,
 		})
 	}
+	if value, ok := cu.mutation.Anonymous(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: comment.FieldAnonymous,
+		})
+	}
+	if cu.mutation.AnonymousCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: comment.FieldAnonymous,
+		})
+	}
+	if value, ok := cu.mutation.TrialUser(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: comment.FieldTrialUser,
+		})
+	}
+	if cu.mutation.TrialUserCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: comment.FieldTrialUser,
+		})
+	}
+	if value, ok := cu.mutation.PurchasedUser(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: comment.FieldPurchasedUser,
+		})
+	}
+	if cu.mutation.PurchasedUserCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: comment.FieldPurchasedUser,
+		})
+	}
 	_spec.Modifiers = cu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -703,6 +802,66 @@ func (cuo *CommentUpdateOne) SetNillableReplyToID(u *uuid.UUID) *CommentUpdateOn
 // ClearReplyToID clears the value of the "reply_to_id" field.
 func (cuo *CommentUpdateOne) ClearReplyToID() *CommentUpdateOne {
 	cuo.mutation.ClearReplyToID()
+	return cuo
+}
+
+// SetAnonymous sets the "anonymous" field.
+func (cuo *CommentUpdateOne) SetAnonymous(b bool) *CommentUpdateOne {
+	cuo.mutation.SetAnonymous(b)
+	return cuo
+}
+
+// SetNillableAnonymous sets the "anonymous" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableAnonymous(b *bool) *CommentUpdateOne {
+	if b != nil {
+		cuo.SetAnonymous(*b)
+	}
+	return cuo
+}
+
+// ClearAnonymous clears the value of the "anonymous" field.
+func (cuo *CommentUpdateOne) ClearAnonymous() *CommentUpdateOne {
+	cuo.mutation.ClearAnonymous()
+	return cuo
+}
+
+// SetTrialUser sets the "trial_user" field.
+func (cuo *CommentUpdateOne) SetTrialUser(b bool) *CommentUpdateOne {
+	cuo.mutation.SetTrialUser(b)
+	return cuo
+}
+
+// SetNillableTrialUser sets the "trial_user" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableTrialUser(b *bool) *CommentUpdateOne {
+	if b != nil {
+		cuo.SetTrialUser(*b)
+	}
+	return cuo
+}
+
+// ClearTrialUser clears the value of the "trial_user" field.
+func (cuo *CommentUpdateOne) ClearTrialUser() *CommentUpdateOne {
+	cuo.mutation.ClearTrialUser()
+	return cuo
+}
+
+// SetPurchasedUser sets the "purchased_user" field.
+func (cuo *CommentUpdateOne) SetPurchasedUser(b bool) *CommentUpdateOne {
+	cuo.mutation.SetPurchasedUser(b)
+	return cuo
+}
+
+// SetNillablePurchasedUser sets the "purchased_user" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillablePurchasedUser(b *bool) *CommentUpdateOne {
+	if b != nil {
+		cuo.SetPurchasedUser(*b)
+	}
+	return cuo
+}
+
+// ClearPurchasedUser clears the value of the "purchased_user" field.
+func (cuo *CommentUpdateOne) ClearPurchasedUser() *CommentUpdateOne {
+	cuo.mutation.ClearPurchasedUser()
 	return cuo
 }
 
@@ -972,6 +1131,45 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Column: comment.FieldReplyToID,
+		})
+	}
+	if value, ok := cuo.mutation.Anonymous(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: comment.FieldAnonymous,
+		})
+	}
+	if cuo.mutation.AnonymousCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: comment.FieldAnonymous,
+		})
+	}
+	if value, ok := cuo.mutation.TrialUser(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: comment.FieldTrialUser,
+		})
+	}
+	if cuo.mutation.TrialUserCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: comment.FieldTrialUser,
+		})
+	}
+	if value, ok := cuo.mutation.PurchasedUser(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: comment.FieldPurchasedUser,
+		})
+	}
+	if cuo.mutation.PurchasedUserCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: comment.FieldPurchasedUser,
 		})
 	}
 	_spec.Modifiers = cuo.modifiers

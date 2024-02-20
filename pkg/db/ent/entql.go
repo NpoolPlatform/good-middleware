@@ -160,17 +160,20 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Comment",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			comment.FieldCreatedAt: {Type: field.TypeUint32, Column: comment.FieldCreatedAt},
-			comment.FieldUpdatedAt: {Type: field.TypeUint32, Column: comment.FieldUpdatedAt},
-			comment.FieldDeletedAt: {Type: field.TypeUint32, Column: comment.FieldDeletedAt},
-			comment.FieldEntID:     {Type: field.TypeUUID, Column: comment.FieldEntID},
-			comment.FieldAppID:     {Type: field.TypeUUID, Column: comment.FieldAppID},
-			comment.FieldUserID:    {Type: field.TypeUUID, Column: comment.FieldUserID},
-			comment.FieldGoodID:    {Type: field.TypeUUID, Column: comment.FieldGoodID},
-			comment.FieldAppGoodID: {Type: field.TypeUUID, Column: comment.FieldAppGoodID},
-			comment.FieldOrderID:   {Type: field.TypeUUID, Column: comment.FieldOrderID},
-			comment.FieldContent:   {Type: field.TypeString, Column: comment.FieldContent},
-			comment.FieldReplyToID: {Type: field.TypeUUID, Column: comment.FieldReplyToID},
+			comment.FieldCreatedAt:     {Type: field.TypeUint32, Column: comment.FieldCreatedAt},
+			comment.FieldUpdatedAt:     {Type: field.TypeUint32, Column: comment.FieldUpdatedAt},
+			comment.FieldDeletedAt:     {Type: field.TypeUint32, Column: comment.FieldDeletedAt},
+			comment.FieldEntID:         {Type: field.TypeUUID, Column: comment.FieldEntID},
+			comment.FieldAppID:         {Type: field.TypeUUID, Column: comment.FieldAppID},
+			comment.FieldUserID:        {Type: field.TypeUUID, Column: comment.FieldUserID},
+			comment.FieldGoodID:        {Type: field.TypeUUID, Column: comment.FieldGoodID},
+			comment.FieldAppGoodID:     {Type: field.TypeUUID, Column: comment.FieldAppGoodID},
+			comment.FieldOrderID:       {Type: field.TypeUUID, Column: comment.FieldOrderID},
+			comment.FieldContent:       {Type: field.TypeString, Column: comment.FieldContent},
+			comment.FieldReplyToID:     {Type: field.TypeUUID, Column: comment.FieldReplyToID},
+			comment.FieldAnonymous:     {Type: field.TypeBool, Column: comment.FieldAnonymous},
+			comment.FieldTrialUser:     {Type: field.TypeBool, Column: comment.FieldTrialUser},
+			comment.FieldPurchasedUser: {Type: field.TypeBool, Column: comment.FieldPurchasedUser},
 		},
 	}
 	graph.Nodes[5] = &sqlgraph.Node{
@@ -1103,6 +1106,21 @@ func (f *CommentFilter) WhereContent(p entql.StringP) {
 // WhereReplyToID applies the entql [16]byte predicate on the reply_to_id field.
 func (f *CommentFilter) WhereReplyToID(p entql.ValueP) {
 	f.Where(p.Field(comment.FieldReplyToID))
+}
+
+// WhereAnonymous applies the entql bool predicate on the anonymous field.
+func (f *CommentFilter) WhereAnonymous(p entql.BoolP) {
+	f.Where(p.Field(comment.FieldAnonymous))
+}
+
+// WhereTrialUser applies the entql bool predicate on the trial_user field.
+func (f *CommentFilter) WhereTrialUser(p entql.BoolP) {
+	f.Where(p.Field(comment.FieldTrialUser))
+}
+
+// WherePurchasedUser applies the entql bool predicate on the purchased_user field.
+func (f *CommentFilter) WherePurchasedUser(p entql.BoolP) {
+	f.Where(p.Field(comment.FieldPurchasedUser))
 }
 
 // addPredicate implements the predicateAdder interface.

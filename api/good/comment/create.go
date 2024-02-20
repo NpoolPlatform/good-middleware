@@ -30,6 +30,9 @@ func (s *Server) CreateComment(ctx context.Context, in *npool.CreateCommentReque
 		comment1.WithOrderID(req.OrderID, false),
 		comment1.WithContent(req.Content, true),
 		comment1.WithReplyToID(req.ReplyToID, false),
+		comment1.WithAnonymous(req.Anonymous, false),
+		comment1.WithPurchasedUser(req.PurchasedUser, false),
+		comment1.WithTrialUser(req.TrialUser, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

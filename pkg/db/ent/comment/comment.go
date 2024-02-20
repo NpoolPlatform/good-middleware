@@ -34,6 +34,12 @@ const (
 	FieldContent = "content"
 	// FieldReplyToID holds the string denoting the reply_to_id field in the database.
 	FieldReplyToID = "reply_to_id"
+	// FieldAnonymous holds the string denoting the anonymous field in the database.
+	FieldAnonymous = "anonymous"
+	// FieldTrialUser holds the string denoting the trial_user field in the database.
+	FieldTrialUser = "trial_user"
+	// FieldPurchasedUser holds the string denoting the purchased_user field in the database.
+	FieldPurchasedUser = "purchased_user"
 	// Table holds the table name of the comment in the database.
 	Table = "comments"
 )
@@ -52,6 +58,9 @@ var Columns = []string{
 	FieldOrderID,
 	FieldContent,
 	FieldReplyToID,
+	FieldAnonymous,
+	FieldTrialUser,
+	FieldPurchasedUser,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -97,4 +106,10 @@ var (
 	DefaultContent string
 	// DefaultReplyToID holds the default value on creation for the "reply_to_id" field.
 	DefaultReplyToID func() uuid.UUID
+	// DefaultAnonymous holds the default value on creation for the "anonymous" field.
+	DefaultAnonymous bool
+	// DefaultTrialUser holds the default value on creation for the "trial_user" field.
+	DefaultTrialUser bool
+	// DefaultPurchasedUser holds the default value on creation for the "purchased_user" field.
+	DefaultPurchasedUser bool
 )

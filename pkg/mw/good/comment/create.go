@@ -62,14 +62,17 @@ func (h *createHandler) createComment(ctx context.Context, tx *ent.Tx) error {
 	if _, err := commentcrud.CreateSet(
 		tx.Comment.Create(),
 		&commentcrud.Req{
-			EntID:     h.EntID,
-			AppID:     h.AppID,
-			UserID:    h.UserID,
-			GoodID:    &goodid,
-			AppGoodID: h.AppGoodID,
-			OrderID:   h.OrderID,
-			Content:   h.Content,
-			ReplyToID: h.ReplyToID,
+			EntID:         h.EntID,
+			AppID:         h.AppID,
+			UserID:        h.UserID,
+			GoodID:        &goodid,
+			AppGoodID:     h.AppGoodID,
+			OrderID:       h.OrderID,
+			Content:       h.Content,
+			ReplyToID:     h.ReplyToID,
+			Anonymous:     h.Anonymous,
+			PurchasedUser: h.PurchasedUser,
+			TrialUser:     h.TrialUser,
 		},
 	).Save(ctx); err != nil {
 		return err

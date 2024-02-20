@@ -176,6 +176,48 @@ func (cc *CommentCreate) SetNillableReplyToID(u *uuid.UUID) *CommentCreate {
 	return cc
 }
 
+// SetAnonymous sets the "anonymous" field.
+func (cc *CommentCreate) SetAnonymous(b bool) *CommentCreate {
+	cc.mutation.SetAnonymous(b)
+	return cc
+}
+
+// SetNillableAnonymous sets the "anonymous" field if the given value is not nil.
+func (cc *CommentCreate) SetNillableAnonymous(b *bool) *CommentCreate {
+	if b != nil {
+		cc.SetAnonymous(*b)
+	}
+	return cc
+}
+
+// SetTrialUser sets the "trial_user" field.
+func (cc *CommentCreate) SetTrialUser(b bool) *CommentCreate {
+	cc.mutation.SetTrialUser(b)
+	return cc
+}
+
+// SetNillableTrialUser sets the "trial_user" field if the given value is not nil.
+func (cc *CommentCreate) SetNillableTrialUser(b *bool) *CommentCreate {
+	if b != nil {
+		cc.SetTrialUser(*b)
+	}
+	return cc
+}
+
+// SetPurchasedUser sets the "purchased_user" field.
+func (cc *CommentCreate) SetPurchasedUser(b bool) *CommentCreate {
+	cc.mutation.SetPurchasedUser(b)
+	return cc
+}
+
+// SetNillablePurchasedUser sets the "purchased_user" field if the given value is not nil.
+func (cc *CommentCreate) SetNillablePurchasedUser(b *bool) *CommentCreate {
+	if b != nil {
+		cc.SetPurchasedUser(*b)
+	}
+	return cc
+}
+
 // SetID sets the "id" field.
 func (cc *CommentCreate) SetID(u uint32) *CommentCreate {
 	cc.mutation.SetID(u)
@@ -335,6 +377,18 @@ func (cc *CommentCreate) defaults() error {
 		v := comment.DefaultReplyToID()
 		cc.mutation.SetReplyToID(v)
 	}
+	if _, ok := cc.mutation.Anonymous(); !ok {
+		v := comment.DefaultAnonymous
+		cc.mutation.SetAnonymous(v)
+	}
+	if _, ok := cc.mutation.TrialUser(); !ok {
+		v := comment.DefaultTrialUser
+		cc.mutation.SetTrialUser(v)
+	}
+	if _, ok := cc.mutation.PurchasedUser(); !ok {
+		v := comment.DefaultPurchasedUser
+		cc.mutation.SetPurchasedUser(v)
+	}
 	return nil
 }
 
@@ -473,6 +527,30 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 			Column: comment.FieldReplyToID,
 		})
 		_node.ReplyToID = value
+	}
+	if value, ok := cc.mutation.Anonymous(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: comment.FieldAnonymous,
+		})
+		_node.Anonymous = value
+	}
+	if value, ok := cc.mutation.TrialUser(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: comment.FieldTrialUser,
+		})
+		_node.TrialUser = value
+	}
+	if value, ok := cc.mutation.PurchasedUser(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: comment.FieldPurchasedUser,
+		})
+		_node.PurchasedUser = value
 	}
 	return _node, _spec
 }
@@ -717,6 +795,60 @@ func (u *CommentUpsert) UpdateReplyToID() *CommentUpsert {
 // ClearReplyToID clears the value of the "reply_to_id" field.
 func (u *CommentUpsert) ClearReplyToID() *CommentUpsert {
 	u.SetNull(comment.FieldReplyToID)
+	return u
+}
+
+// SetAnonymous sets the "anonymous" field.
+func (u *CommentUpsert) SetAnonymous(v bool) *CommentUpsert {
+	u.Set(comment.FieldAnonymous, v)
+	return u
+}
+
+// UpdateAnonymous sets the "anonymous" field to the value that was provided on create.
+func (u *CommentUpsert) UpdateAnonymous() *CommentUpsert {
+	u.SetExcluded(comment.FieldAnonymous)
+	return u
+}
+
+// ClearAnonymous clears the value of the "anonymous" field.
+func (u *CommentUpsert) ClearAnonymous() *CommentUpsert {
+	u.SetNull(comment.FieldAnonymous)
+	return u
+}
+
+// SetTrialUser sets the "trial_user" field.
+func (u *CommentUpsert) SetTrialUser(v bool) *CommentUpsert {
+	u.Set(comment.FieldTrialUser, v)
+	return u
+}
+
+// UpdateTrialUser sets the "trial_user" field to the value that was provided on create.
+func (u *CommentUpsert) UpdateTrialUser() *CommentUpsert {
+	u.SetExcluded(comment.FieldTrialUser)
+	return u
+}
+
+// ClearTrialUser clears the value of the "trial_user" field.
+func (u *CommentUpsert) ClearTrialUser() *CommentUpsert {
+	u.SetNull(comment.FieldTrialUser)
+	return u
+}
+
+// SetPurchasedUser sets the "purchased_user" field.
+func (u *CommentUpsert) SetPurchasedUser(v bool) *CommentUpsert {
+	u.Set(comment.FieldPurchasedUser, v)
+	return u
+}
+
+// UpdatePurchasedUser sets the "purchased_user" field to the value that was provided on create.
+func (u *CommentUpsert) UpdatePurchasedUser() *CommentUpsert {
+	u.SetExcluded(comment.FieldPurchasedUser)
+	return u
+}
+
+// ClearPurchasedUser clears the value of the "purchased_user" field.
+func (u *CommentUpsert) ClearPurchasedUser() *CommentUpsert {
+	u.SetNull(comment.FieldPurchasedUser)
 	return u
 }
 
@@ -991,6 +1123,69 @@ func (u *CommentUpsertOne) UpdateReplyToID() *CommentUpsertOne {
 func (u *CommentUpsertOne) ClearReplyToID() *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.ClearReplyToID()
+	})
+}
+
+// SetAnonymous sets the "anonymous" field.
+func (u *CommentUpsertOne) SetAnonymous(v bool) *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetAnonymous(v)
+	})
+}
+
+// UpdateAnonymous sets the "anonymous" field to the value that was provided on create.
+func (u *CommentUpsertOne) UpdateAnonymous() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateAnonymous()
+	})
+}
+
+// ClearAnonymous clears the value of the "anonymous" field.
+func (u *CommentUpsertOne) ClearAnonymous() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearAnonymous()
+	})
+}
+
+// SetTrialUser sets the "trial_user" field.
+func (u *CommentUpsertOne) SetTrialUser(v bool) *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetTrialUser(v)
+	})
+}
+
+// UpdateTrialUser sets the "trial_user" field to the value that was provided on create.
+func (u *CommentUpsertOne) UpdateTrialUser() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateTrialUser()
+	})
+}
+
+// ClearTrialUser clears the value of the "trial_user" field.
+func (u *CommentUpsertOne) ClearTrialUser() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearTrialUser()
+	})
+}
+
+// SetPurchasedUser sets the "purchased_user" field.
+func (u *CommentUpsertOne) SetPurchasedUser(v bool) *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetPurchasedUser(v)
+	})
+}
+
+// UpdatePurchasedUser sets the "purchased_user" field to the value that was provided on create.
+func (u *CommentUpsertOne) UpdatePurchasedUser() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdatePurchasedUser()
+	})
+}
+
+// ClearPurchasedUser clears the value of the "purchased_user" field.
+func (u *CommentUpsertOne) ClearPurchasedUser() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearPurchasedUser()
 	})
 }
 
@@ -1430,6 +1625,69 @@ func (u *CommentUpsertBulk) UpdateReplyToID() *CommentUpsertBulk {
 func (u *CommentUpsertBulk) ClearReplyToID() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.ClearReplyToID()
+	})
+}
+
+// SetAnonymous sets the "anonymous" field.
+func (u *CommentUpsertBulk) SetAnonymous(v bool) *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetAnonymous(v)
+	})
+}
+
+// UpdateAnonymous sets the "anonymous" field to the value that was provided on create.
+func (u *CommentUpsertBulk) UpdateAnonymous() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateAnonymous()
+	})
+}
+
+// ClearAnonymous clears the value of the "anonymous" field.
+func (u *CommentUpsertBulk) ClearAnonymous() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearAnonymous()
+	})
+}
+
+// SetTrialUser sets the "trial_user" field.
+func (u *CommentUpsertBulk) SetTrialUser(v bool) *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetTrialUser(v)
+	})
+}
+
+// UpdateTrialUser sets the "trial_user" field to the value that was provided on create.
+func (u *CommentUpsertBulk) UpdateTrialUser() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateTrialUser()
+	})
+}
+
+// ClearTrialUser clears the value of the "trial_user" field.
+func (u *CommentUpsertBulk) ClearTrialUser() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearTrialUser()
+	})
+}
+
+// SetPurchasedUser sets the "purchased_user" field.
+func (u *CommentUpsertBulk) SetPurchasedUser(v bool) *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetPurchasedUser(v)
+	})
+}
+
+// UpdatePurchasedUser sets the "purchased_user" field to the value that was provided on create.
+func (u *CommentUpsertBulk) UpdatePurchasedUser() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdatePurchasedUser()
+	})
+}
+
+// ClearPurchasedUser clears the value of the "purchased_user" field.
+func (u *CommentUpsertBulk) ClearPurchasedUser() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearPurchasedUser()
 	})
 }
 

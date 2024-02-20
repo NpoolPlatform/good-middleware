@@ -394,6 +394,18 @@ func init() {
 	commentDescReplyToID := commentFields[6].Descriptor()
 	// comment.DefaultReplyToID holds the default value on creation for the reply_to_id field.
 	comment.DefaultReplyToID = commentDescReplyToID.Default.(func() uuid.UUID)
+	// commentDescAnonymous is the schema descriptor for anonymous field.
+	commentDescAnonymous := commentFields[7].Descriptor()
+	// comment.DefaultAnonymous holds the default value on creation for the anonymous field.
+	comment.DefaultAnonymous = commentDescAnonymous.Default.(bool)
+	// commentDescTrialUser is the schema descriptor for trial_user field.
+	commentDescTrialUser := commentFields[8].Descriptor()
+	// comment.DefaultTrialUser holds the default value on creation for the trial_user field.
+	comment.DefaultTrialUser = commentDescTrialUser.Default.(bool)
+	// commentDescPurchasedUser is the schema descriptor for purchased_user field.
+	commentDescPurchasedUser := commentFields[9].Descriptor()
+	// comment.DefaultPurchasedUser holds the default value on creation for the purchased_user field.
+	comment.DefaultPurchasedUser = commentDescPurchasedUser.Default.(bool)
 	deviceinfoMixin := schema.DeviceInfo{}.Mixin()
 	deviceinfo.Policy = privacy.NewPolicies(deviceinfoMixin[0], schema.DeviceInfo{})
 	deviceinfo.Hooks[0] = func(next ent.Mutator) ent.Mutator {

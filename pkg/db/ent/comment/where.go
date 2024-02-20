@@ -156,6 +156,27 @@ func ReplyToID(v uuid.UUID) predicate.Comment {
 	})
 }
 
+// Anonymous applies equality check predicate on the "anonymous" field. It's identical to AnonymousEQ.
+func Anonymous(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAnonymous), v))
+	})
+}
+
+// TrialUser applies equality check predicate on the "trial_user" field. It's identical to TrialUserEQ.
+func TrialUser(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTrialUser), v))
+	})
+}
+
+// PurchasedUser applies equality check predicate on the "purchased_user" field. It's identical to PurchasedUserEQ.
+func PurchasedUser(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPurchasedUser), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
@@ -990,6 +1011,90 @@ func ReplyToIDIsNil() predicate.Comment {
 func ReplyToIDNotNil() predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldReplyToID)))
+	})
+}
+
+// AnonymousEQ applies the EQ predicate on the "anonymous" field.
+func AnonymousEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAnonymous), v))
+	})
+}
+
+// AnonymousNEQ applies the NEQ predicate on the "anonymous" field.
+func AnonymousNEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAnonymous), v))
+	})
+}
+
+// AnonymousIsNil applies the IsNil predicate on the "anonymous" field.
+func AnonymousIsNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAnonymous)))
+	})
+}
+
+// AnonymousNotNil applies the NotNil predicate on the "anonymous" field.
+func AnonymousNotNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAnonymous)))
+	})
+}
+
+// TrialUserEQ applies the EQ predicate on the "trial_user" field.
+func TrialUserEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTrialUser), v))
+	})
+}
+
+// TrialUserNEQ applies the NEQ predicate on the "trial_user" field.
+func TrialUserNEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldTrialUser), v))
+	})
+}
+
+// TrialUserIsNil applies the IsNil predicate on the "trial_user" field.
+func TrialUserIsNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldTrialUser)))
+	})
+}
+
+// TrialUserNotNil applies the NotNil predicate on the "trial_user" field.
+func TrialUserNotNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldTrialUser)))
+	})
+}
+
+// PurchasedUserEQ applies the EQ predicate on the "purchased_user" field.
+func PurchasedUserEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPurchasedUser), v))
+	})
+}
+
+// PurchasedUserNEQ applies the NEQ predicate on the "purchased_user" field.
+func PurchasedUserNEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldPurchasedUser), v))
+	})
+}
+
+// PurchasedUserIsNil applies the IsNil predicate on the "purchased_user" field.
+func PurchasedUserIsNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldPurchasedUser)))
+	})
+}
+
+// PurchasedUserNotNil applies the NotNil predicate on the "purchased_user" field.
+func PurchasedUserNotNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldPurchasedUser)))
 	})
 }
 
