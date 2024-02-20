@@ -8,6 +8,7 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 type Req struct {
@@ -23,6 +24,7 @@ type Req struct {
 	PurchasedUser     *bool
 	TrialUser         *bool
 	OrderFirstComment *bool
+	Score             *decimal.Decimal
 	DeletedAt         *uint32
 }
 
@@ -62,6 +64,9 @@ func CreateSet(c *ent.CommentCreate, req *Req) *ent.CommentCreate {
 	}
 	if req.OrderFirstComment != nil {
 		c.SetOrderFirstComment(*req.OrderFirstComment)
+	}
+	if req.Score != nil {
+		c.SetScore(*req.Score)
 	}
 	return c
 }

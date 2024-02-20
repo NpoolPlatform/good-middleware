@@ -175,6 +175,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			comment.FieldTrialUser:         {Type: field.TypeBool, Column: comment.FieldTrialUser},
 			comment.FieldPurchasedUser:     {Type: field.TypeBool, Column: comment.FieldPurchasedUser},
 			comment.FieldOrderFirstComment: {Type: field.TypeBool, Column: comment.FieldOrderFirstComment},
+			comment.FieldScore:             {Type: field.TypeOther, Column: comment.FieldScore},
 		},
 	}
 	graph.Nodes[5] = &sqlgraph.Node{
@@ -1127,6 +1128,11 @@ func (f *CommentFilter) WherePurchasedUser(p entql.BoolP) {
 // WhereOrderFirstComment applies the entql bool predicate on the order_first_comment field.
 func (f *CommentFilter) WhereOrderFirstComment(p entql.BoolP) {
 	f.Where(p.Field(comment.FieldOrderFirstComment))
+}
+
+// WhereScore applies the entql other predicate on the score field.
+func (f *CommentFilter) WhereScore(p entql.OtherP) {
+	f.Where(p.Field(comment.FieldScore))
 }
 
 // addPredicate implements the predicateAdder interface.

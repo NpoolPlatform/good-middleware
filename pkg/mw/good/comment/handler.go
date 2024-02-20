@@ -11,24 +11,25 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 type Handler struct {
-	ID                *uint32
-	EntID             *uuid.UUID
-	AppID             *uuid.UUID
-	UserID            *uuid.UUID
-	AppGoodID         *uuid.UUID
-	OrderID           *uuid.UUID
-	Content           *string
-	ReplyToID         *uuid.UUID
-	Anonymous         *bool
-	PurchasedUser     *bool
-	TrialUser         *bool
-	OrderFirstComment *bool
-	Conds             *commentcrud.Conds
-	Offset            int32
-	Limit             int32
+	ID            *uint32
+	EntID         *uuid.UUID
+	AppID         *uuid.UUID
+	UserID        *uuid.UUID
+	AppGoodID     *uuid.UUID
+	OrderID       *uuid.UUID
+	Content       *string
+	ReplyToID     *uuid.UUID
+	Anonymous     *bool
+	PurchasedUser *bool
+	TrialUser     *bool
+	Score         *decimal.Decimal
+	Conds         *commentcrud.Conds
+	Offset        int32
+	Limit         int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -208,9 +209,19 @@ func WithTrialUser(b *bool, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithOrderFirstComment(b *bool, must bool) func(context.Context, *Handler) error {
+func WithScore(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.OrderFirstComment = b
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid score")
+			}
+			return nil
+		}
+		score, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.Score = &score
 		return nil
 	}
 }

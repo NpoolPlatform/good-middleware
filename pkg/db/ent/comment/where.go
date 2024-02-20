@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // ID filters vertices based on their ID field.
@@ -181,6 +182,13 @@ func PurchasedUser(v bool) predicate.Comment {
 func OrderFirstComment(v bool) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldOrderFirstComment), v))
+	})
+}
+
+// Score applies equality check predicate on the "score" field. It's identical to ScoreEQ.
+func Score(v decimal.Decimal) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldScore), v))
 	})
 }
 
@@ -1130,6 +1138,84 @@ func OrderFirstCommentIsNil() predicate.Comment {
 func OrderFirstCommentNotNil() predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldOrderFirstComment)))
+	})
+}
+
+// ScoreEQ applies the EQ predicate on the "score" field.
+func ScoreEQ(v decimal.Decimal) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldScore), v))
+	})
+}
+
+// ScoreNEQ applies the NEQ predicate on the "score" field.
+func ScoreNEQ(v decimal.Decimal) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldScore), v))
+	})
+}
+
+// ScoreIn applies the In predicate on the "score" field.
+func ScoreIn(vs ...decimal.Decimal) predicate.Comment {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldScore), v...))
+	})
+}
+
+// ScoreNotIn applies the NotIn predicate on the "score" field.
+func ScoreNotIn(vs ...decimal.Decimal) predicate.Comment {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldScore), v...))
+	})
+}
+
+// ScoreGT applies the GT predicate on the "score" field.
+func ScoreGT(v decimal.Decimal) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldScore), v))
+	})
+}
+
+// ScoreGTE applies the GTE predicate on the "score" field.
+func ScoreGTE(v decimal.Decimal) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldScore), v))
+	})
+}
+
+// ScoreLT applies the LT predicate on the "score" field.
+func ScoreLT(v decimal.Decimal) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldScore), v))
+	})
+}
+
+// ScoreLTE applies the LTE predicate on the "score" field.
+func ScoreLTE(v decimal.Decimal) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldScore), v))
+	})
+}
+
+// ScoreIsNil applies the IsNil predicate on the "score" field.
+func ScoreIsNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldScore)))
+	})
+}
+
+// ScoreNotNil applies the NotNil predicate on the "score" field.
+func ScoreNotNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldScore)))
 	})
 }
 

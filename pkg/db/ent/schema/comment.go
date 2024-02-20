@@ -2,11 +2,13 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // Comment holds the schema definition for the Comment entity.
@@ -80,6 +82,13 @@ func (Comment) Fields() []ent.Field {
 			Bool("order_first_comment").
 			Optional().
 			Default(false),
+		field.
+			Other("score", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.Decimal{}),
 	}
 }
 

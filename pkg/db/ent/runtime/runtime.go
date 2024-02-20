@@ -410,6 +410,10 @@ func init() {
 	commentDescOrderFirstComment := commentFields[10].Descriptor()
 	// comment.DefaultOrderFirstComment holds the default value on creation for the order_first_comment field.
 	comment.DefaultOrderFirstComment = commentDescOrderFirstComment.Default.(bool)
+	// commentDescScore is the schema descriptor for score field.
+	commentDescScore := commentFields[11].Descriptor()
+	// comment.DefaultScore holds the default value on creation for the score field.
+	comment.DefaultScore = commentDescScore.Default.(decimal.Decimal)
 	deviceinfoMixin := schema.DeviceInfo{}.Mixin()
 	deviceinfo.Policy = privacy.NewPolicies(deviceinfoMixin[0], schema.DeviceInfo{})
 	deviceinfo.Hooks[0] = func(next ent.Mutator) ent.Mutator {
