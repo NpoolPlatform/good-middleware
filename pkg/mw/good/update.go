@@ -122,7 +122,7 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 	}
 
 	totalReward := info.TotalRewardAmount
-	if *h.RewardState == types.BenefitState_BenefitDone {
+	if *h.RewardState == types.BenefitState_BenefitSimulateBookKeeping {
 		if h.RewardAmount != nil {
 			totalReward = h.RewardAmount.Add(totalReward)
 		}
@@ -143,7 +143,7 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 		return err
 	}
 
-	if *h.RewardState != types.BenefitState_BenefitDone {
+	if *h.RewardState != types.BenefitState_BenefitSimulateBookKeeping {
 		return nil
 	}
 	if h.RewardAt == nil {
