@@ -86,8 +86,6 @@ type AppGood struct {
 	MaxOrderDuration uint32 `json:"max_order_duration,omitempty"`
 	// PackageWithRequireds holds the value of the "package_with_requireds" field.
 	PackageWithRequireds bool `json:"package_with_requireds,omitempty"`
-	// EnableSimulate holds the value of the "enable_simulate" field.
-	EnableSimulate bool `json:"enable_simulate,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -99,7 +97,7 @@ func (*AppGood) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new([]byte)
 		case appgood.FieldUnitPrice, appgood.FieldPackagePrice, appgood.FieldTechnicalFeeRatio, appgood.FieldElectricityFeeRatio, appgood.FieldMinOrderAmount, appgood.FieldMaxOrderAmount, appgood.FieldMaxUserAmount:
 			values[i] = new(decimal.Decimal)
-		case appgood.FieldOnline, appgood.FieldVisible, appgood.FieldEnablePurchase, appgood.FieldEnableProductPage, appgood.FieldEnableSetCommission, appgood.FieldPackageWithRequireds, appgood.FieldEnableSimulate:
+		case appgood.FieldOnline, appgood.FieldVisible, appgood.FieldEnablePurchase, appgood.FieldEnableProductPage, appgood.FieldEnableSetCommission, appgood.FieldPackageWithRequireds:
 			values[i] = new(sql.NullBool)
 		case appgood.FieldID, appgood.FieldCreatedAt, appgood.FieldUpdatedAt, appgood.FieldDeletedAt, appgood.FieldDisplayIndex, appgood.FieldSaleStartAt, appgood.FieldSaleEndAt, appgood.FieldServiceStartAt, appgood.FieldCancellableBeforeStart, appgood.FieldMinOrderDuration, appgood.FieldMaxOrderDuration:
 			values[i] = new(sql.NullInt64)
@@ -340,12 +338,6 @@ func (ag *AppGood) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				ag.PackageWithRequireds = value.Bool
 			}
-		case appgood.FieldEnableSimulate:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field enable_simulate", values[i])
-			} else if value.Valid {
-				ag.EnableSimulate = value.Bool
-			}
 		}
 	}
 	return nil
@@ -475,9 +467,6 @@ func (ag *AppGood) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("package_with_requireds=")
 	builder.WriteString(fmt.Sprintf("%v", ag.PackageWithRequireds))
-	builder.WriteString(", ")
-	builder.WriteString("enable_simulate=")
-	builder.WriteString(fmt.Sprintf("%v", ag.EnableSimulate))
 	builder.WriteByte(')')
 	return builder.String()
 }

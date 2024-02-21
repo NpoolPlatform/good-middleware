@@ -688,26 +688,6 @@ func (agu *AppGoodUpdate) ClearPackageWithRequireds() *AppGoodUpdate {
 	return agu
 }
 
-// SetEnableSimulate sets the "enable_simulate" field.
-func (agu *AppGoodUpdate) SetEnableSimulate(b bool) *AppGoodUpdate {
-	agu.mutation.SetEnableSimulate(b)
-	return agu
-}
-
-// SetNillableEnableSimulate sets the "enable_simulate" field if the given value is not nil.
-func (agu *AppGoodUpdate) SetNillableEnableSimulate(b *bool) *AppGoodUpdate {
-	if b != nil {
-		agu.SetEnableSimulate(*b)
-	}
-	return agu
-}
-
-// ClearEnableSimulate clears the value of the "enable_simulate" field.
-func (agu *AppGoodUpdate) ClearEnableSimulate() *AppGoodUpdate {
-	agu.mutation.ClearEnableSimulate()
-	return agu
-}
-
 // Mutation returns the AppGoodMutation object of the builder.
 func (agu *AppGoodUpdate) Mutation() *AppGoodMutation {
 	return agu.mutation
@@ -1280,19 +1260,6 @@ func (agu *AppGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Column: appgood.FieldPackageWithRequireds,
-		})
-	}
-	if value, ok := agu.mutation.EnableSimulate(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: appgood.FieldEnableSimulate,
-		})
-	}
-	if agu.mutation.EnableSimulateCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Column: appgood.FieldEnableSimulate,
 		})
 	}
 	_spec.Modifiers = agu.modifiers
@@ -1974,26 +1941,6 @@ func (aguo *AppGoodUpdateOne) ClearPackageWithRequireds() *AppGoodUpdateOne {
 	return aguo
 }
 
-// SetEnableSimulate sets the "enable_simulate" field.
-func (aguo *AppGoodUpdateOne) SetEnableSimulate(b bool) *AppGoodUpdateOne {
-	aguo.mutation.SetEnableSimulate(b)
-	return aguo
-}
-
-// SetNillableEnableSimulate sets the "enable_simulate" field if the given value is not nil.
-func (aguo *AppGoodUpdateOne) SetNillableEnableSimulate(b *bool) *AppGoodUpdateOne {
-	if b != nil {
-		aguo.SetEnableSimulate(*b)
-	}
-	return aguo
-}
-
-// ClearEnableSimulate clears the value of the "enable_simulate" field.
-func (aguo *AppGoodUpdateOne) ClearEnableSimulate() *AppGoodUpdateOne {
-	aguo.mutation.ClearEnableSimulate()
-	return aguo
-}
-
 // Mutation returns the AppGoodMutation object of the builder.
 func (aguo *AppGoodUpdateOne) Mutation() *AppGoodMutation {
 	return aguo.mutation
@@ -2596,19 +2543,6 @@ func (aguo *AppGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppGood, err 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Column: appgood.FieldPackageWithRequireds,
-		})
-	}
-	if value, ok := aguo.mutation.EnableSimulate(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: appgood.FieldEnableSimulate,
-		})
-	}
-	if aguo.mutation.EnableSimulateCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Column: appgood.FieldEnableSimulate,
 		})
 	}
 	_spec.Modifiers = aguo.modifiers

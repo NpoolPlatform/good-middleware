@@ -164,10 +164,6 @@ func (AppGood) Fields() []ent.Field {
 			Bool("package_with_requireds").
 			Optional().
 			Default(true),
-		field.
-			Bool("enable_simulate").
-			Optional().
-			Default(false),
 	}
 }
 
