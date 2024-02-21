@@ -12,6 +12,9 @@ type AppDefaultGood func(*sql.Selector)
 // AppGood is the predicate function for appgood builders.
 type AppGood func(*sql.Selector)
 
+// AppSimulateGood is the predicate function for appsimulategood builders.
+type AppSimulateGood func(*sql.Selector)
+
 // AppStock is the predicate function for appstock builders.
 type AppStock func(*sql.Selector)
 

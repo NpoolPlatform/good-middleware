@@ -18,6 +18,8 @@ type Tx struct {
 	AppDefaultGood *AppDefaultGoodClient
 	// AppGood is the client for interacting with the AppGood builders.
 	AppGood *AppGoodClient
+	// AppSimulateGood is the client for interacting with the AppSimulateGood builders.
+	AppSimulateGood *AppSimulateGoodClient
 	// AppStock is the client for interacting with the AppStock builders.
 	AppStock *AppStockClient
 	// AppStockLock is the client for interacting with the AppStockLock builders.
@@ -189,6 +191,7 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.AppDefaultGood = NewAppDefaultGoodClient(tx.config)
 	tx.AppGood = NewAppGoodClient(tx.config)
+	tx.AppSimulateGood = NewAppSimulateGoodClient(tx.config)
 	tx.AppStock = NewAppStockClient(tx.config)
 	tx.AppStockLock = NewAppStockLockClient(tx.config)
 	tx.Comment = NewCommentClient(tx.config)

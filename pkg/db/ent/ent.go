@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
@@ -51,6 +52,7 @@ func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
 		appdefaultgood.Table:    appdefaultgood.ValidColumn,
 		appgood.Table:           appgood.ValidColumn,
+		appsimulategood.Table:   appsimulategood.ValidColumn,
 		appstock.Table:          appstock.ValidColumn,
 		appstocklock.Table:      appstocklock.ValidColumn,
 		comment.Table:           comment.ValidColumn,

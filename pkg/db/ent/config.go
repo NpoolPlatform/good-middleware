@@ -30,6 +30,7 @@ type config struct {
 type hooks struct {
 	AppDefaultGood    []ent.Hook
 	AppGood           []ent.Hook
+	AppSimulateGood   []ent.Hook
 	AppStock          []ent.Hook
 	AppStockLock      []ent.Hook
 	Comment           []ent.Hook

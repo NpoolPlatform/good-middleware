@@ -7,6 +7,7 @@ import (
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
@@ -220,6 +221,40 @@ func init() {
 	appgoodDescEnableSimulate := appgoodFields[30].Descriptor()
 	// appgood.DefaultEnableSimulate holds the default value on creation for the enable_simulate field.
 	appgood.DefaultEnableSimulate = appgoodDescEnableSimulate.Default.(bool)
+	appsimulategoodMixin := schema.AppSimulateGood{}.Mixin()
+	appsimulategood.Policy = privacy.NewPolicies(appsimulategoodMixin[0], schema.AppSimulateGood{})
+	appsimulategood.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := appsimulategood.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	appsimulategoodMixinFields0 := appsimulategoodMixin[0].Fields()
+	_ = appsimulategoodMixinFields0
+	appsimulategoodMixinFields1 := appsimulategoodMixin[1].Fields()
+	_ = appsimulategoodMixinFields1
+	appsimulategoodFields := schema.AppSimulateGood{}.Fields()
+	_ = appsimulategoodFields
+	// appsimulategoodDescCreatedAt is the schema descriptor for created_at field.
+	appsimulategoodDescCreatedAt := appsimulategoodMixinFields0[0].Descriptor()
+	// appsimulategood.DefaultCreatedAt holds the default value on creation for the created_at field.
+	appsimulategood.DefaultCreatedAt = appsimulategoodDescCreatedAt.Default.(func() uint32)
+	// appsimulategoodDescUpdatedAt is the schema descriptor for updated_at field.
+	appsimulategoodDescUpdatedAt := appsimulategoodMixinFields0[1].Descriptor()
+	// appsimulategood.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	appsimulategood.DefaultUpdatedAt = appsimulategoodDescUpdatedAt.Default.(func() uint32)
+	// appsimulategood.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	appsimulategood.UpdateDefaultUpdatedAt = appsimulategoodDescUpdatedAt.UpdateDefault.(func() uint32)
+	// appsimulategoodDescDeletedAt is the schema descriptor for deleted_at field.
+	appsimulategoodDescDeletedAt := appsimulategoodMixinFields0[2].Descriptor()
+	// appsimulategood.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	appsimulategood.DefaultDeletedAt = appsimulategoodDescDeletedAt.Default.(func() uint32)
+	// appsimulategoodDescEntID is the schema descriptor for ent_id field.
+	appsimulategoodDescEntID := appsimulategoodMixinFields1[1].Descriptor()
+	// appsimulategood.DefaultEntID holds the default value on creation for the ent_id field.
+	appsimulategood.DefaultEntID = appsimulategoodDescEntID.Default.(func() uuid.UUID)
 	appstockMixin := schema.AppStock{}.Mixin()
 	appstock.Policy = privacy.NewPolicies(appstockMixin[0], schema.AppStock{})
 	appstock.Hooks[0] = func(next ent.Mutator) ent.Mutator {
