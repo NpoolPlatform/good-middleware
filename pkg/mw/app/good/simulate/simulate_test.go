@@ -239,21 +239,6 @@ func createSimulate(t *testing.T) {
 	}
 }
 
-func updateSimulate(t *testing.T) {
-	handler, err := NewHandler(
-		context.Background(),
-		WithID(&ret.ID, true),
-		WithAppGoodID(&ret.AppGoodID, true),
-	)
-	if assert.Nil(t, err) {
-		info, err := handler.UpdateSimulate(context.Background())
-		if assert.Nil(t, err) {
-			ret.UpdatedAt = info.UpdatedAt
-			assert.Equal(t, &ret, info)
-		}
-	}
-}
-
 func getSimulate(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
@@ -316,7 +301,6 @@ func TestSimulate(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createSimulate", createSimulate)
-	t.Run("updateSimulate", updateSimulate)
 	t.Run("getSimulate", getSimulate)
 	t.Run("getSimulates", getSimulates)
 	t.Run("deleteSimulate", deleteSimulate)

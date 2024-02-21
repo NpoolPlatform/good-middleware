@@ -1,4 +1,3 @@
-//nolint:dupl
 package appsimulategood
 
 import (
@@ -41,18 +40,6 @@ func CreateSet(c *ent.AppSimulateGoodCreate, req *Req) *ent.AppSimulateGoodCreat
 }
 
 func UpdateSet(u *ent.AppSimulateGoodUpdateOne, req *Req) *ent.AppSimulateGoodUpdateOne {
-	if req.AppID != nil {
-		u.SetAppID(*req.AppID)
-	}
-	if req.GoodID != nil {
-		u.SetGoodID(*req.GoodID)
-	}
-	if req.AppGoodID != nil {
-		u.SetAppGoodID(*req.AppGoodID)
-	}
-	if req.CoinTypeID != nil {
-		u.SetCoinTypeID(*req.CoinTypeID)
-	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)
 	}

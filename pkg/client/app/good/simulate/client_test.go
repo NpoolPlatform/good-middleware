@@ -220,17 +220,6 @@ func createSimulate(t *testing.T) {
 	}
 }
 
-func updateSimulate(t *testing.T) {
-	info, err := UpdateSimulate(context.Background(), &npool.SimulateReq{
-		ID:        &ret.ID,
-		AppGoodID: &ret.AppGoodID,
-	})
-	if assert.Nil(t, err) {
-		ret.UpdatedAt = info.UpdatedAt
-		assert.Equal(t, &ret, info)
-	}
-}
-
 func getSimulate(t *testing.T) {
 	info, err := GetSimulate(context.Background(), ret.EntID)
 	if assert.Nil(t, err) {
@@ -301,7 +290,6 @@ func TestSimulate(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createSimulate", createSimulate)
-	t.Run("updateSimulate", updateSimulate)
 	t.Run("getSimulate", getSimulate)
 	t.Run("getSimulates", getSimulates)
 	t.Run("getSimulateOnly", getSimulateOnly)
