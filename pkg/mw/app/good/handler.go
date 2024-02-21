@@ -397,13 +397,6 @@ func WithPackageWithRequireds(b *bool, must bool) func(context.Context, *Handler
 	}
 }
 
-func WithEnableSimulate(value *bool, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		h.EnableSimulate = value
-		return nil
-	}
-}
-
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error { //nolint:gocyclo
 	return func(ctx context.Context, h *Handler) error {
 		h.Conds = &appgoodcrud.Conds{}

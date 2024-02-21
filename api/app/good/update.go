@@ -52,7 +52,6 @@ func (s *Server) UpdateGood(ctx context.Context, in *npool.UpdateGoodRequest) (*
 		appgood1.WithMinOrderDuration(req.MinOrderDuration, false),
 		appgood1.WithMaxOrderDuration(req.MaxOrderDuration, false),
 		appgood1.WithPackageWithRequireds(req.PackageWithRequireds, false),
-		appgood1.WithEnableSimulate(req.EnableSimulate, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
