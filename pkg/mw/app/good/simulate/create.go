@@ -40,7 +40,7 @@ func (h *Handler) CreateSimulate(ctx context.Context) (*npool.Simulate, error) {
 		return nil, err
 	}
 
-	key := fmt.Sprintf("%v:%v:%v", basetypes.Prefix_PrefixCreateAppSimulateGood, *h.AppID, *h.CoinTypeID)
+	key := fmt.Sprintf("%v:%v:%v", basetypes.Prefix_PrefixCreateAppSimulateGood, *h.AppID, *h.AppGoodID)
 	if err := redis2.TryLock(key, 0); err != nil {
 		return nil, err
 	}
@@ -49,8 +49,8 @@ func (h *Handler) CreateSimulate(ctx context.Context) (*npool.Simulate, error) {
 	}()
 
 	h.Conds = &appsimulategoodcrud.Conds{
-		AppID:      &cruder.Cond{Op: cruder.EQ, Val: *h.AppID},
-		CoinTypeID: &cruder.Cond{Op: cruder.EQ, Val: *h.CoinTypeID},
+		AppID:     &cruder.Cond{Op: cruder.EQ, Val: *h.AppID},
+		AppGoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.AppGoodID},
 	}
 	exist, err := h.ExistSimulateConds(ctx)
 	if err != nil {
