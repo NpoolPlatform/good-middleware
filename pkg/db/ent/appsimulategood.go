@@ -9,6 +9,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // AppSimulateGood is the model entity for the AppSimulateGood schema.
@@ -32,6 +33,10 @@ type AppSimulateGood struct {
 	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// CoinTypeID holds the value of the "coin_type_id" field.
 	CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
+	// FixedOrderUnits holds the value of the "fixed_order_units" field.
+	FixedOrderUnits decimal.Decimal `json:"fixed_order_units,omitempty"`
+	// FixedOrderDuration holds the value of the "fixed_order_duration" field.
+	FixedOrderDuration uint32 `json:"fixed_order_duration,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -39,7 +44,9 @@ func (*AppSimulateGood) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case appsimulategood.FieldID, appsimulategood.FieldCreatedAt, appsimulategood.FieldUpdatedAt, appsimulategood.FieldDeletedAt:
+		case appsimulategood.FieldFixedOrderUnits:
+			values[i] = new(decimal.Decimal)
+		case appsimulategood.FieldID, appsimulategood.FieldCreatedAt, appsimulategood.FieldUpdatedAt, appsimulategood.FieldDeletedAt, appsimulategood.FieldFixedOrderDuration:
 			values[i] = new(sql.NullInt64)
 		case appsimulategood.FieldEntID, appsimulategood.FieldAppID, appsimulategood.FieldGoodID, appsimulategood.FieldAppGoodID, appsimulategood.FieldCoinTypeID:
 			values[i] = new(uuid.UUID)
@@ -112,6 +119,18 @@ func (asg *AppSimulateGood) assignValues(columns []string, values []interface{})
 			} else if value != nil {
 				asg.CoinTypeID = *value
 			}
+		case appsimulategood.FieldFixedOrderUnits:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field fixed_order_units", values[i])
+			} else if value != nil {
+				asg.FixedOrderUnits = *value
+			}
+		case appsimulategood.FieldFixedOrderDuration:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field fixed_order_duration", values[i])
+			} else if value.Valid {
+				asg.FixedOrderDuration = uint32(value.Int64)
+			}
 		}
 	}
 	return nil
@@ -163,6 +182,12 @@ func (asg *AppSimulateGood) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("coin_type_id=")
 	builder.WriteString(fmt.Sprintf("%v", asg.CoinTypeID))
+	builder.WriteString(", ")
+	builder.WriteString("fixed_order_units=")
+	builder.WriteString(fmt.Sprintf("%v", asg.FixedOrderUnits))
+	builder.WriteString(", ")
+	builder.WriteString("fixed_order_duration=")
+	builder.WriteString(fmt.Sprintf("%v", asg.FixedOrderDuration))
 	builder.WriteByte(')')
 	return builder.String()
 }

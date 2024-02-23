@@ -13,6 +13,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // AppSimulateGoodUpdate is the builder for updating AppSimulateGood entities.
@@ -175,6 +176,53 @@ func (asgu *AppSimulateGoodUpdate) SetNillableCoinTypeID(u *uuid.UUID) *AppSimul
 // ClearCoinTypeID clears the value of the "coin_type_id" field.
 func (asgu *AppSimulateGoodUpdate) ClearCoinTypeID() *AppSimulateGoodUpdate {
 	asgu.mutation.ClearCoinTypeID()
+	return asgu
+}
+
+// SetFixedOrderUnits sets the "fixed_order_units" field.
+func (asgu *AppSimulateGoodUpdate) SetFixedOrderUnits(d decimal.Decimal) *AppSimulateGoodUpdate {
+	asgu.mutation.SetFixedOrderUnits(d)
+	return asgu
+}
+
+// SetNillableFixedOrderUnits sets the "fixed_order_units" field if the given value is not nil.
+func (asgu *AppSimulateGoodUpdate) SetNillableFixedOrderUnits(d *decimal.Decimal) *AppSimulateGoodUpdate {
+	if d != nil {
+		asgu.SetFixedOrderUnits(*d)
+	}
+	return asgu
+}
+
+// ClearFixedOrderUnits clears the value of the "fixed_order_units" field.
+func (asgu *AppSimulateGoodUpdate) ClearFixedOrderUnits() *AppSimulateGoodUpdate {
+	asgu.mutation.ClearFixedOrderUnits()
+	return asgu
+}
+
+// SetFixedOrderDuration sets the "fixed_order_duration" field.
+func (asgu *AppSimulateGoodUpdate) SetFixedOrderDuration(u uint32) *AppSimulateGoodUpdate {
+	asgu.mutation.ResetFixedOrderDuration()
+	asgu.mutation.SetFixedOrderDuration(u)
+	return asgu
+}
+
+// SetNillableFixedOrderDuration sets the "fixed_order_duration" field if the given value is not nil.
+func (asgu *AppSimulateGoodUpdate) SetNillableFixedOrderDuration(u *uint32) *AppSimulateGoodUpdate {
+	if u != nil {
+		asgu.SetFixedOrderDuration(*u)
+	}
+	return asgu
+}
+
+// AddFixedOrderDuration adds u to the "fixed_order_duration" field.
+func (asgu *AppSimulateGoodUpdate) AddFixedOrderDuration(u int32) *AppSimulateGoodUpdate {
+	asgu.mutation.AddFixedOrderDuration(u)
+	return asgu
+}
+
+// ClearFixedOrderDuration clears the value of the "fixed_order_duration" field.
+func (asgu *AppSimulateGoodUpdate) ClearFixedOrderDuration() *AppSimulateGoodUpdate {
+	asgu.mutation.ClearFixedOrderDuration()
 	return asgu
 }
 
@@ -377,6 +425,39 @@ func (asgu *AppSimulateGoodUpdate) sqlSave(ctx context.Context) (n int, err erro
 			Column: appsimulategood.FieldCoinTypeID,
 		})
 	}
+	if value, ok := asgu.mutation.FixedOrderUnits(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appsimulategood.FieldFixedOrderUnits,
+		})
+	}
+	if asgu.mutation.FixedOrderUnitsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appsimulategood.FieldFixedOrderUnits,
+		})
+	}
+	if value, ok := asgu.mutation.FixedOrderDuration(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appsimulategood.FieldFixedOrderDuration,
+		})
+	}
+	if value, ok := asgu.mutation.AddedFixedOrderDuration(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appsimulategood.FieldFixedOrderDuration,
+		})
+	}
+	if asgu.mutation.FixedOrderDurationCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: appsimulategood.FieldFixedOrderDuration,
+		})
+	}
 	_spec.Modifiers = asgu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, asgu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -544,6 +625,53 @@ func (asguo *AppSimulateGoodUpdateOne) SetNillableCoinTypeID(u *uuid.UUID) *AppS
 // ClearCoinTypeID clears the value of the "coin_type_id" field.
 func (asguo *AppSimulateGoodUpdateOne) ClearCoinTypeID() *AppSimulateGoodUpdateOne {
 	asguo.mutation.ClearCoinTypeID()
+	return asguo
+}
+
+// SetFixedOrderUnits sets the "fixed_order_units" field.
+func (asguo *AppSimulateGoodUpdateOne) SetFixedOrderUnits(d decimal.Decimal) *AppSimulateGoodUpdateOne {
+	asguo.mutation.SetFixedOrderUnits(d)
+	return asguo
+}
+
+// SetNillableFixedOrderUnits sets the "fixed_order_units" field if the given value is not nil.
+func (asguo *AppSimulateGoodUpdateOne) SetNillableFixedOrderUnits(d *decimal.Decimal) *AppSimulateGoodUpdateOne {
+	if d != nil {
+		asguo.SetFixedOrderUnits(*d)
+	}
+	return asguo
+}
+
+// ClearFixedOrderUnits clears the value of the "fixed_order_units" field.
+func (asguo *AppSimulateGoodUpdateOne) ClearFixedOrderUnits() *AppSimulateGoodUpdateOne {
+	asguo.mutation.ClearFixedOrderUnits()
+	return asguo
+}
+
+// SetFixedOrderDuration sets the "fixed_order_duration" field.
+func (asguo *AppSimulateGoodUpdateOne) SetFixedOrderDuration(u uint32) *AppSimulateGoodUpdateOne {
+	asguo.mutation.ResetFixedOrderDuration()
+	asguo.mutation.SetFixedOrderDuration(u)
+	return asguo
+}
+
+// SetNillableFixedOrderDuration sets the "fixed_order_duration" field if the given value is not nil.
+func (asguo *AppSimulateGoodUpdateOne) SetNillableFixedOrderDuration(u *uint32) *AppSimulateGoodUpdateOne {
+	if u != nil {
+		asguo.SetFixedOrderDuration(*u)
+	}
+	return asguo
+}
+
+// AddFixedOrderDuration adds u to the "fixed_order_duration" field.
+func (asguo *AppSimulateGoodUpdateOne) AddFixedOrderDuration(u int32) *AppSimulateGoodUpdateOne {
+	asguo.mutation.AddFixedOrderDuration(u)
+	return asguo
+}
+
+// ClearFixedOrderDuration clears the value of the "fixed_order_duration" field.
+func (asguo *AppSimulateGoodUpdateOne) ClearFixedOrderDuration() *AppSimulateGoodUpdateOne {
+	asguo.mutation.ClearFixedOrderDuration()
 	return asguo
 }
 
@@ -774,6 +902,39 @@ func (asguo *AppSimulateGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppS
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Column: appsimulategood.FieldCoinTypeID,
+		})
+	}
+	if value, ok := asguo.mutation.FixedOrderUnits(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appsimulategood.FieldFixedOrderUnits,
+		})
+	}
+	if asguo.mutation.FixedOrderUnitsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appsimulategood.FieldFixedOrderUnits,
+		})
+	}
+	if value, ok := asguo.mutation.FixedOrderDuration(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appsimulategood.FieldFixedOrderDuration,
+		})
+	}
+	if value, ok := asguo.mutation.AddedFixedOrderDuration(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appsimulategood.FieldFixedOrderDuration,
+		})
+	}
+	if asguo.mutation.FixedOrderDurationCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: appsimulategood.FieldFixedOrderDuration,
 		})
 	}
 	_spec.Modifiers = asguo.modifiers

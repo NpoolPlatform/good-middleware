@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // AppSimulateGoodCreate is the builder for creating a AppSimulateGood entity.
@@ -134,6 +135,34 @@ func (asgc *AppSimulateGoodCreate) SetNillableCoinTypeID(u *uuid.UUID) *AppSimul
 	return asgc
 }
 
+// SetFixedOrderUnits sets the "fixed_order_units" field.
+func (asgc *AppSimulateGoodCreate) SetFixedOrderUnits(d decimal.Decimal) *AppSimulateGoodCreate {
+	asgc.mutation.SetFixedOrderUnits(d)
+	return asgc
+}
+
+// SetNillableFixedOrderUnits sets the "fixed_order_units" field if the given value is not nil.
+func (asgc *AppSimulateGoodCreate) SetNillableFixedOrderUnits(d *decimal.Decimal) *AppSimulateGoodCreate {
+	if d != nil {
+		asgc.SetFixedOrderUnits(*d)
+	}
+	return asgc
+}
+
+// SetFixedOrderDuration sets the "fixed_order_duration" field.
+func (asgc *AppSimulateGoodCreate) SetFixedOrderDuration(u uint32) *AppSimulateGoodCreate {
+	asgc.mutation.SetFixedOrderDuration(u)
+	return asgc
+}
+
+// SetNillableFixedOrderDuration sets the "fixed_order_duration" field if the given value is not nil.
+func (asgc *AppSimulateGoodCreate) SetNillableFixedOrderDuration(u *uint32) *AppSimulateGoodCreate {
+	if u != nil {
+		asgc.SetFixedOrderDuration(*u)
+	}
+	return asgc
+}
+
 // SetID sets the "id" field.
 func (asgc *AppSimulateGoodCreate) SetID(u uint32) *AppSimulateGoodCreate {
 	asgc.mutation.SetID(u)
@@ -246,6 +275,14 @@ func (asgc *AppSimulateGoodCreate) defaults() error {
 		}
 		v := appsimulategood.DefaultEntID()
 		asgc.mutation.SetEntID(v)
+	}
+	if _, ok := asgc.mutation.FixedOrderUnits(); !ok {
+		v := appsimulategood.DefaultFixedOrderUnits
+		asgc.mutation.SetFixedOrderUnits(v)
+	}
+	if _, ok := asgc.mutation.FixedOrderDuration(); !ok {
+		v := appsimulategood.DefaultFixedOrderDuration
+		asgc.mutation.SetFixedOrderDuration(v)
 	}
 	return nil
 }
@@ -361,6 +398,22 @@ func (asgc *AppSimulateGoodCreate) createSpec() (*AppSimulateGood, *sqlgraph.Cre
 			Column: appsimulategood.FieldCoinTypeID,
 		})
 		_node.CoinTypeID = value
+	}
+	if value, ok := asgc.mutation.FixedOrderUnits(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appsimulategood.FieldFixedOrderUnits,
+		})
+		_node.FixedOrderUnits = value
+	}
+	if value, ok := asgc.mutation.FixedOrderDuration(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appsimulategood.FieldFixedOrderDuration,
+		})
+		_node.FixedOrderDuration = value
 	}
 	return _node, _spec
 }
@@ -551,6 +604,48 @@ func (u *AppSimulateGoodUpsert) UpdateCoinTypeID() *AppSimulateGoodUpsert {
 // ClearCoinTypeID clears the value of the "coin_type_id" field.
 func (u *AppSimulateGoodUpsert) ClearCoinTypeID() *AppSimulateGoodUpsert {
 	u.SetNull(appsimulategood.FieldCoinTypeID)
+	return u
+}
+
+// SetFixedOrderUnits sets the "fixed_order_units" field.
+func (u *AppSimulateGoodUpsert) SetFixedOrderUnits(v decimal.Decimal) *AppSimulateGoodUpsert {
+	u.Set(appsimulategood.FieldFixedOrderUnits, v)
+	return u
+}
+
+// UpdateFixedOrderUnits sets the "fixed_order_units" field to the value that was provided on create.
+func (u *AppSimulateGoodUpsert) UpdateFixedOrderUnits() *AppSimulateGoodUpsert {
+	u.SetExcluded(appsimulategood.FieldFixedOrderUnits)
+	return u
+}
+
+// ClearFixedOrderUnits clears the value of the "fixed_order_units" field.
+func (u *AppSimulateGoodUpsert) ClearFixedOrderUnits() *AppSimulateGoodUpsert {
+	u.SetNull(appsimulategood.FieldFixedOrderUnits)
+	return u
+}
+
+// SetFixedOrderDuration sets the "fixed_order_duration" field.
+func (u *AppSimulateGoodUpsert) SetFixedOrderDuration(v uint32) *AppSimulateGoodUpsert {
+	u.Set(appsimulategood.FieldFixedOrderDuration, v)
+	return u
+}
+
+// UpdateFixedOrderDuration sets the "fixed_order_duration" field to the value that was provided on create.
+func (u *AppSimulateGoodUpsert) UpdateFixedOrderDuration() *AppSimulateGoodUpsert {
+	u.SetExcluded(appsimulategood.FieldFixedOrderDuration)
+	return u
+}
+
+// AddFixedOrderDuration adds v to the "fixed_order_duration" field.
+func (u *AppSimulateGoodUpsert) AddFixedOrderDuration(v uint32) *AppSimulateGoodUpsert {
+	u.Add(appsimulategood.FieldFixedOrderDuration, v)
+	return u
+}
+
+// ClearFixedOrderDuration clears the value of the "fixed_order_duration" field.
+func (u *AppSimulateGoodUpsert) ClearFixedOrderDuration() *AppSimulateGoodUpsert {
+	u.SetNull(appsimulategood.FieldFixedOrderDuration)
 	return u
 }
 
@@ -762,6 +857,55 @@ func (u *AppSimulateGoodUpsertOne) UpdateCoinTypeID() *AppSimulateGoodUpsertOne 
 func (u *AppSimulateGoodUpsertOne) ClearCoinTypeID() *AppSimulateGoodUpsertOne {
 	return u.Update(func(s *AppSimulateGoodUpsert) {
 		s.ClearCoinTypeID()
+	})
+}
+
+// SetFixedOrderUnits sets the "fixed_order_units" field.
+func (u *AppSimulateGoodUpsertOne) SetFixedOrderUnits(v decimal.Decimal) *AppSimulateGoodUpsertOne {
+	return u.Update(func(s *AppSimulateGoodUpsert) {
+		s.SetFixedOrderUnits(v)
+	})
+}
+
+// UpdateFixedOrderUnits sets the "fixed_order_units" field to the value that was provided on create.
+func (u *AppSimulateGoodUpsertOne) UpdateFixedOrderUnits() *AppSimulateGoodUpsertOne {
+	return u.Update(func(s *AppSimulateGoodUpsert) {
+		s.UpdateFixedOrderUnits()
+	})
+}
+
+// ClearFixedOrderUnits clears the value of the "fixed_order_units" field.
+func (u *AppSimulateGoodUpsertOne) ClearFixedOrderUnits() *AppSimulateGoodUpsertOne {
+	return u.Update(func(s *AppSimulateGoodUpsert) {
+		s.ClearFixedOrderUnits()
+	})
+}
+
+// SetFixedOrderDuration sets the "fixed_order_duration" field.
+func (u *AppSimulateGoodUpsertOne) SetFixedOrderDuration(v uint32) *AppSimulateGoodUpsertOne {
+	return u.Update(func(s *AppSimulateGoodUpsert) {
+		s.SetFixedOrderDuration(v)
+	})
+}
+
+// AddFixedOrderDuration adds v to the "fixed_order_duration" field.
+func (u *AppSimulateGoodUpsertOne) AddFixedOrderDuration(v uint32) *AppSimulateGoodUpsertOne {
+	return u.Update(func(s *AppSimulateGoodUpsert) {
+		s.AddFixedOrderDuration(v)
+	})
+}
+
+// UpdateFixedOrderDuration sets the "fixed_order_duration" field to the value that was provided on create.
+func (u *AppSimulateGoodUpsertOne) UpdateFixedOrderDuration() *AppSimulateGoodUpsertOne {
+	return u.Update(func(s *AppSimulateGoodUpsert) {
+		s.UpdateFixedOrderDuration()
+	})
+}
+
+// ClearFixedOrderDuration clears the value of the "fixed_order_duration" field.
+func (u *AppSimulateGoodUpsertOne) ClearFixedOrderDuration() *AppSimulateGoodUpsertOne {
+	return u.Update(func(s *AppSimulateGoodUpsert) {
+		s.ClearFixedOrderDuration()
 	})
 }
 
@@ -1138,6 +1282,55 @@ func (u *AppSimulateGoodUpsertBulk) UpdateCoinTypeID() *AppSimulateGoodUpsertBul
 func (u *AppSimulateGoodUpsertBulk) ClearCoinTypeID() *AppSimulateGoodUpsertBulk {
 	return u.Update(func(s *AppSimulateGoodUpsert) {
 		s.ClearCoinTypeID()
+	})
+}
+
+// SetFixedOrderUnits sets the "fixed_order_units" field.
+func (u *AppSimulateGoodUpsertBulk) SetFixedOrderUnits(v decimal.Decimal) *AppSimulateGoodUpsertBulk {
+	return u.Update(func(s *AppSimulateGoodUpsert) {
+		s.SetFixedOrderUnits(v)
+	})
+}
+
+// UpdateFixedOrderUnits sets the "fixed_order_units" field to the value that was provided on create.
+func (u *AppSimulateGoodUpsertBulk) UpdateFixedOrderUnits() *AppSimulateGoodUpsertBulk {
+	return u.Update(func(s *AppSimulateGoodUpsert) {
+		s.UpdateFixedOrderUnits()
+	})
+}
+
+// ClearFixedOrderUnits clears the value of the "fixed_order_units" field.
+func (u *AppSimulateGoodUpsertBulk) ClearFixedOrderUnits() *AppSimulateGoodUpsertBulk {
+	return u.Update(func(s *AppSimulateGoodUpsert) {
+		s.ClearFixedOrderUnits()
+	})
+}
+
+// SetFixedOrderDuration sets the "fixed_order_duration" field.
+func (u *AppSimulateGoodUpsertBulk) SetFixedOrderDuration(v uint32) *AppSimulateGoodUpsertBulk {
+	return u.Update(func(s *AppSimulateGoodUpsert) {
+		s.SetFixedOrderDuration(v)
+	})
+}
+
+// AddFixedOrderDuration adds v to the "fixed_order_duration" field.
+func (u *AppSimulateGoodUpsertBulk) AddFixedOrderDuration(v uint32) *AppSimulateGoodUpsertBulk {
+	return u.Update(func(s *AppSimulateGoodUpsert) {
+		s.AddFixedOrderDuration(v)
+	})
+}
+
+// UpdateFixedOrderDuration sets the "fixed_order_duration" field to the value that was provided on create.
+func (u *AppSimulateGoodUpsertBulk) UpdateFixedOrderDuration() *AppSimulateGoodUpsertBulk {
+	return u.Update(func(s *AppSimulateGoodUpsert) {
+		s.UpdateFixedOrderDuration()
+	})
+}
+
+// ClearFixedOrderDuration clears the value of the "fixed_order_duration" field.
+func (u *AppSimulateGoodUpsertBulk) ClearFixedOrderDuration() *AppSimulateGoodUpsertBulk {
+	return u.Update(func(s *AppSimulateGoodUpsert) {
+		s.ClearFixedOrderDuration()
 	})
 }
 

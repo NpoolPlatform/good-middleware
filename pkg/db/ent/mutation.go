@@ -3919,24 +3919,27 @@ func (m *AppGoodMutation) ResetEdge(name string) error {
 // AppSimulateGoodMutation represents an operation that mutates the AppSimulateGood nodes in the graph.
 type AppSimulateGoodMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uint32
-	created_at    *uint32
-	addcreated_at *int32
-	updated_at    *uint32
-	addupdated_at *int32
-	deleted_at    *uint32
-	adddeleted_at *int32
-	ent_id        *uuid.UUID
-	app_id        *uuid.UUID
-	good_id       *uuid.UUID
-	app_good_id   *uuid.UUID
-	coin_type_id  *uuid.UUID
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*AppSimulateGood, error)
-	predicates    []predicate.AppSimulateGood
+	op                      Op
+	typ                     string
+	id                      *uint32
+	created_at              *uint32
+	addcreated_at           *int32
+	updated_at              *uint32
+	addupdated_at           *int32
+	deleted_at              *uint32
+	adddeleted_at           *int32
+	ent_id                  *uuid.UUID
+	app_id                  *uuid.UUID
+	good_id                 *uuid.UUID
+	app_good_id             *uuid.UUID
+	coin_type_id            *uuid.UUID
+	fixed_order_units       *decimal.Decimal
+	fixed_order_duration    *uint32
+	addfixed_order_duration *int32
+	clearedFields           map[string]struct{}
+	done                    bool
+	oldValue                func(context.Context) (*AppSimulateGood, error)
+	predicates              []predicate.AppSimulateGood
 }
 
 var _ ent.Mutation = (*AppSimulateGoodMutation)(nil)
@@ -4443,6 +4446,125 @@ func (m *AppSimulateGoodMutation) ResetCoinTypeID() {
 	delete(m.clearedFields, appsimulategood.FieldCoinTypeID)
 }
 
+// SetFixedOrderUnits sets the "fixed_order_units" field.
+func (m *AppSimulateGoodMutation) SetFixedOrderUnits(d decimal.Decimal) {
+	m.fixed_order_units = &d
+}
+
+// FixedOrderUnits returns the value of the "fixed_order_units" field in the mutation.
+func (m *AppSimulateGoodMutation) FixedOrderUnits() (r decimal.Decimal, exists bool) {
+	v := m.fixed_order_units
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFixedOrderUnits returns the old "fixed_order_units" field's value of the AppSimulateGood entity.
+// If the AppSimulateGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppSimulateGoodMutation) OldFixedOrderUnits(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFixedOrderUnits is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFixedOrderUnits requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFixedOrderUnits: %w", err)
+	}
+	return oldValue.FixedOrderUnits, nil
+}
+
+// ClearFixedOrderUnits clears the value of the "fixed_order_units" field.
+func (m *AppSimulateGoodMutation) ClearFixedOrderUnits() {
+	m.fixed_order_units = nil
+	m.clearedFields[appsimulategood.FieldFixedOrderUnits] = struct{}{}
+}
+
+// FixedOrderUnitsCleared returns if the "fixed_order_units" field was cleared in this mutation.
+func (m *AppSimulateGoodMutation) FixedOrderUnitsCleared() bool {
+	_, ok := m.clearedFields[appsimulategood.FieldFixedOrderUnits]
+	return ok
+}
+
+// ResetFixedOrderUnits resets all changes to the "fixed_order_units" field.
+func (m *AppSimulateGoodMutation) ResetFixedOrderUnits() {
+	m.fixed_order_units = nil
+	delete(m.clearedFields, appsimulategood.FieldFixedOrderUnits)
+}
+
+// SetFixedOrderDuration sets the "fixed_order_duration" field.
+func (m *AppSimulateGoodMutation) SetFixedOrderDuration(u uint32) {
+	m.fixed_order_duration = &u
+	m.addfixed_order_duration = nil
+}
+
+// FixedOrderDuration returns the value of the "fixed_order_duration" field in the mutation.
+func (m *AppSimulateGoodMutation) FixedOrderDuration() (r uint32, exists bool) {
+	v := m.fixed_order_duration
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFixedOrderDuration returns the old "fixed_order_duration" field's value of the AppSimulateGood entity.
+// If the AppSimulateGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppSimulateGoodMutation) OldFixedOrderDuration(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFixedOrderDuration is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFixedOrderDuration requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFixedOrderDuration: %w", err)
+	}
+	return oldValue.FixedOrderDuration, nil
+}
+
+// AddFixedOrderDuration adds u to the "fixed_order_duration" field.
+func (m *AppSimulateGoodMutation) AddFixedOrderDuration(u int32) {
+	if m.addfixed_order_duration != nil {
+		*m.addfixed_order_duration += u
+	} else {
+		m.addfixed_order_duration = &u
+	}
+}
+
+// AddedFixedOrderDuration returns the value that was added to the "fixed_order_duration" field in this mutation.
+func (m *AppSimulateGoodMutation) AddedFixedOrderDuration() (r int32, exists bool) {
+	v := m.addfixed_order_duration
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearFixedOrderDuration clears the value of the "fixed_order_duration" field.
+func (m *AppSimulateGoodMutation) ClearFixedOrderDuration() {
+	m.fixed_order_duration = nil
+	m.addfixed_order_duration = nil
+	m.clearedFields[appsimulategood.FieldFixedOrderDuration] = struct{}{}
+}
+
+// FixedOrderDurationCleared returns if the "fixed_order_duration" field was cleared in this mutation.
+func (m *AppSimulateGoodMutation) FixedOrderDurationCleared() bool {
+	_, ok := m.clearedFields[appsimulategood.FieldFixedOrderDuration]
+	return ok
+}
+
+// ResetFixedOrderDuration resets all changes to the "fixed_order_duration" field.
+func (m *AppSimulateGoodMutation) ResetFixedOrderDuration() {
+	m.fixed_order_duration = nil
+	m.addfixed_order_duration = nil
+	delete(m.clearedFields, appsimulategood.FieldFixedOrderDuration)
+}
+
 // Where appends a list predicates to the AppSimulateGoodMutation builder.
 func (m *AppSimulateGoodMutation) Where(ps ...predicate.AppSimulateGood) {
 	m.predicates = append(m.predicates, ps...)
@@ -4462,7 +4584,7 @@ func (m *AppSimulateGoodMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppSimulateGoodMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 10)
 	if m.created_at != nil {
 		fields = append(fields, appsimulategood.FieldCreatedAt)
 	}
@@ -4486,6 +4608,12 @@ func (m *AppSimulateGoodMutation) Fields() []string {
 	}
 	if m.coin_type_id != nil {
 		fields = append(fields, appsimulategood.FieldCoinTypeID)
+	}
+	if m.fixed_order_units != nil {
+		fields = append(fields, appsimulategood.FieldFixedOrderUnits)
+	}
+	if m.fixed_order_duration != nil {
+		fields = append(fields, appsimulategood.FieldFixedOrderDuration)
 	}
 	return fields
 }
@@ -4511,6 +4639,10 @@ func (m *AppSimulateGoodMutation) Field(name string) (ent.Value, bool) {
 		return m.AppGoodID()
 	case appsimulategood.FieldCoinTypeID:
 		return m.CoinTypeID()
+	case appsimulategood.FieldFixedOrderUnits:
+		return m.FixedOrderUnits()
+	case appsimulategood.FieldFixedOrderDuration:
+		return m.FixedOrderDuration()
 	}
 	return nil, false
 }
@@ -4536,6 +4668,10 @@ func (m *AppSimulateGoodMutation) OldField(ctx context.Context, name string) (en
 		return m.OldAppGoodID(ctx)
 	case appsimulategood.FieldCoinTypeID:
 		return m.OldCoinTypeID(ctx)
+	case appsimulategood.FieldFixedOrderUnits:
+		return m.OldFixedOrderUnits(ctx)
+	case appsimulategood.FieldFixedOrderDuration:
+		return m.OldFixedOrderDuration(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppSimulateGood field %s", name)
 }
@@ -4601,6 +4737,20 @@ func (m *AppSimulateGoodMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetCoinTypeID(v)
 		return nil
+	case appsimulategood.FieldFixedOrderUnits:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFixedOrderUnits(v)
+		return nil
+	case appsimulategood.FieldFixedOrderDuration:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFixedOrderDuration(v)
+		return nil
 	}
 	return fmt.Errorf("unknown AppSimulateGood field %s", name)
 }
@@ -4618,6 +4768,9 @@ func (m *AppSimulateGoodMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, appsimulategood.FieldDeletedAt)
 	}
+	if m.addfixed_order_duration != nil {
+		fields = append(fields, appsimulategood.FieldFixedOrderDuration)
+	}
 	return fields
 }
 
@@ -4632,6 +4785,8 @@ func (m *AppSimulateGoodMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdatedAt()
 	case appsimulategood.FieldDeletedAt:
 		return m.AddedDeletedAt()
+	case appsimulategood.FieldFixedOrderDuration:
+		return m.AddedFixedOrderDuration()
 	}
 	return nil, false
 }
@@ -4662,6 +4817,13 @@ func (m *AppSimulateGoodMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddDeletedAt(v)
 		return nil
+	case appsimulategood.FieldFixedOrderDuration:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddFixedOrderDuration(v)
+		return nil
 	}
 	return fmt.Errorf("unknown AppSimulateGood numeric field %s", name)
 }
@@ -4681,6 +4843,12 @@ func (m *AppSimulateGoodMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(appsimulategood.FieldCoinTypeID) {
 		fields = append(fields, appsimulategood.FieldCoinTypeID)
+	}
+	if m.FieldCleared(appsimulategood.FieldFixedOrderUnits) {
+		fields = append(fields, appsimulategood.FieldFixedOrderUnits)
+	}
+	if m.FieldCleared(appsimulategood.FieldFixedOrderDuration) {
+		fields = append(fields, appsimulategood.FieldFixedOrderDuration)
 	}
 	return fields
 }
@@ -4707,6 +4875,12 @@ func (m *AppSimulateGoodMutation) ClearField(name string) error {
 		return nil
 	case appsimulategood.FieldCoinTypeID:
 		m.ClearCoinTypeID()
+		return nil
+	case appsimulategood.FieldFixedOrderUnits:
+		m.ClearFixedOrderUnits()
+		return nil
+	case appsimulategood.FieldFixedOrderDuration:
+		m.ClearFixedOrderDuration()
 		return nil
 	}
 	return fmt.Errorf("unknown AppSimulateGood nullable field %s", name)
@@ -4739,6 +4913,12 @@ func (m *AppSimulateGoodMutation) ResetField(name string) error {
 		return nil
 	case appsimulategood.FieldCoinTypeID:
 		m.ResetCoinTypeID()
+		return nil
+	case appsimulategood.FieldFixedOrderUnits:
+		m.ResetFixedOrderUnits()
+		return nil
+	case appsimulategood.FieldFixedOrderDuration:
+		m.ResetFixedOrderDuration()
 		return nil
 	}
 	return fmt.Errorf("unknown AppSimulateGood field %s", name)

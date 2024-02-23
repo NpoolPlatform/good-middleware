@@ -251,6 +251,14 @@ func init() {
 	appsimulategoodDescEntID := appsimulategoodMixinFields1[1].Descriptor()
 	// appsimulategood.DefaultEntID holds the default value on creation for the ent_id field.
 	appsimulategood.DefaultEntID = appsimulategoodDescEntID.Default.(func() uuid.UUID)
+	// appsimulategoodDescFixedOrderUnits is the schema descriptor for fixed_order_units field.
+	appsimulategoodDescFixedOrderUnits := appsimulategoodFields[4].Descriptor()
+	// appsimulategood.DefaultFixedOrderUnits holds the default value on creation for the fixed_order_units field.
+	appsimulategood.DefaultFixedOrderUnits = appsimulategoodDescFixedOrderUnits.Default.(decimal.Decimal)
+	// appsimulategoodDescFixedOrderDuration is the schema descriptor for fixed_order_duration field.
+	appsimulategoodDescFixedOrderDuration := appsimulategoodFields[5].Descriptor()
+	// appsimulategood.DefaultFixedOrderDuration holds the default value on creation for the fixed_order_duration field.
+	appsimulategood.DefaultFixedOrderDuration = appsimulategoodDescFixedOrderDuration.Default.(uint32)
 	appstockMixin := schema.AppStock{}.Mixin()
 	appstock.Policy = privacy.NewPolicies(appstockMixin[0], schema.AppStock{})
 	appstock.Hooks[0] = func(next ent.Mutator) ent.Mutator {

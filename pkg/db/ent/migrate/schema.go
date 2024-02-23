@@ -101,6 +101,8 @@ var (
 		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "coin_type_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "fixed_order_units", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "fixed_order_duration", Type: field.TypeUint32, Nullable: true, Default: 0},
 	}
 	// AppSimulateGoodsTable holds the schema information for the "app_simulate_goods" table.
 	AppSimulateGoodsTable = &schema.Table{

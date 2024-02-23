@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // ID filters vertices based on their ID field.
@@ -132,6 +133,20 @@ func AppGoodID(v uuid.UUID) predicate.AppSimulateGood {
 func CoinTypeID(v uuid.UUID) predicate.AppSimulateGood {
 	return predicate.AppSimulateGood(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldCoinTypeID), v))
+	})
+}
+
+// FixedOrderUnits applies equality check predicate on the "fixed_order_units" field. It's identical to FixedOrderUnitsEQ.
+func FixedOrderUnits(v decimal.Decimal) predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFixedOrderUnits), v))
+	})
+}
+
+// FixedOrderDuration applies equality check predicate on the "fixed_order_duration" field. It's identical to FixedOrderDurationEQ.
+func FixedOrderDuration(v uint32) predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFixedOrderDuration), v))
 	})
 }
 
@@ -700,6 +715,162 @@ func CoinTypeIDIsNil() predicate.AppSimulateGood {
 func CoinTypeIDNotNil() predicate.AppSimulateGood {
 	return predicate.AppSimulateGood(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldCoinTypeID)))
+	})
+}
+
+// FixedOrderUnitsEQ applies the EQ predicate on the "fixed_order_units" field.
+func FixedOrderUnitsEQ(v decimal.Decimal) predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFixedOrderUnits), v))
+	})
+}
+
+// FixedOrderUnitsNEQ applies the NEQ predicate on the "fixed_order_units" field.
+func FixedOrderUnitsNEQ(v decimal.Decimal) predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldFixedOrderUnits), v))
+	})
+}
+
+// FixedOrderUnitsIn applies the In predicate on the "fixed_order_units" field.
+func FixedOrderUnitsIn(vs ...decimal.Decimal) predicate.AppSimulateGood {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldFixedOrderUnits), v...))
+	})
+}
+
+// FixedOrderUnitsNotIn applies the NotIn predicate on the "fixed_order_units" field.
+func FixedOrderUnitsNotIn(vs ...decimal.Decimal) predicate.AppSimulateGood {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldFixedOrderUnits), v...))
+	})
+}
+
+// FixedOrderUnitsGT applies the GT predicate on the "fixed_order_units" field.
+func FixedOrderUnitsGT(v decimal.Decimal) predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldFixedOrderUnits), v))
+	})
+}
+
+// FixedOrderUnitsGTE applies the GTE predicate on the "fixed_order_units" field.
+func FixedOrderUnitsGTE(v decimal.Decimal) predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldFixedOrderUnits), v))
+	})
+}
+
+// FixedOrderUnitsLT applies the LT predicate on the "fixed_order_units" field.
+func FixedOrderUnitsLT(v decimal.Decimal) predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldFixedOrderUnits), v))
+	})
+}
+
+// FixedOrderUnitsLTE applies the LTE predicate on the "fixed_order_units" field.
+func FixedOrderUnitsLTE(v decimal.Decimal) predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldFixedOrderUnits), v))
+	})
+}
+
+// FixedOrderUnitsIsNil applies the IsNil predicate on the "fixed_order_units" field.
+func FixedOrderUnitsIsNil() predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldFixedOrderUnits)))
+	})
+}
+
+// FixedOrderUnitsNotNil applies the NotNil predicate on the "fixed_order_units" field.
+func FixedOrderUnitsNotNil() predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldFixedOrderUnits)))
+	})
+}
+
+// FixedOrderDurationEQ applies the EQ predicate on the "fixed_order_duration" field.
+func FixedOrderDurationEQ(v uint32) predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFixedOrderDuration), v))
+	})
+}
+
+// FixedOrderDurationNEQ applies the NEQ predicate on the "fixed_order_duration" field.
+func FixedOrderDurationNEQ(v uint32) predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldFixedOrderDuration), v))
+	})
+}
+
+// FixedOrderDurationIn applies the In predicate on the "fixed_order_duration" field.
+func FixedOrderDurationIn(vs ...uint32) predicate.AppSimulateGood {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldFixedOrderDuration), v...))
+	})
+}
+
+// FixedOrderDurationNotIn applies the NotIn predicate on the "fixed_order_duration" field.
+func FixedOrderDurationNotIn(vs ...uint32) predicate.AppSimulateGood {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldFixedOrderDuration), v...))
+	})
+}
+
+// FixedOrderDurationGT applies the GT predicate on the "fixed_order_duration" field.
+func FixedOrderDurationGT(v uint32) predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldFixedOrderDuration), v))
+	})
+}
+
+// FixedOrderDurationGTE applies the GTE predicate on the "fixed_order_duration" field.
+func FixedOrderDurationGTE(v uint32) predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldFixedOrderDuration), v))
+	})
+}
+
+// FixedOrderDurationLT applies the LT predicate on the "fixed_order_duration" field.
+func FixedOrderDurationLT(v uint32) predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldFixedOrderDuration), v))
+	})
+}
+
+// FixedOrderDurationLTE applies the LTE predicate on the "fixed_order_duration" field.
+func FixedOrderDurationLTE(v uint32) predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldFixedOrderDuration), v))
+	})
+}
+
+// FixedOrderDurationIsNil applies the IsNil predicate on the "fixed_order_duration" field.
+func FixedOrderDurationIsNil() predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldFixedOrderDuration)))
+	})
+}
+
+// FixedOrderDurationNotNil applies the NotNil predicate on the "fixed_order_duration" field.
+func FixedOrderDurationNotNil() predicate.AppSimulateGood {
+	return predicate.AppSimulateGood(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldFixedOrderDuration)))
 	})
 }
 

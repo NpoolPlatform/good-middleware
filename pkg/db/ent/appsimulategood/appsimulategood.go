@@ -5,6 +5,7 @@ package appsimulategood
 import (
 	"entgo.io/ent"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 const (
@@ -28,6 +29,10 @@ const (
 	FieldAppGoodID = "app_good_id"
 	// FieldCoinTypeID holds the string denoting the coin_type_id field in the database.
 	FieldCoinTypeID = "coin_type_id"
+	// FieldFixedOrderUnits holds the string denoting the fixed_order_units field in the database.
+	FieldFixedOrderUnits = "fixed_order_units"
+	// FieldFixedOrderDuration holds the string denoting the fixed_order_duration field in the database.
+	FieldFixedOrderDuration = "fixed_order_duration"
 	// Table holds the table name of the appsimulategood in the database.
 	Table = "app_simulate_goods"
 )
@@ -43,6 +48,8 @@ var Columns = []string{
 	FieldGoodID,
 	FieldAppGoodID,
 	FieldCoinTypeID,
+	FieldFixedOrderUnits,
+	FieldFixedOrderDuration,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -74,4 +81,8 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultEntID holds the default value on creation for the "ent_id" field.
 	DefaultEntID func() uuid.UUID
+	// DefaultFixedOrderUnits holds the default value on creation for the "fixed_order_units" field.
+	DefaultFixedOrderUnits decimal.Decimal
+	// DefaultFixedOrderDuration holds the default value on creation for the "fixed_order_duration" field.
+	DefaultFixedOrderDuration uint32
 )

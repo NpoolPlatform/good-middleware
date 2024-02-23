@@ -112,14 +112,16 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppSimulateGood",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			appsimulategood.FieldCreatedAt:  {Type: field.TypeUint32, Column: appsimulategood.FieldCreatedAt},
-			appsimulategood.FieldUpdatedAt:  {Type: field.TypeUint32, Column: appsimulategood.FieldUpdatedAt},
-			appsimulategood.FieldDeletedAt:  {Type: field.TypeUint32, Column: appsimulategood.FieldDeletedAt},
-			appsimulategood.FieldEntID:      {Type: field.TypeUUID, Column: appsimulategood.FieldEntID},
-			appsimulategood.FieldAppID:      {Type: field.TypeUUID, Column: appsimulategood.FieldAppID},
-			appsimulategood.FieldGoodID:     {Type: field.TypeUUID, Column: appsimulategood.FieldGoodID},
-			appsimulategood.FieldAppGoodID:  {Type: field.TypeUUID, Column: appsimulategood.FieldAppGoodID},
-			appsimulategood.FieldCoinTypeID: {Type: field.TypeUUID, Column: appsimulategood.FieldCoinTypeID},
+			appsimulategood.FieldCreatedAt:          {Type: field.TypeUint32, Column: appsimulategood.FieldCreatedAt},
+			appsimulategood.FieldUpdatedAt:          {Type: field.TypeUint32, Column: appsimulategood.FieldUpdatedAt},
+			appsimulategood.FieldDeletedAt:          {Type: field.TypeUint32, Column: appsimulategood.FieldDeletedAt},
+			appsimulategood.FieldEntID:              {Type: field.TypeUUID, Column: appsimulategood.FieldEntID},
+			appsimulategood.FieldAppID:              {Type: field.TypeUUID, Column: appsimulategood.FieldAppID},
+			appsimulategood.FieldGoodID:             {Type: field.TypeUUID, Column: appsimulategood.FieldGoodID},
+			appsimulategood.FieldAppGoodID:          {Type: field.TypeUUID, Column: appsimulategood.FieldAppGoodID},
+			appsimulategood.FieldCoinTypeID:         {Type: field.TypeUUID, Column: appsimulategood.FieldCoinTypeID},
+			appsimulategood.FieldFixedOrderUnits:    {Type: field.TypeOther, Column: appsimulategood.FieldFixedOrderUnits},
+			appsimulategood.FieldFixedOrderDuration: {Type: field.TypeUint32, Column: appsimulategood.FieldFixedOrderDuration},
 		},
 	}
 	graph.Nodes[3] = &sqlgraph.Node{
@@ -914,6 +916,16 @@ func (f *AppSimulateGoodFilter) WhereAppGoodID(p entql.ValueP) {
 // WhereCoinTypeID applies the entql [16]byte predicate on the coin_type_id field.
 func (f *AppSimulateGoodFilter) WhereCoinTypeID(p entql.ValueP) {
 	f.Where(p.Field(appsimulategood.FieldCoinTypeID))
+}
+
+// WhereFixedOrderUnits applies the entql other predicate on the fixed_order_units field.
+func (f *AppSimulateGoodFilter) WhereFixedOrderUnits(p entql.OtherP) {
+	f.Where(p.Field(appsimulategood.FieldFixedOrderUnits))
+}
+
+// WhereFixedOrderDuration applies the entql uint32 predicate on the fixed_order_duration field.
+func (f *AppSimulateGoodFilter) WhereFixedOrderDuration(p entql.Uint32P) {
+	f.Where(p.Field(appsimulategood.FieldFixedOrderDuration))
 }
 
 // addPredicate implements the predicateAdder interface.

@@ -3,10 +3,12 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // AppSimulateGood holds the schema definition for the AppSimulateGood entity.
@@ -35,6 +37,17 @@ func (AppSimulateGood) Fields() []ent.Field {
 		field.
 			UUID("coin_type_id", uuid.UUID{}).
 			Optional(),
+		field.
+			Other("fixed_order_units", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.Decimal{}),
+		field.
+			Uint32("fixed_order_duration").
+			Optional().
+			Default(0),
 	}
 }
 
