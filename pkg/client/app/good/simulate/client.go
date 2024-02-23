@@ -146,3 +146,19 @@ func ExistSimulateConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 	}
 	return info.(bool), nil
 }
+
+func UpdateSimulate(ctx context.Context, in *npool.SimulateReq) (*npool.Simulate, error) {
+	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+		resp, err := cli.UpdateSimulate(ctx, &npool.UpdateSimulateRequest{
+			Info: in,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.Simulate), nil
+}

@@ -10,6 +10,7 @@ import (
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/simulate"
+	"github.com/shopspring/decimal"
 
 	"github.com/google/uuid"
 )
@@ -138,6 +139,39 @@ func WithCoinTypeID(id *string, must bool) func(context.Context, *Handler) error
 			return err
 		}
 		h.CoinTypeID = &_id
+		return nil
+	}
+}
+
+func WithFixedOrderUnits(value *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if value == nil {
+			if must {
+				return fmt.Errorf("invalid units")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*value)
+		if err != nil {
+			return err
+		}
+		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
+			return fmt.Errorf("units is less than or equal to 0")
+		}
+		h.FixedOrderUnits = &amount
+		return nil
+	}
+}
+
+func WithFixedOrderDuration(duration *uint32, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if duration == nil {
+			if must {
+				return fmt.Errorf("invalid duration")
+			}
+			return nil
+		}
+		h.FixedOrderDuration = duration
 		return nil
 	}
 }

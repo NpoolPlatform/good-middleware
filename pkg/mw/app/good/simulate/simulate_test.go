@@ -117,11 +117,13 @@ var appgood = appgoodmwpb.Good{
 }
 
 var ret = npool.Simulate{
-	EntID:      uuid.NewString(),
-	AppID:      appgood.AppID,
-	GoodID:     good.EntID,
-	AppGoodID:  appgood.EntID,
-	CoinTypeID: good.CoinTypeID,
+	EntID:              uuid.NewString(),
+	AppID:              appgood.AppID,
+	GoodID:             good.EntID,
+	AppGoodID:          appgood.EntID,
+	CoinTypeID:         good.CoinTypeID,
+	FixedOrderUnits:    "10",
+	FixedOrderDuration: 100,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -227,6 +229,8 @@ func createSimulate(t *testing.T) {
 		context.Background(),
 		WithEntID(&ret.EntID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
+		WithFixedOrderUnits(&ret.FixedOrderUnits, true),
+		WithFixedOrderDuration(&ret.FixedOrderDuration, true),
 	)
 	if assert.Nil(t, err) {
 		info, err := handler.CreateSimulate(context.Background())
@@ -234,6 +238,24 @@ func createSimulate(t *testing.T) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			ret.ID = info.ID
+			assert.Equal(t, &ret, info)
+		}
+	}
+}
+
+func updateSimulate(t *testing.T) {
+	ret.FixedOrderUnits = "20"
+	ret.FixedOrderDuration = 200
+	handler, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithFixedOrderUnits(&ret.FixedOrderUnits, true),
+		WithFixedOrderDuration(&ret.FixedOrderDuration, true),
+	)
+	if assert.Nil(t, err) {
+		info, err := handler.UpdateSimulate(context.Background())
+		if assert.Nil(t, err) {
+			ret.UpdatedAt = info.UpdatedAt
 			assert.Equal(t, &ret, info)
 		}
 	}
@@ -301,6 +323,7 @@ func TestSimulate(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createSimulate", createSimulate)
+	t.Run("updateSimulate", updateSimulate)
 	t.Run("getSimulate", getSimulate)
 	t.Run("getSimulates", getSimulates)
 	t.Run("deleteSimulate", deleteSimulate)

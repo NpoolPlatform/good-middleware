@@ -13,6 +13,7 @@ import (
 	entappsimulategood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
 	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/simulate"
+	"github.com/shopspring/decimal"
 )
 
 type queryHandler struct {
@@ -63,6 +64,8 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entappsimulategood.FieldGoodID), "good_id"),
 			sql.As(t.C(entappsimulategood.FieldAppGoodID), "app_good_id"),
 			sql.As(t.C(entappsimulategood.FieldCoinTypeID), "coin_type_id"),
+			sql.As(t.C(entappsimulategood.FieldFixedOrderUnits), "fixed_order_units"),
+			sql.As(t.C(entappsimulategood.FieldFixedOrderDuration), "fixed_order_duration"),
 			sql.As(t.C(entappsimulategood.FieldCreatedAt), "created_at"),
 			sql.As(t.C(entappsimulategood.FieldUpdatedAt), "updated_at"),
 		)
@@ -111,6 +114,17 @@ func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
 }
 
+func (h *queryHandler) formalize() {
+	for _, info := range h.infos {
+		amount, err := decimal.NewFromString(info.FixedOrderUnits)
+		if err != nil {
+			info.FixedOrderUnits = decimal.NewFromInt(0).String()
+		} else {
+			info.FixedOrderUnits = amount.String()
+		}
+	}
+}
+
 func (h *Handler) GetSimulate(ctx context.Context) (*npool.Simulate, error) {
 	handler := &queryHandler{
 		Handler: h,
@@ -132,6 +146,8 @@ func (h *Handler) GetSimulate(ctx context.Context) (*npool.Simulate, error) {
 	if len(handler.infos) > 1 {
 		return nil, fmt.Errorf("too many records")
 	}
+
+	handler.formalize()
 
 	return handler.infos[0], nil
 }
@@ -169,6 +185,8 @@ func (h *Handler) GetSimulates(ctx context.Context) ([]*npool.Simulate, uint32, 
 	if err != nil {
 		return nil, 0, err
 	}
+
+	handler.formalize()
 
 	return handler.infos, handler.total, nil
 }

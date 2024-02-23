@@ -23,11 +23,13 @@ func (h *createHandler) createSimulate(ctx context.Context, tx *ent.Tx) error {
 	if _, err := appsimulategoodcrud.CreateSet(
 		tx.AppSimulateGood.Create(),
 		&appsimulategoodcrud.Req{
-			EntID:      h.EntID,
-			AppID:      h.AppID,
-			GoodID:     h.GoodID,
-			AppGoodID:  h.AppGoodID,
-			CoinTypeID: h.CoinTypeID,
+			EntID:              h.EntID,
+			AppID:              h.AppID,
+			GoodID:             h.GoodID,
+			AppGoodID:          h.AppGoodID,
+			CoinTypeID:         h.CoinTypeID,
+			FixedOrderUnits:    h.FixedOrderUnits,
+			FixedOrderDuration: h.FixedOrderDuration,
 		},
 	).Save(ctx); err != nil {
 		return err

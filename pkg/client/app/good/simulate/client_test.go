@@ -126,11 +126,13 @@ var appgood = appgoodmwpb.Good{
 }
 
 var ret = npool.Simulate{
-	EntID:      uuid.NewString(),
-	AppID:      appgood.AppID,
-	GoodID:     appgood.GoodID,
-	AppGoodID:  appgood.EntID,
-	CoinTypeID: good.CoinTypeID,
+	EntID:              uuid.NewString(),
+	AppID:              appgood.AppID,
+	GoodID:             appgood.GoodID,
+	AppGoodID:          appgood.EntID,
+	CoinTypeID:         good.CoinTypeID,
+	FixedOrderUnits:    "10",
+	FixedOrderDuration: 100,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -220,6 +222,20 @@ func createSimulate(t *testing.T) {
 	}
 }
 
+func updateSimulate(t *testing.T) {
+	ret.FixedOrderUnits = "20"
+	ret.FixedOrderDuration = 200
+	info, err := UpdateSimulate(context.Background(), &npool.SimulateReq{
+		ID:                 &ret.ID,
+		FixedOrderUnits:    &ret.FixedOrderUnits,
+		FixedOrderDuration: &ret.FixedOrderDuration,
+	})
+	if assert.Nil(t, err) {
+		ret.UpdatedAt = info.UpdatedAt
+		assert.Equal(t, &ret, info)
+	}
+}
+
 func getSimulate(t *testing.T) {
 	info, err := GetSimulate(context.Background(), ret.EntID)
 	if assert.Nil(t, err) {
@@ -290,6 +306,7 @@ func TestSimulate(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createSimulate", createSimulate)
+	t.Run("updateSimulate", updateSimulate)
 	t.Run("getSimulate", getSimulate)
 	t.Run("getSimulates", getSimulates)
 	t.Run("getSimulateOnly", getSimulateOnly)

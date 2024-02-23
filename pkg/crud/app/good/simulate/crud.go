@@ -6,18 +6,21 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappsimulategood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	"github.com/shopspring/decimal"
 
 	"github.com/google/uuid"
 )
 
 type Req struct {
-	ID         *uint32
-	EntID      *uuid.UUID
-	AppID      *uuid.UUID
-	AppGoodID  *uuid.UUID
-	CoinTypeID *uuid.UUID
-	GoodID     *uuid.UUID
-	DeletedAt  *uint32
+	ID                 *uint32
+	EntID              *uuid.UUID
+	AppID              *uuid.UUID
+	AppGoodID          *uuid.UUID
+	CoinTypeID         *uuid.UUID
+	GoodID             *uuid.UUID
+	FixedOrderUnits    *decimal.Decimal
+	FixedOrderDuration *uint32
+	DeletedAt          *uint32
 }
 
 func CreateSet(c *ent.AppSimulateGoodCreate, req *Req) *ent.AppSimulateGoodCreate {
@@ -36,10 +39,22 @@ func CreateSet(c *ent.AppSimulateGoodCreate, req *Req) *ent.AppSimulateGoodCreat
 	if req.GoodID != nil {
 		c.SetAppGoodID(*req.AppGoodID)
 	}
+	if req.FixedOrderUnits != nil {
+		c.SetFixedOrderUnits(*req.FixedOrderUnits)
+	}
+	if req.FixedOrderDuration != nil {
+		c.SetFixedOrderDuration(*req.FixedOrderDuration)
+	}
 	return c
 }
 
 func UpdateSet(u *ent.AppSimulateGoodUpdateOne, req *Req) *ent.AppSimulateGoodUpdateOne {
+	if req.FixedOrderUnits != nil {
+		u.SetFixedOrderUnits(*req.FixedOrderUnits)
+	}
+	if req.FixedOrderDuration != nil {
+		u.SetFixedOrderDuration(*req.FixedOrderDuration)
+	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)
 	}
