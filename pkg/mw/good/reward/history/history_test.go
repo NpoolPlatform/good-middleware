@@ -188,7 +188,7 @@ func setup(t *testing.T) func(*testing.T) {
 	_, err = h5.UpdateGood(context.Background())
 	assert.Nil(t, err)
 
-	state = types.BenefitState_BenefitDone
+	state = types.BenefitState_BenefitSimulateBookKeeping
 	h5, err = good1.NewHandler(
 		context.Background(),
 		good1.WithID(&good.ID, true),
@@ -197,6 +197,17 @@ func setup(t *testing.T) func(*testing.T) {
 		good1.WithRewardTID(&ret.TID, true),
 		good1.WithRewardAmount(&ret.Amount, true),
 		good1.WithUnitRewardAmount(&ret.UnitAmount, true),
+	)
+	assert.Nil(t, err)
+
+	_, err = h5.UpdateGood(context.Background())
+	assert.Nil(t, err)
+
+	state = types.BenefitState_BenefitDone
+	h5, err = good1.NewHandler(
+		context.Background(),
+		good1.WithID(&good.ID, true),
+		good1.WithRewardState(&state, true),
 	)
 	assert.Nil(t, err)
 
@@ -247,10 +258,9 @@ func setup(t *testing.T) func(*testing.T) {
 	_, err = h5.UpdateGood(context.Background())
 	assert.Nil(t, err)
 
-	state = types.BenefitState_BenefitDone
+	state = types.BenefitState_BenefitSimulateBookKeeping
 	now := uint32(time.Now().Unix() - 500)
 	tid := uuid.NewString()
-
 	h5, err = good1.NewHandler(
 		context.Background(),
 		good1.WithID(&good.ID, true),
@@ -259,6 +269,18 @@ func setup(t *testing.T) func(*testing.T) {
 		good1.WithRewardTID(&tid, true),
 		good1.WithRewardAmount(&ret.Amount, true),
 		good1.WithUnitRewardAmount(&ret.UnitAmount, true),
+	)
+	assert.Nil(t, err)
+
+	_, err = h5.UpdateGood(context.Background())
+	assert.Nil(t, err)
+
+	state = types.BenefitState_BenefitDone
+
+	h5, err = good1.NewHandler(
+		context.Background(),
+		good1.WithID(&good.ID, true),
+		good1.WithRewardState(&state, true),
 	)
 	assert.Nil(t, err)
 
@@ -287,6 +309,7 @@ func getHistories(t *testing.T) {
 	if assert.Nil(t, err) {
 		infos, total, err := handler.GetHistories(context.Background())
 		if assert.Nil(t, err) {
+			fmt.Println("TOTAL: ", total)
 			if assert.Equal(t, uint32(2), total) {
 				found := false
 				for _, info := range infos {
