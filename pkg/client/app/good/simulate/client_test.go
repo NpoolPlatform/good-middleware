@@ -211,8 +211,10 @@ func setup(t *testing.T) func(*testing.T) {
 
 func createSimulate(t *testing.T) {
 	info, err := CreateSimulate(context.Background(), &npool.SimulateReq{
-		EntID:     &ret.EntID,
-		AppGoodID: &ret.AppGoodID,
+		EntID:              &ret.EntID,
+		AppGoodID:          &ret.AppGoodID,
+		FixedOrderUnits:    &ret.FixedOrderUnits,
+		FixedOrderDuration: &ret.FixedOrderDuration,
 	})
 	if assert.Nil(t, err) {
 		ret.CreatedAt = info.CreatedAt
