@@ -123,6 +123,10 @@ var appgood = appgoodmwpb.Good{
 	BenefitType:            good.BenefitType,
 	BenefitTypeStr:         good.BenefitType.String(),
 	GoodTypeStr:            good.GoodType.String(),
+	MinOrderDuration:       1,
+	MaxOrderDuration:       200,
+	MaxOrderAmount:         "100",
+	MinOrderAmount:         "1",
 }
 
 var ret = npool.Simulate{
@@ -193,6 +197,8 @@ func setup(t *testing.T) func(*testing.T) {
 		PackagePrice:     &appgood.PackagePrice,
 		MinOrderDuration: &appgood.MinOrderDuration,
 		MaxOrderDuration: &appgood.MaxOrderDuration,
+		MinOrderAmount:   &appgood.MinOrderAmount,
+		MaxOrderAmount:   &appgood.MaxOrderAmount,
 		GoodName:         &appgood.GoodName,
 	})
 	assert.Nil(t, err)
