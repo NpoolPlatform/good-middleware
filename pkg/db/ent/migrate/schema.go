@@ -159,6 +159,7 @@ var (
 		{Name: "app_spot_units", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "lock_state", Type: field.TypeString, Nullable: true, Default: "AppStockLocked"},
 		{Name: "charge_back_state", Type: field.TypeString, Nullable: true, Default: "DefaultAppStockLockState"},
+		{Name: "ex_lock_id", Type: field.TypeUUID, Nullable: true},
 	}
 	// AppStockLocksTable holds the schema information for the "app_stock_locks" table.
 	AppStockLocksTable = &schema.Table{
@@ -187,6 +188,11 @@ var (
 		{Name: "order_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "content", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "reply_to_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "anonymous", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "trial_user", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "purchased_user", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "order_first_comment", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "score", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}
 	// CommentsTable holds the schema information for the "comments" table.
 	CommentsTable = &schema.Table{

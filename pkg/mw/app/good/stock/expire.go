@@ -21,7 +21,7 @@ type expireHandler struct {
 	*lockopHandler
 }
 
-func (h *expireHandler) expireStock(ctx context.Context, tx *ent.Tx) error {
+func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	info, err := tx.
 		Stock.
 		Query().
@@ -41,8 +41,8 @@ func (h *expireHandler) expireStock(ctx context.Context, tx *ent.Tx) error {
 	inService := info.InService
 	spotQuantity := info.SpotQuantity
 
-	inService = inService.Sub(h.lock.Units)
-	spotQuantity = spotQuantity.Add(h.lock.Units)
+	inService = inService.Sub(lock.Units)
+	spotQuantity = spotQuantity.Add(lock.Units)
 
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
@@ -68,7 +68,7 @@ func (h *expireHandler) expireStock(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *expireHandler) expireAppStock(ctx context.Context, tx *ent.Tx) error {
+func (h *expireHandler) expireAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.
 		Query().
@@ -87,7 +87,7 @@ func (h *expireHandler) expireAppStock(ctx context.Context, tx *ent.Tx) error {
 
 	h.GoodID = &info.GoodID
 	inService := info.InService
-	inService = inService.Sub(h.lock.Units)
+	inService = inService.Sub(lock.Units)
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
@@ -112,18 +112,20 @@ func (h *Handler) ExpireStock(ctx context.Context) (*npool.Stock, error) {
 		},
 	}
 
-	if err := handler.getLock(ctx); err != nil {
+	if err := handler.getLocks(ctx); err != nil {
 		return nil, err
 	}
 
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.expireAppStock(ctx, tx); err != nil {
-			return err
+		for _, lock := range handler.lockopHandler.locks {
+			if err := handler.expireAppStock(ctx, lock, tx); err != nil {
+				return err
+			}
+			if err := handler.expireStock(ctx, lock, tx); err != nil {
+				return err
+			}
 		}
-		if err := handler.expireStock(ctx, tx); err != nil {
-			return err
-		}
-		if err := handler.updateLock(ctx, tx); err != nil {
+		if err := handler.updateLocks(ctx, tx); err != nil {
 			return err
 		}
 		return nil

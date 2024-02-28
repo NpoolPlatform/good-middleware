@@ -21,7 +21,7 @@ type inServiceHandler struct {
 	*lockopHandler
 }
 
-func (h *inServiceHandler) inServiceStock(ctx context.Context, tx *ent.Tx) error {
+func (h *inServiceHandler) inServiceStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	info, err := tx.
 		Stock.
 		Query().
@@ -41,8 +41,8 @@ func (h *inServiceHandler) inServiceStock(ctx context.Context, tx *ent.Tx) error
 	inService := info.InService
 	waitStart := info.WaitStart
 
-	inService = h.lock.Units.Add(inService)
-	waitStart = waitStart.Sub(h.lock.Units)
+	inService = lock.Units.Add(inService)
+	waitStart = waitStart.Sub(lock.Units)
 
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
@@ -68,7 +68,7 @@ func (h *inServiceHandler) inServiceStock(ctx context.Context, tx *ent.Tx) error
 	return nil
 }
 
-func (h *inServiceHandler) inServiceAppStock(ctx context.Context, tx *ent.Tx) error {
+func (h *inServiceHandler) inServiceAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	info, err := tx.
 		AppStock.
 		Query().
@@ -89,8 +89,8 @@ func (h *inServiceHandler) inServiceAppStock(ctx context.Context, tx *ent.Tx) er
 	inService := info.InService
 	waitStart := info.WaitStart
 
-	inService = h.lock.Units.Add(inService)
-	waitStart = waitStart.Sub(h.lock.Units)
+	inService = lock.Units.Add(inService)
+	waitStart = waitStart.Sub(lock.Units)
 
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
@@ -117,18 +117,20 @@ func (h *Handler) InServiceStock(ctx context.Context) (*npool.Stock, error) {
 		},
 	}
 
-	if err := handler.getLock(ctx); err != nil {
+	if err := handler.getLocks(ctx); err != nil {
 		return nil, err
 	}
 
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.inServiceAppStock(ctx, tx); err != nil {
-			return err
+		for _, lock := range handler.lockopHandler.locks {
+			if err := handler.inServiceAppStock(ctx, lock, tx); err != nil {
+				return err
+			}
+			if err := handler.inServiceStock(ctx, lock, tx); err != nil {
+				return err
+			}
 		}
-		if err := handler.inServiceStock(ctx, tx); err != nil {
-			return err
-		}
-		if err := handler.updateLock(ctx, tx); err != nil {
+		if err := handler.updateLocks(ctx, tx); err != nil {
 			return err
 		}
 		return nil

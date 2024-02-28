@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // ID filters vertices based on their ID field.
@@ -153,6 +154,41 @@ func Content(v string) predicate.Comment {
 func ReplyToID(v uuid.UUID) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldReplyToID), v))
+	})
+}
+
+// Anonymous applies equality check predicate on the "anonymous" field. It's identical to AnonymousEQ.
+func Anonymous(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAnonymous), v))
+	})
+}
+
+// TrialUser applies equality check predicate on the "trial_user" field. It's identical to TrialUserEQ.
+func TrialUser(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTrialUser), v))
+	})
+}
+
+// PurchasedUser applies equality check predicate on the "purchased_user" field. It's identical to PurchasedUserEQ.
+func PurchasedUser(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPurchasedUser), v))
+	})
+}
+
+// OrderFirstComment applies equality check predicate on the "order_first_comment" field. It's identical to OrderFirstCommentEQ.
+func OrderFirstComment(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldOrderFirstComment), v))
+	})
+}
+
+// Score applies equality check predicate on the "score" field. It's identical to ScoreEQ.
+func Score(v decimal.Decimal) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldScore), v))
 	})
 }
 
@@ -990,6 +1026,196 @@ func ReplyToIDIsNil() predicate.Comment {
 func ReplyToIDNotNil() predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldReplyToID)))
+	})
+}
+
+// AnonymousEQ applies the EQ predicate on the "anonymous" field.
+func AnonymousEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAnonymous), v))
+	})
+}
+
+// AnonymousNEQ applies the NEQ predicate on the "anonymous" field.
+func AnonymousNEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAnonymous), v))
+	})
+}
+
+// AnonymousIsNil applies the IsNil predicate on the "anonymous" field.
+func AnonymousIsNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAnonymous)))
+	})
+}
+
+// AnonymousNotNil applies the NotNil predicate on the "anonymous" field.
+func AnonymousNotNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAnonymous)))
+	})
+}
+
+// TrialUserEQ applies the EQ predicate on the "trial_user" field.
+func TrialUserEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTrialUser), v))
+	})
+}
+
+// TrialUserNEQ applies the NEQ predicate on the "trial_user" field.
+func TrialUserNEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldTrialUser), v))
+	})
+}
+
+// TrialUserIsNil applies the IsNil predicate on the "trial_user" field.
+func TrialUserIsNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldTrialUser)))
+	})
+}
+
+// TrialUserNotNil applies the NotNil predicate on the "trial_user" field.
+func TrialUserNotNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldTrialUser)))
+	})
+}
+
+// PurchasedUserEQ applies the EQ predicate on the "purchased_user" field.
+func PurchasedUserEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPurchasedUser), v))
+	})
+}
+
+// PurchasedUserNEQ applies the NEQ predicate on the "purchased_user" field.
+func PurchasedUserNEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldPurchasedUser), v))
+	})
+}
+
+// PurchasedUserIsNil applies the IsNil predicate on the "purchased_user" field.
+func PurchasedUserIsNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldPurchasedUser)))
+	})
+}
+
+// PurchasedUserNotNil applies the NotNil predicate on the "purchased_user" field.
+func PurchasedUserNotNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldPurchasedUser)))
+	})
+}
+
+// OrderFirstCommentEQ applies the EQ predicate on the "order_first_comment" field.
+func OrderFirstCommentEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldOrderFirstComment), v))
+	})
+}
+
+// OrderFirstCommentNEQ applies the NEQ predicate on the "order_first_comment" field.
+func OrderFirstCommentNEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldOrderFirstComment), v))
+	})
+}
+
+// OrderFirstCommentIsNil applies the IsNil predicate on the "order_first_comment" field.
+func OrderFirstCommentIsNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldOrderFirstComment)))
+	})
+}
+
+// OrderFirstCommentNotNil applies the NotNil predicate on the "order_first_comment" field.
+func OrderFirstCommentNotNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldOrderFirstComment)))
+	})
+}
+
+// ScoreEQ applies the EQ predicate on the "score" field.
+func ScoreEQ(v decimal.Decimal) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldScore), v))
+	})
+}
+
+// ScoreNEQ applies the NEQ predicate on the "score" field.
+func ScoreNEQ(v decimal.Decimal) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldScore), v))
+	})
+}
+
+// ScoreIn applies the In predicate on the "score" field.
+func ScoreIn(vs ...decimal.Decimal) predicate.Comment {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldScore), v...))
+	})
+}
+
+// ScoreNotIn applies the NotIn predicate on the "score" field.
+func ScoreNotIn(vs ...decimal.Decimal) predicate.Comment {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldScore), v...))
+	})
+}
+
+// ScoreGT applies the GT predicate on the "score" field.
+func ScoreGT(v decimal.Decimal) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldScore), v))
+	})
+}
+
+// ScoreGTE applies the GTE predicate on the "score" field.
+func ScoreGTE(v decimal.Decimal) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldScore), v))
+	})
+}
+
+// ScoreLT applies the LT predicate on the "score" field.
+func ScoreLT(v decimal.Decimal) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldScore), v))
+	})
+}
+
+// ScoreLTE applies the LTE predicate on the "score" field.
+func ScoreLTE(v decimal.Decimal) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldScore), v))
+	})
+}
+
+// ScoreIsNil applies the IsNil predicate on the "score" field.
+func ScoreIsNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldScore)))
+	})
+}
+
+// ScoreNotNil applies the NotNil predicate on the "score" field.
+func ScoreNotNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldScore)))
 	})
 }
 

@@ -9,6 +9,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // Comment is the model entity for the Comment schema.
@@ -38,6 +39,16 @@ type Comment struct {
 	Content string `json:"content,omitempty"`
 	// ReplyToID holds the value of the "reply_to_id" field.
 	ReplyToID uuid.UUID `json:"reply_to_id,omitempty"`
+	// Anonymous holds the value of the "anonymous" field.
+	Anonymous bool `json:"anonymous,omitempty"`
+	// TrialUser holds the value of the "trial_user" field.
+	TrialUser bool `json:"trial_user,omitempty"`
+	// PurchasedUser holds the value of the "purchased_user" field.
+	PurchasedUser bool `json:"purchased_user,omitempty"`
+	// OrderFirstComment holds the value of the "order_first_comment" field.
+	OrderFirstComment bool `json:"order_first_comment,omitempty"`
+	// Score holds the value of the "score" field.
+	Score decimal.Decimal `json:"score,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -45,6 +56,10 @@ func (*Comment) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case comment.FieldScore:
+			values[i] = new(decimal.Decimal)
+		case comment.FieldAnonymous, comment.FieldTrialUser, comment.FieldPurchasedUser, comment.FieldOrderFirstComment:
+			values[i] = new(sql.NullBool)
 		case comment.FieldID, comment.FieldCreatedAt, comment.FieldUpdatedAt, comment.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
 		case comment.FieldContent:
@@ -138,6 +153,36 @@ func (c *Comment) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				c.ReplyToID = *value
 			}
+		case comment.FieldAnonymous:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field anonymous", values[i])
+			} else if value.Valid {
+				c.Anonymous = value.Bool
+			}
+		case comment.FieldTrialUser:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field trial_user", values[i])
+			} else if value.Valid {
+				c.TrialUser = value.Bool
+			}
+		case comment.FieldPurchasedUser:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field purchased_user", values[i])
+			} else if value.Valid {
+				c.PurchasedUser = value.Bool
+			}
+		case comment.FieldOrderFirstComment:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field order_first_comment", values[i])
+			} else if value.Valid {
+				c.OrderFirstComment = value.Bool
+			}
+		case comment.FieldScore:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field score", values[i])
+			} else if value != nil {
+				c.Score = *value
+			}
 		}
 	}
 	return nil
@@ -198,6 +243,21 @@ func (c *Comment) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("reply_to_id=")
 	builder.WriteString(fmt.Sprintf("%v", c.ReplyToID))
+	builder.WriteString(", ")
+	builder.WriteString("anonymous=")
+	builder.WriteString(fmt.Sprintf("%v", c.Anonymous))
+	builder.WriteString(", ")
+	builder.WriteString("trial_user=")
+	builder.WriteString(fmt.Sprintf("%v", c.TrialUser))
+	builder.WriteString(", ")
+	builder.WriteString("purchased_user=")
+	builder.WriteString(fmt.Sprintf("%v", c.PurchasedUser))
+	builder.WriteString(", ")
+	builder.WriteString("order_first_comment=")
+	builder.WriteString(fmt.Sprintf("%v", c.OrderFirstComment))
+	builder.WriteString(", ")
+	builder.WriteString("score=")
+	builder.WriteString(fmt.Sprintf("%v", c.Score))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -371,6 +371,10 @@ func init() {
 	appstocklockDescChargeBackState := appstocklockFields[4].Descriptor()
 	// appstocklock.DefaultChargeBackState holds the default value on creation for the charge_back_state field.
 	appstocklock.DefaultChargeBackState = appstocklockDescChargeBackState.Default.(string)
+	// appstocklockDescExLockID is the schema descriptor for ex_lock_id field.
+	appstocklockDescExLockID := appstocklockFields[5].Descriptor()
+	// appstocklock.DefaultExLockID holds the default value on creation for the ex_lock_id field.
+	appstocklock.DefaultExLockID = appstocklockDescExLockID.Default.(func() uuid.UUID)
 	commentMixin := schema.Comment{}.Mixin()
 	comment.Policy = privacy.NewPolicies(commentMixin[0], schema.Comment{})
 	comment.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -433,6 +437,26 @@ func init() {
 	commentDescReplyToID := commentFields[6].Descriptor()
 	// comment.DefaultReplyToID holds the default value on creation for the reply_to_id field.
 	comment.DefaultReplyToID = commentDescReplyToID.Default.(func() uuid.UUID)
+	// commentDescAnonymous is the schema descriptor for anonymous field.
+	commentDescAnonymous := commentFields[7].Descriptor()
+	// comment.DefaultAnonymous holds the default value on creation for the anonymous field.
+	comment.DefaultAnonymous = commentDescAnonymous.Default.(bool)
+	// commentDescTrialUser is the schema descriptor for trial_user field.
+	commentDescTrialUser := commentFields[8].Descriptor()
+	// comment.DefaultTrialUser holds the default value on creation for the trial_user field.
+	comment.DefaultTrialUser = commentDescTrialUser.Default.(bool)
+	// commentDescPurchasedUser is the schema descriptor for purchased_user field.
+	commentDescPurchasedUser := commentFields[9].Descriptor()
+	// comment.DefaultPurchasedUser holds the default value on creation for the purchased_user field.
+	comment.DefaultPurchasedUser = commentDescPurchasedUser.Default.(bool)
+	// commentDescOrderFirstComment is the schema descriptor for order_first_comment field.
+	commentDescOrderFirstComment := commentFields[10].Descriptor()
+	// comment.DefaultOrderFirstComment holds the default value on creation for the order_first_comment field.
+	comment.DefaultOrderFirstComment = commentDescOrderFirstComment.Default.(bool)
+	// commentDescScore is the schema descriptor for score field.
+	commentDescScore := commentFields[11].Descriptor()
+	// comment.DefaultScore holds the default value on creation for the score field.
+	comment.DefaultScore = commentDescScore.Default.(decimal.Decimal)
 	deviceinfoMixin := schema.DeviceInfo{}.Mixin()
 	deviceinfo.Policy = privacy.NewPolicies(deviceinfoMixin[0], schema.DeviceInfo{})
 	deviceinfo.Hooks[0] = func(next ent.Mutator) ent.Mutator {

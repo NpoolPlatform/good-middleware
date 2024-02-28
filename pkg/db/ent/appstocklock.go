@@ -35,6 +35,8 @@ type AppStockLock struct {
 	LockState string `json:"lock_state,omitempty"`
 	// ChargeBackState holds the value of the "charge_back_state" field.
 	ChargeBackState string `json:"charge_back_state,omitempty"`
+	// ExLockID holds the value of the "ex_lock_id" field.
+	ExLockID uuid.UUID `json:"ex_lock_id,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -48,7 +50,7 @@ func (*AppStockLock) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case appstocklock.FieldLockState, appstocklock.FieldChargeBackState:
 			values[i] = new(sql.NullString)
-		case appstocklock.FieldEntID, appstocklock.FieldAppStockID:
+		case appstocklock.FieldEntID, appstocklock.FieldAppStockID, appstocklock.FieldExLockID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type AppStockLock", columns[i])
@@ -125,6 +127,12 @@ func (asl *AppStockLock) assignValues(columns []string, values []interface{}) er
 			} else if value.Valid {
 				asl.ChargeBackState = value.String
 			}
+		case appstocklock.FieldExLockID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field ex_lock_id", values[i])
+			} else if value != nil {
+				asl.ExLockID = *value
+			}
 		}
 	}
 	return nil
@@ -179,6 +187,9 @@ func (asl *AppStockLock) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("charge_back_state=")
 	builder.WriteString(asl.ChargeBackState)
+	builder.WriteString(", ")
+	builder.WriteString("ex_lock_id=")
+	builder.WriteString(fmt.Sprintf("%v", asl.ExLockID))
 	builder.WriteByte(')')
 	return builder.String()
 }

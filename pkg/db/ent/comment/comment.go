@@ -5,6 +5,7 @@ package comment
 import (
 	"entgo.io/ent"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 const (
@@ -34,6 +35,16 @@ const (
 	FieldContent = "content"
 	// FieldReplyToID holds the string denoting the reply_to_id field in the database.
 	FieldReplyToID = "reply_to_id"
+	// FieldAnonymous holds the string denoting the anonymous field in the database.
+	FieldAnonymous = "anonymous"
+	// FieldTrialUser holds the string denoting the trial_user field in the database.
+	FieldTrialUser = "trial_user"
+	// FieldPurchasedUser holds the string denoting the purchased_user field in the database.
+	FieldPurchasedUser = "purchased_user"
+	// FieldOrderFirstComment holds the string denoting the order_first_comment field in the database.
+	FieldOrderFirstComment = "order_first_comment"
+	// FieldScore holds the string denoting the score field in the database.
+	FieldScore = "score"
 	// Table holds the table name of the comment in the database.
 	Table = "comments"
 )
@@ -52,6 +63,11 @@ var Columns = []string{
 	FieldOrderID,
 	FieldContent,
 	FieldReplyToID,
+	FieldAnonymous,
+	FieldTrialUser,
+	FieldPurchasedUser,
+	FieldOrderFirstComment,
+	FieldScore,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -97,4 +113,14 @@ var (
 	DefaultContent string
 	// DefaultReplyToID holds the default value on creation for the "reply_to_id" field.
 	DefaultReplyToID func() uuid.UUID
+	// DefaultAnonymous holds the default value on creation for the "anonymous" field.
+	DefaultAnonymous bool
+	// DefaultTrialUser holds the default value on creation for the "trial_user" field.
+	DefaultTrialUser bool
+	// DefaultPurchasedUser holds the default value on creation for the "purchased_user" field.
+	DefaultPurchasedUser bool
+	// DefaultOrderFirstComment holds the default value on creation for the "order_first_comment" field.
+	DefaultOrderFirstComment bool
+	// DefaultScore holds the default value on creation for the "score" field.
+	DefaultScore decimal.Decimal
 )

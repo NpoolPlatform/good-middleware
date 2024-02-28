@@ -9,6 +9,7 @@ import (
 	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -20,6 +21,8 @@ type Handler struct {
 	AppStockLockState *types.AppStockLockState
 	LockID            *uuid.UUID
 	Rollback          *bool
+	Stocks            []*LockStock
+	EntIDs            []uuid.UUID
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -274,6 +277,47 @@ func WithLockID(id *string, must bool) func(context.Context, *Handler) error {
 			return err
 		}
 		h.LockID = &_id
+		return nil
+	}
+}
+
+func WithStocks(stocks []*npool.LocksRequest_XStock, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		for _, stock := range stocks {
+			_stock := &LockStock{}
+
+			entID, err := uuid.Parse(stock.EntID)
+			if err != nil {
+				return err
+			}
+			_stock.EntID = &entID
+
+			goodID, err := uuid.Parse(stock.GoodID)
+			if err != nil {
+				return err
+			}
+			_stock.GoodID = &goodID
+
+			appGoodID, err := uuid.Parse(stock.AppGoodID)
+			if err != nil {
+				return err
+			}
+			_stock.AppGoodID = &appGoodID
+
+			units, err := decimal.NewFromString(stock.Units)
+			if err != nil {
+				return err
+			}
+			_stock.Locked = &units
+
+			appSpotUnits, err := decimal.NewFromString(stock.AppSpotUnits)
+			if err != nil {
+				return err
+			}
+			_stock.AppSpotLocked = &appSpotUnits
+
+			h.Stocks = append(h.Stocks, _stock)
+		}
 		return nil
 	}
 }

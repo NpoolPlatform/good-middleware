@@ -16,11 +16,13 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 type createHandler struct {
 	*Handler
-	appgood *appgoodpb.Good
+	appgood           *appgoodpb.Good
+	orderFirstComment bool
 }
 
 func (h *createHandler) getAppGood(ctx context.Context) error {
@@ -58,20 +60,27 @@ func (h *createHandler) createComment(ctx context.Context, tx *ent.Tx) error {
 			return fmt.Errorf("appgoodid not matched")
 		}
 	}
+
 	goodid := uuid.MustParse(h.appgood.GoodID)
-	if _, err := commentcrud.CreateSet(
-		tx.Comment.Create(),
-		&commentcrud.Req{
-			EntID:     h.EntID,
-			AppID:     h.AppID,
-			UserID:    h.UserID,
-			GoodID:    &goodid,
-			AppGoodID: h.AppGoodID,
-			OrderID:   h.OrderID,
-			Content:   h.Content,
-			ReplyToID: h.ReplyToID,
-		},
-	).Save(ctx); err != nil {
+	req := &commentcrud.Req{
+		EntID:             h.EntID,
+		AppID:             h.AppID,
+		UserID:            h.UserID,
+		GoodID:            &goodid,
+		AppGoodID:         h.AppGoodID,
+		OrderID:           h.OrderID,
+		Content:           h.Content,
+		ReplyToID:         h.ReplyToID,
+		Anonymous:         h.Anonymous,
+		PurchasedUser:     h.PurchasedUser,
+		TrialUser:         h.TrialUser,
+		OrderFirstComment: &h.orderFirstComment,
+	}
+	if h.orderFirstComment {
+		req.Score = h.Score
+	}
+
+	if _, err := commentcrud.CreateSet(tx.Comment.Create(), req).Save(ctx); err != nil {
 		return err
 	}
 	return nil
@@ -91,13 +100,23 @@ func (h *createHandler) updateGoodComment(ctx context.Context, tx *ent.Tx) error
 	if err != nil {
 		return err
 	}
+
 	commentCount := info.CommentCount + 1
-	if _, err := extrainfocrud.UpdateSet(
-		info.Update(),
-		&extrainfocrud.Req{
-			CommentCount: &commentCount,
-		},
-	).Save(ctx); err != nil {
+	req := &extrainfocrud.Req{
+		CommentCount: &commentCount,
+	}
+	if h.orderFirstComment && h.Score != nil {
+		scoreCount := info.ScoreCount + 1
+		req.ScoreCount = &scoreCount
+		score := h.Score.Add(
+			info.Score.Mul(
+				decimal.NewFromInt(int64(info.ScoreCount)),
+			),
+		).Div(decimal.NewFromInt(int64(scoreCount)))
+		req.Score = &score
+	}
+
+	if _, err := extrainfocrud.UpdateSet(info.Update(), req).Save(ctx); err != nil {
 		return err
 	}
 	return nil
@@ -122,6 +141,18 @@ func (h *Handler) CreateComment(ctx context.Context) (*npool.Comment, error) {
 	}
 	if err := handler.getAppGood(ctx); err != nil {
 		return nil, err
+	}
+
+	if h.OrderID != nil {
+		handler.Conds = &commentcrud.Conds{
+			AppGoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.AppGoodID},
+			OrderID:   &cruder.Cond{Op: cruder.EQ, Val: *h.OrderID},
+		}
+		exist, err := handler.ExistCommentConds(ctx)
+		if err != nil {
+			return nil, err
+		}
+		handler.orderFirstComment = !exist
 	}
 
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {

@@ -170,6 +170,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appstocklock.FieldAppSpotUnits:    {Type: field.TypeOther, Column: appstocklock.FieldAppSpotUnits},
 			appstocklock.FieldLockState:       {Type: field.TypeString, Column: appstocklock.FieldLockState},
 			appstocklock.FieldChargeBackState: {Type: field.TypeString, Column: appstocklock.FieldChargeBackState},
+			appstocklock.FieldExLockID:        {Type: field.TypeUUID, Column: appstocklock.FieldExLockID},
 		},
 	}
 	graph.Nodes[5] = &sqlgraph.Node{
@@ -183,17 +184,22 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Comment",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			comment.FieldCreatedAt: {Type: field.TypeUint32, Column: comment.FieldCreatedAt},
-			comment.FieldUpdatedAt: {Type: field.TypeUint32, Column: comment.FieldUpdatedAt},
-			comment.FieldDeletedAt: {Type: field.TypeUint32, Column: comment.FieldDeletedAt},
-			comment.FieldEntID:     {Type: field.TypeUUID, Column: comment.FieldEntID},
-			comment.FieldAppID:     {Type: field.TypeUUID, Column: comment.FieldAppID},
-			comment.FieldUserID:    {Type: field.TypeUUID, Column: comment.FieldUserID},
-			comment.FieldGoodID:    {Type: field.TypeUUID, Column: comment.FieldGoodID},
-			comment.FieldAppGoodID: {Type: field.TypeUUID, Column: comment.FieldAppGoodID},
-			comment.FieldOrderID:   {Type: field.TypeUUID, Column: comment.FieldOrderID},
-			comment.FieldContent:   {Type: field.TypeString, Column: comment.FieldContent},
-			comment.FieldReplyToID: {Type: field.TypeUUID, Column: comment.FieldReplyToID},
+			comment.FieldCreatedAt:         {Type: field.TypeUint32, Column: comment.FieldCreatedAt},
+			comment.FieldUpdatedAt:         {Type: field.TypeUint32, Column: comment.FieldUpdatedAt},
+			comment.FieldDeletedAt:         {Type: field.TypeUint32, Column: comment.FieldDeletedAt},
+			comment.FieldEntID:             {Type: field.TypeUUID, Column: comment.FieldEntID},
+			comment.FieldAppID:             {Type: field.TypeUUID, Column: comment.FieldAppID},
+			comment.FieldUserID:            {Type: field.TypeUUID, Column: comment.FieldUserID},
+			comment.FieldGoodID:            {Type: field.TypeUUID, Column: comment.FieldGoodID},
+			comment.FieldAppGoodID:         {Type: field.TypeUUID, Column: comment.FieldAppGoodID},
+			comment.FieldOrderID:           {Type: field.TypeUUID, Column: comment.FieldOrderID},
+			comment.FieldContent:           {Type: field.TypeString, Column: comment.FieldContent},
+			comment.FieldReplyToID:         {Type: field.TypeUUID, Column: comment.FieldReplyToID},
+			comment.FieldAnonymous:         {Type: field.TypeBool, Column: comment.FieldAnonymous},
+			comment.FieldTrialUser:         {Type: field.TypeBool, Column: comment.FieldTrialUser},
+			comment.FieldPurchasedUser:     {Type: field.TypeBool, Column: comment.FieldPurchasedUser},
+			comment.FieldOrderFirstComment: {Type: field.TypeBool, Column: comment.FieldOrderFirstComment},
+			comment.FieldScore:             {Type: field.TypeOther, Column: comment.FieldScore},
 		},
 	}
 	graph.Nodes[6] = &sqlgraph.Node{
@@ -1118,6 +1124,11 @@ func (f *AppStockLockFilter) WhereChargeBackState(p entql.StringP) {
 	f.Where(p.Field(appstocklock.FieldChargeBackState))
 }
 
+// WhereExLockID applies the entql [16]byte predicate on the ex_lock_id field.
+func (f *AppStockLockFilter) WhereExLockID(p entql.ValueP) {
+	f.Where(p.Field(appstocklock.FieldExLockID))
+}
+
 // addPredicate implements the predicateAdder interface.
 func (cq *CommentQuery) addPredicate(pred func(s *sql.Selector)) {
 	cq.predicates = append(cq.predicates, pred)
@@ -1211,6 +1222,31 @@ func (f *CommentFilter) WhereContent(p entql.StringP) {
 // WhereReplyToID applies the entql [16]byte predicate on the reply_to_id field.
 func (f *CommentFilter) WhereReplyToID(p entql.ValueP) {
 	f.Where(p.Field(comment.FieldReplyToID))
+}
+
+// WhereAnonymous applies the entql bool predicate on the anonymous field.
+func (f *CommentFilter) WhereAnonymous(p entql.BoolP) {
+	f.Where(p.Field(comment.FieldAnonymous))
+}
+
+// WhereTrialUser applies the entql bool predicate on the trial_user field.
+func (f *CommentFilter) WhereTrialUser(p entql.BoolP) {
+	f.Where(p.Field(comment.FieldTrialUser))
+}
+
+// WherePurchasedUser applies the entql bool predicate on the purchased_user field.
+func (f *CommentFilter) WherePurchasedUser(p entql.BoolP) {
+	f.Where(p.Field(comment.FieldPurchasedUser))
+}
+
+// WhereOrderFirstComment applies the entql bool predicate on the order_first_comment field.
+func (f *CommentFilter) WhereOrderFirstComment(p entql.BoolP) {
+	f.Where(p.Field(comment.FieldOrderFirstComment))
+}
+
+// WhereScore applies the entql other predicate on the score field.
+func (f *CommentFilter) WhereScore(p entql.OtherP) {
+	f.Where(p.Field(comment.FieldScore))
 }
 
 // addPredicate implements the predicateAdder interface.
