@@ -115,7 +115,7 @@ var appgood = appgoodmwpb.Good{
 	BenefitTypeStr:         good.BenefitType.String(),
 	GoodTypeStr:            good.GoodType.String(),
 	MinOrderDuration:       1,
-	MaxOrderDuration:       200,
+	MaxOrderDuration:       1,
 	MaxOrderAmount:         "100",
 	MinOrderAmount:         "1",
 }
@@ -127,7 +127,7 @@ var ret = npool.Simulate{
 	AppGoodID:          appgood.EntID,
 	CoinTypeID:         good.CoinTypeID,
 	FixedOrderUnits:    "10",
-	FixedOrderDuration: 100,
+	FixedOrderDuration: 1,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -251,7 +251,7 @@ func createSimulate(t *testing.T) {
 
 func updateSimulate(t *testing.T) {
 	ret.FixedOrderUnits = "20"
-	ret.FixedOrderDuration = 200
+	ret.FixedOrderDuration = 1
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
