@@ -8,15 +8,47 @@ import (
 	appsimulategoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/simulate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	appgoodmw "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/simulate"
+	"github.com/shopspring/decimal"
 
 	"github.com/google/uuid"
 )
 
 type createHandler struct {
 	*Handler
+}
+
+func (h *createHandler) checkUnits(ctx context.Context) error {
+	handler, err := appgoodmw.NewHandler(ctx)
+	if err != nil {
+		return err
+	}
+	handler.EntID = h.AppGoodID
+	appgood, err := handler.GetGood(ctx)
+	if err != nil {
+		return err
+	}
+	if appgood == nil {
+		return fmt.Errorf("invalid appgood")
+	}
+	maxOrderAmount, err := decimal.NewFromString(appgood.MaxOrderAmount)
+	if err != nil {
+		return err
+	}
+	minOrderAmount, err := decimal.NewFromString(appgood.MinOrderAmount)
+	if err != nil {
+		return err
+	}
+	if h.FixedOrderUnits.Cmp(minOrderAmount) < 0 {
+		return fmt.Errorf("units is less than minorderamount")
+	}
+	if h.FixedOrderUnits.Cmp(maxOrderAmount) > 0 {
+		return fmt.Errorf("units is more than maxorderamount")
+	}
+	return nil
 }
 
 func (h *createHandler) createSimulate(ctx context.Context, tx *ent.Tx) error {
@@ -69,6 +101,10 @@ func (h *Handler) CreateSimulate(ctx context.Context) (*npool.Simulate, error) {
 
 	handler := &createHandler{
 		Handler: h,
+	}
+
+	if err := handler.checkUnits(ctx); err != nil {
+		return nil, err
 	}
 
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
