@@ -171,6 +171,9 @@ func WithFixedOrderDuration(duration *uint32, must bool) func(context.Context, *
 			}
 			return nil
 		}
+		if *duration <= uint32(0) {
+			return fmt.Errorf("duration is less than or equal to 0")
+		}
 		h.FixedOrderDuration = duration
 		return nil
 	}
