@@ -48,6 +48,9 @@ func (h *createHandler) checkUnits(ctx context.Context) error {
 	if h.FixedOrderUnits.Cmp(maxOrderAmount) > 0 {
 		return fmt.Errorf("units is more than maxorderamount")
 	}
+	if *h.FixedOrderDuration > appgood.MaxOrderDuration || *h.FixedOrderDuration < appgood.MinOrderDuration {
+		return fmt.Errorf("invalid duration")
+	}
 	return nil
 }
 
