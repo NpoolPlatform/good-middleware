@@ -2,16 +2,36 @@ package appsimulategood
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	appsimulategoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/simulate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/simulate"
 )
 
 type deleteHandler struct {
 	*Handler
+}
+
+func (h *deleteHandler) existSimulateCheck(ctx context.Context) error {
+	if h.EntID == nil || h.ID == nil {
+		return nil
+	}
+	h.Conds = &appsimulategoodcrud.Conds{
+		ID:    &cruder.Cond{Op: cruder.EQ, Val: h.ID},
+		EntID: &cruder.Cond{Op: cruder.EQ, Val: h.EntID},
+	}
+	exist, err := h.ExistSimulateConds(ctx)
+	if err != nil {
+		return err
+	}
+	if !exist {
+		return fmt.Errorf("invalid id")
+	}
+	return nil
 }
 
 func (h *deleteHandler) deleteSimulate(ctx context.Context, tx *ent.Tx) error {
@@ -38,6 +58,10 @@ func (h *Handler) DeleteSimulate(ctx context.Context) (*npool.Simulate, error) {
 
 	handler := &deleteHandler{
 		Handler: h,
+	}
+
+	if err := handler.existSimulateCheck(ctx); err != nil {
+		return nil, err
 	}
 
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {

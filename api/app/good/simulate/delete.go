@@ -23,7 +23,8 @@ func (s *Server) DeleteSimulate(ctx context.Context, in *npool.DeleteSimulateReq
 	}
 	handler, err := appsimulategood1.NewHandler(
 		ctx,
-		appsimulategood1.WithID(req.ID, true),
+		appsimulategood1.WithID(req.ID, false),
+		appsimulategood1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
