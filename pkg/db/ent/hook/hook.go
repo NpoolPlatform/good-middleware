@@ -35,6 +35,19 @@ func (f AppGoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	return f(ctx, mv)
 }
 
+// The AppSimulateGoodFunc type is an adapter to allow the use of ordinary
+// function as AppSimulateGood mutator.
+type AppSimulateGoodFunc func(context.Context, *ent.AppSimulateGoodMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppSimulateGoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppSimulateGoodMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppSimulateGoodMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The AppStockFunc type is an adapter to allow the use of ordinary
 // function as AppStock mutator.
 type AppStockFunc func(context.Context, *ent.AppStockMutation) (ent.Value, error)

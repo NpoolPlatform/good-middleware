@@ -1,4 +1,4 @@
-package history
+package appsimulategood
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
 	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/mw/deviceinfo"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
@@ -15,8 +16,9 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
+	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/simulate"
 	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/reward/history"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -74,18 +76,64 @@ var good = goodmwpb.Good{
 	UnitLockDeposit:      decimal.NewFromInt(1).String(),
 }
 
-var ret = npool.History{
-	EntID:      uuid.NewString(),
-	GoodID:     good.EntID,
-	GoodName:   good.Title,
-	RewardDate: uint32(time.Now().Unix() - 1000),
-	TID:        uuid.NewString(),
-	Amount:     decimal.RequireFromString("25.1").String(),
-	UnitAmount: decimal.RequireFromString("2.51").String(),
+var appgood = appgoodmwpb.Good{
+	EntID:                  uuid.NewString(),
+	AppID:                  uuid.NewString(),
+	GoodID:                 good.EntID,
+	Online:                 false,
+	Visible:                false,
+	GoodName:               good.Title,
+	UnitPrice:              decimal.NewFromInt(125).String(),
+	PackagePrice:           decimal.NewFromInt(125).String(),
+	DeviceInfoID:           good.DeviceInfoID,
+	DeviceType:             good.DeviceType,
+	DeviceManufacturer:     good.DeviceManufacturer,
+	DevicePowerConsumption: good.DevicePowerConsumption,
+	DevicePosters:          good.DevicePosters,
+	DeviceShipmentAt:       good.DeviceShipmentAt,
+	CoinTypeID:             good.CoinTypeID,
+	VendorLocationID:       good.VendorLocationID,
+	VendorLocationCountry:  good.VendorLocationCountry,
+	VendorBrandName:        good.VendorBrandName,
+	VendorBrandLogo:        good.VendorBrandLogo,
+	GoodType:               good.GoodType,
+	QuantityUnit:           good.QuantityUnit,
+	QuantityUnitAmount:     good.QuantityUnitAmount,
+	TestOnly:               good.TestOnly,
+	Posters:                good.Posters,
+	Labels:                 good.Labels,
+	BenefitIntervalHours:   good.BenefitIntervalHours,
+	GoodTotal:              good.GoodTotal,
+	GoodSpotQuantity:       good.GoodTotal,
+	CancelModeStr:          types.CancelMode_Uncancellable.String(),
+	EnableSetCommission:    true,
+	EnablePurchase:         true,
+	EnableProductPage:      true,
+	Score:                  decimal.NewFromInt(0).String(),
+	StartAt:                good.StartAt,
+	BenefitType:            good.BenefitType,
+	BenefitTypeStr:         good.BenefitType.String(),
+	GoodTypeStr:            good.GoodType.String(),
+	MinOrderDuration:       1,
+	MaxOrderDuration:       1,
+	MaxOrderAmount:         "100",
+	MinOrderAmount:         "1",
 }
 
-//nolint:funlen
+var ret = npool.Simulate{
+	EntID:              uuid.NewString(),
+	AppID:              appgood.AppID,
+	GoodID:             good.EntID,
+	AppGoodID:          appgood.EntID,
+	CoinTypeID:         good.CoinTypeID,
+	FixedOrderUnits:    "10",
+	FixedOrderDuration: 1,
+}
+
 func setup(t *testing.T) func(*testing.T) {
+	ret.GoodName = good.Title
+	ret.AppGoodName = appgood.GoodName
+
 	h1, err := vendorbrand1.NewHandler(
 		context.Background(),
 		vendorbrand1.WithName(&good.VendorBrandName, true),
@@ -153,141 +201,28 @@ func setup(t *testing.T) func(*testing.T) {
 	info4, err := h4.CreateGood(context.Background())
 	assert.Nil(t, err)
 	h4.ID = &info4.ID
-	good.ID = info4.ID
 
-	state := types.BenefitState_BenefitTransferring
-	h5, err := good1.NewHandler(
+	h5, err := appgood1.NewHandler(
 		context.Background(),
-		good1.WithID(&good.ID, true),
-		good1.WithRewardState(&state, true),
+		appgood1.WithEntID(&appgood.EntID, true),
+		appgood1.WithAppID(&appgood.AppID, true),
+		appgood1.WithGoodID(&appgood.GoodID, true),
+		appgood1.WithUnitPrice(&appgood.UnitPrice, true),
+		appgood1.WithPackagePrice(&appgood.PackagePrice, true),
+		appgood1.WithMinOrderDuration(&appgood.MinOrderDuration, true),
+		appgood1.WithMaxOrderDuration(&appgood.MaxOrderDuration, true),
+		appgood1.WithGoodName(&appgood.GoodName, true),
+		appgood1.WithMinOrderAmount(&appgood.MinOrderAmount, true),
+		appgood1.WithMaxOrderAmount(&appgood.MaxOrderAmount, true),
 	)
 	assert.Nil(t, err)
 
-	_, err = h5.UpdateGood(context.Background())
+	info5, err := h5.CreateGood(context.Background())
 	assert.Nil(t, err)
-
-	state = types.BenefitState_BenefitBookKeeping
-	h5, err = good1.NewHandler(
-		context.Background(),
-		good1.WithID(&good.ID, true),
-		good1.WithRewardState(&state, true),
-	)
-	assert.Nil(t, err)
-
-	_, err = h5.UpdateGood(context.Background())
-	assert.Nil(t, err)
-
-	state = types.BenefitState_BenefitUserBookKeeping
-	h5, err = good1.NewHandler(
-		context.Background(),
-		good1.WithID(&good.ID, true),
-		good1.WithRewardState(&state, true),
-	)
-	assert.Nil(t, err)
-
-	_, err = h5.UpdateGood(context.Background())
-	assert.Nil(t, err)
-
-	state = types.BenefitState_BenefitSimulateBookKeeping
-	h5, err = good1.NewHandler(
-		context.Background(),
-		good1.WithID(&good.ID, true),
-		good1.WithRewardState(&state, true),
-		good1.WithRewardAt(&ret.RewardDate, true),
-		good1.WithRewardTID(&ret.TID, true),
-		good1.WithRewardAmount(&ret.Amount, true),
-		good1.WithUnitRewardAmount(&ret.UnitAmount, true),
-	)
-	assert.Nil(t, err)
-
-	_, err = h5.UpdateGood(context.Background())
-	assert.Nil(t, err)
-
-	state = types.BenefitState_BenefitDone
-	h5, err = good1.NewHandler(
-		context.Background(),
-		good1.WithID(&good.ID, true),
-		good1.WithRewardState(&state, true),
-	)
-	assert.Nil(t, err)
-
-	_, err = h5.UpdateGood(context.Background())
-	assert.Nil(t, err)
-
-	state = types.BenefitState_BenefitWait
-	h5, err = good1.NewHandler(
-		context.Background(),
-		good1.WithID(&good.ID, true),
-		good1.WithRewardState(&state, true),
-	)
-	assert.Nil(t, err)
-
-	_, err = h5.UpdateGood(context.Background())
-	assert.Nil(t, err)
-
-	state = types.BenefitState_BenefitTransferring
-	h5, err = good1.NewHandler(
-		context.Background(),
-		good1.WithID(&good.ID, true),
-		good1.WithRewardState(&state, true),
-	)
-	assert.Nil(t, err)
-
-	_, err = h5.UpdateGood(context.Background())
-	assert.Nil(t, err)
-
-	state = types.BenefitState_BenefitBookKeeping
-	h5, err = good1.NewHandler(
-		context.Background(),
-		good1.WithID(&good.ID, true),
-		good1.WithRewardState(&state, true),
-	)
-	assert.Nil(t, err)
-
-	_, err = h5.UpdateGood(context.Background())
-	assert.Nil(t, err)
-
-	state = types.BenefitState_BenefitUserBookKeeping
-	h5, err = good1.NewHandler(
-		context.Background(),
-		good1.WithID(&good.ID, true),
-		good1.WithRewardState(&state, true),
-	)
-	assert.Nil(t, err)
-
-	_, err = h5.UpdateGood(context.Background())
-	assert.Nil(t, err)
-
-	state = types.BenefitState_BenefitSimulateBookKeeping
-	now := uint32(time.Now().Unix() - 500)
-	tid := uuid.NewString()
-	h5, err = good1.NewHandler(
-		context.Background(),
-		good1.WithID(&good.ID, true),
-		good1.WithRewardState(&state, true),
-		good1.WithRewardAt(&now, true),
-		good1.WithRewardTID(&tid, true),
-		good1.WithRewardAmount(&ret.Amount, true),
-		good1.WithUnitRewardAmount(&ret.UnitAmount, true),
-	)
-	assert.Nil(t, err)
-
-	_, err = h5.UpdateGood(context.Background())
-	assert.Nil(t, err)
-
-	state = types.BenefitState_BenefitDone
-
-	h5, err = good1.NewHandler(
-		context.Background(),
-		good1.WithID(&good.ID, true),
-		good1.WithRewardState(&state, true),
-	)
-	assert.Nil(t, err)
-
-	_, err = h5.UpdateGood(context.Background())
-	assert.Nil(t, err)
+	h5.ID = &info5.ID
 
 	return func(*testing.T) {
+		_, _ = h5.DeleteGood(context.Background())
 		_, _ = h4.DeleteGood(context.Background())
 		_, _ = h3.DeleteDeviceInfo(context.Background())
 		_, _ = h2.DeleteLocation(context.Background())
@@ -295,35 +230,97 @@ func setup(t *testing.T) func(*testing.T) {
 	}
 }
 
-func getHistories(t *testing.T) {
+func createSimulate(t *testing.T) {
+	handler, err := NewHandler(
+		context.Background(),
+		WithEntID(&ret.EntID, true),
+		WithAppGoodID(&ret.AppGoodID, true),
+		WithFixedOrderUnits(&ret.FixedOrderUnits, true),
+		WithFixedOrderDuration(&ret.FixedOrderDuration, true),
+	)
+	if assert.Nil(t, err) {
+		info, err := handler.CreateSimulate(context.Background())
+		if assert.Nil(t, err) {
+			ret.CreatedAt = info.CreatedAt
+			ret.UpdatedAt = info.UpdatedAt
+			ret.ID = info.ID
+			assert.Equal(t, &ret, info)
+		}
+	}
+}
+
+func updateSimulate(t *testing.T) {
+	ret.FixedOrderUnits = "20"
+	ret.FixedOrderDuration = 1
+	handler, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithFixedOrderUnits(&ret.FixedOrderUnits, true),
+		WithFixedOrderDuration(&ret.FixedOrderDuration, true),
+	)
+	if assert.Nil(t, err) {
+		info, err := handler.UpdateSimulate(context.Background())
+		if assert.Nil(t, err) {
+			ret.UpdatedAt = info.UpdatedAt
+			assert.Equal(t, &ret, info)
+		}
+	}
+}
+
+func getSimulate(t *testing.T) {
+	handler, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+	)
+	if assert.Nil(t, err) {
+		info, err := handler.GetSimulate(context.Background())
+		if assert.Nil(t, err) {
+			assert.Equal(t, &ret, info)
+		}
+	}
+}
+
+func getSimulates(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithConds(&npool.Conds{
-			GoodID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-			GoodIDs:    &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
-			RewardDate: &basetypes.Uint32Val{Op: cruder.LTE, Value: uint32(time.Now().Unix())},
+			ID:      &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+			EntID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
+			AppID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+			GoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
+			GoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
 		}),
 		WithOffset(0),
 		WithLimit(0),
 	)
 	if assert.Nil(t, err) {
-		infos, total, err := handler.GetHistories(context.Background())
+		infos, total, err := handler.GetSimulates(context.Background())
 		if assert.Nil(t, err) {
-			fmt.Println("TOTAL: ", total)
-			if assert.Equal(t, uint32(2), total) {
-				found := false
-				for _, info := range infos {
-					if ret.RewardDate == info.RewardDate && ret.TID == info.TID {
-						found = true
-					}
-				}
-				assert.Equal(t, true, found)
+			if assert.Equal(t, uint32(1), total) {
+				assert.Equal(t, &ret, infos[0])
 			}
 		}
 	}
 }
 
-func TestHistory(t *testing.T) {
+func deleteSimulate(t *testing.T) {
+	handler, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+	)
+	if assert.Nil(t, err) {
+		info, err := handler.DeleteSimulate(context.Background())
+		if assert.Nil(t, err) {
+			assert.Equal(t, &ret, info)
+		}
+
+		info, err = handler.GetSimulate(context.Background())
+		assert.Nil(t, err)
+		assert.Nil(t, info)
+	}
+}
+
+func TestSimulate(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
 	}
@@ -331,5 +328,9 @@ func TestHistory(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
 
-	t.Run("getHistories", getHistories)
+	t.Run("createSimulate", createSimulate)
+	t.Run("updateSimulate", updateSimulate)
+	t.Run("getSimulate", getSimulate)
+	t.Run("getSimulates", getSimulates)
+	t.Run("deleteSimulate", deleteSimulate)
 }

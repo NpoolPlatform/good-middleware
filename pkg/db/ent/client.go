@@ -12,6 +12,7 @@ import (
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
@@ -43,6 +44,8 @@ type Client struct {
 	AppDefaultGood *AppDefaultGoodClient
 	// AppGood is the client for interacting with the AppGood builders.
 	AppGood *AppGoodClient
+	// AppSimulateGood is the client for interacting with the AppSimulateGood builders.
+	AppSimulateGood *AppSimulateGoodClient
 	// AppStock is the client for interacting with the AppStock builders.
 	AppStock *AppStockClient
 	// AppStockLock is the client for interacting with the AppStockLock builders.
@@ -92,6 +95,7 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.AppDefaultGood = NewAppDefaultGoodClient(c.config)
 	c.AppGood = NewAppGoodClient(c.config)
+	c.AppSimulateGood = NewAppSimulateGoodClient(c.config)
 	c.AppStock = NewAppStockClient(c.config)
 	c.AppStockLock = NewAppStockLockClient(c.config)
 	c.Comment = NewCommentClient(c.config)
@@ -144,6 +148,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		config:            cfg,
 		AppDefaultGood:    NewAppDefaultGoodClient(cfg),
 		AppGood:           NewAppGoodClient(cfg),
+		AppSimulateGood:   NewAppSimulateGoodClient(cfg),
 		AppStock:          NewAppStockClient(cfg),
 		AppStockLock:      NewAppStockLockClient(cfg),
 		Comment:           NewCommentClient(cfg),
@@ -182,6 +187,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		config:            cfg,
 		AppDefaultGood:    NewAppDefaultGoodClient(cfg),
 		AppGood:           NewAppGoodClient(cfg),
+		AppSimulateGood:   NewAppSimulateGoodClient(cfg),
 		AppStock:          NewAppStockClient(cfg),
 		AppStockLock:      NewAppStockLockClient(cfg),
 		Comment:           NewCommentClient(cfg),
@@ -230,6 +236,7 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	c.AppDefaultGood.Use(hooks...)
 	c.AppGood.Use(hooks...)
+	c.AppSimulateGood.Use(hooks...)
 	c.AppStock.Use(hooks...)
 	c.AppStockLock.Use(hooks...)
 	c.Comment.Use(hooks...)
@@ -429,6 +436,97 @@ func (c *AppGoodClient) GetX(ctx context.Context, id uint32) *AppGood {
 func (c *AppGoodClient) Hooks() []Hook {
 	hooks := c.hooks.AppGood
 	return append(hooks[:len(hooks):len(hooks)], appgood.Hooks[:]...)
+}
+
+// AppSimulateGoodClient is a client for the AppSimulateGood schema.
+type AppSimulateGoodClient struct {
+	config
+}
+
+// NewAppSimulateGoodClient returns a client for the AppSimulateGood from the given config.
+func NewAppSimulateGoodClient(c config) *AppSimulateGoodClient {
+	return &AppSimulateGoodClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appsimulategood.Hooks(f(g(h())))`.
+func (c *AppSimulateGoodClient) Use(hooks ...Hook) {
+	c.hooks.AppSimulateGood = append(c.hooks.AppSimulateGood, hooks...)
+}
+
+// Create returns a builder for creating a AppSimulateGood entity.
+func (c *AppSimulateGoodClient) Create() *AppSimulateGoodCreate {
+	mutation := newAppSimulateGoodMutation(c.config, OpCreate)
+	return &AppSimulateGoodCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppSimulateGood entities.
+func (c *AppSimulateGoodClient) CreateBulk(builders ...*AppSimulateGoodCreate) *AppSimulateGoodCreateBulk {
+	return &AppSimulateGoodCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppSimulateGood.
+func (c *AppSimulateGoodClient) Update() *AppSimulateGoodUpdate {
+	mutation := newAppSimulateGoodMutation(c.config, OpUpdate)
+	return &AppSimulateGoodUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppSimulateGoodClient) UpdateOne(asg *AppSimulateGood) *AppSimulateGoodUpdateOne {
+	mutation := newAppSimulateGoodMutation(c.config, OpUpdateOne, withAppSimulateGood(asg))
+	return &AppSimulateGoodUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppSimulateGoodClient) UpdateOneID(id uint32) *AppSimulateGoodUpdateOne {
+	mutation := newAppSimulateGoodMutation(c.config, OpUpdateOne, withAppSimulateGoodID(id))
+	return &AppSimulateGoodUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppSimulateGood.
+func (c *AppSimulateGoodClient) Delete() *AppSimulateGoodDelete {
+	mutation := newAppSimulateGoodMutation(c.config, OpDelete)
+	return &AppSimulateGoodDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppSimulateGoodClient) DeleteOne(asg *AppSimulateGood) *AppSimulateGoodDeleteOne {
+	return c.DeleteOneID(asg.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppSimulateGoodClient) DeleteOneID(id uint32) *AppSimulateGoodDeleteOne {
+	builder := c.Delete().Where(appsimulategood.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppSimulateGoodDeleteOne{builder}
+}
+
+// Query returns a query builder for AppSimulateGood.
+func (c *AppSimulateGoodClient) Query() *AppSimulateGoodQuery {
+	return &AppSimulateGoodQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppSimulateGood entity by its id.
+func (c *AppSimulateGoodClient) Get(ctx context.Context, id uint32) (*AppSimulateGood, error) {
+	return c.Query().Where(appsimulategood.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppSimulateGoodClient) GetX(ctx context.Context, id uint32) *AppSimulateGood {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppSimulateGoodClient) Hooks() []Hook {
+	hooks := c.hooks.AppSimulateGood
+	return append(hooks[:len(hooks):len(hooks)], appsimulategood.Hooks[:]...)
 }
 
 // AppStockClient is a client for the AppStock schema.

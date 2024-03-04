@@ -351,5 +351,6 @@ func SetQueryConds(q *ent.AppGoodQuery, conds *Conds) (*ent.AppGoodQuery, error)
 			return nil, fmt.Errorf("invalid appgood field")
 		}
 	}
+
 	return q, nil
 }

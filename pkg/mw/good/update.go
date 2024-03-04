@@ -100,6 +100,13 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 		}
 	case types.BenefitState_BenefitUserBookKeeping.String():
 		switch *h.RewardState {
+		case types.BenefitState_BenefitSimulateBookKeeping:
+		case types.BenefitState_BenefitDone:
+		default:
+			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
+		}
+	case types.BenefitState_BenefitSimulateBookKeeping.String():
+		switch *h.RewardState {
 		case types.BenefitState_BenefitDone:
 		default:
 			return fmt.Errorf("broken rewardstate %v -> %v", info.RewardState, *h.RewardState)
@@ -115,7 +122,7 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 	}
 
 	totalReward := info.TotalRewardAmount
-	if *h.RewardState == types.BenefitState_BenefitDone {
+	if *h.RewardState == types.BenefitState_BenefitSimulateBookKeeping {
 		if h.RewardAmount != nil {
 			totalReward = h.RewardAmount.Add(totalReward)
 		}
@@ -136,7 +143,7 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 		return err
 	}
 
-	if *h.RewardState != types.BenefitState_BenefitDone {
+	if *h.RewardState != types.BenefitState_BenefitSimulateBookKeeping {
 		return nil
 	}
 	if h.RewardAt == nil {

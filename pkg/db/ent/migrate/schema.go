@@ -90,6 +90,33 @@ var (
 			},
 		},
 	}
+	// AppSimulateGoodsColumns holds the columns for the "app_simulate_goods" table.
+	AppSimulateGoodsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "coin_type_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "fixed_order_units", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "fixed_order_duration", Type: field.TypeUint32, Nullable: true, Default: 0},
+	}
+	// AppSimulateGoodsTable holds the schema information for the "app_simulate_goods" table.
+	AppSimulateGoodsTable = &schema.Table{
+		Name:       "app_simulate_goods",
+		Columns:    AppSimulateGoodsColumns,
+		PrimaryKey: []*schema.Column{AppSimulateGoodsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appsimulategood_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppSimulateGoodsColumns[4]},
+			},
+		},
+	}
 	// AppStocksColumns holds the columns for the "app_stocks" table.
 	AppStocksColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -603,6 +630,7 @@ var (
 	Tables = []*schema.Table{
 		AppDefaultGoodsTable,
 		AppGoodsTable,
+		AppSimulateGoodsTable,
 		AppStocksTable,
 		AppStockLocksTable,
 		CommentsTable,

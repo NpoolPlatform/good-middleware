@@ -198,6 +198,30 @@ func (f AppGoodMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutatio
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppGoodMutation", m)
 }
 
+// The AppSimulateGoodQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AppSimulateGoodQueryRuleFunc func(context.Context, *ent.AppSimulateGoodQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AppSimulateGoodQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppSimulateGoodQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppSimulateGoodQuery", q)
+}
+
+// The AppSimulateGoodMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AppSimulateGoodMutationRuleFunc func(context.Context, *ent.AppSimulateGoodMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AppSimulateGoodMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppSimulateGoodMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppSimulateGoodMutation", m)
+}
+
 // The AppStockQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type AppStockQueryRuleFunc func(context.Context, *ent.AppStockQuery) error
@@ -645,6 +669,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.AppGoodQuery:
 		return q.Filter(), nil
+	case *ent.AppSimulateGoodQuery:
+		return q.Filter(), nil
 	case *ent.AppStockQuery:
 		return q.Filter(), nil
 	case *ent.AppStockLockQuery:
@@ -689,6 +715,8 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	case *ent.AppDefaultGoodMutation:
 		return m.Filter(), nil
 	case *ent.AppGoodMutation:
+		return m.Filter(), nil
+	case *ent.AppSimulateGoodMutation:
 		return m.Filter(), nil
 	case *ent.AppStockMutation:
 		return m.Filter(), nil
