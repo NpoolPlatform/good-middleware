@@ -174,6 +174,30 @@ func (f AppDefaultGoodMutationRuleFunc) EvalMutation(ctx context.Context, m ent.
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppDefaultGoodMutation", m)
 }
 
+// The AppFeeQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AppFeeQueryRuleFunc func(context.Context, *ent.AppFeeQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AppFeeQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppFeeQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppFeeQuery", q)
+}
+
+// The AppFeeMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AppFeeMutationRuleFunc func(context.Context, *ent.AppFeeMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AppFeeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppFeeMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppFeeMutation", m)
+}
+
 // The AppGoodQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type AppGoodQueryRuleFunc func(context.Context, *ent.AppGoodQuery) error
@@ -196,6 +220,174 @@ func (f AppGoodMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutatio
 		return f(ctx, m)
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppGoodMutation", m)
+}
+
+// The AppGoodBaseQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AppGoodBaseQueryRuleFunc func(context.Context, *ent.AppGoodBaseQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AppGoodBaseQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppGoodBaseQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppGoodBaseQuery", q)
+}
+
+// The AppGoodBaseMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AppGoodBaseMutationRuleFunc func(context.Context, *ent.AppGoodBaseMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AppGoodBaseMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppGoodBaseMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppGoodBaseMutation", m)
+}
+
+// The AppGoodDescriptionQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AppGoodDescriptionQueryRuleFunc func(context.Context, *ent.AppGoodDescriptionQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AppGoodDescriptionQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppGoodDescriptionQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppGoodDescriptionQuery", q)
+}
+
+// The AppGoodDescriptionMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AppGoodDescriptionMutationRuleFunc func(context.Context, *ent.AppGoodDescriptionMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AppGoodDescriptionMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppGoodDescriptionMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppGoodDescriptionMutation", m)
+}
+
+// The AppGoodDisplayColorQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AppGoodDisplayColorQueryRuleFunc func(context.Context, *ent.AppGoodDisplayColorQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AppGoodDisplayColorQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppGoodDisplayColorQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppGoodDisplayColorQuery", q)
+}
+
+// The AppGoodDisplayColorMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AppGoodDisplayColorMutationRuleFunc func(context.Context, *ent.AppGoodDisplayColorMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AppGoodDisplayColorMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppGoodDisplayColorMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppGoodDisplayColorMutation", m)
+}
+
+// The AppGoodDisplayNameQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AppGoodDisplayNameQueryRuleFunc func(context.Context, *ent.AppGoodDisplayNameQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AppGoodDisplayNameQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppGoodDisplayNameQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppGoodDisplayNameQuery", q)
+}
+
+// The AppGoodDisplayNameMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AppGoodDisplayNameMutationRuleFunc func(context.Context, *ent.AppGoodDisplayNameMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AppGoodDisplayNameMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppGoodDisplayNameMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppGoodDisplayNameMutation", m)
+}
+
+// The AppGoodPosterQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AppGoodPosterQueryRuleFunc func(context.Context, *ent.AppGoodPosterQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AppGoodPosterQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppGoodPosterQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppGoodPosterQuery", q)
+}
+
+// The AppGoodPosterMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AppGoodPosterMutationRuleFunc func(context.Context, *ent.AppGoodPosterMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AppGoodPosterMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppGoodPosterMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppGoodPosterMutation", m)
+}
+
+// The AppLegacyPowerRentalQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AppLegacyPowerRentalQueryRuleFunc func(context.Context, *ent.AppLegacyPowerRentalQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AppLegacyPowerRentalQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppLegacyPowerRentalQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppLegacyPowerRentalQuery", q)
+}
+
+// The AppLegacyPowerRentalMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AppLegacyPowerRentalMutationRuleFunc func(context.Context, *ent.AppLegacyPowerRentalMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AppLegacyPowerRentalMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppLegacyPowerRentalMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppLegacyPowerRentalMutation", m)
+}
+
+// The AppPowerRentalQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AppPowerRentalQueryRuleFunc func(context.Context, *ent.AppPowerRentalQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AppPowerRentalQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppPowerRentalQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppPowerRentalQuery", q)
+}
+
+// The AppPowerRentalMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AppPowerRentalMutationRuleFunc func(context.Context, *ent.AppPowerRentalMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AppPowerRentalMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppPowerRentalMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppPowerRentalMutation", m)
 }
 
 // The AppSimulateGoodQueryRuleFunc type is an adapter to allow the use of ordinary
@@ -294,6 +486,30 @@ func (f CommentMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutatio
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.CommentMutation", m)
 }
 
+// The DelegatedStakingQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type DelegatedStakingQueryRuleFunc func(context.Context, *ent.DelegatedStakingQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f DelegatedStakingQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.DelegatedStakingQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.DelegatedStakingQuery", q)
+}
+
+// The DelegatedStakingMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type DelegatedStakingMutationRuleFunc func(context.Context, *ent.DelegatedStakingMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f DelegatedStakingMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.DelegatedStakingMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.DelegatedStakingMutation", m)
+}
+
 // The DeviceInfoQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type DeviceInfoQueryRuleFunc func(context.Context, *ent.DeviceInfoQuery) error
@@ -342,6 +558,54 @@ func (f ExtraInfoMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutat
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.ExtraInfoMutation", m)
 }
 
+// The FbmCrowdFundingQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type FbmCrowdFundingQueryRuleFunc func(context.Context, *ent.FbmCrowdFundingQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f FbmCrowdFundingQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.FbmCrowdFundingQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.FbmCrowdFundingQuery", q)
+}
+
+// The FbmCrowdFundingMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type FbmCrowdFundingMutationRuleFunc func(context.Context, *ent.FbmCrowdFundingMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f FbmCrowdFundingMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.FbmCrowdFundingMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.FbmCrowdFundingMutation", m)
+}
+
+// The FeeQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type FeeQueryRuleFunc func(context.Context, *ent.FeeQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f FeeQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.FeeQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.FeeQuery", q)
+}
+
+// The FeeMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type FeeMutationRuleFunc func(context.Context, *ent.FeeMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f FeeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.FeeMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.FeeMutation", m)
+}
+
 // The GoodQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type GoodQueryRuleFunc func(context.Context, *ent.GoodQuery) error
@@ -364,6 +628,54 @@ func (f GoodMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) 
 		return f(ctx, m)
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.GoodMutation", m)
+}
+
+// The GoodBaseQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type GoodBaseQueryRuleFunc func(context.Context, *ent.GoodBaseQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f GoodBaseQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.GoodBaseQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.GoodBaseQuery", q)
+}
+
+// The GoodBaseMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type GoodBaseMutationRuleFunc func(context.Context, *ent.GoodBaseMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f GoodBaseMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.GoodBaseMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.GoodBaseMutation", m)
+}
+
+// The GoodCoinQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type GoodCoinQueryRuleFunc func(context.Context, *ent.GoodCoinQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f GoodCoinQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.GoodCoinQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.GoodCoinQuery", q)
+}
+
+// The GoodCoinMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type GoodCoinMutationRuleFunc func(context.Context, *ent.GoodCoinMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f GoodCoinMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.GoodCoinMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.GoodCoinMutation", m)
 }
 
 // The GoodRewardQueryRuleFunc type is an adapter to allow the use of ordinary
@@ -438,6 +750,30 @@ func (f LikeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) 
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.LikeMutation", m)
 }
 
+// The PowerRentalQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type PowerRentalQueryRuleFunc func(context.Context, *ent.PowerRentalQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f PowerRentalQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.PowerRentalQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.PowerRentalQuery", q)
+}
+
+// The PowerRentalMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type PowerRentalMutationRuleFunc func(context.Context, *ent.PowerRentalMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f PowerRentalMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.PowerRentalMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.PowerRentalMutation", m)
+}
+
 // The RecommendQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type RecommendQueryRuleFunc func(context.Context, *ent.RecommendQuery) error
@@ -460,6 +796,30 @@ func (f RecommendMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutat
 		return f(ctx, m)
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.RecommendMutation", m)
+}
+
+// The RequiredAppGoodQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type RequiredAppGoodQueryRuleFunc func(context.Context, *ent.RequiredAppGoodQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f RequiredAppGoodQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.RequiredAppGoodQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.RequiredAppGoodQuery", q)
+}
+
+// The RequiredAppGoodMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type RequiredAppGoodMutationRuleFunc func(context.Context, *ent.RequiredAppGoodMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f RequiredAppGoodMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.RequiredAppGoodMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.RequiredAppGoodMutation", m)
 }
 
 // The RequiredGoodQueryRuleFunc type is an adapter to allow the use of ordinary
@@ -667,7 +1027,23 @@ func queryFilter(q ent.Query) (Filter, error) {
 	switch q := q.(type) {
 	case *ent.AppDefaultGoodQuery:
 		return q.Filter(), nil
+	case *ent.AppFeeQuery:
+		return q.Filter(), nil
 	case *ent.AppGoodQuery:
+		return q.Filter(), nil
+	case *ent.AppGoodBaseQuery:
+		return q.Filter(), nil
+	case *ent.AppGoodDescriptionQuery:
+		return q.Filter(), nil
+	case *ent.AppGoodDisplayColorQuery:
+		return q.Filter(), nil
+	case *ent.AppGoodDisplayNameQuery:
+		return q.Filter(), nil
+	case *ent.AppGoodPosterQuery:
+		return q.Filter(), nil
+	case *ent.AppLegacyPowerRentalQuery:
+		return q.Filter(), nil
+	case *ent.AppPowerRentalQuery:
 		return q.Filter(), nil
 	case *ent.AppSimulateGoodQuery:
 		return q.Filter(), nil
@@ -677,11 +1053,21 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.CommentQuery:
 		return q.Filter(), nil
+	case *ent.DelegatedStakingQuery:
+		return q.Filter(), nil
 	case *ent.DeviceInfoQuery:
 		return q.Filter(), nil
 	case *ent.ExtraInfoQuery:
 		return q.Filter(), nil
+	case *ent.FbmCrowdFundingQuery:
+		return q.Filter(), nil
+	case *ent.FeeQuery:
+		return q.Filter(), nil
 	case *ent.GoodQuery:
+		return q.Filter(), nil
+	case *ent.GoodBaseQuery:
+		return q.Filter(), nil
+	case *ent.GoodCoinQuery:
 		return q.Filter(), nil
 	case *ent.GoodRewardQuery:
 		return q.Filter(), nil
@@ -689,7 +1075,11 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.LikeQuery:
 		return q.Filter(), nil
+	case *ent.PowerRentalQuery:
+		return q.Filter(), nil
 	case *ent.RecommendQuery:
+		return q.Filter(), nil
+	case *ent.RequiredAppGoodQuery:
 		return q.Filter(), nil
 	case *ent.RequiredGoodQuery:
 		return q.Filter(), nil
@@ -714,7 +1104,23 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	switch m := m.(type) {
 	case *ent.AppDefaultGoodMutation:
 		return m.Filter(), nil
+	case *ent.AppFeeMutation:
+		return m.Filter(), nil
 	case *ent.AppGoodMutation:
+		return m.Filter(), nil
+	case *ent.AppGoodBaseMutation:
+		return m.Filter(), nil
+	case *ent.AppGoodDescriptionMutation:
+		return m.Filter(), nil
+	case *ent.AppGoodDisplayColorMutation:
+		return m.Filter(), nil
+	case *ent.AppGoodDisplayNameMutation:
+		return m.Filter(), nil
+	case *ent.AppGoodPosterMutation:
+		return m.Filter(), nil
+	case *ent.AppLegacyPowerRentalMutation:
+		return m.Filter(), nil
+	case *ent.AppPowerRentalMutation:
 		return m.Filter(), nil
 	case *ent.AppSimulateGoodMutation:
 		return m.Filter(), nil
@@ -724,11 +1130,21 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 		return m.Filter(), nil
 	case *ent.CommentMutation:
 		return m.Filter(), nil
+	case *ent.DelegatedStakingMutation:
+		return m.Filter(), nil
 	case *ent.DeviceInfoMutation:
 		return m.Filter(), nil
 	case *ent.ExtraInfoMutation:
 		return m.Filter(), nil
+	case *ent.FbmCrowdFundingMutation:
+		return m.Filter(), nil
+	case *ent.FeeMutation:
+		return m.Filter(), nil
 	case *ent.GoodMutation:
+		return m.Filter(), nil
+	case *ent.GoodBaseMutation:
+		return m.Filter(), nil
+	case *ent.GoodCoinMutation:
 		return m.Filter(), nil
 	case *ent.GoodRewardMutation:
 		return m.Filter(), nil
@@ -736,7 +1152,11 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 		return m.Filter(), nil
 	case *ent.LikeMutation:
 		return m.Filter(), nil
+	case *ent.PowerRentalMutation:
+		return m.Filter(), nil
 	case *ent.RecommendMutation:
+		return m.Filter(), nil
+	case *ent.RequiredAppGoodMutation:
 		return m.Filter(), nil
 	case *ent.RequiredGoodMutation:
 		return m.Filter(), nil

@@ -11,18 +11,33 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appfee"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddescription"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplaycolor"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplayname"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/delegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fbmcrowdfunding"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fee"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredappgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
@@ -50,26 +65,41 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		appdefaultgood.Table:    appdefaultgood.ValidColumn,
-		appgood.Table:           appgood.ValidColumn,
-		appsimulategood.Table:   appsimulategood.ValidColumn,
-		appstock.Table:          appstock.ValidColumn,
-		appstocklock.Table:      appstocklock.ValidColumn,
-		comment.Table:           comment.ValidColumn,
-		deviceinfo.Table:        deviceinfo.ValidColumn,
-		extrainfo.Table:         extrainfo.ValidColumn,
-		good.Table:              good.ValidColumn,
-		goodreward.Table:        goodreward.ValidColumn,
-		goodrewardhistory.Table: goodrewardhistory.ValidColumn,
-		like.Table:              like.ValidColumn,
-		recommend.Table:         recommend.ValidColumn,
-		requiredgood.Table:      requiredgood.ValidColumn,
-		score.Table:             score.ValidColumn,
-		stock.Table:             stock.ValidColumn,
-		topmost.Table:           topmost.ValidColumn,
-		topmostgood.Table:       topmostgood.ValidColumn,
-		vendorbrand.Table:       vendorbrand.ValidColumn,
-		vendorlocation.Table:    vendorlocation.ValidColumn,
+		appdefaultgood.Table:       appdefaultgood.ValidColumn,
+		appfee.Table:               appfee.ValidColumn,
+		appgood.Table:              appgood.ValidColumn,
+		appgoodbase.Table:          appgoodbase.ValidColumn,
+		appgooddescription.Table:   appgooddescription.ValidColumn,
+		appgooddisplaycolor.Table:  appgooddisplaycolor.ValidColumn,
+		appgooddisplayname.Table:   appgooddisplayname.ValidColumn,
+		appgoodposter.Table:        appgoodposter.ValidColumn,
+		applegacypowerrental.Table: applegacypowerrental.ValidColumn,
+		apppowerrental.Table:       apppowerrental.ValidColumn,
+		appsimulategood.Table:      appsimulategood.ValidColumn,
+		appstock.Table:             appstock.ValidColumn,
+		appstocklock.Table:         appstocklock.ValidColumn,
+		comment.Table:              comment.ValidColumn,
+		delegatedstaking.Table:     delegatedstaking.ValidColumn,
+		deviceinfo.Table:           deviceinfo.ValidColumn,
+		extrainfo.Table:            extrainfo.ValidColumn,
+		fbmcrowdfunding.Table:      fbmcrowdfunding.ValidColumn,
+		fee.Table:                  fee.ValidColumn,
+		good.Table:                 good.ValidColumn,
+		goodbase.Table:             goodbase.ValidColumn,
+		goodcoin.Table:             goodcoin.ValidColumn,
+		goodreward.Table:           goodreward.ValidColumn,
+		goodrewardhistory.Table:    goodrewardhistory.ValidColumn,
+		like.Table:                 like.ValidColumn,
+		powerrental.Table:          powerrental.ValidColumn,
+		recommend.Table:            recommend.ValidColumn,
+		requiredappgood.Table:      requiredappgood.ValidColumn,
+		requiredgood.Table:         requiredgood.ValidColumn,
+		score.Table:                score.ValidColumn,
+		stock.Table:                stock.ValidColumn,
+		topmost.Table:              topmost.ValidColumn,
+		topmostgood.Table:          topmostgood.ValidColumn,
+		vendorbrand.Table:          vendorbrand.ValidColumn,
+		vendorlocation.Table:       vendorlocation.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

@@ -11,18 +11,33 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/migrate"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appfee"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddescription"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplaycolor"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplayname"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/delegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fbmcrowdfunding"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fee"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredappgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
@@ -42,8 +57,24 @@ type Client struct {
 	Schema *migrate.Schema
 	// AppDefaultGood is the client for interacting with the AppDefaultGood builders.
 	AppDefaultGood *AppDefaultGoodClient
+	// AppFee is the client for interacting with the AppFee builders.
+	AppFee *AppFeeClient
 	// AppGood is the client for interacting with the AppGood builders.
 	AppGood *AppGoodClient
+	// AppGoodBase is the client for interacting with the AppGoodBase builders.
+	AppGoodBase *AppGoodBaseClient
+	// AppGoodDescription is the client for interacting with the AppGoodDescription builders.
+	AppGoodDescription *AppGoodDescriptionClient
+	// AppGoodDisplayColor is the client for interacting with the AppGoodDisplayColor builders.
+	AppGoodDisplayColor *AppGoodDisplayColorClient
+	// AppGoodDisplayName is the client for interacting with the AppGoodDisplayName builders.
+	AppGoodDisplayName *AppGoodDisplayNameClient
+	// AppGoodPoster is the client for interacting with the AppGoodPoster builders.
+	AppGoodPoster *AppGoodPosterClient
+	// AppLegacyPowerRental is the client for interacting with the AppLegacyPowerRental builders.
+	AppLegacyPowerRental *AppLegacyPowerRentalClient
+	// AppPowerRental is the client for interacting with the AppPowerRental builders.
+	AppPowerRental *AppPowerRentalClient
 	// AppSimulateGood is the client for interacting with the AppSimulateGood builders.
 	AppSimulateGood *AppSimulateGoodClient
 	// AppStock is the client for interacting with the AppStock builders.
@@ -52,20 +83,34 @@ type Client struct {
 	AppStockLock *AppStockLockClient
 	// Comment is the client for interacting with the Comment builders.
 	Comment *CommentClient
+	// DelegatedStaking is the client for interacting with the DelegatedStaking builders.
+	DelegatedStaking *DelegatedStakingClient
 	// DeviceInfo is the client for interacting with the DeviceInfo builders.
 	DeviceInfo *DeviceInfoClient
 	// ExtraInfo is the client for interacting with the ExtraInfo builders.
 	ExtraInfo *ExtraInfoClient
+	// FbmCrowdFunding is the client for interacting with the FbmCrowdFunding builders.
+	FbmCrowdFunding *FbmCrowdFundingClient
+	// Fee is the client for interacting with the Fee builders.
+	Fee *FeeClient
 	// Good is the client for interacting with the Good builders.
 	Good *GoodClient
+	// GoodBase is the client for interacting with the GoodBase builders.
+	GoodBase *GoodBaseClient
+	// GoodCoin is the client for interacting with the GoodCoin builders.
+	GoodCoin *GoodCoinClient
 	// GoodReward is the client for interacting with the GoodReward builders.
 	GoodReward *GoodRewardClient
 	// GoodRewardHistory is the client for interacting with the GoodRewardHistory builders.
 	GoodRewardHistory *GoodRewardHistoryClient
 	// Like is the client for interacting with the Like builders.
 	Like *LikeClient
+	// PowerRental is the client for interacting with the PowerRental builders.
+	PowerRental *PowerRentalClient
 	// Recommend is the client for interacting with the Recommend builders.
 	Recommend *RecommendClient
+	// RequiredAppGood is the client for interacting with the RequiredAppGood builders.
+	RequiredAppGood *RequiredAppGoodClient
 	// RequiredGood is the client for interacting with the RequiredGood builders.
 	RequiredGood *RequiredGoodClient
 	// Score is the client for interacting with the Score builders.
@@ -94,18 +139,33 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.AppDefaultGood = NewAppDefaultGoodClient(c.config)
+	c.AppFee = NewAppFeeClient(c.config)
 	c.AppGood = NewAppGoodClient(c.config)
+	c.AppGoodBase = NewAppGoodBaseClient(c.config)
+	c.AppGoodDescription = NewAppGoodDescriptionClient(c.config)
+	c.AppGoodDisplayColor = NewAppGoodDisplayColorClient(c.config)
+	c.AppGoodDisplayName = NewAppGoodDisplayNameClient(c.config)
+	c.AppGoodPoster = NewAppGoodPosterClient(c.config)
+	c.AppLegacyPowerRental = NewAppLegacyPowerRentalClient(c.config)
+	c.AppPowerRental = NewAppPowerRentalClient(c.config)
 	c.AppSimulateGood = NewAppSimulateGoodClient(c.config)
 	c.AppStock = NewAppStockClient(c.config)
 	c.AppStockLock = NewAppStockLockClient(c.config)
 	c.Comment = NewCommentClient(c.config)
+	c.DelegatedStaking = NewDelegatedStakingClient(c.config)
 	c.DeviceInfo = NewDeviceInfoClient(c.config)
 	c.ExtraInfo = NewExtraInfoClient(c.config)
+	c.FbmCrowdFunding = NewFbmCrowdFundingClient(c.config)
+	c.Fee = NewFeeClient(c.config)
 	c.Good = NewGoodClient(c.config)
+	c.GoodBase = NewGoodBaseClient(c.config)
+	c.GoodCoin = NewGoodCoinClient(c.config)
 	c.GoodReward = NewGoodRewardClient(c.config)
 	c.GoodRewardHistory = NewGoodRewardHistoryClient(c.config)
 	c.Like = NewLikeClient(c.config)
+	c.PowerRental = NewPowerRentalClient(c.config)
 	c.Recommend = NewRecommendClient(c.config)
+	c.RequiredAppGood = NewRequiredAppGoodClient(c.config)
 	c.RequiredGood = NewRequiredGoodClient(c.config)
 	c.Score = NewScoreClient(c.config)
 	c.Stock = NewStockClient(c.config)
@@ -144,28 +204,43 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:               ctx,
-		config:            cfg,
-		AppDefaultGood:    NewAppDefaultGoodClient(cfg),
-		AppGood:           NewAppGoodClient(cfg),
-		AppSimulateGood:   NewAppSimulateGoodClient(cfg),
-		AppStock:          NewAppStockClient(cfg),
-		AppStockLock:      NewAppStockLockClient(cfg),
-		Comment:           NewCommentClient(cfg),
-		DeviceInfo:        NewDeviceInfoClient(cfg),
-		ExtraInfo:         NewExtraInfoClient(cfg),
-		Good:              NewGoodClient(cfg),
-		GoodReward:        NewGoodRewardClient(cfg),
-		GoodRewardHistory: NewGoodRewardHistoryClient(cfg),
-		Like:              NewLikeClient(cfg),
-		Recommend:         NewRecommendClient(cfg),
-		RequiredGood:      NewRequiredGoodClient(cfg),
-		Score:             NewScoreClient(cfg),
-		Stock:             NewStockClient(cfg),
-		TopMost:           NewTopMostClient(cfg),
-		TopMostGood:       NewTopMostGoodClient(cfg),
-		VendorBrand:       NewVendorBrandClient(cfg),
-		VendorLocation:    NewVendorLocationClient(cfg),
+		ctx:                  ctx,
+		config:               cfg,
+		AppDefaultGood:       NewAppDefaultGoodClient(cfg),
+		AppFee:               NewAppFeeClient(cfg),
+		AppGood:              NewAppGoodClient(cfg),
+		AppGoodBase:          NewAppGoodBaseClient(cfg),
+		AppGoodDescription:   NewAppGoodDescriptionClient(cfg),
+		AppGoodDisplayColor:  NewAppGoodDisplayColorClient(cfg),
+		AppGoodDisplayName:   NewAppGoodDisplayNameClient(cfg),
+		AppGoodPoster:        NewAppGoodPosterClient(cfg),
+		AppLegacyPowerRental: NewAppLegacyPowerRentalClient(cfg),
+		AppPowerRental:       NewAppPowerRentalClient(cfg),
+		AppSimulateGood:      NewAppSimulateGoodClient(cfg),
+		AppStock:             NewAppStockClient(cfg),
+		AppStockLock:         NewAppStockLockClient(cfg),
+		Comment:              NewCommentClient(cfg),
+		DelegatedStaking:     NewDelegatedStakingClient(cfg),
+		DeviceInfo:           NewDeviceInfoClient(cfg),
+		ExtraInfo:            NewExtraInfoClient(cfg),
+		FbmCrowdFunding:      NewFbmCrowdFundingClient(cfg),
+		Fee:                  NewFeeClient(cfg),
+		Good:                 NewGoodClient(cfg),
+		GoodBase:             NewGoodBaseClient(cfg),
+		GoodCoin:             NewGoodCoinClient(cfg),
+		GoodReward:           NewGoodRewardClient(cfg),
+		GoodRewardHistory:    NewGoodRewardHistoryClient(cfg),
+		Like:                 NewLikeClient(cfg),
+		PowerRental:          NewPowerRentalClient(cfg),
+		Recommend:            NewRecommendClient(cfg),
+		RequiredAppGood:      NewRequiredAppGoodClient(cfg),
+		RequiredGood:         NewRequiredGoodClient(cfg),
+		Score:                NewScoreClient(cfg),
+		Stock:                NewStockClient(cfg),
+		TopMost:              NewTopMostClient(cfg),
+		TopMostGood:          NewTopMostGoodClient(cfg),
+		VendorBrand:          NewVendorBrandClient(cfg),
+		VendorLocation:       NewVendorLocationClient(cfg),
 	}, nil
 }
 
@@ -183,28 +258,43 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:               ctx,
-		config:            cfg,
-		AppDefaultGood:    NewAppDefaultGoodClient(cfg),
-		AppGood:           NewAppGoodClient(cfg),
-		AppSimulateGood:   NewAppSimulateGoodClient(cfg),
-		AppStock:          NewAppStockClient(cfg),
-		AppStockLock:      NewAppStockLockClient(cfg),
-		Comment:           NewCommentClient(cfg),
-		DeviceInfo:        NewDeviceInfoClient(cfg),
-		ExtraInfo:         NewExtraInfoClient(cfg),
-		Good:              NewGoodClient(cfg),
-		GoodReward:        NewGoodRewardClient(cfg),
-		GoodRewardHistory: NewGoodRewardHistoryClient(cfg),
-		Like:              NewLikeClient(cfg),
-		Recommend:         NewRecommendClient(cfg),
-		RequiredGood:      NewRequiredGoodClient(cfg),
-		Score:             NewScoreClient(cfg),
-		Stock:             NewStockClient(cfg),
-		TopMost:           NewTopMostClient(cfg),
-		TopMostGood:       NewTopMostGoodClient(cfg),
-		VendorBrand:       NewVendorBrandClient(cfg),
-		VendorLocation:    NewVendorLocationClient(cfg),
+		ctx:                  ctx,
+		config:               cfg,
+		AppDefaultGood:       NewAppDefaultGoodClient(cfg),
+		AppFee:               NewAppFeeClient(cfg),
+		AppGood:              NewAppGoodClient(cfg),
+		AppGoodBase:          NewAppGoodBaseClient(cfg),
+		AppGoodDescription:   NewAppGoodDescriptionClient(cfg),
+		AppGoodDisplayColor:  NewAppGoodDisplayColorClient(cfg),
+		AppGoodDisplayName:   NewAppGoodDisplayNameClient(cfg),
+		AppGoodPoster:        NewAppGoodPosterClient(cfg),
+		AppLegacyPowerRental: NewAppLegacyPowerRentalClient(cfg),
+		AppPowerRental:       NewAppPowerRentalClient(cfg),
+		AppSimulateGood:      NewAppSimulateGoodClient(cfg),
+		AppStock:             NewAppStockClient(cfg),
+		AppStockLock:         NewAppStockLockClient(cfg),
+		Comment:              NewCommentClient(cfg),
+		DelegatedStaking:     NewDelegatedStakingClient(cfg),
+		DeviceInfo:           NewDeviceInfoClient(cfg),
+		ExtraInfo:            NewExtraInfoClient(cfg),
+		FbmCrowdFunding:      NewFbmCrowdFundingClient(cfg),
+		Fee:                  NewFeeClient(cfg),
+		Good:                 NewGoodClient(cfg),
+		GoodBase:             NewGoodBaseClient(cfg),
+		GoodCoin:             NewGoodCoinClient(cfg),
+		GoodReward:           NewGoodRewardClient(cfg),
+		GoodRewardHistory:    NewGoodRewardHistoryClient(cfg),
+		Like:                 NewLikeClient(cfg),
+		PowerRental:          NewPowerRentalClient(cfg),
+		Recommend:            NewRecommendClient(cfg),
+		RequiredAppGood:      NewRequiredAppGoodClient(cfg),
+		RequiredGood:         NewRequiredGoodClient(cfg),
+		Score:                NewScoreClient(cfg),
+		Stock:                NewStockClient(cfg),
+		TopMost:              NewTopMostClient(cfg),
+		TopMostGood:          NewTopMostGoodClient(cfg),
+		VendorBrand:          NewVendorBrandClient(cfg),
+		VendorLocation:       NewVendorLocationClient(cfg),
 	}, nil
 }
 
@@ -235,18 +325,33 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.AppDefaultGood.Use(hooks...)
+	c.AppFee.Use(hooks...)
 	c.AppGood.Use(hooks...)
+	c.AppGoodBase.Use(hooks...)
+	c.AppGoodDescription.Use(hooks...)
+	c.AppGoodDisplayColor.Use(hooks...)
+	c.AppGoodDisplayName.Use(hooks...)
+	c.AppGoodPoster.Use(hooks...)
+	c.AppLegacyPowerRental.Use(hooks...)
+	c.AppPowerRental.Use(hooks...)
 	c.AppSimulateGood.Use(hooks...)
 	c.AppStock.Use(hooks...)
 	c.AppStockLock.Use(hooks...)
 	c.Comment.Use(hooks...)
+	c.DelegatedStaking.Use(hooks...)
 	c.DeviceInfo.Use(hooks...)
 	c.ExtraInfo.Use(hooks...)
+	c.FbmCrowdFunding.Use(hooks...)
+	c.Fee.Use(hooks...)
 	c.Good.Use(hooks...)
+	c.GoodBase.Use(hooks...)
+	c.GoodCoin.Use(hooks...)
 	c.GoodReward.Use(hooks...)
 	c.GoodRewardHistory.Use(hooks...)
 	c.Like.Use(hooks...)
+	c.PowerRental.Use(hooks...)
 	c.Recommend.Use(hooks...)
+	c.RequiredAppGood.Use(hooks...)
 	c.RequiredGood.Use(hooks...)
 	c.Score.Use(hooks...)
 	c.Stock.Use(hooks...)
@@ -347,6 +452,97 @@ func (c *AppDefaultGoodClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], appdefaultgood.Hooks[:]...)
 }
 
+// AppFeeClient is a client for the AppFee schema.
+type AppFeeClient struct {
+	config
+}
+
+// NewAppFeeClient returns a client for the AppFee from the given config.
+func NewAppFeeClient(c config) *AppFeeClient {
+	return &AppFeeClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appfee.Hooks(f(g(h())))`.
+func (c *AppFeeClient) Use(hooks ...Hook) {
+	c.hooks.AppFee = append(c.hooks.AppFee, hooks...)
+}
+
+// Create returns a builder for creating a AppFee entity.
+func (c *AppFeeClient) Create() *AppFeeCreate {
+	mutation := newAppFeeMutation(c.config, OpCreate)
+	return &AppFeeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppFee entities.
+func (c *AppFeeClient) CreateBulk(builders ...*AppFeeCreate) *AppFeeCreateBulk {
+	return &AppFeeCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppFee.
+func (c *AppFeeClient) Update() *AppFeeUpdate {
+	mutation := newAppFeeMutation(c.config, OpUpdate)
+	return &AppFeeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppFeeClient) UpdateOne(af *AppFee) *AppFeeUpdateOne {
+	mutation := newAppFeeMutation(c.config, OpUpdateOne, withAppFee(af))
+	return &AppFeeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppFeeClient) UpdateOneID(id uint32) *AppFeeUpdateOne {
+	mutation := newAppFeeMutation(c.config, OpUpdateOne, withAppFeeID(id))
+	return &AppFeeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppFee.
+func (c *AppFeeClient) Delete() *AppFeeDelete {
+	mutation := newAppFeeMutation(c.config, OpDelete)
+	return &AppFeeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppFeeClient) DeleteOne(af *AppFee) *AppFeeDeleteOne {
+	return c.DeleteOneID(af.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppFeeClient) DeleteOneID(id uint32) *AppFeeDeleteOne {
+	builder := c.Delete().Where(appfee.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppFeeDeleteOne{builder}
+}
+
+// Query returns a query builder for AppFee.
+func (c *AppFeeClient) Query() *AppFeeQuery {
+	return &AppFeeQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppFee entity by its id.
+func (c *AppFeeClient) Get(ctx context.Context, id uint32) (*AppFee, error) {
+	return c.Query().Where(appfee.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppFeeClient) GetX(ctx context.Context, id uint32) *AppFee {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppFeeClient) Hooks() []Hook {
+	hooks := c.hooks.AppFee
+	return append(hooks[:len(hooks):len(hooks)], appfee.Hooks[:]...)
+}
+
 // AppGoodClient is a client for the AppGood schema.
 type AppGoodClient struct {
 	config
@@ -436,6 +632,643 @@ func (c *AppGoodClient) GetX(ctx context.Context, id uint32) *AppGood {
 func (c *AppGoodClient) Hooks() []Hook {
 	hooks := c.hooks.AppGood
 	return append(hooks[:len(hooks):len(hooks)], appgood.Hooks[:]...)
+}
+
+// AppGoodBaseClient is a client for the AppGoodBase schema.
+type AppGoodBaseClient struct {
+	config
+}
+
+// NewAppGoodBaseClient returns a client for the AppGoodBase from the given config.
+func NewAppGoodBaseClient(c config) *AppGoodBaseClient {
+	return &AppGoodBaseClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appgoodbase.Hooks(f(g(h())))`.
+func (c *AppGoodBaseClient) Use(hooks ...Hook) {
+	c.hooks.AppGoodBase = append(c.hooks.AppGoodBase, hooks...)
+}
+
+// Create returns a builder for creating a AppGoodBase entity.
+func (c *AppGoodBaseClient) Create() *AppGoodBaseCreate {
+	mutation := newAppGoodBaseMutation(c.config, OpCreate)
+	return &AppGoodBaseCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppGoodBase entities.
+func (c *AppGoodBaseClient) CreateBulk(builders ...*AppGoodBaseCreate) *AppGoodBaseCreateBulk {
+	return &AppGoodBaseCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppGoodBase.
+func (c *AppGoodBaseClient) Update() *AppGoodBaseUpdate {
+	mutation := newAppGoodBaseMutation(c.config, OpUpdate)
+	return &AppGoodBaseUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppGoodBaseClient) UpdateOne(agb *AppGoodBase) *AppGoodBaseUpdateOne {
+	mutation := newAppGoodBaseMutation(c.config, OpUpdateOne, withAppGoodBase(agb))
+	return &AppGoodBaseUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppGoodBaseClient) UpdateOneID(id uint32) *AppGoodBaseUpdateOne {
+	mutation := newAppGoodBaseMutation(c.config, OpUpdateOne, withAppGoodBaseID(id))
+	return &AppGoodBaseUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppGoodBase.
+func (c *AppGoodBaseClient) Delete() *AppGoodBaseDelete {
+	mutation := newAppGoodBaseMutation(c.config, OpDelete)
+	return &AppGoodBaseDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppGoodBaseClient) DeleteOne(agb *AppGoodBase) *AppGoodBaseDeleteOne {
+	return c.DeleteOneID(agb.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppGoodBaseClient) DeleteOneID(id uint32) *AppGoodBaseDeleteOne {
+	builder := c.Delete().Where(appgoodbase.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppGoodBaseDeleteOne{builder}
+}
+
+// Query returns a query builder for AppGoodBase.
+func (c *AppGoodBaseClient) Query() *AppGoodBaseQuery {
+	return &AppGoodBaseQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppGoodBase entity by its id.
+func (c *AppGoodBaseClient) Get(ctx context.Context, id uint32) (*AppGoodBase, error) {
+	return c.Query().Where(appgoodbase.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppGoodBaseClient) GetX(ctx context.Context, id uint32) *AppGoodBase {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppGoodBaseClient) Hooks() []Hook {
+	hooks := c.hooks.AppGoodBase
+	return append(hooks[:len(hooks):len(hooks)], appgoodbase.Hooks[:]...)
+}
+
+// AppGoodDescriptionClient is a client for the AppGoodDescription schema.
+type AppGoodDescriptionClient struct {
+	config
+}
+
+// NewAppGoodDescriptionClient returns a client for the AppGoodDescription from the given config.
+func NewAppGoodDescriptionClient(c config) *AppGoodDescriptionClient {
+	return &AppGoodDescriptionClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appgooddescription.Hooks(f(g(h())))`.
+func (c *AppGoodDescriptionClient) Use(hooks ...Hook) {
+	c.hooks.AppGoodDescription = append(c.hooks.AppGoodDescription, hooks...)
+}
+
+// Create returns a builder for creating a AppGoodDescription entity.
+func (c *AppGoodDescriptionClient) Create() *AppGoodDescriptionCreate {
+	mutation := newAppGoodDescriptionMutation(c.config, OpCreate)
+	return &AppGoodDescriptionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppGoodDescription entities.
+func (c *AppGoodDescriptionClient) CreateBulk(builders ...*AppGoodDescriptionCreate) *AppGoodDescriptionCreateBulk {
+	return &AppGoodDescriptionCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppGoodDescription.
+func (c *AppGoodDescriptionClient) Update() *AppGoodDescriptionUpdate {
+	mutation := newAppGoodDescriptionMutation(c.config, OpUpdate)
+	return &AppGoodDescriptionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppGoodDescriptionClient) UpdateOne(agd *AppGoodDescription) *AppGoodDescriptionUpdateOne {
+	mutation := newAppGoodDescriptionMutation(c.config, OpUpdateOne, withAppGoodDescription(agd))
+	return &AppGoodDescriptionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppGoodDescriptionClient) UpdateOneID(id uint32) *AppGoodDescriptionUpdateOne {
+	mutation := newAppGoodDescriptionMutation(c.config, OpUpdateOne, withAppGoodDescriptionID(id))
+	return &AppGoodDescriptionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppGoodDescription.
+func (c *AppGoodDescriptionClient) Delete() *AppGoodDescriptionDelete {
+	mutation := newAppGoodDescriptionMutation(c.config, OpDelete)
+	return &AppGoodDescriptionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppGoodDescriptionClient) DeleteOne(agd *AppGoodDescription) *AppGoodDescriptionDeleteOne {
+	return c.DeleteOneID(agd.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppGoodDescriptionClient) DeleteOneID(id uint32) *AppGoodDescriptionDeleteOne {
+	builder := c.Delete().Where(appgooddescription.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppGoodDescriptionDeleteOne{builder}
+}
+
+// Query returns a query builder for AppGoodDescription.
+func (c *AppGoodDescriptionClient) Query() *AppGoodDescriptionQuery {
+	return &AppGoodDescriptionQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppGoodDescription entity by its id.
+func (c *AppGoodDescriptionClient) Get(ctx context.Context, id uint32) (*AppGoodDescription, error) {
+	return c.Query().Where(appgooddescription.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppGoodDescriptionClient) GetX(ctx context.Context, id uint32) *AppGoodDescription {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppGoodDescriptionClient) Hooks() []Hook {
+	hooks := c.hooks.AppGoodDescription
+	return append(hooks[:len(hooks):len(hooks)], appgooddescription.Hooks[:]...)
+}
+
+// AppGoodDisplayColorClient is a client for the AppGoodDisplayColor schema.
+type AppGoodDisplayColorClient struct {
+	config
+}
+
+// NewAppGoodDisplayColorClient returns a client for the AppGoodDisplayColor from the given config.
+func NewAppGoodDisplayColorClient(c config) *AppGoodDisplayColorClient {
+	return &AppGoodDisplayColorClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appgooddisplaycolor.Hooks(f(g(h())))`.
+func (c *AppGoodDisplayColorClient) Use(hooks ...Hook) {
+	c.hooks.AppGoodDisplayColor = append(c.hooks.AppGoodDisplayColor, hooks...)
+}
+
+// Create returns a builder for creating a AppGoodDisplayColor entity.
+func (c *AppGoodDisplayColorClient) Create() *AppGoodDisplayColorCreate {
+	mutation := newAppGoodDisplayColorMutation(c.config, OpCreate)
+	return &AppGoodDisplayColorCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppGoodDisplayColor entities.
+func (c *AppGoodDisplayColorClient) CreateBulk(builders ...*AppGoodDisplayColorCreate) *AppGoodDisplayColorCreateBulk {
+	return &AppGoodDisplayColorCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppGoodDisplayColor.
+func (c *AppGoodDisplayColorClient) Update() *AppGoodDisplayColorUpdate {
+	mutation := newAppGoodDisplayColorMutation(c.config, OpUpdate)
+	return &AppGoodDisplayColorUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppGoodDisplayColorClient) UpdateOne(agdc *AppGoodDisplayColor) *AppGoodDisplayColorUpdateOne {
+	mutation := newAppGoodDisplayColorMutation(c.config, OpUpdateOne, withAppGoodDisplayColor(agdc))
+	return &AppGoodDisplayColorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppGoodDisplayColorClient) UpdateOneID(id uint32) *AppGoodDisplayColorUpdateOne {
+	mutation := newAppGoodDisplayColorMutation(c.config, OpUpdateOne, withAppGoodDisplayColorID(id))
+	return &AppGoodDisplayColorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppGoodDisplayColor.
+func (c *AppGoodDisplayColorClient) Delete() *AppGoodDisplayColorDelete {
+	mutation := newAppGoodDisplayColorMutation(c.config, OpDelete)
+	return &AppGoodDisplayColorDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppGoodDisplayColorClient) DeleteOne(agdc *AppGoodDisplayColor) *AppGoodDisplayColorDeleteOne {
+	return c.DeleteOneID(agdc.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppGoodDisplayColorClient) DeleteOneID(id uint32) *AppGoodDisplayColorDeleteOne {
+	builder := c.Delete().Where(appgooddisplaycolor.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppGoodDisplayColorDeleteOne{builder}
+}
+
+// Query returns a query builder for AppGoodDisplayColor.
+func (c *AppGoodDisplayColorClient) Query() *AppGoodDisplayColorQuery {
+	return &AppGoodDisplayColorQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppGoodDisplayColor entity by its id.
+func (c *AppGoodDisplayColorClient) Get(ctx context.Context, id uint32) (*AppGoodDisplayColor, error) {
+	return c.Query().Where(appgooddisplaycolor.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppGoodDisplayColorClient) GetX(ctx context.Context, id uint32) *AppGoodDisplayColor {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppGoodDisplayColorClient) Hooks() []Hook {
+	hooks := c.hooks.AppGoodDisplayColor
+	return append(hooks[:len(hooks):len(hooks)], appgooddisplaycolor.Hooks[:]...)
+}
+
+// AppGoodDisplayNameClient is a client for the AppGoodDisplayName schema.
+type AppGoodDisplayNameClient struct {
+	config
+}
+
+// NewAppGoodDisplayNameClient returns a client for the AppGoodDisplayName from the given config.
+func NewAppGoodDisplayNameClient(c config) *AppGoodDisplayNameClient {
+	return &AppGoodDisplayNameClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appgooddisplayname.Hooks(f(g(h())))`.
+func (c *AppGoodDisplayNameClient) Use(hooks ...Hook) {
+	c.hooks.AppGoodDisplayName = append(c.hooks.AppGoodDisplayName, hooks...)
+}
+
+// Create returns a builder for creating a AppGoodDisplayName entity.
+func (c *AppGoodDisplayNameClient) Create() *AppGoodDisplayNameCreate {
+	mutation := newAppGoodDisplayNameMutation(c.config, OpCreate)
+	return &AppGoodDisplayNameCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppGoodDisplayName entities.
+func (c *AppGoodDisplayNameClient) CreateBulk(builders ...*AppGoodDisplayNameCreate) *AppGoodDisplayNameCreateBulk {
+	return &AppGoodDisplayNameCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppGoodDisplayName.
+func (c *AppGoodDisplayNameClient) Update() *AppGoodDisplayNameUpdate {
+	mutation := newAppGoodDisplayNameMutation(c.config, OpUpdate)
+	return &AppGoodDisplayNameUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppGoodDisplayNameClient) UpdateOne(agdn *AppGoodDisplayName) *AppGoodDisplayNameUpdateOne {
+	mutation := newAppGoodDisplayNameMutation(c.config, OpUpdateOne, withAppGoodDisplayName(agdn))
+	return &AppGoodDisplayNameUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppGoodDisplayNameClient) UpdateOneID(id uint32) *AppGoodDisplayNameUpdateOne {
+	mutation := newAppGoodDisplayNameMutation(c.config, OpUpdateOne, withAppGoodDisplayNameID(id))
+	return &AppGoodDisplayNameUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppGoodDisplayName.
+func (c *AppGoodDisplayNameClient) Delete() *AppGoodDisplayNameDelete {
+	mutation := newAppGoodDisplayNameMutation(c.config, OpDelete)
+	return &AppGoodDisplayNameDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppGoodDisplayNameClient) DeleteOne(agdn *AppGoodDisplayName) *AppGoodDisplayNameDeleteOne {
+	return c.DeleteOneID(agdn.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppGoodDisplayNameClient) DeleteOneID(id uint32) *AppGoodDisplayNameDeleteOne {
+	builder := c.Delete().Where(appgooddisplayname.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppGoodDisplayNameDeleteOne{builder}
+}
+
+// Query returns a query builder for AppGoodDisplayName.
+func (c *AppGoodDisplayNameClient) Query() *AppGoodDisplayNameQuery {
+	return &AppGoodDisplayNameQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppGoodDisplayName entity by its id.
+func (c *AppGoodDisplayNameClient) Get(ctx context.Context, id uint32) (*AppGoodDisplayName, error) {
+	return c.Query().Where(appgooddisplayname.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppGoodDisplayNameClient) GetX(ctx context.Context, id uint32) *AppGoodDisplayName {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppGoodDisplayNameClient) Hooks() []Hook {
+	hooks := c.hooks.AppGoodDisplayName
+	return append(hooks[:len(hooks):len(hooks)], appgooddisplayname.Hooks[:]...)
+}
+
+// AppGoodPosterClient is a client for the AppGoodPoster schema.
+type AppGoodPosterClient struct {
+	config
+}
+
+// NewAppGoodPosterClient returns a client for the AppGoodPoster from the given config.
+func NewAppGoodPosterClient(c config) *AppGoodPosterClient {
+	return &AppGoodPosterClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appgoodposter.Hooks(f(g(h())))`.
+func (c *AppGoodPosterClient) Use(hooks ...Hook) {
+	c.hooks.AppGoodPoster = append(c.hooks.AppGoodPoster, hooks...)
+}
+
+// Create returns a builder for creating a AppGoodPoster entity.
+func (c *AppGoodPosterClient) Create() *AppGoodPosterCreate {
+	mutation := newAppGoodPosterMutation(c.config, OpCreate)
+	return &AppGoodPosterCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppGoodPoster entities.
+func (c *AppGoodPosterClient) CreateBulk(builders ...*AppGoodPosterCreate) *AppGoodPosterCreateBulk {
+	return &AppGoodPosterCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppGoodPoster.
+func (c *AppGoodPosterClient) Update() *AppGoodPosterUpdate {
+	mutation := newAppGoodPosterMutation(c.config, OpUpdate)
+	return &AppGoodPosterUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppGoodPosterClient) UpdateOne(agp *AppGoodPoster) *AppGoodPosterUpdateOne {
+	mutation := newAppGoodPosterMutation(c.config, OpUpdateOne, withAppGoodPoster(agp))
+	return &AppGoodPosterUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppGoodPosterClient) UpdateOneID(id uint32) *AppGoodPosterUpdateOne {
+	mutation := newAppGoodPosterMutation(c.config, OpUpdateOne, withAppGoodPosterID(id))
+	return &AppGoodPosterUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppGoodPoster.
+func (c *AppGoodPosterClient) Delete() *AppGoodPosterDelete {
+	mutation := newAppGoodPosterMutation(c.config, OpDelete)
+	return &AppGoodPosterDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppGoodPosterClient) DeleteOne(agp *AppGoodPoster) *AppGoodPosterDeleteOne {
+	return c.DeleteOneID(agp.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppGoodPosterClient) DeleteOneID(id uint32) *AppGoodPosterDeleteOne {
+	builder := c.Delete().Where(appgoodposter.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppGoodPosterDeleteOne{builder}
+}
+
+// Query returns a query builder for AppGoodPoster.
+func (c *AppGoodPosterClient) Query() *AppGoodPosterQuery {
+	return &AppGoodPosterQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppGoodPoster entity by its id.
+func (c *AppGoodPosterClient) Get(ctx context.Context, id uint32) (*AppGoodPoster, error) {
+	return c.Query().Where(appgoodposter.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppGoodPosterClient) GetX(ctx context.Context, id uint32) *AppGoodPoster {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppGoodPosterClient) Hooks() []Hook {
+	hooks := c.hooks.AppGoodPoster
+	return append(hooks[:len(hooks):len(hooks)], appgoodposter.Hooks[:]...)
+}
+
+// AppLegacyPowerRentalClient is a client for the AppLegacyPowerRental schema.
+type AppLegacyPowerRentalClient struct {
+	config
+}
+
+// NewAppLegacyPowerRentalClient returns a client for the AppLegacyPowerRental from the given config.
+func NewAppLegacyPowerRentalClient(c config) *AppLegacyPowerRentalClient {
+	return &AppLegacyPowerRentalClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `applegacypowerrental.Hooks(f(g(h())))`.
+func (c *AppLegacyPowerRentalClient) Use(hooks ...Hook) {
+	c.hooks.AppLegacyPowerRental = append(c.hooks.AppLegacyPowerRental, hooks...)
+}
+
+// Create returns a builder for creating a AppLegacyPowerRental entity.
+func (c *AppLegacyPowerRentalClient) Create() *AppLegacyPowerRentalCreate {
+	mutation := newAppLegacyPowerRentalMutation(c.config, OpCreate)
+	return &AppLegacyPowerRentalCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppLegacyPowerRental entities.
+func (c *AppLegacyPowerRentalClient) CreateBulk(builders ...*AppLegacyPowerRentalCreate) *AppLegacyPowerRentalCreateBulk {
+	return &AppLegacyPowerRentalCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppLegacyPowerRental.
+func (c *AppLegacyPowerRentalClient) Update() *AppLegacyPowerRentalUpdate {
+	mutation := newAppLegacyPowerRentalMutation(c.config, OpUpdate)
+	return &AppLegacyPowerRentalUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppLegacyPowerRentalClient) UpdateOne(alpr *AppLegacyPowerRental) *AppLegacyPowerRentalUpdateOne {
+	mutation := newAppLegacyPowerRentalMutation(c.config, OpUpdateOne, withAppLegacyPowerRental(alpr))
+	return &AppLegacyPowerRentalUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppLegacyPowerRentalClient) UpdateOneID(id uint32) *AppLegacyPowerRentalUpdateOne {
+	mutation := newAppLegacyPowerRentalMutation(c.config, OpUpdateOne, withAppLegacyPowerRentalID(id))
+	return &AppLegacyPowerRentalUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppLegacyPowerRental.
+func (c *AppLegacyPowerRentalClient) Delete() *AppLegacyPowerRentalDelete {
+	mutation := newAppLegacyPowerRentalMutation(c.config, OpDelete)
+	return &AppLegacyPowerRentalDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppLegacyPowerRentalClient) DeleteOne(alpr *AppLegacyPowerRental) *AppLegacyPowerRentalDeleteOne {
+	return c.DeleteOneID(alpr.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppLegacyPowerRentalClient) DeleteOneID(id uint32) *AppLegacyPowerRentalDeleteOne {
+	builder := c.Delete().Where(applegacypowerrental.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppLegacyPowerRentalDeleteOne{builder}
+}
+
+// Query returns a query builder for AppLegacyPowerRental.
+func (c *AppLegacyPowerRentalClient) Query() *AppLegacyPowerRentalQuery {
+	return &AppLegacyPowerRentalQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppLegacyPowerRental entity by its id.
+func (c *AppLegacyPowerRentalClient) Get(ctx context.Context, id uint32) (*AppLegacyPowerRental, error) {
+	return c.Query().Where(applegacypowerrental.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppLegacyPowerRentalClient) GetX(ctx context.Context, id uint32) *AppLegacyPowerRental {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppLegacyPowerRentalClient) Hooks() []Hook {
+	hooks := c.hooks.AppLegacyPowerRental
+	return append(hooks[:len(hooks):len(hooks)], applegacypowerrental.Hooks[:]...)
+}
+
+// AppPowerRentalClient is a client for the AppPowerRental schema.
+type AppPowerRentalClient struct {
+	config
+}
+
+// NewAppPowerRentalClient returns a client for the AppPowerRental from the given config.
+func NewAppPowerRentalClient(c config) *AppPowerRentalClient {
+	return &AppPowerRentalClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `apppowerrental.Hooks(f(g(h())))`.
+func (c *AppPowerRentalClient) Use(hooks ...Hook) {
+	c.hooks.AppPowerRental = append(c.hooks.AppPowerRental, hooks...)
+}
+
+// Create returns a builder for creating a AppPowerRental entity.
+func (c *AppPowerRentalClient) Create() *AppPowerRentalCreate {
+	mutation := newAppPowerRentalMutation(c.config, OpCreate)
+	return &AppPowerRentalCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppPowerRental entities.
+func (c *AppPowerRentalClient) CreateBulk(builders ...*AppPowerRentalCreate) *AppPowerRentalCreateBulk {
+	return &AppPowerRentalCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppPowerRental.
+func (c *AppPowerRentalClient) Update() *AppPowerRentalUpdate {
+	mutation := newAppPowerRentalMutation(c.config, OpUpdate)
+	return &AppPowerRentalUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppPowerRentalClient) UpdateOne(apr *AppPowerRental) *AppPowerRentalUpdateOne {
+	mutation := newAppPowerRentalMutation(c.config, OpUpdateOne, withAppPowerRental(apr))
+	return &AppPowerRentalUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppPowerRentalClient) UpdateOneID(id uint32) *AppPowerRentalUpdateOne {
+	mutation := newAppPowerRentalMutation(c.config, OpUpdateOne, withAppPowerRentalID(id))
+	return &AppPowerRentalUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppPowerRental.
+func (c *AppPowerRentalClient) Delete() *AppPowerRentalDelete {
+	mutation := newAppPowerRentalMutation(c.config, OpDelete)
+	return &AppPowerRentalDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppPowerRentalClient) DeleteOne(apr *AppPowerRental) *AppPowerRentalDeleteOne {
+	return c.DeleteOneID(apr.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppPowerRentalClient) DeleteOneID(id uint32) *AppPowerRentalDeleteOne {
+	builder := c.Delete().Where(apppowerrental.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppPowerRentalDeleteOne{builder}
+}
+
+// Query returns a query builder for AppPowerRental.
+func (c *AppPowerRentalClient) Query() *AppPowerRentalQuery {
+	return &AppPowerRentalQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppPowerRental entity by its id.
+func (c *AppPowerRentalClient) Get(ctx context.Context, id uint32) (*AppPowerRental, error) {
+	return c.Query().Where(apppowerrental.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppPowerRentalClient) GetX(ctx context.Context, id uint32) *AppPowerRental {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppPowerRentalClient) Hooks() []Hook {
+	hooks := c.hooks.AppPowerRental
+	return append(hooks[:len(hooks):len(hooks)], apppowerrental.Hooks[:]...)
 }
 
 // AppSimulateGoodClient is a client for the AppSimulateGood schema.
@@ -802,6 +1635,97 @@ func (c *CommentClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], comment.Hooks[:]...)
 }
 
+// DelegatedStakingClient is a client for the DelegatedStaking schema.
+type DelegatedStakingClient struct {
+	config
+}
+
+// NewDelegatedStakingClient returns a client for the DelegatedStaking from the given config.
+func NewDelegatedStakingClient(c config) *DelegatedStakingClient {
+	return &DelegatedStakingClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `delegatedstaking.Hooks(f(g(h())))`.
+func (c *DelegatedStakingClient) Use(hooks ...Hook) {
+	c.hooks.DelegatedStaking = append(c.hooks.DelegatedStaking, hooks...)
+}
+
+// Create returns a builder for creating a DelegatedStaking entity.
+func (c *DelegatedStakingClient) Create() *DelegatedStakingCreate {
+	mutation := newDelegatedStakingMutation(c.config, OpCreate)
+	return &DelegatedStakingCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of DelegatedStaking entities.
+func (c *DelegatedStakingClient) CreateBulk(builders ...*DelegatedStakingCreate) *DelegatedStakingCreateBulk {
+	return &DelegatedStakingCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for DelegatedStaking.
+func (c *DelegatedStakingClient) Update() *DelegatedStakingUpdate {
+	mutation := newDelegatedStakingMutation(c.config, OpUpdate)
+	return &DelegatedStakingUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *DelegatedStakingClient) UpdateOne(ds *DelegatedStaking) *DelegatedStakingUpdateOne {
+	mutation := newDelegatedStakingMutation(c.config, OpUpdateOne, withDelegatedStaking(ds))
+	return &DelegatedStakingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *DelegatedStakingClient) UpdateOneID(id uint32) *DelegatedStakingUpdateOne {
+	mutation := newDelegatedStakingMutation(c.config, OpUpdateOne, withDelegatedStakingID(id))
+	return &DelegatedStakingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for DelegatedStaking.
+func (c *DelegatedStakingClient) Delete() *DelegatedStakingDelete {
+	mutation := newDelegatedStakingMutation(c.config, OpDelete)
+	return &DelegatedStakingDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *DelegatedStakingClient) DeleteOne(ds *DelegatedStaking) *DelegatedStakingDeleteOne {
+	return c.DeleteOneID(ds.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *DelegatedStakingClient) DeleteOneID(id uint32) *DelegatedStakingDeleteOne {
+	builder := c.Delete().Where(delegatedstaking.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &DelegatedStakingDeleteOne{builder}
+}
+
+// Query returns a query builder for DelegatedStaking.
+func (c *DelegatedStakingClient) Query() *DelegatedStakingQuery {
+	return &DelegatedStakingQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a DelegatedStaking entity by its id.
+func (c *DelegatedStakingClient) Get(ctx context.Context, id uint32) (*DelegatedStaking, error) {
+	return c.Query().Where(delegatedstaking.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *DelegatedStakingClient) GetX(ctx context.Context, id uint32) *DelegatedStaking {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *DelegatedStakingClient) Hooks() []Hook {
+	hooks := c.hooks.DelegatedStaking
+	return append(hooks[:len(hooks):len(hooks)], delegatedstaking.Hooks[:]...)
+}
+
 // DeviceInfoClient is a client for the DeviceInfo schema.
 type DeviceInfoClient struct {
 	config
@@ -984,6 +1908,188 @@ func (c *ExtraInfoClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], extrainfo.Hooks[:]...)
 }
 
+// FbmCrowdFundingClient is a client for the FbmCrowdFunding schema.
+type FbmCrowdFundingClient struct {
+	config
+}
+
+// NewFbmCrowdFundingClient returns a client for the FbmCrowdFunding from the given config.
+func NewFbmCrowdFundingClient(c config) *FbmCrowdFundingClient {
+	return &FbmCrowdFundingClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `fbmcrowdfunding.Hooks(f(g(h())))`.
+func (c *FbmCrowdFundingClient) Use(hooks ...Hook) {
+	c.hooks.FbmCrowdFunding = append(c.hooks.FbmCrowdFunding, hooks...)
+}
+
+// Create returns a builder for creating a FbmCrowdFunding entity.
+func (c *FbmCrowdFundingClient) Create() *FbmCrowdFundingCreate {
+	mutation := newFbmCrowdFundingMutation(c.config, OpCreate)
+	return &FbmCrowdFundingCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of FbmCrowdFunding entities.
+func (c *FbmCrowdFundingClient) CreateBulk(builders ...*FbmCrowdFundingCreate) *FbmCrowdFundingCreateBulk {
+	return &FbmCrowdFundingCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for FbmCrowdFunding.
+func (c *FbmCrowdFundingClient) Update() *FbmCrowdFundingUpdate {
+	mutation := newFbmCrowdFundingMutation(c.config, OpUpdate)
+	return &FbmCrowdFundingUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *FbmCrowdFundingClient) UpdateOne(fcf *FbmCrowdFunding) *FbmCrowdFundingUpdateOne {
+	mutation := newFbmCrowdFundingMutation(c.config, OpUpdateOne, withFbmCrowdFunding(fcf))
+	return &FbmCrowdFundingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *FbmCrowdFundingClient) UpdateOneID(id uint32) *FbmCrowdFundingUpdateOne {
+	mutation := newFbmCrowdFundingMutation(c.config, OpUpdateOne, withFbmCrowdFundingID(id))
+	return &FbmCrowdFundingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for FbmCrowdFunding.
+func (c *FbmCrowdFundingClient) Delete() *FbmCrowdFundingDelete {
+	mutation := newFbmCrowdFundingMutation(c.config, OpDelete)
+	return &FbmCrowdFundingDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *FbmCrowdFundingClient) DeleteOne(fcf *FbmCrowdFunding) *FbmCrowdFundingDeleteOne {
+	return c.DeleteOneID(fcf.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *FbmCrowdFundingClient) DeleteOneID(id uint32) *FbmCrowdFundingDeleteOne {
+	builder := c.Delete().Where(fbmcrowdfunding.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &FbmCrowdFundingDeleteOne{builder}
+}
+
+// Query returns a query builder for FbmCrowdFunding.
+func (c *FbmCrowdFundingClient) Query() *FbmCrowdFundingQuery {
+	return &FbmCrowdFundingQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a FbmCrowdFunding entity by its id.
+func (c *FbmCrowdFundingClient) Get(ctx context.Context, id uint32) (*FbmCrowdFunding, error) {
+	return c.Query().Where(fbmcrowdfunding.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *FbmCrowdFundingClient) GetX(ctx context.Context, id uint32) *FbmCrowdFunding {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *FbmCrowdFundingClient) Hooks() []Hook {
+	hooks := c.hooks.FbmCrowdFunding
+	return append(hooks[:len(hooks):len(hooks)], fbmcrowdfunding.Hooks[:]...)
+}
+
+// FeeClient is a client for the Fee schema.
+type FeeClient struct {
+	config
+}
+
+// NewFeeClient returns a client for the Fee from the given config.
+func NewFeeClient(c config) *FeeClient {
+	return &FeeClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `fee.Hooks(f(g(h())))`.
+func (c *FeeClient) Use(hooks ...Hook) {
+	c.hooks.Fee = append(c.hooks.Fee, hooks...)
+}
+
+// Create returns a builder for creating a Fee entity.
+func (c *FeeClient) Create() *FeeCreate {
+	mutation := newFeeMutation(c.config, OpCreate)
+	return &FeeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Fee entities.
+func (c *FeeClient) CreateBulk(builders ...*FeeCreate) *FeeCreateBulk {
+	return &FeeCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Fee.
+func (c *FeeClient) Update() *FeeUpdate {
+	mutation := newFeeMutation(c.config, OpUpdate)
+	return &FeeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *FeeClient) UpdateOne(f *Fee) *FeeUpdateOne {
+	mutation := newFeeMutation(c.config, OpUpdateOne, withFee(f))
+	return &FeeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *FeeClient) UpdateOneID(id uint32) *FeeUpdateOne {
+	mutation := newFeeMutation(c.config, OpUpdateOne, withFeeID(id))
+	return &FeeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Fee.
+func (c *FeeClient) Delete() *FeeDelete {
+	mutation := newFeeMutation(c.config, OpDelete)
+	return &FeeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *FeeClient) DeleteOne(f *Fee) *FeeDeleteOne {
+	return c.DeleteOneID(f.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *FeeClient) DeleteOneID(id uint32) *FeeDeleteOne {
+	builder := c.Delete().Where(fee.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &FeeDeleteOne{builder}
+}
+
+// Query returns a query builder for Fee.
+func (c *FeeClient) Query() *FeeQuery {
+	return &FeeQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Fee entity by its id.
+func (c *FeeClient) Get(ctx context.Context, id uint32) (*Fee, error) {
+	return c.Query().Where(fee.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *FeeClient) GetX(ctx context.Context, id uint32) *Fee {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *FeeClient) Hooks() []Hook {
+	hooks := c.hooks.Fee
+	return append(hooks[:len(hooks):len(hooks)], fee.Hooks[:]...)
+}
+
 // GoodClient is a client for the Good schema.
 type GoodClient struct {
 	config
@@ -1073,6 +2179,188 @@ func (c *GoodClient) GetX(ctx context.Context, id uint32) *Good {
 func (c *GoodClient) Hooks() []Hook {
 	hooks := c.hooks.Good
 	return append(hooks[:len(hooks):len(hooks)], good.Hooks[:]...)
+}
+
+// GoodBaseClient is a client for the GoodBase schema.
+type GoodBaseClient struct {
+	config
+}
+
+// NewGoodBaseClient returns a client for the GoodBase from the given config.
+func NewGoodBaseClient(c config) *GoodBaseClient {
+	return &GoodBaseClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `goodbase.Hooks(f(g(h())))`.
+func (c *GoodBaseClient) Use(hooks ...Hook) {
+	c.hooks.GoodBase = append(c.hooks.GoodBase, hooks...)
+}
+
+// Create returns a builder for creating a GoodBase entity.
+func (c *GoodBaseClient) Create() *GoodBaseCreate {
+	mutation := newGoodBaseMutation(c.config, OpCreate)
+	return &GoodBaseCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of GoodBase entities.
+func (c *GoodBaseClient) CreateBulk(builders ...*GoodBaseCreate) *GoodBaseCreateBulk {
+	return &GoodBaseCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for GoodBase.
+func (c *GoodBaseClient) Update() *GoodBaseUpdate {
+	mutation := newGoodBaseMutation(c.config, OpUpdate)
+	return &GoodBaseUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GoodBaseClient) UpdateOne(gb *GoodBase) *GoodBaseUpdateOne {
+	mutation := newGoodBaseMutation(c.config, OpUpdateOne, withGoodBase(gb))
+	return &GoodBaseUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GoodBaseClient) UpdateOneID(id uint32) *GoodBaseUpdateOne {
+	mutation := newGoodBaseMutation(c.config, OpUpdateOne, withGoodBaseID(id))
+	return &GoodBaseUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for GoodBase.
+func (c *GoodBaseClient) Delete() *GoodBaseDelete {
+	mutation := newGoodBaseMutation(c.config, OpDelete)
+	return &GoodBaseDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *GoodBaseClient) DeleteOne(gb *GoodBase) *GoodBaseDeleteOne {
+	return c.DeleteOneID(gb.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *GoodBaseClient) DeleteOneID(id uint32) *GoodBaseDeleteOne {
+	builder := c.Delete().Where(goodbase.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GoodBaseDeleteOne{builder}
+}
+
+// Query returns a query builder for GoodBase.
+func (c *GoodBaseClient) Query() *GoodBaseQuery {
+	return &GoodBaseQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a GoodBase entity by its id.
+func (c *GoodBaseClient) Get(ctx context.Context, id uint32) (*GoodBase, error) {
+	return c.Query().Where(goodbase.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GoodBaseClient) GetX(ctx context.Context, id uint32) *GoodBase {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *GoodBaseClient) Hooks() []Hook {
+	hooks := c.hooks.GoodBase
+	return append(hooks[:len(hooks):len(hooks)], goodbase.Hooks[:]...)
+}
+
+// GoodCoinClient is a client for the GoodCoin schema.
+type GoodCoinClient struct {
+	config
+}
+
+// NewGoodCoinClient returns a client for the GoodCoin from the given config.
+func NewGoodCoinClient(c config) *GoodCoinClient {
+	return &GoodCoinClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `goodcoin.Hooks(f(g(h())))`.
+func (c *GoodCoinClient) Use(hooks ...Hook) {
+	c.hooks.GoodCoin = append(c.hooks.GoodCoin, hooks...)
+}
+
+// Create returns a builder for creating a GoodCoin entity.
+func (c *GoodCoinClient) Create() *GoodCoinCreate {
+	mutation := newGoodCoinMutation(c.config, OpCreate)
+	return &GoodCoinCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of GoodCoin entities.
+func (c *GoodCoinClient) CreateBulk(builders ...*GoodCoinCreate) *GoodCoinCreateBulk {
+	return &GoodCoinCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for GoodCoin.
+func (c *GoodCoinClient) Update() *GoodCoinUpdate {
+	mutation := newGoodCoinMutation(c.config, OpUpdate)
+	return &GoodCoinUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GoodCoinClient) UpdateOne(gc *GoodCoin) *GoodCoinUpdateOne {
+	mutation := newGoodCoinMutation(c.config, OpUpdateOne, withGoodCoin(gc))
+	return &GoodCoinUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GoodCoinClient) UpdateOneID(id uint32) *GoodCoinUpdateOne {
+	mutation := newGoodCoinMutation(c.config, OpUpdateOne, withGoodCoinID(id))
+	return &GoodCoinUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for GoodCoin.
+func (c *GoodCoinClient) Delete() *GoodCoinDelete {
+	mutation := newGoodCoinMutation(c.config, OpDelete)
+	return &GoodCoinDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *GoodCoinClient) DeleteOne(gc *GoodCoin) *GoodCoinDeleteOne {
+	return c.DeleteOneID(gc.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *GoodCoinClient) DeleteOneID(id uint32) *GoodCoinDeleteOne {
+	builder := c.Delete().Where(goodcoin.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GoodCoinDeleteOne{builder}
+}
+
+// Query returns a query builder for GoodCoin.
+func (c *GoodCoinClient) Query() *GoodCoinQuery {
+	return &GoodCoinQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a GoodCoin entity by its id.
+func (c *GoodCoinClient) Get(ctx context.Context, id uint32) (*GoodCoin, error) {
+	return c.Query().Where(goodcoin.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GoodCoinClient) GetX(ctx context.Context, id uint32) *GoodCoin {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *GoodCoinClient) Hooks() []Hook {
+	hooks := c.hooks.GoodCoin
+	return append(hooks[:len(hooks):len(hooks)], goodcoin.Hooks[:]...)
 }
 
 // GoodRewardClient is a client for the GoodReward schema.
@@ -1348,6 +2636,97 @@ func (c *LikeClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], like.Hooks[:]...)
 }
 
+// PowerRentalClient is a client for the PowerRental schema.
+type PowerRentalClient struct {
+	config
+}
+
+// NewPowerRentalClient returns a client for the PowerRental from the given config.
+func NewPowerRentalClient(c config) *PowerRentalClient {
+	return &PowerRentalClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `powerrental.Hooks(f(g(h())))`.
+func (c *PowerRentalClient) Use(hooks ...Hook) {
+	c.hooks.PowerRental = append(c.hooks.PowerRental, hooks...)
+}
+
+// Create returns a builder for creating a PowerRental entity.
+func (c *PowerRentalClient) Create() *PowerRentalCreate {
+	mutation := newPowerRentalMutation(c.config, OpCreate)
+	return &PowerRentalCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of PowerRental entities.
+func (c *PowerRentalClient) CreateBulk(builders ...*PowerRentalCreate) *PowerRentalCreateBulk {
+	return &PowerRentalCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for PowerRental.
+func (c *PowerRentalClient) Update() *PowerRentalUpdate {
+	mutation := newPowerRentalMutation(c.config, OpUpdate)
+	return &PowerRentalUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PowerRentalClient) UpdateOne(pr *PowerRental) *PowerRentalUpdateOne {
+	mutation := newPowerRentalMutation(c.config, OpUpdateOne, withPowerRental(pr))
+	return &PowerRentalUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PowerRentalClient) UpdateOneID(id uint32) *PowerRentalUpdateOne {
+	mutation := newPowerRentalMutation(c.config, OpUpdateOne, withPowerRentalID(id))
+	return &PowerRentalUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for PowerRental.
+func (c *PowerRentalClient) Delete() *PowerRentalDelete {
+	mutation := newPowerRentalMutation(c.config, OpDelete)
+	return &PowerRentalDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PowerRentalClient) DeleteOne(pr *PowerRental) *PowerRentalDeleteOne {
+	return c.DeleteOneID(pr.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *PowerRentalClient) DeleteOneID(id uint32) *PowerRentalDeleteOne {
+	builder := c.Delete().Where(powerrental.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PowerRentalDeleteOne{builder}
+}
+
+// Query returns a query builder for PowerRental.
+func (c *PowerRentalClient) Query() *PowerRentalQuery {
+	return &PowerRentalQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a PowerRental entity by its id.
+func (c *PowerRentalClient) Get(ctx context.Context, id uint32) (*PowerRental, error) {
+	return c.Query().Where(powerrental.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PowerRentalClient) GetX(ctx context.Context, id uint32) *PowerRental {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *PowerRentalClient) Hooks() []Hook {
+	hooks := c.hooks.PowerRental
+	return append(hooks[:len(hooks):len(hooks)], powerrental.Hooks[:]...)
+}
+
 // RecommendClient is a client for the Recommend schema.
 type RecommendClient struct {
 	config
@@ -1437,6 +2816,97 @@ func (c *RecommendClient) GetX(ctx context.Context, id uint32) *Recommend {
 func (c *RecommendClient) Hooks() []Hook {
 	hooks := c.hooks.Recommend
 	return append(hooks[:len(hooks):len(hooks)], recommend.Hooks[:]...)
+}
+
+// RequiredAppGoodClient is a client for the RequiredAppGood schema.
+type RequiredAppGoodClient struct {
+	config
+}
+
+// NewRequiredAppGoodClient returns a client for the RequiredAppGood from the given config.
+func NewRequiredAppGoodClient(c config) *RequiredAppGoodClient {
+	return &RequiredAppGoodClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `requiredappgood.Hooks(f(g(h())))`.
+func (c *RequiredAppGoodClient) Use(hooks ...Hook) {
+	c.hooks.RequiredAppGood = append(c.hooks.RequiredAppGood, hooks...)
+}
+
+// Create returns a builder for creating a RequiredAppGood entity.
+func (c *RequiredAppGoodClient) Create() *RequiredAppGoodCreate {
+	mutation := newRequiredAppGoodMutation(c.config, OpCreate)
+	return &RequiredAppGoodCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of RequiredAppGood entities.
+func (c *RequiredAppGoodClient) CreateBulk(builders ...*RequiredAppGoodCreate) *RequiredAppGoodCreateBulk {
+	return &RequiredAppGoodCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for RequiredAppGood.
+func (c *RequiredAppGoodClient) Update() *RequiredAppGoodUpdate {
+	mutation := newRequiredAppGoodMutation(c.config, OpUpdate)
+	return &RequiredAppGoodUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *RequiredAppGoodClient) UpdateOne(rag *RequiredAppGood) *RequiredAppGoodUpdateOne {
+	mutation := newRequiredAppGoodMutation(c.config, OpUpdateOne, withRequiredAppGood(rag))
+	return &RequiredAppGoodUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *RequiredAppGoodClient) UpdateOneID(id uint32) *RequiredAppGoodUpdateOne {
+	mutation := newRequiredAppGoodMutation(c.config, OpUpdateOne, withRequiredAppGoodID(id))
+	return &RequiredAppGoodUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for RequiredAppGood.
+func (c *RequiredAppGoodClient) Delete() *RequiredAppGoodDelete {
+	mutation := newRequiredAppGoodMutation(c.config, OpDelete)
+	return &RequiredAppGoodDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *RequiredAppGoodClient) DeleteOne(rag *RequiredAppGood) *RequiredAppGoodDeleteOne {
+	return c.DeleteOneID(rag.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *RequiredAppGoodClient) DeleteOneID(id uint32) *RequiredAppGoodDeleteOne {
+	builder := c.Delete().Where(requiredappgood.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &RequiredAppGoodDeleteOne{builder}
+}
+
+// Query returns a query builder for RequiredAppGood.
+func (c *RequiredAppGoodClient) Query() *RequiredAppGoodQuery {
+	return &RequiredAppGoodQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a RequiredAppGood entity by its id.
+func (c *RequiredAppGoodClient) Get(ctx context.Context, id uint32) (*RequiredAppGood, error) {
+	return c.Query().Where(requiredappgood.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *RequiredAppGoodClient) GetX(ctx context.Context, id uint32) *RequiredAppGood {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *RequiredAppGoodClient) Hooks() []Hook {
+	hooks := c.hooks.RequiredAppGood
+	return append(hooks[:len(hooks):len(hooks)], requiredappgood.Hooks[:]...)
 }
 
 // RequiredGoodClient is a client for the RequiredGood schema.

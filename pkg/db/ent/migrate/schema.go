@@ -34,6 +34,31 @@ var (
 			},
 		},
 	}
+	// AppFeesColumns holds the columns for the "app_fees" table.
+	AppFeesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "unit_value", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "min_order_duration", Type: field.TypeUint32, Nullable: true, Default: 3},
+	}
+	// AppFeesTable holds the schema information for the "app_fees" table.
+	AppFeesTable = &schema.Table{
+		Name:       "app_fees",
+		Columns:    AppFeesColumns,
+		PrimaryKey: []*schema.Column{AppFeesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appfee_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppFeesColumns[4]},
+			},
+		},
+	}
 	// AppGoodsColumns holds the columns for the "app_goods" table.
 	AppGoodsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -87,6 +112,230 @@ var (
 				Name:    "appgood_good_id_app_id_online",
 				Unique:  false,
 				Columns: []*schema.Column{AppGoodsColumns[6], AppGoodsColumns[5], AppGoodsColumns[7]},
+			},
+		},
+	}
+	// AppGoodBasesColumns holds the columns for the "app_good_bases" table.
+	AppGoodBasesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "purchasable", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "enable_product_page", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "product_page", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "online", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "visible", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "name", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "display_index", Type: field.TypeInt32, Nullable: true, Default: 0},
+		{Name: "banner", Type: field.TypeString, Nullable: true, Default: ""},
+	}
+	// AppGoodBasesTable holds the schema information for the "app_good_bases" table.
+	AppGoodBasesTable = &schema.Table{
+		Name:       "app_good_bases",
+		Columns:    AppGoodBasesColumns,
+		PrimaryKey: []*schema.Column{AppGoodBasesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appgoodbase_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppGoodBasesColumns[4]},
+			},
+			{
+				Name:    "appgoodbase_good_id_app_id",
+				Unique:  false,
+				Columns: []*schema.Column{AppGoodBasesColumns[6], AppGoodBasesColumns[5]},
+			},
+		},
+	}
+	// AppGoodDescriptionsColumns holds the columns for the "app_good_descriptions" table.
+	AppGoodDescriptionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "description", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "index", Type: field.TypeUint8, Nullable: true, Default: 0},
+	}
+	// AppGoodDescriptionsTable holds the schema information for the "app_good_descriptions" table.
+	AppGoodDescriptionsTable = &schema.Table{
+		Name:       "app_good_descriptions",
+		Columns:    AppGoodDescriptionsColumns,
+		PrimaryKey: []*schema.Column{AppGoodDescriptionsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appgooddescription_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppGoodDescriptionsColumns[4]},
+			},
+			{
+				Name:    "appgooddescription_app_good_id",
+				Unique:  false,
+				Columns: []*schema.Column{AppGoodDescriptionsColumns[5]},
+			},
+		},
+	}
+	// AppGoodDisplayColorsColumns holds the columns for the "app_good_display_colors" table.
+	AppGoodDisplayColorsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "color", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "index", Type: field.TypeUint8, Nullable: true, Default: 0},
+	}
+	// AppGoodDisplayColorsTable holds the schema information for the "app_good_display_colors" table.
+	AppGoodDisplayColorsTable = &schema.Table{
+		Name:       "app_good_display_colors",
+		Columns:    AppGoodDisplayColorsColumns,
+		PrimaryKey: []*schema.Column{AppGoodDisplayColorsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appgooddisplaycolor_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppGoodDisplayColorsColumns[4]},
+			},
+			{
+				Name:    "appgooddisplaycolor_app_good_id",
+				Unique:  false,
+				Columns: []*schema.Column{AppGoodDisplayColorsColumns[5]},
+			},
+		},
+	}
+	// AppGoodDisplayNamesColumns holds the columns for the "app_good_display_names" table.
+	AppGoodDisplayNamesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "name", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "index", Type: field.TypeUint8, Nullable: true, Default: 0},
+	}
+	// AppGoodDisplayNamesTable holds the schema information for the "app_good_display_names" table.
+	AppGoodDisplayNamesTable = &schema.Table{
+		Name:       "app_good_display_names",
+		Columns:    AppGoodDisplayNamesColumns,
+		PrimaryKey: []*schema.Column{AppGoodDisplayNamesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appgooddisplayname_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppGoodDisplayNamesColumns[4]},
+			},
+			{
+				Name:    "appgooddisplayname_app_good_id",
+				Unique:  false,
+				Columns: []*schema.Column{AppGoodDisplayNamesColumns[5]},
+			},
+		},
+	}
+	// AppGoodPostersColumns holds the columns for the "app_good_posters" table.
+	AppGoodPostersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "poster", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "index", Type: field.TypeUint8, Nullable: true, Default: 0},
+	}
+	// AppGoodPostersTable holds the schema information for the "app_good_posters" table.
+	AppGoodPostersTable = &schema.Table{
+		Name:       "app_good_posters",
+		Columns:    AppGoodPostersColumns,
+		PrimaryKey: []*schema.Column{AppGoodPostersColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appgoodposter_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppGoodPostersColumns[4]},
+			},
+			{
+				Name:    "appgoodposter_app_good_id",
+				Unique:  false,
+				Columns: []*schema.Column{AppGoodPostersColumns[5]},
+			},
+		},
+	}
+	// AppLegacyPowerRentalsColumns holds the columns for the "app_legacy_power_rentals" table.
+	AppLegacyPowerRentalsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "technique_fee_ratio", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+	}
+	// AppLegacyPowerRentalsTable holds the schema information for the "app_legacy_power_rentals" table.
+	AppLegacyPowerRentalsTable = &schema.Table{
+		Name:       "app_legacy_power_rentals",
+		Columns:    AppLegacyPowerRentalsColumns,
+		PrimaryKey: []*schema.Column{AppLegacyPowerRentalsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "applegacypowerrental_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppLegacyPowerRentalsColumns[4]},
+			},
+			{
+				Name:    "applegacypowerrental_good_id_app_id",
+				Unique:  false,
+				Columns: []*schema.Column{AppLegacyPowerRentalsColumns[6], AppLegacyPowerRentalsColumns[5]},
+			},
+		},
+	}
+	// AppPowerRentalsColumns holds the columns for the "app_power_rentals" table.
+	AppPowerRentalsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "service_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "cancel_mode", Type: field.TypeString, Nullable: true, Default: "Uncancellable"},
+		{Name: "cancelable_before_start_seconds", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "enable_set_commission", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "min_order_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "max_order_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "max_user_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "min_order_duration", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "max_order_duration", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "unit_price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "package_price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "sale_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "sale_end_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "package_with_requireds", Type: field.TypeBool, Nullable: true, Default: true},
+		{Name: "sale_mode", Type: field.TypeString, Nullable: true, Default: "GoodSaleModeMainnetSpot"},
+	}
+	// AppPowerRentalsTable holds the schema information for the "app_power_rentals" table.
+	AppPowerRentalsTable = &schema.Table{
+		Name:       "app_power_rentals",
+		Columns:    AppPowerRentalsColumns,
+		PrimaryKey: []*schema.Column{AppPowerRentalsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "apppowerrental_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppPowerRentalsColumns[4]},
+			},
+			{
+				Name:    "apppowerrental_good_id_app_id",
+				Unique:  false,
+				Columns: []*schema.Column{AppPowerRentalsColumns[6], AppPowerRentalsColumns[5]},
 			},
 		},
 	}
@@ -212,6 +461,32 @@ var (
 			},
 		},
 	}
+	// DelegatedStakingsColumns holds the columns for the "delegated_stakings" table.
+	DelegatedStakingsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "no_stake_redeem_delay_hours", Type: field.TypeUint32, Nullable: true, Default: 8},
+		{Name: "max_redeem_delay_hours", Type: field.TypeUint32, Nullable: true, Default: 96},
+		{Name: "contract_address", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "no_stake_benefit_delay_hours", Type: field.TypeUint32, Nullable: true, Default: 24},
+	}
+	// DelegatedStakingsTable holds the schema information for the "delegated_stakings" table.
+	DelegatedStakingsTable = &schema.Table{
+		Name:       "delegated_stakings",
+		Columns:    DelegatedStakingsColumns,
+		PrimaryKey: []*schema.Column{DelegatedStakingsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "delegatedstaking_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{DelegatedStakingsColumns[4]},
+			},
+		},
+	}
 	// DeviceInfosColumns holds the columns for the "device_infos" table.
 	DeviceInfosColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -273,6 +548,63 @@ var (
 			},
 		},
 	}
+	// FbmCrowdFundingsColumns holds the columns for the "fbm_crowd_fundings" table.
+	FbmCrowdFundingsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "min_deposit_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "delivery_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "target_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "deposit_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "deposit_end_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "contract_address", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "deposit_coin_type_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "redeemable", Type: field.TypeBool, Nullable: true, Default: true},
+		{Name: "redeem_delay_hours", Type: field.TypeUint32, Nullable: true, Default: 8},
+		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
+	}
+	// FbmCrowdFundingsTable holds the schema information for the "fbm_crowd_fundings" table.
+	FbmCrowdFundingsTable = &schema.Table{
+		Name:       "fbm_crowd_fundings",
+		Columns:    FbmCrowdFundingsColumns,
+		PrimaryKey: []*schema.Column{FbmCrowdFundingsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "fbmcrowdfunding_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{FbmCrowdFundingsColumns[4]},
+			},
+		},
+	}
+	// FeesColumns holds the columns for the "fees" table.
+	FeesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "settlement_type", Type: field.TypeString, Nullable: true, Default: "GoodSettledByCash"},
+		{Name: "unit_value", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
+	}
+	// FeesTable holds the schema information for the "fees" table.
+	FeesTable = &schema.Table{
+		Name:       "fees",
+		Columns:    FeesColumns,
+		PrimaryKey: []*schema.Column{FeesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "fee_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{FeesColumns[4]},
+			},
+		},
+	}
 	// GoodsColumns holds the columns for the "goods" table.
 	GoodsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -314,6 +646,60 @@ var (
 				Name:    "good_ent_id",
 				Unique:  true,
 				Columns: []*schema.Column{GoodsColumns[4]},
+			},
+		},
+	}
+	// GoodBasesColumns holds the columns for the "good_bases" table.
+	GoodBasesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "good_type", Type: field.TypeString, Nullable: true, Default: "DefaultGoodType"},
+		{Name: "benefit_type", Type: field.TypeString, Nullable: true, Default: "DefaultBenefitType"},
+		{Name: "name", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "service_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "start_mode", Type: field.TypeString, Nullable: true, Default: "GoodStartModeNextDay"},
+		{Name: "test_only", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "benefit_interval_hours", Type: field.TypeUint32, Nullable: true, Default: 24},
+		{Name: "purchasable", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "online", Type: field.TypeBool, Nullable: true, Default: false},
+	}
+	// GoodBasesTable holds the schema information for the "good_bases" table.
+	GoodBasesTable = &schema.Table{
+		Name:       "good_bases",
+		Columns:    GoodBasesColumns,
+		PrimaryKey: []*schema.Column{GoodBasesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "goodbase_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{GoodBasesColumns[4]},
+			},
+		},
+	}
+	// GoodCoinsColumns holds the columns for the "good_coins" table.
+	GoodCoinsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "coin_type_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "main", Type: field.TypeBool, Nullable: true, Default: true},
+	}
+	// GoodCoinsTable holds the schema information for the "good_coins" table.
+	GoodCoinsTable = &schema.Table{
+		Name:       "good_coins",
+		Columns:    GoodCoinsColumns,
+		PrimaryKey: []*schema.Column{GoodCoinsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "goodcoin_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{GoodCoinsColumns[4]},
 			},
 		},
 	}
@@ -399,6 +785,36 @@ var (
 			},
 		},
 	}
+	// PowerRentalsColumns holds the columns for the "power_rentals" table.
+	PowerRentalsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "device_type_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "vendor_location_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "unit_price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "quantity_unit", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "quantity_unit_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "delivery_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "unit_lock_deposit", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
+	}
+	// PowerRentalsTable holds the schema information for the "power_rentals" table.
+	PowerRentalsTable = &schema.Table{
+		Name:       "power_rentals",
+		Columns:    PowerRentalsColumns,
+		PrimaryKey: []*schema.Column{PowerRentalsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "powerrental_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{PowerRentalsColumns[4]},
+			},
+		},
+	}
 	// RecommendsColumns holds the columns for the "recommends" table.
 	RecommendsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -427,6 +843,35 @@ var (
 				Name:    "recommend_app_id_good_id",
 				Unique:  false,
 				Columns: []*schema.Column{RecommendsColumns[5], RecommendsColumns[6]},
+			},
+		},
+	}
+	// RequiredAppGoodsColumns holds the columns for the "required_app_goods" table.
+	RequiredAppGoodsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "main_app_good_id", Type: field.TypeUUID},
+		{Name: "required_app_good_id", Type: field.TypeUUID},
+		{Name: "must", Type: field.TypeBool, Nullable: true, Default: false},
+	}
+	// RequiredAppGoodsTable holds the schema information for the "required_app_goods" table.
+	RequiredAppGoodsTable = &schema.Table{
+		Name:       "required_app_goods",
+		Columns:    RequiredAppGoodsColumns,
+		PrimaryKey: []*schema.Column{RequiredAppGoodsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "requiredappgood_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{RequiredAppGoodsColumns[4]},
+			},
+			{
+				Name:    "requiredappgood_main_app_good_id_required_app_good_id",
+				Unique:  false,
+				Columns: []*schema.Column{RequiredAppGoodsColumns[5], RequiredAppGoodsColumns[6]},
 			},
 		},
 	}
@@ -629,18 +1074,33 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AppDefaultGoodsTable,
+		AppFeesTable,
 		AppGoodsTable,
+		AppGoodBasesTable,
+		AppGoodDescriptionsTable,
+		AppGoodDisplayColorsTable,
+		AppGoodDisplayNamesTable,
+		AppGoodPostersTable,
+		AppLegacyPowerRentalsTable,
+		AppPowerRentalsTable,
 		AppSimulateGoodsTable,
 		AppStocksTable,
 		AppStockLocksTable,
 		CommentsTable,
+		DelegatedStakingsTable,
 		DeviceInfosTable,
 		ExtraInfosTable,
+		FbmCrowdFundingsTable,
+		FeesTable,
 		GoodsTable,
+		GoodBasesTable,
+		GoodCoinsTable,
 		GoodRewardsTable,
 		GoodRewardHistoriesTable,
 		LikesTable,
+		PowerRentalsTable,
 		RecommendsTable,
+		RequiredAppGoodsTable,
 		RequiredGoodsTable,
 		ScoresTable,
 		StocksV1Table,

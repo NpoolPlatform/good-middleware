@@ -16,8 +16,24 @@ type Tx struct {
 	config
 	// AppDefaultGood is the client for interacting with the AppDefaultGood builders.
 	AppDefaultGood *AppDefaultGoodClient
+	// AppFee is the client for interacting with the AppFee builders.
+	AppFee *AppFeeClient
 	// AppGood is the client for interacting with the AppGood builders.
 	AppGood *AppGoodClient
+	// AppGoodBase is the client for interacting with the AppGoodBase builders.
+	AppGoodBase *AppGoodBaseClient
+	// AppGoodDescription is the client for interacting with the AppGoodDescription builders.
+	AppGoodDescription *AppGoodDescriptionClient
+	// AppGoodDisplayColor is the client for interacting with the AppGoodDisplayColor builders.
+	AppGoodDisplayColor *AppGoodDisplayColorClient
+	// AppGoodDisplayName is the client for interacting with the AppGoodDisplayName builders.
+	AppGoodDisplayName *AppGoodDisplayNameClient
+	// AppGoodPoster is the client for interacting with the AppGoodPoster builders.
+	AppGoodPoster *AppGoodPosterClient
+	// AppLegacyPowerRental is the client for interacting with the AppLegacyPowerRental builders.
+	AppLegacyPowerRental *AppLegacyPowerRentalClient
+	// AppPowerRental is the client for interacting with the AppPowerRental builders.
+	AppPowerRental *AppPowerRentalClient
 	// AppSimulateGood is the client for interacting with the AppSimulateGood builders.
 	AppSimulateGood *AppSimulateGoodClient
 	// AppStock is the client for interacting with the AppStock builders.
@@ -26,20 +42,34 @@ type Tx struct {
 	AppStockLock *AppStockLockClient
 	// Comment is the client for interacting with the Comment builders.
 	Comment *CommentClient
+	// DelegatedStaking is the client for interacting with the DelegatedStaking builders.
+	DelegatedStaking *DelegatedStakingClient
 	// DeviceInfo is the client for interacting with the DeviceInfo builders.
 	DeviceInfo *DeviceInfoClient
 	// ExtraInfo is the client for interacting with the ExtraInfo builders.
 	ExtraInfo *ExtraInfoClient
+	// FbmCrowdFunding is the client for interacting with the FbmCrowdFunding builders.
+	FbmCrowdFunding *FbmCrowdFundingClient
+	// Fee is the client for interacting with the Fee builders.
+	Fee *FeeClient
 	// Good is the client for interacting with the Good builders.
 	Good *GoodClient
+	// GoodBase is the client for interacting with the GoodBase builders.
+	GoodBase *GoodBaseClient
+	// GoodCoin is the client for interacting with the GoodCoin builders.
+	GoodCoin *GoodCoinClient
 	// GoodReward is the client for interacting with the GoodReward builders.
 	GoodReward *GoodRewardClient
 	// GoodRewardHistory is the client for interacting with the GoodRewardHistory builders.
 	GoodRewardHistory *GoodRewardHistoryClient
 	// Like is the client for interacting with the Like builders.
 	Like *LikeClient
+	// PowerRental is the client for interacting with the PowerRental builders.
+	PowerRental *PowerRentalClient
 	// Recommend is the client for interacting with the Recommend builders.
 	Recommend *RecommendClient
+	// RequiredAppGood is the client for interacting with the RequiredAppGood builders.
+	RequiredAppGood *RequiredAppGoodClient
 	// RequiredGood is the client for interacting with the RequiredGood builders.
 	RequiredGood *RequiredGoodClient
 	// Score is the client for interacting with the Score builders.
@@ -190,18 +220,33 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.AppDefaultGood = NewAppDefaultGoodClient(tx.config)
+	tx.AppFee = NewAppFeeClient(tx.config)
 	tx.AppGood = NewAppGoodClient(tx.config)
+	tx.AppGoodBase = NewAppGoodBaseClient(tx.config)
+	tx.AppGoodDescription = NewAppGoodDescriptionClient(tx.config)
+	tx.AppGoodDisplayColor = NewAppGoodDisplayColorClient(tx.config)
+	tx.AppGoodDisplayName = NewAppGoodDisplayNameClient(tx.config)
+	tx.AppGoodPoster = NewAppGoodPosterClient(tx.config)
+	tx.AppLegacyPowerRental = NewAppLegacyPowerRentalClient(tx.config)
+	tx.AppPowerRental = NewAppPowerRentalClient(tx.config)
 	tx.AppSimulateGood = NewAppSimulateGoodClient(tx.config)
 	tx.AppStock = NewAppStockClient(tx.config)
 	tx.AppStockLock = NewAppStockLockClient(tx.config)
 	tx.Comment = NewCommentClient(tx.config)
+	tx.DelegatedStaking = NewDelegatedStakingClient(tx.config)
 	tx.DeviceInfo = NewDeviceInfoClient(tx.config)
 	tx.ExtraInfo = NewExtraInfoClient(tx.config)
+	tx.FbmCrowdFunding = NewFbmCrowdFundingClient(tx.config)
+	tx.Fee = NewFeeClient(tx.config)
 	tx.Good = NewGoodClient(tx.config)
+	tx.GoodBase = NewGoodBaseClient(tx.config)
+	tx.GoodCoin = NewGoodCoinClient(tx.config)
 	tx.GoodReward = NewGoodRewardClient(tx.config)
 	tx.GoodRewardHistory = NewGoodRewardHistoryClient(tx.config)
 	tx.Like = NewLikeClient(tx.config)
+	tx.PowerRental = NewPowerRentalClient(tx.config)
 	tx.Recommend = NewRecommendClient(tx.config)
+	tx.RequiredAppGood = NewRequiredAppGoodClient(tx.config)
 	tx.RequiredGood = NewRequiredGoodClient(tx.config)
 	tx.Score = NewScoreClient(tx.config)
 	tx.Stock = NewStockClient(tx.config)

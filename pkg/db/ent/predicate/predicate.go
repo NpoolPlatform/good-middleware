@@ -9,8 +9,32 @@ import (
 // AppDefaultGood is the predicate function for appdefaultgood builders.
 type AppDefaultGood func(*sql.Selector)
 
+// AppFee is the predicate function for appfee builders.
+type AppFee func(*sql.Selector)
+
 // AppGood is the predicate function for appgood builders.
 type AppGood func(*sql.Selector)
+
+// AppGoodBase is the predicate function for appgoodbase builders.
+type AppGoodBase func(*sql.Selector)
+
+// AppGoodDescription is the predicate function for appgooddescription builders.
+type AppGoodDescription func(*sql.Selector)
+
+// AppGoodDisplayColor is the predicate function for appgooddisplaycolor builders.
+type AppGoodDisplayColor func(*sql.Selector)
+
+// AppGoodDisplayName is the predicate function for appgooddisplayname builders.
+type AppGoodDisplayName func(*sql.Selector)
+
+// AppGoodPoster is the predicate function for appgoodposter builders.
+type AppGoodPoster func(*sql.Selector)
+
+// AppLegacyPowerRental is the predicate function for applegacypowerrental builders.
+type AppLegacyPowerRental func(*sql.Selector)
+
+// AppPowerRental is the predicate function for apppowerrental builders.
+type AppPowerRental func(*sql.Selector)
 
 // AppSimulateGood is the predicate function for appsimulategood builders.
 type AppSimulateGood func(*sql.Selector)
@@ -24,14 +48,29 @@ type AppStockLock func(*sql.Selector)
 // Comment is the predicate function for comment builders.
 type Comment func(*sql.Selector)
 
+// DelegatedStaking is the predicate function for delegatedstaking builders.
+type DelegatedStaking func(*sql.Selector)
+
 // DeviceInfo is the predicate function for deviceinfo builders.
 type DeviceInfo func(*sql.Selector)
 
 // ExtraInfo is the predicate function for extrainfo builders.
 type ExtraInfo func(*sql.Selector)
 
+// FbmCrowdFunding is the predicate function for fbmcrowdfunding builders.
+type FbmCrowdFunding func(*sql.Selector)
+
+// Fee is the predicate function for fee builders.
+type Fee func(*sql.Selector)
+
 // Good is the predicate function for good builders.
 type Good func(*sql.Selector)
+
+// GoodBase is the predicate function for goodbase builders.
+type GoodBase func(*sql.Selector)
+
+// GoodCoin is the predicate function for goodcoin builders.
+type GoodCoin func(*sql.Selector)
 
 // GoodReward is the predicate function for goodreward builders.
 type GoodReward func(*sql.Selector)
@@ -42,8 +81,14 @@ type GoodRewardHistory func(*sql.Selector)
 // Like is the predicate function for like builders.
 type Like func(*sql.Selector)
 
+// PowerRental is the predicate function for powerrental builders.
+type PowerRental func(*sql.Selector)
+
 // Recommend is the predicate function for recommend builders.
 type Recommend func(*sql.Selector)
+
+// RequiredAppGood is the predicate function for requiredappgood builders.
+type RequiredAppGood func(*sql.Selector)
 
 // RequiredGood is the predicate function for requiredgood builders.
 type RequiredGood func(*sql.Selector)

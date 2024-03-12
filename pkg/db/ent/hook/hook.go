@@ -22,6 +22,19 @@ func (f AppDefaultGoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Val
 	return f(ctx, mv)
 }
 
+// The AppFeeFunc type is an adapter to allow the use of ordinary
+// function as AppFee mutator.
+type AppFeeFunc func(context.Context, *ent.AppFeeMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppFeeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppFeeMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppFeeMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The AppGoodFunc type is an adapter to allow the use of ordinary
 // function as AppGood mutator.
 type AppGoodFunc func(context.Context, *ent.AppGoodMutation) (ent.Value, error)
@@ -31,6 +44,97 @@ func (f AppGoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	mv, ok := m.(*ent.AppGoodMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppGoodMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The AppGoodBaseFunc type is an adapter to allow the use of ordinary
+// function as AppGoodBase mutator.
+type AppGoodBaseFunc func(context.Context, *ent.AppGoodBaseMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppGoodBaseFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppGoodBaseMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppGoodBaseMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The AppGoodDescriptionFunc type is an adapter to allow the use of ordinary
+// function as AppGoodDescription mutator.
+type AppGoodDescriptionFunc func(context.Context, *ent.AppGoodDescriptionMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppGoodDescriptionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppGoodDescriptionMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppGoodDescriptionMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The AppGoodDisplayColorFunc type is an adapter to allow the use of ordinary
+// function as AppGoodDisplayColor mutator.
+type AppGoodDisplayColorFunc func(context.Context, *ent.AppGoodDisplayColorMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppGoodDisplayColorFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppGoodDisplayColorMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppGoodDisplayColorMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The AppGoodDisplayNameFunc type is an adapter to allow the use of ordinary
+// function as AppGoodDisplayName mutator.
+type AppGoodDisplayNameFunc func(context.Context, *ent.AppGoodDisplayNameMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppGoodDisplayNameFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppGoodDisplayNameMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppGoodDisplayNameMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The AppGoodPosterFunc type is an adapter to allow the use of ordinary
+// function as AppGoodPoster mutator.
+type AppGoodPosterFunc func(context.Context, *ent.AppGoodPosterMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppGoodPosterFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppGoodPosterMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppGoodPosterMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The AppLegacyPowerRentalFunc type is an adapter to allow the use of ordinary
+// function as AppLegacyPowerRental mutator.
+type AppLegacyPowerRentalFunc func(context.Context, *ent.AppLegacyPowerRentalMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppLegacyPowerRentalFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppLegacyPowerRentalMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppLegacyPowerRentalMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The AppPowerRentalFunc type is an adapter to allow the use of ordinary
+// function as AppPowerRental mutator.
+type AppPowerRentalFunc func(context.Context, *ent.AppPowerRentalMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppPowerRentalFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppPowerRentalMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppPowerRentalMutation", m)
 	}
 	return f(ctx, mv)
 }
@@ -87,6 +191,19 @@ func (f CommentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	return f(ctx, mv)
 }
 
+// The DelegatedStakingFunc type is an adapter to allow the use of ordinary
+// function as DelegatedStaking mutator.
+type DelegatedStakingFunc func(context.Context, *ent.DelegatedStakingMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f DelegatedStakingFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.DelegatedStakingMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DelegatedStakingMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The DeviceInfoFunc type is an adapter to allow the use of ordinary
 // function as DeviceInfo mutator.
 type DeviceInfoFunc func(context.Context, *ent.DeviceInfoMutation) (ent.Value, error)
@@ -113,6 +230,32 @@ func (f ExtraInfoFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, e
 	return f(ctx, mv)
 }
 
+// The FbmCrowdFundingFunc type is an adapter to allow the use of ordinary
+// function as FbmCrowdFunding mutator.
+type FbmCrowdFundingFunc func(context.Context, *ent.FbmCrowdFundingMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f FbmCrowdFundingFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.FbmCrowdFundingMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FbmCrowdFundingMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The FeeFunc type is an adapter to allow the use of ordinary
+// function as Fee mutator.
+type FeeFunc func(context.Context, *ent.FeeMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f FeeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.FeeMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FeeMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The GoodFunc type is an adapter to allow the use of ordinary
 // function as Good mutator.
 type GoodFunc func(context.Context, *ent.GoodMutation) (ent.Value, error)
@@ -122,6 +265,32 @@ func (f GoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	mv, ok := m.(*ent.GoodMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GoodMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The GoodBaseFunc type is an adapter to allow the use of ordinary
+// function as GoodBase mutator.
+type GoodBaseFunc func(context.Context, *ent.GoodBaseMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f GoodBaseFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.GoodBaseMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GoodBaseMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The GoodCoinFunc type is an adapter to allow the use of ordinary
+// function as GoodCoin mutator.
+type GoodCoinFunc func(context.Context, *ent.GoodCoinMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f GoodCoinFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.GoodCoinMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GoodCoinMutation", m)
 	}
 	return f(ctx, mv)
 }
@@ -165,6 +334,19 @@ func (f LikeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	return f(ctx, mv)
 }
 
+// The PowerRentalFunc type is an adapter to allow the use of ordinary
+// function as PowerRental mutator.
+type PowerRentalFunc func(context.Context, *ent.PowerRentalMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f PowerRentalFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.PowerRentalMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PowerRentalMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The RecommendFunc type is an adapter to allow the use of ordinary
 // function as Recommend mutator.
 type RecommendFunc func(context.Context, *ent.RecommendMutation) (ent.Value, error)
@@ -174,6 +356,19 @@ func (f RecommendFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, e
 	mv, ok := m.(*ent.RecommendMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RecommendMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The RequiredAppGoodFunc type is an adapter to allow the use of ordinary
+// function as RequiredAppGood mutator.
+type RequiredAppGoodFunc func(context.Context, *ent.RequiredAppGoodMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f RequiredAppGoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.RequiredAppGoodMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RequiredAppGoodMutation", m)
 	}
 	return f(ctx, mv)
 }

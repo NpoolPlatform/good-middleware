@@ -4,18 +4,33 @@ package ent
 
 import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appfee"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddescription"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplaycolor"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplayname"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/delegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fbmcrowdfunding"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fee"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredappgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
@@ -32,7 +47,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 20)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 35)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   appdefaultgood.Table,
@@ -55,6 +70,27 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 	}
 	graph.Nodes[1] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   appfee.Table,
+			Columns: appfee.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: appfee.FieldID,
+			},
+		},
+		Type: "AppFee",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			appfee.FieldCreatedAt:        {Type: field.TypeUint32, Column: appfee.FieldCreatedAt},
+			appfee.FieldUpdatedAt:        {Type: field.TypeUint32, Column: appfee.FieldUpdatedAt},
+			appfee.FieldDeletedAt:        {Type: field.TypeUint32, Column: appfee.FieldDeletedAt},
+			appfee.FieldEntID:            {Type: field.TypeUUID, Column: appfee.FieldEntID},
+			appfee.FieldAppID:            {Type: field.TypeUUID, Column: appfee.FieldAppID},
+			appfee.FieldGoodID:           {Type: field.TypeUUID, Column: appfee.FieldGoodID},
+			appfee.FieldUnitValue:        {Type: field.TypeOther, Column: appfee.FieldUnitValue},
+			appfee.FieldMinOrderDuration: {Type: field.TypeUint32, Column: appfee.FieldMinOrderDuration},
+		},
+	}
+	graph.Nodes[2] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   appgood.Table,
 			Columns: appgood.Columns,
@@ -101,7 +137,168 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appgood.FieldPackageWithRequireds:   {Type: field.TypeBool, Column: appgood.FieldPackageWithRequireds},
 		},
 	}
-	graph.Nodes[2] = &sqlgraph.Node{
+	graph.Nodes[3] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   appgoodbase.Table,
+			Columns: appgoodbase.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: appgoodbase.FieldID,
+			},
+		},
+		Type: "AppGoodBase",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			appgoodbase.FieldCreatedAt:         {Type: field.TypeUint32, Column: appgoodbase.FieldCreatedAt},
+			appgoodbase.FieldUpdatedAt:         {Type: field.TypeUint32, Column: appgoodbase.FieldUpdatedAt},
+			appgoodbase.FieldDeletedAt:         {Type: field.TypeUint32, Column: appgoodbase.FieldDeletedAt},
+			appgoodbase.FieldEntID:             {Type: field.TypeUUID, Column: appgoodbase.FieldEntID},
+			appgoodbase.FieldAppID:             {Type: field.TypeUUID, Column: appgoodbase.FieldAppID},
+			appgoodbase.FieldGoodID:            {Type: field.TypeUUID, Column: appgoodbase.FieldGoodID},
+			appgoodbase.FieldPurchasable:       {Type: field.TypeBool, Column: appgoodbase.FieldPurchasable},
+			appgoodbase.FieldEnableProductPage: {Type: field.TypeBool, Column: appgoodbase.FieldEnableProductPage},
+			appgoodbase.FieldProductPage:       {Type: field.TypeString, Column: appgoodbase.FieldProductPage},
+			appgoodbase.FieldOnline:            {Type: field.TypeBool, Column: appgoodbase.FieldOnline},
+			appgoodbase.FieldVisible:           {Type: field.TypeBool, Column: appgoodbase.FieldVisible},
+			appgoodbase.FieldName:              {Type: field.TypeString, Column: appgoodbase.FieldName},
+			appgoodbase.FieldDisplayIndex:      {Type: field.TypeInt32, Column: appgoodbase.FieldDisplayIndex},
+			appgoodbase.FieldBanner:            {Type: field.TypeString, Column: appgoodbase.FieldBanner},
+		},
+	}
+	graph.Nodes[4] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   appgooddescription.Table,
+			Columns: appgooddescription.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: appgooddescription.FieldID,
+			},
+		},
+		Type: "AppGoodDescription",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			appgooddescription.FieldCreatedAt:   {Type: field.TypeUint32, Column: appgooddescription.FieldCreatedAt},
+			appgooddescription.FieldUpdatedAt:   {Type: field.TypeUint32, Column: appgooddescription.FieldUpdatedAt},
+			appgooddescription.FieldDeletedAt:   {Type: field.TypeUint32, Column: appgooddescription.FieldDeletedAt},
+			appgooddescription.FieldEntID:       {Type: field.TypeUUID, Column: appgooddescription.FieldEntID},
+			appgooddescription.FieldAppGoodID:   {Type: field.TypeUUID, Column: appgooddescription.FieldAppGoodID},
+			appgooddescription.FieldDescription: {Type: field.TypeString, Column: appgooddescription.FieldDescription},
+			appgooddescription.FieldIndex:       {Type: field.TypeUint8, Column: appgooddescription.FieldIndex},
+		},
+	}
+	graph.Nodes[5] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   appgooddisplaycolor.Table,
+			Columns: appgooddisplaycolor.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: appgooddisplaycolor.FieldID,
+			},
+		},
+		Type: "AppGoodDisplayColor",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			appgooddisplaycolor.FieldCreatedAt: {Type: field.TypeUint32, Column: appgooddisplaycolor.FieldCreatedAt},
+			appgooddisplaycolor.FieldUpdatedAt: {Type: field.TypeUint32, Column: appgooddisplaycolor.FieldUpdatedAt},
+			appgooddisplaycolor.FieldDeletedAt: {Type: field.TypeUint32, Column: appgooddisplaycolor.FieldDeletedAt},
+			appgooddisplaycolor.FieldEntID:     {Type: field.TypeUUID, Column: appgooddisplaycolor.FieldEntID},
+			appgooddisplaycolor.FieldAppGoodID: {Type: field.TypeUUID, Column: appgooddisplaycolor.FieldAppGoodID},
+			appgooddisplaycolor.FieldColor:     {Type: field.TypeString, Column: appgooddisplaycolor.FieldColor},
+			appgooddisplaycolor.FieldIndex:     {Type: field.TypeUint8, Column: appgooddisplaycolor.FieldIndex},
+		},
+	}
+	graph.Nodes[6] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   appgooddisplayname.Table,
+			Columns: appgooddisplayname.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: appgooddisplayname.FieldID,
+			},
+		},
+		Type: "AppGoodDisplayName",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			appgooddisplayname.FieldCreatedAt: {Type: field.TypeUint32, Column: appgooddisplayname.FieldCreatedAt},
+			appgooddisplayname.FieldUpdatedAt: {Type: field.TypeUint32, Column: appgooddisplayname.FieldUpdatedAt},
+			appgooddisplayname.FieldDeletedAt: {Type: field.TypeUint32, Column: appgooddisplayname.FieldDeletedAt},
+			appgooddisplayname.FieldEntID:     {Type: field.TypeUUID, Column: appgooddisplayname.FieldEntID},
+			appgooddisplayname.FieldAppGoodID: {Type: field.TypeUUID, Column: appgooddisplayname.FieldAppGoodID},
+			appgooddisplayname.FieldName:      {Type: field.TypeString, Column: appgooddisplayname.FieldName},
+			appgooddisplayname.FieldIndex:     {Type: field.TypeUint8, Column: appgooddisplayname.FieldIndex},
+		},
+	}
+	graph.Nodes[7] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   appgoodposter.Table,
+			Columns: appgoodposter.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: appgoodposter.FieldID,
+			},
+		},
+		Type: "AppGoodPoster",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			appgoodposter.FieldCreatedAt: {Type: field.TypeUint32, Column: appgoodposter.FieldCreatedAt},
+			appgoodposter.FieldUpdatedAt: {Type: field.TypeUint32, Column: appgoodposter.FieldUpdatedAt},
+			appgoodposter.FieldDeletedAt: {Type: field.TypeUint32, Column: appgoodposter.FieldDeletedAt},
+			appgoodposter.FieldEntID:     {Type: field.TypeUUID, Column: appgoodposter.FieldEntID},
+			appgoodposter.FieldAppGoodID: {Type: field.TypeUUID, Column: appgoodposter.FieldAppGoodID},
+			appgoodposter.FieldPoster:    {Type: field.TypeString, Column: appgoodposter.FieldPoster},
+			appgoodposter.FieldIndex:     {Type: field.TypeUint8, Column: appgoodposter.FieldIndex},
+		},
+	}
+	graph.Nodes[8] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   applegacypowerrental.Table,
+			Columns: applegacypowerrental.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: applegacypowerrental.FieldID,
+			},
+		},
+		Type: "AppLegacyPowerRental",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			applegacypowerrental.FieldCreatedAt:         {Type: field.TypeUint32, Column: applegacypowerrental.FieldCreatedAt},
+			applegacypowerrental.FieldUpdatedAt:         {Type: field.TypeUint32, Column: applegacypowerrental.FieldUpdatedAt},
+			applegacypowerrental.FieldDeletedAt:         {Type: field.TypeUint32, Column: applegacypowerrental.FieldDeletedAt},
+			applegacypowerrental.FieldEntID:             {Type: field.TypeUUID, Column: applegacypowerrental.FieldEntID},
+			applegacypowerrental.FieldAppID:             {Type: field.TypeUUID, Column: applegacypowerrental.FieldAppID},
+			applegacypowerrental.FieldGoodID:            {Type: field.TypeUUID, Column: applegacypowerrental.FieldGoodID},
+			applegacypowerrental.FieldTechniqueFeeRatio: {Type: field.TypeOther, Column: applegacypowerrental.FieldTechniqueFeeRatio},
+		},
+	}
+	graph.Nodes[9] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   apppowerrental.Table,
+			Columns: apppowerrental.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: apppowerrental.FieldID,
+			},
+		},
+		Type: "AppPowerRental",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			apppowerrental.FieldCreatedAt:                    {Type: field.TypeUint32, Column: apppowerrental.FieldCreatedAt},
+			apppowerrental.FieldUpdatedAt:                    {Type: field.TypeUint32, Column: apppowerrental.FieldUpdatedAt},
+			apppowerrental.FieldDeletedAt:                    {Type: field.TypeUint32, Column: apppowerrental.FieldDeletedAt},
+			apppowerrental.FieldEntID:                        {Type: field.TypeUUID, Column: apppowerrental.FieldEntID},
+			apppowerrental.FieldAppID:                        {Type: field.TypeUUID, Column: apppowerrental.FieldAppID},
+			apppowerrental.FieldGoodID:                       {Type: field.TypeUUID, Column: apppowerrental.FieldGoodID},
+			apppowerrental.FieldServiceStartAt:               {Type: field.TypeUint32, Column: apppowerrental.FieldServiceStartAt},
+			apppowerrental.FieldCancelMode:                   {Type: field.TypeString, Column: apppowerrental.FieldCancelMode},
+			apppowerrental.FieldCancelableBeforeStartSeconds: {Type: field.TypeUint32, Column: apppowerrental.FieldCancelableBeforeStartSeconds},
+			apppowerrental.FieldEnableSetCommission:          {Type: field.TypeBool, Column: apppowerrental.FieldEnableSetCommission},
+			apppowerrental.FieldMinOrderAmount:               {Type: field.TypeOther, Column: apppowerrental.FieldMinOrderAmount},
+			apppowerrental.FieldMaxOrderAmount:               {Type: field.TypeOther, Column: apppowerrental.FieldMaxOrderAmount},
+			apppowerrental.FieldMaxUserAmount:                {Type: field.TypeOther, Column: apppowerrental.FieldMaxUserAmount},
+			apppowerrental.FieldMinOrderDuration:             {Type: field.TypeUint32, Column: apppowerrental.FieldMinOrderDuration},
+			apppowerrental.FieldMaxOrderDuration:             {Type: field.TypeUint32, Column: apppowerrental.FieldMaxOrderDuration},
+			apppowerrental.FieldUnitPrice:                    {Type: field.TypeOther, Column: apppowerrental.FieldUnitPrice},
+			apppowerrental.FieldPackagePrice:                 {Type: field.TypeOther, Column: apppowerrental.FieldPackagePrice},
+			apppowerrental.FieldSaleStartAt:                  {Type: field.TypeUint32, Column: apppowerrental.FieldSaleStartAt},
+			apppowerrental.FieldSaleEndAt:                    {Type: field.TypeUint32, Column: apppowerrental.FieldSaleEndAt},
+			apppowerrental.FieldPackageWithRequireds:         {Type: field.TypeBool, Column: apppowerrental.FieldPackageWithRequireds},
+			apppowerrental.FieldSaleMode:                     {Type: field.TypeString, Column: apppowerrental.FieldSaleMode},
+		},
+	}
+	graph.Nodes[10] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   appsimulategood.Table,
 			Columns: appsimulategood.Columns,
@@ -124,7 +321,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appsimulategood.FieldFixedOrderDuration: {Type: field.TypeUint32, Column: appsimulategood.FieldFixedOrderDuration},
 		},
 	}
-	graph.Nodes[3] = &sqlgraph.Node{
+	graph.Nodes[11] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   appstock.Table,
 			Columns: appstock.Columns,
@@ -150,7 +347,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appstock.FieldSold:         {Type: field.TypeOther, Column: appstock.FieldSold},
 		},
 	}
-	graph.Nodes[4] = &sqlgraph.Node{
+	graph.Nodes[12] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   appstocklock.Table,
 			Columns: appstocklock.Columns,
@@ -173,7 +370,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appstocklock.FieldExLockID:        {Type: field.TypeUUID, Column: appstocklock.FieldExLockID},
 		},
 	}
-	graph.Nodes[5] = &sqlgraph.Node{
+	graph.Nodes[13] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   comment.Table,
 			Columns: comment.Columns,
@@ -202,7 +399,29 @@ var schemaGraph = func() *sqlgraph.Schema {
 			comment.FieldScore:             {Type: field.TypeOther, Column: comment.FieldScore},
 		},
 	}
-	graph.Nodes[6] = &sqlgraph.Node{
+	graph.Nodes[14] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   delegatedstaking.Table,
+			Columns: delegatedstaking.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: delegatedstaking.FieldID,
+			},
+		},
+		Type: "DelegatedStaking",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			delegatedstaking.FieldCreatedAt:                {Type: field.TypeUint32, Column: delegatedstaking.FieldCreatedAt},
+			delegatedstaking.FieldUpdatedAt:                {Type: field.TypeUint32, Column: delegatedstaking.FieldUpdatedAt},
+			delegatedstaking.FieldDeletedAt:                {Type: field.TypeUint32, Column: delegatedstaking.FieldDeletedAt},
+			delegatedstaking.FieldEntID:                    {Type: field.TypeUUID, Column: delegatedstaking.FieldEntID},
+			delegatedstaking.FieldGoodID:                   {Type: field.TypeUUID, Column: delegatedstaking.FieldGoodID},
+			delegatedstaking.FieldNoStakeRedeemDelayHours:  {Type: field.TypeUint32, Column: delegatedstaking.FieldNoStakeRedeemDelayHours},
+			delegatedstaking.FieldMaxRedeemDelayHours:      {Type: field.TypeUint32, Column: delegatedstaking.FieldMaxRedeemDelayHours},
+			delegatedstaking.FieldContractAddress:          {Type: field.TypeString, Column: delegatedstaking.FieldContractAddress},
+			delegatedstaking.FieldNoStakeBenefitDelayHours: {Type: field.TypeUint32, Column: delegatedstaking.FieldNoStakeBenefitDelayHours},
+		},
+	}
+	graph.Nodes[15] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   deviceinfo.Table,
 			Columns: deviceinfo.Columns,
@@ -224,7 +443,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			deviceinfo.FieldPosters:          {Type: field.TypeJSON, Column: deviceinfo.FieldPosters},
 		},
 	}
-	graph.Nodes[7] = &sqlgraph.Node{
+	graph.Nodes[16] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   extrainfo.Table,
 			Columns: extrainfo.Columns,
@@ -250,7 +469,56 @@ var schemaGraph = func() *sqlgraph.Schema {
 			extrainfo.FieldScore:          {Type: field.TypeOther, Column: extrainfo.FieldScore},
 		},
 	}
-	graph.Nodes[8] = &sqlgraph.Node{
+	graph.Nodes[17] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   fbmcrowdfunding.Table,
+			Columns: fbmcrowdfunding.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: fbmcrowdfunding.FieldID,
+			},
+		},
+		Type: "FbmCrowdFunding",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			fbmcrowdfunding.FieldCreatedAt:         {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldCreatedAt},
+			fbmcrowdfunding.FieldUpdatedAt:         {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldUpdatedAt},
+			fbmcrowdfunding.FieldDeletedAt:         {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldDeletedAt},
+			fbmcrowdfunding.FieldEntID:             {Type: field.TypeUUID, Column: fbmcrowdfunding.FieldEntID},
+			fbmcrowdfunding.FieldGoodID:            {Type: field.TypeUUID, Column: fbmcrowdfunding.FieldGoodID},
+			fbmcrowdfunding.FieldMinDepositAmount:  {Type: field.TypeOther, Column: fbmcrowdfunding.FieldMinDepositAmount},
+			fbmcrowdfunding.FieldDeliveryAt:        {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldDeliveryAt},
+			fbmcrowdfunding.FieldTargetAmount:      {Type: field.TypeOther, Column: fbmcrowdfunding.FieldTargetAmount},
+			fbmcrowdfunding.FieldDepositStartAt:    {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldDepositStartAt},
+			fbmcrowdfunding.FieldDepositEndAt:      {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldDepositEndAt},
+			fbmcrowdfunding.FieldContractAddress:   {Type: field.TypeString, Column: fbmcrowdfunding.FieldContractAddress},
+			fbmcrowdfunding.FieldDepositCoinTypeID: {Type: field.TypeUUID, Column: fbmcrowdfunding.FieldDepositCoinTypeID},
+			fbmcrowdfunding.FieldRedeemable:        {Type: field.TypeBool, Column: fbmcrowdfunding.FieldRedeemable},
+			fbmcrowdfunding.FieldRedeemDelayHours:  {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldRedeemDelayHours},
+			fbmcrowdfunding.FieldDurationType:      {Type: field.TypeString, Column: fbmcrowdfunding.FieldDurationType},
+		},
+	}
+	graph.Nodes[18] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   fee.Table,
+			Columns: fee.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: fee.FieldID,
+			},
+		},
+		Type: "Fee",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			fee.FieldCreatedAt:      {Type: field.TypeUint32, Column: fee.FieldCreatedAt},
+			fee.FieldUpdatedAt:      {Type: field.TypeUint32, Column: fee.FieldUpdatedAt},
+			fee.FieldDeletedAt:      {Type: field.TypeUint32, Column: fee.FieldDeletedAt},
+			fee.FieldEntID:          {Type: field.TypeUUID, Column: fee.FieldEntID},
+			fee.FieldGoodID:         {Type: field.TypeUUID, Column: fee.FieldGoodID},
+			fee.FieldSettlementType: {Type: field.TypeString, Column: fee.FieldSettlementType},
+			fee.FieldUnitValue:      {Type: field.TypeOther, Column: fee.FieldUnitValue},
+			fee.FieldDurationType:   {Type: field.TypeString, Column: fee.FieldDurationType},
+		},
+	}
+	graph.Nodes[19] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   good.Table,
 			Columns: good.Columns,
@@ -290,7 +558,53 @@ var schemaGraph = func() *sqlgraph.Schema {
 			good.FieldSettlementType:        {Type: field.TypeString, Column: good.FieldSettlementType},
 		},
 	}
-	graph.Nodes[9] = &sqlgraph.Node{
+	graph.Nodes[20] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   goodbase.Table,
+			Columns: goodbase.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: goodbase.FieldID,
+			},
+		},
+		Type: "GoodBase",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			goodbase.FieldCreatedAt:            {Type: field.TypeUint32, Column: goodbase.FieldCreatedAt},
+			goodbase.FieldUpdatedAt:            {Type: field.TypeUint32, Column: goodbase.FieldUpdatedAt},
+			goodbase.FieldDeletedAt:            {Type: field.TypeUint32, Column: goodbase.FieldDeletedAt},
+			goodbase.FieldEntID:                {Type: field.TypeUUID, Column: goodbase.FieldEntID},
+			goodbase.FieldGoodType:             {Type: field.TypeString, Column: goodbase.FieldGoodType},
+			goodbase.FieldBenefitType:          {Type: field.TypeString, Column: goodbase.FieldBenefitType},
+			goodbase.FieldName:                 {Type: field.TypeString, Column: goodbase.FieldName},
+			goodbase.FieldServiceStartAt:       {Type: field.TypeUint32, Column: goodbase.FieldServiceStartAt},
+			goodbase.FieldStartMode:            {Type: field.TypeString, Column: goodbase.FieldStartMode},
+			goodbase.FieldTestOnly:             {Type: field.TypeBool, Column: goodbase.FieldTestOnly},
+			goodbase.FieldBenefitIntervalHours: {Type: field.TypeUint32, Column: goodbase.FieldBenefitIntervalHours},
+			goodbase.FieldPurchasable:          {Type: field.TypeBool, Column: goodbase.FieldPurchasable},
+			goodbase.FieldOnline:               {Type: field.TypeBool, Column: goodbase.FieldOnline},
+		},
+	}
+	graph.Nodes[21] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   goodcoin.Table,
+			Columns: goodcoin.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: goodcoin.FieldID,
+			},
+		},
+		Type: "GoodCoin",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			goodcoin.FieldCreatedAt:  {Type: field.TypeUint32, Column: goodcoin.FieldCreatedAt},
+			goodcoin.FieldUpdatedAt:  {Type: field.TypeUint32, Column: goodcoin.FieldUpdatedAt},
+			goodcoin.FieldDeletedAt:  {Type: field.TypeUint32, Column: goodcoin.FieldDeletedAt},
+			goodcoin.FieldEntID:      {Type: field.TypeUUID, Column: goodcoin.FieldEntID},
+			goodcoin.FieldGoodID:     {Type: field.TypeUUID, Column: goodcoin.FieldGoodID},
+			goodcoin.FieldCoinTypeID: {Type: field.TypeUUID, Column: goodcoin.FieldCoinTypeID},
+			goodcoin.FieldMain:       {Type: field.TypeBool, Column: goodcoin.FieldMain},
+		},
+	}
+	graph.Nodes[22] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   goodreward.Table,
 			Columns: goodreward.Columns,
@@ -315,7 +629,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			goodreward.FieldTotalRewardAmount:     {Type: field.TypeOther, Column: goodreward.FieldTotalRewardAmount},
 		},
 	}
-	graph.Nodes[10] = &sqlgraph.Node{
+	graph.Nodes[23] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   goodrewardhistory.Table,
 			Columns: goodrewardhistory.Columns,
@@ -338,7 +652,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			goodrewardhistory.FieldUnitNetAmount: {Type: field.TypeOther, Column: goodrewardhistory.FieldUnitNetAmount},
 		},
 	}
-	graph.Nodes[11] = &sqlgraph.Node{
+	graph.Nodes[24] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   like.Table,
 			Columns: like.Columns,
@@ -360,7 +674,33 @@ var schemaGraph = func() *sqlgraph.Schema {
 			like.FieldLike:      {Type: field.TypeBool, Column: like.FieldLike},
 		},
 	}
-	graph.Nodes[12] = &sqlgraph.Node{
+	graph.Nodes[25] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   powerrental.Table,
+			Columns: powerrental.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: powerrental.FieldID,
+			},
+		},
+		Type: "PowerRental",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			powerrental.FieldCreatedAt:          {Type: field.TypeUint32, Column: powerrental.FieldCreatedAt},
+			powerrental.FieldUpdatedAt:          {Type: field.TypeUint32, Column: powerrental.FieldUpdatedAt},
+			powerrental.FieldDeletedAt:          {Type: field.TypeUint32, Column: powerrental.FieldDeletedAt},
+			powerrental.FieldEntID:              {Type: field.TypeUUID, Column: powerrental.FieldEntID},
+			powerrental.FieldGoodID:             {Type: field.TypeUUID, Column: powerrental.FieldGoodID},
+			powerrental.FieldDeviceTypeID:       {Type: field.TypeUUID, Column: powerrental.FieldDeviceTypeID},
+			powerrental.FieldVendorLocationID:   {Type: field.TypeUUID, Column: powerrental.FieldVendorLocationID},
+			powerrental.FieldUnitPrice:          {Type: field.TypeOther, Column: powerrental.FieldUnitPrice},
+			powerrental.FieldQuantityUnit:       {Type: field.TypeString, Column: powerrental.FieldQuantityUnit},
+			powerrental.FieldQuantityUnitAmount: {Type: field.TypeOther, Column: powerrental.FieldQuantityUnitAmount},
+			powerrental.FieldDeliveryAt:         {Type: field.TypeUint32, Column: powerrental.FieldDeliveryAt},
+			powerrental.FieldUnitLockDeposit:    {Type: field.TypeOther, Column: powerrental.FieldUnitLockDeposit},
+			powerrental.FieldDurationType:       {Type: field.TypeString, Column: powerrental.FieldDurationType},
+		},
+	}
+	graph.Nodes[26] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   recommend.Table,
 			Columns: recommend.Columns,
@@ -382,7 +722,27 @@ var schemaGraph = func() *sqlgraph.Schema {
 			recommend.FieldRecommendIndex: {Type: field.TypeOther, Column: recommend.FieldRecommendIndex},
 		},
 	}
-	graph.Nodes[13] = &sqlgraph.Node{
+	graph.Nodes[27] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   requiredappgood.Table,
+			Columns: requiredappgood.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: requiredappgood.FieldID,
+			},
+		},
+		Type: "RequiredAppGood",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			requiredappgood.FieldCreatedAt:         {Type: field.TypeUint32, Column: requiredappgood.FieldCreatedAt},
+			requiredappgood.FieldUpdatedAt:         {Type: field.TypeUint32, Column: requiredappgood.FieldUpdatedAt},
+			requiredappgood.FieldDeletedAt:         {Type: field.TypeUint32, Column: requiredappgood.FieldDeletedAt},
+			requiredappgood.FieldEntID:             {Type: field.TypeUUID, Column: requiredappgood.FieldEntID},
+			requiredappgood.FieldMainAppGoodID:     {Type: field.TypeUUID, Column: requiredappgood.FieldMainAppGoodID},
+			requiredappgood.FieldRequiredAppGoodID: {Type: field.TypeUUID, Column: requiredappgood.FieldRequiredAppGoodID},
+			requiredappgood.FieldMust:              {Type: field.TypeBool, Column: requiredappgood.FieldMust},
+		},
+	}
+	graph.Nodes[28] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   requiredgood.Table,
 			Columns: requiredgood.Columns,
@@ -402,7 +762,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			requiredgood.FieldMust:           {Type: field.TypeBool, Column: requiredgood.FieldMust},
 		},
 	}
-	graph.Nodes[14] = &sqlgraph.Node{
+	graph.Nodes[29] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   score.Table,
 			Columns: score.Columns,
@@ -424,7 +784,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			score.FieldScore:     {Type: field.TypeOther, Column: score.FieldScore},
 		},
 	}
-	graph.Nodes[15] = &sqlgraph.Node{
+	graph.Nodes[30] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   stock.Table,
 			Columns: stock.Columns,
@@ -449,7 +809,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			stock.FieldAppReserved:  {Type: field.TypeOther, Column: stock.FieldAppReserved},
 		},
 	}
-	graph.Nodes[16] = &sqlgraph.Node{
+	graph.Nodes[31] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   topmost.Table,
 			Columns: topmost.Columns,
@@ -478,7 +838,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmost.FieldKycMust:                {Type: field.TypeBool, Column: topmost.FieldKycMust},
 		},
 	}
-	graph.Nodes[17] = &sqlgraph.Node{
+	graph.Nodes[32] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   topmostgood.Table,
 			Columns: topmostgood.Columns,
@@ -504,7 +864,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostgood.FieldPackagePrice: {Type: field.TypeOther, Column: topmostgood.FieldPackagePrice},
 		},
 	}
-	graph.Nodes[18] = &sqlgraph.Node{
+	graph.Nodes[33] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   vendorbrand.Table,
 			Columns: vendorbrand.Columns,
@@ -523,7 +883,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			vendorbrand.FieldLogo:      {Type: field.TypeString, Column: vendorbrand.FieldLogo},
 		},
 	}
-	graph.Nodes[19] = &sqlgraph.Node{
+	graph.Nodes[34] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   vendorlocation.Table,
 			Columns: vendorlocation.Columns,
@@ -635,6 +995,86 @@ func (f *AppDefaultGoodFilter) WhereCoinTypeID(p entql.ValueP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (afq *AppFeeQuery) addPredicate(pred func(s *sql.Selector)) {
+	afq.predicates = append(afq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the AppFeeQuery builder.
+func (afq *AppFeeQuery) Filter() *AppFeeFilter {
+	return &AppFeeFilter{config: afq.config, predicateAdder: afq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *AppFeeMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the AppFeeMutation builder.
+func (m *AppFeeMutation) Filter() *AppFeeFilter {
+	return &AppFeeFilter{config: m.config, predicateAdder: m}
+}
+
+// AppFeeFilter provides a generic filtering capability at runtime for AppFeeQuery.
+type AppFeeFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *AppFeeFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *AppFeeFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(appfee.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppFeeFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appfee.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppFeeFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appfee.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppFeeFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(appfee.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *AppFeeFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(appfee.FieldEntID))
+}
+
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *AppFeeFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(appfee.FieldAppID))
+}
+
+// WhereGoodID applies the entql [16]byte predicate on the good_id field.
+func (f *AppFeeFilter) WhereGoodID(p entql.ValueP) {
+	f.Where(p.Field(appfee.FieldGoodID))
+}
+
+// WhereUnitValue applies the entql other predicate on the unit_value field.
+func (f *AppFeeFilter) WhereUnitValue(p entql.OtherP) {
+	f.Where(p.Field(appfee.FieldUnitValue))
+}
+
+// WhereMinOrderDuration applies the entql uint32 predicate on the min_order_duration field.
+func (f *AppFeeFilter) WhereMinOrderDuration(p entql.Uint32P) {
+	f.Where(p.Field(appfee.FieldMinOrderDuration))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (agq *AppGoodQuery) addPredicate(pred func(s *sql.Selector)) {
 	agq.predicates = append(agq.predicates, pred)
 }
@@ -663,7 +1103,7 @@ type AppGoodFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *AppGoodFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[2].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -845,6 +1285,636 @@ func (f *AppGoodFilter) WherePackageWithRequireds(p entql.BoolP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (agbq *AppGoodBaseQuery) addPredicate(pred func(s *sql.Selector)) {
+	agbq.predicates = append(agbq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the AppGoodBaseQuery builder.
+func (agbq *AppGoodBaseQuery) Filter() *AppGoodBaseFilter {
+	return &AppGoodBaseFilter{config: agbq.config, predicateAdder: agbq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *AppGoodBaseMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the AppGoodBaseMutation builder.
+func (m *AppGoodBaseMutation) Filter() *AppGoodBaseFilter {
+	return &AppGoodBaseFilter{config: m.config, predicateAdder: m}
+}
+
+// AppGoodBaseFilter provides a generic filtering capability at runtime for AppGoodBaseQuery.
+type AppGoodBaseFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *AppGoodBaseFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[3].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *AppGoodBaseFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(appgoodbase.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppGoodBaseFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appgoodbase.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppGoodBaseFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appgoodbase.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppGoodBaseFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(appgoodbase.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *AppGoodBaseFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(appgoodbase.FieldEntID))
+}
+
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *AppGoodBaseFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(appgoodbase.FieldAppID))
+}
+
+// WhereGoodID applies the entql [16]byte predicate on the good_id field.
+func (f *AppGoodBaseFilter) WhereGoodID(p entql.ValueP) {
+	f.Where(p.Field(appgoodbase.FieldGoodID))
+}
+
+// WherePurchasable applies the entql bool predicate on the purchasable field.
+func (f *AppGoodBaseFilter) WherePurchasable(p entql.BoolP) {
+	f.Where(p.Field(appgoodbase.FieldPurchasable))
+}
+
+// WhereEnableProductPage applies the entql bool predicate on the enable_product_page field.
+func (f *AppGoodBaseFilter) WhereEnableProductPage(p entql.BoolP) {
+	f.Where(p.Field(appgoodbase.FieldEnableProductPage))
+}
+
+// WhereProductPage applies the entql string predicate on the product_page field.
+func (f *AppGoodBaseFilter) WhereProductPage(p entql.StringP) {
+	f.Where(p.Field(appgoodbase.FieldProductPage))
+}
+
+// WhereOnline applies the entql bool predicate on the online field.
+func (f *AppGoodBaseFilter) WhereOnline(p entql.BoolP) {
+	f.Where(p.Field(appgoodbase.FieldOnline))
+}
+
+// WhereVisible applies the entql bool predicate on the visible field.
+func (f *AppGoodBaseFilter) WhereVisible(p entql.BoolP) {
+	f.Where(p.Field(appgoodbase.FieldVisible))
+}
+
+// WhereName applies the entql string predicate on the name field.
+func (f *AppGoodBaseFilter) WhereName(p entql.StringP) {
+	f.Where(p.Field(appgoodbase.FieldName))
+}
+
+// WhereDisplayIndex applies the entql int32 predicate on the display_index field.
+func (f *AppGoodBaseFilter) WhereDisplayIndex(p entql.Int32P) {
+	f.Where(p.Field(appgoodbase.FieldDisplayIndex))
+}
+
+// WhereBanner applies the entql string predicate on the banner field.
+func (f *AppGoodBaseFilter) WhereBanner(p entql.StringP) {
+	f.Where(p.Field(appgoodbase.FieldBanner))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (agdq *AppGoodDescriptionQuery) addPredicate(pred func(s *sql.Selector)) {
+	agdq.predicates = append(agdq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the AppGoodDescriptionQuery builder.
+func (agdq *AppGoodDescriptionQuery) Filter() *AppGoodDescriptionFilter {
+	return &AppGoodDescriptionFilter{config: agdq.config, predicateAdder: agdq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *AppGoodDescriptionMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the AppGoodDescriptionMutation builder.
+func (m *AppGoodDescriptionMutation) Filter() *AppGoodDescriptionFilter {
+	return &AppGoodDescriptionFilter{config: m.config, predicateAdder: m}
+}
+
+// AppGoodDescriptionFilter provides a generic filtering capability at runtime for AppGoodDescriptionQuery.
+type AppGoodDescriptionFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *AppGoodDescriptionFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[4].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *AppGoodDescriptionFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(appgooddescription.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppGoodDescriptionFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appgooddescription.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppGoodDescriptionFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appgooddescription.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppGoodDescriptionFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(appgooddescription.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *AppGoodDescriptionFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(appgooddescription.FieldEntID))
+}
+
+// WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
+func (f *AppGoodDescriptionFilter) WhereAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(appgooddescription.FieldAppGoodID))
+}
+
+// WhereDescription applies the entql string predicate on the description field.
+func (f *AppGoodDescriptionFilter) WhereDescription(p entql.StringP) {
+	f.Where(p.Field(appgooddescription.FieldDescription))
+}
+
+// WhereIndex applies the entql uint8 predicate on the index field.
+func (f *AppGoodDescriptionFilter) WhereIndex(p entql.Uint8P) {
+	f.Where(p.Field(appgooddescription.FieldIndex))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (agdcq *AppGoodDisplayColorQuery) addPredicate(pred func(s *sql.Selector)) {
+	agdcq.predicates = append(agdcq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the AppGoodDisplayColorQuery builder.
+func (agdcq *AppGoodDisplayColorQuery) Filter() *AppGoodDisplayColorFilter {
+	return &AppGoodDisplayColorFilter{config: agdcq.config, predicateAdder: agdcq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *AppGoodDisplayColorMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the AppGoodDisplayColorMutation builder.
+func (m *AppGoodDisplayColorMutation) Filter() *AppGoodDisplayColorFilter {
+	return &AppGoodDisplayColorFilter{config: m.config, predicateAdder: m}
+}
+
+// AppGoodDisplayColorFilter provides a generic filtering capability at runtime for AppGoodDisplayColorQuery.
+type AppGoodDisplayColorFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *AppGoodDisplayColorFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[5].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *AppGoodDisplayColorFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(appgooddisplaycolor.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppGoodDisplayColorFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appgooddisplaycolor.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppGoodDisplayColorFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appgooddisplaycolor.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppGoodDisplayColorFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(appgooddisplaycolor.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *AppGoodDisplayColorFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(appgooddisplaycolor.FieldEntID))
+}
+
+// WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
+func (f *AppGoodDisplayColorFilter) WhereAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(appgooddisplaycolor.FieldAppGoodID))
+}
+
+// WhereColor applies the entql string predicate on the color field.
+func (f *AppGoodDisplayColorFilter) WhereColor(p entql.StringP) {
+	f.Where(p.Field(appgooddisplaycolor.FieldColor))
+}
+
+// WhereIndex applies the entql uint8 predicate on the index field.
+func (f *AppGoodDisplayColorFilter) WhereIndex(p entql.Uint8P) {
+	f.Where(p.Field(appgooddisplaycolor.FieldIndex))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (agdnq *AppGoodDisplayNameQuery) addPredicate(pred func(s *sql.Selector)) {
+	agdnq.predicates = append(agdnq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the AppGoodDisplayNameQuery builder.
+func (agdnq *AppGoodDisplayNameQuery) Filter() *AppGoodDisplayNameFilter {
+	return &AppGoodDisplayNameFilter{config: agdnq.config, predicateAdder: agdnq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *AppGoodDisplayNameMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the AppGoodDisplayNameMutation builder.
+func (m *AppGoodDisplayNameMutation) Filter() *AppGoodDisplayNameFilter {
+	return &AppGoodDisplayNameFilter{config: m.config, predicateAdder: m}
+}
+
+// AppGoodDisplayNameFilter provides a generic filtering capability at runtime for AppGoodDisplayNameQuery.
+type AppGoodDisplayNameFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *AppGoodDisplayNameFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[6].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *AppGoodDisplayNameFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(appgooddisplayname.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppGoodDisplayNameFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appgooddisplayname.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppGoodDisplayNameFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appgooddisplayname.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppGoodDisplayNameFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(appgooddisplayname.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *AppGoodDisplayNameFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(appgooddisplayname.FieldEntID))
+}
+
+// WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
+func (f *AppGoodDisplayNameFilter) WhereAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(appgooddisplayname.FieldAppGoodID))
+}
+
+// WhereName applies the entql string predicate on the name field.
+func (f *AppGoodDisplayNameFilter) WhereName(p entql.StringP) {
+	f.Where(p.Field(appgooddisplayname.FieldName))
+}
+
+// WhereIndex applies the entql uint8 predicate on the index field.
+func (f *AppGoodDisplayNameFilter) WhereIndex(p entql.Uint8P) {
+	f.Where(p.Field(appgooddisplayname.FieldIndex))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (agpq *AppGoodPosterQuery) addPredicate(pred func(s *sql.Selector)) {
+	agpq.predicates = append(agpq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the AppGoodPosterQuery builder.
+func (agpq *AppGoodPosterQuery) Filter() *AppGoodPosterFilter {
+	return &AppGoodPosterFilter{config: agpq.config, predicateAdder: agpq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *AppGoodPosterMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the AppGoodPosterMutation builder.
+func (m *AppGoodPosterMutation) Filter() *AppGoodPosterFilter {
+	return &AppGoodPosterFilter{config: m.config, predicateAdder: m}
+}
+
+// AppGoodPosterFilter provides a generic filtering capability at runtime for AppGoodPosterQuery.
+type AppGoodPosterFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *AppGoodPosterFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[7].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *AppGoodPosterFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(appgoodposter.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppGoodPosterFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appgoodposter.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppGoodPosterFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appgoodposter.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppGoodPosterFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(appgoodposter.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *AppGoodPosterFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(appgoodposter.FieldEntID))
+}
+
+// WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
+func (f *AppGoodPosterFilter) WhereAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(appgoodposter.FieldAppGoodID))
+}
+
+// WherePoster applies the entql string predicate on the poster field.
+func (f *AppGoodPosterFilter) WherePoster(p entql.StringP) {
+	f.Where(p.Field(appgoodposter.FieldPoster))
+}
+
+// WhereIndex applies the entql uint8 predicate on the index field.
+func (f *AppGoodPosterFilter) WhereIndex(p entql.Uint8P) {
+	f.Where(p.Field(appgoodposter.FieldIndex))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (alprq *AppLegacyPowerRentalQuery) addPredicate(pred func(s *sql.Selector)) {
+	alprq.predicates = append(alprq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the AppLegacyPowerRentalQuery builder.
+func (alprq *AppLegacyPowerRentalQuery) Filter() *AppLegacyPowerRentalFilter {
+	return &AppLegacyPowerRentalFilter{config: alprq.config, predicateAdder: alprq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *AppLegacyPowerRentalMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the AppLegacyPowerRentalMutation builder.
+func (m *AppLegacyPowerRentalMutation) Filter() *AppLegacyPowerRentalFilter {
+	return &AppLegacyPowerRentalFilter{config: m.config, predicateAdder: m}
+}
+
+// AppLegacyPowerRentalFilter provides a generic filtering capability at runtime for AppLegacyPowerRentalQuery.
+type AppLegacyPowerRentalFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *AppLegacyPowerRentalFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[8].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *AppLegacyPowerRentalFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(applegacypowerrental.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppLegacyPowerRentalFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(applegacypowerrental.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppLegacyPowerRentalFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(applegacypowerrental.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppLegacyPowerRentalFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(applegacypowerrental.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *AppLegacyPowerRentalFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(applegacypowerrental.FieldEntID))
+}
+
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *AppLegacyPowerRentalFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(applegacypowerrental.FieldAppID))
+}
+
+// WhereGoodID applies the entql [16]byte predicate on the good_id field.
+func (f *AppLegacyPowerRentalFilter) WhereGoodID(p entql.ValueP) {
+	f.Where(p.Field(applegacypowerrental.FieldGoodID))
+}
+
+// WhereTechniqueFeeRatio applies the entql other predicate on the technique_fee_ratio field.
+func (f *AppLegacyPowerRentalFilter) WhereTechniqueFeeRatio(p entql.OtherP) {
+	f.Where(p.Field(applegacypowerrental.FieldTechniqueFeeRatio))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (aprq *AppPowerRentalQuery) addPredicate(pred func(s *sql.Selector)) {
+	aprq.predicates = append(aprq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the AppPowerRentalQuery builder.
+func (aprq *AppPowerRentalQuery) Filter() *AppPowerRentalFilter {
+	return &AppPowerRentalFilter{config: aprq.config, predicateAdder: aprq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *AppPowerRentalMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the AppPowerRentalMutation builder.
+func (m *AppPowerRentalMutation) Filter() *AppPowerRentalFilter {
+	return &AppPowerRentalFilter{config: m.config, predicateAdder: m}
+}
+
+// AppPowerRentalFilter provides a generic filtering capability at runtime for AppPowerRentalQuery.
+type AppPowerRentalFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *AppPowerRentalFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[9].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *AppPowerRentalFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(apppowerrental.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppPowerRentalFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(apppowerrental.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppPowerRentalFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(apppowerrental.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppPowerRentalFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(apppowerrental.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *AppPowerRentalFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(apppowerrental.FieldEntID))
+}
+
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *AppPowerRentalFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(apppowerrental.FieldAppID))
+}
+
+// WhereGoodID applies the entql [16]byte predicate on the good_id field.
+func (f *AppPowerRentalFilter) WhereGoodID(p entql.ValueP) {
+	f.Where(p.Field(apppowerrental.FieldGoodID))
+}
+
+// WhereServiceStartAt applies the entql uint32 predicate on the service_start_at field.
+func (f *AppPowerRentalFilter) WhereServiceStartAt(p entql.Uint32P) {
+	f.Where(p.Field(apppowerrental.FieldServiceStartAt))
+}
+
+// WhereCancelMode applies the entql string predicate on the cancel_mode field.
+func (f *AppPowerRentalFilter) WhereCancelMode(p entql.StringP) {
+	f.Where(p.Field(apppowerrental.FieldCancelMode))
+}
+
+// WhereCancelableBeforeStartSeconds applies the entql uint32 predicate on the cancelable_before_start_seconds field.
+func (f *AppPowerRentalFilter) WhereCancelableBeforeStartSeconds(p entql.Uint32P) {
+	f.Where(p.Field(apppowerrental.FieldCancelableBeforeStartSeconds))
+}
+
+// WhereEnableSetCommission applies the entql bool predicate on the enable_set_commission field.
+func (f *AppPowerRentalFilter) WhereEnableSetCommission(p entql.BoolP) {
+	f.Where(p.Field(apppowerrental.FieldEnableSetCommission))
+}
+
+// WhereMinOrderAmount applies the entql other predicate on the min_order_amount field.
+func (f *AppPowerRentalFilter) WhereMinOrderAmount(p entql.OtherP) {
+	f.Where(p.Field(apppowerrental.FieldMinOrderAmount))
+}
+
+// WhereMaxOrderAmount applies the entql other predicate on the max_order_amount field.
+func (f *AppPowerRentalFilter) WhereMaxOrderAmount(p entql.OtherP) {
+	f.Where(p.Field(apppowerrental.FieldMaxOrderAmount))
+}
+
+// WhereMaxUserAmount applies the entql other predicate on the max_user_amount field.
+func (f *AppPowerRentalFilter) WhereMaxUserAmount(p entql.OtherP) {
+	f.Where(p.Field(apppowerrental.FieldMaxUserAmount))
+}
+
+// WhereMinOrderDuration applies the entql uint32 predicate on the min_order_duration field.
+func (f *AppPowerRentalFilter) WhereMinOrderDuration(p entql.Uint32P) {
+	f.Where(p.Field(apppowerrental.FieldMinOrderDuration))
+}
+
+// WhereMaxOrderDuration applies the entql uint32 predicate on the max_order_duration field.
+func (f *AppPowerRentalFilter) WhereMaxOrderDuration(p entql.Uint32P) {
+	f.Where(p.Field(apppowerrental.FieldMaxOrderDuration))
+}
+
+// WhereUnitPrice applies the entql other predicate on the unit_price field.
+func (f *AppPowerRentalFilter) WhereUnitPrice(p entql.OtherP) {
+	f.Where(p.Field(apppowerrental.FieldUnitPrice))
+}
+
+// WherePackagePrice applies the entql other predicate on the package_price field.
+func (f *AppPowerRentalFilter) WherePackagePrice(p entql.OtherP) {
+	f.Where(p.Field(apppowerrental.FieldPackagePrice))
+}
+
+// WhereSaleStartAt applies the entql uint32 predicate on the sale_start_at field.
+func (f *AppPowerRentalFilter) WhereSaleStartAt(p entql.Uint32P) {
+	f.Where(p.Field(apppowerrental.FieldSaleStartAt))
+}
+
+// WhereSaleEndAt applies the entql uint32 predicate on the sale_end_at field.
+func (f *AppPowerRentalFilter) WhereSaleEndAt(p entql.Uint32P) {
+	f.Where(p.Field(apppowerrental.FieldSaleEndAt))
+}
+
+// WherePackageWithRequireds applies the entql bool predicate on the package_with_requireds field.
+func (f *AppPowerRentalFilter) WherePackageWithRequireds(p entql.BoolP) {
+	f.Where(p.Field(apppowerrental.FieldPackageWithRequireds))
+}
+
+// WhereSaleMode applies the entql string predicate on the sale_mode field.
+func (f *AppPowerRentalFilter) WhereSaleMode(p entql.StringP) {
+	f.Where(p.Field(apppowerrental.FieldSaleMode))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (asgq *AppSimulateGoodQuery) addPredicate(pred func(s *sql.Selector)) {
 	asgq.predicates = append(asgq.predicates, pred)
 }
@@ -873,7 +1943,7 @@ type AppSimulateGoodFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *AppSimulateGoodFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[2].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[10].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -963,7 +2033,7 @@ type AppStockFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *AppStockFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[3].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[11].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1068,7 +2138,7 @@ type AppStockLockFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *AppStockLockFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[4].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[12].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1158,7 +2228,7 @@ type CommentFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *CommentFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[5].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[13].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1250,6 +2320,91 @@ func (f *CommentFilter) WhereScore(p entql.OtherP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (dsq *DelegatedStakingQuery) addPredicate(pred func(s *sql.Selector)) {
+	dsq.predicates = append(dsq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the DelegatedStakingQuery builder.
+func (dsq *DelegatedStakingQuery) Filter() *DelegatedStakingFilter {
+	return &DelegatedStakingFilter{config: dsq.config, predicateAdder: dsq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *DelegatedStakingMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the DelegatedStakingMutation builder.
+func (m *DelegatedStakingMutation) Filter() *DelegatedStakingFilter {
+	return &DelegatedStakingFilter{config: m.config, predicateAdder: m}
+}
+
+// DelegatedStakingFilter provides a generic filtering capability at runtime for DelegatedStakingQuery.
+type DelegatedStakingFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *DelegatedStakingFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[14].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *DelegatedStakingFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(delegatedstaking.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *DelegatedStakingFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(delegatedstaking.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *DelegatedStakingFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(delegatedstaking.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *DelegatedStakingFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(delegatedstaking.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *DelegatedStakingFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(delegatedstaking.FieldEntID))
+}
+
+// WhereGoodID applies the entql [16]byte predicate on the good_id field.
+func (f *DelegatedStakingFilter) WhereGoodID(p entql.ValueP) {
+	f.Where(p.Field(delegatedstaking.FieldGoodID))
+}
+
+// WhereNoStakeRedeemDelayHours applies the entql uint32 predicate on the no_stake_redeem_delay_hours field.
+func (f *DelegatedStakingFilter) WhereNoStakeRedeemDelayHours(p entql.Uint32P) {
+	f.Where(p.Field(delegatedstaking.FieldNoStakeRedeemDelayHours))
+}
+
+// WhereMaxRedeemDelayHours applies the entql uint32 predicate on the max_redeem_delay_hours field.
+func (f *DelegatedStakingFilter) WhereMaxRedeemDelayHours(p entql.Uint32P) {
+	f.Where(p.Field(delegatedstaking.FieldMaxRedeemDelayHours))
+}
+
+// WhereContractAddress applies the entql string predicate on the contract_address field.
+func (f *DelegatedStakingFilter) WhereContractAddress(p entql.StringP) {
+	f.Where(p.Field(delegatedstaking.FieldContractAddress))
+}
+
+// WhereNoStakeBenefitDelayHours applies the entql uint32 predicate on the no_stake_benefit_delay_hours field.
+func (f *DelegatedStakingFilter) WhereNoStakeBenefitDelayHours(p entql.Uint32P) {
+	f.Where(p.Field(delegatedstaking.FieldNoStakeBenefitDelayHours))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (diq *DeviceInfoQuery) addPredicate(pred func(s *sql.Selector)) {
 	diq.predicates = append(diq.predicates, pred)
 }
@@ -1278,7 +2433,7 @@ type DeviceInfoFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *DeviceInfoFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[6].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[15].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1363,7 +2518,7 @@ type ExtraInfoFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *ExtraInfoFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[7].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[16].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1440,6 +2595,201 @@ func (f *ExtraInfoFilter) WhereScore(p entql.OtherP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (fcfq *FbmCrowdFundingQuery) addPredicate(pred func(s *sql.Selector)) {
+	fcfq.predicates = append(fcfq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the FbmCrowdFundingQuery builder.
+func (fcfq *FbmCrowdFundingQuery) Filter() *FbmCrowdFundingFilter {
+	return &FbmCrowdFundingFilter{config: fcfq.config, predicateAdder: fcfq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *FbmCrowdFundingMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the FbmCrowdFundingMutation builder.
+func (m *FbmCrowdFundingMutation) Filter() *FbmCrowdFundingFilter {
+	return &FbmCrowdFundingFilter{config: m.config, predicateAdder: m}
+}
+
+// FbmCrowdFundingFilter provides a generic filtering capability at runtime for FbmCrowdFundingQuery.
+type FbmCrowdFundingFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *FbmCrowdFundingFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[17].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *FbmCrowdFundingFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(fbmcrowdfunding.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *FbmCrowdFundingFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(fbmcrowdfunding.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *FbmCrowdFundingFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(fbmcrowdfunding.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *FbmCrowdFundingFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(fbmcrowdfunding.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *FbmCrowdFundingFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(fbmcrowdfunding.FieldEntID))
+}
+
+// WhereGoodID applies the entql [16]byte predicate on the good_id field.
+func (f *FbmCrowdFundingFilter) WhereGoodID(p entql.ValueP) {
+	f.Where(p.Field(fbmcrowdfunding.FieldGoodID))
+}
+
+// WhereMinDepositAmount applies the entql other predicate on the min_deposit_amount field.
+func (f *FbmCrowdFundingFilter) WhereMinDepositAmount(p entql.OtherP) {
+	f.Where(p.Field(fbmcrowdfunding.FieldMinDepositAmount))
+}
+
+// WhereDeliveryAt applies the entql uint32 predicate on the delivery_at field.
+func (f *FbmCrowdFundingFilter) WhereDeliveryAt(p entql.Uint32P) {
+	f.Where(p.Field(fbmcrowdfunding.FieldDeliveryAt))
+}
+
+// WhereTargetAmount applies the entql other predicate on the target_amount field.
+func (f *FbmCrowdFundingFilter) WhereTargetAmount(p entql.OtherP) {
+	f.Where(p.Field(fbmcrowdfunding.FieldTargetAmount))
+}
+
+// WhereDepositStartAt applies the entql uint32 predicate on the deposit_start_at field.
+func (f *FbmCrowdFundingFilter) WhereDepositStartAt(p entql.Uint32P) {
+	f.Where(p.Field(fbmcrowdfunding.FieldDepositStartAt))
+}
+
+// WhereDepositEndAt applies the entql uint32 predicate on the deposit_end_at field.
+func (f *FbmCrowdFundingFilter) WhereDepositEndAt(p entql.Uint32P) {
+	f.Where(p.Field(fbmcrowdfunding.FieldDepositEndAt))
+}
+
+// WhereContractAddress applies the entql string predicate on the contract_address field.
+func (f *FbmCrowdFundingFilter) WhereContractAddress(p entql.StringP) {
+	f.Where(p.Field(fbmcrowdfunding.FieldContractAddress))
+}
+
+// WhereDepositCoinTypeID applies the entql [16]byte predicate on the deposit_coin_type_id field.
+func (f *FbmCrowdFundingFilter) WhereDepositCoinTypeID(p entql.ValueP) {
+	f.Where(p.Field(fbmcrowdfunding.FieldDepositCoinTypeID))
+}
+
+// WhereRedeemable applies the entql bool predicate on the redeemable field.
+func (f *FbmCrowdFundingFilter) WhereRedeemable(p entql.BoolP) {
+	f.Where(p.Field(fbmcrowdfunding.FieldRedeemable))
+}
+
+// WhereRedeemDelayHours applies the entql uint32 predicate on the redeem_delay_hours field.
+func (f *FbmCrowdFundingFilter) WhereRedeemDelayHours(p entql.Uint32P) {
+	f.Where(p.Field(fbmcrowdfunding.FieldRedeemDelayHours))
+}
+
+// WhereDurationType applies the entql string predicate on the duration_type field.
+func (f *FbmCrowdFundingFilter) WhereDurationType(p entql.StringP) {
+	f.Where(p.Field(fbmcrowdfunding.FieldDurationType))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (fq *FeeQuery) addPredicate(pred func(s *sql.Selector)) {
+	fq.predicates = append(fq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the FeeQuery builder.
+func (fq *FeeQuery) Filter() *FeeFilter {
+	return &FeeFilter{config: fq.config, predicateAdder: fq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *FeeMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the FeeMutation builder.
+func (m *FeeMutation) Filter() *FeeFilter {
+	return &FeeFilter{config: m.config, predicateAdder: m}
+}
+
+// FeeFilter provides a generic filtering capability at runtime for FeeQuery.
+type FeeFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *FeeFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[18].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *FeeFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(fee.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *FeeFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(fee.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *FeeFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(fee.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *FeeFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(fee.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *FeeFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(fee.FieldEntID))
+}
+
+// WhereGoodID applies the entql [16]byte predicate on the good_id field.
+func (f *FeeFilter) WhereGoodID(p entql.ValueP) {
+	f.Where(p.Field(fee.FieldGoodID))
+}
+
+// WhereSettlementType applies the entql string predicate on the settlement_type field.
+func (f *FeeFilter) WhereSettlementType(p entql.StringP) {
+	f.Where(p.Field(fee.FieldSettlementType))
+}
+
+// WhereUnitValue applies the entql other predicate on the unit_value field.
+func (f *FeeFilter) WhereUnitValue(p entql.OtherP) {
+	f.Where(p.Field(fee.FieldUnitValue))
+}
+
+// WhereDurationType applies the entql string predicate on the duration_type field.
+func (f *FeeFilter) WhereDurationType(p entql.StringP) {
+	f.Where(p.Field(fee.FieldDurationType))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (gq *GoodQuery) addPredicate(pred func(s *sql.Selector)) {
 	gq.predicates = append(gq.predicates, pred)
 }
@@ -1468,7 +2818,7 @@ type GoodFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *GoodFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[8].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[19].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1615,6 +2965,186 @@ func (f *GoodFilter) WhereSettlementType(p entql.StringP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (gbq *GoodBaseQuery) addPredicate(pred func(s *sql.Selector)) {
+	gbq.predicates = append(gbq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the GoodBaseQuery builder.
+func (gbq *GoodBaseQuery) Filter() *GoodBaseFilter {
+	return &GoodBaseFilter{config: gbq.config, predicateAdder: gbq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *GoodBaseMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the GoodBaseMutation builder.
+func (m *GoodBaseMutation) Filter() *GoodBaseFilter {
+	return &GoodBaseFilter{config: m.config, predicateAdder: m}
+}
+
+// GoodBaseFilter provides a generic filtering capability at runtime for GoodBaseQuery.
+type GoodBaseFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *GoodBaseFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[20].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *GoodBaseFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(goodbase.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *GoodBaseFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(goodbase.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *GoodBaseFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(goodbase.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *GoodBaseFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(goodbase.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *GoodBaseFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(goodbase.FieldEntID))
+}
+
+// WhereGoodType applies the entql string predicate on the good_type field.
+func (f *GoodBaseFilter) WhereGoodType(p entql.StringP) {
+	f.Where(p.Field(goodbase.FieldGoodType))
+}
+
+// WhereBenefitType applies the entql string predicate on the benefit_type field.
+func (f *GoodBaseFilter) WhereBenefitType(p entql.StringP) {
+	f.Where(p.Field(goodbase.FieldBenefitType))
+}
+
+// WhereName applies the entql string predicate on the name field.
+func (f *GoodBaseFilter) WhereName(p entql.StringP) {
+	f.Where(p.Field(goodbase.FieldName))
+}
+
+// WhereServiceStartAt applies the entql uint32 predicate on the service_start_at field.
+func (f *GoodBaseFilter) WhereServiceStartAt(p entql.Uint32P) {
+	f.Where(p.Field(goodbase.FieldServiceStartAt))
+}
+
+// WhereStartMode applies the entql string predicate on the start_mode field.
+func (f *GoodBaseFilter) WhereStartMode(p entql.StringP) {
+	f.Where(p.Field(goodbase.FieldStartMode))
+}
+
+// WhereTestOnly applies the entql bool predicate on the test_only field.
+func (f *GoodBaseFilter) WhereTestOnly(p entql.BoolP) {
+	f.Where(p.Field(goodbase.FieldTestOnly))
+}
+
+// WhereBenefitIntervalHours applies the entql uint32 predicate on the benefit_interval_hours field.
+func (f *GoodBaseFilter) WhereBenefitIntervalHours(p entql.Uint32P) {
+	f.Where(p.Field(goodbase.FieldBenefitIntervalHours))
+}
+
+// WherePurchasable applies the entql bool predicate on the purchasable field.
+func (f *GoodBaseFilter) WherePurchasable(p entql.BoolP) {
+	f.Where(p.Field(goodbase.FieldPurchasable))
+}
+
+// WhereOnline applies the entql bool predicate on the online field.
+func (f *GoodBaseFilter) WhereOnline(p entql.BoolP) {
+	f.Where(p.Field(goodbase.FieldOnline))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (gcq *GoodCoinQuery) addPredicate(pred func(s *sql.Selector)) {
+	gcq.predicates = append(gcq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the GoodCoinQuery builder.
+func (gcq *GoodCoinQuery) Filter() *GoodCoinFilter {
+	return &GoodCoinFilter{config: gcq.config, predicateAdder: gcq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *GoodCoinMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the GoodCoinMutation builder.
+func (m *GoodCoinMutation) Filter() *GoodCoinFilter {
+	return &GoodCoinFilter{config: m.config, predicateAdder: m}
+}
+
+// GoodCoinFilter provides a generic filtering capability at runtime for GoodCoinQuery.
+type GoodCoinFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *GoodCoinFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[21].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *GoodCoinFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(goodcoin.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *GoodCoinFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(goodcoin.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *GoodCoinFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(goodcoin.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *GoodCoinFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(goodcoin.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *GoodCoinFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(goodcoin.FieldEntID))
+}
+
+// WhereGoodID applies the entql [16]byte predicate on the good_id field.
+func (f *GoodCoinFilter) WhereGoodID(p entql.ValueP) {
+	f.Where(p.Field(goodcoin.FieldGoodID))
+}
+
+// WhereCoinTypeID applies the entql [16]byte predicate on the coin_type_id field.
+func (f *GoodCoinFilter) WhereCoinTypeID(p entql.ValueP) {
+	f.Where(p.Field(goodcoin.FieldCoinTypeID))
+}
+
+// WhereMain applies the entql bool predicate on the main field.
+func (f *GoodCoinFilter) WhereMain(p entql.BoolP) {
+	f.Where(p.Field(goodcoin.FieldMain))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (grq *GoodRewardQuery) addPredicate(pred func(s *sql.Selector)) {
 	grq.predicates = append(grq.predicates, pred)
 }
@@ -1643,7 +3173,7 @@ type GoodRewardFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *GoodRewardFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[9].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[22].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1743,7 +3273,7 @@ type GoodRewardHistoryFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *GoodRewardHistoryFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[10].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[23].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1833,7 +3363,7 @@ type LikeFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *LikeFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[11].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[24].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1890,6 +3420,111 @@ func (f *LikeFilter) WhereLike(p entql.BoolP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (prq *PowerRentalQuery) addPredicate(pred func(s *sql.Selector)) {
+	prq.predicates = append(prq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the PowerRentalQuery builder.
+func (prq *PowerRentalQuery) Filter() *PowerRentalFilter {
+	return &PowerRentalFilter{config: prq.config, predicateAdder: prq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *PowerRentalMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the PowerRentalMutation builder.
+func (m *PowerRentalMutation) Filter() *PowerRentalFilter {
+	return &PowerRentalFilter{config: m.config, predicateAdder: m}
+}
+
+// PowerRentalFilter provides a generic filtering capability at runtime for PowerRentalQuery.
+type PowerRentalFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *PowerRentalFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[25].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *PowerRentalFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(powerrental.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *PowerRentalFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(powerrental.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *PowerRentalFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(powerrental.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *PowerRentalFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(powerrental.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *PowerRentalFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(powerrental.FieldEntID))
+}
+
+// WhereGoodID applies the entql [16]byte predicate on the good_id field.
+func (f *PowerRentalFilter) WhereGoodID(p entql.ValueP) {
+	f.Where(p.Field(powerrental.FieldGoodID))
+}
+
+// WhereDeviceTypeID applies the entql [16]byte predicate on the device_type_id field.
+func (f *PowerRentalFilter) WhereDeviceTypeID(p entql.ValueP) {
+	f.Where(p.Field(powerrental.FieldDeviceTypeID))
+}
+
+// WhereVendorLocationID applies the entql [16]byte predicate on the vendor_location_id field.
+func (f *PowerRentalFilter) WhereVendorLocationID(p entql.ValueP) {
+	f.Where(p.Field(powerrental.FieldVendorLocationID))
+}
+
+// WhereUnitPrice applies the entql other predicate on the unit_price field.
+func (f *PowerRentalFilter) WhereUnitPrice(p entql.OtherP) {
+	f.Where(p.Field(powerrental.FieldUnitPrice))
+}
+
+// WhereQuantityUnit applies the entql string predicate on the quantity_unit field.
+func (f *PowerRentalFilter) WhereQuantityUnit(p entql.StringP) {
+	f.Where(p.Field(powerrental.FieldQuantityUnit))
+}
+
+// WhereQuantityUnitAmount applies the entql other predicate on the quantity_unit_amount field.
+func (f *PowerRentalFilter) WhereQuantityUnitAmount(p entql.OtherP) {
+	f.Where(p.Field(powerrental.FieldQuantityUnitAmount))
+}
+
+// WhereDeliveryAt applies the entql uint32 predicate on the delivery_at field.
+func (f *PowerRentalFilter) WhereDeliveryAt(p entql.Uint32P) {
+	f.Where(p.Field(powerrental.FieldDeliveryAt))
+}
+
+// WhereUnitLockDeposit applies the entql other predicate on the unit_lock_deposit field.
+func (f *PowerRentalFilter) WhereUnitLockDeposit(p entql.OtherP) {
+	f.Where(p.Field(powerrental.FieldUnitLockDeposit))
+}
+
+// WhereDurationType applies the entql string predicate on the duration_type field.
+func (f *PowerRentalFilter) WhereDurationType(p entql.StringP) {
+	f.Where(p.Field(powerrental.FieldDurationType))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (rq *RecommendQuery) addPredicate(pred func(s *sql.Selector)) {
 	rq.predicates = append(rq.predicates, pred)
 }
@@ -1918,7 +3553,7 @@ type RecommendFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *RecommendFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[12].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[26].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1975,6 +3610,81 @@ func (f *RecommendFilter) WhereRecommendIndex(p entql.OtherP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (ragq *RequiredAppGoodQuery) addPredicate(pred func(s *sql.Selector)) {
+	ragq.predicates = append(ragq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the RequiredAppGoodQuery builder.
+func (ragq *RequiredAppGoodQuery) Filter() *RequiredAppGoodFilter {
+	return &RequiredAppGoodFilter{config: ragq.config, predicateAdder: ragq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *RequiredAppGoodMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the RequiredAppGoodMutation builder.
+func (m *RequiredAppGoodMutation) Filter() *RequiredAppGoodFilter {
+	return &RequiredAppGoodFilter{config: m.config, predicateAdder: m}
+}
+
+// RequiredAppGoodFilter provides a generic filtering capability at runtime for RequiredAppGoodQuery.
+type RequiredAppGoodFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *RequiredAppGoodFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[27].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *RequiredAppGoodFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(requiredappgood.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *RequiredAppGoodFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(requiredappgood.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *RequiredAppGoodFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(requiredappgood.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *RequiredAppGoodFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(requiredappgood.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *RequiredAppGoodFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(requiredappgood.FieldEntID))
+}
+
+// WhereMainAppGoodID applies the entql [16]byte predicate on the main_app_good_id field.
+func (f *RequiredAppGoodFilter) WhereMainAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(requiredappgood.FieldMainAppGoodID))
+}
+
+// WhereRequiredAppGoodID applies the entql [16]byte predicate on the required_app_good_id field.
+func (f *RequiredAppGoodFilter) WhereRequiredAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(requiredappgood.FieldRequiredAppGoodID))
+}
+
+// WhereMust applies the entql bool predicate on the must field.
+func (f *RequiredAppGoodFilter) WhereMust(p entql.BoolP) {
+	f.Where(p.Field(requiredappgood.FieldMust))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (rgq *RequiredGoodQuery) addPredicate(pred func(s *sql.Selector)) {
 	rgq.predicates = append(rgq.predicates, pred)
 }
@@ -2003,7 +3713,7 @@ type RequiredGoodFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *RequiredGoodFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[13].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[28].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -2078,7 +3788,7 @@ type ScoreFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *ScoreFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[14].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[29].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -2163,7 +3873,7 @@ type StockFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *StockFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[15].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[30].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -2263,7 +3973,7 @@ type TopMostFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *TopMostFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[16].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[31].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -2383,7 +4093,7 @@ type TopMostGoodFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *TopMostGoodFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[17].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[32].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -2488,7 +4198,7 @@ type VendorBrandFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *VendorBrandFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[18].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[33].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -2558,7 +4268,7 @@ type VendorLocationFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *VendorLocationFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[19].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[34].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
