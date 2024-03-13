@@ -275,8 +275,7 @@ var (
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
-		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "technique_fee_ratio", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}
 	// AppLegacyPowerRentalsTable holds the schema information for the "app_legacy_power_rentals" table.
@@ -291,9 +290,9 @@ var (
 				Columns: []*schema.Column{AppLegacyPowerRentalsColumns[4]},
 			},
 			{
-				Name:    "applegacypowerrental_good_id_app_id",
+				Name:    "applegacypowerrental_app_good_id",
 				Unique:  false,
-				Columns: []*schema.Column{AppLegacyPowerRentalsColumns[6], AppLegacyPowerRentalsColumns[5]},
+				Columns: []*schema.Column{AppLegacyPowerRentalsColumns[5]},
 			},
 		},
 	}
@@ -318,7 +317,7 @@ var (
 		{Name: "sale_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "sale_end_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "sale_mode", Type: field.TypeString, Nullable: true, Default: "GoodSaleModeMainnetSpot"},
-		{Name: "fix_duration", Type: field.TypeBool, Nullable: true, Default: true},
+		{Name: "fixed_duration", Type: field.TypeBool, Nullable: true, Default: true},
 		{Name: "package_with_requireds", Type: field.TypeBool, Nullable: true, Default: true},
 	}
 	// AppPowerRentalsTable holds the schema information for the "app_power_rentals" table.

@@ -9,6 +9,7 @@ import (
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 type Req struct {
@@ -24,6 +25,9 @@ type Req struct {
 	MinOrderDuration             *uint32
 	MaxOrderDuration             *uint32
 	UnitPrice                    *decimal.Decimal
+	SaleStartAt                  *uint32
+	SaleEndAt                    *uint32
+	SaleMode                     *types.GoodSaleMode
 	FixedDuration                *bool
 	PackageWithRequireds         *bool
 	DeletedAt                    *uint32
@@ -37,11 +41,44 @@ func CreateSet(c *ent.AppPowerRentalCreate, req *Req) *ent.AppPowerRentalCreate 
 	if req.AppGoodID != nil {
 		c.SetAppGoodID(*req.AppGoodID)
 	}
-	if req.Description != nil {
-		c.SetDescription(*req.Description)
+	if req.ServiceStartAt != nil {
+		c.SetServiceStartAt(*req.ServiceStartAt)
 	}
-	if req.Index != nil {
-		c.SetIndex(*req.Index)
+	if req.CancelMode != nil {
+		c.SetCancelMode(req.CancelMode.String())
+	}
+	if req.CancelableBeforeStartSeconds != nil {
+		c.SetCancelableBeforeStartSeconds(*req.CancelableBeforeStartSeconds)
+	}
+	if req.EnableSetCommission != nil {
+		c.SetEnableSetCommission(*req.EnableSetCommission)
+	}
+	if req.MinOrderAmount != nil {
+		c.SetMinOrderAmount(*req.MinOrderAmount)
+	}
+	if req.MaxOrderAmount != nil {
+		c.SetMaxOrderAmount(*req.MaxOrderAmount)
+	}
+	if req.MaxUserAmount != nil {
+		c.SetMaxUserAmount(*req.MaxUserAmount)
+	}
+	if req.MinOrderDuration != nil {
+		c.SetMinOrderDuration(*req.MinOrderDuration)
+	}
+	if req.MaxOrderDuration != nil {
+		c.SetMaxOrderDuration(*req.MaxOrderDuration)
+	}
+	if req.UnitPrice != nil {
+		c.SetUnitPrice(*req.UnitPrice)
+	}
+	if req.SaleStartAt != nil {
+		c.SetSaleStartAt(*req.SaleStartAt)
+	}
+	if req.SaleEndAt != nil {
+		c.SetSaleEndAt(*req.SaleEndAt)
+	}
+	if req.SaleMode != nil {
+		c.SetSaleMode(req.SaleMode.String())
 	}
 	if req.FixedDuration != nil {
 		c.SetFixedDuration(*req.FixedDuration)
@@ -54,14 +91,47 @@ func CreateSet(c *ent.AppPowerRentalCreate, req *Req) *ent.AppPowerRentalCreate 
 
 //nolint:gocyclo,funlen
 func UpdateSet(u *ent.AppPowerRentalUpdateOne, req *Req) *ent.AppPowerRentalUpdateOne {
-	if req.Description != nil {
-		u.SetDescription(*req.Description)
+	if req.ServiceStartAt != nil {
+		u.SetServiceStartAt(*req.ServiceStartAt)
 	}
-	if req.Index != nil {
-		u.SetIndex(*req.Index)
+	if req.CancelMode != nil {
+		u.SetCancelMode(req.CancelMode.String())
+	}
+	if req.CancelableBeforeStartSeconds != nil {
+		u.SetCancelableBeforeStartSeconds(*req.CancelableBeforeStartSeconds)
+	}
+	if req.EnableSetCommission != nil {
+		u.SetEnableSetCommission(*req.EnableSetCommission)
+	}
+	if req.MinOrderAmount != nil {
+		u.SetMinOrderAmount(*req.MinOrderAmount)
+	}
+	if req.MaxOrderAmount != nil {
+		u.SetMaxOrderAmount(*req.MaxOrderAmount)
+	}
+	if req.MaxUserAmount != nil {
+		u.SetMaxUserAmount(*req.MaxUserAmount)
+	}
+	if req.MinOrderDuration != nil {
+		u.SetMinOrderDuration(*req.MinOrderDuration)
+	}
+	if req.MaxOrderDuration != nil {
+		u.SetMaxOrderDuration(*req.MaxOrderDuration)
+	}
+	if req.UnitPrice != nil {
+		u.SetUnitPrice(*req.UnitPrice)
+	}
+	if req.SaleStartAt != nil {
+		u.SetSaleStartAt(*req.SaleStartAt)
+	}
+	if req.SaleEndAt != nil {
+		u.SetSaleEndAt(*req.SaleEndAt)
+	}
+	if req.SaleMode != nil {
+		u.SetSaleMode(req.SaleMode.String())
 	}
 	if req.FixedDuration != nil {
-		u.SetFixedDuration(req.FixedDuration.String())
+		u.SetFixedDuration(*req.FixedDuration)
 	}
 	if req.PackageWithRequireds != nil {
 		u.SetPackageWithRequireds(*req.PackageWithRequireds)

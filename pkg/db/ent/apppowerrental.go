@@ -53,8 +53,8 @@ type AppPowerRental struct {
 	SaleEndAt uint32 `json:"sale_end_at,omitempty"`
 	// SaleMode holds the value of the "sale_mode" field.
 	SaleMode string `json:"sale_mode,omitempty"`
-	// FixDuration holds the value of the "fix_duration" field.
-	FixDuration bool `json:"fix_duration,omitempty"`
+	// FixedDuration holds the value of the "fixed_duration" field.
+	FixedDuration bool `json:"fixed_duration,omitempty"`
 	// PackageWithRequireds holds the value of the "package_with_requireds" field.
 	PackageWithRequireds bool `json:"package_with_requireds,omitempty"`
 }
@@ -66,7 +66,7 @@ func (*AppPowerRental) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case apppowerrental.FieldMinOrderAmount, apppowerrental.FieldMaxOrderAmount, apppowerrental.FieldMaxUserAmount, apppowerrental.FieldUnitPrice:
 			values[i] = new(decimal.Decimal)
-		case apppowerrental.FieldEnableSetCommission, apppowerrental.FieldFixDuration, apppowerrental.FieldPackageWithRequireds:
+		case apppowerrental.FieldEnableSetCommission, apppowerrental.FieldFixedDuration, apppowerrental.FieldPackageWithRequireds:
 			values[i] = new(sql.NullBool)
 		case apppowerrental.FieldID, apppowerrental.FieldCreatedAt, apppowerrental.FieldUpdatedAt, apppowerrental.FieldDeletedAt, apppowerrental.FieldServiceStartAt, apppowerrental.FieldCancelableBeforeStartSeconds, apppowerrental.FieldMinOrderDuration, apppowerrental.FieldMaxOrderDuration, apppowerrental.FieldSaleStartAt, apppowerrental.FieldSaleEndAt:
 			values[i] = new(sql.NullInt64)
@@ -203,11 +203,11 @@ func (apr *AppPowerRental) assignValues(columns []string, values []interface{}) 
 			} else if value.Valid {
 				apr.SaleMode = value.String
 			}
-		case apppowerrental.FieldFixDuration:
+		case apppowerrental.FieldFixedDuration:
 			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field fix_duration", values[i])
+				return fmt.Errorf("unexpected type %T for field fixed_duration", values[i])
 			} else if value.Valid {
-				apr.FixDuration = value.Bool
+				apr.FixedDuration = value.Bool
 			}
 		case apppowerrental.FieldPackageWithRequireds:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -297,8 +297,8 @@ func (apr *AppPowerRental) String() string {
 	builder.WriteString("sale_mode=")
 	builder.WriteString(apr.SaleMode)
 	builder.WriteString(", ")
-	builder.WriteString("fix_duration=")
-	builder.WriteString(fmt.Sprintf("%v", apr.FixDuration))
+	builder.WriteString("fixed_duration=")
+	builder.WriteString(fmt.Sprintf("%v", apr.FixedDuration))
 	builder.WriteString(", ")
 	builder.WriteString("package_with_requireds=")
 	builder.WriteString(fmt.Sprintf("%v", apr.PackageWithRequireds))

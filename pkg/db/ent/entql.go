@@ -260,8 +260,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			applegacypowerrental.FieldUpdatedAt:         {Type: field.TypeUint32, Column: applegacypowerrental.FieldUpdatedAt},
 			applegacypowerrental.FieldDeletedAt:         {Type: field.TypeUint32, Column: applegacypowerrental.FieldDeletedAt},
 			applegacypowerrental.FieldEntID:             {Type: field.TypeUUID, Column: applegacypowerrental.FieldEntID},
-			applegacypowerrental.FieldAppID:             {Type: field.TypeUUID, Column: applegacypowerrental.FieldAppID},
-			applegacypowerrental.FieldGoodID:            {Type: field.TypeUUID, Column: applegacypowerrental.FieldGoodID},
+			applegacypowerrental.FieldAppGoodID:         {Type: field.TypeUUID, Column: applegacypowerrental.FieldAppGoodID},
 			applegacypowerrental.FieldTechniqueFeeRatio: {Type: field.TypeOther, Column: applegacypowerrental.FieldTechniqueFeeRatio},
 		},
 	}
@@ -294,7 +293,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			apppowerrental.FieldSaleStartAt:                  {Type: field.TypeUint32, Column: apppowerrental.FieldSaleStartAt},
 			apppowerrental.FieldSaleEndAt:                    {Type: field.TypeUint32, Column: apppowerrental.FieldSaleEndAt},
 			apppowerrental.FieldSaleMode:                     {Type: field.TypeString, Column: apppowerrental.FieldSaleMode},
-			apppowerrental.FieldFixDuration:                  {Type: field.TypeBool, Column: apppowerrental.FieldFixDuration},
+			apppowerrental.FieldFixedDuration:                {Type: field.TypeBool, Column: apppowerrental.FieldFixedDuration},
 			apppowerrental.FieldPackageWithRequireds:         {Type: field.TypeBool, Column: apppowerrental.FieldPackageWithRequireds},
 		},
 	}
@@ -1760,14 +1759,9 @@ func (f *AppLegacyPowerRentalFilter) WhereEntID(p entql.ValueP) {
 	f.Where(p.Field(applegacypowerrental.FieldEntID))
 }
 
-// WhereAppID applies the entql [16]byte predicate on the app_id field.
-func (f *AppLegacyPowerRentalFilter) WhereAppID(p entql.ValueP) {
-	f.Where(p.Field(applegacypowerrental.FieldAppID))
-}
-
-// WhereGoodID applies the entql [16]byte predicate on the good_id field.
-func (f *AppLegacyPowerRentalFilter) WhereGoodID(p entql.ValueP) {
-	f.Where(p.Field(applegacypowerrental.FieldGoodID))
+// WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
+func (f *AppLegacyPowerRentalFilter) WhereAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(applegacypowerrental.FieldAppGoodID))
 }
 
 // WhereTechniqueFeeRatio applies the entql other predicate on the technique_fee_ratio field.
@@ -1905,9 +1899,9 @@ func (f *AppPowerRentalFilter) WhereSaleMode(p entql.StringP) {
 	f.Where(p.Field(apppowerrental.FieldSaleMode))
 }
 
-// WhereFixDuration applies the entql bool predicate on the fix_duration field.
-func (f *AppPowerRentalFilter) WhereFixDuration(p entql.BoolP) {
-	f.Where(p.Field(apppowerrental.FieldFixDuration))
+// WhereFixedDuration applies the entql bool predicate on the fixed_duration field.
+func (f *AppPowerRentalFilter) WhereFixedDuration(p entql.BoolP) {
+	f.Where(p.Field(apppowerrental.FieldFixedDuration))
 }
 
 // WherePackageWithRequireds applies the entql bool predicate on the package_with_requireds field.

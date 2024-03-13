@@ -98,7 +98,7 @@ func (AppPowerRental) Fields() []ent.Field {
 			Optional().
 			Default(types.GoodSaleMode_GoodSaleModeMainnetSpot.String()),
 		field.
-			Bool("fix_duration").
+			Bool("fixed_duration").
 			Optional().
 			Default(true),
 		field.

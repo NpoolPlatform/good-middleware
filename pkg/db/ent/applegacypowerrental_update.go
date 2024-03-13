@@ -99,43 +99,23 @@ func (alpru *AppLegacyPowerRentalUpdate) SetNillableEntID(u *uuid.UUID) *AppLega
 	return alpru
 }
 
-// SetAppID sets the "app_id" field.
-func (alpru *AppLegacyPowerRentalUpdate) SetAppID(u uuid.UUID) *AppLegacyPowerRentalUpdate {
-	alpru.mutation.SetAppID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (alpru *AppLegacyPowerRentalUpdate) SetAppGoodID(u uuid.UUID) *AppLegacyPowerRentalUpdate {
+	alpru.mutation.SetAppGoodID(u)
 	return alpru
 }
 
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (alpru *AppLegacyPowerRentalUpdate) SetNillableAppID(u *uuid.UUID) *AppLegacyPowerRentalUpdate {
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (alpru *AppLegacyPowerRentalUpdate) SetNillableAppGoodID(u *uuid.UUID) *AppLegacyPowerRentalUpdate {
 	if u != nil {
-		alpru.SetAppID(*u)
+		alpru.SetAppGoodID(*u)
 	}
 	return alpru
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (alpru *AppLegacyPowerRentalUpdate) ClearAppID() *AppLegacyPowerRentalUpdate {
-	alpru.mutation.ClearAppID()
-	return alpru
-}
-
-// SetGoodID sets the "good_id" field.
-func (alpru *AppLegacyPowerRentalUpdate) SetGoodID(u uuid.UUID) *AppLegacyPowerRentalUpdate {
-	alpru.mutation.SetGoodID(u)
-	return alpru
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (alpru *AppLegacyPowerRentalUpdate) SetNillableGoodID(u *uuid.UUID) *AppLegacyPowerRentalUpdate {
-	if u != nil {
-		alpru.SetGoodID(*u)
-	}
-	return alpru
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (alpru *AppLegacyPowerRentalUpdate) ClearGoodID() *AppLegacyPowerRentalUpdate {
-	alpru.mutation.ClearGoodID()
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (alpru *AppLegacyPowerRentalUpdate) ClearAppGoodID() *AppLegacyPowerRentalUpdate {
+	alpru.mutation.ClearAppGoodID()
 	return alpru
 }
 
@@ -306,30 +286,17 @@ func (alpru *AppLegacyPowerRentalUpdate) sqlSave(ctx context.Context) (n int, er
 			Column: applegacypowerrental.FieldEntID,
 		})
 	}
-	if value, ok := alpru.mutation.AppID(); ok {
+	if value, ok := alpru.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: applegacypowerrental.FieldAppID,
+			Column: applegacypowerrental.FieldAppGoodID,
 		})
 	}
-	if alpru.mutation.AppIDCleared() {
+	if alpru.mutation.AppGoodIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Column: applegacypowerrental.FieldAppID,
-		})
-	}
-	if value, ok := alpru.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: applegacypowerrental.FieldGoodID,
-		})
-	}
-	if alpru.mutation.GoodIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: applegacypowerrental.FieldGoodID,
+			Column: applegacypowerrental.FieldAppGoodID,
 		})
 	}
 	if value, ok := alpru.mutation.TechniqueFeeRatio(); ok {
@@ -435,43 +402,23 @@ func (alpruo *AppLegacyPowerRentalUpdateOne) SetNillableEntID(u *uuid.UUID) *App
 	return alpruo
 }
 
-// SetAppID sets the "app_id" field.
-func (alpruo *AppLegacyPowerRentalUpdateOne) SetAppID(u uuid.UUID) *AppLegacyPowerRentalUpdateOne {
-	alpruo.mutation.SetAppID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (alpruo *AppLegacyPowerRentalUpdateOne) SetAppGoodID(u uuid.UUID) *AppLegacyPowerRentalUpdateOne {
+	alpruo.mutation.SetAppGoodID(u)
 	return alpruo
 }
 
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (alpruo *AppLegacyPowerRentalUpdateOne) SetNillableAppID(u *uuid.UUID) *AppLegacyPowerRentalUpdateOne {
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (alpruo *AppLegacyPowerRentalUpdateOne) SetNillableAppGoodID(u *uuid.UUID) *AppLegacyPowerRentalUpdateOne {
 	if u != nil {
-		alpruo.SetAppID(*u)
+		alpruo.SetAppGoodID(*u)
 	}
 	return alpruo
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (alpruo *AppLegacyPowerRentalUpdateOne) ClearAppID() *AppLegacyPowerRentalUpdateOne {
-	alpruo.mutation.ClearAppID()
-	return alpruo
-}
-
-// SetGoodID sets the "good_id" field.
-func (alpruo *AppLegacyPowerRentalUpdateOne) SetGoodID(u uuid.UUID) *AppLegacyPowerRentalUpdateOne {
-	alpruo.mutation.SetGoodID(u)
-	return alpruo
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (alpruo *AppLegacyPowerRentalUpdateOne) SetNillableGoodID(u *uuid.UUID) *AppLegacyPowerRentalUpdateOne {
-	if u != nil {
-		alpruo.SetGoodID(*u)
-	}
-	return alpruo
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (alpruo *AppLegacyPowerRentalUpdateOne) ClearGoodID() *AppLegacyPowerRentalUpdateOne {
-	alpruo.mutation.ClearGoodID()
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (alpruo *AppLegacyPowerRentalUpdateOne) ClearAppGoodID() *AppLegacyPowerRentalUpdateOne {
+	alpruo.mutation.ClearAppGoodID()
 	return alpruo
 }
 
@@ -672,30 +619,17 @@ func (alpruo *AppLegacyPowerRentalUpdateOne) sqlSave(ctx context.Context) (_node
 			Column: applegacypowerrental.FieldEntID,
 		})
 	}
-	if value, ok := alpruo.mutation.AppID(); ok {
+	if value, ok := alpruo.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: applegacypowerrental.FieldAppID,
+			Column: applegacypowerrental.FieldAppGoodID,
 		})
 	}
-	if alpruo.mutation.AppIDCleared() {
+	if alpruo.mutation.AppGoodIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Column: applegacypowerrental.FieldAppID,
-		})
-	}
-	if value, ok := alpruo.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: applegacypowerrental.FieldGoodID,
-		})
-	}
-	if alpruo.mutation.GoodIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: applegacypowerrental.FieldGoodID,
+			Column: applegacypowerrental.FieldAppGoodID,
 		})
 	}
 	if value, ok := alpruo.mutation.TechniqueFeeRatio(); ok {

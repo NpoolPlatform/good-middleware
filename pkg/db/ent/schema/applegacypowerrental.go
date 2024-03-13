@@ -27,13 +27,7 @@ func (AppLegacyPowerRental) Mixin() []ent.Mixin {
 func (AppLegacyPowerRental) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("app_id", uuid.UUID{}).
-			Optional().
-			Default(func() uuid.UUID {
-				return uuid.Nil
-			}),
-		field.
-			UUID("good_id", uuid.UUID{}).
+			UUID("app_good_id", uuid.UUID{}).
 			Optional().
 			Default(func() uuid.UUID {
 				return uuid.Nil
@@ -55,6 +49,6 @@ func (AppLegacyPowerRental) Edges() []ent.Edge {
 
 func (AppLegacyPowerRental) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("good_id", "app_id"),
+		index.Fields("app_good_id"),
 	}
 }

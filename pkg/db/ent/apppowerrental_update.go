@@ -421,23 +421,23 @@ func (apru *AppPowerRentalUpdate) ClearSaleMode() *AppPowerRentalUpdate {
 	return apru
 }
 
-// SetFixDuration sets the "fix_duration" field.
-func (apru *AppPowerRentalUpdate) SetFixDuration(b bool) *AppPowerRentalUpdate {
-	apru.mutation.SetFixDuration(b)
+// SetFixedDuration sets the "fixed_duration" field.
+func (apru *AppPowerRentalUpdate) SetFixedDuration(b bool) *AppPowerRentalUpdate {
+	apru.mutation.SetFixedDuration(b)
 	return apru
 }
 
-// SetNillableFixDuration sets the "fix_duration" field if the given value is not nil.
-func (apru *AppPowerRentalUpdate) SetNillableFixDuration(b *bool) *AppPowerRentalUpdate {
+// SetNillableFixedDuration sets the "fixed_duration" field if the given value is not nil.
+func (apru *AppPowerRentalUpdate) SetNillableFixedDuration(b *bool) *AppPowerRentalUpdate {
 	if b != nil {
-		apru.SetFixDuration(*b)
+		apru.SetFixedDuration(*b)
 	}
 	return apru
 }
 
-// ClearFixDuration clears the value of the "fix_duration" field.
-func (apru *AppPowerRentalUpdate) ClearFixDuration() *AppPowerRentalUpdate {
-	apru.mutation.ClearFixDuration()
+// ClearFixedDuration clears the value of the "fixed_duration" field.
+func (apru *AppPowerRentalUpdate) ClearFixedDuration() *AppPowerRentalUpdate {
+	apru.mutation.ClearFixedDuration()
 	return apru
 }
 
@@ -832,17 +832,17 @@ func (apru *AppPowerRentalUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: apppowerrental.FieldSaleMode,
 		})
 	}
-	if value, ok := apru.mutation.FixDuration(); ok {
+	if value, ok := apru.mutation.FixedDuration(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: apppowerrental.FieldFixDuration,
+			Column: apppowerrental.FieldFixedDuration,
 		})
 	}
-	if apru.mutation.FixDurationCleared() {
+	if apru.mutation.FixedDurationCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
-			Column: apppowerrental.FieldFixDuration,
+			Column: apppowerrental.FieldFixedDuration,
 		})
 	}
 	if value, ok := apru.mutation.PackageWithRequireds(); ok {
@@ -1270,23 +1270,23 @@ func (apruo *AppPowerRentalUpdateOne) ClearSaleMode() *AppPowerRentalUpdateOne {
 	return apruo
 }
 
-// SetFixDuration sets the "fix_duration" field.
-func (apruo *AppPowerRentalUpdateOne) SetFixDuration(b bool) *AppPowerRentalUpdateOne {
-	apruo.mutation.SetFixDuration(b)
+// SetFixedDuration sets the "fixed_duration" field.
+func (apruo *AppPowerRentalUpdateOne) SetFixedDuration(b bool) *AppPowerRentalUpdateOne {
+	apruo.mutation.SetFixedDuration(b)
 	return apruo
 }
 
-// SetNillableFixDuration sets the "fix_duration" field if the given value is not nil.
-func (apruo *AppPowerRentalUpdateOne) SetNillableFixDuration(b *bool) *AppPowerRentalUpdateOne {
+// SetNillableFixedDuration sets the "fixed_duration" field if the given value is not nil.
+func (apruo *AppPowerRentalUpdateOne) SetNillableFixedDuration(b *bool) *AppPowerRentalUpdateOne {
 	if b != nil {
-		apruo.SetFixDuration(*b)
+		apruo.SetFixedDuration(*b)
 	}
 	return apruo
 }
 
-// ClearFixDuration clears the value of the "fix_duration" field.
-func (apruo *AppPowerRentalUpdateOne) ClearFixDuration() *AppPowerRentalUpdateOne {
-	apruo.mutation.ClearFixDuration()
+// ClearFixedDuration clears the value of the "fixed_duration" field.
+func (apruo *AppPowerRentalUpdateOne) ClearFixedDuration() *AppPowerRentalUpdateOne {
+	apruo.mutation.ClearFixedDuration()
 	return apruo
 }
 
@@ -1711,17 +1711,17 @@ func (apruo *AppPowerRentalUpdateOne) sqlSave(ctx context.Context) (_node *AppPo
 			Column: apppowerrental.FieldSaleMode,
 		})
 	}
-	if value, ok := apruo.mutation.FixDuration(); ok {
+	if value, ok := apruo.mutation.FixedDuration(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: apppowerrental.FieldFixDuration,
+			Column: apppowerrental.FieldFixedDuration,
 		})
 	}
-	if apruo.mutation.FixDurationCleared() {
+	if apruo.mutation.FixedDurationCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
-			Column: apppowerrental.FieldFixDuration,
+			Column: apppowerrental.FieldFixedDuration,
 		})
 	}
 	if value, ok := apruo.mutation.PackageWithRequireds(); ok {

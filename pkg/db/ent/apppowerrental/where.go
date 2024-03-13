@@ -206,10 +206,10 @@ func SaleMode(v string) predicate.AppPowerRental {
 	})
 }
 
-// FixDuration applies equality check predicate on the "fix_duration" field. It's identical to FixDurationEQ.
-func FixDuration(v bool) predicate.AppPowerRental {
+// FixedDuration applies equality check predicate on the "fixed_duration" field. It's identical to FixedDurationEQ.
+func FixedDuration(v bool) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFixDuration), v))
+		s.Where(sql.EQ(s.C(FieldFixedDuration), v))
 	})
 }
 
@@ -1588,31 +1588,31 @@ func SaleModeContainsFold(v string) predicate.AppPowerRental {
 	})
 }
 
-// FixDurationEQ applies the EQ predicate on the "fix_duration" field.
-func FixDurationEQ(v bool) predicate.AppPowerRental {
+// FixedDurationEQ applies the EQ predicate on the "fixed_duration" field.
+func FixedDurationEQ(v bool) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFixDuration), v))
+		s.Where(sql.EQ(s.C(FieldFixedDuration), v))
 	})
 }
 
-// FixDurationNEQ applies the NEQ predicate on the "fix_duration" field.
-func FixDurationNEQ(v bool) predicate.AppPowerRental {
+// FixedDurationNEQ applies the NEQ predicate on the "fixed_duration" field.
+func FixedDurationNEQ(v bool) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldFixDuration), v))
+		s.Where(sql.NEQ(s.C(FieldFixedDuration), v))
 	})
 }
 
-// FixDurationIsNil applies the IsNil predicate on the "fix_duration" field.
-func FixDurationIsNil() predicate.AppPowerRental {
+// FixedDurationIsNil applies the IsNil predicate on the "fixed_duration" field.
+func FixedDurationIsNil() predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldFixDuration)))
+		s.Where(sql.IsNull(s.C(FieldFixedDuration)))
 	})
 }
 
-// FixDurationNotNil applies the NotNil predicate on the "fix_duration" field.
-func FixDurationNotNil() predicate.AppPowerRental {
+// FixedDurationNotNil applies the NotNil predicate on the "fixed_duration" field.
+func FixedDurationNotNil() predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldFixDuration)))
+		s.Where(sql.NotNull(s.C(FieldFixedDuration)))
 	})
 }
 

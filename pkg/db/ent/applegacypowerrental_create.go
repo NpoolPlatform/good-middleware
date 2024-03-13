@@ -79,30 +79,16 @@ func (alprc *AppLegacyPowerRentalCreate) SetNillableEntID(u *uuid.UUID) *AppLega
 	return alprc
 }
 
-// SetAppID sets the "app_id" field.
-func (alprc *AppLegacyPowerRentalCreate) SetAppID(u uuid.UUID) *AppLegacyPowerRentalCreate {
-	alprc.mutation.SetAppID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (alprc *AppLegacyPowerRentalCreate) SetAppGoodID(u uuid.UUID) *AppLegacyPowerRentalCreate {
+	alprc.mutation.SetAppGoodID(u)
 	return alprc
 }
 
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (alprc *AppLegacyPowerRentalCreate) SetNillableAppID(u *uuid.UUID) *AppLegacyPowerRentalCreate {
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (alprc *AppLegacyPowerRentalCreate) SetNillableAppGoodID(u *uuid.UUID) *AppLegacyPowerRentalCreate {
 	if u != nil {
-		alprc.SetAppID(*u)
-	}
-	return alprc
-}
-
-// SetGoodID sets the "good_id" field.
-func (alprc *AppLegacyPowerRentalCreate) SetGoodID(u uuid.UUID) *AppLegacyPowerRentalCreate {
-	alprc.mutation.SetGoodID(u)
-	return alprc
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (alprc *AppLegacyPowerRentalCreate) SetNillableGoodID(u *uuid.UUID) *AppLegacyPowerRentalCreate {
-	if u != nil {
-		alprc.SetGoodID(*u)
+		alprc.SetAppGoodID(*u)
 	}
 	return alprc
 }
@@ -234,19 +220,12 @@ func (alprc *AppLegacyPowerRentalCreate) defaults() error {
 		v := applegacypowerrental.DefaultEntID()
 		alprc.mutation.SetEntID(v)
 	}
-	if _, ok := alprc.mutation.AppID(); !ok {
-		if applegacypowerrental.DefaultAppID == nil {
-			return fmt.Errorf("ent: uninitialized applegacypowerrental.DefaultAppID (forgotten import ent/runtime?)")
+	if _, ok := alprc.mutation.AppGoodID(); !ok {
+		if applegacypowerrental.DefaultAppGoodID == nil {
+			return fmt.Errorf("ent: uninitialized applegacypowerrental.DefaultAppGoodID (forgotten import ent/runtime?)")
 		}
-		v := applegacypowerrental.DefaultAppID()
-		alprc.mutation.SetAppID(v)
-	}
-	if _, ok := alprc.mutation.GoodID(); !ok {
-		if applegacypowerrental.DefaultGoodID == nil {
-			return fmt.Errorf("ent: uninitialized applegacypowerrental.DefaultGoodID (forgotten import ent/runtime?)")
-		}
-		v := applegacypowerrental.DefaultGoodID()
-		alprc.mutation.SetGoodID(v)
+		v := applegacypowerrental.DefaultAppGoodID()
+		alprc.mutation.SetAppGoodID(v)
 	}
 	if _, ok := alprc.mutation.TechniqueFeeRatio(); !ok {
 		v := applegacypowerrental.DefaultTechniqueFeeRatio
@@ -335,21 +314,13 @@ func (alprc *AppLegacyPowerRentalCreate) createSpec() (*AppLegacyPowerRental, *s
 		})
 		_node.EntID = value
 	}
-	if value, ok := alprc.mutation.AppID(); ok {
+	if value, ok := alprc.mutation.AppGoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: applegacypowerrental.FieldAppID,
+			Column: applegacypowerrental.FieldAppGoodID,
 		})
-		_node.AppID = value
-	}
-	if value, ok := alprc.mutation.GoodID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: applegacypowerrental.FieldGoodID,
-		})
-		_node.GoodID = value
+		_node.AppGoodID = value
 	}
 	if value, ok := alprc.mutation.TechniqueFeeRatio(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -479,39 +450,21 @@ func (u *AppLegacyPowerRentalUpsert) UpdateEntID() *AppLegacyPowerRentalUpsert {
 	return u
 }
 
-// SetAppID sets the "app_id" field.
-func (u *AppLegacyPowerRentalUpsert) SetAppID(v uuid.UUID) *AppLegacyPowerRentalUpsert {
-	u.Set(applegacypowerrental.FieldAppID, v)
+// SetAppGoodID sets the "app_good_id" field.
+func (u *AppLegacyPowerRentalUpsert) SetAppGoodID(v uuid.UUID) *AppLegacyPowerRentalUpsert {
+	u.Set(applegacypowerrental.FieldAppGoodID, v)
 	return u
 }
 
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *AppLegacyPowerRentalUpsert) UpdateAppID() *AppLegacyPowerRentalUpsert {
-	u.SetExcluded(applegacypowerrental.FieldAppID)
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *AppLegacyPowerRentalUpsert) UpdateAppGoodID() *AppLegacyPowerRentalUpsert {
+	u.SetExcluded(applegacypowerrental.FieldAppGoodID)
 	return u
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (u *AppLegacyPowerRentalUpsert) ClearAppID() *AppLegacyPowerRentalUpsert {
-	u.SetNull(applegacypowerrental.FieldAppID)
-	return u
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *AppLegacyPowerRentalUpsert) SetGoodID(v uuid.UUID) *AppLegacyPowerRentalUpsert {
-	u.Set(applegacypowerrental.FieldGoodID, v)
-	return u
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *AppLegacyPowerRentalUpsert) UpdateGoodID() *AppLegacyPowerRentalUpsert {
-	u.SetExcluded(applegacypowerrental.FieldGoodID)
-	return u
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *AppLegacyPowerRentalUpsert) ClearGoodID() *AppLegacyPowerRentalUpsert {
-	u.SetNull(applegacypowerrental.FieldGoodID)
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *AppLegacyPowerRentalUpsert) ClearAppGoodID() *AppLegacyPowerRentalUpsert {
+	u.SetNull(applegacypowerrental.FieldAppGoodID)
 	return u
 }
 
@@ -660,45 +613,24 @@ func (u *AppLegacyPowerRentalUpsertOne) UpdateEntID() *AppLegacyPowerRentalUpser
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *AppLegacyPowerRentalUpsertOne) SetAppID(v uuid.UUID) *AppLegacyPowerRentalUpsertOne {
+// SetAppGoodID sets the "app_good_id" field.
+func (u *AppLegacyPowerRentalUpsertOne) SetAppGoodID(v uuid.UUID) *AppLegacyPowerRentalUpsertOne {
 	return u.Update(func(s *AppLegacyPowerRentalUpsert) {
-		s.SetAppID(v)
+		s.SetAppGoodID(v)
 	})
 }
 
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *AppLegacyPowerRentalUpsertOne) UpdateAppID() *AppLegacyPowerRentalUpsertOne {
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *AppLegacyPowerRentalUpsertOne) UpdateAppGoodID() *AppLegacyPowerRentalUpsertOne {
 	return u.Update(func(s *AppLegacyPowerRentalUpsert) {
-		s.UpdateAppID()
+		s.UpdateAppGoodID()
 	})
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (u *AppLegacyPowerRentalUpsertOne) ClearAppID() *AppLegacyPowerRentalUpsertOne {
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *AppLegacyPowerRentalUpsertOne) ClearAppGoodID() *AppLegacyPowerRentalUpsertOne {
 	return u.Update(func(s *AppLegacyPowerRentalUpsert) {
-		s.ClearAppID()
-	})
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *AppLegacyPowerRentalUpsertOne) SetGoodID(v uuid.UUID) *AppLegacyPowerRentalUpsertOne {
-	return u.Update(func(s *AppLegacyPowerRentalUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *AppLegacyPowerRentalUpsertOne) UpdateGoodID() *AppLegacyPowerRentalUpsertOne {
-	return u.Update(func(s *AppLegacyPowerRentalUpsert) {
-		s.UpdateGoodID()
-	})
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *AppLegacyPowerRentalUpsertOne) ClearGoodID() *AppLegacyPowerRentalUpsertOne {
-	return u.Update(func(s *AppLegacyPowerRentalUpsert) {
-		s.ClearGoodID()
+		s.ClearAppGoodID()
 	})
 }
 
@@ -1015,45 +947,24 @@ func (u *AppLegacyPowerRentalUpsertBulk) UpdateEntID() *AppLegacyPowerRentalUpse
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *AppLegacyPowerRentalUpsertBulk) SetAppID(v uuid.UUID) *AppLegacyPowerRentalUpsertBulk {
+// SetAppGoodID sets the "app_good_id" field.
+func (u *AppLegacyPowerRentalUpsertBulk) SetAppGoodID(v uuid.UUID) *AppLegacyPowerRentalUpsertBulk {
 	return u.Update(func(s *AppLegacyPowerRentalUpsert) {
-		s.SetAppID(v)
+		s.SetAppGoodID(v)
 	})
 }
 
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *AppLegacyPowerRentalUpsertBulk) UpdateAppID() *AppLegacyPowerRentalUpsertBulk {
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *AppLegacyPowerRentalUpsertBulk) UpdateAppGoodID() *AppLegacyPowerRentalUpsertBulk {
 	return u.Update(func(s *AppLegacyPowerRentalUpsert) {
-		s.UpdateAppID()
+		s.UpdateAppGoodID()
 	})
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (u *AppLegacyPowerRentalUpsertBulk) ClearAppID() *AppLegacyPowerRentalUpsertBulk {
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *AppLegacyPowerRentalUpsertBulk) ClearAppGoodID() *AppLegacyPowerRentalUpsertBulk {
 	return u.Update(func(s *AppLegacyPowerRentalUpsert) {
-		s.ClearAppID()
-	})
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *AppLegacyPowerRentalUpsertBulk) SetGoodID(v uuid.UUID) *AppLegacyPowerRentalUpsertBulk {
-	return u.Update(func(s *AppLegacyPowerRentalUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *AppLegacyPowerRentalUpsertBulk) UpdateGoodID() *AppLegacyPowerRentalUpsertBulk {
-	return u.Update(func(s *AppLegacyPowerRentalUpsert) {
-		s.UpdateGoodID()
-	})
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *AppLegacyPowerRentalUpsertBulk) ClearGoodID() *AppLegacyPowerRentalUpsertBulk {
-	return u.Update(func(s *AppLegacyPowerRentalUpsert) {
-		s.ClearGoodID()
+		s.ClearAppGoodID()
 	})
 }
 

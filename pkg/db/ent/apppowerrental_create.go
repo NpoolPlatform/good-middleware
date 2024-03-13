@@ -275,16 +275,16 @@ func (aprc *AppPowerRentalCreate) SetNillableSaleMode(s *string) *AppPowerRental
 	return aprc
 }
 
-// SetFixDuration sets the "fix_duration" field.
-func (aprc *AppPowerRentalCreate) SetFixDuration(b bool) *AppPowerRentalCreate {
-	aprc.mutation.SetFixDuration(b)
+// SetFixedDuration sets the "fixed_duration" field.
+func (aprc *AppPowerRentalCreate) SetFixedDuration(b bool) *AppPowerRentalCreate {
+	aprc.mutation.SetFixedDuration(b)
 	return aprc
 }
 
-// SetNillableFixDuration sets the "fix_duration" field if the given value is not nil.
-func (aprc *AppPowerRentalCreate) SetNillableFixDuration(b *bool) *AppPowerRentalCreate {
+// SetNillableFixedDuration sets the "fixed_duration" field if the given value is not nil.
+func (aprc *AppPowerRentalCreate) SetNillableFixedDuration(b *bool) *AppPowerRentalCreate {
 	if b != nil {
-		aprc.SetFixDuration(*b)
+		aprc.SetFixedDuration(*b)
 	}
 	return aprc
 }
@@ -475,9 +475,9 @@ func (aprc *AppPowerRentalCreate) defaults() error {
 		v := apppowerrental.DefaultSaleMode
 		aprc.mutation.SetSaleMode(v)
 	}
-	if _, ok := aprc.mutation.FixDuration(); !ok {
-		v := apppowerrental.DefaultFixDuration
-		aprc.mutation.SetFixDuration(v)
+	if _, ok := aprc.mutation.FixedDuration(); !ok {
+		v := apppowerrental.DefaultFixedDuration
+		aprc.mutation.SetFixedDuration(v)
 	}
 	if _, ok := aprc.mutation.PackageWithRequireds(); !ok {
 		v := apppowerrental.DefaultPackageWithRequireds
@@ -678,13 +678,13 @@ func (aprc *AppPowerRentalCreate) createSpec() (*AppPowerRental, *sqlgraph.Creat
 		})
 		_node.SaleMode = value
 	}
-	if value, ok := aprc.mutation.FixDuration(); ok {
+	if value, ok := aprc.mutation.FixedDuration(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: apppowerrental.FieldFixDuration,
+			Column: apppowerrental.FieldFixedDuration,
 		})
-		_node.FixDuration = value
+		_node.FixedDuration = value
 	}
 	if value, ok := aprc.mutation.PackageWithRequireds(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -1102,21 +1102,21 @@ func (u *AppPowerRentalUpsert) ClearSaleMode() *AppPowerRentalUpsert {
 	return u
 }
 
-// SetFixDuration sets the "fix_duration" field.
-func (u *AppPowerRentalUpsert) SetFixDuration(v bool) *AppPowerRentalUpsert {
-	u.Set(apppowerrental.FieldFixDuration, v)
+// SetFixedDuration sets the "fixed_duration" field.
+func (u *AppPowerRentalUpsert) SetFixedDuration(v bool) *AppPowerRentalUpsert {
+	u.Set(apppowerrental.FieldFixedDuration, v)
 	return u
 }
 
-// UpdateFixDuration sets the "fix_duration" field to the value that was provided on create.
-func (u *AppPowerRentalUpsert) UpdateFixDuration() *AppPowerRentalUpsert {
-	u.SetExcluded(apppowerrental.FieldFixDuration)
+// UpdateFixedDuration sets the "fixed_duration" field to the value that was provided on create.
+func (u *AppPowerRentalUpsert) UpdateFixedDuration() *AppPowerRentalUpsert {
+	u.SetExcluded(apppowerrental.FieldFixedDuration)
 	return u
 }
 
-// ClearFixDuration clears the value of the "fix_duration" field.
-func (u *AppPowerRentalUpsert) ClearFixDuration() *AppPowerRentalUpsert {
-	u.SetNull(apppowerrental.FieldFixDuration)
+// ClearFixedDuration clears the value of the "fixed_duration" field.
+func (u *AppPowerRentalUpsert) ClearFixedDuration() *AppPowerRentalUpsert {
+	u.SetNull(apppowerrental.FieldFixedDuration)
 	return u
 }
 
@@ -1601,24 +1601,24 @@ func (u *AppPowerRentalUpsertOne) ClearSaleMode() *AppPowerRentalUpsertOne {
 	})
 }
 
-// SetFixDuration sets the "fix_duration" field.
-func (u *AppPowerRentalUpsertOne) SetFixDuration(v bool) *AppPowerRentalUpsertOne {
+// SetFixedDuration sets the "fixed_duration" field.
+func (u *AppPowerRentalUpsertOne) SetFixedDuration(v bool) *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.SetFixDuration(v)
+		s.SetFixedDuration(v)
 	})
 }
 
-// UpdateFixDuration sets the "fix_duration" field to the value that was provided on create.
-func (u *AppPowerRentalUpsertOne) UpdateFixDuration() *AppPowerRentalUpsertOne {
+// UpdateFixedDuration sets the "fixed_duration" field to the value that was provided on create.
+func (u *AppPowerRentalUpsertOne) UpdateFixedDuration() *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.UpdateFixDuration()
+		s.UpdateFixedDuration()
 	})
 }
 
-// ClearFixDuration clears the value of the "fix_duration" field.
-func (u *AppPowerRentalUpsertOne) ClearFixDuration() *AppPowerRentalUpsertOne {
+// ClearFixedDuration clears the value of the "fixed_duration" field.
+func (u *AppPowerRentalUpsertOne) ClearFixedDuration() *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.ClearFixDuration()
+		s.ClearFixedDuration()
 	})
 }
 
@@ -2271,24 +2271,24 @@ func (u *AppPowerRentalUpsertBulk) ClearSaleMode() *AppPowerRentalUpsertBulk {
 	})
 }
 
-// SetFixDuration sets the "fix_duration" field.
-func (u *AppPowerRentalUpsertBulk) SetFixDuration(v bool) *AppPowerRentalUpsertBulk {
+// SetFixedDuration sets the "fixed_duration" field.
+func (u *AppPowerRentalUpsertBulk) SetFixedDuration(v bool) *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.SetFixDuration(v)
+		s.SetFixedDuration(v)
 	})
 }
 
-// UpdateFixDuration sets the "fix_duration" field to the value that was provided on create.
-func (u *AppPowerRentalUpsertBulk) UpdateFixDuration() *AppPowerRentalUpsertBulk {
+// UpdateFixedDuration sets the "fixed_duration" field to the value that was provided on create.
+func (u *AppPowerRentalUpsertBulk) UpdateFixedDuration() *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.UpdateFixDuration()
+		s.UpdateFixedDuration()
 	})
 }
 
-// ClearFixDuration clears the value of the "fix_duration" field.
-func (u *AppPowerRentalUpsertBulk) ClearFixDuration() *AppPowerRentalUpsertBulk {
+// ClearFixedDuration clears the value of the "fixed_duration" field.
+func (u *AppPowerRentalUpsertBulk) ClearFixedDuration() *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.ClearFixDuration()
+		s.ClearFixedDuration()
 	})
 }
 

@@ -25,10 +25,8 @@ type AppLegacyPowerRental struct {
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// EntID holds the value of the "ent_id" field.
 	EntID uuid.UUID `json:"ent_id,omitempty"`
-	// AppID holds the value of the "app_id" field.
-	AppID uuid.UUID `json:"app_id,omitempty"`
-	// GoodID holds the value of the "good_id" field.
-	GoodID uuid.UUID `json:"good_id,omitempty"`
+	// AppGoodID holds the value of the "app_good_id" field.
+	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// TechniqueFeeRatio holds the value of the "technique_fee_ratio" field.
 	TechniqueFeeRatio decimal.Decimal `json:"technique_fee_ratio,omitempty"`
 }
@@ -42,7 +40,7 @@ func (*AppLegacyPowerRental) scanValues(columns []string) ([]interface{}, error)
 			values[i] = new(decimal.Decimal)
 		case applegacypowerrental.FieldID, applegacypowerrental.FieldCreatedAt, applegacypowerrental.FieldUpdatedAt, applegacypowerrental.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case applegacypowerrental.FieldEntID, applegacypowerrental.FieldAppID, applegacypowerrental.FieldGoodID:
+		case applegacypowerrental.FieldEntID, applegacypowerrental.FieldAppGoodID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type AppLegacyPowerRental", columns[i])
@@ -89,17 +87,11 @@ func (alpr *AppLegacyPowerRental) assignValues(columns []string, values []interf
 			} else if value != nil {
 				alpr.EntID = *value
 			}
-		case applegacypowerrental.FieldAppID:
+		case applegacypowerrental.FieldAppGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field app_id", values[i])
+				return fmt.Errorf("unexpected type %T for field app_good_id", values[i])
 			} else if value != nil {
-				alpr.AppID = *value
-			}
-		case applegacypowerrental.FieldGoodID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field good_id", values[i])
-			} else if value != nil {
-				alpr.GoodID = *value
+				alpr.AppGoodID = *value
 			}
 		case applegacypowerrental.FieldTechniqueFeeRatio:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
@@ -147,11 +139,8 @@ func (alpr *AppLegacyPowerRental) String() string {
 	builder.WriteString("ent_id=")
 	builder.WriteString(fmt.Sprintf("%v", alpr.EntID))
 	builder.WriteString(", ")
-	builder.WriteString("app_id=")
-	builder.WriteString(fmt.Sprintf("%v", alpr.AppID))
-	builder.WriteString(", ")
-	builder.WriteString("good_id=")
-	builder.WriteString(fmt.Sprintf("%v", alpr.GoodID))
+	builder.WriteString("app_good_id=")
+	builder.WriteString(fmt.Sprintf("%v", alpr.AppGoodID))
 	builder.WriteString(", ")
 	builder.WriteString("technique_fee_ratio=")
 	builder.WriteString(fmt.Sprintf("%v", alpr.TechniqueFeeRatio))

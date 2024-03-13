@@ -49,8 +49,8 @@ const (
 	FieldSaleEndAt = "sale_end_at"
 	// FieldSaleMode holds the string denoting the sale_mode field in the database.
 	FieldSaleMode = "sale_mode"
-	// FieldFixDuration holds the string denoting the fix_duration field in the database.
-	FieldFixDuration = "fix_duration"
+	// FieldFixedDuration holds the string denoting the fixed_duration field in the database.
+	FieldFixedDuration = "fixed_duration"
 	// FieldPackageWithRequireds holds the string denoting the package_with_requireds field in the database.
 	FieldPackageWithRequireds = "package_with_requireds"
 	// Table holds the table name of the apppowerrental in the database.
@@ -78,7 +78,7 @@ var Columns = []string{
 	FieldSaleStartAt,
 	FieldSaleEndAt,
 	FieldSaleMode,
-	FieldFixDuration,
+	FieldFixedDuration,
 	FieldPackageWithRequireds,
 }
 
@@ -139,8 +139,8 @@ var (
 	DefaultSaleEndAt uint32
 	// DefaultSaleMode holds the default value on creation for the "sale_mode" field.
 	DefaultSaleMode string
-	// DefaultFixDuration holds the default value on creation for the "fix_duration" field.
-	DefaultFixDuration bool
+	// DefaultFixedDuration holds the default value on creation for the "fixed_duration" field.
+	DefaultFixedDuration bool
 	// DefaultPackageWithRequireds holds the default value on creation for the "package_with_requireds" field.
 	DefaultPackageWithRequireds bool
 )
