@@ -36,7 +36,7 @@ func CreateSet(c *ent.AppSimulateGoodCreate, req *Req) *ent.AppSimulateGoodCreat
 	if req.GoodID != nil {
 		c.SetGoodID(*req.GoodID)
 	}
-	if req.GoodID != nil {
+	if req.AppGoodID != nil {
 		c.SetAppGoodID(*req.AppGoodID)
 	}
 	if req.FixedOrderUnits != nil {
