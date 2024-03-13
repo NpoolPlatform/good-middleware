@@ -25,10 +25,8 @@ type AppPowerRental struct {
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// EntID holds the value of the "ent_id" field.
 	EntID uuid.UUID `json:"ent_id,omitempty"`
-	// AppID holds the value of the "app_id" field.
-	AppID uuid.UUID `json:"app_id,omitempty"`
-	// GoodID holds the value of the "good_id" field.
-	GoodID uuid.UUID `json:"good_id,omitempty"`
+	// AppGoodID holds the value of the "app_good_id" field.
+	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// ServiceStartAt holds the value of the "service_start_at" field.
 	ServiceStartAt uint32 `json:"service_start_at,omitempty"`
 	// CancelMode holds the value of the "cancel_mode" field.
@@ -49,16 +47,16 @@ type AppPowerRental struct {
 	MaxOrderDuration uint32 `json:"max_order_duration,omitempty"`
 	// UnitPrice holds the value of the "unit_price" field.
 	UnitPrice decimal.Decimal `json:"unit_price,omitempty"`
-	// PackagePrice holds the value of the "package_price" field.
-	PackagePrice decimal.Decimal `json:"package_price,omitempty"`
 	// SaleStartAt holds the value of the "sale_start_at" field.
 	SaleStartAt uint32 `json:"sale_start_at,omitempty"`
 	// SaleEndAt holds the value of the "sale_end_at" field.
 	SaleEndAt uint32 `json:"sale_end_at,omitempty"`
-	// PackageWithRequireds holds the value of the "package_with_requireds" field.
-	PackageWithRequireds bool `json:"package_with_requireds,omitempty"`
 	// SaleMode holds the value of the "sale_mode" field.
 	SaleMode string `json:"sale_mode,omitempty"`
+	// FixDuration holds the value of the "fix_duration" field.
+	FixDuration bool `json:"fix_duration,omitempty"`
+	// PackageWithRequireds holds the value of the "package_with_requireds" field.
+	PackageWithRequireds bool `json:"package_with_requireds,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -66,15 +64,15 @@ func (*AppPowerRental) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case apppowerrental.FieldMinOrderAmount, apppowerrental.FieldMaxOrderAmount, apppowerrental.FieldMaxUserAmount, apppowerrental.FieldUnitPrice, apppowerrental.FieldPackagePrice:
+		case apppowerrental.FieldMinOrderAmount, apppowerrental.FieldMaxOrderAmount, apppowerrental.FieldMaxUserAmount, apppowerrental.FieldUnitPrice:
 			values[i] = new(decimal.Decimal)
-		case apppowerrental.FieldEnableSetCommission, apppowerrental.FieldPackageWithRequireds:
+		case apppowerrental.FieldEnableSetCommission, apppowerrental.FieldFixDuration, apppowerrental.FieldPackageWithRequireds:
 			values[i] = new(sql.NullBool)
 		case apppowerrental.FieldID, apppowerrental.FieldCreatedAt, apppowerrental.FieldUpdatedAt, apppowerrental.FieldDeletedAt, apppowerrental.FieldServiceStartAt, apppowerrental.FieldCancelableBeforeStartSeconds, apppowerrental.FieldMinOrderDuration, apppowerrental.FieldMaxOrderDuration, apppowerrental.FieldSaleStartAt, apppowerrental.FieldSaleEndAt:
 			values[i] = new(sql.NullInt64)
 		case apppowerrental.FieldCancelMode, apppowerrental.FieldSaleMode:
 			values[i] = new(sql.NullString)
-		case apppowerrental.FieldEntID, apppowerrental.FieldAppID, apppowerrental.FieldGoodID:
+		case apppowerrental.FieldEntID, apppowerrental.FieldAppGoodID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type AppPowerRental", columns[i])
@@ -121,17 +119,11 @@ func (apr *AppPowerRental) assignValues(columns []string, values []interface{}) 
 			} else if value != nil {
 				apr.EntID = *value
 			}
-		case apppowerrental.FieldAppID:
+		case apppowerrental.FieldAppGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field app_id", values[i])
+				return fmt.Errorf("unexpected type %T for field app_good_id", values[i])
 			} else if value != nil {
-				apr.AppID = *value
-			}
-		case apppowerrental.FieldGoodID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field good_id", values[i])
-			} else if value != nil {
-				apr.GoodID = *value
+				apr.AppGoodID = *value
 			}
 		case apppowerrental.FieldServiceStartAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -193,12 +185,6 @@ func (apr *AppPowerRental) assignValues(columns []string, values []interface{}) 
 			} else if value != nil {
 				apr.UnitPrice = *value
 			}
-		case apppowerrental.FieldPackagePrice:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field package_price", values[i])
-			} else if value != nil {
-				apr.PackagePrice = *value
-			}
 		case apppowerrental.FieldSaleStartAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field sale_start_at", values[i])
@@ -211,17 +197,23 @@ func (apr *AppPowerRental) assignValues(columns []string, values []interface{}) 
 			} else if value.Valid {
 				apr.SaleEndAt = uint32(value.Int64)
 			}
-		case apppowerrental.FieldPackageWithRequireds:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field package_with_requireds", values[i])
-			} else if value.Valid {
-				apr.PackageWithRequireds = value.Bool
-			}
 		case apppowerrental.FieldSaleMode:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field sale_mode", values[i])
 			} else if value.Valid {
 				apr.SaleMode = value.String
+			}
+		case apppowerrental.FieldFixDuration:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field fix_duration", values[i])
+			} else if value.Valid {
+				apr.FixDuration = value.Bool
+			}
+		case apppowerrental.FieldPackageWithRequireds:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field package_with_requireds", values[i])
+			} else if value.Valid {
+				apr.PackageWithRequireds = value.Bool
 			}
 		}
 	}
@@ -263,11 +255,8 @@ func (apr *AppPowerRental) String() string {
 	builder.WriteString("ent_id=")
 	builder.WriteString(fmt.Sprintf("%v", apr.EntID))
 	builder.WriteString(", ")
-	builder.WriteString("app_id=")
-	builder.WriteString(fmt.Sprintf("%v", apr.AppID))
-	builder.WriteString(", ")
-	builder.WriteString("good_id=")
-	builder.WriteString(fmt.Sprintf("%v", apr.GoodID))
+	builder.WriteString("app_good_id=")
+	builder.WriteString(fmt.Sprintf("%v", apr.AppGoodID))
 	builder.WriteString(", ")
 	builder.WriteString("service_start_at=")
 	builder.WriteString(fmt.Sprintf("%v", apr.ServiceStartAt))
@@ -299,20 +288,20 @@ func (apr *AppPowerRental) String() string {
 	builder.WriteString("unit_price=")
 	builder.WriteString(fmt.Sprintf("%v", apr.UnitPrice))
 	builder.WriteString(", ")
-	builder.WriteString("package_price=")
-	builder.WriteString(fmt.Sprintf("%v", apr.PackagePrice))
-	builder.WriteString(", ")
 	builder.WriteString("sale_start_at=")
 	builder.WriteString(fmt.Sprintf("%v", apr.SaleStartAt))
 	builder.WriteString(", ")
 	builder.WriteString("sale_end_at=")
 	builder.WriteString(fmt.Sprintf("%v", apr.SaleEndAt))
 	builder.WriteString(", ")
-	builder.WriteString("package_with_requireds=")
-	builder.WriteString(fmt.Sprintf("%v", apr.PackageWithRequireds))
-	builder.WriteString(", ")
 	builder.WriteString("sale_mode=")
 	builder.WriteString(apr.SaleMode)
+	builder.WriteString(", ")
+	builder.WriteString("fix_duration=")
+	builder.WriteString(fmt.Sprintf("%v", apr.FixDuration))
+	builder.WriteString(", ")
+	builder.WriteString("package_with_requireds=")
+	builder.WriteString(fmt.Sprintf("%v", apr.PackageWithRequireds))
 	builder.WriteByte(')')
 	return builder.String()
 }

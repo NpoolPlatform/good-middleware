@@ -347,6 +347,33 @@ func (fcfu *FbmCrowdFundingUpdate) ClearDurationType() *FbmCrowdFundingUpdate {
 	return fcfu
 }
 
+// SetDuration sets the "duration" field.
+func (fcfu *FbmCrowdFundingUpdate) SetDuration(u uint32) *FbmCrowdFundingUpdate {
+	fcfu.mutation.ResetDuration()
+	fcfu.mutation.SetDuration(u)
+	return fcfu
+}
+
+// SetNillableDuration sets the "duration" field if the given value is not nil.
+func (fcfu *FbmCrowdFundingUpdate) SetNillableDuration(u *uint32) *FbmCrowdFundingUpdate {
+	if u != nil {
+		fcfu.SetDuration(*u)
+	}
+	return fcfu
+}
+
+// AddDuration adds u to the "duration" field.
+func (fcfu *FbmCrowdFundingUpdate) AddDuration(u int32) *FbmCrowdFundingUpdate {
+	fcfu.mutation.AddDuration(u)
+	return fcfu
+}
+
+// ClearDuration clears the value of the "duration" field.
+func (fcfu *FbmCrowdFundingUpdate) ClearDuration() *FbmCrowdFundingUpdate {
+	fcfu.mutation.ClearDuration()
+	return fcfu
+}
+
 // Mutation returns the FbmCrowdFundingMutation object of the builder.
 func (fcfu *FbmCrowdFundingUpdate) Mutation() *FbmCrowdFundingMutation {
 	return fcfu.mutation
@@ -663,6 +690,26 @@ func (fcfu *FbmCrowdFundingUpdate) sqlSave(ctx context.Context) (n int, err erro
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: fbmcrowdfunding.FieldDurationType,
+		})
+	}
+	if value, ok := fcfu.mutation.Duration(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: fbmcrowdfunding.FieldDuration,
+		})
+	}
+	if value, ok := fcfu.mutation.AddedDuration(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: fbmcrowdfunding.FieldDuration,
+		})
+	}
+	if fcfu.mutation.DurationCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: fbmcrowdfunding.FieldDuration,
 		})
 	}
 	_spec.Modifiers = fcfu.modifiers
@@ -1000,6 +1047,33 @@ func (fcfuo *FbmCrowdFundingUpdateOne) SetNillableDurationType(s *string) *FbmCr
 // ClearDurationType clears the value of the "duration_type" field.
 func (fcfuo *FbmCrowdFundingUpdateOne) ClearDurationType() *FbmCrowdFundingUpdateOne {
 	fcfuo.mutation.ClearDurationType()
+	return fcfuo
+}
+
+// SetDuration sets the "duration" field.
+func (fcfuo *FbmCrowdFundingUpdateOne) SetDuration(u uint32) *FbmCrowdFundingUpdateOne {
+	fcfuo.mutation.ResetDuration()
+	fcfuo.mutation.SetDuration(u)
+	return fcfuo
+}
+
+// SetNillableDuration sets the "duration" field if the given value is not nil.
+func (fcfuo *FbmCrowdFundingUpdateOne) SetNillableDuration(u *uint32) *FbmCrowdFundingUpdateOne {
+	if u != nil {
+		fcfuo.SetDuration(*u)
+	}
+	return fcfuo
+}
+
+// AddDuration adds u to the "duration" field.
+func (fcfuo *FbmCrowdFundingUpdateOne) AddDuration(u int32) *FbmCrowdFundingUpdateOne {
+	fcfuo.mutation.AddDuration(u)
+	return fcfuo
+}
+
+// ClearDuration clears the value of the "duration" field.
+func (fcfuo *FbmCrowdFundingUpdateOne) ClearDuration() *FbmCrowdFundingUpdateOne {
+	fcfuo.mutation.ClearDuration()
 	return fcfuo
 }
 
@@ -1349,6 +1423,26 @@ func (fcfuo *FbmCrowdFundingUpdateOne) sqlSave(ctx context.Context) (_node *FbmC
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: fbmcrowdfunding.FieldDurationType,
+		})
+	}
+	if value, ok := fcfuo.mutation.Duration(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: fbmcrowdfunding.FieldDuration,
+		})
+	}
+	if value, ok := fcfuo.mutation.AddedDuration(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: fbmcrowdfunding.FieldDuration,
+		})
+	}
+	if fcfuo.mutation.DurationCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: fbmcrowdfunding.FieldDuration,
 		})
 	}
 	_spec.Modifiers = fcfuo.modifiers

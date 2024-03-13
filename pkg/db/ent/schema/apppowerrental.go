@@ -28,13 +28,7 @@ func (AppPowerRental) Mixin() []ent.Mixin {
 func (AppPowerRental) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("app_id", uuid.UUID{}).
-			Optional().
-			Default(func() uuid.UUID {
-				return uuid.Nil
-			}),
-		field.
-			UUID("good_id", uuid.UUID{}).
+			UUID("app_good_id", uuid.UUID{}).
 			Optional().
 			Default(func() uuid.UUID {
 				return uuid.Nil
@@ -92,13 +86,6 @@ func (AppPowerRental) Fields() []ent.Field {
 			Optional().
 			Default(decimal.Decimal{}),
 		field.
-			Other("package_price", decimal.Decimal{}).
-			SchemaType(map[string]string{
-				dialect.MySQL: "decimal(37,18)",
-			}).
-			Optional().
-			Default(decimal.Decimal{}),
-		field.
 			Uint32("sale_start_at").
 			Optional().
 			Default(0),
@@ -107,13 +94,17 @@ func (AppPowerRental) Fields() []ent.Field {
 			Optional().
 			Default(0),
 		field.
-			Bool("package_with_requireds").
-			Optional().
-			Default(true),
-		field.
 			String("sale_mode").
 			Optional().
 			Default(types.GoodSaleMode_GoodSaleModeMainnetSpot.String()),
+		field.
+			Bool("fix_duration").
+			Optional().
+			Default(true),
+		field.
+			Bool("package_with_requireds").
+			Optional().
+			Default(true),
 	}
 }
 
@@ -124,6 +115,6 @@ func (AppPowerRental) Edges() []ent.Edge {
 
 func (AppPowerRental) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("good_id", "app_id"),
+		index.Fields("app_good_id"),
 	}
 }

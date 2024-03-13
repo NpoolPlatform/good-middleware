@@ -10441,8 +10441,7 @@ type AppPowerRentalMutation struct {
 	deleted_at                         *uint32
 	adddeleted_at                      *int32
 	ent_id                             *uuid.UUID
-	app_id                             *uuid.UUID
-	good_id                            *uuid.UUID
+	app_good_id                        *uuid.UUID
 	service_start_at                   *uint32
 	addservice_start_at                *int32
 	cancel_mode                        *string
@@ -10457,13 +10456,13 @@ type AppPowerRentalMutation struct {
 	max_order_duration                 *uint32
 	addmax_order_duration              *int32
 	unit_price                         *decimal.Decimal
-	package_price                      *decimal.Decimal
 	sale_start_at                      *uint32
 	addsale_start_at                   *int32
 	sale_end_at                        *uint32
 	addsale_end_at                     *int32
-	package_with_requireds             *bool
 	sale_mode                          *string
+	fix_duration                       *bool
+	package_with_requireds             *bool
 	clearedFields                      map[string]struct{}
 	done                               bool
 	oldValue                           func(context.Context) (*AppPowerRental, error)
@@ -10778,102 +10777,53 @@ func (m *AppPowerRentalMutation) ResetEntID() {
 	m.ent_id = nil
 }
 
-// SetAppID sets the "app_id" field.
-func (m *AppPowerRentalMutation) SetAppID(u uuid.UUID) {
-	m.app_id = &u
+// SetAppGoodID sets the "app_good_id" field.
+func (m *AppPowerRentalMutation) SetAppGoodID(u uuid.UUID) {
+	m.app_good_id = &u
 }
 
-// AppID returns the value of the "app_id" field in the mutation.
-func (m *AppPowerRentalMutation) AppID() (r uuid.UUID, exists bool) {
-	v := m.app_id
+// AppGoodID returns the value of the "app_good_id" field in the mutation.
+func (m *AppPowerRentalMutation) AppGoodID() (r uuid.UUID, exists bool) {
+	v := m.app_good_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAppID returns the old "app_id" field's value of the AppPowerRental entity.
+// OldAppGoodID returns the old "app_good_id" field's value of the AppPowerRental entity.
 // If the AppPowerRental object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppPowerRentalMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *AppPowerRentalMutation) OldAppGoodID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
+		return v, errors.New("OldAppGoodID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAppID requires an ID field in the mutation")
+		return v, errors.New("OldAppGoodID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
+		return v, fmt.Errorf("querying old value for OldAppGoodID: %w", err)
 	}
-	return oldValue.AppID, nil
+	return oldValue.AppGoodID, nil
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (m *AppPowerRentalMutation) ClearAppID() {
-	m.app_id = nil
-	m.clearedFields[apppowerrental.FieldAppID] = struct{}{}
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (m *AppPowerRentalMutation) ClearAppGoodID() {
+	m.app_good_id = nil
+	m.clearedFields[apppowerrental.FieldAppGoodID] = struct{}{}
 }
 
-// AppIDCleared returns if the "app_id" field was cleared in this mutation.
-func (m *AppPowerRentalMutation) AppIDCleared() bool {
-	_, ok := m.clearedFields[apppowerrental.FieldAppID]
+// AppGoodIDCleared returns if the "app_good_id" field was cleared in this mutation.
+func (m *AppPowerRentalMutation) AppGoodIDCleared() bool {
+	_, ok := m.clearedFields[apppowerrental.FieldAppGoodID]
 	return ok
 }
 
-// ResetAppID resets all changes to the "app_id" field.
-func (m *AppPowerRentalMutation) ResetAppID() {
-	m.app_id = nil
-	delete(m.clearedFields, apppowerrental.FieldAppID)
-}
-
-// SetGoodID sets the "good_id" field.
-func (m *AppPowerRentalMutation) SetGoodID(u uuid.UUID) {
-	m.good_id = &u
-}
-
-// GoodID returns the value of the "good_id" field in the mutation.
-func (m *AppPowerRentalMutation) GoodID() (r uuid.UUID, exists bool) {
-	v := m.good_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldGoodID returns the old "good_id" field's value of the AppPowerRental entity.
-// If the AppPowerRental object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppPowerRentalMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldGoodID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldGoodID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldGoodID: %w", err)
-	}
-	return oldValue.GoodID, nil
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (m *AppPowerRentalMutation) ClearGoodID() {
-	m.good_id = nil
-	m.clearedFields[apppowerrental.FieldGoodID] = struct{}{}
-}
-
-// GoodIDCleared returns if the "good_id" field was cleared in this mutation.
-func (m *AppPowerRentalMutation) GoodIDCleared() bool {
-	_, ok := m.clearedFields[apppowerrental.FieldGoodID]
-	return ok
-}
-
-// ResetGoodID resets all changes to the "good_id" field.
-func (m *AppPowerRentalMutation) ResetGoodID() {
-	m.good_id = nil
-	delete(m.clearedFields, apppowerrental.FieldGoodID)
+// ResetAppGoodID resets all changes to the "app_good_id" field.
+func (m *AppPowerRentalMutation) ResetAppGoodID() {
+	m.app_good_id = nil
+	delete(m.clearedFields, apppowerrental.FieldAppGoodID)
 }
 
 // SetServiceStartAt sets the "service_start_at" field.
@@ -11450,55 +11400,6 @@ func (m *AppPowerRentalMutation) ResetUnitPrice() {
 	delete(m.clearedFields, apppowerrental.FieldUnitPrice)
 }
 
-// SetPackagePrice sets the "package_price" field.
-func (m *AppPowerRentalMutation) SetPackagePrice(d decimal.Decimal) {
-	m.package_price = &d
-}
-
-// PackagePrice returns the value of the "package_price" field in the mutation.
-func (m *AppPowerRentalMutation) PackagePrice() (r decimal.Decimal, exists bool) {
-	v := m.package_price
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPackagePrice returns the old "package_price" field's value of the AppPowerRental entity.
-// If the AppPowerRental object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppPowerRentalMutation) OldPackagePrice(ctx context.Context) (v decimal.Decimal, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPackagePrice is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPackagePrice requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPackagePrice: %w", err)
-	}
-	return oldValue.PackagePrice, nil
-}
-
-// ClearPackagePrice clears the value of the "package_price" field.
-func (m *AppPowerRentalMutation) ClearPackagePrice() {
-	m.package_price = nil
-	m.clearedFields[apppowerrental.FieldPackagePrice] = struct{}{}
-}
-
-// PackagePriceCleared returns if the "package_price" field was cleared in this mutation.
-func (m *AppPowerRentalMutation) PackagePriceCleared() bool {
-	_, ok := m.clearedFields[apppowerrental.FieldPackagePrice]
-	return ok
-}
-
-// ResetPackagePrice resets all changes to the "package_price" field.
-func (m *AppPowerRentalMutation) ResetPackagePrice() {
-	m.package_price = nil
-	delete(m.clearedFields, apppowerrental.FieldPackagePrice)
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (m *AppPowerRentalMutation) SetSaleStartAt(u uint32) {
 	m.sale_start_at = &u
@@ -11639,55 +11540,6 @@ func (m *AppPowerRentalMutation) ResetSaleEndAt() {
 	delete(m.clearedFields, apppowerrental.FieldSaleEndAt)
 }
 
-// SetPackageWithRequireds sets the "package_with_requireds" field.
-func (m *AppPowerRentalMutation) SetPackageWithRequireds(b bool) {
-	m.package_with_requireds = &b
-}
-
-// PackageWithRequireds returns the value of the "package_with_requireds" field in the mutation.
-func (m *AppPowerRentalMutation) PackageWithRequireds() (r bool, exists bool) {
-	v := m.package_with_requireds
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPackageWithRequireds returns the old "package_with_requireds" field's value of the AppPowerRental entity.
-// If the AppPowerRental object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppPowerRentalMutation) OldPackageWithRequireds(ctx context.Context) (v bool, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPackageWithRequireds is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPackageWithRequireds requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPackageWithRequireds: %w", err)
-	}
-	return oldValue.PackageWithRequireds, nil
-}
-
-// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
-func (m *AppPowerRentalMutation) ClearPackageWithRequireds() {
-	m.package_with_requireds = nil
-	m.clearedFields[apppowerrental.FieldPackageWithRequireds] = struct{}{}
-}
-
-// PackageWithRequiredsCleared returns if the "package_with_requireds" field was cleared in this mutation.
-func (m *AppPowerRentalMutation) PackageWithRequiredsCleared() bool {
-	_, ok := m.clearedFields[apppowerrental.FieldPackageWithRequireds]
-	return ok
-}
-
-// ResetPackageWithRequireds resets all changes to the "package_with_requireds" field.
-func (m *AppPowerRentalMutation) ResetPackageWithRequireds() {
-	m.package_with_requireds = nil
-	delete(m.clearedFields, apppowerrental.FieldPackageWithRequireds)
-}
-
 // SetSaleMode sets the "sale_mode" field.
 func (m *AppPowerRentalMutation) SetSaleMode(s string) {
 	m.sale_mode = &s
@@ -11737,6 +11589,104 @@ func (m *AppPowerRentalMutation) ResetSaleMode() {
 	delete(m.clearedFields, apppowerrental.FieldSaleMode)
 }
 
+// SetFixDuration sets the "fix_duration" field.
+func (m *AppPowerRentalMutation) SetFixDuration(b bool) {
+	m.fix_duration = &b
+}
+
+// FixDuration returns the value of the "fix_duration" field in the mutation.
+func (m *AppPowerRentalMutation) FixDuration() (r bool, exists bool) {
+	v := m.fix_duration
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFixDuration returns the old "fix_duration" field's value of the AppPowerRental entity.
+// If the AppPowerRental object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppPowerRentalMutation) OldFixDuration(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFixDuration is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFixDuration requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFixDuration: %w", err)
+	}
+	return oldValue.FixDuration, nil
+}
+
+// ClearFixDuration clears the value of the "fix_duration" field.
+func (m *AppPowerRentalMutation) ClearFixDuration() {
+	m.fix_duration = nil
+	m.clearedFields[apppowerrental.FieldFixDuration] = struct{}{}
+}
+
+// FixDurationCleared returns if the "fix_duration" field was cleared in this mutation.
+func (m *AppPowerRentalMutation) FixDurationCleared() bool {
+	_, ok := m.clearedFields[apppowerrental.FieldFixDuration]
+	return ok
+}
+
+// ResetFixDuration resets all changes to the "fix_duration" field.
+func (m *AppPowerRentalMutation) ResetFixDuration() {
+	m.fix_duration = nil
+	delete(m.clearedFields, apppowerrental.FieldFixDuration)
+}
+
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (m *AppPowerRentalMutation) SetPackageWithRequireds(b bool) {
+	m.package_with_requireds = &b
+}
+
+// PackageWithRequireds returns the value of the "package_with_requireds" field in the mutation.
+func (m *AppPowerRentalMutation) PackageWithRequireds() (r bool, exists bool) {
+	v := m.package_with_requireds
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPackageWithRequireds returns the old "package_with_requireds" field's value of the AppPowerRental entity.
+// If the AppPowerRental object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppPowerRentalMutation) OldPackageWithRequireds(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPackageWithRequireds is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPackageWithRequireds requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPackageWithRequireds: %w", err)
+	}
+	return oldValue.PackageWithRequireds, nil
+}
+
+// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
+func (m *AppPowerRentalMutation) ClearPackageWithRequireds() {
+	m.package_with_requireds = nil
+	m.clearedFields[apppowerrental.FieldPackageWithRequireds] = struct{}{}
+}
+
+// PackageWithRequiredsCleared returns if the "package_with_requireds" field was cleared in this mutation.
+func (m *AppPowerRentalMutation) PackageWithRequiredsCleared() bool {
+	_, ok := m.clearedFields[apppowerrental.FieldPackageWithRequireds]
+	return ok
+}
+
+// ResetPackageWithRequireds resets all changes to the "package_with_requireds" field.
+func (m *AppPowerRentalMutation) ResetPackageWithRequireds() {
+	m.package_with_requireds = nil
+	delete(m.clearedFields, apppowerrental.FieldPackageWithRequireds)
+}
+
 // Where appends a list predicates to the AppPowerRentalMutation builder.
 func (m *AppPowerRentalMutation) Where(ps ...predicate.AppPowerRental) {
 	m.predicates = append(m.predicates, ps...)
@@ -11756,7 +11706,7 @@ func (m *AppPowerRentalMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppPowerRentalMutation) Fields() []string {
-	fields := make([]string, 0, 21)
+	fields := make([]string, 0, 20)
 	if m.created_at != nil {
 		fields = append(fields, apppowerrental.FieldCreatedAt)
 	}
@@ -11769,11 +11719,8 @@ func (m *AppPowerRentalMutation) Fields() []string {
 	if m.ent_id != nil {
 		fields = append(fields, apppowerrental.FieldEntID)
 	}
-	if m.app_id != nil {
-		fields = append(fields, apppowerrental.FieldAppID)
-	}
-	if m.good_id != nil {
-		fields = append(fields, apppowerrental.FieldGoodID)
+	if m.app_good_id != nil {
+		fields = append(fields, apppowerrental.FieldAppGoodID)
 	}
 	if m.service_start_at != nil {
 		fields = append(fields, apppowerrental.FieldServiceStartAt)
@@ -11805,20 +11752,20 @@ func (m *AppPowerRentalMutation) Fields() []string {
 	if m.unit_price != nil {
 		fields = append(fields, apppowerrental.FieldUnitPrice)
 	}
-	if m.package_price != nil {
-		fields = append(fields, apppowerrental.FieldPackagePrice)
-	}
 	if m.sale_start_at != nil {
 		fields = append(fields, apppowerrental.FieldSaleStartAt)
 	}
 	if m.sale_end_at != nil {
 		fields = append(fields, apppowerrental.FieldSaleEndAt)
 	}
-	if m.package_with_requireds != nil {
-		fields = append(fields, apppowerrental.FieldPackageWithRequireds)
-	}
 	if m.sale_mode != nil {
 		fields = append(fields, apppowerrental.FieldSaleMode)
+	}
+	if m.fix_duration != nil {
+		fields = append(fields, apppowerrental.FieldFixDuration)
+	}
+	if m.package_with_requireds != nil {
+		fields = append(fields, apppowerrental.FieldPackageWithRequireds)
 	}
 	return fields
 }
@@ -11836,10 +11783,8 @@ func (m *AppPowerRentalMutation) Field(name string) (ent.Value, bool) {
 		return m.DeletedAt()
 	case apppowerrental.FieldEntID:
 		return m.EntID()
-	case apppowerrental.FieldAppID:
-		return m.AppID()
-	case apppowerrental.FieldGoodID:
-		return m.GoodID()
+	case apppowerrental.FieldAppGoodID:
+		return m.AppGoodID()
 	case apppowerrental.FieldServiceStartAt:
 		return m.ServiceStartAt()
 	case apppowerrental.FieldCancelMode:
@@ -11860,16 +11805,16 @@ func (m *AppPowerRentalMutation) Field(name string) (ent.Value, bool) {
 		return m.MaxOrderDuration()
 	case apppowerrental.FieldUnitPrice:
 		return m.UnitPrice()
-	case apppowerrental.FieldPackagePrice:
-		return m.PackagePrice()
 	case apppowerrental.FieldSaleStartAt:
 		return m.SaleStartAt()
 	case apppowerrental.FieldSaleEndAt:
 		return m.SaleEndAt()
-	case apppowerrental.FieldPackageWithRequireds:
-		return m.PackageWithRequireds()
 	case apppowerrental.FieldSaleMode:
 		return m.SaleMode()
+	case apppowerrental.FieldFixDuration:
+		return m.FixDuration()
+	case apppowerrental.FieldPackageWithRequireds:
+		return m.PackageWithRequireds()
 	}
 	return nil, false
 }
@@ -11887,10 +11832,8 @@ func (m *AppPowerRentalMutation) OldField(ctx context.Context, name string) (ent
 		return m.OldDeletedAt(ctx)
 	case apppowerrental.FieldEntID:
 		return m.OldEntID(ctx)
-	case apppowerrental.FieldAppID:
-		return m.OldAppID(ctx)
-	case apppowerrental.FieldGoodID:
-		return m.OldGoodID(ctx)
+	case apppowerrental.FieldAppGoodID:
+		return m.OldAppGoodID(ctx)
 	case apppowerrental.FieldServiceStartAt:
 		return m.OldServiceStartAt(ctx)
 	case apppowerrental.FieldCancelMode:
@@ -11911,16 +11854,16 @@ func (m *AppPowerRentalMutation) OldField(ctx context.Context, name string) (ent
 		return m.OldMaxOrderDuration(ctx)
 	case apppowerrental.FieldUnitPrice:
 		return m.OldUnitPrice(ctx)
-	case apppowerrental.FieldPackagePrice:
-		return m.OldPackagePrice(ctx)
 	case apppowerrental.FieldSaleStartAt:
 		return m.OldSaleStartAt(ctx)
 	case apppowerrental.FieldSaleEndAt:
 		return m.OldSaleEndAt(ctx)
-	case apppowerrental.FieldPackageWithRequireds:
-		return m.OldPackageWithRequireds(ctx)
 	case apppowerrental.FieldSaleMode:
 		return m.OldSaleMode(ctx)
+	case apppowerrental.FieldFixDuration:
+		return m.OldFixDuration(ctx)
+	case apppowerrental.FieldPackageWithRequireds:
+		return m.OldPackageWithRequireds(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppPowerRental field %s", name)
 }
@@ -11958,19 +11901,12 @@ func (m *AppPowerRentalMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetEntID(v)
 		return nil
-	case apppowerrental.FieldAppID:
+	case apppowerrental.FieldAppGoodID:
 		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetAppID(v)
-		return nil
-	case apppowerrental.FieldGoodID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetGoodID(v)
+		m.SetAppGoodID(v)
 		return nil
 	case apppowerrental.FieldServiceStartAt:
 		v, ok := value.(uint32)
@@ -12042,13 +11978,6 @@ func (m *AppPowerRentalMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUnitPrice(v)
 		return nil
-	case apppowerrental.FieldPackagePrice:
-		v, ok := value.(decimal.Decimal)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPackagePrice(v)
-		return nil
 	case apppowerrental.FieldSaleStartAt:
 		v, ok := value.(uint32)
 		if !ok {
@@ -12063,19 +11992,26 @@ func (m *AppPowerRentalMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetSaleEndAt(v)
 		return nil
-	case apppowerrental.FieldPackageWithRequireds:
-		v, ok := value.(bool)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPackageWithRequireds(v)
-		return nil
 	case apppowerrental.FieldSaleMode:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetSaleMode(v)
+		return nil
+	case apppowerrental.FieldFixDuration:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFixDuration(v)
+		return nil
+	case apppowerrental.FieldPackageWithRequireds:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPackageWithRequireds(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppPowerRental field %s", name)
@@ -12218,11 +12154,8 @@ func (m *AppPowerRentalMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *AppPowerRentalMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(apppowerrental.FieldAppID) {
-		fields = append(fields, apppowerrental.FieldAppID)
-	}
-	if m.FieldCleared(apppowerrental.FieldGoodID) {
-		fields = append(fields, apppowerrental.FieldGoodID)
+	if m.FieldCleared(apppowerrental.FieldAppGoodID) {
+		fields = append(fields, apppowerrental.FieldAppGoodID)
 	}
 	if m.FieldCleared(apppowerrental.FieldServiceStartAt) {
 		fields = append(fields, apppowerrental.FieldServiceStartAt)
@@ -12254,20 +12187,20 @@ func (m *AppPowerRentalMutation) ClearedFields() []string {
 	if m.FieldCleared(apppowerrental.FieldUnitPrice) {
 		fields = append(fields, apppowerrental.FieldUnitPrice)
 	}
-	if m.FieldCleared(apppowerrental.FieldPackagePrice) {
-		fields = append(fields, apppowerrental.FieldPackagePrice)
-	}
 	if m.FieldCleared(apppowerrental.FieldSaleStartAt) {
 		fields = append(fields, apppowerrental.FieldSaleStartAt)
 	}
 	if m.FieldCleared(apppowerrental.FieldSaleEndAt) {
 		fields = append(fields, apppowerrental.FieldSaleEndAt)
 	}
-	if m.FieldCleared(apppowerrental.FieldPackageWithRequireds) {
-		fields = append(fields, apppowerrental.FieldPackageWithRequireds)
-	}
 	if m.FieldCleared(apppowerrental.FieldSaleMode) {
 		fields = append(fields, apppowerrental.FieldSaleMode)
+	}
+	if m.FieldCleared(apppowerrental.FieldFixDuration) {
+		fields = append(fields, apppowerrental.FieldFixDuration)
+	}
+	if m.FieldCleared(apppowerrental.FieldPackageWithRequireds) {
+		fields = append(fields, apppowerrental.FieldPackageWithRequireds)
 	}
 	return fields
 }
@@ -12283,11 +12216,8 @@ func (m *AppPowerRentalMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *AppPowerRentalMutation) ClearField(name string) error {
 	switch name {
-	case apppowerrental.FieldAppID:
-		m.ClearAppID()
-		return nil
-	case apppowerrental.FieldGoodID:
-		m.ClearGoodID()
+	case apppowerrental.FieldAppGoodID:
+		m.ClearAppGoodID()
 		return nil
 	case apppowerrental.FieldServiceStartAt:
 		m.ClearServiceStartAt()
@@ -12319,20 +12249,20 @@ func (m *AppPowerRentalMutation) ClearField(name string) error {
 	case apppowerrental.FieldUnitPrice:
 		m.ClearUnitPrice()
 		return nil
-	case apppowerrental.FieldPackagePrice:
-		m.ClearPackagePrice()
-		return nil
 	case apppowerrental.FieldSaleStartAt:
 		m.ClearSaleStartAt()
 		return nil
 	case apppowerrental.FieldSaleEndAt:
 		m.ClearSaleEndAt()
 		return nil
-	case apppowerrental.FieldPackageWithRequireds:
-		m.ClearPackageWithRequireds()
-		return nil
 	case apppowerrental.FieldSaleMode:
 		m.ClearSaleMode()
+		return nil
+	case apppowerrental.FieldFixDuration:
+		m.ClearFixDuration()
+		return nil
+	case apppowerrental.FieldPackageWithRequireds:
+		m.ClearPackageWithRequireds()
 		return nil
 	}
 	return fmt.Errorf("unknown AppPowerRental nullable field %s", name)
@@ -12354,11 +12284,8 @@ func (m *AppPowerRentalMutation) ResetField(name string) error {
 	case apppowerrental.FieldEntID:
 		m.ResetEntID()
 		return nil
-	case apppowerrental.FieldAppID:
-		m.ResetAppID()
-		return nil
-	case apppowerrental.FieldGoodID:
-		m.ResetGoodID()
+	case apppowerrental.FieldAppGoodID:
+		m.ResetAppGoodID()
 		return nil
 	case apppowerrental.FieldServiceStartAt:
 		m.ResetServiceStartAt()
@@ -12390,20 +12317,20 @@ func (m *AppPowerRentalMutation) ResetField(name string) error {
 	case apppowerrental.FieldUnitPrice:
 		m.ResetUnitPrice()
 		return nil
-	case apppowerrental.FieldPackagePrice:
-		m.ResetPackagePrice()
-		return nil
 	case apppowerrental.FieldSaleStartAt:
 		m.ResetSaleStartAt()
 		return nil
 	case apppowerrental.FieldSaleEndAt:
 		m.ResetSaleEndAt()
 		return nil
-	case apppowerrental.FieldPackageWithRequireds:
-		m.ResetPackageWithRequireds()
-		return nil
 	case apppowerrental.FieldSaleMode:
 		m.ResetSaleMode()
+		return nil
+	case apppowerrental.FieldFixDuration:
+		m.ResetFixDuration()
+		return nil
+	case apppowerrental.FieldPackageWithRequireds:
+		m.ResetPackageWithRequireds()
 		return nil
 	}
 	return fmt.Errorf("unknown AppPowerRental field %s", name)
@@ -20724,6 +20651,8 @@ type FbmCrowdFundingMutation struct {
 	redeem_delay_hours    *uint32
 	addredeem_delay_hours *int32
 	duration_type         *string
+	duration              *uint32
+	addduration           *int32
 	clearedFields         map[string]struct{}
 	done                  bool
 	oldValue              func(context.Context) (*FbmCrowdFunding, error)
@@ -21661,6 +21590,76 @@ func (m *FbmCrowdFundingMutation) ResetDurationType() {
 	delete(m.clearedFields, fbmcrowdfunding.FieldDurationType)
 }
 
+// SetDuration sets the "duration" field.
+func (m *FbmCrowdFundingMutation) SetDuration(u uint32) {
+	m.duration = &u
+	m.addduration = nil
+}
+
+// Duration returns the value of the "duration" field in the mutation.
+func (m *FbmCrowdFundingMutation) Duration() (r uint32, exists bool) {
+	v := m.duration
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDuration returns the old "duration" field's value of the FbmCrowdFunding entity.
+// If the FbmCrowdFunding object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FbmCrowdFundingMutation) OldDuration(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDuration is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDuration requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDuration: %w", err)
+	}
+	return oldValue.Duration, nil
+}
+
+// AddDuration adds u to the "duration" field.
+func (m *FbmCrowdFundingMutation) AddDuration(u int32) {
+	if m.addduration != nil {
+		*m.addduration += u
+	} else {
+		m.addduration = &u
+	}
+}
+
+// AddedDuration returns the value that was added to the "duration" field in this mutation.
+func (m *FbmCrowdFundingMutation) AddedDuration() (r int32, exists bool) {
+	v := m.addduration
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearDuration clears the value of the "duration" field.
+func (m *FbmCrowdFundingMutation) ClearDuration() {
+	m.duration = nil
+	m.addduration = nil
+	m.clearedFields[fbmcrowdfunding.FieldDuration] = struct{}{}
+}
+
+// DurationCleared returns if the "duration" field was cleared in this mutation.
+func (m *FbmCrowdFundingMutation) DurationCleared() bool {
+	_, ok := m.clearedFields[fbmcrowdfunding.FieldDuration]
+	return ok
+}
+
+// ResetDuration resets all changes to the "duration" field.
+func (m *FbmCrowdFundingMutation) ResetDuration() {
+	m.duration = nil
+	m.addduration = nil
+	delete(m.clearedFields, fbmcrowdfunding.FieldDuration)
+}
+
 // Where appends a list predicates to the FbmCrowdFundingMutation builder.
 func (m *FbmCrowdFundingMutation) Where(ps ...predicate.FbmCrowdFunding) {
 	m.predicates = append(m.predicates, ps...)
@@ -21680,7 +21679,7 @@ func (m *FbmCrowdFundingMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *FbmCrowdFundingMutation) Fields() []string {
-	fields := make([]string, 0, 15)
+	fields := make([]string, 0, 16)
 	if m.created_at != nil {
 		fields = append(fields, fbmcrowdfunding.FieldCreatedAt)
 	}
@@ -21726,6 +21725,9 @@ func (m *FbmCrowdFundingMutation) Fields() []string {
 	if m.duration_type != nil {
 		fields = append(fields, fbmcrowdfunding.FieldDurationType)
 	}
+	if m.duration != nil {
+		fields = append(fields, fbmcrowdfunding.FieldDuration)
+	}
 	return fields
 }
 
@@ -21764,6 +21766,8 @@ func (m *FbmCrowdFundingMutation) Field(name string) (ent.Value, bool) {
 		return m.RedeemDelayHours()
 	case fbmcrowdfunding.FieldDurationType:
 		return m.DurationType()
+	case fbmcrowdfunding.FieldDuration:
+		return m.Duration()
 	}
 	return nil, false
 }
@@ -21803,6 +21807,8 @@ func (m *FbmCrowdFundingMutation) OldField(ctx context.Context, name string) (en
 		return m.OldRedeemDelayHours(ctx)
 	case fbmcrowdfunding.FieldDurationType:
 		return m.OldDurationType(ctx)
+	case fbmcrowdfunding.FieldDuration:
+		return m.OldDuration(ctx)
 	}
 	return nil, fmt.Errorf("unknown FbmCrowdFunding field %s", name)
 }
@@ -21917,6 +21923,13 @@ func (m *FbmCrowdFundingMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDurationType(v)
 		return nil
+	case fbmcrowdfunding.FieldDuration:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDuration(v)
+		return nil
 	}
 	return fmt.Errorf("unknown FbmCrowdFunding field %s", name)
 }
@@ -21946,6 +21959,9 @@ func (m *FbmCrowdFundingMutation) AddedFields() []string {
 	if m.addredeem_delay_hours != nil {
 		fields = append(fields, fbmcrowdfunding.FieldRedeemDelayHours)
 	}
+	if m.addduration != nil {
+		fields = append(fields, fbmcrowdfunding.FieldDuration)
+	}
 	return fields
 }
 
@@ -21968,6 +21984,8 @@ func (m *FbmCrowdFundingMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedDepositEndAt()
 	case fbmcrowdfunding.FieldRedeemDelayHours:
 		return m.AddedRedeemDelayHours()
+	case fbmcrowdfunding.FieldDuration:
+		return m.AddedDuration()
 	}
 	return nil, false
 }
@@ -22026,6 +22044,13 @@ func (m *FbmCrowdFundingMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddRedeemDelayHours(v)
 		return nil
+	case fbmcrowdfunding.FieldDuration:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDuration(v)
+		return nil
 	}
 	return fmt.Errorf("unknown FbmCrowdFunding numeric field %s", name)
 }
@@ -22066,6 +22091,9 @@ func (m *FbmCrowdFundingMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(fbmcrowdfunding.FieldDurationType) {
 		fields = append(fields, fbmcrowdfunding.FieldDurationType)
+	}
+	if m.FieldCleared(fbmcrowdfunding.FieldDuration) {
+		fields = append(fields, fbmcrowdfunding.FieldDuration)
 	}
 	return fields
 }
@@ -22113,6 +22141,9 @@ func (m *FbmCrowdFundingMutation) ClearField(name string) error {
 		return nil
 	case fbmcrowdfunding.FieldDurationType:
 		m.ClearDurationType()
+		return nil
+	case fbmcrowdfunding.FieldDuration:
+		m.ClearDuration()
 		return nil
 	}
 	return fmt.Errorf("unknown FbmCrowdFunding nullable field %s", name)
@@ -22166,6 +22197,9 @@ func (m *FbmCrowdFundingMutation) ResetField(name string) error {
 		return nil
 	case fbmcrowdfunding.FieldDurationType:
 		m.ResetDurationType()
+		return nil
+	case fbmcrowdfunding.FieldDuration:
+		m.ResetDuration()
 		return nil
 	}
 	return fmt.Errorf("unknown FbmCrowdFunding field %s", name)

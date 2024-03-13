@@ -21,10 +21,8 @@ const (
 	FieldDeletedAt = "deleted_at"
 	// FieldEntID holds the string denoting the ent_id field in the database.
 	FieldEntID = "ent_id"
-	// FieldAppID holds the string denoting the app_id field in the database.
-	FieldAppID = "app_id"
-	// FieldGoodID holds the string denoting the good_id field in the database.
-	FieldGoodID = "good_id"
+	// FieldAppGoodID holds the string denoting the app_good_id field in the database.
+	FieldAppGoodID = "app_good_id"
 	// FieldServiceStartAt holds the string denoting the service_start_at field in the database.
 	FieldServiceStartAt = "service_start_at"
 	// FieldCancelMode holds the string denoting the cancel_mode field in the database.
@@ -45,16 +43,16 @@ const (
 	FieldMaxOrderDuration = "max_order_duration"
 	// FieldUnitPrice holds the string denoting the unit_price field in the database.
 	FieldUnitPrice = "unit_price"
-	// FieldPackagePrice holds the string denoting the package_price field in the database.
-	FieldPackagePrice = "package_price"
 	// FieldSaleStartAt holds the string denoting the sale_start_at field in the database.
 	FieldSaleStartAt = "sale_start_at"
 	// FieldSaleEndAt holds the string denoting the sale_end_at field in the database.
 	FieldSaleEndAt = "sale_end_at"
-	// FieldPackageWithRequireds holds the string denoting the package_with_requireds field in the database.
-	FieldPackageWithRequireds = "package_with_requireds"
 	// FieldSaleMode holds the string denoting the sale_mode field in the database.
 	FieldSaleMode = "sale_mode"
+	// FieldFixDuration holds the string denoting the fix_duration field in the database.
+	FieldFixDuration = "fix_duration"
+	// FieldPackageWithRequireds holds the string denoting the package_with_requireds field in the database.
+	FieldPackageWithRequireds = "package_with_requireds"
 	// Table holds the table name of the apppowerrental in the database.
 	Table = "app_power_rentals"
 )
@@ -66,8 +64,7 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldDeletedAt,
 	FieldEntID,
-	FieldAppID,
-	FieldGoodID,
+	FieldAppGoodID,
 	FieldServiceStartAt,
 	FieldCancelMode,
 	FieldCancelableBeforeStartSeconds,
@@ -78,11 +75,11 @@ var Columns = []string{
 	FieldMinOrderDuration,
 	FieldMaxOrderDuration,
 	FieldUnitPrice,
-	FieldPackagePrice,
 	FieldSaleStartAt,
 	FieldSaleEndAt,
-	FieldPackageWithRequireds,
 	FieldSaleMode,
+	FieldFixDuration,
+	FieldPackageWithRequireds,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -114,10 +111,8 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultEntID holds the default value on creation for the "ent_id" field.
 	DefaultEntID func() uuid.UUID
-	// DefaultAppID holds the default value on creation for the "app_id" field.
-	DefaultAppID func() uuid.UUID
-	// DefaultGoodID holds the default value on creation for the "good_id" field.
-	DefaultGoodID func() uuid.UUID
+	// DefaultAppGoodID holds the default value on creation for the "app_good_id" field.
+	DefaultAppGoodID func() uuid.UUID
 	// DefaultServiceStartAt holds the default value on creation for the "service_start_at" field.
 	DefaultServiceStartAt uint32
 	// DefaultCancelMode holds the default value on creation for the "cancel_mode" field.
@@ -138,14 +133,14 @@ var (
 	DefaultMaxOrderDuration uint32
 	// DefaultUnitPrice holds the default value on creation for the "unit_price" field.
 	DefaultUnitPrice decimal.Decimal
-	// DefaultPackagePrice holds the default value on creation for the "package_price" field.
-	DefaultPackagePrice decimal.Decimal
 	// DefaultSaleStartAt holds the default value on creation for the "sale_start_at" field.
 	DefaultSaleStartAt uint32
 	// DefaultSaleEndAt holds the default value on creation for the "sale_end_at" field.
 	DefaultSaleEndAt uint32
-	// DefaultPackageWithRequireds holds the default value on creation for the "package_with_requireds" field.
-	DefaultPackageWithRequireds bool
 	// DefaultSaleMode holds the default value on creation for the "sale_mode" field.
 	DefaultSaleMode string
+	// DefaultFixDuration holds the default value on creation for the "fix_duration" field.
+	DefaultFixDuration bool
+	// DefaultPackageWithRequireds holds the default value on creation for the "package_with_requireds" field.
+	DefaultPackageWithRequireds bool
 )

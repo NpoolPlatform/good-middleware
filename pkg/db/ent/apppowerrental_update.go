@@ -99,43 +99,23 @@ func (apru *AppPowerRentalUpdate) SetNillableEntID(u *uuid.UUID) *AppPowerRental
 	return apru
 }
 
-// SetAppID sets the "app_id" field.
-func (apru *AppPowerRentalUpdate) SetAppID(u uuid.UUID) *AppPowerRentalUpdate {
-	apru.mutation.SetAppID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (apru *AppPowerRentalUpdate) SetAppGoodID(u uuid.UUID) *AppPowerRentalUpdate {
+	apru.mutation.SetAppGoodID(u)
 	return apru
 }
 
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (apru *AppPowerRentalUpdate) SetNillableAppID(u *uuid.UUID) *AppPowerRentalUpdate {
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (apru *AppPowerRentalUpdate) SetNillableAppGoodID(u *uuid.UUID) *AppPowerRentalUpdate {
 	if u != nil {
-		apru.SetAppID(*u)
+		apru.SetAppGoodID(*u)
 	}
 	return apru
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (apru *AppPowerRentalUpdate) ClearAppID() *AppPowerRentalUpdate {
-	apru.mutation.ClearAppID()
-	return apru
-}
-
-// SetGoodID sets the "good_id" field.
-func (apru *AppPowerRentalUpdate) SetGoodID(u uuid.UUID) *AppPowerRentalUpdate {
-	apru.mutation.SetGoodID(u)
-	return apru
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (apru *AppPowerRentalUpdate) SetNillableGoodID(u *uuid.UUID) *AppPowerRentalUpdate {
-	if u != nil {
-		apru.SetGoodID(*u)
-	}
-	return apru
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (apru *AppPowerRentalUpdate) ClearGoodID() *AppPowerRentalUpdate {
-	apru.mutation.ClearGoodID()
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (apru *AppPowerRentalUpdate) ClearAppGoodID() *AppPowerRentalUpdate {
+	apru.mutation.ClearAppGoodID()
 	return apru
 }
 
@@ -367,26 +347,6 @@ func (apru *AppPowerRentalUpdate) ClearUnitPrice() *AppPowerRentalUpdate {
 	return apru
 }
 
-// SetPackagePrice sets the "package_price" field.
-func (apru *AppPowerRentalUpdate) SetPackagePrice(d decimal.Decimal) *AppPowerRentalUpdate {
-	apru.mutation.SetPackagePrice(d)
-	return apru
-}
-
-// SetNillablePackagePrice sets the "package_price" field if the given value is not nil.
-func (apru *AppPowerRentalUpdate) SetNillablePackagePrice(d *decimal.Decimal) *AppPowerRentalUpdate {
-	if d != nil {
-		apru.SetPackagePrice(*d)
-	}
-	return apru
-}
-
-// ClearPackagePrice clears the value of the "package_price" field.
-func (apru *AppPowerRentalUpdate) ClearPackagePrice() *AppPowerRentalUpdate {
-	apru.mutation.ClearPackagePrice()
-	return apru
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (apru *AppPowerRentalUpdate) SetSaleStartAt(u uint32) *AppPowerRentalUpdate {
 	apru.mutation.ResetSaleStartAt()
@@ -441,26 +401,6 @@ func (apru *AppPowerRentalUpdate) ClearSaleEndAt() *AppPowerRentalUpdate {
 	return apru
 }
 
-// SetPackageWithRequireds sets the "package_with_requireds" field.
-func (apru *AppPowerRentalUpdate) SetPackageWithRequireds(b bool) *AppPowerRentalUpdate {
-	apru.mutation.SetPackageWithRequireds(b)
-	return apru
-}
-
-// SetNillablePackageWithRequireds sets the "package_with_requireds" field if the given value is not nil.
-func (apru *AppPowerRentalUpdate) SetNillablePackageWithRequireds(b *bool) *AppPowerRentalUpdate {
-	if b != nil {
-		apru.SetPackageWithRequireds(*b)
-	}
-	return apru
-}
-
-// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
-func (apru *AppPowerRentalUpdate) ClearPackageWithRequireds() *AppPowerRentalUpdate {
-	apru.mutation.ClearPackageWithRequireds()
-	return apru
-}
-
 // SetSaleMode sets the "sale_mode" field.
 func (apru *AppPowerRentalUpdate) SetSaleMode(s string) *AppPowerRentalUpdate {
 	apru.mutation.SetSaleMode(s)
@@ -478,6 +418,46 @@ func (apru *AppPowerRentalUpdate) SetNillableSaleMode(s *string) *AppPowerRental
 // ClearSaleMode clears the value of the "sale_mode" field.
 func (apru *AppPowerRentalUpdate) ClearSaleMode() *AppPowerRentalUpdate {
 	apru.mutation.ClearSaleMode()
+	return apru
+}
+
+// SetFixDuration sets the "fix_duration" field.
+func (apru *AppPowerRentalUpdate) SetFixDuration(b bool) *AppPowerRentalUpdate {
+	apru.mutation.SetFixDuration(b)
+	return apru
+}
+
+// SetNillableFixDuration sets the "fix_duration" field if the given value is not nil.
+func (apru *AppPowerRentalUpdate) SetNillableFixDuration(b *bool) *AppPowerRentalUpdate {
+	if b != nil {
+		apru.SetFixDuration(*b)
+	}
+	return apru
+}
+
+// ClearFixDuration clears the value of the "fix_duration" field.
+func (apru *AppPowerRentalUpdate) ClearFixDuration() *AppPowerRentalUpdate {
+	apru.mutation.ClearFixDuration()
+	return apru
+}
+
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (apru *AppPowerRentalUpdate) SetPackageWithRequireds(b bool) *AppPowerRentalUpdate {
+	apru.mutation.SetPackageWithRequireds(b)
+	return apru
+}
+
+// SetNillablePackageWithRequireds sets the "package_with_requireds" field if the given value is not nil.
+func (apru *AppPowerRentalUpdate) SetNillablePackageWithRequireds(b *bool) *AppPowerRentalUpdate {
+	if b != nil {
+		apru.SetPackageWithRequireds(*b)
+	}
+	return apru
+}
+
+// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
+func (apru *AppPowerRentalUpdate) ClearPackageWithRequireds() *AppPowerRentalUpdate {
+	apru.mutation.ClearPackageWithRequireds()
 	return apru
 }
 
@@ -628,30 +608,17 @@ func (apru *AppPowerRentalUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: apppowerrental.FieldEntID,
 		})
 	}
-	if value, ok := apru.mutation.AppID(); ok {
+	if value, ok := apru.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: apppowerrental.FieldAppID,
+			Column: apppowerrental.FieldAppGoodID,
 		})
 	}
-	if apru.mutation.AppIDCleared() {
+	if apru.mutation.AppGoodIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Column: apppowerrental.FieldAppID,
-		})
-	}
-	if value, ok := apru.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: apppowerrental.FieldGoodID,
-		})
-	}
-	if apru.mutation.GoodIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: apppowerrental.FieldGoodID,
+			Column: apppowerrental.FieldAppGoodID,
 		})
 	}
 	if value, ok := apru.mutation.ServiceStartAt(); ok {
@@ -812,19 +779,6 @@ func (apru *AppPowerRentalUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: apppowerrental.FieldUnitPrice,
 		})
 	}
-	if value, ok := apru.mutation.PackagePrice(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: apppowerrental.FieldPackagePrice,
-		})
-	}
-	if apru.mutation.PackagePriceCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: apppowerrental.FieldPackagePrice,
-		})
-	}
 	if value, ok := apru.mutation.SaleStartAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -865,19 +819,6 @@ func (apru *AppPowerRentalUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: apppowerrental.FieldSaleEndAt,
 		})
 	}
-	if value, ok := apru.mutation.PackageWithRequireds(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: apppowerrental.FieldPackageWithRequireds,
-		})
-	}
-	if apru.mutation.PackageWithRequiredsCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Column: apppowerrental.FieldPackageWithRequireds,
-		})
-	}
 	if value, ok := apru.mutation.SaleMode(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -889,6 +830,32 @@ func (apru *AppPowerRentalUpdate) sqlSave(ctx context.Context) (n int, err error
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: apppowerrental.FieldSaleMode,
+		})
+	}
+	if value, ok := apru.mutation.FixDuration(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: apppowerrental.FieldFixDuration,
+		})
+	}
+	if apru.mutation.FixDurationCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: apppowerrental.FieldFixDuration,
+		})
+	}
+	if value, ok := apru.mutation.PackageWithRequireds(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: apppowerrental.FieldPackageWithRequireds,
+		})
+	}
+	if apru.mutation.PackageWithRequiredsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: apppowerrental.FieldPackageWithRequireds,
 		})
 	}
 	_spec.Modifiers = apru.modifiers
@@ -981,43 +948,23 @@ func (apruo *AppPowerRentalUpdateOne) SetNillableEntID(u *uuid.UUID) *AppPowerRe
 	return apruo
 }
 
-// SetAppID sets the "app_id" field.
-func (apruo *AppPowerRentalUpdateOne) SetAppID(u uuid.UUID) *AppPowerRentalUpdateOne {
-	apruo.mutation.SetAppID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (apruo *AppPowerRentalUpdateOne) SetAppGoodID(u uuid.UUID) *AppPowerRentalUpdateOne {
+	apruo.mutation.SetAppGoodID(u)
 	return apruo
 }
 
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (apruo *AppPowerRentalUpdateOne) SetNillableAppID(u *uuid.UUID) *AppPowerRentalUpdateOne {
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (apruo *AppPowerRentalUpdateOne) SetNillableAppGoodID(u *uuid.UUID) *AppPowerRentalUpdateOne {
 	if u != nil {
-		apruo.SetAppID(*u)
+		apruo.SetAppGoodID(*u)
 	}
 	return apruo
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (apruo *AppPowerRentalUpdateOne) ClearAppID() *AppPowerRentalUpdateOne {
-	apruo.mutation.ClearAppID()
-	return apruo
-}
-
-// SetGoodID sets the "good_id" field.
-func (apruo *AppPowerRentalUpdateOne) SetGoodID(u uuid.UUID) *AppPowerRentalUpdateOne {
-	apruo.mutation.SetGoodID(u)
-	return apruo
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (apruo *AppPowerRentalUpdateOne) SetNillableGoodID(u *uuid.UUID) *AppPowerRentalUpdateOne {
-	if u != nil {
-		apruo.SetGoodID(*u)
-	}
-	return apruo
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (apruo *AppPowerRentalUpdateOne) ClearGoodID() *AppPowerRentalUpdateOne {
-	apruo.mutation.ClearGoodID()
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (apruo *AppPowerRentalUpdateOne) ClearAppGoodID() *AppPowerRentalUpdateOne {
+	apruo.mutation.ClearAppGoodID()
 	return apruo
 }
 
@@ -1249,26 +1196,6 @@ func (apruo *AppPowerRentalUpdateOne) ClearUnitPrice() *AppPowerRentalUpdateOne 
 	return apruo
 }
 
-// SetPackagePrice sets the "package_price" field.
-func (apruo *AppPowerRentalUpdateOne) SetPackagePrice(d decimal.Decimal) *AppPowerRentalUpdateOne {
-	apruo.mutation.SetPackagePrice(d)
-	return apruo
-}
-
-// SetNillablePackagePrice sets the "package_price" field if the given value is not nil.
-func (apruo *AppPowerRentalUpdateOne) SetNillablePackagePrice(d *decimal.Decimal) *AppPowerRentalUpdateOne {
-	if d != nil {
-		apruo.SetPackagePrice(*d)
-	}
-	return apruo
-}
-
-// ClearPackagePrice clears the value of the "package_price" field.
-func (apruo *AppPowerRentalUpdateOne) ClearPackagePrice() *AppPowerRentalUpdateOne {
-	apruo.mutation.ClearPackagePrice()
-	return apruo
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (apruo *AppPowerRentalUpdateOne) SetSaleStartAt(u uint32) *AppPowerRentalUpdateOne {
 	apruo.mutation.ResetSaleStartAt()
@@ -1323,26 +1250,6 @@ func (apruo *AppPowerRentalUpdateOne) ClearSaleEndAt() *AppPowerRentalUpdateOne 
 	return apruo
 }
 
-// SetPackageWithRequireds sets the "package_with_requireds" field.
-func (apruo *AppPowerRentalUpdateOne) SetPackageWithRequireds(b bool) *AppPowerRentalUpdateOne {
-	apruo.mutation.SetPackageWithRequireds(b)
-	return apruo
-}
-
-// SetNillablePackageWithRequireds sets the "package_with_requireds" field if the given value is not nil.
-func (apruo *AppPowerRentalUpdateOne) SetNillablePackageWithRequireds(b *bool) *AppPowerRentalUpdateOne {
-	if b != nil {
-		apruo.SetPackageWithRequireds(*b)
-	}
-	return apruo
-}
-
-// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
-func (apruo *AppPowerRentalUpdateOne) ClearPackageWithRequireds() *AppPowerRentalUpdateOne {
-	apruo.mutation.ClearPackageWithRequireds()
-	return apruo
-}
-
 // SetSaleMode sets the "sale_mode" field.
 func (apruo *AppPowerRentalUpdateOne) SetSaleMode(s string) *AppPowerRentalUpdateOne {
 	apruo.mutation.SetSaleMode(s)
@@ -1360,6 +1267,46 @@ func (apruo *AppPowerRentalUpdateOne) SetNillableSaleMode(s *string) *AppPowerRe
 // ClearSaleMode clears the value of the "sale_mode" field.
 func (apruo *AppPowerRentalUpdateOne) ClearSaleMode() *AppPowerRentalUpdateOne {
 	apruo.mutation.ClearSaleMode()
+	return apruo
+}
+
+// SetFixDuration sets the "fix_duration" field.
+func (apruo *AppPowerRentalUpdateOne) SetFixDuration(b bool) *AppPowerRentalUpdateOne {
+	apruo.mutation.SetFixDuration(b)
+	return apruo
+}
+
+// SetNillableFixDuration sets the "fix_duration" field if the given value is not nil.
+func (apruo *AppPowerRentalUpdateOne) SetNillableFixDuration(b *bool) *AppPowerRentalUpdateOne {
+	if b != nil {
+		apruo.SetFixDuration(*b)
+	}
+	return apruo
+}
+
+// ClearFixDuration clears the value of the "fix_duration" field.
+func (apruo *AppPowerRentalUpdateOne) ClearFixDuration() *AppPowerRentalUpdateOne {
+	apruo.mutation.ClearFixDuration()
+	return apruo
+}
+
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (apruo *AppPowerRentalUpdateOne) SetPackageWithRequireds(b bool) *AppPowerRentalUpdateOne {
+	apruo.mutation.SetPackageWithRequireds(b)
+	return apruo
+}
+
+// SetNillablePackageWithRequireds sets the "package_with_requireds" field if the given value is not nil.
+func (apruo *AppPowerRentalUpdateOne) SetNillablePackageWithRequireds(b *bool) *AppPowerRentalUpdateOne {
+	if b != nil {
+		apruo.SetPackageWithRequireds(*b)
+	}
+	return apruo
+}
+
+// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
+func (apruo *AppPowerRentalUpdateOne) ClearPackageWithRequireds() *AppPowerRentalUpdateOne {
+	apruo.mutation.ClearPackageWithRequireds()
 	return apruo
 }
 
@@ -1540,30 +1487,17 @@ func (apruo *AppPowerRentalUpdateOne) sqlSave(ctx context.Context) (_node *AppPo
 			Column: apppowerrental.FieldEntID,
 		})
 	}
-	if value, ok := apruo.mutation.AppID(); ok {
+	if value, ok := apruo.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: apppowerrental.FieldAppID,
+			Column: apppowerrental.FieldAppGoodID,
 		})
 	}
-	if apruo.mutation.AppIDCleared() {
+	if apruo.mutation.AppGoodIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Column: apppowerrental.FieldAppID,
-		})
-	}
-	if value, ok := apruo.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: apppowerrental.FieldGoodID,
-		})
-	}
-	if apruo.mutation.GoodIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: apppowerrental.FieldGoodID,
+			Column: apppowerrental.FieldAppGoodID,
 		})
 	}
 	if value, ok := apruo.mutation.ServiceStartAt(); ok {
@@ -1724,19 +1658,6 @@ func (apruo *AppPowerRentalUpdateOne) sqlSave(ctx context.Context) (_node *AppPo
 			Column: apppowerrental.FieldUnitPrice,
 		})
 	}
-	if value, ok := apruo.mutation.PackagePrice(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: apppowerrental.FieldPackagePrice,
-		})
-	}
-	if apruo.mutation.PackagePriceCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: apppowerrental.FieldPackagePrice,
-		})
-	}
 	if value, ok := apruo.mutation.SaleStartAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -1777,19 +1698,6 @@ func (apruo *AppPowerRentalUpdateOne) sqlSave(ctx context.Context) (_node *AppPo
 			Column: apppowerrental.FieldSaleEndAt,
 		})
 	}
-	if value, ok := apruo.mutation.PackageWithRequireds(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: apppowerrental.FieldPackageWithRequireds,
-		})
-	}
-	if apruo.mutation.PackageWithRequiredsCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Column: apppowerrental.FieldPackageWithRequireds,
-		})
-	}
 	if value, ok := apruo.mutation.SaleMode(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -1801,6 +1709,32 @@ func (apruo *AppPowerRentalUpdateOne) sqlSave(ctx context.Context) (_node *AppPo
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: apppowerrental.FieldSaleMode,
+		})
+	}
+	if value, ok := apruo.mutation.FixDuration(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: apppowerrental.FieldFixDuration,
+		})
+	}
+	if apruo.mutation.FixDurationCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: apppowerrental.FieldFixDuration,
+		})
+	}
+	if value, ok := apruo.mutation.PackageWithRequireds(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: apppowerrental.FieldPackageWithRequireds,
+		})
+	}
+	if apruo.mutation.PackageWithRequiredsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: apppowerrental.FieldPackageWithRequireds,
 		})
 	}
 	_spec.Modifiers = apruo.modifiers

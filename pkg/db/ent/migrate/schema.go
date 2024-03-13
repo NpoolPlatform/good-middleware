@@ -304,8 +304,7 @@ var (
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
-		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "service_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "cancel_mode", Type: field.TypeString, Nullable: true, Default: "Uncancellable"},
 		{Name: "cancelable_before_start_seconds", Type: field.TypeUint32, Nullable: true, Default: 0},
@@ -316,11 +315,11 @@ var (
 		{Name: "min_order_duration", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "max_order_duration", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "unit_price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
-		{Name: "package_price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "sale_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "sale_end_at", Type: field.TypeUint32, Nullable: true, Default: 0},
-		{Name: "package_with_requireds", Type: field.TypeBool, Nullable: true, Default: true},
 		{Name: "sale_mode", Type: field.TypeString, Nullable: true, Default: "GoodSaleModeMainnetSpot"},
+		{Name: "fix_duration", Type: field.TypeBool, Nullable: true, Default: true},
+		{Name: "package_with_requireds", Type: field.TypeBool, Nullable: true, Default: true},
 	}
 	// AppPowerRentalsTable holds the schema information for the "app_power_rentals" table.
 	AppPowerRentalsTable = &schema.Table{
@@ -334,9 +333,9 @@ var (
 				Columns: []*schema.Column{AppPowerRentalsColumns[4]},
 			},
 			{
-				Name:    "apppowerrental_good_id_app_id",
+				Name:    "apppowerrental_app_good_id",
 				Unique:  false,
-				Columns: []*schema.Column{AppPowerRentalsColumns[6], AppPowerRentalsColumns[5]},
+				Columns: []*schema.Column{AppPowerRentalsColumns[5]},
 			},
 		},
 	}
@@ -567,6 +566,7 @@ var (
 		{Name: "redeemable", Type: field.TypeBool, Nullable: true, Default: true},
 		{Name: "redeem_delay_hours", Type: field.TypeUint32, Nullable: true, Default: 8},
 		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
+		{Name: "duration", Type: field.TypeUint32, Nullable: true, Default: 365},
 	}
 	// FbmCrowdFundingsTable holds the schema information for the "fbm_crowd_fundings" table.
 	FbmCrowdFundingsTable = &schema.Table{

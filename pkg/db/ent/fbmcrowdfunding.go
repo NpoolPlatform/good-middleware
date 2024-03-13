@@ -47,6 +47,8 @@ type FbmCrowdFunding struct {
 	RedeemDelayHours uint32 `json:"redeem_delay_hours,omitempty"`
 	// DurationType holds the value of the "duration_type" field.
 	DurationType string `json:"duration_type,omitempty"`
+	// Duration holds the value of the "duration" field.
+	Duration uint32 `json:"duration,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -58,7 +60,7 @@ func (*FbmCrowdFunding) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case fbmcrowdfunding.FieldRedeemable:
 			values[i] = new(sql.NullBool)
-		case fbmcrowdfunding.FieldID, fbmcrowdfunding.FieldCreatedAt, fbmcrowdfunding.FieldUpdatedAt, fbmcrowdfunding.FieldDeletedAt, fbmcrowdfunding.FieldDeliveryAt, fbmcrowdfunding.FieldDepositStartAt, fbmcrowdfunding.FieldDepositEndAt, fbmcrowdfunding.FieldRedeemDelayHours:
+		case fbmcrowdfunding.FieldID, fbmcrowdfunding.FieldCreatedAt, fbmcrowdfunding.FieldUpdatedAt, fbmcrowdfunding.FieldDeletedAt, fbmcrowdfunding.FieldDeliveryAt, fbmcrowdfunding.FieldDepositStartAt, fbmcrowdfunding.FieldDepositEndAt, fbmcrowdfunding.FieldRedeemDelayHours, fbmcrowdfunding.FieldDuration:
 			values[i] = new(sql.NullInt64)
 		case fbmcrowdfunding.FieldContractAddress, fbmcrowdfunding.FieldDurationType:
 			values[i] = new(sql.NullString)
@@ -175,6 +177,12 @@ func (fcf *FbmCrowdFunding) assignValues(columns []string, values []interface{})
 			} else if value.Valid {
 				fcf.DurationType = value.String
 			}
+		case fbmcrowdfunding.FieldDuration:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field duration", values[i])
+			} else if value.Valid {
+				fcf.Duration = uint32(value.Int64)
+			}
 		}
 	}
 	return nil
@@ -247,6 +255,9 @@ func (fcf *FbmCrowdFunding) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("duration_type=")
 	builder.WriteString(fcf.DurationType)
+	builder.WriteString(", ")
+	builder.WriteString("duration=")
+	builder.WriteString(fmt.Sprintf("%v", fcf.Duration))
 	builder.WriteByte(')')
 	return builder.String()
 }

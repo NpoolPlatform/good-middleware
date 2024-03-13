@@ -80,6 +80,10 @@ func (FbmCrowdFunding) Fields() []ent.Field {
 			String("duration_type").
 			Optional().
 			Default(types.GoodDurationType_GoodDurationByDay.String()),
+		field.
+			Uint32("duration").
+			Optional().
+			Default(365),
 	}
 }
 

@@ -43,6 +43,8 @@ const (
 	FieldRedeemDelayHours = "redeem_delay_hours"
 	// FieldDurationType holds the string denoting the duration_type field in the database.
 	FieldDurationType = "duration_type"
+	// FieldDuration holds the string denoting the duration field in the database.
+	FieldDuration = "duration"
 	// Table holds the table name of the fbmcrowdfunding in the database.
 	Table = "fbm_crowd_fundings"
 )
@@ -65,6 +67,7 @@ var Columns = []string{
 	FieldRedeemable,
 	FieldRedeemDelayHours,
 	FieldDurationType,
+	FieldDuration,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -118,4 +121,6 @@ var (
 	DefaultRedeemDelayHours uint32
 	// DefaultDurationType holds the default value on creation for the "duration_type" field.
 	DefaultDurationType string
+	// DefaultDuration holds the default value on creation for the "duration" field.
+	DefaultDuration uint32
 )

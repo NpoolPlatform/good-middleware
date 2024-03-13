@@ -79,30 +79,16 @@ func (aprc *AppPowerRentalCreate) SetNillableEntID(u *uuid.UUID) *AppPowerRental
 	return aprc
 }
 
-// SetAppID sets the "app_id" field.
-func (aprc *AppPowerRentalCreate) SetAppID(u uuid.UUID) *AppPowerRentalCreate {
-	aprc.mutation.SetAppID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (aprc *AppPowerRentalCreate) SetAppGoodID(u uuid.UUID) *AppPowerRentalCreate {
+	aprc.mutation.SetAppGoodID(u)
 	return aprc
 }
 
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (aprc *AppPowerRentalCreate) SetNillableAppID(u *uuid.UUID) *AppPowerRentalCreate {
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (aprc *AppPowerRentalCreate) SetNillableAppGoodID(u *uuid.UUID) *AppPowerRentalCreate {
 	if u != nil {
-		aprc.SetAppID(*u)
-	}
-	return aprc
-}
-
-// SetGoodID sets the "good_id" field.
-func (aprc *AppPowerRentalCreate) SetGoodID(u uuid.UUID) *AppPowerRentalCreate {
-	aprc.mutation.SetGoodID(u)
-	return aprc
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (aprc *AppPowerRentalCreate) SetNillableGoodID(u *uuid.UUID) *AppPowerRentalCreate {
-	if u != nil {
-		aprc.SetGoodID(*u)
+		aprc.SetAppGoodID(*u)
 	}
 	return aprc
 }
@@ -247,20 +233,6 @@ func (aprc *AppPowerRentalCreate) SetNillableUnitPrice(d *decimal.Decimal) *AppP
 	return aprc
 }
 
-// SetPackagePrice sets the "package_price" field.
-func (aprc *AppPowerRentalCreate) SetPackagePrice(d decimal.Decimal) *AppPowerRentalCreate {
-	aprc.mutation.SetPackagePrice(d)
-	return aprc
-}
-
-// SetNillablePackagePrice sets the "package_price" field if the given value is not nil.
-func (aprc *AppPowerRentalCreate) SetNillablePackagePrice(d *decimal.Decimal) *AppPowerRentalCreate {
-	if d != nil {
-		aprc.SetPackagePrice(*d)
-	}
-	return aprc
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (aprc *AppPowerRentalCreate) SetSaleStartAt(u uint32) *AppPowerRentalCreate {
 	aprc.mutation.SetSaleStartAt(u)
@@ -289,20 +261,6 @@ func (aprc *AppPowerRentalCreate) SetNillableSaleEndAt(u *uint32) *AppPowerRenta
 	return aprc
 }
 
-// SetPackageWithRequireds sets the "package_with_requireds" field.
-func (aprc *AppPowerRentalCreate) SetPackageWithRequireds(b bool) *AppPowerRentalCreate {
-	aprc.mutation.SetPackageWithRequireds(b)
-	return aprc
-}
-
-// SetNillablePackageWithRequireds sets the "package_with_requireds" field if the given value is not nil.
-func (aprc *AppPowerRentalCreate) SetNillablePackageWithRequireds(b *bool) *AppPowerRentalCreate {
-	if b != nil {
-		aprc.SetPackageWithRequireds(*b)
-	}
-	return aprc
-}
-
 // SetSaleMode sets the "sale_mode" field.
 func (aprc *AppPowerRentalCreate) SetSaleMode(s string) *AppPowerRentalCreate {
 	aprc.mutation.SetSaleMode(s)
@@ -313,6 +271,34 @@ func (aprc *AppPowerRentalCreate) SetSaleMode(s string) *AppPowerRentalCreate {
 func (aprc *AppPowerRentalCreate) SetNillableSaleMode(s *string) *AppPowerRentalCreate {
 	if s != nil {
 		aprc.SetSaleMode(*s)
+	}
+	return aprc
+}
+
+// SetFixDuration sets the "fix_duration" field.
+func (aprc *AppPowerRentalCreate) SetFixDuration(b bool) *AppPowerRentalCreate {
+	aprc.mutation.SetFixDuration(b)
+	return aprc
+}
+
+// SetNillableFixDuration sets the "fix_duration" field if the given value is not nil.
+func (aprc *AppPowerRentalCreate) SetNillableFixDuration(b *bool) *AppPowerRentalCreate {
+	if b != nil {
+		aprc.SetFixDuration(*b)
+	}
+	return aprc
+}
+
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (aprc *AppPowerRentalCreate) SetPackageWithRequireds(b bool) *AppPowerRentalCreate {
+	aprc.mutation.SetPackageWithRequireds(b)
+	return aprc
+}
+
+// SetNillablePackageWithRequireds sets the "package_with_requireds" field if the given value is not nil.
+func (aprc *AppPowerRentalCreate) SetNillablePackageWithRequireds(b *bool) *AppPowerRentalCreate {
+	if b != nil {
+		aprc.SetPackageWithRequireds(*b)
 	}
 	return aprc
 }
@@ -430,19 +416,12 @@ func (aprc *AppPowerRentalCreate) defaults() error {
 		v := apppowerrental.DefaultEntID()
 		aprc.mutation.SetEntID(v)
 	}
-	if _, ok := aprc.mutation.AppID(); !ok {
-		if apppowerrental.DefaultAppID == nil {
-			return fmt.Errorf("ent: uninitialized apppowerrental.DefaultAppID (forgotten import ent/runtime?)")
+	if _, ok := aprc.mutation.AppGoodID(); !ok {
+		if apppowerrental.DefaultAppGoodID == nil {
+			return fmt.Errorf("ent: uninitialized apppowerrental.DefaultAppGoodID (forgotten import ent/runtime?)")
 		}
-		v := apppowerrental.DefaultAppID()
-		aprc.mutation.SetAppID(v)
-	}
-	if _, ok := aprc.mutation.GoodID(); !ok {
-		if apppowerrental.DefaultGoodID == nil {
-			return fmt.Errorf("ent: uninitialized apppowerrental.DefaultGoodID (forgotten import ent/runtime?)")
-		}
-		v := apppowerrental.DefaultGoodID()
-		aprc.mutation.SetGoodID(v)
+		v := apppowerrental.DefaultAppGoodID()
+		aprc.mutation.SetAppGoodID(v)
 	}
 	if _, ok := aprc.mutation.ServiceStartAt(); !ok {
 		v := apppowerrental.DefaultServiceStartAt
@@ -484,10 +463,6 @@ func (aprc *AppPowerRentalCreate) defaults() error {
 		v := apppowerrental.DefaultUnitPrice
 		aprc.mutation.SetUnitPrice(v)
 	}
-	if _, ok := aprc.mutation.PackagePrice(); !ok {
-		v := apppowerrental.DefaultPackagePrice
-		aprc.mutation.SetPackagePrice(v)
-	}
 	if _, ok := aprc.mutation.SaleStartAt(); !ok {
 		v := apppowerrental.DefaultSaleStartAt
 		aprc.mutation.SetSaleStartAt(v)
@@ -496,13 +471,17 @@ func (aprc *AppPowerRentalCreate) defaults() error {
 		v := apppowerrental.DefaultSaleEndAt
 		aprc.mutation.SetSaleEndAt(v)
 	}
-	if _, ok := aprc.mutation.PackageWithRequireds(); !ok {
-		v := apppowerrental.DefaultPackageWithRequireds
-		aprc.mutation.SetPackageWithRequireds(v)
-	}
 	if _, ok := aprc.mutation.SaleMode(); !ok {
 		v := apppowerrental.DefaultSaleMode
 		aprc.mutation.SetSaleMode(v)
+	}
+	if _, ok := aprc.mutation.FixDuration(); !ok {
+		v := apppowerrental.DefaultFixDuration
+		aprc.mutation.SetFixDuration(v)
+	}
+	if _, ok := aprc.mutation.PackageWithRequireds(); !ok {
+		v := apppowerrental.DefaultPackageWithRequireds
+		aprc.mutation.SetPackageWithRequireds(v)
 	}
 	return nil
 }
@@ -587,21 +566,13 @@ func (aprc *AppPowerRentalCreate) createSpec() (*AppPowerRental, *sqlgraph.Creat
 		})
 		_node.EntID = value
 	}
-	if value, ok := aprc.mutation.AppID(); ok {
+	if value, ok := aprc.mutation.AppGoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: apppowerrental.FieldAppID,
+			Column: apppowerrental.FieldAppGoodID,
 		})
-		_node.AppID = value
-	}
-	if value, ok := aprc.mutation.GoodID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: apppowerrental.FieldGoodID,
-		})
-		_node.GoodID = value
+		_node.AppGoodID = value
 	}
 	if value, ok := aprc.mutation.ServiceStartAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -683,14 +654,6 @@ func (aprc *AppPowerRentalCreate) createSpec() (*AppPowerRental, *sqlgraph.Creat
 		})
 		_node.UnitPrice = value
 	}
-	if value, ok := aprc.mutation.PackagePrice(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: apppowerrental.FieldPackagePrice,
-		})
-		_node.PackagePrice = value
-	}
 	if value, ok := aprc.mutation.SaleStartAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -707,14 +670,6 @@ func (aprc *AppPowerRentalCreate) createSpec() (*AppPowerRental, *sqlgraph.Creat
 		})
 		_node.SaleEndAt = value
 	}
-	if value, ok := aprc.mutation.PackageWithRequireds(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: apppowerrental.FieldPackageWithRequireds,
-		})
-		_node.PackageWithRequireds = value
-	}
 	if value, ok := aprc.mutation.SaleMode(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -722,6 +677,22 @@ func (aprc *AppPowerRentalCreate) createSpec() (*AppPowerRental, *sqlgraph.Creat
 			Column: apppowerrental.FieldSaleMode,
 		})
 		_node.SaleMode = value
+	}
+	if value, ok := aprc.mutation.FixDuration(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: apppowerrental.FieldFixDuration,
+		})
+		_node.FixDuration = value
+	}
+	if value, ok := aprc.mutation.PackageWithRequireds(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: apppowerrental.FieldPackageWithRequireds,
+		})
+		_node.PackageWithRequireds = value
 	}
 	return _node, _spec
 }
@@ -843,39 +814,21 @@ func (u *AppPowerRentalUpsert) UpdateEntID() *AppPowerRentalUpsert {
 	return u
 }
 
-// SetAppID sets the "app_id" field.
-func (u *AppPowerRentalUpsert) SetAppID(v uuid.UUID) *AppPowerRentalUpsert {
-	u.Set(apppowerrental.FieldAppID, v)
+// SetAppGoodID sets the "app_good_id" field.
+func (u *AppPowerRentalUpsert) SetAppGoodID(v uuid.UUID) *AppPowerRentalUpsert {
+	u.Set(apppowerrental.FieldAppGoodID, v)
 	return u
 }
 
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *AppPowerRentalUpsert) UpdateAppID() *AppPowerRentalUpsert {
-	u.SetExcluded(apppowerrental.FieldAppID)
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *AppPowerRentalUpsert) UpdateAppGoodID() *AppPowerRentalUpsert {
+	u.SetExcluded(apppowerrental.FieldAppGoodID)
 	return u
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (u *AppPowerRentalUpsert) ClearAppID() *AppPowerRentalUpsert {
-	u.SetNull(apppowerrental.FieldAppID)
-	return u
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *AppPowerRentalUpsert) SetGoodID(v uuid.UUID) *AppPowerRentalUpsert {
-	u.Set(apppowerrental.FieldGoodID, v)
-	return u
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *AppPowerRentalUpsert) UpdateGoodID() *AppPowerRentalUpsert {
-	u.SetExcluded(apppowerrental.FieldGoodID)
-	return u
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *AppPowerRentalUpsert) ClearGoodID() *AppPowerRentalUpsert {
-	u.SetNull(apppowerrental.FieldGoodID)
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *AppPowerRentalUpsert) ClearAppGoodID() *AppPowerRentalUpsert {
+	u.SetNull(apppowerrental.FieldAppGoodID)
 	return u
 }
 
@@ -1083,24 +1036,6 @@ func (u *AppPowerRentalUpsert) ClearUnitPrice() *AppPowerRentalUpsert {
 	return u
 }
 
-// SetPackagePrice sets the "package_price" field.
-func (u *AppPowerRentalUpsert) SetPackagePrice(v decimal.Decimal) *AppPowerRentalUpsert {
-	u.Set(apppowerrental.FieldPackagePrice, v)
-	return u
-}
-
-// UpdatePackagePrice sets the "package_price" field to the value that was provided on create.
-func (u *AppPowerRentalUpsert) UpdatePackagePrice() *AppPowerRentalUpsert {
-	u.SetExcluded(apppowerrental.FieldPackagePrice)
-	return u
-}
-
-// ClearPackagePrice clears the value of the "package_price" field.
-func (u *AppPowerRentalUpsert) ClearPackagePrice() *AppPowerRentalUpsert {
-	u.SetNull(apppowerrental.FieldPackagePrice)
-	return u
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (u *AppPowerRentalUpsert) SetSaleStartAt(v uint32) *AppPowerRentalUpsert {
 	u.Set(apppowerrental.FieldSaleStartAt, v)
@@ -1149,24 +1084,6 @@ func (u *AppPowerRentalUpsert) ClearSaleEndAt() *AppPowerRentalUpsert {
 	return u
 }
 
-// SetPackageWithRequireds sets the "package_with_requireds" field.
-func (u *AppPowerRentalUpsert) SetPackageWithRequireds(v bool) *AppPowerRentalUpsert {
-	u.Set(apppowerrental.FieldPackageWithRequireds, v)
-	return u
-}
-
-// UpdatePackageWithRequireds sets the "package_with_requireds" field to the value that was provided on create.
-func (u *AppPowerRentalUpsert) UpdatePackageWithRequireds() *AppPowerRentalUpsert {
-	u.SetExcluded(apppowerrental.FieldPackageWithRequireds)
-	return u
-}
-
-// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
-func (u *AppPowerRentalUpsert) ClearPackageWithRequireds() *AppPowerRentalUpsert {
-	u.SetNull(apppowerrental.FieldPackageWithRequireds)
-	return u
-}
-
 // SetSaleMode sets the "sale_mode" field.
 func (u *AppPowerRentalUpsert) SetSaleMode(v string) *AppPowerRentalUpsert {
 	u.Set(apppowerrental.FieldSaleMode, v)
@@ -1182,6 +1099,42 @@ func (u *AppPowerRentalUpsert) UpdateSaleMode() *AppPowerRentalUpsert {
 // ClearSaleMode clears the value of the "sale_mode" field.
 func (u *AppPowerRentalUpsert) ClearSaleMode() *AppPowerRentalUpsert {
 	u.SetNull(apppowerrental.FieldSaleMode)
+	return u
+}
+
+// SetFixDuration sets the "fix_duration" field.
+func (u *AppPowerRentalUpsert) SetFixDuration(v bool) *AppPowerRentalUpsert {
+	u.Set(apppowerrental.FieldFixDuration, v)
+	return u
+}
+
+// UpdateFixDuration sets the "fix_duration" field to the value that was provided on create.
+func (u *AppPowerRentalUpsert) UpdateFixDuration() *AppPowerRentalUpsert {
+	u.SetExcluded(apppowerrental.FieldFixDuration)
+	return u
+}
+
+// ClearFixDuration clears the value of the "fix_duration" field.
+func (u *AppPowerRentalUpsert) ClearFixDuration() *AppPowerRentalUpsert {
+	u.SetNull(apppowerrental.FieldFixDuration)
+	return u
+}
+
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (u *AppPowerRentalUpsert) SetPackageWithRequireds(v bool) *AppPowerRentalUpsert {
+	u.Set(apppowerrental.FieldPackageWithRequireds, v)
+	return u
+}
+
+// UpdatePackageWithRequireds sets the "package_with_requireds" field to the value that was provided on create.
+func (u *AppPowerRentalUpsert) UpdatePackageWithRequireds() *AppPowerRentalUpsert {
+	u.SetExcluded(apppowerrental.FieldPackageWithRequireds)
+	return u
+}
+
+// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
+func (u *AppPowerRentalUpsert) ClearPackageWithRequireds() *AppPowerRentalUpsert {
+	u.SetNull(apppowerrental.FieldPackageWithRequireds)
 	return u
 }
 
@@ -1312,45 +1265,24 @@ func (u *AppPowerRentalUpsertOne) UpdateEntID() *AppPowerRentalUpsertOne {
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *AppPowerRentalUpsertOne) SetAppID(v uuid.UUID) *AppPowerRentalUpsertOne {
+// SetAppGoodID sets the "app_good_id" field.
+func (u *AppPowerRentalUpsertOne) SetAppGoodID(v uuid.UUID) *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.SetAppID(v)
+		s.SetAppGoodID(v)
 	})
 }
 
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *AppPowerRentalUpsertOne) UpdateAppID() *AppPowerRentalUpsertOne {
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *AppPowerRentalUpsertOne) UpdateAppGoodID() *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.UpdateAppID()
+		s.UpdateAppGoodID()
 	})
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (u *AppPowerRentalUpsertOne) ClearAppID() *AppPowerRentalUpsertOne {
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *AppPowerRentalUpsertOne) ClearAppGoodID() *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.ClearAppID()
-	})
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *AppPowerRentalUpsertOne) SetGoodID(v uuid.UUID) *AppPowerRentalUpsertOne {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *AppPowerRentalUpsertOne) UpdateGoodID() *AppPowerRentalUpsertOne {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.UpdateGoodID()
-	})
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *AppPowerRentalUpsertOne) ClearGoodID() *AppPowerRentalUpsertOne {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.ClearGoodID()
+		s.ClearAppGoodID()
 	})
 }
 
@@ -1592,27 +1524,6 @@ func (u *AppPowerRentalUpsertOne) ClearUnitPrice() *AppPowerRentalUpsertOne {
 	})
 }
 
-// SetPackagePrice sets the "package_price" field.
-func (u *AppPowerRentalUpsertOne) SetPackagePrice(v decimal.Decimal) *AppPowerRentalUpsertOne {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.SetPackagePrice(v)
-	})
-}
-
-// UpdatePackagePrice sets the "package_price" field to the value that was provided on create.
-func (u *AppPowerRentalUpsertOne) UpdatePackagePrice() *AppPowerRentalUpsertOne {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.UpdatePackagePrice()
-	})
-}
-
-// ClearPackagePrice clears the value of the "package_price" field.
-func (u *AppPowerRentalUpsertOne) ClearPackagePrice() *AppPowerRentalUpsertOne {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.ClearPackagePrice()
-	})
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (u *AppPowerRentalUpsertOne) SetSaleStartAt(v uint32) *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
@@ -1669,27 +1580,6 @@ func (u *AppPowerRentalUpsertOne) ClearSaleEndAt() *AppPowerRentalUpsertOne {
 	})
 }
 
-// SetPackageWithRequireds sets the "package_with_requireds" field.
-func (u *AppPowerRentalUpsertOne) SetPackageWithRequireds(v bool) *AppPowerRentalUpsertOne {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.SetPackageWithRequireds(v)
-	})
-}
-
-// UpdatePackageWithRequireds sets the "package_with_requireds" field to the value that was provided on create.
-func (u *AppPowerRentalUpsertOne) UpdatePackageWithRequireds() *AppPowerRentalUpsertOne {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.UpdatePackageWithRequireds()
-	})
-}
-
-// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
-func (u *AppPowerRentalUpsertOne) ClearPackageWithRequireds() *AppPowerRentalUpsertOne {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.ClearPackageWithRequireds()
-	})
-}
-
 // SetSaleMode sets the "sale_mode" field.
 func (u *AppPowerRentalUpsertOne) SetSaleMode(v string) *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
@@ -1708,6 +1598,48 @@ func (u *AppPowerRentalUpsertOne) UpdateSaleMode() *AppPowerRentalUpsertOne {
 func (u *AppPowerRentalUpsertOne) ClearSaleMode() *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
 		s.ClearSaleMode()
+	})
+}
+
+// SetFixDuration sets the "fix_duration" field.
+func (u *AppPowerRentalUpsertOne) SetFixDuration(v bool) *AppPowerRentalUpsertOne {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.SetFixDuration(v)
+	})
+}
+
+// UpdateFixDuration sets the "fix_duration" field to the value that was provided on create.
+func (u *AppPowerRentalUpsertOne) UpdateFixDuration() *AppPowerRentalUpsertOne {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.UpdateFixDuration()
+	})
+}
+
+// ClearFixDuration clears the value of the "fix_duration" field.
+func (u *AppPowerRentalUpsertOne) ClearFixDuration() *AppPowerRentalUpsertOne {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.ClearFixDuration()
+	})
+}
+
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (u *AppPowerRentalUpsertOne) SetPackageWithRequireds(v bool) *AppPowerRentalUpsertOne {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.SetPackageWithRequireds(v)
+	})
+}
+
+// UpdatePackageWithRequireds sets the "package_with_requireds" field to the value that was provided on create.
+func (u *AppPowerRentalUpsertOne) UpdatePackageWithRequireds() *AppPowerRentalUpsertOne {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.UpdatePackageWithRequireds()
+	})
+}
+
+// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
+func (u *AppPowerRentalUpsertOne) ClearPackageWithRequireds() *AppPowerRentalUpsertOne {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.ClearPackageWithRequireds()
 	})
 }
 
@@ -2003,45 +1935,24 @@ func (u *AppPowerRentalUpsertBulk) UpdateEntID() *AppPowerRentalUpsertBulk {
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *AppPowerRentalUpsertBulk) SetAppID(v uuid.UUID) *AppPowerRentalUpsertBulk {
+// SetAppGoodID sets the "app_good_id" field.
+func (u *AppPowerRentalUpsertBulk) SetAppGoodID(v uuid.UUID) *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.SetAppID(v)
+		s.SetAppGoodID(v)
 	})
 }
 
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *AppPowerRentalUpsertBulk) UpdateAppID() *AppPowerRentalUpsertBulk {
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *AppPowerRentalUpsertBulk) UpdateAppGoodID() *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.UpdateAppID()
+		s.UpdateAppGoodID()
 	})
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (u *AppPowerRentalUpsertBulk) ClearAppID() *AppPowerRentalUpsertBulk {
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *AppPowerRentalUpsertBulk) ClearAppGoodID() *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.ClearAppID()
-	})
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *AppPowerRentalUpsertBulk) SetGoodID(v uuid.UUID) *AppPowerRentalUpsertBulk {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *AppPowerRentalUpsertBulk) UpdateGoodID() *AppPowerRentalUpsertBulk {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.UpdateGoodID()
-	})
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *AppPowerRentalUpsertBulk) ClearGoodID() *AppPowerRentalUpsertBulk {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.ClearGoodID()
+		s.ClearAppGoodID()
 	})
 }
 
@@ -2283,27 +2194,6 @@ func (u *AppPowerRentalUpsertBulk) ClearUnitPrice() *AppPowerRentalUpsertBulk {
 	})
 }
 
-// SetPackagePrice sets the "package_price" field.
-func (u *AppPowerRentalUpsertBulk) SetPackagePrice(v decimal.Decimal) *AppPowerRentalUpsertBulk {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.SetPackagePrice(v)
-	})
-}
-
-// UpdatePackagePrice sets the "package_price" field to the value that was provided on create.
-func (u *AppPowerRentalUpsertBulk) UpdatePackagePrice() *AppPowerRentalUpsertBulk {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.UpdatePackagePrice()
-	})
-}
-
-// ClearPackagePrice clears the value of the "package_price" field.
-func (u *AppPowerRentalUpsertBulk) ClearPackagePrice() *AppPowerRentalUpsertBulk {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.ClearPackagePrice()
-	})
-}
-
 // SetSaleStartAt sets the "sale_start_at" field.
 func (u *AppPowerRentalUpsertBulk) SetSaleStartAt(v uint32) *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
@@ -2360,27 +2250,6 @@ func (u *AppPowerRentalUpsertBulk) ClearSaleEndAt() *AppPowerRentalUpsertBulk {
 	})
 }
 
-// SetPackageWithRequireds sets the "package_with_requireds" field.
-func (u *AppPowerRentalUpsertBulk) SetPackageWithRequireds(v bool) *AppPowerRentalUpsertBulk {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.SetPackageWithRequireds(v)
-	})
-}
-
-// UpdatePackageWithRequireds sets the "package_with_requireds" field to the value that was provided on create.
-func (u *AppPowerRentalUpsertBulk) UpdatePackageWithRequireds() *AppPowerRentalUpsertBulk {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.UpdatePackageWithRequireds()
-	})
-}
-
-// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
-func (u *AppPowerRentalUpsertBulk) ClearPackageWithRequireds() *AppPowerRentalUpsertBulk {
-	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.ClearPackageWithRequireds()
-	})
-}
-
 // SetSaleMode sets the "sale_mode" field.
 func (u *AppPowerRentalUpsertBulk) SetSaleMode(v string) *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
@@ -2399,6 +2268,48 @@ func (u *AppPowerRentalUpsertBulk) UpdateSaleMode() *AppPowerRentalUpsertBulk {
 func (u *AppPowerRentalUpsertBulk) ClearSaleMode() *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
 		s.ClearSaleMode()
+	})
+}
+
+// SetFixDuration sets the "fix_duration" field.
+func (u *AppPowerRentalUpsertBulk) SetFixDuration(v bool) *AppPowerRentalUpsertBulk {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.SetFixDuration(v)
+	})
+}
+
+// UpdateFixDuration sets the "fix_duration" field to the value that was provided on create.
+func (u *AppPowerRentalUpsertBulk) UpdateFixDuration() *AppPowerRentalUpsertBulk {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.UpdateFixDuration()
+	})
+}
+
+// ClearFixDuration clears the value of the "fix_duration" field.
+func (u *AppPowerRentalUpsertBulk) ClearFixDuration() *AppPowerRentalUpsertBulk {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.ClearFixDuration()
+	})
+}
+
+// SetPackageWithRequireds sets the "package_with_requireds" field.
+func (u *AppPowerRentalUpsertBulk) SetPackageWithRequireds(v bool) *AppPowerRentalUpsertBulk {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.SetPackageWithRequireds(v)
+	})
+}
+
+// UpdatePackageWithRequireds sets the "package_with_requireds" field to the value that was provided on create.
+func (u *AppPowerRentalUpsertBulk) UpdatePackageWithRequireds() *AppPowerRentalUpsertBulk {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.UpdatePackageWithRequireds()
+	})
+}
+
+// ClearPackageWithRequireds clears the value of the "package_with_requireds" field.
+func (u *AppPowerRentalUpsertBulk) ClearPackageWithRequireds() *AppPowerRentalUpsertBulk {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.ClearPackageWithRequireds()
 	})
 }
 

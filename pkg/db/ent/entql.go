@@ -280,8 +280,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			apppowerrental.FieldUpdatedAt:                    {Type: field.TypeUint32, Column: apppowerrental.FieldUpdatedAt},
 			apppowerrental.FieldDeletedAt:                    {Type: field.TypeUint32, Column: apppowerrental.FieldDeletedAt},
 			apppowerrental.FieldEntID:                        {Type: field.TypeUUID, Column: apppowerrental.FieldEntID},
-			apppowerrental.FieldAppID:                        {Type: field.TypeUUID, Column: apppowerrental.FieldAppID},
-			apppowerrental.FieldGoodID:                       {Type: field.TypeUUID, Column: apppowerrental.FieldGoodID},
+			apppowerrental.FieldAppGoodID:                    {Type: field.TypeUUID, Column: apppowerrental.FieldAppGoodID},
 			apppowerrental.FieldServiceStartAt:               {Type: field.TypeUint32, Column: apppowerrental.FieldServiceStartAt},
 			apppowerrental.FieldCancelMode:                   {Type: field.TypeString, Column: apppowerrental.FieldCancelMode},
 			apppowerrental.FieldCancelableBeforeStartSeconds: {Type: field.TypeUint32, Column: apppowerrental.FieldCancelableBeforeStartSeconds},
@@ -292,11 +291,11 @@ var schemaGraph = func() *sqlgraph.Schema {
 			apppowerrental.FieldMinOrderDuration:             {Type: field.TypeUint32, Column: apppowerrental.FieldMinOrderDuration},
 			apppowerrental.FieldMaxOrderDuration:             {Type: field.TypeUint32, Column: apppowerrental.FieldMaxOrderDuration},
 			apppowerrental.FieldUnitPrice:                    {Type: field.TypeOther, Column: apppowerrental.FieldUnitPrice},
-			apppowerrental.FieldPackagePrice:                 {Type: field.TypeOther, Column: apppowerrental.FieldPackagePrice},
 			apppowerrental.FieldSaleStartAt:                  {Type: field.TypeUint32, Column: apppowerrental.FieldSaleStartAt},
 			apppowerrental.FieldSaleEndAt:                    {Type: field.TypeUint32, Column: apppowerrental.FieldSaleEndAt},
-			apppowerrental.FieldPackageWithRequireds:         {Type: field.TypeBool, Column: apppowerrental.FieldPackageWithRequireds},
 			apppowerrental.FieldSaleMode:                     {Type: field.TypeString, Column: apppowerrental.FieldSaleMode},
+			apppowerrental.FieldFixDuration:                  {Type: field.TypeBool, Column: apppowerrental.FieldFixDuration},
+			apppowerrental.FieldPackageWithRequireds:         {Type: field.TypeBool, Column: apppowerrental.FieldPackageWithRequireds},
 		},
 	}
 	graph.Nodes[10] = &sqlgraph.Node{
@@ -496,6 +495,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			fbmcrowdfunding.FieldRedeemable:        {Type: field.TypeBool, Column: fbmcrowdfunding.FieldRedeemable},
 			fbmcrowdfunding.FieldRedeemDelayHours:  {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldRedeemDelayHours},
 			fbmcrowdfunding.FieldDurationType:      {Type: field.TypeString, Column: fbmcrowdfunding.FieldDurationType},
+			fbmcrowdfunding.FieldDuration:          {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldDuration},
 		},
 	}
 	graph.Nodes[18] = &sqlgraph.Node{
@@ -1835,14 +1835,9 @@ func (f *AppPowerRentalFilter) WhereEntID(p entql.ValueP) {
 	f.Where(p.Field(apppowerrental.FieldEntID))
 }
 
-// WhereAppID applies the entql [16]byte predicate on the app_id field.
-func (f *AppPowerRentalFilter) WhereAppID(p entql.ValueP) {
-	f.Where(p.Field(apppowerrental.FieldAppID))
-}
-
-// WhereGoodID applies the entql [16]byte predicate on the good_id field.
-func (f *AppPowerRentalFilter) WhereGoodID(p entql.ValueP) {
-	f.Where(p.Field(apppowerrental.FieldGoodID))
+// WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
+func (f *AppPowerRentalFilter) WhereAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(apppowerrental.FieldAppGoodID))
 }
 
 // WhereServiceStartAt applies the entql uint32 predicate on the service_start_at field.
@@ -1895,11 +1890,6 @@ func (f *AppPowerRentalFilter) WhereUnitPrice(p entql.OtherP) {
 	f.Where(p.Field(apppowerrental.FieldUnitPrice))
 }
 
-// WherePackagePrice applies the entql other predicate on the package_price field.
-func (f *AppPowerRentalFilter) WherePackagePrice(p entql.OtherP) {
-	f.Where(p.Field(apppowerrental.FieldPackagePrice))
-}
-
 // WhereSaleStartAt applies the entql uint32 predicate on the sale_start_at field.
 func (f *AppPowerRentalFilter) WhereSaleStartAt(p entql.Uint32P) {
 	f.Where(p.Field(apppowerrental.FieldSaleStartAt))
@@ -1910,14 +1900,19 @@ func (f *AppPowerRentalFilter) WhereSaleEndAt(p entql.Uint32P) {
 	f.Where(p.Field(apppowerrental.FieldSaleEndAt))
 }
 
-// WherePackageWithRequireds applies the entql bool predicate on the package_with_requireds field.
-func (f *AppPowerRentalFilter) WherePackageWithRequireds(p entql.BoolP) {
-	f.Where(p.Field(apppowerrental.FieldPackageWithRequireds))
-}
-
 // WhereSaleMode applies the entql string predicate on the sale_mode field.
 func (f *AppPowerRentalFilter) WhereSaleMode(p entql.StringP) {
 	f.Where(p.Field(apppowerrental.FieldSaleMode))
+}
+
+// WhereFixDuration applies the entql bool predicate on the fix_duration field.
+func (f *AppPowerRentalFilter) WhereFixDuration(p entql.BoolP) {
+	f.Where(p.Field(apppowerrental.FieldFixDuration))
+}
+
+// WherePackageWithRequireds applies the entql bool predicate on the package_with_requireds field.
+func (f *AppPowerRentalFilter) WherePackageWithRequireds(p entql.BoolP) {
+	f.Where(p.Field(apppowerrental.FieldPackageWithRequireds))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -2713,6 +2708,11 @@ func (f *FbmCrowdFundingFilter) WhereRedeemDelayHours(p entql.Uint32P) {
 // WhereDurationType applies the entql string predicate on the duration_type field.
 func (f *FbmCrowdFundingFilter) WhereDurationType(p entql.StringP) {
 	f.Where(p.Field(fbmcrowdfunding.FieldDurationType))
+}
+
+// WhereDuration applies the entql uint32 predicate on the duration field.
+func (f *FbmCrowdFundingFilter) WhereDuration(p entql.Uint32P) {
+	f.Where(p.Field(fbmcrowdfunding.FieldDuration))
 }
 
 // addPredicate implements the predicateAdder interface.

@@ -108,17 +108,10 @@ func EntID(v uuid.UUID) predicate.AppPowerRental {
 	})
 }
 
-// AppID applies equality check predicate on the "app_id" field. It's identical to AppIDEQ.
-func AppID(v uuid.UUID) predicate.AppPowerRental {
+// AppGoodID applies equality check predicate on the "app_good_id" field. It's identical to AppGoodIDEQ.
+func AppGoodID(v uuid.UUID) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppID), v))
-	})
-}
-
-// GoodID applies equality check predicate on the "good_id" field. It's identical to GoodIDEQ.
-func GoodID(v uuid.UUID) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodID), v))
+		s.Where(sql.EQ(s.C(FieldAppGoodID), v))
 	})
 }
 
@@ -192,13 +185,6 @@ func UnitPrice(v decimal.Decimal) predicate.AppPowerRental {
 	})
 }
 
-// PackagePrice applies equality check predicate on the "package_price" field. It's identical to PackagePriceEQ.
-func PackagePrice(v decimal.Decimal) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPackagePrice), v))
-	})
-}
-
 // SaleStartAt applies equality check predicate on the "sale_start_at" field. It's identical to SaleStartAtEQ.
 func SaleStartAt(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
@@ -213,17 +199,24 @@ func SaleEndAt(v uint32) predicate.AppPowerRental {
 	})
 }
 
-// PackageWithRequireds applies equality check predicate on the "package_with_requireds" field. It's identical to PackageWithRequiredsEQ.
-func PackageWithRequireds(v bool) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPackageWithRequireds), v))
-	})
-}
-
 // SaleMode applies equality check predicate on the "sale_mode" field. It's identical to SaleModeEQ.
 func SaleMode(v string) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldSaleMode), v))
+	})
+}
+
+// FixDuration applies equality check predicate on the "fix_duration" field. It's identical to FixDurationEQ.
+func FixDuration(v bool) predicate.AppPowerRental {
+	return predicate.AppPowerRental(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFixDuration), v))
+	})
+}
+
+// PackageWithRequireds applies equality check predicate on the "package_with_requireds" field. It's identical to PackageWithRequiredsEQ.
+func PackageWithRequireds(v bool) predicate.AppPowerRental {
+	return predicate.AppPowerRental(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPackageWithRequireds), v))
 	})
 }
 
@@ -483,159 +476,81 @@ func EntIDLTE(v uuid.UUID) predicate.AppPowerRental {
 	})
 }
 
-// AppIDEQ applies the EQ predicate on the "app_id" field.
-func AppIDEQ(v uuid.UUID) predicate.AppPowerRental {
+// AppGoodIDEQ applies the EQ predicate on the "app_good_id" field.
+func AppGoodIDEQ(v uuid.UUID) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppID), v))
+		s.Where(sql.EQ(s.C(FieldAppGoodID), v))
 	})
 }
 
-// AppIDNEQ applies the NEQ predicate on the "app_id" field.
-func AppIDNEQ(v uuid.UUID) predicate.AppPowerRental {
+// AppGoodIDNEQ applies the NEQ predicate on the "app_good_id" field.
+func AppGoodIDNEQ(v uuid.UUID) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAppID), v))
+		s.Where(sql.NEQ(s.C(FieldAppGoodID), v))
 	})
 }
 
-// AppIDIn applies the In predicate on the "app_id" field.
-func AppIDIn(vs ...uuid.UUID) predicate.AppPowerRental {
+// AppGoodIDIn applies the In predicate on the "app_good_id" field.
+func AppGoodIDIn(vs ...uuid.UUID) predicate.AppPowerRental {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldAppID), v...))
+		s.Where(sql.In(s.C(FieldAppGoodID), v...))
 	})
 }
 
-// AppIDNotIn applies the NotIn predicate on the "app_id" field.
-func AppIDNotIn(vs ...uuid.UUID) predicate.AppPowerRental {
+// AppGoodIDNotIn applies the NotIn predicate on the "app_good_id" field.
+func AppGoodIDNotIn(vs ...uuid.UUID) predicate.AppPowerRental {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldAppID), v...))
+		s.Where(sql.NotIn(s.C(FieldAppGoodID), v...))
 	})
 }
 
-// AppIDGT applies the GT predicate on the "app_id" field.
-func AppIDGT(v uuid.UUID) predicate.AppPowerRental {
+// AppGoodIDGT applies the GT predicate on the "app_good_id" field.
+func AppGoodIDGT(v uuid.UUID) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAppID), v))
+		s.Where(sql.GT(s.C(FieldAppGoodID), v))
 	})
 }
 
-// AppIDGTE applies the GTE predicate on the "app_id" field.
-func AppIDGTE(v uuid.UUID) predicate.AppPowerRental {
+// AppGoodIDGTE applies the GTE predicate on the "app_good_id" field.
+func AppGoodIDGTE(v uuid.UUID) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAppID), v))
+		s.Where(sql.GTE(s.C(FieldAppGoodID), v))
 	})
 }
 
-// AppIDLT applies the LT predicate on the "app_id" field.
-func AppIDLT(v uuid.UUID) predicate.AppPowerRental {
+// AppGoodIDLT applies the LT predicate on the "app_good_id" field.
+func AppGoodIDLT(v uuid.UUID) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAppID), v))
+		s.Where(sql.LT(s.C(FieldAppGoodID), v))
 	})
 }
 
-// AppIDLTE applies the LTE predicate on the "app_id" field.
-func AppIDLTE(v uuid.UUID) predicate.AppPowerRental {
+// AppGoodIDLTE applies the LTE predicate on the "app_good_id" field.
+func AppGoodIDLTE(v uuid.UUID) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAppID), v))
+		s.Where(sql.LTE(s.C(FieldAppGoodID), v))
 	})
 }
 
-// AppIDIsNil applies the IsNil predicate on the "app_id" field.
-func AppIDIsNil() predicate.AppPowerRental {
+// AppGoodIDIsNil applies the IsNil predicate on the "app_good_id" field.
+func AppGoodIDIsNil() predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldAppID)))
+		s.Where(sql.IsNull(s.C(FieldAppGoodID)))
 	})
 }
 
-// AppIDNotNil applies the NotNil predicate on the "app_id" field.
-func AppIDNotNil() predicate.AppPowerRental {
+// AppGoodIDNotNil applies the NotNil predicate on the "app_good_id" field.
+func AppGoodIDNotNil() predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldAppID)))
-	})
-}
-
-// GoodIDEQ applies the EQ predicate on the "good_id" field.
-func GoodIDEQ(v uuid.UUID) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDNEQ applies the NEQ predicate on the "good_id" field.
-func GoodIDNEQ(v uuid.UUID) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDIn applies the In predicate on the "good_id" field.
-func GoodIDIn(vs ...uuid.UUID) predicate.AppPowerRental {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldGoodID), v...))
-	})
-}
-
-// GoodIDNotIn applies the NotIn predicate on the "good_id" field.
-func GoodIDNotIn(vs ...uuid.UUID) predicate.AppPowerRental {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldGoodID), v...))
-	})
-}
-
-// GoodIDGT applies the GT predicate on the "good_id" field.
-func GoodIDGT(v uuid.UUID) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDGTE applies the GTE predicate on the "good_id" field.
-func GoodIDGTE(v uuid.UUID) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDLT applies the LT predicate on the "good_id" field.
-func GoodIDLT(v uuid.UUID) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDLTE applies the LTE predicate on the "good_id" field.
-func GoodIDLTE(v uuid.UUID) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDIsNil applies the IsNil predicate on the "good_id" field.
-func GoodIDIsNil() predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldGoodID)))
-	})
-}
-
-// GoodIDNotNil applies the NotNil predicate on the "good_id" field.
-func GoodIDNotNil() predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldGoodID)))
+		s.Where(sql.NotNull(s.C(FieldAppGoodID)))
 	})
 }
 
@@ -1404,84 +1319,6 @@ func UnitPriceNotNil() predicate.AppPowerRental {
 	})
 }
 
-// PackagePriceEQ applies the EQ predicate on the "package_price" field.
-func PackagePriceEQ(v decimal.Decimal) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPackagePrice), v))
-	})
-}
-
-// PackagePriceNEQ applies the NEQ predicate on the "package_price" field.
-func PackagePriceNEQ(v decimal.Decimal) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldPackagePrice), v))
-	})
-}
-
-// PackagePriceIn applies the In predicate on the "package_price" field.
-func PackagePriceIn(vs ...decimal.Decimal) predicate.AppPowerRental {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldPackagePrice), v...))
-	})
-}
-
-// PackagePriceNotIn applies the NotIn predicate on the "package_price" field.
-func PackagePriceNotIn(vs ...decimal.Decimal) predicate.AppPowerRental {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldPackagePrice), v...))
-	})
-}
-
-// PackagePriceGT applies the GT predicate on the "package_price" field.
-func PackagePriceGT(v decimal.Decimal) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldPackagePrice), v))
-	})
-}
-
-// PackagePriceGTE applies the GTE predicate on the "package_price" field.
-func PackagePriceGTE(v decimal.Decimal) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldPackagePrice), v))
-	})
-}
-
-// PackagePriceLT applies the LT predicate on the "package_price" field.
-func PackagePriceLT(v decimal.Decimal) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldPackagePrice), v))
-	})
-}
-
-// PackagePriceLTE applies the LTE predicate on the "package_price" field.
-func PackagePriceLTE(v decimal.Decimal) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldPackagePrice), v))
-	})
-}
-
-// PackagePriceIsNil applies the IsNil predicate on the "package_price" field.
-func PackagePriceIsNil() predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldPackagePrice)))
-	})
-}
-
-// PackagePriceNotNil applies the NotNil predicate on the "package_price" field.
-func PackagePriceNotNil() predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldPackagePrice)))
-	})
-}
-
 // SaleStartAtEQ applies the EQ predicate on the "sale_start_at" field.
 func SaleStartAtEQ(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
@@ -1638,34 +1475,6 @@ func SaleEndAtNotNil() predicate.AppPowerRental {
 	})
 }
 
-// PackageWithRequiredsEQ applies the EQ predicate on the "package_with_requireds" field.
-func PackageWithRequiredsEQ(v bool) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPackageWithRequireds), v))
-	})
-}
-
-// PackageWithRequiredsNEQ applies the NEQ predicate on the "package_with_requireds" field.
-func PackageWithRequiredsNEQ(v bool) predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldPackageWithRequireds), v))
-	})
-}
-
-// PackageWithRequiredsIsNil applies the IsNil predicate on the "package_with_requireds" field.
-func PackageWithRequiredsIsNil() predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldPackageWithRequireds)))
-	})
-}
-
-// PackageWithRequiredsNotNil applies the NotNil predicate on the "package_with_requireds" field.
-func PackageWithRequiredsNotNil() predicate.AppPowerRental {
-	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldPackageWithRequireds)))
-	})
-}
-
 // SaleModeEQ applies the EQ predicate on the "sale_mode" field.
 func SaleModeEQ(v string) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
@@ -1776,6 +1585,62 @@ func SaleModeEqualFold(v string) predicate.AppPowerRental {
 func SaleModeContainsFold(v string) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldSaleMode), v))
+	})
+}
+
+// FixDurationEQ applies the EQ predicate on the "fix_duration" field.
+func FixDurationEQ(v bool) predicate.AppPowerRental {
+	return predicate.AppPowerRental(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFixDuration), v))
+	})
+}
+
+// FixDurationNEQ applies the NEQ predicate on the "fix_duration" field.
+func FixDurationNEQ(v bool) predicate.AppPowerRental {
+	return predicate.AppPowerRental(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldFixDuration), v))
+	})
+}
+
+// FixDurationIsNil applies the IsNil predicate on the "fix_duration" field.
+func FixDurationIsNil() predicate.AppPowerRental {
+	return predicate.AppPowerRental(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldFixDuration)))
+	})
+}
+
+// FixDurationNotNil applies the NotNil predicate on the "fix_duration" field.
+func FixDurationNotNil() predicate.AppPowerRental {
+	return predicate.AppPowerRental(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldFixDuration)))
+	})
+}
+
+// PackageWithRequiredsEQ applies the EQ predicate on the "package_with_requireds" field.
+func PackageWithRequiredsEQ(v bool) predicate.AppPowerRental {
+	return predicate.AppPowerRental(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPackageWithRequireds), v))
+	})
+}
+
+// PackageWithRequiredsNEQ applies the NEQ predicate on the "package_with_requireds" field.
+func PackageWithRequiredsNEQ(v bool) predicate.AppPowerRental {
+	return predicate.AppPowerRental(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldPackageWithRequireds), v))
+	})
+}
+
+// PackageWithRequiredsIsNil applies the IsNil predicate on the "package_with_requireds" field.
+func PackageWithRequiredsIsNil() predicate.AppPowerRental {
+	return predicate.AppPowerRental(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldPackageWithRequireds)))
+	})
+}
+
+// PackageWithRequiredsNotNil applies the NotNil predicate on the "package_with_requireds" field.
+func PackageWithRequiredsNotNil() predicate.AppPowerRental {
+	return predicate.AppPowerRental(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldPackageWithRequireds)))
 	})
 }
 
