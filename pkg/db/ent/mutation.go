@@ -113,6 +113,7 @@ type AppDefaultGoodMutation struct {
 	good_id       *uuid.UUID
 	app_good_id   *uuid.UUID
 	coin_type_id  *uuid.UUID
+	good_type     *string
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*AppDefaultGood, error)
@@ -623,6 +624,55 @@ func (m *AppDefaultGoodMutation) ResetCoinTypeID() {
 	delete(m.clearedFields, appdefaultgood.FieldCoinTypeID)
 }
 
+// SetGoodType sets the "good_type" field.
+func (m *AppDefaultGoodMutation) SetGoodType(s string) {
+	m.good_type = &s
+}
+
+// GoodType returns the value of the "good_type" field in the mutation.
+func (m *AppDefaultGoodMutation) GoodType() (r string, exists bool) {
+	v := m.good_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGoodType returns the old "good_type" field's value of the AppDefaultGood entity.
+// If the AppDefaultGood object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppDefaultGoodMutation) OldGoodType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGoodType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGoodType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGoodType: %w", err)
+	}
+	return oldValue.GoodType, nil
+}
+
+// ClearGoodType clears the value of the "good_type" field.
+func (m *AppDefaultGoodMutation) ClearGoodType() {
+	m.good_type = nil
+	m.clearedFields[appdefaultgood.FieldGoodType] = struct{}{}
+}
+
+// GoodTypeCleared returns if the "good_type" field was cleared in this mutation.
+func (m *AppDefaultGoodMutation) GoodTypeCleared() bool {
+	_, ok := m.clearedFields[appdefaultgood.FieldGoodType]
+	return ok
+}
+
+// ResetGoodType resets all changes to the "good_type" field.
+func (m *AppDefaultGoodMutation) ResetGoodType() {
+	m.good_type = nil
+	delete(m.clearedFields, appdefaultgood.FieldGoodType)
+}
+
 // Where appends a list predicates to the AppDefaultGoodMutation builder.
 func (m *AppDefaultGoodMutation) Where(ps ...predicate.AppDefaultGood) {
 	m.predicates = append(m.predicates, ps...)
@@ -642,7 +692,7 @@ func (m *AppDefaultGoodMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppDefaultGoodMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 9)
 	if m.created_at != nil {
 		fields = append(fields, appdefaultgood.FieldCreatedAt)
 	}
@@ -666,6 +716,9 @@ func (m *AppDefaultGoodMutation) Fields() []string {
 	}
 	if m.coin_type_id != nil {
 		fields = append(fields, appdefaultgood.FieldCoinTypeID)
+	}
+	if m.good_type != nil {
+		fields = append(fields, appdefaultgood.FieldGoodType)
 	}
 	return fields
 }
@@ -691,6 +744,8 @@ func (m *AppDefaultGoodMutation) Field(name string) (ent.Value, bool) {
 		return m.AppGoodID()
 	case appdefaultgood.FieldCoinTypeID:
 		return m.CoinTypeID()
+	case appdefaultgood.FieldGoodType:
+		return m.GoodType()
 	}
 	return nil, false
 }
@@ -716,6 +771,8 @@ func (m *AppDefaultGoodMutation) OldField(ctx context.Context, name string) (ent
 		return m.OldAppGoodID(ctx)
 	case appdefaultgood.FieldCoinTypeID:
 		return m.OldCoinTypeID(ctx)
+	case appdefaultgood.FieldGoodType:
+		return m.OldGoodType(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppDefaultGood field %s", name)
 }
@@ -780,6 +837,13 @@ func (m *AppDefaultGoodMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCoinTypeID(v)
+		return nil
+	case appdefaultgood.FieldGoodType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGoodType(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppDefaultGood field %s", name)
@@ -862,6 +926,9 @@ func (m *AppDefaultGoodMutation) ClearedFields() []string {
 	if m.FieldCleared(appdefaultgood.FieldCoinTypeID) {
 		fields = append(fields, appdefaultgood.FieldCoinTypeID)
 	}
+	if m.FieldCleared(appdefaultgood.FieldGoodType) {
+		fields = append(fields, appdefaultgood.FieldGoodType)
+	}
 	return fields
 }
 
@@ -887,6 +954,9 @@ func (m *AppDefaultGoodMutation) ClearField(name string) error {
 		return nil
 	case appdefaultgood.FieldCoinTypeID:
 		m.ClearCoinTypeID()
+		return nil
+	case appdefaultgood.FieldGoodType:
+		m.ClearGoodType()
 		return nil
 	}
 	return fmt.Errorf("unknown AppDefaultGood nullable field %s", name)
@@ -919,6 +989,9 @@ func (m *AppDefaultGoodMutation) ResetField(name string) error {
 		return nil
 	case appdefaultgood.FieldCoinTypeID:
 		m.ResetCoinTypeID()
+		return nil
+	case appdefaultgood.FieldGoodType:
+		m.ResetGoodType()
 		return nil
 	}
 	return fmt.Errorf("unknown AppDefaultGood field %s", name)

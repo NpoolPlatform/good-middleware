@@ -86,6 +86,10 @@ func init() {
 	appdefaultgoodDescEntID := appdefaultgoodMixinFields1[1].Descriptor()
 	// appdefaultgood.DefaultEntID holds the default value on creation for the ent_id field.
 	appdefaultgood.DefaultEntID = appdefaultgoodDescEntID.Default.(func() uuid.UUID)
+	// appdefaultgoodDescGoodType is the schema descriptor for good_type field.
+	appdefaultgoodDescGoodType := appdefaultgoodFields[4].Descriptor()
+	// appdefaultgood.DefaultGoodType holds the default value on creation for the good_type field.
+	appdefaultgood.DefaultGoodType = appdefaultgoodDescGoodType.Default.(string)
 	appfeeMixin := schema.AppFee{}.Mixin()
 	appfee.Policy = privacy.NewPolicies(appfeeMixin[0], schema.AppFee{})
 	appfee.Hooks[0] = func(next ent.Mutator) ent.Mutator {

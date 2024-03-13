@@ -178,6 +178,26 @@ func (adgu *AppDefaultGoodUpdate) ClearCoinTypeID() *AppDefaultGoodUpdate {
 	return adgu
 }
 
+// SetGoodType sets the "good_type" field.
+func (adgu *AppDefaultGoodUpdate) SetGoodType(s string) *AppDefaultGoodUpdate {
+	adgu.mutation.SetGoodType(s)
+	return adgu
+}
+
+// SetNillableGoodType sets the "good_type" field if the given value is not nil.
+func (adgu *AppDefaultGoodUpdate) SetNillableGoodType(s *string) *AppDefaultGoodUpdate {
+	if s != nil {
+		adgu.SetGoodType(*s)
+	}
+	return adgu
+}
+
+// ClearGoodType clears the value of the "good_type" field.
+func (adgu *AppDefaultGoodUpdate) ClearGoodType() *AppDefaultGoodUpdate {
+	adgu.mutation.ClearGoodType()
+	return adgu
+}
+
 // Mutation returns the AppDefaultGoodMutation object of the builder.
 func (adgu *AppDefaultGoodUpdate) Mutation() *AppDefaultGoodMutation {
 	return adgu.mutation
@@ -377,6 +397,19 @@ func (adgu *AppDefaultGoodUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: appdefaultgood.FieldCoinTypeID,
 		})
 	}
+	if value, ok := adgu.mutation.GoodType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appdefaultgood.FieldGoodType,
+		})
+	}
+	if adgu.mutation.GoodTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appdefaultgood.FieldGoodType,
+		})
+	}
 	_spec.Modifiers = adgu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, adgu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -544,6 +577,26 @@ func (adguo *AppDefaultGoodUpdateOne) SetNillableCoinTypeID(u *uuid.UUID) *AppDe
 // ClearCoinTypeID clears the value of the "coin_type_id" field.
 func (adguo *AppDefaultGoodUpdateOne) ClearCoinTypeID() *AppDefaultGoodUpdateOne {
 	adguo.mutation.ClearCoinTypeID()
+	return adguo
+}
+
+// SetGoodType sets the "good_type" field.
+func (adguo *AppDefaultGoodUpdateOne) SetGoodType(s string) *AppDefaultGoodUpdateOne {
+	adguo.mutation.SetGoodType(s)
+	return adguo
+}
+
+// SetNillableGoodType sets the "good_type" field if the given value is not nil.
+func (adguo *AppDefaultGoodUpdateOne) SetNillableGoodType(s *string) *AppDefaultGoodUpdateOne {
+	if s != nil {
+		adguo.SetGoodType(*s)
+	}
+	return adguo
+}
+
+// ClearGoodType clears the value of the "good_type" field.
+func (adguo *AppDefaultGoodUpdateOne) ClearGoodType() *AppDefaultGoodUpdateOne {
+	adguo.mutation.ClearGoodType()
 	return adguo
 }
 
@@ -774,6 +827,19 @@ func (adguo *AppDefaultGoodUpdateOne) sqlSave(ctx context.Context) (_node *AppDe
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Column: appdefaultgood.FieldCoinTypeID,
+		})
+	}
+	if value, ok := adguo.mutation.GoodType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appdefaultgood.FieldGoodType,
+		})
+	}
+	if adguo.mutation.GoodTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appdefaultgood.FieldGoodType,
 		})
 	}
 	_spec.Modifiers = adguo.modifiers

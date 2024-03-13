@@ -50,7 +50,7 @@ var good = goodmwpb.Good{
 	VendorLocationAddress:  uuid.NewString(),
 	VendorBrandName:        uuid.NewString(),
 	VendorBrandLogo:        uuid.NewString(),
-	GoodType:               types.GoodType_PowerRenting,
+	GoodType:               types.GoodType_PowerRental,
 	BenefitType:            types.BenefitType_BenefitTypePlatform,
 	UnitPrice:              decimal.NewFromInt(123).String(),
 	Title:                  uuid.NewString(),

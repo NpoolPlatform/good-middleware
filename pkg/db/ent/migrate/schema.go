@@ -20,6 +20,7 @@ var (
 		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "coin_type_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "good_type", Type: field.TypeString, Nullable: true, Default: "PowerRental"},
 	}
 	// AppDefaultGoodsTable holds the schema information for the "app_default_goods" table.
 	AppDefaultGoodsTable = &schema.Table{

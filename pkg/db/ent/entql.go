@@ -67,6 +67,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appdefaultgood.FieldGoodID:     {Type: field.TypeUUID, Column: appdefaultgood.FieldGoodID},
 			appdefaultgood.FieldAppGoodID:  {Type: field.TypeUUID, Column: appdefaultgood.FieldAppGoodID},
 			appdefaultgood.FieldCoinTypeID: {Type: field.TypeUUID, Column: appdefaultgood.FieldCoinTypeID},
+			appdefaultgood.FieldGoodType:   {Type: field.TypeString, Column: appdefaultgood.FieldGoodType},
 		},
 	}
 	graph.Nodes[1] = &sqlgraph.Node{
@@ -992,6 +993,11 @@ func (f *AppDefaultGoodFilter) WhereAppGoodID(p entql.ValueP) {
 // WhereCoinTypeID applies the entql [16]byte predicate on the coin_type_id field.
 func (f *AppDefaultGoodFilter) WhereCoinTypeID(p entql.ValueP) {
 	f.Where(p.Field(appdefaultgood.FieldCoinTypeID))
+}
+
+// WhereGoodType applies the entql string predicate on the good_type field.
+func (f *AppDefaultGoodFilter) WhereGoodType(p entql.StringP) {
+	f.Where(p.Field(appdefaultgood.FieldGoodType))
 }
 
 // addPredicate implements the predicateAdder interface.

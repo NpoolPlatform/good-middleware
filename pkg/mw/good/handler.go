@@ -193,10 +193,10 @@ func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) 
 			return nil
 		}
 		switch *e {
-		case types.GoodType_PowerRenting:
+		case types.GoodType_PowerRental:
 		case types.GoodType_TechniqueServiceFee:
 		case types.GoodType_ElectricityFee:
-		case types.GoodType_MachineRenting:
+		case types.GoodType_MachineRental:
 			fallthrough //nolint
 		case types.GoodType_MachineHosting:
 			fallthrough //nolint
