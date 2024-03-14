@@ -6,6 +6,7 @@ import (
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	feecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/fee"
+	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/fee"
@@ -17,13 +18,16 @@ import (
 type Handler struct {
 	ID *uint32
 	feecrud.Req
-	Conds  *feecrud.Conds
-	Offset int32
-	Limit  int32
+	GoodReq *goodbasecrud.Req
+	Conds   *feecrud.Conds
+	Offset  int32
+	Limit   int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
-	handler := &Handler{}
+	handler := &Handler{
+		GoodReq: &goodbasecrud.Req{},
+	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
 			return nil, err
@@ -110,6 +114,9 @@ func WithUnitValue(s *string, must bool) func(context.Context, *Handler) error {
 		if err != nil {
 			return err
 		}
+		if amount.LessThanOrEqual(decimal.NewFromInt(0)) {
+			return fmt.Errorf("invalid unitvalue")
+		}
 		h.UnitValue = &amount
 		return nil
 	}
@@ -132,6 +139,41 @@ func WithDurationType(e *types.GoodDurationType, must bool) func(context.Context
 			return fmt.Errorf("invalid durationtype")
 		}
 		h.DurationType = e
+		return nil
+	}
+}
+
+func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return fmt.Errorf("invalid goodtype")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodType_TechniqueServiceFee:
+		case types.GoodType_ElectricityFee:
+		default:
+			return fmt.Errorf("invalid goodtype")
+		}
+		h.GoodReq.GoodType = e
+		return nil
+	}
+}
+
+func WithName(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid name")
+			}
+			return nil
+		}
+		if *s == "" {
+			return fmt.Errorf("invalid name")
+		}
+		h.GoodReq.Name = s
 		return nil
 	}
 }
