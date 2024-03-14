@@ -27,7 +27,9 @@ type Handler struct {
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
-		GoodBaseReq: &goodbasecrud.Req{},
+		GoodBaseReq:   &goodbasecrud.Req{},
+		FeeConds:      &feecrud.Conds{},
+		GoodBaseConds: &goodbasecrud.Conds{},
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
@@ -182,7 +184,6 @@ func WithName(s *string, must bool) func(context.Context, *Handler) error {
 
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.FeeConds = &feecrud.Conds{}
 		if conds == nil {
 			return nil
 		}

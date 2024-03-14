@@ -55,7 +55,12 @@ func (h *Handler) DeleteFee(ctx context.Context) (*npool.Fee, error) {
 		return nil, nil
 	}
 
-	return nil, db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	info, err := handler.GetFee(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return info, db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.deleteGoodBase(_ctx, tx); err != nil {
 			return err
 		}

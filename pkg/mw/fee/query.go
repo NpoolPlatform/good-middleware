@@ -83,28 +83,28 @@ func (h *queryHandler) queryJoinFee(s *sql.Selector) error {
 		OnP(
 			sql.EQ(t1.C(entfee.FieldDeletedAt), 0),
 		)
-	if h.FeeConds.ID != nil {
+	if h.FeeConds != nil && h.FeeConds.ID != nil {
 		u, ok := h.FeeConds.ID.Val.(uint32)
 		if !ok {
 			return fmt.Errorf("invalid id")
 		}
 		s.OnP(sql.EQ(t1.C(entfee.FieldID), u))
 	}
-	if h.FeeConds.IDs != nil {
+	if h.FeeConds != nil && h.FeeConds.IDs != nil {
 		ids, ok := h.FeeConds.IDs.Val.([]uint32)
 		if !ok {
 			return fmt.Errorf("invalid ids")
 		}
 		s.OnP(sql.In(t1.C(entfee.FieldID), ids))
 	}
-	if h.FeeConds.EntID != nil {
+	if h.FeeConds != nil && h.FeeConds.EntID != nil {
 		uid, ok := h.FeeConds.EntID.Val.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("invalid entid")
 		}
 		s.OnP(sql.EQ(t1.C(entfee.FieldEntID), uid))
 	}
-	if h.FeeConds.EntIDs != nil {
+	if h.FeeConds != nil && h.FeeConds.EntIDs != nil {
 		uids, ok := h.FeeConds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
 			return fmt.Errorf("invalid entids")
@@ -152,6 +152,9 @@ func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
 		amount, _ := decimal.NewFromString(info.UnitValue)
 		info.UnitValue = amount.String()
+		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
+		info.SettlementType = types.GoodSettlementType(types.GoodSettlementType_value[info.SettlementTypeStr])
+		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
 	}
 }
 
