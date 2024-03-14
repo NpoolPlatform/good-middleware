@@ -2,6 +2,7 @@ package fee
 
 import (
 	"context"
+	"time"
 
 	feecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/fee"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
@@ -10,16 +11,16 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/fee"
 )
 
-type updateHandler struct {
+type deleteHandler struct {
 	*feeGoodQueryHandler
+	now uint32
 }
 
-func (h *updateHandler) updateGoodBase(ctx context.Context, tx *ent.Tx) error {
+func (h *deleteHandler) deleteGoodBase(ctx context.Context, tx *ent.Tx) error {
 	if _, err := goodbasecrud.UpdateSet(
 		tx.GoodBase.UpdateOneID(h.goodBase.ID),
 		&goodbasecrud.Req{
-			GoodType: h.GoodBaseReq.GoodType,
-			Name:     h.GoodBaseReq.Name,
+			DeletedAt: &h.now,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -27,13 +28,11 @@ func (h *updateHandler) updateGoodBase(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *updateHandler) updateFee(ctx context.Context, tx *ent.Tx) error {
+func (h *deleteHandler) deleteFee(ctx context.Context, tx *ent.Tx) error {
 	if _, err := feecrud.UpdateSet(
 		tx.Fee.UpdateOneID(*h.ID),
 		&feecrud.Req{
-			SettlementType: h.SettlementType,
-			UnitValue:      h.UnitValue,
-			DurationType:   h.DurationType,
+			DeletedAt: &h.now,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -41,21 +40,25 @@ func (h *updateHandler) updateFee(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *Handler) UpdateFee(ctx context.Context) (*npool.Fee, error) {
-	handler := &updateHandler{
+func (h *Handler) DeleteFee(ctx context.Context) (*npool.Fee, error) {
+	handler := &deleteHandler{
 		feeGoodQueryHandler: &feeGoodQueryHandler{
 			Handler: h,
 		},
+		now: uint32(time.Now().Unix()),
 	}
 
-	if err := handler.requireFeeGood(ctx); err != nil {
+	if err := handler.getFeeGood(ctx); err != nil {
 		return nil, err
+	}
+	if handler.fee == nil {
+		return nil, nil
 	}
 
 	return nil, db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.updateGoodBase(_ctx, tx); err != nil {
+		if err := handler.deleteGoodBase(_ctx, tx); err != nil {
 			return err
 		}
-		return handler.updateFee(_ctx, tx)
+		return handler.deleteFee(_ctx, tx)
 	})
 }
