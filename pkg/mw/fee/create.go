@@ -22,8 +22,8 @@ func (h *createHandler) createGoodBase(ctx context.Context, tx *ent.Tx) error {
 		tx.GoodBase.Create(),
 		&goodbasecrud.Req{
 			EntID:       h.GoodID,
-			GoodType:    h.GoodReq.GoodType,
-			Name:        h.GoodReq.Name,
+			GoodType:    h.GoodBaseReq.GoodType,
+			Name:        h.GoodBaseReq.Name,
 			Purchasable: &valueTrue,
 			Online:      &valueTrue,
 		},

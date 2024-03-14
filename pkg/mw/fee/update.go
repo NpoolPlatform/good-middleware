@@ -21,8 +21,8 @@ func (h *updateHandler) updateGoodBase(ctx context.Context, tx *ent.Tx) error {
 	if _, err := goodbasecrud.UpdateSet(
 		tx.GoodBase.UpdateOneID(h.goodBase.ID),
 		&goodbasecrud.Req{
-			GoodType: h.GoodReq.GoodType,
-			Name:     h.GoodReq.Name,
+			GoodType: h.GoodBaseReq.GoodType,
+			Name:     h.GoodBaseReq.Name,
 		},
 	).Save(ctx); err != nil {
 		return err

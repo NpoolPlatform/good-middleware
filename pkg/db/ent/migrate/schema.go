@@ -588,7 +588,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
 		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "settlement_type", Type: field.TypeString, Nullable: true, Default: "GoodSettledByCash"},
+		{Name: "settlement_type", Type: field.TypeString, Nullable: true, Default: "GoodSettledByPaymentAmount"},
 		{Name: "unit_value", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
 	}
@@ -634,7 +634,7 @@ var (
 		{Name: "quantity_calculate_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitCalculateBySelf"},
 		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
 		{Name: "duration_calculate_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitCalculateBySelf"},
-		{Name: "settlement_type", Type: field.TypeString, Nullable: true, Default: "GoodSettledByCash"},
+		{Name: "settlement_type", Type: field.TypeString, Nullable: true, Default: "GoodSettledByPaymentAmount"},
 	}
 	// GoodsTable holds the schema information for the "goods" table.
 	GoodsTable = &schema.Table{

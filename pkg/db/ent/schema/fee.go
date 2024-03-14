@@ -35,7 +35,7 @@ func (Fee) Fields() []ent.Field {
 		field.
 			String("settlement_type").
 			Optional().
-			Default(types.GoodSettlementType_GoodSettledByCash.String()),
+			Default(types.GoodSettlementType_GoodSettledByPaymentAmount.String()),
 		// Unit value with amount or percent
 		field.
 			Other("unit_value", decimal.Decimal{}).

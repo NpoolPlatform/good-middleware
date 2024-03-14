@@ -59,12 +59,13 @@ func UpdateSet(u *ent.FeeUpdateOne, req *Req) *ent.FeeUpdateOne {
 }
 
 type Conds struct {
-	ID      *cruder.Cond
-	IDs     *cruder.Cond
-	EntID   *cruder.Cond
-	EntIDs  *cruder.Cond
-	GoodID  *cruder.Cond
-	GoodIDs *cruder.Cond
+	ID             *cruder.Cond
+	IDs            *cruder.Cond
+	EntID          *cruder.Cond
+	EntIDs         *cruder.Cond
+	GoodID         *cruder.Cond
+	GoodIDs        *cruder.Cond
+	SettlementType *cruder.Cond
 }
 
 //nolint:gocyclo,funlen
@@ -143,6 +144,20 @@ func SetQueryConds(q *ent.FeeQuery, conds *Conds) (*ent.FeeQuery, error) {
 			q.Where(entfee.GoodIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid fee field")
+		}
+	}
+	if conds.SettlementType != nil {
+		e, ok := conds.SettlementType.Val.(types.GoodSettlementType)
+		if !ok {
+			return nil, fmt.Errorf("invalid settlementtype")
+		}
+		switch conds.SettlementType.Op {
+		case cruder.EQ:
+			q.Where(entfee.SettlementType(e.String()))
+		case cruder.NEQ:
+			q.Where(entfee.SettlementTypeNEQ(e.String()))
+		default:
+			return nil, fmt.Errorf("invalid settlementtype")
 		}
 	}
 	return q, nil
