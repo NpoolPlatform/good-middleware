@@ -5,18 +5,22 @@ import (
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
-	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
+	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 )
 
-func (h *Handler) GetAppGood(ctx context.Context) error {
+type queryAppGoodHandler struct {
+	*Handler
+}
+
+func (h *queryAppGoodHandler) getAppGood(ctx context.Context) error {
 	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		info, err := cli.
-			AppGood.
+			AppGoodBase.
 			Query().
 			Where(
-				entappgood.EntID(*h.AppGoodID),
-				entappgood.DeletedAt(0),
+				entappgoodbase.EntID(*h.AppGoodID),
+				entappgoodbase.DeletedAt(0),
 			).
 			Only(ctx)
 		if err != nil {
@@ -24,11 +28,11 @@ func (h *Handler) GetAppGood(ctx context.Context) error {
 		}
 
 		info1, err := cli.
-			Good.
+			GoodBase.
 			Query().
 			Where(
-				entgood.EntID(info.GoodID),
-				entgood.DeletedAt(0),
+				entgoodbase.EntID(info.GoodID),
+				entgoodbase.DeletedAt(0),
 			).
 			Only(ctx)
 		if err != nil {

@@ -63,6 +63,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(entappdefaultgood.FieldGoodID), "good_id"),
 			sql.As(t.C(entappdefaultgood.FieldAppGoodID), "app_good_id"),
 			sql.As(t.C(entappdefaultgood.FieldCoinTypeID), "coin_type_id"),
+			sql.As(t.C(entappdefaultgood.FieldGoodType), "good_type"),
 			sql.As(t.C(entappdefaultgood.FieldCreatedAt), "created_at"),
 			sql.As(t.C(entappdefaultgood.FieldUpdatedAt), "updated_at"),
 		)

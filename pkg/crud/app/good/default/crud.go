@@ -7,6 +7,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappdefaultgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 )
@@ -18,6 +19,7 @@ type Req struct {
 	AppGoodID  *uuid.UUID
 	CoinTypeID *uuid.UUID
 	GoodID     *uuid.UUID
+	GoodType   *types.GoodType
 	DeletedAt  *uint32
 }
 
@@ -37,24 +39,24 @@ func CreateSet(c *ent.AppDefaultGoodCreate, req *Req) *ent.AppDefaultGoodCreate 
 	if req.GoodID != nil {
 		c.SetAppGoodID(*req.AppGoodID)
 	}
+	if req.GoodType != nil {
+		c.SetGoodType(req.GoodType.String())
+	}
 	return c
 }
 
 func UpdateSet(u *ent.AppDefaultGoodUpdateOne, req *Req) *ent.AppDefaultGoodUpdateOne {
-	if req.AppID != nil {
-		u.SetAppID(*req.AppID)
-	}
 	if req.GoodID != nil {
 		u.SetGoodID(*req.GoodID)
 	}
 	if req.AppGoodID != nil {
 		u.SetAppGoodID(*req.AppGoodID)
 	}
-	if req.CoinTypeID != nil {
-		u.SetCoinTypeID(*req.CoinTypeID)
-	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)
+	}
+	if req.GoodType != nil {
+		u.SetGoodType(req.GoodType.String())
 	}
 	return u
 }
@@ -64,9 +66,9 @@ type Conds struct {
 	EntID       *cruder.Cond
 	AppID       *cruder.Cond
 	GoodID      *cruder.Cond
+	GoodIDs     *cruder.Cond
 	AppGoodID   *cruder.Cond
 	CoinTypeID  *cruder.Cond
-	GoodIDs     *cruder.Cond
 	CoinTypeIDs *cruder.Cond
 }
 
@@ -124,6 +126,18 @@ func SetQueryConds(q *ent.AppDefaultGoodQuery, conds *Conds) (*ent.AppDefaultGoo
 			return nil, fmt.Errorf("invalid appdefaultgood field")
 		}
 	}
+	if conds.GoodIDs != nil {
+		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid goodids")
+		}
+		switch conds.GoodIDs.Op {
+		case cruder.IN:
+			q.Where(entappdefaultgood.GoodIDIn(ids...))
+		default:
+			return nil, fmt.Errorf("invalid appdefaultgood field")
+		}
+	}
 	if conds.AppGoodID != nil {
 		id, ok := conds.AppGoodID.Val.(uuid.UUID)
 		if !ok {
@@ -144,18 +158,6 @@ func SetQueryConds(q *ent.AppDefaultGoodQuery, conds *Conds) (*ent.AppDefaultGoo
 		switch conds.CoinTypeID.Op {
 		case cruder.EQ:
 			q.Where(entappdefaultgood.CoinTypeID(id))
-		default:
-			return nil, fmt.Errorf("invalid appdefaultgood field")
-		}
-	}
-	if conds.GoodIDs != nil {
-		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
-		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
-		}
-		switch conds.GoodIDs.Op {
-		case cruder.IN:
-			q.Where(entappdefaultgood.GoodIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid appdefaultgood field")
 		}

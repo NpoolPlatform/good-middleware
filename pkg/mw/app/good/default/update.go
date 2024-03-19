@@ -10,17 +10,16 @@ import (
 )
 
 type updateHandler struct {
-	*Handler
+	*queryAppGoodHandler
 }
 
 func (h *updateHandler) updateDefault(ctx context.Context, tx *ent.Tx) error {
 	if _, err := appdefaultgoodcrud.UpdateSet(
 		tx.AppDefaultGood.UpdateOneID(*h.ID),
 		&appdefaultgoodcrud.Req{
-			AppID:      h.AppID,
-			GoodID:     h.GoodID,
-			AppGoodID:  h.AppGoodID,
-			CoinTypeID: h.CoinTypeID,
+			GoodID:    h.GoodID,
+			AppGoodID: h.AppGoodID,
+			GoodType:  h.GoodType,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -29,7 +28,13 @@ func (h *updateHandler) updateDefault(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) UpdateDefault(ctx context.Context) (*npool.Default, error) {
-	info, err := h.GetDefault(ctx)
+	handler := &createHandler{
+		queryAppGoodHandler: &queryAppGoodHandler{
+			Handler: h,
+		},
+	}
+
+	info, err := handler.getDefault(ctx)
 	if err != nil {
 		return nil, err
 	}

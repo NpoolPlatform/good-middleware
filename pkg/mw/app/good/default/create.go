@@ -16,7 +16,7 @@ import (
 )
 
 type createHandler struct {
-	*Handler
+	*queryAppGoodHandler
 }
 
 func (h *createHandler) createDefault(ctx context.Context, tx *ent.Tx) error {
@@ -28,6 +28,7 @@ func (h *createHandler) createDefault(ctx context.Context, tx *ent.Tx) error {
 			GoodID:     h.GoodID,
 			AppGoodID:  h.AppGoodID,
 			CoinTypeID: h.CoinTypeID,
+			GoodType:   h.GoodType,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -36,7 +37,13 @@ func (h *createHandler) createDefault(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) CreateDefault(ctx context.Context) (*npool.Default, error) {
-	if err := h.GetAppGood(ctx); err != nil {
+	handler := &createHandler{
+		queryAppGoodHandler: &queryAppGoodHandler{
+			Handler: h,
+		},
+	}
+
+	if err := handler.getAppGood(ctx); err != nil {
 		return nil, err
 	}
 
