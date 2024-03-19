@@ -99,43 +99,23 @@ func (afu *AppFeeUpdate) SetNillableEntID(u *uuid.UUID) *AppFeeUpdate {
 	return afu
 }
 
-// SetAppID sets the "app_id" field.
-func (afu *AppFeeUpdate) SetAppID(u uuid.UUID) *AppFeeUpdate {
-	afu.mutation.SetAppID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (afu *AppFeeUpdate) SetAppGoodID(u uuid.UUID) *AppFeeUpdate {
+	afu.mutation.SetAppGoodID(u)
 	return afu
 }
 
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (afu *AppFeeUpdate) SetNillableAppID(u *uuid.UUID) *AppFeeUpdate {
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (afu *AppFeeUpdate) SetNillableAppGoodID(u *uuid.UUID) *AppFeeUpdate {
 	if u != nil {
-		afu.SetAppID(*u)
+		afu.SetAppGoodID(*u)
 	}
 	return afu
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (afu *AppFeeUpdate) ClearAppID() *AppFeeUpdate {
-	afu.mutation.ClearAppID()
-	return afu
-}
-
-// SetGoodID sets the "good_id" field.
-func (afu *AppFeeUpdate) SetGoodID(u uuid.UUID) *AppFeeUpdate {
-	afu.mutation.SetGoodID(u)
-	return afu
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (afu *AppFeeUpdate) SetNillableGoodID(u *uuid.UUID) *AppFeeUpdate {
-	if u != nil {
-		afu.SetGoodID(*u)
-	}
-	return afu
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (afu *AppFeeUpdate) ClearGoodID() *AppFeeUpdate {
-	afu.mutation.ClearGoodID()
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (afu *AppFeeUpdate) ClearAppGoodID() *AppFeeUpdate {
+	afu.mutation.ClearAppGoodID()
 	return afu
 }
 
@@ -333,30 +313,17 @@ func (afu *AppFeeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appfee.FieldEntID,
 		})
 	}
-	if value, ok := afu.mutation.AppID(); ok {
+	if value, ok := afu.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: appfee.FieldAppID,
+			Column: appfee.FieldAppGoodID,
 		})
 	}
-	if afu.mutation.AppIDCleared() {
+	if afu.mutation.AppGoodIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Column: appfee.FieldAppID,
-		})
-	}
-	if value, ok := afu.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: appfee.FieldGoodID,
-		})
-	}
-	if afu.mutation.GoodIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: appfee.FieldGoodID,
+			Column: appfee.FieldAppGoodID,
 		})
 	}
 	if value, ok := afu.mutation.UnitValue(); ok {
@@ -482,43 +449,23 @@ func (afuo *AppFeeUpdateOne) SetNillableEntID(u *uuid.UUID) *AppFeeUpdateOne {
 	return afuo
 }
 
-// SetAppID sets the "app_id" field.
-func (afuo *AppFeeUpdateOne) SetAppID(u uuid.UUID) *AppFeeUpdateOne {
-	afuo.mutation.SetAppID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (afuo *AppFeeUpdateOne) SetAppGoodID(u uuid.UUID) *AppFeeUpdateOne {
+	afuo.mutation.SetAppGoodID(u)
 	return afuo
 }
 
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (afuo *AppFeeUpdateOne) SetNillableAppID(u *uuid.UUID) *AppFeeUpdateOne {
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (afuo *AppFeeUpdateOne) SetNillableAppGoodID(u *uuid.UUID) *AppFeeUpdateOne {
 	if u != nil {
-		afuo.SetAppID(*u)
+		afuo.SetAppGoodID(*u)
 	}
 	return afuo
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (afuo *AppFeeUpdateOne) ClearAppID() *AppFeeUpdateOne {
-	afuo.mutation.ClearAppID()
-	return afuo
-}
-
-// SetGoodID sets the "good_id" field.
-func (afuo *AppFeeUpdateOne) SetGoodID(u uuid.UUID) *AppFeeUpdateOne {
-	afuo.mutation.SetGoodID(u)
-	return afuo
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (afuo *AppFeeUpdateOne) SetNillableGoodID(u *uuid.UUID) *AppFeeUpdateOne {
-	if u != nil {
-		afuo.SetGoodID(*u)
-	}
-	return afuo
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (afuo *AppFeeUpdateOne) ClearGoodID() *AppFeeUpdateOne {
-	afuo.mutation.ClearGoodID()
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (afuo *AppFeeUpdateOne) ClearAppGoodID() *AppFeeUpdateOne {
+	afuo.mutation.ClearAppGoodID()
 	return afuo
 }
 
@@ -746,30 +693,17 @@ func (afuo *AppFeeUpdateOne) sqlSave(ctx context.Context) (_node *AppFee, err er
 			Column: appfee.FieldEntID,
 		})
 	}
-	if value, ok := afuo.mutation.AppID(); ok {
+	if value, ok := afuo.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: appfee.FieldAppID,
+			Column: appfee.FieldAppGoodID,
 		})
 	}
-	if afuo.mutation.AppIDCleared() {
+	if afuo.mutation.AppGoodIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Column: appfee.FieldAppID,
-		})
-	}
-	if value, ok := afuo.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: appfee.FieldGoodID,
-		})
-	}
-	if afuo.mutation.GoodIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: appfee.FieldGoodID,
+			Column: appfee.FieldAppGoodID,
 		})
 	}
 	if value, ok := afuo.mutation.UnitValue(); ok {

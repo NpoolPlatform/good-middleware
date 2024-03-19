@@ -25,10 +25,8 @@ type AppFee struct {
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// EntID holds the value of the "ent_id" field.
 	EntID uuid.UUID `json:"ent_id,omitempty"`
-	// AppID holds the value of the "app_id" field.
-	AppID uuid.UUID `json:"app_id,omitempty"`
-	// GoodID holds the value of the "good_id" field.
-	GoodID uuid.UUID `json:"good_id,omitempty"`
+	// AppGoodID holds the value of the "app_good_id" field.
+	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// UnitValue holds the value of the "unit_value" field.
 	UnitValue decimal.Decimal `json:"unit_value,omitempty"`
 	// MinOrderDuration holds the value of the "min_order_duration" field.
@@ -44,7 +42,7 @@ func (*AppFee) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case appfee.FieldID, appfee.FieldCreatedAt, appfee.FieldUpdatedAt, appfee.FieldDeletedAt, appfee.FieldMinOrderDuration:
 			values[i] = new(sql.NullInt64)
-		case appfee.FieldEntID, appfee.FieldAppID, appfee.FieldGoodID:
+		case appfee.FieldEntID, appfee.FieldAppGoodID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type AppFee", columns[i])
@@ -91,17 +89,11 @@ func (af *AppFee) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				af.EntID = *value
 			}
-		case appfee.FieldAppID:
+		case appfee.FieldAppGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field app_id", values[i])
+				return fmt.Errorf("unexpected type %T for field app_good_id", values[i])
 			} else if value != nil {
-				af.AppID = *value
-			}
-		case appfee.FieldGoodID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field good_id", values[i])
-			} else if value != nil {
-				af.GoodID = *value
+				af.AppGoodID = *value
 			}
 		case appfee.FieldUnitValue:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
@@ -155,11 +147,8 @@ func (af *AppFee) String() string {
 	builder.WriteString("ent_id=")
 	builder.WriteString(fmt.Sprintf("%v", af.EntID))
 	builder.WriteString(", ")
-	builder.WriteString("app_id=")
-	builder.WriteString(fmt.Sprintf("%v", af.AppID))
-	builder.WriteString(", ")
-	builder.WriteString("good_id=")
-	builder.WriteString(fmt.Sprintf("%v", af.GoodID))
+	builder.WriteString("app_good_id=")
+	builder.WriteString(fmt.Sprintf("%v", af.AppGoodID))
 	builder.WriteString(", ")
 	builder.WriteString("unit_value=")
 	builder.WriteString(fmt.Sprintf("%v", af.UnitValue))

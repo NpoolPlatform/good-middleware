@@ -85,8 +85,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appfee.FieldUpdatedAt:        {Type: field.TypeUint32, Column: appfee.FieldUpdatedAt},
 			appfee.FieldDeletedAt:        {Type: field.TypeUint32, Column: appfee.FieldDeletedAt},
 			appfee.FieldEntID:            {Type: field.TypeUUID, Column: appfee.FieldEntID},
-			appfee.FieldAppID:            {Type: field.TypeUUID, Column: appfee.FieldAppID},
-			appfee.FieldGoodID:           {Type: field.TypeUUID, Column: appfee.FieldGoodID},
+			appfee.FieldAppGoodID:        {Type: field.TypeUUID, Column: appfee.FieldAppGoodID},
 			appfee.FieldUnitValue:        {Type: field.TypeOther, Column: appfee.FieldUnitValue},
 			appfee.FieldMinOrderDuration: {Type: field.TypeUint32, Column: appfee.FieldMinOrderDuration},
 		},
@@ -1059,14 +1058,9 @@ func (f *AppFeeFilter) WhereEntID(p entql.ValueP) {
 	f.Where(p.Field(appfee.FieldEntID))
 }
 
-// WhereAppID applies the entql [16]byte predicate on the app_id field.
-func (f *AppFeeFilter) WhereAppID(p entql.ValueP) {
-	f.Where(p.Field(appfee.FieldAppID))
-}
-
-// WhereGoodID applies the entql [16]byte predicate on the good_id field.
-func (f *AppFeeFilter) WhereGoodID(p entql.ValueP) {
-	f.Where(p.Field(appfee.FieldGoodID))
+// WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
+func (f *AppFeeFilter) WhereAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(appfee.FieldAppGoodID))
 }
 
 // WhereUnitValue applies the entql other predicate on the unit_value field.

@@ -124,20 +124,16 @@ func init() {
 	appfeeDescEntID := appfeeMixinFields1[1].Descriptor()
 	// appfee.DefaultEntID holds the default value on creation for the ent_id field.
 	appfee.DefaultEntID = appfeeDescEntID.Default.(func() uuid.UUID)
-	// appfeeDescAppID is the schema descriptor for app_id field.
-	appfeeDescAppID := appfeeFields[0].Descriptor()
-	// appfee.DefaultAppID holds the default value on creation for the app_id field.
-	appfee.DefaultAppID = appfeeDescAppID.Default.(func() uuid.UUID)
-	// appfeeDescGoodID is the schema descriptor for good_id field.
-	appfeeDescGoodID := appfeeFields[1].Descriptor()
-	// appfee.DefaultGoodID holds the default value on creation for the good_id field.
-	appfee.DefaultGoodID = appfeeDescGoodID.Default.(func() uuid.UUID)
+	// appfeeDescAppGoodID is the schema descriptor for app_good_id field.
+	appfeeDescAppGoodID := appfeeFields[0].Descriptor()
+	// appfee.DefaultAppGoodID holds the default value on creation for the app_good_id field.
+	appfee.DefaultAppGoodID = appfeeDescAppGoodID.Default.(func() uuid.UUID)
 	// appfeeDescUnitValue is the schema descriptor for unit_value field.
-	appfeeDescUnitValue := appfeeFields[2].Descriptor()
+	appfeeDescUnitValue := appfeeFields[1].Descriptor()
 	// appfee.DefaultUnitValue holds the default value on creation for the unit_value field.
 	appfee.DefaultUnitValue = appfeeDescUnitValue.Default.(decimal.Decimal)
 	// appfeeDescMinOrderDuration is the schema descriptor for min_order_duration field.
-	appfeeDescMinOrderDuration := appfeeFields[3].Descriptor()
+	appfeeDescMinOrderDuration := appfeeFields[2].Descriptor()
 	// appfee.DefaultMinOrderDuration holds the default value on creation for the min_order_duration field.
 	appfee.DefaultMinOrderDuration = appfeeDescMinOrderDuration.Default.(uint32)
 	appgoodMixin := schema.AppGood{}.Mixin()

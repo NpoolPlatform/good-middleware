@@ -13,8 +13,7 @@ import (
 
 type Req struct {
 	EntID            *uuid.UUID
-	AppID            *uuid.UUID
-	GoodID           *uuid.UUID
+	AppGoodID        *uuid.UUID
 	UnitValue        *decimal.Decimal // Per unit per duration, cash or from profit
 	MinOrderDuration *uint32
 	DeletedAt        *uint32
@@ -25,11 +24,8 @@ func CreateSet(c *ent.AppFeeCreate, req *Req) *ent.AppFeeCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
 	}
-	if req.AppID != nil {
-		c.SetAppID(*req.AppID)
-	}
-	if req.GoodID != nil {
-		c.SetGoodID(*req.GoodID)
+	if req.AppGoodID != nil {
+		c.SetAppGoodID(*req.AppGoodID)
 	}
 	if req.UnitValue != nil {
 		c.SetUnitValue(*req.UnitValue)
@@ -55,14 +51,12 @@ func UpdateSet(u *ent.AppFeeUpdateOne, req *Req) *ent.AppFeeUpdateOne {
 }
 
 type Conds struct {
-	ID      *cruder.Cond
-	IDs     *cruder.Cond
-	EntID   *cruder.Cond
-	EntIDs  *cruder.Cond
-	AppID   *cruder.Cond
-	AppIDs  *cruder.Cond
-	GoodID  *cruder.Cond
-	GoodIDs *cruder.Cond
+	ID         *cruder.Cond
+	IDs        *cruder.Cond
+	EntID      *cruder.Cond
+	EntIDs     *cruder.Cond
+	AppGoodID  *cruder.Cond
+	AppGoodIDs *cruder.Cond
 }
 
 //nolint:gocyclo,funlen
@@ -119,50 +113,26 @@ func SetQueryConds(q *ent.AppFeeQuery, conds *Conds) (*ent.AppFeeQuery, error) {
 			return nil, fmt.Errorf("invalid appfee field")
 		}
 	}
-	if conds.AppID != nil {
-		id, ok := conds.AppID.Val.(uuid.UUID)
+	if conds.AppGoodID != nil {
+		id, ok := conds.AppGoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appid")
+			return nil, fmt.Errorf("invalid appgoodid")
 		}
-		switch conds.AppID.Op {
+		switch conds.AppGoodID.Op {
 		case cruder.EQ:
-			q.Where(entappfee.AppID(id))
+			q.Where(entappfee.AppGoodID(id))
 		default:
 			return nil, fmt.Errorf("invalid appfee field")
 		}
 	}
-	if conds.AppIDs != nil {
-		ids, ok := conds.AppIDs.Val.([]uuid.UUID)
+	if conds.AppGoodIDs != nil {
+		ids, ok := conds.AppGoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appids")
+			return nil, fmt.Errorf("invalid appgoodids")
 		}
-		switch conds.AppIDs.Op {
+		switch conds.AppGoodIDs.Op {
 		case cruder.IN:
-			q.Where(entappfee.AppIDIn(ids...))
-		default:
-			return nil, fmt.Errorf("invalid appfee field")
-		}
-	}
-	if conds.GoodID != nil {
-		id, ok := conds.GoodID.Val.(uuid.UUID)
-		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
-		}
-		switch conds.GoodID.Op {
-		case cruder.EQ:
-			q.Where(entappfee.GoodID(id))
-		default:
-			return nil, fmt.Errorf("invalid appfee field")
-		}
-	}
-	if conds.GoodIDs != nil {
-		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
-		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
-		}
-		switch conds.GoodIDs.Op {
-		case cruder.IN:
-			q.Where(entappfee.GoodIDIn(ids...))
+			q.Where(entappfee.AppGoodIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid appfee field")
 		}

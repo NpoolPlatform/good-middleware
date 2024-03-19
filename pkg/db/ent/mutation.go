@@ -1058,8 +1058,7 @@ type AppFeeMutation struct {
 	deleted_at            *uint32
 	adddeleted_at         *int32
 	ent_id                *uuid.UUID
-	app_id                *uuid.UUID
-	good_id               *uuid.UUID
+	app_good_id           *uuid.UUID
 	unit_value            *decimal.Decimal
 	min_order_duration    *uint32
 	addmin_order_duration *int32
@@ -1377,102 +1376,53 @@ func (m *AppFeeMutation) ResetEntID() {
 	m.ent_id = nil
 }
 
-// SetAppID sets the "app_id" field.
-func (m *AppFeeMutation) SetAppID(u uuid.UUID) {
-	m.app_id = &u
+// SetAppGoodID sets the "app_good_id" field.
+func (m *AppFeeMutation) SetAppGoodID(u uuid.UUID) {
+	m.app_good_id = &u
 }
 
-// AppID returns the value of the "app_id" field in the mutation.
-func (m *AppFeeMutation) AppID() (r uuid.UUID, exists bool) {
-	v := m.app_id
+// AppGoodID returns the value of the "app_good_id" field in the mutation.
+func (m *AppFeeMutation) AppGoodID() (r uuid.UUID, exists bool) {
+	v := m.app_good_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAppID returns the old "app_id" field's value of the AppFee entity.
+// OldAppGoodID returns the old "app_good_id" field's value of the AppFee entity.
 // If the AppFee object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppFeeMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *AppFeeMutation) OldAppGoodID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
+		return v, errors.New("OldAppGoodID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAppID requires an ID field in the mutation")
+		return v, errors.New("OldAppGoodID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
+		return v, fmt.Errorf("querying old value for OldAppGoodID: %w", err)
 	}
-	return oldValue.AppID, nil
+	return oldValue.AppGoodID, nil
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (m *AppFeeMutation) ClearAppID() {
-	m.app_id = nil
-	m.clearedFields[appfee.FieldAppID] = struct{}{}
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (m *AppFeeMutation) ClearAppGoodID() {
+	m.app_good_id = nil
+	m.clearedFields[appfee.FieldAppGoodID] = struct{}{}
 }
 
-// AppIDCleared returns if the "app_id" field was cleared in this mutation.
-func (m *AppFeeMutation) AppIDCleared() bool {
-	_, ok := m.clearedFields[appfee.FieldAppID]
+// AppGoodIDCleared returns if the "app_good_id" field was cleared in this mutation.
+func (m *AppFeeMutation) AppGoodIDCleared() bool {
+	_, ok := m.clearedFields[appfee.FieldAppGoodID]
 	return ok
 }
 
-// ResetAppID resets all changes to the "app_id" field.
-func (m *AppFeeMutation) ResetAppID() {
-	m.app_id = nil
-	delete(m.clearedFields, appfee.FieldAppID)
-}
-
-// SetGoodID sets the "good_id" field.
-func (m *AppFeeMutation) SetGoodID(u uuid.UUID) {
-	m.good_id = &u
-}
-
-// GoodID returns the value of the "good_id" field in the mutation.
-func (m *AppFeeMutation) GoodID() (r uuid.UUID, exists bool) {
-	v := m.good_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldGoodID returns the old "good_id" field's value of the AppFee entity.
-// If the AppFee object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppFeeMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldGoodID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldGoodID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldGoodID: %w", err)
-	}
-	return oldValue.GoodID, nil
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (m *AppFeeMutation) ClearGoodID() {
-	m.good_id = nil
-	m.clearedFields[appfee.FieldGoodID] = struct{}{}
-}
-
-// GoodIDCleared returns if the "good_id" field was cleared in this mutation.
-func (m *AppFeeMutation) GoodIDCleared() bool {
-	_, ok := m.clearedFields[appfee.FieldGoodID]
-	return ok
-}
-
-// ResetGoodID resets all changes to the "good_id" field.
-func (m *AppFeeMutation) ResetGoodID() {
-	m.good_id = nil
-	delete(m.clearedFields, appfee.FieldGoodID)
+// ResetAppGoodID resets all changes to the "app_good_id" field.
+func (m *AppFeeMutation) ResetAppGoodID() {
+	m.app_good_id = nil
+	delete(m.clearedFields, appfee.FieldAppGoodID)
 }
 
 // SetUnitValue sets the "unit_value" field.
@@ -1613,7 +1563,7 @@ func (m *AppFeeMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppFeeMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 7)
 	if m.created_at != nil {
 		fields = append(fields, appfee.FieldCreatedAt)
 	}
@@ -1626,11 +1576,8 @@ func (m *AppFeeMutation) Fields() []string {
 	if m.ent_id != nil {
 		fields = append(fields, appfee.FieldEntID)
 	}
-	if m.app_id != nil {
-		fields = append(fields, appfee.FieldAppID)
-	}
-	if m.good_id != nil {
-		fields = append(fields, appfee.FieldGoodID)
+	if m.app_good_id != nil {
+		fields = append(fields, appfee.FieldAppGoodID)
 	}
 	if m.unit_value != nil {
 		fields = append(fields, appfee.FieldUnitValue)
@@ -1654,10 +1601,8 @@ func (m *AppFeeMutation) Field(name string) (ent.Value, bool) {
 		return m.DeletedAt()
 	case appfee.FieldEntID:
 		return m.EntID()
-	case appfee.FieldAppID:
-		return m.AppID()
-	case appfee.FieldGoodID:
-		return m.GoodID()
+	case appfee.FieldAppGoodID:
+		return m.AppGoodID()
 	case appfee.FieldUnitValue:
 		return m.UnitValue()
 	case appfee.FieldMinOrderDuration:
@@ -1679,10 +1624,8 @@ func (m *AppFeeMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldDeletedAt(ctx)
 	case appfee.FieldEntID:
 		return m.OldEntID(ctx)
-	case appfee.FieldAppID:
-		return m.OldAppID(ctx)
-	case appfee.FieldGoodID:
-		return m.OldGoodID(ctx)
+	case appfee.FieldAppGoodID:
+		return m.OldAppGoodID(ctx)
 	case appfee.FieldUnitValue:
 		return m.OldUnitValue(ctx)
 	case appfee.FieldMinOrderDuration:
@@ -1724,19 +1667,12 @@ func (m *AppFeeMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetEntID(v)
 		return nil
-	case appfee.FieldAppID:
+	case appfee.FieldAppGoodID:
 		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetAppID(v)
-		return nil
-	case appfee.FieldGoodID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetGoodID(v)
+		m.SetAppGoodID(v)
 		return nil
 	case appfee.FieldUnitValue:
 		v, ok := value.(decimal.Decimal)
@@ -1833,11 +1769,8 @@ func (m *AppFeeMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *AppFeeMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(appfee.FieldAppID) {
-		fields = append(fields, appfee.FieldAppID)
-	}
-	if m.FieldCleared(appfee.FieldGoodID) {
-		fields = append(fields, appfee.FieldGoodID)
+	if m.FieldCleared(appfee.FieldAppGoodID) {
+		fields = append(fields, appfee.FieldAppGoodID)
 	}
 	if m.FieldCleared(appfee.FieldUnitValue) {
 		fields = append(fields, appfee.FieldUnitValue)
@@ -1859,11 +1792,8 @@ func (m *AppFeeMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *AppFeeMutation) ClearField(name string) error {
 	switch name {
-	case appfee.FieldAppID:
-		m.ClearAppID()
-		return nil
-	case appfee.FieldGoodID:
-		m.ClearGoodID()
+	case appfee.FieldAppGoodID:
+		m.ClearAppGoodID()
 		return nil
 	case appfee.FieldUnitValue:
 		m.ClearUnitValue()
@@ -1891,11 +1821,8 @@ func (m *AppFeeMutation) ResetField(name string) error {
 	case appfee.FieldEntID:
 		m.ResetEntID()
 		return nil
-	case appfee.FieldAppID:
-		m.ResetAppID()
-		return nil
-	case appfee.FieldGoodID:
-		m.ResetGoodID()
+	case appfee.FieldAppGoodID:
+		m.ResetAppGoodID()
 		return nil
 	case appfee.FieldUnitValue:
 		m.ResetUnitValue()

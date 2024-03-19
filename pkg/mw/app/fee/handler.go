@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
+	appfeecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/fee"
+	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	feecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/fee"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -17,19 +19,23 @@ import (
 
 type Handler struct {
 	ID *uint32
-	feecrud.Req
-	GoodBaseReq   *goodbasecrud.Req
-	FeeConds      *feecrud.Conds
-	GoodBaseConds *goodbasecrud.Conds
-	Offset        int32
-	Limit         int32
+	appfeecrud.Req
+	AppGoodBaseReq   *appgoodbasecrud.Req
+	AppFeeConds      *appfeecrud.Conds
+	FeeConds         *feecrud.Conds
+	GoodBaseConds    *goodbasecrud.Conds
+	AppGoodBaseConds *appgoodbasecrud.Conds
+	Offset           int32
+	Limit            int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
-		GoodBaseReq:   &goodbasecrud.Req{},
-		FeeConds:      &feecrud.Conds{},
-		GoodBaseConds: &goodbasecrud.Conds{},
+		AppGoodBaseReq:   &appgoodbasecrud.Req{},
+		AppFeeConds:      &appfeecrud.Conds{},
+		FeeConds:         &feecrud.Conds{},
+		GoodBaseConds:    &goodbasecrud.Conds{},
+		AppGoodBaseConds: &appgoodbasecrud.Conds{},
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
@@ -182,114 +188,84 @@ func WithName(s *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func (h *Handler) withFeeConds(conds *npool.Conds) error {
-	if conds.ID != nil {
-		h.FeeConds.ID = &cruder.Cond{
-			Op:  conds.GetID().GetOp(),
-			Val: conds.GetID().GetValue(),
-		}
-	}
-	if conds.IDs != nil {
-		h.FeeConds.IDs = &cruder.Cond{
-			Op:  conds.GetIDs().GetOp(),
-			Val: conds.GetIDs().GetValue(),
-		}
-	}
-	if conds.EntID != nil {
-		id, err := uuid.Parse(conds.GetEntID().GetValue())
-		if err != nil {
-			return err
-		}
-		h.FeeConds.EntID = &cruder.Cond{
-			Op:  conds.GetEntID().GetOp(),
-			Val: id,
-		}
-	}
-	if conds.EntIDs != nil {
-		ids := []uuid.UUID{}
-		for _, id := range conds.GetEntIDs().GetValue() {
-			_id, err := uuid.Parse(id)
-			if err != nil {
-				return err
-			}
-			ids = append(ids, _id)
-		}
-		h.FeeConds.EntID = &cruder.Cond{
-			Op:  conds.GetEntIDs().GetOp(),
-			Val: ids,
-		}
-	}
-	if conds.GoodID != nil {
-		id, err := uuid.Parse(conds.GetGoodID().GetValue())
-		if err != nil {
-			return err
-		}
-		h.FeeConds.GoodID = &cruder.Cond{
-			Op:  conds.GetGoodID().GetOp(),
-			Val: id,
-		}
-	}
-	if conds.GoodIDs != nil {
-		ids := []uuid.UUID{}
-		for _, id := range conds.GetGoodIDs().GetValue() {
-			_id, err := uuid.Parse(id)
-			if err != nil {
-				return err
-			}
-			ids = append(ids, _id)
-		}
-		h.FeeConds.GoodIDs = &cruder.Cond{
-			Op:  conds.GetGoodIDs().GetOp(),
-			Val: ids,
-		}
-	}
-	if conds.SettlementType != nil {
-		h.FeeConds.SettlementType = &cruder.Cond{
-			Op:  conds.GetSettlementType().GetOp(),
-			Val: types.GoodSettlementType(conds.GetSettlementType().GetValue()),
-		}
-	}
-	return nil
-}
-
-func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
-	if conds.GoodID != nil {
-		id, err := uuid.Parse(conds.GetGoodID().GetValue())
-		if err != nil {
-			return err
-		}
-		h.GoodBaseConds.EntID = &cruder.Cond{
-			Op:  conds.GetGoodID().GetOp(),
-			Val: id,
-		}
-	}
-	if conds.GoodIDs != nil {
-		ids := []uuid.UUID{}
-		for _, id := range conds.GetGoodIDs().GetValue() {
-			_id, err := uuid.Parse(id)
-			if err != nil {
-				return err
-			}
-			ids = append(ids, _id)
-		}
-		h.GoodBaseConds.EntIDs = &cruder.Cond{
-			Op:  conds.GetGoodIDs().GetOp(),
-			Val: ids,
-		}
-	}
-	return nil
-}
-
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if conds == nil {
 			return nil
 		}
-		if err := h.withFeeConds(conds); err != nil {
-			return err
+		if conds.ID != nil {
+			h.FeeConds.ID = &cruder.Cond{
+				Op:  conds.GetID().GetOp(),
+				Val: conds.GetID().GetValue(),
+			}
 		}
-		if err := h.withGoodBaseConds(conds); err != nil {
-			return err
+		if conds.IDs != nil {
+			h.FeeConds.IDs = &cruder.Cond{
+				Op:  conds.GetIDs().GetOp(),
+				Val: conds.GetIDs().GetValue(),
+			}
+		}
+		if conds.EntID != nil {
+			id, err := uuid.Parse(conds.GetEntID().GetValue())
+			if err != nil {
+				return err
+			}
+			h.FeeConds.EntID = &cruder.Cond{
+				Op:  conds.GetEntID().GetOp(),
+				Val: id,
+			}
+		}
+		if conds.EntIDs != nil {
+			ids := []uuid.UUID{}
+			for _, id := range conds.GetEntIDs().GetValue() {
+				_id, err := uuid.Parse(id)
+				if err != nil {
+					return err
+				}
+				ids = append(ids, _id)
+			}
+			h.FeeConds.EntID = &cruder.Cond{
+				Op:  conds.GetEntIDs().GetOp(),
+				Val: ids,
+			}
+		}
+		if conds.GoodID != nil {
+			id, err := uuid.Parse(conds.GetGoodID().GetValue())
+			if err != nil {
+				return err
+			}
+			h.FeeConds.GoodID = &cruder.Cond{
+				Op:  conds.GetGoodID().GetOp(),
+				Val: id,
+			}
+			h.GoodBaseConds.EntID = &cruder.Cond{
+				Op:  conds.GetGoodID().GetOp(),
+				Val: id,
+			}
+		}
+		if conds.GoodIDs != nil {
+			ids := []uuid.UUID{}
+			for _, id := range conds.GetGoodIDs().GetValue() {
+				_id, err := uuid.Parse(id)
+				if err != nil {
+					return err
+				}
+				ids = append(ids, _id)
+			}
+			h.FeeConds.GoodIDs = &cruder.Cond{
+				Op:  conds.GetGoodIDs().GetOp(),
+				Val: ids,
+			}
+			h.GoodBaseConds.EntIDs = &cruder.Cond{
+				Op:  conds.GetGoodIDs().GetOp(),
+				Val: ids,
+			}
+		}
+		if conds.SettlementType != nil {
+			h.FeeConds.SettlementType = &cruder.Cond{
+				Op:  conds.GetSettlementType().GetOp(),
+				Val: types.GoodSettlementType(conds.GetSettlementType().GetValue()),
+			}
 		}
 		return nil
 	}

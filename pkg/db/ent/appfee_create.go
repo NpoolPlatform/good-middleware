@@ -79,30 +79,16 @@ func (afc *AppFeeCreate) SetNillableEntID(u *uuid.UUID) *AppFeeCreate {
 	return afc
 }
 
-// SetAppID sets the "app_id" field.
-func (afc *AppFeeCreate) SetAppID(u uuid.UUID) *AppFeeCreate {
-	afc.mutation.SetAppID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (afc *AppFeeCreate) SetAppGoodID(u uuid.UUID) *AppFeeCreate {
+	afc.mutation.SetAppGoodID(u)
 	return afc
 }
 
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (afc *AppFeeCreate) SetNillableAppID(u *uuid.UUID) *AppFeeCreate {
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (afc *AppFeeCreate) SetNillableAppGoodID(u *uuid.UUID) *AppFeeCreate {
 	if u != nil {
-		afc.SetAppID(*u)
-	}
-	return afc
-}
-
-// SetGoodID sets the "good_id" field.
-func (afc *AppFeeCreate) SetGoodID(u uuid.UUID) *AppFeeCreate {
-	afc.mutation.SetGoodID(u)
-	return afc
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (afc *AppFeeCreate) SetNillableGoodID(u *uuid.UUID) *AppFeeCreate {
-	if u != nil {
-		afc.SetGoodID(*u)
+		afc.SetAppGoodID(*u)
 	}
 	return afc
 }
@@ -248,19 +234,12 @@ func (afc *AppFeeCreate) defaults() error {
 		v := appfee.DefaultEntID()
 		afc.mutation.SetEntID(v)
 	}
-	if _, ok := afc.mutation.AppID(); !ok {
-		if appfee.DefaultAppID == nil {
-			return fmt.Errorf("ent: uninitialized appfee.DefaultAppID (forgotten import ent/runtime?)")
+	if _, ok := afc.mutation.AppGoodID(); !ok {
+		if appfee.DefaultAppGoodID == nil {
+			return fmt.Errorf("ent: uninitialized appfee.DefaultAppGoodID (forgotten import ent/runtime?)")
 		}
-		v := appfee.DefaultAppID()
-		afc.mutation.SetAppID(v)
-	}
-	if _, ok := afc.mutation.GoodID(); !ok {
-		if appfee.DefaultGoodID == nil {
-			return fmt.Errorf("ent: uninitialized appfee.DefaultGoodID (forgotten import ent/runtime?)")
-		}
-		v := appfee.DefaultGoodID()
-		afc.mutation.SetGoodID(v)
+		v := appfee.DefaultAppGoodID()
+		afc.mutation.SetAppGoodID(v)
 	}
 	if _, ok := afc.mutation.UnitValue(); !ok {
 		v := appfee.DefaultUnitValue
@@ -353,21 +332,13 @@ func (afc *AppFeeCreate) createSpec() (*AppFee, *sqlgraph.CreateSpec) {
 		})
 		_node.EntID = value
 	}
-	if value, ok := afc.mutation.AppID(); ok {
+	if value, ok := afc.mutation.AppGoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: appfee.FieldAppID,
+			Column: appfee.FieldAppGoodID,
 		})
-		_node.AppID = value
-	}
-	if value, ok := afc.mutation.GoodID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: appfee.FieldGoodID,
-		})
-		_node.GoodID = value
+		_node.AppGoodID = value
 	}
 	if value, ok := afc.mutation.UnitValue(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -505,39 +476,21 @@ func (u *AppFeeUpsert) UpdateEntID() *AppFeeUpsert {
 	return u
 }
 
-// SetAppID sets the "app_id" field.
-func (u *AppFeeUpsert) SetAppID(v uuid.UUID) *AppFeeUpsert {
-	u.Set(appfee.FieldAppID, v)
+// SetAppGoodID sets the "app_good_id" field.
+func (u *AppFeeUpsert) SetAppGoodID(v uuid.UUID) *AppFeeUpsert {
+	u.Set(appfee.FieldAppGoodID, v)
 	return u
 }
 
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *AppFeeUpsert) UpdateAppID() *AppFeeUpsert {
-	u.SetExcluded(appfee.FieldAppID)
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *AppFeeUpsert) UpdateAppGoodID() *AppFeeUpsert {
+	u.SetExcluded(appfee.FieldAppGoodID)
 	return u
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (u *AppFeeUpsert) ClearAppID() *AppFeeUpsert {
-	u.SetNull(appfee.FieldAppID)
-	return u
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *AppFeeUpsert) SetGoodID(v uuid.UUID) *AppFeeUpsert {
-	u.Set(appfee.FieldGoodID, v)
-	return u
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *AppFeeUpsert) UpdateGoodID() *AppFeeUpsert {
-	u.SetExcluded(appfee.FieldGoodID)
-	return u
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *AppFeeUpsert) ClearGoodID() *AppFeeUpsert {
-	u.SetNull(appfee.FieldGoodID)
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *AppFeeUpsert) ClearAppGoodID() *AppFeeUpsert {
+	u.SetNull(appfee.FieldAppGoodID)
 	return u
 }
 
@@ -710,45 +663,24 @@ func (u *AppFeeUpsertOne) UpdateEntID() *AppFeeUpsertOne {
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *AppFeeUpsertOne) SetAppID(v uuid.UUID) *AppFeeUpsertOne {
+// SetAppGoodID sets the "app_good_id" field.
+func (u *AppFeeUpsertOne) SetAppGoodID(v uuid.UUID) *AppFeeUpsertOne {
 	return u.Update(func(s *AppFeeUpsert) {
-		s.SetAppID(v)
+		s.SetAppGoodID(v)
 	})
 }
 
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *AppFeeUpsertOne) UpdateAppID() *AppFeeUpsertOne {
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *AppFeeUpsertOne) UpdateAppGoodID() *AppFeeUpsertOne {
 	return u.Update(func(s *AppFeeUpsert) {
-		s.UpdateAppID()
+		s.UpdateAppGoodID()
 	})
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (u *AppFeeUpsertOne) ClearAppID() *AppFeeUpsertOne {
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *AppFeeUpsertOne) ClearAppGoodID() *AppFeeUpsertOne {
 	return u.Update(func(s *AppFeeUpsert) {
-		s.ClearAppID()
-	})
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *AppFeeUpsertOne) SetGoodID(v uuid.UUID) *AppFeeUpsertOne {
-	return u.Update(func(s *AppFeeUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *AppFeeUpsertOne) UpdateGoodID() *AppFeeUpsertOne {
-	return u.Update(func(s *AppFeeUpsert) {
-		s.UpdateGoodID()
-	})
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *AppFeeUpsertOne) ClearGoodID() *AppFeeUpsertOne {
-	return u.Update(func(s *AppFeeUpsert) {
-		s.ClearGoodID()
+		s.ClearAppGoodID()
 	})
 }
 
@@ -1093,45 +1025,24 @@ func (u *AppFeeUpsertBulk) UpdateEntID() *AppFeeUpsertBulk {
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *AppFeeUpsertBulk) SetAppID(v uuid.UUID) *AppFeeUpsertBulk {
+// SetAppGoodID sets the "app_good_id" field.
+func (u *AppFeeUpsertBulk) SetAppGoodID(v uuid.UUID) *AppFeeUpsertBulk {
 	return u.Update(func(s *AppFeeUpsert) {
-		s.SetAppID(v)
+		s.SetAppGoodID(v)
 	})
 }
 
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *AppFeeUpsertBulk) UpdateAppID() *AppFeeUpsertBulk {
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *AppFeeUpsertBulk) UpdateAppGoodID() *AppFeeUpsertBulk {
 	return u.Update(func(s *AppFeeUpsert) {
-		s.UpdateAppID()
+		s.UpdateAppGoodID()
 	})
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (u *AppFeeUpsertBulk) ClearAppID() *AppFeeUpsertBulk {
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *AppFeeUpsertBulk) ClearAppGoodID() *AppFeeUpsertBulk {
 	return u.Update(func(s *AppFeeUpsert) {
-		s.ClearAppID()
-	})
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *AppFeeUpsertBulk) SetGoodID(v uuid.UUID) *AppFeeUpsertBulk {
-	return u.Update(func(s *AppFeeUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *AppFeeUpsertBulk) UpdateGoodID() *AppFeeUpsertBulk {
-	return u.Update(func(s *AppFeeUpsert) {
-		s.UpdateGoodID()
-	})
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *AppFeeUpsertBulk) ClearGoodID() *AppFeeUpsertBulk {
-	return u.Update(func(s *AppFeeUpsert) {
-		s.ClearGoodID()
+		s.ClearAppGoodID()
 	})
 }
 
