@@ -7,7 +7,6 @@ import (
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/fee"
 )
 
 type updateHandler struct {
@@ -41,7 +40,7 @@ func (h *updateHandler) updateFee(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *Handler) UpdateFee(ctx context.Context) (*npool.Fee, error) {
+func (h *Handler) UpdateFee(ctx context.Context) error {
 	handler := &updateHandler{
 		feeGoodQueryHandler: &feeGoodQueryHandler{
 			Handler: h,
@@ -49,10 +48,10 @@ func (h *Handler) UpdateFee(ctx context.Context) (*npool.Fee, error) {
 	}
 
 	if err := handler.requireFeeGood(ctx); err != nil {
-		return nil, err
+		return err
 	}
 
-	return nil, db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateGoodBase(_ctx, tx); err != nil {
 			return err
 		}

@@ -7,7 +7,6 @@ import (
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/fee"
 
 	"github.com/google/uuid"
 )
@@ -49,7 +48,7 @@ func (h *createHandler) createFee(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *Handler) CreateFee(ctx context.Context) (*npool.Fee, error) {
+func (h *Handler) CreateFee(ctx context.Context) error {
 	entID := uuid.New()
 	if h.EntID == nil {
 		h.EntID = &entID
@@ -63,7 +62,7 @@ func (h *Handler) CreateFee(ctx context.Context) (*npool.Fee, error) {
 		Handler: h,
 	}
 
-	return nil, db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createGoodBase(ctx, tx); err != nil {
 			return err
 		}
