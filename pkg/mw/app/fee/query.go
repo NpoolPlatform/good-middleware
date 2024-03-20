@@ -193,6 +193,8 @@ func (h *queryHandler) queryJoinAppFee(s *sql.Selector) error {
 		s.OnP(sql.In(t1.C(entappfee.FieldAppGoodID), uids))
 	}
 	s.AppendSelect(
+		sql.As(t1.C(entappfee.FieldID), "id"),
+		sql.As(t1.C(entappfee.FieldEntID), "ent_id"),
 		sql.As(t1.C(entappfee.FieldUnitValue), "unit_value"),
 		sql.As(t1.C(entappfee.FieldMinOrderDuration), "min_order_duration"),
 	)

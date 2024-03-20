@@ -99,6 +99,7 @@ func updateFee(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
+		WithAppGoodID(&ret.AppGoodID, true),
 		WithName(&ret.Name, true),
 		WithUnitValue(&ret.UnitValue, true),
 		WithMinOrderDuration(&ret.MinOrderDuration, true),
@@ -161,13 +162,10 @@ func deleteFee(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	info, err := handler.DeleteFee(context.Background())
-	if assert.Nil(t, err) {
-		ret.UpdatedAt = info.UpdatedAt
-		assert.Equal(t, info, &ret)
-	}
+	err = handler.DeleteFee(context.Background())
+	assert.Nil(t, err)
 
-	info, err = handler.GetFee(context.Background())
+	info, err := handler.GetFee(context.Background())
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }

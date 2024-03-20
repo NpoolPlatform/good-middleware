@@ -29,7 +29,7 @@ func (h *deleteHandler) deleteGoodBase(ctx context.Context, tx *ent.Tx) error {
 
 func (h *deleteHandler) deleteFee(ctx context.Context, tx *ent.Tx) error {
 	if _, err := feecrud.UpdateSet(
-		tx.Fee.UpdateOneID(*h.ID),
+		tx.Fee.UpdateOneID(h.fee.ID),
 		&feecrud.Req{
 			DeletedAt: &h.now,
 		},

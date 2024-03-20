@@ -29,7 +29,7 @@ func (h *deleteHandler) deleteAppGoodBase(ctx context.Context, tx *ent.Tx) error
 
 func (h *deleteHandler) deleteAppFee(ctx context.Context, tx *ent.Tx) error {
 	if _, err := appfeecrud.UpdateSet(
-		tx.AppFee.UpdateOneID(*h.ID),
+		tx.AppFee.UpdateOneID(h.appFee.ID),
 		&appfeecrud.Req{
 			DeletedAt: &h.now,
 		},
