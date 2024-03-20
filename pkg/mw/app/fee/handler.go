@@ -9,9 +9,10 @@ import (
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	feecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/fee"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
+	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/fee"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/fee"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -75,11 +76,11 @@ func WithEntID(s *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithGoodID(s *string, must bool) func(context.Context, *Handler) error {
+func WithAppID(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid goodid")
+				return fmt.Errorf("invalid appid")
 			}
 			return nil
 		}
@@ -87,27 +88,77 @@ func WithGoodID(s *string, must bool) func(context.Context, *Handler) error {
 		if err != nil {
 			return err
 		}
-		h.GoodID = &id
+		h.AppGoodBaseReq.AppID = &id
 		return nil
 	}
 }
 
-func WithSettlementType(e *types.GoodSettlementType, must bool) func(context.Context, *Handler) error {
+func WithGoodID(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		if e == nil {
+		handler, err := goodbase1.NewHandler(
+			ctx,
+			goodbase1.WithEntID(s, true),
+		)
+		if err != nil {
+			return err
+		}
+		exist, err := handler.ExistGoodBase(ctx)
+		if err != nil {
+			return err
+		}
+		if !exist {
+			return fmt.Errorf("invalid goodid")
+		}
+		h.AppGoodBaseReq.GoodID = handler.EntID
+		return nil
+	}
+}
+
+func WithAppGoodID(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
 			if must {
-				return fmt.Errorf("invalid settlementtype")
+				return fmt.Errorf("invalid appgoodid")
 			}
 			return nil
 		}
-		switch *e {
-		case types.GoodSettlementType_GoodSettledByPaymentPercent:
-		case types.GoodSettlementType_GoodSettledByPaymentAmount:
-		case types.GoodSettlementType_GoodSettledByProfitPercent:
-		default:
-			return fmt.Errorf("invalid settlementtype")
+		id, err := uuid.Parse(*s)
+		if err != nil {
+			return err
 		}
-		h.SettlementType = e
+		h.AppGoodID = &id
+		h.AppGoodBaseReq.EntID = &id
+		return nil
+	}
+}
+
+func WithProductPage(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.AppGoodBaseReq.ProductPage = s
+		return nil
+	}
+}
+
+func WithName(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid name")
+			}
+			return nil
+		}
+		const leastNameLen = 3
+		if len(*s) < leastNameLen {
+			return fmt.Errorf("invalid name")
+		}
+		h.AppGoodBaseReq.Name = s
+		return nil
+	}
+}
+
+func WithBanner(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.AppGoodBaseReq.Banner = s
 		return nil
 	}
 }
@@ -132,60 +183,222 @@ func WithUnitValue(s *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithDurationType(e *types.GoodDurationType, must bool) func(context.Context, *Handler) error {
+func WithMinOrderDuration(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		if e == nil {
+		if n == nil {
 			if must {
-				return fmt.Errorf("invalid durationtype")
+				return fmt.Errorf("invalid minorderduration")
 			}
 			return nil
 		}
-		switch *e {
-		case types.GoodDurationType_GoodDurationByHour:
-		case types.GoodDurationType_GoodDurationByDay:
-		case types.GoodDurationType_GoodDurationByMonth:
-		case types.GoodDurationType_GoodDurationByYear:
-		default:
-			return fmt.Errorf("invalid durationtype")
+		if *n == 0 {
+			return fmt.Errorf("invalid minorderduration")
 		}
-		h.DurationType = e
+		h.MinOrderDuration = n
 		return nil
 	}
 }
 
-func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if e == nil {
-			if must {
-				return fmt.Errorf("invalid goodtype")
-			}
-			return nil
+func (h *Handler) withFeeConds(conds *npool.Conds) error {
+	if conds.GoodID != nil {
+		id, err := uuid.Parse(conds.GetGoodID().GetValue())
+		if err != nil {
+			return err
 		}
-		switch *e {
-		case types.GoodType_TechniqueServiceFee:
-		case types.GoodType_ElectricityFee:
-		default:
-			return fmt.Errorf("invalid goodtype")
+		h.FeeConds.GoodID = &cruder.Cond{
+			Op:  conds.GetGoodID().GetOp(),
+			Val: id,
 		}
-		h.GoodBaseReq.GoodType = e
-		return nil
 	}
+	if conds.GoodIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range conds.GetGoodIDs().GetValue() {
+			_id, err := uuid.Parse(id)
+			if err != nil {
+				return err
+			}
+			ids = append(ids, _id)
+		}
+		h.FeeConds.GoodIDs = &cruder.Cond{
+			Op:  conds.GetGoodIDs().GetOp(),
+			Val: ids,
+		}
+	}
+	if conds.SettlementType != nil {
+		h.FeeConds.SettlementType = &cruder.Cond{
+			Val: types.GoodSettlementType(conds.GetSettlementType().GetValue()),
+			Op:  conds.GetSettlementType().GetOp(),
+		}
+	}
+	return nil
 }
 
-func WithName(s *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return fmt.Errorf("invalid name")
-			}
-			return nil
+func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
+	if conds.GoodID != nil {
+		id, err := uuid.Parse(conds.GetGoodID().GetValue())
+		if err != nil {
+			return err
 		}
-		if *s == "" {
-			return fmt.Errorf("invalid name")
+		h.GoodBaseConds.EntID = &cruder.Cond{
+			Op:  conds.GetGoodID().GetOp(),
+			Val: id,
 		}
-		h.GoodBaseReq.Name = s
-		return nil
 	}
+	if conds.GoodIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range conds.GetGoodIDs().GetValue() {
+			_id, err := uuid.Parse(id)
+			if err != nil {
+				return err
+			}
+			ids = append(ids, _id)
+		}
+		h.GoodBaseConds.EntIDs = &cruder.Cond{
+			Op:  conds.GetGoodIDs().GetOp(),
+			Val: ids,
+		}
+	}
+	return nil
+}
+
+func (h *Handler) withAppFeeConds(conds *npool.Conds) error {
+	if conds.ID != nil {
+		h.AppFeeConds.ID = &cruder.Cond{
+			Op:  conds.GetID().GetOp(),
+			Val: conds.GetID().GetValue(),
+		}
+	}
+	if conds.IDs != nil {
+		h.AppFeeConds.IDs = &cruder.Cond{
+			Op:  conds.GetIDs().GetOp(),
+			Val: conds.GetIDs().GetValue(),
+		}
+	}
+	if conds.EntID != nil {
+		id, err := uuid.Parse(conds.GetEntID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.AppFeeConds.EntID = &cruder.Cond{
+			Op:  conds.GetEntID().GetOp(),
+			Val: id,
+		}
+	}
+	if conds.EntIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range conds.GetEntIDs().GetValue() {
+			_id, err := uuid.Parse(id)
+			if err != nil {
+				return err
+			}
+			ids = append(ids, _id)
+		}
+		h.AppFeeConds.EntID = &cruder.Cond{
+			Op:  conds.GetEntIDs().GetOp(),
+			Val: ids,
+		}
+	}
+	if conds.AppGoodID != nil {
+		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.AppFeeConds.AppGoodID = &cruder.Cond{
+			Op:  conds.GetAppGoodID().GetOp(),
+			Val: id,
+		}
+	}
+	if conds.AppGoodIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range conds.GetAppGoodIDs().GetValue() {
+			_id, err := uuid.Parse(id)
+			if err != nil {
+				return err
+			}
+			ids = append(ids, _id)
+		}
+		h.AppFeeConds.AppGoodIDs = &cruder.Cond{
+			Op:  conds.GetAppGoodIDs().GetOp(),
+			Val: ids,
+		}
+	}
+	return nil
+}
+
+func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
+	if conds.AppGoodID != nil {
+		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.AppGoodBaseConds.EntID = &cruder.Cond{
+			Op:  conds.GetAppGoodID().GetOp(),
+			Val: id,
+		}
+	}
+	if conds.AppGoodIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range conds.GetAppGoodIDs().GetValue() {
+			_id, err := uuid.Parse(id)
+			if err != nil {
+				return err
+			}
+			ids = append(ids, _id)
+		}
+		h.AppGoodBaseConds.EntIDs = &cruder.Cond{
+			Op:  conds.GetAppGoodIDs().GetOp(),
+			Val: ids,
+		}
+	}
+	if conds.AppID != nil {
+		id, err := uuid.Parse(conds.GetAppID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.AppGoodBaseConds.AppID = &cruder.Cond{
+			Op:  conds.GetAppID().GetOp(),
+			Val: id,
+		}
+	}
+	if conds.AppIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range conds.GetAppIDs().GetValue() {
+			_id, err := uuid.Parse(id)
+			if err != nil {
+				return err
+			}
+			ids = append(ids, _id)
+		}
+		h.AppGoodBaseConds.AppIDs = &cruder.Cond{
+			Op:  conds.GetAppIDs().GetOp(),
+			Val: ids,
+		}
+	}
+	if conds.GoodID != nil {
+		id, err := uuid.Parse(conds.GetGoodID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.AppGoodBaseConds.GoodID = &cruder.Cond{
+			Op:  conds.GetGoodID().GetOp(),
+			Val: id,
+		}
+	}
+	if conds.GoodIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range conds.GetGoodIDs().GetValue() {
+			_id, err := uuid.Parse(id)
+			if err != nil {
+				return err
+			}
+			ids = append(ids, _id)
+		}
+		h.AppGoodBaseConds.GoodIDs = &cruder.Cond{
+			Op:  conds.GetGoodIDs().GetOp(),
+			Val: ids,
+		}
+	}
+	return nil
 }
 
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
@@ -193,79 +406,17 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if conds == nil {
 			return nil
 		}
-		if conds.ID != nil {
-			h.FeeConds.ID = &cruder.Cond{
-				Op:  conds.GetID().GetOp(),
-				Val: conds.GetID().GetValue(),
-			}
+		if err := h.withFeeConds(conds); err != nil {
+			return err
 		}
-		if conds.IDs != nil {
-			h.FeeConds.IDs = &cruder.Cond{
-				Op:  conds.GetIDs().GetOp(),
-				Val: conds.GetIDs().GetValue(),
-			}
+		if err := h.withGoodBaseConds(conds); err != nil {
+			return err
 		}
-		if conds.EntID != nil {
-			id, err := uuid.Parse(conds.GetEntID().GetValue())
-			if err != nil {
-				return err
-			}
-			h.FeeConds.EntID = &cruder.Cond{
-				Op:  conds.GetEntID().GetOp(),
-				Val: id,
-			}
+		if err := h.withAppFeeConds(conds); err != nil {
+			return err
 		}
-		if conds.EntIDs != nil {
-			ids := []uuid.UUID{}
-			for _, id := range conds.GetEntIDs().GetValue() {
-				_id, err := uuid.Parse(id)
-				if err != nil {
-					return err
-				}
-				ids = append(ids, _id)
-			}
-			h.FeeConds.EntID = &cruder.Cond{
-				Op:  conds.GetEntIDs().GetOp(),
-				Val: ids,
-			}
-		}
-		if conds.GoodID != nil {
-			id, err := uuid.Parse(conds.GetGoodID().GetValue())
-			if err != nil {
-				return err
-			}
-			h.FeeConds.GoodID = &cruder.Cond{
-				Op:  conds.GetGoodID().GetOp(),
-				Val: id,
-			}
-			h.GoodBaseConds.EntID = &cruder.Cond{
-				Op:  conds.GetGoodID().GetOp(),
-				Val: id,
-			}
-		}
-		if conds.GoodIDs != nil {
-			ids := []uuid.UUID{}
-			for _, id := range conds.GetGoodIDs().GetValue() {
-				_id, err := uuid.Parse(id)
-				if err != nil {
-					return err
-				}
-				ids = append(ids, _id)
-			}
-			h.FeeConds.GoodIDs = &cruder.Cond{
-				Op:  conds.GetGoodIDs().GetOp(),
-				Val: ids,
-			}
-			h.GoodBaseConds.EntIDs = &cruder.Cond{
-				Op:  conds.GetGoodIDs().GetOp(),
-				Val: ids,
-			}
-		}
-		if conds.SettlementType != nil {
-			h.FeeConds.SettlementType = &cruder.Cond{
-				Op:  conds.GetSettlementType().GetOp(),
-				Val: types.GoodSettlementType(conds.GetSettlementType().GetValue()),
-			}
+		if err := h.withAppGoodBaseConds(conds); err != nil {
+			return err
 		}
 		return nil
 	}
