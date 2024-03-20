@@ -63,11 +63,8 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appdefaultgood.FieldUpdatedAt:  {Type: field.TypeUint32, Column: appdefaultgood.FieldUpdatedAt},
 			appdefaultgood.FieldDeletedAt:  {Type: field.TypeUint32, Column: appdefaultgood.FieldDeletedAt},
 			appdefaultgood.FieldEntID:      {Type: field.TypeUUID, Column: appdefaultgood.FieldEntID},
-			appdefaultgood.FieldAppID:      {Type: field.TypeUUID, Column: appdefaultgood.FieldAppID},
-			appdefaultgood.FieldGoodID:     {Type: field.TypeUUID, Column: appdefaultgood.FieldGoodID},
 			appdefaultgood.FieldAppGoodID:  {Type: field.TypeUUID, Column: appdefaultgood.FieldAppGoodID},
 			appdefaultgood.FieldCoinTypeID: {Type: field.TypeUUID, Column: appdefaultgood.FieldCoinTypeID},
-			appdefaultgood.FieldGoodType:   {Type: field.TypeString, Column: appdefaultgood.FieldGoodType},
 		},
 	}
 	graph.Nodes[1] = &sqlgraph.Node{
@@ -601,6 +598,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			goodcoin.FieldGoodID:     {Type: field.TypeUUID, Column: goodcoin.FieldGoodID},
 			goodcoin.FieldCoinTypeID: {Type: field.TypeUUID, Column: goodcoin.FieldCoinTypeID},
 			goodcoin.FieldMain:       {Type: field.TypeBool, Column: goodcoin.FieldMain},
+			goodcoin.FieldIndex:      {Type: field.TypeInt32, Column: goodcoin.FieldIndex},
 		},
 	}
 	graph.Nodes[22] = &sqlgraph.Node{
@@ -973,16 +971,6 @@ func (f *AppDefaultGoodFilter) WhereEntID(p entql.ValueP) {
 	f.Where(p.Field(appdefaultgood.FieldEntID))
 }
 
-// WhereAppID applies the entql [16]byte predicate on the app_id field.
-func (f *AppDefaultGoodFilter) WhereAppID(p entql.ValueP) {
-	f.Where(p.Field(appdefaultgood.FieldAppID))
-}
-
-// WhereGoodID applies the entql [16]byte predicate on the good_id field.
-func (f *AppDefaultGoodFilter) WhereGoodID(p entql.ValueP) {
-	f.Where(p.Field(appdefaultgood.FieldGoodID))
-}
-
 // WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
 func (f *AppDefaultGoodFilter) WhereAppGoodID(p entql.ValueP) {
 	f.Where(p.Field(appdefaultgood.FieldAppGoodID))
@@ -991,11 +979,6 @@ func (f *AppDefaultGoodFilter) WhereAppGoodID(p entql.ValueP) {
 // WhereCoinTypeID applies the entql [16]byte predicate on the coin_type_id field.
 func (f *AppDefaultGoodFilter) WhereCoinTypeID(p entql.ValueP) {
 	f.Where(p.Field(appdefaultgood.FieldCoinTypeID))
-}
-
-// WhereGoodType applies the entql string predicate on the good_type field.
-func (f *AppDefaultGoodFilter) WhereGoodType(p entql.StringP) {
-	f.Where(p.Field(appdefaultgood.FieldGoodType))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -3136,6 +3119,11 @@ func (f *GoodCoinFilter) WhereCoinTypeID(p entql.ValueP) {
 // WhereMain applies the entql bool predicate on the main field.
 func (f *GoodCoinFilter) WhereMain(p entql.BoolP) {
 	f.Where(p.Field(goodcoin.FieldMain))
+}
+
+// WhereIndex applies the entql int32 predicate on the index field.
+func (f *GoodCoinFilter) WhereIndex(p entql.Int32P) {
+	f.Where(p.Field(goodcoin.FieldIndex))
 }
 
 // addPredicate implements the predicateAdder interface.

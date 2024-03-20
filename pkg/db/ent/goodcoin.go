@@ -30,6 +30,8 @@ type GoodCoin struct {
 	CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
 	// Main holds the value of the "main" field.
 	Main bool `json:"main,omitempty"`
+	// Index holds the value of the "index" field.
+	Index int32 `json:"index,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -39,7 +41,7 @@ func (*GoodCoin) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case goodcoin.FieldMain:
 			values[i] = new(sql.NullBool)
-		case goodcoin.FieldID, goodcoin.FieldCreatedAt, goodcoin.FieldUpdatedAt, goodcoin.FieldDeletedAt:
+		case goodcoin.FieldID, goodcoin.FieldCreatedAt, goodcoin.FieldUpdatedAt, goodcoin.FieldDeletedAt, goodcoin.FieldIndex:
 			values[i] = new(sql.NullInt64)
 		case goodcoin.FieldEntID, goodcoin.FieldGoodID, goodcoin.FieldCoinTypeID:
 			values[i] = new(uuid.UUID)
@@ -106,6 +108,12 @@ func (gc *GoodCoin) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				gc.Main = value.Bool
 			}
+		case goodcoin.FieldIndex:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field index", values[i])
+			} else if value.Valid {
+				gc.Index = int32(value.Int64)
+			}
 		}
 	}
 	return nil
@@ -154,6 +162,9 @@ func (gc *GoodCoin) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("main=")
 	builder.WriteString(fmt.Sprintf("%v", gc.Main))
+	builder.WriteString(", ")
+	builder.WriteString("index=")
+	builder.WriteString(fmt.Sprintf("%v", gc.Index))
 	builder.WriteByte(')')
 	return builder.String()
 }

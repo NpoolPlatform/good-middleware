@@ -120,6 +120,20 @@ func (gcc *GoodCoinCreate) SetNillableMain(b *bool) *GoodCoinCreate {
 	return gcc
 }
 
+// SetIndex sets the "index" field.
+func (gcc *GoodCoinCreate) SetIndex(i int32) *GoodCoinCreate {
+	gcc.mutation.SetIndex(i)
+	return gcc
+}
+
+// SetNillableIndex sets the "index" field if the given value is not nil.
+func (gcc *GoodCoinCreate) SetNillableIndex(i *int32) *GoodCoinCreate {
+	if i != nil {
+		gcc.SetIndex(*i)
+	}
+	return gcc
+}
+
 // SetID sets the "id" field.
 func (gcc *GoodCoinCreate) SetID(u uint32) *GoodCoinCreate {
 	gcc.mutation.SetID(u)
@@ -251,6 +265,10 @@ func (gcc *GoodCoinCreate) defaults() error {
 		v := goodcoin.DefaultMain
 		gcc.mutation.SetMain(v)
 	}
+	if _, ok := gcc.mutation.Index(); !ok {
+		v := goodcoin.DefaultIndex
+		gcc.mutation.SetIndex(v)
+	}
 	return nil
 }
 
@@ -357,6 +375,14 @@ func (gcc *GoodCoinCreate) createSpec() (*GoodCoin, *sqlgraph.CreateSpec) {
 			Column: goodcoin.FieldMain,
 		})
 		_node.Main = value
+	}
+	if value, ok := gcc.mutation.Index(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt32,
+			Value:  value,
+			Column: goodcoin.FieldIndex,
+		})
+		_node.Index = value
 	}
 	return _node, _spec
 }
@@ -529,6 +555,30 @@ func (u *GoodCoinUpsert) UpdateMain() *GoodCoinUpsert {
 // ClearMain clears the value of the "main" field.
 func (u *GoodCoinUpsert) ClearMain() *GoodCoinUpsert {
 	u.SetNull(goodcoin.FieldMain)
+	return u
+}
+
+// SetIndex sets the "index" field.
+func (u *GoodCoinUpsert) SetIndex(v int32) *GoodCoinUpsert {
+	u.Set(goodcoin.FieldIndex, v)
+	return u
+}
+
+// UpdateIndex sets the "index" field to the value that was provided on create.
+func (u *GoodCoinUpsert) UpdateIndex() *GoodCoinUpsert {
+	u.SetExcluded(goodcoin.FieldIndex)
+	return u
+}
+
+// AddIndex adds v to the "index" field.
+func (u *GoodCoinUpsert) AddIndex(v int32) *GoodCoinUpsert {
+	u.Add(goodcoin.FieldIndex, v)
+	return u
+}
+
+// ClearIndex clears the value of the "index" field.
+func (u *GoodCoinUpsert) ClearIndex() *GoodCoinUpsert {
+	u.SetNull(goodcoin.FieldIndex)
 	return u
 }
 
@@ -719,6 +769,34 @@ func (u *GoodCoinUpsertOne) UpdateMain() *GoodCoinUpsertOne {
 func (u *GoodCoinUpsertOne) ClearMain() *GoodCoinUpsertOne {
 	return u.Update(func(s *GoodCoinUpsert) {
 		s.ClearMain()
+	})
+}
+
+// SetIndex sets the "index" field.
+func (u *GoodCoinUpsertOne) SetIndex(v int32) *GoodCoinUpsertOne {
+	return u.Update(func(s *GoodCoinUpsert) {
+		s.SetIndex(v)
+	})
+}
+
+// AddIndex adds v to the "index" field.
+func (u *GoodCoinUpsertOne) AddIndex(v int32) *GoodCoinUpsertOne {
+	return u.Update(func(s *GoodCoinUpsert) {
+		s.AddIndex(v)
+	})
+}
+
+// UpdateIndex sets the "index" field to the value that was provided on create.
+func (u *GoodCoinUpsertOne) UpdateIndex() *GoodCoinUpsertOne {
+	return u.Update(func(s *GoodCoinUpsert) {
+		s.UpdateIndex()
+	})
+}
+
+// ClearIndex clears the value of the "index" field.
+func (u *GoodCoinUpsertOne) ClearIndex() *GoodCoinUpsertOne {
+	return u.Update(func(s *GoodCoinUpsert) {
+		s.ClearIndex()
 	})
 }
 
@@ -1074,6 +1152,34 @@ func (u *GoodCoinUpsertBulk) UpdateMain() *GoodCoinUpsertBulk {
 func (u *GoodCoinUpsertBulk) ClearMain() *GoodCoinUpsertBulk {
 	return u.Update(func(s *GoodCoinUpsert) {
 		s.ClearMain()
+	})
+}
+
+// SetIndex sets the "index" field.
+func (u *GoodCoinUpsertBulk) SetIndex(v int32) *GoodCoinUpsertBulk {
+	return u.Update(func(s *GoodCoinUpsert) {
+		s.SetIndex(v)
+	})
+}
+
+// AddIndex adds v to the "index" field.
+func (u *GoodCoinUpsertBulk) AddIndex(v int32) *GoodCoinUpsertBulk {
+	return u.Update(func(s *GoodCoinUpsert) {
+		s.AddIndex(v)
+	})
+}
+
+// UpdateIndex sets the "index" field to the value that was provided on create.
+func (u *GoodCoinUpsertBulk) UpdateIndex() *GoodCoinUpsertBulk {
+	return u.Update(func(s *GoodCoinUpsert) {
+		s.UpdateIndex()
+	})
+}
+
+// ClearIndex clears the value of the "index" field.
+func (u *GoodCoinUpsertBulk) ClearIndex() *GoodCoinUpsertBulk {
+	return u.Update(func(s *GoodCoinUpsert) {
+		s.ClearIndex()
 	})
 }
 

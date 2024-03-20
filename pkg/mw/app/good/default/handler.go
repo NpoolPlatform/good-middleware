@@ -6,6 +6,8 @@ import (
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	appdefaultgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/default"
+	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
+	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -16,13 +18,19 @@ import (
 
 type Handler struct {
 	appdefaultgoodcrud.Req
-	Conds  *appdefaultgoodcrud.Conds
-	Offset int32
-	Limit  int32
+	DefaultConds     *appdefaultgoodcrud.Conds
+	GoodBaseConds    *goodbasecrud.Conds
+	AppGoodBaseConds *appgoodbasecrud.Conds
+	Offset           int32
+	Limit            int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
-	handler := &Handler{}
+	handler := &Handler{
+		DefaultConds:     &appdefaultgoodcrud.Conds{},
+		GoodBaseConds:    &goodbasecrud.Conds{},
+		AppGoodBaseConds: &appgoodbasecrud.Conds{},
+	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
 			return nil, err
@@ -120,6 +128,13 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 		if err != nil {
 			return err
 		}
+		exist, err := handler.ExistGood(ctx)
+		if err != nil {
+			return err
+		}
+		if !exist {
+			return fmt.Errorf("invalid appgood")
+		}
 		h.AppGoodID = handler.EntID
 		return nil
 	}
@@ -140,6 +155,98 @@ func WithCoinTypeID(id *string, must bool) func(context.Context, *Handler) error
 		h.CoinTypeID = &_id
 		return nil
 	}
+}
+
+func (h *Handler) withAppDefaultGoodConds(conds *npool.Conds) error {
+	if conds.ID != nil {
+		h.DefaultConds.ID = &cruder.Cond{
+			Op:  conds.GetID().GetOp(),
+			Val: conds.GetID().GetValue(),
+		}
+	}
+	if conds.EntID != nil {
+		id, err := uuid.Parse(conds.GetEntID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.DefaultConds.EntID = &cruder.Cond{
+			Op:  conds.GetEntID().GetOp(),
+			Val: id,
+		}
+	}
+	if conds.CoinTypeID != nil {
+		id, err := uuid.Parse(conds.GetCoinTypeID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.DefaultConds.CoinTypeID = &cruder.Cond{
+			Op:  conds.GetCoinTypeID().GetOp(),
+			Val: id,
+		}
+	}
+	if conds.AppGoodID != nil {
+		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.DefaultConds.AppGoodID = &cruder.Cond{
+			Op:  conds.GetAppGoodID().GetOp(),
+			Val: id,
+		}
+	}
+	if conds.CoinTypeIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range conds.GetCoinTypeIDs().GetValue() {
+			_id, err := uuid.Parse(id)
+			if err != nil {
+				return err
+			}
+			ids = append(ids, _id)
+		}
+		h.DefaultConds.CoinTypeIDs = &cruder.Cond{
+			Op:  conds.GetCoinTypeIDs().GetOp(),
+			Val: ids,
+		}
+	}
+	return nil
+}
+
+func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
+	if conds.GoodID != nil {
+		id, err := uuid.Parse(conds.GetGoodID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.GoodBaseConds.EntID = &cruder.Cond{
+			Op:  conds.GetGoodID().GetOp(),
+			Val: id,
+		}
+	}
+	if conds.GoodIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range conds.GetGoodIDs().GetValue() {
+			_id, err := uuid.Parse(id)
+			if err != nil {
+				return err
+			}
+			ids = append(ids, _id)
+		}
+		h.GoodBaseConds.EntIDs = &cruder.Cond{
+			Op:  conds.GetGoodIDs().GetOp(),
+			Val: ids,
+		}
+	}
+	if conds.GoodType != nil {
+		h.GoodBaseConds.GoodType = &cruder.Cond{
+			Op:  conds.GetGoodType().GetOp(),
+			Val: types.GoodType(conds.GetGoodType().GetValue()),
+		}
+	}
+	return nil
+}
+
+func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
+
 }
 
 //nolint:gocyclo

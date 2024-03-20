@@ -20,16 +20,10 @@ const (
 	FieldDeletedAt = "deleted_at"
 	// FieldEntID holds the string denoting the ent_id field in the database.
 	FieldEntID = "ent_id"
-	// FieldAppID holds the string denoting the app_id field in the database.
-	FieldAppID = "app_id"
-	// FieldGoodID holds the string denoting the good_id field in the database.
-	FieldGoodID = "good_id"
 	// FieldAppGoodID holds the string denoting the app_good_id field in the database.
 	FieldAppGoodID = "app_good_id"
 	// FieldCoinTypeID holds the string denoting the coin_type_id field in the database.
 	FieldCoinTypeID = "coin_type_id"
-	// FieldGoodType holds the string denoting the good_type field in the database.
-	FieldGoodType = "good_type"
 	// Table holds the table name of the appdefaultgood in the database.
 	Table = "app_default_goods"
 )
@@ -41,11 +35,8 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldDeletedAt,
 	FieldEntID,
-	FieldAppID,
-	FieldGoodID,
 	FieldAppGoodID,
 	FieldCoinTypeID,
-	FieldGoodType,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -77,6 +68,4 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultEntID holds the default value on creation for the "ent_id" field.
 	DefaultEntID func() uuid.UUID
-	// DefaultGoodType holds the default value on creation for the "good_type" field.
-	DefaultGoodType string
 )

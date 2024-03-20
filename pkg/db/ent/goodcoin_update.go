@@ -158,6 +158,33 @@ func (gcu *GoodCoinUpdate) ClearMain() *GoodCoinUpdate {
 	return gcu
 }
 
+// SetIndex sets the "index" field.
+func (gcu *GoodCoinUpdate) SetIndex(i int32) *GoodCoinUpdate {
+	gcu.mutation.ResetIndex()
+	gcu.mutation.SetIndex(i)
+	return gcu
+}
+
+// SetNillableIndex sets the "index" field if the given value is not nil.
+func (gcu *GoodCoinUpdate) SetNillableIndex(i *int32) *GoodCoinUpdate {
+	if i != nil {
+		gcu.SetIndex(*i)
+	}
+	return gcu
+}
+
+// AddIndex adds i to the "index" field.
+func (gcu *GoodCoinUpdate) AddIndex(i int32) *GoodCoinUpdate {
+	gcu.mutation.AddIndex(i)
+	return gcu
+}
+
+// ClearIndex clears the value of the "index" field.
+func (gcu *GoodCoinUpdate) ClearIndex() *GoodCoinUpdate {
+	gcu.mutation.ClearIndex()
+	return gcu
+}
+
 // Mutation returns the GoodCoinMutation object of the builder.
 func (gcu *GoodCoinUpdate) Mutation() *GoodCoinMutation {
 	return gcu.mutation
@@ -344,6 +371,26 @@ func (gcu *GoodCoinUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: goodcoin.FieldMain,
 		})
 	}
+	if value, ok := gcu.mutation.Index(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt32,
+			Value:  value,
+			Column: goodcoin.FieldIndex,
+		})
+	}
+	if value, ok := gcu.mutation.AddedIndex(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt32,
+			Value:  value,
+			Column: goodcoin.FieldIndex,
+		})
+	}
+	if gcu.mutation.IndexCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt32,
+			Column: goodcoin.FieldIndex,
+		})
+	}
 	_spec.Modifiers = gcu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, gcu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -491,6 +538,33 @@ func (gcuo *GoodCoinUpdateOne) SetNillableMain(b *bool) *GoodCoinUpdateOne {
 // ClearMain clears the value of the "main" field.
 func (gcuo *GoodCoinUpdateOne) ClearMain() *GoodCoinUpdateOne {
 	gcuo.mutation.ClearMain()
+	return gcuo
+}
+
+// SetIndex sets the "index" field.
+func (gcuo *GoodCoinUpdateOne) SetIndex(i int32) *GoodCoinUpdateOne {
+	gcuo.mutation.ResetIndex()
+	gcuo.mutation.SetIndex(i)
+	return gcuo
+}
+
+// SetNillableIndex sets the "index" field if the given value is not nil.
+func (gcuo *GoodCoinUpdateOne) SetNillableIndex(i *int32) *GoodCoinUpdateOne {
+	if i != nil {
+		gcuo.SetIndex(*i)
+	}
+	return gcuo
+}
+
+// AddIndex adds i to the "index" field.
+func (gcuo *GoodCoinUpdateOne) AddIndex(i int32) *GoodCoinUpdateOne {
+	gcuo.mutation.AddIndex(i)
+	return gcuo
+}
+
+// ClearIndex clears the value of the "index" field.
+func (gcuo *GoodCoinUpdateOne) ClearIndex() *GoodCoinUpdateOne {
+	gcuo.mutation.ClearIndex()
 	return gcuo
 }
 
@@ -708,6 +782,26 @@ func (gcuo *GoodCoinUpdateOne) sqlSave(ctx context.Context) (_node *GoodCoin, er
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Column: goodcoin.FieldMain,
+		})
+	}
+	if value, ok := gcuo.mutation.Index(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt32,
+			Value:  value,
+			Column: goodcoin.FieldIndex,
+		})
+	}
+	if value, ok := gcuo.mutation.AddedIndex(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt32,
+			Value:  value,
+			Column: goodcoin.FieldIndex,
+		})
+	}
+	if gcuo.mutation.IndexCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt32,
+			Column: goodcoin.FieldIndex,
 		})
 	}
 	_spec.Modifiers = gcuo.modifiers

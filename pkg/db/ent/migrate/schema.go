@@ -16,11 +16,8 @@ var (
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
-		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "coin_type_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "good_type", Type: field.TypeString, Nullable: true, Default: "PowerRental"},
 	}
 	// AppDefaultGoodsTable holds the schema information for the "app_default_goods" table.
 	AppDefaultGoodsTable = &schema.Table{
@@ -688,6 +685,7 @@ var (
 		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "coin_type_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "main", Type: field.TypeBool, Nullable: true, Default: true},
+		{Name: "index", Type: field.TypeInt32, Nullable: true, Default: 0},
 	}
 	// GoodCoinsTable holds the schema information for the "good_coins" table.
 	GoodCoinsTable = &schema.Table{

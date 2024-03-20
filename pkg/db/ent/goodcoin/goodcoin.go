@@ -26,6 +26,8 @@ const (
 	FieldCoinTypeID = "coin_type_id"
 	// FieldMain holds the string denoting the main field in the database.
 	FieldMain = "main"
+	// FieldIndex holds the string denoting the index field in the database.
+	FieldIndex = "index"
 	// Table holds the table name of the goodcoin in the database.
 	Table = "good_coins"
 )
@@ -40,6 +42,7 @@ var Columns = []string{
 	FieldGoodID,
 	FieldCoinTypeID,
 	FieldMain,
+	FieldIndex,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -77,4 +80,6 @@ var (
 	DefaultCoinTypeID func() uuid.UUID
 	// DefaultMain holds the default value on creation for the "main" field.
 	DefaultMain bool
+	// DefaultIndex holds the default value on creation for the "index" field.
+	DefaultIndex int32
 )

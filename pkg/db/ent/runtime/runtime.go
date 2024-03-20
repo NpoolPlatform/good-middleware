@@ -86,10 +86,6 @@ func init() {
 	appdefaultgoodDescEntID := appdefaultgoodMixinFields1[1].Descriptor()
 	// appdefaultgood.DefaultEntID holds the default value on creation for the ent_id field.
 	appdefaultgood.DefaultEntID = appdefaultgoodDescEntID.Default.(func() uuid.UUID)
-	// appdefaultgoodDescGoodType is the schema descriptor for good_type field.
-	appdefaultgoodDescGoodType := appdefaultgoodFields[4].Descriptor()
-	// appdefaultgood.DefaultGoodType holds the default value on creation for the good_type field.
-	appdefaultgood.DefaultGoodType = appdefaultgoodDescGoodType.Default.(string)
 	appfeeMixin := schema.AppFee{}.Mixin()
 	appfee.Policy = privacy.NewPolicies(appfeeMixin[0], schema.AppFee{})
 	appfee.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -1460,6 +1456,10 @@ func init() {
 	goodcoinDescMain := goodcoinFields[2].Descriptor()
 	// goodcoin.DefaultMain holds the default value on creation for the main field.
 	goodcoin.DefaultMain = goodcoinDescMain.Default.(bool)
+	// goodcoinDescIndex is the schema descriptor for index field.
+	goodcoinDescIndex := goodcoinFields[3].Descriptor()
+	// goodcoin.DefaultIndex holds the default value on creation for the index field.
+	goodcoin.DefaultIndex = goodcoinDescIndex.Default.(int32)
 	goodrewardMixin := schema.GoodReward{}.Mixin()
 	goodreward.Policy = privacy.NewPolicies(goodrewardMixin[0], schema.GoodReward{})
 	goodreward.Hooks[0] = func(next ent.Mutator) ent.Mutator {
