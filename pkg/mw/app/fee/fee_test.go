@@ -9,7 +9,8 @@ import (
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/fee"
+	fee1 "github.com/NpoolPlatform/good-middleware/pkg/mw/fee"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/fee"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
@@ -30,13 +31,16 @@ func init() {
 
 var (
 	ret = npool.Fee{
-		EntID:          uuid.NewString(),
-		GoodID:         uuid.NewString(),
-		GoodType:       types.GoodType_TechniqueServiceFee,
-		Name:           uuid.NewString(),
-		SettlementType: types.GoodSettlementType_GoodSettledByProfitPercent,
-		UnitValue:      decimal.NewFromInt(20).String(),
-		DurationType:   types.GoodDurationType_GoodDurationByDay,
+		EntID:            uuid.NewString(),
+		AppID:            uuid.NewString(),
+		GoodID:           uuid.NewString(),
+		AppGoodID:        uuid.NewString(),
+		GoodType:         types.GoodType_TechniqueServiceFee,
+		Name:             uuid.NewString(),
+		SettlementType:   types.GoodSettlementType_GoodSettledByProfitPercent,
+		UnitValue:        decimal.NewFromInt(20).String(),
+		DurationType:     types.GoodDurationType_GoodDurationByDay,
+		MinOrderDuration: 20,
 	}
 )
 
@@ -44,19 +48,38 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.SettlementTypeStr = ret.SettlementType.String()
 	ret.DurationTypeStr = ret.DurationType.String()
-	return func(*testing.T) {}
+
+	feeEntID := uuid.NewString()
+	h1, err := fee1.NewHandler(
+		context.Background(),
+		fee1.WithEntID(&feeEntID, true),
+		fee1.WithGoodID(&ret.GoodID, true),
+		fee1.WithGoodType(&ret.GoodType, true),
+		fee1.WithName(&ret.Name, true),
+		fee1.WithSettlementType(&ret.SettlementType, true),
+		fee1.WithUnitValue(&ret.UnitValue, true),
+		fee1.WithDurationType(&ret.DurationType, true),
+	)
+	assert.Nil(t, err)
+
+	err = h1.CreateFee(context.Background())
+	assert.Nil(t, err)
+
+	return func(*testing.T) {
+		_ = h1.DeleteFee(context.Background())
+	}
 }
 
 func createFee(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithEntID(&ret.EntID, true),
+		WithAppID(&ret.AppID, true),
 		WithGoodID(&ret.GoodID, true),
-		WithGoodType(&ret.GoodType, true),
+		WithAppGoodID(&ret.AppGoodID, true),
 		WithName(&ret.Name, true),
-		WithSettlementType(&ret.SettlementType, true),
 		WithUnitValue(&ret.UnitValue, true),
-		WithDurationType(&ret.DurationType, true),
+		WithMinOrderDuration(&ret.MinOrderDuration, true),
 	)
 	assert.Nil(t, err)
 
@@ -76,12 +99,9 @@ func updateFee(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
-		WithGoodID(&ret.GoodID, true),
-		WithGoodType(&ret.GoodType, true),
 		WithName(&ret.Name, true),
-		WithSettlementType(&ret.SettlementType, true),
 		WithUnitValue(&ret.UnitValue, true),
-		WithDurationType(&ret.DurationType, true),
+		WithMinOrderDuration(&ret.MinOrderDuration, true),
 	)
 	assert.Nil(t, err)
 
@@ -100,7 +120,7 @@ func getFee(t *testing.T) {
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithEntID(&ret.EntID, true),
-		WithGoodID(&ret.GoodID, true),
+		WithAppGoodID(&ret.AppGoodID, true),
 	)
 	assert.Nil(t, err)
 
@@ -112,9 +132,9 @@ func getFee(t *testing.T) {
 
 func getFees(t *testing.T) {
 	conds := &npool.Conds{
-		ID:     &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
-		EntID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
-		GoodID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
+		ID:        &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
+		AppGoodID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
 	}
 
 	handler, err := NewHandler(
@@ -137,14 +157,17 @@ func deleteFee(t *testing.T) {
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithEntID(&ret.EntID, true),
-		WithGoodID(&ret.GoodID, true),
+		WithAppGoodID(&ret.AppGoodID, true),
 	)
 	assert.Nil(t, err)
 
-	err = handler.DeleteFee(context.Background())
-	assert.Nil(t, err)
+	info, err := handler.DeleteFee(context.Background())
+	if assert.Nil(t, err) {
+		ret.UpdatedAt = info.UpdatedAt
+		assert.Equal(t, info, &ret)
+	}
 
-	info, err := handler.GetFee(context.Background())
+	info, err = handler.GetFee(context.Background())
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }
