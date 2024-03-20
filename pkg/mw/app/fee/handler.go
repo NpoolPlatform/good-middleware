@@ -31,8 +31,14 @@ type Handler struct {
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
+	valTrue := true
 	handler := &Handler{
-		AppGoodBaseReq:   &appgoodbasecrud.Req{},
+		AppGoodBaseReq: &appgoodbasecrud.Req{
+			Purchasable:       &valTrue,
+			EnableProductPage: &valTrue,
+			Online:            &valTrue,
+			Visible:           &valTrue,
+		},
 		AppFeeConds:      &appfeecrud.Conds{},
 		FeeConds:         &feecrud.Conds{},
 		GoodBaseConds:    &goodbasecrud.Conds{},

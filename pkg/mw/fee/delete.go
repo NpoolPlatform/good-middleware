@@ -8,7 +8,6 @@ import (
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/fee"
 )
 
 type deleteHandler struct {
@@ -40,7 +39,7 @@ func (h *deleteHandler) deleteFee(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *Handler) DeleteFee(ctx context.Context) (*npool.Fee, error) {
+func (h *Handler) DeleteFee(ctx context.Context) error {
 	handler := &deleteHandler{
 		feeGoodQueryHandler: &feeGoodQueryHandler{
 			Handler: h,
@@ -49,18 +48,13 @@ func (h *Handler) DeleteFee(ctx context.Context) (*npool.Fee, error) {
 	}
 
 	if err := handler.getFeeGood(ctx); err != nil {
-		return nil, err
+		return err
 	}
 	if handler.fee == nil {
-		return nil, nil
+		return nil
 	}
 
-	info, err := handler.GetFee(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return info, db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.deleteGoodBase(_ctx, tx); err != nil {
 			return err
 		}
