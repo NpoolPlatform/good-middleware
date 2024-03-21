@@ -3,88 +3,76 @@ package appdefaultgood
 import (
 	"context"
 	"fmt"
+	"time"
 
-	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
-	appdefaultgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/default"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/default"
-
-	"github.com/google/uuid"
 )
 
 type createHandler struct {
-	*queryAppGoodHandler
+	*Handler
+	sql string
+}
+
+func (h *createHandler) constructSql() {
+	now := uint32(time.Now().Unix())
+	comma := ""
+	_sql := "insert into app_default_goods ("
+	if h.EntID != nil {
+		_sql += "ent_id"
+		comma = ", "
+	}
+	_sql += comma + "app_good_id"
+	comma = ", "
+	_sql += comma + "coin_type_id"
+	_sql += comma + "created_at"
+	_sql += comma + "updated_at"
+	_sql += comma + "deleted_at"
+	_sql += ")"
+
+	comma = ""
+	_sql += " select * from ( select "
+	if h.EntID != nil {
+		_sql += fmt.Sprintf("'%v' as ent_id", *h.EntID)
+		comma = ", "
+	}
+	_sql += fmt.Sprintf("%v'%v' as app_good_id", comma, *h.AppGoodID)
+	comma = ", "
+	_sql += fmt.Sprintf("%v'%v' as coin_type_id", comma, *h.CoinTypeID)
+	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
+	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
+	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
+	_sql += ") as tmp "
+	_sql += "where not exists ("
+	_sql += "select 1 from app_default_goods as adg "
+	_sql += fmt.Sprintf("where adg.app_good_id = '%v' and adg.coin_type_id='%v'", *h.AppGoodID, *h.CoinTypeID)
+	_sql += ") and exists ("
+	_sql += "select 1 from app_good_bases as agb "
+	_sql += "left join good_bases as gb on agb.good_id = gb.ent_id "
+	_sql += fmt.Sprintf("left join good_coins as gc on agb.good_id = gc.good_id and gc.coin_type_id = '%v'", *h.CoinTypeID)
+	_sql += ")"
+
+	h.sql = _sql
 }
 
 func (h *createHandler) createDefault(ctx context.Context, tx *ent.Tx) error {
-	if _, err := appdefaultgoodcrud.CreateSet(
-		tx.AppDefaultGood.Create(),
-		&appdefaultgoodcrud.Req{
-			EntID:      h.EntID,
-			AppID:      h.AppID,
-			GoodID:     h.GoodID,
-			AppGoodID:  h.AppGoodID,
-			CoinTypeID: h.CoinTypeID,
-			GoodType:   h.GoodType,
-		},
-	).Save(ctx); err != nil {
+	rc, err := tx.ExecContext(ctx, h.sql)
+	if err != nil {
 		return err
+	}
+	n, err := rc.RowsAffected()
+	if err != nil || n != 1 {
+		return fmt.Errorf("fail create appdefaultgood: %v", err)
 	}
 	return nil
 }
 
-func (h *Handler) CreateDefault(ctx context.Context) (*npool.Default, error) {
-	handler := &createHandler{
-		queryAppGoodHandler: &queryAppGoodHandler{
-			Handler: h,
-		},
-	}
-
-	if err := handler.getAppGood(ctx); err != nil {
-		return nil, err
-	}
-
-	key := fmt.Sprintf("%v:%v:%v", basetypes.Prefix_PrefixCreateAppDefaultGood, *h.AppID, *h.CoinTypeID)
-	if err := redis2.TryLock(key, 0); err != nil {
-		return nil, err
-	}
-	defer func() {
-		_ = redis2.Unlock(key)
-	}()
-
-	h.Conds = &appdefaultgoodcrud.Conds{
-		AppID:      &cruder.Cond{Op: cruder.EQ, Val: *h.AppID},
-		CoinTypeID: &cruder.Cond{Op: cruder.EQ, Val: *h.CoinTypeID},
-	}
-	exist, err := h.ExistDefaultConds(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if exist {
-		return nil, fmt.Errorf("already exists")
-	}
-
-	id := uuid.New()
-	if h.EntID == nil {
-		h.EntID = &id
-	}
-
+func (h *Handler) CreateDefault(ctx context.Context) error {
 	handler := &createHandler{
 		Handler: h,
 	}
-
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.createDefault(_ctx, tx); err != nil {
-			return err
-		}
-		return nil
+	handler.constructSql()
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		return handler.createDefault(_ctx, tx)
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetDefault(ctx)
 }

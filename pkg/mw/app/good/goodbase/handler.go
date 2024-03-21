@@ -61,6 +61,23 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
+func WithAppID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid appid")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
+		if err != nil {
+			return err
+		}
+		h.AppID = &_id
+		return nil
+	}
+}
+
 func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		handler, err := goodbase1.NewHandler(
