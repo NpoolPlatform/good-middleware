@@ -31,6 +31,15 @@ func (h *Handler) DeleteGoodBase(ctx context.Context) error {
 		Handler: h,
 		now:     uint32(time.Now().Unix()),
 	}
+	info, err := h.GetGoodBase(ctx)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		return nil
+	}
+
+	h.ID = func() *uint32 { id := info.ID(); return &id }()
 	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		return handler.deleteGoodBase(_ctx, cli)
 	})

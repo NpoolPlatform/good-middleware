@@ -58,7 +58,7 @@ func setup(t *testing.T) func(*testing.T) {
 }
 
 func createFee(t *testing.T) {
-	handler, err := NewHandler(
+	h1, err := NewHandler(
 		context.Background(),
 		WithEntID(&ret.EntID, true),
 		WithGoodID(&ret.GoodID, true),
@@ -66,8 +66,18 @@ func createFee(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	err = handler.CreateGoodCoin(context.Background())
+	err = h1.CreateGoodCoin(context.Background())
 	assert.Nil(t, err)
+
+	h2, err := NewHandler(
+		context.Background(),
+		WithGoodID(&ret.GoodID, true),
+		WithCoinTypeID(&ret.CoinTypeID, true),
+	)
+	assert.Nil(t, err)
+
+	err = h2.CreateGoodCoin(context.Background())
+	assert.NotNil(t, err)
 }
 
 func TestFee(t *testing.T) {
