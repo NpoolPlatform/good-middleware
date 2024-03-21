@@ -39,6 +39,7 @@ var ret = npool.Default{
 	AppGoodName: uuid.NewString(),
 	CoinTypeID:  uuid.NewString(),
 }
+var appGoodID2 = uuid.NewString()
 
 func setup(t *testing.T) func(*testing.T) {
 	goodType := types.GoodType_PowerRental
@@ -78,7 +79,20 @@ func setup(t *testing.T) func(*testing.T) {
 	err = h3.CreateGoodCoin(context.Background())
 	assert.Nil(t, err)
 
+	h4, err := appgoodbase1.NewHandler(
+		context.Background(),
+		appgoodbase1.WithEntID(&appGoodID2, true),
+		appgoodbase1.WithAppID(&ret.AppID, true),
+		appgoodbase1.WithGoodID(&ret.GoodID, true),
+		appgoodbase1.WithName(&ret.AppGoodName, true),
+	)
+	assert.Nil(t, err)
+
+	err = h4.CreateGoodBase(context.Background())
+	assert.Nil(t, err)
+
 	return func(*testing.T) {
+		_ = h4.DeleteGoodBase(context.Background())
 		_ = h3.DeleteGoodCoin(context.Background())
 		_ = h2.DeleteGoodBase(context.Background())
 		_ = h1.DeleteGoodBase(context.Background())
@@ -86,7 +100,7 @@ func setup(t *testing.T) func(*testing.T) {
 }
 
 func createDefault(t *testing.T) {
-	handler, err := NewHandler(
+	h1, err := NewHandler(
 		context.Background(),
 		WithEntID(&ret.EntID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
@@ -94,13 +108,43 @@ func createDefault(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	err = handler.CreateDefault(context.Background())
+	err = h1.CreateDefault(context.Background())
 	if assert.Nil(t, err) {
-		info, err := handler.GetDefault(context.Background())
+		info, err := h1.GetDefault(context.Background())
 		if assert.Nil(t, err) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			ret.ID = info.ID
+			assert.Equal(t, info, &ret)
+		}
+	}
+
+	h2, err := NewHandler(
+		context.Background(),
+		WithAppGoodID(&ret.AppGoodID, true),
+		WithCoinTypeID(&ret.CoinTypeID, true),
+	)
+	assert.Nil(t, err)
+
+	err = h2.CreateDefault(context.Background())
+	assert.NotNil(t, err)
+}
+
+func updateDefault(t *testing.T) {
+	handler, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
+		WithAppGoodID(&appGoodID2, true),
+	)
+	assert.Nil(t, err)
+
+	err = handler.UpdateDefault(context.Background())
+	if assert.Nil(t, err) {
+		info, err := handler.GetDefault(context.Background())
+		if assert.Nil(t, err) {
+			ret.UpdatedAt = info.UpdatedAt
+			ret.AppGoodID = appGoodID2
 			assert.Equal(t, info, &ret)
 		}
 	}
@@ -115,4 +159,5 @@ func TestDefault(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createDefault", createDefault)
+	t.Run("updateDefault", updateDefault)
 }
