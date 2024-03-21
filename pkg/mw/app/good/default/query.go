@@ -123,7 +123,7 @@ func (h *Handler) GetDefault(ctx context.Context) (*npool.Default, error) {
 		return nil, err
 	}
 	if len(handler.infos) == 0 {
-		return nil, nil
+		return nil, fmt.Errorf("invalid appdefaultgood")
 	}
 	if len(handler.infos) > 1 {
 		return nil, fmt.Errorf("too many records")

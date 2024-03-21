@@ -62,7 +62,7 @@ func (h *Handler) UpdateDefault(ctx context.Context) error {
 	handler.coinTypeID = info.CoinTypeID
 	handler.constructSql()
 
-	return db.WithDebugTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		return handler.updateDefault(_ctx, tx)
 	})
 }

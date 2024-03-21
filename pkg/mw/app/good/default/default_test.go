@@ -10,9 +10,9 @@ import (
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	goodcoin1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/coin"
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
-	// "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
-	// basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
+	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/default"
 
 	"github.com/google/uuid"
@@ -150,6 +150,59 @@ func updateDefault(t *testing.T) {
 	}
 }
 
+func getDefault(t *testing.T) {
+	handler, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
+	)
+	if assert.Nil(t, err) {
+		info, err := handler.GetDefault(context.Background())
+		if assert.Nil(t, err) {
+			assert.Equal(t, &ret, info)
+		}
+	}
+}
+
+func getDefaults(t *testing.T) {
+	handler, err := NewHandler(
+		context.Background(),
+		WithConds(&npool.Conds{
+			ID:      &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+			EntID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
+			AppID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+			GoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
+			GoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
+		}),
+		WithOffset(0),
+		WithLimit(0),
+	)
+	if assert.Nil(t, err) {
+		infos, total, err := handler.GetDefaults(context.Background())
+		if assert.Nil(t, err) {
+			if assert.Equal(t, uint32(1), total) {
+				assert.Equal(t, &ret, infos[0])
+			}
+		}
+	}
+}
+
+func deleteDefault(t *testing.T) {
+	handler, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
+	)
+	if assert.Nil(t, err) {
+		err = handler.DeleteDefault(context.Background())
+		assert.Nil(t, err)
+
+		info, err := handler.GetDefault(context.Background())
+		assert.NotNil(t, err)
+		assert.Nil(t, info)
+	}
+}
+
 func TestDefault(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
@@ -160,4 +213,7 @@ func TestDefault(t *testing.T) {
 
 	t.Run("createDefault", createDefault)
 	t.Run("updateDefault", updateDefault)
+	t.Run("getDefault", getDefault)
+	t.Run("getDefaults", getDefaults)
+	t.Run("deleteDefault", deleteDefault)
 }

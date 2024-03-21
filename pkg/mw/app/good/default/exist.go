@@ -37,7 +37,7 @@ func (h *Handler) ExistDefaultConds(ctx context.Context) (bool, error) {
 	exist := false
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := appdefaultgoodcrud.SetQueryConds(cli.AppDefaultGood.Query(), h.Conds)
+		stm, err := appdefaultgoodcrud.SetQueryConds(cli.AppDefaultGood.Query(), h.DefaultConds)
 		if err != nil {
 			return err
 		}
