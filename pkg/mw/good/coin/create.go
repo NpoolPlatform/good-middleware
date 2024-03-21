@@ -44,7 +44,8 @@ func (h *createHandler) constructSql() {
 	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
 	_sql += ") as tmp "
 	_sql += "where not exists ("
-	_sql += fmt.Sprintf("select 1 from good_coins where good_id='%v' and coin_type_id='%v'", *h.GoodID, *h.CoinTypeID)
+	_sql += "select 1 from good_coins "
+	_sql += fmt.Sprintf("where good_id='%v' and coin_type_id='%v'", *h.GoodID, *h.CoinTypeID)
 	_sql += ") limit 1"
 	h.sql = _sql
 }
