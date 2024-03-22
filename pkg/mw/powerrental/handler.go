@@ -87,6 +87,7 @@ func WithGoodID(s *string, must bool) func(context.Context, *Handler) error {
 			return err
 		}
 		h.GoodID = &id
+		h.GoodBaseReq.EntID = &id
 		return nil
 	}
 }
