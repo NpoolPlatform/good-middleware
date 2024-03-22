@@ -72,7 +72,7 @@ func WithDeviceTypeID(id *string, must bool) func(context.Context, *Handler) err
 		if err != nil {
 			return err
 		}
-		exist, err := handler.ExistGoodBase(ctx)
+		exist, err := handler.ExistDeviceType(ctx)
 		if err != nil {
 			return err
 		}

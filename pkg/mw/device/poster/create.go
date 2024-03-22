@@ -3,7 +3,7 @@ package poster
 import (
 	"context"
 
-	appgoodpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/poster"
+	devicepostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device/poster"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 )
@@ -13,8 +13,8 @@ type createHandler struct {
 }
 
 func (h *createHandler) createPoster(ctx context.Context, cli *ent.Client) error {
-	if _, err := appgoodpostercrud.CreateSet(
-		cli.AppGoodPoster.Create(),
+	if _, err := devicepostercrud.CreateSet(
+		cli.DevicePoster.Create(),
 		&h.Req,
 	).Save(ctx); err != nil {
 		return err

@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	appgoodpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/poster"
+	devicepostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device/poster"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 )
@@ -15,9 +15,9 @@ type deleteHandler struct {
 }
 
 func (h *deleteHandler) deletePoster(ctx context.Context, cli *ent.Client) error {
-	if _, err := appgoodpostercrud.UpdateSet(
-		cli.AppGoodPoster.UpdateOneID(*h.ID),
-		&appgoodpostercrud.Req{
+	if _, err := devicepostercrud.UpdateSet(
+		cli.DevicePoster.UpdateOneID(*h.ID),
+		&devicepostercrud.Req{
 			DeletedAt: &h.now,
 		},
 	).Save(ctx); err != nil {

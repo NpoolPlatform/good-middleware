@@ -7,12 +7,10 @@ import (
 	"strconv"
 	"testing"
 
-	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
-	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
+	devicetype1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/poster"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device/poster"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -30,44 +28,27 @@ func init() {
 }
 
 var ret = npool.Poster{
-	EntID:       uuid.NewString(),
-	AppID:       uuid.NewString(),
-	GoodID:      uuid.NewString(),
-	GoodName:    uuid.NewString(),
-	AppGoodID:   uuid.NewString(),
-	AppGoodName: uuid.NewString(),
-	Poster:      uuid.NewString(),
+	EntID:        uuid.NewString(),
+	DeviceTypeID: uuid.NewString(),
+	DeviceType:   uuid.NewString(),
+	Manufacturer: uuid.NewString(),
+	Poster:       uuid.NewString(),
 }
 
 func setup(t *testing.T) func(*testing.T) {
-	goodType := types.GoodType_PowerRental
-
-	h1, err := goodbase1.NewHandler(
+	h1, err := devicetype1.NewHandler(
 		context.Background(),
-		goodbase1.WithEntID(&ret.GoodID, true),
-		goodbase1.WithGoodType(&goodType, true),
-		goodbase1.WithName(&ret.GoodName, true),
+		devicetype1.WithEntID(&ret.DeviceTypeID, true),
+		devicetype1.WithType(&ret.DeviceType, true),
+		devicetype1.WithManufacturer(&ret.Manufacturer, true),
 	)
 	assert.Nil(t, err)
 
-	err = h1.CreateGoodBase(context.Background())
-	assert.Nil(t, err)
-
-	h2, err := appgoodbase1.NewHandler(
-		context.Background(),
-		appgoodbase1.WithEntID(&ret.AppGoodID, true),
-		appgoodbase1.WithAppID(&ret.AppID, true),
-		appgoodbase1.WithGoodID(&ret.GoodID, true),
-		appgoodbase1.WithName(&ret.AppGoodName, true),
-	)
-	assert.Nil(t, err)
-
-	err = h2.CreateGoodBase(context.Background())
+	err = h1.CreateDeviceType(context.Background())
 	assert.Nil(t, err)
 
 	return func(*testing.T) {
-		_ = h2.DeleteGoodBase(context.Background())
-		_ = h1.DeleteGoodBase(context.Background())
+		_ = h1.DeleteDeviceType(context.Background())
 	}
 }
 
@@ -75,7 +56,7 @@ func createPoster(t *testing.T) {
 	h1, err := NewHandler(
 		context.Background(),
 		WithEntID(&ret.EntID, true),
-		WithAppGoodID(&ret.AppGoodID, true),
+		WithDeviceTypeID(&ret.DeviceTypeID, true),
 		WithPoster(&ret.Poster, true),
 	)
 	assert.Nil(t, err)
@@ -93,7 +74,7 @@ func createPoster(t *testing.T) {
 
 	h2, err := NewHandler(
 		context.Background(),
-		WithAppGoodID(&ret.AppGoodID, true),
+		WithDeviceTypeID(&ret.DeviceTypeID, true),
 		WithPoster(&ret.Poster, true),
 	)
 	assert.Nil(t, err)
@@ -139,13 +120,10 @@ func getPosters(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithConds(&npool.Conds{
-			ID:         &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
-			EntID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
-			AppID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
-			GoodID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-			GoodIDs:    &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
-			AppGoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
-			AppGoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppGoodID}},
+			ID:            &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+			EntID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
+			DeviceTypeID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.DeviceTypeID},
+			DeviceTypeIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.DeviceTypeID}},
 		}),
 		WithOffset(0),
 		WithLimit(0),

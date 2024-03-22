@@ -3,7 +3,7 @@ package poster
 import (
 	"context"
 
-	appgoodpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/poster"
+	devicepostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device/poster"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 )
@@ -13,8 +13,8 @@ type updateHandler struct {
 }
 
 func (h *updateHandler) updatePoster(ctx context.Context, cli *ent.Client) error {
-	if _, err := appgoodpostercrud.UpdateSet(
-		cli.AppGoodPoster.UpdateOneID(*h.ID),
+	if _, err := devicepostercrud.UpdateSet(
+		cli.DevicePoster.UpdateOneID(*h.ID),
 		&h.Req,
 	).Save(ctx); err != nil {
 		return err
