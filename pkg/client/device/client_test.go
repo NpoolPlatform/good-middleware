@@ -10,7 +10,7 @@ import (
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/config"
 
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"

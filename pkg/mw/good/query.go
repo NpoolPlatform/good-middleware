@@ -10,7 +10,7 @@ import (
 	goodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entdeviceinfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
+	entdevice "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	entextrainfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	entgoodreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
@@ -176,21 +176,21 @@ func (h *queryHandler) queryJoinStock(s *sql.Selector) {
 }
 
 func (h *queryHandler) queryJoinDeviceInfo(s *sql.Selector) {
-	t := sql.Table(entdeviceinfo.Table)
+	t := sql.Table(entdevice.Table)
 	s.LeftJoin(t).
 		On(
 			s.C(entgood.FieldDeviceInfoID),
-			t.C(entdeviceinfo.FieldEntID),
+			t.C(entdevice.FieldEntID),
 		).
 		OnP(
-			sql.EQ(t.C(entdeviceinfo.FieldDeletedAt), 0),
+			sql.EQ(t.C(entdevice.FieldDeletedAt), 0),
 		).
 		AppendSelect(
-			sql.As(t.C(entdeviceinfo.FieldType), "device_type"),
-			sql.As(t.C(entdeviceinfo.FieldManufacturer), "device_manufacturer"),
-			sql.As(t.C(entdeviceinfo.FieldPowerConsumption), "device_power_consumption"),
-			sql.As(t.C(entdeviceinfo.FieldShipmentAt), "device_shipment_at"),
-			sql.As(t.C(entdeviceinfo.FieldPosters), "device_posters"),
+			sql.As(t.C(entdevice.FieldType), "device_type"),
+			sql.As(t.C(entdevice.FieldManufacturer), "device_manufacturer"),
+			sql.As(t.C(entdevice.FieldPowerConsumption), "device_power_consumption"),
+			sql.As(t.C(entdevice.FieldShipmentAt), "device_shipment_at"),
+			sql.As(t.C(entdevice.FieldPosters), "device_posters"),
 		)
 }
 

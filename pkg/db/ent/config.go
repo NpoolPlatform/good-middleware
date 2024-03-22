@@ -44,6 +44,7 @@ type hooks struct {
 	Comment              []ent.Hook
 	DelegatedStaking     []ent.Hook
 	DeviceInfo           []ent.Hook
+	DevicePoster         []ent.Hook
 	ExtraInfo            []ent.Hook
 	FbmCrowdFunding      []ent.Hook
 	Fee                  []ent.Hook

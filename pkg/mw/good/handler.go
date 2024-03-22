@@ -7,7 +7,7 @@ import (
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	goodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good"
-	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/mw/deviceinfo"
+	device1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -80,13 +80,13 @@ func WithDeviceInfoID(id *string, must bool) func(context.Context, *Handler) err
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid deviceinfoid")
+				return fmt.Errorf("invalid deviceid")
 			}
 			return nil
 		}
-		handler, err := deviceinfo1.NewHandler(
+		handler, err := device1.NewHandler(
 			ctx,
-			deviceinfo1.WithEntID(id, true),
+			device1.WithEntID(id, true),
 		)
 		if err != nil {
 			return err
@@ -96,7 +96,7 @@ func WithDeviceInfoID(id *string, must bool) func(context.Context, *Handler) err
 			return err
 		}
 		if !exist {
-			return fmt.Errorf("invalid deviceinfo")
+			return fmt.Errorf("invalid device")
 		}
 		h.DeviceInfoID = handler.EntID
 		return nil

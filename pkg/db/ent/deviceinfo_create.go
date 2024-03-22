@@ -134,12 +134,6 @@ func (dic *DeviceInfoCreate) SetNillableShipmentAt(u *uint32) *DeviceInfoCreate 
 	return dic
 }
 
-// SetPosters sets the "posters" field.
-func (dic *DeviceInfoCreate) SetPosters(s []string) *DeviceInfoCreate {
-	dic.mutation.SetPosters(s)
-	return dic
-}
-
 // SetID sets the "id" field.
 func (dic *DeviceInfoCreate) SetID(u uint32) *DeviceInfoCreate {
 	dic.mutation.SetID(u)
@@ -269,10 +263,6 @@ func (dic *DeviceInfoCreate) defaults() error {
 		v := deviceinfo.DefaultShipmentAt
 		dic.mutation.SetShipmentAt(v)
 	}
-	if _, ok := dic.mutation.Posters(); !ok {
-		v := deviceinfo.DefaultPosters
-		dic.mutation.SetPosters(v)
-	}
 	return nil
 }
 
@@ -397,14 +387,6 @@ func (dic *DeviceInfoCreate) createSpec() (*DeviceInfo, *sqlgraph.CreateSpec) {
 			Column: deviceinfo.FieldShipmentAt,
 		})
 		_node.ShipmentAt = value
-	}
-	if value, ok := dic.mutation.Posters(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: deviceinfo.FieldPosters,
-		})
-		_node.Posters = value
 	}
 	return _node, _spec
 }
@@ -607,24 +589,6 @@ func (u *DeviceInfoUpsert) AddShipmentAt(v uint32) *DeviceInfoUpsert {
 // ClearShipmentAt clears the value of the "shipment_at" field.
 func (u *DeviceInfoUpsert) ClearShipmentAt() *DeviceInfoUpsert {
 	u.SetNull(deviceinfo.FieldShipmentAt)
-	return u
-}
-
-// SetPosters sets the "posters" field.
-func (u *DeviceInfoUpsert) SetPosters(v []string) *DeviceInfoUpsert {
-	u.Set(deviceinfo.FieldPosters, v)
-	return u
-}
-
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *DeviceInfoUpsert) UpdatePosters() *DeviceInfoUpsert {
-	u.SetExcluded(deviceinfo.FieldPosters)
-	return u
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (u *DeviceInfoUpsert) ClearPosters() *DeviceInfoUpsert {
-	u.SetNull(deviceinfo.FieldPosters)
 	return u
 }
 
@@ -850,27 +814,6 @@ func (u *DeviceInfoUpsertOne) UpdateShipmentAt() *DeviceInfoUpsertOne {
 func (u *DeviceInfoUpsertOne) ClearShipmentAt() *DeviceInfoUpsertOne {
 	return u.Update(func(s *DeviceInfoUpsert) {
 		s.ClearShipmentAt()
-	})
-}
-
-// SetPosters sets the "posters" field.
-func (u *DeviceInfoUpsertOne) SetPosters(v []string) *DeviceInfoUpsertOne {
-	return u.Update(func(s *DeviceInfoUpsert) {
-		s.SetPosters(v)
-	})
-}
-
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *DeviceInfoUpsertOne) UpdatePosters() *DeviceInfoUpsertOne {
-	return u.Update(func(s *DeviceInfoUpsert) {
-		s.UpdatePosters()
-	})
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (u *DeviceInfoUpsertOne) ClearPosters() *DeviceInfoUpsertOne {
-	return u.Update(func(s *DeviceInfoUpsert) {
-		s.ClearPosters()
 	})
 }
 
@@ -1261,27 +1204,6 @@ func (u *DeviceInfoUpsertBulk) UpdateShipmentAt() *DeviceInfoUpsertBulk {
 func (u *DeviceInfoUpsertBulk) ClearShipmentAt() *DeviceInfoUpsertBulk {
 	return u.Update(func(s *DeviceInfoUpsert) {
 		s.ClearShipmentAt()
-	})
-}
-
-// SetPosters sets the "posters" field.
-func (u *DeviceInfoUpsertBulk) SetPosters(v []string) *DeviceInfoUpsertBulk {
-	return u.Update(func(s *DeviceInfoUpsert) {
-		s.SetPosters(v)
-	})
-}
-
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *DeviceInfoUpsertBulk) UpdatePosters() *DeviceInfoUpsertBulk {
-	return u.Update(func(s *DeviceInfoUpsert) {
-		s.UpdatePosters()
-	})
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (u *DeviceInfoUpsertBulk) ClearPosters() *DeviceInfoUpsertBulk {
-	return u.Update(func(s *DeviceInfoUpsert) {
-		s.ClearPosters()
 	})
 }
 

@@ -217,6 +217,19 @@ func (f DeviceInfoFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, 
 	return f(ctx, mv)
 }
 
+// The DevicePosterFunc type is an adapter to allow the use of ordinary
+// function as DevicePoster mutator.
+type DevicePosterFunc func(context.Context, *ent.DevicePosterMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f DevicePosterFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.DevicePosterMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DevicePosterMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The ExtraInfoFunc type is an adapter to allow the use of ordinary
 // function as ExtraInfo mutator.
 type ExtraInfoFunc func(context.Context, *ent.ExtraInfoMutation) (ent.Value, error)

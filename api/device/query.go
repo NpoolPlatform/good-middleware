@@ -1,4 +1,4 @@
-package deviceinfo
+package device
 
 import (
 	"context"
@@ -8,14 +8,14 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/mw/deviceinfo"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	device1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 )
 
 func (s *Server) GetDeviceInfo(ctx context.Context, in *npool.GetDeviceInfoRequest) (*npool.GetDeviceInfoResponse, error) {
-	handler, err := deviceinfo1.NewHandler(
+	handler, err := device1.NewHandler(
 		ctx,
-		deviceinfo1.WithEntID(&in.EntID, true),
+		device1.WithEntID(&in.EntID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
@@ -42,11 +42,11 @@ func (s *Server) GetDeviceInfo(ctx context.Context, in *npool.GetDeviceInfoReque
 }
 
 func (s *Server) GetDeviceInfos(ctx context.Context, in *npool.GetDeviceInfosRequest) (*npool.GetDeviceInfosResponse, error) {
-	handler, err := deviceinfo1.NewHandler(
+	handler, err := device1.NewHandler(
 		ctx,
-		deviceinfo1.WithConds(in.GetConds()),
-		deviceinfo1.WithOffset(in.GetOffset()),
-		deviceinfo1.WithLimit(in.GetLimit()),
+		device1.WithConds(in.GetConds()),
+		device1.WithOffset(in.GetOffset()),
+		device1.WithLimit(in.GetLimit()),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

@@ -1,18 +1,18 @@
-package deviceinfo
+package device
 
 import (
-	"github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	"github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 )
 
 type Server struct {
-	deviceinfo.UnimplementedMiddlewareServer
+	device.UnimplementedMiddlewareServer
 }
 
 func Register(server grpc.ServiceRegistrar) {
-	deviceinfo.RegisterMiddlewareServer(server, &Server{})
+	device.RegisterMiddlewareServer(server, &Server{})
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {

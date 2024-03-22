@@ -493,7 +493,6 @@ var (
 		{Name: "manufacturer", Type: field.TypeString, Nullable: true, Size: 64, Default: ""},
 		{Name: "power_consumption", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "shipment_at", Type: field.TypeUint32, Nullable: true, Default: 0},
-		{Name: "posters", Type: field.TypeJSON, Nullable: true},
 	}
 	// DeviceInfosTable holds the schema information for the "device_infos" table.
 	DeviceInfosTable = &schema.Table{
@@ -505,6 +504,35 @@ var (
 				Name:    "deviceinfo_ent_id",
 				Unique:  true,
 				Columns: []*schema.Column{DeviceInfosColumns[4]},
+			},
+		},
+	}
+	// DevicePostersColumns holds the columns for the "device_posters" table.
+	DevicePostersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "device_type_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "poster", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "index", Type: field.TypeUint8, Nullable: true, Default: 0},
+	}
+	// DevicePostersTable holds the schema information for the "device_posters" table.
+	DevicePostersTable = &schema.Table{
+		Name:       "device_posters",
+		Columns:    DevicePostersColumns,
+		PrimaryKey: []*schema.Column{DevicePostersColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "deviceposter_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{DevicePostersColumns[4]},
+			},
+			{
+				Name:    "deviceposter_device_type_id",
+				Unique:  false,
+				Columns: []*schema.Column{DevicePostersColumns[5]},
 			},
 		},
 	}
@@ -1086,6 +1114,7 @@ var (
 		CommentsTable,
 		DelegatedStakingsTable,
 		DeviceInfosTable,
+		DevicePostersTable,
 		ExtraInfosTable,
 		FbmCrowdFundingsTable,
 		FeesTable,

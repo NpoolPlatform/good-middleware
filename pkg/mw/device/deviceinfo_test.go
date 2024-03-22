@@ -1,4 +1,4 @@
-package deviceinfo
+package device
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 

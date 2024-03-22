@@ -1,16 +1,16 @@
 //nolint:dupl
-package deviceinfo
+package device
 
 import (
 	"context"
 
-	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/mw/deviceinfo"
+	device1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 )
 
 func (s *Server) CreateDeviceInfo(ctx context.Context, in *npool.CreateDeviceInfoRequest) (*npool.CreateDeviceInfoResponse, error) {
@@ -22,14 +22,14 @@ func (s *Server) CreateDeviceInfo(ctx context.Context, in *npool.CreateDeviceInf
 		)
 		return &npool.CreateDeviceInfoResponse{}, status.Error(codes.Aborted, "invalid argument")
 	}
-	handler, err := deviceinfo1.NewHandler(
+	handler, err := device1.NewHandler(
 		ctx,
-		deviceinfo1.WithEntID(req.EntID, false),
-		deviceinfo1.WithType(req.Type, true),
-		deviceinfo1.WithManufacturer(req.Manufacturer, true),
-		deviceinfo1.WithPowerConsumption(req.PowerConsumption, true),
-		deviceinfo1.WithShipmentAt(req.ShipmentAt, true),
-		deviceinfo1.WithPosters(req.Posters, true),
+		device1.WithEntID(req.EntID, false),
+		device1.WithType(req.Type, true),
+		device1.WithManufacturer(req.Manufacturer, true),
+		device1.WithPowerConsumption(req.PowerConsumption, true),
+		device1.WithShipmentAt(req.ShipmentAt, true),
+		device1.WithPosters(req.Posters, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

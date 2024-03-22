@@ -9,7 +9,7 @@ import (
 	appstock "github.com/NpoolPlatform/good-middleware/api/app/good/stock"
 	topmost "github.com/NpoolPlatform/good-middleware/api/app/good/topmost"
 	topmostgood "github.com/NpoolPlatform/good-middleware/api/app/good/topmost/good"
-	"github.com/NpoolPlatform/good-middleware/api/deviceinfo"
+	"github.com/NpoolPlatform/good-middleware/api/device"
 	"github.com/NpoolPlatform/good-middleware/api/good"
 	"github.com/NpoolPlatform/good-middleware/api/good/comment"
 	"github.com/NpoolPlatform/good-middleware/api/good/like"
@@ -44,7 +44,7 @@ func Register(server grpc.ServiceRegistrar) {
 	required.Register(server)
 	history.Register(server)
 	score.Register(server)
-	deviceinfo.Register(server)
+	device.Register(server)
 	brand.Register(server)
 	location.Register(server)
 }

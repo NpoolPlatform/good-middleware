@@ -26,6 +26,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/delegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fbmcrowdfunding"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fee"
@@ -81,6 +82,7 @@ func columnChecker(table string) func(string) error {
 		comment.Table:              comment.ValidColumn,
 		delegatedstaking.Table:     delegatedstaking.ValidColumn,
 		deviceinfo.Table:           deviceinfo.ValidColumn,
+		deviceposter.Table:         deviceposter.ValidColumn,
 		extrainfo.Table:            extrainfo.ValidColumn,
 		fbmcrowdfunding.Table:      fbmcrowdfunding.ValidColumn,
 		fee.Table:                  fee.ValidColumn,

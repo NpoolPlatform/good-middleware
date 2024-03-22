@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/mw/deviceinfo"
+	device1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
@@ -152,14 +152,14 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 	h2.ID = &info2.ID
 
-	h3, err := deviceinfo1.NewHandler(
+	h3, err := device1.NewHandler(
 		context.Background(),
-		deviceinfo1.WithEntID(&mainGood.DeviceInfoID, true),
-		deviceinfo1.WithType(&mainGood.DeviceType, true),
-		deviceinfo1.WithManufacturer(&mainGood.DeviceManufacturer, true),
-		deviceinfo1.WithPowerConsumption(&mainGood.DevicePowerConsumption, true),
-		deviceinfo1.WithShipmentAt(&mainGood.DeviceShipmentAt, true),
-		deviceinfo1.WithPosters(mainGood.DevicePosters, true),
+		device1.WithEntID(&mainGood.DeviceInfoID, true),
+		device1.WithType(&mainGood.DeviceType, true),
+		device1.WithManufacturer(&mainGood.DeviceManufacturer, true),
+		device1.WithPowerConsumption(&mainGood.DevicePowerConsumption, true),
+		device1.WithShipmentAt(&mainGood.DeviceShipmentAt, true),
+		device1.WithPosters(mainGood.DevicePosters, true),
 	)
 	assert.Nil(t, err)
 
@@ -220,14 +220,14 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 	h6.ID = &info6.ID
 
-	h7, err := deviceinfo1.NewHandler(
+	h7, err := device1.NewHandler(
 		context.Background(),
-		deviceinfo1.WithEntID(&requiredGood.DeviceInfoID, true),
-		deviceinfo1.WithType(&requiredGood.DeviceType, true),
-		deviceinfo1.WithManufacturer(&requiredGood.DeviceManufacturer, true),
-		deviceinfo1.WithPowerConsumption(&requiredGood.DevicePowerConsumption, true),
-		deviceinfo1.WithShipmentAt(&requiredGood.DeviceShipmentAt, true),
-		deviceinfo1.WithPosters(requiredGood.DevicePosters, true),
+		device1.WithEntID(&requiredGood.DeviceInfoID, true),
+		device1.WithType(&requiredGood.DeviceType, true),
+		device1.WithManufacturer(&requiredGood.DeviceManufacturer, true),
+		device1.WithPowerConsumption(&requiredGood.DevicePowerConsumption, true),
+		device1.WithShipmentAt(&requiredGood.DeviceShipmentAt, true),
+		device1.WithPosters(requiredGood.DevicePosters, true),
 	)
 	assert.Nil(t, err)
 

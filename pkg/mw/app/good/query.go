@@ -13,7 +13,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
 	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
-	entdeviceinfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
+	entdevice "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	entextrainfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	entgoodreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
@@ -108,7 +108,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 
 func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 	t1 := sql.Table(entgood.Table)
-	t2 := sql.Table(entdeviceinfo.Table)
+	t2 := sql.Table(entdevice.Table)
 	t3 := sql.Table(entvendorlocation.Table)
 	t4 := sql.Table(entvendorbrand.Table)
 
@@ -120,10 +120,10 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 		LeftJoin(t2).
 		On(
 			t1.C(entgood.FieldDeviceInfoID),
-			t2.C(entdeviceinfo.FieldEntID),
+			t2.C(entdevice.FieldEntID),
 		).
 		OnP(
-			sql.EQ(t2.C(entdeviceinfo.FieldDeletedAt), 0),
+			sql.EQ(t2.C(entdevice.FieldDeletedAt), 0),
 		).
 		LeftJoin(t3).
 		On(
@@ -158,11 +158,11 @@ func (h *queryHandler) queryJoinGood(s *sql.Selector) {
 			sql.As(t1.C(entgood.FieldDurationType), "duration_type"),
 			sql.As(t1.C(entgood.FieldSettlementType), "settlement_type"),
 			sql.As(t1.C(entgood.FieldDurationCalculateType), "duration_calculate_type"),
-			sql.As(t2.C(entdeviceinfo.FieldType), "device_type"),
-			sql.As(t2.C(entdeviceinfo.FieldManufacturer), "device_manufacturer"),
-			sql.As(t2.C(entdeviceinfo.FieldPowerConsumption), "device_power_consumption"),
-			sql.As(t2.C(entdeviceinfo.FieldShipmentAt), "device_shipment_at"),
-			sql.As(t2.C(entdeviceinfo.FieldPosters), "device_posters"),
+			sql.As(t2.C(entdevice.FieldType), "device_type"),
+			sql.As(t2.C(entdevice.FieldManufacturer), "device_manufacturer"),
+			sql.As(t2.C(entdevice.FieldPowerConsumption), "device_power_consumption"),
+			sql.As(t2.C(entdevice.FieldShipmentAt), "device_shipment_at"),
+			sql.As(t2.C(entdevice.FieldPosters), "device_posters"),
 			sql.As(t3.C(entvendorlocation.FieldCountry), "vendor_location_country"),
 			sql.As(t4.C(entvendorbrand.FieldName), "vendor_brand_name"),
 			sql.As(t4.C(entvendorbrand.FieldLogo), "vendor_brand_logo"),

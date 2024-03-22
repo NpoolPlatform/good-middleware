@@ -24,6 +24,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/delegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fbmcrowdfunding"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fee"
@@ -75,6 +76,7 @@ const (
 	TypeComment              = "Comment"
 	TypeDelegatedStaking     = "DelegatedStaking"
 	TypeDeviceInfo           = "DeviceInfo"
+	TypeDevicePoster         = "DevicePoster"
 	TypeExtraInfo            = "ExtraInfo"
 	TypeFbmCrowdFunding      = "FbmCrowdFunding"
 	TypeFee                  = "Fee"
@@ -17868,7 +17870,6 @@ type DeviceInfoMutation struct {
 	addpower_consumption *int32
 	shipment_at          *uint32
 	addshipment_at       *int32
-	posters              *[]string
 	clearedFields        map[string]struct{}
 	done                 bool
 	oldValue             func(context.Context) (*DeviceInfo, error)
@@ -18421,55 +18422,6 @@ func (m *DeviceInfoMutation) ResetShipmentAt() {
 	delete(m.clearedFields, deviceinfo.FieldShipmentAt)
 }
 
-// SetPosters sets the "posters" field.
-func (m *DeviceInfoMutation) SetPosters(s []string) {
-	m.posters = &s
-}
-
-// Posters returns the value of the "posters" field in the mutation.
-func (m *DeviceInfoMutation) Posters() (r []string, exists bool) {
-	v := m.posters
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPosters returns the old "posters" field's value of the DeviceInfo entity.
-// If the DeviceInfo object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DeviceInfoMutation) OldPosters(ctx context.Context) (v []string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPosters is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPosters requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPosters: %w", err)
-	}
-	return oldValue.Posters, nil
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (m *DeviceInfoMutation) ClearPosters() {
-	m.posters = nil
-	m.clearedFields[deviceinfo.FieldPosters] = struct{}{}
-}
-
-// PostersCleared returns if the "posters" field was cleared in this mutation.
-func (m *DeviceInfoMutation) PostersCleared() bool {
-	_, ok := m.clearedFields[deviceinfo.FieldPosters]
-	return ok
-}
-
-// ResetPosters resets all changes to the "posters" field.
-func (m *DeviceInfoMutation) ResetPosters() {
-	m.posters = nil
-	delete(m.clearedFields, deviceinfo.FieldPosters)
-}
-
 // Where appends a list predicates to the DeviceInfoMutation builder.
 func (m *DeviceInfoMutation) Where(ps ...predicate.DeviceInfo) {
 	m.predicates = append(m.predicates, ps...)
@@ -18489,7 +18441,7 @@ func (m *DeviceInfoMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *DeviceInfoMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 8)
 	if m.created_at != nil {
 		fields = append(fields, deviceinfo.FieldCreatedAt)
 	}
@@ -18513,9 +18465,6 @@ func (m *DeviceInfoMutation) Fields() []string {
 	}
 	if m.shipment_at != nil {
 		fields = append(fields, deviceinfo.FieldShipmentAt)
-	}
-	if m.posters != nil {
-		fields = append(fields, deviceinfo.FieldPosters)
 	}
 	return fields
 }
@@ -18541,8 +18490,6 @@ func (m *DeviceInfoMutation) Field(name string) (ent.Value, bool) {
 		return m.PowerConsumption()
 	case deviceinfo.FieldShipmentAt:
 		return m.ShipmentAt()
-	case deviceinfo.FieldPosters:
-		return m.Posters()
 	}
 	return nil, false
 }
@@ -18568,8 +18515,6 @@ func (m *DeviceInfoMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldPowerConsumption(ctx)
 	case deviceinfo.FieldShipmentAt:
 		return m.OldShipmentAt(ctx)
-	case deviceinfo.FieldPosters:
-		return m.OldPosters(ctx)
 	}
 	return nil, fmt.Errorf("unknown DeviceInfo field %s", name)
 }
@@ -18634,13 +18579,6 @@ func (m *DeviceInfoMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetShipmentAt(v)
-		return nil
-	case deviceinfo.FieldPosters:
-		v, ok := value.([]string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPosters(v)
 		return nil
 	}
 	return fmt.Errorf("unknown DeviceInfo field %s", name)
@@ -18747,9 +18685,6 @@ func (m *DeviceInfoMutation) ClearedFields() []string {
 	if m.FieldCleared(deviceinfo.FieldShipmentAt) {
 		fields = append(fields, deviceinfo.FieldShipmentAt)
 	}
-	if m.FieldCleared(deviceinfo.FieldPosters) {
-		fields = append(fields, deviceinfo.FieldPosters)
-	}
 	return fields
 }
 
@@ -18775,9 +18710,6 @@ func (m *DeviceInfoMutation) ClearField(name string) error {
 		return nil
 	case deviceinfo.FieldShipmentAt:
 		m.ClearShipmentAt()
-		return nil
-	case deviceinfo.FieldPosters:
-		m.ClearPosters()
 		return nil
 	}
 	return fmt.Errorf("unknown DeviceInfo nullable field %s", name)
@@ -18810,9 +18742,6 @@ func (m *DeviceInfoMutation) ResetField(name string) error {
 		return nil
 	case deviceinfo.FieldShipmentAt:
 		m.ResetShipmentAt()
-		return nil
-	case deviceinfo.FieldPosters:
-		m.ResetPosters()
 		return nil
 	}
 	return fmt.Errorf("unknown DeviceInfo field %s", name)
@@ -18864,6 +18793,843 @@ func (m *DeviceInfoMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *DeviceInfoMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown DeviceInfo edge %s", name)
+}
+
+// DevicePosterMutation represents an operation that mutates the DevicePoster nodes in the graph.
+type DevicePosterMutation struct {
+	config
+	op             Op
+	typ            string
+	id             *uint32
+	created_at     *uint32
+	addcreated_at  *int32
+	updated_at     *uint32
+	addupdated_at  *int32
+	deleted_at     *uint32
+	adddeleted_at  *int32
+	ent_id         *uuid.UUID
+	device_type_id *uuid.UUID
+	poster         *string
+	index          *uint8
+	addindex       *int8
+	clearedFields  map[string]struct{}
+	done           bool
+	oldValue       func(context.Context) (*DevicePoster, error)
+	predicates     []predicate.DevicePoster
+}
+
+var _ ent.Mutation = (*DevicePosterMutation)(nil)
+
+// deviceposterOption allows management of the mutation configuration using functional options.
+type deviceposterOption func(*DevicePosterMutation)
+
+// newDevicePosterMutation creates new mutation for the DevicePoster entity.
+func newDevicePosterMutation(c config, op Op, opts ...deviceposterOption) *DevicePosterMutation {
+	m := &DevicePosterMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeDevicePoster,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withDevicePosterID sets the ID field of the mutation.
+func withDevicePosterID(id uint32) deviceposterOption {
+	return func(m *DevicePosterMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *DevicePoster
+		)
+		m.oldValue = func(ctx context.Context) (*DevicePoster, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().DevicePoster.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withDevicePoster sets the old DevicePoster of the mutation.
+func withDevicePoster(node *DevicePoster) deviceposterOption {
+	return func(m *DevicePosterMutation) {
+		m.oldValue = func(context.Context) (*DevicePoster, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m DevicePosterMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m DevicePosterMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of DevicePoster entities.
+func (m *DevicePosterMutation) SetID(id uint32) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *DevicePosterMutation) ID() (id uint32, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *DevicePosterMutation) IDs(ctx context.Context) ([]uint32, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uint32{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().DevicePoster.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *DevicePosterMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *DevicePosterMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the DevicePoster entity.
+// If the DevicePoster object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DevicePosterMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *DevicePosterMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *DevicePosterMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *DevicePosterMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *DevicePosterMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *DevicePosterMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the DevicePoster entity.
+// If the DevicePoster object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DevicePosterMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *DevicePosterMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *DevicePosterMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *DevicePosterMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *DevicePosterMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *DevicePosterMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the DevicePoster entity.
+// If the DevicePoster object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DevicePosterMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *DevicePosterMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *DevicePosterMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *DevicePosterMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetEntID sets the "ent_id" field.
+func (m *DevicePosterMutation) SetEntID(u uuid.UUID) {
+	m.ent_id = &u
+}
+
+// EntID returns the value of the "ent_id" field in the mutation.
+func (m *DevicePosterMutation) EntID() (r uuid.UUID, exists bool) {
+	v := m.ent_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEntID returns the old "ent_id" field's value of the DevicePoster entity.
+// If the DevicePoster object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DevicePosterMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEntID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEntID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEntID: %w", err)
+	}
+	return oldValue.EntID, nil
+}
+
+// ResetEntID resets all changes to the "ent_id" field.
+func (m *DevicePosterMutation) ResetEntID() {
+	m.ent_id = nil
+}
+
+// SetDeviceTypeID sets the "device_type_id" field.
+func (m *DevicePosterMutation) SetDeviceTypeID(u uuid.UUID) {
+	m.device_type_id = &u
+}
+
+// DeviceTypeID returns the value of the "device_type_id" field in the mutation.
+func (m *DevicePosterMutation) DeviceTypeID() (r uuid.UUID, exists bool) {
+	v := m.device_type_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeviceTypeID returns the old "device_type_id" field's value of the DevicePoster entity.
+// If the DevicePoster object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DevicePosterMutation) OldDeviceTypeID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeviceTypeID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeviceTypeID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeviceTypeID: %w", err)
+	}
+	return oldValue.DeviceTypeID, nil
+}
+
+// ClearDeviceTypeID clears the value of the "device_type_id" field.
+func (m *DevicePosterMutation) ClearDeviceTypeID() {
+	m.device_type_id = nil
+	m.clearedFields[deviceposter.FieldDeviceTypeID] = struct{}{}
+}
+
+// DeviceTypeIDCleared returns if the "device_type_id" field was cleared in this mutation.
+func (m *DevicePosterMutation) DeviceTypeIDCleared() bool {
+	_, ok := m.clearedFields[deviceposter.FieldDeviceTypeID]
+	return ok
+}
+
+// ResetDeviceTypeID resets all changes to the "device_type_id" field.
+func (m *DevicePosterMutation) ResetDeviceTypeID() {
+	m.device_type_id = nil
+	delete(m.clearedFields, deviceposter.FieldDeviceTypeID)
+}
+
+// SetPoster sets the "poster" field.
+func (m *DevicePosterMutation) SetPoster(s string) {
+	m.poster = &s
+}
+
+// Poster returns the value of the "poster" field in the mutation.
+func (m *DevicePosterMutation) Poster() (r string, exists bool) {
+	v := m.poster
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPoster returns the old "poster" field's value of the DevicePoster entity.
+// If the DevicePoster object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DevicePosterMutation) OldPoster(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPoster is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPoster requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPoster: %w", err)
+	}
+	return oldValue.Poster, nil
+}
+
+// ClearPoster clears the value of the "poster" field.
+func (m *DevicePosterMutation) ClearPoster() {
+	m.poster = nil
+	m.clearedFields[deviceposter.FieldPoster] = struct{}{}
+}
+
+// PosterCleared returns if the "poster" field was cleared in this mutation.
+func (m *DevicePosterMutation) PosterCleared() bool {
+	_, ok := m.clearedFields[deviceposter.FieldPoster]
+	return ok
+}
+
+// ResetPoster resets all changes to the "poster" field.
+func (m *DevicePosterMutation) ResetPoster() {
+	m.poster = nil
+	delete(m.clearedFields, deviceposter.FieldPoster)
+}
+
+// SetIndex sets the "index" field.
+func (m *DevicePosterMutation) SetIndex(u uint8) {
+	m.index = &u
+	m.addindex = nil
+}
+
+// Index returns the value of the "index" field in the mutation.
+func (m *DevicePosterMutation) Index() (r uint8, exists bool) {
+	v := m.index
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIndex returns the old "index" field's value of the DevicePoster entity.
+// If the DevicePoster object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DevicePosterMutation) OldIndex(ctx context.Context) (v uint8, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIndex is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIndex requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIndex: %w", err)
+	}
+	return oldValue.Index, nil
+}
+
+// AddIndex adds u to the "index" field.
+func (m *DevicePosterMutation) AddIndex(u int8) {
+	if m.addindex != nil {
+		*m.addindex += u
+	} else {
+		m.addindex = &u
+	}
+}
+
+// AddedIndex returns the value that was added to the "index" field in this mutation.
+func (m *DevicePosterMutation) AddedIndex() (r int8, exists bool) {
+	v := m.addindex
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearIndex clears the value of the "index" field.
+func (m *DevicePosterMutation) ClearIndex() {
+	m.index = nil
+	m.addindex = nil
+	m.clearedFields[deviceposter.FieldIndex] = struct{}{}
+}
+
+// IndexCleared returns if the "index" field was cleared in this mutation.
+func (m *DevicePosterMutation) IndexCleared() bool {
+	_, ok := m.clearedFields[deviceposter.FieldIndex]
+	return ok
+}
+
+// ResetIndex resets all changes to the "index" field.
+func (m *DevicePosterMutation) ResetIndex() {
+	m.index = nil
+	m.addindex = nil
+	delete(m.clearedFields, deviceposter.FieldIndex)
+}
+
+// Where appends a list predicates to the DevicePosterMutation builder.
+func (m *DevicePosterMutation) Where(ps ...predicate.DevicePoster) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *DevicePosterMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (DevicePoster).
+func (m *DevicePosterMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *DevicePosterMutation) Fields() []string {
+	fields := make([]string, 0, 7)
+	if m.created_at != nil {
+		fields = append(fields, deviceposter.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, deviceposter.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, deviceposter.FieldDeletedAt)
+	}
+	if m.ent_id != nil {
+		fields = append(fields, deviceposter.FieldEntID)
+	}
+	if m.device_type_id != nil {
+		fields = append(fields, deviceposter.FieldDeviceTypeID)
+	}
+	if m.poster != nil {
+		fields = append(fields, deviceposter.FieldPoster)
+	}
+	if m.index != nil {
+		fields = append(fields, deviceposter.FieldIndex)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *DevicePosterMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case deviceposter.FieldCreatedAt:
+		return m.CreatedAt()
+	case deviceposter.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case deviceposter.FieldDeletedAt:
+		return m.DeletedAt()
+	case deviceposter.FieldEntID:
+		return m.EntID()
+	case deviceposter.FieldDeviceTypeID:
+		return m.DeviceTypeID()
+	case deviceposter.FieldPoster:
+		return m.Poster()
+	case deviceposter.FieldIndex:
+		return m.Index()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *DevicePosterMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case deviceposter.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case deviceposter.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case deviceposter.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case deviceposter.FieldEntID:
+		return m.OldEntID(ctx)
+	case deviceposter.FieldDeviceTypeID:
+		return m.OldDeviceTypeID(ctx)
+	case deviceposter.FieldPoster:
+		return m.OldPoster(ctx)
+	case deviceposter.FieldIndex:
+		return m.OldIndex(ctx)
+	}
+	return nil, fmt.Errorf("unknown DevicePoster field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *DevicePosterMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case deviceposter.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case deviceposter.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case deviceposter.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case deviceposter.FieldEntID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEntID(v)
+		return nil
+	case deviceposter.FieldDeviceTypeID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeviceTypeID(v)
+		return nil
+	case deviceposter.FieldPoster:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPoster(v)
+		return nil
+	case deviceposter.FieldIndex:
+		v, ok := value.(uint8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIndex(v)
+		return nil
+	}
+	return fmt.Errorf("unknown DevicePoster field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *DevicePosterMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, deviceposter.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, deviceposter.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, deviceposter.FieldDeletedAt)
+	}
+	if m.addindex != nil {
+		fields = append(fields, deviceposter.FieldIndex)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *DevicePosterMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case deviceposter.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case deviceposter.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case deviceposter.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	case deviceposter.FieldIndex:
+		return m.AddedIndex()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *DevicePosterMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case deviceposter.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case deviceposter.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case deviceposter.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	case deviceposter.FieldIndex:
+		v, ok := value.(int8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddIndex(v)
+		return nil
+	}
+	return fmt.Errorf("unknown DevicePoster numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *DevicePosterMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(deviceposter.FieldDeviceTypeID) {
+		fields = append(fields, deviceposter.FieldDeviceTypeID)
+	}
+	if m.FieldCleared(deviceposter.FieldPoster) {
+		fields = append(fields, deviceposter.FieldPoster)
+	}
+	if m.FieldCleared(deviceposter.FieldIndex) {
+		fields = append(fields, deviceposter.FieldIndex)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *DevicePosterMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *DevicePosterMutation) ClearField(name string) error {
+	switch name {
+	case deviceposter.FieldDeviceTypeID:
+		m.ClearDeviceTypeID()
+		return nil
+	case deviceposter.FieldPoster:
+		m.ClearPoster()
+		return nil
+	case deviceposter.FieldIndex:
+		m.ClearIndex()
+		return nil
+	}
+	return fmt.Errorf("unknown DevicePoster nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *DevicePosterMutation) ResetField(name string) error {
+	switch name {
+	case deviceposter.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case deviceposter.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case deviceposter.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case deviceposter.FieldEntID:
+		m.ResetEntID()
+		return nil
+	case deviceposter.FieldDeviceTypeID:
+		m.ResetDeviceTypeID()
+		return nil
+	case deviceposter.FieldPoster:
+		m.ResetPoster()
+		return nil
+	case deviceposter.FieldIndex:
+		m.ResetIndex()
+		return nil
+	}
+	return fmt.Errorf("unknown DevicePoster field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *DevicePosterMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *DevicePosterMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *DevicePosterMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *DevicePosterMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *DevicePosterMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *DevicePosterMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *DevicePosterMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown DevicePoster unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *DevicePosterMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown DevicePoster edge %s", name)
 }
 
 // ExtraInfoMutation represents an operation that mutates the ExtraInfo nodes in the graph.

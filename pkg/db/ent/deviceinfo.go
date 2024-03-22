@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -33,8 +32,6 @@ type DeviceInfo struct {
 	PowerConsumption uint32 `json:"power_consumption,omitempty"`
 	// ShipmentAt holds the value of the "shipment_at" field.
 	ShipmentAt uint32 `json:"shipment_at,omitempty"`
-	// Posters holds the value of the "posters" field.
-	Posters []string `json:"posters,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -42,8 +39,6 @@ func (*DeviceInfo) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case deviceinfo.FieldPosters:
-			values[i] = new([]byte)
 		case deviceinfo.FieldID, deviceinfo.FieldCreatedAt, deviceinfo.FieldUpdatedAt, deviceinfo.FieldDeletedAt, deviceinfo.FieldPowerConsumption, deviceinfo.FieldShipmentAt:
 			values[i] = new(sql.NullInt64)
 		case deviceinfo.FieldType, deviceinfo.FieldManufacturer:
@@ -119,14 +114,6 @@ func (di *DeviceInfo) assignValues(columns []string, values []interface{}) error
 			} else if value.Valid {
 				di.ShipmentAt = uint32(value.Int64)
 			}
-		case deviceinfo.FieldPosters:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field posters", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &di.Posters); err != nil {
-					return fmt.Errorf("unmarshal field posters: %w", err)
-				}
-			}
 		}
 	}
 	return nil
@@ -178,9 +165,6 @@ func (di *DeviceInfo) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("shipment_at=")
 	builder.WriteString(fmt.Sprintf("%v", di.ShipmentAt))
-	builder.WriteString(", ")
-	builder.WriteString("posters=")
-	builder.WriteString(fmt.Sprintf("%v", di.Posters))
 	builder.WriteByte(')')
 	return builder.String()
 }

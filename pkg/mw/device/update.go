@@ -1,15 +1,15 @@
-package deviceinfo
+package device
 
 import (
 	"context"
 	"fmt"
 
 	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
-	deviceinfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/deviceinfo"
+	devicecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 )
 
 func (h *Handler) UpdateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, error) {
@@ -26,7 +26,7 @@ func (h *Handler) UpdateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 			_ = redis2.Unlock(key)
 		}()
 
-		h.Conds = &deviceinfocrud.Conds{
+		h.Conds = &devicecrud.Conds{
 			ID:   &cruder.Cond{Op: cruder.NEQ, Val: *h.ID},
 			Type: &cruder.Cond{Op: cruder.EQ, Val: *h.Type},
 		}
@@ -40,9 +40,9 @@ func (h *Handler) UpdateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if _, err := deviceinfocrud.UpdateSet(
+		if _, err := devicecrud.UpdateSet(
 			cli.DeviceInfo.UpdateOneID(*h.ID),
-			&deviceinfocrud.Req{
+			&devicecrud.Req{
 				Type:             h.Type,
 				Manufacturer:     h.Manufacturer,
 				PowerConsumption: h.PowerConsumption,

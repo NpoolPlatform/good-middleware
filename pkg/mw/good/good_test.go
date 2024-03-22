@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/mw/deviceinfo"
+	device1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -132,14 +132,14 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 	h2.ID = &info2.ID
 
-	h3, err := deviceinfo1.NewHandler(
+	h3, err := device1.NewHandler(
 		context.Background(),
-		deviceinfo1.WithEntID(&ret.DeviceInfoID, true),
-		deviceinfo1.WithType(&ret.DeviceType, true),
-		deviceinfo1.WithManufacturer(&ret.DeviceManufacturer, true),
-		deviceinfo1.WithPowerConsumption(&ret.DevicePowerConsumption, true),
-		deviceinfo1.WithShipmentAt(&ret.DeviceShipmentAt, true),
-		deviceinfo1.WithPosters(ret.DevicePosters, true),
+		device1.WithEntID(&ret.DeviceInfoID, true),
+		device1.WithType(&ret.DeviceType, true),
+		device1.WithManufacturer(&ret.DeviceManufacturer, true),
+		device1.WithPowerConsumption(&ret.DevicePowerConsumption, true),
+		device1.WithShipmentAt(&ret.DeviceShipmentAt, true),
+		device1.WithPosters(ret.DevicePosters, true),
 	)
 	assert.Nil(t, err)
 

@@ -773,20 +773,6 @@ func ShipmentAtNotNil() predicate.DeviceInfo {
 	})
 }
 
-// PostersIsNil applies the IsNil predicate on the "posters" field.
-func PostersIsNil() predicate.DeviceInfo {
-	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldPosters)))
-	})
-}
-
-// PostersNotNil applies the NotNil predicate on the "posters" field.
-func PostersNotNil() predicate.DeviceInfo {
-	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldPosters)))
-	})
-}
-
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.DeviceInfo) predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {

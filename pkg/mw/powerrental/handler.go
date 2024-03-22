@@ -8,7 +8,7 @@ import (
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	powerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/powerrental"
-	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/mw/deviceinfo"
+	device1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -100,9 +100,9 @@ func WithDeviceTypeID(id *string, must bool) func(context.Context, *Handler) err
 			}
 			return nil
 		}
-		handler, err := deviceinfo1.NewHandler(
+		handler, err := device1.NewHandler(
 			ctx,
-			deviceinfo1.WithEntID(id, true),
+			device1.WithEntID(id, true),
 		)
 		if err != nil {
 			return err

@@ -534,6 +534,30 @@ func (f DeviceInfoMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Muta
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.DeviceInfoMutation", m)
 }
 
+// The DevicePosterQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type DevicePosterQueryRuleFunc func(context.Context, *ent.DevicePosterQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f DevicePosterQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.DevicePosterQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.DevicePosterQuery", q)
+}
+
+// The DevicePosterMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type DevicePosterMutationRuleFunc func(context.Context, *ent.DevicePosterMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f DevicePosterMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.DevicePosterMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.DevicePosterMutation", m)
+}
+
 // The ExtraInfoQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type ExtraInfoQueryRuleFunc func(context.Context, *ent.ExtraInfoQuery) error
@@ -1057,6 +1081,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.DeviceInfoQuery:
 		return q.Filter(), nil
+	case *ent.DevicePosterQuery:
+		return q.Filter(), nil
 	case *ent.ExtraInfoQuery:
 		return q.Filter(), nil
 	case *ent.FbmCrowdFundingQuery:
@@ -1133,6 +1159,8 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	case *ent.DelegatedStakingMutation:
 		return m.Filter(), nil
 	case *ent.DeviceInfoMutation:
+		return m.Filter(), nil
+	case *ent.DevicePosterMutation:
 		return m.Filter(), nil
 	case *ent.ExtraInfoMutation:
 		return m.Filter(), nil

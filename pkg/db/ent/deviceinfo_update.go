@@ -192,18 +192,6 @@ func (diu *DeviceInfoUpdate) ClearShipmentAt() *DeviceInfoUpdate {
 	return diu
 }
 
-// SetPosters sets the "posters" field.
-func (diu *DeviceInfoUpdate) SetPosters(s []string) *DeviceInfoUpdate {
-	diu.mutation.SetPosters(s)
-	return diu
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (diu *DeviceInfoUpdate) ClearPosters() *DeviceInfoUpdate {
-	diu.mutation.ClearPosters()
-	return diu
-}
-
 // Mutation returns the DeviceInfoMutation object of the builder.
 func (diu *DeviceInfoUpdate) Mutation() *DeviceInfoMutation {
 	return diu.mutation
@@ -438,19 +426,6 @@ func (diu *DeviceInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: deviceinfo.FieldShipmentAt,
 		})
 	}
-	if value, ok := diu.mutation.Posters(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: deviceinfo.FieldPosters,
-		})
-	}
-	if diu.mutation.PostersCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: deviceinfo.FieldPosters,
-		})
-	}
 	_spec.Modifiers = diu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, diu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -632,18 +607,6 @@ func (diuo *DeviceInfoUpdateOne) AddShipmentAt(u int32) *DeviceInfoUpdateOne {
 // ClearShipmentAt clears the value of the "shipment_at" field.
 func (diuo *DeviceInfoUpdateOne) ClearShipmentAt() *DeviceInfoUpdateOne {
 	diuo.mutation.ClearShipmentAt()
-	return diuo
-}
-
-// SetPosters sets the "posters" field.
-func (diuo *DeviceInfoUpdateOne) SetPosters(s []string) *DeviceInfoUpdateOne {
-	diuo.mutation.SetPosters(s)
-	return diuo
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (diuo *DeviceInfoUpdateOne) ClearPosters() *DeviceInfoUpdateOne {
-	diuo.mutation.ClearPosters()
 	return diuo
 }
 
@@ -909,19 +872,6 @@ func (diuo *DeviceInfoUpdateOne) sqlSave(ctx context.Context) (_node *DeviceInfo
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: deviceinfo.FieldShipmentAt,
-		})
-	}
-	if value, ok := diuo.mutation.Posters(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: deviceinfo.FieldPosters,
-		})
-	}
-	if diuo.mutation.PostersCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: deviceinfo.FieldPosters,
 		})
 	}
 	_spec.Modifiers = diuo.modifiers

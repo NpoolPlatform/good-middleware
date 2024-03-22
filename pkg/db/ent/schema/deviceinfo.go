@@ -41,10 +41,6 @@ func (DeviceInfo) Fields() []ent.Field {
 			Uint32("shipment_at").
 			Optional().
 			Default(0),
-		field.
-			JSON("posters", []string{}).
-			Optional().
-			Default([]string{}),
 	}
 }
 

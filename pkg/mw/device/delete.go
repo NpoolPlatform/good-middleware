@@ -1,14 +1,14 @@
-package deviceinfo
+package device
 
 import (
 	"context"
 	"fmt"
 	"time"
 
-	deviceinfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/deviceinfo"
+	devicecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 )
 
 func (h *Handler) DeleteDeviceInfo(ctx context.Context) (*npool.DeviceInfo, error) {
@@ -23,9 +23,9 @@ func (h *Handler) DeleteDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 
 	now := uint32(time.Now().Unix())
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if _, err := deviceinfocrud.UpdateSet(
+		if _, err := devicecrud.UpdateSet(
 			cli.DeviceInfo.UpdateOneID(*h.ID),
-			&deviceinfocrud.Req{
+			&devicecrud.Req{
 				DeletedAt: &now,
 			},
 		).Save(_ctx); err != nil {

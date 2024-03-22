@@ -1,15 +1,15 @@
-package deviceinfo
+package device
 
 import (
 	"context"
 	"fmt"
 
 	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
-	deviceinfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/deviceinfo"
+	devicecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 
 	"github.com/google/uuid"
 )
@@ -27,7 +27,7 @@ func (h *Handler) CreateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 		_ = redis2.Unlock(key)
 	}()
 
-	h.Conds = &deviceinfocrud.Conds{
+	h.Conds = &devicecrud.Conds{
 		Type: &cruder.Cond{Op: cruder.EQ, Val: *h.Type},
 	}
 	exist, err := h.ExistDeviceInfoConds(ctx)
@@ -44,9 +44,9 @@ func (h *Handler) CreateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, erro
 	}
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if _, err := deviceinfocrud.CreateSet(
+		if _, err := devicecrud.CreateSet(
 			cli.DeviceInfo.Create(),
-			&deviceinfocrud.Req{
+			&devicecrud.Req{
 				EntID:            h.EntID,
 				Type:             h.Type,
 				Manufacturer:     h.Manufacturer,

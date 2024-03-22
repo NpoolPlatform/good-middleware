@@ -17,7 +17,6 @@ type Req struct {
 	Manufacturer     *string
 	PowerConsumption *uint32
 	ShipmentAt       *uint32
-	Posters          []string
 	DeletedAt        *uint32
 }
 
@@ -37,9 +36,6 @@ func CreateSet(c *ent.DeviceInfoCreate, req *Req) *ent.DeviceInfoCreate {
 	if req.ShipmentAt != nil {
 		c.SetShipmentAt(*req.ShipmentAt)
 	}
-	if len(req.Posters) > 0 {
-		c.SetPosters(req.Posters)
-	}
 	return c
 }
 
@@ -55,9 +51,6 @@ func UpdateSet(u *ent.DeviceInfoUpdateOne, req *Req) *ent.DeviceInfoUpdateOne {
 	}
 	if req.ShipmentAt != nil {
 		u.SetShipmentAt(*req.ShipmentAt)
-	}
-	if len(req.Posters) > 0 {
-		u.SetPosters(req.Posters)
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)

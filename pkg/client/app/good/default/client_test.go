@@ -15,7 +15,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 
 	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/client/app/good"
-	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/client/deviceinfo"
+	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/client/device"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/client/good"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/client/vender/brand"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/client/vender/location"
@@ -24,7 +24,7 @@ import (
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/default"
-	deviceinfomwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	deviceinfomwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 	vendorbrandmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/brand"
 	vendorlocationmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"

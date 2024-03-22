@@ -1,15 +1,15 @@
-package deviceinfo
+package device
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 
-	deviceinfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/deviceinfo"
+	devicecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entdeviceinfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	entdevice "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 )
 
 type queryHandler struct {
@@ -21,15 +21,15 @@ type queryHandler struct {
 
 func (h *queryHandler) selectDeviceInfo(stm *ent.DeviceInfoQuery) {
 	h.stmSelect = stm.Select(
-		entdeviceinfo.FieldID,
-		entdeviceinfo.FieldEntID,
-		entdeviceinfo.FieldType,
-		entdeviceinfo.FieldManufacturer,
-		entdeviceinfo.FieldPowerConsumption,
-		entdeviceinfo.FieldShipmentAt,
-		entdeviceinfo.FieldPosters,
-		entdeviceinfo.FieldCreatedAt,
-		entdeviceinfo.FieldUpdatedAt,
+		entdevice.FieldID,
+		entdevice.FieldEntID,
+		entdevice.FieldType,
+		entdevice.FieldManufacturer,
+		entdevice.FieldPowerConsumption,
+		entdevice.FieldShipmentAt,
+		entdevice.FieldPosters,
+		entdevice.FieldCreatedAt,
+		entdevice.FieldUpdatedAt,
 	)
 }
 
@@ -37,19 +37,19 @@ func (h *queryHandler) queryDeviceInfo(cli *ent.Client) error {
 	if h.ID == nil && h.EntID == nil {
 		return fmt.Errorf("invalid id")
 	}
-	stm := cli.DeviceInfo.Query().Where(entdeviceinfo.DeletedAt(0))
+	stm := cli.DeviceInfo.Query().Where(entdevice.DeletedAt(0))
 	if h.ID != nil {
-		stm.Where(entdeviceinfo.ID(*h.ID))
+		stm.Where(entdevice.ID(*h.ID))
 	}
 	if h.EntID != nil {
-		stm.Where(entdeviceinfo.EntID(*h.EntID))
+		stm.Where(entdevice.EntID(*h.EntID))
 	}
 	h.selectDeviceInfo(stm)
 	return nil
 }
 
 func (h *queryHandler) queryDeviceInfos(ctx context.Context, cli *ent.Client) error {
-	stm, err := deviceinfocrud.SetQueryConds(cli.DeviceInfo.Query(), h.Conds)
+	stm, err := devicecrud.SetQueryConds(cli.DeviceInfo.Query(), h.Conds)
 	if err != nil {
 		return err
 	}

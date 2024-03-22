@@ -21,6 +21,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/delegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fbmcrowdfunding"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fee"
@@ -1024,10 +1025,52 @@ func init() {
 	deviceinfoDescShipmentAt := deviceinfoFields[3].Descriptor()
 	// deviceinfo.DefaultShipmentAt holds the default value on creation for the shipment_at field.
 	deviceinfo.DefaultShipmentAt = deviceinfoDescShipmentAt.Default.(uint32)
-	// deviceinfoDescPosters is the schema descriptor for posters field.
-	deviceinfoDescPosters := deviceinfoFields[4].Descriptor()
-	// deviceinfo.DefaultPosters holds the default value on creation for the posters field.
-	deviceinfo.DefaultPosters = deviceinfoDescPosters.Default.([]string)
+	deviceposterMixin := schema.DevicePoster{}.Mixin()
+	deviceposter.Policy = privacy.NewPolicies(deviceposterMixin[0], schema.DevicePoster{})
+	deviceposter.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := deviceposter.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	deviceposterMixinFields0 := deviceposterMixin[0].Fields()
+	_ = deviceposterMixinFields0
+	deviceposterMixinFields1 := deviceposterMixin[1].Fields()
+	_ = deviceposterMixinFields1
+	deviceposterFields := schema.DevicePoster{}.Fields()
+	_ = deviceposterFields
+	// deviceposterDescCreatedAt is the schema descriptor for created_at field.
+	deviceposterDescCreatedAt := deviceposterMixinFields0[0].Descriptor()
+	// deviceposter.DefaultCreatedAt holds the default value on creation for the created_at field.
+	deviceposter.DefaultCreatedAt = deviceposterDescCreatedAt.Default.(func() uint32)
+	// deviceposterDescUpdatedAt is the schema descriptor for updated_at field.
+	deviceposterDescUpdatedAt := deviceposterMixinFields0[1].Descriptor()
+	// deviceposter.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	deviceposter.DefaultUpdatedAt = deviceposterDescUpdatedAt.Default.(func() uint32)
+	// deviceposter.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	deviceposter.UpdateDefaultUpdatedAt = deviceposterDescUpdatedAt.UpdateDefault.(func() uint32)
+	// deviceposterDescDeletedAt is the schema descriptor for deleted_at field.
+	deviceposterDescDeletedAt := deviceposterMixinFields0[2].Descriptor()
+	// deviceposter.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	deviceposter.DefaultDeletedAt = deviceposterDescDeletedAt.Default.(func() uint32)
+	// deviceposterDescEntID is the schema descriptor for ent_id field.
+	deviceposterDescEntID := deviceposterMixinFields1[1].Descriptor()
+	// deviceposter.DefaultEntID holds the default value on creation for the ent_id field.
+	deviceposter.DefaultEntID = deviceposterDescEntID.Default.(func() uuid.UUID)
+	// deviceposterDescDeviceTypeID is the schema descriptor for device_type_id field.
+	deviceposterDescDeviceTypeID := deviceposterFields[0].Descriptor()
+	// deviceposter.DefaultDeviceTypeID holds the default value on creation for the device_type_id field.
+	deviceposter.DefaultDeviceTypeID = deviceposterDescDeviceTypeID.Default.(func() uuid.UUID)
+	// deviceposterDescPoster is the schema descriptor for poster field.
+	deviceposterDescPoster := deviceposterFields[1].Descriptor()
+	// deviceposter.DefaultPoster holds the default value on creation for the poster field.
+	deviceposter.DefaultPoster = deviceposterDescPoster.Default.(string)
+	// deviceposterDescIndex is the schema descriptor for index field.
+	deviceposterDescIndex := deviceposterFields[2].Descriptor()
+	// deviceposter.DefaultIndex holds the default value on creation for the index field.
+	deviceposter.DefaultIndex = deviceposterDescIndex.Default.(uint8)
 	extrainfoMixin := schema.ExtraInfo{}.Mixin()
 	extrainfo.Policy = privacy.NewPolicies(extrainfoMixin[0], schema.ExtraInfo{})
 	extrainfo.Hooks[0] = func(next ent.Mutator) ent.Mutator {

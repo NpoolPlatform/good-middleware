@@ -16,7 +16,7 @@ import (
 
 	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/client/app/good"
 	topmost1 "github.com/NpoolPlatform/good-middleware/pkg/client/app/good/topmost"
-	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/client/deviceinfo"
+	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/client/device"
 	good1 "github.com/NpoolPlatform/good-middleware/pkg/client/good"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/client/vender/brand"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/client/vender/location"
@@ -26,7 +26,7 @@ import (
 	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	topmostmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/good"
-	deviceinfomwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	deviceinfomwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 	vendorbrandmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/brand"
 	vendorlocationmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"

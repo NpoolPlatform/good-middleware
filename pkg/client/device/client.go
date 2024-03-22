@@ -1,4 +1,4 @@
-package deviceinfo
+package device
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
 )

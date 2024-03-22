@@ -1,13 +1,13 @@
-package deviceinfo
+package device
 
 import (
 	"context"
 	"fmt"
 
-	deviceinfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/deviceinfo"
+	devicecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entdeviceinfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
+	entdevice "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 )
 
 func (h *Handler) ExistDeviceInfo(ctx context.Context) (bool, error) {
@@ -23,8 +23,8 @@ func (h *Handler) ExistDeviceInfo(ctx context.Context) (bool, error) {
 			DeviceInfo.
 			Query().
 			Where(
-				entdeviceinfo.EntID(*h.EntID),
-				entdeviceinfo.DeletedAt(0),
+				entdevice.EntID(*h.EntID),
+				entdevice.DeletedAt(0),
 			).
 			Exist(_ctx)
 		if err != nil {
@@ -41,7 +41,7 @@ func (h *Handler) ExistDeviceInfo(ctx context.Context) (bool, error) {
 func (h *Handler) ExistDeviceInfoConds(ctx context.Context) (bool, error) {
 	exist := false
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := deviceinfocrud.SetQueryConds(cli.DeviceInfo.Query(), h.Conds)
+		stm, err := devicecrud.SetQueryConds(cli.DeviceInfo.Query(), h.Conds)
 		if err != nil {
 			return err
 		}

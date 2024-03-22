@@ -26,6 +26,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/delegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fbmcrowdfunding"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fee"
@@ -87,6 +88,8 @@ type Client struct {
 	DelegatedStaking *DelegatedStakingClient
 	// DeviceInfo is the client for interacting with the DeviceInfo builders.
 	DeviceInfo *DeviceInfoClient
+	// DevicePoster is the client for interacting with the DevicePoster builders.
+	DevicePoster *DevicePosterClient
 	// ExtraInfo is the client for interacting with the ExtraInfo builders.
 	ExtraInfo *ExtraInfoClient
 	// FbmCrowdFunding is the client for interacting with the FbmCrowdFunding builders.
@@ -154,6 +157,7 @@ func (c *Client) init() {
 	c.Comment = NewCommentClient(c.config)
 	c.DelegatedStaking = NewDelegatedStakingClient(c.config)
 	c.DeviceInfo = NewDeviceInfoClient(c.config)
+	c.DevicePoster = NewDevicePosterClient(c.config)
 	c.ExtraInfo = NewExtraInfoClient(c.config)
 	c.FbmCrowdFunding = NewFbmCrowdFundingClient(c.config)
 	c.Fee = NewFeeClient(c.config)
@@ -222,6 +226,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Comment:              NewCommentClient(cfg),
 		DelegatedStaking:     NewDelegatedStakingClient(cfg),
 		DeviceInfo:           NewDeviceInfoClient(cfg),
+		DevicePoster:         NewDevicePosterClient(cfg),
 		ExtraInfo:            NewExtraInfoClient(cfg),
 		FbmCrowdFunding:      NewFbmCrowdFundingClient(cfg),
 		Fee:                  NewFeeClient(cfg),
@@ -276,6 +281,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Comment:              NewCommentClient(cfg),
 		DelegatedStaking:     NewDelegatedStakingClient(cfg),
 		DeviceInfo:           NewDeviceInfoClient(cfg),
+		DevicePoster:         NewDevicePosterClient(cfg),
 		ExtraInfo:            NewExtraInfoClient(cfg),
 		FbmCrowdFunding:      NewFbmCrowdFundingClient(cfg),
 		Fee:                  NewFeeClient(cfg),
@@ -340,6 +346,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Comment.Use(hooks...)
 	c.DelegatedStaking.Use(hooks...)
 	c.DeviceInfo.Use(hooks...)
+	c.DevicePoster.Use(hooks...)
 	c.ExtraInfo.Use(hooks...)
 	c.FbmCrowdFunding.Use(hooks...)
 	c.Fee.Use(hooks...)
@@ -1815,6 +1822,97 @@ func (c *DeviceInfoClient) GetX(ctx context.Context, id uint32) *DeviceInfo {
 func (c *DeviceInfoClient) Hooks() []Hook {
 	hooks := c.hooks.DeviceInfo
 	return append(hooks[:len(hooks):len(hooks)], deviceinfo.Hooks[:]...)
+}
+
+// DevicePosterClient is a client for the DevicePoster schema.
+type DevicePosterClient struct {
+	config
+}
+
+// NewDevicePosterClient returns a client for the DevicePoster from the given config.
+func NewDevicePosterClient(c config) *DevicePosterClient {
+	return &DevicePosterClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `deviceposter.Hooks(f(g(h())))`.
+func (c *DevicePosterClient) Use(hooks ...Hook) {
+	c.hooks.DevicePoster = append(c.hooks.DevicePoster, hooks...)
+}
+
+// Create returns a builder for creating a DevicePoster entity.
+func (c *DevicePosterClient) Create() *DevicePosterCreate {
+	mutation := newDevicePosterMutation(c.config, OpCreate)
+	return &DevicePosterCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of DevicePoster entities.
+func (c *DevicePosterClient) CreateBulk(builders ...*DevicePosterCreate) *DevicePosterCreateBulk {
+	return &DevicePosterCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for DevicePoster.
+func (c *DevicePosterClient) Update() *DevicePosterUpdate {
+	mutation := newDevicePosterMutation(c.config, OpUpdate)
+	return &DevicePosterUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *DevicePosterClient) UpdateOne(dp *DevicePoster) *DevicePosterUpdateOne {
+	mutation := newDevicePosterMutation(c.config, OpUpdateOne, withDevicePoster(dp))
+	return &DevicePosterUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *DevicePosterClient) UpdateOneID(id uint32) *DevicePosterUpdateOne {
+	mutation := newDevicePosterMutation(c.config, OpUpdateOne, withDevicePosterID(id))
+	return &DevicePosterUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for DevicePoster.
+func (c *DevicePosterClient) Delete() *DevicePosterDelete {
+	mutation := newDevicePosterMutation(c.config, OpDelete)
+	return &DevicePosterDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *DevicePosterClient) DeleteOne(dp *DevicePoster) *DevicePosterDeleteOne {
+	return c.DeleteOneID(dp.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *DevicePosterClient) DeleteOneID(id uint32) *DevicePosterDeleteOne {
+	builder := c.Delete().Where(deviceposter.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &DevicePosterDeleteOne{builder}
+}
+
+// Query returns a query builder for DevicePoster.
+func (c *DevicePosterClient) Query() *DevicePosterQuery {
+	return &DevicePosterQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a DevicePoster entity by its id.
+func (c *DevicePosterClient) Get(ctx context.Context, id uint32) (*DevicePoster, error) {
+	return c.Query().Where(deviceposter.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *DevicePosterClient) GetX(ctx context.Context, id uint32) *DevicePoster {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *DevicePosterClient) Hooks() []Hook {
+	hooks := c.hooks.DevicePoster
+	return append(hooks[:len(hooks):len(hooks)], deviceposter.Hooks[:]...)
 }
 
 // ExtraInfoClient is a client for the ExtraInfo schema.

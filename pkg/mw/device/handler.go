@@ -1,20 +1,20 @@
-package deviceinfo
+package device
 
 import (
 	"context"
 	"fmt"
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
-	deviceinfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/deviceinfo"
+	devicecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/deviceinfo"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 
 	"github.com/google/uuid"
 )
 
 type Handler struct {
-	deviceinfocrud.Req
-	Conds  *deviceinfocrud.Conds
+	devicecrud.Req
+	Conds  *devicecrud.Conds
 	Offset int32
 	Limit  int32
 }
@@ -121,7 +121,7 @@ func WithPosters(ss []string, must bool) func(context.Context, *Handler) error {
 
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.Conds = &deviceinfocrud.Conds{}
+		h.Conds = &devicecrud.Conds{}
 		if conds == nil {
 			return nil
 		}
