@@ -101,6 +101,7 @@ type Conds struct {
 	EntID       *cruder.Cond
 	EntIDs      *cruder.Cond
 	GoodType    *cruder.Cond
+	GoodTypes   *cruder.Cond
 	BenefitType *cruder.Cond
 	TestOnly    *cruder.Cond
 	Purchasable *cruder.Cond
@@ -173,6 +174,22 @@ func SetQueryConds(q *ent.GoodBaseQuery, conds *Conds) (*ent.GoodBaseQuery, erro
 		switch conds.GoodType.Op {
 		case cruder.EQ:
 			q.Where(entgoodbase.GoodType(_type.String()))
+		default:
+			return nil, fmt.Errorf("invalid goodbase field")
+		}
+	}
+	if conds.GoodTypes != nil {
+		_types, ok := conds.GoodTypes.Val.([]types.GoodType)
+		if !ok {
+			return nil, fmt.Errorf("invalid goodtypes")
+		}
+		es := []string{}
+		for _, _type := range _types {
+			es = append(es, _type.String())
+		}
+		switch conds.GoodTypes.Op {
+		case cruder.EQ:
+			q.Where(entgoodbase.GoodTypeIn(es...))
 		default:
 			return nil, fmt.Errorf("invalid goodbase field")
 		}

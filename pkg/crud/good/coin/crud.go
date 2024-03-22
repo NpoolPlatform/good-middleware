@@ -52,11 +52,12 @@ func UpdateSet(u *ent.GoodCoinUpdateOne, req *Req) *ent.GoodCoinUpdateOne {
 }
 
 type Conds struct {
-	ID         *cruder.Cond
-	EntID      *cruder.Cond
-	GoodID     *cruder.Cond
-	GoodIDs    *cruder.Cond
-	CoinTypeID *cruder.Cond
+	ID          *cruder.Cond
+	EntID       *cruder.Cond
+	GoodID      *cruder.Cond
+	GoodIDs     *cruder.Cond
+	CoinTypeID  *cruder.Cond
+	CoinTypeIDs *cruder.Cond
 }
 
 //nolint:funlen,gocyclo
@@ -123,6 +124,18 @@ func SetQueryConds(q *ent.GoodCoinQuery, conds *Conds) (*ent.GoodCoinQuery, erro
 			q.Where(entgoodcoin.CoinTypeID(id))
 		default:
 			return nil, fmt.Errorf("invalid cointypeid field")
+		}
+	}
+	if conds.CoinTypeIDs != nil {
+		ids, ok := conds.CoinTypeIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid cointypeids")
+		}
+		switch conds.CoinTypeIDs.Op {
+		case cruder.IN:
+			q.Where(entgoodcoin.CoinTypeIDIn(ids...))
+		default:
+			return nil, fmt.Errorf("invalid cointypeids field")
 		}
 	}
 	return q, nil
