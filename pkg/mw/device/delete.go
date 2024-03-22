@@ -2,40 +2,46 @@ package device
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	devicecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 )
 
-func (h *Handler) DeleteDeviceInfo(ctx context.Context) (*npool.DeviceInfo, error) {
-	if h.ID == nil {
-		return nil, fmt.Errorf("invalid id")
+type deleteHandler struct {
+	*Handler
+	now uint32
+}
+
+func (h *deleteHandler) deleteDeviceType(ctx context.Context, cli *ent.Client) error {
+	if _, err := devicecrud.UpdateSet(
+		cli.DeviceInfo.UpdateOneID(*h.ID),
+		&devicecrud.Req{
+			DeletedAt: &h.now,
+		},
+	).Save(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (h *Handler) DeleteDeviceType(ctx context.Context) error {
+	handler := &deleteHandler{
+		Handler: h,
+		now:     uint32(time.Now().Unix()),
 	}
 
-	info, err := h.GetDeviceInfo(ctx)
+	info, err := h.GetDeviceType(ctx)
 	if err != nil {
-		return nil, err
+		return err
 	}
-
-	now := uint32(time.Now().Unix())
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if _, err := devicecrud.UpdateSet(
-			cli.DeviceInfo.UpdateOneID(*h.ID),
-			&devicecrud.Req{
-				DeletedAt: &now,
-			},
-		).Save(_ctx); err != nil {
-			return err
-		}
+	if info == nil {
 		return nil
-	})
-	if err != nil {
-		return nil, err
 	}
 
-	return info, nil
+	h.ID = &info.ID
+	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		return handler.deleteDeviceType(_ctx, cli)
+	})
 }

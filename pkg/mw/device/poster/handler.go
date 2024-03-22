@@ -5,28 +5,25 @@ import (
 	"fmt"
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
-	appgoodpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/poster"
-	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
-	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
+	devicepostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device/poster"
+	device1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/poster"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device/poster"
 
 	"github.com/google/uuid"
 )
 
 type Handler struct {
 	ID *uint32
-	appgoodpostercrud.Req
-	PosterConds   *appgoodpostercrud.Conds
-	GoodBaseConds *goodbasecrud.Conds
-	Offset        int32
-	Limit         int32
+	devicepostercrud.Req
+	PosterConds *devicepostercrud.Conds
+	Offset      int32
+	Limit       int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
-		PosterConds:   &appgoodpostercrud.Conds{},
-		GoodBaseConds: &goodbasecrud.Conds{},
+		PosterConds: &devicepostercrud.Conds{},
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
@@ -66,11 +63,11 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error {
+func WithDeviceTypeID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		handler, err := appgoodbase1.NewHandler(
+		handler, err := device1.NewHandler(
 			ctx,
-			appgoodbase1.WithEntID(id, true),
+			device1.WithEntID(id, true),
 		)
 		if err != nil {
 			return err
@@ -82,7 +79,7 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 		if !exist {
 			return fmt.Errorf("invalid appgood")
 		}
-		h.AppGoodID = handler.EntID
+		h.DeviceTypeID = handler.EntID
 		return nil
 	}
 }
@@ -101,7 +98,7 @@ func WithIndex(n *uint8, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func (h *Handler) withAppGoodPosterConds(conds *npool.Conds) error {
+func (h *Handler) withAppPosterGoodConds(conds *npool.Conds) error {
 	if conds.ID != nil {
 		h.PosterConds.ID = &cruder.Cond{
 			Op:  conds.GetID().GetOp(),
@@ -118,55 +115,27 @@ func (h *Handler) withAppGoodPosterConds(conds *npool.Conds) error {
 			Val: id,
 		}
 	}
-	if conds.AppGoodID != nil {
-		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
+	if conds.DeviceTypeID != nil {
+		id, err := uuid.Parse(conds.GetDeviceTypeID().GetValue())
 		if err != nil {
 			return err
 		}
-		h.PosterConds.AppGoodID = &cruder.Cond{
-			Op:  conds.GetAppGoodID().GetOp(),
+		h.PosterConds.DeviceTypeID = &cruder.Cond{
+			Op:  conds.GetDeviceTypeID().GetOp(),
 			Val: id,
 		}
 	}
-	if conds.AppGoodIDs != nil {
+	if conds.DeviceTypeIDs != nil {
 		ids := []uuid.UUID{}
-		for _, id := range conds.GetAppGoodIDs().GetValue() {
+		for _, id := range conds.GetDeviceTypeIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
 				return err
 			}
 			ids = append(ids, _id)
 		}
-		h.PosterConds.AppGoodIDs = &cruder.Cond{
-			Op:  conds.GetAppGoodIDs().GetOp(),
-			Val: ids,
-		}
-	}
-	return nil
-}
-
-func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
-	if conds.GoodID != nil {
-		id, err := uuid.Parse(conds.GetGoodID().GetValue())
-		if err != nil {
-			return err
-		}
-		h.GoodBaseConds.EntID = &cruder.Cond{
-			Op:  conds.GetGoodID().GetOp(),
-			Val: id,
-		}
-	}
-	if conds.GoodIDs != nil {
-		ids := []uuid.UUID{}
-		for _, id := range conds.GetGoodIDs().GetValue() {
-			_id, err := uuid.Parse(id)
-			if err != nil {
-				return err
-			}
-			ids = append(ids, _id)
-		}
-		h.GoodBaseConds.EntIDs = &cruder.Cond{
-			Op:  conds.GetGoodIDs().GetOp(),
+		h.PosterConds.DeviceTypeIDs = &cruder.Cond{
+			Op:  conds.GetDeviceTypeIDs().GetOp(),
 			Val: ids,
 		}
 	}
@@ -179,13 +148,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if conds == nil {
 			return nil
 		}
-		if err := h.withAppGoodPosterConds(conds); err != nil {
-			return err
-		}
-		if err := h.withGoodBaseConds(conds); err != nil {
-			return err
-		}
-		return nil
+		return h.withAppPosterGoodConds(conds)
 	}
 }
 

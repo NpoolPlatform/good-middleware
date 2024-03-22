@@ -107,18 +107,6 @@ func WithShipmentAt(n *uint32, must bool) func(context.Context, *Handler) error 
 	}
 }
 
-func WithPosters(ss []string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		for _, s := range ss {
-			if s == "" {
-				return fmt.Errorf("invalid poster")
-			}
-		}
-		h.Posters = ss
-		return nil
-	}
-}
-
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Conds = &devicecrud.Conds{}

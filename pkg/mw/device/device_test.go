@@ -2,7 +2,6 @@ package device
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"os"
 	"strconv"
@@ -29,23 +28,20 @@ func init() {
 }
 
 var (
-	ret = npool.DeviceInfo{
+	ret = npool.DeviceType{
 		EntID:            uuid.NewString(),
 		Type:             uuid.NewString(),
 		Manufacturer:     uuid.NewString(),
 		PowerConsumption: 120,
 		ShipmentAt:       uint32(time.Now().Unix()),
-		Posters:          []string{uuid.NewString()},
 	}
 )
 
 func setup() func(*testing.T) {
-	b, _ := json.Marshal(ret.Posters)
-	ret.PostersStr = string(b)
 	return func(*testing.T) {}
 }
 
-func createDeviceInfo(t *testing.T) {
+func createDeviceType(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithEntID(&ret.EntID, true),
@@ -53,20 +49,22 @@ func createDeviceInfo(t *testing.T) {
 		WithManufacturer(&ret.Manufacturer, true),
 		WithPowerConsumption(&ret.PowerConsumption, true),
 		WithShipmentAt(&ret.ShipmentAt, true),
-		WithPosters(ret.Posters, true),
 	)
 	assert.Nil(t, err)
 
-	info, err := handler.CreateDeviceInfo(context.Background())
+	err = handler.CreateDeviceType(context.Background())
 	if assert.Nil(t, err) {
-		ret.CreatedAt = info.CreatedAt
-		ret.UpdatedAt = info.UpdatedAt
-		ret.ID = info.ID
-		assert.Equal(t, info, &ret)
+		info, err := handler.GetDeviceType(context.Background())
+		if assert.Nil(t, err) {
+			ret.CreatedAt = info.CreatedAt
+			ret.UpdatedAt = info.UpdatedAt
+			ret.ID = info.ID
+			assert.Equal(t, info, &ret)
+		}
 	}
 }
 
-func updateDeviceInfo(t *testing.T) {
+func updateDeviceType(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
@@ -74,31 +72,33 @@ func updateDeviceInfo(t *testing.T) {
 		WithManufacturer(&ret.Manufacturer, false),
 		WithPowerConsumption(&ret.PowerConsumption, false),
 		WithShipmentAt(&ret.ShipmentAt, false),
-		WithPosters(ret.Posters, false),
 	)
 	assert.Nil(t, err)
 
-	info, err := handler.UpdateDeviceInfo(context.Background())
+	err = handler.UpdateDeviceType(context.Background())
 	if assert.Nil(t, err) {
-		ret.UpdatedAt = info.UpdatedAt
-		assert.Equal(t, info, &ret)
+		info, err := handler.GetDeviceType(context.Background())
+		if assert.Nil(t, err) {
+			ret.UpdatedAt = info.UpdatedAt
+			assert.Equal(t, info, &ret)
+		}
 	}
 }
 
-func getDeviceInfo(t *testing.T) {
+func getDeviceType(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithEntID(&ret.EntID, true),
 	)
 	assert.Nil(t, err)
 
-	info, err := handler.GetDeviceInfo(context.Background())
+	info, err := handler.GetDeviceType(context.Background())
 	if assert.Nil(t, err) {
 		assert.Equal(t, info, &ret)
 	}
 }
 
-func getDeviceInfos(t *testing.T) {
+func getDeviceTypes(t *testing.T) {
 	conds := &npool.Conds{
 		ID:           &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
 		EntID:        &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
@@ -114,31 +114,29 @@ func getDeviceInfos(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	infos, _, err := handler.GetDeviceInfos(context.Background())
+	infos, _, err := handler.GetDeviceTypes(context.Background())
 	if !assert.Nil(t, err) {
 		assert.Equal(t, len(infos), 1)
 		assert.Equal(t, infos[0], &ret)
 	}
 }
 
-func deleteDeviceInfo(t *testing.T) {
+func deleteDeviceType(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 	)
 	assert.Nil(t, err)
 
-	info, err := handler.DeleteDeviceInfo(context.Background())
-	if assert.Nil(t, err) {
-		assert.Equal(t, info, &ret)
-	}
+	err = handler.DeleteDeviceType(context.Background())
+	assert.Nil(t, err)
 
-	info, err = handler.GetDeviceInfo(context.Background())
+	info, err := handler.GetDeviceType(context.Background())
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }
 
-func TestDeviceInfo(t *testing.T) {
+func TestDeviceType(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
 	}
@@ -146,9 +144,9 @@ func TestDeviceInfo(t *testing.T) {
 	teardown := setup()
 	defer teardown(t)
 
-	t.Run("createDeviceInfo", createDeviceInfo)
-	t.Run("updateDeviceInfo", updateDeviceInfo)
-	t.Run("getDeviceInfo", getDeviceInfo)
-	t.Run("getDeviceInfos", getDeviceInfos)
-	t.Run("deleteDeviceInfo", deleteDeviceInfo)
+	t.Run("createDeviceType", createDeviceType)
+	t.Run("updateDeviceType", updateDeviceType)
+	t.Run("getDeviceType", getDeviceType)
+	t.Run("getDeviceTypes", getDeviceTypes)
+	t.Run("deleteDeviceType", deleteDeviceType)
 }

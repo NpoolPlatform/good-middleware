@@ -2,7 +2,6 @@ package device
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	devicecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device"
@@ -15,11 +14,11 @@ import (
 type queryHandler struct {
 	*Handler
 	stmSelect *ent.DeviceInfoSelect
-	infos     []*npool.DeviceInfo
+	infos     []*npool.DeviceType
 	total     uint32
 }
 
-func (h *queryHandler) selectDeviceInfo(stm *ent.DeviceInfoQuery) {
+func (h *queryHandler) selectDeviceType(stm *ent.DeviceInfoQuery) {
 	h.stmSelect = stm.Select(
 		entdevice.FieldID,
 		entdevice.FieldEntID,
@@ -27,13 +26,12 @@ func (h *queryHandler) selectDeviceInfo(stm *ent.DeviceInfoQuery) {
 		entdevice.FieldManufacturer,
 		entdevice.FieldPowerConsumption,
 		entdevice.FieldShipmentAt,
-		entdevice.FieldPosters,
 		entdevice.FieldCreatedAt,
 		entdevice.FieldUpdatedAt,
 	)
 }
 
-func (h *queryHandler) queryDeviceInfo(cli *ent.Client) error {
+func (h *queryHandler) queryDeviceType(cli *ent.Client) error {
 	if h.ID == nil && h.EntID == nil {
 		return fmt.Errorf("invalid id")
 	}
@@ -44,11 +42,11 @@ func (h *queryHandler) queryDeviceInfo(cli *ent.Client) error {
 	if h.EntID != nil {
 		stm.Where(entdevice.EntID(*h.EntID))
 	}
-	h.selectDeviceInfo(stm)
+	h.selectDeviceType(stm)
 	return nil
 }
 
-func (h *queryHandler) queryDeviceInfos(ctx context.Context, cli *ent.Client) error {
+func (h *queryHandler) queryDeviceTypes(ctx context.Context, cli *ent.Client) error {
 	stm, err := devicecrud.SetQueryConds(cli.DeviceInfo.Query(), h.Conds)
 	if err != nil {
 		return err
@@ -58,7 +56,7 @@ func (h *queryHandler) queryDeviceInfos(ctx context.Context, cli *ent.Client) er
 		return err
 	}
 	h.total = uint32(total)
-	h.selectDeviceInfo(stm)
+	h.selectDeviceType(stm)
 	return nil
 }
 
@@ -67,18 +65,16 @@ func (h *queryHandler) scan(ctx context.Context) error {
 }
 
 func (h *queryHandler) formalize() {
-	for _, info := range h.infos {
-		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
-	}
+	// TODO
 }
 
-func (h *Handler) GetDeviceInfo(ctx context.Context) (*npool.DeviceInfo, error) {
+func (h *Handler) GetDeviceType(ctx context.Context) (*npool.DeviceType, error) {
 	handler := &queryHandler{
 		Handler: h,
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if err := handler.queryDeviceInfo(cli); err != nil {
+		if err := handler.queryDeviceType(cli); err != nil {
 			return err
 		}
 		return handler.scan(_ctx)
@@ -96,12 +92,12 @@ func (h *Handler) GetDeviceInfo(ctx context.Context) (*npool.DeviceInfo, error) 
 	return handler.infos[0], nil
 }
 
-func (h *Handler) GetDeviceInfos(ctx context.Context) ([]*npool.DeviceInfo, uint32, error) {
+func (h *Handler) GetDeviceTypes(ctx context.Context) ([]*npool.DeviceType, uint32, error) {
 	handler := &queryHandler{
 		Handler: h,
 	}
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if err := handler.queryDeviceInfos(_ctx, cli); err != nil {
+		if err := handler.queryDeviceTypes(_ctx, cli); err != nil {
 			return err
 		}
 		handler.stmSelect.

@@ -3,60 +3,66 @@ package device
 import (
 	"context"
 	"fmt"
+	"time"
 
-	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
-	devicecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 )
 
-func (h *Handler) UpdateDeviceInfo(ctx context.Context) (*npool.DeviceInfo, error) {
-	if h.ID == nil {
-		return nil, fmt.Errorf("invalid id")
-	}
+type updateHandler struct {
+	*Handler
+	sql string
+}
 
+func (h *updateHandler) constructSql() {
+	comma := ""
+	now := uint32(time.Now().Unix())
+
+	_sql := "update device_infos "
 	if h.Type != nil {
-		key := h.lockKey()
-		if err := redis2.TryLock(key, 0); err != nil {
-			return nil, err
-		}
-		defer func() {
-			_ = redis2.Unlock(key)
-		}()
-
-		h.Conds = &devicecrud.Conds{
-			ID:   &cruder.Cond{Op: cruder.NEQ, Val: *h.ID},
-			Type: &cruder.Cond{Op: cruder.EQ, Val: *h.Type},
-		}
-		exist, err := h.ExistDeviceInfoConds(ctx)
-		if err != nil {
-			return nil, err
-		}
-		if exist {
-			return nil, fmt.Errorf("arleady exists")
-		}
+		_sql += fmt.Sprintf("set type = '%v'", *h.Type)
+		comma = ", "
 	}
+	if h.Manufacturer != nil {
+		_sql += fmt.Sprintf("%vmanufacturer = '%v'", comma, *h.Manufacturer)
+		comma = ", "
+	}
+	if h.PowerConsumption != nil {
+		_sql += fmt.Sprintf("%vpower_consumption = '%v'", comma, *h.PowerConsumption)
+		comma = ", "
+	}
+	if h.ShipmentAt != nil {
+		_sql += fmt.Sprintf("%vshipment_at = '%v'", comma, *h.ShipmentAt)
+		comma = ", "
+	}
+	_sql += fmt.Sprintf("%vupdated_at = %v ", comma, now)
+	_sql += "where "
+	_sql += fmt.Sprintf("id = %v ", *h.ID)
+	_sql += "and not exists ("
+	_sql += "select 1 from (select * from device_infos) as di "
+	_sql += fmt.Sprintf("where di.type = '%v' and di.manufacturer = '%v' and di.id != %v", *h.Type, h.Manufacturer, *h.ID)
+	_sql += ") limit 1"
 
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if _, err := devicecrud.UpdateSet(
-			cli.DeviceInfo.UpdateOneID(*h.ID),
-			&devicecrud.Req{
-				Type:             h.Type,
-				Manufacturer:     h.Manufacturer,
-				PowerConsumption: h.PowerConsumption,
-				ShipmentAt:       h.ShipmentAt,
-				Posters:          h.Posters,
-			},
-		).Save(_ctx); err != nil {
-			return err
-		}
-		return nil
-	})
+	h.sql = _sql
+}
+
+func (h *updateHandler) updateDeviceType(ctx context.Context, tx *ent.Tx) error {
+	rc, err := tx.ExecContext(ctx, h.sql)
 	if err != nil {
-		return nil, err
+		return err
 	}
+	if _, err := rc.RowsAffected(); err != nil {
+		return err
+	}
+	return nil
+}
 
-	return h.GetDeviceInfo(ctx)
+func (h *Handler) UpdateDeviceType(ctx context.Context) error {
+	handler := &updateHandler{
+		Handler: h,
+	}
+	handler.constructSql()
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		return handler.updateDeviceType(_ctx, tx)
+	})
 }

@@ -2,7 +2,6 @@ package device
 
 import (
 	"context"
-	"fmt"
 
 	devicecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -10,14 +9,7 @@ import (
 	entdevice "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 )
 
-func (h *Handler) ExistDeviceInfo(ctx context.Context) (bool, error) {
-	if h.EntID == nil {
-		return false, fmt.Errorf("invalid entid")
-	}
-
-	exist := false
-	var err error
-
+func (h *Handler) ExistDeviceType(ctx context.Context) (exist bool, err error) {
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		exist, err = cli.
 			DeviceInfo.
@@ -38,9 +30,8 @@ func (h *Handler) ExistDeviceInfo(ctx context.Context) (bool, error) {
 	return exist, nil
 }
 
-func (h *Handler) ExistDeviceInfoConds(ctx context.Context) (bool, error) {
-	exist := false
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+func (h *Handler) ExistDeviceTypeConds(ctx context.Context) (exist bool, err error) {
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := devicecrud.SetQueryConds(cli.DeviceInfo.Query(), h.Conds)
 		if err != nil {
 			return err
