@@ -47,12 +47,15 @@ func createBrand(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	info, err := handler.CreateBrand(context.Background())
+	err = handler.CreateBrand(context.Background())
 	if assert.Nil(t, err) {
-		ret.CreatedAt = info.CreatedAt
-		ret.UpdatedAt = info.UpdatedAt
-		ret.ID = info.ID
-		assert.Equal(t, info, &ret)
+		info, err := handler.GetBrand(context.Background())
+		if assert.Nil(t, err) {
+			ret.CreatedAt = info.CreatedAt
+			ret.UpdatedAt = info.UpdatedAt
+			ret.ID = info.ID
+			assert.Equal(t, info, &ret)
+		}
 	}
 }
 
@@ -65,10 +68,13 @@ func updateBrand(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	info, err := handler.UpdateBrand(context.Background())
+	err = handler.UpdateBrand(context.Background())
 	if assert.Nil(t, err) {
-		ret.UpdatedAt = info.UpdatedAt
-		assert.Equal(t, info, &ret)
+		info, err := handler.GetBrand(context.Background())
+		if assert.Nil(t, err) {
+			ret.UpdatedAt = info.UpdatedAt
+			assert.Equal(t, info, &ret)
+		}
 	}
 }
 
@@ -114,12 +120,10 @@ func deleteBrand(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	info, err := handler.DeleteBrand(context.Background())
-	if assert.Nil(t, err) {
-		assert.Equal(t, info, &ret)
-	}
+	err = handler.DeleteBrand(context.Background())
+	assert.Nil(t, err)
 
-	info, err = handler.GetBrand(context.Background())
+	info, err := handler.GetBrand(context.Background())
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }

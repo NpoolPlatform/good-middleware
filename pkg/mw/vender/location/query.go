@@ -4,61 +4,94 @@ import (
 	"context"
 	"fmt"
 
+	"entgo.io/ent/dialect/sql"
+
 	locationcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/vender/location"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
+	entvendorbrand "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
+	entvendorlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"
 )
 
 type queryHandler struct {
 	*Handler
 	stmSelect *ent.VendorLocationSelect
+	stmCount  *ent.VendorLocationSelect
 	infos     []*npool.Location
 	total     uint32
 }
 
-func (h *queryHandler) selectVendorLocation(stm *ent.VendorLocationQuery) {
-	h.stmSelect = stm.Select(
-		entlocation.FieldID,
-		entlocation.FieldEntID,
-		entlocation.FieldCountry,
-		entlocation.FieldProvince,
-		entlocation.FieldCity,
-		entlocation.FieldAddress,
-		entlocation.FieldBrandID,
-		entlocation.FieldCreatedAt,
-		entlocation.FieldUpdatedAt,
-	)
+func (h *queryHandler) selectVendorLocation(stm *ent.VendorLocationQuery) *ent.VendorLocationSelect {
+	return stm.Select(entvendorlocation.FieldID)
 }
 
 func (h *queryHandler) queryVendorLocation(cli *ent.Client) error {
 	if h.ID == nil && h.EntID == nil {
 		return fmt.Errorf("invalid id")
 	}
-	stm := cli.VendorLocation.Query().Where(entlocation.DeletedAt(0))
+	stm := cli.VendorLocation.Query().Where(entvendorlocation.DeletedAt(0))
 	if h.ID != nil {
-		stm.Where(entlocation.ID(*h.ID))
+		stm.Where(entvendorlocation.ID(*h.ID))
 	}
 	if h.EntID != nil {
-		stm.Where(entlocation.EntID(*h.EntID))
+		stm.Where(entvendorlocation.EntID(*h.EntID))
 	}
-	h.selectVendorLocation(stm)
+	h.stmSelect = h.selectVendorLocation(stm)
 	return nil
 }
 
-func (h *queryHandler) queryVendorLocations(ctx context.Context, cli *ent.Client) error {
+func (h *queryHandler) queryVendorLocations(ctx context.Context, cli *ent.Client) (*ent.VendorLocationSelect, error) {
 	stm, err := locationcrud.SetQueryConds(cli.VendorLocation.Query(), h.Conds)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	total, err := stm.Count(ctx)
-	if err != nil {
-		return err
+	return h.selectVendorLocation(stm), nil
+}
+
+func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
+	t1 := sql.Table(entvendorlocation.Table)
+	s.LeftJoin(t1).
+		On(
+			s.C(entvendorlocation.FieldEntID),
+			t1.C(entvendorlocation.FieldEntID),
+		).
+		AppendSelect(
+			t1.C(entvendorlocation.FieldEntID),
+			t1.C(entvendorlocation.FieldCountry),
+			t1.C(entvendorlocation.FieldProvince),
+			t1.C(entvendorlocation.FieldCity),
+			t1.C(entvendorlocation.FieldAddress),
+			t1.C(entvendorlocation.FieldBrandID),
+			t1.C(entvendorlocation.FieldCreatedAt),
+			t1.C(entvendorlocation.FieldUpdatedAt),
+		)
+}
+
+func (h *queryHandler) queryJoinBrand(s *sql.Selector) {
+	t1 := sql.Table(entvendorbrand.Table)
+	s.LeftJoin(t1).
+		On(
+			s.C(entvendorlocation.FieldBrandID),
+			t1.C(entvendorbrand.FieldEntID),
+		).
+		AppendSelect(
+			sql.As(t1.C(entvendorbrand.FieldName), "brand_name"),
+			sql.As(t1.C(entvendorbrand.FieldLogo), "brand_logo"),
+		)
+}
+
+func (h *queryHandler) queryJoin() {
+	h.stmSelect.Modify(func(s *sql.Selector) {
+		h.queryJoinMyself(s)
+		h.queryJoinBrand(s)
+	})
+	if h.stmCount == nil {
+		return
 	}
-	h.total = uint32(total)
-	h.selectVendorLocation(stm)
-	return nil
+	h.stmCount.Modify(func(s *sql.Selector) {
+		h.queryJoinBrand(s)
+	})
 }
 
 func (h *queryHandler) scan(ctx context.Context) error {
@@ -74,6 +107,10 @@ func (h *Handler) GetLocation(ctx context.Context) (*npool.Location, error) {
 		if err := handler.queryVendorLocation(cli); err != nil {
 			return err
 		}
+		handler.queryJoin()
+		handler.stmSelect.
+			Offset(0).
+			Limit(2)
 		return handler.scan(_ctx)
 	})
 	if err != nil {
@@ -92,8 +129,12 @@ func (h *Handler) GetLocations(ctx context.Context) ([]*npool.Location, uint32, 
 	handler := &queryHandler{
 		Handler: h,
 	}
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if err := handler.queryVendorLocations(_ctx, cli); err != nil {
+	var err error
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		if handler.stmSelect, err = handler.queryVendorLocations(_ctx, cli); err != nil {
+			return err
+		}
+		if handler.stmCount, err = handler.queryVendorLocations(_ctx, cli); err != nil {
 			return err
 		}
 		handler.stmSelect.

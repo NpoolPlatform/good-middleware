@@ -44,24 +44,24 @@ func (h *Handler) ConstructGoodBaseSql() string {
 	comma = ", "
 	_sql += fmt.Sprintf("%v'%v' as benefit_type", comma, h.BenefitType.String())
 	_sql += fmt.Sprintf("%v'%v' as name", comma, *h.Name)
-	_sql += fmt.Sprintf("%v'%v' as service_start_at", comma, *h.ServiceStartAt)
+	_sql += fmt.Sprintf("%v%v as service_start_at", comma, *h.ServiceStartAt)
 	_sql += fmt.Sprintf("%v'%v' as start_mode", comma, h.StartMode.String())
 	if h.TestOnly != nil {
-		_sql += fmt.Sprintf("%v'%v' as test_only", comma, *h.TestOnly)
+		_sql += fmt.Sprintf("%v%v as test_only", comma, *h.TestOnly)
 	}
 	_sql += fmt.Sprintf("%v'%v' as benefit_interval_hours", comma, *h.BenefitIntervalHours)
 	if h.Purchasable != nil {
-		_sql += fmt.Sprintf("%v'%v' as purchasable", comma, *h.Purchasable)
+		_sql += fmt.Sprintf("%v%v as purchasable", comma, *h.Purchasable)
 	}
 	if h.Online != nil {
-		_sql += fmt.Sprintf("%v'%v' as inline", comma, *h.Online)
+		_sql += fmt.Sprintf("%v%v as online", comma, *h.Online)
 	}
 	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
 	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
 	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
 	_sql += ") as tmp "
 	_sql += "where not exists ("
-	_sql += "select 1 from good_coins "
+	_sql += "select 1 from good_bases "
 	_sql += fmt.Sprintf("where name = '%v'", *h.Name)
 	_sql += ") limit 1"
 

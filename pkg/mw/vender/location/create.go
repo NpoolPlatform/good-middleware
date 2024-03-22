@@ -3,81 +3,86 @@ package location
 import (
 	"context"
 	"fmt"
+	"time"
 
-	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
-	locationcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/vender/location"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"
-
-	"github.com/google/uuid"
 )
 
-func (h *Handler) CreateLocation(ctx context.Context) (*npool.Location, error) {
-	if h.Country == nil {
-		return nil, fmt.Errorf("invalid country")
-	}
-	if h.Province == nil {
-		return nil, fmt.Errorf("invalid province")
-	}
-	if h.City == nil {
-		return nil, fmt.Errorf("invalid city")
-	}
-	if h.Address == nil {
-		return nil, fmt.Errorf("invalid address")
-	}
-	if h.BrandID == nil {
-		return nil, fmt.Errorf("invalid brandid")
-	}
+type createHandler struct {
+	*Handler
+	sql string
+}
 
-	key := h.lockKey()
-	if err := redis2.TryLock(key, 0); err != nil {
-		return nil, err
+func (h *createHandler) constructSql() {
+	now := uint32(time.Now().Unix())
+	comma := ""
+	_sql := "insert into vendor_locations ("
+	if h.EntID != nil {
+		_sql += "ent_id"
+		comma = ", "
 	}
-	defer func() {
-		_ = redis2.Unlock(key)
-	}()
+	_sql += comma + "country"
+	comma = ", "
+	_sql += comma + "province"
+	_sql += comma + "city"
+	_sql += comma + "address"
+	_sql += comma + "brand_id"
+	_sql += comma + "created_at"
+	_sql += comma + "updated_at"
+	_sql += comma + "deleted_at"
+	_sql += ")"
 
-	h.Conds = &locationcrud.Conds{
-		Country:  &cruder.Cond{Op: cruder.EQ, Val: *h.Country},
-		Province: &cruder.Cond{Op: cruder.EQ, Val: *h.Province},
-		City:     &cruder.Cond{Op: cruder.EQ, Val: *h.City},
-		Address:  &cruder.Cond{Op: cruder.EQ, Val: *h.Address},
-		BrandID:  &cruder.Cond{Op: cruder.EQ, Val: *h.BrandID},
+	comma = ""
+	_sql += " select * from (select "
+	if h.EntID != nil {
+		_sql += fmt.Sprintf("'%v' as ent_id", *h.EntID)
+		comma = ", "
 	}
-	exist, err := h.ExistLocationConds(ctx)
+	_sql += fmt.Sprintf("%v'%v' as country", comma, *h.Country)
+	comma = ", "
+	_sql += fmt.Sprintf("%v'%v' as province", comma, *h.Province)
+	_sql += fmt.Sprintf("%v'%v' as city", comma, *h.City)
+	_sql += fmt.Sprintf("%v'%v' as address", comma, *h.Address)
+	_sql += fmt.Sprintf("%v'%v' as brand_id", comma, *h.BrandID)
+	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
+	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
+	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
+	_sql += ") as tmp "
+	_sql += "where not exists ("
+	_sql += "select 1 from vendor_locations as vl "
+	_sql += fmt.Sprintf("where vl.country = '%v' ", *h.Country)
+	_sql += fmt.Sprintf("and vl.province = '%v' ", *h.Province)
+	_sql += fmt.Sprintf("and vl.city = '%v' ", *h.City)
+	_sql += fmt.Sprintf("and vl.address = '%v' ", *h.Address)
+	_sql += fmt.Sprintf("and vl.brand_id = '%v'", *h.BrandID)
+	_sql += " limit 1) "
+	_sql += "and exists ("
+	_sql += "select 1 from vendor_brands "
+	_sql += fmt.Sprintf("where ent_id = '%v' limit 1", *h.BrandID)
+	_sql += ")"
+
+	h.sql = _sql
+}
+
+func (h *createHandler) createLocation(ctx context.Context, tx *ent.Tx) error {
+	rc, err := tx.ExecContext(ctx, h.sql)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	if exist {
-		return nil, fmt.Errorf("arleady exists")
+	n, err := rc.RowsAffected()
+	if err != nil || n != 1 {
+		return fmt.Errorf("fail create manufacturer: %v", err)
 	}
+	return nil
+}
 
-	id := uuid.New()
-	if h.EntID == nil {
-		h.EntID = &id
+func (h *Handler) CreateLocation(ctx context.Context) error {
+	handler := &createHandler{
+		Handler: h,
 	}
-
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if _, err := locationcrud.CreateSet(
-			cli.VendorLocation.Create(),
-			&locationcrud.Req{
-				EntID:    h.EntID,
-				Country:  h.Country,
-				Province: h.Province,
-				City:     h.City,
-				Address:  h.Address,
-				BrandID:  h.BrandID,
-			},
-		).Save(_ctx); err != nil {
-			return err
-		}
-		return nil
+	handler.constructSql()
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		return handler.createLocation(_ctx, tx)
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetLocation(ctx)
 }

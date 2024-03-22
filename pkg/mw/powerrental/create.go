@@ -46,8 +46,9 @@ func (h *createHandler) constructPowerRentalSql() {
 		_sql += "ent_id"
 		comma = ", "
 	}
-	_sql += comma + "device_type_id"
+	_sql += comma + "good_id"
 	comma = ", "
+	_sql += comma + "device_type_id"
 	_sql += comma + "vendor_location_id"
 	_sql += comma + "unit_price"
 	_sql += comma + "quantity_unit"
@@ -73,7 +74,7 @@ func (h *createHandler) constructPowerRentalSql() {
 	_sql += fmt.Sprintf("%v'%v' as unit_price", comma, *h.UnitPrice)
 	_sql += fmt.Sprintf("%v'%v' as quantity_unit", comma, *h.QuantityUnit)
 	_sql += fmt.Sprintf("%v'%v' as quantity_unit_amount", comma, *h.QuantityUnitAmount)
-	_sql += fmt.Sprintf("%v'%v' as delivery_at", comma, *h.DeliveryAt)
+	_sql += fmt.Sprintf("%v%v as delivery_at", comma, *h.DeliveryAt)
 	if h.DurationType != nil {
 		_sql += fmt.Sprintf("%v'%v' as duration_type", comma, h.DurationType.String())
 	}
@@ -84,11 +85,11 @@ func (h *createHandler) constructPowerRentalSql() {
 	_sql += "where not exists ("
 	_sql += "select 1 from power_rentals "
 	_sql += fmt.Sprintf("where good_id = '%v'", *h.GoodID)
-	_sql += ") limit 1 "
+	_sql += " limit 1) "
 	_sql += "and exists ("
 	_sql += "select 1 from good_bases "
 	_sql += fmt.Sprintf("where ent_id = '%v'", *h.GoodID)
-	_sql += ") limit 1"
+	_sql += " limit 1)"
 	h.sqlPowerRental = _sql
 }
 

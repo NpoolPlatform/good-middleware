@@ -10,8 +10,11 @@ import (
 
 	// "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/powerrental"
 	devicetype1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
+	manufacturer1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device/manufacturer"
+	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
+	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/powerrental"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
@@ -32,10 +35,22 @@ func init() {
 
 var (
 	ret = npool.PowerRental{
-		EntID:              uuid.NewString(),
-		GoodID:             uuid.NewString(),
-		DeviceTypeID:       uuid.NewString(),
-		VendorLocationID:   uuid.NewString(),
+		EntID:  uuid.NewString(),
+		GoodID: uuid.NewString(),
+
+		DeviceTypeID:           uuid.NewString(),
+		DeviceType:             uuid.NewString(),
+		DeviceManufacturerName: uuid.NewString(),
+		DeviceManufacturerLogo: uuid.NewString(),
+		DevicePowerConsumption: 120,
+		DeviceShipmentAt:       uint32(time.Now().Unix()),
+
+		VendorLocationID: uuid.NewString(),
+		VendorBrand:      uuid.NewString(),
+		VendorLogo:       uuid.NewString(),
+		VendorCountry:    uuid.NewString(),
+		VendorProvince:   uuid.NewString(),
+
 		UnitPrice:          decimal.NewFromInt(120).String(),
 		QuantityUnit:       "TiB",
 		QuantityUnitAmount: decimal.NewFromInt(2).String(),
@@ -48,6 +63,7 @@ var (
 		ServiceStartAt:       uint32(time.Now().Unix()),
 		StartMode:            types.GoodStartMode_GoodStartModeInstantly,
 		BenefitIntervalHours: 20,
+		UnitLockDeposit:      decimal.NewFromInt(1).String(),
 	}
 )
 
@@ -56,13 +72,63 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.DurationTypeStr = ret.DurationType.String()
 	ret.StartModeStr = ret.StartMode.String()
 
-	h1, err := devicetype1.NewHandler(
+	manufacturerID := uuid.NewString()
+	h1, err := manufacturer1.NewHandler(
+		context.Background(),
+		manufacturer1.WithEntID(&manufacturerID, true),
+		manufacturer1.WithName(&ret.DeviceManufacturerName, true),
+		manufacturer1.WithLogo(&ret.DeviceManufacturerLogo, true),
+	)
+	assert.Nil(t, err)
+
+	err = h1.CreateManufacturer(context.Background())
+	assert.Nil(t, err)
+
+	h2, err := devicetype1.NewHandler(
 		context.Background(),
 		devicetype1.WithEntID(&ret.DeviceTypeID, true),
-		devicetype1.WithType(&ret.)
+		devicetype1.WithType(&ret.DeviceType, true),
+		devicetype1.WithManufacturerID(&manufacturerID, true),
+		devicetype1.WithPowerConsumption(&ret.DevicePowerConsumption, true),
+		devicetype1.WithShipmentAt(&ret.DeviceShipmentAt, true),
 	)
+	assert.Nil(t, err)
 
-	return func(*testing.T) {}
+	err = h2.CreateDeviceType(context.Background())
+	assert.Nil(t, err)
+
+	brandID := uuid.NewString()
+	h3, err := vendorbrand1.NewHandler(
+		context.Background(),
+		vendorbrand1.WithEntID(&brandID, true),
+		vendorbrand1.WithName(&ret.VendorBrand, true),
+		vendorbrand1.WithLogo(&ret.VendorLogo, true),
+	)
+	assert.Nil(t, err)
+
+	err = h3.CreateBrand(context.Background())
+	assert.Nil(t, err)
+
+	h4, err := vendorlocation1.NewHandler(
+		context.Background(),
+		vendorlocation1.WithEntID(&ret.VendorLocationID, true),
+		vendorlocation1.WithBrandID(&brandID, true),
+		vendorlocation1.WithCountry(&ret.VendorCountry, true),
+		vendorlocation1.WithProvince(&ret.VendorProvince, true),
+		vendorlocation1.WithCity(&ret.VendorProvince, true),
+		vendorlocation1.WithAddress(&ret.VendorProvince, true),
+	)
+	assert.Nil(t, err)
+
+	err = h4.CreateLocation(context.Background())
+	assert.Nil(t, err)
+
+	return func(*testing.T) {
+		_ = h4.DeleteLocation(context.Background())
+		_ = h3.DeleteBrand(context.Background())
+		_ = h2.DeleteDeviceType(context.Background())
+		_ = h1.DeleteManufacturer(context.Background())
+	}
 }
 
 func createPowerRental(t *testing.T) {
@@ -117,7 +183,7 @@ func createPowerRental(t *testing.T) {
 	assert.Nil(t, err)
 
 	err = h2.CreatePowerRental(context.Background())
-	assert.Nil(t, err)
+	assert.NotNil(t, err)
 }
 
 func TestPowerRental(t *testing.T) {
