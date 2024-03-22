@@ -114,10 +114,10 @@ func Type(v string) predicate.DeviceInfo {
 	})
 }
 
-// Manufacturer applies equality check predicate on the "manufacturer" field. It's identical to ManufacturerEQ.
-func Manufacturer(v string) predicate.DeviceInfo {
+// ManufacturerID applies equality check predicate on the "manufacturer_id" field. It's identical to ManufacturerIDEQ.
+func ManufacturerID(v uuid.UUID) predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldManufacturer), v))
+		s.Where(sql.EQ(s.C(FieldManufacturerID), v))
 	})
 }
 
@@ -504,116 +504,81 @@ func TypeContainsFold(v string) predicate.DeviceInfo {
 	})
 }
 
-// ManufacturerEQ applies the EQ predicate on the "manufacturer" field.
-func ManufacturerEQ(v string) predicate.DeviceInfo {
+// ManufacturerIDEQ applies the EQ predicate on the "manufacturer_id" field.
+func ManufacturerIDEQ(v uuid.UUID) predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldManufacturer), v))
+		s.Where(sql.EQ(s.C(FieldManufacturerID), v))
 	})
 }
 
-// ManufacturerNEQ applies the NEQ predicate on the "manufacturer" field.
-func ManufacturerNEQ(v string) predicate.DeviceInfo {
+// ManufacturerIDNEQ applies the NEQ predicate on the "manufacturer_id" field.
+func ManufacturerIDNEQ(v uuid.UUID) predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldManufacturer), v))
+		s.Where(sql.NEQ(s.C(FieldManufacturerID), v))
 	})
 }
 
-// ManufacturerIn applies the In predicate on the "manufacturer" field.
-func ManufacturerIn(vs ...string) predicate.DeviceInfo {
+// ManufacturerIDIn applies the In predicate on the "manufacturer_id" field.
+func ManufacturerIDIn(vs ...uuid.UUID) predicate.DeviceInfo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldManufacturer), v...))
+		s.Where(sql.In(s.C(FieldManufacturerID), v...))
 	})
 }
 
-// ManufacturerNotIn applies the NotIn predicate on the "manufacturer" field.
-func ManufacturerNotIn(vs ...string) predicate.DeviceInfo {
+// ManufacturerIDNotIn applies the NotIn predicate on the "manufacturer_id" field.
+func ManufacturerIDNotIn(vs ...uuid.UUID) predicate.DeviceInfo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldManufacturer), v...))
+		s.Where(sql.NotIn(s.C(FieldManufacturerID), v...))
 	})
 }
 
-// ManufacturerGT applies the GT predicate on the "manufacturer" field.
-func ManufacturerGT(v string) predicate.DeviceInfo {
+// ManufacturerIDGT applies the GT predicate on the "manufacturer_id" field.
+func ManufacturerIDGT(v uuid.UUID) predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldManufacturer), v))
+		s.Where(sql.GT(s.C(FieldManufacturerID), v))
 	})
 }
 
-// ManufacturerGTE applies the GTE predicate on the "manufacturer" field.
-func ManufacturerGTE(v string) predicate.DeviceInfo {
+// ManufacturerIDGTE applies the GTE predicate on the "manufacturer_id" field.
+func ManufacturerIDGTE(v uuid.UUID) predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldManufacturer), v))
+		s.Where(sql.GTE(s.C(FieldManufacturerID), v))
 	})
 }
 
-// ManufacturerLT applies the LT predicate on the "manufacturer" field.
-func ManufacturerLT(v string) predicate.DeviceInfo {
+// ManufacturerIDLT applies the LT predicate on the "manufacturer_id" field.
+func ManufacturerIDLT(v uuid.UUID) predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldManufacturer), v))
+		s.Where(sql.LT(s.C(FieldManufacturerID), v))
 	})
 }
 
-// ManufacturerLTE applies the LTE predicate on the "manufacturer" field.
-func ManufacturerLTE(v string) predicate.DeviceInfo {
+// ManufacturerIDLTE applies the LTE predicate on the "manufacturer_id" field.
+func ManufacturerIDLTE(v uuid.UUID) predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldManufacturer), v))
+		s.Where(sql.LTE(s.C(FieldManufacturerID), v))
 	})
 }
 
-// ManufacturerContains applies the Contains predicate on the "manufacturer" field.
-func ManufacturerContains(v string) predicate.DeviceInfo {
+// ManufacturerIDIsNil applies the IsNil predicate on the "manufacturer_id" field.
+func ManufacturerIDIsNil() predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldManufacturer), v))
+		s.Where(sql.IsNull(s.C(FieldManufacturerID)))
 	})
 }
 
-// ManufacturerHasPrefix applies the HasPrefix predicate on the "manufacturer" field.
-func ManufacturerHasPrefix(v string) predicate.DeviceInfo {
+// ManufacturerIDNotNil applies the NotNil predicate on the "manufacturer_id" field.
+func ManufacturerIDNotNil() predicate.DeviceInfo {
 	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldManufacturer), v))
-	})
-}
-
-// ManufacturerHasSuffix applies the HasSuffix predicate on the "manufacturer" field.
-func ManufacturerHasSuffix(v string) predicate.DeviceInfo {
-	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldManufacturer), v))
-	})
-}
-
-// ManufacturerIsNil applies the IsNil predicate on the "manufacturer" field.
-func ManufacturerIsNil() predicate.DeviceInfo {
-	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldManufacturer)))
-	})
-}
-
-// ManufacturerNotNil applies the NotNil predicate on the "manufacturer" field.
-func ManufacturerNotNil() predicate.DeviceInfo {
-	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldManufacturer)))
-	})
-}
-
-// ManufacturerEqualFold applies the EqualFold predicate on the "manufacturer" field.
-func ManufacturerEqualFold(v string) predicate.DeviceInfo {
-	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldManufacturer), v))
-	})
-}
-
-// ManufacturerContainsFold applies the ContainsFold predicate on the "manufacturer" field.
-func ManufacturerContainsFold(v string) predicate.DeviceInfo {
-	return predicate.DeviceInfo(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldManufacturer), v))
+		s.Where(sql.NotNull(s.C(FieldManufacturerID)))
 	})
 }
 

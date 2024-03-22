@@ -26,8 +26,8 @@ type DeviceInfo struct {
 	EntID uuid.UUID `json:"ent_id,omitempty"`
 	// Type holds the value of the "type" field.
 	Type string `json:"type,omitempty"`
-	// Manufacturer holds the value of the "manufacturer" field.
-	Manufacturer string `json:"manufacturer,omitempty"`
+	// ManufacturerID holds the value of the "manufacturer_id" field.
+	ManufacturerID uuid.UUID `json:"manufacturer_id,omitempty"`
 	// PowerConsumption holds the value of the "power_consumption" field.
 	PowerConsumption uint32 `json:"power_consumption,omitempty"`
 	// ShipmentAt holds the value of the "shipment_at" field.
@@ -41,9 +41,9 @@ func (*DeviceInfo) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case deviceinfo.FieldID, deviceinfo.FieldCreatedAt, deviceinfo.FieldUpdatedAt, deviceinfo.FieldDeletedAt, deviceinfo.FieldPowerConsumption, deviceinfo.FieldShipmentAt:
 			values[i] = new(sql.NullInt64)
-		case deviceinfo.FieldType, deviceinfo.FieldManufacturer:
+		case deviceinfo.FieldType:
 			values[i] = new(sql.NullString)
-		case deviceinfo.FieldEntID:
+		case deviceinfo.FieldEntID, deviceinfo.FieldManufacturerID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type DeviceInfo", columns[i])
@@ -96,11 +96,11 @@ func (di *DeviceInfo) assignValues(columns []string, values []interface{}) error
 			} else if value.Valid {
 				di.Type = value.String
 			}
-		case deviceinfo.FieldManufacturer:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field manufacturer", values[i])
-			} else if value.Valid {
-				di.Manufacturer = value.String
+		case deviceinfo.FieldManufacturerID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field manufacturer_id", values[i])
+			} else if value != nil {
+				di.ManufacturerID = *value
 			}
 		case deviceinfo.FieldPowerConsumption:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -157,8 +157,8 @@ func (di *DeviceInfo) String() string {
 	builder.WriteString("type=")
 	builder.WriteString(di.Type)
 	builder.WriteString(", ")
-	builder.WriteString("manufacturer=")
-	builder.WriteString(di.Manufacturer)
+	builder.WriteString("manufacturer_id=")
+	builder.WriteString(fmt.Sprintf("%v", di.ManufacturerID))
 	builder.WriteString(", ")
 	builder.WriteString("power_consumption=")
 	builder.WriteString(fmt.Sprintf("%v", di.PowerConsumption))

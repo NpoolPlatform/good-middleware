@@ -434,7 +434,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			deviceinfo.FieldDeletedAt:        {Type: field.TypeUint32, Column: deviceinfo.FieldDeletedAt},
 			deviceinfo.FieldEntID:            {Type: field.TypeUUID, Column: deviceinfo.FieldEntID},
 			deviceinfo.FieldType:             {Type: field.TypeString, Column: deviceinfo.FieldType},
-			deviceinfo.FieldManufacturer:     {Type: field.TypeString, Column: deviceinfo.FieldManufacturer},
+			deviceinfo.FieldManufacturerID:   {Type: field.TypeUUID, Column: deviceinfo.FieldManufacturerID},
 			deviceinfo.FieldPowerConsumption: {Type: field.TypeUint32, Column: deviceinfo.FieldPowerConsumption},
 			deviceinfo.FieldShipmentAt:       {Type: field.TypeUint32, Column: deviceinfo.FieldShipmentAt},
 		},
@@ -2481,9 +2481,9 @@ func (f *DeviceInfoFilter) WhereType(p entql.StringP) {
 	f.Where(p.Field(deviceinfo.FieldType))
 }
 
-// WhereManufacturer applies the entql string predicate on the manufacturer field.
-func (f *DeviceInfoFilter) WhereManufacturer(p entql.StringP) {
-	f.Where(p.Field(deviceinfo.FieldManufacturer))
+// WhereManufacturerID applies the entql [16]byte predicate on the manufacturer_id field.
+func (f *DeviceInfoFilter) WhereManufacturerID(p entql.ValueP) {
+	f.Where(p.Field(deviceinfo.FieldManufacturerID))
 }
 
 // WherePowerConsumption applies the entql uint32 predicate on the power_consumption field.

@@ -17867,7 +17867,7 @@ type DeviceInfoMutation struct {
 	adddeleted_at        *int32
 	ent_id               *uuid.UUID
 	_type                *string
-	manufacturer         *string
+	manufacturer_id      *uuid.UUID
 	power_consumption    *uint32
 	addpower_consumption *int32
 	shipment_at          *uint32
@@ -18235,53 +18235,53 @@ func (m *DeviceInfoMutation) ResetType() {
 	delete(m.clearedFields, deviceinfo.FieldType)
 }
 
-// SetManufacturer sets the "manufacturer" field.
-func (m *DeviceInfoMutation) SetManufacturer(s string) {
-	m.manufacturer = &s
+// SetManufacturerID sets the "manufacturer_id" field.
+func (m *DeviceInfoMutation) SetManufacturerID(u uuid.UUID) {
+	m.manufacturer_id = &u
 }
 
-// Manufacturer returns the value of the "manufacturer" field in the mutation.
-func (m *DeviceInfoMutation) Manufacturer() (r string, exists bool) {
-	v := m.manufacturer
+// ManufacturerID returns the value of the "manufacturer_id" field in the mutation.
+func (m *DeviceInfoMutation) ManufacturerID() (r uuid.UUID, exists bool) {
+	v := m.manufacturer_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldManufacturer returns the old "manufacturer" field's value of the DeviceInfo entity.
+// OldManufacturerID returns the old "manufacturer_id" field's value of the DeviceInfo entity.
 // If the DeviceInfo object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DeviceInfoMutation) OldManufacturer(ctx context.Context) (v string, err error) {
+func (m *DeviceInfoMutation) OldManufacturerID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldManufacturer is only allowed on UpdateOne operations")
+		return v, errors.New("OldManufacturerID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldManufacturer requires an ID field in the mutation")
+		return v, errors.New("OldManufacturerID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldManufacturer: %w", err)
+		return v, fmt.Errorf("querying old value for OldManufacturerID: %w", err)
 	}
-	return oldValue.Manufacturer, nil
+	return oldValue.ManufacturerID, nil
 }
 
-// ClearManufacturer clears the value of the "manufacturer" field.
-func (m *DeviceInfoMutation) ClearManufacturer() {
-	m.manufacturer = nil
-	m.clearedFields[deviceinfo.FieldManufacturer] = struct{}{}
+// ClearManufacturerID clears the value of the "manufacturer_id" field.
+func (m *DeviceInfoMutation) ClearManufacturerID() {
+	m.manufacturer_id = nil
+	m.clearedFields[deviceinfo.FieldManufacturerID] = struct{}{}
 }
 
-// ManufacturerCleared returns if the "manufacturer" field was cleared in this mutation.
-func (m *DeviceInfoMutation) ManufacturerCleared() bool {
-	_, ok := m.clearedFields[deviceinfo.FieldManufacturer]
+// ManufacturerIDCleared returns if the "manufacturer_id" field was cleared in this mutation.
+func (m *DeviceInfoMutation) ManufacturerIDCleared() bool {
+	_, ok := m.clearedFields[deviceinfo.FieldManufacturerID]
 	return ok
 }
 
-// ResetManufacturer resets all changes to the "manufacturer" field.
-func (m *DeviceInfoMutation) ResetManufacturer() {
-	m.manufacturer = nil
-	delete(m.clearedFields, deviceinfo.FieldManufacturer)
+// ResetManufacturerID resets all changes to the "manufacturer_id" field.
+func (m *DeviceInfoMutation) ResetManufacturerID() {
+	m.manufacturer_id = nil
+	delete(m.clearedFields, deviceinfo.FieldManufacturerID)
 }
 
 // SetPowerConsumption sets the "power_consumption" field.
@@ -18459,8 +18459,8 @@ func (m *DeviceInfoMutation) Fields() []string {
 	if m._type != nil {
 		fields = append(fields, deviceinfo.FieldType)
 	}
-	if m.manufacturer != nil {
-		fields = append(fields, deviceinfo.FieldManufacturer)
+	if m.manufacturer_id != nil {
+		fields = append(fields, deviceinfo.FieldManufacturerID)
 	}
 	if m.power_consumption != nil {
 		fields = append(fields, deviceinfo.FieldPowerConsumption)
@@ -18486,8 +18486,8 @@ func (m *DeviceInfoMutation) Field(name string) (ent.Value, bool) {
 		return m.EntID()
 	case deviceinfo.FieldType:
 		return m.GetType()
-	case deviceinfo.FieldManufacturer:
-		return m.Manufacturer()
+	case deviceinfo.FieldManufacturerID:
+		return m.ManufacturerID()
 	case deviceinfo.FieldPowerConsumption:
 		return m.PowerConsumption()
 	case deviceinfo.FieldShipmentAt:
@@ -18511,8 +18511,8 @@ func (m *DeviceInfoMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldEntID(ctx)
 	case deviceinfo.FieldType:
 		return m.OldType(ctx)
-	case deviceinfo.FieldManufacturer:
-		return m.OldManufacturer(ctx)
+	case deviceinfo.FieldManufacturerID:
+		return m.OldManufacturerID(ctx)
 	case deviceinfo.FieldPowerConsumption:
 		return m.OldPowerConsumption(ctx)
 	case deviceinfo.FieldShipmentAt:
@@ -18561,12 +18561,12 @@ func (m *DeviceInfoMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetType(v)
 		return nil
-	case deviceinfo.FieldManufacturer:
-		v, ok := value.(string)
+	case deviceinfo.FieldManufacturerID:
+		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetManufacturer(v)
+		m.SetManufacturerID(v)
 		return nil
 	case deviceinfo.FieldPowerConsumption:
 		v, ok := value.(uint32)
@@ -18678,8 +18678,8 @@ func (m *DeviceInfoMutation) ClearedFields() []string {
 	if m.FieldCleared(deviceinfo.FieldType) {
 		fields = append(fields, deviceinfo.FieldType)
 	}
-	if m.FieldCleared(deviceinfo.FieldManufacturer) {
-		fields = append(fields, deviceinfo.FieldManufacturer)
+	if m.FieldCleared(deviceinfo.FieldManufacturerID) {
+		fields = append(fields, deviceinfo.FieldManufacturerID)
 	}
 	if m.FieldCleared(deviceinfo.FieldPowerConsumption) {
 		fields = append(fields, deviceinfo.FieldPowerConsumption)
@@ -18704,8 +18704,8 @@ func (m *DeviceInfoMutation) ClearField(name string) error {
 	case deviceinfo.FieldType:
 		m.ClearType()
 		return nil
-	case deviceinfo.FieldManufacturer:
-		m.ClearManufacturer()
+	case deviceinfo.FieldManufacturerID:
+		m.ClearManufacturerID()
 		return nil
 	case deviceinfo.FieldPowerConsumption:
 		m.ClearPowerConsumption()
@@ -18736,8 +18736,8 @@ func (m *DeviceInfoMutation) ResetField(name string) error {
 	case deviceinfo.FieldType:
 		m.ResetType()
 		return nil
-	case deviceinfo.FieldManufacturer:
-		m.ResetManufacturer()
+	case deviceinfo.FieldManufacturerID:
+		m.ResetManufacturerID()
 		return nil
 	case deviceinfo.FieldPowerConsumption:
 		m.ResetPowerConsumption()

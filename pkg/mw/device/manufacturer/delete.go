@@ -40,6 +40,7 @@ func (h *Handler) DeleteManufacturer(ctx context.Context) error {
 		return nil
 	}
 
+	h.ID = &info.ID
 	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		return handler.deleteManufacturer(_ctx, cli)
 	})

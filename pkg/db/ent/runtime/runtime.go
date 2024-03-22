@@ -1012,12 +1012,10 @@ func init() {
 	deviceinfo.DefaultType = deviceinfoDescType.Default.(string)
 	// deviceinfo.TypeValidator is a validator for the "type" field. It is called by the builders before save.
 	deviceinfo.TypeValidator = deviceinfoDescType.Validators[0].(func(string) error)
-	// deviceinfoDescManufacturer is the schema descriptor for manufacturer field.
-	deviceinfoDescManufacturer := deviceinfoFields[1].Descriptor()
-	// deviceinfo.DefaultManufacturer holds the default value on creation for the manufacturer field.
-	deviceinfo.DefaultManufacturer = deviceinfoDescManufacturer.Default.(string)
-	// deviceinfo.ManufacturerValidator is a validator for the "manufacturer" field. It is called by the builders before save.
-	deviceinfo.ManufacturerValidator = deviceinfoDescManufacturer.Validators[0].(func(string) error)
+	// deviceinfoDescManufacturerID is the schema descriptor for manufacturer_id field.
+	deviceinfoDescManufacturerID := deviceinfoFields[1].Descriptor()
+	// deviceinfo.DefaultManufacturerID holds the default value on creation for the manufacturer_id field.
+	deviceinfo.DefaultManufacturerID = deviceinfoDescManufacturerID.Default.(func() uuid.UUID)
 	// deviceinfoDescPowerConsumption is the schema descriptor for power_consumption field.
 	deviceinfoDescPowerConsumption := deviceinfoFields[2].Descriptor()
 	// deviceinfo.DefaultPowerConsumption holds the default value on creation for the power_consumption field.

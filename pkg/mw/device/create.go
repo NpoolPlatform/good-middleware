@@ -25,7 +25,7 @@ func (h *createHandler) constructSql() {
 	}
 	_sql += comma + "type"
 	comma = ", "
-	_sql += comma + "manufacturer"
+	_sql += comma + "manufacturer_id"
 	if h.PowerConsumption != nil {
 		_sql += comma + "power_consumption"
 	}
@@ -44,7 +44,7 @@ func (h *createHandler) constructSql() {
 	}
 	_sql += fmt.Sprintf("%v'%v' as type", comma, *h.Type)
 	comma = ", "
-	_sql += fmt.Sprintf("%v'%v' as manufacturer", comma, *h.Manufacturer)
+	_sql += fmt.Sprintf("%v'%v' as manufacturer_id", comma, *h.ManufacturerID)
 	if h.PowerConsumption != nil {
 		_sql += fmt.Sprintf("%v'%v' as power_consumption", comma, *h.PowerConsumption)
 	}
@@ -57,7 +57,7 @@ func (h *createHandler) constructSql() {
 	_sql += ") as tmp "
 	_sql += "where not exists ("
 	_sql += "select 1 from device_infos "
-	_sql += fmt.Sprintf("where type='%v' and manufacturer='%v'", *h.Type, *h.Manufacturer)
+	_sql += fmt.Sprintf("where type='%v' and manufacturer='%v'", *h.Type, *h.ManufacturerID)
 	_sql += ") limit 1"
 	h.sql = _sql
 }

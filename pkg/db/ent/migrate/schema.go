@@ -490,7 +490,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
 		{Name: "type", Type: field.TypeString, Nullable: true, Size: 64, Default: ""},
-		{Name: "manufacturer", Type: field.TypeString, Nullable: true, Size: 64, Default: ""},
+		{Name: "manufacturer_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "power_consumption", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "shipment_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 	}

@@ -14,7 +14,7 @@ type Req struct {
 	ID               *uint32
 	EntID            *uuid.UUID
 	Type             *string
-	Manufacturer     *string
+	ManufacturerID   *uuid.UUID
 	PowerConsumption *uint32
 	ShipmentAt       *uint32
 	DeletedAt        *uint32
@@ -27,8 +27,8 @@ func CreateSet(c *ent.DeviceInfoCreate, req *Req) *ent.DeviceInfoCreate {
 	if req.Type != nil {
 		c.SetType(*req.Type)
 	}
-	if req.Manufacturer != nil {
-		c.SetManufacturer(*req.Manufacturer)
+	if req.ManufacturerID != nil {
+		c.SetManufacturerID(*req.ManufacturerID)
 	}
 	if req.PowerConsumption != nil {
 		c.SetPowerConsumption(*req.PowerConsumption)
@@ -43,8 +43,8 @@ func UpdateSet(u *ent.DeviceInfoUpdateOne, req *Req) *ent.DeviceInfoUpdateOne {
 	if req.Type != nil {
 		u.SetType(*req.Type)
 	}
-	if req.Manufacturer != nil {
-		u.SetManufacturer(*req.Manufacturer)
+	if req.ManufacturerID != nil {
+		u.SetManufacturerID(*req.ManufacturerID)
 	}
 	if req.PowerConsumption != nil {
 		u.SetPowerConsumption(*req.PowerConsumption)
@@ -59,10 +59,10 @@ func UpdateSet(u *ent.DeviceInfoUpdateOne, req *Req) *ent.DeviceInfoUpdateOne {
 }
 
 type Conds struct {
-	ID           *cruder.Cond
-	EntID        *cruder.Cond
-	Type         *cruder.Cond
-	Manufacturer *cruder.Cond
+	ID             *cruder.Cond
+	EntID          *cruder.Cond
+	Type           *cruder.Cond
+	ManufacturerID *cruder.Cond
 }
 
 //nolint:gocyclo
@@ -111,14 +111,14 @@ func SetQueryConds(q *ent.DeviceInfoQuery, conds *Conds) (*ent.DeviceInfoQuery, 
 			return nil, fmt.Errorf("invalid deviceinfo field")
 		}
 	}
-	if conds.Manufacturer != nil {
-		manufacturer, ok := conds.Manufacturer.Val.(string)
+	if conds.ManufacturerID != nil {
+		manufacturer, ok := conds.ManufacturerID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid manufacturer")
+			return nil, fmt.Errorf("invalid manufacturerid")
 		}
-		switch conds.Manufacturer.Op {
+		switch conds.ManufacturerID.Op {
 		case cruder.EQ:
-			q.Where(entdeviceinfo.Manufacturer(manufacturer))
+			q.Where(entdeviceinfo.ManufacturerID(manufacturer))
 		default:
 			return nil, fmt.Errorf("invalid deviceinfo field")
 		}

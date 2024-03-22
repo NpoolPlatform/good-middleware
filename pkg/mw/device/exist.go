@@ -32,7 +32,7 @@ func (h *Handler) ExistDeviceType(ctx context.Context) (exist bool, err error) {
 
 func (h *Handler) ExistDeviceTypeConds(ctx context.Context) (exist bool, err error) {
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := devicecrud.SetQueryConds(cli.DeviceInfo.Query(), h.Conds)
+		stm, err := devicecrud.SetQueryConds(cli.DeviceInfo.Query(), h.DeviceConds)
 		if err != nil {
 			return err
 		}
