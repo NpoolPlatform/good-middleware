@@ -24,6 +24,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/delegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fbmcrowdfunding"
@@ -76,6 +77,7 @@ const (
 	TypeComment              = "Comment"
 	TypeDelegatedStaking     = "DelegatedStaking"
 	TypeDeviceInfo           = "DeviceInfo"
+	TypeDeviceManufacturer   = "DeviceManufacturer"
 	TypeDevicePoster         = "DevicePoster"
 	TypeExtraInfo            = "ExtraInfo"
 	TypeFbmCrowdFunding      = "FbmCrowdFunding"
@@ -18793,6 +18795,736 @@ func (m *DeviceInfoMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *DeviceInfoMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown DeviceInfo edge %s", name)
+}
+
+// DeviceManufacturerMutation represents an operation that mutates the DeviceManufacturer nodes in the graph.
+type DeviceManufacturerMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *uint32
+	created_at    *uint32
+	addcreated_at *int32
+	updated_at    *uint32
+	addupdated_at *int32
+	deleted_at    *uint32
+	adddeleted_at *int32
+	ent_id        *uuid.UUID
+	name          *string
+	logo          *string
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*DeviceManufacturer, error)
+	predicates    []predicate.DeviceManufacturer
+}
+
+var _ ent.Mutation = (*DeviceManufacturerMutation)(nil)
+
+// devicemanufacturerOption allows management of the mutation configuration using functional options.
+type devicemanufacturerOption func(*DeviceManufacturerMutation)
+
+// newDeviceManufacturerMutation creates new mutation for the DeviceManufacturer entity.
+func newDeviceManufacturerMutation(c config, op Op, opts ...devicemanufacturerOption) *DeviceManufacturerMutation {
+	m := &DeviceManufacturerMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeDeviceManufacturer,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withDeviceManufacturerID sets the ID field of the mutation.
+func withDeviceManufacturerID(id uint32) devicemanufacturerOption {
+	return func(m *DeviceManufacturerMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *DeviceManufacturer
+		)
+		m.oldValue = func(ctx context.Context) (*DeviceManufacturer, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().DeviceManufacturer.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withDeviceManufacturer sets the old DeviceManufacturer of the mutation.
+func withDeviceManufacturer(node *DeviceManufacturer) devicemanufacturerOption {
+	return func(m *DeviceManufacturerMutation) {
+		m.oldValue = func(context.Context) (*DeviceManufacturer, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m DeviceManufacturerMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m DeviceManufacturerMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of DeviceManufacturer entities.
+func (m *DeviceManufacturerMutation) SetID(id uint32) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *DeviceManufacturerMutation) ID() (id uint32, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *DeviceManufacturerMutation) IDs(ctx context.Context) ([]uint32, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uint32{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().DeviceManufacturer.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *DeviceManufacturerMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *DeviceManufacturerMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the DeviceManufacturer entity.
+// If the DeviceManufacturer object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DeviceManufacturerMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *DeviceManufacturerMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *DeviceManufacturerMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *DeviceManufacturerMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *DeviceManufacturerMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *DeviceManufacturerMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the DeviceManufacturer entity.
+// If the DeviceManufacturer object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DeviceManufacturerMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *DeviceManufacturerMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *DeviceManufacturerMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *DeviceManufacturerMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *DeviceManufacturerMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *DeviceManufacturerMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the DeviceManufacturer entity.
+// If the DeviceManufacturer object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DeviceManufacturerMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *DeviceManufacturerMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *DeviceManufacturerMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *DeviceManufacturerMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetEntID sets the "ent_id" field.
+func (m *DeviceManufacturerMutation) SetEntID(u uuid.UUID) {
+	m.ent_id = &u
+}
+
+// EntID returns the value of the "ent_id" field in the mutation.
+func (m *DeviceManufacturerMutation) EntID() (r uuid.UUID, exists bool) {
+	v := m.ent_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEntID returns the old "ent_id" field's value of the DeviceManufacturer entity.
+// If the DeviceManufacturer object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DeviceManufacturerMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEntID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEntID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEntID: %w", err)
+	}
+	return oldValue.EntID, nil
+}
+
+// ResetEntID resets all changes to the "ent_id" field.
+func (m *DeviceManufacturerMutation) ResetEntID() {
+	m.ent_id = nil
+}
+
+// SetName sets the "name" field.
+func (m *DeviceManufacturerMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *DeviceManufacturerMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the DeviceManufacturer entity.
+// If the DeviceManufacturer object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DeviceManufacturerMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ClearName clears the value of the "name" field.
+func (m *DeviceManufacturerMutation) ClearName() {
+	m.name = nil
+	m.clearedFields[devicemanufacturer.FieldName] = struct{}{}
+}
+
+// NameCleared returns if the "name" field was cleared in this mutation.
+func (m *DeviceManufacturerMutation) NameCleared() bool {
+	_, ok := m.clearedFields[devicemanufacturer.FieldName]
+	return ok
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *DeviceManufacturerMutation) ResetName() {
+	m.name = nil
+	delete(m.clearedFields, devicemanufacturer.FieldName)
+}
+
+// SetLogo sets the "logo" field.
+func (m *DeviceManufacturerMutation) SetLogo(s string) {
+	m.logo = &s
+}
+
+// Logo returns the value of the "logo" field in the mutation.
+func (m *DeviceManufacturerMutation) Logo() (r string, exists bool) {
+	v := m.logo
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLogo returns the old "logo" field's value of the DeviceManufacturer entity.
+// If the DeviceManufacturer object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DeviceManufacturerMutation) OldLogo(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLogo is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLogo requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLogo: %w", err)
+	}
+	return oldValue.Logo, nil
+}
+
+// ClearLogo clears the value of the "logo" field.
+func (m *DeviceManufacturerMutation) ClearLogo() {
+	m.logo = nil
+	m.clearedFields[devicemanufacturer.FieldLogo] = struct{}{}
+}
+
+// LogoCleared returns if the "logo" field was cleared in this mutation.
+func (m *DeviceManufacturerMutation) LogoCleared() bool {
+	_, ok := m.clearedFields[devicemanufacturer.FieldLogo]
+	return ok
+}
+
+// ResetLogo resets all changes to the "logo" field.
+func (m *DeviceManufacturerMutation) ResetLogo() {
+	m.logo = nil
+	delete(m.clearedFields, devicemanufacturer.FieldLogo)
+}
+
+// Where appends a list predicates to the DeviceManufacturerMutation builder.
+func (m *DeviceManufacturerMutation) Where(ps ...predicate.DeviceManufacturer) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *DeviceManufacturerMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (DeviceManufacturer).
+func (m *DeviceManufacturerMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *DeviceManufacturerMutation) Fields() []string {
+	fields := make([]string, 0, 6)
+	if m.created_at != nil {
+		fields = append(fields, devicemanufacturer.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, devicemanufacturer.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, devicemanufacturer.FieldDeletedAt)
+	}
+	if m.ent_id != nil {
+		fields = append(fields, devicemanufacturer.FieldEntID)
+	}
+	if m.name != nil {
+		fields = append(fields, devicemanufacturer.FieldName)
+	}
+	if m.logo != nil {
+		fields = append(fields, devicemanufacturer.FieldLogo)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *DeviceManufacturerMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case devicemanufacturer.FieldCreatedAt:
+		return m.CreatedAt()
+	case devicemanufacturer.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case devicemanufacturer.FieldDeletedAt:
+		return m.DeletedAt()
+	case devicemanufacturer.FieldEntID:
+		return m.EntID()
+	case devicemanufacturer.FieldName:
+		return m.Name()
+	case devicemanufacturer.FieldLogo:
+		return m.Logo()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *DeviceManufacturerMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case devicemanufacturer.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case devicemanufacturer.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case devicemanufacturer.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case devicemanufacturer.FieldEntID:
+		return m.OldEntID(ctx)
+	case devicemanufacturer.FieldName:
+		return m.OldName(ctx)
+	case devicemanufacturer.FieldLogo:
+		return m.OldLogo(ctx)
+	}
+	return nil, fmt.Errorf("unknown DeviceManufacturer field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *DeviceManufacturerMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case devicemanufacturer.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case devicemanufacturer.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case devicemanufacturer.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case devicemanufacturer.FieldEntID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEntID(v)
+		return nil
+	case devicemanufacturer.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case devicemanufacturer.FieldLogo:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLogo(v)
+		return nil
+	}
+	return fmt.Errorf("unknown DeviceManufacturer field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *DeviceManufacturerMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, devicemanufacturer.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, devicemanufacturer.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, devicemanufacturer.FieldDeletedAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *DeviceManufacturerMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case devicemanufacturer.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case devicemanufacturer.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case devicemanufacturer.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *DeviceManufacturerMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case devicemanufacturer.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case devicemanufacturer.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case devicemanufacturer.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown DeviceManufacturer numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *DeviceManufacturerMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(devicemanufacturer.FieldName) {
+		fields = append(fields, devicemanufacturer.FieldName)
+	}
+	if m.FieldCleared(devicemanufacturer.FieldLogo) {
+		fields = append(fields, devicemanufacturer.FieldLogo)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *DeviceManufacturerMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *DeviceManufacturerMutation) ClearField(name string) error {
+	switch name {
+	case devicemanufacturer.FieldName:
+		m.ClearName()
+		return nil
+	case devicemanufacturer.FieldLogo:
+		m.ClearLogo()
+		return nil
+	}
+	return fmt.Errorf("unknown DeviceManufacturer nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *DeviceManufacturerMutation) ResetField(name string) error {
+	switch name {
+	case devicemanufacturer.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case devicemanufacturer.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case devicemanufacturer.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case devicemanufacturer.FieldEntID:
+		m.ResetEntID()
+		return nil
+	case devicemanufacturer.FieldName:
+		m.ResetName()
+		return nil
+	case devicemanufacturer.FieldLogo:
+		m.ResetLogo()
+		return nil
+	}
+	return fmt.Errorf("unknown DeviceManufacturer field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *DeviceManufacturerMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *DeviceManufacturerMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *DeviceManufacturerMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *DeviceManufacturerMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *DeviceManufacturerMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *DeviceManufacturerMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *DeviceManufacturerMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown DeviceManufacturer unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *DeviceManufacturerMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown DeviceManufacturer edge %s", name)
 }
 
 // DevicePosterMutation represents an operation that mutates the DevicePoster nodes in the graph.

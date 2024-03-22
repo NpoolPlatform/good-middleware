@@ -21,6 +21,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/delegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fbmcrowdfunding"
@@ -1025,6 +1026,52 @@ func init() {
 	deviceinfoDescShipmentAt := deviceinfoFields[3].Descriptor()
 	// deviceinfo.DefaultShipmentAt holds the default value on creation for the shipment_at field.
 	deviceinfo.DefaultShipmentAt = deviceinfoDescShipmentAt.Default.(uint32)
+	devicemanufacturerMixin := schema.DeviceManufacturer{}.Mixin()
+	devicemanufacturer.Policy = privacy.NewPolicies(devicemanufacturerMixin[0], schema.DeviceManufacturer{})
+	devicemanufacturer.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := devicemanufacturer.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	devicemanufacturerMixinFields0 := devicemanufacturerMixin[0].Fields()
+	_ = devicemanufacturerMixinFields0
+	devicemanufacturerMixinFields1 := devicemanufacturerMixin[1].Fields()
+	_ = devicemanufacturerMixinFields1
+	devicemanufacturerFields := schema.DeviceManufacturer{}.Fields()
+	_ = devicemanufacturerFields
+	// devicemanufacturerDescCreatedAt is the schema descriptor for created_at field.
+	devicemanufacturerDescCreatedAt := devicemanufacturerMixinFields0[0].Descriptor()
+	// devicemanufacturer.DefaultCreatedAt holds the default value on creation for the created_at field.
+	devicemanufacturer.DefaultCreatedAt = devicemanufacturerDescCreatedAt.Default.(func() uint32)
+	// devicemanufacturerDescUpdatedAt is the schema descriptor for updated_at field.
+	devicemanufacturerDescUpdatedAt := devicemanufacturerMixinFields0[1].Descriptor()
+	// devicemanufacturer.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	devicemanufacturer.DefaultUpdatedAt = devicemanufacturerDescUpdatedAt.Default.(func() uint32)
+	// devicemanufacturer.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	devicemanufacturer.UpdateDefaultUpdatedAt = devicemanufacturerDescUpdatedAt.UpdateDefault.(func() uint32)
+	// devicemanufacturerDescDeletedAt is the schema descriptor for deleted_at field.
+	devicemanufacturerDescDeletedAt := devicemanufacturerMixinFields0[2].Descriptor()
+	// devicemanufacturer.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	devicemanufacturer.DefaultDeletedAt = devicemanufacturerDescDeletedAt.Default.(func() uint32)
+	// devicemanufacturerDescEntID is the schema descriptor for ent_id field.
+	devicemanufacturerDescEntID := devicemanufacturerMixinFields1[1].Descriptor()
+	// devicemanufacturer.DefaultEntID holds the default value on creation for the ent_id field.
+	devicemanufacturer.DefaultEntID = devicemanufacturerDescEntID.Default.(func() uuid.UUID)
+	// devicemanufacturerDescName is the schema descriptor for name field.
+	devicemanufacturerDescName := devicemanufacturerFields[0].Descriptor()
+	// devicemanufacturer.DefaultName holds the default value on creation for the name field.
+	devicemanufacturer.DefaultName = devicemanufacturerDescName.Default.(string)
+	// devicemanufacturer.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	devicemanufacturer.NameValidator = devicemanufacturerDescName.Validators[0].(func(string) error)
+	// devicemanufacturerDescLogo is the schema descriptor for logo field.
+	devicemanufacturerDescLogo := devicemanufacturerFields[1].Descriptor()
+	// devicemanufacturer.DefaultLogo holds the default value on creation for the logo field.
+	devicemanufacturer.DefaultLogo = devicemanufacturerDescLogo.Default.(string)
+	// devicemanufacturer.LogoValidator is a validator for the "logo" field. It is called by the builders before save.
+	devicemanufacturer.LogoValidator = devicemanufacturerDescLogo.Validators[0].(func(string) error)
 	deviceposterMixin := schema.DevicePoster{}.Mixin()
 	deviceposter.Policy = privacy.NewPolicies(deviceposterMixin[0], schema.DevicePoster{})
 	deviceposter.Hooks[0] = func(next ent.Mutator) ent.Mutator {

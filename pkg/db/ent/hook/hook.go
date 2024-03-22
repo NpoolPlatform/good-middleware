@@ -217,6 +217,19 @@ func (f DeviceInfoFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, 
 	return f(ctx, mv)
 }
 
+// The DeviceManufacturerFunc type is an adapter to allow the use of ordinary
+// function as DeviceManufacturer mutator.
+type DeviceManufacturerFunc func(context.Context, *ent.DeviceManufacturerMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f DeviceManufacturerFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.DeviceManufacturerMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DeviceManufacturerMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The DevicePosterFunc type is an adapter to allow the use of ordinary
 // function as DevicePoster mutator.
 type DevicePosterFunc func(context.Context, *ent.DevicePosterMutation) (ent.Value, error)

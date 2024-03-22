@@ -11,6 +11,7 @@ import (
 	// "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/powerrental"
+	devicetype1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
@@ -54,6 +55,12 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.DurationTypeStr = ret.DurationType.String()
 	ret.StartModeStr = ret.StartMode.String()
+
+	h1, err := devicetype1.NewHandler(
+		context.Background(),
+		devicetype1.WithEntID(&ret.DeviceTypeID, true),
+		devicetype1.WithType(&ret.)
+	)
 
 	return func(*testing.T) {}
 }

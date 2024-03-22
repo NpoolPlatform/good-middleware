@@ -46,6 +46,8 @@ type Tx struct {
 	DelegatedStaking *DelegatedStakingClient
 	// DeviceInfo is the client for interacting with the DeviceInfo builders.
 	DeviceInfo *DeviceInfoClient
+	// DeviceManufacturer is the client for interacting with the DeviceManufacturer builders.
+	DeviceManufacturer *DeviceManufacturerClient
 	// DevicePoster is the client for interacting with the DevicePoster builders.
 	DevicePoster *DevicePosterClient
 	// ExtraInfo is the client for interacting with the ExtraInfo builders.
@@ -237,6 +239,7 @@ func (tx *Tx) init() {
 	tx.Comment = NewCommentClient(tx.config)
 	tx.DelegatedStaking = NewDelegatedStakingClient(tx.config)
 	tx.DeviceInfo = NewDeviceInfoClient(tx.config)
+	tx.DeviceManufacturer = NewDeviceManufacturerClient(tx.config)
 	tx.DevicePoster = NewDevicePosterClient(tx.config)
 	tx.ExtraInfo = NewExtraInfoClient(tx.config)
 	tx.FbmCrowdFunding = NewFbmCrowdFundingClient(tx.config)

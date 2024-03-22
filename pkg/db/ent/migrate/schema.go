@@ -507,6 +507,29 @@ var (
 			},
 		},
 	}
+	// DeviceManufacturersColumns holds the columns for the "device_manufacturers" table.
+	DeviceManufacturersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "name", Type: field.TypeString, Nullable: true, Size: 128, Default: ""},
+		{Name: "logo", Type: field.TypeString, Nullable: true, Size: 128, Default: ""},
+	}
+	// DeviceManufacturersTable holds the schema information for the "device_manufacturers" table.
+	DeviceManufacturersTable = &schema.Table{
+		Name:       "device_manufacturers",
+		Columns:    DeviceManufacturersColumns,
+		PrimaryKey: []*schema.Column{DeviceManufacturersColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "devicemanufacturer_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{DeviceManufacturersColumns[4]},
+			},
+		},
+	}
 	// DevicePostersColumns holds the columns for the "device_posters" table.
 	DevicePostersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -1114,6 +1137,7 @@ var (
 		CommentsTable,
 		DelegatedStakingsTable,
 		DeviceInfosTable,
+		DeviceManufacturersTable,
 		DevicePostersTable,
 		ExtraInfosTable,
 		FbmCrowdFundingsTable,

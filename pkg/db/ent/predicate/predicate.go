@@ -54,6 +54,9 @@ type DelegatedStaking func(*sql.Selector)
 // DeviceInfo is the predicate function for deviceinfo builders.
 type DeviceInfo func(*sql.Selector)
 
+// DeviceManufacturer is the predicate function for devicemanufacturer builders.
+type DeviceManufacturer func(*sql.Selector)
+
 // DevicePoster is the predicate function for deviceposter builders.
 type DevicePoster func(*sql.Selector)
 

@@ -26,6 +26,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/delegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/fbmcrowdfunding"
@@ -88,6 +89,8 @@ type Client struct {
 	DelegatedStaking *DelegatedStakingClient
 	// DeviceInfo is the client for interacting with the DeviceInfo builders.
 	DeviceInfo *DeviceInfoClient
+	// DeviceManufacturer is the client for interacting with the DeviceManufacturer builders.
+	DeviceManufacturer *DeviceManufacturerClient
 	// DevicePoster is the client for interacting with the DevicePoster builders.
 	DevicePoster *DevicePosterClient
 	// ExtraInfo is the client for interacting with the ExtraInfo builders.
@@ -157,6 +160,7 @@ func (c *Client) init() {
 	c.Comment = NewCommentClient(c.config)
 	c.DelegatedStaking = NewDelegatedStakingClient(c.config)
 	c.DeviceInfo = NewDeviceInfoClient(c.config)
+	c.DeviceManufacturer = NewDeviceManufacturerClient(c.config)
 	c.DevicePoster = NewDevicePosterClient(c.config)
 	c.ExtraInfo = NewExtraInfoClient(c.config)
 	c.FbmCrowdFunding = NewFbmCrowdFundingClient(c.config)
@@ -226,6 +230,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Comment:              NewCommentClient(cfg),
 		DelegatedStaking:     NewDelegatedStakingClient(cfg),
 		DeviceInfo:           NewDeviceInfoClient(cfg),
+		DeviceManufacturer:   NewDeviceManufacturerClient(cfg),
 		DevicePoster:         NewDevicePosterClient(cfg),
 		ExtraInfo:            NewExtraInfoClient(cfg),
 		FbmCrowdFunding:      NewFbmCrowdFundingClient(cfg),
@@ -281,6 +286,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Comment:              NewCommentClient(cfg),
 		DelegatedStaking:     NewDelegatedStakingClient(cfg),
 		DeviceInfo:           NewDeviceInfoClient(cfg),
+		DeviceManufacturer:   NewDeviceManufacturerClient(cfg),
 		DevicePoster:         NewDevicePosterClient(cfg),
 		ExtraInfo:            NewExtraInfoClient(cfg),
 		FbmCrowdFunding:      NewFbmCrowdFundingClient(cfg),
@@ -346,6 +352,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Comment.Use(hooks...)
 	c.DelegatedStaking.Use(hooks...)
 	c.DeviceInfo.Use(hooks...)
+	c.DeviceManufacturer.Use(hooks...)
 	c.DevicePoster.Use(hooks...)
 	c.ExtraInfo.Use(hooks...)
 	c.FbmCrowdFunding.Use(hooks...)
@@ -1822,6 +1829,97 @@ func (c *DeviceInfoClient) GetX(ctx context.Context, id uint32) *DeviceInfo {
 func (c *DeviceInfoClient) Hooks() []Hook {
 	hooks := c.hooks.DeviceInfo
 	return append(hooks[:len(hooks):len(hooks)], deviceinfo.Hooks[:]...)
+}
+
+// DeviceManufacturerClient is a client for the DeviceManufacturer schema.
+type DeviceManufacturerClient struct {
+	config
+}
+
+// NewDeviceManufacturerClient returns a client for the DeviceManufacturer from the given config.
+func NewDeviceManufacturerClient(c config) *DeviceManufacturerClient {
+	return &DeviceManufacturerClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `devicemanufacturer.Hooks(f(g(h())))`.
+func (c *DeviceManufacturerClient) Use(hooks ...Hook) {
+	c.hooks.DeviceManufacturer = append(c.hooks.DeviceManufacturer, hooks...)
+}
+
+// Create returns a builder for creating a DeviceManufacturer entity.
+func (c *DeviceManufacturerClient) Create() *DeviceManufacturerCreate {
+	mutation := newDeviceManufacturerMutation(c.config, OpCreate)
+	return &DeviceManufacturerCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of DeviceManufacturer entities.
+func (c *DeviceManufacturerClient) CreateBulk(builders ...*DeviceManufacturerCreate) *DeviceManufacturerCreateBulk {
+	return &DeviceManufacturerCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for DeviceManufacturer.
+func (c *DeviceManufacturerClient) Update() *DeviceManufacturerUpdate {
+	mutation := newDeviceManufacturerMutation(c.config, OpUpdate)
+	return &DeviceManufacturerUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *DeviceManufacturerClient) UpdateOne(dm *DeviceManufacturer) *DeviceManufacturerUpdateOne {
+	mutation := newDeviceManufacturerMutation(c.config, OpUpdateOne, withDeviceManufacturer(dm))
+	return &DeviceManufacturerUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *DeviceManufacturerClient) UpdateOneID(id uint32) *DeviceManufacturerUpdateOne {
+	mutation := newDeviceManufacturerMutation(c.config, OpUpdateOne, withDeviceManufacturerID(id))
+	return &DeviceManufacturerUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for DeviceManufacturer.
+func (c *DeviceManufacturerClient) Delete() *DeviceManufacturerDelete {
+	mutation := newDeviceManufacturerMutation(c.config, OpDelete)
+	return &DeviceManufacturerDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *DeviceManufacturerClient) DeleteOne(dm *DeviceManufacturer) *DeviceManufacturerDeleteOne {
+	return c.DeleteOneID(dm.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *DeviceManufacturerClient) DeleteOneID(id uint32) *DeviceManufacturerDeleteOne {
+	builder := c.Delete().Where(devicemanufacturer.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &DeviceManufacturerDeleteOne{builder}
+}
+
+// Query returns a query builder for DeviceManufacturer.
+func (c *DeviceManufacturerClient) Query() *DeviceManufacturerQuery {
+	return &DeviceManufacturerQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a DeviceManufacturer entity by its id.
+func (c *DeviceManufacturerClient) Get(ctx context.Context, id uint32) (*DeviceManufacturer, error) {
+	return c.Query().Where(devicemanufacturer.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *DeviceManufacturerClient) GetX(ctx context.Context, id uint32) *DeviceManufacturer {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *DeviceManufacturerClient) Hooks() []Hook {
+	hooks := c.hooks.DeviceManufacturer
+	return append(hooks[:len(hooks):len(hooks)], devicemanufacturer.Hooks[:]...)
 }
 
 // DevicePosterClient is a client for the DevicePoster schema.

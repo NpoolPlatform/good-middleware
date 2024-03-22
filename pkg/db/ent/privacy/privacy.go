@@ -534,6 +534,30 @@ func (f DeviceInfoMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Muta
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.DeviceInfoMutation", m)
 }
 
+// The DeviceManufacturerQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type DeviceManufacturerQueryRuleFunc func(context.Context, *ent.DeviceManufacturerQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f DeviceManufacturerQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.DeviceManufacturerQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.DeviceManufacturerQuery", q)
+}
+
+// The DeviceManufacturerMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type DeviceManufacturerMutationRuleFunc func(context.Context, *ent.DeviceManufacturerMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f DeviceManufacturerMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.DeviceManufacturerMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.DeviceManufacturerMutation", m)
+}
+
 // The DevicePosterQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type DevicePosterQueryRuleFunc func(context.Context, *ent.DevicePosterQuery) error
@@ -1081,6 +1105,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.DeviceInfoQuery:
 		return q.Filter(), nil
+	case *ent.DeviceManufacturerQuery:
+		return q.Filter(), nil
 	case *ent.DevicePosterQuery:
 		return q.Filter(), nil
 	case *ent.ExtraInfoQuery:
@@ -1159,6 +1185,8 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	case *ent.DelegatedStakingMutation:
 		return m.Filter(), nil
 	case *ent.DeviceInfoMutation:
+		return m.Filter(), nil
+	case *ent.DeviceManufacturerMutation:
 		return m.Filter(), nil
 	case *ent.DevicePosterMutation:
 		return m.Filter(), nil
