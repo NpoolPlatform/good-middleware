@@ -33,7 +33,7 @@ func (h *createHandler) constructGoodBaseSql(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	h.sqlGoodBase = handler.ConstructGoodBaseSql()
+	h.sqlGoodBase = handler.ConstructCreateGoodBaseSql()
 	return nil
 }
 

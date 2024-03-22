@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func (h *Handler) ConstructGoodBaseSql() string {
+func (h *Handler) ConstructCreateGoodBaseSql() string {
 	comma := ""
 	now := uint32(time.Now().Unix())
 	_sql := "insert into good_bases "
