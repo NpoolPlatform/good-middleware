@@ -63,7 +63,7 @@ func (h *Handler) ConstructCreateSql() string {
 	_sql += "where not exists ("
 	_sql += "select 1 from good_bases "
 	_sql += fmt.Sprintf("where name = '%v'", *h.Name)
-	_sql += ") limit 1"
+	_sql += " limit 1)"
 
 	return _sql
 }

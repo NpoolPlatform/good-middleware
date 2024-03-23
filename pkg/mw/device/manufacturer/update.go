@@ -39,7 +39,7 @@ func (h *updateHandler) constructSql() error {
 		_sql += "and not exists ("
 		_sql += "select 1 from (select * from device_manufacturers) as dm "
 		_sql += fmt.Sprintf("where dm.name = '%v' and dm.id != %v", *h.Name, *h.ID)
-		_sql += ") limit 1"
+		_sql += " limit 1)"
 	}
 
 	h.sql = _sql
