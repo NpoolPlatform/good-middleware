@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	// "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	devicetype1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
 	manufacturer1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device/manufacturer"
@@ -21,7 +21,7 @@ import (
 
 	"github.com/NpoolPlatform/good-middleware/pkg/testinit"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
-	// basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
+	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 )
 
 func init() {
@@ -226,6 +226,60 @@ func updatePowerRental(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func getPowerRental(t *testing.T) {
+	handler, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
+		WithGoodID(&ret.GoodID, true),
+	)
+	assert.Nil(t, err)
+
+	info, err := handler.GetPowerRental(context.Background())
+	if assert.Nil(t, err) {
+		assert.Equal(t, info, &ret)
+	}
+}
+
+func getPowerRentals(t *testing.T) {
+	conds := &npool.Conds{
+		ID:     &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
+		GoodID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
+	}
+
+	handler, err := NewHandler(
+		context.Background(),
+		WithConds(conds),
+		WithOffset(0),
+		WithLimit(0),
+	)
+	assert.Nil(t, err)
+
+	infos, _, err := handler.GetPowerRentals(context.Background())
+	if !assert.Nil(t, err) {
+		assert.Equal(t, len(infos), 1)
+		assert.Equal(t, infos[0], &ret)
+	}
+}
+
+func deletePowerRental(t *testing.T) {
+	handler, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
+		WithGoodID(&ret.GoodID, true),
+	)
+	assert.Nil(t, err)
+
+	err = handler.DeletePowerRental(context.Background())
+	assert.Nil(t, err)
+
+	info, err := handler.GetPowerRental(context.Background())
+	assert.Nil(t, err)
+	assert.Nil(t, info)
+}
+
 func TestPowerRental(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
@@ -236,4 +290,7 @@ func TestPowerRental(t *testing.T) {
 
 	t.Run("createPowerRental", createPowerRental)
 	t.Run("updatePowerRental", updatePowerRental)
+	t.Run("getPowerRental", getPowerRental)
+	t.Run("getPowerRentals", getPowerRentals)
+	t.Run("deletePowerRental", deletePowerRental)
 }
