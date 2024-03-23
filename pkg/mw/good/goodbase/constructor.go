@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func (h *Handler) ConstructCreateGoodBaseSql() string {
+func (h *Handler) ConstructCreateSql() string {
 	comma := ""
 	now := uint32(time.Now().Unix())
 	_sql := "insert into good_bases "
@@ -66,4 +66,59 @@ func (h *Handler) ConstructCreateGoodBaseSql() string {
 	_sql += ") limit 1"
 
 	return _sql
+}
+
+func (h *Handler) ConstructUpdateSql() (string, error) {
+	set := "set "
+	now := uint32(time.Now().Unix())
+	_sql := "update good_bases "
+	if h.GoodType != nil {
+		_sql += fmt.Sprintf("%vgood_type = '%v', ", set, h.GoodType.String())
+		set = ""
+	}
+	if h.BenefitType != nil {
+		_sql += fmt.Sprintf("%vbenefit_type = '%v', ", set, h.BenefitType.String())
+		set = ""
+	}
+	if h.Name != nil {
+		_sql += fmt.Sprintf("%vname = '%v', ", set, *h.Name)
+		set = ""
+	}
+	if h.ServiceStartAt != nil {
+		_sql += fmt.Sprintf("%vservice_start_at = %v, ", set, *h.ServiceStartAt)
+		set = ""
+	}
+	if h.StartMode != nil {
+		_sql += fmt.Sprintf("%vstart_mode = '%v', ", set, h.StartMode.String())
+		set = ""
+	}
+	if h.TestOnly != nil {
+		_sql += fmt.Sprintf("%vtest_only = %v, ", set, *h.TestOnly)
+		set = ""
+	}
+	if h.BenefitIntervalHours != nil {
+		_sql += fmt.Sprintf("%vbenefit_interval_hours = %v, ", set, *h.BenefitIntervalHours)
+		set = ""
+	}
+	if h.Purchasable != nil {
+		_sql += fmt.Sprintf("%vpurchasable = %v, ", set, *h.Purchasable)
+		set = ""
+	}
+	if h.Online != nil {
+		_sql += fmt.Sprintf("%vonline = %v, ", set, *h.Online)
+		set = ""
+	}
+	if set != "" {
+		return "", fmt.Errorf("update nothing")
+	}
+	_sql += fmt.Sprintf("updated_at = %v ", now)
+	_sql += fmt.Sprintf("where id = %v", *h.ID)
+	if h.Name != nil {
+		_sql += " and not exists ("
+		_sql += "select 1 from good_bases "
+		_sql += fmt.Sprintf("where name = '%v' and id != %v", *h.Name, *h.ID)
+		_sql += " limit 1)"
+	}
+
+	return _sql, nil
 }

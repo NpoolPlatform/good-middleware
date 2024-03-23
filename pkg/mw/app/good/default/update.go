@@ -26,11 +26,11 @@ func (h *updateHandler) constructSql() {
 	_sql += "and not exists ("
 	_sql += "select 1 from (select * from app_default_goods) as adg "
 	_sql += fmt.Sprintf("where adg.app_good_id = '%v' and adg.coin_type_id = '%v' and adg.id != %v", *h.AppGoodID, h.coinTypeID, *h.ID)
-	_sql += ") and exists ("
+	_sql += " limit 1) and exists ("
 	_sql += "select 1 from app_good_bases as agb "
 	_sql += "left join good_bases as gb on agb.good_id = gb.ent_id "
 	_sql += fmt.Sprintf("left join good_coins as gc on agb.good_id = gc.good_id and gc.coin_type_id = '%v'", h.coinTypeID)
-	_sql += ")"
+	_sql += " limit 1)"
 
 	h.sql = _sql
 }

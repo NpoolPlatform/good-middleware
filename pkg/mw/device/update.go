@@ -35,7 +35,7 @@ func (h *updateHandler) constructSql() {
 	_sql += "and not exists ("
 	_sql += "select 1 from (select * from device_infos) as di "
 	_sql += fmt.Sprintf("where di.type = '%v' and di.manufacturer_id = '%v' and di.id != %v", *h.Type, h.manufacturerID, *h.ID)
-	_sql += ") limit 1"
+	_sql += " limit 1)"
 
 	h.sql = _sql
 }
