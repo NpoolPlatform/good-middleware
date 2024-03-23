@@ -3,6 +3,8 @@ package goodbase
 import (
 	"fmt"
 	"time"
+
+	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 )
 
 func (h *Handler) ConstructCreateSql() string {
@@ -69,6 +71,9 @@ func (h *Handler) ConstructCreateSql() string {
 }
 
 func (h *Handler) ConstructUpdateSql() (string, error) {
+	if h.ID == nil && h.EntID == nil {
+		return "", fmt.Errorf("invalid goodid")
+	}
 	set := "set "
 	now := uint32(time.Now().Unix())
 	_sql := "update good_bases "
@@ -109,15 +114,25 @@ func (h *Handler) ConstructUpdateSql() (string, error) {
 		set = ""
 	}
 	if set != "" {
-		return "", fmt.Errorf("update nothing")
+		return "", cruder.ErrUpdateNothing
 	}
 	_sql += fmt.Sprintf("updated_at = %v ", now)
-	_sql += fmt.Sprintf("where id = %v", *h.ID)
+	if h.ID != nil {
+		_sql += fmt.Sprintf("where id = %v", *h.ID)
+	} else if h.EntID != nil {
+		_sql += fmt.Sprintf("where ent_id = '%v'", *h.EntID)
+	}
 	if h.Name != nil {
 		_sql += " and not exists ("
-		_sql += "select 1 from good_bases "
-		_sql += fmt.Sprintf("where name = '%v' and id != %v", *h.Name, *h.ID)
-		_sql += " limit 1)"
+		_sql += "select 1 from ("
+		_sql += "select * from good_bases as gb "
+		_sql += fmt.Sprintf("where gb.name = '%v' ", *h.Name)
+		if h.ID != nil {
+			_sql += fmt.Sprintf("and gb.id != %v", *h.ID)
+		} else if h.EntID != nil {
+			_sql += fmt.Sprintf("and gb.ent_id != '%v'", *h.EntID)
+		}
+		_sql += " limit 1) as tmp)"
 	}
 
 	return _sql, nil

@@ -69,6 +69,8 @@ var (
 
 func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()
+	ret.BenefitTypeStr = ret.BenefitType.String()
+	ret.StartModeStr = ret.StartMode.String()
 	ret.DurationTypeStr = ret.DurationType.String()
 	ret.StartModeStr = ret.StartMode.String()
 
@@ -157,7 +159,15 @@ func createPowerRental(t *testing.T) {
 	assert.Nil(t, err)
 
 	err = h1.CreatePowerRental(context.Background())
-	assert.Nil(t, err)
+	if assert.Nil(t, err) {
+		info, err := h1.GetPowerRental(context.Background())
+		if assert.Nil(t, err) {
+			ret.CreatedAt = info.CreatedAt
+			ret.UpdatedAt = info.UpdatedAt
+			ret.ID = info.ID
+			assert.Equal(t, &ret, info)
+		}
+	}
 
 	h2, err := NewHandler(
 		context.Background(),
@@ -186,6 +196,36 @@ func createPowerRental(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
+func updatePowerRental(t *testing.T) {
+	h1, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
+		WithGoodID(&ret.GoodID, true),
+		WithDeviceTypeID(&ret.DeviceTypeID, true),
+		WithVendorLocationID(&ret.VendorLocationID, true),
+		WithUnitPrice(&ret.UnitPrice, true),
+		WithQuantityUnit(&ret.QuantityUnit, true),
+		WithQuantityUnitAmount(&ret.QuantityUnitAmount, true),
+		WithDeliveryAt(&ret.DeliveryAt, true),
+		WithUnitLockDeposit(&ret.UnitLockDeposit, true),
+		WithDurationType(&ret.DurationType, true),
+		WithGoodType(&ret.GoodType, true),
+		WithBenefitType(&ret.BenefitType, true),
+		WithName(&ret.Name, true),
+		WithServiceStartAt(&ret.ServiceStartAt, true),
+		WithStartMode(&ret.StartMode, true),
+		WithTestOnly(&ret.TestOnly, true),
+		WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
+		WithPurchasable(&ret.Purchasable, true),
+		WithOnline(&ret.Online, true),
+	)
+	assert.Nil(t, err)
+
+	err = h1.UpdatePowerRental(context.Background())
+	assert.Nil(t, err)
+}
+
 func TestPowerRental(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
@@ -195,4 +235,5 @@ func TestPowerRental(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createPowerRental", createPowerRental)
+	t.Run("updatePowerRental", updatePowerRental)
 }
