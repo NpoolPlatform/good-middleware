@@ -12,13 +12,13 @@ import (
 	"github.com/shopspring/decimal"
 )
 
-type createHandler struct {
+type updateHandler struct {
 	*powerRentalAppGoodQueryHandler
 	sqlAppPowerRental string
 	sqlAppGoodBase    string
 }
 
-func (h *createHandler) constructAppGoodBaseSql(ctx context.Context) error {
+func (h *updateHandler) constructAppGoodBaseSql(ctx context.Context) error {
 	handler, err := appgoodbase1.NewHandler(
 		ctx,
 		appgoodbase1.WithEntID(func() *string { s := h.AppGoodBaseReq.EntID.String(); return &s }(), false),
@@ -36,11 +36,11 @@ func (h *createHandler) constructAppGoodBaseSql(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	h.sqlAppGoodBase = handler.ConstructCreateSql()
+	h.sqlAppGoodBase = handler.ConstructUpdateSql()
 	return nil
 }
 
-func (h *createHandler) constructAppPowerRentalSql() {
+func (h *updateHandler) constructAppPowerRentalSql() {
 	comma := ""
 	now := uint32(time.Now().Unix())
 	_sql := "insert into app_power_rentals "
@@ -92,7 +92,7 @@ func (h *createHandler) constructAppPowerRentalSql() {
 	if h.PackageWithRequireds != nil {
 		_sql += comma + "package_with_requireds"
 	}
-	_sql += comma + "created_at"
+	_sql += comma + "updated_at"
 	_sql += comma + "updated_at"
 	_sql += comma + "deleted_at"
 	_sql += ")"
@@ -145,43 +145,38 @@ func (h *createHandler) constructAppPowerRentalSql() {
 	if h.PackageWithRequireds != nil {
 		_sql += fmt.Sprintf("%v%v as package_with_requireds", comma, *h.PackageWithRequireds)
 	}
-	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
+	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
 	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
 	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
 	_sql += ") as tmp "
-	_sql += "where not exists ("
-	_sql += "select 1 from ("
-	_sql += "select * from app_power_rentals as apr "
-	_sql += fmt.Sprintf("where app_good_id = '%v'", *h.AppGoodID)
-	_sql += " limit 1) as tmp)"
-	_sql += "and exists ("
+	_sql += "where exists ("
 	_sql += "select 1 from power_rentals "
 	_sql += fmt.Sprintf("where good_id = '%v'", *h.AppGoodBaseReq.GoodID)
 	_sql += " limit 1)"
 	h.sqlAppPowerRental = _sql
 }
 
-func (h *createHandler) execSql(ctx context.Context, tx *ent.Tx, sql string) error {
+func (h *updateHandler) execSql(ctx context.Context, tx *ent.Tx, sql string) error {
 	rc, err := tx.ExecContext(ctx, sql)
 	if err != nil {
 		return err
 	}
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
-		return fmt.Errorf("fail create apppowerrental: %v", err)
+		return fmt.Errorf("fail update apppowerrental: %v", err)
 	}
 	return nil
 }
 
-func (h *createHandler) createAppPowerRental(ctx context.Context, tx *ent.Tx) error {
+func (h *updateHandler) updateAppPowerRental(ctx context.Context, tx *ent.Tx) error {
 	return h.execSql(ctx, tx, h.sqlAppPowerRental)
 }
 
-func (h *createHandler) createAppGoodBase(ctx context.Context, tx *ent.Tx) error {
+func (h *updateHandler) updateAppGoodBase(ctx context.Context, tx *ent.Tx) error {
 	return h.execSql(ctx, tx, h.sqlAppGoodBase)
 }
 
-func (h *createHandler) validateFixedDurationUnitPrice() error {
+func (h *updateHandler) validateFixedDurationUnitPrice() error {
 	if h.MinOrderDuration != h.MaxOrderDuration {
 		return fmt.Errorf("invalid order duration")
 	}
@@ -192,7 +187,7 @@ func (h *createHandler) validateFixedDurationUnitPrice() error {
 	return nil
 }
 
-func (h *createHandler) validateUnitPrice(ctx context.Context) error {
+func (h *updateHandler) validateUnitPrice(ctx context.Context) error {
 	if err := h.requirePowerRentalGood(ctx); err != nil {
 		return err
 	}
@@ -205,8 +200,8 @@ func (h *createHandler) validateUnitPrice(ctx context.Context) error {
 	return nil
 }
 
-func (h *Handler) CreatePowerRental(ctx context.Context) error {
-	handler := &createHandler{
+func (h *Handler) UpdatePowerRental(ctx context.Context) error {
+	handler := &updateHandler{
 		powerRentalAppGoodQueryHandler: &powerRentalAppGoodQueryHandler{
 			Handler: h,
 		},
@@ -222,9 +217,9 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	}
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.createAppGoodBase(_ctx, tx); err != nil {
+		if err := handler.updateAppGoodBase(_ctx, tx); err != nil {
 			return err
 		}
-		return handler.createAppPowerRental(_ctx, tx)
+		return handler.updateAppPowerRental(_ctx, tx)
 	})
 }
