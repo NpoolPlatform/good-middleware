@@ -8,10 +8,12 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
+
+	"github.com/shopspring/decimal"
 )
 
 type createHandler struct {
-	*Handler
+	*powerRentalAppGoodQueryHandler
 	sqlAppPowerRental string
 	sqlAppGoodBase    string
 }
@@ -174,9 +176,40 @@ func (h *createHandler) createAppGoodBase(ctx context.Context, tx *ent.Tx) error
 	return h.execSql(ctx, tx, h.sqlAppGoodBase)
 }
 
+func (h *createHandler) validateFixedDurationUnitPrice() error {
+	// when fixed_duration=1, max=min,powerental.unit_price*max_duration >= good.unit_price*max_duration
+	if h.MinOrderDuration != h.MaxOrderDuration {
+		return fmt.Errorf("invalid order duration")
+	}
+	unitPrice := h.powerRental.UnitPrice.Mul(decimal.NewFromInt(int64(*h.MaxOrderDuration)))
+	if h.UnitPrice.Cmp(unitPrice) < 0 {
+		return fmt.Errorf("invalid unitprice")
+	}
+	return nil
+}
+
+func (h *createHandler) validateUnitPrice(ctx context.Context) error {
+	if err := h.requirePowerRentalGood(ctx); err != nil {
+		return err
+	}
+	if h.FixedDuration != nil && *h.FixedDuration {
+		return h.validateFixedDurationUnitPrice()
+	}
+	if h.UnitPrice.Cmp(h.powerRental.UnitPrice) < 0 {
+		return fmt.Errorf("invalid unitprice")
+	}
+	return nil
+}
+
 func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	handler := &createHandler{
-		Handler: h,
+		powerRentalAppGoodQueryHandler: &powerRentalAppGoodQueryHandler{
+			Handler: h,
+		},
+	}
+
+	if err := handler.validateUnitPrice(ctx); err != nil {
+		return err
 	}
 
 	handler.constructAppPowerRentalSql()
@@ -184,7 +217,7 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 		return err
 	}
 
-	return db.WithDebugTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createAppGoodBase(_ctx, tx); err != nil {
 			return err
 		}

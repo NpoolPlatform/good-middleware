@@ -84,7 +84,7 @@ var (
 		MinOrderDuration:             1,
 		MaxOrderDuration:             10,
 		SaleMode:                     types.GoodSaleMode_GoodSaleModeMainnetSpot,
-		FixedDuration:                true,
+		FixedDuration:                false,
 		PackageWithRequireds:         false,
 		TechniqueFeeRatio:            decimal.NewFromInt(1).String(),
 	}
