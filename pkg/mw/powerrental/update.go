@@ -75,7 +75,7 @@ func (h *updateHandler) constructPowerRentalSql() error {
 		set = ""
 	}
 	if set != "" {
-		return fmt.Errorf("update nothing")
+		return cruder.ErrUpdateNothing
 	}
 	_sql += fmt.Sprintf("updated_at = %v ", now)
 	_sql += fmt.Sprintf("where id = %v ", *h.ID)

@@ -231,4 +231,5 @@ func TestPowerRental(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createPowerRental", createPowerRental)
+	t.Run("updatePowerRental", updatePowerRental)
 }

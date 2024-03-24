@@ -8,6 +8,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
+	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	"github.com/shopspring/decimal"
 )
@@ -21,10 +22,10 @@ type updateHandler struct {
 func (h *updateHandler) constructAppGoodBaseSql(ctx context.Context) error {
 	handler, err := appgoodbase1.NewHandler(
 		ctx,
-		appgoodbase1.WithEntID(func() *string { s := h.AppGoodBaseReq.EntID.String(); return &s }(), false),
-		appgoodbase1.WithAppID(func() *string { s := h.AppGoodBaseReq.AppID.String(); return &s }(), true),
-		appgoodbase1.WithGoodID(func() *string { s := h.AppGoodBaseReq.GoodID.String(); return &s }(), true),
-		appgoodbase1.WithName(h.AppGoodBaseReq.Name, true),
+		appgoodbase1.WithEntID(func() *string { s := h.AppGoodBaseReq.EntID.String(); return &s }(), true),
+		appgoodbase1.WithAppID(func() *string { s := h.AppGoodBaseReq.AppID.String(); return &s }(), false),
+		appgoodbase1.WithGoodID(func() *string { s := h.AppGoodBaseReq.GoodID.String(); return &s }(), false),
+		appgoodbase1.WithName(h.AppGoodBaseReq.Name, false),
 		appgoodbase1.WithPurchasable(h.AppGoodBaseReq.Purchasable, false),
 		appgoodbase1.WithEnableProductPage(h.AppGoodBaseReq.EnableProductPage, false),
 		appgoodbase1.WithProductPage(h.AppGoodBaseReq.ProductPage, false),
@@ -36,124 +37,86 @@ func (h *updateHandler) constructAppGoodBaseSql(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	h.sqlAppGoodBase = handler.ConstructUpdateSql()
+	h.sqlAppGoodBase, err = handler.ConstructUpdateSql()
+	if err == cruder.ErrUpdateNothing {
+		return nil
+	}
 	return nil
 }
 
-func (h *updateHandler) constructAppPowerRentalSql() {
-	comma := ""
+func (h *updateHandler) constructAppPowerRentalSql() error {
+	set := "set "
 	now := uint32(time.Now().Unix())
-	_sql := "insert into app_power_rentals "
-	_sql += "("
-	if h.EntID != nil {
-		_sql += "ent_id"
-		comma = ", "
+	_sql := "update app_power_rentals "
+	if h.ServiceStartAt != nil {
+		_sql += fmt.Sprintf("%vservice_start_at = %v,", *h.ServiceStartAt)
+		set = ""
 	}
-	_sql += comma + "app_good_id"
-	comma = ", "
-	_sql += comma + "service_start_at"
 	if h.CancelMode != nil {
-		_sql += comma + "cancel_mode"
+		_sql += fmt.Sprintf("%vcancel_mode = '%v',", h.CancelMode.String())
+		set = ""
 	}
 	if h.CancelableBeforeStartSeconds != nil {
-		_sql += comma + "cancelable_before_start_seconds"
+		_sql += fmt.Sprintf("%vcancelable_before_start_seconds = %v,", *h.CancelableBeforeStartSeconds)
+		set = ""
 	}
 	if h.EnableSetCommission != nil {
-		_sql += comma + "enable_set_commission"
+		_sql += fmt.Sprintf("%venable_set_commission = %v,", *h.EnableSetCommission)
+		set = ""
 	}
 	if h.MinOrderAmount != nil {
-		_sql += comma + "min_order_amount"
+		_sql += fmt.Sprintf("%vmin_order_amount = '%v',", *h.MinOrderAmount)
+		set = ""
 	}
 	if h.MaxOrderAmount != nil {
-		_sql += comma + "max_order_amount"
+		_sql += fmt.Sprintf("%vmax_order_amount = '%v',", *h.MaxOrderAmount)
+		set = ""
 	}
 	if h.MaxUserAmount != nil {
-		_sql += comma + "max_user_amount"
+		_sql += fmt.Sprintf("%vmax_user_amount = '%v',", *h.MaxUserAmount)
+		set = ""
 	}
 	if h.MinOrderDuration != nil {
-		_sql += comma + "min_order_duration"
+		_sql += fmt.Sprintf("%vmin_order_duration = %v,", *h.MinOrderDuration)
+		set = ""
 	}
 	if h.MaxOrderDuration != nil {
-		_sql += comma + "max_order_duration"
+		_sql += fmt.Sprintf("%vmax_order_duration = %v,", *h.MaxOrderDuration)
+		set = ""
 	}
-	_sql += comma + "unit_price"
+	if h.UnitPrice != nil {
+		_sql += fmt.Sprintf("%vunit_price = '%v',", *h.UnitPrice)
+		set = ""
+	}
 	if h.SaleStartAt != nil {
-		_sql += comma + "sale_start_at"
+		_sql += fmt.Sprintf("%vsale_start_at = %v,", *h.SaleStartAt)
+		set = ""
 	}
 	if h.SaleEndAt != nil {
-		_sql += comma + "sale_end_at"
+		_sql += fmt.Sprintf("%vsale_end_at = %v,", *h.SaleEndAt)
+		set = ""
 	}
 	if h.SaleMode != nil {
-		_sql += comma + "sale_mode"
+		_sql += fmt.Sprintf("%vsale_mode = '%v',", h.SaleMode.String())
+		set = ""
 	}
 	if h.FixedDuration != nil {
-		_sql += comma + "fixed_duration"
+		_sql += fmt.Sprintf("%vfixed_duration = %v,", *h.FixedDuration)
+		set = ""
 	}
 	if h.PackageWithRequireds != nil {
-		_sql += comma + "package_with_requireds"
+		_sql += fmt.Sprintf("%vpackage_with_requireds = %v,", *h.PackageWithRequireds)
+		set = ""
 	}
-	_sql += comma + "updated_at"
-	_sql += comma + "updated_at"
-	_sql += comma + "deleted_at"
-	_sql += ")"
-	comma = ""
-	_sql += " select * from (select "
-	if h.EntID != nil {
-		_sql += fmt.Sprintf("'%v' as ent_id ", *h.EntID)
-		comma = ", "
+	if set != "" {
+		return cruder.ErrUpdateNothing
 	}
-	_sql += fmt.Sprintf("%v'%v' as app_good_id", comma, *h.AppGoodID)
-	comma = ", "
-	_sql += fmt.Sprintf("%v%v as service_start_at", comma, *h.ServiceStartAt)
-	if h.CancelMode != nil {
-		_sql += fmt.Sprintf("%v'%v' as cancel_mode", comma, h.CancelMode.String())
-	}
-	if h.CancelableBeforeStartSeconds != nil {
-		_sql += fmt.Sprintf("%v%v as cancelable_before_start_seconds", comma, *h.CancelableBeforeStartSeconds)
-	}
-	if h.EnableSetCommission != nil {
-		_sql += fmt.Sprintf("%v%v as enable_set_commission", comma, *h.EnableSetCommission)
-	}
-	if h.MinOrderAmount != nil {
-		_sql += fmt.Sprintf("%v%v as min_order_amount", comma, *h.MinOrderAmount)
-	}
-	if h.MaxOrderAmount != nil {
-		_sql += fmt.Sprintf("%v%v as max_order_amount", comma, *h.MaxOrderAmount)
-	}
-	if h.MaxUserAmount != nil {
-		_sql += fmt.Sprintf("%v%v as max_user_amount", comma, *h.MaxUserAmount)
-	}
-	if h.MinOrderDuration != nil {
-		_sql += fmt.Sprintf("%v%v as min_order_duration", comma, *h.MinOrderDuration)
-	}
-	if h.MaxOrderDuration != nil {
-		_sql += fmt.Sprintf("%v%v as max_order_duration", comma, *h.MaxOrderDuration)
-	}
-	_sql += fmt.Sprintf("%v'%v' as unit_price", comma, *h.UnitPrice)
-	if h.SaleStartAt != nil {
-		_sql += fmt.Sprintf("%v%v as sale_start_at", comma, *h.SaleStartAt)
-	}
-	if h.SaleEndAt != nil {
-		_sql += fmt.Sprintf("%v%v as sale_end_at", comma, *h.SaleEndAt)
-	}
-	if h.SaleMode != nil {
-		_sql += fmt.Sprintf("%v'%v' as sale_mode", comma, *h.SaleMode)
-	}
-	if h.FixedDuration != nil {
-		_sql += fmt.Sprintf("%v%v as fixed_duration", comma, *h.FixedDuration)
-	}
-	if h.PackageWithRequireds != nil {
-		_sql += fmt.Sprintf("%v%v as package_with_requireds", comma, *h.PackageWithRequireds)
-	}
-	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
-	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
-	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
-	_sql += ") as tmp "
-	_sql += "where exists ("
-	_sql += "select 1 from power_rentals "
-	_sql += fmt.Sprintf("where good_id = '%v'", *h.AppGoodBaseReq.GoodID)
-	_sql += " limit 1)"
+	_sql += fmt.Sprintf("updated_at = %v", now)
+	_sql += fmt.Sprintf(" where id = %v ", *h.ID)
+	_sql += fmt.Sprintf(" and ent_id = '%v' ", *h.EntID)
+	_sql += fmt.Sprintf(" and app_good_id = '%v'", *h.AppGoodID)
 	h.sqlAppPowerRental = _sql
+	return nil
 }
 
 func (h *updateHandler) execSql(ctx context.Context, tx *ent.Tx, sql string) error {
@@ -188,10 +151,24 @@ func (h *updateHandler) validateFixedDurationUnitPrice() error {
 }
 
 func (h *updateHandler) validateUnitPrice(ctx context.Context) error {
-	if err := h.requirePowerRentalGood(ctx); err != nil {
-		return err
+	if h.UnitPrice == nil && h.FixedDuration == nil && h.MinOrderDuration == nil && h.MaxOrderDuration == nil {
+		return nil
 	}
-	if h.FixedDuration != nil && *h.FixedDuration {
+
+	if h.FixedDuration == nil {
+		h.FixedDuration = &h.appPowerRental.FixedDuration
+	}
+	if h.MinOrderDuration == nil {
+		h.MinOrderDuration = &h.appPowerRental.MinOrderDuration
+	}
+	if h.MaxOrderDuration == nil {
+		h.MaxOrderDuration = &h.appPowerRental.MaxOrderDuration
+	}
+	if h.UnitPrice == nil {
+		h.UnitPrice = &h.appPowerRental.UnitPrice
+	}
+
+	if *h.FixedDuration {
 		return h.validateFixedDurationUnitPrice()
 	}
 	if h.UnitPrice.Cmp(h.powerRental.UnitPrice) < 0 {
@@ -205,6 +182,20 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		powerRentalAppGoodQueryHandler: &powerRentalAppGoodQueryHandler{
 			Handler: h,
 		},
+	}
+
+	if err := handler.requireAppPowerRentalAppGood(ctx); err != nil {
+		return err
+	}
+
+	if h.ID == nil {
+		h.ID = &handler.appPowerRental.ID
+	}
+	if h.EntID == nil {
+		h.EntID = &handler.appPowerRental.EntID
+	}
+	if h.AppGoodID == nil {
+		h.AppGoodID = &handler.appPowerRental.AppGoodID
 	}
 
 	if err := handler.validateUnitPrice(ctx); err != nil {
