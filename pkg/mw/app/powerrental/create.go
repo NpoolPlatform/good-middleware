@@ -177,7 +177,6 @@ func (h *createHandler) createAppGoodBase(ctx context.Context, tx *ent.Tx) error
 }
 
 func (h *createHandler) validateFixedDurationUnitPrice() error {
-	// when fixed_duration=1, max=min,powerental.unit_price*max_duration >= good.unit_price*max_duration
 	if h.MinOrderDuration != h.MaxOrderDuration {
 		return fmt.Errorf("invalid order duration")
 	}
