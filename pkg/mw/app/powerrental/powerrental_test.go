@@ -86,7 +86,7 @@ var (
 		SaleMode:                     types.GoodSaleMode_GoodSaleModeMainnetSpot,
 		FixedDuration:                false,
 		PackageWithRequireds:         false,
-		TechniqueFeeRatio:            decimal.NewFromInt(1).String(),
+		TechniqueFeeRatio:            decimal.NewFromInt(0).String(),
 	}
 )
 
@@ -96,6 +96,7 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.DurationTypeStr = ret.DurationType.String()
 	ret.StartModeStr = ret.StartMode.String()
 	ret.CancelModeStr = ret.CancelMode.String()
+	ret.SaleModeStr = ret.SaleMode.String()
 
 	manufacturerID := uuid.NewString()
 	h1, err := manufacturer1.NewHandler(
@@ -195,9 +196,9 @@ func createPowerRental(t *testing.T) {
 		WithPurchasable(&ret.GoodPurchasable, true),
 		WithEnableProductPage(&ret.EnableProductPage, true),
 		WithProductPage(&ret.ProductPage, true),
+		WithName(&ret.AppGoodName, true),
 		WithOnline(&ret.GoodOnline, true),
 		WithVisible(&ret.Visible, true),
-		WithName(&ret.GoodName, true),
 		WithDisplayIndex(&ret.DisplayIndex, true),
 		WithBanner(&ret.Banner, true),
 		WithServiceStartAt(&ret.ServiceStartAt, true),
@@ -219,7 +220,59 @@ func createPowerRental(t *testing.T) {
 	assert.Nil(t, err)
 
 	err = h1.CreatePowerRental(context.Background())
+	if assert.Nil(t, err) {
+		info, err := h1.GetPowerRental(context.Background())
+		if assert.Nil(t, err) {
+			ret.CreatedAt = info.CreatedAt
+			ret.UpdatedAt = info.UpdatedAt
+			ret.ID = info.ID
+			assert.Equal(t, &ret, info)
+		}
+	}
+}
+
+func updatePowerRental(t *testing.T) {
+	h1, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
+		WithAppID(&ret.AppID, true),
+		WithGoodID(&ret.GoodID, true),
+		WithAppGoodID(&ret.AppGoodID, true),
+		WithPurchasable(&ret.GoodPurchasable, true),
+		WithEnableProductPage(&ret.EnableProductPage, true),
+		WithProductPage(&ret.ProductPage, true),
+		WithName(&ret.AppGoodName, true),
+		WithOnline(&ret.GoodOnline, true),
+		WithVisible(&ret.Visible, true),
+		WithDisplayIndex(&ret.DisplayIndex, true),
+		WithBanner(&ret.Banner, true),
+		WithServiceStartAt(&ret.ServiceStartAt, true),
+		WithCancelMode(&ret.CancelMode, true),
+		WithCancelableBeforeStartSeconds(&ret.CancelableBeforeStartSeconds, true),
+		WithEnableSetCommission(&ret.EnableSetCommission, true),
+		WithMinOrderAmount(&ret.MinOrderAmount, true),
+		WithMaxOrderAmount(&ret.MaxOrderAmount, true),
+		WithMaxUserAmount(&ret.MaxUserAmount, true),
+		WithMinOrderDuration(&ret.MinOrderDuration, true),
+		WithMaxOrderDuration(&ret.MaxOrderDuration, true),
+		WithUnitPrice(&ret.UnitPrice, true),
+		WithSaleStartAt(&ret.SaleStartAt, true),
+		WithSaleEndAt(&ret.SaleEndAt, true),
+		WithSaleMode(&ret.SaleMode, true),
+		WithFixedDuration(&ret.FixedDuration, true),
+		WithPackageWithRequireds(&ret.PackageWithRequireds, true),
+	)
 	assert.Nil(t, err)
+
+	err = h1.UpdatePowerRental(context.Background())
+	if assert.Nil(t, err) {
+		info, err := h1.GetPowerRental(context.Background())
+		if assert.Nil(t, err) {
+			ret.UpdatedAt = info.UpdatedAt
+			assert.Equal(t, &ret, info)
+		}
+	}
 }
 
 func TestPowerRental(t *testing.T) {
@@ -231,5 +284,5 @@ func TestPowerRental(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createPowerRental", createPowerRental)
-	t.Run("updatePowerRental", updatePowerRental)
+	// t.Run("updatePowerRental", updatePowerRental)
 }

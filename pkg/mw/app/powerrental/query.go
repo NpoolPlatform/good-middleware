@@ -7,9 +7,12 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
-	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
+	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
+	entapplegacypowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
+	entapppowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
 	entdevicetype "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	entmanufacturer "github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
@@ -17,7 +20,7 @@ import (
 	entvendorbrand "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	entvendorlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/powerrental"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -25,69 +28,124 @@ import (
 
 type queryHandler struct {
 	*Handler
-	stmSelect *ent.GoodBaseSelect
-	stmCount  *ent.GoodBaseSelect
+	stmSelect *ent.AppGoodBaseSelect
+	stmCount  *ent.AppGoodBaseSelect
 	infos     []*npool.PowerRental
 	total     uint32
 }
 
-func (h *queryHandler) selectGoodBase(stm *ent.GoodBaseQuery) *ent.GoodBaseSelect {
-	return stm.Select(entgoodbase.FieldID)
+func (h *queryHandler) selectAppGoodBase(stm *ent.AppGoodBaseQuery) *ent.AppGoodBaseSelect {
+	return stm.Select(entappgoodbase.FieldID)
 }
 
-func (h *queryHandler) queryGoodBase(cli *ent.Client) error {
-	if h.GoodID == nil {
-		return fmt.Errorf("invalid goodid")
+func (h *queryHandler) queryAppGoodBase(cli *ent.Client) error {
+	if h.AppGoodID == nil {
+		return fmt.Errorf("invalid appgoodid")
 	}
-	h.stmSelect = h.selectGoodBase(
-		cli.GoodBase.
+	h.stmSelect = h.selectAppGoodBase(
+		cli.AppGoodBase.
 			Query().
 			Where(
-				entgoodbase.DeletedAt(0),
-				entgoodbase.EntID(*h.GoodID),
-				entgoodbase.Or(
-					entgoodbase.GoodType(types.GoodType_PowerRental.String()),
-					entgoodbase.GoodType(types.GoodType_LegacyPowerRental.String()),
-				),
+				entappgoodbase.DeletedAt(0),
+				entappgoodbase.EntID(*h.AppGoodID),
 			),
 	)
 	return nil
 }
 
-func (h *queryHandler) queryGoodBases(cli *ent.Client) (*ent.GoodBaseSelect, error) {
-	stm, err := goodbasecrud.SetQueryConds(cli.GoodBase.Query(), h.GoodBaseConds)
+func (h *queryHandler) queryAppGoodBases(cli *ent.Client) (*ent.AppGoodBaseSelect, error) {
+	stm, err := appgoodbasecrud.SetQueryConds(cli.AppGoodBase.Query(), h.AppGoodBaseConds)
 	if err != nil {
 		return nil, err
 	}
-	stm.Where(
-		entgoodbase.Or(
-			entgoodbase.GoodType(types.GoodType_PowerRental.String()),
-			entgoodbase.GoodType(types.GoodType_LegacyPowerRental.String()),
-		),
-	)
-	return h.selectGoodBase(stm), nil
+	return h.selectAppGoodBase(stm), nil
 }
 
 func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
-	t1 := sql.Table(entgoodbase.Table)
-
-	s.LeftJoin(t1).
+	t1 := sql.Table(entappgoodbase.Table)
+	s.Join(t1).
 		On(
-			s.C(entgoodbase.FieldID),
-			t1.C(entgoodbase.FieldID),
+			s.C(entappgoodbase.FieldID),
+			t1.C(entappgoodbase.FieldID),
+		).
+		AppendSelect(
+			t1.C(entappgoodbase.FieldAppID),
+			t1.C(entappgoodbase.FieldGoodID),
+			sql.As(t1.C(entappgoodbase.FieldPurchasable), "app_good_purchasable"),
+			sql.As(t1.C(entappgoodbase.FieldOnline), "app_good_online"),
+			t1.C(entappgoodbase.FieldEnableProductPage),
+			t1.C(entappgoodbase.FieldProductPage),
+			t1.C(entappgoodbase.FieldVisible),
+			sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
+			t1.C(entappgoodbase.FieldDisplayIndex),
+			t1.C(entappgoodbase.FieldBanner),
+			t1.C(entappgoodbase.FieldCreatedAt),
+			t1.C(entappgoodbase.FieldUpdatedAt),
+		)
+}
+
+func (h *queryHandler) queryJoinGoodBase(s *sql.Selector) {
+	t1 := sql.Table(entgoodbase.Table)
+	s.Join(t1).
+		On(
+			s.C(entappgoodbase.FieldGoodID),
+			t1.C(entgoodbase.FieldEntID),
+		).
+		OnP(
+			sql.Or(
+				sql.EQ(t1.C(entgoodbase.FieldGoodType), types.GoodType_PowerRental.String()),
+				sql.EQ(t1.C(entgoodbase.FieldGoodType), types.GoodType_LegacyPowerRental.String()),
+			),
 		).
 		AppendSelect(
 			t1.C(entgoodbase.FieldGoodType),
 			t1.C(entgoodbase.FieldBenefitType),
-			t1.C(entgoodbase.FieldName),
+			sql.As(t1.C(entgoodbase.FieldName), "good_name"),
 			t1.C(entgoodbase.FieldServiceStartAt),
 			t1.C(entgoodbase.FieldStartMode),
 			t1.C(entgoodbase.FieldTestOnly),
 			t1.C(entgoodbase.FieldBenefitIntervalHours),
-			t1.C(entgoodbase.FieldPurchasable),
-			t1.C(entgoodbase.FieldOnline),
-			t1.C(entgoodbase.FieldCreatedAt),
-			t1.C(entgoodbase.FieldUpdatedAt),
+			sql.As(t1.C(entgoodbase.FieldPurchasable), "good_purchasable"),
+			sql.As(t1.C(entgoodbase.FieldOnline), "good_online"),
+		)
+}
+
+func (h *queryHandler) queryJoinAppPowerRental(s *sql.Selector) {
+	t1 := sql.Table(entapppowerrental.Table)
+	s.Join(t1).
+		On(
+			s.C(entappgoodbase.FieldEntID),
+			t1.C(entapppowerrental.FieldAppGoodID),
+		).
+		AppendSelect(
+			t1.C(entapppowerrental.FieldID),
+			t1.C(entapppowerrental.FieldEntID),
+			t1.C(entapppowerrental.FieldAppGoodID),
+			t1.C(entapppowerrental.FieldCancelMode),
+			t1.C(entapppowerrental.FieldCancelableBeforeStartSeconds),
+			t1.C(entapppowerrental.FieldEnableSetCommission),
+			t1.C(entapppowerrental.FieldMinOrderAmount),
+			t1.C(entapppowerrental.FieldMaxOrderAmount),
+			t1.C(entapppowerrental.FieldMaxUserAmount),
+			t1.C(entapppowerrental.FieldMinOrderDuration),
+			t1.C(entapppowerrental.FieldMaxOrderDuration),
+			t1.C(entapppowerrental.FieldSaleStartAt),
+			t1.C(entapppowerrental.FieldSaleEndAt),
+			t1.C(entapppowerrental.FieldSaleMode),
+			t1.C(entapppowerrental.FieldFixedDuration),
+			t1.C(entapppowerrental.FieldPackageWithRequireds),
+		)
+}
+
+func (h *queryHandler) queryJoinAppLegacyPowerRental(s *sql.Selector) {
+	t1 := sql.Table(entapplegacypowerrental.Table)
+	s.LeftJoin(t1).
+		On(
+			s.C(entappgoodbase.FieldEntID),
+			t1.C(entapplegacypowerrental.FieldAppGoodID),
+		).
+		AppendSelect(
+			t1.C(entapplegacypowerrental.FieldTechniqueFeeRatio),
 		)
 }
 
@@ -98,9 +156,9 @@ func (h *queryHandler) queryJoinPowerRental(s *sql.Selector) error {
 	t4 := sql.Table(entvendorlocation.Table)
 	t5 := sql.Table(entvendorbrand.Table)
 
-	s.LeftJoin(t1).
+	s.Join(t1).
 		On(
-			s.C(entgoodbase.FieldEntID),
+			s.C(entappgoodbase.FieldGoodID),
 			t1.C(entpowerrental.FieldGoodID),
 		).
 		OnP(
@@ -134,29 +192,27 @@ func (h *queryHandler) queryJoinPowerRental(s *sql.Selector) error {
 		}
 		s.OnP(sql.In(t1.C(entpowerrental.FieldEntID), uids))
 	}
-	s.LeftJoin(t2).
+	s.Join(t2).
 		On(
 			t1.C(entpowerrental.FieldDeviceTypeID),
 			t2.C(entdevicetype.FieldEntID),
 		).
-		LeftJoin(t3).
+		Join(t3).
 		On(
 			t2.C(entdevicetype.FieldManufacturerID),
 			t3.C(entmanufacturer.FieldEntID),
 		).
-		LeftJoin(t4).
+		Join(t4).
 		On(
 			t1.C(entpowerrental.FieldVendorLocationID),
 			t4.C(entvendorlocation.FieldEntID),
 		).
-		LeftJoin(t5).
+		Join(t5).
 		On(
 			t4.C(entvendorlocation.FieldBrandID),
 			t5.C(entvendorbrand.FieldEntID),
 		)
 	s.AppendSelect(
-		t1.C(entpowerrental.FieldID),
-		t1.C(entpowerrental.FieldEntID),
 		t1.C(entpowerrental.FieldGoodID),
 		t1.C(entpowerrental.FieldDeviceTypeID),
 		t1.C(entpowerrental.FieldVendorLocationID),
@@ -186,6 +242,9 @@ func (h *queryHandler) queryJoin() error {
 	var err error
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
+		h.queryJoinGoodBase(s)
+		h.queryJoinAppPowerRental(s)
+		h.queryJoinAppLegacyPowerRental(s)
 		err = h.queryJoinPowerRental(s)
 	})
 	if err != nil {
@@ -195,6 +254,9 @@ func (h *queryHandler) queryJoin() error {
 		return nil
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
+		h.queryJoinGoodBase(s)
+		h.queryJoinAppPowerRental(s)
+		h.queryJoinAppLegacyPowerRental(s)
 		err = h.queryJoinPowerRental(s)
 	})
 	if err != nil {
@@ -213,7 +275,13 @@ func (h *queryHandler) formalize() {
 		info.UnitPrice = func() string { amount, _ := decimal.NewFromString(info.UnitPrice); return amount.String() }()
 		info.QuantityUnitAmount = func() string { amount, _ := decimal.NewFromString(info.QuantityUnitAmount); return amount.String() }()
 		info.UnitLockDeposit = func() string { amount, _ := decimal.NewFromString(info.UnitLockDeposit); return amount.String() }()
+		info.MinOrderAmount = func() string { amount, _ := decimal.NewFromString(info.MinOrderAmount); return amount.String() }()
+		info.MaxOrderAmount = func() string { amount, _ := decimal.NewFromString(info.MaxOrderAmount); return amount.String() }()
+		info.MaxUserAmount = func() string { amount, _ := decimal.NewFromString(info.MaxUserAmount); return amount.String() }()
+		info.TechniqueFeeRatio = func() string { amount, _ := decimal.NewFromString(info.TechniqueFeeRatio); return amount.String() }()
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
+		info.CancelMode = types.CancelMode(types.CancelMode_value[info.CancelModeStr])
+		info.SaleMode = types.GoodSaleMode(types.GoodSaleMode_value[info.SaleModeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
@@ -226,7 +294,7 @@ func (h *Handler) GetPowerRental(ctx context.Context) (*npool.PowerRental, error
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if err := handler.queryGoodBase(cli); err != nil {
+		if err := handler.queryAppGoodBase(cli); err != nil {
 			return err
 		}
 		if err := handler.queryJoin(); err != nil {
@@ -256,11 +324,11 @@ func (h *Handler) GetPowerRentals(ctx context.Context) ([]*npool.PowerRental, ui
 	var err error
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		handler.stmSelect, err = handler.queryGoodBases(cli)
+		handler.stmSelect, err = handler.queryAppGoodBases(cli)
 		if err != nil {
 			return err
 		}
-		handler.stmCount, err = handler.queryGoodBases(cli)
+		handler.stmCount, err = handler.queryAppGoodBases(cli)
 		if err != nil {
 			return err
 		}

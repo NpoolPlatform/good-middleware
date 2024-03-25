@@ -49,63 +49,63 @@ func (h *updateHandler) constructAppPowerRentalSql() error {
 	now := uint32(time.Now().Unix())
 	_sql := "update app_power_rentals "
 	if h.ServiceStartAt != nil {
-		_sql += fmt.Sprintf("%vservice_start_at = %v,", *h.ServiceStartAt)
+		_sql += fmt.Sprintf("%vservice_start_at = %v,", set, *h.ServiceStartAt)
 		set = ""
 	}
 	if h.CancelMode != nil {
-		_sql += fmt.Sprintf("%vcancel_mode = '%v',", h.CancelMode.String())
+		_sql += fmt.Sprintf("%vcancel_mode = '%v',", set, h.CancelMode.String())
 		set = ""
 	}
 	if h.CancelableBeforeStartSeconds != nil {
-		_sql += fmt.Sprintf("%vcancelable_before_start_seconds = %v,", *h.CancelableBeforeStartSeconds)
+		_sql += fmt.Sprintf("%vcancelable_before_start_seconds = %v,", set, *h.CancelableBeforeStartSeconds)
 		set = ""
 	}
 	if h.EnableSetCommission != nil {
-		_sql += fmt.Sprintf("%venable_set_commission = %v,", *h.EnableSetCommission)
+		_sql += fmt.Sprintf("%venable_set_commission = %v,", set, *h.EnableSetCommission)
 		set = ""
 	}
 	if h.MinOrderAmount != nil {
-		_sql += fmt.Sprintf("%vmin_order_amount = '%v',", *h.MinOrderAmount)
+		_sql += fmt.Sprintf("%vmin_order_amount = '%v',", set, *h.MinOrderAmount)
 		set = ""
 	}
 	if h.MaxOrderAmount != nil {
-		_sql += fmt.Sprintf("%vmax_order_amount = '%v',", *h.MaxOrderAmount)
+		_sql += fmt.Sprintf("%vmax_order_amount = '%v',", set, *h.MaxOrderAmount)
 		set = ""
 	}
 	if h.MaxUserAmount != nil {
-		_sql += fmt.Sprintf("%vmax_user_amount = '%v',", *h.MaxUserAmount)
+		_sql += fmt.Sprintf("%vmax_user_amount = '%v',", set, *h.MaxUserAmount)
 		set = ""
 	}
 	if h.MinOrderDuration != nil {
-		_sql += fmt.Sprintf("%vmin_order_duration = %v,", *h.MinOrderDuration)
+		_sql += fmt.Sprintf("%vmin_order_duration = %v,", set, *h.MinOrderDuration)
 		set = ""
 	}
 	if h.MaxOrderDuration != nil {
-		_sql += fmt.Sprintf("%vmax_order_duration = %v,", *h.MaxOrderDuration)
+		_sql += fmt.Sprintf("%vmax_order_duration = %v,", set, *h.MaxOrderDuration)
 		set = ""
 	}
 	if h.UnitPrice != nil {
-		_sql += fmt.Sprintf("%vunit_price = '%v',", *h.UnitPrice)
+		_sql += fmt.Sprintf("%vunit_price = '%v',", set, *h.UnitPrice)
 		set = ""
 	}
 	if h.SaleStartAt != nil {
-		_sql += fmt.Sprintf("%vsale_start_at = %v,", *h.SaleStartAt)
+		_sql += fmt.Sprintf("%vsale_start_at = %v,", set, *h.SaleStartAt)
 		set = ""
 	}
 	if h.SaleEndAt != nil {
-		_sql += fmt.Sprintf("%vsale_end_at = %v,", *h.SaleEndAt)
+		_sql += fmt.Sprintf("%vsale_end_at = %v,", set, *h.SaleEndAt)
 		set = ""
 	}
 	if h.SaleMode != nil {
-		_sql += fmt.Sprintf("%vsale_mode = '%v',", h.SaleMode.String())
+		_sql += fmt.Sprintf("%vsale_mode = '%v',", set, h.SaleMode.String())
 		set = ""
 	}
 	if h.FixedDuration != nil {
-		_sql += fmt.Sprintf("%vfixed_duration = %v,", *h.FixedDuration)
+		_sql += fmt.Sprintf("%vfixed_duration = %v,", set, *h.FixedDuration)
 		set = ""
 	}
 	if h.PackageWithRequireds != nil {
-		_sql += fmt.Sprintf("%vpackage_with_requireds = %v,", *h.PackageWithRequireds)
+		_sql += fmt.Sprintf("%vpackage_with_requireds = %v,", set, *h.PackageWithRequireds)
 		set = ""
 	}
 	if set != "" {

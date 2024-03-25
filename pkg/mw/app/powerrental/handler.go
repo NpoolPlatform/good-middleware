@@ -7,7 +7,6 @@ import (
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	apppowerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental"
-	applegacypowerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental/legacy"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	powerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/powerrental"
@@ -23,15 +22,14 @@ import (
 type Handler struct {
 	ID *uint32
 	apppowerrentalcrud.Req
-	AppGoodBaseReq          *appgoodbasecrud.Req
-	AppLegacyPowerRentalReq *applegacypowerrentalcrud.Req
-	AppPowerRentalConds     *apppowerrentalcrud.Conds
-	PowerRentalConds        *powerrentalcrud.Conds
-	AppGoodBaseConds        *appgoodbasecrud.Conds
-	GoodBaseConds           *goodbasecrud.Conds
-	GoodCoinConds           *goodcoincrud.Conds
-	Offset                  int32
-	Limit                   int32
+	AppGoodBaseReq      *appgoodbasecrud.Req
+	AppPowerRentalConds *apppowerrentalcrud.Conds
+	PowerRentalConds    *powerrentalcrud.Conds
+	AppGoodBaseConds    *appgoodbasecrud.Conds
+	GoodBaseConds       *goodbasecrud.Conds
+	GoodCoinConds       *goodcoincrud.Conds
+	Offset              int32
+	Limit               int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
