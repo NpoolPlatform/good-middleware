@@ -20,7 +20,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
-	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulatepowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
@@ -77,8 +77,8 @@ type Client struct {
 	AppLegacyPowerRental *AppLegacyPowerRentalClient
 	// AppPowerRental is the client for interacting with the AppPowerRental builders.
 	AppPowerRental *AppPowerRentalClient
-	// AppSimulateGood is the client for interacting with the AppSimulateGood builders.
-	AppSimulateGood *AppSimulateGoodClient
+	// AppSimulatePowerRental is the client for interacting with the AppSimulatePowerRental builders.
+	AppSimulatePowerRental *AppSimulatePowerRentalClient
 	// AppStock is the client for interacting with the AppStock builders.
 	AppStock *AppStockClient
 	// AppStockLock is the client for interacting with the AppStockLock builders.
@@ -154,7 +154,7 @@ func (c *Client) init() {
 	c.AppGoodPoster = NewAppGoodPosterClient(c.config)
 	c.AppLegacyPowerRental = NewAppLegacyPowerRentalClient(c.config)
 	c.AppPowerRental = NewAppPowerRentalClient(c.config)
-	c.AppSimulateGood = NewAppSimulateGoodClient(c.config)
+	c.AppSimulatePowerRental = NewAppSimulatePowerRentalClient(c.config)
 	c.AppStock = NewAppStockClient(c.config)
 	c.AppStockLock = NewAppStockLockClient(c.config)
 	c.Comment = NewCommentClient(c.config)
@@ -212,45 +212,45 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:                  ctx,
-		config:               cfg,
-		AppDefaultGood:       NewAppDefaultGoodClient(cfg),
-		AppFee:               NewAppFeeClient(cfg),
-		AppGood:              NewAppGoodClient(cfg),
-		AppGoodBase:          NewAppGoodBaseClient(cfg),
-		AppGoodDescription:   NewAppGoodDescriptionClient(cfg),
-		AppGoodDisplayColor:  NewAppGoodDisplayColorClient(cfg),
-		AppGoodDisplayName:   NewAppGoodDisplayNameClient(cfg),
-		AppGoodPoster:        NewAppGoodPosterClient(cfg),
-		AppLegacyPowerRental: NewAppLegacyPowerRentalClient(cfg),
-		AppPowerRental:       NewAppPowerRentalClient(cfg),
-		AppSimulateGood:      NewAppSimulateGoodClient(cfg),
-		AppStock:             NewAppStockClient(cfg),
-		AppStockLock:         NewAppStockLockClient(cfg),
-		Comment:              NewCommentClient(cfg),
-		DelegatedStaking:     NewDelegatedStakingClient(cfg),
-		DeviceInfo:           NewDeviceInfoClient(cfg),
-		DeviceManufacturer:   NewDeviceManufacturerClient(cfg),
-		DevicePoster:         NewDevicePosterClient(cfg),
-		ExtraInfo:            NewExtraInfoClient(cfg),
-		FbmCrowdFunding:      NewFbmCrowdFundingClient(cfg),
-		Fee:                  NewFeeClient(cfg),
-		Good:                 NewGoodClient(cfg),
-		GoodBase:             NewGoodBaseClient(cfg),
-		GoodCoin:             NewGoodCoinClient(cfg),
-		GoodReward:           NewGoodRewardClient(cfg),
-		GoodRewardHistory:    NewGoodRewardHistoryClient(cfg),
-		Like:                 NewLikeClient(cfg),
-		PowerRental:          NewPowerRentalClient(cfg),
-		Recommend:            NewRecommendClient(cfg),
-		RequiredAppGood:      NewRequiredAppGoodClient(cfg),
-		RequiredGood:         NewRequiredGoodClient(cfg),
-		Score:                NewScoreClient(cfg),
-		Stock:                NewStockClient(cfg),
-		TopMost:              NewTopMostClient(cfg),
-		TopMostGood:          NewTopMostGoodClient(cfg),
-		VendorBrand:          NewVendorBrandClient(cfg),
-		VendorLocation:       NewVendorLocationClient(cfg),
+		ctx:                    ctx,
+		config:                 cfg,
+		AppDefaultGood:         NewAppDefaultGoodClient(cfg),
+		AppFee:                 NewAppFeeClient(cfg),
+		AppGood:                NewAppGoodClient(cfg),
+		AppGoodBase:            NewAppGoodBaseClient(cfg),
+		AppGoodDescription:     NewAppGoodDescriptionClient(cfg),
+		AppGoodDisplayColor:    NewAppGoodDisplayColorClient(cfg),
+		AppGoodDisplayName:     NewAppGoodDisplayNameClient(cfg),
+		AppGoodPoster:          NewAppGoodPosterClient(cfg),
+		AppLegacyPowerRental:   NewAppLegacyPowerRentalClient(cfg),
+		AppPowerRental:         NewAppPowerRentalClient(cfg),
+		AppSimulatePowerRental: NewAppSimulatePowerRentalClient(cfg),
+		AppStock:               NewAppStockClient(cfg),
+		AppStockLock:           NewAppStockLockClient(cfg),
+		Comment:                NewCommentClient(cfg),
+		DelegatedStaking:       NewDelegatedStakingClient(cfg),
+		DeviceInfo:             NewDeviceInfoClient(cfg),
+		DeviceManufacturer:     NewDeviceManufacturerClient(cfg),
+		DevicePoster:           NewDevicePosterClient(cfg),
+		ExtraInfo:              NewExtraInfoClient(cfg),
+		FbmCrowdFunding:        NewFbmCrowdFundingClient(cfg),
+		Fee:                    NewFeeClient(cfg),
+		Good:                   NewGoodClient(cfg),
+		GoodBase:               NewGoodBaseClient(cfg),
+		GoodCoin:               NewGoodCoinClient(cfg),
+		GoodReward:             NewGoodRewardClient(cfg),
+		GoodRewardHistory:      NewGoodRewardHistoryClient(cfg),
+		Like:                   NewLikeClient(cfg),
+		PowerRental:            NewPowerRentalClient(cfg),
+		Recommend:              NewRecommendClient(cfg),
+		RequiredAppGood:        NewRequiredAppGoodClient(cfg),
+		RequiredGood:           NewRequiredGoodClient(cfg),
+		Score:                  NewScoreClient(cfg),
+		Stock:                  NewStockClient(cfg),
+		TopMost:                NewTopMostClient(cfg),
+		TopMostGood:            NewTopMostGoodClient(cfg),
+		VendorBrand:            NewVendorBrandClient(cfg),
+		VendorLocation:         NewVendorLocationClient(cfg),
 	}, nil
 }
 
@@ -268,45 +268,45 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:                  ctx,
-		config:               cfg,
-		AppDefaultGood:       NewAppDefaultGoodClient(cfg),
-		AppFee:               NewAppFeeClient(cfg),
-		AppGood:              NewAppGoodClient(cfg),
-		AppGoodBase:          NewAppGoodBaseClient(cfg),
-		AppGoodDescription:   NewAppGoodDescriptionClient(cfg),
-		AppGoodDisplayColor:  NewAppGoodDisplayColorClient(cfg),
-		AppGoodDisplayName:   NewAppGoodDisplayNameClient(cfg),
-		AppGoodPoster:        NewAppGoodPosterClient(cfg),
-		AppLegacyPowerRental: NewAppLegacyPowerRentalClient(cfg),
-		AppPowerRental:       NewAppPowerRentalClient(cfg),
-		AppSimulateGood:      NewAppSimulateGoodClient(cfg),
-		AppStock:             NewAppStockClient(cfg),
-		AppStockLock:         NewAppStockLockClient(cfg),
-		Comment:              NewCommentClient(cfg),
-		DelegatedStaking:     NewDelegatedStakingClient(cfg),
-		DeviceInfo:           NewDeviceInfoClient(cfg),
-		DeviceManufacturer:   NewDeviceManufacturerClient(cfg),
-		DevicePoster:         NewDevicePosterClient(cfg),
-		ExtraInfo:            NewExtraInfoClient(cfg),
-		FbmCrowdFunding:      NewFbmCrowdFundingClient(cfg),
-		Fee:                  NewFeeClient(cfg),
-		Good:                 NewGoodClient(cfg),
-		GoodBase:             NewGoodBaseClient(cfg),
-		GoodCoin:             NewGoodCoinClient(cfg),
-		GoodReward:           NewGoodRewardClient(cfg),
-		GoodRewardHistory:    NewGoodRewardHistoryClient(cfg),
-		Like:                 NewLikeClient(cfg),
-		PowerRental:          NewPowerRentalClient(cfg),
-		Recommend:            NewRecommendClient(cfg),
-		RequiredAppGood:      NewRequiredAppGoodClient(cfg),
-		RequiredGood:         NewRequiredGoodClient(cfg),
-		Score:                NewScoreClient(cfg),
-		Stock:                NewStockClient(cfg),
-		TopMost:              NewTopMostClient(cfg),
-		TopMostGood:          NewTopMostGoodClient(cfg),
-		VendorBrand:          NewVendorBrandClient(cfg),
-		VendorLocation:       NewVendorLocationClient(cfg),
+		ctx:                    ctx,
+		config:                 cfg,
+		AppDefaultGood:         NewAppDefaultGoodClient(cfg),
+		AppFee:                 NewAppFeeClient(cfg),
+		AppGood:                NewAppGoodClient(cfg),
+		AppGoodBase:            NewAppGoodBaseClient(cfg),
+		AppGoodDescription:     NewAppGoodDescriptionClient(cfg),
+		AppGoodDisplayColor:    NewAppGoodDisplayColorClient(cfg),
+		AppGoodDisplayName:     NewAppGoodDisplayNameClient(cfg),
+		AppGoodPoster:          NewAppGoodPosterClient(cfg),
+		AppLegacyPowerRental:   NewAppLegacyPowerRentalClient(cfg),
+		AppPowerRental:         NewAppPowerRentalClient(cfg),
+		AppSimulatePowerRental: NewAppSimulatePowerRentalClient(cfg),
+		AppStock:               NewAppStockClient(cfg),
+		AppStockLock:           NewAppStockLockClient(cfg),
+		Comment:                NewCommentClient(cfg),
+		DelegatedStaking:       NewDelegatedStakingClient(cfg),
+		DeviceInfo:             NewDeviceInfoClient(cfg),
+		DeviceManufacturer:     NewDeviceManufacturerClient(cfg),
+		DevicePoster:           NewDevicePosterClient(cfg),
+		ExtraInfo:              NewExtraInfoClient(cfg),
+		FbmCrowdFunding:        NewFbmCrowdFundingClient(cfg),
+		Fee:                    NewFeeClient(cfg),
+		Good:                   NewGoodClient(cfg),
+		GoodBase:               NewGoodBaseClient(cfg),
+		GoodCoin:               NewGoodCoinClient(cfg),
+		GoodReward:             NewGoodRewardClient(cfg),
+		GoodRewardHistory:      NewGoodRewardHistoryClient(cfg),
+		Like:                   NewLikeClient(cfg),
+		PowerRental:            NewPowerRentalClient(cfg),
+		Recommend:              NewRecommendClient(cfg),
+		RequiredAppGood:        NewRequiredAppGoodClient(cfg),
+		RequiredGood:           NewRequiredGoodClient(cfg),
+		Score:                  NewScoreClient(cfg),
+		Stock:                  NewStockClient(cfg),
+		TopMost:                NewTopMostClient(cfg),
+		TopMostGood:            NewTopMostGoodClient(cfg),
+		VendorBrand:            NewVendorBrandClient(cfg),
+		VendorLocation:         NewVendorLocationClient(cfg),
 	}, nil
 }
 
@@ -346,7 +346,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.AppGoodPoster.Use(hooks...)
 	c.AppLegacyPowerRental.Use(hooks...)
 	c.AppPowerRental.Use(hooks...)
-	c.AppSimulateGood.Use(hooks...)
+	c.AppSimulatePowerRental.Use(hooks...)
 	c.AppStock.Use(hooks...)
 	c.AppStockLock.Use(hooks...)
 	c.Comment.Use(hooks...)
@@ -1285,84 +1285,84 @@ func (c *AppPowerRentalClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], apppowerrental.Hooks[:]...)
 }
 
-// AppSimulateGoodClient is a client for the AppSimulateGood schema.
-type AppSimulateGoodClient struct {
+// AppSimulatePowerRentalClient is a client for the AppSimulatePowerRental schema.
+type AppSimulatePowerRentalClient struct {
 	config
 }
 
-// NewAppSimulateGoodClient returns a client for the AppSimulateGood from the given config.
-func NewAppSimulateGoodClient(c config) *AppSimulateGoodClient {
-	return &AppSimulateGoodClient{config: c}
+// NewAppSimulatePowerRentalClient returns a client for the AppSimulatePowerRental from the given config.
+func NewAppSimulatePowerRentalClient(c config) *AppSimulatePowerRentalClient {
+	return &AppSimulatePowerRentalClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `appsimulategood.Hooks(f(g(h())))`.
-func (c *AppSimulateGoodClient) Use(hooks ...Hook) {
-	c.hooks.AppSimulateGood = append(c.hooks.AppSimulateGood, hooks...)
+// A call to `Use(f, g, h)` equals to `appsimulatepowerrental.Hooks(f(g(h())))`.
+func (c *AppSimulatePowerRentalClient) Use(hooks ...Hook) {
+	c.hooks.AppSimulatePowerRental = append(c.hooks.AppSimulatePowerRental, hooks...)
 }
 
-// Create returns a builder for creating a AppSimulateGood entity.
-func (c *AppSimulateGoodClient) Create() *AppSimulateGoodCreate {
-	mutation := newAppSimulateGoodMutation(c.config, OpCreate)
-	return &AppSimulateGoodCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a builder for creating a AppSimulatePowerRental entity.
+func (c *AppSimulatePowerRentalClient) Create() *AppSimulatePowerRentalCreate {
+	mutation := newAppSimulatePowerRentalMutation(c.config, OpCreate)
+	return &AppSimulatePowerRentalCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of AppSimulateGood entities.
-func (c *AppSimulateGoodClient) CreateBulk(builders ...*AppSimulateGoodCreate) *AppSimulateGoodCreateBulk {
-	return &AppSimulateGoodCreateBulk{config: c.config, builders: builders}
+// CreateBulk returns a builder for creating a bulk of AppSimulatePowerRental entities.
+func (c *AppSimulatePowerRentalClient) CreateBulk(builders ...*AppSimulatePowerRentalCreate) *AppSimulatePowerRentalCreateBulk {
+	return &AppSimulatePowerRentalCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for AppSimulateGood.
-func (c *AppSimulateGoodClient) Update() *AppSimulateGoodUpdate {
-	mutation := newAppSimulateGoodMutation(c.config, OpUpdate)
-	return &AppSimulateGoodUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for AppSimulatePowerRental.
+func (c *AppSimulatePowerRentalClient) Update() *AppSimulatePowerRentalUpdate {
+	mutation := newAppSimulatePowerRentalMutation(c.config, OpUpdate)
+	return &AppSimulatePowerRentalUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *AppSimulateGoodClient) UpdateOne(asg *AppSimulateGood) *AppSimulateGoodUpdateOne {
-	mutation := newAppSimulateGoodMutation(c.config, OpUpdateOne, withAppSimulateGood(asg))
-	return &AppSimulateGoodUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *AppSimulatePowerRentalClient) UpdateOne(aspr *AppSimulatePowerRental) *AppSimulatePowerRentalUpdateOne {
+	mutation := newAppSimulatePowerRentalMutation(c.config, OpUpdateOne, withAppSimulatePowerRental(aspr))
+	return &AppSimulatePowerRentalUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *AppSimulateGoodClient) UpdateOneID(id uint32) *AppSimulateGoodUpdateOne {
-	mutation := newAppSimulateGoodMutation(c.config, OpUpdateOne, withAppSimulateGoodID(id))
-	return &AppSimulateGoodUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *AppSimulatePowerRentalClient) UpdateOneID(id uint32) *AppSimulatePowerRentalUpdateOne {
+	mutation := newAppSimulatePowerRentalMutation(c.config, OpUpdateOne, withAppSimulatePowerRentalID(id))
+	return &AppSimulatePowerRentalUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for AppSimulateGood.
-func (c *AppSimulateGoodClient) Delete() *AppSimulateGoodDelete {
-	mutation := newAppSimulateGoodMutation(c.config, OpDelete)
-	return &AppSimulateGoodDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for AppSimulatePowerRental.
+func (c *AppSimulatePowerRentalClient) Delete() *AppSimulatePowerRentalDelete {
+	mutation := newAppSimulatePowerRentalMutation(c.config, OpDelete)
+	return &AppSimulatePowerRentalDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *AppSimulateGoodClient) DeleteOne(asg *AppSimulateGood) *AppSimulateGoodDeleteOne {
-	return c.DeleteOneID(asg.ID)
+func (c *AppSimulatePowerRentalClient) DeleteOne(aspr *AppSimulatePowerRental) *AppSimulatePowerRentalDeleteOne {
+	return c.DeleteOneID(aspr.ID)
 }
 
 // DeleteOne returns a builder for deleting the given entity by its id.
-func (c *AppSimulateGoodClient) DeleteOneID(id uint32) *AppSimulateGoodDeleteOne {
-	builder := c.Delete().Where(appsimulategood.ID(id))
+func (c *AppSimulatePowerRentalClient) DeleteOneID(id uint32) *AppSimulatePowerRentalDeleteOne {
+	builder := c.Delete().Where(appsimulatepowerrental.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &AppSimulateGoodDeleteOne{builder}
+	return &AppSimulatePowerRentalDeleteOne{builder}
 }
 
-// Query returns a query builder for AppSimulateGood.
-func (c *AppSimulateGoodClient) Query() *AppSimulateGoodQuery {
-	return &AppSimulateGoodQuery{
+// Query returns a query builder for AppSimulatePowerRental.
+func (c *AppSimulatePowerRentalClient) Query() *AppSimulatePowerRentalQuery {
+	return &AppSimulatePowerRentalQuery{
 		config: c.config,
 	}
 }
 
-// Get returns a AppSimulateGood entity by its id.
-func (c *AppSimulateGoodClient) Get(ctx context.Context, id uint32) (*AppSimulateGood, error) {
-	return c.Query().Where(appsimulategood.ID(id)).Only(ctx)
+// Get returns a AppSimulatePowerRental entity by its id.
+func (c *AppSimulatePowerRentalClient) Get(ctx context.Context, id uint32) (*AppSimulatePowerRental, error) {
+	return c.Query().Where(appsimulatepowerrental.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *AppSimulateGoodClient) GetX(ctx context.Context, id uint32) *AppSimulateGood {
+func (c *AppSimulatePowerRentalClient) GetX(ctx context.Context, id uint32) *AppSimulatePowerRental {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -1371,9 +1371,9 @@ func (c *AppSimulateGoodClient) GetX(ctx context.Context, id uint32) *AppSimulat
 }
 
 // Hooks returns the client hooks.
-func (c *AppSimulateGoodClient) Hooks() []Hook {
-	hooks := c.hooks.AppSimulateGood
-	return append(hooks[:len(hooks):len(hooks)], appsimulategood.Hooks[:]...)
+func (c *AppSimulatePowerRentalClient) Hooks() []Hook {
+	hooks := c.hooks.AppSimulatePowerRental
+	return append(hooks[:len(hooks):len(hooks)], appsimulatepowerrental.Hooks[:]...)
 }
 
 // AppStockClient is a client for the AppStock schema.

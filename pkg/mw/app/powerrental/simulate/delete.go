@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	appsimulategoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/simulate"
+	appsimulategoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental/simulate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/simulate"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental/simulate"
 )
 
 type deleteHandler struct {

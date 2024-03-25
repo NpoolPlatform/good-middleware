@@ -139,15 +139,15 @@ func (f AppPowerRentalFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Val
 	return f(ctx, mv)
 }
 
-// The AppSimulateGoodFunc type is an adapter to allow the use of ordinary
-// function as AppSimulateGood mutator.
-type AppSimulateGoodFunc func(context.Context, *ent.AppSimulateGoodMutation) (ent.Value, error)
+// The AppSimulatePowerRentalFunc type is an adapter to allow the use of ordinary
+// function as AppSimulatePowerRental mutator.
+type AppSimulatePowerRentalFunc func(context.Context, *ent.AppSimulatePowerRentalMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f AppSimulateGoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.AppSimulateGoodMutation)
+func (f AppSimulatePowerRentalFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppSimulatePowerRentalMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppSimulateGoodMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppSimulatePowerRentalMutation", m)
 	}
 	return f(ctx, mv)
 }

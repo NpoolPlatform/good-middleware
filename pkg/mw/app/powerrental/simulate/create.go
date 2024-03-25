@@ -5,13 +5,13 @@ import (
 	"fmt"
 
 	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
-	appsimulategoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/simulate"
+	appsimulategoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental/simulate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	appgoodmw "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/simulate"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental/simulate"
 	"github.com/shopspring/decimal"
 
 	"github.com/google/uuid"

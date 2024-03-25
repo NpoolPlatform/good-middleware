@@ -10,26 +10,20 @@ import (
 	"github.com/shopspring/decimal"
 )
 
-// AppSimulateGood holds the schema definition for the AppSimulateGood entity.
-type AppSimulateGood struct {
+// AppSimulatePowerRental holds the schema definition for the AppSimulatePowerRental entity.
+type AppSimulatePowerRental struct {
 	ent.Schema
 }
 
-func (AppSimulateGood) Mixin() []ent.Mixin {
+func (AppSimulatePowerRental) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.TimeMixin{},
 		crudermixin.AutoIDMixin{},
 	}
 }
 
-func (AppSimulateGood) Fields() []ent.Field {
+func (AppSimulatePowerRental) Fields() []ent.Field {
 	return []ent.Field{
-		field.
-			UUID("app_id", uuid.UUID{}).
-			Optional(),
-		field.
-			UUID("good_id", uuid.UUID{}).
-			Optional(),
 		field.
 			UUID("app_good_id", uuid.UUID{}).
 			Optional(),
@@ -37,20 +31,20 @@ func (AppSimulateGood) Fields() []ent.Field {
 			UUID("coin_type_id", uuid.UUID{}).
 			Optional(),
 		field.
-			Other("fixed_order_units", decimal.Decimal{}).
+			Other("order_units", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).
 			Optional().
 			Default(decimal.Decimal{}),
 		field.
-			Uint32("fixed_order_duration").
+			Uint32("order_duration").
 			Optional().
 			Default(0),
 	}
 }
 
-// Edges of the AppSimulateGood.
-func (AppSimulateGood) Edges() []ent.Edge {
+// Edges of the AppSimulatePowerRental.
+func (AppSimulatePowerRental) Edges() []ent.Edge {
 	return nil
 }

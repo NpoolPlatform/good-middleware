@@ -15,7 +15,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
-	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulatepowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
@@ -678,48 +678,48 @@ func init() {
 	apppowerrentalDescPackageWithRequireds := apppowerrentalFields[15].Descriptor()
 	// apppowerrental.DefaultPackageWithRequireds holds the default value on creation for the package_with_requireds field.
 	apppowerrental.DefaultPackageWithRequireds = apppowerrentalDescPackageWithRequireds.Default.(bool)
-	appsimulategoodMixin := schema.AppSimulateGood{}.Mixin()
-	appsimulategood.Policy = privacy.NewPolicies(appsimulategoodMixin[0], schema.AppSimulateGood{})
-	appsimulategood.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+	appsimulatepowerrentalMixin := schema.AppSimulatePowerRental{}.Mixin()
+	appsimulatepowerrental.Policy = privacy.NewPolicies(appsimulatepowerrentalMixin[0], schema.AppSimulatePowerRental{})
+	appsimulatepowerrental.Hooks[0] = func(next ent.Mutator) ent.Mutator {
 		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-			if err := appsimulategood.Policy.EvalMutation(ctx, m); err != nil {
+			if err := appsimulatepowerrental.Policy.EvalMutation(ctx, m); err != nil {
 				return nil, err
 			}
 			return next.Mutate(ctx, m)
 		})
 	}
-	appsimulategoodMixinFields0 := appsimulategoodMixin[0].Fields()
-	_ = appsimulategoodMixinFields0
-	appsimulategoodMixinFields1 := appsimulategoodMixin[1].Fields()
-	_ = appsimulategoodMixinFields1
-	appsimulategoodFields := schema.AppSimulateGood{}.Fields()
-	_ = appsimulategoodFields
-	// appsimulategoodDescCreatedAt is the schema descriptor for created_at field.
-	appsimulategoodDescCreatedAt := appsimulategoodMixinFields0[0].Descriptor()
-	// appsimulategood.DefaultCreatedAt holds the default value on creation for the created_at field.
-	appsimulategood.DefaultCreatedAt = appsimulategoodDescCreatedAt.Default.(func() uint32)
-	// appsimulategoodDescUpdatedAt is the schema descriptor for updated_at field.
-	appsimulategoodDescUpdatedAt := appsimulategoodMixinFields0[1].Descriptor()
-	// appsimulategood.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	appsimulategood.DefaultUpdatedAt = appsimulategoodDescUpdatedAt.Default.(func() uint32)
-	// appsimulategood.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	appsimulategood.UpdateDefaultUpdatedAt = appsimulategoodDescUpdatedAt.UpdateDefault.(func() uint32)
-	// appsimulategoodDescDeletedAt is the schema descriptor for deleted_at field.
-	appsimulategoodDescDeletedAt := appsimulategoodMixinFields0[2].Descriptor()
-	// appsimulategood.DefaultDeletedAt holds the default value on creation for the deleted_at field.
-	appsimulategood.DefaultDeletedAt = appsimulategoodDescDeletedAt.Default.(func() uint32)
-	// appsimulategoodDescEntID is the schema descriptor for ent_id field.
-	appsimulategoodDescEntID := appsimulategoodMixinFields1[1].Descriptor()
-	// appsimulategood.DefaultEntID holds the default value on creation for the ent_id field.
-	appsimulategood.DefaultEntID = appsimulategoodDescEntID.Default.(func() uuid.UUID)
-	// appsimulategoodDescFixedOrderUnits is the schema descriptor for fixed_order_units field.
-	appsimulategoodDescFixedOrderUnits := appsimulategoodFields[4].Descriptor()
-	// appsimulategood.DefaultFixedOrderUnits holds the default value on creation for the fixed_order_units field.
-	appsimulategood.DefaultFixedOrderUnits = appsimulategoodDescFixedOrderUnits.Default.(decimal.Decimal)
-	// appsimulategoodDescFixedOrderDuration is the schema descriptor for fixed_order_duration field.
-	appsimulategoodDescFixedOrderDuration := appsimulategoodFields[5].Descriptor()
-	// appsimulategood.DefaultFixedOrderDuration holds the default value on creation for the fixed_order_duration field.
-	appsimulategood.DefaultFixedOrderDuration = appsimulategoodDescFixedOrderDuration.Default.(uint32)
+	appsimulatepowerrentalMixinFields0 := appsimulatepowerrentalMixin[0].Fields()
+	_ = appsimulatepowerrentalMixinFields0
+	appsimulatepowerrentalMixinFields1 := appsimulatepowerrentalMixin[1].Fields()
+	_ = appsimulatepowerrentalMixinFields1
+	appsimulatepowerrentalFields := schema.AppSimulatePowerRental{}.Fields()
+	_ = appsimulatepowerrentalFields
+	// appsimulatepowerrentalDescCreatedAt is the schema descriptor for created_at field.
+	appsimulatepowerrentalDescCreatedAt := appsimulatepowerrentalMixinFields0[0].Descriptor()
+	// appsimulatepowerrental.DefaultCreatedAt holds the default value on creation for the created_at field.
+	appsimulatepowerrental.DefaultCreatedAt = appsimulatepowerrentalDescCreatedAt.Default.(func() uint32)
+	// appsimulatepowerrentalDescUpdatedAt is the schema descriptor for updated_at field.
+	appsimulatepowerrentalDescUpdatedAt := appsimulatepowerrentalMixinFields0[1].Descriptor()
+	// appsimulatepowerrental.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	appsimulatepowerrental.DefaultUpdatedAt = appsimulatepowerrentalDescUpdatedAt.Default.(func() uint32)
+	// appsimulatepowerrental.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	appsimulatepowerrental.UpdateDefaultUpdatedAt = appsimulatepowerrentalDescUpdatedAt.UpdateDefault.(func() uint32)
+	// appsimulatepowerrentalDescDeletedAt is the schema descriptor for deleted_at field.
+	appsimulatepowerrentalDescDeletedAt := appsimulatepowerrentalMixinFields0[2].Descriptor()
+	// appsimulatepowerrental.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	appsimulatepowerrental.DefaultDeletedAt = appsimulatepowerrentalDescDeletedAt.Default.(func() uint32)
+	// appsimulatepowerrentalDescEntID is the schema descriptor for ent_id field.
+	appsimulatepowerrentalDescEntID := appsimulatepowerrentalMixinFields1[1].Descriptor()
+	// appsimulatepowerrental.DefaultEntID holds the default value on creation for the ent_id field.
+	appsimulatepowerrental.DefaultEntID = appsimulatepowerrentalDescEntID.Default.(func() uuid.UUID)
+	// appsimulatepowerrentalDescOrderUnits is the schema descriptor for order_units field.
+	appsimulatepowerrentalDescOrderUnits := appsimulatepowerrentalFields[2].Descriptor()
+	// appsimulatepowerrental.DefaultOrderUnits holds the default value on creation for the order_units field.
+	appsimulatepowerrental.DefaultOrderUnits = appsimulatepowerrentalDescOrderUnits.Default.(decimal.Decimal)
+	// appsimulatepowerrentalDescOrderDuration is the schema descriptor for order_duration field.
+	appsimulatepowerrentalDescOrderDuration := appsimulatepowerrentalFields[3].Descriptor()
+	// appsimulatepowerrental.DefaultOrderDuration holds the default value on creation for the order_duration field.
+	appsimulatepowerrental.DefaultOrderDuration = appsimulatepowerrentalDescOrderDuration.Default.(uint32)
 	appstockMixin := schema.AppStock{}.Mixin()
 	appstock.Policy = privacy.NewPolicies(appstockMixin[0], schema.AppStock{})
 	appstock.Hooks[0] = func(next ent.Mutator) ent.Mutator {

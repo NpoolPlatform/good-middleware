@@ -3,13 +3,13 @@ package appsimulategood
 import (
 	"context"
 
-	appsimulategood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/simulate"
+	appsimulategood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/powerrental/simulate"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/simulate"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental/simulate"
 )
 
 func (s *Server) UpdateSimulate(ctx context.Context, in *npool.UpdateSimulateRequest) (*npool.UpdateSimulateResponse, error) {

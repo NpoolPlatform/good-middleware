@@ -6,13 +6,13 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
-	appsimulategoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/simulate"
+	appsimulatepowerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental/simulate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
-	entappsimulategood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
+	entappsimulatepowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulatepowerrental"
 	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/simulate"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental/simulate"
 	"github.com/shopspring/decimal"
 )
 

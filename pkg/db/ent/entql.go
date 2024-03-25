@@ -13,7 +13,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
-	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulatepowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
@@ -297,25 +297,23 @@ var schemaGraph = func() *sqlgraph.Schema {
 	}
 	graph.Nodes[10] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
-			Table:   appsimulategood.Table,
-			Columns: appsimulategood.Columns,
+			Table:   appsimulatepowerrental.Table,
+			Columns: appsimulatepowerrental.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeUint32,
-				Column: appsimulategood.FieldID,
+				Column: appsimulatepowerrental.FieldID,
 			},
 		},
-		Type: "AppSimulateGood",
+		Type: "AppSimulatePowerRental",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			appsimulategood.FieldCreatedAt:          {Type: field.TypeUint32, Column: appsimulategood.FieldCreatedAt},
-			appsimulategood.FieldUpdatedAt:          {Type: field.TypeUint32, Column: appsimulategood.FieldUpdatedAt},
-			appsimulategood.FieldDeletedAt:          {Type: field.TypeUint32, Column: appsimulategood.FieldDeletedAt},
-			appsimulategood.FieldEntID:              {Type: field.TypeUUID, Column: appsimulategood.FieldEntID},
-			appsimulategood.FieldAppID:              {Type: field.TypeUUID, Column: appsimulategood.FieldAppID},
-			appsimulategood.FieldGoodID:             {Type: field.TypeUUID, Column: appsimulategood.FieldGoodID},
-			appsimulategood.FieldAppGoodID:          {Type: field.TypeUUID, Column: appsimulategood.FieldAppGoodID},
-			appsimulategood.FieldCoinTypeID:         {Type: field.TypeUUID, Column: appsimulategood.FieldCoinTypeID},
-			appsimulategood.FieldFixedOrderUnits:    {Type: field.TypeOther, Column: appsimulategood.FieldFixedOrderUnits},
-			appsimulategood.FieldFixedOrderDuration: {Type: field.TypeUint32, Column: appsimulategood.FieldFixedOrderDuration},
+			appsimulatepowerrental.FieldCreatedAt:     {Type: field.TypeUint32, Column: appsimulatepowerrental.FieldCreatedAt},
+			appsimulatepowerrental.FieldUpdatedAt:     {Type: field.TypeUint32, Column: appsimulatepowerrental.FieldUpdatedAt},
+			appsimulatepowerrental.FieldDeletedAt:     {Type: field.TypeUint32, Column: appsimulatepowerrental.FieldDeletedAt},
+			appsimulatepowerrental.FieldEntID:         {Type: field.TypeUUID, Column: appsimulatepowerrental.FieldEntID},
+			appsimulatepowerrental.FieldAppGoodID:     {Type: field.TypeUUID, Column: appsimulatepowerrental.FieldAppGoodID},
+			appsimulatepowerrental.FieldCoinTypeID:    {Type: field.TypeUUID, Column: appsimulatepowerrental.FieldCoinTypeID},
+			appsimulatepowerrental.FieldOrderUnits:    {Type: field.TypeOther, Column: appsimulatepowerrental.FieldOrderUnits},
+			appsimulatepowerrental.FieldOrderDuration: {Type: field.TypeUint32, Column: appsimulatepowerrental.FieldOrderDuration},
 		},
 	}
 	graph.Nodes[11] = &sqlgraph.Node{
@@ -1927,33 +1925,33 @@ func (f *AppPowerRentalFilter) WherePackageWithRequireds(p entql.BoolP) {
 }
 
 // addPredicate implements the predicateAdder interface.
-func (asgq *AppSimulateGoodQuery) addPredicate(pred func(s *sql.Selector)) {
-	asgq.predicates = append(asgq.predicates, pred)
+func (asprq *AppSimulatePowerRentalQuery) addPredicate(pred func(s *sql.Selector)) {
+	asprq.predicates = append(asprq.predicates, pred)
 }
 
-// Filter returns a Filter implementation to apply filters on the AppSimulateGoodQuery builder.
-func (asgq *AppSimulateGoodQuery) Filter() *AppSimulateGoodFilter {
-	return &AppSimulateGoodFilter{config: asgq.config, predicateAdder: asgq}
+// Filter returns a Filter implementation to apply filters on the AppSimulatePowerRentalQuery builder.
+func (asprq *AppSimulatePowerRentalQuery) Filter() *AppSimulatePowerRentalFilter {
+	return &AppSimulatePowerRentalFilter{config: asprq.config, predicateAdder: asprq}
 }
 
 // addPredicate implements the predicateAdder interface.
-func (m *AppSimulateGoodMutation) addPredicate(pred func(s *sql.Selector)) {
+func (m *AppSimulatePowerRentalMutation) addPredicate(pred func(s *sql.Selector)) {
 	m.predicates = append(m.predicates, pred)
 }
 
-// Filter returns an entql.Where implementation to apply filters on the AppSimulateGoodMutation builder.
-func (m *AppSimulateGoodMutation) Filter() *AppSimulateGoodFilter {
-	return &AppSimulateGoodFilter{config: m.config, predicateAdder: m}
+// Filter returns an entql.Where implementation to apply filters on the AppSimulatePowerRentalMutation builder.
+func (m *AppSimulatePowerRentalMutation) Filter() *AppSimulatePowerRentalFilter {
+	return &AppSimulatePowerRentalFilter{config: m.config, predicateAdder: m}
 }
 
-// AppSimulateGoodFilter provides a generic filtering capability at runtime for AppSimulateGoodQuery.
-type AppSimulateGoodFilter struct {
+// AppSimulatePowerRentalFilter provides a generic filtering capability at runtime for AppSimulatePowerRentalQuery.
+type AppSimulatePowerRentalFilter struct {
 	predicateAdder
 	config
 }
 
 // Where applies the entql predicate on the query filter.
-func (f *AppSimulateGoodFilter) Where(p entql.P) {
+func (f *AppSimulatePowerRentalFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
 		if err := schemaGraph.EvalP(schemaGraph.Nodes[10].Type, p, s); err != nil {
 			s.AddError(err)
@@ -1962,58 +1960,48 @@ func (f *AppSimulateGoodFilter) Where(p entql.P) {
 }
 
 // WhereID applies the entql uint32 predicate on the id field.
-func (f *AppSimulateGoodFilter) WhereID(p entql.Uint32P) {
-	f.Where(p.Field(appsimulategood.FieldID))
+func (f *AppSimulatePowerRentalFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(appsimulatepowerrental.FieldID))
 }
 
 // WhereCreatedAt applies the entql uint32 predicate on the created_at field.
-func (f *AppSimulateGoodFilter) WhereCreatedAt(p entql.Uint32P) {
-	f.Where(p.Field(appsimulategood.FieldCreatedAt))
+func (f *AppSimulatePowerRentalFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appsimulatepowerrental.FieldCreatedAt))
 }
 
 // WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
-func (f *AppSimulateGoodFilter) WhereUpdatedAt(p entql.Uint32P) {
-	f.Where(p.Field(appsimulategood.FieldUpdatedAt))
+func (f *AppSimulatePowerRentalFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appsimulatepowerrental.FieldUpdatedAt))
 }
 
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
-func (f *AppSimulateGoodFilter) WhereDeletedAt(p entql.Uint32P) {
-	f.Where(p.Field(appsimulategood.FieldDeletedAt))
+func (f *AppSimulatePowerRentalFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(appsimulatepowerrental.FieldDeletedAt))
 }
 
 // WhereEntID applies the entql [16]byte predicate on the ent_id field.
-func (f *AppSimulateGoodFilter) WhereEntID(p entql.ValueP) {
-	f.Where(p.Field(appsimulategood.FieldEntID))
-}
-
-// WhereAppID applies the entql [16]byte predicate on the app_id field.
-func (f *AppSimulateGoodFilter) WhereAppID(p entql.ValueP) {
-	f.Where(p.Field(appsimulategood.FieldAppID))
-}
-
-// WhereGoodID applies the entql [16]byte predicate on the good_id field.
-func (f *AppSimulateGoodFilter) WhereGoodID(p entql.ValueP) {
-	f.Where(p.Field(appsimulategood.FieldGoodID))
+func (f *AppSimulatePowerRentalFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(appsimulatepowerrental.FieldEntID))
 }
 
 // WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
-func (f *AppSimulateGoodFilter) WhereAppGoodID(p entql.ValueP) {
-	f.Where(p.Field(appsimulategood.FieldAppGoodID))
+func (f *AppSimulatePowerRentalFilter) WhereAppGoodID(p entql.ValueP) {
+	f.Where(p.Field(appsimulatepowerrental.FieldAppGoodID))
 }
 
 // WhereCoinTypeID applies the entql [16]byte predicate on the coin_type_id field.
-func (f *AppSimulateGoodFilter) WhereCoinTypeID(p entql.ValueP) {
-	f.Where(p.Field(appsimulategood.FieldCoinTypeID))
+func (f *AppSimulatePowerRentalFilter) WhereCoinTypeID(p entql.ValueP) {
+	f.Where(p.Field(appsimulatepowerrental.FieldCoinTypeID))
 }
 
-// WhereFixedOrderUnits applies the entql other predicate on the fixed_order_units field.
-func (f *AppSimulateGoodFilter) WhereFixedOrderUnits(p entql.OtherP) {
-	f.Where(p.Field(appsimulategood.FieldFixedOrderUnits))
+// WhereOrderUnits applies the entql other predicate on the order_units field.
+func (f *AppSimulatePowerRentalFilter) WhereOrderUnits(p entql.OtherP) {
+	f.Where(p.Field(appsimulatepowerrental.FieldOrderUnits))
 }
 
-// WhereFixedOrderDuration applies the entql uint32 predicate on the fixed_order_duration field.
-func (f *AppSimulateGoodFilter) WhereFixedOrderDuration(p entql.Uint32P) {
-	f.Where(p.Field(appsimulategood.FieldFixedOrderDuration))
+// WhereOrderDuration applies the entql uint32 predicate on the order_duration field.
+func (f *AppSimulatePowerRentalFilter) WhereOrderDuration(p entql.Uint32P) {
+	f.Where(p.Field(appsimulatepowerrental.FieldOrderDuration))
 }
 
 // addPredicate implements the predicateAdder interface.

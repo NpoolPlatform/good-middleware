@@ -1,7 +1,7 @@
 package appsimulategood
 
 import (
-	appsimulategood "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/simulate"
+	appsimulategood "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental/simulate"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"

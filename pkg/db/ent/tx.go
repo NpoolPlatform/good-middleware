@@ -34,8 +34,8 @@ type Tx struct {
 	AppLegacyPowerRental *AppLegacyPowerRentalClient
 	// AppPowerRental is the client for interacting with the AppPowerRental builders.
 	AppPowerRental *AppPowerRentalClient
-	// AppSimulateGood is the client for interacting with the AppSimulateGood builders.
-	AppSimulateGood *AppSimulateGoodClient
+	// AppSimulatePowerRental is the client for interacting with the AppSimulatePowerRental builders.
+	AppSimulatePowerRental *AppSimulatePowerRentalClient
 	// AppStock is the client for interacting with the AppStock builders.
 	AppStock *AppStockClient
 	// AppStockLock is the client for interacting with the AppStockLock builders.
@@ -233,7 +233,7 @@ func (tx *Tx) init() {
 	tx.AppGoodPoster = NewAppGoodPosterClient(tx.config)
 	tx.AppLegacyPowerRental = NewAppLegacyPowerRentalClient(tx.config)
 	tx.AppPowerRental = NewAppPowerRentalClient(tx.config)
-	tx.AppSimulateGood = NewAppSimulateGoodClient(tx.config)
+	tx.AppSimulatePowerRental = NewAppSimulatePowerRentalClient(tx.config)
 	tx.AppStock = NewAppStockClient(tx.config)
 	tx.AppStockLock = NewAppStockLockClient(tx.config)
 	tx.Comment = NewCommentClient(tx.config)

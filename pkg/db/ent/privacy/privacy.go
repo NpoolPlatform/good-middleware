@@ -390,28 +390,28 @@ func (f AppPowerRentalMutationRuleFunc) EvalMutation(ctx context.Context, m ent.
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppPowerRentalMutation", m)
 }
 
-// The AppSimulateGoodQueryRuleFunc type is an adapter to allow the use of ordinary
+// The AppSimulatePowerRentalQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
-type AppSimulateGoodQueryRuleFunc func(context.Context, *ent.AppSimulateGoodQuery) error
+type AppSimulatePowerRentalQueryRuleFunc func(context.Context, *ent.AppSimulatePowerRentalQuery) error
 
 // EvalQuery return f(ctx, q).
-func (f AppSimulateGoodQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.AppSimulateGoodQuery); ok {
+func (f AppSimulatePowerRentalQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppSimulatePowerRentalQuery); ok {
 		return f(ctx, q)
 	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppSimulateGoodQuery", q)
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppSimulatePowerRentalQuery", q)
 }
 
-// The AppSimulateGoodMutationRuleFunc type is an adapter to allow the use of ordinary
+// The AppSimulatePowerRentalMutationRuleFunc type is an adapter to allow the use of ordinary
 // functions as a mutation rule.
-type AppSimulateGoodMutationRuleFunc func(context.Context, *ent.AppSimulateGoodMutation) error
+type AppSimulatePowerRentalMutationRuleFunc func(context.Context, *ent.AppSimulatePowerRentalMutation) error
 
 // EvalMutation calls f(ctx, m).
-func (f AppSimulateGoodMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.AppSimulateGoodMutation); ok {
+func (f AppSimulatePowerRentalMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppSimulatePowerRentalMutation); ok {
 		return f(ctx, m)
 	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppSimulateGoodMutation", m)
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppSimulatePowerRentalMutation", m)
 }
 
 // The AppStockQueryRuleFunc type is an adapter to allow the use of ordinary
@@ -1093,7 +1093,7 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.AppPowerRentalQuery:
 		return q.Filter(), nil
-	case *ent.AppSimulateGoodQuery:
+	case *ent.AppSimulatePowerRentalQuery:
 		return q.Filter(), nil
 	case *ent.AppStockQuery:
 		return q.Filter(), nil
@@ -1174,7 +1174,7 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 		return m.Filter(), nil
 	case *ent.AppPowerRentalMutation:
 		return m.Filter(), nil
-	case *ent.AppSimulateGoodMutation:
+	case *ent.AppSimulatePowerRentalMutation:
 		return m.Filter(), nil
 	case *ent.AppStockMutation:
 		return m.Filter(), nil

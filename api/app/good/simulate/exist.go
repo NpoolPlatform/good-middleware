@@ -8,8 +8,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	appsimulategood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/simulate"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/simulate"
+	appsimulategood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/powerrental/simulate"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental/simulate"
 )
 
 func (s *Server) ExistSimulateConds(ctx context.Context, in *npool.ExistSimulateCondsRequest) (*npool.ExistSimulateCondsResponse, error) {

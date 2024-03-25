@@ -36,8 +36,8 @@ type AppLegacyPowerRental func(*sql.Selector)
 // AppPowerRental is the predicate function for apppowerrental builders.
 type AppPowerRental func(*sql.Selector)
 
-// AppSimulateGood is the predicate function for appsimulategood builders.
-type AppSimulateGood func(*sql.Selector)
+// AppSimulatePowerRental is the predicate function for appsimulatepowerrental builders.
+type AppSimulatePowerRental func(*sql.Selector)
 
 // AppStock is the predicate function for appstock builders.
 type AppStock func(*sql.Selector)

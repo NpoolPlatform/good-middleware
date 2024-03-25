@@ -17,7 +17,7 @@ import (
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/simulate"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental/simulate"
 	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 
 	"github.com/google/uuid"

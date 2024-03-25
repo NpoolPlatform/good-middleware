@@ -18,7 +18,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
-	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulategood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulatepowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
@@ -61,43 +61,43 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeAppDefaultGood       = "AppDefaultGood"
-	TypeAppFee               = "AppFee"
-	TypeAppGood              = "AppGood"
-	TypeAppGoodBase          = "AppGoodBase"
-	TypeAppGoodDescription   = "AppGoodDescription"
-	TypeAppGoodDisplayColor  = "AppGoodDisplayColor"
-	TypeAppGoodDisplayName   = "AppGoodDisplayName"
-	TypeAppGoodPoster        = "AppGoodPoster"
-	TypeAppLegacyPowerRental = "AppLegacyPowerRental"
-	TypeAppPowerRental       = "AppPowerRental"
-	TypeAppSimulateGood      = "AppSimulateGood"
-	TypeAppStock             = "AppStock"
-	TypeAppStockLock         = "AppStockLock"
-	TypeComment              = "Comment"
-	TypeDelegatedStaking     = "DelegatedStaking"
-	TypeDeviceInfo           = "DeviceInfo"
-	TypeDeviceManufacturer   = "DeviceManufacturer"
-	TypeDevicePoster         = "DevicePoster"
-	TypeExtraInfo            = "ExtraInfo"
-	TypeFbmCrowdFunding      = "FbmCrowdFunding"
-	TypeFee                  = "Fee"
-	TypeGood                 = "Good"
-	TypeGoodBase             = "GoodBase"
-	TypeGoodCoin             = "GoodCoin"
-	TypeGoodReward           = "GoodReward"
-	TypeGoodRewardHistory    = "GoodRewardHistory"
-	TypeLike                 = "Like"
-	TypePowerRental          = "PowerRental"
-	TypeRecommend            = "Recommend"
-	TypeRequiredAppGood      = "RequiredAppGood"
-	TypeRequiredGood         = "RequiredGood"
-	TypeScore                = "Score"
-	TypeStock                = "Stock"
-	TypeTopMost              = "TopMost"
-	TypeTopMostGood          = "TopMostGood"
-	TypeVendorBrand          = "VendorBrand"
-	TypeVendorLocation       = "VendorLocation"
+	TypeAppDefaultGood         = "AppDefaultGood"
+	TypeAppFee                 = "AppFee"
+	TypeAppGood                = "AppGood"
+	TypeAppGoodBase            = "AppGoodBase"
+	TypeAppGoodDescription     = "AppGoodDescription"
+	TypeAppGoodDisplayColor    = "AppGoodDisplayColor"
+	TypeAppGoodDisplayName     = "AppGoodDisplayName"
+	TypeAppGoodPoster          = "AppGoodPoster"
+	TypeAppLegacyPowerRental   = "AppLegacyPowerRental"
+	TypeAppPowerRental         = "AppPowerRental"
+	TypeAppSimulatePowerRental = "AppSimulatePowerRental"
+	TypeAppStock               = "AppStock"
+	TypeAppStockLock           = "AppStockLock"
+	TypeComment                = "Comment"
+	TypeDelegatedStaking       = "DelegatedStaking"
+	TypeDeviceInfo             = "DeviceInfo"
+	TypeDeviceManufacturer     = "DeviceManufacturer"
+	TypeDevicePoster           = "DevicePoster"
+	TypeExtraInfo              = "ExtraInfo"
+	TypeFbmCrowdFunding        = "FbmCrowdFunding"
+	TypeFee                    = "Fee"
+	TypeGood                   = "Good"
+	TypeGoodBase               = "GoodBase"
+	TypeGoodCoin               = "GoodCoin"
+	TypeGoodReward             = "GoodReward"
+	TypeGoodRewardHistory      = "GoodRewardHistory"
+	TypeLike                   = "Like"
+	TypePowerRental            = "PowerRental"
+	TypeRecommend              = "Recommend"
+	TypeRequiredAppGood        = "RequiredAppGood"
+	TypeRequiredGood           = "RequiredGood"
+	TypeScore                  = "Score"
+	TypeStock                  = "Stock"
+	TypeTopMost                = "TopMost"
+	TypeTopMostGood            = "TopMostGood"
+	TypeVendorBrand            = "VendorBrand"
+	TypeVendorLocation         = "VendorLocation"
 )
 
 // AppDefaultGoodMutation represents an operation that mutates the AppDefaultGood nodes in the graph.
@@ -12023,43 +12023,41 @@ func (m *AppPowerRentalMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown AppPowerRental edge %s", name)
 }
 
-// AppSimulateGoodMutation represents an operation that mutates the AppSimulateGood nodes in the graph.
-type AppSimulateGoodMutation struct {
+// AppSimulatePowerRentalMutation represents an operation that mutates the AppSimulatePowerRental nodes in the graph.
+type AppSimulatePowerRentalMutation struct {
 	config
-	op                      Op
-	typ                     string
-	id                      *uint32
-	created_at              *uint32
-	addcreated_at           *int32
-	updated_at              *uint32
-	addupdated_at           *int32
-	deleted_at              *uint32
-	adddeleted_at           *int32
-	ent_id                  *uuid.UUID
-	app_id                  *uuid.UUID
-	good_id                 *uuid.UUID
-	app_good_id             *uuid.UUID
-	coin_type_id            *uuid.UUID
-	fixed_order_units       *decimal.Decimal
-	fixed_order_duration    *uint32
-	addfixed_order_duration *int32
-	clearedFields           map[string]struct{}
-	done                    bool
-	oldValue                func(context.Context) (*AppSimulateGood, error)
-	predicates              []predicate.AppSimulateGood
+	op                Op
+	typ               string
+	id                *uint32
+	created_at        *uint32
+	addcreated_at     *int32
+	updated_at        *uint32
+	addupdated_at     *int32
+	deleted_at        *uint32
+	adddeleted_at     *int32
+	ent_id            *uuid.UUID
+	app_good_id       *uuid.UUID
+	coin_type_id      *uuid.UUID
+	order_units       *decimal.Decimal
+	order_duration    *uint32
+	addorder_duration *int32
+	clearedFields     map[string]struct{}
+	done              bool
+	oldValue          func(context.Context) (*AppSimulatePowerRental, error)
+	predicates        []predicate.AppSimulatePowerRental
 }
 
-var _ ent.Mutation = (*AppSimulateGoodMutation)(nil)
+var _ ent.Mutation = (*AppSimulatePowerRentalMutation)(nil)
 
-// appsimulategoodOption allows management of the mutation configuration using functional options.
-type appsimulategoodOption func(*AppSimulateGoodMutation)
+// appsimulatepowerrentalOption allows management of the mutation configuration using functional options.
+type appsimulatepowerrentalOption func(*AppSimulatePowerRentalMutation)
 
-// newAppSimulateGoodMutation creates new mutation for the AppSimulateGood entity.
-func newAppSimulateGoodMutation(c config, op Op, opts ...appsimulategoodOption) *AppSimulateGoodMutation {
-	m := &AppSimulateGoodMutation{
+// newAppSimulatePowerRentalMutation creates new mutation for the AppSimulatePowerRental entity.
+func newAppSimulatePowerRentalMutation(c config, op Op, opts ...appsimulatepowerrentalOption) *AppSimulatePowerRentalMutation {
+	m := &AppSimulatePowerRentalMutation{
 		config:        c,
 		op:            op,
-		typ:           TypeAppSimulateGood,
+		typ:           TypeAppSimulatePowerRental,
 		clearedFields: make(map[string]struct{}),
 	}
 	for _, opt := range opts {
@@ -12068,20 +12066,20 @@ func newAppSimulateGoodMutation(c config, op Op, opts ...appsimulategoodOption) 
 	return m
 }
 
-// withAppSimulateGoodID sets the ID field of the mutation.
-func withAppSimulateGoodID(id uint32) appsimulategoodOption {
-	return func(m *AppSimulateGoodMutation) {
+// withAppSimulatePowerRentalID sets the ID field of the mutation.
+func withAppSimulatePowerRentalID(id uint32) appsimulatepowerrentalOption {
+	return func(m *AppSimulatePowerRentalMutation) {
 		var (
 			err   error
 			once  sync.Once
-			value *AppSimulateGood
+			value *AppSimulatePowerRental
 		)
-		m.oldValue = func(ctx context.Context) (*AppSimulateGood, error) {
+		m.oldValue = func(ctx context.Context) (*AppSimulatePowerRental, error) {
 			once.Do(func() {
 				if m.done {
 					err = errors.New("querying old values post mutation is not allowed")
 				} else {
-					value, err = m.Client().AppSimulateGood.Get(ctx, id)
+					value, err = m.Client().AppSimulatePowerRental.Get(ctx, id)
 				}
 			})
 			return value, err
@@ -12090,10 +12088,10 @@ func withAppSimulateGoodID(id uint32) appsimulategoodOption {
 	}
 }
 
-// withAppSimulateGood sets the old AppSimulateGood of the mutation.
-func withAppSimulateGood(node *AppSimulateGood) appsimulategoodOption {
-	return func(m *AppSimulateGoodMutation) {
-		m.oldValue = func(context.Context) (*AppSimulateGood, error) {
+// withAppSimulatePowerRental sets the old AppSimulatePowerRental of the mutation.
+func withAppSimulatePowerRental(node *AppSimulatePowerRental) appsimulatepowerrentalOption {
+	return func(m *AppSimulatePowerRentalMutation) {
+		m.oldValue = func(context.Context) (*AppSimulatePowerRental, error) {
 			return node, nil
 		}
 		m.id = &node.ID
@@ -12102,7 +12100,7 @@ func withAppSimulateGood(node *AppSimulateGood) appsimulategoodOption {
 
 // Client returns a new `ent.Client` from the mutation. If the mutation was
 // executed in a transaction (ent.Tx), a transactional client is returned.
-func (m AppSimulateGoodMutation) Client() *Client {
+func (m AppSimulatePowerRentalMutation) Client() *Client {
 	client := &Client{config: m.config}
 	client.init()
 	return client
@@ -12110,7 +12108,7 @@ func (m AppSimulateGoodMutation) Client() *Client {
 
 // Tx returns an `ent.Tx` for mutations that were executed in transactions;
 // it returns an error otherwise.
-func (m AppSimulateGoodMutation) Tx() (*Tx, error) {
+func (m AppSimulatePowerRentalMutation) Tx() (*Tx, error) {
 	if _, ok := m.driver.(*txDriver); !ok {
 		return nil, errors.New("ent: mutation is not running in a transaction")
 	}
@@ -12120,14 +12118,14 @@ func (m AppSimulateGoodMutation) Tx() (*Tx, error) {
 }
 
 // SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of AppSimulateGood entities.
-func (m *AppSimulateGoodMutation) SetID(id uint32) {
+// operation is only accepted on creation of AppSimulatePowerRental entities.
+func (m *AppSimulatePowerRentalMutation) SetID(id uint32) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *AppSimulateGoodMutation) ID() (id uint32, exists bool) {
+func (m *AppSimulatePowerRentalMutation) ID() (id uint32, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -12138,7 +12136,7 @@ func (m *AppSimulateGoodMutation) ID() (id uint32, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *AppSimulateGoodMutation) IDs(ctx context.Context) ([]uint32, error) {
+func (m *AppSimulatePowerRentalMutation) IDs(ctx context.Context) ([]uint32, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
@@ -12147,20 +12145,20 @@ func (m *AppSimulateGoodMutation) IDs(ctx context.Context) ([]uint32, error) {
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().AppSimulateGood.Query().Where(m.predicates...).IDs(ctx)
+		return m.Client().AppSimulatePowerRental.Query().Where(m.predicates...).IDs(ctx)
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (m *AppSimulateGoodMutation) SetCreatedAt(u uint32) {
+func (m *AppSimulatePowerRentalMutation) SetCreatedAt(u uint32) {
 	m.created_at = &u
 	m.addcreated_at = nil
 }
 
 // CreatedAt returns the value of the "created_at" field in the mutation.
-func (m *AppSimulateGoodMutation) CreatedAt() (r uint32, exists bool) {
+func (m *AppSimulatePowerRentalMutation) CreatedAt() (r uint32, exists bool) {
 	v := m.created_at
 	if v == nil {
 		return
@@ -12168,10 +12166,10 @@ func (m *AppSimulateGoodMutation) CreatedAt() (r uint32, exists bool) {
 	return *v, true
 }
 
-// OldCreatedAt returns the old "created_at" field's value of the AppSimulateGood entity.
-// If the AppSimulateGood object wasn't provided to the builder, the object is fetched from the database.
+// OldCreatedAt returns the old "created_at" field's value of the AppSimulatePowerRental entity.
+// If the AppSimulatePowerRental object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppSimulateGoodMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+func (m *AppSimulatePowerRentalMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
 	}
@@ -12186,7 +12184,7 @@ func (m *AppSimulateGoodMutation) OldCreatedAt(ctx context.Context) (v uint32, e
 }
 
 // AddCreatedAt adds u to the "created_at" field.
-func (m *AppSimulateGoodMutation) AddCreatedAt(u int32) {
+func (m *AppSimulatePowerRentalMutation) AddCreatedAt(u int32) {
 	if m.addcreated_at != nil {
 		*m.addcreated_at += u
 	} else {
@@ -12195,7 +12193,7 @@ func (m *AppSimulateGoodMutation) AddCreatedAt(u int32) {
 }
 
 // AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
-func (m *AppSimulateGoodMutation) AddedCreatedAt() (r int32, exists bool) {
+func (m *AppSimulatePowerRentalMutation) AddedCreatedAt() (r int32, exists bool) {
 	v := m.addcreated_at
 	if v == nil {
 		return
@@ -12204,19 +12202,19 @@ func (m *AppSimulateGoodMutation) AddedCreatedAt() (r int32, exists bool) {
 }
 
 // ResetCreatedAt resets all changes to the "created_at" field.
-func (m *AppSimulateGoodMutation) ResetCreatedAt() {
+func (m *AppSimulatePowerRentalMutation) ResetCreatedAt() {
 	m.created_at = nil
 	m.addcreated_at = nil
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (m *AppSimulateGoodMutation) SetUpdatedAt(u uint32) {
+func (m *AppSimulatePowerRentalMutation) SetUpdatedAt(u uint32) {
 	m.updated_at = &u
 	m.addupdated_at = nil
 }
 
 // UpdatedAt returns the value of the "updated_at" field in the mutation.
-func (m *AppSimulateGoodMutation) UpdatedAt() (r uint32, exists bool) {
+func (m *AppSimulatePowerRentalMutation) UpdatedAt() (r uint32, exists bool) {
 	v := m.updated_at
 	if v == nil {
 		return
@@ -12224,10 +12222,10 @@ func (m *AppSimulateGoodMutation) UpdatedAt() (r uint32, exists bool) {
 	return *v, true
 }
 
-// OldUpdatedAt returns the old "updated_at" field's value of the AppSimulateGood entity.
-// If the AppSimulateGood object wasn't provided to the builder, the object is fetched from the database.
+// OldUpdatedAt returns the old "updated_at" field's value of the AppSimulatePowerRental entity.
+// If the AppSimulatePowerRental object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppSimulateGoodMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+func (m *AppSimulatePowerRentalMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
 	}
@@ -12242,7 +12240,7 @@ func (m *AppSimulateGoodMutation) OldUpdatedAt(ctx context.Context) (v uint32, e
 }
 
 // AddUpdatedAt adds u to the "updated_at" field.
-func (m *AppSimulateGoodMutation) AddUpdatedAt(u int32) {
+func (m *AppSimulatePowerRentalMutation) AddUpdatedAt(u int32) {
 	if m.addupdated_at != nil {
 		*m.addupdated_at += u
 	} else {
@@ -12251,7 +12249,7 @@ func (m *AppSimulateGoodMutation) AddUpdatedAt(u int32) {
 }
 
 // AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
-func (m *AppSimulateGoodMutation) AddedUpdatedAt() (r int32, exists bool) {
+func (m *AppSimulatePowerRentalMutation) AddedUpdatedAt() (r int32, exists bool) {
 	v := m.addupdated_at
 	if v == nil {
 		return
@@ -12260,19 +12258,19 @@ func (m *AppSimulateGoodMutation) AddedUpdatedAt() (r int32, exists bool) {
 }
 
 // ResetUpdatedAt resets all changes to the "updated_at" field.
-func (m *AppSimulateGoodMutation) ResetUpdatedAt() {
+func (m *AppSimulatePowerRentalMutation) ResetUpdatedAt() {
 	m.updated_at = nil
 	m.addupdated_at = nil
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (m *AppSimulateGoodMutation) SetDeletedAt(u uint32) {
+func (m *AppSimulatePowerRentalMutation) SetDeletedAt(u uint32) {
 	m.deleted_at = &u
 	m.adddeleted_at = nil
 }
 
 // DeletedAt returns the value of the "deleted_at" field in the mutation.
-func (m *AppSimulateGoodMutation) DeletedAt() (r uint32, exists bool) {
+func (m *AppSimulatePowerRentalMutation) DeletedAt() (r uint32, exists bool) {
 	v := m.deleted_at
 	if v == nil {
 		return
@@ -12280,10 +12278,10 @@ func (m *AppSimulateGoodMutation) DeletedAt() (r uint32, exists bool) {
 	return *v, true
 }
 
-// OldDeletedAt returns the old "deleted_at" field's value of the AppSimulateGood entity.
-// If the AppSimulateGood object wasn't provided to the builder, the object is fetched from the database.
+// OldDeletedAt returns the old "deleted_at" field's value of the AppSimulatePowerRental entity.
+// If the AppSimulatePowerRental object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppSimulateGoodMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+func (m *AppSimulatePowerRentalMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
 	}
@@ -12298,7 +12296,7 @@ func (m *AppSimulateGoodMutation) OldDeletedAt(ctx context.Context) (v uint32, e
 }
 
 // AddDeletedAt adds u to the "deleted_at" field.
-func (m *AppSimulateGoodMutation) AddDeletedAt(u int32) {
+func (m *AppSimulatePowerRentalMutation) AddDeletedAt(u int32) {
 	if m.adddeleted_at != nil {
 		*m.adddeleted_at += u
 	} else {
@@ -12307,7 +12305,7 @@ func (m *AppSimulateGoodMutation) AddDeletedAt(u int32) {
 }
 
 // AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
-func (m *AppSimulateGoodMutation) AddedDeletedAt() (r int32, exists bool) {
+func (m *AppSimulatePowerRentalMutation) AddedDeletedAt() (r int32, exists bool) {
 	v := m.adddeleted_at
 	if v == nil {
 		return
@@ -12316,18 +12314,18 @@ func (m *AppSimulateGoodMutation) AddedDeletedAt() (r int32, exists bool) {
 }
 
 // ResetDeletedAt resets all changes to the "deleted_at" field.
-func (m *AppSimulateGoodMutation) ResetDeletedAt() {
+func (m *AppSimulatePowerRentalMutation) ResetDeletedAt() {
 	m.deleted_at = nil
 	m.adddeleted_at = nil
 }
 
 // SetEntID sets the "ent_id" field.
-func (m *AppSimulateGoodMutation) SetEntID(u uuid.UUID) {
+func (m *AppSimulatePowerRentalMutation) SetEntID(u uuid.UUID) {
 	m.ent_id = &u
 }
 
 // EntID returns the value of the "ent_id" field in the mutation.
-func (m *AppSimulateGoodMutation) EntID() (r uuid.UUID, exists bool) {
+func (m *AppSimulatePowerRentalMutation) EntID() (r uuid.UUID, exists bool) {
 	v := m.ent_id
 	if v == nil {
 		return
@@ -12335,10 +12333,10 @@ func (m *AppSimulateGoodMutation) EntID() (r uuid.UUID, exists bool) {
 	return *v, true
 }
 
-// OldEntID returns the old "ent_id" field's value of the AppSimulateGood entity.
-// If the AppSimulateGood object wasn't provided to the builder, the object is fetched from the database.
+// OldEntID returns the old "ent_id" field's value of the AppSimulatePowerRental entity.
+// If the AppSimulatePowerRental object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppSimulateGoodMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *AppSimulatePowerRentalMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldEntID is only allowed on UpdateOne operations")
 	}
@@ -12353,115 +12351,17 @@ func (m *AppSimulateGoodMutation) OldEntID(ctx context.Context) (v uuid.UUID, er
 }
 
 // ResetEntID resets all changes to the "ent_id" field.
-func (m *AppSimulateGoodMutation) ResetEntID() {
+func (m *AppSimulatePowerRentalMutation) ResetEntID() {
 	m.ent_id = nil
 }
 
-// SetAppID sets the "app_id" field.
-func (m *AppSimulateGoodMutation) SetAppID(u uuid.UUID) {
-	m.app_id = &u
-}
-
-// AppID returns the value of the "app_id" field in the mutation.
-func (m *AppSimulateGoodMutation) AppID() (r uuid.UUID, exists bool) {
-	v := m.app_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAppID returns the old "app_id" field's value of the AppSimulateGood entity.
-// If the AppSimulateGood object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppSimulateGoodMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAppID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
-	}
-	return oldValue.AppID, nil
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (m *AppSimulateGoodMutation) ClearAppID() {
-	m.app_id = nil
-	m.clearedFields[appsimulategood.FieldAppID] = struct{}{}
-}
-
-// AppIDCleared returns if the "app_id" field was cleared in this mutation.
-func (m *AppSimulateGoodMutation) AppIDCleared() bool {
-	_, ok := m.clearedFields[appsimulategood.FieldAppID]
-	return ok
-}
-
-// ResetAppID resets all changes to the "app_id" field.
-func (m *AppSimulateGoodMutation) ResetAppID() {
-	m.app_id = nil
-	delete(m.clearedFields, appsimulategood.FieldAppID)
-}
-
-// SetGoodID sets the "good_id" field.
-func (m *AppSimulateGoodMutation) SetGoodID(u uuid.UUID) {
-	m.good_id = &u
-}
-
-// GoodID returns the value of the "good_id" field in the mutation.
-func (m *AppSimulateGoodMutation) GoodID() (r uuid.UUID, exists bool) {
-	v := m.good_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldGoodID returns the old "good_id" field's value of the AppSimulateGood entity.
-// If the AppSimulateGood object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppSimulateGoodMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldGoodID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldGoodID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldGoodID: %w", err)
-	}
-	return oldValue.GoodID, nil
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (m *AppSimulateGoodMutation) ClearGoodID() {
-	m.good_id = nil
-	m.clearedFields[appsimulategood.FieldGoodID] = struct{}{}
-}
-
-// GoodIDCleared returns if the "good_id" field was cleared in this mutation.
-func (m *AppSimulateGoodMutation) GoodIDCleared() bool {
-	_, ok := m.clearedFields[appsimulategood.FieldGoodID]
-	return ok
-}
-
-// ResetGoodID resets all changes to the "good_id" field.
-func (m *AppSimulateGoodMutation) ResetGoodID() {
-	m.good_id = nil
-	delete(m.clearedFields, appsimulategood.FieldGoodID)
-}
-
 // SetAppGoodID sets the "app_good_id" field.
-func (m *AppSimulateGoodMutation) SetAppGoodID(u uuid.UUID) {
+func (m *AppSimulatePowerRentalMutation) SetAppGoodID(u uuid.UUID) {
 	m.app_good_id = &u
 }
 
 // AppGoodID returns the value of the "app_good_id" field in the mutation.
-func (m *AppSimulateGoodMutation) AppGoodID() (r uuid.UUID, exists bool) {
+func (m *AppSimulatePowerRentalMutation) AppGoodID() (r uuid.UUID, exists bool) {
 	v := m.app_good_id
 	if v == nil {
 		return
@@ -12469,10 +12369,10 @@ func (m *AppSimulateGoodMutation) AppGoodID() (r uuid.UUID, exists bool) {
 	return *v, true
 }
 
-// OldAppGoodID returns the old "app_good_id" field's value of the AppSimulateGood entity.
-// If the AppSimulateGood object wasn't provided to the builder, the object is fetched from the database.
+// OldAppGoodID returns the old "app_good_id" field's value of the AppSimulatePowerRental entity.
+// If the AppSimulatePowerRental object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppSimulateGoodMutation) OldAppGoodID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *AppSimulatePowerRentalMutation) OldAppGoodID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldAppGoodID is only allowed on UpdateOne operations")
 	}
@@ -12487,30 +12387,30 @@ func (m *AppSimulateGoodMutation) OldAppGoodID(ctx context.Context) (v uuid.UUID
 }
 
 // ClearAppGoodID clears the value of the "app_good_id" field.
-func (m *AppSimulateGoodMutation) ClearAppGoodID() {
+func (m *AppSimulatePowerRentalMutation) ClearAppGoodID() {
 	m.app_good_id = nil
-	m.clearedFields[appsimulategood.FieldAppGoodID] = struct{}{}
+	m.clearedFields[appsimulatepowerrental.FieldAppGoodID] = struct{}{}
 }
 
 // AppGoodIDCleared returns if the "app_good_id" field was cleared in this mutation.
-func (m *AppSimulateGoodMutation) AppGoodIDCleared() bool {
-	_, ok := m.clearedFields[appsimulategood.FieldAppGoodID]
+func (m *AppSimulatePowerRentalMutation) AppGoodIDCleared() bool {
+	_, ok := m.clearedFields[appsimulatepowerrental.FieldAppGoodID]
 	return ok
 }
 
 // ResetAppGoodID resets all changes to the "app_good_id" field.
-func (m *AppSimulateGoodMutation) ResetAppGoodID() {
+func (m *AppSimulatePowerRentalMutation) ResetAppGoodID() {
 	m.app_good_id = nil
-	delete(m.clearedFields, appsimulategood.FieldAppGoodID)
+	delete(m.clearedFields, appsimulatepowerrental.FieldAppGoodID)
 }
 
 // SetCoinTypeID sets the "coin_type_id" field.
-func (m *AppSimulateGoodMutation) SetCoinTypeID(u uuid.UUID) {
+func (m *AppSimulatePowerRentalMutation) SetCoinTypeID(u uuid.UUID) {
 	m.coin_type_id = &u
 }
 
 // CoinTypeID returns the value of the "coin_type_id" field in the mutation.
-func (m *AppSimulateGoodMutation) CoinTypeID() (r uuid.UUID, exists bool) {
+func (m *AppSimulatePowerRentalMutation) CoinTypeID() (r uuid.UUID, exists bool) {
 	v := m.coin_type_id
 	if v == nil {
 		return
@@ -12518,10 +12418,10 @@ func (m *AppSimulateGoodMutation) CoinTypeID() (r uuid.UUID, exists bool) {
 	return *v, true
 }
 
-// OldCoinTypeID returns the old "coin_type_id" field's value of the AppSimulateGood entity.
-// If the AppSimulateGood object wasn't provided to the builder, the object is fetched from the database.
+// OldCoinTypeID returns the old "coin_type_id" field's value of the AppSimulatePowerRental entity.
+// If the AppSimulatePowerRental object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppSimulateGoodMutation) OldCoinTypeID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *AppSimulatePowerRentalMutation) OldCoinTypeID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCoinTypeID is only allowed on UpdateOne operations")
 	}
@@ -12536,191 +12436,185 @@ func (m *AppSimulateGoodMutation) OldCoinTypeID(ctx context.Context) (v uuid.UUI
 }
 
 // ClearCoinTypeID clears the value of the "coin_type_id" field.
-func (m *AppSimulateGoodMutation) ClearCoinTypeID() {
+func (m *AppSimulatePowerRentalMutation) ClearCoinTypeID() {
 	m.coin_type_id = nil
-	m.clearedFields[appsimulategood.FieldCoinTypeID] = struct{}{}
+	m.clearedFields[appsimulatepowerrental.FieldCoinTypeID] = struct{}{}
 }
 
 // CoinTypeIDCleared returns if the "coin_type_id" field was cleared in this mutation.
-func (m *AppSimulateGoodMutation) CoinTypeIDCleared() bool {
-	_, ok := m.clearedFields[appsimulategood.FieldCoinTypeID]
+func (m *AppSimulatePowerRentalMutation) CoinTypeIDCleared() bool {
+	_, ok := m.clearedFields[appsimulatepowerrental.FieldCoinTypeID]
 	return ok
 }
 
 // ResetCoinTypeID resets all changes to the "coin_type_id" field.
-func (m *AppSimulateGoodMutation) ResetCoinTypeID() {
+func (m *AppSimulatePowerRentalMutation) ResetCoinTypeID() {
 	m.coin_type_id = nil
-	delete(m.clearedFields, appsimulategood.FieldCoinTypeID)
+	delete(m.clearedFields, appsimulatepowerrental.FieldCoinTypeID)
 }
 
-// SetFixedOrderUnits sets the "fixed_order_units" field.
-func (m *AppSimulateGoodMutation) SetFixedOrderUnits(d decimal.Decimal) {
-	m.fixed_order_units = &d
+// SetOrderUnits sets the "order_units" field.
+func (m *AppSimulatePowerRentalMutation) SetOrderUnits(d decimal.Decimal) {
+	m.order_units = &d
 }
 
-// FixedOrderUnits returns the value of the "fixed_order_units" field in the mutation.
-func (m *AppSimulateGoodMutation) FixedOrderUnits() (r decimal.Decimal, exists bool) {
-	v := m.fixed_order_units
+// OrderUnits returns the value of the "order_units" field in the mutation.
+func (m *AppSimulatePowerRentalMutation) OrderUnits() (r decimal.Decimal, exists bool) {
+	v := m.order_units
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldFixedOrderUnits returns the old "fixed_order_units" field's value of the AppSimulateGood entity.
-// If the AppSimulateGood object wasn't provided to the builder, the object is fetched from the database.
+// OldOrderUnits returns the old "order_units" field's value of the AppSimulatePowerRental entity.
+// If the AppSimulatePowerRental object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppSimulateGoodMutation) OldFixedOrderUnits(ctx context.Context) (v decimal.Decimal, err error) {
+func (m *AppSimulatePowerRentalMutation) OldOrderUnits(ctx context.Context) (v decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldFixedOrderUnits is only allowed on UpdateOne operations")
+		return v, errors.New("OldOrderUnits is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldFixedOrderUnits requires an ID field in the mutation")
+		return v, errors.New("OldOrderUnits requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldFixedOrderUnits: %w", err)
+		return v, fmt.Errorf("querying old value for OldOrderUnits: %w", err)
 	}
-	return oldValue.FixedOrderUnits, nil
+	return oldValue.OrderUnits, nil
 }
 
-// ClearFixedOrderUnits clears the value of the "fixed_order_units" field.
-func (m *AppSimulateGoodMutation) ClearFixedOrderUnits() {
-	m.fixed_order_units = nil
-	m.clearedFields[appsimulategood.FieldFixedOrderUnits] = struct{}{}
+// ClearOrderUnits clears the value of the "order_units" field.
+func (m *AppSimulatePowerRentalMutation) ClearOrderUnits() {
+	m.order_units = nil
+	m.clearedFields[appsimulatepowerrental.FieldOrderUnits] = struct{}{}
 }
 
-// FixedOrderUnitsCleared returns if the "fixed_order_units" field was cleared in this mutation.
-func (m *AppSimulateGoodMutation) FixedOrderUnitsCleared() bool {
-	_, ok := m.clearedFields[appsimulategood.FieldFixedOrderUnits]
+// OrderUnitsCleared returns if the "order_units" field was cleared in this mutation.
+func (m *AppSimulatePowerRentalMutation) OrderUnitsCleared() bool {
+	_, ok := m.clearedFields[appsimulatepowerrental.FieldOrderUnits]
 	return ok
 }
 
-// ResetFixedOrderUnits resets all changes to the "fixed_order_units" field.
-func (m *AppSimulateGoodMutation) ResetFixedOrderUnits() {
-	m.fixed_order_units = nil
-	delete(m.clearedFields, appsimulategood.FieldFixedOrderUnits)
+// ResetOrderUnits resets all changes to the "order_units" field.
+func (m *AppSimulatePowerRentalMutation) ResetOrderUnits() {
+	m.order_units = nil
+	delete(m.clearedFields, appsimulatepowerrental.FieldOrderUnits)
 }
 
-// SetFixedOrderDuration sets the "fixed_order_duration" field.
-func (m *AppSimulateGoodMutation) SetFixedOrderDuration(u uint32) {
-	m.fixed_order_duration = &u
-	m.addfixed_order_duration = nil
+// SetOrderDuration sets the "order_duration" field.
+func (m *AppSimulatePowerRentalMutation) SetOrderDuration(u uint32) {
+	m.order_duration = &u
+	m.addorder_duration = nil
 }
 
-// FixedOrderDuration returns the value of the "fixed_order_duration" field in the mutation.
-func (m *AppSimulateGoodMutation) FixedOrderDuration() (r uint32, exists bool) {
-	v := m.fixed_order_duration
+// OrderDuration returns the value of the "order_duration" field in the mutation.
+func (m *AppSimulatePowerRentalMutation) OrderDuration() (r uint32, exists bool) {
+	v := m.order_duration
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldFixedOrderDuration returns the old "fixed_order_duration" field's value of the AppSimulateGood entity.
-// If the AppSimulateGood object wasn't provided to the builder, the object is fetched from the database.
+// OldOrderDuration returns the old "order_duration" field's value of the AppSimulatePowerRental entity.
+// If the AppSimulatePowerRental object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppSimulateGoodMutation) OldFixedOrderDuration(ctx context.Context) (v uint32, err error) {
+func (m *AppSimulatePowerRentalMutation) OldOrderDuration(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldFixedOrderDuration is only allowed on UpdateOne operations")
+		return v, errors.New("OldOrderDuration is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldFixedOrderDuration requires an ID field in the mutation")
+		return v, errors.New("OldOrderDuration requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldFixedOrderDuration: %w", err)
+		return v, fmt.Errorf("querying old value for OldOrderDuration: %w", err)
 	}
-	return oldValue.FixedOrderDuration, nil
+	return oldValue.OrderDuration, nil
 }
 
-// AddFixedOrderDuration adds u to the "fixed_order_duration" field.
-func (m *AppSimulateGoodMutation) AddFixedOrderDuration(u int32) {
-	if m.addfixed_order_duration != nil {
-		*m.addfixed_order_duration += u
+// AddOrderDuration adds u to the "order_duration" field.
+func (m *AppSimulatePowerRentalMutation) AddOrderDuration(u int32) {
+	if m.addorder_duration != nil {
+		*m.addorder_duration += u
 	} else {
-		m.addfixed_order_duration = &u
+		m.addorder_duration = &u
 	}
 }
 
-// AddedFixedOrderDuration returns the value that was added to the "fixed_order_duration" field in this mutation.
-func (m *AppSimulateGoodMutation) AddedFixedOrderDuration() (r int32, exists bool) {
-	v := m.addfixed_order_duration
+// AddedOrderDuration returns the value that was added to the "order_duration" field in this mutation.
+func (m *AppSimulatePowerRentalMutation) AddedOrderDuration() (r int32, exists bool) {
+	v := m.addorder_duration
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ClearFixedOrderDuration clears the value of the "fixed_order_duration" field.
-func (m *AppSimulateGoodMutation) ClearFixedOrderDuration() {
-	m.fixed_order_duration = nil
-	m.addfixed_order_duration = nil
-	m.clearedFields[appsimulategood.FieldFixedOrderDuration] = struct{}{}
+// ClearOrderDuration clears the value of the "order_duration" field.
+func (m *AppSimulatePowerRentalMutation) ClearOrderDuration() {
+	m.order_duration = nil
+	m.addorder_duration = nil
+	m.clearedFields[appsimulatepowerrental.FieldOrderDuration] = struct{}{}
 }
 
-// FixedOrderDurationCleared returns if the "fixed_order_duration" field was cleared in this mutation.
-func (m *AppSimulateGoodMutation) FixedOrderDurationCleared() bool {
-	_, ok := m.clearedFields[appsimulategood.FieldFixedOrderDuration]
+// OrderDurationCleared returns if the "order_duration" field was cleared in this mutation.
+func (m *AppSimulatePowerRentalMutation) OrderDurationCleared() bool {
+	_, ok := m.clearedFields[appsimulatepowerrental.FieldOrderDuration]
 	return ok
 }
 
-// ResetFixedOrderDuration resets all changes to the "fixed_order_duration" field.
-func (m *AppSimulateGoodMutation) ResetFixedOrderDuration() {
-	m.fixed_order_duration = nil
-	m.addfixed_order_duration = nil
-	delete(m.clearedFields, appsimulategood.FieldFixedOrderDuration)
+// ResetOrderDuration resets all changes to the "order_duration" field.
+func (m *AppSimulatePowerRentalMutation) ResetOrderDuration() {
+	m.order_duration = nil
+	m.addorder_duration = nil
+	delete(m.clearedFields, appsimulatepowerrental.FieldOrderDuration)
 }
 
-// Where appends a list predicates to the AppSimulateGoodMutation builder.
-func (m *AppSimulateGoodMutation) Where(ps ...predicate.AppSimulateGood) {
+// Where appends a list predicates to the AppSimulatePowerRentalMutation builder.
+func (m *AppSimulatePowerRentalMutation) Where(ps ...predicate.AppSimulatePowerRental) {
 	m.predicates = append(m.predicates, ps...)
 }
 
 // Op returns the operation name.
-func (m *AppSimulateGoodMutation) Op() Op {
+func (m *AppSimulatePowerRentalMutation) Op() Op {
 	return m.op
 }
 
-// Type returns the node type of this mutation (AppSimulateGood).
-func (m *AppSimulateGoodMutation) Type() string {
+// Type returns the node type of this mutation (AppSimulatePowerRental).
+func (m *AppSimulatePowerRentalMutation) Type() string {
 	return m.typ
 }
 
 // Fields returns all fields that were changed during this mutation. Note that in
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
-func (m *AppSimulateGoodMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+func (m *AppSimulatePowerRentalMutation) Fields() []string {
+	fields := make([]string, 0, 8)
 	if m.created_at != nil {
-		fields = append(fields, appsimulategood.FieldCreatedAt)
+		fields = append(fields, appsimulatepowerrental.FieldCreatedAt)
 	}
 	if m.updated_at != nil {
-		fields = append(fields, appsimulategood.FieldUpdatedAt)
+		fields = append(fields, appsimulatepowerrental.FieldUpdatedAt)
 	}
 	if m.deleted_at != nil {
-		fields = append(fields, appsimulategood.FieldDeletedAt)
+		fields = append(fields, appsimulatepowerrental.FieldDeletedAt)
 	}
 	if m.ent_id != nil {
-		fields = append(fields, appsimulategood.FieldEntID)
-	}
-	if m.app_id != nil {
-		fields = append(fields, appsimulategood.FieldAppID)
-	}
-	if m.good_id != nil {
-		fields = append(fields, appsimulategood.FieldGoodID)
+		fields = append(fields, appsimulatepowerrental.FieldEntID)
 	}
 	if m.app_good_id != nil {
-		fields = append(fields, appsimulategood.FieldAppGoodID)
+		fields = append(fields, appsimulatepowerrental.FieldAppGoodID)
 	}
 	if m.coin_type_id != nil {
-		fields = append(fields, appsimulategood.FieldCoinTypeID)
+		fields = append(fields, appsimulatepowerrental.FieldCoinTypeID)
 	}
-	if m.fixed_order_units != nil {
-		fields = append(fields, appsimulategood.FieldFixedOrderUnits)
+	if m.order_units != nil {
+		fields = append(fields, appsimulatepowerrental.FieldOrderUnits)
 	}
-	if m.fixed_order_duration != nil {
-		fields = append(fields, appsimulategood.FieldFixedOrderDuration)
+	if m.order_duration != nil {
+		fields = append(fields, appsimulatepowerrental.FieldOrderDuration)
 	}
 	return fields
 }
@@ -12728,28 +12622,24 @@ func (m *AppSimulateGoodMutation) Fields() []string {
 // Field returns the value of a field with the given name. The second boolean
 // return value indicates that this field was not set, or was not defined in the
 // schema.
-func (m *AppSimulateGoodMutation) Field(name string) (ent.Value, bool) {
+func (m *AppSimulatePowerRentalMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case appsimulategood.FieldCreatedAt:
+	case appsimulatepowerrental.FieldCreatedAt:
 		return m.CreatedAt()
-	case appsimulategood.FieldUpdatedAt:
+	case appsimulatepowerrental.FieldUpdatedAt:
 		return m.UpdatedAt()
-	case appsimulategood.FieldDeletedAt:
+	case appsimulatepowerrental.FieldDeletedAt:
 		return m.DeletedAt()
-	case appsimulategood.FieldEntID:
+	case appsimulatepowerrental.FieldEntID:
 		return m.EntID()
-	case appsimulategood.FieldAppID:
-		return m.AppID()
-	case appsimulategood.FieldGoodID:
-		return m.GoodID()
-	case appsimulategood.FieldAppGoodID:
+	case appsimulatepowerrental.FieldAppGoodID:
 		return m.AppGoodID()
-	case appsimulategood.FieldCoinTypeID:
+	case appsimulatepowerrental.FieldCoinTypeID:
 		return m.CoinTypeID()
-	case appsimulategood.FieldFixedOrderUnits:
-		return m.FixedOrderUnits()
-	case appsimulategood.FieldFixedOrderDuration:
-		return m.FixedOrderDuration()
+	case appsimulatepowerrental.FieldOrderUnits:
+		return m.OrderUnits()
+	case appsimulatepowerrental.FieldOrderDuration:
+		return m.OrderDuration()
 	}
 	return nil, false
 }
@@ -12757,126 +12647,108 @@ func (m *AppSimulateGoodMutation) Field(name string) (ent.Value, bool) {
 // OldField returns the old value of the field from the database. An error is
 // returned if the mutation operation is not UpdateOne, or the query to the
 // database failed.
-func (m *AppSimulateGoodMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+func (m *AppSimulatePowerRentalMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case appsimulategood.FieldCreatedAt:
+	case appsimulatepowerrental.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
-	case appsimulategood.FieldUpdatedAt:
+	case appsimulatepowerrental.FieldUpdatedAt:
 		return m.OldUpdatedAt(ctx)
-	case appsimulategood.FieldDeletedAt:
+	case appsimulatepowerrental.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
-	case appsimulategood.FieldEntID:
+	case appsimulatepowerrental.FieldEntID:
 		return m.OldEntID(ctx)
-	case appsimulategood.FieldAppID:
-		return m.OldAppID(ctx)
-	case appsimulategood.FieldGoodID:
-		return m.OldGoodID(ctx)
-	case appsimulategood.FieldAppGoodID:
+	case appsimulatepowerrental.FieldAppGoodID:
 		return m.OldAppGoodID(ctx)
-	case appsimulategood.FieldCoinTypeID:
+	case appsimulatepowerrental.FieldCoinTypeID:
 		return m.OldCoinTypeID(ctx)
-	case appsimulategood.FieldFixedOrderUnits:
-		return m.OldFixedOrderUnits(ctx)
-	case appsimulategood.FieldFixedOrderDuration:
-		return m.OldFixedOrderDuration(ctx)
+	case appsimulatepowerrental.FieldOrderUnits:
+		return m.OldOrderUnits(ctx)
+	case appsimulatepowerrental.FieldOrderDuration:
+		return m.OldOrderDuration(ctx)
 	}
-	return nil, fmt.Errorf("unknown AppSimulateGood field %s", name)
+	return nil, fmt.Errorf("unknown AppSimulatePowerRental field %s", name)
 }
 
 // SetField sets the value of a field with the given name. It returns an error if
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
-func (m *AppSimulateGoodMutation) SetField(name string, value ent.Value) error {
+func (m *AppSimulatePowerRentalMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case appsimulategood.FieldCreatedAt:
+	case appsimulatepowerrental.FieldCreatedAt:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreatedAt(v)
 		return nil
-	case appsimulategood.FieldUpdatedAt:
+	case appsimulatepowerrental.FieldUpdatedAt:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUpdatedAt(v)
 		return nil
-	case appsimulategood.FieldDeletedAt:
+	case appsimulatepowerrental.FieldDeletedAt:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDeletedAt(v)
 		return nil
-	case appsimulategood.FieldEntID:
+	case appsimulatepowerrental.FieldEntID:
 		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEntID(v)
 		return nil
-	case appsimulategood.FieldAppID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAppID(v)
-		return nil
-	case appsimulategood.FieldGoodID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetGoodID(v)
-		return nil
-	case appsimulategood.FieldAppGoodID:
+	case appsimulatepowerrental.FieldAppGoodID:
 		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAppGoodID(v)
 		return nil
-	case appsimulategood.FieldCoinTypeID:
+	case appsimulatepowerrental.FieldCoinTypeID:
 		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCoinTypeID(v)
 		return nil
-	case appsimulategood.FieldFixedOrderUnits:
+	case appsimulatepowerrental.FieldOrderUnits:
 		v, ok := value.(decimal.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetFixedOrderUnits(v)
+		m.SetOrderUnits(v)
 		return nil
-	case appsimulategood.FieldFixedOrderDuration:
+	case appsimulatepowerrental.FieldOrderDuration:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetFixedOrderDuration(v)
+		m.SetOrderDuration(v)
 		return nil
 	}
-	return fmt.Errorf("unknown AppSimulateGood field %s", name)
+	return fmt.Errorf("unknown AppSimulatePowerRental field %s", name)
 }
 
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
-func (m *AppSimulateGoodMutation) AddedFields() []string {
+func (m *AppSimulatePowerRentalMutation) AddedFields() []string {
 	var fields []string
 	if m.addcreated_at != nil {
-		fields = append(fields, appsimulategood.FieldCreatedAt)
+		fields = append(fields, appsimulatepowerrental.FieldCreatedAt)
 	}
 	if m.addupdated_at != nil {
-		fields = append(fields, appsimulategood.FieldUpdatedAt)
+		fields = append(fields, appsimulatepowerrental.FieldUpdatedAt)
 	}
 	if m.adddeleted_at != nil {
-		fields = append(fields, appsimulategood.FieldDeletedAt)
+		fields = append(fields, appsimulatepowerrental.FieldDeletedAt)
 	}
-	if m.addfixed_order_duration != nil {
-		fields = append(fields, appsimulategood.FieldFixedOrderDuration)
+	if m.addorder_duration != nil {
+		fields = append(fields, appsimulatepowerrental.FieldOrderDuration)
 	}
 	return fields
 }
@@ -12884,16 +12756,16 @@ func (m *AppSimulateGoodMutation) AddedFields() []string {
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
-func (m *AppSimulateGoodMutation) AddedField(name string) (ent.Value, bool) {
+func (m *AppSimulatePowerRentalMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case appsimulategood.FieldCreatedAt:
+	case appsimulatepowerrental.FieldCreatedAt:
 		return m.AddedCreatedAt()
-	case appsimulategood.FieldUpdatedAt:
+	case appsimulatepowerrental.FieldUpdatedAt:
 		return m.AddedUpdatedAt()
-	case appsimulategood.FieldDeletedAt:
+	case appsimulatepowerrental.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case appsimulategood.FieldFixedOrderDuration:
-		return m.AddedFixedOrderDuration()
+	case appsimulatepowerrental.FieldOrderDuration:
+		return m.AddedOrderDuration()
 	}
 	return nil, false
 }
@@ -12901,182 +12773,164 @@ func (m *AppSimulateGoodMutation) AddedField(name string) (ent.Value, bool) {
 // AddField adds the value to the field with the given name. It returns an error if
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
-func (m *AppSimulateGoodMutation) AddField(name string, value ent.Value) error {
+func (m *AppSimulatePowerRentalMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case appsimulategood.FieldCreatedAt:
+	case appsimulatepowerrental.FieldCreatedAt:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddCreatedAt(v)
 		return nil
-	case appsimulategood.FieldUpdatedAt:
+	case appsimulatepowerrental.FieldUpdatedAt:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddUpdatedAt(v)
 		return nil
-	case appsimulategood.FieldDeletedAt:
+	case appsimulatepowerrental.FieldDeletedAt:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddDeletedAt(v)
 		return nil
-	case appsimulategood.FieldFixedOrderDuration:
+	case appsimulatepowerrental.FieldOrderDuration:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddFixedOrderDuration(v)
+		m.AddOrderDuration(v)
 		return nil
 	}
-	return fmt.Errorf("unknown AppSimulateGood numeric field %s", name)
+	return fmt.Errorf("unknown AppSimulatePowerRental numeric field %s", name)
 }
 
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
-func (m *AppSimulateGoodMutation) ClearedFields() []string {
+func (m *AppSimulatePowerRentalMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(appsimulategood.FieldAppID) {
-		fields = append(fields, appsimulategood.FieldAppID)
+	if m.FieldCleared(appsimulatepowerrental.FieldAppGoodID) {
+		fields = append(fields, appsimulatepowerrental.FieldAppGoodID)
 	}
-	if m.FieldCleared(appsimulategood.FieldGoodID) {
-		fields = append(fields, appsimulategood.FieldGoodID)
+	if m.FieldCleared(appsimulatepowerrental.FieldCoinTypeID) {
+		fields = append(fields, appsimulatepowerrental.FieldCoinTypeID)
 	}
-	if m.FieldCleared(appsimulategood.FieldAppGoodID) {
-		fields = append(fields, appsimulategood.FieldAppGoodID)
+	if m.FieldCleared(appsimulatepowerrental.FieldOrderUnits) {
+		fields = append(fields, appsimulatepowerrental.FieldOrderUnits)
 	}
-	if m.FieldCleared(appsimulategood.FieldCoinTypeID) {
-		fields = append(fields, appsimulategood.FieldCoinTypeID)
-	}
-	if m.FieldCleared(appsimulategood.FieldFixedOrderUnits) {
-		fields = append(fields, appsimulategood.FieldFixedOrderUnits)
-	}
-	if m.FieldCleared(appsimulategood.FieldFixedOrderDuration) {
-		fields = append(fields, appsimulategood.FieldFixedOrderDuration)
+	if m.FieldCleared(appsimulatepowerrental.FieldOrderDuration) {
+		fields = append(fields, appsimulatepowerrental.FieldOrderDuration)
 	}
 	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
 // cleared in this mutation.
-func (m *AppSimulateGoodMutation) FieldCleared(name string) bool {
+func (m *AppSimulatePowerRentalMutation) FieldCleared(name string) bool {
 	_, ok := m.clearedFields[name]
 	return ok
 }
 
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
-func (m *AppSimulateGoodMutation) ClearField(name string) error {
+func (m *AppSimulatePowerRentalMutation) ClearField(name string) error {
 	switch name {
-	case appsimulategood.FieldAppID:
-		m.ClearAppID()
-		return nil
-	case appsimulategood.FieldGoodID:
-		m.ClearGoodID()
-		return nil
-	case appsimulategood.FieldAppGoodID:
+	case appsimulatepowerrental.FieldAppGoodID:
 		m.ClearAppGoodID()
 		return nil
-	case appsimulategood.FieldCoinTypeID:
+	case appsimulatepowerrental.FieldCoinTypeID:
 		m.ClearCoinTypeID()
 		return nil
-	case appsimulategood.FieldFixedOrderUnits:
-		m.ClearFixedOrderUnits()
+	case appsimulatepowerrental.FieldOrderUnits:
+		m.ClearOrderUnits()
 		return nil
-	case appsimulategood.FieldFixedOrderDuration:
-		m.ClearFixedOrderDuration()
+	case appsimulatepowerrental.FieldOrderDuration:
+		m.ClearOrderDuration()
 		return nil
 	}
-	return fmt.Errorf("unknown AppSimulateGood nullable field %s", name)
+	return fmt.Errorf("unknown AppSimulatePowerRental nullable field %s", name)
 }
 
 // ResetField resets all changes in the mutation for the field with the given name.
 // It returns an error if the field is not defined in the schema.
-func (m *AppSimulateGoodMutation) ResetField(name string) error {
+func (m *AppSimulatePowerRentalMutation) ResetField(name string) error {
 	switch name {
-	case appsimulategood.FieldCreatedAt:
+	case appsimulatepowerrental.FieldCreatedAt:
 		m.ResetCreatedAt()
 		return nil
-	case appsimulategood.FieldUpdatedAt:
+	case appsimulatepowerrental.FieldUpdatedAt:
 		m.ResetUpdatedAt()
 		return nil
-	case appsimulategood.FieldDeletedAt:
+	case appsimulatepowerrental.FieldDeletedAt:
 		m.ResetDeletedAt()
 		return nil
-	case appsimulategood.FieldEntID:
+	case appsimulatepowerrental.FieldEntID:
 		m.ResetEntID()
 		return nil
-	case appsimulategood.FieldAppID:
-		m.ResetAppID()
-		return nil
-	case appsimulategood.FieldGoodID:
-		m.ResetGoodID()
-		return nil
-	case appsimulategood.FieldAppGoodID:
+	case appsimulatepowerrental.FieldAppGoodID:
 		m.ResetAppGoodID()
 		return nil
-	case appsimulategood.FieldCoinTypeID:
+	case appsimulatepowerrental.FieldCoinTypeID:
 		m.ResetCoinTypeID()
 		return nil
-	case appsimulategood.FieldFixedOrderUnits:
-		m.ResetFixedOrderUnits()
+	case appsimulatepowerrental.FieldOrderUnits:
+		m.ResetOrderUnits()
 		return nil
-	case appsimulategood.FieldFixedOrderDuration:
-		m.ResetFixedOrderDuration()
+	case appsimulatepowerrental.FieldOrderDuration:
+		m.ResetOrderDuration()
 		return nil
 	}
-	return fmt.Errorf("unknown AppSimulateGood field %s", name)
+	return fmt.Errorf("unknown AppSimulatePowerRental field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
-func (m *AppSimulateGoodMutation) AddedEdges() []string {
+func (m *AppSimulatePowerRentalMutation) AddedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
-func (m *AppSimulateGoodMutation) AddedIDs(name string) []ent.Value {
+func (m *AppSimulatePowerRentalMutation) AddedIDs(name string) []ent.Value {
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
-func (m *AppSimulateGoodMutation) RemovedEdges() []string {
+func (m *AppSimulatePowerRentalMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
-func (m *AppSimulateGoodMutation) RemovedIDs(name string) []ent.Value {
+func (m *AppSimulatePowerRentalMutation) RemovedIDs(name string) []ent.Value {
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *AppSimulateGoodMutation) ClearedEdges() []string {
+func (m *AppSimulatePowerRentalMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
-func (m *AppSimulateGoodMutation) EdgeCleared(name string) bool {
+func (m *AppSimulatePowerRentalMutation) EdgeCleared(name string) bool {
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
-func (m *AppSimulateGoodMutation) ClearEdge(name string) error {
-	return fmt.Errorf("unknown AppSimulateGood unique edge %s", name)
+func (m *AppSimulatePowerRentalMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown AppSimulatePowerRental unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
-func (m *AppSimulateGoodMutation) ResetEdge(name string) error {
-	return fmt.Errorf("unknown AppSimulateGood edge %s", name)
+func (m *AppSimulatePowerRentalMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown AppSimulatePowerRental edge %s", name)
 }
 
 // AppStockMutation represents an operation that mutates the AppStock nodes in the graph.
