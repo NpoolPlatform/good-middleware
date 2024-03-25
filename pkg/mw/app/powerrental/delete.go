@@ -17,7 +17,7 @@ type deleteHandler struct {
 
 func (h *deleteHandler) deleteAppGoodBase(ctx context.Context, tx *ent.Tx) error {
 	if _, err := appgoodbasecrud.UpdateSet(
-		tx.AppGoodBase.UpdateOneID(h.appGoodBase.ID),
+		tx.AppGoodBase.UpdateOneID(h._ent.appGoodBase.ID),
 		&appgoodbasecrud.Req{
 			DeletedAt: &h.now,
 		},
@@ -29,7 +29,7 @@ func (h *deleteHandler) deleteAppGoodBase(ctx context.Context, tx *ent.Tx) error
 
 func (h *deleteHandler) deletePowerRental(ctx context.Context, tx *ent.Tx) error {
 	if _, err := apppowerrentalcrud.UpdateSet(
-		tx.AppPowerRental.UpdateOneID(h.appPowerRental.ID),
+		tx.AppPowerRental.UpdateOneID(h._ent.appPowerRental.ID),
 		&apppowerrentalcrud.Req{
 			DeletedAt: &h.now,
 		},
@@ -50,7 +50,7 @@ func (h *Handler) DeletePowerRental(ctx context.Context) error {
 	if err := handler.getAppPowerRentalAppGood(ctx); err != nil {
 		return err
 	}
-	if handler.appPowerRental == nil {
+	if handler._ent.appPowerRental == nil {
 		return nil
 	}
 

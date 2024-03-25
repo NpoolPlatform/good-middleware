@@ -14,10 +14,7 @@ import (
 
 type powerRentalAppGoodQueryHandler struct {
 	*Handler
-	powerRental    *ent.PowerRental
-	goodBase       *ent.GoodBase
-	appGoodBase    *ent.AppGoodBase
-	appPowerRental *ent.AppPowerRental
+	_ent powerRental
 }
 
 func (h *powerRentalAppGoodQueryHandler) _getPowerRentalGood(ctx context.Context, must bool) (err error) {
@@ -30,17 +27,17 @@ func (h *powerRentalAppGoodQueryHandler) _getPowerRentalGood(ctx context.Context
 		if h.AppGoodBaseReq.GoodID != nil {
 			stm.Where(entpowerrental.GoodID(*h.AppGoodBaseReq.GoodID))
 		}
-		if h.powerRental, err = stm.Only(_ctx); err != nil {
+		if h._ent.powerRental, err = stm.Only(_ctx); err != nil {
 			if ent.IsNotFound(err) && !must {
 				return nil
 			}
 			return err
 		}
-		if h.goodBase, err = cli.
+		if h._ent.goodBase, err = cli.
 			GoodBase.
 			Query().
 			Where(
-				entgoodbase.EntID(h.powerRental.GoodID),
+				entgoodbase.EntID(h._ent.powerRental.GoodID),
 				entgoodbase.DeletedAt(0),
 			).Only(_ctx); err != nil {
 			if ent.IsNotFound(err) && !must {
@@ -68,18 +65,18 @@ func (h *powerRentalAppGoodQueryHandler) _getAppPowerRentalAppGood(ctx context.C
 		if h.AppGoodID != nil {
 			stm.Where(entapppowerrental.AppGoodID(*h.AppGoodID))
 		}
-		h.appPowerRental, err = stm.Only(_ctx)
+		h._ent.appPowerRental, err = stm.Only(_ctx)
 		if err != nil {
 			if ent.IsNotFound(err) && !must {
 				return nil
 			}
 			return err
 		}
-		if h.appGoodBase, err = cli.
+		if h._ent.appGoodBase, err = cli.
 			AppGoodBase.
 			Query().
 			Where(
-				entappgoodbase.EntID(h.appPowerRental.AppGoodID),
+				entappgoodbase.EntID(h._ent.appPowerRental.AppGoodID),
 				entappgoodbase.DeletedAt(0),
 			).Only(_ctx); err != nil {
 			if ent.IsNotFound(err) && !must {
@@ -92,7 +89,7 @@ func (h *powerRentalAppGoodQueryHandler) _getAppPowerRentalAppGood(ctx context.C
 		return err
 	}
 
-	h.AppGoodBaseReq.GoodID = &h.appGoodBase.GoodID
+	h.AppGoodBaseReq.GoodID = &h._ent.appGoodBase.GoodID
 	return h._getPowerRentalGood(ctx, must)
 }
 
@@ -110,4 +107,14 @@ func (h *powerRentalAppGoodQueryHandler) getAppPowerRentalAppGood(ctx context.Co
 
 func (h *powerRentalAppGoodQueryHandler) requireAppPowerRentalAppGood(ctx context.Context) error {
 	return h._getAppPowerRentalAppGood(ctx, true)
+}
+
+func (h *Handler) QueryPowerRentalEnt(ctx context.Context) (PowerRental, error) {
+	handler := &powerRentalAppGoodQueryHandler{
+		Handler: h,
+	}
+	if err := handler.requireAppPowerRentalAppGood(ctx); err != nil {
+		return nil, err
+	}
+	return &handler._ent, nil
 }

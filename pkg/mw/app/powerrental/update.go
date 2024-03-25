@@ -142,7 +142,7 @@ func (h *updateHandler) validateFixedDurationUnitPrice() error {
 	if h.MinOrderDuration != h.MaxOrderDuration {
 		return fmt.Errorf("invalid order duration")
 	}
-	unitPrice := h.powerRental.UnitPrice.Mul(decimal.NewFromInt(int64(*h.MaxOrderDuration)))
+	unitPrice := h._ent.powerRental.UnitPrice.Mul(decimal.NewFromInt(int64(*h.MaxOrderDuration)))
 	if h.UnitPrice.Cmp(unitPrice) < 0 {
 		return fmt.Errorf("invalid unitprice")
 	}
@@ -155,22 +155,22 @@ func (h *updateHandler) validateUnitPrice(ctx context.Context) error {
 	}
 
 	if h.FixedDuration == nil {
-		h.FixedDuration = &h.appPowerRental.FixedDuration
+		h.FixedDuration = &h._ent.appPowerRental.FixedDuration
 	}
 	if h.MinOrderDuration == nil {
-		h.MinOrderDuration = &h.appPowerRental.MinOrderDuration
+		h.MinOrderDuration = &h._ent.appPowerRental.MinOrderDuration
 	}
 	if h.MaxOrderDuration == nil {
-		h.MaxOrderDuration = &h.appPowerRental.MaxOrderDuration
+		h.MaxOrderDuration = &h._ent.appPowerRental.MaxOrderDuration
 	}
 	if h.UnitPrice == nil {
-		h.UnitPrice = &h.appPowerRental.UnitPrice
+		h.UnitPrice = &h._ent.appPowerRental.UnitPrice
 	}
 
 	if *h.FixedDuration {
 		return h.validateFixedDurationUnitPrice()
 	}
-	if h.UnitPrice.Cmp(h.powerRental.UnitPrice) < 0 {
+	if h.UnitPrice.Cmp(h._ent.powerRental.UnitPrice) < 0 {
 		return fmt.Errorf("invalid unitprice")
 	}
 	return nil
@@ -188,13 +188,13 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 	}
 
 	if h.ID == nil {
-		h.ID = &handler.appPowerRental.ID
+		h.ID = &handler._ent.appPowerRental.ID
 	}
 	if h.EntID == nil {
-		h.EntID = &handler.appPowerRental.EntID
+		h.EntID = &handler._ent.appPowerRental.EntID
 	}
 	if h.AppGoodID == nil {
-		h.AppGoodID = &handler.appPowerRental.AppGoodID
+		h.AppGoodID = &handler._ent.appPowerRental.AppGoodID
 	}
 
 	if err := handler.validateUnitPrice(ctx); err != nil {

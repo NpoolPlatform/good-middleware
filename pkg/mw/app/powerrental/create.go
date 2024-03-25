@@ -185,7 +185,7 @@ func (h *createHandler) validateFixedDurationUnitPrice() error {
 	if h.MinOrderDuration != h.MaxOrderDuration {
 		return fmt.Errorf("invalid order duration")
 	}
-	unitPrice := h.powerRental.UnitPrice.Mul(decimal.NewFromInt(int64(*h.MaxOrderDuration)))
+	unitPrice := h._ent.powerRental.UnitPrice.Mul(decimal.NewFromInt(int64(*h.MaxOrderDuration)))
 	if h.UnitPrice.Cmp(unitPrice) < 0 {
 		return fmt.Errorf("invalid unitprice")
 	}
@@ -199,7 +199,7 @@ func (h *createHandler) validateUnitPrice(ctx context.Context) error {
 	if h.FixedDuration != nil && *h.FixedDuration {
 		return h.validateFixedDurationUnitPrice()
 	}
-	if h.UnitPrice.Cmp(h.powerRental.UnitPrice) < 0 {
+	if h.UnitPrice.Cmp(h._ent.powerRental.UnitPrice) < 0 {
 		return fmt.Errorf("invalid unitprice")
 	}
 	return nil
