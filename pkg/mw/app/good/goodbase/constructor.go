@@ -104,7 +104,7 @@ func (h *Handler) ConstructUpdateSql() (string, error) {
 		set = ""
 	}
 	if h.ProductPage != nil {
-		_sql += fmt.Sprintf("%vproduct_page = %v, ", set, *h.ProductPage)
+		_sql += fmt.Sprintf("%vproduct_page = '%v', ", set, *h.ProductPage)
 		set = ""
 	}
 	if h.Online != nil {
@@ -116,7 +116,7 @@ func (h *Handler) ConstructUpdateSql() (string, error) {
 		set = ""
 	}
 	if h.Name != nil {
-		_sql += fmt.Sprintf("%vname = %v, ", set, *h.Name)
+		_sql += fmt.Sprintf("%vname = '%v', ", set, *h.Name)
 		set = ""
 	}
 	if h.DisplayIndex != nil {
@@ -124,7 +124,7 @@ func (h *Handler) ConstructUpdateSql() (string, error) {
 		set = ""
 	}
 	if h.Banner != nil {
-		_sql += fmt.Sprintf("%vbanner = %v, ", set, *h.Banner)
+		_sql += fmt.Sprintf("%vbanner = '%v', ", set, *h.Banner)
 		set = ""
 	}
 	if set != "" {

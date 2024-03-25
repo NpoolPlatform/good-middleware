@@ -124,8 +124,7 @@ func (h *updateHandler) execSql(ctx context.Context, tx *ent.Tx, sql string) err
 	if err != nil {
 		return err
 	}
-	n, err := rc.RowsAffected()
-	if err != nil || n != 1 {
+	if _, err := rc.RowsAffected(); err != nil {
 		return fmt.Errorf("fail update apppowerrental: %v", err)
 	}
 	return nil
