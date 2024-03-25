@@ -1,100 +1,116 @@
-package appsimulategood
+package appsimulatepowerrental
 
 import (
 	"context"
 	"fmt"
+	"time"
 
-	appsimulategoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental/simulate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	appgoodmw "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental/simulate"
-	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
+	apppowerrental1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/powerrental"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 )
 
 type updateHandler struct {
-	*Handler
+	*appPowerRentalHandler
+	appPowerRental apppowerrental1.PowerRental
+	sql            string
 }
 
-func (h *updateHandler) checkUnits(ctx context.Context) error {
-	handler, err := appgoodmw.NewHandler(ctx)
-	if err != nil {
-		return err
+func (h *updateHandler) constructSql() error {
+	if h.ID == nil && h.EntID == nil && h.AppGoodID == nil {
+		return fmt.Errorf("invalid simulateid")
 	}
-	handler.EntID = h.AppGoodID
-	appgood, err := handler.GetGood(ctx)
-	if err != nil {
-		return err
+
+	set := "set "
+	now := uint32(time.Now().Unix())
+
+	_sql := "update app_simulate_power_rentals "
+	if h.OrderUnits != nil {
+		_sql += fmt.Sprintf("%vorder_units= '%v', ", set, *h.OrderUnits)
+		set = ""
 	}
-	if appgood == nil {
-		return fmt.Errorf("invalid appgood")
+	if h.OrderDuration != nil {
+		_sql += fmt.Sprintf("%vorder_duration= %v, ", set, *h.OrderDuration)
+		set = ""
 	}
-	maxOrderAmount, err := decimal.NewFromString(appgood.MaxOrderAmount)
-	if err != nil {
-		return err
+	if set != "" {
+		return cruder.ErrUpdateNothing
 	}
-	minOrderAmount, err := decimal.NewFromString(appgood.MinOrderAmount)
-	if err != nil {
-		return err
+	_sql += fmt.Sprintf("updated_at = %v ", now)
+	_sql += "where "
+	and := ""
+	if h.ID != nil {
+		_sql += fmt.Sprintf("id = %v ", *h.ID)
+		and = "and "
 	}
-	if h.FixedOrderUnits != nil && h.FixedOrderUnits.Cmp(minOrderAmount) < 0 {
-		return fmt.Errorf("units is less than minorderamount")
+	if h.EntID != nil {
+		_sql += fmt.Sprintf("%vent_id = '%v' ", and, *h.EntID)
+		and = "and "
 	}
-	if h.FixedOrderUnits != nil && h.FixedOrderUnits.Cmp(maxOrderAmount) > 0 {
-		return fmt.Errorf("units is more than maxorderamount")
+	if h.AppGoodID != nil {
+		_sql += fmt.Sprintf("%vapp_good_id = '%v' ", and, *h.AppGoodID)
+		and = "and "
 	}
-	if h.FixedOrderDuration == nil {
-		return nil
-	}
-	if *h.FixedOrderDuration > appgood.MaxOrderDuration || *h.FixedOrderDuration < appgood.MinOrderDuration {
-		return fmt.Errorf("invalid duration")
-	}
+	h.sql = _sql
 	return nil
 }
 
 func (h *updateHandler) updateSimulate(ctx context.Context, tx *ent.Tx) error {
-	if _, err := appsimulategoodcrud.UpdateSet(
-		tx.AppSimulateGood.UpdateOneID(*h.ID),
-		&appsimulategoodcrud.Req{
-			FixedOrderUnits:    h.FixedOrderUnits,
-			FixedOrderDuration: h.FixedOrderDuration,
-		},
-	).Save(ctx); err != nil {
+	rc, err := tx.ExecContext(ctx, h.sql)
+	if err != nil {
+		return err
+	}
+	if _, err := rc.RowsAffected(); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (h *Handler) UpdateSimulate(ctx context.Context) (*npool.Simulate, error) {
-	info, err := h.GetSimulate(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if h.FixedOrderUnits == nil && h.FixedOrderDuration == nil {
-		return info, nil
-	}
-
-	appgoodID := uuid.MustParse(info.AppGoodID)
-	h.AppGoodID = &appgoodID
-
-	handler := &updateHandler{
-		Handler: h,
-	}
-
-	if err := handler.checkUnits(ctx); err != nil {
-		return nil, err
-	}
-
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.updateSimulate(_ctx, tx); err != nil {
-			return err
-		}
+func (h *updateHandler) validateOrderUnits() error {
+	if h.OrderUnits == nil {
 		return nil
-	})
-	if err != nil {
-		return nil, err
+	}
+	if h.OrderUnits.Cmp(h.appPowerRental.MinOrderAmount()) < 0 ||
+		h.OrderUnits.Cmp(h.appPowerRental.MaxOrderAmount()) > 0 {
+		return fmt.Errorf("invalid orderunits")
+	}
+	return nil
+}
+
+func (h *updateHandler) validateOrderDuration() error {
+	if h.OrderDuration == nil {
+		return nil
+	}
+	if *h.OrderDuration < h.appPowerRental.MinOrderDuration() ||
+		*h.OrderDuration > h.appPowerRental.MaxOrderDuration() {
+		return fmt.Errorf("invalid orderduration")
+	}
+	return nil
+}
+
+func (h *Handler) UpdateSimulate(ctx context.Context) error {
+	handler := &updateHandler{
+		appPowerRentalHandler: &appPowerRentalHandler{
+			Handler: h,
+		},
 	}
 
-	return h.GetSimulate(ctx)
+	if err := handler.queryAppPowerRental(ctx); err != nil {
+		return err
+	}
+	if err := handler.validateOrderUnits(); err != nil {
+		return err
+	}
+	if err := handler.validateOrderDuration(); err != nil {
+		return err
+	}
+
+	if err := handler.constructSql(); err != nil {
+		return err
+	}
+
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		return handler.updateSimulate(_ctx, tx)
+	})
 }

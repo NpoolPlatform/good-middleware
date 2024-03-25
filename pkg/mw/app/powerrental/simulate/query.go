@@ -1,4 +1,4 @@
-package appsimulategood
+package appsimulatepowerrental
 
 import (
 	"context"
@@ -9,42 +9,44 @@ import (
 	appsimulatepowerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental/simulate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
+	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entappsimulatepowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulatepowerrental"
-	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	entpowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental/simulate"
+
 	"github.com/shopspring/decimal"
 )
 
 type queryHandler struct {
 	*Handler
-	stmSelect *ent.AppSimulateGoodSelect
-	stmCount  *ent.AppSimulateGoodSelect
+	stmSelect *ent.AppSimulatePowerRentalSelect
+	stmCount  *ent.AppSimulatePowerRentalSelect
 	infos     []*npool.Simulate
 	total     uint32
 }
 
-func (h *queryHandler) selectSimulate(stm *ent.AppSimulateGoodQuery) *ent.AppSimulateGoodSelect {
-	return stm.Select(entappsimulategood.FieldID)
+func (h *queryHandler) selectSimulate(stm *ent.AppSimulatePowerRentalQuery) *ent.AppSimulatePowerRentalSelect {
+	return stm.Select(entappsimulatepowerrental.FieldID)
 }
 
 func (h *queryHandler) querySimulate(cli *ent.Client) error {
 	if h.ID == nil && h.EntID == nil {
 		return fmt.Errorf("invalid id")
 	}
-	stm := cli.AppSimulateGood.Query().Where(entappsimulategood.DeletedAt(0))
+	stm := cli.AppSimulatePowerRental.Query().Where(entappsimulatepowerrental.DeletedAt(0))
 	if h.ID != nil {
-		stm.Where(entappsimulategood.ID(*h.ID))
+		stm.Where(entappsimulatepowerrental.ID(*h.ID))
 	}
 	if h.EntID != nil {
-		stm.Where(entappsimulategood.EntID(*h.EntID))
+		stm.Where(entappsimulatepowerrental.EntID(*h.EntID))
 	}
 	h.stmSelect = h.selectSimulate(stm)
 	return nil
 }
 
-func (h *queryHandler) querySimulates(cli *ent.Client) (*ent.AppSimulateGoodSelect, error) {
-	stm, err := appsimulategoodcrud.SetQueryConds(cli.AppSimulateGood.Query(), h.Conds)
+func (h *queryHandler) querySimulates(cli *ent.Client) (*ent.AppSimulatePowerRentalSelect, error) {
+	stm, err := appsimulatepowerrentalcrud.SetQueryConds(cli.AppSimulatePowerRental.Query(), h.AppSimulatePowerRentalConds)
 	if err != nil {
 		return nil, err
 	}
@@ -52,61 +54,61 @@ func (h *queryHandler) querySimulates(cli *ent.Client) (*ent.AppSimulateGoodSele
 }
 
 func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
-	t := sql.Table(entappsimulategood.Table)
-	s.LeftJoin(t).
+	t1 := sql.Table(entappsimulatepowerrental.Table)
+	s.LeftJoin(t1).
 		On(
-			s.C(entappsimulategood.FieldID),
-			t.C(entappsimulategood.FieldID),
+			s.C(entappsimulatepowerrental.FieldID),
+			t1.C(entappsimulatepowerrental.FieldID),
 		).
 		AppendSelect(
-			sql.As(t.C(entappsimulategood.FieldEntID), "ent_id"),
-			sql.As(t.C(entappsimulategood.FieldAppID), "app_id"),
-			sql.As(t.C(entappsimulategood.FieldGoodID), "good_id"),
-			sql.As(t.C(entappsimulategood.FieldAppGoodID), "app_good_id"),
-			sql.As(t.C(entappsimulategood.FieldCoinTypeID), "coin_type_id"),
-			sql.As(t.C(entappsimulategood.FieldFixedOrderUnits), "fixed_order_units"),
-			sql.As(t.C(entappsimulategood.FieldFixedOrderDuration), "fixed_order_duration"),
-			sql.As(t.C(entappsimulategood.FieldCreatedAt), "created_at"),
-			sql.As(t.C(entappsimulategood.FieldUpdatedAt), "updated_at"),
+			t1.C(entappsimulatepowerrental.FieldID),
+			t1.C(entappsimulatepowerrental.FieldEntID),
+			t1.C(entappsimulatepowerrental.FieldAppGoodID),
+			t1.C(entappsimulatepowerrental.FieldOrderUnits),
+			t1.C(entappsimulatepowerrental.FieldOrderDuration),
+			t1.C(entappsimulatepowerrental.FieldCreatedAt),
+			t1.C(entappsimulatepowerrental.FieldUpdatedAt),
 		)
 }
 
-func (h *queryHandler) queryJoinGood(s *sql.Selector) {
-	t := sql.Table(entgood.Table)
-	s.LeftJoin(t).
-		On(
-			s.C(entappsimulategood.FieldGoodID),
-			t.C(entgood.FieldEntID),
-		).
-		AppendSelect(
-			sql.As(t.C(entgood.FieldTitle), "good_name"),
-		)
-}
+func (h *queryHandler) queryJoinAppGoodBase(s *sql.Selector) {
+	t1 := sql.Table(entappgoodbase.Table)
+	t2 := sql.Table(entgoodbase.Table)
+	t3 := sql.Table(entpowerrental.Table)
 
-func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
-	t := sql.Table(entappgood.Table)
-	s.LeftJoin(t).
+	s.LeftJoin(t1).
 		On(
-			s.C(entappsimulategood.FieldAppGoodID),
-			t.C(entappgood.FieldEntID),
+			s.C(entappsimulatepowerrental.FieldAppGoodID),
+			t1.C(entappgoodbase.FieldEntID),
+		).
+		LeftJoin(t2).
+		On(
+			t1.C(entappgoodbase.FieldGoodID),
+			t2.C(entgoodbase.FieldEntID),
+		).
+		LeftJoin(t3).
+		On(
+			t1.C(entappgoodbase.FieldGoodID),
+			t3.C(entgoodbase.FieldEntID),
 		).
 		AppendSelect(
-			sql.As(t.C(entappgood.FieldGoodName), "app_good_name"),
+			t1.C(entappgoodbase.FieldAppID),
+			sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
+			sql.As(t2.C(entgoodbase.FieldEntID), "good_id"),
+			sql.As(t2.C(entgoodbase.FieldName), "good_name"),
 		)
 }
 
 func (h *queryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
-		h.queryJoinGood(s)
-		h.queryJoinAppGood(s)
+		h.queryJoinAppGoodBase(s)
 	})
 	if h.stmCount == nil {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
-		h.queryJoinGood(s)
-		h.queryJoinAppGood(s)
+		h.queryJoinAppGoodBase(s)
 	})
 }
 
@@ -116,12 +118,7 @@ func (h *queryHandler) scan(ctx context.Context) error {
 
 func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
-		amount, err := decimal.NewFromString(info.FixedOrderUnits)
-		if err != nil {
-			info.FixedOrderUnits = decimal.NewFromInt(0).String()
-		} else {
-			info.FixedOrderUnits = amount.String()
-		}
+		info.OrderUnits = func() string { amount, _ := decimal.NewFromString(info.OrderUnits); return amount.String() }()
 	}
 }
 

@@ -1,25 +1,24 @@
-package appsimulategood
+package appsimulatepowerrental
 
 import (
 	"context"
 	"time"
 
-	appsimulategoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental/simulate"
+	appsimulatepowerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental/simulate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental/simulate"
 )
 
 type deleteHandler struct {
 	*Handler
+	now uint32
 }
 
-func (h *deleteHandler) deleteSimulate(ctx context.Context, tx *ent.Tx) error {
-	now := uint32(time.Now().Unix())
-	if _, err := appsimulategoodcrud.UpdateSet(
-		tx.AppSimulateGood.UpdateOneID(*h.ID),
-		&appsimulategoodcrud.Req{
-			DeletedAt: &now,
+func (h *deleteHandler) deleteSimulate(ctx context.Context, cli *ent.Client) error {
+	if _, err := appsimulatepowerrentalcrud.UpdateSet(
+		cli.AppSimulatePowerRental.UpdateOneID(*h.ID),
+		&appsimulatepowerrentalcrud.Req{
+			DeletedAt: &h.now,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -27,30 +26,12 @@ func (h *deleteHandler) deleteSimulate(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *Handler) DeleteSimulate(ctx context.Context) (*npool.Simulate, error) {
-	info, err := h.GetSimulate(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if info == nil {
-		return nil, nil
-	}
-
-	h.ID = &info.ID
-
+func (h *Handler) DeleteSimulate(ctx context.Context) error {
 	handler := &deleteHandler{
 		Handler: h,
+		now:     uint32(time.Now().Unix()),
 	}
-
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.deleteSimulate(_ctx, tx); err != nil {
-			return err
-		}
-		return nil
+	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		return handler.deleteSimulate(_ctx, cli)
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return info, nil
 }

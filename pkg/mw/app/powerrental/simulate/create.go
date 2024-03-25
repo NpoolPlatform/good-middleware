@@ -11,7 +11,7 @@ import (
 )
 
 type createHandler struct {
-	*Handler
+	*appPowerRentalHandler
 	appPowerRental apppowerrental1.PowerRental
 	sql            string
 }
@@ -99,7 +99,9 @@ func (h *createHandler) validateOrderDuration() error {
 
 func (h *Handler) CreateSimulate(ctx context.Context) error {
 	handler := &createHandler{
-		Handler: h,
+		appPowerRentalHandler: &appPowerRentalHandler{
+			Handler: h,
+		},
 	}
 
 	if err := handler.queryAppPowerRental(ctx); err != nil {

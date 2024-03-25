@@ -1,4 +1,4 @@
-package appsimulategood
+package appsimulatepowerrental
 
 import (
 	"context"
@@ -9,17 +9,14 @@ import (
 	entappsimulatepowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulatepowerrental"
 )
 
-func (h *Handler) ExistSimulate(ctx context.Context) (bool, error) {
-	exist := false
-	var err error
-
+func (h *Handler) ExistSimulate(ctx context.Context) (exist bool, err error) {
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		exist, err = cli.
-			AppSimulateGood.
+			AppSimulatePowerRental.
 			Query().
 			Where(
-				entappsimulategood.EntID(*h.EntID),
-				entappsimulategood.DeletedAt(0),
+				entappsimulatepowerrental.EntID(*h.EntID),
+				entappsimulatepowerrental.DeletedAt(0),
 			).
 			Exist(_ctx)
 		if err != nil {
@@ -33,11 +30,9 @@ func (h *Handler) ExistSimulate(ctx context.Context) (bool, error) {
 	return exist, nil
 }
 
-func (h *Handler) ExistSimulateConds(ctx context.Context) (bool, error) {
-	exist := false
-
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := appsimulategoodcrud.SetQueryConds(cli.AppSimulateGood.Query(), h.Conds)
+func (h *Handler) ExistSimulateConds(ctx context.Context) (exist bool, err error) {
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		stm, err := appsimulatepowerrentalcrud.SetQueryConds(cli.AppSimulatePowerRental.Query(), h.AppSimulatePowerRentalConds)
 		if err != nil {
 			return err
 		}

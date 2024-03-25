@@ -1,4 +1,4 @@
-package appsimulategood
+package appsimulatepowerrental
 
 import (
 	"context"
@@ -8,17 +8,16 @@ import (
 	"testing"
 	"time"
 
-	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
-	device1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
-	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
+	apppowerrental1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/powerrental"
+	devicetype1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
+	manufacturer1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device/manufacturer"
+	powerrental1 "github.com/NpoolPlatform/good-middleware/pkg/mw/powerrental"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
-	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental/simulate"
-	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -36,197 +35,141 @@ func init() {
 	}
 }
 
-var good = goodmwpb.Good{
-	EntID:                  uuid.NewString(),
-	DeviceInfoID:           uuid.NewString(),
-	DeviceType:             uuid.NewString(),
-	DeviceManufacturer:     uuid.NewString(),
-	DevicePowerConsumption: 120,
-	DeviceShipmentAt:       uint32(time.Now().Unix() - 1000),
-	DevicePosters:          []string{uuid.NewString(), uuid.NewString()},
-	CoinTypeID:             uuid.NewString(),
-	VendorLocationID:       uuid.NewString(),
-	VendorLocationCountry:  uuid.NewString(),
-	VendorLocationProvince: uuid.NewString(),
-	VendorLocationCity:     uuid.NewString(),
-	VendorLocationAddress:  uuid.NewString(),
-	VendorBrandName:        uuid.NewString(),
-	VendorBrandLogo:        uuid.NewString(),
-	GoodType:               types.GoodType_PowerRental,
-	BenefitType:            types.BenefitType_BenefitTypePlatform,
-	UnitPrice:              decimal.NewFromInt(123).String(),
-	Title:                  uuid.NewString(),
-	QuantityUnit:           "TiB",
-	QuantityUnitAmount:     "1",
-	TestOnly:               true,
-	Posters:                []string{uuid.NewString(), uuid.NewString()},
-	Labels: []types.GoodLabel{
-		types.GoodLabel_GoodLabelInnovationStarter,
-		types.GoodLabel_GoodLabelNoviceExclusive,
-	},
-	GoodTotal:            decimal.NewFromInt(1000).String(),
-	GoodLocked:           decimal.NewFromInt(0).String(),
-	GoodInService:        decimal.NewFromInt(0).String(),
-	GoodWaitStart:        decimal.NewFromInt(0).String(),
-	GoodSold:             decimal.NewFromInt(0).String(),
-	DeliveryAt:           uint32(time.Now().Unix() + 1000),
-	StartAt:              uint32(time.Now().Unix() + 1000),
-	BenefitIntervalHours: 24,
-	GoodAppReserved:      decimal.NewFromInt(0).String(),
-	UnitLockDeposit:      decimal.NewFromInt(1).String(),
-}
-
-var appgood = appgoodmwpb.Good{
-	EntID:                  uuid.NewString(),
-	AppID:                  uuid.NewString(),
-	GoodID:                 good.EntID,
-	Online:                 false,
-	Visible:                false,
-	GoodName:               good.Title,
-	UnitPrice:              decimal.NewFromInt(125).String(),
-	PackagePrice:           decimal.NewFromInt(125).String(),
-	DeviceInfoID:           good.DeviceInfoID,
-	DeviceType:             good.DeviceType,
-	DeviceManufacturer:     good.DeviceManufacturer,
-	DevicePowerConsumption: good.DevicePowerConsumption,
-	DevicePosters:          good.DevicePosters,
-	DeviceShipmentAt:       good.DeviceShipmentAt,
-	CoinTypeID:             good.CoinTypeID,
-	VendorLocationID:       good.VendorLocationID,
-	VendorLocationCountry:  good.VendorLocationCountry,
-	VendorBrandName:        good.VendorBrandName,
-	VendorBrandLogo:        good.VendorBrandLogo,
-	GoodType:               good.GoodType,
-	QuantityUnit:           good.QuantityUnit,
-	QuantityUnitAmount:     good.QuantityUnitAmount,
-	TestOnly:               good.TestOnly,
-	Posters:                good.Posters,
-	Labels:                 good.Labels,
-	BenefitIntervalHours:   good.BenefitIntervalHours,
-	GoodTotal:              good.GoodTotal,
-	GoodSpotQuantity:       good.GoodTotal,
-	CancelModeStr:          types.CancelMode_Uncancellable.String(),
-	EnableSetCommission:    true,
-	EnablePurchase:         true,
-	EnableProductPage:      true,
-	Score:                  decimal.NewFromInt(0).String(),
-	StartAt:                good.StartAt,
-	BenefitType:            good.BenefitType,
-	BenefitTypeStr:         good.BenefitType.String(),
-	GoodTypeStr:            good.GoodType.String(),
-	MinOrderDuration:       1,
-	MaxOrderDuration:       1,
-	MaxOrderAmount:         "100",
-	MinOrderAmount:         "1",
-}
-
 var ret = npool.Simulate{
-	EntID:              uuid.NewString(),
-	AppID:              appgood.AppID,
-	GoodID:             good.EntID,
-	AppGoodID:          appgood.EntID,
-	CoinTypeID:         good.CoinTypeID,
-	FixedOrderUnits:    "10",
-	FixedOrderDuration: 1,
+	EntID:         uuid.NewString(),
+	AppID:         uuid.NewString(),
+	GoodID:        uuid.NewString(),
+	GoodName:      uuid.NewString(),
+	AppGoodID:     uuid.NewString(),
+	AppGoodName:   uuid.NewString(),
+	OrderUnits:    "10",
+	OrderDuration: 1,
 }
 
 func setup(t *testing.T) func(*testing.T) {
-	ret.GoodName = good.Title
-	ret.AppGoodName = appgood.GoodName
-
-	h1, err := vendorbrand1.NewHandler(
+	manufacturerID := uuid.NewString()
+	h1, err := manufacturer1.NewHandler(
 		context.Background(),
-		vendorbrand1.WithName(&good.VendorBrandName, true),
-		vendorbrand1.WithLogo(&good.VendorBrandLogo, true),
+		manufacturer1.WithEntID(&manufacturerID, true),
+		manufacturer1.WithName(func() *string { s := uuid.NewString(); return &s }(), true),
+		manufacturer1.WithLogo(func() *string { s := uuid.NewString(); return &s }(), true),
 	)
 	assert.Nil(t, err)
 
-	info1, err := h1.CreateBrand(context.Background())
+	err = h1.CreateManufacturer(context.Background())
 	assert.Nil(t, err)
-	h1.ID = &info1.ID
 
-	h2, err := vendorlocation1.NewHandler(
+	deviceTypeID := uuid.NewString()
+	h2, err := devicetype1.NewHandler(
 		context.Background(),
-		vendorlocation1.WithEntID(&good.VendorLocationID, true),
-		vendorlocation1.WithCountry(&good.VendorLocationCountry, true),
-		vendorlocation1.WithProvince(&good.VendorLocationProvince, true),
-		vendorlocation1.WithCity(&good.VendorLocationCity, true),
-		vendorlocation1.WithAddress(&good.VendorLocationAddress, true),
-		vendorlocation1.WithBrandID(&info1.EntID, true),
+		devicetype1.WithEntID(&deviceTypeID, true),
+		devicetype1.WithType(func() *string { s := uuid.NewString(); return &s }(), true),
+		devicetype1.WithManufacturerID(&manufacturerID, true),
+		devicetype1.WithPowerConsumption(func() *uint32 { u := uint32(100); return &u }(), true),
+		devicetype1.WithShipmentAt(func() *uint32 { u := uint32(100); return &u }(), true),
 	)
 	assert.Nil(t, err)
 
-	info2, err := h2.CreateLocation(context.Background())
+	err = h2.CreateDeviceType(context.Background())
 	assert.Nil(t, err)
-	h2.ID = &info2.ID
 
-	h3, err := device1.NewHandler(
+	brandID := uuid.NewString()
+	h3, err := vendorbrand1.NewHandler(
 		context.Background(),
-		device1.WithEntID(&good.DeviceInfoID, true),
-		device1.WithType(&good.DeviceType, true),
-		device1.WithManufacturer(&good.DeviceManufacturer, true),
-		device1.WithPowerConsumption(&good.DevicePowerConsumption, true),
-		device1.WithShipmentAt(&good.DeviceShipmentAt, true),
-		device1.WithPosters(good.DevicePosters, true),
+		vendorbrand1.WithEntID(&brandID, true),
+		vendorbrand1.WithName(func() *string { s := uuid.NewString(); return &s }(), true),
+		vendorbrand1.WithLogo(func() *string { s := uuid.NewString(); return &s }(), true),
 	)
 	assert.Nil(t, err)
 
-	info3, err := h3.CreateDeviceInfo(context.Background())
+	err = h3.CreateBrand(context.Background())
 	assert.Nil(t, err)
-	h3.ID = &info3.ID
 
-	h4, err := good1.NewHandler(
+	vendorLocationID := uuid.NewString()
+	h4, err := vendorlocation1.NewHandler(
 		context.Background(),
-		good1.WithEntID(&good.EntID, true),
-		good1.WithDeviceInfoID(&good.DeviceInfoID, true),
-		good1.WithCoinTypeID(&good.CoinTypeID, true),
-		good1.WithVendorLocationID(&good.VendorLocationID, true),
-		good1.WithUnitPrice(&good.UnitPrice, true),
-		good1.WithBenefitType(&good.BenefitType, true),
-		good1.WithGoodType(&good.GoodType, true),
-		good1.WithTitle(&good.Title, true),
-		good1.WithQuantityUnit(&good.QuantityUnit, true),
-		good1.WithQuantityUnitAmount(&good.QuantityUnitAmount, true),
-		good1.WithDeliveryAt(&good.DeliveryAt, true),
-		good1.WithStartAt(&good.StartAt, true),
-		good1.WithTestOnly(&good.TestOnly, false),
-		good1.WithBenefitIntervalHours(&good.BenefitIntervalHours, true),
-		good1.WithUnitLockDeposit(&good.UnitLockDeposit, false),
-		good1.WithTotal(&good.GoodTotal, true),
-		good1.WithPosters(good.Posters, false),
-		good1.WithLabels(good.Labels, false),
+		vendorlocation1.WithEntID(&vendorLocationID, true),
+		vendorlocation1.WithBrandID(&brandID, true),
+		vendorlocation1.WithCountry(func() *string { s := uuid.NewString(); return &s }(), true),
+		vendorlocation1.WithProvince(func() *string { s := uuid.NewString(); return &s }(), true),
+		vendorlocation1.WithCity(func() *string { s := uuid.NewString(); return &s }(), true),
+		vendorlocation1.WithAddress(func() *string { s := uuid.NewString(); return &s }(), true),
 	)
 	assert.Nil(t, err)
 
-	info4, err := h4.CreateGood(context.Background())
+	err = h4.CreateLocation(context.Background())
 	assert.Nil(t, err)
-	h4.ID = &info4.ID
 
-	h5, err := appgood1.NewHandler(
+	powerRentalID := uuid.NewString()
+	h5, err := powerrental1.NewHandler(
 		context.Background(),
-		appgood1.WithEntID(&appgood.EntID, true),
-		appgood1.WithAppID(&appgood.AppID, true),
-		appgood1.WithGoodID(&appgood.GoodID, true),
-		appgood1.WithUnitPrice(&appgood.UnitPrice, true),
-		appgood1.WithPackagePrice(&appgood.PackagePrice, true),
-		appgood1.WithMinOrderDuration(&appgood.MinOrderDuration, true),
-		appgood1.WithMaxOrderDuration(&appgood.MaxOrderDuration, true),
-		appgood1.WithGoodName(&appgood.GoodName, true),
-		appgood1.WithMinOrderAmount(&appgood.MinOrderAmount, true),
-		appgood1.WithMaxOrderAmount(&appgood.MaxOrderAmount, true),
+		powerrental1.WithEntID(&powerRentalID, true),
+		powerrental1.WithGoodID(&ret.GoodID, true),
+		powerrental1.WithDeviceTypeID(&deviceTypeID, true),
+		powerrental1.WithVendorLocationID(&vendorLocationID, true),
+		powerrental1.WithUnitPrice(func() *string { s := decimal.NewFromInt(100).String(); return &s }(), true),
+		powerrental1.WithQuantityUnit(func() *string { s := "TiB"; return &s }(), true),
+		powerrental1.WithQuantityUnitAmount(func() *string { s := decimal.NewFromInt(100).String(); return &s }(), true),
+		powerrental1.WithDeliveryAt(func() *uint32 { u := uint32(time.Now().Unix()); return &u }(), true),
+		powerrental1.WithUnitLockDeposit(func() *string { s := decimal.NewFromInt(90).String(); return &s }(), true),
+		powerrental1.WithDurationType(func() *types.GoodDurationType { e := types.GoodDurationType_GoodDurationByDay; return &e }(), true),
+		powerrental1.WithGoodType(func() *types.GoodType { e := types.GoodType_PowerRental; return &e }(), true),
+		powerrental1.WithBenefitType(func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }(), true),
+		powerrental1.WithName(&ret.GoodName, true),
+		powerrental1.WithServiceStartAt(func() *uint32 { u := uint32(time.Now().Unix()); return &u }(), true),
+		powerrental1.WithStartMode(func() *types.GoodStartMode { e := types.GoodStartMode_GoodStartModeInstantly; return &e }(), true),
+		powerrental1.WithTestOnly(func() *bool { b := true; return &b }(), true),
+		powerrental1.WithBenefitIntervalHours(func() *uint32 { n := uint32(24); return &n }(), true),
+		powerrental1.WithPurchasable(func() *bool { b := true; return &b }(), true),
+		powerrental1.WithOnline(func() *bool { b := true; return &b }(), true),
 	)
 	assert.Nil(t, err)
 
-	info5, err := h5.CreateGood(context.Background())
+	err = h5.CreatePowerRental(context.Background())
 	assert.Nil(t, err)
-	h5.ID = &info5.ID
+
+	h6, err := apppowerrental1.NewHandler(
+		context.Background(),
+		apppowerrental1.WithEntID(func() *string { s := uuid.NewString(); return &s }(), true),
+		apppowerrental1.WithAppID(&ret.AppID, true),
+		apppowerrental1.WithGoodID(&ret.GoodID, true),
+		apppowerrental1.WithAppGoodID(&ret.AppGoodID, true),
+		apppowerrental1.WithPurchasable(func() *bool { b := true; return &b }(), true),
+		apppowerrental1.WithEnableProductPage(func() *bool { b := true; return &b }(), true),
+		apppowerrental1.WithProductPage(func() *string { s := uuid.NewString(); return &s }(), true),
+		apppowerrental1.WithName(&ret.AppGoodName, true),
+		apppowerrental1.WithOnline(func() *bool { b := true; return &b }(), true),
+		apppowerrental1.WithVisible(func() *bool { b := true; return &b }(), true),
+		apppowerrental1.WithDisplayIndex(func() *int32 { n := int32(24); return &n }(), true),
+		apppowerrental1.WithBanner(func() *string { s := uuid.NewString(); return &s }(), true),
+		apppowerrental1.WithServiceStartAt(func() *uint32 { n := uint32(24); return &n }(), true),
+		apppowerrental1.WithCancelMode(func() *types.CancelMode { e := types.CancelMode_Uncancellable; return &e }(), true),
+		apppowerrental1.WithCancelableBeforeStartSeconds(func() *uint32 { n := uint32(24); return &n }(), true),
+		apppowerrental1.WithEnableSetCommission(func() *bool { b := true; return &b }(), true),
+		apppowerrental1.WithMinOrderAmount(func() *string { s := decimal.NewFromInt(90).String(); return &s }(), true),
+		apppowerrental1.WithMaxOrderAmount(func() *string { s := decimal.NewFromInt(90).String(); return &s }(), true),
+		apppowerrental1.WithMaxUserAmount(func() *string { s := decimal.NewFromInt(90).String(); return &s }(), true),
+		apppowerrental1.WithMinOrderDuration(func() *uint32 { n := uint32(24); return &n }(), true),
+		apppowerrental1.WithMaxOrderDuration(func() *uint32 { n := uint32(24); return &n }(), true),
+		apppowerrental1.WithUnitPrice(func() *string { s := decimal.NewFromInt(90).String(); return &s }(), true),
+		apppowerrental1.WithSaleStartAt(func() *uint32 { n := uint32(24); return &n }(), true),
+		apppowerrental1.WithSaleEndAt(func() *uint32 { n := uint32(24); return &n }(), true),
+		apppowerrental1.WithSaleMode(func() *types.GoodSaleMode { e := types.GoodSaleMode_GoodSaleModeMainnetSpot; return &e }(), true),
+		apppowerrental1.WithFixedDuration(func() *bool { b := true; return &b }(), true),
+		apppowerrental1.WithPackageWithRequireds(func() *bool { b := false; return &b }(), true),
+	)
+	assert.Nil(t, err)
+
+	err = h6.CreatePowerRental(context.Background())
+	assert.Nil(t, err)
 
 	return func(*testing.T) {
-		_, _ = h5.DeleteGood(context.Background())
-		_, _ = h4.DeleteGood(context.Background())
-		_, _ = h3.DeleteDeviceInfo(context.Background())
-		_, _ = h2.DeleteLocation(context.Background())
-		_, _ = h1.DeleteBrand(context.Background())
+		_ = h6.DeletePowerRental(context.Background())
+		_ = h5.DeletePowerRental(context.Background())
+		_ = h4.DeleteLocation(context.Background())
+		_ = h3.DeleteBrand(context.Background())
+		_ = h2.DeleteDeviceType(context.Background())
+		_ = h1.DeleteManufacturer(context.Background())
 	}
 }
 
@@ -235,34 +178,40 @@ func createSimulate(t *testing.T) {
 		context.Background(),
 		WithEntID(&ret.EntID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
-		WithFixedOrderUnits(&ret.FixedOrderUnits, true),
-		WithFixedOrderDuration(&ret.FixedOrderDuration, true),
+		WithOrderUnits(&ret.OrderUnits, true),
+		WithOrderDuration(&ret.OrderDuration, true),
 	)
 	if assert.Nil(t, err) {
-		info, err := handler.CreateSimulate(context.Background())
+		err = handler.CreateSimulate(context.Background())
 		if assert.Nil(t, err) {
-			ret.CreatedAt = info.CreatedAt
-			ret.UpdatedAt = info.UpdatedAt
-			ret.ID = info.ID
-			assert.Equal(t, &ret, info)
+			info, err := handler.GetSimulate(context.Background())
+			if assert.Nil(t, err) {
+				ret.CreatedAt = info.CreatedAt
+				ret.UpdatedAt = info.UpdatedAt
+				ret.ID = info.ID
+				assert.Equal(t, &ret, info)
+			}
 		}
 	}
 }
 
 func updateSimulate(t *testing.T) {
-	ret.FixedOrderUnits = "20"
-	ret.FixedOrderDuration = 1
+	ret.OrderUnits = "20"
+	ret.OrderDuration = 1
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
-		WithFixedOrderUnits(&ret.FixedOrderUnits, true),
-		WithFixedOrderDuration(&ret.FixedOrderDuration, true),
+		WithOrderUnits(&ret.OrderUnits, true),
+		WithOrderDuration(&ret.OrderDuration, true),
 	)
 	if assert.Nil(t, err) {
-		info, err := handler.UpdateSimulate(context.Background())
+		err = handler.UpdateSimulate(context.Background())
 		if assert.Nil(t, err) {
-			ret.UpdatedAt = info.UpdatedAt
-			assert.Equal(t, &ret, info)
+			info, err := handler.GetSimulate(context.Background())
+			if assert.Nil(t, err) {
+				ret.UpdatedAt = info.UpdatedAt
+				assert.Equal(t, &ret, info)
+			}
 		}
 	}
 }
@@ -284,11 +233,9 @@ func getSimulates(t *testing.T) {
 	handler, err := NewHandler(
 		context.Background(),
 		WithConds(&npool.Conds{
-			ID:      &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
-			EntID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
-			AppID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
-			GoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
-			GoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
+			ID:        &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+			EntID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
+			AppGoodID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
 		}),
 		WithOffset(0),
 		WithLimit(0),
@@ -309,12 +256,10 @@ func deleteSimulate(t *testing.T) {
 		WithID(&ret.ID, true),
 	)
 	if assert.Nil(t, err) {
-		info, err := handler.DeleteSimulate(context.Background())
-		if assert.Nil(t, err) {
-			assert.Equal(t, &ret, info)
-		}
+		err = handler.DeleteSimulate(context.Background())
+		assert.Nil(t, err)
 
-		info, err = handler.GetSimulate(context.Background())
+		info, err := handler.GetSimulate(context.Background())
 		assert.Nil(t, err)
 		assert.Nil(t, info)
 	}
