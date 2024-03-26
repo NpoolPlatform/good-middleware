@@ -7,13 +7,11 @@ import (
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	apppowerrental1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/powerrental"
 )
 
 type createHandler struct {
 	*appPowerRentalHandler
-	appPowerRental apppowerrental1.PowerRental
-	sql            string
+	sql string
 }
 
 func (h *createHandler) constructSql() {
@@ -63,20 +61,6 @@ func (h *createHandler) createSimulate(ctx context.Context, tx *ent.Tx) error {
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
 		return fmt.Errorf("fail create appsimulatepowerrental: %v", err)
-	}
-	return nil
-}
-
-func (h *createHandler) queryAppPowerRental(ctx context.Context) error {
-	handler, err := apppowerrental1.NewHandler(
-		ctx,
-		apppowerrental1.WithAppGoodID(func() *string { s := h.AppGoodID.String(); return &s }(), true),
-	)
-	if err != nil {
-		return err
-	}
-	if h.appPowerRental, err = handler.QueryPowerRentalEnt(ctx); err != nil {
-		return err
 	}
 	return nil
 }

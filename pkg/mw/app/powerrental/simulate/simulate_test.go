@@ -43,7 +43,7 @@ var ret = npool.Simulate{
 	AppGoodID:     uuid.NewString(),
 	AppGoodName:   uuid.NewString(),
 	OrderUnits:    "10",
-	OrderDuration: 1,
+	OrderDuration: 11,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -146,16 +146,16 @@ func setup(t *testing.T) func(*testing.T) {
 		apppowerrental1.WithCancelMode(func() *types.CancelMode { e := types.CancelMode_Uncancellable; return &e }(), true),
 		apppowerrental1.WithCancelableBeforeStartSeconds(func() *uint32 { n := uint32(24); return &n }(), true),
 		apppowerrental1.WithEnableSetCommission(func() *bool { b := true; return &b }(), true),
-		apppowerrental1.WithMinOrderAmount(func() *string { s := decimal.NewFromInt(90).String(); return &s }(), true),
+		apppowerrental1.WithMinOrderAmount(func() *string { s := decimal.NewFromInt(10).String(); return &s }(), true),
 		apppowerrental1.WithMaxOrderAmount(func() *string { s := decimal.NewFromInt(90).String(); return &s }(), true),
 		apppowerrental1.WithMaxUserAmount(func() *string { s := decimal.NewFromInt(90).String(); return &s }(), true),
-		apppowerrental1.WithMinOrderDuration(func() *uint32 { n := uint32(24); return &n }(), true),
+		apppowerrental1.WithMinOrderDuration(func() *uint32 { n := uint32(10); return &n }(), true),
 		apppowerrental1.WithMaxOrderDuration(func() *uint32 { n := uint32(24); return &n }(), true),
-		apppowerrental1.WithUnitPrice(func() *string { s := decimal.NewFromInt(90).String(); return &s }(), true),
+		apppowerrental1.WithUnitPrice(func() *string { s := decimal.NewFromInt(100).String(); return &s }(), true),
 		apppowerrental1.WithSaleStartAt(func() *uint32 { n := uint32(24); return &n }(), true),
 		apppowerrental1.WithSaleEndAt(func() *uint32 { n := uint32(24); return &n }(), true),
 		apppowerrental1.WithSaleMode(func() *types.GoodSaleMode { e := types.GoodSaleMode_GoodSaleModeMainnetSpot; return &e }(), true),
-		apppowerrental1.WithFixedDuration(func() *bool { b := true; return &b }(), true),
+		apppowerrental1.WithFixedDuration(func() *bool { b := false; return &b }(), true),
 		apppowerrental1.WithPackageWithRequireds(func() *bool { b := false; return &b }(), true),
 	)
 	assert.Nil(t, err)
@@ -197,7 +197,7 @@ func createSimulate(t *testing.T) {
 
 func updateSimulate(t *testing.T) {
 	ret.OrderUnits = "20"
-	ret.OrderDuration = 1
+	ret.OrderDuration = 12
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),

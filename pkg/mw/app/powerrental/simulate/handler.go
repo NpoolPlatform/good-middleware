@@ -88,7 +88,7 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 		if !exist {
 			return fmt.Errorf("invalid appgoodid")
 		}
-		h.AppGoodID = handler.EntID
+		h.AppGoodID = handler.AppGoodID
 		return nil
 	}
 }

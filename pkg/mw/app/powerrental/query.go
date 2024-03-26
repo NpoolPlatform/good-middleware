@@ -300,6 +300,9 @@ func (h *Handler) GetPowerRental(ctx context.Context) (*npool.PowerRental, error
 		if err := handler.queryJoin(); err != nil {
 			return err
 		}
+		handler.stmSelect.
+			Offset(0).
+			Limit(2)
 		return handler.scan(_ctx)
 	})
 	if err != nil {

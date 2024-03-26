@@ -7,14 +7,12 @@ import (
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	apppowerrental1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/powerrental"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 )
 
 type updateHandler struct {
 	*appPowerRentalHandler
-	appPowerRental apppowerrental1.PowerRental
-	sql            string
+	sql string
 }
 
 func (h *updateHandler) constructSql() error {
