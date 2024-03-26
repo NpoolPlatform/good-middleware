@@ -64,6 +64,8 @@ var (
 		StartMode:            types.GoodStartMode_GoodStartModeInstantly,
 		BenefitIntervalHours: 20,
 		UnitLockDeposit:      decimal.NewFromInt(1).String(),
+
+		GoodTotal: decimal.NewFromInt(120).String(),
 	}
 )
 
@@ -155,6 +157,7 @@ func createPowerRental(t *testing.T) {
 		WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
 		WithPurchasable(&ret.Purchasable, true),
 		WithOnline(&ret.Online, true),
+		WithTotal(&ret.GoodTotal, true),
 	)
 	assert.Nil(t, err)
 
@@ -189,6 +192,7 @@ func createPowerRental(t *testing.T) {
 		WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
 		WithPurchasable(&ret.Purchasable, true),
 		WithOnline(&ret.Online, true),
+		WithTotal(&ret.GoodTotal, true),
 	)
 	assert.Nil(t, err)
 

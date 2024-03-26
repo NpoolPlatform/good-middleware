@@ -11,6 +11,7 @@ import (
 	stock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/stock"
 	mininggoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/stock/mining"
 
+	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
 
@@ -192,6 +193,17 @@ func (h *createHandler) createMiningGoodStocks(ctx context.Context, tx *ent.Tx) 
 func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	handler := &createHandler{
 		Handler: h,
+	}
+
+	if handler.StockReq.EntID == nil {
+		handler.StockReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
+	}
+	for _, poolStock := range h.MiningGoodStockReqs {
+		poolStock.GoodStockID = handler.StockReq.EntID
+	}
+	if handler.GoodBaseReq.EntID == nil {
+		handler.GoodBaseReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
+		handler.StockReq.GoodID = handler.GoodBaseReq.EntID
 	}
 
 	if err := handler.validateStock(); err != nil {

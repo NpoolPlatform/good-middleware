@@ -14,6 +14,7 @@ import (
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
+	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/powerrental"
 
 	"github.com/google/uuid"
@@ -93,6 +94,7 @@ func WithGoodID(s *string, must bool) func(context.Context, *Handler) error {
 		}
 		h.GoodID = &id
 		h.GoodBaseReq.EntID = &id
+		h.StockReq.GoodID = &id
 		return nil
 	}
 }
@@ -371,6 +373,51 @@ func WithPurchasable(b *bool, must bool) func(context.Context, *Handler) error {
 func WithOnline(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.GoodBaseReq.Online = b
+		return nil
+	}
+}
+
+func WithTotal(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid total")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
+			return fmt.Errorf("invalid total")
+		}
+		h.StockReq.Total = &amount
+		return nil
+	}
+}
+
+func WithStocks(stocks []*stockmwpb.MiningGoodStockReq, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		for _, _stock := range stocks {
+			poolID, err := uuid.Parse(_stock.GetMiningPoolID())
+			if err != nil {
+				return err
+			}
+			poolUserID, err := uuid.Parse(_stock.GetPoolGoodUserID())
+			if err != nil {
+				return err
+			}
+			amount, err := decimal.NewFromString(_stock.GetTotal())
+			if err != nil {
+				return err
+			}
+			h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, &mininggoodstockcrud.Req{
+				MiningPoolID:   &poolID,
+				PoolGoodUserID: &poolUserID,
+				Total:          &amount,
+			})
+		}
 		return nil
 	}
 }
