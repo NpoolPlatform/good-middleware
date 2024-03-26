@@ -45,6 +45,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
@@ -129,6 +130,8 @@ type Client struct {
 	Score *ScoreClient
 	// Stock is the client for interacting with the Stock builders.
 	Stock *StockClient
+	// StockLock is the client for interacting with the StockLock builders.
+	StockLock *StockLockClient
 	// TopMost is the client for interacting with the TopMost builders.
 	TopMost *TopMostClient
 	// TopMostGood is the client for interacting with the TopMostGood builders.
@@ -185,6 +188,7 @@ func (c *Client) init() {
 	c.RequiredGood = NewRequiredGoodClient(c.config)
 	c.Score = NewScoreClient(c.config)
 	c.Stock = NewStockClient(c.config)
+	c.StockLock = NewStockLockClient(c.config)
 	c.TopMost = NewTopMostClient(c.config)
 	c.TopMostGood = NewTopMostGoodClient(c.config)
 	c.VendorBrand = NewVendorBrandClient(c.config)
@@ -257,6 +261,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		RequiredGood:           NewRequiredGoodClient(cfg),
 		Score:                  NewScoreClient(cfg),
 		Stock:                  NewStockClient(cfg),
+		StockLock:              NewStockLockClient(cfg),
 		TopMost:                NewTopMostClient(cfg),
 		TopMostGood:            NewTopMostGoodClient(cfg),
 		VendorBrand:            NewVendorBrandClient(cfg),
@@ -315,6 +320,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		RequiredGood:           NewRequiredGoodClient(cfg),
 		Score:                  NewScoreClient(cfg),
 		Stock:                  NewStockClient(cfg),
+		StockLock:              NewStockLockClient(cfg),
 		TopMost:                NewTopMostClient(cfg),
 		TopMostGood:            NewTopMostGoodClient(cfg),
 		VendorBrand:            NewVendorBrandClient(cfg),
@@ -383,6 +389,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.RequiredGood.Use(hooks...)
 	c.Score.Use(hooks...)
 	c.Stock.Use(hooks...)
+	c.StockLock.Use(hooks...)
 	c.TopMost.Use(hooks...)
 	c.TopMostGood.Use(hooks...)
 	c.VendorBrand.Use(hooks...)
@@ -3572,6 +3579,97 @@ func (c *StockClient) GetX(ctx context.Context, id uint32) *Stock {
 func (c *StockClient) Hooks() []Hook {
 	hooks := c.hooks.Stock
 	return append(hooks[:len(hooks):len(hooks)], stock.Hooks[:]...)
+}
+
+// StockLockClient is a client for the StockLock schema.
+type StockLockClient struct {
+	config
+}
+
+// NewStockLockClient returns a client for the StockLock from the given config.
+func NewStockLockClient(c config) *StockLockClient {
+	return &StockLockClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `stocklock.Hooks(f(g(h())))`.
+func (c *StockLockClient) Use(hooks ...Hook) {
+	c.hooks.StockLock = append(c.hooks.StockLock, hooks...)
+}
+
+// Create returns a builder for creating a StockLock entity.
+func (c *StockLockClient) Create() *StockLockCreate {
+	mutation := newStockLockMutation(c.config, OpCreate)
+	return &StockLockCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of StockLock entities.
+func (c *StockLockClient) CreateBulk(builders ...*StockLockCreate) *StockLockCreateBulk {
+	return &StockLockCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for StockLock.
+func (c *StockLockClient) Update() *StockLockUpdate {
+	mutation := newStockLockMutation(c.config, OpUpdate)
+	return &StockLockUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *StockLockClient) UpdateOne(sl *StockLock) *StockLockUpdateOne {
+	mutation := newStockLockMutation(c.config, OpUpdateOne, withStockLock(sl))
+	return &StockLockUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *StockLockClient) UpdateOneID(id uint32) *StockLockUpdateOne {
+	mutation := newStockLockMutation(c.config, OpUpdateOne, withStockLockID(id))
+	return &StockLockUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for StockLock.
+func (c *StockLockClient) Delete() *StockLockDelete {
+	mutation := newStockLockMutation(c.config, OpDelete)
+	return &StockLockDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *StockLockClient) DeleteOne(sl *StockLock) *StockLockDeleteOne {
+	return c.DeleteOneID(sl.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *StockLockClient) DeleteOneID(id uint32) *StockLockDeleteOne {
+	builder := c.Delete().Where(stocklock.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &StockLockDeleteOne{builder}
+}
+
+// Query returns a query builder for StockLock.
+func (c *StockLockClient) Query() *StockLockQuery {
+	return &StockLockQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a StockLock entity by its id.
+func (c *StockLockClient) Get(ctx context.Context, id uint32) (*StockLock, error) {
+	return c.Query().Where(stocklock.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *StockLockClient) GetX(ctx context.Context, id uint32) *StockLock {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *StockLockClient) Hooks() []Hook {
+	hooks := c.hooks.StockLock
+	return append(hooks[:len(hooks):len(hooks)], stocklock.Hooks[:]...)
 }
 
 // TopMostClient is a client for the TopMost schema.

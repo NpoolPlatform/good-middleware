@@ -41,6 +41,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/schema"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
@@ -2172,6 +2173,60 @@ func init() {
 	stockDescAppReserved := stockFields[7].Descriptor()
 	// stock.DefaultAppReserved holds the default value on creation for the app_reserved field.
 	stock.DefaultAppReserved = stockDescAppReserved.Default.(decimal.Decimal)
+	stocklockMixin := schema.StockLock{}.Mixin()
+	stocklock.Policy = privacy.NewPolicies(stocklockMixin[0], schema.StockLock{})
+	stocklock.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := stocklock.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	stocklockMixinFields0 := stocklockMixin[0].Fields()
+	_ = stocklockMixinFields0
+	stocklockMixinFields1 := stocklockMixin[1].Fields()
+	_ = stocklockMixinFields1
+	stocklockFields := schema.StockLock{}.Fields()
+	_ = stocklockFields
+	// stocklockDescCreatedAt is the schema descriptor for created_at field.
+	stocklockDescCreatedAt := stocklockMixinFields0[0].Descriptor()
+	// stocklock.DefaultCreatedAt holds the default value on creation for the created_at field.
+	stocklock.DefaultCreatedAt = stocklockDescCreatedAt.Default.(func() uint32)
+	// stocklockDescUpdatedAt is the schema descriptor for updated_at field.
+	stocklockDescUpdatedAt := stocklockMixinFields0[1].Descriptor()
+	// stocklock.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	stocklock.DefaultUpdatedAt = stocklockDescUpdatedAt.Default.(func() uint32)
+	// stocklock.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	stocklock.UpdateDefaultUpdatedAt = stocklockDescUpdatedAt.UpdateDefault.(func() uint32)
+	// stocklockDescDeletedAt is the schema descriptor for deleted_at field.
+	stocklockDescDeletedAt := stocklockMixinFields0[2].Descriptor()
+	// stocklock.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	stocklock.DefaultDeletedAt = stocklockDescDeletedAt.Default.(func() uint32)
+	// stocklockDescEntID is the schema descriptor for ent_id field.
+	stocklockDescEntID := stocklockMixinFields1[1].Descriptor()
+	// stocklock.DefaultEntID holds the default value on creation for the ent_id field.
+	stocklock.DefaultEntID = stocklockDescEntID.Default.(func() uuid.UUID)
+	// stocklockDescStockID is the schema descriptor for stock_id field.
+	stocklockDescStockID := stocklockFields[0].Descriptor()
+	// stocklock.DefaultStockID holds the default value on creation for the stock_id field.
+	stocklock.DefaultStockID = stocklockDescStockID.Default.(func() uuid.UUID)
+	// stocklockDescUnits is the schema descriptor for units field.
+	stocklockDescUnits := stocklockFields[1].Descriptor()
+	// stocklock.DefaultUnits holds the default value on creation for the units field.
+	stocklock.DefaultUnits = stocklockDescUnits.Default.(decimal.Decimal)
+	// stocklockDescLockState is the schema descriptor for lock_state field.
+	stocklockDescLockState := stocklockFields[2].Descriptor()
+	// stocklock.DefaultLockState holds the default value on creation for the lock_state field.
+	stocklock.DefaultLockState = stocklockDescLockState.Default.(string)
+	// stocklockDescChargeBackState is the schema descriptor for charge_back_state field.
+	stocklockDescChargeBackState := stocklockFields[3].Descriptor()
+	// stocklock.DefaultChargeBackState holds the default value on creation for the charge_back_state field.
+	stocklock.DefaultChargeBackState = stocklockDescChargeBackState.Default.(string)
+	// stocklockDescExLockID is the schema descriptor for ex_lock_id field.
+	stocklockDescExLockID := stocklockFields[4].Descriptor()
+	// stocklock.DefaultExLockID holds the default value on creation for the ex_lock_id field.
+	stocklock.DefaultExLockID = stocklockDescExLockID.Default.(func() uuid.UUID)
 	topmostMixin := schema.TopMost{}.Mixin()
 	topmost.Policy = privacy.NewPolicies(topmostMixin[0], schema.TopMost{})
 	topmost.Hooks[0] = func(next ent.Mutator) ent.Mutator {

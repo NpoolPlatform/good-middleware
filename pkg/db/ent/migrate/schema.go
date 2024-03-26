@@ -1063,6 +1063,32 @@ var (
 			},
 		},
 	}
+	// StockLocksColumns holds the columns for the "stock_locks" table.
+	StockLocksColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "stock_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "units", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "lock_state", Type: field.TypeString, Nullable: true, Default: "StockLocked"},
+		{Name: "charge_back_state", Type: field.TypeString, Nullable: true, Default: "DefaultStockLockState"},
+		{Name: "ex_lock_id", Type: field.TypeUUID, Nullable: true},
+	}
+	// StockLocksTable holds the schema information for the "stock_locks" table.
+	StockLocksTable = &schema.Table{
+		Name:       "stock_locks",
+		Columns:    StockLocksColumns,
+		PrimaryKey: []*schema.Column{StockLocksColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "stocklock_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{StockLocksColumns[4]},
+			},
+		},
+	}
 	// TopMostsColumns holds the columns for the "top_mosts" table.
 	TopMostsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -1212,6 +1238,7 @@ var (
 		RequiredGoodsTable,
 		ScoresTable,
 		StocksV1Table,
+		StockLocksTable,
 		TopMostsTable,
 		TopMostGoodsTable,
 		VendorBrandsTable,

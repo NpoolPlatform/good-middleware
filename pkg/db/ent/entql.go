@@ -38,6 +38,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
@@ -51,7 +52,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 39)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 40)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   appdefaultgood.Table,
@@ -898,6 +899,28 @@ var schemaGraph = func() *sqlgraph.Schema {
 	}
 	graph.Nodes[35] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
+			Table:   stocklock.Table,
+			Columns: stocklock.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: stocklock.FieldID,
+			},
+		},
+		Type: "StockLock",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			stocklock.FieldCreatedAt:       {Type: field.TypeUint32, Column: stocklock.FieldCreatedAt},
+			stocklock.FieldUpdatedAt:       {Type: field.TypeUint32, Column: stocklock.FieldUpdatedAt},
+			stocklock.FieldDeletedAt:       {Type: field.TypeUint32, Column: stocklock.FieldDeletedAt},
+			stocklock.FieldEntID:           {Type: field.TypeUUID, Column: stocklock.FieldEntID},
+			stocklock.FieldStockID:         {Type: field.TypeUUID, Column: stocklock.FieldStockID},
+			stocklock.FieldUnits:           {Type: field.TypeOther, Column: stocklock.FieldUnits},
+			stocklock.FieldLockState:       {Type: field.TypeString, Column: stocklock.FieldLockState},
+			stocklock.FieldChargeBackState: {Type: field.TypeString, Column: stocklock.FieldChargeBackState},
+			stocklock.FieldExLockID:        {Type: field.TypeUUID, Column: stocklock.FieldExLockID},
+		},
+	}
+	graph.Nodes[36] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
 			Table:   topmost.Table,
 			Columns: topmost.Columns,
 			ID: &sqlgraph.FieldSpec{
@@ -925,7 +948,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmost.FieldKycMust:                {Type: field.TypeBool, Column: topmost.FieldKycMust},
 		},
 	}
-	graph.Nodes[36] = &sqlgraph.Node{
+	graph.Nodes[37] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   topmostgood.Table,
 			Columns: topmostgood.Columns,
@@ -951,7 +974,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostgood.FieldPackagePrice: {Type: field.TypeOther, Column: topmostgood.FieldPackagePrice},
 		},
 	}
-	graph.Nodes[37] = &sqlgraph.Node{
+	graph.Nodes[38] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   vendorbrand.Table,
 			Columns: vendorbrand.Columns,
@@ -970,7 +993,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			vendorbrand.FieldLogo:      {Type: field.TypeString, Column: vendorbrand.FieldLogo},
 		},
 	}
-	graph.Nodes[38] = &sqlgraph.Node{
+	graph.Nodes[39] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   vendorlocation.Table,
 			Columns: vendorlocation.Columns,
@@ -4347,6 +4370,91 @@ func (f *StockFilter) WhereAppReserved(p entql.OtherP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (slq *StockLockQuery) addPredicate(pred func(s *sql.Selector)) {
+	slq.predicates = append(slq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the StockLockQuery builder.
+func (slq *StockLockQuery) Filter() *StockLockFilter {
+	return &StockLockFilter{config: slq.config, predicateAdder: slq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *StockLockMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the StockLockMutation builder.
+func (m *StockLockMutation) Filter() *StockLockFilter {
+	return &StockLockFilter{config: m.config, predicateAdder: m}
+}
+
+// StockLockFilter provides a generic filtering capability at runtime for StockLockQuery.
+type StockLockFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *StockLockFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[35].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *StockLockFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(stocklock.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *StockLockFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(stocklock.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *StockLockFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(stocklock.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *StockLockFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(stocklock.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *StockLockFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(stocklock.FieldEntID))
+}
+
+// WhereStockID applies the entql [16]byte predicate on the stock_id field.
+func (f *StockLockFilter) WhereStockID(p entql.ValueP) {
+	f.Where(p.Field(stocklock.FieldStockID))
+}
+
+// WhereUnits applies the entql other predicate on the units field.
+func (f *StockLockFilter) WhereUnits(p entql.OtherP) {
+	f.Where(p.Field(stocklock.FieldUnits))
+}
+
+// WhereLockState applies the entql string predicate on the lock_state field.
+func (f *StockLockFilter) WhereLockState(p entql.StringP) {
+	f.Where(p.Field(stocklock.FieldLockState))
+}
+
+// WhereChargeBackState applies the entql string predicate on the charge_back_state field.
+func (f *StockLockFilter) WhereChargeBackState(p entql.StringP) {
+	f.Where(p.Field(stocklock.FieldChargeBackState))
+}
+
+// WhereExLockID applies the entql [16]byte predicate on the ex_lock_id field.
+func (f *StockLockFilter) WhereExLockID(p entql.ValueP) {
+	f.Where(p.Field(stocklock.FieldExLockID))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (tmq *TopMostQuery) addPredicate(pred func(s *sql.Selector)) {
 	tmq.predicates = append(tmq.predicates, pred)
 }
@@ -4375,7 +4483,7 @@ type TopMostFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *TopMostFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[35].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[36].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4495,7 +4603,7 @@ type TopMostGoodFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *TopMostGoodFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[36].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[37].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4600,7 +4708,7 @@ type VendorBrandFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *VendorBrandFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[37].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[38].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4670,7 +4778,7 @@ type VendorLocationFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *VendorLocationFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[38].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[39].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})

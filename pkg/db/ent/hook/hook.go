@@ -464,6 +464,19 @@ func (f StockFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error
 	return f(ctx, mv)
 }
 
+// The StockLockFunc type is an adapter to allow the use of ordinary
+// function as StockLock mutator.
+type StockLockFunc func(context.Context, *ent.StockLockMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f StockLockFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.StockLockMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.StockLockMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The TopMostFunc type is an adapter to allow the use of ordinary
 // function as TopMost mutator.
 type TopMostFunc func(context.Context, *ent.TopMostMutation) (ent.Value, error)

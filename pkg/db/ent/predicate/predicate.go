@@ -111,6 +111,9 @@ type Score func(*sql.Selector)
 // Stock is the predicate function for stock builders.
 type Stock func(*sql.Selector)
 
+// StockLock is the predicate function for stocklock builders.
+type StockLock func(*sql.Selector)
+
 // TopMost is the predicate function for topmost builders.
 type TopMost func(*sql.Selector)
 

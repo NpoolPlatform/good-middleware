@@ -12,8 +12,9 @@ import (
 
 type createHandler struct {
 	*Handler
-	sqlPowerRental string
-	sqlGoodBase    string
+	sqlPowerRental     string
+	sqlGoodBase        string
+	sqlMiningGoodStock string
 }
 
 func (h *createHandler) constructGoodBaseSql(ctx context.Context) error {
@@ -35,6 +36,10 @@ func (h *createHandler) constructGoodBaseSql(ctx context.Context) error {
 	}
 	h.sqlGoodBase = handler.ConstructCreateSql()
 	return nil
+}
+
+func (h *createHandler) constructMiningGoodStockSql(ctx context.Context) error {
+
 }
 
 func (h *createHandler) constructPowerRentalSql() {
@@ -127,6 +132,10 @@ func (h *createHandler) createGoodBase(ctx context.Context, tx *ent.Tx) error {
 	return h.execSql(ctx, tx, h.sqlGoodBase)
 }
 
+func (h *createHandler) createMiningGoodStock(ctx context.Context, tx *ent.Tx) error {
+	return h.execSql(ctx, tx, h.sqlMiningGoodStock)
+}
+
 func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	handler := &createHandler{
 		Handler: h,
@@ -136,9 +145,15 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	if err := handler.constructGoodBaseSql(ctx); err != nil {
 		return err
 	}
+	if err := handler.constructMiningGoodStockSql(ctx); err != nil {
+		return err
+	}
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createGoodBase(_ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.createMiningGoodStock(_ctx, tx); err != nil {
 			return err
 		}
 		return handler.createPowerRental(_ctx, tx)
