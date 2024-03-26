@@ -14,8 +14,6 @@ import (
 type Req struct {
 	ID           *uint32
 	EntID        *uuid.UUID
-	AppID        *uuid.UUID
-	GoodID       *uuid.UUID
 	AppGoodID    *uuid.UUID
 	Reserved     *decimal.Decimal
 	SpotQuantity *decimal.Decimal
@@ -29,12 +27,6 @@ type Req struct {
 func CreateSet(c *ent.AppStockCreate, req *Req) *ent.AppStockCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
-	}
-	if req.AppID != nil {
-		c.SetAppID(*req.AppID)
-	}
-	if req.GoodID != nil {
-		c.SetGoodID(*req.GoodID)
 	}
 	if req.AppGoodID != nil {
 		c.SetAppGoodID(*req.AppGoodID)
@@ -89,12 +81,8 @@ type Conds struct {
 	ID         *cruder.Cond
 	EntID      *cruder.Cond
 	EntIDs     *cruder.Cond
-	AppID      *cruder.Cond
-	GoodID     *cruder.Cond
-	GoodIDs    *cruder.Cond
 	AppGoodID  *cruder.Cond
 	AppGoodIDs *cruder.Cond
-	AppIDs     *cruder.Cond
 }
 
 //nolint:funlen,gocyclo
@@ -139,30 +127,6 @@ func SetQueryConds(q *ent.AppStockQuery, conds *Conds) (*ent.AppStockQuery, erro
 			return nil, fmt.Errorf("invalid appstock field")
 		}
 	}
-	if conds.AppID != nil {
-		id, ok := conds.AppID.Val.(uuid.UUID)
-		if !ok {
-			return nil, fmt.Errorf("invalid appid")
-		}
-		switch conds.AppID.Op {
-		case cruder.EQ:
-			q.Where(entappstock.AppID(id))
-		default:
-			return nil, fmt.Errorf("invalid appstock field")
-		}
-	}
-	if conds.GoodID != nil {
-		id, ok := conds.GoodID.Val.(uuid.UUID)
-		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
-		}
-		switch conds.GoodID.Op {
-		case cruder.EQ:
-			q.Where(entappstock.GoodID(id))
-		default:
-			return nil, fmt.Errorf("invalid appstock field")
-		}
-	}
 	if conds.AppGoodID != nil {
 		id, ok := conds.AppGoodID.Val.(uuid.UUID)
 		if !ok {
@@ -175,18 +139,6 @@ func SetQueryConds(q *ent.AppStockQuery, conds *Conds) (*ent.AppStockQuery, erro
 			return nil, fmt.Errorf("invalid appstock field")
 		}
 	}
-	if conds.GoodIDs != nil {
-		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
-		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
-		}
-		switch conds.GoodIDs.Op {
-		case cruder.IN:
-			q.Where(entappstock.GoodIDIn(ids...))
-		default:
-			return nil, fmt.Errorf("invalid appstock field")
-		}
-	}
 	if conds.AppGoodIDs != nil {
 		ids, ok := conds.AppGoodIDs.Val.([]uuid.UUID)
 		if !ok {
@@ -195,18 +147,6 @@ func SetQueryConds(q *ent.AppStockQuery, conds *Conds) (*ent.AppStockQuery, erro
 		switch conds.AppGoodIDs.Op {
 		case cruder.IN:
 			q.Where(entappstock.AppGoodIDIn(ids...))
-		default:
-			return nil, fmt.Errorf("invalid appstock field")
-		}
-	}
-	if conds.AppIDs != nil {
-		ids, ok := conds.AppIDs.Val.([]uuid.UUID)
-		if !ok {
-			return nil, fmt.Errorf("invalid appids")
-		}
-		switch conds.AppIDs.Op {
-		case cruder.IN:
-			q.Where(entappstock.AppIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid appstock field")
 		}

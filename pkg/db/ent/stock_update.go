@@ -105,6 +105,20 @@ func (su *StockUpdate) SetGoodID(u uuid.UUID) *StockUpdate {
 	return su
 }
 
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (su *StockUpdate) SetNillableGoodID(u *uuid.UUID) *StockUpdate {
+	if u != nil {
+		su.SetGoodID(*u)
+	}
+	return su
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (su *StockUpdate) ClearGoodID() *StockUpdate {
+	su.mutation.ClearGoodID()
+	return su
+}
+
 // SetTotal sets the "total" field.
 func (su *StockUpdate) SetTotal(d decimal.Decimal) *StockUpdate {
 	su.mutation.SetTotal(d)
@@ -399,6 +413,12 @@ func (su *StockUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: stock.FieldGoodID,
 		})
 	}
+	if su.mutation.GoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: stock.FieldGoodID,
+		})
+	}
 	if value, ok := su.mutation.Total(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
@@ -583,6 +603,20 @@ func (suo *StockUpdateOne) SetNillableEntID(u *uuid.UUID) *StockUpdateOne {
 // SetGoodID sets the "good_id" field.
 func (suo *StockUpdateOne) SetGoodID(u uuid.UUID) *StockUpdateOne {
 	suo.mutation.SetGoodID(u)
+	return suo
+}
+
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (suo *StockUpdateOne) SetNillableGoodID(u *uuid.UUID) *StockUpdateOne {
+	if u != nil {
+		suo.SetGoodID(*u)
+	}
+	return suo
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (suo *StockUpdateOne) ClearGoodID() *StockUpdateOne {
+	suo.mutation.ClearGoodID()
 	return suo
 }
 
@@ -907,6 +941,12 @@ func (suo *StockUpdateOne) sqlSave(ctx context.Context) (_node *Stock, err error
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: stock.FieldGoodID,
+		})
+	}
+	if suo.mutation.GoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: stock.FieldGoodID,
 		})
 	}

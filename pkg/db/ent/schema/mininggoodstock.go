@@ -11,27 +11,21 @@ import (
 	"github.com/shopspring/decimal"
 )
 
-// AppStock holds the schema definition for the AppStock entity.
-type AppStock struct {
+// MiningGoodStock holds the schema definition for the MiningGoodStock entity.
+type MiningGoodStock struct {
 	ent.Schema
 }
 
-func (AppStock) Mixin() []ent.Mixin {
+func (MiningGoodStock) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.TimeMixin{},
 		crudermixin.AutoIDMixin{},
 	}
 }
 
-// Fields of the AppStock.
-func (AppStock) Fields() []ent.Field {
+// Fields of the MiningGoodStock.
+func (MiningGoodStock) Fields() []ent.Field {
 	return []ent.Field{
-		field.
-			UUID("app_good_id", uuid.UUID{}).
-			Optional().
-			Default(func() uuid.UUID {
-				return uuid.Nil
-			}),
 		field.
 			UUID("good_stock_id", uuid.UUID{}).
 			Optional().
@@ -39,7 +33,19 @@ func (AppStock) Fields() []ent.Field {
 				return uuid.Nil
 			}),
 		field.
-			Other("reserved", decimal.Decimal{}).
+			UUID("mining_pool_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
+		field.
+			UUID("pool_good_user_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
+		field.
+			Other("total", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).
@@ -80,13 +86,20 @@ func (AppStock) Fields() []ent.Field {
 			}).
 			Optional().
 			Default(decimal.Decimal{}),
+		field.
+			Other("app_reserved", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.Decimal{}),
 	}
 }
 
-func (AppStock) Annotations() []schema.Annotation {
+func (MiningGoodStock) Annotations() []schema.Annotation {
 	return nil
 }
 
-func (AppStock) Indexes() []ent.Index {
+func (MiningGoodStock) Indexes() []ent.Index {
 	return nil
 }

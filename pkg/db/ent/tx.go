@@ -32,6 +32,8 @@ type Tx struct {
 	AppGoodPoster *AppGoodPosterClient
 	// AppLegacyPowerRental is the client for interacting with the AppLegacyPowerRental builders.
 	AppLegacyPowerRental *AppLegacyPowerRentalClient
+	// AppMiningGoodStock is the client for interacting with the AppMiningGoodStock builders.
+	AppMiningGoodStock *AppMiningGoodStockClient
 	// AppPowerRental is the client for interacting with the AppPowerRental builders.
 	AppPowerRental *AppPowerRentalClient
 	// AppSimulatePowerRental is the client for interacting with the AppSimulatePowerRental builders.
@@ -68,6 +70,8 @@ type Tx struct {
 	GoodRewardHistory *GoodRewardHistoryClient
 	// Like is the client for interacting with the Like builders.
 	Like *LikeClient
+	// MiningGoodStock is the client for interacting with the MiningGoodStock builders.
+	MiningGoodStock *MiningGoodStockClient
 	// PowerRental is the client for interacting with the PowerRental builders.
 	PowerRental *PowerRentalClient
 	// Recommend is the client for interacting with the Recommend builders.
@@ -232,6 +236,7 @@ func (tx *Tx) init() {
 	tx.AppGoodDisplayName = NewAppGoodDisplayNameClient(tx.config)
 	tx.AppGoodPoster = NewAppGoodPosterClient(tx.config)
 	tx.AppLegacyPowerRental = NewAppLegacyPowerRentalClient(tx.config)
+	tx.AppMiningGoodStock = NewAppMiningGoodStockClient(tx.config)
 	tx.AppPowerRental = NewAppPowerRentalClient(tx.config)
 	tx.AppSimulatePowerRental = NewAppSimulatePowerRentalClient(tx.config)
 	tx.AppStock = NewAppStockClient(tx.config)
@@ -250,6 +255,7 @@ func (tx *Tx) init() {
 	tx.GoodReward = NewGoodRewardClient(tx.config)
 	tx.GoodRewardHistory = NewGoodRewardHistoryClient(tx.config)
 	tx.Like = NewLikeClient(tx.config)
+	tx.MiningGoodStock = NewMiningGoodStockClient(tx.config)
 	tx.PowerRental = NewPowerRentalClient(tx.config)
 	tx.Recommend = NewRecommendClient(tx.config)
 	tx.RequiredAppGood = NewRequiredAppGoodClient(tx.config)

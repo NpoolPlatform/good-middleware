@@ -126,6 +126,19 @@ func (f AppLegacyPowerRentalFunc) Mutate(ctx context.Context, m ent.Mutation) (e
 	return f(ctx, mv)
 }
 
+// The AppMiningGoodStockFunc type is an adapter to allow the use of ordinary
+// function as AppMiningGoodStock mutator.
+type AppMiningGoodStockFunc func(context.Context, *ent.AppMiningGoodStockMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppMiningGoodStockFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppMiningGoodStockMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppMiningGoodStockMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The AppPowerRentalFunc type is an adapter to allow the use of ordinary
 // function as AppPowerRental mutator.
 type AppPowerRentalFunc func(context.Context, *ent.AppPowerRentalMutation) (ent.Value, error)
@@ -356,6 +369,19 @@ func (f LikeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	mv, ok := m.(*ent.LikeMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.LikeMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The MiningGoodStockFunc type is an adapter to allow the use of ordinary
+// function as MiningGoodStock mutator.
+type MiningGoodStockFunc func(context.Context, *ent.MiningGoodStockMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f MiningGoodStockFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.MiningGoodStockMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.MiningGoodStockMutation", m)
 	}
 	return f(ctx, mv)
 }

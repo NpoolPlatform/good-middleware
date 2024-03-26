@@ -19,6 +19,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplayname"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulatepowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
@@ -37,6 +38,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredappgood"
@@ -75,6 +77,8 @@ type Client struct {
 	AppGoodPoster *AppGoodPosterClient
 	// AppLegacyPowerRental is the client for interacting with the AppLegacyPowerRental builders.
 	AppLegacyPowerRental *AppLegacyPowerRentalClient
+	// AppMiningGoodStock is the client for interacting with the AppMiningGoodStock builders.
+	AppMiningGoodStock *AppMiningGoodStockClient
 	// AppPowerRental is the client for interacting with the AppPowerRental builders.
 	AppPowerRental *AppPowerRentalClient
 	// AppSimulatePowerRental is the client for interacting with the AppSimulatePowerRental builders.
@@ -111,6 +115,8 @@ type Client struct {
 	GoodRewardHistory *GoodRewardHistoryClient
 	// Like is the client for interacting with the Like builders.
 	Like *LikeClient
+	// MiningGoodStock is the client for interacting with the MiningGoodStock builders.
+	MiningGoodStock *MiningGoodStockClient
 	// PowerRental is the client for interacting with the PowerRental builders.
 	PowerRental *PowerRentalClient
 	// Recommend is the client for interacting with the Recommend builders.
@@ -153,6 +159,7 @@ func (c *Client) init() {
 	c.AppGoodDisplayName = NewAppGoodDisplayNameClient(c.config)
 	c.AppGoodPoster = NewAppGoodPosterClient(c.config)
 	c.AppLegacyPowerRental = NewAppLegacyPowerRentalClient(c.config)
+	c.AppMiningGoodStock = NewAppMiningGoodStockClient(c.config)
 	c.AppPowerRental = NewAppPowerRentalClient(c.config)
 	c.AppSimulatePowerRental = NewAppSimulatePowerRentalClient(c.config)
 	c.AppStock = NewAppStockClient(c.config)
@@ -171,6 +178,7 @@ func (c *Client) init() {
 	c.GoodReward = NewGoodRewardClient(c.config)
 	c.GoodRewardHistory = NewGoodRewardHistoryClient(c.config)
 	c.Like = NewLikeClient(c.config)
+	c.MiningGoodStock = NewMiningGoodStockClient(c.config)
 	c.PowerRental = NewPowerRentalClient(c.config)
 	c.Recommend = NewRecommendClient(c.config)
 	c.RequiredAppGood = NewRequiredAppGoodClient(c.config)
@@ -223,6 +231,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		AppGoodDisplayName:     NewAppGoodDisplayNameClient(cfg),
 		AppGoodPoster:          NewAppGoodPosterClient(cfg),
 		AppLegacyPowerRental:   NewAppLegacyPowerRentalClient(cfg),
+		AppMiningGoodStock:     NewAppMiningGoodStockClient(cfg),
 		AppPowerRental:         NewAppPowerRentalClient(cfg),
 		AppSimulatePowerRental: NewAppSimulatePowerRentalClient(cfg),
 		AppStock:               NewAppStockClient(cfg),
@@ -241,6 +250,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		GoodReward:             NewGoodRewardClient(cfg),
 		GoodRewardHistory:      NewGoodRewardHistoryClient(cfg),
 		Like:                   NewLikeClient(cfg),
+		MiningGoodStock:        NewMiningGoodStockClient(cfg),
 		PowerRental:            NewPowerRentalClient(cfg),
 		Recommend:              NewRecommendClient(cfg),
 		RequiredAppGood:        NewRequiredAppGoodClient(cfg),
@@ -279,6 +289,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		AppGoodDisplayName:     NewAppGoodDisplayNameClient(cfg),
 		AppGoodPoster:          NewAppGoodPosterClient(cfg),
 		AppLegacyPowerRental:   NewAppLegacyPowerRentalClient(cfg),
+		AppMiningGoodStock:     NewAppMiningGoodStockClient(cfg),
 		AppPowerRental:         NewAppPowerRentalClient(cfg),
 		AppSimulatePowerRental: NewAppSimulatePowerRentalClient(cfg),
 		AppStock:               NewAppStockClient(cfg),
@@ -297,6 +308,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		GoodReward:             NewGoodRewardClient(cfg),
 		GoodRewardHistory:      NewGoodRewardHistoryClient(cfg),
 		Like:                   NewLikeClient(cfg),
+		MiningGoodStock:        NewMiningGoodStockClient(cfg),
 		PowerRental:            NewPowerRentalClient(cfg),
 		Recommend:              NewRecommendClient(cfg),
 		RequiredAppGood:        NewRequiredAppGoodClient(cfg),
@@ -345,6 +357,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.AppGoodDisplayName.Use(hooks...)
 	c.AppGoodPoster.Use(hooks...)
 	c.AppLegacyPowerRental.Use(hooks...)
+	c.AppMiningGoodStock.Use(hooks...)
 	c.AppPowerRental.Use(hooks...)
 	c.AppSimulatePowerRental.Use(hooks...)
 	c.AppStock.Use(hooks...)
@@ -363,6 +376,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.GoodReward.Use(hooks...)
 	c.GoodRewardHistory.Use(hooks...)
 	c.Like.Use(hooks...)
+	c.MiningGoodStock.Use(hooks...)
 	c.PowerRental.Use(hooks...)
 	c.Recommend.Use(hooks...)
 	c.RequiredAppGood.Use(hooks...)
@@ -1192,6 +1206,97 @@ func (c *AppLegacyPowerRentalClient) GetX(ctx context.Context, id uint32) *AppLe
 func (c *AppLegacyPowerRentalClient) Hooks() []Hook {
 	hooks := c.hooks.AppLegacyPowerRental
 	return append(hooks[:len(hooks):len(hooks)], applegacypowerrental.Hooks[:]...)
+}
+
+// AppMiningGoodStockClient is a client for the AppMiningGoodStock schema.
+type AppMiningGoodStockClient struct {
+	config
+}
+
+// NewAppMiningGoodStockClient returns a client for the AppMiningGoodStock from the given config.
+func NewAppMiningGoodStockClient(c config) *AppMiningGoodStockClient {
+	return &AppMiningGoodStockClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appmininggoodstock.Hooks(f(g(h())))`.
+func (c *AppMiningGoodStockClient) Use(hooks ...Hook) {
+	c.hooks.AppMiningGoodStock = append(c.hooks.AppMiningGoodStock, hooks...)
+}
+
+// Create returns a builder for creating a AppMiningGoodStock entity.
+func (c *AppMiningGoodStockClient) Create() *AppMiningGoodStockCreate {
+	mutation := newAppMiningGoodStockMutation(c.config, OpCreate)
+	return &AppMiningGoodStockCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppMiningGoodStock entities.
+func (c *AppMiningGoodStockClient) CreateBulk(builders ...*AppMiningGoodStockCreate) *AppMiningGoodStockCreateBulk {
+	return &AppMiningGoodStockCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppMiningGoodStock.
+func (c *AppMiningGoodStockClient) Update() *AppMiningGoodStockUpdate {
+	mutation := newAppMiningGoodStockMutation(c.config, OpUpdate)
+	return &AppMiningGoodStockUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppMiningGoodStockClient) UpdateOne(amgs *AppMiningGoodStock) *AppMiningGoodStockUpdateOne {
+	mutation := newAppMiningGoodStockMutation(c.config, OpUpdateOne, withAppMiningGoodStock(amgs))
+	return &AppMiningGoodStockUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppMiningGoodStockClient) UpdateOneID(id uint32) *AppMiningGoodStockUpdateOne {
+	mutation := newAppMiningGoodStockMutation(c.config, OpUpdateOne, withAppMiningGoodStockID(id))
+	return &AppMiningGoodStockUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppMiningGoodStock.
+func (c *AppMiningGoodStockClient) Delete() *AppMiningGoodStockDelete {
+	mutation := newAppMiningGoodStockMutation(c.config, OpDelete)
+	return &AppMiningGoodStockDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppMiningGoodStockClient) DeleteOne(amgs *AppMiningGoodStock) *AppMiningGoodStockDeleteOne {
+	return c.DeleteOneID(amgs.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppMiningGoodStockClient) DeleteOneID(id uint32) *AppMiningGoodStockDeleteOne {
+	builder := c.Delete().Where(appmininggoodstock.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppMiningGoodStockDeleteOne{builder}
+}
+
+// Query returns a query builder for AppMiningGoodStock.
+func (c *AppMiningGoodStockClient) Query() *AppMiningGoodStockQuery {
+	return &AppMiningGoodStockQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppMiningGoodStock entity by its id.
+func (c *AppMiningGoodStockClient) Get(ctx context.Context, id uint32) (*AppMiningGoodStock, error) {
+	return c.Query().Where(appmininggoodstock.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppMiningGoodStockClient) GetX(ctx context.Context, id uint32) *AppMiningGoodStock {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppMiningGoodStockClient) Hooks() []Hook {
+	hooks := c.hooks.AppMiningGoodStock
+	return append(hooks[:len(hooks):len(hooks)], appmininggoodstock.Hooks[:]...)
 }
 
 // AppPowerRentalClient is a client for the AppPowerRental schema.
@@ -2830,6 +2935,97 @@ func (c *LikeClient) GetX(ctx context.Context, id uint32) *Like {
 func (c *LikeClient) Hooks() []Hook {
 	hooks := c.hooks.Like
 	return append(hooks[:len(hooks):len(hooks)], like.Hooks[:]...)
+}
+
+// MiningGoodStockClient is a client for the MiningGoodStock schema.
+type MiningGoodStockClient struct {
+	config
+}
+
+// NewMiningGoodStockClient returns a client for the MiningGoodStock from the given config.
+func NewMiningGoodStockClient(c config) *MiningGoodStockClient {
+	return &MiningGoodStockClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `mininggoodstock.Hooks(f(g(h())))`.
+func (c *MiningGoodStockClient) Use(hooks ...Hook) {
+	c.hooks.MiningGoodStock = append(c.hooks.MiningGoodStock, hooks...)
+}
+
+// Create returns a builder for creating a MiningGoodStock entity.
+func (c *MiningGoodStockClient) Create() *MiningGoodStockCreate {
+	mutation := newMiningGoodStockMutation(c.config, OpCreate)
+	return &MiningGoodStockCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of MiningGoodStock entities.
+func (c *MiningGoodStockClient) CreateBulk(builders ...*MiningGoodStockCreate) *MiningGoodStockCreateBulk {
+	return &MiningGoodStockCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for MiningGoodStock.
+func (c *MiningGoodStockClient) Update() *MiningGoodStockUpdate {
+	mutation := newMiningGoodStockMutation(c.config, OpUpdate)
+	return &MiningGoodStockUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *MiningGoodStockClient) UpdateOne(mgs *MiningGoodStock) *MiningGoodStockUpdateOne {
+	mutation := newMiningGoodStockMutation(c.config, OpUpdateOne, withMiningGoodStock(mgs))
+	return &MiningGoodStockUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *MiningGoodStockClient) UpdateOneID(id uint32) *MiningGoodStockUpdateOne {
+	mutation := newMiningGoodStockMutation(c.config, OpUpdateOne, withMiningGoodStockID(id))
+	return &MiningGoodStockUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for MiningGoodStock.
+func (c *MiningGoodStockClient) Delete() *MiningGoodStockDelete {
+	mutation := newMiningGoodStockMutation(c.config, OpDelete)
+	return &MiningGoodStockDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *MiningGoodStockClient) DeleteOne(mgs *MiningGoodStock) *MiningGoodStockDeleteOne {
+	return c.DeleteOneID(mgs.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *MiningGoodStockClient) DeleteOneID(id uint32) *MiningGoodStockDeleteOne {
+	builder := c.Delete().Where(mininggoodstock.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &MiningGoodStockDeleteOne{builder}
+}
+
+// Query returns a query builder for MiningGoodStock.
+func (c *MiningGoodStockClient) Query() *MiningGoodStockQuery {
+	return &MiningGoodStockQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a MiningGoodStock entity by its id.
+func (c *MiningGoodStockClient) Get(ctx context.Context, id uint32) (*MiningGoodStock, error) {
+	return c.Query().Where(mininggoodstock.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *MiningGoodStockClient) GetX(ctx context.Context, id uint32) *MiningGoodStock {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *MiningGoodStockClient) Hooks() []Hook {
+	hooks := c.hooks.MiningGoodStock
+	return append(hooks[:len(hooks):len(hooks)], mininggoodstock.Hooks[:]...)
 }
 
 // PowerRentalClient is a client for the PowerRental schema.

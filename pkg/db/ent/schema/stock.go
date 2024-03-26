@@ -28,7 +28,11 @@ func (Stock) Mixin() []ent.Mixin {
 func (Stock) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("good_id", uuid.UUID{}),
+			UUID("good_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
 			Other("total", decimal.Decimal{}).
 			SchemaType(map[string]string{

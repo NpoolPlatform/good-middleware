@@ -7,13 +7,13 @@ import (
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
 
-// AppStock is the model entity for the AppStock schema.
-type AppStock struct {
+// AppMiningGoodStock is the model entity for the AppMiningGoodStock schema.
+type AppMiningGoodStock struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uint32 `json:"id,omitempty"`
@@ -25,10 +25,8 @@ type AppStock struct {
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// EntID holds the value of the "ent_id" field.
 	EntID uuid.UUID `json:"ent_id,omitempty"`
-	// AppGoodID holds the value of the "app_good_id" field.
-	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
-	// GoodStockID holds the value of the "good_stock_id" field.
-	GoodStockID uuid.UUID `json:"good_stock_id,omitempty"`
+	// MiningGoodStockID holds the value of the "mining_good_stock_id" field.
+	MiningGoodStockID uuid.UUID `json:"mining_good_stock_id,omitempty"`
 	// Reserved holds the value of the "reserved" field.
 	Reserved decimal.Decimal `json:"reserved,omitempty"`
 	// SpotQuantity holds the value of the "spot_quantity" field.
@@ -44,181 +42,172 @@ type AppStock struct {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*AppStock) scanValues(columns []string) ([]interface{}, error) {
+func (*AppMiningGoodStock) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case appstock.FieldReserved, appstock.FieldSpotQuantity, appstock.FieldLocked, appstock.FieldInService, appstock.FieldWaitStart, appstock.FieldSold:
+		case appmininggoodstock.FieldReserved, appmininggoodstock.FieldSpotQuantity, appmininggoodstock.FieldLocked, appmininggoodstock.FieldInService, appmininggoodstock.FieldWaitStart, appmininggoodstock.FieldSold:
 			values[i] = new(decimal.Decimal)
-		case appstock.FieldID, appstock.FieldCreatedAt, appstock.FieldUpdatedAt, appstock.FieldDeletedAt:
+		case appmininggoodstock.FieldID, appmininggoodstock.FieldCreatedAt, appmininggoodstock.FieldUpdatedAt, appmininggoodstock.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case appstock.FieldEntID, appstock.FieldAppGoodID, appstock.FieldGoodStockID:
+		case appmininggoodstock.FieldEntID, appmininggoodstock.FieldMiningGoodStockID:
 			values[i] = new(uuid.UUID)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type AppStock", columns[i])
+			return nil, fmt.Errorf("unexpected column %q for type AppMiningGoodStock", columns[i])
 		}
 	}
 	return values, nil
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the AppStock fields.
-func (as *AppStock) assignValues(columns []string, values []interface{}) error {
+// to the AppMiningGoodStock fields.
+func (amgs *AppMiningGoodStock) assignValues(columns []string, values []interface{}) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	for i := range columns {
 		switch columns[i] {
-		case appstock.FieldID:
+		case appmininggoodstock.FieldID:
 			value, ok := values[i].(*sql.NullInt64)
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			as.ID = uint32(value.Int64)
-		case appstock.FieldCreatedAt:
+			amgs.ID = uint32(value.Int64)
+		case appmininggoodstock.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				as.CreatedAt = uint32(value.Int64)
+				amgs.CreatedAt = uint32(value.Int64)
 			}
-		case appstock.FieldUpdatedAt:
+		case appmininggoodstock.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
-				as.UpdatedAt = uint32(value.Int64)
+				amgs.UpdatedAt = uint32(value.Int64)
 			}
-		case appstock.FieldDeletedAt:
+		case appmininggoodstock.FieldDeletedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
-				as.DeletedAt = uint32(value.Int64)
+				amgs.DeletedAt = uint32(value.Int64)
 			}
-		case appstock.FieldEntID:
+		case appmininggoodstock.FieldEntID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field ent_id", values[i])
 			} else if value != nil {
-				as.EntID = *value
+				amgs.EntID = *value
 			}
-		case appstock.FieldAppGoodID:
+		case appmininggoodstock.FieldMiningGoodStockID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field app_good_id", values[i])
+				return fmt.Errorf("unexpected type %T for field mining_good_stock_id", values[i])
 			} else if value != nil {
-				as.AppGoodID = *value
+				amgs.MiningGoodStockID = *value
 			}
-		case appstock.FieldGoodStockID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field good_stock_id", values[i])
-			} else if value != nil {
-				as.GoodStockID = *value
-			}
-		case appstock.FieldReserved:
+		case appmininggoodstock.FieldReserved:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
 				return fmt.Errorf("unexpected type %T for field reserved", values[i])
 			} else if value != nil {
-				as.Reserved = *value
+				amgs.Reserved = *value
 			}
-		case appstock.FieldSpotQuantity:
+		case appmininggoodstock.FieldSpotQuantity:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
 				return fmt.Errorf("unexpected type %T for field spot_quantity", values[i])
 			} else if value != nil {
-				as.SpotQuantity = *value
+				amgs.SpotQuantity = *value
 			}
-		case appstock.FieldLocked:
+		case appmininggoodstock.FieldLocked:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
 				return fmt.Errorf("unexpected type %T for field locked", values[i])
 			} else if value != nil {
-				as.Locked = *value
+				amgs.Locked = *value
 			}
-		case appstock.FieldInService:
+		case appmininggoodstock.FieldInService:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
 				return fmt.Errorf("unexpected type %T for field in_service", values[i])
 			} else if value != nil {
-				as.InService = *value
+				amgs.InService = *value
 			}
-		case appstock.FieldWaitStart:
+		case appmininggoodstock.FieldWaitStart:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
 				return fmt.Errorf("unexpected type %T for field wait_start", values[i])
 			} else if value != nil {
-				as.WaitStart = *value
+				amgs.WaitStart = *value
 			}
-		case appstock.FieldSold:
+		case appmininggoodstock.FieldSold:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
 				return fmt.Errorf("unexpected type %T for field sold", values[i])
 			} else if value != nil {
-				as.Sold = *value
+				amgs.Sold = *value
 			}
 		}
 	}
 	return nil
 }
 
-// Update returns a builder for updating this AppStock.
-// Note that you need to call AppStock.Unwrap() before calling this method if this AppStock
+// Update returns a builder for updating this AppMiningGoodStock.
+// Note that you need to call AppMiningGoodStock.Unwrap() before calling this method if this AppMiningGoodStock
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (as *AppStock) Update() *AppStockUpdateOne {
-	return (&AppStockClient{config: as.config}).UpdateOne(as)
+func (amgs *AppMiningGoodStock) Update() *AppMiningGoodStockUpdateOne {
+	return (&AppMiningGoodStockClient{config: amgs.config}).UpdateOne(amgs)
 }
 
-// Unwrap unwraps the AppStock entity that was returned from a transaction after it was closed,
+// Unwrap unwraps the AppMiningGoodStock entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (as *AppStock) Unwrap() *AppStock {
-	_tx, ok := as.config.driver.(*txDriver)
+func (amgs *AppMiningGoodStock) Unwrap() *AppMiningGoodStock {
+	_tx, ok := amgs.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: AppStock is not a transactional entity")
+		panic("ent: AppMiningGoodStock is not a transactional entity")
 	}
-	as.config.driver = _tx.drv
-	return as
+	amgs.config.driver = _tx.drv
+	return amgs
 }
 
 // String implements the fmt.Stringer.
-func (as *AppStock) String() string {
+func (amgs *AppMiningGoodStock) String() string {
 	var builder strings.Builder
-	builder.WriteString("AppStock(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", as.ID))
+	builder.WriteString("AppMiningGoodStock(")
+	builder.WriteString(fmt.Sprintf("id=%v, ", amgs.ID))
 	builder.WriteString("created_at=")
-	builder.WriteString(fmt.Sprintf("%v", as.CreatedAt))
+	builder.WriteString(fmt.Sprintf("%v", amgs.CreatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
-	builder.WriteString(fmt.Sprintf("%v", as.UpdatedAt))
+	builder.WriteString(fmt.Sprintf("%v", amgs.UpdatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("deleted_at=")
-	builder.WriteString(fmt.Sprintf("%v", as.DeletedAt))
+	builder.WriteString(fmt.Sprintf("%v", amgs.DeletedAt))
 	builder.WriteString(", ")
 	builder.WriteString("ent_id=")
-	builder.WriteString(fmt.Sprintf("%v", as.EntID))
+	builder.WriteString(fmt.Sprintf("%v", amgs.EntID))
 	builder.WriteString(", ")
-	builder.WriteString("app_good_id=")
-	builder.WriteString(fmt.Sprintf("%v", as.AppGoodID))
-	builder.WriteString(", ")
-	builder.WriteString("good_stock_id=")
-	builder.WriteString(fmt.Sprintf("%v", as.GoodStockID))
+	builder.WriteString("mining_good_stock_id=")
+	builder.WriteString(fmt.Sprintf("%v", amgs.MiningGoodStockID))
 	builder.WriteString(", ")
 	builder.WriteString("reserved=")
-	builder.WriteString(fmt.Sprintf("%v", as.Reserved))
+	builder.WriteString(fmt.Sprintf("%v", amgs.Reserved))
 	builder.WriteString(", ")
 	builder.WriteString("spot_quantity=")
-	builder.WriteString(fmt.Sprintf("%v", as.SpotQuantity))
+	builder.WriteString(fmt.Sprintf("%v", amgs.SpotQuantity))
 	builder.WriteString(", ")
 	builder.WriteString("locked=")
-	builder.WriteString(fmt.Sprintf("%v", as.Locked))
+	builder.WriteString(fmt.Sprintf("%v", amgs.Locked))
 	builder.WriteString(", ")
 	builder.WriteString("in_service=")
-	builder.WriteString(fmt.Sprintf("%v", as.InService))
+	builder.WriteString(fmt.Sprintf("%v", amgs.InService))
 	builder.WriteString(", ")
 	builder.WriteString("wait_start=")
-	builder.WriteString(fmt.Sprintf("%v", as.WaitStart))
+	builder.WriteString(fmt.Sprintf("%v", amgs.WaitStart))
 	builder.WriteString(", ")
 	builder.WriteString("sold=")
-	builder.WriteString(fmt.Sprintf("%v", as.Sold))
+	builder.WriteString(fmt.Sprintf("%v", amgs.Sold))
 	builder.WriteByte(')')
 	return builder.String()
 }
 
-// AppStocks is a parsable slice of AppStock.
-type AppStocks []*AppStock
+// AppMiningGoodStocks is a parsable slice of AppMiningGoodStock.
+type AppMiningGoodStocks []*AppMiningGoodStock
 
-func (as AppStocks) config(cfg config) {
-	for _i := range as {
-		as[_i].config = cfg
+func (amgs AppMiningGoodStocks) config(cfg config) {
+	for _i := range amgs {
+		amgs[_i].config = cfg
 	}
 }

@@ -37,6 +37,7 @@ type hooks struct {
 	AppGoodDisplayName     []ent.Hook
 	AppGoodPoster          []ent.Hook
 	AppLegacyPowerRental   []ent.Hook
+	AppMiningGoodStock     []ent.Hook
 	AppPowerRental         []ent.Hook
 	AppSimulatePowerRental []ent.Hook
 	AppStock               []ent.Hook
@@ -55,6 +56,7 @@ type hooks struct {
 	GoodReward             []ent.Hook
 	GoodRewardHistory      []ent.Hook
 	Like                   []ent.Hook
+	MiningGoodStock        []ent.Hook
 	PowerRental            []ent.Hook
 	Recommend              []ent.Hook
 	RequiredAppGood        []ent.Hook

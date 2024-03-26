@@ -366,6 +366,30 @@ func (f AppLegacyPowerRentalMutationRuleFunc) EvalMutation(ctx context.Context, 
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppLegacyPowerRentalMutation", m)
 }
 
+// The AppMiningGoodStockQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AppMiningGoodStockQueryRuleFunc func(context.Context, *ent.AppMiningGoodStockQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AppMiningGoodStockQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppMiningGoodStockQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppMiningGoodStockQuery", q)
+}
+
+// The AppMiningGoodStockMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AppMiningGoodStockMutationRuleFunc func(context.Context, *ent.AppMiningGoodStockMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AppMiningGoodStockMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppMiningGoodStockMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppMiningGoodStockMutation", m)
+}
+
 // The AppPowerRentalQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type AppPowerRentalQueryRuleFunc func(context.Context, *ent.AppPowerRentalQuery) error
@@ -798,6 +822,30 @@ func (f LikeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) 
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.LikeMutation", m)
 }
 
+// The MiningGoodStockQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type MiningGoodStockQueryRuleFunc func(context.Context, *ent.MiningGoodStockQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f MiningGoodStockQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.MiningGoodStockQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.MiningGoodStockQuery", q)
+}
+
+// The MiningGoodStockMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type MiningGoodStockMutationRuleFunc func(context.Context, *ent.MiningGoodStockMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f MiningGoodStockMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.MiningGoodStockMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.MiningGoodStockMutation", m)
+}
+
 // The PowerRentalQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type PowerRentalQueryRuleFunc func(context.Context, *ent.PowerRentalQuery) error
@@ -1091,6 +1139,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.AppLegacyPowerRentalQuery:
 		return q.Filter(), nil
+	case *ent.AppMiningGoodStockQuery:
+		return q.Filter(), nil
 	case *ent.AppPowerRentalQuery:
 		return q.Filter(), nil
 	case *ent.AppSimulatePowerRentalQuery:
@@ -1126,6 +1176,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 	case *ent.GoodRewardHistoryQuery:
 		return q.Filter(), nil
 	case *ent.LikeQuery:
+		return q.Filter(), nil
+	case *ent.MiningGoodStockQuery:
 		return q.Filter(), nil
 	case *ent.PowerRentalQuery:
 		return q.Filter(), nil
@@ -1172,6 +1224,8 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 		return m.Filter(), nil
 	case *ent.AppLegacyPowerRentalMutation:
 		return m.Filter(), nil
+	case *ent.AppMiningGoodStockMutation:
+		return m.Filter(), nil
 	case *ent.AppPowerRentalMutation:
 		return m.Filter(), nil
 	case *ent.AppSimulatePowerRentalMutation:
@@ -1207,6 +1261,8 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	case *ent.GoodRewardHistoryMutation:
 		return m.Filter(), nil
 	case *ent.LikeMutation:
+		return m.Filter(), nil
+	case *ent.MiningGoodStockMutation:
 		return m.Filter(), nil
 	case *ent.PowerRentalMutation:
 		return m.Filter(), nil

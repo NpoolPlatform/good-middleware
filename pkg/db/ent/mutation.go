@@ -17,6 +17,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplayname"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulatepowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
@@ -35,6 +36,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
@@ -70,6 +72,7 @@ const (
 	TypeAppGoodDisplayName     = "AppGoodDisplayName"
 	TypeAppGoodPoster          = "AppGoodPoster"
 	TypeAppLegacyPowerRental   = "AppLegacyPowerRental"
+	TypeAppMiningGoodStock     = "AppMiningGoodStock"
 	TypeAppPowerRental         = "AppPowerRental"
 	TypeAppSimulatePowerRental = "AppSimulatePowerRental"
 	TypeAppStock               = "AppStock"
@@ -88,6 +91,7 @@ const (
 	TypeGoodReward             = "GoodReward"
 	TypeGoodRewardHistory      = "GoodRewardHistory"
 	TypeLike                   = "Like"
+	TypeMiningGoodStock        = "MiningGoodStock"
 	TypePowerRental            = "PowerRental"
 	TypeRecommend              = "Recommend"
 	TypeRequiredAppGood        = "RequiredAppGood"
@@ -10067,6 +10071,1101 @@ func (m *AppLegacyPowerRentalMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown AppLegacyPowerRental edge %s", name)
 }
 
+// AppMiningGoodStockMutation represents an operation that mutates the AppMiningGoodStock nodes in the graph.
+type AppMiningGoodStockMutation struct {
+	config
+	op                   Op
+	typ                  string
+	id                   *uint32
+	created_at           *uint32
+	addcreated_at        *int32
+	updated_at           *uint32
+	addupdated_at        *int32
+	deleted_at           *uint32
+	adddeleted_at        *int32
+	ent_id               *uuid.UUID
+	mining_good_stock_id *uuid.UUID
+	reserved             *decimal.Decimal
+	spot_quantity        *decimal.Decimal
+	locked               *decimal.Decimal
+	in_service           *decimal.Decimal
+	wait_start           *decimal.Decimal
+	sold                 *decimal.Decimal
+	clearedFields        map[string]struct{}
+	done                 bool
+	oldValue             func(context.Context) (*AppMiningGoodStock, error)
+	predicates           []predicate.AppMiningGoodStock
+}
+
+var _ ent.Mutation = (*AppMiningGoodStockMutation)(nil)
+
+// appmininggoodstockOption allows management of the mutation configuration using functional options.
+type appmininggoodstockOption func(*AppMiningGoodStockMutation)
+
+// newAppMiningGoodStockMutation creates new mutation for the AppMiningGoodStock entity.
+func newAppMiningGoodStockMutation(c config, op Op, opts ...appmininggoodstockOption) *AppMiningGoodStockMutation {
+	m := &AppMiningGoodStockMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeAppMiningGoodStock,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withAppMiningGoodStockID sets the ID field of the mutation.
+func withAppMiningGoodStockID(id uint32) appmininggoodstockOption {
+	return func(m *AppMiningGoodStockMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *AppMiningGoodStock
+		)
+		m.oldValue = func(ctx context.Context) (*AppMiningGoodStock, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().AppMiningGoodStock.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withAppMiningGoodStock sets the old AppMiningGoodStock of the mutation.
+func withAppMiningGoodStock(node *AppMiningGoodStock) appmininggoodstockOption {
+	return func(m *AppMiningGoodStockMutation) {
+		m.oldValue = func(context.Context) (*AppMiningGoodStock, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m AppMiningGoodStockMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m AppMiningGoodStockMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of AppMiningGoodStock entities.
+func (m *AppMiningGoodStockMutation) SetID(id uint32) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *AppMiningGoodStockMutation) ID() (id uint32, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *AppMiningGoodStockMutation) IDs(ctx context.Context) ([]uint32, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uint32{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().AppMiningGoodStock.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *AppMiningGoodStockMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *AppMiningGoodStockMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the AppMiningGoodStock entity.
+// If the AppMiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppMiningGoodStockMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *AppMiningGoodStockMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *AppMiningGoodStockMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *AppMiningGoodStockMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *AppMiningGoodStockMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *AppMiningGoodStockMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the AppMiningGoodStock entity.
+// If the AppMiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppMiningGoodStockMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *AppMiningGoodStockMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *AppMiningGoodStockMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *AppMiningGoodStockMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *AppMiningGoodStockMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *AppMiningGoodStockMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the AppMiningGoodStock entity.
+// If the AppMiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppMiningGoodStockMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *AppMiningGoodStockMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *AppMiningGoodStockMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *AppMiningGoodStockMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetEntID sets the "ent_id" field.
+func (m *AppMiningGoodStockMutation) SetEntID(u uuid.UUID) {
+	m.ent_id = &u
+}
+
+// EntID returns the value of the "ent_id" field in the mutation.
+func (m *AppMiningGoodStockMutation) EntID() (r uuid.UUID, exists bool) {
+	v := m.ent_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEntID returns the old "ent_id" field's value of the AppMiningGoodStock entity.
+// If the AppMiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppMiningGoodStockMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEntID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEntID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEntID: %w", err)
+	}
+	return oldValue.EntID, nil
+}
+
+// ResetEntID resets all changes to the "ent_id" field.
+func (m *AppMiningGoodStockMutation) ResetEntID() {
+	m.ent_id = nil
+}
+
+// SetMiningGoodStockID sets the "mining_good_stock_id" field.
+func (m *AppMiningGoodStockMutation) SetMiningGoodStockID(u uuid.UUID) {
+	m.mining_good_stock_id = &u
+}
+
+// MiningGoodStockID returns the value of the "mining_good_stock_id" field in the mutation.
+func (m *AppMiningGoodStockMutation) MiningGoodStockID() (r uuid.UUID, exists bool) {
+	v := m.mining_good_stock_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMiningGoodStockID returns the old "mining_good_stock_id" field's value of the AppMiningGoodStock entity.
+// If the AppMiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppMiningGoodStockMutation) OldMiningGoodStockID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMiningGoodStockID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMiningGoodStockID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMiningGoodStockID: %w", err)
+	}
+	return oldValue.MiningGoodStockID, nil
+}
+
+// ClearMiningGoodStockID clears the value of the "mining_good_stock_id" field.
+func (m *AppMiningGoodStockMutation) ClearMiningGoodStockID() {
+	m.mining_good_stock_id = nil
+	m.clearedFields[appmininggoodstock.FieldMiningGoodStockID] = struct{}{}
+}
+
+// MiningGoodStockIDCleared returns if the "mining_good_stock_id" field was cleared in this mutation.
+func (m *AppMiningGoodStockMutation) MiningGoodStockIDCleared() bool {
+	_, ok := m.clearedFields[appmininggoodstock.FieldMiningGoodStockID]
+	return ok
+}
+
+// ResetMiningGoodStockID resets all changes to the "mining_good_stock_id" field.
+func (m *AppMiningGoodStockMutation) ResetMiningGoodStockID() {
+	m.mining_good_stock_id = nil
+	delete(m.clearedFields, appmininggoodstock.FieldMiningGoodStockID)
+}
+
+// SetReserved sets the "reserved" field.
+func (m *AppMiningGoodStockMutation) SetReserved(d decimal.Decimal) {
+	m.reserved = &d
+}
+
+// Reserved returns the value of the "reserved" field in the mutation.
+func (m *AppMiningGoodStockMutation) Reserved() (r decimal.Decimal, exists bool) {
+	v := m.reserved
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldReserved returns the old "reserved" field's value of the AppMiningGoodStock entity.
+// If the AppMiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppMiningGoodStockMutation) OldReserved(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldReserved is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldReserved requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldReserved: %w", err)
+	}
+	return oldValue.Reserved, nil
+}
+
+// ClearReserved clears the value of the "reserved" field.
+func (m *AppMiningGoodStockMutation) ClearReserved() {
+	m.reserved = nil
+	m.clearedFields[appmininggoodstock.FieldReserved] = struct{}{}
+}
+
+// ReservedCleared returns if the "reserved" field was cleared in this mutation.
+func (m *AppMiningGoodStockMutation) ReservedCleared() bool {
+	_, ok := m.clearedFields[appmininggoodstock.FieldReserved]
+	return ok
+}
+
+// ResetReserved resets all changes to the "reserved" field.
+func (m *AppMiningGoodStockMutation) ResetReserved() {
+	m.reserved = nil
+	delete(m.clearedFields, appmininggoodstock.FieldReserved)
+}
+
+// SetSpotQuantity sets the "spot_quantity" field.
+func (m *AppMiningGoodStockMutation) SetSpotQuantity(d decimal.Decimal) {
+	m.spot_quantity = &d
+}
+
+// SpotQuantity returns the value of the "spot_quantity" field in the mutation.
+func (m *AppMiningGoodStockMutation) SpotQuantity() (r decimal.Decimal, exists bool) {
+	v := m.spot_quantity
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSpotQuantity returns the old "spot_quantity" field's value of the AppMiningGoodStock entity.
+// If the AppMiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppMiningGoodStockMutation) OldSpotQuantity(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSpotQuantity is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSpotQuantity requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSpotQuantity: %w", err)
+	}
+	return oldValue.SpotQuantity, nil
+}
+
+// ClearSpotQuantity clears the value of the "spot_quantity" field.
+func (m *AppMiningGoodStockMutation) ClearSpotQuantity() {
+	m.spot_quantity = nil
+	m.clearedFields[appmininggoodstock.FieldSpotQuantity] = struct{}{}
+}
+
+// SpotQuantityCleared returns if the "spot_quantity" field was cleared in this mutation.
+func (m *AppMiningGoodStockMutation) SpotQuantityCleared() bool {
+	_, ok := m.clearedFields[appmininggoodstock.FieldSpotQuantity]
+	return ok
+}
+
+// ResetSpotQuantity resets all changes to the "spot_quantity" field.
+func (m *AppMiningGoodStockMutation) ResetSpotQuantity() {
+	m.spot_quantity = nil
+	delete(m.clearedFields, appmininggoodstock.FieldSpotQuantity)
+}
+
+// SetLocked sets the "locked" field.
+func (m *AppMiningGoodStockMutation) SetLocked(d decimal.Decimal) {
+	m.locked = &d
+}
+
+// Locked returns the value of the "locked" field in the mutation.
+func (m *AppMiningGoodStockMutation) Locked() (r decimal.Decimal, exists bool) {
+	v := m.locked
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLocked returns the old "locked" field's value of the AppMiningGoodStock entity.
+// If the AppMiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppMiningGoodStockMutation) OldLocked(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLocked is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLocked requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLocked: %w", err)
+	}
+	return oldValue.Locked, nil
+}
+
+// ClearLocked clears the value of the "locked" field.
+func (m *AppMiningGoodStockMutation) ClearLocked() {
+	m.locked = nil
+	m.clearedFields[appmininggoodstock.FieldLocked] = struct{}{}
+}
+
+// LockedCleared returns if the "locked" field was cleared in this mutation.
+func (m *AppMiningGoodStockMutation) LockedCleared() bool {
+	_, ok := m.clearedFields[appmininggoodstock.FieldLocked]
+	return ok
+}
+
+// ResetLocked resets all changes to the "locked" field.
+func (m *AppMiningGoodStockMutation) ResetLocked() {
+	m.locked = nil
+	delete(m.clearedFields, appmininggoodstock.FieldLocked)
+}
+
+// SetInService sets the "in_service" field.
+func (m *AppMiningGoodStockMutation) SetInService(d decimal.Decimal) {
+	m.in_service = &d
+}
+
+// InService returns the value of the "in_service" field in the mutation.
+func (m *AppMiningGoodStockMutation) InService() (r decimal.Decimal, exists bool) {
+	v := m.in_service
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldInService returns the old "in_service" field's value of the AppMiningGoodStock entity.
+// If the AppMiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppMiningGoodStockMutation) OldInService(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldInService is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldInService requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldInService: %w", err)
+	}
+	return oldValue.InService, nil
+}
+
+// ClearInService clears the value of the "in_service" field.
+func (m *AppMiningGoodStockMutation) ClearInService() {
+	m.in_service = nil
+	m.clearedFields[appmininggoodstock.FieldInService] = struct{}{}
+}
+
+// InServiceCleared returns if the "in_service" field was cleared in this mutation.
+func (m *AppMiningGoodStockMutation) InServiceCleared() bool {
+	_, ok := m.clearedFields[appmininggoodstock.FieldInService]
+	return ok
+}
+
+// ResetInService resets all changes to the "in_service" field.
+func (m *AppMiningGoodStockMutation) ResetInService() {
+	m.in_service = nil
+	delete(m.clearedFields, appmininggoodstock.FieldInService)
+}
+
+// SetWaitStart sets the "wait_start" field.
+func (m *AppMiningGoodStockMutation) SetWaitStart(d decimal.Decimal) {
+	m.wait_start = &d
+}
+
+// WaitStart returns the value of the "wait_start" field in the mutation.
+func (m *AppMiningGoodStockMutation) WaitStart() (r decimal.Decimal, exists bool) {
+	v := m.wait_start
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldWaitStart returns the old "wait_start" field's value of the AppMiningGoodStock entity.
+// If the AppMiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppMiningGoodStockMutation) OldWaitStart(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldWaitStart is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldWaitStart requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldWaitStart: %w", err)
+	}
+	return oldValue.WaitStart, nil
+}
+
+// ClearWaitStart clears the value of the "wait_start" field.
+func (m *AppMiningGoodStockMutation) ClearWaitStart() {
+	m.wait_start = nil
+	m.clearedFields[appmininggoodstock.FieldWaitStart] = struct{}{}
+}
+
+// WaitStartCleared returns if the "wait_start" field was cleared in this mutation.
+func (m *AppMiningGoodStockMutation) WaitStartCleared() bool {
+	_, ok := m.clearedFields[appmininggoodstock.FieldWaitStart]
+	return ok
+}
+
+// ResetWaitStart resets all changes to the "wait_start" field.
+func (m *AppMiningGoodStockMutation) ResetWaitStart() {
+	m.wait_start = nil
+	delete(m.clearedFields, appmininggoodstock.FieldWaitStart)
+}
+
+// SetSold sets the "sold" field.
+func (m *AppMiningGoodStockMutation) SetSold(d decimal.Decimal) {
+	m.sold = &d
+}
+
+// Sold returns the value of the "sold" field in the mutation.
+func (m *AppMiningGoodStockMutation) Sold() (r decimal.Decimal, exists bool) {
+	v := m.sold
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSold returns the old "sold" field's value of the AppMiningGoodStock entity.
+// If the AppMiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppMiningGoodStockMutation) OldSold(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSold is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSold requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSold: %w", err)
+	}
+	return oldValue.Sold, nil
+}
+
+// ClearSold clears the value of the "sold" field.
+func (m *AppMiningGoodStockMutation) ClearSold() {
+	m.sold = nil
+	m.clearedFields[appmininggoodstock.FieldSold] = struct{}{}
+}
+
+// SoldCleared returns if the "sold" field was cleared in this mutation.
+func (m *AppMiningGoodStockMutation) SoldCleared() bool {
+	_, ok := m.clearedFields[appmininggoodstock.FieldSold]
+	return ok
+}
+
+// ResetSold resets all changes to the "sold" field.
+func (m *AppMiningGoodStockMutation) ResetSold() {
+	m.sold = nil
+	delete(m.clearedFields, appmininggoodstock.FieldSold)
+}
+
+// Where appends a list predicates to the AppMiningGoodStockMutation builder.
+func (m *AppMiningGoodStockMutation) Where(ps ...predicate.AppMiningGoodStock) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *AppMiningGoodStockMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (AppMiningGoodStock).
+func (m *AppMiningGoodStockMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *AppMiningGoodStockMutation) Fields() []string {
+	fields := make([]string, 0, 11)
+	if m.created_at != nil {
+		fields = append(fields, appmininggoodstock.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, appmininggoodstock.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, appmininggoodstock.FieldDeletedAt)
+	}
+	if m.ent_id != nil {
+		fields = append(fields, appmininggoodstock.FieldEntID)
+	}
+	if m.mining_good_stock_id != nil {
+		fields = append(fields, appmininggoodstock.FieldMiningGoodStockID)
+	}
+	if m.reserved != nil {
+		fields = append(fields, appmininggoodstock.FieldReserved)
+	}
+	if m.spot_quantity != nil {
+		fields = append(fields, appmininggoodstock.FieldSpotQuantity)
+	}
+	if m.locked != nil {
+		fields = append(fields, appmininggoodstock.FieldLocked)
+	}
+	if m.in_service != nil {
+		fields = append(fields, appmininggoodstock.FieldInService)
+	}
+	if m.wait_start != nil {
+		fields = append(fields, appmininggoodstock.FieldWaitStart)
+	}
+	if m.sold != nil {
+		fields = append(fields, appmininggoodstock.FieldSold)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *AppMiningGoodStockMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case appmininggoodstock.FieldCreatedAt:
+		return m.CreatedAt()
+	case appmininggoodstock.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case appmininggoodstock.FieldDeletedAt:
+		return m.DeletedAt()
+	case appmininggoodstock.FieldEntID:
+		return m.EntID()
+	case appmininggoodstock.FieldMiningGoodStockID:
+		return m.MiningGoodStockID()
+	case appmininggoodstock.FieldReserved:
+		return m.Reserved()
+	case appmininggoodstock.FieldSpotQuantity:
+		return m.SpotQuantity()
+	case appmininggoodstock.FieldLocked:
+		return m.Locked()
+	case appmininggoodstock.FieldInService:
+		return m.InService()
+	case appmininggoodstock.FieldWaitStart:
+		return m.WaitStart()
+	case appmininggoodstock.FieldSold:
+		return m.Sold()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *AppMiningGoodStockMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case appmininggoodstock.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case appmininggoodstock.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case appmininggoodstock.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case appmininggoodstock.FieldEntID:
+		return m.OldEntID(ctx)
+	case appmininggoodstock.FieldMiningGoodStockID:
+		return m.OldMiningGoodStockID(ctx)
+	case appmininggoodstock.FieldReserved:
+		return m.OldReserved(ctx)
+	case appmininggoodstock.FieldSpotQuantity:
+		return m.OldSpotQuantity(ctx)
+	case appmininggoodstock.FieldLocked:
+		return m.OldLocked(ctx)
+	case appmininggoodstock.FieldInService:
+		return m.OldInService(ctx)
+	case appmininggoodstock.FieldWaitStart:
+		return m.OldWaitStart(ctx)
+	case appmininggoodstock.FieldSold:
+		return m.OldSold(ctx)
+	}
+	return nil, fmt.Errorf("unknown AppMiningGoodStock field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AppMiningGoodStockMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case appmininggoodstock.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case appmininggoodstock.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case appmininggoodstock.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case appmininggoodstock.FieldEntID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEntID(v)
+		return nil
+	case appmininggoodstock.FieldMiningGoodStockID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMiningGoodStockID(v)
+		return nil
+	case appmininggoodstock.FieldReserved:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetReserved(v)
+		return nil
+	case appmininggoodstock.FieldSpotQuantity:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSpotQuantity(v)
+		return nil
+	case appmininggoodstock.FieldLocked:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLocked(v)
+		return nil
+	case appmininggoodstock.FieldInService:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetInService(v)
+		return nil
+	case appmininggoodstock.FieldWaitStart:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetWaitStart(v)
+		return nil
+	case appmininggoodstock.FieldSold:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSold(v)
+		return nil
+	}
+	return fmt.Errorf("unknown AppMiningGoodStock field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *AppMiningGoodStockMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, appmininggoodstock.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, appmininggoodstock.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, appmininggoodstock.FieldDeletedAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *AppMiningGoodStockMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case appmininggoodstock.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case appmininggoodstock.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case appmininggoodstock.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AppMiningGoodStockMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case appmininggoodstock.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case appmininggoodstock.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case appmininggoodstock.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown AppMiningGoodStock numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *AppMiningGoodStockMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(appmininggoodstock.FieldMiningGoodStockID) {
+		fields = append(fields, appmininggoodstock.FieldMiningGoodStockID)
+	}
+	if m.FieldCleared(appmininggoodstock.FieldReserved) {
+		fields = append(fields, appmininggoodstock.FieldReserved)
+	}
+	if m.FieldCleared(appmininggoodstock.FieldSpotQuantity) {
+		fields = append(fields, appmininggoodstock.FieldSpotQuantity)
+	}
+	if m.FieldCleared(appmininggoodstock.FieldLocked) {
+		fields = append(fields, appmininggoodstock.FieldLocked)
+	}
+	if m.FieldCleared(appmininggoodstock.FieldInService) {
+		fields = append(fields, appmininggoodstock.FieldInService)
+	}
+	if m.FieldCleared(appmininggoodstock.FieldWaitStart) {
+		fields = append(fields, appmininggoodstock.FieldWaitStart)
+	}
+	if m.FieldCleared(appmininggoodstock.FieldSold) {
+		fields = append(fields, appmininggoodstock.FieldSold)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *AppMiningGoodStockMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *AppMiningGoodStockMutation) ClearField(name string) error {
+	switch name {
+	case appmininggoodstock.FieldMiningGoodStockID:
+		m.ClearMiningGoodStockID()
+		return nil
+	case appmininggoodstock.FieldReserved:
+		m.ClearReserved()
+		return nil
+	case appmininggoodstock.FieldSpotQuantity:
+		m.ClearSpotQuantity()
+		return nil
+	case appmininggoodstock.FieldLocked:
+		m.ClearLocked()
+		return nil
+	case appmininggoodstock.FieldInService:
+		m.ClearInService()
+		return nil
+	case appmininggoodstock.FieldWaitStart:
+		m.ClearWaitStart()
+		return nil
+	case appmininggoodstock.FieldSold:
+		m.ClearSold()
+		return nil
+	}
+	return fmt.Errorf("unknown AppMiningGoodStock nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *AppMiningGoodStockMutation) ResetField(name string) error {
+	switch name {
+	case appmininggoodstock.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case appmininggoodstock.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case appmininggoodstock.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case appmininggoodstock.FieldEntID:
+		m.ResetEntID()
+		return nil
+	case appmininggoodstock.FieldMiningGoodStockID:
+		m.ResetMiningGoodStockID()
+		return nil
+	case appmininggoodstock.FieldReserved:
+		m.ResetReserved()
+		return nil
+	case appmininggoodstock.FieldSpotQuantity:
+		m.ResetSpotQuantity()
+		return nil
+	case appmininggoodstock.FieldLocked:
+		m.ResetLocked()
+		return nil
+	case appmininggoodstock.FieldInService:
+		m.ResetInService()
+		return nil
+	case appmininggoodstock.FieldWaitStart:
+		m.ResetWaitStart()
+		return nil
+	case appmininggoodstock.FieldSold:
+		m.ResetSold()
+		return nil
+	}
+	return fmt.Errorf("unknown AppMiningGoodStock field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *AppMiningGoodStockMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *AppMiningGoodStockMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *AppMiningGoodStockMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *AppMiningGoodStockMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *AppMiningGoodStockMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *AppMiningGoodStockMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *AppMiningGoodStockMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown AppMiningGoodStock unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *AppMiningGoodStockMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown AppMiningGoodStock edge %s", name)
+}
+
 // AppPowerRentalMutation represents an operation that mutates the AppPowerRental nodes in the graph.
 type AppPowerRentalMutation struct {
 	config
@@ -12946,9 +14045,8 @@ type AppStockMutation struct {
 	deleted_at    *uint32
 	adddeleted_at *int32
 	ent_id        *uuid.UUID
-	app_id        *uuid.UUID
-	good_id       *uuid.UUID
 	app_good_id   *uuid.UUID
+	good_stock_id *uuid.UUID
 	reserved      *decimal.Decimal
 	spot_quantity *decimal.Decimal
 	locked        *decimal.Decimal
@@ -13269,104 +14367,6 @@ func (m *AppStockMutation) ResetEntID() {
 	m.ent_id = nil
 }
 
-// SetAppID sets the "app_id" field.
-func (m *AppStockMutation) SetAppID(u uuid.UUID) {
-	m.app_id = &u
-}
-
-// AppID returns the value of the "app_id" field in the mutation.
-func (m *AppStockMutation) AppID() (r uuid.UUID, exists bool) {
-	v := m.app_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAppID returns the old "app_id" field's value of the AppStock entity.
-// If the AppStock object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppStockMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAppID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
-	}
-	return oldValue.AppID, nil
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (m *AppStockMutation) ClearAppID() {
-	m.app_id = nil
-	m.clearedFields[appstock.FieldAppID] = struct{}{}
-}
-
-// AppIDCleared returns if the "app_id" field was cleared in this mutation.
-func (m *AppStockMutation) AppIDCleared() bool {
-	_, ok := m.clearedFields[appstock.FieldAppID]
-	return ok
-}
-
-// ResetAppID resets all changes to the "app_id" field.
-func (m *AppStockMutation) ResetAppID() {
-	m.app_id = nil
-	delete(m.clearedFields, appstock.FieldAppID)
-}
-
-// SetGoodID sets the "good_id" field.
-func (m *AppStockMutation) SetGoodID(u uuid.UUID) {
-	m.good_id = &u
-}
-
-// GoodID returns the value of the "good_id" field in the mutation.
-func (m *AppStockMutation) GoodID() (r uuid.UUID, exists bool) {
-	v := m.good_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldGoodID returns the old "good_id" field's value of the AppStock entity.
-// If the AppStock object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppStockMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldGoodID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldGoodID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldGoodID: %w", err)
-	}
-	return oldValue.GoodID, nil
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (m *AppStockMutation) ClearGoodID() {
-	m.good_id = nil
-	m.clearedFields[appstock.FieldGoodID] = struct{}{}
-}
-
-// GoodIDCleared returns if the "good_id" field was cleared in this mutation.
-func (m *AppStockMutation) GoodIDCleared() bool {
-	_, ok := m.clearedFields[appstock.FieldGoodID]
-	return ok
-}
-
-// ResetGoodID resets all changes to the "good_id" field.
-func (m *AppStockMutation) ResetGoodID() {
-	m.good_id = nil
-	delete(m.clearedFields, appstock.FieldGoodID)
-}
-
 // SetAppGoodID sets the "app_good_id" field.
 func (m *AppStockMutation) SetAppGoodID(u uuid.UUID) {
 	m.app_good_id = &u
@@ -13414,6 +14414,55 @@ func (m *AppStockMutation) AppGoodIDCleared() bool {
 func (m *AppStockMutation) ResetAppGoodID() {
 	m.app_good_id = nil
 	delete(m.clearedFields, appstock.FieldAppGoodID)
+}
+
+// SetGoodStockID sets the "good_stock_id" field.
+func (m *AppStockMutation) SetGoodStockID(u uuid.UUID) {
+	m.good_stock_id = &u
+}
+
+// GoodStockID returns the value of the "good_stock_id" field in the mutation.
+func (m *AppStockMutation) GoodStockID() (r uuid.UUID, exists bool) {
+	v := m.good_stock_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGoodStockID returns the old "good_stock_id" field's value of the AppStock entity.
+// If the AppStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppStockMutation) OldGoodStockID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGoodStockID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGoodStockID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGoodStockID: %w", err)
+	}
+	return oldValue.GoodStockID, nil
+}
+
+// ClearGoodStockID clears the value of the "good_stock_id" field.
+func (m *AppStockMutation) ClearGoodStockID() {
+	m.good_stock_id = nil
+	m.clearedFields[appstock.FieldGoodStockID] = struct{}{}
+}
+
+// GoodStockIDCleared returns if the "good_stock_id" field was cleared in this mutation.
+func (m *AppStockMutation) GoodStockIDCleared() bool {
+	_, ok := m.clearedFields[appstock.FieldGoodStockID]
+	return ok
+}
+
+// ResetGoodStockID resets all changes to the "good_stock_id" field.
+func (m *AppStockMutation) ResetGoodStockID() {
+	m.good_stock_id = nil
+	delete(m.clearedFields, appstock.FieldGoodStockID)
 }
 
 // SetReserved sets the "reserved" field.
@@ -13729,7 +14778,7 @@ func (m *AppStockMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppStockMutation) Fields() []string {
-	fields := make([]string, 0, 13)
+	fields := make([]string, 0, 12)
 	if m.created_at != nil {
 		fields = append(fields, appstock.FieldCreatedAt)
 	}
@@ -13742,14 +14791,11 @@ func (m *AppStockMutation) Fields() []string {
 	if m.ent_id != nil {
 		fields = append(fields, appstock.FieldEntID)
 	}
-	if m.app_id != nil {
-		fields = append(fields, appstock.FieldAppID)
-	}
-	if m.good_id != nil {
-		fields = append(fields, appstock.FieldGoodID)
-	}
 	if m.app_good_id != nil {
 		fields = append(fields, appstock.FieldAppGoodID)
+	}
+	if m.good_stock_id != nil {
+		fields = append(fields, appstock.FieldGoodStockID)
 	}
 	if m.reserved != nil {
 		fields = append(fields, appstock.FieldReserved)
@@ -13785,12 +14831,10 @@ func (m *AppStockMutation) Field(name string) (ent.Value, bool) {
 		return m.DeletedAt()
 	case appstock.FieldEntID:
 		return m.EntID()
-	case appstock.FieldAppID:
-		return m.AppID()
-	case appstock.FieldGoodID:
-		return m.GoodID()
 	case appstock.FieldAppGoodID:
 		return m.AppGoodID()
+	case appstock.FieldGoodStockID:
+		return m.GoodStockID()
 	case appstock.FieldReserved:
 		return m.Reserved()
 	case appstock.FieldSpotQuantity:
@@ -13820,12 +14864,10 @@ func (m *AppStockMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldDeletedAt(ctx)
 	case appstock.FieldEntID:
 		return m.OldEntID(ctx)
-	case appstock.FieldAppID:
-		return m.OldAppID(ctx)
-	case appstock.FieldGoodID:
-		return m.OldGoodID(ctx)
 	case appstock.FieldAppGoodID:
 		return m.OldAppGoodID(ctx)
+	case appstock.FieldGoodStockID:
+		return m.OldGoodStockID(ctx)
 	case appstock.FieldReserved:
 		return m.OldReserved(ctx)
 	case appstock.FieldSpotQuantity:
@@ -13875,26 +14917,19 @@ func (m *AppStockMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetEntID(v)
 		return nil
-	case appstock.FieldAppID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAppID(v)
-		return nil
-	case appstock.FieldGoodID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetGoodID(v)
-		return nil
 	case appstock.FieldAppGoodID:
 		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAppGoodID(v)
+		return nil
+	case appstock.FieldGoodStockID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGoodStockID(v)
 		return nil
 	case appstock.FieldReserved:
 		v, ok := value.(decimal.Decimal)
@@ -14007,14 +15042,11 @@ func (m *AppStockMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *AppStockMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(appstock.FieldAppID) {
-		fields = append(fields, appstock.FieldAppID)
-	}
-	if m.FieldCleared(appstock.FieldGoodID) {
-		fields = append(fields, appstock.FieldGoodID)
-	}
 	if m.FieldCleared(appstock.FieldAppGoodID) {
 		fields = append(fields, appstock.FieldAppGoodID)
+	}
+	if m.FieldCleared(appstock.FieldGoodStockID) {
+		fields = append(fields, appstock.FieldGoodStockID)
 	}
 	if m.FieldCleared(appstock.FieldReserved) {
 		fields = append(fields, appstock.FieldReserved)
@@ -14048,14 +15080,11 @@ func (m *AppStockMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *AppStockMutation) ClearField(name string) error {
 	switch name {
-	case appstock.FieldAppID:
-		m.ClearAppID()
-		return nil
-	case appstock.FieldGoodID:
-		m.ClearGoodID()
-		return nil
 	case appstock.FieldAppGoodID:
 		m.ClearAppGoodID()
+		return nil
+	case appstock.FieldGoodStockID:
+		m.ClearGoodStockID()
 		return nil
 	case appstock.FieldReserved:
 		m.ClearReserved()
@@ -14095,14 +15124,11 @@ func (m *AppStockMutation) ResetField(name string) error {
 	case appstock.FieldEntID:
 		m.ResetEntID()
 		return nil
-	case appstock.FieldAppID:
-		m.ResetAppID()
-		return nil
-	case appstock.FieldGoodID:
-		m.ResetGoodID()
-		return nil
 	case appstock.FieldAppGoodID:
 		m.ResetAppGoodID()
+		return nil
+	case appstock.FieldGoodStockID:
+		m.ResetGoodStockID()
 		return nil
 	case appstock.FieldReserved:
 		m.ResetReserved()
@@ -31846,6 +32872,1320 @@ func (m *LikeMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Like edge %s", name)
 }
 
+// MiningGoodStockMutation represents an operation that mutates the MiningGoodStock nodes in the graph.
+type MiningGoodStockMutation struct {
+	config
+	op                Op
+	typ               string
+	id                *uint32
+	created_at        *uint32
+	addcreated_at     *int32
+	updated_at        *uint32
+	addupdated_at     *int32
+	deleted_at        *uint32
+	adddeleted_at     *int32
+	ent_id            *uuid.UUID
+	good_stock_id     *uuid.UUID
+	mining_pool_id    *uuid.UUID
+	pool_good_user_id *uuid.UUID
+	total             *decimal.Decimal
+	spot_quantity     *decimal.Decimal
+	locked            *decimal.Decimal
+	in_service        *decimal.Decimal
+	wait_start        *decimal.Decimal
+	sold              *decimal.Decimal
+	app_reserved      *decimal.Decimal
+	clearedFields     map[string]struct{}
+	done              bool
+	oldValue          func(context.Context) (*MiningGoodStock, error)
+	predicates        []predicate.MiningGoodStock
+}
+
+var _ ent.Mutation = (*MiningGoodStockMutation)(nil)
+
+// mininggoodstockOption allows management of the mutation configuration using functional options.
+type mininggoodstockOption func(*MiningGoodStockMutation)
+
+// newMiningGoodStockMutation creates new mutation for the MiningGoodStock entity.
+func newMiningGoodStockMutation(c config, op Op, opts ...mininggoodstockOption) *MiningGoodStockMutation {
+	m := &MiningGoodStockMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeMiningGoodStock,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withMiningGoodStockID sets the ID field of the mutation.
+func withMiningGoodStockID(id uint32) mininggoodstockOption {
+	return func(m *MiningGoodStockMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *MiningGoodStock
+		)
+		m.oldValue = func(ctx context.Context) (*MiningGoodStock, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().MiningGoodStock.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withMiningGoodStock sets the old MiningGoodStock of the mutation.
+func withMiningGoodStock(node *MiningGoodStock) mininggoodstockOption {
+	return func(m *MiningGoodStockMutation) {
+		m.oldValue = func(context.Context) (*MiningGoodStock, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m MiningGoodStockMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m MiningGoodStockMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of MiningGoodStock entities.
+func (m *MiningGoodStockMutation) SetID(id uint32) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *MiningGoodStockMutation) ID() (id uint32, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *MiningGoodStockMutation) IDs(ctx context.Context) ([]uint32, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uint32{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().MiningGoodStock.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *MiningGoodStockMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *MiningGoodStockMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the MiningGoodStock entity.
+// If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MiningGoodStockMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *MiningGoodStockMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *MiningGoodStockMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *MiningGoodStockMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *MiningGoodStockMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *MiningGoodStockMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the MiningGoodStock entity.
+// If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MiningGoodStockMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *MiningGoodStockMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *MiningGoodStockMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *MiningGoodStockMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *MiningGoodStockMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *MiningGoodStockMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the MiningGoodStock entity.
+// If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MiningGoodStockMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *MiningGoodStockMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *MiningGoodStockMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *MiningGoodStockMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetEntID sets the "ent_id" field.
+func (m *MiningGoodStockMutation) SetEntID(u uuid.UUID) {
+	m.ent_id = &u
+}
+
+// EntID returns the value of the "ent_id" field in the mutation.
+func (m *MiningGoodStockMutation) EntID() (r uuid.UUID, exists bool) {
+	v := m.ent_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEntID returns the old "ent_id" field's value of the MiningGoodStock entity.
+// If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MiningGoodStockMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEntID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEntID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEntID: %w", err)
+	}
+	return oldValue.EntID, nil
+}
+
+// ResetEntID resets all changes to the "ent_id" field.
+func (m *MiningGoodStockMutation) ResetEntID() {
+	m.ent_id = nil
+}
+
+// SetGoodStockID sets the "good_stock_id" field.
+func (m *MiningGoodStockMutation) SetGoodStockID(u uuid.UUID) {
+	m.good_stock_id = &u
+}
+
+// GoodStockID returns the value of the "good_stock_id" field in the mutation.
+func (m *MiningGoodStockMutation) GoodStockID() (r uuid.UUID, exists bool) {
+	v := m.good_stock_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGoodStockID returns the old "good_stock_id" field's value of the MiningGoodStock entity.
+// If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MiningGoodStockMutation) OldGoodStockID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGoodStockID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGoodStockID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGoodStockID: %w", err)
+	}
+	return oldValue.GoodStockID, nil
+}
+
+// ClearGoodStockID clears the value of the "good_stock_id" field.
+func (m *MiningGoodStockMutation) ClearGoodStockID() {
+	m.good_stock_id = nil
+	m.clearedFields[mininggoodstock.FieldGoodStockID] = struct{}{}
+}
+
+// GoodStockIDCleared returns if the "good_stock_id" field was cleared in this mutation.
+func (m *MiningGoodStockMutation) GoodStockIDCleared() bool {
+	_, ok := m.clearedFields[mininggoodstock.FieldGoodStockID]
+	return ok
+}
+
+// ResetGoodStockID resets all changes to the "good_stock_id" field.
+func (m *MiningGoodStockMutation) ResetGoodStockID() {
+	m.good_stock_id = nil
+	delete(m.clearedFields, mininggoodstock.FieldGoodStockID)
+}
+
+// SetMiningPoolID sets the "mining_pool_id" field.
+func (m *MiningGoodStockMutation) SetMiningPoolID(u uuid.UUID) {
+	m.mining_pool_id = &u
+}
+
+// MiningPoolID returns the value of the "mining_pool_id" field in the mutation.
+func (m *MiningGoodStockMutation) MiningPoolID() (r uuid.UUID, exists bool) {
+	v := m.mining_pool_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMiningPoolID returns the old "mining_pool_id" field's value of the MiningGoodStock entity.
+// If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MiningGoodStockMutation) OldMiningPoolID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMiningPoolID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMiningPoolID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMiningPoolID: %w", err)
+	}
+	return oldValue.MiningPoolID, nil
+}
+
+// ClearMiningPoolID clears the value of the "mining_pool_id" field.
+func (m *MiningGoodStockMutation) ClearMiningPoolID() {
+	m.mining_pool_id = nil
+	m.clearedFields[mininggoodstock.FieldMiningPoolID] = struct{}{}
+}
+
+// MiningPoolIDCleared returns if the "mining_pool_id" field was cleared in this mutation.
+func (m *MiningGoodStockMutation) MiningPoolIDCleared() bool {
+	_, ok := m.clearedFields[mininggoodstock.FieldMiningPoolID]
+	return ok
+}
+
+// ResetMiningPoolID resets all changes to the "mining_pool_id" field.
+func (m *MiningGoodStockMutation) ResetMiningPoolID() {
+	m.mining_pool_id = nil
+	delete(m.clearedFields, mininggoodstock.FieldMiningPoolID)
+}
+
+// SetPoolGoodUserID sets the "pool_good_user_id" field.
+func (m *MiningGoodStockMutation) SetPoolGoodUserID(u uuid.UUID) {
+	m.pool_good_user_id = &u
+}
+
+// PoolGoodUserID returns the value of the "pool_good_user_id" field in the mutation.
+func (m *MiningGoodStockMutation) PoolGoodUserID() (r uuid.UUID, exists bool) {
+	v := m.pool_good_user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPoolGoodUserID returns the old "pool_good_user_id" field's value of the MiningGoodStock entity.
+// If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MiningGoodStockMutation) OldPoolGoodUserID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPoolGoodUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPoolGoodUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPoolGoodUserID: %w", err)
+	}
+	return oldValue.PoolGoodUserID, nil
+}
+
+// ClearPoolGoodUserID clears the value of the "pool_good_user_id" field.
+func (m *MiningGoodStockMutation) ClearPoolGoodUserID() {
+	m.pool_good_user_id = nil
+	m.clearedFields[mininggoodstock.FieldPoolGoodUserID] = struct{}{}
+}
+
+// PoolGoodUserIDCleared returns if the "pool_good_user_id" field was cleared in this mutation.
+func (m *MiningGoodStockMutation) PoolGoodUserIDCleared() bool {
+	_, ok := m.clearedFields[mininggoodstock.FieldPoolGoodUserID]
+	return ok
+}
+
+// ResetPoolGoodUserID resets all changes to the "pool_good_user_id" field.
+func (m *MiningGoodStockMutation) ResetPoolGoodUserID() {
+	m.pool_good_user_id = nil
+	delete(m.clearedFields, mininggoodstock.FieldPoolGoodUserID)
+}
+
+// SetTotal sets the "total" field.
+func (m *MiningGoodStockMutation) SetTotal(d decimal.Decimal) {
+	m.total = &d
+}
+
+// Total returns the value of the "total" field in the mutation.
+func (m *MiningGoodStockMutation) Total() (r decimal.Decimal, exists bool) {
+	v := m.total
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTotal returns the old "total" field's value of the MiningGoodStock entity.
+// If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MiningGoodStockMutation) OldTotal(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTotal is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTotal requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTotal: %w", err)
+	}
+	return oldValue.Total, nil
+}
+
+// ClearTotal clears the value of the "total" field.
+func (m *MiningGoodStockMutation) ClearTotal() {
+	m.total = nil
+	m.clearedFields[mininggoodstock.FieldTotal] = struct{}{}
+}
+
+// TotalCleared returns if the "total" field was cleared in this mutation.
+func (m *MiningGoodStockMutation) TotalCleared() bool {
+	_, ok := m.clearedFields[mininggoodstock.FieldTotal]
+	return ok
+}
+
+// ResetTotal resets all changes to the "total" field.
+func (m *MiningGoodStockMutation) ResetTotal() {
+	m.total = nil
+	delete(m.clearedFields, mininggoodstock.FieldTotal)
+}
+
+// SetSpotQuantity sets the "spot_quantity" field.
+func (m *MiningGoodStockMutation) SetSpotQuantity(d decimal.Decimal) {
+	m.spot_quantity = &d
+}
+
+// SpotQuantity returns the value of the "spot_quantity" field in the mutation.
+func (m *MiningGoodStockMutation) SpotQuantity() (r decimal.Decimal, exists bool) {
+	v := m.spot_quantity
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSpotQuantity returns the old "spot_quantity" field's value of the MiningGoodStock entity.
+// If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MiningGoodStockMutation) OldSpotQuantity(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSpotQuantity is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSpotQuantity requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSpotQuantity: %w", err)
+	}
+	return oldValue.SpotQuantity, nil
+}
+
+// ClearSpotQuantity clears the value of the "spot_quantity" field.
+func (m *MiningGoodStockMutation) ClearSpotQuantity() {
+	m.spot_quantity = nil
+	m.clearedFields[mininggoodstock.FieldSpotQuantity] = struct{}{}
+}
+
+// SpotQuantityCleared returns if the "spot_quantity" field was cleared in this mutation.
+func (m *MiningGoodStockMutation) SpotQuantityCleared() bool {
+	_, ok := m.clearedFields[mininggoodstock.FieldSpotQuantity]
+	return ok
+}
+
+// ResetSpotQuantity resets all changes to the "spot_quantity" field.
+func (m *MiningGoodStockMutation) ResetSpotQuantity() {
+	m.spot_quantity = nil
+	delete(m.clearedFields, mininggoodstock.FieldSpotQuantity)
+}
+
+// SetLocked sets the "locked" field.
+func (m *MiningGoodStockMutation) SetLocked(d decimal.Decimal) {
+	m.locked = &d
+}
+
+// Locked returns the value of the "locked" field in the mutation.
+func (m *MiningGoodStockMutation) Locked() (r decimal.Decimal, exists bool) {
+	v := m.locked
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLocked returns the old "locked" field's value of the MiningGoodStock entity.
+// If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MiningGoodStockMutation) OldLocked(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLocked is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLocked requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLocked: %w", err)
+	}
+	return oldValue.Locked, nil
+}
+
+// ClearLocked clears the value of the "locked" field.
+func (m *MiningGoodStockMutation) ClearLocked() {
+	m.locked = nil
+	m.clearedFields[mininggoodstock.FieldLocked] = struct{}{}
+}
+
+// LockedCleared returns if the "locked" field was cleared in this mutation.
+func (m *MiningGoodStockMutation) LockedCleared() bool {
+	_, ok := m.clearedFields[mininggoodstock.FieldLocked]
+	return ok
+}
+
+// ResetLocked resets all changes to the "locked" field.
+func (m *MiningGoodStockMutation) ResetLocked() {
+	m.locked = nil
+	delete(m.clearedFields, mininggoodstock.FieldLocked)
+}
+
+// SetInService sets the "in_service" field.
+func (m *MiningGoodStockMutation) SetInService(d decimal.Decimal) {
+	m.in_service = &d
+}
+
+// InService returns the value of the "in_service" field in the mutation.
+func (m *MiningGoodStockMutation) InService() (r decimal.Decimal, exists bool) {
+	v := m.in_service
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldInService returns the old "in_service" field's value of the MiningGoodStock entity.
+// If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MiningGoodStockMutation) OldInService(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldInService is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldInService requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldInService: %w", err)
+	}
+	return oldValue.InService, nil
+}
+
+// ClearInService clears the value of the "in_service" field.
+func (m *MiningGoodStockMutation) ClearInService() {
+	m.in_service = nil
+	m.clearedFields[mininggoodstock.FieldInService] = struct{}{}
+}
+
+// InServiceCleared returns if the "in_service" field was cleared in this mutation.
+func (m *MiningGoodStockMutation) InServiceCleared() bool {
+	_, ok := m.clearedFields[mininggoodstock.FieldInService]
+	return ok
+}
+
+// ResetInService resets all changes to the "in_service" field.
+func (m *MiningGoodStockMutation) ResetInService() {
+	m.in_service = nil
+	delete(m.clearedFields, mininggoodstock.FieldInService)
+}
+
+// SetWaitStart sets the "wait_start" field.
+func (m *MiningGoodStockMutation) SetWaitStart(d decimal.Decimal) {
+	m.wait_start = &d
+}
+
+// WaitStart returns the value of the "wait_start" field in the mutation.
+func (m *MiningGoodStockMutation) WaitStart() (r decimal.Decimal, exists bool) {
+	v := m.wait_start
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldWaitStart returns the old "wait_start" field's value of the MiningGoodStock entity.
+// If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MiningGoodStockMutation) OldWaitStart(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldWaitStart is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldWaitStart requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldWaitStart: %w", err)
+	}
+	return oldValue.WaitStart, nil
+}
+
+// ClearWaitStart clears the value of the "wait_start" field.
+func (m *MiningGoodStockMutation) ClearWaitStart() {
+	m.wait_start = nil
+	m.clearedFields[mininggoodstock.FieldWaitStart] = struct{}{}
+}
+
+// WaitStartCleared returns if the "wait_start" field was cleared in this mutation.
+func (m *MiningGoodStockMutation) WaitStartCleared() bool {
+	_, ok := m.clearedFields[mininggoodstock.FieldWaitStart]
+	return ok
+}
+
+// ResetWaitStart resets all changes to the "wait_start" field.
+func (m *MiningGoodStockMutation) ResetWaitStart() {
+	m.wait_start = nil
+	delete(m.clearedFields, mininggoodstock.FieldWaitStart)
+}
+
+// SetSold sets the "sold" field.
+func (m *MiningGoodStockMutation) SetSold(d decimal.Decimal) {
+	m.sold = &d
+}
+
+// Sold returns the value of the "sold" field in the mutation.
+func (m *MiningGoodStockMutation) Sold() (r decimal.Decimal, exists bool) {
+	v := m.sold
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSold returns the old "sold" field's value of the MiningGoodStock entity.
+// If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MiningGoodStockMutation) OldSold(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSold is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSold requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSold: %w", err)
+	}
+	return oldValue.Sold, nil
+}
+
+// ClearSold clears the value of the "sold" field.
+func (m *MiningGoodStockMutation) ClearSold() {
+	m.sold = nil
+	m.clearedFields[mininggoodstock.FieldSold] = struct{}{}
+}
+
+// SoldCleared returns if the "sold" field was cleared in this mutation.
+func (m *MiningGoodStockMutation) SoldCleared() bool {
+	_, ok := m.clearedFields[mininggoodstock.FieldSold]
+	return ok
+}
+
+// ResetSold resets all changes to the "sold" field.
+func (m *MiningGoodStockMutation) ResetSold() {
+	m.sold = nil
+	delete(m.clearedFields, mininggoodstock.FieldSold)
+}
+
+// SetAppReserved sets the "app_reserved" field.
+func (m *MiningGoodStockMutation) SetAppReserved(d decimal.Decimal) {
+	m.app_reserved = &d
+}
+
+// AppReserved returns the value of the "app_reserved" field in the mutation.
+func (m *MiningGoodStockMutation) AppReserved() (r decimal.Decimal, exists bool) {
+	v := m.app_reserved
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppReserved returns the old "app_reserved" field's value of the MiningGoodStock entity.
+// If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MiningGoodStockMutation) OldAppReserved(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppReserved is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppReserved requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppReserved: %w", err)
+	}
+	return oldValue.AppReserved, nil
+}
+
+// ClearAppReserved clears the value of the "app_reserved" field.
+func (m *MiningGoodStockMutation) ClearAppReserved() {
+	m.app_reserved = nil
+	m.clearedFields[mininggoodstock.FieldAppReserved] = struct{}{}
+}
+
+// AppReservedCleared returns if the "app_reserved" field was cleared in this mutation.
+func (m *MiningGoodStockMutation) AppReservedCleared() bool {
+	_, ok := m.clearedFields[mininggoodstock.FieldAppReserved]
+	return ok
+}
+
+// ResetAppReserved resets all changes to the "app_reserved" field.
+func (m *MiningGoodStockMutation) ResetAppReserved() {
+	m.app_reserved = nil
+	delete(m.clearedFields, mininggoodstock.FieldAppReserved)
+}
+
+// Where appends a list predicates to the MiningGoodStockMutation builder.
+func (m *MiningGoodStockMutation) Where(ps ...predicate.MiningGoodStock) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *MiningGoodStockMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (MiningGoodStock).
+func (m *MiningGoodStockMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *MiningGoodStockMutation) Fields() []string {
+	fields := make([]string, 0, 14)
+	if m.created_at != nil {
+		fields = append(fields, mininggoodstock.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, mininggoodstock.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, mininggoodstock.FieldDeletedAt)
+	}
+	if m.ent_id != nil {
+		fields = append(fields, mininggoodstock.FieldEntID)
+	}
+	if m.good_stock_id != nil {
+		fields = append(fields, mininggoodstock.FieldGoodStockID)
+	}
+	if m.mining_pool_id != nil {
+		fields = append(fields, mininggoodstock.FieldMiningPoolID)
+	}
+	if m.pool_good_user_id != nil {
+		fields = append(fields, mininggoodstock.FieldPoolGoodUserID)
+	}
+	if m.total != nil {
+		fields = append(fields, mininggoodstock.FieldTotal)
+	}
+	if m.spot_quantity != nil {
+		fields = append(fields, mininggoodstock.FieldSpotQuantity)
+	}
+	if m.locked != nil {
+		fields = append(fields, mininggoodstock.FieldLocked)
+	}
+	if m.in_service != nil {
+		fields = append(fields, mininggoodstock.FieldInService)
+	}
+	if m.wait_start != nil {
+		fields = append(fields, mininggoodstock.FieldWaitStart)
+	}
+	if m.sold != nil {
+		fields = append(fields, mininggoodstock.FieldSold)
+	}
+	if m.app_reserved != nil {
+		fields = append(fields, mininggoodstock.FieldAppReserved)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *MiningGoodStockMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case mininggoodstock.FieldCreatedAt:
+		return m.CreatedAt()
+	case mininggoodstock.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case mininggoodstock.FieldDeletedAt:
+		return m.DeletedAt()
+	case mininggoodstock.FieldEntID:
+		return m.EntID()
+	case mininggoodstock.FieldGoodStockID:
+		return m.GoodStockID()
+	case mininggoodstock.FieldMiningPoolID:
+		return m.MiningPoolID()
+	case mininggoodstock.FieldPoolGoodUserID:
+		return m.PoolGoodUserID()
+	case mininggoodstock.FieldTotal:
+		return m.Total()
+	case mininggoodstock.FieldSpotQuantity:
+		return m.SpotQuantity()
+	case mininggoodstock.FieldLocked:
+		return m.Locked()
+	case mininggoodstock.FieldInService:
+		return m.InService()
+	case mininggoodstock.FieldWaitStart:
+		return m.WaitStart()
+	case mininggoodstock.FieldSold:
+		return m.Sold()
+	case mininggoodstock.FieldAppReserved:
+		return m.AppReserved()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *MiningGoodStockMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case mininggoodstock.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case mininggoodstock.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case mininggoodstock.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case mininggoodstock.FieldEntID:
+		return m.OldEntID(ctx)
+	case mininggoodstock.FieldGoodStockID:
+		return m.OldGoodStockID(ctx)
+	case mininggoodstock.FieldMiningPoolID:
+		return m.OldMiningPoolID(ctx)
+	case mininggoodstock.FieldPoolGoodUserID:
+		return m.OldPoolGoodUserID(ctx)
+	case mininggoodstock.FieldTotal:
+		return m.OldTotal(ctx)
+	case mininggoodstock.FieldSpotQuantity:
+		return m.OldSpotQuantity(ctx)
+	case mininggoodstock.FieldLocked:
+		return m.OldLocked(ctx)
+	case mininggoodstock.FieldInService:
+		return m.OldInService(ctx)
+	case mininggoodstock.FieldWaitStart:
+		return m.OldWaitStart(ctx)
+	case mininggoodstock.FieldSold:
+		return m.OldSold(ctx)
+	case mininggoodstock.FieldAppReserved:
+		return m.OldAppReserved(ctx)
+	}
+	return nil, fmt.Errorf("unknown MiningGoodStock field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *MiningGoodStockMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case mininggoodstock.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case mininggoodstock.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case mininggoodstock.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case mininggoodstock.FieldEntID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEntID(v)
+		return nil
+	case mininggoodstock.FieldGoodStockID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGoodStockID(v)
+		return nil
+	case mininggoodstock.FieldMiningPoolID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMiningPoolID(v)
+		return nil
+	case mininggoodstock.FieldPoolGoodUserID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPoolGoodUserID(v)
+		return nil
+	case mininggoodstock.FieldTotal:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTotal(v)
+		return nil
+	case mininggoodstock.FieldSpotQuantity:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSpotQuantity(v)
+		return nil
+	case mininggoodstock.FieldLocked:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLocked(v)
+		return nil
+	case mininggoodstock.FieldInService:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetInService(v)
+		return nil
+	case mininggoodstock.FieldWaitStart:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetWaitStart(v)
+		return nil
+	case mininggoodstock.FieldSold:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSold(v)
+		return nil
+	case mininggoodstock.FieldAppReserved:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppReserved(v)
+		return nil
+	}
+	return fmt.Errorf("unknown MiningGoodStock field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *MiningGoodStockMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, mininggoodstock.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, mininggoodstock.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, mininggoodstock.FieldDeletedAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *MiningGoodStockMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case mininggoodstock.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case mininggoodstock.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case mininggoodstock.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *MiningGoodStockMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case mininggoodstock.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case mininggoodstock.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case mininggoodstock.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown MiningGoodStock numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *MiningGoodStockMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(mininggoodstock.FieldGoodStockID) {
+		fields = append(fields, mininggoodstock.FieldGoodStockID)
+	}
+	if m.FieldCleared(mininggoodstock.FieldMiningPoolID) {
+		fields = append(fields, mininggoodstock.FieldMiningPoolID)
+	}
+	if m.FieldCleared(mininggoodstock.FieldPoolGoodUserID) {
+		fields = append(fields, mininggoodstock.FieldPoolGoodUserID)
+	}
+	if m.FieldCleared(mininggoodstock.FieldTotal) {
+		fields = append(fields, mininggoodstock.FieldTotal)
+	}
+	if m.FieldCleared(mininggoodstock.FieldSpotQuantity) {
+		fields = append(fields, mininggoodstock.FieldSpotQuantity)
+	}
+	if m.FieldCleared(mininggoodstock.FieldLocked) {
+		fields = append(fields, mininggoodstock.FieldLocked)
+	}
+	if m.FieldCleared(mininggoodstock.FieldInService) {
+		fields = append(fields, mininggoodstock.FieldInService)
+	}
+	if m.FieldCleared(mininggoodstock.FieldWaitStart) {
+		fields = append(fields, mininggoodstock.FieldWaitStart)
+	}
+	if m.FieldCleared(mininggoodstock.FieldSold) {
+		fields = append(fields, mininggoodstock.FieldSold)
+	}
+	if m.FieldCleared(mininggoodstock.FieldAppReserved) {
+		fields = append(fields, mininggoodstock.FieldAppReserved)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *MiningGoodStockMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *MiningGoodStockMutation) ClearField(name string) error {
+	switch name {
+	case mininggoodstock.FieldGoodStockID:
+		m.ClearGoodStockID()
+		return nil
+	case mininggoodstock.FieldMiningPoolID:
+		m.ClearMiningPoolID()
+		return nil
+	case mininggoodstock.FieldPoolGoodUserID:
+		m.ClearPoolGoodUserID()
+		return nil
+	case mininggoodstock.FieldTotal:
+		m.ClearTotal()
+		return nil
+	case mininggoodstock.FieldSpotQuantity:
+		m.ClearSpotQuantity()
+		return nil
+	case mininggoodstock.FieldLocked:
+		m.ClearLocked()
+		return nil
+	case mininggoodstock.FieldInService:
+		m.ClearInService()
+		return nil
+	case mininggoodstock.FieldWaitStart:
+		m.ClearWaitStart()
+		return nil
+	case mininggoodstock.FieldSold:
+		m.ClearSold()
+		return nil
+	case mininggoodstock.FieldAppReserved:
+		m.ClearAppReserved()
+		return nil
+	}
+	return fmt.Errorf("unknown MiningGoodStock nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *MiningGoodStockMutation) ResetField(name string) error {
+	switch name {
+	case mininggoodstock.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case mininggoodstock.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case mininggoodstock.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case mininggoodstock.FieldEntID:
+		m.ResetEntID()
+		return nil
+	case mininggoodstock.FieldGoodStockID:
+		m.ResetGoodStockID()
+		return nil
+	case mininggoodstock.FieldMiningPoolID:
+		m.ResetMiningPoolID()
+		return nil
+	case mininggoodstock.FieldPoolGoodUserID:
+		m.ResetPoolGoodUserID()
+		return nil
+	case mininggoodstock.FieldTotal:
+		m.ResetTotal()
+		return nil
+	case mininggoodstock.FieldSpotQuantity:
+		m.ResetSpotQuantity()
+		return nil
+	case mininggoodstock.FieldLocked:
+		m.ResetLocked()
+		return nil
+	case mininggoodstock.FieldInService:
+		m.ResetInService()
+		return nil
+	case mininggoodstock.FieldWaitStart:
+		m.ResetWaitStart()
+		return nil
+	case mininggoodstock.FieldSold:
+		m.ResetSold()
+		return nil
+	case mininggoodstock.FieldAppReserved:
+		m.ResetAppReserved()
+		return nil
+	}
+	return fmt.Errorf("unknown MiningGoodStock field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *MiningGoodStockMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *MiningGoodStockMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *MiningGoodStockMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *MiningGoodStockMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *MiningGoodStockMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *MiningGoodStockMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *MiningGoodStockMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown MiningGoodStock unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *MiningGoodStockMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown MiningGoodStock edge %s", name)
+}
+
 // PowerRentalMutation represents an operation that mutates the PowerRental nodes in the graph.
 type PowerRentalMutation struct {
 	config
@@ -36877,9 +39217,22 @@ func (m *StockMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error) 
 	return oldValue.GoodID, nil
 }
 
+// ClearGoodID clears the value of the "good_id" field.
+func (m *StockMutation) ClearGoodID() {
+	m.good_id = nil
+	m.clearedFields[stock.FieldGoodID] = struct{}{}
+}
+
+// GoodIDCleared returns if the "good_id" field was cleared in this mutation.
+func (m *StockMutation) GoodIDCleared() bool {
+	_, ok := m.clearedFields[stock.FieldGoodID]
+	return ok
+}
+
 // ResetGoodID resets all changes to the "good_id" field.
 func (m *StockMutation) ResetGoodID() {
 	m.good_id = nil
+	delete(m.clearedFields, stock.FieldGoodID)
 }
 
 // SetTotal sets the "total" field.
@@ -37508,6 +39861,9 @@ func (m *StockMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *StockMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(stock.FieldGoodID) {
+		fields = append(fields, stock.FieldGoodID)
+	}
 	if m.FieldCleared(stock.FieldTotal) {
 		fields = append(fields, stock.FieldTotal)
 	}
@@ -37543,6 +39899,9 @@ func (m *StockMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *StockMutation) ClearField(name string) error {
 	switch name {
+	case stock.FieldGoodID:
+		m.ClearGoodID()
+		return nil
 	case stock.FieldTotal:
 		m.ClearTotal()
 		return nil

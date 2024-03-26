@@ -292,6 +292,34 @@ var (
 			},
 		},
 	}
+	// AppMiningGoodStocksColumns holds the columns for the "app_mining_good_stocks" table.
+	AppMiningGoodStocksColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "mining_good_stock_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "reserved", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "spot_quantity", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "locked", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "in_service", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "wait_start", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "sold", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+	}
+	// AppMiningGoodStocksTable holds the schema information for the "app_mining_good_stocks" table.
+	AppMiningGoodStocksTable = &schema.Table{
+		Name:       "app_mining_good_stocks",
+		Columns:    AppMiningGoodStocksColumns,
+		PrimaryKey: []*schema.Column{AppMiningGoodStocksColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appmininggoodstock_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppMiningGoodStocksColumns[4]},
+			},
+		},
+	}
 	// AppPowerRentalsColumns holds the columns for the "app_power_rentals" table.
 	AppPowerRentalsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -366,9 +394,8 @@ var (
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
-		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "good_stock_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "reserved", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "spot_quantity", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "locked", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
@@ -831,6 +858,37 @@ var (
 			},
 		},
 	}
+	// MiningGoodStocksColumns holds the columns for the "mining_good_stocks" table.
+	MiningGoodStocksColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "good_stock_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "mining_pool_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "pool_good_user_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "total", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "spot_quantity", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "locked", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "in_service", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "wait_start", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "sold", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "app_reserved", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+	}
+	// MiningGoodStocksTable holds the schema information for the "mining_good_stocks" table.
+	MiningGoodStocksTable = &schema.Table{
+		Name:       "mining_good_stocks",
+		Columns:    MiningGoodStocksColumns,
+		PrimaryKey: []*schema.Column{MiningGoodStocksColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "mininggoodstock_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{MiningGoodStocksColumns[4]},
+			},
+		},
+	}
 	// PowerRentalsColumns holds the columns for the "power_rentals" table.
 	PowerRentalsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -983,7 +1041,7 @@ var (
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
-		{Name: "good_id", Type: field.TypeUUID},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "total", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "spot_quantity", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "locked", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
@@ -1128,6 +1186,7 @@ var (
 		AppGoodDisplayNamesTable,
 		AppGoodPostersTable,
 		AppLegacyPowerRentalsTable,
+		AppMiningGoodStocksTable,
 		AppPowerRentalsTable,
 		AppSimulatePowerRentalsTable,
 		AppStocksTable,
@@ -1146,6 +1205,7 @@ var (
 		GoodRewardsTable,
 		GoodRewardHistoriesTable,
 		LikesTable,
+		MiningGoodStocksTable,
 		PowerRentalsTable,
 		RecommendsTable,
 		RequiredAppGoodsTable,

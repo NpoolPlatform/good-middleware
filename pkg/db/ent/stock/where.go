@@ -484,6 +484,20 @@ func GoodIDLTE(v uuid.UUID) predicate.Stock {
 	})
 }
 
+// GoodIDIsNil applies the IsNil predicate on the "good_id" field.
+func GoodIDIsNil() predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldGoodID)))
+	})
+}
+
+// GoodIDNotNil applies the NotNil predicate on the "good_id" field.
+func GoodIDNotNil() predicate.Stock {
+	return predicate.Stock(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldGoodID)))
+	})
+}
+
 // TotalEQ applies the EQ predicate on the "total" field.
 func TotalEQ(v decimal.Decimal) predicate.Stock {
 	return predicate.Stock(func(s *sql.Selector) {

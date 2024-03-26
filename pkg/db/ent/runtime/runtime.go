@@ -14,6 +14,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplayname"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulatepowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
@@ -32,6 +33,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredappgood"
@@ -580,6 +582,68 @@ func init() {
 	applegacypowerrentalDescTechniqueFeeRatio := applegacypowerrentalFields[1].Descriptor()
 	// applegacypowerrental.DefaultTechniqueFeeRatio holds the default value on creation for the technique_fee_ratio field.
 	applegacypowerrental.DefaultTechniqueFeeRatio = applegacypowerrentalDescTechniqueFeeRatio.Default.(decimal.Decimal)
+	appmininggoodstockMixin := schema.AppMiningGoodStock{}.Mixin()
+	appmininggoodstock.Policy = privacy.NewPolicies(appmininggoodstockMixin[0], schema.AppMiningGoodStock{})
+	appmininggoodstock.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := appmininggoodstock.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	appmininggoodstockMixinFields0 := appmininggoodstockMixin[0].Fields()
+	_ = appmininggoodstockMixinFields0
+	appmininggoodstockMixinFields1 := appmininggoodstockMixin[1].Fields()
+	_ = appmininggoodstockMixinFields1
+	appmininggoodstockFields := schema.AppMiningGoodStock{}.Fields()
+	_ = appmininggoodstockFields
+	// appmininggoodstockDescCreatedAt is the schema descriptor for created_at field.
+	appmininggoodstockDescCreatedAt := appmininggoodstockMixinFields0[0].Descriptor()
+	// appmininggoodstock.DefaultCreatedAt holds the default value on creation for the created_at field.
+	appmininggoodstock.DefaultCreatedAt = appmininggoodstockDescCreatedAt.Default.(func() uint32)
+	// appmininggoodstockDescUpdatedAt is the schema descriptor for updated_at field.
+	appmininggoodstockDescUpdatedAt := appmininggoodstockMixinFields0[1].Descriptor()
+	// appmininggoodstock.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	appmininggoodstock.DefaultUpdatedAt = appmininggoodstockDescUpdatedAt.Default.(func() uint32)
+	// appmininggoodstock.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	appmininggoodstock.UpdateDefaultUpdatedAt = appmininggoodstockDescUpdatedAt.UpdateDefault.(func() uint32)
+	// appmininggoodstockDescDeletedAt is the schema descriptor for deleted_at field.
+	appmininggoodstockDescDeletedAt := appmininggoodstockMixinFields0[2].Descriptor()
+	// appmininggoodstock.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	appmininggoodstock.DefaultDeletedAt = appmininggoodstockDescDeletedAt.Default.(func() uint32)
+	// appmininggoodstockDescEntID is the schema descriptor for ent_id field.
+	appmininggoodstockDescEntID := appmininggoodstockMixinFields1[1].Descriptor()
+	// appmininggoodstock.DefaultEntID holds the default value on creation for the ent_id field.
+	appmininggoodstock.DefaultEntID = appmininggoodstockDescEntID.Default.(func() uuid.UUID)
+	// appmininggoodstockDescMiningGoodStockID is the schema descriptor for mining_good_stock_id field.
+	appmininggoodstockDescMiningGoodStockID := appmininggoodstockFields[0].Descriptor()
+	// appmininggoodstock.DefaultMiningGoodStockID holds the default value on creation for the mining_good_stock_id field.
+	appmininggoodstock.DefaultMiningGoodStockID = appmininggoodstockDescMiningGoodStockID.Default.(func() uuid.UUID)
+	// appmininggoodstockDescReserved is the schema descriptor for reserved field.
+	appmininggoodstockDescReserved := appmininggoodstockFields[1].Descriptor()
+	// appmininggoodstock.DefaultReserved holds the default value on creation for the reserved field.
+	appmininggoodstock.DefaultReserved = appmininggoodstockDescReserved.Default.(decimal.Decimal)
+	// appmininggoodstockDescSpotQuantity is the schema descriptor for spot_quantity field.
+	appmininggoodstockDescSpotQuantity := appmininggoodstockFields[2].Descriptor()
+	// appmininggoodstock.DefaultSpotQuantity holds the default value on creation for the spot_quantity field.
+	appmininggoodstock.DefaultSpotQuantity = appmininggoodstockDescSpotQuantity.Default.(decimal.Decimal)
+	// appmininggoodstockDescLocked is the schema descriptor for locked field.
+	appmininggoodstockDescLocked := appmininggoodstockFields[3].Descriptor()
+	// appmininggoodstock.DefaultLocked holds the default value on creation for the locked field.
+	appmininggoodstock.DefaultLocked = appmininggoodstockDescLocked.Default.(decimal.Decimal)
+	// appmininggoodstockDescInService is the schema descriptor for in_service field.
+	appmininggoodstockDescInService := appmininggoodstockFields[4].Descriptor()
+	// appmininggoodstock.DefaultInService holds the default value on creation for the in_service field.
+	appmininggoodstock.DefaultInService = appmininggoodstockDescInService.Default.(decimal.Decimal)
+	// appmininggoodstockDescWaitStart is the schema descriptor for wait_start field.
+	appmininggoodstockDescWaitStart := appmininggoodstockFields[5].Descriptor()
+	// appmininggoodstock.DefaultWaitStart holds the default value on creation for the wait_start field.
+	appmininggoodstock.DefaultWaitStart = appmininggoodstockDescWaitStart.Default.(decimal.Decimal)
+	// appmininggoodstockDescSold is the schema descriptor for sold field.
+	appmininggoodstockDescSold := appmininggoodstockFields[6].Descriptor()
+	// appmininggoodstock.DefaultSold holds the default value on creation for the sold field.
+	appmininggoodstock.DefaultSold = appmininggoodstockDescSold.Default.(decimal.Decimal)
 	apppowerrentalMixin := schema.AppPowerRental{}.Mixin()
 	apppowerrental.Policy = privacy.NewPolicies(apppowerrentalMixin[0], schema.AppPowerRental{})
 	apppowerrental.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -754,28 +818,36 @@ func init() {
 	appstockDescEntID := appstockMixinFields1[1].Descriptor()
 	// appstock.DefaultEntID holds the default value on creation for the ent_id field.
 	appstock.DefaultEntID = appstockDescEntID.Default.(func() uuid.UUID)
+	// appstockDescAppGoodID is the schema descriptor for app_good_id field.
+	appstockDescAppGoodID := appstockFields[0].Descriptor()
+	// appstock.DefaultAppGoodID holds the default value on creation for the app_good_id field.
+	appstock.DefaultAppGoodID = appstockDescAppGoodID.Default.(func() uuid.UUID)
+	// appstockDescGoodStockID is the schema descriptor for good_stock_id field.
+	appstockDescGoodStockID := appstockFields[1].Descriptor()
+	// appstock.DefaultGoodStockID holds the default value on creation for the good_stock_id field.
+	appstock.DefaultGoodStockID = appstockDescGoodStockID.Default.(func() uuid.UUID)
 	// appstockDescReserved is the schema descriptor for reserved field.
-	appstockDescReserved := appstockFields[3].Descriptor()
+	appstockDescReserved := appstockFields[2].Descriptor()
 	// appstock.DefaultReserved holds the default value on creation for the reserved field.
 	appstock.DefaultReserved = appstockDescReserved.Default.(decimal.Decimal)
 	// appstockDescSpotQuantity is the schema descriptor for spot_quantity field.
-	appstockDescSpotQuantity := appstockFields[4].Descriptor()
+	appstockDescSpotQuantity := appstockFields[3].Descriptor()
 	// appstock.DefaultSpotQuantity holds the default value on creation for the spot_quantity field.
 	appstock.DefaultSpotQuantity = appstockDescSpotQuantity.Default.(decimal.Decimal)
 	// appstockDescLocked is the schema descriptor for locked field.
-	appstockDescLocked := appstockFields[5].Descriptor()
+	appstockDescLocked := appstockFields[4].Descriptor()
 	// appstock.DefaultLocked holds the default value on creation for the locked field.
 	appstock.DefaultLocked = appstockDescLocked.Default.(decimal.Decimal)
 	// appstockDescInService is the schema descriptor for in_service field.
-	appstockDescInService := appstockFields[6].Descriptor()
+	appstockDescInService := appstockFields[5].Descriptor()
 	// appstock.DefaultInService holds the default value on creation for the in_service field.
 	appstock.DefaultInService = appstockDescInService.Default.(decimal.Decimal)
 	// appstockDescWaitStart is the schema descriptor for wait_start field.
-	appstockDescWaitStart := appstockFields[7].Descriptor()
+	appstockDescWaitStart := appstockFields[6].Descriptor()
 	// appstock.DefaultWaitStart holds the default value on creation for the wait_start field.
 	appstock.DefaultWaitStart = appstockDescWaitStart.Default.(decimal.Decimal)
 	// appstockDescSold is the schema descriptor for sold field.
-	appstockDescSold := appstockFields[8].Descriptor()
+	appstockDescSold := appstockFields[7].Descriptor()
 	// appstock.DefaultSold holds the default value on creation for the sold field.
 	appstock.DefaultSold = appstockDescSold.Default.(decimal.Decimal)
 	appstocklockMixin := schema.AppStockLock{}.Mixin()
@@ -1714,6 +1786,80 @@ func init() {
 	likeDescAppGoodID := likeFields[3].Descriptor()
 	// like.DefaultAppGoodID holds the default value on creation for the app_good_id field.
 	like.DefaultAppGoodID = likeDescAppGoodID.Default.(func() uuid.UUID)
+	mininggoodstockMixin := schema.MiningGoodStock{}.Mixin()
+	mininggoodstock.Policy = privacy.NewPolicies(mininggoodstockMixin[0], schema.MiningGoodStock{})
+	mininggoodstock.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := mininggoodstock.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	mininggoodstockMixinFields0 := mininggoodstockMixin[0].Fields()
+	_ = mininggoodstockMixinFields0
+	mininggoodstockMixinFields1 := mininggoodstockMixin[1].Fields()
+	_ = mininggoodstockMixinFields1
+	mininggoodstockFields := schema.MiningGoodStock{}.Fields()
+	_ = mininggoodstockFields
+	// mininggoodstockDescCreatedAt is the schema descriptor for created_at field.
+	mininggoodstockDescCreatedAt := mininggoodstockMixinFields0[0].Descriptor()
+	// mininggoodstock.DefaultCreatedAt holds the default value on creation for the created_at field.
+	mininggoodstock.DefaultCreatedAt = mininggoodstockDescCreatedAt.Default.(func() uint32)
+	// mininggoodstockDescUpdatedAt is the schema descriptor for updated_at field.
+	mininggoodstockDescUpdatedAt := mininggoodstockMixinFields0[1].Descriptor()
+	// mininggoodstock.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	mininggoodstock.DefaultUpdatedAt = mininggoodstockDescUpdatedAt.Default.(func() uint32)
+	// mininggoodstock.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	mininggoodstock.UpdateDefaultUpdatedAt = mininggoodstockDescUpdatedAt.UpdateDefault.(func() uint32)
+	// mininggoodstockDescDeletedAt is the schema descriptor for deleted_at field.
+	mininggoodstockDescDeletedAt := mininggoodstockMixinFields0[2].Descriptor()
+	// mininggoodstock.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	mininggoodstock.DefaultDeletedAt = mininggoodstockDescDeletedAt.Default.(func() uint32)
+	// mininggoodstockDescEntID is the schema descriptor for ent_id field.
+	mininggoodstockDescEntID := mininggoodstockMixinFields1[1].Descriptor()
+	// mininggoodstock.DefaultEntID holds the default value on creation for the ent_id field.
+	mininggoodstock.DefaultEntID = mininggoodstockDescEntID.Default.(func() uuid.UUID)
+	// mininggoodstockDescGoodStockID is the schema descriptor for good_stock_id field.
+	mininggoodstockDescGoodStockID := mininggoodstockFields[0].Descriptor()
+	// mininggoodstock.DefaultGoodStockID holds the default value on creation for the good_stock_id field.
+	mininggoodstock.DefaultGoodStockID = mininggoodstockDescGoodStockID.Default.(func() uuid.UUID)
+	// mininggoodstockDescMiningPoolID is the schema descriptor for mining_pool_id field.
+	mininggoodstockDescMiningPoolID := mininggoodstockFields[1].Descriptor()
+	// mininggoodstock.DefaultMiningPoolID holds the default value on creation for the mining_pool_id field.
+	mininggoodstock.DefaultMiningPoolID = mininggoodstockDescMiningPoolID.Default.(func() uuid.UUID)
+	// mininggoodstockDescPoolGoodUserID is the schema descriptor for pool_good_user_id field.
+	mininggoodstockDescPoolGoodUserID := mininggoodstockFields[2].Descriptor()
+	// mininggoodstock.DefaultPoolGoodUserID holds the default value on creation for the pool_good_user_id field.
+	mininggoodstock.DefaultPoolGoodUserID = mininggoodstockDescPoolGoodUserID.Default.(func() uuid.UUID)
+	// mininggoodstockDescTotal is the schema descriptor for total field.
+	mininggoodstockDescTotal := mininggoodstockFields[3].Descriptor()
+	// mininggoodstock.DefaultTotal holds the default value on creation for the total field.
+	mininggoodstock.DefaultTotal = mininggoodstockDescTotal.Default.(decimal.Decimal)
+	// mininggoodstockDescSpotQuantity is the schema descriptor for spot_quantity field.
+	mininggoodstockDescSpotQuantity := mininggoodstockFields[4].Descriptor()
+	// mininggoodstock.DefaultSpotQuantity holds the default value on creation for the spot_quantity field.
+	mininggoodstock.DefaultSpotQuantity = mininggoodstockDescSpotQuantity.Default.(decimal.Decimal)
+	// mininggoodstockDescLocked is the schema descriptor for locked field.
+	mininggoodstockDescLocked := mininggoodstockFields[5].Descriptor()
+	// mininggoodstock.DefaultLocked holds the default value on creation for the locked field.
+	mininggoodstock.DefaultLocked = mininggoodstockDescLocked.Default.(decimal.Decimal)
+	// mininggoodstockDescInService is the schema descriptor for in_service field.
+	mininggoodstockDescInService := mininggoodstockFields[6].Descriptor()
+	// mininggoodstock.DefaultInService holds the default value on creation for the in_service field.
+	mininggoodstock.DefaultInService = mininggoodstockDescInService.Default.(decimal.Decimal)
+	// mininggoodstockDescWaitStart is the schema descriptor for wait_start field.
+	mininggoodstockDescWaitStart := mininggoodstockFields[7].Descriptor()
+	// mininggoodstock.DefaultWaitStart holds the default value on creation for the wait_start field.
+	mininggoodstock.DefaultWaitStart = mininggoodstockDescWaitStart.Default.(decimal.Decimal)
+	// mininggoodstockDescSold is the schema descriptor for sold field.
+	mininggoodstockDescSold := mininggoodstockFields[8].Descriptor()
+	// mininggoodstock.DefaultSold holds the default value on creation for the sold field.
+	mininggoodstock.DefaultSold = mininggoodstockDescSold.Default.(decimal.Decimal)
+	// mininggoodstockDescAppReserved is the schema descriptor for app_reserved field.
+	mininggoodstockDescAppReserved := mininggoodstockFields[9].Descriptor()
+	// mininggoodstock.DefaultAppReserved holds the default value on creation for the app_reserved field.
+	mininggoodstock.DefaultAppReserved = mininggoodstockDescAppReserved.Default.(decimal.Decimal)
 	powerrentalMixin := schema.PowerRental{}.Mixin()
 	powerrental.Policy = privacy.NewPolicies(powerrentalMixin[0], schema.PowerRental{})
 	powerrental.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -1994,6 +2140,10 @@ func init() {
 	stockDescEntID := stockMixinFields1[1].Descriptor()
 	// stock.DefaultEntID holds the default value on creation for the ent_id field.
 	stock.DefaultEntID = stockDescEntID.Default.(func() uuid.UUID)
+	// stockDescGoodID is the schema descriptor for good_id field.
+	stockDescGoodID := stockFields[0].Descriptor()
+	// stock.DefaultGoodID holds the default value on creation for the good_id field.
+	stock.DefaultGoodID = stockDescGoodID.Default.(func() uuid.UUID)
 	// stockDescTotal is the schema descriptor for total field.
 	stockDescTotal := stockFields[1].Descriptor()
 	// stock.DefaultTotal holds the default value on creation for the total field.

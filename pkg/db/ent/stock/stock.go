@@ -87,6 +87,8 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultEntID holds the default value on creation for the "ent_id" field.
 	DefaultEntID func() uuid.UUID
+	// DefaultGoodID holds the default value on creation for the "good_id" field.
+	DefaultGoodID func() uuid.UUID
 	// DefaultTotal holds the default value on creation for the "total" field.
 	DefaultTotal decimal.Decimal
 	// DefaultSpotQuantity holds the default value on creation for the "spot_quantity" field.

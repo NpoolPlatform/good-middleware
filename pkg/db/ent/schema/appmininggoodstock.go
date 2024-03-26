@@ -11,29 +11,23 @@ import (
 	"github.com/shopspring/decimal"
 )
 
-// AppStock holds the schema definition for the AppStock entity.
-type AppStock struct {
+// AppMiningGoodStock holds the schema definition for the AppMiningGoodStock entity.
+type AppMiningGoodStock struct {
 	ent.Schema
 }
 
-func (AppStock) Mixin() []ent.Mixin {
+func (AppMiningGoodStock) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.TimeMixin{},
 		crudermixin.AutoIDMixin{},
 	}
 }
 
-// Fields of the AppStock.
-func (AppStock) Fields() []ent.Field {
+// Fields of the AppMiningGoodStock.
+func (AppMiningGoodStock) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("app_good_id", uuid.UUID{}).
-			Optional().
-			Default(func() uuid.UUID {
-				return uuid.Nil
-			}),
-		field.
-			UUID("good_stock_id", uuid.UUID{}).
+			UUID("mining_good_stock_id", uuid.UUID{}).
 			Optional().
 			Default(func() uuid.UUID {
 				return uuid.Nil
@@ -83,10 +77,10 @@ func (AppStock) Fields() []ent.Field {
 	}
 }
 
-func (AppStock) Annotations() []schema.Annotation {
+func (AppMiningGoodStock) Annotations() []schema.Annotation {
 	return nil
 }
 
-func (AppStock) Indexes() []ent.Index {
+func (AppMiningGoodStock) Indexes() []ent.Index {
 	return nil
 }
