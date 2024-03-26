@@ -8,13 +8,18 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
+	stock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/stock"
+	mininggoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/stock/mining"
+
+	"github.com/shopspring/decimal"
 )
 
 type createHandler struct {
 	*Handler
-	sqlPowerRental     string
-	sqlGoodBase        string
-	sqlMiningGoodStock string
+	sqlPowerRental      string
+	sqlGoodBase         string
+	sqlMiningGoodStocks []string
+	sqlStock            string
 }
 
 func (h *createHandler) constructGoodBaseSql(ctx context.Context) error {
@@ -38,8 +43,47 @@ func (h *createHandler) constructGoodBaseSql(ctx context.Context) error {
 	return nil
 }
 
-func (h *createHandler) constructMiningGoodStockSql(ctx context.Context) error {
+func (h *createHandler) validateStock() error {
+	poolTotal := decimal.NewFromInt(0)
+	for _, poolStock := range h.MiningGoodStockReqs {
+		poolTotal = poolStock.Total.Add(poolTotal)
+	}
+	if h.StockReq.Total.Cmp(poolTotal) < 0 {
+		return fmt.Errorf("invalid stock total")
+	}
+	return nil
+}
 
+func (h *createHandler) constructMiningGoodStockSql(ctx context.Context) error {
+	for _, poolStock := range h.MiningGoodStockReqs {
+		handler, err := mininggoodstock1.NewHandler(
+			ctx,
+			mininggoodstock1.WithEntID(func() *string { s := poolStock.EntID.String(); return &s }(), false),
+			mininggoodstock1.WithGoodStockID(func() *string { s := poolStock.GoodStockID.String(); return &s }(), false),
+			mininggoodstock1.WithMiningPoolID(func() *string { s := poolStock.MiningPoolID.String(); return &s }(), false),
+			mininggoodstock1.WithPoolGoodUserID(func() *string { s := poolStock.PoolGoodUserID.String(); return &s }(), false),
+			mininggoodstock1.WithTotal(func() *string { s := poolStock.Total.String(); return &s }(), true),
+		)
+		if err != nil {
+			return err
+		}
+		h.sqlMiningGoodStocks = append(h.sqlMiningGoodStocks, handler.ConstructCreateSql())
+	}
+	return nil
+}
+
+func (h *createHandler) constructStockSql(ctx context.Context) error {
+	handler, err := stock1.NewHandler(
+		ctx,
+		stock1.WithEntID(func() *string { s := h.StockReq.EntID.String(); return &s }(), false),
+		stock1.WithGoodID(func() *string { s := h.StockReq.GoodID.String(); return &s }(), false),
+		stock1.WithTotal(func() *string { s := h.StockReq.Total.String(); return &s }(), true),
+	)
+	if err != nil {
+		return err
+	}
+	h.sqlStock = handler.ConstructCreateSql()
+	return nil
 }
 
 func (h *createHandler) constructPowerRentalSql() {
@@ -132,8 +176,17 @@ func (h *createHandler) createGoodBase(ctx context.Context, tx *ent.Tx) error {
 	return h.execSql(ctx, tx, h.sqlGoodBase)
 }
 
-func (h *createHandler) createMiningGoodStock(ctx context.Context, tx *ent.Tx) error {
-	return h.execSql(ctx, tx, h.sqlMiningGoodStock)
+func (h *createHandler) createStock(ctx context.Context, tx *ent.Tx) error {
+	return h.execSql(ctx, tx, h.sqlStock)
+}
+
+func (h *createHandler) createMiningGoodStocks(ctx context.Context, tx *ent.Tx) error {
+	for _, _sql := range h.sqlMiningGoodStocks {
+		if err := h.execSql(ctx, tx, _sql); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (h *Handler) CreatePowerRental(ctx context.Context) error {
@@ -141,8 +194,15 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 		Handler: h,
 	}
 
+	if err := handler.validateStock(); err != nil {
+		return err
+	}
+
 	handler.constructPowerRentalSql()
 	if err := handler.constructGoodBaseSql(ctx); err != nil {
+		return err
+	}
+	if err := handler.constructStockSql(ctx); err != nil {
 		return err
 	}
 	if err := handler.constructMiningGoodStockSql(ctx); err != nil {
@@ -153,7 +213,10 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 		if err := handler.createGoodBase(_ctx, tx); err != nil {
 			return err
 		}
-		if err := handler.createMiningGoodStock(_ctx, tx); err != nil {
+		if err := handler.createStock(_ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.createMiningGoodStocks(_ctx, tx); err != nil {
 			return err
 		}
 		return handler.createPowerRental(_ctx, tx)

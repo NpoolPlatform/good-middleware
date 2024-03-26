@@ -10,7 +10,7 @@ import (
 	// goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 
 	"github.com/google/uuid"
-	// "github.com/shopspring/decimal"
+	"github.com/shopspring/decimal"
 )
 
 type Handler struct {
@@ -57,6 +57,77 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 			return err
 		}
 		h.EntID = &_id
+		return nil
+	}
+}
+
+func WithGoodStockID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid goodstockid")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
+		if err != nil {
+			return err
+		}
+		h.GoodStockID = &_id
+		return nil
+	}
+}
+
+func WithMiningPoolID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid miningpoolid")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
+		if err != nil {
+			return err
+		}
+		h.MiningPoolID = &_id
+		return nil
+	}
+}
+
+func WithPoolGoodUserID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid poolgooduserid")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
+		if err != nil {
+			return err
+		}
+		h.PoolGoodUserID = &_id
+		return nil
+	}
+}
+
+func WithTotal(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid total")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
+			return fmt.Errorf("invalid total")
+		}
+		h.Total = &amount
 		return nil
 	}
 }

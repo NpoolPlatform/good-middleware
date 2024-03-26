@@ -7,6 +7,8 @@ import (
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
+	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
+	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	powerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/powerrental"
 	device1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
@@ -21,17 +23,20 @@ import (
 type Handler struct {
 	ID *uint32
 	powerrentalcrud.Req
-	GoodBaseReq      *goodbasecrud.Req
-	PowerRentalConds *powerrentalcrud.Conds
-	GoodBaseConds    *goodbasecrud.Conds
-	GoodCoinConds    *goodcoincrud.Conds
-	Offset           int32
-	Limit            int32
+	GoodBaseReq         *goodbasecrud.Req
+	StockReq            *stockcrud.Req
+	MiningGoodStockReqs []*mininggoodstockcrud.Req
+	PowerRentalConds    *powerrentalcrud.Conds
+	GoodBaseConds       *goodbasecrud.Conds
+	GoodCoinConds       *goodcoincrud.Conds
+	Offset              int32
+	Limit               int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
 		GoodBaseReq:      &goodbasecrud.Req{},
+		StockReq:         &stockcrud.Req{},
 		PowerRentalConds: &powerrentalcrud.Conds{},
 		GoodBaseConds:    &goodbasecrud.Conds{},
 		GoodCoinConds:    &goodcoincrud.Conds{},

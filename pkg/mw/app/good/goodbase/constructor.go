@@ -82,7 +82,7 @@ func (h *Handler) ConstructCreateSql() string {
 	_sql += ") as tmp "
 	_sql += "where exists ("
 	_sql += "select 1 from good_bases "
-	_sql += fmt.Sprintf("where good_id = '%v'", *h.GoodID)
+	_sql += fmt.Sprintf("where ent_id = '%v'", *h.GoodID)
 	_sql += " limit 1)"
 
 	return _sql
