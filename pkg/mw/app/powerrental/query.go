@@ -17,6 +17,7 @@ import (
 	entmanufacturer "github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 	entpowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
+	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	entvendorbrand "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	entvendorlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -107,6 +108,20 @@ func (h *queryHandler) queryJoinGoodBase(s *sql.Selector) {
 			t1.C(entgoodbase.FieldBenefitIntervalHours),
 			sql.As(t1.C(entgoodbase.FieldPurchasable), "good_purchasable"),
 			sql.As(t1.C(entgoodbase.FieldOnline), "good_online"),
+		)
+}
+
+func (h *queryHandler) queryJoinGoodStock(s *sql.Selector) {
+	t1 := sql.Table(entstock.Table)
+	s.Join(t1).
+		On(
+			s.C(entappgoodbase.FieldGoodID),
+			t1.C(entstock.FieldGoodID),
+		).
+		AppendSelect(
+			sql.As(t1.C(entstock.FieldEntID), "good_stock_id"),
+			sql.As(t1.C(entstock.FieldTotal), "good_total"),
+			sql.As(t1.C(entstock.FieldSpotQuantity), "good_spot_quantity"),
 		)
 }
 
@@ -243,6 +258,7 @@ func (h *queryHandler) queryJoin() error {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
 		h.queryJoinGoodBase(s)
+		h.queryJoinGoodStock(s)
 		h.queryJoinAppPowerRental(s)
 		h.queryJoinAppLegacyPowerRental(s)
 		err = h.queryJoinPowerRental(s)
@@ -255,6 +271,7 @@ func (h *queryHandler) queryJoin() error {
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
 		h.queryJoinGoodBase(s)
+		h.queryJoinGoodStock(s)
 		h.queryJoinAppPowerRental(s)
 		h.queryJoinAppLegacyPowerRental(s)
 		err = h.queryJoinPowerRental(s)
@@ -279,6 +296,8 @@ func (h *queryHandler) formalize() {
 		info.MaxOrderAmount = func() string { amount, _ := decimal.NewFromString(info.MaxOrderAmount); return amount.String() }()
 		info.MaxUserAmount = func() string { amount, _ := decimal.NewFromString(info.MaxUserAmount); return amount.String() }()
 		info.TechniqueFeeRatio = func() string { amount, _ := decimal.NewFromString(info.TechniqueFeeRatio); return amount.String() }()
+		info.GoodTotal = func() string { amount, _ := decimal.NewFromString(info.GoodTotal); return amount.String() }()
+		info.GoodSpotQuantity = func() string { amount, _ := decimal.NewFromString(info.GoodSpotQuantity); return amount.String() }()
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.CancelMode = types.CancelMode(types.CancelMode_value[info.CancelModeStr])
 		info.SaleMode = types.GoodSaleMode(types.GoodSaleMode_value[info.SaleModeStr])

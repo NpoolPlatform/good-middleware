@@ -90,6 +90,10 @@ var (
 		FixedDuration:                false,
 		PackageWithRequireds:         false,
 		TechniqueFeeRatio:            decimal.NewFromInt(0).String(),
+
+		GoodStockID:      uuid.NewString(),
+		GoodTotal:        decimal.NewFromInt(120).String(),
+		GoodSpotQuantity: decimal.NewFromInt(120).String(),
 	}
 )
 
@@ -174,6 +178,8 @@ func setup(t *testing.T) func(*testing.T) {
 		powerrental1.WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
 		powerrental1.WithPurchasable(&ret.GoodPurchasable, true),
 		powerrental1.WithOnline(&ret.GoodOnline, true),
+		powerrental1.WithStockID(&ret.GoodStockID, true),
+		powerrental1.WithTotal(&ret.GoodTotal, true),
 	)
 	assert.Nil(t, err)
 

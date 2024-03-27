@@ -6,6 +6,7 @@ import (
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
+	appgoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	apppowerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
@@ -23,6 +24,7 @@ type Handler struct {
 	ID *uint32
 	apppowerrentalcrud.Req
 	AppGoodBaseReq      *appgoodbasecrud.Req
+	AppGoodStockReq     *appgoodstockcrud.Req
 	AppPowerRentalConds *apppowerrentalcrud.Conds
 	PowerRentalConds    *powerrentalcrud.Conds
 	AppGoodBaseConds    *appgoodbasecrud.Conds
@@ -35,6 +37,7 @@ type Handler struct {
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
 		AppGoodBaseReq:      &appgoodbasecrud.Req{},
+		AppGoodStockReq:     &appgoodstockcrud.Req{},
 		AppPowerRentalConds: &apppowerrentalcrud.Conds{},
 		PowerRentalConds:    &powerrentalcrud.Conds{},
 		AppGoodBaseConds:    &appgoodbasecrud.Conds{},
