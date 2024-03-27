@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
+	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
@@ -12,9 +14,11 @@ import (
 )
 
 type updateHandler struct {
-	*Handler
-	sqlPowerRental string
-	sqlGoodBase    string
+	*powerRentalGoodQueryHandler
+	stockValidator      *validateStockHandler
+	sqlPowerRental      string
+	sqlGoodBase         string
+	sqlMiningGoodStocks []string
 }
 
 func (h *updateHandler) constructGoodBaseSql(ctx context.Context) error {
@@ -122,9 +126,72 @@ func (h *updateHandler) updateGoodBase(ctx context.Context, tx *ent.Tx) error {
 	return h.execSql(ctx, tx, h.sqlGoodBase)
 }
 
+func (h *updateHandler) updateStock(ctx context.Context, tx *ent.Tx) error {
+	if _, err := stockcrud.UpdateSet(
+		tx.Stock.UpdateOneID(h.stock.ID),
+		h.StockReq,
+	).Save(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (h *updateHandler) updateMiningGoodStocks(ctx context.Context, tx *ent.Tx) error {
+	for _, poolStock := range h.MiningGoodStockReqs {
+		if _, err := mininggoodstockcrud.UpdateSet(
+			tx.MiningGoodStock.UpdateOneID(*poolStock.ID),
+			poolStock,
+		).Save(ctx); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (h *updateHandler) _validateStock() error {
+	if h.StockReq.Total == nil {
+		h.StockReq.Total = &h.stock.Total
+	}
+
+	miningGoodStockReqs := h.MiningGoodStockReqs
+	defer func() { h.MiningGoodStockReqs = miningGoodStockReqs }()
+
+	for _, poolStock := range h.miningGoodStocks {
+		if func() bool {
+			for _, _poolStock := range h.MiningGoodStockReqs {
+				if *_poolStock.EntID == poolStock.EntID {
+					_poolStock.ID = &poolStock.ID
+					return true
+				}
+			}
+			return false
+		}() {
+			continue
+		}
+		h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, &mininggoodstockcrud.Req{
+			EntID: &poolStock.EntID,
+			Total: &poolStock.Total,
+		})
+	}
+
+	return h.stockValidator.validateStock()
+}
+
 func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 	handler := &updateHandler{
-		Handler: h,
+		powerRentalGoodQueryHandler: &powerRentalGoodQueryHandler{
+			Handler: h,
+		},
+		stockValidator: &validateStockHandler{
+			Handler: h,
+		},
+	}
+
+	if err := handler.requirePowerRentalGood(ctx); err != nil {
+		return err
+	}
+	if err := handler._validateStock(); err != nil {
+		return err
 	}
 
 	handler.constructPowerRentalSql()
@@ -134,6 +201,12 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateGoodBase(_ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.updateStock(_ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.updateMiningGoodStocks(_ctx, tx); err != nil {
 			return err
 		}
 		return handler.updatePowerRental(_ctx, tx)

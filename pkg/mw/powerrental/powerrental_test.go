@@ -210,6 +210,8 @@ func createPowerRental(t *testing.T) {
 }
 
 func updatePowerRental(t *testing.T) {
+	ret.GoodTotal = decimal.NewFromInt(10000).String()
+
 	h1, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
@@ -232,6 +234,7 @@ func updatePowerRental(t *testing.T) {
 		WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
 		WithPurchasable(&ret.Purchasable, true),
 		WithOnline(&ret.Online, true),
+		WithTotal(&ret.GoodTotal, true),
 	)
 	assert.Nil(t, err)
 

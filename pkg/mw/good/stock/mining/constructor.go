@@ -3,7 +3,6 @@ package mining
 import (
 	"fmt"
 	"time"
-	// cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 )
 
 func (h *Handler) ConstructCreateSql() string {
@@ -47,8 +46,4 @@ func (h *Handler) ConstructCreateSql() string {
 	_sql += " limit 1)"
 
 	return _sql
-}
-
-func (h *Handler) ConstructUpdateSql() string {
-	return ""
 }

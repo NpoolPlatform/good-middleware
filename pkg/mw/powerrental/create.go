@@ -12,11 +12,10 @@ import (
 	mininggoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/stock/mining"
 
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 type createHandler struct {
-	*Handler
+	*validateStockHandler
 	sqlPowerRental      string
 	sqlGoodBase         string
 	sqlMiningGoodStocks []string
@@ -41,17 +40,6 @@ func (h *createHandler) constructGoodBaseSql(ctx context.Context) error {
 		return err
 	}
 	h.sqlGoodBase = handler.ConstructCreateSql()
-	return nil
-}
-
-func (h *createHandler) validateStock() error {
-	poolTotal := decimal.NewFromInt(0)
-	for _, poolStock := range h.MiningGoodStockReqs {
-		poolTotal = poolStock.Total.Add(poolTotal)
-	}
-	if h.StockReq.Total.Cmp(poolTotal) < 0 {
-		return fmt.Errorf("invalid stock total")
-	}
 	return nil
 }
 
@@ -192,7 +180,9 @@ func (h *createHandler) createMiningGoodStocks(ctx context.Context, tx *ent.Tx) 
 
 func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	handler := &createHandler{
-		Handler: h,
+		validateStockHandler: &validateStockHandler{
+			Handler: h,
+		},
 	}
 
 	if handler.StockReq.EntID == nil {

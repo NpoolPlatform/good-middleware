@@ -5,6 +5,8 @@ import (
 	"time"
 
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
+	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
+	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	powerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/powerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -39,6 +41,32 @@ func (h *deleteHandler) deletePowerRental(ctx context.Context, tx *ent.Tx) error
 	return nil
 }
 
+func (h *deleteHandler) deleteStock(ctx context.Context, tx *ent.Tx) error {
+	if _, err := stockcrud.UpdateSet(
+		tx.Stock.UpdateOneID(h.stock.ID),
+		&stockcrud.Req{
+			DeletedAt: &h.now,
+		},
+	).Save(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (h *deleteHandler) deleteMiningGoodStock(ctx context.Context, tx *ent.Tx) error {
+	for _, poolStock := range h.miningGoodStocks {
+		if _, err := mininggoodstockcrud.UpdateSet(
+			tx.MiningGoodStock.UpdateOneID(poolStock.ID),
+			&mininggoodstockcrud.Req{
+				DeletedAt: &h.now,
+			},
+		).Save(ctx); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (h *Handler) DeletePowerRental(ctx context.Context) error {
 	handler := &deleteHandler{
 		powerRentalGoodQueryHandler: &powerRentalGoodQueryHandler{
@@ -56,6 +84,12 @@ func (h *Handler) DeletePowerRental(ctx context.Context) error {
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.deleteGoodBase(_ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.deleteStock(_ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.deleteMiningGoodStock(_ctx, tx); err != nil {
 			return err
 		}
 		return handler.deletePowerRental(_ctx, tx)

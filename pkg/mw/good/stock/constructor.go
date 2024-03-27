@@ -3,7 +3,6 @@ package stock
 import (
 	"fmt"
 	"time"
-	// cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 )
 
 func (h *Handler) ConstructCreateSql() string {
@@ -19,6 +18,11 @@ func (h *Handler) ConstructCreateSql() string {
 	comma = ", "
 	_sql += comma + "total"
 	_sql += comma + "spot_quantity"
+	_sql += comma + "locked"
+	_sql += comma + "in_service"
+	_sql += comma + "wait_start"
+	_sql += comma + "sold"
+	_sql += comma + "app_reserved"
 	_sql += comma + "created_at"
 	_sql += comma + "updated_at"
 	_sql += comma + "deleted_at"
@@ -33,6 +37,11 @@ func (h *Handler) ConstructCreateSql() string {
 	comma = ", "
 	_sql += fmt.Sprintf("%v'%v' as total", comma, *h.Total)
 	_sql += fmt.Sprintf("%v'%v' as spot_quantity", comma, *h.Total)
+	_sql += fmt.Sprintf("%v'0' as locked", comma)
+	_sql += fmt.Sprintf("%v'0' as in_service", comma)
+	_sql += fmt.Sprintf("%v'0' as wait_start", comma)
+	_sql += fmt.Sprintf("%v'0' as sold", comma)
+	_sql += fmt.Sprintf("%v'0' as app_reserved", comma)
 	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
 	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
 	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
@@ -43,8 +52,4 @@ func (h *Handler) ConstructCreateSql() string {
 	_sql += " limit 1)"
 
 	return _sql
-}
-
-func (h *Handler) ConstructUpdateSql() string {
-	return ""
 }

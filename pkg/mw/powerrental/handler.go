@@ -417,6 +417,13 @@ func WithTotal(s *string, must bool) func(context.Context, *Handler) error {
 func WithStocks(stocks []*stockmwpb.MiningGoodStockReq, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		for _, _stock := range stocks {
+			entID := func() *uuid.UUID {
+				uid, err := uuid.Parse(_stock.GetEntID())
+				if err != nil {
+					return nil
+				}
+				return &uid
+			}()
 			poolID, err := uuid.Parse(_stock.GetMiningPoolID())
 			if err != nil {
 				return err
@@ -430,6 +437,7 @@ func WithStocks(stocks []*stockmwpb.MiningGoodStockReq, must bool) func(context.
 				return err
 			}
 			h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, &mininggoodstockcrud.Req{
+				EntID:          entID,
 				MiningPoolID:   &poolID,
 				PoolGoodUserID: &poolUserID,
 				Total:          &amount,
