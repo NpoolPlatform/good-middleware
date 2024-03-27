@@ -65,7 +65,14 @@ var (
 		BenefitIntervalHours: 20,
 		UnitLockDeposit:      decimal.NewFromInt(1).String(),
 
-		GoodTotal: decimal.NewFromInt(120).String(),
+		GoodStockID:      uuid.NewString(),
+		GoodTotal:        decimal.NewFromInt(120).String(),
+		GoodSpotQuantity: decimal.NewFromInt(120).String(),
+		GoodLocked:       decimal.NewFromInt(0).String(),
+		GoodInService:    decimal.NewFromInt(0).String(),
+		GoodWaitStart:    decimal.NewFromInt(0).String(),
+		GoodSold:         decimal.NewFromInt(0).String(),
+		GoodAppReserved:  decimal.NewFromInt(0).String(),
 	}
 )
 
@@ -157,6 +164,7 @@ func createPowerRental(t *testing.T) {
 		WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
 		WithPurchasable(&ret.Purchasable, true),
 		WithOnline(&ret.Online, true),
+		WithStockID(&ret.GoodStockID, true),
 		WithTotal(&ret.GoodTotal, true),
 	)
 	assert.Nil(t, err)
@@ -192,6 +200,7 @@ func createPowerRental(t *testing.T) {
 		WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
 		WithPurchasable(&ret.Purchasable, true),
 		WithOnline(&ret.Online, true),
+		WithStockID(&ret.GoodStockID, true),
 		WithTotal(&ret.GoodTotal, true),
 	)
 	assert.Nil(t, err)

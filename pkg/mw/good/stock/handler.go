@@ -6,7 +6,6 @@ import (
 
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	stocklockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/lock"
-	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -63,21 +62,17 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 
 func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		handler, err := goodbase1.NewHandler(
-			ctx,
-			goodbase1.WithEntID(id, true),
-		)
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid goodid")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
 		if err != nil {
 			return err
 		}
-		exist, err := handler.ExistGoodBase(ctx)
-		if err != nil {
-			return err
-		}
-		if !exist {
-			return fmt.Errorf("invalid good")
-		}
-		h.GoodID = handler.EntID
+		h.GoodID = &_id
 		return nil
 	}
 }

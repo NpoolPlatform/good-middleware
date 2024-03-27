@@ -377,6 +377,23 @@ func WithOnline(b *bool, must bool) func(context.Context, *Handler) error {
 	}
 }
 
+func WithStockID(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid stockid")
+			}
+			return nil
+		}
+		id, err := uuid.Parse(*s)
+		if err != nil {
+			return err
+		}
+		h.StockReq.EntID = &id
+		return nil
+	}
+}
+
 func WithTotal(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {

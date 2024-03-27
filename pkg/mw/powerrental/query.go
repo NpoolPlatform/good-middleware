@@ -14,6 +14,7 @@ import (
 	entmanufacturer "github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 	entpowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
+	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	entvendorbrand "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	entvendorlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -70,8 +71,7 @@ func (h *queryHandler) queryGoodBases(cli *ent.Client) (*ent.GoodBaseSelect, err
 
 func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 	t1 := sql.Table(entgoodbase.Table)
-
-	s.LeftJoin(t1).
+	s.Join(t1).
 		On(
 			s.C(entgoodbase.FieldID),
 			t1.C(entgoodbase.FieldID),
@@ -98,7 +98,7 @@ func (h *queryHandler) queryJoinPowerRental(s *sql.Selector) error {
 	t4 := sql.Table(entvendorlocation.Table)
 	t5 := sql.Table(entvendorbrand.Table)
 
-	s.LeftJoin(t1).
+	s.Join(t1).
 		On(
 			s.C(entgoodbase.FieldEntID),
 			t1.C(entpowerrental.FieldGoodID),
@@ -134,22 +134,22 @@ func (h *queryHandler) queryJoinPowerRental(s *sql.Selector) error {
 		}
 		s.OnP(sql.In(t1.C(entpowerrental.FieldEntID), uids))
 	}
-	s.LeftJoin(t2).
+	s.Join(t2).
 		On(
 			t1.C(entpowerrental.FieldDeviceTypeID),
 			t2.C(entdevicetype.FieldEntID),
 		).
-		LeftJoin(t3).
+		Join(t3).
 		On(
 			t2.C(entdevicetype.FieldManufacturerID),
 			t3.C(entmanufacturer.FieldEntID),
 		).
-		LeftJoin(t4).
+		Join(t4).
 		On(
 			t1.C(entpowerrental.FieldVendorLocationID),
 			t4.C(entvendorlocation.FieldEntID),
 		).
-		LeftJoin(t5).
+		Join(t5).
 		On(
 			t4.C(entvendorlocation.FieldBrandID),
 			t5.C(entvendorbrand.FieldEntID),
@@ -182,10 +182,30 @@ func (h *queryHandler) queryJoinPowerRental(s *sql.Selector) error {
 	return nil
 }
 
+func (h *queryHandler) queryJoinStock(s *sql.Selector) {
+	t1 := sql.Table(entstock.Table)
+	s.Join(t1).
+		On(
+			s.C(entgoodbase.FieldEntID),
+			t1.C(entstock.FieldGoodID),
+		).
+		AppendSelect(
+			sql.As(t1.C(entstock.FieldEntID), "good_stock_id"),
+			sql.As(t1.C(entstock.FieldTotal), "good_total"),
+			sql.As(t1.C(entstock.FieldSpotQuantity), "good_spot_quantity"),
+			sql.As(t1.C(entstock.FieldLocked), "good_locked"),
+			sql.As(t1.C(entstock.FieldInService), "good_in_service"),
+			sql.As(t1.C(entstock.FieldWaitStart), "good_wait_start"),
+			sql.As(t1.C(entstock.FieldSold), "good_sold"),
+			sql.As(t1.C(entstock.FieldAppReserved), "good_app_reserved"),
+		)
+}
+
 func (h *queryHandler) queryJoin() error {
 	var err error
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
+		h.queryJoinStock(s)
 		err = h.queryJoinPowerRental(s)
 	})
 	if err != nil {
@@ -195,6 +215,7 @@ func (h *queryHandler) queryJoin() error {
 		return nil
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
+		h.queryJoinStock(s)
 		err = h.queryJoinPowerRental(s)
 	})
 	if err != nil {
@@ -213,6 +234,13 @@ func (h *queryHandler) formalize() {
 		info.UnitPrice = func() string { amount, _ := decimal.NewFromString(info.UnitPrice); return amount.String() }()
 		info.QuantityUnitAmount = func() string { amount, _ := decimal.NewFromString(info.QuantityUnitAmount); return amount.String() }()
 		info.UnitLockDeposit = func() string { amount, _ := decimal.NewFromString(info.UnitLockDeposit); return amount.String() }()
+		info.GoodTotal = func() string { amount, _ := decimal.NewFromString(info.GoodTotal); return amount.String() }()
+		info.GoodSpotQuantity = func() string { amount, _ := decimal.NewFromString(info.GoodSpotQuantity); return amount.String() }()
+		info.GoodLocked = func() string { amount, _ := decimal.NewFromString(info.GoodLocked); return amount.String() }()
+		info.GoodInService = func() string { amount, _ := decimal.NewFromString(info.GoodInService); return amount.String() }()
+		info.GoodWaitStart = func() string { amount, _ := decimal.NewFromString(info.GoodWaitStart); return amount.String() }()
+		info.GoodSold = func() string { amount, _ := decimal.NewFromString(info.GoodSold); return amount.String() }()
+		info.GoodAppReserved = func() string { amount, _ := decimal.NewFromString(info.GoodAppReserved); return amount.String() }()
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
