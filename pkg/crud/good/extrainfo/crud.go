@@ -14,8 +14,6 @@ import (
 type Req struct {
 	EntID          *uuid.UUID
 	GoodID         *uuid.UUID
-	Posters        []string
-	Labels         []string
 	Likes          *uint32
 	Dislikes       *uint32
 	ScoreCount     *uint32
@@ -31,12 +29,6 @@ func CreateSet(c *ent.ExtraInfoCreate, req *Req) *ent.ExtraInfoCreate {
 	}
 	if req.GoodID != nil {
 		c.SetGoodID(*req.GoodID)
-	}
-	if len(req.Posters) > 0 {
-		c.SetPosters(req.Posters)
-	}
-	if len(req.Labels) > 0 {
-		c.SetLabels(req.Labels)
 	}
 	if req.Likes != nil {
 		c.SetLikes(*req.Likes)
@@ -60,12 +52,6 @@ func CreateSet(c *ent.ExtraInfoCreate, req *Req) *ent.ExtraInfoCreate {
 }
 
 func UpdateSet(u *ent.ExtraInfoUpdateOne, req *Req) *ent.ExtraInfoUpdateOne {
-	if len(req.Posters) > 0 {
-		u.SetPosters(req.Posters)
-	}
-	if len(req.Labels) > 0 {
-		u.SetLabels(req.Labels)
-	}
 	if req.Likes != nil {
 		u.SetLikes(*req.Likes)
 	}
