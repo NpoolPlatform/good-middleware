@@ -12,6 +12,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddescription"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplaycolor"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplayname"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodlabel"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
@@ -495,6 +496,64 @@ func init() {
 	appgooddisplaynameDescIndex := appgooddisplaynameFields[2].Descriptor()
 	// appgooddisplayname.DefaultIndex holds the default value on creation for the index field.
 	appgooddisplayname.DefaultIndex = appgooddisplaynameDescIndex.Default.(uint8)
+	appgoodlabelMixin := schema.AppGoodLabel{}.Mixin()
+	appgoodlabel.Policy = privacy.NewPolicies(appgoodlabelMixin[0], schema.AppGoodLabel{})
+	appgoodlabel.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := appgoodlabel.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	appgoodlabelMixinFields0 := appgoodlabelMixin[0].Fields()
+	_ = appgoodlabelMixinFields0
+	appgoodlabelMixinFields1 := appgoodlabelMixin[1].Fields()
+	_ = appgoodlabelMixinFields1
+	appgoodlabelFields := schema.AppGoodLabel{}.Fields()
+	_ = appgoodlabelFields
+	// appgoodlabelDescCreatedAt is the schema descriptor for created_at field.
+	appgoodlabelDescCreatedAt := appgoodlabelMixinFields0[0].Descriptor()
+	// appgoodlabel.DefaultCreatedAt holds the default value on creation for the created_at field.
+	appgoodlabel.DefaultCreatedAt = appgoodlabelDescCreatedAt.Default.(func() uint32)
+	// appgoodlabelDescUpdatedAt is the schema descriptor for updated_at field.
+	appgoodlabelDescUpdatedAt := appgoodlabelMixinFields0[1].Descriptor()
+	// appgoodlabel.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	appgoodlabel.DefaultUpdatedAt = appgoodlabelDescUpdatedAt.Default.(func() uint32)
+	// appgoodlabel.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	appgoodlabel.UpdateDefaultUpdatedAt = appgoodlabelDescUpdatedAt.UpdateDefault.(func() uint32)
+	// appgoodlabelDescDeletedAt is the schema descriptor for deleted_at field.
+	appgoodlabelDescDeletedAt := appgoodlabelMixinFields0[2].Descriptor()
+	// appgoodlabel.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	appgoodlabel.DefaultDeletedAt = appgoodlabelDescDeletedAt.Default.(func() uint32)
+	// appgoodlabelDescEntID is the schema descriptor for ent_id field.
+	appgoodlabelDescEntID := appgoodlabelMixinFields1[1].Descriptor()
+	// appgoodlabel.DefaultEntID holds the default value on creation for the ent_id field.
+	appgoodlabel.DefaultEntID = appgoodlabelDescEntID.Default.(func() uuid.UUID)
+	// appgoodlabelDescAppGoodID is the schema descriptor for app_good_id field.
+	appgoodlabelDescAppGoodID := appgoodlabelFields[0].Descriptor()
+	// appgoodlabel.DefaultAppGoodID holds the default value on creation for the app_good_id field.
+	appgoodlabel.DefaultAppGoodID = appgoodlabelDescAppGoodID.Default.(func() uuid.UUID)
+	// appgoodlabelDescIcon is the schema descriptor for icon field.
+	appgoodlabelDescIcon := appgoodlabelFields[1].Descriptor()
+	// appgoodlabel.DefaultIcon holds the default value on creation for the icon field.
+	appgoodlabel.DefaultIcon = appgoodlabelDescIcon.Default.(string)
+	// appgoodlabelDescIconBgColor is the schema descriptor for icon_bg_color field.
+	appgoodlabelDescIconBgColor := appgoodlabelFields[2].Descriptor()
+	// appgoodlabel.DefaultIconBgColor holds the default value on creation for the icon_bg_color field.
+	appgoodlabel.DefaultIconBgColor = appgoodlabelDescIconBgColor.Default.(string)
+	// appgoodlabelDescLabel is the schema descriptor for label field.
+	appgoodlabelDescLabel := appgoodlabelFields[3].Descriptor()
+	// appgoodlabel.DefaultLabel holds the default value on creation for the label field.
+	appgoodlabel.DefaultLabel = appgoodlabelDescLabel.Default.(string)
+	// appgoodlabelDescLabelBgColor is the schema descriptor for label_bg_color field.
+	appgoodlabelDescLabelBgColor := appgoodlabelFields[4].Descriptor()
+	// appgoodlabel.DefaultLabelBgColor holds the default value on creation for the label_bg_color field.
+	appgoodlabel.DefaultLabelBgColor = appgoodlabelDescLabelBgColor.Default.(string)
+	// appgoodlabelDescIndex is the schema descriptor for index field.
+	appgoodlabelDescIndex := appgoodlabelFields[5].Descriptor()
+	// appgoodlabel.DefaultIndex holds the default value on creation for the index field.
+	appgoodlabel.DefaultIndex = appgoodlabelDescIndex.Default.(uint8)
 	appgoodposterMixin := schema.AppGoodPoster{}.Mixin()
 	appgoodposter.Policy = privacy.NewPolicies(appgoodposterMixin[0], schema.AppGoodPoster{})
 	appgoodposter.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -1223,36 +1282,32 @@ func init() {
 	extrainfoDescEntID := extrainfoMixinFields1[1].Descriptor()
 	// extrainfo.DefaultEntID holds the default value on creation for the ent_id field.
 	extrainfo.DefaultEntID = extrainfoDescEntID.Default.(func() uuid.UUID)
-	// extrainfoDescPosters is the schema descriptor for posters field.
-	extrainfoDescPosters := extrainfoFields[1].Descriptor()
-	// extrainfo.DefaultPosters holds the default value on creation for the posters field.
-	extrainfo.DefaultPosters = extrainfoDescPosters.Default.([]string)
-	// extrainfoDescLabels is the schema descriptor for labels field.
-	extrainfoDescLabels := extrainfoFields[2].Descriptor()
-	// extrainfo.DefaultLabels holds the default value on creation for the labels field.
-	extrainfo.DefaultLabels = extrainfoDescLabels.Default.([]string)
+	// extrainfoDescGoodID is the schema descriptor for good_id field.
+	extrainfoDescGoodID := extrainfoFields[0].Descriptor()
+	// extrainfo.DefaultGoodID holds the default value on creation for the good_id field.
+	extrainfo.DefaultGoodID = extrainfoDescGoodID.Default.(func() uuid.UUID)
 	// extrainfoDescLikes is the schema descriptor for likes field.
-	extrainfoDescLikes := extrainfoFields[3].Descriptor()
+	extrainfoDescLikes := extrainfoFields[1].Descriptor()
 	// extrainfo.DefaultLikes holds the default value on creation for the likes field.
 	extrainfo.DefaultLikes = extrainfoDescLikes.Default.(uint32)
 	// extrainfoDescDislikes is the schema descriptor for dislikes field.
-	extrainfoDescDislikes := extrainfoFields[4].Descriptor()
+	extrainfoDescDislikes := extrainfoFields[2].Descriptor()
 	// extrainfo.DefaultDislikes holds the default value on creation for the dislikes field.
 	extrainfo.DefaultDislikes = extrainfoDescDislikes.Default.(uint32)
 	// extrainfoDescRecommendCount is the schema descriptor for recommend_count field.
-	extrainfoDescRecommendCount := extrainfoFields[5].Descriptor()
+	extrainfoDescRecommendCount := extrainfoFields[3].Descriptor()
 	// extrainfo.DefaultRecommendCount holds the default value on creation for the recommend_count field.
 	extrainfo.DefaultRecommendCount = extrainfoDescRecommendCount.Default.(uint32)
 	// extrainfoDescCommentCount is the schema descriptor for comment_count field.
-	extrainfoDescCommentCount := extrainfoFields[6].Descriptor()
+	extrainfoDescCommentCount := extrainfoFields[4].Descriptor()
 	// extrainfo.DefaultCommentCount holds the default value on creation for the comment_count field.
 	extrainfo.DefaultCommentCount = extrainfoDescCommentCount.Default.(uint32)
 	// extrainfoDescScoreCount is the schema descriptor for score_count field.
-	extrainfoDescScoreCount := extrainfoFields[7].Descriptor()
+	extrainfoDescScoreCount := extrainfoFields[5].Descriptor()
 	// extrainfo.DefaultScoreCount holds the default value on creation for the score_count field.
 	extrainfo.DefaultScoreCount = extrainfoDescScoreCount.Default.(uint32)
 	// extrainfoDescScore is the schema descriptor for score field.
-	extrainfoDescScore := extrainfoFields[8].Descriptor()
+	extrainfoDescScore := extrainfoFields[6].Descriptor()
 	// extrainfo.DefaultScore holds the default value on creation for the score field.
 	extrainfo.DefaultScore = extrainfoDescScore.Default.(decimal.Decimal)
 	fbmcrowdfundingMixin := schema.FbmCrowdFunding{}.Mixin()

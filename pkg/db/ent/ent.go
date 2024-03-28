@@ -17,6 +17,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddescription"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplaycolor"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplayname"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodlabel"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
@@ -77,6 +78,7 @@ func columnChecker(table string) func(string) error {
 		appgooddescription.Table:     appgooddescription.ValidColumn,
 		appgooddisplaycolor.Table:    appgooddisplaycolor.ValidColumn,
 		appgooddisplayname.Table:     appgooddisplayname.ValidColumn,
+		appgoodlabel.Table:           appgoodlabel.ValidColumn,
 		appgoodposter.Table:          appgoodposter.ValidColumn,
 		applegacypowerrental.Table:   applegacypowerrental.ValidColumn,
 		appmininggoodstock.Table:     appmininggoodstock.ValidColumn,

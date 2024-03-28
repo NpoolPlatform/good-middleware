@@ -100,6 +100,19 @@ func (f AppGoodDisplayNameFunc) Mutate(ctx context.Context, m ent.Mutation) (ent
 	return f(ctx, mv)
 }
 
+// The AppGoodLabelFunc type is an adapter to allow the use of ordinary
+// function as AppGoodLabel mutator.
+type AppGoodLabelFunc func(context.Context, *ent.AppGoodLabelMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppGoodLabelFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppGoodLabelMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppGoodLabelMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The AppGoodPosterFunc type is an adapter to allow the use of ordinary
 // function as AppGoodPoster mutator.
 type AppGoodPosterFunc func(context.Context, *ent.AppGoodPosterMutation) (ent.Value, error)

@@ -27,6 +27,9 @@ type AppGoodDisplayColor func(*sql.Selector)
 // AppGoodDisplayName is the predicate function for appgooddisplayname builders.
 type AppGoodDisplayName func(*sql.Selector)
 
+// AppGoodLabel is the predicate function for appgoodlabel builders.
+type AppGoodLabel func(*sql.Selector)
+
 // AppGoodPoster is the predicate function for appgoodposter builders.
 type AppGoodPoster func(*sql.Selector)
 

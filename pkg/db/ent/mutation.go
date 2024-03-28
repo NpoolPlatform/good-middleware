@@ -15,6 +15,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddescription"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplaycolor"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplayname"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodlabel"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
@@ -71,6 +72,7 @@ const (
 	TypeAppGoodDescription     = "AppGoodDescription"
 	TypeAppGoodDisplayColor    = "AppGoodDisplayColor"
 	TypeAppGoodDisplayName     = "AppGoodDisplayName"
+	TypeAppGoodLabel           = "AppGoodLabel"
 	TypeAppGoodPoster          = "AppGoodPoster"
 	TypeAppLegacyPowerRental   = "AppLegacyPowerRental"
 	TypeAppMiningGoodStock     = "AppMiningGoodStock"
@@ -8504,6 +8506,1062 @@ func (m *AppGoodDisplayNameMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *AppGoodDisplayNameMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown AppGoodDisplayName edge %s", name)
+}
+
+// AppGoodLabelMutation represents an operation that mutates the AppGoodLabel nodes in the graph.
+type AppGoodLabelMutation struct {
+	config
+	op             Op
+	typ            string
+	id             *uint32
+	created_at     *uint32
+	addcreated_at  *int32
+	updated_at     *uint32
+	addupdated_at  *int32
+	deleted_at     *uint32
+	adddeleted_at  *int32
+	ent_id         *uuid.UUID
+	app_good_id    *uuid.UUID
+	icon           *string
+	icon_bg_color  *string
+	label          *string
+	label_bg_color *string
+	index          *uint8
+	addindex       *int8
+	clearedFields  map[string]struct{}
+	done           bool
+	oldValue       func(context.Context) (*AppGoodLabel, error)
+	predicates     []predicate.AppGoodLabel
+}
+
+var _ ent.Mutation = (*AppGoodLabelMutation)(nil)
+
+// appgoodlabelOption allows management of the mutation configuration using functional options.
+type appgoodlabelOption func(*AppGoodLabelMutation)
+
+// newAppGoodLabelMutation creates new mutation for the AppGoodLabel entity.
+func newAppGoodLabelMutation(c config, op Op, opts ...appgoodlabelOption) *AppGoodLabelMutation {
+	m := &AppGoodLabelMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeAppGoodLabel,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withAppGoodLabelID sets the ID field of the mutation.
+func withAppGoodLabelID(id uint32) appgoodlabelOption {
+	return func(m *AppGoodLabelMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *AppGoodLabel
+		)
+		m.oldValue = func(ctx context.Context) (*AppGoodLabel, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().AppGoodLabel.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withAppGoodLabel sets the old AppGoodLabel of the mutation.
+func withAppGoodLabel(node *AppGoodLabel) appgoodlabelOption {
+	return func(m *AppGoodLabelMutation) {
+		m.oldValue = func(context.Context) (*AppGoodLabel, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m AppGoodLabelMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m AppGoodLabelMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of AppGoodLabel entities.
+func (m *AppGoodLabelMutation) SetID(id uint32) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *AppGoodLabelMutation) ID() (id uint32, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *AppGoodLabelMutation) IDs(ctx context.Context) ([]uint32, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uint32{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().AppGoodLabel.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *AppGoodLabelMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *AppGoodLabelMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the AppGoodLabel entity.
+// If the AppGoodLabel object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodLabelMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *AppGoodLabelMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *AppGoodLabelMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *AppGoodLabelMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *AppGoodLabelMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *AppGoodLabelMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the AppGoodLabel entity.
+// If the AppGoodLabel object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodLabelMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *AppGoodLabelMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *AppGoodLabelMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *AppGoodLabelMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *AppGoodLabelMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *AppGoodLabelMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the AppGoodLabel entity.
+// If the AppGoodLabel object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodLabelMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *AppGoodLabelMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *AppGoodLabelMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *AppGoodLabelMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetEntID sets the "ent_id" field.
+func (m *AppGoodLabelMutation) SetEntID(u uuid.UUID) {
+	m.ent_id = &u
+}
+
+// EntID returns the value of the "ent_id" field in the mutation.
+func (m *AppGoodLabelMutation) EntID() (r uuid.UUID, exists bool) {
+	v := m.ent_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEntID returns the old "ent_id" field's value of the AppGoodLabel entity.
+// If the AppGoodLabel object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodLabelMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEntID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEntID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEntID: %w", err)
+	}
+	return oldValue.EntID, nil
+}
+
+// ResetEntID resets all changes to the "ent_id" field.
+func (m *AppGoodLabelMutation) ResetEntID() {
+	m.ent_id = nil
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (m *AppGoodLabelMutation) SetAppGoodID(u uuid.UUID) {
+	m.app_good_id = &u
+}
+
+// AppGoodID returns the value of the "app_good_id" field in the mutation.
+func (m *AppGoodLabelMutation) AppGoodID() (r uuid.UUID, exists bool) {
+	v := m.app_good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppGoodID returns the old "app_good_id" field's value of the AppGoodLabel entity.
+// If the AppGoodLabel object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodLabelMutation) OldAppGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppGoodID: %w", err)
+	}
+	return oldValue.AppGoodID, nil
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (m *AppGoodLabelMutation) ClearAppGoodID() {
+	m.app_good_id = nil
+	m.clearedFields[appgoodlabel.FieldAppGoodID] = struct{}{}
+}
+
+// AppGoodIDCleared returns if the "app_good_id" field was cleared in this mutation.
+func (m *AppGoodLabelMutation) AppGoodIDCleared() bool {
+	_, ok := m.clearedFields[appgoodlabel.FieldAppGoodID]
+	return ok
+}
+
+// ResetAppGoodID resets all changes to the "app_good_id" field.
+func (m *AppGoodLabelMutation) ResetAppGoodID() {
+	m.app_good_id = nil
+	delete(m.clearedFields, appgoodlabel.FieldAppGoodID)
+}
+
+// SetIcon sets the "icon" field.
+func (m *AppGoodLabelMutation) SetIcon(s string) {
+	m.icon = &s
+}
+
+// Icon returns the value of the "icon" field in the mutation.
+func (m *AppGoodLabelMutation) Icon() (r string, exists bool) {
+	v := m.icon
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIcon returns the old "icon" field's value of the AppGoodLabel entity.
+// If the AppGoodLabel object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodLabelMutation) OldIcon(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIcon is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIcon requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIcon: %w", err)
+	}
+	return oldValue.Icon, nil
+}
+
+// ClearIcon clears the value of the "icon" field.
+func (m *AppGoodLabelMutation) ClearIcon() {
+	m.icon = nil
+	m.clearedFields[appgoodlabel.FieldIcon] = struct{}{}
+}
+
+// IconCleared returns if the "icon" field was cleared in this mutation.
+func (m *AppGoodLabelMutation) IconCleared() bool {
+	_, ok := m.clearedFields[appgoodlabel.FieldIcon]
+	return ok
+}
+
+// ResetIcon resets all changes to the "icon" field.
+func (m *AppGoodLabelMutation) ResetIcon() {
+	m.icon = nil
+	delete(m.clearedFields, appgoodlabel.FieldIcon)
+}
+
+// SetIconBgColor sets the "icon_bg_color" field.
+func (m *AppGoodLabelMutation) SetIconBgColor(s string) {
+	m.icon_bg_color = &s
+}
+
+// IconBgColor returns the value of the "icon_bg_color" field in the mutation.
+func (m *AppGoodLabelMutation) IconBgColor() (r string, exists bool) {
+	v := m.icon_bg_color
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIconBgColor returns the old "icon_bg_color" field's value of the AppGoodLabel entity.
+// If the AppGoodLabel object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodLabelMutation) OldIconBgColor(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIconBgColor is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIconBgColor requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIconBgColor: %w", err)
+	}
+	return oldValue.IconBgColor, nil
+}
+
+// ClearIconBgColor clears the value of the "icon_bg_color" field.
+func (m *AppGoodLabelMutation) ClearIconBgColor() {
+	m.icon_bg_color = nil
+	m.clearedFields[appgoodlabel.FieldIconBgColor] = struct{}{}
+}
+
+// IconBgColorCleared returns if the "icon_bg_color" field was cleared in this mutation.
+func (m *AppGoodLabelMutation) IconBgColorCleared() bool {
+	_, ok := m.clearedFields[appgoodlabel.FieldIconBgColor]
+	return ok
+}
+
+// ResetIconBgColor resets all changes to the "icon_bg_color" field.
+func (m *AppGoodLabelMutation) ResetIconBgColor() {
+	m.icon_bg_color = nil
+	delete(m.clearedFields, appgoodlabel.FieldIconBgColor)
+}
+
+// SetLabel sets the "label" field.
+func (m *AppGoodLabelMutation) SetLabel(s string) {
+	m.label = &s
+}
+
+// Label returns the value of the "label" field in the mutation.
+func (m *AppGoodLabelMutation) Label() (r string, exists bool) {
+	v := m.label
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLabel returns the old "label" field's value of the AppGoodLabel entity.
+// If the AppGoodLabel object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodLabelMutation) OldLabel(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLabel is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLabel requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLabel: %w", err)
+	}
+	return oldValue.Label, nil
+}
+
+// ClearLabel clears the value of the "label" field.
+func (m *AppGoodLabelMutation) ClearLabel() {
+	m.label = nil
+	m.clearedFields[appgoodlabel.FieldLabel] = struct{}{}
+}
+
+// LabelCleared returns if the "label" field was cleared in this mutation.
+func (m *AppGoodLabelMutation) LabelCleared() bool {
+	_, ok := m.clearedFields[appgoodlabel.FieldLabel]
+	return ok
+}
+
+// ResetLabel resets all changes to the "label" field.
+func (m *AppGoodLabelMutation) ResetLabel() {
+	m.label = nil
+	delete(m.clearedFields, appgoodlabel.FieldLabel)
+}
+
+// SetLabelBgColor sets the "label_bg_color" field.
+func (m *AppGoodLabelMutation) SetLabelBgColor(s string) {
+	m.label_bg_color = &s
+}
+
+// LabelBgColor returns the value of the "label_bg_color" field in the mutation.
+func (m *AppGoodLabelMutation) LabelBgColor() (r string, exists bool) {
+	v := m.label_bg_color
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLabelBgColor returns the old "label_bg_color" field's value of the AppGoodLabel entity.
+// If the AppGoodLabel object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodLabelMutation) OldLabelBgColor(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLabelBgColor is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLabelBgColor requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLabelBgColor: %w", err)
+	}
+	return oldValue.LabelBgColor, nil
+}
+
+// ClearLabelBgColor clears the value of the "label_bg_color" field.
+func (m *AppGoodLabelMutation) ClearLabelBgColor() {
+	m.label_bg_color = nil
+	m.clearedFields[appgoodlabel.FieldLabelBgColor] = struct{}{}
+}
+
+// LabelBgColorCleared returns if the "label_bg_color" field was cleared in this mutation.
+func (m *AppGoodLabelMutation) LabelBgColorCleared() bool {
+	_, ok := m.clearedFields[appgoodlabel.FieldLabelBgColor]
+	return ok
+}
+
+// ResetLabelBgColor resets all changes to the "label_bg_color" field.
+func (m *AppGoodLabelMutation) ResetLabelBgColor() {
+	m.label_bg_color = nil
+	delete(m.clearedFields, appgoodlabel.FieldLabelBgColor)
+}
+
+// SetIndex sets the "index" field.
+func (m *AppGoodLabelMutation) SetIndex(u uint8) {
+	m.index = &u
+	m.addindex = nil
+}
+
+// Index returns the value of the "index" field in the mutation.
+func (m *AppGoodLabelMutation) Index() (r uint8, exists bool) {
+	v := m.index
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIndex returns the old "index" field's value of the AppGoodLabel entity.
+// If the AppGoodLabel object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppGoodLabelMutation) OldIndex(ctx context.Context) (v uint8, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIndex is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIndex requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIndex: %w", err)
+	}
+	return oldValue.Index, nil
+}
+
+// AddIndex adds u to the "index" field.
+func (m *AppGoodLabelMutation) AddIndex(u int8) {
+	if m.addindex != nil {
+		*m.addindex += u
+	} else {
+		m.addindex = &u
+	}
+}
+
+// AddedIndex returns the value that was added to the "index" field in this mutation.
+func (m *AppGoodLabelMutation) AddedIndex() (r int8, exists bool) {
+	v := m.addindex
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearIndex clears the value of the "index" field.
+func (m *AppGoodLabelMutation) ClearIndex() {
+	m.index = nil
+	m.addindex = nil
+	m.clearedFields[appgoodlabel.FieldIndex] = struct{}{}
+}
+
+// IndexCleared returns if the "index" field was cleared in this mutation.
+func (m *AppGoodLabelMutation) IndexCleared() bool {
+	_, ok := m.clearedFields[appgoodlabel.FieldIndex]
+	return ok
+}
+
+// ResetIndex resets all changes to the "index" field.
+func (m *AppGoodLabelMutation) ResetIndex() {
+	m.index = nil
+	m.addindex = nil
+	delete(m.clearedFields, appgoodlabel.FieldIndex)
+}
+
+// Where appends a list predicates to the AppGoodLabelMutation builder.
+func (m *AppGoodLabelMutation) Where(ps ...predicate.AppGoodLabel) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *AppGoodLabelMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (AppGoodLabel).
+func (m *AppGoodLabelMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *AppGoodLabelMutation) Fields() []string {
+	fields := make([]string, 0, 10)
+	if m.created_at != nil {
+		fields = append(fields, appgoodlabel.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, appgoodlabel.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, appgoodlabel.FieldDeletedAt)
+	}
+	if m.ent_id != nil {
+		fields = append(fields, appgoodlabel.FieldEntID)
+	}
+	if m.app_good_id != nil {
+		fields = append(fields, appgoodlabel.FieldAppGoodID)
+	}
+	if m.icon != nil {
+		fields = append(fields, appgoodlabel.FieldIcon)
+	}
+	if m.icon_bg_color != nil {
+		fields = append(fields, appgoodlabel.FieldIconBgColor)
+	}
+	if m.label != nil {
+		fields = append(fields, appgoodlabel.FieldLabel)
+	}
+	if m.label_bg_color != nil {
+		fields = append(fields, appgoodlabel.FieldLabelBgColor)
+	}
+	if m.index != nil {
+		fields = append(fields, appgoodlabel.FieldIndex)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *AppGoodLabelMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case appgoodlabel.FieldCreatedAt:
+		return m.CreatedAt()
+	case appgoodlabel.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case appgoodlabel.FieldDeletedAt:
+		return m.DeletedAt()
+	case appgoodlabel.FieldEntID:
+		return m.EntID()
+	case appgoodlabel.FieldAppGoodID:
+		return m.AppGoodID()
+	case appgoodlabel.FieldIcon:
+		return m.Icon()
+	case appgoodlabel.FieldIconBgColor:
+		return m.IconBgColor()
+	case appgoodlabel.FieldLabel:
+		return m.Label()
+	case appgoodlabel.FieldLabelBgColor:
+		return m.LabelBgColor()
+	case appgoodlabel.FieldIndex:
+		return m.Index()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *AppGoodLabelMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case appgoodlabel.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case appgoodlabel.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case appgoodlabel.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case appgoodlabel.FieldEntID:
+		return m.OldEntID(ctx)
+	case appgoodlabel.FieldAppGoodID:
+		return m.OldAppGoodID(ctx)
+	case appgoodlabel.FieldIcon:
+		return m.OldIcon(ctx)
+	case appgoodlabel.FieldIconBgColor:
+		return m.OldIconBgColor(ctx)
+	case appgoodlabel.FieldLabel:
+		return m.OldLabel(ctx)
+	case appgoodlabel.FieldLabelBgColor:
+		return m.OldLabelBgColor(ctx)
+	case appgoodlabel.FieldIndex:
+		return m.OldIndex(ctx)
+	}
+	return nil, fmt.Errorf("unknown AppGoodLabel field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AppGoodLabelMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case appgoodlabel.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case appgoodlabel.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case appgoodlabel.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case appgoodlabel.FieldEntID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEntID(v)
+		return nil
+	case appgoodlabel.FieldAppGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppGoodID(v)
+		return nil
+	case appgoodlabel.FieldIcon:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIcon(v)
+		return nil
+	case appgoodlabel.FieldIconBgColor:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIconBgColor(v)
+		return nil
+	case appgoodlabel.FieldLabel:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLabel(v)
+		return nil
+	case appgoodlabel.FieldLabelBgColor:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLabelBgColor(v)
+		return nil
+	case appgoodlabel.FieldIndex:
+		v, ok := value.(uint8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIndex(v)
+		return nil
+	}
+	return fmt.Errorf("unknown AppGoodLabel field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *AppGoodLabelMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, appgoodlabel.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, appgoodlabel.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, appgoodlabel.FieldDeletedAt)
+	}
+	if m.addindex != nil {
+		fields = append(fields, appgoodlabel.FieldIndex)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *AppGoodLabelMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case appgoodlabel.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case appgoodlabel.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case appgoodlabel.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	case appgoodlabel.FieldIndex:
+		return m.AddedIndex()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AppGoodLabelMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case appgoodlabel.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case appgoodlabel.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case appgoodlabel.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	case appgoodlabel.FieldIndex:
+		v, ok := value.(int8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddIndex(v)
+		return nil
+	}
+	return fmt.Errorf("unknown AppGoodLabel numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *AppGoodLabelMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(appgoodlabel.FieldAppGoodID) {
+		fields = append(fields, appgoodlabel.FieldAppGoodID)
+	}
+	if m.FieldCleared(appgoodlabel.FieldIcon) {
+		fields = append(fields, appgoodlabel.FieldIcon)
+	}
+	if m.FieldCleared(appgoodlabel.FieldIconBgColor) {
+		fields = append(fields, appgoodlabel.FieldIconBgColor)
+	}
+	if m.FieldCleared(appgoodlabel.FieldLabel) {
+		fields = append(fields, appgoodlabel.FieldLabel)
+	}
+	if m.FieldCleared(appgoodlabel.FieldLabelBgColor) {
+		fields = append(fields, appgoodlabel.FieldLabelBgColor)
+	}
+	if m.FieldCleared(appgoodlabel.FieldIndex) {
+		fields = append(fields, appgoodlabel.FieldIndex)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *AppGoodLabelMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *AppGoodLabelMutation) ClearField(name string) error {
+	switch name {
+	case appgoodlabel.FieldAppGoodID:
+		m.ClearAppGoodID()
+		return nil
+	case appgoodlabel.FieldIcon:
+		m.ClearIcon()
+		return nil
+	case appgoodlabel.FieldIconBgColor:
+		m.ClearIconBgColor()
+		return nil
+	case appgoodlabel.FieldLabel:
+		m.ClearLabel()
+		return nil
+	case appgoodlabel.FieldLabelBgColor:
+		m.ClearLabelBgColor()
+		return nil
+	case appgoodlabel.FieldIndex:
+		m.ClearIndex()
+		return nil
+	}
+	return fmt.Errorf("unknown AppGoodLabel nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *AppGoodLabelMutation) ResetField(name string) error {
+	switch name {
+	case appgoodlabel.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case appgoodlabel.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case appgoodlabel.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case appgoodlabel.FieldEntID:
+		m.ResetEntID()
+		return nil
+	case appgoodlabel.FieldAppGoodID:
+		m.ResetAppGoodID()
+		return nil
+	case appgoodlabel.FieldIcon:
+		m.ResetIcon()
+		return nil
+	case appgoodlabel.FieldIconBgColor:
+		m.ResetIconBgColor()
+		return nil
+	case appgoodlabel.FieldLabel:
+		m.ResetLabel()
+		return nil
+	case appgoodlabel.FieldLabelBgColor:
+		m.ResetLabelBgColor()
+		return nil
+	case appgoodlabel.FieldIndex:
+		m.ResetIndex()
+		return nil
+	}
+	return fmt.Errorf("unknown AppGoodLabel field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *AppGoodLabelMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *AppGoodLabelMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *AppGoodLabelMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *AppGoodLabelMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *AppGoodLabelMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *AppGoodLabelMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *AppGoodLabelMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown AppGoodLabel unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *AppGoodLabelMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown AppGoodLabel edge %s", name)
 }
 
 // AppGoodPosterMutation represents an operation that mutates the AppGoodPoster nodes in the graph.
@@ -21260,8 +22318,6 @@ type ExtraInfoMutation struct {
 	adddeleted_at      *int32
 	ent_id             *uuid.UUID
 	good_id            *uuid.UUID
-	posters            *[]string
-	labels             *[]string
 	likes              *uint32
 	addlikes           *int32
 	dislikes           *uint32
@@ -21618,107 +22674,22 @@ func (m *ExtraInfoMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err err
 	return oldValue.GoodID, nil
 }
 
+// ClearGoodID clears the value of the "good_id" field.
+func (m *ExtraInfoMutation) ClearGoodID() {
+	m.good_id = nil
+	m.clearedFields[extrainfo.FieldGoodID] = struct{}{}
+}
+
+// GoodIDCleared returns if the "good_id" field was cleared in this mutation.
+func (m *ExtraInfoMutation) GoodIDCleared() bool {
+	_, ok := m.clearedFields[extrainfo.FieldGoodID]
+	return ok
+}
+
 // ResetGoodID resets all changes to the "good_id" field.
 func (m *ExtraInfoMutation) ResetGoodID() {
 	m.good_id = nil
-}
-
-// SetPosters sets the "posters" field.
-func (m *ExtraInfoMutation) SetPosters(s []string) {
-	m.posters = &s
-}
-
-// Posters returns the value of the "posters" field in the mutation.
-func (m *ExtraInfoMutation) Posters() (r []string, exists bool) {
-	v := m.posters
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPosters returns the old "posters" field's value of the ExtraInfo entity.
-// If the ExtraInfo object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ExtraInfoMutation) OldPosters(ctx context.Context) (v []string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPosters is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPosters requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPosters: %w", err)
-	}
-	return oldValue.Posters, nil
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (m *ExtraInfoMutation) ClearPosters() {
-	m.posters = nil
-	m.clearedFields[extrainfo.FieldPosters] = struct{}{}
-}
-
-// PostersCleared returns if the "posters" field was cleared in this mutation.
-func (m *ExtraInfoMutation) PostersCleared() bool {
-	_, ok := m.clearedFields[extrainfo.FieldPosters]
-	return ok
-}
-
-// ResetPosters resets all changes to the "posters" field.
-func (m *ExtraInfoMutation) ResetPosters() {
-	m.posters = nil
-	delete(m.clearedFields, extrainfo.FieldPosters)
-}
-
-// SetLabels sets the "labels" field.
-func (m *ExtraInfoMutation) SetLabels(s []string) {
-	m.labels = &s
-}
-
-// Labels returns the value of the "labels" field in the mutation.
-func (m *ExtraInfoMutation) Labels() (r []string, exists bool) {
-	v := m.labels
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldLabels returns the old "labels" field's value of the ExtraInfo entity.
-// If the ExtraInfo object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ExtraInfoMutation) OldLabels(ctx context.Context) (v []string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldLabels is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldLabels requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLabels: %w", err)
-	}
-	return oldValue.Labels, nil
-}
-
-// ClearLabels clears the value of the "labels" field.
-func (m *ExtraInfoMutation) ClearLabels() {
-	m.labels = nil
-	m.clearedFields[extrainfo.FieldLabels] = struct{}{}
-}
-
-// LabelsCleared returns if the "labels" field was cleared in this mutation.
-func (m *ExtraInfoMutation) LabelsCleared() bool {
-	_, ok := m.clearedFields[extrainfo.FieldLabels]
-	return ok
-}
-
-// ResetLabels resets all changes to the "labels" field.
-func (m *ExtraInfoMutation) ResetLabels() {
-	m.labels = nil
-	delete(m.clearedFields, extrainfo.FieldLabels)
+	delete(m.clearedFields, extrainfo.FieldGoodID)
 }
 
 // SetLikes sets the "likes" field.
@@ -22139,7 +23110,7 @@ func (m *ExtraInfoMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ExtraInfoMutation) Fields() []string {
-	fields := make([]string, 0, 13)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, extrainfo.FieldCreatedAt)
 	}
@@ -22154,12 +23125,6 @@ func (m *ExtraInfoMutation) Fields() []string {
 	}
 	if m.good_id != nil {
 		fields = append(fields, extrainfo.FieldGoodID)
-	}
-	if m.posters != nil {
-		fields = append(fields, extrainfo.FieldPosters)
-	}
-	if m.labels != nil {
-		fields = append(fields, extrainfo.FieldLabels)
 	}
 	if m.likes != nil {
 		fields = append(fields, extrainfo.FieldLikes)
@@ -22197,10 +23162,6 @@ func (m *ExtraInfoMutation) Field(name string) (ent.Value, bool) {
 		return m.EntID()
 	case extrainfo.FieldGoodID:
 		return m.GoodID()
-	case extrainfo.FieldPosters:
-		return m.Posters()
-	case extrainfo.FieldLabels:
-		return m.Labels()
 	case extrainfo.FieldLikes:
 		return m.Likes()
 	case extrainfo.FieldDislikes:
@@ -22232,10 +23193,6 @@ func (m *ExtraInfoMutation) OldField(ctx context.Context, name string) (ent.Valu
 		return m.OldEntID(ctx)
 	case extrainfo.FieldGoodID:
 		return m.OldGoodID(ctx)
-	case extrainfo.FieldPosters:
-		return m.OldPosters(ctx)
-	case extrainfo.FieldLabels:
-		return m.OldLabels(ctx)
 	case extrainfo.FieldLikes:
 		return m.OldLikes(ctx)
 	case extrainfo.FieldDislikes:
@@ -22291,20 +23248,6 @@ func (m *ExtraInfoMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetGoodID(v)
-		return nil
-	case extrainfo.FieldPosters:
-		v, ok := value.([]string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPosters(v)
-		return nil
-	case extrainfo.FieldLabels:
-		v, ok := value.([]string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetLabels(v)
 		return nil
 	case extrainfo.FieldLikes:
 		v, ok := value.(uint32)
@@ -22477,11 +23420,8 @@ func (m *ExtraInfoMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *ExtraInfoMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(extrainfo.FieldPosters) {
-		fields = append(fields, extrainfo.FieldPosters)
-	}
-	if m.FieldCleared(extrainfo.FieldLabels) {
-		fields = append(fields, extrainfo.FieldLabels)
+	if m.FieldCleared(extrainfo.FieldGoodID) {
+		fields = append(fields, extrainfo.FieldGoodID)
 	}
 	if m.FieldCleared(extrainfo.FieldLikes) {
 		fields = append(fields, extrainfo.FieldLikes)
@@ -22515,11 +23455,8 @@ func (m *ExtraInfoMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *ExtraInfoMutation) ClearField(name string) error {
 	switch name {
-	case extrainfo.FieldPosters:
-		m.ClearPosters()
-		return nil
-	case extrainfo.FieldLabels:
-		m.ClearLabels()
+	case extrainfo.FieldGoodID:
+		m.ClearGoodID()
 		return nil
 	case extrainfo.FieldLikes:
 		m.ClearLikes()
@@ -22561,12 +23498,6 @@ func (m *ExtraInfoMutation) ResetField(name string) error {
 		return nil
 	case extrainfo.FieldGoodID:
 		m.ResetGoodID()
-		return nil
-	case extrainfo.FieldPosters:
-		m.ResetPosters()
-		return nil
-	case extrainfo.FieldLabels:
-		m.ResetLabels()
 		return nil
 	case extrainfo.FieldLikes:
 		m.ResetLikes()

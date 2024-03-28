@@ -235,6 +235,38 @@ var (
 			},
 		},
 	}
+	// AppGoodLabelsColumns holds the columns for the "app_good_labels" table.
+	AppGoodLabelsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "icon", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "icon_bg_color", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "label", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "label_bg_color", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "index", Type: field.TypeUint8, Nullable: true, Default: 0},
+	}
+	// AppGoodLabelsTable holds the schema information for the "app_good_labels" table.
+	AppGoodLabelsTable = &schema.Table{
+		Name:       "app_good_labels",
+		Columns:    AppGoodLabelsColumns,
+		PrimaryKey: []*schema.Column{AppGoodLabelsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appgoodlabel_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppGoodLabelsColumns[4]},
+			},
+			{
+				Name:    "appgoodlabel_app_good_id",
+				Unique:  false,
+				Columns: []*schema.Column{AppGoodLabelsColumns[5]},
+			},
+		},
+	}
 	// AppGoodPostersColumns holds the columns for the "app_good_posters" table.
 	AppGoodPostersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -591,9 +623,7 @@ var (
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
-		{Name: "good_id", Type: field.TypeUUID},
-		{Name: "posters", Type: field.TypeJSON, Nullable: true},
-		{Name: "labels", Type: field.TypeJSON, Nullable: true},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "likes", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "dislikes", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "recommend_count", Type: field.TypeUint32, Nullable: true, Default: 0},
@@ -1210,6 +1240,7 @@ var (
 		AppGoodDescriptionsTable,
 		AppGoodDisplayColorsTable,
 		AppGoodDisplayNamesTable,
+		AppGoodLabelsTable,
 		AppGoodPostersTable,
 		AppLegacyPowerRentalsTable,
 		AppMiningGoodStocksTable,

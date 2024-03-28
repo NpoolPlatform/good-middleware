@@ -35,6 +35,7 @@ type hooks struct {
 	AppGoodDescription     []ent.Hook
 	AppGoodDisplayColor    []ent.Hook
 	AppGoodDisplayName     []ent.Hook
+	AppGoodLabel           []ent.Hook
 	AppGoodPoster          []ent.Hook
 	AppLegacyPowerRental   []ent.Hook
 	AppMiningGoodStock     []ent.Hook

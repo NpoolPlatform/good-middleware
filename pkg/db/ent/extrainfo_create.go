@@ -85,15 +85,11 @@ func (eic *ExtraInfoCreate) SetGoodID(u uuid.UUID) *ExtraInfoCreate {
 	return eic
 }
 
-// SetPosters sets the "posters" field.
-func (eic *ExtraInfoCreate) SetPosters(s []string) *ExtraInfoCreate {
-	eic.mutation.SetPosters(s)
-	return eic
-}
-
-// SetLabels sets the "labels" field.
-func (eic *ExtraInfoCreate) SetLabels(s []string) *ExtraInfoCreate {
-	eic.mutation.SetLabels(s)
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (eic *ExtraInfoCreate) SetNillableGoodID(u *uuid.UUID) *ExtraInfoCreate {
+	if u != nil {
+		eic.SetGoodID(*u)
+	}
 	return eic
 }
 
@@ -294,13 +290,12 @@ func (eic *ExtraInfoCreate) defaults() error {
 		v := extrainfo.DefaultEntID()
 		eic.mutation.SetEntID(v)
 	}
-	if _, ok := eic.mutation.Posters(); !ok {
-		v := extrainfo.DefaultPosters
-		eic.mutation.SetPosters(v)
-	}
-	if _, ok := eic.mutation.Labels(); !ok {
-		v := extrainfo.DefaultLabels
-		eic.mutation.SetLabels(v)
+	if _, ok := eic.mutation.GoodID(); !ok {
+		if extrainfo.DefaultGoodID == nil {
+			return fmt.Errorf("ent: uninitialized extrainfo.DefaultGoodID (forgotten import ent/runtime?)")
+		}
+		v := extrainfo.DefaultGoodID()
+		eic.mutation.SetGoodID(v)
 	}
 	if _, ok := eic.mutation.Likes(); !ok {
 		v := extrainfo.DefaultLikes
@@ -342,9 +337,6 @@ func (eic *ExtraInfoCreate) check() error {
 	}
 	if _, ok := eic.mutation.EntID(); !ok {
 		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "ExtraInfo.ent_id"`)}
-	}
-	if _, ok := eic.mutation.GoodID(); !ok {
-		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "ExtraInfo.good_id"`)}
 	}
 	return nil
 }
@@ -419,22 +411,6 @@ func (eic *ExtraInfoCreate) createSpec() (*ExtraInfo, *sqlgraph.CreateSpec) {
 			Column: extrainfo.FieldGoodID,
 		})
 		_node.GoodID = value
-	}
-	if value, ok := eic.mutation.Posters(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: extrainfo.FieldPosters,
-		})
-		_node.Posters = value
-	}
-	if value, ok := eic.mutation.Labels(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: extrainfo.FieldLabels,
-		})
-		_node.Labels = value
 	}
 	if value, ok := eic.mutation.Likes(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -616,39 +592,9 @@ func (u *ExtraInfoUpsert) UpdateGoodID() *ExtraInfoUpsert {
 	return u
 }
 
-// SetPosters sets the "posters" field.
-func (u *ExtraInfoUpsert) SetPosters(v []string) *ExtraInfoUpsert {
-	u.Set(extrainfo.FieldPosters, v)
-	return u
-}
-
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *ExtraInfoUpsert) UpdatePosters() *ExtraInfoUpsert {
-	u.SetExcluded(extrainfo.FieldPosters)
-	return u
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (u *ExtraInfoUpsert) ClearPosters() *ExtraInfoUpsert {
-	u.SetNull(extrainfo.FieldPosters)
-	return u
-}
-
-// SetLabels sets the "labels" field.
-func (u *ExtraInfoUpsert) SetLabels(v []string) *ExtraInfoUpsert {
-	u.Set(extrainfo.FieldLabels, v)
-	return u
-}
-
-// UpdateLabels sets the "labels" field to the value that was provided on create.
-func (u *ExtraInfoUpsert) UpdateLabels() *ExtraInfoUpsert {
-	u.SetExcluded(extrainfo.FieldLabels)
-	return u
-}
-
-// ClearLabels clears the value of the "labels" field.
-func (u *ExtraInfoUpsert) ClearLabels() *ExtraInfoUpsert {
-	u.SetNull(extrainfo.FieldLabels)
+// ClearGoodID clears the value of the "good_id" field.
+func (u *ExtraInfoUpsert) ClearGoodID() *ExtraInfoUpsert {
+	u.SetNull(extrainfo.FieldGoodID)
 	return u
 }
 
@@ -931,45 +877,10 @@ func (u *ExtraInfoUpsertOne) UpdateGoodID() *ExtraInfoUpsertOne {
 	})
 }
 
-// SetPosters sets the "posters" field.
-func (u *ExtraInfoUpsertOne) SetPosters(v []string) *ExtraInfoUpsertOne {
+// ClearGoodID clears the value of the "good_id" field.
+func (u *ExtraInfoUpsertOne) ClearGoodID() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetPosters(v)
-	})
-}
-
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *ExtraInfoUpsertOne) UpdatePosters() *ExtraInfoUpsertOne {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdatePosters()
-	})
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (u *ExtraInfoUpsertOne) ClearPosters() *ExtraInfoUpsertOne {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearPosters()
-	})
-}
-
-// SetLabels sets the "labels" field.
-func (u *ExtraInfoUpsertOne) SetLabels(v []string) *ExtraInfoUpsertOne {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetLabels(v)
-	})
-}
-
-// UpdateLabels sets the "labels" field to the value that was provided on create.
-func (u *ExtraInfoUpsertOne) UpdateLabels() *ExtraInfoUpsertOne {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateLabels()
-	})
-}
-
-// ClearLabels clears the value of the "labels" field.
-func (u *ExtraInfoUpsertOne) ClearLabels() *ExtraInfoUpsertOne {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearLabels()
+		s.ClearGoodID()
 	})
 }
 
@@ -1440,45 +1351,10 @@ func (u *ExtraInfoUpsertBulk) UpdateGoodID() *ExtraInfoUpsertBulk {
 	})
 }
 
-// SetPosters sets the "posters" field.
-func (u *ExtraInfoUpsertBulk) SetPosters(v []string) *ExtraInfoUpsertBulk {
+// ClearGoodID clears the value of the "good_id" field.
+func (u *ExtraInfoUpsertBulk) ClearGoodID() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetPosters(v)
-	})
-}
-
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *ExtraInfoUpsertBulk) UpdatePosters() *ExtraInfoUpsertBulk {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdatePosters()
-	})
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (u *ExtraInfoUpsertBulk) ClearPosters() *ExtraInfoUpsertBulk {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearPosters()
-	})
-}
-
-// SetLabels sets the "labels" field.
-func (u *ExtraInfoUpsertBulk) SetLabels(v []string) *ExtraInfoUpsertBulk {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetLabels(v)
-	})
-}
-
-// UpdateLabels sets the "labels" field to the value that was provided on create.
-func (u *ExtraInfoUpsertBulk) UpdateLabels() *ExtraInfoUpsertBulk {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateLabels()
-	})
-}
-
-// ClearLabels clears the value of the "labels" field.
-func (u *ExtraInfoUpsertBulk) ClearLabels() *ExtraInfoUpsertBulk {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearLabels()
+		s.ClearGoodID()
 	})
 }
 

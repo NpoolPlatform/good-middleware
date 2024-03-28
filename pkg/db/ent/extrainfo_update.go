@@ -105,27 +105,17 @@ func (eiu *ExtraInfoUpdate) SetGoodID(u uuid.UUID) *ExtraInfoUpdate {
 	return eiu
 }
 
-// SetPosters sets the "posters" field.
-func (eiu *ExtraInfoUpdate) SetPosters(s []string) *ExtraInfoUpdate {
-	eiu.mutation.SetPosters(s)
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (eiu *ExtraInfoUpdate) SetNillableGoodID(u *uuid.UUID) *ExtraInfoUpdate {
+	if u != nil {
+		eiu.SetGoodID(*u)
+	}
 	return eiu
 }
 
-// ClearPosters clears the value of the "posters" field.
-func (eiu *ExtraInfoUpdate) ClearPosters() *ExtraInfoUpdate {
-	eiu.mutation.ClearPosters()
-	return eiu
-}
-
-// SetLabels sets the "labels" field.
-func (eiu *ExtraInfoUpdate) SetLabels(s []string) *ExtraInfoUpdate {
-	eiu.mutation.SetLabels(s)
-	return eiu
-}
-
-// ClearLabels clears the value of the "labels" field.
-func (eiu *ExtraInfoUpdate) ClearLabels() *ExtraInfoUpdate {
-	eiu.mutation.ClearLabels()
+// ClearGoodID clears the value of the "good_id" field.
+func (eiu *ExtraInfoUpdate) ClearGoodID() *ExtraInfoUpdate {
+	eiu.mutation.ClearGoodID()
 	return eiu
 }
 
@@ -438,30 +428,10 @@ func (eiu *ExtraInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: extrainfo.FieldGoodID,
 		})
 	}
-	if value, ok := eiu.mutation.Posters(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: extrainfo.FieldPosters,
-		})
-	}
-	if eiu.mutation.PostersCleared() {
+	if eiu.mutation.GoodIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: extrainfo.FieldPosters,
-		})
-	}
-	if value, ok := eiu.mutation.Labels(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: extrainfo.FieldLabels,
-		})
-	}
-	if eiu.mutation.LabelsCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: extrainfo.FieldLabels,
+			Type:   field.TypeUUID,
+			Column: extrainfo.FieldGoodID,
 		})
 	}
 	if value, ok := eiu.mutation.Likes(); ok {
@@ -673,27 +643,17 @@ func (eiuo *ExtraInfoUpdateOne) SetGoodID(u uuid.UUID) *ExtraInfoUpdateOne {
 	return eiuo
 }
 
-// SetPosters sets the "posters" field.
-func (eiuo *ExtraInfoUpdateOne) SetPosters(s []string) *ExtraInfoUpdateOne {
-	eiuo.mutation.SetPosters(s)
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (eiuo *ExtraInfoUpdateOne) SetNillableGoodID(u *uuid.UUID) *ExtraInfoUpdateOne {
+	if u != nil {
+		eiuo.SetGoodID(*u)
+	}
 	return eiuo
 }
 
-// ClearPosters clears the value of the "posters" field.
-func (eiuo *ExtraInfoUpdateOne) ClearPosters() *ExtraInfoUpdateOne {
-	eiuo.mutation.ClearPosters()
-	return eiuo
-}
-
-// SetLabels sets the "labels" field.
-func (eiuo *ExtraInfoUpdateOne) SetLabels(s []string) *ExtraInfoUpdateOne {
-	eiuo.mutation.SetLabels(s)
-	return eiuo
-}
-
-// ClearLabels clears the value of the "labels" field.
-func (eiuo *ExtraInfoUpdateOne) ClearLabels() *ExtraInfoUpdateOne {
-	eiuo.mutation.ClearLabels()
+// ClearGoodID clears the value of the "good_id" field.
+func (eiuo *ExtraInfoUpdateOne) ClearGoodID() *ExtraInfoUpdateOne {
+	eiuo.mutation.ClearGoodID()
 	return eiuo
 }
 
@@ -1036,30 +996,10 @@ func (eiuo *ExtraInfoUpdateOne) sqlSave(ctx context.Context) (_node *ExtraInfo, 
 			Column: extrainfo.FieldGoodID,
 		})
 	}
-	if value, ok := eiuo.mutation.Posters(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: extrainfo.FieldPosters,
-		})
-	}
-	if eiuo.mutation.PostersCleared() {
+	if eiuo.mutation.GoodIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: extrainfo.FieldPosters,
-		})
-	}
-	if value, ok := eiuo.mutation.Labels(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: extrainfo.FieldLabels,
-		})
-	}
-	if eiuo.mutation.LabelsCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: extrainfo.FieldLabels,
+			Type:   field.TypeUUID,
+			Column: extrainfo.FieldGoodID,
 		})
 	}
 	if value, ok := eiuo.mutation.Likes(); ok {

@@ -28,6 +28,8 @@ type Tx struct {
 	AppGoodDisplayColor *AppGoodDisplayColorClient
 	// AppGoodDisplayName is the client for interacting with the AppGoodDisplayName builders.
 	AppGoodDisplayName *AppGoodDisplayNameClient
+	// AppGoodLabel is the client for interacting with the AppGoodLabel builders.
+	AppGoodLabel *AppGoodLabelClient
 	// AppGoodPoster is the client for interacting with the AppGoodPoster builders.
 	AppGoodPoster *AppGoodPosterClient
 	// AppLegacyPowerRental is the client for interacting with the AppLegacyPowerRental builders.
@@ -236,6 +238,7 @@ func (tx *Tx) init() {
 	tx.AppGoodDescription = NewAppGoodDescriptionClient(tx.config)
 	tx.AppGoodDisplayColor = NewAppGoodDisplayColorClient(tx.config)
 	tx.AppGoodDisplayName = NewAppGoodDisplayNameClient(tx.config)
+	tx.AppGoodLabel = NewAppGoodLabelClient(tx.config)
 	tx.AppGoodPoster = NewAppGoodPosterClient(tx.config)
 	tx.AppLegacyPowerRental = NewAppLegacyPowerRentalClient(tx.config)
 	tx.AppMiningGoodStock = NewAppMiningGoodStockClient(tx.config)

@@ -318,6 +318,30 @@ func (f AppGoodDisplayNameMutationRuleFunc) EvalMutation(ctx context.Context, m 
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppGoodDisplayNameMutation", m)
 }
 
+// The AppGoodLabelQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AppGoodLabelQueryRuleFunc func(context.Context, *ent.AppGoodLabelQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AppGoodLabelQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppGoodLabelQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppGoodLabelQuery", q)
+}
+
+// The AppGoodLabelMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AppGoodLabelMutationRuleFunc func(context.Context, *ent.AppGoodLabelMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AppGoodLabelMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppGoodLabelMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppGoodLabelMutation", m)
+}
+
 // The AppGoodPosterQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type AppGoodPosterQueryRuleFunc func(context.Context, *ent.AppGoodPosterQuery) error
@@ -1159,6 +1183,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.AppGoodDisplayNameQuery:
 		return q.Filter(), nil
+	case *ent.AppGoodLabelQuery:
+		return q.Filter(), nil
 	case *ent.AppGoodPosterQuery:
 		return q.Filter(), nil
 	case *ent.AppLegacyPowerRentalQuery:
@@ -1245,6 +1271,8 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	case *ent.AppGoodDisplayColorMutation:
 		return m.Filter(), nil
 	case *ent.AppGoodDisplayNameMutation:
+		return m.Filter(), nil
+	case *ent.AppGoodLabelMutation:
 		return m.Filter(), nil
 	case *ent.AppGoodPosterMutation:
 		return m.Filter(), nil

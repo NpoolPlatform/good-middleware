@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -28,10 +27,6 @@ type ExtraInfo struct {
 	EntID uuid.UUID `json:"ent_id,omitempty"`
 	// GoodID holds the value of the "good_id" field.
 	GoodID uuid.UUID `json:"good_id,omitempty"`
-	// Posters holds the value of the "posters" field.
-	Posters []string `json:"posters,omitempty"`
-	// Labels holds the value of the "labels" field.
-	Labels []string `json:"labels,omitempty"`
 	// Likes holds the value of the "likes" field.
 	Likes uint32 `json:"likes,omitempty"`
 	// Dislikes holds the value of the "dislikes" field.
@@ -51,8 +46,6 @@ func (*ExtraInfo) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case extrainfo.FieldPosters, extrainfo.FieldLabels:
-			values[i] = new([]byte)
 		case extrainfo.FieldScore:
 			values[i] = new(decimal.Decimal)
 		case extrainfo.FieldID, extrainfo.FieldCreatedAt, extrainfo.FieldUpdatedAt, extrainfo.FieldDeletedAt, extrainfo.FieldLikes, extrainfo.FieldDislikes, extrainfo.FieldRecommendCount, extrainfo.FieldCommentCount, extrainfo.FieldScoreCount:
@@ -109,22 +102,6 @@ func (ei *ExtraInfo) assignValues(columns []string, values []interface{}) error 
 				return fmt.Errorf("unexpected type %T for field good_id", values[i])
 			} else if value != nil {
 				ei.GoodID = *value
-			}
-		case extrainfo.FieldPosters:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field posters", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &ei.Posters); err != nil {
-					return fmt.Errorf("unmarshal field posters: %w", err)
-				}
-			}
-		case extrainfo.FieldLabels:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field labels", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &ei.Labels); err != nil {
-					return fmt.Errorf("unmarshal field labels: %w", err)
-				}
 			}
 		case extrainfo.FieldLikes:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -204,12 +181,6 @@ func (ei *ExtraInfo) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("good_id=")
 	builder.WriteString(fmt.Sprintf("%v", ei.GoodID))
-	builder.WriteString(", ")
-	builder.WriteString("posters=")
-	builder.WriteString(fmt.Sprintf("%v", ei.Posters))
-	builder.WriteString(", ")
-	builder.WriteString("labels=")
-	builder.WriteString(fmt.Sprintf("%v", ei.Labels))
 	builder.WriteString(", ")
 	builder.WriteString("likes=")
 	builder.WriteString(fmt.Sprintf("%v", ei.Likes))

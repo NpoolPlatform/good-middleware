@@ -477,31 +477,17 @@ func GoodIDLTE(v uuid.UUID) predicate.ExtraInfo {
 	})
 }
 
-// PostersIsNil applies the IsNil predicate on the "posters" field.
-func PostersIsNil() predicate.ExtraInfo {
+// GoodIDIsNil applies the IsNil predicate on the "good_id" field.
+func GoodIDIsNil() predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldPosters)))
+		s.Where(sql.IsNull(s.C(FieldGoodID)))
 	})
 }
 
-// PostersNotNil applies the NotNil predicate on the "posters" field.
-func PostersNotNil() predicate.ExtraInfo {
+// GoodIDNotNil applies the NotNil predicate on the "good_id" field.
+func GoodIDNotNil() predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldPosters)))
-	})
-}
-
-// LabelsIsNil applies the IsNil predicate on the "labels" field.
-func LabelsIsNil() predicate.ExtraInfo {
-	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldLabels)))
-	})
-}
-
-// LabelsNotNil applies the NotNil predicate on the "labels" field.
-func LabelsNotNil() predicate.ExtraInfo {
-	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldLabels)))
+		s.Where(sql.NotNull(s.C(FieldGoodID)))
 	})
 }
 

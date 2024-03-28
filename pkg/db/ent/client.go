@@ -17,6 +17,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddescription"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplaycolor"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplayname"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodlabel"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
@@ -74,6 +75,8 @@ type Client struct {
 	AppGoodDisplayColor *AppGoodDisplayColorClient
 	// AppGoodDisplayName is the client for interacting with the AppGoodDisplayName builders.
 	AppGoodDisplayName *AppGoodDisplayNameClient
+	// AppGoodLabel is the client for interacting with the AppGoodLabel builders.
+	AppGoodLabel *AppGoodLabelClient
 	// AppGoodPoster is the client for interacting with the AppGoodPoster builders.
 	AppGoodPoster *AppGoodPosterClient
 	// AppLegacyPowerRental is the client for interacting with the AppLegacyPowerRental builders.
@@ -160,6 +163,7 @@ func (c *Client) init() {
 	c.AppGoodDescription = NewAppGoodDescriptionClient(c.config)
 	c.AppGoodDisplayColor = NewAppGoodDisplayColorClient(c.config)
 	c.AppGoodDisplayName = NewAppGoodDisplayNameClient(c.config)
+	c.AppGoodLabel = NewAppGoodLabelClient(c.config)
 	c.AppGoodPoster = NewAppGoodPosterClient(c.config)
 	c.AppLegacyPowerRental = NewAppLegacyPowerRentalClient(c.config)
 	c.AppMiningGoodStock = NewAppMiningGoodStockClient(c.config)
@@ -233,6 +237,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		AppGoodDescription:     NewAppGoodDescriptionClient(cfg),
 		AppGoodDisplayColor:    NewAppGoodDisplayColorClient(cfg),
 		AppGoodDisplayName:     NewAppGoodDisplayNameClient(cfg),
+		AppGoodLabel:           NewAppGoodLabelClient(cfg),
 		AppGoodPoster:          NewAppGoodPosterClient(cfg),
 		AppLegacyPowerRental:   NewAppLegacyPowerRentalClient(cfg),
 		AppMiningGoodStock:     NewAppMiningGoodStockClient(cfg),
@@ -292,6 +297,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		AppGoodDescription:     NewAppGoodDescriptionClient(cfg),
 		AppGoodDisplayColor:    NewAppGoodDisplayColorClient(cfg),
 		AppGoodDisplayName:     NewAppGoodDisplayNameClient(cfg),
+		AppGoodLabel:           NewAppGoodLabelClient(cfg),
 		AppGoodPoster:          NewAppGoodPosterClient(cfg),
 		AppLegacyPowerRental:   NewAppLegacyPowerRentalClient(cfg),
 		AppMiningGoodStock:     NewAppMiningGoodStockClient(cfg),
@@ -361,6 +367,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.AppGoodDescription.Use(hooks...)
 	c.AppGoodDisplayColor.Use(hooks...)
 	c.AppGoodDisplayName.Use(hooks...)
+	c.AppGoodLabel.Use(hooks...)
 	c.AppGoodPoster.Use(hooks...)
 	c.AppLegacyPowerRental.Use(hooks...)
 	c.AppMiningGoodStock.Use(hooks...)
@@ -1031,6 +1038,97 @@ func (c *AppGoodDisplayNameClient) GetX(ctx context.Context, id uint32) *AppGood
 func (c *AppGoodDisplayNameClient) Hooks() []Hook {
 	hooks := c.hooks.AppGoodDisplayName
 	return append(hooks[:len(hooks):len(hooks)], appgooddisplayname.Hooks[:]...)
+}
+
+// AppGoodLabelClient is a client for the AppGoodLabel schema.
+type AppGoodLabelClient struct {
+	config
+}
+
+// NewAppGoodLabelClient returns a client for the AppGoodLabel from the given config.
+func NewAppGoodLabelClient(c config) *AppGoodLabelClient {
+	return &AppGoodLabelClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appgoodlabel.Hooks(f(g(h())))`.
+func (c *AppGoodLabelClient) Use(hooks ...Hook) {
+	c.hooks.AppGoodLabel = append(c.hooks.AppGoodLabel, hooks...)
+}
+
+// Create returns a builder for creating a AppGoodLabel entity.
+func (c *AppGoodLabelClient) Create() *AppGoodLabelCreate {
+	mutation := newAppGoodLabelMutation(c.config, OpCreate)
+	return &AppGoodLabelCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppGoodLabel entities.
+func (c *AppGoodLabelClient) CreateBulk(builders ...*AppGoodLabelCreate) *AppGoodLabelCreateBulk {
+	return &AppGoodLabelCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppGoodLabel.
+func (c *AppGoodLabelClient) Update() *AppGoodLabelUpdate {
+	mutation := newAppGoodLabelMutation(c.config, OpUpdate)
+	return &AppGoodLabelUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppGoodLabelClient) UpdateOne(agl *AppGoodLabel) *AppGoodLabelUpdateOne {
+	mutation := newAppGoodLabelMutation(c.config, OpUpdateOne, withAppGoodLabel(agl))
+	return &AppGoodLabelUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppGoodLabelClient) UpdateOneID(id uint32) *AppGoodLabelUpdateOne {
+	mutation := newAppGoodLabelMutation(c.config, OpUpdateOne, withAppGoodLabelID(id))
+	return &AppGoodLabelUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppGoodLabel.
+func (c *AppGoodLabelClient) Delete() *AppGoodLabelDelete {
+	mutation := newAppGoodLabelMutation(c.config, OpDelete)
+	return &AppGoodLabelDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppGoodLabelClient) DeleteOne(agl *AppGoodLabel) *AppGoodLabelDeleteOne {
+	return c.DeleteOneID(agl.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppGoodLabelClient) DeleteOneID(id uint32) *AppGoodLabelDeleteOne {
+	builder := c.Delete().Where(appgoodlabel.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppGoodLabelDeleteOne{builder}
+}
+
+// Query returns a query builder for AppGoodLabel.
+func (c *AppGoodLabelClient) Query() *AppGoodLabelQuery {
+	return &AppGoodLabelQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppGoodLabel entity by its id.
+func (c *AppGoodLabelClient) Get(ctx context.Context, id uint32) (*AppGoodLabel, error) {
+	return c.Query().Where(appgoodlabel.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppGoodLabelClient) GetX(ctx context.Context, id uint32) *AppGoodLabel {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppGoodLabelClient) Hooks() []Hook {
+	hooks := c.hooks.AppGoodLabel
+	return append(hooks[:len(hooks):len(hooks)], appgoodlabel.Hooks[:]...)
 }
 
 // AppGoodPosterClient is a client for the AppGoodPoster schema.
