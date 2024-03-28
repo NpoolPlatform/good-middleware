@@ -280,6 +280,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appmininggoodstock.FieldUpdatedAt:         {Type: field.TypeUint32, Column: appmininggoodstock.FieldUpdatedAt},
 			appmininggoodstock.FieldDeletedAt:         {Type: field.TypeUint32, Column: appmininggoodstock.FieldDeletedAt},
 			appmininggoodstock.FieldEntID:             {Type: field.TypeUUID, Column: appmininggoodstock.FieldEntID},
+			appmininggoodstock.FieldAppGoodStockID:    {Type: field.TypeUUID, Column: appmininggoodstock.FieldAppGoodStockID},
 			appmininggoodstock.FieldMiningGoodStockID: {Type: field.TypeUUID, Column: appmininggoodstock.FieldMiningGoodStockID},
 			appmininggoodstock.FieldReserved:          {Type: field.TypeOther, Column: appmininggoodstock.FieldReserved},
 			appmininggoodstock.FieldSpotQuantity:      {Type: field.TypeOther, Column: appmininggoodstock.FieldSpotQuantity},
@@ -1917,6 +1918,11 @@ func (f *AppMiningGoodStockFilter) WhereDeletedAt(p entql.Uint32P) {
 // WhereEntID applies the entql [16]byte predicate on the ent_id field.
 func (f *AppMiningGoodStockFilter) WhereEntID(p entql.ValueP) {
 	f.Where(p.Field(appmininggoodstock.FieldEntID))
+}
+
+// WhereAppGoodStockID applies the entql [16]byte predicate on the app_good_stock_id field.
+func (f *AppMiningGoodStockFilter) WhereAppGoodStockID(p entql.ValueP) {
+	f.Where(p.Field(appmininggoodstock.FieldAppGoodStockID))
 }
 
 // WhereMiningGoodStockID applies the entql [16]byte predicate on the mining_good_stock_id field.

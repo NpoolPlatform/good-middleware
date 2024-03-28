@@ -21,6 +21,8 @@ const (
 	FieldDeletedAt = "deleted_at"
 	// FieldEntID holds the string denoting the ent_id field in the database.
 	FieldEntID = "ent_id"
+	// FieldAppGoodStockID holds the string denoting the app_good_stock_id field in the database.
+	FieldAppGoodStockID = "app_good_stock_id"
 	// FieldMiningGoodStockID holds the string denoting the mining_good_stock_id field in the database.
 	FieldMiningGoodStockID = "mining_good_stock_id"
 	// FieldReserved holds the string denoting the reserved field in the database.
@@ -46,6 +48,7 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldDeletedAt,
 	FieldEntID,
+	FieldAppGoodStockID,
 	FieldMiningGoodStockID,
 	FieldReserved,
 	FieldSpotQuantity,
@@ -84,6 +87,8 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultEntID holds the default value on creation for the "ent_id" field.
 	DefaultEntID func() uuid.UUID
+	// DefaultAppGoodStockID holds the default value on creation for the "app_good_stock_id" field.
+	DefaultAppGoodStockID func() uuid.UUID
 	// DefaultMiningGoodStockID holds the default value on creation for the "mining_good_stock_id" field.
 	DefaultMiningGoodStockID func() uuid.UUID
 	// DefaultReserved holds the default value on creation for the "reserved" field.

@@ -13,10 +13,14 @@ type PowerRental interface {
 }
 
 type powerRental struct {
-	powerRental    *ent.PowerRental
-	goodBase       *ent.GoodBase
-	appGoodBase    *ent.AppGoodBase
-	appPowerRental *ent.AppPowerRental
+	powerRental         *ent.PowerRental
+	goodBase            *ent.GoodBase
+	appGoodBase         *ent.AppGoodBase
+	appPowerRental      *ent.AppPowerRental
+	stock               *ent.Stock
+	miningGoodStocks    []*ent.MiningGoodStock
+	appGoodStock        *ent.AppStock
+	appMiningGoodStocks []*ent.AppMiningGoodStock
 }
 
 func (pr *powerRental) MinOrderAmount() decimal.Decimal {

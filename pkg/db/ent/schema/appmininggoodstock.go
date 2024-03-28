@@ -27,6 +27,12 @@ func (AppMiningGoodStock) Mixin() []ent.Mixin {
 func (AppMiningGoodStock) Fields() []ent.Field {
 	return []ent.Field{
 		field.
+			UUID("app_good_stock_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
+		field.
 			UUID("mining_good_stock_id", uuid.UUID{}).
 			Optional().
 			Default(func() uuid.UUID {

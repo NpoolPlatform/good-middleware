@@ -99,6 +99,26 @@ func (amgsu *AppMiningGoodStockUpdate) SetNillableEntID(u *uuid.UUID) *AppMining
 	return amgsu
 }
 
+// SetAppGoodStockID sets the "app_good_stock_id" field.
+func (amgsu *AppMiningGoodStockUpdate) SetAppGoodStockID(u uuid.UUID) *AppMiningGoodStockUpdate {
+	amgsu.mutation.SetAppGoodStockID(u)
+	return amgsu
+}
+
+// SetNillableAppGoodStockID sets the "app_good_stock_id" field if the given value is not nil.
+func (amgsu *AppMiningGoodStockUpdate) SetNillableAppGoodStockID(u *uuid.UUID) *AppMiningGoodStockUpdate {
+	if u != nil {
+		amgsu.SetAppGoodStockID(*u)
+	}
+	return amgsu
+}
+
+// ClearAppGoodStockID clears the value of the "app_good_stock_id" field.
+func (amgsu *AppMiningGoodStockUpdate) ClearAppGoodStockID() *AppMiningGoodStockUpdate {
+	amgsu.mutation.ClearAppGoodStockID()
+	return amgsu
+}
+
 // SetMiningGoodStockID sets the "mining_good_stock_id" field.
 func (amgsu *AppMiningGoodStockUpdate) SetMiningGoodStockID(u uuid.UUID) *AppMiningGoodStockUpdate {
 	amgsu.mutation.SetMiningGoodStockID(u)
@@ -386,6 +406,19 @@ func (amgsu *AppMiningGoodStockUpdate) sqlSave(ctx context.Context) (n int, err 
 			Column: appmininggoodstock.FieldEntID,
 		})
 	}
+	if value, ok := amgsu.mutation.AppGoodStockID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appmininggoodstock.FieldAppGoodStockID,
+		})
+	}
+	if amgsu.mutation.AppGoodStockIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appmininggoodstock.FieldAppGoodStockID,
+		})
+	}
 	if value, ok := amgsu.mutation.MiningGoodStockID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -564,6 +597,26 @@ func (amgsuo *AppMiningGoodStockUpdateOne) SetNillableEntID(u *uuid.UUID) *AppMi
 	if u != nil {
 		amgsuo.SetEntID(*u)
 	}
+	return amgsuo
+}
+
+// SetAppGoodStockID sets the "app_good_stock_id" field.
+func (amgsuo *AppMiningGoodStockUpdateOne) SetAppGoodStockID(u uuid.UUID) *AppMiningGoodStockUpdateOne {
+	amgsuo.mutation.SetAppGoodStockID(u)
+	return amgsuo
+}
+
+// SetNillableAppGoodStockID sets the "app_good_stock_id" field if the given value is not nil.
+func (amgsuo *AppMiningGoodStockUpdateOne) SetNillableAppGoodStockID(u *uuid.UUID) *AppMiningGoodStockUpdateOne {
+	if u != nil {
+		amgsuo.SetAppGoodStockID(*u)
+	}
+	return amgsuo
+}
+
+// ClearAppGoodStockID clears the value of the "app_good_stock_id" field.
+func (amgsuo *AppMiningGoodStockUpdateOne) ClearAppGoodStockID() *AppMiningGoodStockUpdateOne {
+	amgsuo.mutation.ClearAppGoodStockID()
 	return amgsuo
 }
 
@@ -882,6 +935,19 @@ func (amgsuo *AppMiningGoodStockUpdateOne) sqlSave(ctx context.Context) (_node *
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: appmininggoodstock.FieldEntID,
+		})
+	}
+	if value, ok := amgsuo.mutation.AppGoodStockID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appmininggoodstock.FieldAppGoodStockID,
+		})
+	}
+	if amgsuo.mutation.AppGoodStockIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appmininggoodstock.FieldAppGoodStockID,
 		})
 	}
 	if value, ok := amgsuo.mutation.MiningGoodStockID(); ok {

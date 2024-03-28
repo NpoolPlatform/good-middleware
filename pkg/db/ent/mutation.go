@@ -10086,6 +10086,7 @@ type AppMiningGoodStockMutation struct {
 	deleted_at           *uint32
 	adddeleted_at        *int32
 	ent_id               *uuid.UUID
+	app_good_stock_id    *uuid.UUID
 	mining_good_stock_id *uuid.UUID
 	reserved             *decimal.Decimal
 	spot_quantity        *decimal.Decimal
@@ -10405,6 +10406,55 @@ func (m *AppMiningGoodStockMutation) OldEntID(ctx context.Context) (v uuid.UUID,
 // ResetEntID resets all changes to the "ent_id" field.
 func (m *AppMiningGoodStockMutation) ResetEntID() {
 	m.ent_id = nil
+}
+
+// SetAppGoodStockID sets the "app_good_stock_id" field.
+func (m *AppMiningGoodStockMutation) SetAppGoodStockID(u uuid.UUID) {
+	m.app_good_stock_id = &u
+}
+
+// AppGoodStockID returns the value of the "app_good_stock_id" field in the mutation.
+func (m *AppMiningGoodStockMutation) AppGoodStockID() (r uuid.UUID, exists bool) {
+	v := m.app_good_stock_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppGoodStockID returns the old "app_good_stock_id" field's value of the AppMiningGoodStock entity.
+// If the AppMiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppMiningGoodStockMutation) OldAppGoodStockID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppGoodStockID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppGoodStockID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppGoodStockID: %w", err)
+	}
+	return oldValue.AppGoodStockID, nil
+}
+
+// ClearAppGoodStockID clears the value of the "app_good_stock_id" field.
+func (m *AppMiningGoodStockMutation) ClearAppGoodStockID() {
+	m.app_good_stock_id = nil
+	m.clearedFields[appmininggoodstock.FieldAppGoodStockID] = struct{}{}
+}
+
+// AppGoodStockIDCleared returns if the "app_good_stock_id" field was cleared in this mutation.
+func (m *AppMiningGoodStockMutation) AppGoodStockIDCleared() bool {
+	_, ok := m.clearedFields[appmininggoodstock.FieldAppGoodStockID]
+	return ok
+}
+
+// ResetAppGoodStockID resets all changes to the "app_good_stock_id" field.
+func (m *AppMiningGoodStockMutation) ResetAppGoodStockID() {
+	m.app_good_stock_id = nil
+	delete(m.clearedFields, appmininggoodstock.FieldAppGoodStockID)
 }
 
 // SetMiningGoodStockID sets the "mining_good_stock_id" field.
@@ -10769,7 +10819,7 @@ func (m *AppMiningGoodStockMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppMiningGoodStockMutation) Fields() []string {
-	fields := make([]string, 0, 11)
+	fields := make([]string, 0, 12)
 	if m.created_at != nil {
 		fields = append(fields, appmininggoodstock.FieldCreatedAt)
 	}
@@ -10781,6 +10831,9 @@ func (m *AppMiningGoodStockMutation) Fields() []string {
 	}
 	if m.ent_id != nil {
 		fields = append(fields, appmininggoodstock.FieldEntID)
+	}
+	if m.app_good_stock_id != nil {
+		fields = append(fields, appmininggoodstock.FieldAppGoodStockID)
 	}
 	if m.mining_good_stock_id != nil {
 		fields = append(fields, appmininggoodstock.FieldMiningGoodStockID)
@@ -10819,6 +10872,8 @@ func (m *AppMiningGoodStockMutation) Field(name string) (ent.Value, bool) {
 		return m.DeletedAt()
 	case appmininggoodstock.FieldEntID:
 		return m.EntID()
+	case appmininggoodstock.FieldAppGoodStockID:
+		return m.AppGoodStockID()
 	case appmininggoodstock.FieldMiningGoodStockID:
 		return m.MiningGoodStockID()
 	case appmininggoodstock.FieldReserved:
@@ -10850,6 +10905,8 @@ func (m *AppMiningGoodStockMutation) OldField(ctx context.Context, name string) 
 		return m.OldDeletedAt(ctx)
 	case appmininggoodstock.FieldEntID:
 		return m.OldEntID(ctx)
+	case appmininggoodstock.FieldAppGoodStockID:
+		return m.OldAppGoodStockID(ctx)
 	case appmininggoodstock.FieldMiningGoodStockID:
 		return m.OldMiningGoodStockID(ctx)
 	case appmininggoodstock.FieldReserved:
@@ -10900,6 +10957,13 @@ func (m *AppMiningGoodStockMutation) SetField(name string, value ent.Value) erro
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEntID(v)
+		return nil
+	case appmininggoodstock.FieldAppGoodStockID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppGoodStockID(v)
 		return nil
 	case appmininggoodstock.FieldMiningGoodStockID:
 		v, ok := value.(uuid.UUID)
@@ -11019,6 +11083,9 @@ func (m *AppMiningGoodStockMutation) AddField(name string, value ent.Value) erro
 // mutation.
 func (m *AppMiningGoodStockMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(appmininggoodstock.FieldAppGoodStockID) {
+		fields = append(fields, appmininggoodstock.FieldAppGoodStockID)
+	}
 	if m.FieldCleared(appmininggoodstock.FieldMiningGoodStockID) {
 		fields = append(fields, appmininggoodstock.FieldMiningGoodStockID)
 	}
@@ -11054,6 +11121,9 @@ func (m *AppMiningGoodStockMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *AppMiningGoodStockMutation) ClearField(name string) error {
 	switch name {
+	case appmininggoodstock.FieldAppGoodStockID:
+		m.ClearAppGoodStockID()
+		return nil
 	case appmininggoodstock.FieldMiningGoodStockID:
 		m.ClearMiningGoodStockID()
 		return nil
@@ -11094,6 +11164,9 @@ func (m *AppMiningGoodStockMutation) ResetField(name string) error {
 		return nil
 	case appmininggoodstock.FieldEntID:
 		m.ResetEntID()
+		return nil
+	case appmininggoodstock.FieldAppGoodStockID:
+		m.ResetAppGoodStockID()
 		return nil
 	case appmininggoodstock.FieldMiningGoodStockID:
 		m.ResetMiningGoodStockID()

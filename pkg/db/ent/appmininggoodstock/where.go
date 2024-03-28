@@ -108,6 +108,13 @@ func EntID(v uuid.UUID) predicate.AppMiningGoodStock {
 	})
 }
 
+// AppGoodStockID applies equality check predicate on the "app_good_stock_id" field. It's identical to AppGoodStockIDEQ.
+func AppGoodStockID(v uuid.UUID) predicate.AppMiningGoodStock {
+	return predicate.AppMiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAppGoodStockID), v))
+	})
+}
+
 // MiningGoodStockID applies equality check predicate on the "mining_good_stock_id" field. It's identical to MiningGoodStockIDEQ.
 func MiningGoodStockID(v uuid.UUID) predicate.AppMiningGoodStock {
 	return predicate.AppMiningGoodStock(func(s *sql.Selector) {
@@ -410,6 +417,84 @@ func EntIDLT(v uuid.UUID) predicate.AppMiningGoodStock {
 func EntIDLTE(v uuid.UUID) predicate.AppMiningGoodStock {
 	return predicate.AppMiningGoodStock(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldEntID), v))
+	})
+}
+
+// AppGoodStockIDEQ applies the EQ predicate on the "app_good_stock_id" field.
+func AppGoodStockIDEQ(v uuid.UUID) predicate.AppMiningGoodStock {
+	return predicate.AppMiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAppGoodStockID), v))
+	})
+}
+
+// AppGoodStockIDNEQ applies the NEQ predicate on the "app_good_stock_id" field.
+func AppGoodStockIDNEQ(v uuid.UUID) predicate.AppMiningGoodStock {
+	return predicate.AppMiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAppGoodStockID), v))
+	})
+}
+
+// AppGoodStockIDIn applies the In predicate on the "app_good_stock_id" field.
+func AppGoodStockIDIn(vs ...uuid.UUID) predicate.AppMiningGoodStock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppMiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldAppGoodStockID), v...))
+	})
+}
+
+// AppGoodStockIDNotIn applies the NotIn predicate on the "app_good_stock_id" field.
+func AppGoodStockIDNotIn(vs ...uuid.UUID) predicate.AppMiningGoodStock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppMiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldAppGoodStockID), v...))
+	})
+}
+
+// AppGoodStockIDGT applies the GT predicate on the "app_good_stock_id" field.
+func AppGoodStockIDGT(v uuid.UUID) predicate.AppMiningGoodStock {
+	return predicate.AppMiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAppGoodStockID), v))
+	})
+}
+
+// AppGoodStockIDGTE applies the GTE predicate on the "app_good_stock_id" field.
+func AppGoodStockIDGTE(v uuid.UUID) predicate.AppMiningGoodStock {
+	return predicate.AppMiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAppGoodStockID), v))
+	})
+}
+
+// AppGoodStockIDLT applies the LT predicate on the "app_good_stock_id" field.
+func AppGoodStockIDLT(v uuid.UUID) predicate.AppMiningGoodStock {
+	return predicate.AppMiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAppGoodStockID), v))
+	})
+}
+
+// AppGoodStockIDLTE applies the LTE predicate on the "app_good_stock_id" field.
+func AppGoodStockIDLTE(v uuid.UUID) predicate.AppMiningGoodStock {
+	return predicate.AppMiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAppGoodStockID), v))
+	})
+}
+
+// AppGoodStockIDIsNil applies the IsNil predicate on the "app_good_stock_id" field.
+func AppGoodStockIDIsNil() predicate.AppMiningGoodStock {
+	return predicate.AppMiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAppGoodStockID)))
+	})
+}
+
+// AppGoodStockIDNotNil applies the NotNil predicate on the "app_good_stock_id" field.
+func AppGoodStockIDNotNil() predicate.AppMiningGoodStock {
+	return predicate.AppMiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAppGoodStockID)))
 	})
 }
 

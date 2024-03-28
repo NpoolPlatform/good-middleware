@@ -7,6 +7,7 @@ import (
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	appgoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
+	appgoodminingstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
 	apppowerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
@@ -14,6 +15,7 @@ import (
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
+	appminingstockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock/mining"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental"
 
 	"github.com/google/uuid"
@@ -23,15 +25,16 @@ import (
 type Handler struct {
 	ID *uint32
 	apppowerrentalcrud.Req
-	AppGoodBaseReq      *appgoodbasecrud.Req
-	AppGoodStockReq     *appgoodstockcrud.Req
-	AppPowerRentalConds *apppowerrentalcrud.Conds
-	PowerRentalConds    *powerrentalcrud.Conds
-	AppGoodBaseConds    *appgoodbasecrud.Conds
-	GoodBaseConds       *goodbasecrud.Conds
-	GoodCoinConds       *goodcoincrud.Conds
-	Offset              int32
-	Limit               int32
+	AppGoodBaseReq         *appgoodbasecrud.Req
+	AppGoodStockReq        *appgoodstockcrud.Req
+	AppMiningGoodStockReqs []*appgoodminingstockcrud.Req
+	AppPowerRentalConds    *apppowerrentalcrud.Conds
+	PowerRentalConds       *powerrentalcrud.Conds
+	AppGoodBaseConds       *appgoodbasecrud.Conds
+	GoodBaseConds          *goodbasecrud.Conds
+	GoodCoinConds          *goodcoincrud.Conds
+	Offset                 int32
+	Limit                  int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -387,6 +390,71 @@ func WithFixedDuration(b *bool, must bool) func(context.Context, *Handler) error
 func WithPackageWithRequireds(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.PackageWithRequireds = b
+		return nil
+	}
+}
+
+func WithAppGoodStockID(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid appgoodstockid")
+			}
+			return nil
+		}
+		id, err := uuid.Parse(*s)
+		if err != nil {
+			return err
+		}
+		h.AppGoodStockReq.EntID = &id
+		return nil
+	}
+}
+
+func WithReserved(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid reserved")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
+			return fmt.Errorf("invalid reserved")
+		}
+		h.AppGoodStockReq.Reserved = &amount
+		return nil
+	}
+}
+
+func WithMiningGoodStocks(stocks []*appminingstockmwpb.StockReq, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		for _, _stock := range stocks {
+			entID := func() *uuid.UUID {
+				uid, err := uuid.Parse(_stock.GetEntID())
+				if err != nil {
+					return nil
+				}
+				return &uid
+			}()
+			miningGoodStockID, err := uuid.Parse(_stock.GetMiningGoodStockID())
+			if err != nil {
+				return err
+			}
+			amount, err := decimal.NewFromString(_stock.GetReserved())
+			if err != nil {
+				return err
+			}
+			h.AppMiningGoodStockReqs = append(h.AppMiningGoodStockReqs, &appgoodminingstockcrud.Req{
+				EntID:             entID,
+				MiningGoodStockID: &miningGoodStockID,
+				Reserved:          &amount,
+			})
+		}
 		return nil
 	}
 }

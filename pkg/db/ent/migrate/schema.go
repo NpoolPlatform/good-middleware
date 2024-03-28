@@ -299,6 +299,7 @@ var (
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_good_stock_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "mining_good_stock_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "reserved", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "spot_quantity", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},

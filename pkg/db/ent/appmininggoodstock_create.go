@@ -79,6 +79,20 @@ func (amgsc *AppMiningGoodStockCreate) SetNillableEntID(u *uuid.UUID) *AppMining
 	return amgsc
 }
 
+// SetAppGoodStockID sets the "app_good_stock_id" field.
+func (amgsc *AppMiningGoodStockCreate) SetAppGoodStockID(u uuid.UUID) *AppMiningGoodStockCreate {
+	amgsc.mutation.SetAppGoodStockID(u)
+	return amgsc
+}
+
+// SetNillableAppGoodStockID sets the "app_good_stock_id" field if the given value is not nil.
+func (amgsc *AppMiningGoodStockCreate) SetNillableAppGoodStockID(u *uuid.UUID) *AppMiningGoodStockCreate {
+	if u != nil {
+		amgsc.SetAppGoodStockID(*u)
+	}
+	return amgsc
+}
+
 // SetMiningGoodStockID sets the "mining_good_stock_id" field.
 func (amgsc *AppMiningGoodStockCreate) SetMiningGoodStockID(u uuid.UUID) *AppMiningGoodStockCreate {
 	amgsc.mutation.SetMiningGoodStockID(u)
@@ -290,6 +304,13 @@ func (amgsc *AppMiningGoodStockCreate) defaults() error {
 		v := appmininggoodstock.DefaultEntID()
 		amgsc.mutation.SetEntID(v)
 	}
+	if _, ok := amgsc.mutation.AppGoodStockID(); !ok {
+		if appmininggoodstock.DefaultAppGoodStockID == nil {
+			return fmt.Errorf("ent: uninitialized appmininggoodstock.DefaultAppGoodStockID (forgotten import ent/runtime?)")
+		}
+		v := appmininggoodstock.DefaultAppGoodStockID()
+		amgsc.mutation.SetAppGoodStockID(v)
+	}
 	if _, ok := amgsc.mutation.MiningGoodStockID(); !ok {
 		if appmininggoodstock.DefaultMiningGoodStockID == nil {
 			return fmt.Errorf("ent: uninitialized appmininggoodstock.DefaultMiningGoodStockID (forgotten import ent/runtime?)")
@@ -403,6 +424,14 @@ func (amgsc *AppMiningGoodStockCreate) createSpec() (*AppMiningGoodStock, *sqlgr
 			Column: appmininggoodstock.FieldEntID,
 		})
 		_node.EntID = value
+	}
+	if value, ok := amgsc.mutation.AppGoodStockID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appmininggoodstock.FieldAppGoodStockID,
+		})
+		_node.AppGoodStockID = value
 	}
 	if value, ok := amgsc.mutation.MiningGoodStockID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -577,6 +606,24 @@ func (u *AppMiningGoodStockUpsert) SetEntID(v uuid.UUID) *AppMiningGoodStockUpse
 // UpdateEntID sets the "ent_id" field to the value that was provided on create.
 func (u *AppMiningGoodStockUpsert) UpdateEntID() *AppMiningGoodStockUpsert {
 	u.SetExcluded(appmininggoodstock.FieldEntID)
+	return u
+}
+
+// SetAppGoodStockID sets the "app_good_stock_id" field.
+func (u *AppMiningGoodStockUpsert) SetAppGoodStockID(v uuid.UUID) *AppMiningGoodStockUpsert {
+	u.Set(appmininggoodstock.FieldAppGoodStockID, v)
+	return u
+}
+
+// UpdateAppGoodStockID sets the "app_good_stock_id" field to the value that was provided on create.
+func (u *AppMiningGoodStockUpsert) UpdateAppGoodStockID() *AppMiningGoodStockUpsert {
+	u.SetExcluded(appmininggoodstock.FieldAppGoodStockID)
+	return u
+}
+
+// ClearAppGoodStockID clears the value of the "app_good_stock_id" field.
+func (u *AppMiningGoodStockUpsert) ClearAppGoodStockID() *AppMiningGoodStockUpsert {
+	u.SetNull(appmininggoodstock.FieldAppGoodStockID)
 	return u
 }
 
@@ -830,6 +877,27 @@ func (u *AppMiningGoodStockUpsertOne) SetEntID(v uuid.UUID) *AppMiningGoodStockU
 func (u *AppMiningGoodStockUpsertOne) UpdateEntID() *AppMiningGoodStockUpsertOne {
 	return u.Update(func(s *AppMiningGoodStockUpsert) {
 		s.UpdateEntID()
+	})
+}
+
+// SetAppGoodStockID sets the "app_good_stock_id" field.
+func (u *AppMiningGoodStockUpsertOne) SetAppGoodStockID(v uuid.UUID) *AppMiningGoodStockUpsertOne {
+	return u.Update(func(s *AppMiningGoodStockUpsert) {
+		s.SetAppGoodStockID(v)
+	})
+}
+
+// UpdateAppGoodStockID sets the "app_good_stock_id" field to the value that was provided on create.
+func (u *AppMiningGoodStockUpsertOne) UpdateAppGoodStockID() *AppMiningGoodStockUpsertOne {
+	return u.Update(func(s *AppMiningGoodStockUpsert) {
+		s.UpdateAppGoodStockID()
+	})
+}
+
+// ClearAppGoodStockID clears the value of the "app_good_stock_id" field.
+func (u *AppMiningGoodStockUpsertOne) ClearAppGoodStockID() *AppMiningGoodStockUpsertOne {
+	return u.Update(func(s *AppMiningGoodStockUpsert) {
+		s.ClearAppGoodStockID()
 	})
 }
 
@@ -1269,6 +1337,27 @@ func (u *AppMiningGoodStockUpsertBulk) SetEntID(v uuid.UUID) *AppMiningGoodStock
 func (u *AppMiningGoodStockUpsertBulk) UpdateEntID() *AppMiningGoodStockUpsertBulk {
 	return u.Update(func(s *AppMiningGoodStockUpsert) {
 		s.UpdateEntID()
+	})
+}
+
+// SetAppGoodStockID sets the "app_good_stock_id" field.
+func (u *AppMiningGoodStockUpsertBulk) SetAppGoodStockID(v uuid.UUID) *AppMiningGoodStockUpsertBulk {
+	return u.Update(func(s *AppMiningGoodStockUpsert) {
+		s.SetAppGoodStockID(v)
+	})
+}
+
+// UpdateAppGoodStockID sets the "app_good_stock_id" field to the value that was provided on create.
+func (u *AppMiningGoodStockUpsertBulk) UpdateAppGoodStockID() *AppMiningGoodStockUpsertBulk {
+	return u.Update(func(s *AppMiningGoodStockUpsert) {
+		s.UpdateAppGoodStockID()
+	})
+}
+
+// ClearAppGoodStockID clears the value of the "app_good_stock_id" field.
+func (u *AppMiningGoodStockUpsertBulk) ClearAppGoodStockID() *AppMiningGoodStockUpsertBulk {
+	return u.Update(func(s *AppMiningGoodStockUpsert) {
+		s.ClearAppGoodStockID()
 	})
 }
 

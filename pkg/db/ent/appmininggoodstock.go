@@ -25,6 +25,8 @@ type AppMiningGoodStock struct {
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// EntID holds the value of the "ent_id" field.
 	EntID uuid.UUID `json:"ent_id,omitempty"`
+	// AppGoodStockID holds the value of the "app_good_stock_id" field.
+	AppGoodStockID uuid.UUID `json:"app_good_stock_id,omitempty"`
 	// MiningGoodStockID holds the value of the "mining_good_stock_id" field.
 	MiningGoodStockID uuid.UUID `json:"mining_good_stock_id,omitempty"`
 	// Reserved holds the value of the "reserved" field.
@@ -50,7 +52,7 @@ func (*AppMiningGoodStock) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case appmininggoodstock.FieldID, appmininggoodstock.FieldCreatedAt, appmininggoodstock.FieldUpdatedAt, appmininggoodstock.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case appmininggoodstock.FieldEntID, appmininggoodstock.FieldMiningGoodStockID:
+		case appmininggoodstock.FieldEntID, appmininggoodstock.FieldAppGoodStockID, appmininggoodstock.FieldMiningGoodStockID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type AppMiningGoodStock", columns[i])
@@ -96,6 +98,12 @@ func (amgs *AppMiningGoodStock) assignValues(columns []string, values []interfac
 				return fmt.Errorf("unexpected type %T for field ent_id", values[i])
 			} else if value != nil {
 				amgs.EntID = *value
+			}
+		case appmininggoodstock.FieldAppGoodStockID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field app_good_stock_id", values[i])
+			} else if value != nil {
+				amgs.AppGoodStockID = *value
 			}
 		case appmininggoodstock.FieldMiningGoodStockID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -178,6 +186,9 @@ func (amgs *AppMiningGoodStock) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("ent_id=")
 	builder.WriteString(fmt.Sprintf("%v", amgs.EntID))
+	builder.WriteString(", ")
+	builder.WriteString("app_good_stock_id=")
+	builder.WriteString(fmt.Sprintf("%v", amgs.AppGoodStockID))
 	builder.WriteString(", ")
 	builder.WriteString("mining_good_stock_id=")
 	builder.WriteString(fmt.Sprintf("%v", amgs.MiningGoodStockID))
