@@ -21,10 +21,8 @@ const (
 	FieldDeletedAt = "deleted_at"
 	// FieldEntID holds the string denoting the ent_id field in the database.
 	FieldEntID = "ent_id"
-	// FieldAppID holds the string denoting the app_id field in the database.
-	FieldAppID = "app_id"
-	// FieldGoodID holds the string denoting the good_id field in the database.
-	FieldGoodID = "good_id"
+	// FieldAppGoodID holds the string denoting the app_good_id field in the database.
+	FieldAppGoodID = "app_good_id"
 	// FieldRecommenderID holds the string denoting the recommender_id field in the database.
 	FieldRecommenderID = "recommender_id"
 	// FieldMessage holds the string denoting the message field in the database.
@@ -42,8 +40,7 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldDeletedAt,
 	FieldEntID,
-	FieldAppID,
-	FieldGoodID,
+	FieldAppGoodID,
 	FieldRecommenderID,
 	FieldMessage,
 	FieldRecommendIndex,
@@ -78,6 +75,8 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultEntID holds the default value on creation for the "ent_id" field.
 	DefaultEntID func() uuid.UUID
+	// DefaultAppGoodID holds the default value on creation for the "app_good_id" field.
+	DefaultAppGoodID func() uuid.UUID
 	// DefaultRecommenderID holds the default value on creation for the "recommender_id" field.
 	DefaultRecommenderID func() uuid.UUID
 	// DefaultMessage holds the default value on creation for the "message" field.

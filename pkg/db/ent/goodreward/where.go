@@ -484,6 +484,20 @@ func GoodIDLTE(v uuid.UUID) predicate.GoodReward {
 	})
 }
 
+// GoodIDIsNil applies the IsNil predicate on the "good_id" field.
+func GoodIDIsNil() predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldGoodID)))
+	})
+}
+
+// GoodIDNotNil applies the NotNil predicate on the "good_id" field.
+func GoodIDNotNil() predicate.GoodReward {
+	return predicate.GoodReward(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldGoodID)))
+	})
+}
+
 // RewardStateEQ applies the EQ predicate on the "reward_state" field.
 func RewardStateEQ(v string) predicate.GoodReward {
 	return predicate.GoodReward(func(s *sql.Selector) {

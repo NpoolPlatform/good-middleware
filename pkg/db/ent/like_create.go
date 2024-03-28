@@ -106,20 +106,6 @@ func (lc *LikeCreate) SetNillableUserID(u *uuid.UUID) *LikeCreate {
 	return lc
 }
 
-// SetGoodID sets the "good_id" field.
-func (lc *LikeCreate) SetGoodID(u uuid.UUID) *LikeCreate {
-	lc.mutation.SetGoodID(u)
-	return lc
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (lc *LikeCreate) SetNillableGoodID(u *uuid.UUID) *LikeCreate {
-	if u != nil {
-		lc.SetGoodID(*u)
-	}
-	return lc
-}
-
 // SetAppGoodID sets the "app_good_id" field.
 func (lc *LikeCreate) SetAppGoodID(u uuid.UUID) *LikeCreate {
 	lc.mutation.SetAppGoodID(u)
@@ -267,13 +253,6 @@ func (lc *LikeCreate) defaults() error {
 		v := like.DefaultUserID()
 		lc.mutation.SetUserID(v)
 	}
-	if _, ok := lc.mutation.GoodID(); !ok {
-		if like.DefaultGoodID == nil {
-			return fmt.Errorf("ent: uninitialized like.DefaultGoodID (forgotten import ent/runtime?)")
-		}
-		v := like.DefaultGoodID()
-		lc.mutation.SetGoodID(v)
-	}
 	if _, ok := lc.mutation.AppGoodID(); !ok {
 		if like.DefaultAppGoodID == nil {
 			return fmt.Errorf("ent: uninitialized like.DefaultAppGoodID (forgotten import ent/runtime?)")
@@ -382,14 +361,6 @@ func (lc *LikeCreate) createSpec() (*Like, *sqlgraph.CreateSpec) {
 			Column: like.FieldUserID,
 		})
 		_node.UserID = value
-	}
-	if value, ok := lc.mutation.GoodID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: like.FieldGoodID,
-		})
-		_node.GoodID = value
 	}
 	if value, ok := lc.mutation.AppGoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -560,24 +531,6 @@ func (u *LikeUpsert) UpdateUserID() *LikeUpsert {
 // ClearUserID clears the value of the "user_id" field.
 func (u *LikeUpsert) ClearUserID() *LikeUpsert {
 	u.SetNull(like.FieldUserID)
-	return u
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *LikeUpsert) SetGoodID(v uuid.UUID) *LikeUpsert {
-	u.Set(like.FieldGoodID, v)
-	return u
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *LikeUpsert) UpdateGoodID() *LikeUpsert {
-	u.SetExcluded(like.FieldGoodID)
-	return u
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *LikeUpsert) ClearGoodID() *LikeUpsert {
-	u.SetNull(like.FieldGoodID)
 	return u
 }
 
@@ -777,27 +730,6 @@ func (u *LikeUpsertOne) UpdateUserID() *LikeUpsertOne {
 func (u *LikeUpsertOne) ClearUserID() *LikeUpsertOne {
 	return u.Update(func(s *LikeUpsert) {
 		s.ClearUserID()
-	})
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *LikeUpsertOne) SetGoodID(v uuid.UUID) *LikeUpsertOne {
-	return u.Update(func(s *LikeUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *LikeUpsertOne) UpdateGoodID() *LikeUpsertOne {
-	return u.Update(func(s *LikeUpsert) {
-		s.UpdateGoodID()
-	})
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *LikeUpsertOne) ClearGoodID() *LikeUpsertOne {
-	return u.Update(func(s *LikeUpsert) {
-		s.ClearGoodID()
 	})
 }
 
@@ -1167,27 +1099,6 @@ func (u *LikeUpsertBulk) UpdateUserID() *LikeUpsertBulk {
 func (u *LikeUpsertBulk) ClearUserID() *LikeUpsertBulk {
 	return u.Update(func(s *LikeUpsert) {
 		s.ClearUserID()
-	})
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *LikeUpsertBulk) SetGoodID(v uuid.UUID) *LikeUpsertBulk {
-	return u.Update(func(s *LikeUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *LikeUpsertBulk) UpdateGoodID() *LikeUpsertBulk {
-	return u.Update(func(s *LikeUpsert) {
-		s.UpdateGoodID()
-	})
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *LikeUpsertBulk) ClearGoodID() *LikeUpsertBulk {
-	return u.Update(func(s *LikeUpsert) {
-		s.ClearGoodID()
 	})
 }
 

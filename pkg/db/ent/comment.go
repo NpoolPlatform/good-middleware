@@ -25,12 +25,8 @@ type Comment struct {
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// EntID holds the value of the "ent_id" field.
 	EntID uuid.UUID `json:"ent_id,omitempty"`
-	// AppID holds the value of the "app_id" field.
-	AppID uuid.UUID `json:"app_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID uuid.UUID `json:"user_id,omitempty"`
-	// GoodID holds the value of the "good_id" field.
-	GoodID uuid.UUID `json:"good_id,omitempty"`
 	// AppGoodID holds the value of the "app_good_id" field.
 	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// OrderID holds the value of the "order_id" field.
@@ -64,7 +60,7 @@ func (*Comment) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case comment.FieldContent:
 			values[i] = new(sql.NullString)
-		case comment.FieldEntID, comment.FieldAppID, comment.FieldUserID, comment.FieldGoodID, comment.FieldAppGoodID, comment.FieldOrderID, comment.FieldReplyToID:
+		case comment.FieldEntID, comment.FieldUserID, comment.FieldAppGoodID, comment.FieldOrderID, comment.FieldReplyToID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Comment", columns[i])
@@ -111,23 +107,11 @@ func (c *Comment) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				c.EntID = *value
 			}
-		case comment.FieldAppID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field app_id", values[i])
-			} else if value != nil {
-				c.AppID = *value
-			}
 		case comment.FieldUserID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value != nil {
 				c.UserID = *value
-			}
-		case comment.FieldGoodID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field good_id", values[i])
-			} else if value != nil {
-				c.GoodID = *value
 			}
 		case comment.FieldAppGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -223,14 +207,8 @@ func (c *Comment) String() string {
 	builder.WriteString("ent_id=")
 	builder.WriteString(fmt.Sprintf("%v", c.EntID))
 	builder.WriteString(", ")
-	builder.WriteString("app_id=")
-	builder.WriteString(fmt.Sprintf("%v", c.AppID))
-	builder.WriteString(", ")
 	builder.WriteString("user_id=")
 	builder.WriteString(fmt.Sprintf("%v", c.UserID))
-	builder.WriteString(", ")
-	builder.WriteString("good_id=")
-	builder.WriteString(fmt.Sprintf("%v", c.GoodID))
 	builder.WriteString(", ")
 	builder.WriteString("app_good_id=")
 	builder.WriteString(fmt.Sprintf("%v", c.AppGoodID))

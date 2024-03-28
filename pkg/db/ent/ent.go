@@ -49,6 +49,8 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodposter"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 )
@@ -110,6 +112,8 @@ func columnChecker(table string) func(string) error {
 		stocklock.Table:              stocklock.ValidColumn,
 		topmost.Table:                topmost.ValidColumn,
 		topmostgood.Table:            topmostgood.ValidColumn,
+		topmostgoodposter.Table:      topmostgoodposter.ValidColumn,
+		topmostposter.Table:          topmostposter.ValidColumn,
 		vendorbrand.Table:            vendorbrand.ValidColumn,
 		vendorlocation.Table:         vendorlocation.ValidColumn,
 	}

@@ -25,8 +25,8 @@ type ExtraInfo struct {
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// EntID holds the value of the "ent_id" field.
 	EntID uuid.UUID `json:"ent_id,omitempty"`
-	// GoodID holds the value of the "good_id" field.
-	GoodID uuid.UUID `json:"good_id,omitempty"`
+	// AppGoodID holds the value of the "app_good_id" field.
+	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// Likes holds the value of the "likes" field.
 	Likes uint32 `json:"likes,omitempty"`
 	// Dislikes holds the value of the "dislikes" field.
@@ -50,7 +50,7 @@ func (*ExtraInfo) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case extrainfo.FieldID, extrainfo.FieldCreatedAt, extrainfo.FieldUpdatedAt, extrainfo.FieldDeletedAt, extrainfo.FieldLikes, extrainfo.FieldDislikes, extrainfo.FieldRecommendCount, extrainfo.FieldCommentCount, extrainfo.FieldScoreCount:
 			values[i] = new(sql.NullInt64)
-		case extrainfo.FieldEntID, extrainfo.FieldGoodID:
+		case extrainfo.FieldEntID, extrainfo.FieldAppGoodID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type ExtraInfo", columns[i])
@@ -97,11 +97,11 @@ func (ei *ExtraInfo) assignValues(columns []string, values []interface{}) error 
 			} else if value != nil {
 				ei.EntID = *value
 			}
-		case extrainfo.FieldGoodID:
+		case extrainfo.FieldAppGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field good_id", values[i])
+				return fmt.Errorf("unexpected type %T for field app_good_id", values[i])
 			} else if value != nil {
-				ei.GoodID = *value
+				ei.AppGoodID = *value
 			}
 		case extrainfo.FieldLikes:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -179,8 +179,8 @@ func (ei *ExtraInfo) String() string {
 	builder.WriteString("ent_id=")
 	builder.WriteString(fmt.Sprintf("%v", ei.EntID))
 	builder.WriteString(", ")
-	builder.WriteString("good_id=")
-	builder.WriteString(fmt.Sprintf("%v", ei.GoodID))
+	builder.WriteString("app_good_id=")
+	builder.WriteString(fmt.Sprintf("%v", ei.AppGoodID))
 	builder.WriteString(", ")
 	builder.WriteString("likes=")
 	builder.WriteString(fmt.Sprintf("%v", ei.Likes))

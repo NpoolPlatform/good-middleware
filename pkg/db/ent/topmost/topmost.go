@@ -5,7 +5,6 @@ package topmost
 import (
 	"entgo.io/ent"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 const (
@@ -29,22 +28,10 @@ const (
 	FieldTitle = "title"
 	// FieldMessage holds the string denoting the message field in the database.
 	FieldMessage = "message"
-	// FieldPosters holds the string denoting the posters field in the database.
-	FieldPosters = "posters"
 	// FieldStartAt holds the string denoting the start_at field in the database.
 	FieldStartAt = "start_at"
 	// FieldEndAt holds the string denoting the end_at field in the database.
 	FieldEndAt = "end_at"
-	// FieldThresholdCredits holds the string denoting the threshold_credits field in the database.
-	FieldThresholdCredits = "threshold_credits"
-	// FieldRegisterElapsedSeconds holds the string denoting the register_elapsed_seconds field in the database.
-	FieldRegisterElapsedSeconds = "register_elapsed_seconds"
-	// FieldThresholdPurchases holds the string denoting the threshold_purchases field in the database.
-	FieldThresholdPurchases = "threshold_purchases"
-	// FieldThresholdPaymentAmount holds the string denoting the threshold_payment_amount field in the database.
-	FieldThresholdPaymentAmount = "threshold_payment_amount"
-	// FieldKycMust holds the string denoting the kyc_must field in the database.
-	FieldKycMust = "kyc_must"
 	// Table holds the table name of the topmost in the database.
 	Table = "top_mosts"
 )
@@ -60,14 +47,8 @@ var Columns = []string{
 	FieldTopMostType,
 	FieldTitle,
 	FieldMessage,
-	FieldPosters,
 	FieldStartAt,
 	FieldEndAt,
-	FieldThresholdCredits,
-	FieldRegisterElapsedSeconds,
-	FieldThresholdPurchases,
-	FieldThresholdPaymentAmount,
-	FieldKycMust,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -99,26 +80,16 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultEntID holds the default value on creation for the "ent_id" field.
 	DefaultEntID func() uuid.UUID
+	// DefaultAppID holds the default value on creation for the "app_id" field.
+	DefaultAppID func() uuid.UUID
 	// DefaultTopMostType holds the default value on creation for the "top_most_type" field.
 	DefaultTopMostType string
 	// DefaultTitle holds the default value on creation for the "title" field.
 	DefaultTitle string
 	// DefaultMessage holds the default value on creation for the "message" field.
 	DefaultMessage string
-	// DefaultPosters holds the default value on creation for the "posters" field.
-	DefaultPosters []string
 	// DefaultStartAt holds the default value on creation for the "start_at" field.
 	DefaultStartAt uint32
 	// DefaultEndAt holds the default value on creation for the "end_at" field.
 	DefaultEndAt uint32
-	// DefaultThresholdCredits holds the default value on creation for the "threshold_credits" field.
-	DefaultThresholdCredits decimal.Decimal
-	// DefaultRegisterElapsedSeconds holds the default value on creation for the "register_elapsed_seconds" field.
-	DefaultRegisterElapsedSeconds uint32
-	// DefaultThresholdPurchases holds the default value on creation for the "threshold_purchases" field.
-	DefaultThresholdPurchases uint32
-	// DefaultThresholdPaymentAmount holds the default value on creation for the "threshold_payment_amount" field.
-	DefaultThresholdPaymentAmount decimal.Decimal
-	// DefaultKycMust holds the default value on creation for the "kyc_must" field.
-	DefaultKycMust bool
 )

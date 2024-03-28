@@ -29,7 +29,10 @@ func (GoodRewardHistory) Fields() []ent.Field {
 	return []ent.Field{
 		field.
 			UUID("good_id", uuid.UUID{}).
-			Optional(),
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
 			Uint32("reward_date").
 			Optional().

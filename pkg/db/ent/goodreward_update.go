@@ -105,6 +105,20 @@ func (gru *GoodRewardUpdate) SetGoodID(u uuid.UUID) *GoodRewardUpdate {
 	return gru
 }
 
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (gru *GoodRewardUpdate) SetNillableGoodID(u *uuid.UUID) *GoodRewardUpdate {
+	if u != nil {
+		gru.SetGoodID(*u)
+	}
+	return gru
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (gru *GoodRewardUpdate) ClearGoodID() *GoodRewardUpdate {
+	gru.mutation.ClearGoodID()
+	return gru
+}
+
 // SetRewardState sets the "reward_state" field.
 func (gru *GoodRewardUpdate) SetRewardState(s string) *GoodRewardUpdate {
 	gru.mutation.SetRewardState(s)
@@ -406,6 +420,12 @@ func (gru *GoodRewardUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: goodreward.FieldGoodID,
 		})
 	}
+	if gru.mutation.GoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: goodreward.FieldGoodID,
+		})
+	}
 	if value, ok := gru.mutation.RewardState(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -597,6 +617,20 @@ func (gruo *GoodRewardUpdateOne) SetNillableEntID(u *uuid.UUID) *GoodRewardUpdat
 // SetGoodID sets the "good_id" field.
 func (gruo *GoodRewardUpdateOne) SetGoodID(u uuid.UUID) *GoodRewardUpdateOne {
 	gruo.mutation.SetGoodID(u)
+	return gruo
+}
+
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (gruo *GoodRewardUpdateOne) SetNillableGoodID(u *uuid.UUID) *GoodRewardUpdateOne {
+	if u != nil {
+		gruo.SetGoodID(*u)
+	}
+	return gruo
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (gruo *GoodRewardUpdateOne) ClearGoodID() *GoodRewardUpdateOne {
+	gruo.mutation.ClearGoodID()
 	return gruo
 }
 
@@ -928,6 +962,12 @@ func (gruo *GoodRewardUpdateOne) sqlSave(ctx context.Context) (_node *GoodReward
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: goodreward.FieldGoodID,
+		})
+	}
+	if gruo.mutation.GoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: goodreward.FieldGoodID,
 		})
 	}

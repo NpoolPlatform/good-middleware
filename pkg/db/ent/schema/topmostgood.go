@@ -26,32 +26,23 @@ func (TopMostGood) Mixin() []ent.Mixin {
 func (TopMostGood) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("app_id", uuid.UUID{}),
+			UUID("app_good_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
-			UUID("good_id", uuid.UUID{}),
-		field.
-			UUID("app_good_id", uuid.UUID{}),
-		field.
-			UUID("coin_type_id", uuid.UUID{}),
-		field.
-			UUID("top_most_id", uuid.UUID{}),
+			UUID("top_most_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
 			Uint32("display_index").
 			Optional().
 			Default(0),
 		field.
-			JSON("posters", []string{}).
-			Optional().
-			Default([]string{}),
-		field.
 			Other("unit_price", decimal.Decimal{}).
-			SchemaType(map[string]string{
-				dialect.MySQL: "decimal(37,18)",
-			}).
-			Optional().
-			Default(decimal.Decimal{}),
-		field.
-			Other("package_price", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).

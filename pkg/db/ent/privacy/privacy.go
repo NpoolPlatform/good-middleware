@@ -1086,6 +1086,54 @@ func (f TopMostGoodMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mut
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.TopMostGoodMutation", m)
 }
 
+// The TopMostGoodPosterQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type TopMostGoodPosterQueryRuleFunc func(context.Context, *ent.TopMostGoodPosterQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f TopMostGoodPosterQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.TopMostGoodPosterQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.TopMostGoodPosterQuery", q)
+}
+
+// The TopMostGoodPosterMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type TopMostGoodPosterMutationRuleFunc func(context.Context, *ent.TopMostGoodPosterMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f TopMostGoodPosterMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.TopMostGoodPosterMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.TopMostGoodPosterMutation", m)
+}
+
+// The TopMostPosterQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type TopMostPosterQueryRuleFunc func(context.Context, *ent.TopMostPosterQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f TopMostPosterQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.TopMostPosterQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.TopMostPosterQuery", q)
+}
+
+// The TopMostPosterMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type TopMostPosterMutationRuleFunc func(context.Context, *ent.TopMostPosterMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f TopMostPosterMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.TopMostPosterMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.TopMostPosterMutation", m)
+}
+
 // The VendorBrandQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type VendorBrandQueryRuleFunc func(context.Context, *ent.VendorBrandQuery) error
@@ -1247,6 +1295,10 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.TopMostGoodQuery:
 		return q.Filter(), nil
+	case *ent.TopMostGoodPosterQuery:
+		return q.Filter(), nil
+	case *ent.TopMostPosterQuery:
+		return q.Filter(), nil
 	case *ent.VendorBrandQuery:
 		return q.Filter(), nil
 	case *ent.VendorLocationQuery:
@@ -1335,6 +1387,10 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	case *ent.TopMostMutation:
 		return m.Filter(), nil
 	case *ent.TopMostGoodMutation:
+		return m.Filter(), nil
+	case *ent.TopMostGoodPosterMutation:
+		return m.Filter(), nil
+	case *ent.TopMostPosterMutation:
 		return m.Filter(), nil
 	case *ent.VendorBrandMutation:
 		return m.Filter(), nil

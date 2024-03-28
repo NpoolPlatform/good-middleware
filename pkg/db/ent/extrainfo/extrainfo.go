@@ -21,8 +21,8 @@ const (
 	FieldDeletedAt = "deleted_at"
 	// FieldEntID holds the string denoting the ent_id field in the database.
 	FieldEntID = "ent_id"
-	// FieldGoodID holds the string denoting the good_id field in the database.
-	FieldGoodID = "good_id"
+	// FieldAppGoodID holds the string denoting the app_good_id field in the database.
+	FieldAppGoodID = "app_good_id"
 	// FieldLikes holds the string denoting the likes field in the database.
 	FieldLikes = "likes"
 	// FieldDislikes holds the string denoting the dislikes field in the database.
@@ -46,7 +46,7 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldDeletedAt,
 	FieldEntID,
-	FieldGoodID,
+	FieldAppGoodID,
 	FieldLikes,
 	FieldDislikes,
 	FieldRecommendCount,
@@ -84,8 +84,8 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultEntID holds the default value on creation for the "ent_id" field.
 	DefaultEntID func() uuid.UUID
-	// DefaultGoodID holds the default value on creation for the "good_id" field.
-	DefaultGoodID func() uuid.UUID
+	// DefaultAppGoodID holds the default value on creation for the "app_good_id" field.
+	DefaultAppGoodID func() uuid.UUID
 	// DefaultLikes holds the default value on creation for the "likes" field.
 	DefaultLikes uint32
 	// DefaultDislikes holds the default value on creation for the "dislikes" field.

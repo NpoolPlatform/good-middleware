@@ -79,16 +79,16 @@ func (eic *ExtraInfoCreate) SetNillableEntID(u *uuid.UUID) *ExtraInfoCreate {
 	return eic
 }
 
-// SetGoodID sets the "good_id" field.
-func (eic *ExtraInfoCreate) SetGoodID(u uuid.UUID) *ExtraInfoCreate {
-	eic.mutation.SetGoodID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (eic *ExtraInfoCreate) SetAppGoodID(u uuid.UUID) *ExtraInfoCreate {
+	eic.mutation.SetAppGoodID(u)
 	return eic
 }
 
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (eic *ExtraInfoCreate) SetNillableGoodID(u *uuid.UUID) *ExtraInfoCreate {
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (eic *ExtraInfoCreate) SetNillableAppGoodID(u *uuid.UUID) *ExtraInfoCreate {
 	if u != nil {
-		eic.SetGoodID(*u)
+		eic.SetAppGoodID(*u)
 	}
 	return eic
 }
@@ -290,12 +290,12 @@ func (eic *ExtraInfoCreate) defaults() error {
 		v := extrainfo.DefaultEntID()
 		eic.mutation.SetEntID(v)
 	}
-	if _, ok := eic.mutation.GoodID(); !ok {
-		if extrainfo.DefaultGoodID == nil {
-			return fmt.Errorf("ent: uninitialized extrainfo.DefaultGoodID (forgotten import ent/runtime?)")
+	if _, ok := eic.mutation.AppGoodID(); !ok {
+		if extrainfo.DefaultAppGoodID == nil {
+			return fmt.Errorf("ent: uninitialized extrainfo.DefaultAppGoodID (forgotten import ent/runtime?)")
 		}
-		v := extrainfo.DefaultGoodID()
-		eic.mutation.SetGoodID(v)
+		v := extrainfo.DefaultAppGoodID()
+		eic.mutation.SetAppGoodID(v)
 	}
 	if _, ok := eic.mutation.Likes(); !ok {
 		v := extrainfo.DefaultLikes
@@ -404,13 +404,13 @@ func (eic *ExtraInfoCreate) createSpec() (*ExtraInfo, *sqlgraph.CreateSpec) {
 		})
 		_node.EntID = value
 	}
-	if value, ok := eic.mutation.GoodID(); ok {
+	if value, ok := eic.mutation.AppGoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: extrainfo.FieldGoodID,
+			Column: extrainfo.FieldAppGoodID,
 		})
-		_node.GoodID = value
+		_node.AppGoodID = value
 	}
 	if value, ok := eic.mutation.Likes(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -580,21 +580,21 @@ func (u *ExtraInfoUpsert) UpdateEntID() *ExtraInfoUpsert {
 	return u
 }
 
-// SetGoodID sets the "good_id" field.
-func (u *ExtraInfoUpsert) SetGoodID(v uuid.UUID) *ExtraInfoUpsert {
-	u.Set(extrainfo.FieldGoodID, v)
+// SetAppGoodID sets the "app_good_id" field.
+func (u *ExtraInfoUpsert) SetAppGoodID(v uuid.UUID) *ExtraInfoUpsert {
+	u.Set(extrainfo.FieldAppGoodID, v)
 	return u
 }
 
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *ExtraInfoUpsert) UpdateGoodID() *ExtraInfoUpsert {
-	u.SetExcluded(extrainfo.FieldGoodID)
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *ExtraInfoUpsert) UpdateAppGoodID() *ExtraInfoUpsert {
+	u.SetExcluded(extrainfo.FieldAppGoodID)
 	return u
 }
 
-// ClearGoodID clears the value of the "good_id" field.
-func (u *ExtraInfoUpsert) ClearGoodID() *ExtraInfoUpsert {
-	u.SetNull(extrainfo.FieldGoodID)
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *ExtraInfoUpsert) ClearAppGoodID() *ExtraInfoUpsert {
+	u.SetNull(extrainfo.FieldAppGoodID)
 	return u
 }
 
@@ -863,24 +863,24 @@ func (u *ExtraInfoUpsertOne) UpdateEntID() *ExtraInfoUpsertOne {
 	})
 }
 
-// SetGoodID sets the "good_id" field.
-func (u *ExtraInfoUpsertOne) SetGoodID(v uuid.UUID) *ExtraInfoUpsertOne {
+// SetAppGoodID sets the "app_good_id" field.
+func (u *ExtraInfoUpsertOne) SetAppGoodID(v uuid.UUID) *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetGoodID(v)
+		s.SetAppGoodID(v)
 	})
 }
 
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *ExtraInfoUpsertOne) UpdateGoodID() *ExtraInfoUpsertOne {
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *ExtraInfoUpsertOne) UpdateAppGoodID() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateGoodID()
+		s.UpdateAppGoodID()
 	})
 }
 
-// ClearGoodID clears the value of the "good_id" field.
-func (u *ExtraInfoUpsertOne) ClearGoodID() *ExtraInfoUpsertOne {
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *ExtraInfoUpsertOne) ClearAppGoodID() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearGoodID()
+		s.ClearAppGoodID()
 	})
 }
 
@@ -1337,24 +1337,24 @@ func (u *ExtraInfoUpsertBulk) UpdateEntID() *ExtraInfoUpsertBulk {
 	})
 }
 
-// SetGoodID sets the "good_id" field.
-func (u *ExtraInfoUpsertBulk) SetGoodID(v uuid.UUID) *ExtraInfoUpsertBulk {
+// SetAppGoodID sets the "app_good_id" field.
+func (u *ExtraInfoUpsertBulk) SetAppGoodID(v uuid.UUID) *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetGoodID(v)
+		s.SetAppGoodID(v)
 	})
 }
 
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *ExtraInfoUpsertBulk) UpdateGoodID() *ExtraInfoUpsertBulk {
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *ExtraInfoUpsertBulk) UpdateAppGoodID() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateGoodID()
+		s.UpdateAppGoodID()
 	})
 }
 
-// ClearGoodID clears the value of the "good_id" field.
-func (u *ExtraInfoUpsertBulk) ClearGoodID() *ExtraInfoUpsertBulk {
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *ExtraInfoUpsertBulk) ClearAppGoodID() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearGoodID()
+		s.ClearAppGoodID()
 	})
 }
 

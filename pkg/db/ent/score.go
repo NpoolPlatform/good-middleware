@@ -25,16 +25,14 @@ type Score struct {
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// EntID holds the value of the "ent_id" field.
 	EntID uuid.UUID `json:"ent_id,omitempty"`
-	// AppID holds the value of the "app_id" field.
-	AppID uuid.UUID `json:"app_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID uuid.UUID `json:"user_id,omitempty"`
-	// GoodID holds the value of the "good_id" field.
-	GoodID uuid.UUID `json:"good_id,omitempty"`
 	// AppGoodID holds the value of the "app_good_id" field.
 	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// Score holds the value of the "score" field.
 	Score decimal.Decimal `json:"score,omitempty"`
+	// CommentID holds the value of the "comment_id" field.
+	CommentID uuid.UUID `json:"comment_id,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -46,7 +44,7 @@ func (*Score) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case score.FieldID, score.FieldCreatedAt, score.FieldUpdatedAt, score.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case score.FieldEntID, score.FieldAppID, score.FieldUserID, score.FieldGoodID, score.FieldAppGoodID:
+		case score.FieldEntID, score.FieldUserID, score.FieldAppGoodID, score.FieldCommentID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Score", columns[i])
@@ -93,23 +91,11 @@ func (s *Score) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				s.EntID = *value
 			}
-		case score.FieldAppID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field app_id", values[i])
-			} else if value != nil {
-				s.AppID = *value
-			}
 		case score.FieldUserID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value != nil {
 				s.UserID = *value
-			}
-		case score.FieldGoodID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field good_id", values[i])
-			} else if value != nil {
-				s.GoodID = *value
 			}
 		case score.FieldAppGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -122,6 +108,12 @@ func (s *Score) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field score", values[i])
 			} else if value != nil {
 				s.Score = *value
+			}
+		case score.FieldCommentID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field comment_id", values[i])
+			} else if value != nil {
+				s.CommentID = *value
 			}
 		}
 	}
@@ -163,20 +155,17 @@ func (s *Score) String() string {
 	builder.WriteString("ent_id=")
 	builder.WriteString(fmt.Sprintf("%v", s.EntID))
 	builder.WriteString(", ")
-	builder.WriteString("app_id=")
-	builder.WriteString(fmt.Sprintf("%v", s.AppID))
-	builder.WriteString(", ")
 	builder.WriteString("user_id=")
 	builder.WriteString(fmt.Sprintf("%v", s.UserID))
-	builder.WriteString(", ")
-	builder.WriteString("good_id=")
-	builder.WriteString(fmt.Sprintf("%v", s.GoodID))
 	builder.WriteString(", ")
 	builder.WriteString("app_good_id=")
 	builder.WriteString(fmt.Sprintf("%v", s.AppGoodID))
 	builder.WriteString(", ")
 	builder.WriteString("score=")
 	builder.WriteString(fmt.Sprintf("%v", s.Score))
+	builder.WriteString(", ")
+	builder.WriteString("comment_id=")
+	builder.WriteString(fmt.Sprintf("%v", s.CommentID))
 	builder.WriteByte(')')
 	return builder.String()
 }

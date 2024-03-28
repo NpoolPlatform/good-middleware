@@ -27,7 +27,7 @@ func (ExtraInfo) Mixin() []ent.Mixin {
 func (ExtraInfo) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("good_id", uuid.UUID{}).
+			UUID("app_good_id", uuid.UUID{}).
 			Optional().
 			Default(func() uuid.UUID {
 				return uuid.Nil
@@ -69,6 +69,6 @@ func (ExtraInfo) Edges() []ent.Edge {
 
 func (ExtraInfo) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("good_id"),
+		index.Fields("app_good_id"),
 	}
 }

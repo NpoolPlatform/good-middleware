@@ -87,6 +87,8 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultEntID holds the default value on creation for the "ent_id" field.
 	DefaultEntID func() uuid.UUID
+	// DefaultGoodID holds the default value on creation for the "good_id" field.
+	DefaultGoodID func() uuid.UUID
 	// DefaultRewardState holds the default value on creation for the "reward_state" field.
 	DefaultRewardState string
 	// DefaultLastRewardAt holds the default value on creation for the "last_reward_at" field.

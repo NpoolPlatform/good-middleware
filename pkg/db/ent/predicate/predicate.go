@@ -123,6 +123,12 @@ type TopMost func(*sql.Selector)
 // TopMostGood is the predicate function for topmostgood builders.
 type TopMostGood func(*sql.Selector)
 
+// TopMostGoodPoster is the predicate function for topmostgoodposter builders.
+type TopMostGoodPoster func(*sql.Selector)
+
+// TopMostPoster is the predicate function for topmostposter builders.
+type TopMostPoster func(*sql.Selector)
+
 // VendorBrand is the predicate function for vendorbrand builders.
 type VendorBrand func(*sql.Selector)
 

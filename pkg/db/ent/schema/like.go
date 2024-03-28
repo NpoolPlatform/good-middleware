@@ -36,12 +36,6 @@ func (Like) Fields() []ent.Field {
 				return uuid.Nil
 			}),
 		field.
-			UUID("good_id", uuid.UUID{}).
-			Optional().
-			Default(func() uuid.UUID {
-				return uuid.Nil
-			}),
-		field.
 			UUID("app_good_id", uuid.UUID{}).
 			Optional().
 			Default(func() uuid.UUID {

@@ -49,6 +49,8 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stocklock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodposter"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 
@@ -139,6 +141,10 @@ type Client struct {
 	TopMost *TopMostClient
 	// TopMostGood is the client for interacting with the TopMostGood builders.
 	TopMostGood *TopMostGoodClient
+	// TopMostGoodPoster is the client for interacting with the TopMostGoodPoster builders.
+	TopMostGoodPoster *TopMostGoodPosterClient
+	// TopMostPoster is the client for interacting with the TopMostPoster builders.
+	TopMostPoster *TopMostPosterClient
 	// VendorBrand is the client for interacting with the VendorBrand builders.
 	VendorBrand *VendorBrandClient
 	// VendorLocation is the client for interacting with the VendorLocation builders.
@@ -195,6 +201,8 @@ func (c *Client) init() {
 	c.StockLock = NewStockLockClient(c.config)
 	c.TopMost = NewTopMostClient(c.config)
 	c.TopMostGood = NewTopMostGoodClient(c.config)
+	c.TopMostGoodPoster = NewTopMostGoodPosterClient(c.config)
+	c.TopMostPoster = NewTopMostPosterClient(c.config)
 	c.VendorBrand = NewVendorBrandClient(c.config)
 	c.VendorLocation = NewVendorLocationClient(c.config)
 }
@@ -269,6 +277,8 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		StockLock:              NewStockLockClient(cfg),
 		TopMost:                NewTopMostClient(cfg),
 		TopMostGood:            NewTopMostGoodClient(cfg),
+		TopMostGoodPoster:      NewTopMostGoodPosterClient(cfg),
+		TopMostPoster:          NewTopMostPosterClient(cfg),
 		VendorBrand:            NewVendorBrandClient(cfg),
 		VendorLocation:         NewVendorLocationClient(cfg),
 	}, nil
@@ -329,6 +339,8 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		StockLock:              NewStockLockClient(cfg),
 		TopMost:                NewTopMostClient(cfg),
 		TopMostGood:            NewTopMostGoodClient(cfg),
+		TopMostGoodPoster:      NewTopMostGoodPosterClient(cfg),
+		TopMostPoster:          NewTopMostPosterClient(cfg),
 		VendorBrand:            NewVendorBrandClient(cfg),
 		VendorLocation:         NewVendorLocationClient(cfg),
 	}, nil
@@ -399,6 +411,8 @@ func (c *Client) Use(hooks ...Hook) {
 	c.StockLock.Use(hooks...)
 	c.TopMost.Use(hooks...)
 	c.TopMostGood.Use(hooks...)
+	c.TopMostGoodPoster.Use(hooks...)
+	c.TopMostPoster.Use(hooks...)
 	c.VendorBrand.Use(hooks...)
 	c.VendorLocation.Use(hooks...)
 }
@@ -3950,6 +3964,188 @@ func (c *TopMostGoodClient) GetX(ctx context.Context, id uint32) *TopMostGood {
 func (c *TopMostGoodClient) Hooks() []Hook {
 	hooks := c.hooks.TopMostGood
 	return append(hooks[:len(hooks):len(hooks)], topmostgood.Hooks[:]...)
+}
+
+// TopMostGoodPosterClient is a client for the TopMostGoodPoster schema.
+type TopMostGoodPosterClient struct {
+	config
+}
+
+// NewTopMostGoodPosterClient returns a client for the TopMostGoodPoster from the given config.
+func NewTopMostGoodPosterClient(c config) *TopMostGoodPosterClient {
+	return &TopMostGoodPosterClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `topmostgoodposter.Hooks(f(g(h())))`.
+func (c *TopMostGoodPosterClient) Use(hooks ...Hook) {
+	c.hooks.TopMostGoodPoster = append(c.hooks.TopMostGoodPoster, hooks...)
+}
+
+// Create returns a builder for creating a TopMostGoodPoster entity.
+func (c *TopMostGoodPosterClient) Create() *TopMostGoodPosterCreate {
+	mutation := newTopMostGoodPosterMutation(c.config, OpCreate)
+	return &TopMostGoodPosterCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of TopMostGoodPoster entities.
+func (c *TopMostGoodPosterClient) CreateBulk(builders ...*TopMostGoodPosterCreate) *TopMostGoodPosterCreateBulk {
+	return &TopMostGoodPosterCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for TopMostGoodPoster.
+func (c *TopMostGoodPosterClient) Update() *TopMostGoodPosterUpdate {
+	mutation := newTopMostGoodPosterMutation(c.config, OpUpdate)
+	return &TopMostGoodPosterUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *TopMostGoodPosterClient) UpdateOne(tmgp *TopMostGoodPoster) *TopMostGoodPosterUpdateOne {
+	mutation := newTopMostGoodPosterMutation(c.config, OpUpdateOne, withTopMostGoodPoster(tmgp))
+	return &TopMostGoodPosterUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *TopMostGoodPosterClient) UpdateOneID(id uint32) *TopMostGoodPosterUpdateOne {
+	mutation := newTopMostGoodPosterMutation(c.config, OpUpdateOne, withTopMostGoodPosterID(id))
+	return &TopMostGoodPosterUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for TopMostGoodPoster.
+func (c *TopMostGoodPosterClient) Delete() *TopMostGoodPosterDelete {
+	mutation := newTopMostGoodPosterMutation(c.config, OpDelete)
+	return &TopMostGoodPosterDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *TopMostGoodPosterClient) DeleteOne(tmgp *TopMostGoodPoster) *TopMostGoodPosterDeleteOne {
+	return c.DeleteOneID(tmgp.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *TopMostGoodPosterClient) DeleteOneID(id uint32) *TopMostGoodPosterDeleteOne {
+	builder := c.Delete().Where(topmostgoodposter.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TopMostGoodPosterDeleteOne{builder}
+}
+
+// Query returns a query builder for TopMostGoodPoster.
+func (c *TopMostGoodPosterClient) Query() *TopMostGoodPosterQuery {
+	return &TopMostGoodPosterQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a TopMostGoodPoster entity by its id.
+func (c *TopMostGoodPosterClient) Get(ctx context.Context, id uint32) (*TopMostGoodPoster, error) {
+	return c.Query().Where(topmostgoodposter.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *TopMostGoodPosterClient) GetX(ctx context.Context, id uint32) *TopMostGoodPoster {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *TopMostGoodPosterClient) Hooks() []Hook {
+	hooks := c.hooks.TopMostGoodPoster
+	return append(hooks[:len(hooks):len(hooks)], topmostgoodposter.Hooks[:]...)
+}
+
+// TopMostPosterClient is a client for the TopMostPoster schema.
+type TopMostPosterClient struct {
+	config
+}
+
+// NewTopMostPosterClient returns a client for the TopMostPoster from the given config.
+func NewTopMostPosterClient(c config) *TopMostPosterClient {
+	return &TopMostPosterClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `topmostposter.Hooks(f(g(h())))`.
+func (c *TopMostPosterClient) Use(hooks ...Hook) {
+	c.hooks.TopMostPoster = append(c.hooks.TopMostPoster, hooks...)
+}
+
+// Create returns a builder for creating a TopMostPoster entity.
+func (c *TopMostPosterClient) Create() *TopMostPosterCreate {
+	mutation := newTopMostPosterMutation(c.config, OpCreate)
+	return &TopMostPosterCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of TopMostPoster entities.
+func (c *TopMostPosterClient) CreateBulk(builders ...*TopMostPosterCreate) *TopMostPosterCreateBulk {
+	return &TopMostPosterCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for TopMostPoster.
+func (c *TopMostPosterClient) Update() *TopMostPosterUpdate {
+	mutation := newTopMostPosterMutation(c.config, OpUpdate)
+	return &TopMostPosterUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *TopMostPosterClient) UpdateOne(tmp *TopMostPoster) *TopMostPosterUpdateOne {
+	mutation := newTopMostPosterMutation(c.config, OpUpdateOne, withTopMostPoster(tmp))
+	return &TopMostPosterUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *TopMostPosterClient) UpdateOneID(id uint32) *TopMostPosterUpdateOne {
+	mutation := newTopMostPosterMutation(c.config, OpUpdateOne, withTopMostPosterID(id))
+	return &TopMostPosterUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for TopMostPoster.
+func (c *TopMostPosterClient) Delete() *TopMostPosterDelete {
+	mutation := newTopMostPosterMutation(c.config, OpDelete)
+	return &TopMostPosterDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *TopMostPosterClient) DeleteOne(tmp *TopMostPoster) *TopMostPosterDeleteOne {
+	return c.DeleteOneID(tmp.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *TopMostPosterClient) DeleteOneID(id uint32) *TopMostPosterDeleteOne {
+	builder := c.Delete().Where(topmostposter.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TopMostPosterDeleteOne{builder}
+}
+
+// Query returns a query builder for TopMostPoster.
+func (c *TopMostPosterClient) Query() *TopMostPosterQuery {
+	return &TopMostPosterQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a TopMostPoster entity by its id.
+func (c *TopMostPosterClient) Get(ctx context.Context, id uint32) (*TopMostPoster, error) {
+	return c.Query().Where(topmostposter.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *TopMostPosterClient) GetX(ctx context.Context, id uint32) *TopMostPoster {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *TopMostPosterClient) Hooks() []Hook {
+	hooks := c.hooks.TopMostPoster
+	return append(hooks[:len(hooks):len(hooks)], topmostposter.Hooks[:]...)
 }
 
 // VendorBrandClient is a client for the VendorBrand schema.

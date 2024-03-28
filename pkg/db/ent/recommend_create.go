@@ -79,15 +79,17 @@ func (rc *RecommendCreate) SetNillableEntID(u *uuid.UUID) *RecommendCreate {
 	return rc
 }
 
-// SetAppID sets the "app_id" field.
-func (rc *RecommendCreate) SetAppID(u uuid.UUID) *RecommendCreate {
-	rc.mutation.SetAppID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (rc *RecommendCreate) SetAppGoodID(u uuid.UUID) *RecommendCreate {
+	rc.mutation.SetAppGoodID(u)
 	return rc
 }
 
-// SetGoodID sets the "good_id" field.
-func (rc *RecommendCreate) SetGoodID(u uuid.UUID) *RecommendCreate {
-	rc.mutation.SetGoodID(u)
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (rc *RecommendCreate) SetNillableAppGoodID(u *uuid.UUID) *RecommendCreate {
+	if u != nil {
+		rc.SetAppGoodID(*u)
+	}
 	return rc
 }
 
@@ -246,6 +248,13 @@ func (rc *RecommendCreate) defaults() error {
 		v := recommend.DefaultEntID()
 		rc.mutation.SetEntID(v)
 	}
+	if _, ok := rc.mutation.AppGoodID(); !ok {
+		if recommend.DefaultAppGoodID == nil {
+			return fmt.Errorf("ent: uninitialized recommend.DefaultAppGoodID (forgotten import ent/runtime?)")
+		}
+		v := recommend.DefaultAppGoodID()
+		rc.mutation.SetAppGoodID(v)
+	}
 	if _, ok := rc.mutation.RecommenderID(); !ok {
 		if recommend.DefaultRecommenderID == nil {
 			return fmt.Errorf("ent: uninitialized recommend.DefaultRecommenderID (forgotten import ent/runtime?)")
@@ -277,12 +286,6 @@ func (rc *RecommendCreate) check() error {
 	}
 	if _, ok := rc.mutation.EntID(); !ok {
 		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "Recommend.ent_id"`)}
-	}
-	if _, ok := rc.mutation.AppID(); !ok {
-		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "Recommend.app_id"`)}
-	}
-	if _, ok := rc.mutation.GoodID(); !ok {
-		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "Recommend.good_id"`)}
 	}
 	return nil
 }
@@ -350,21 +353,13 @@ func (rc *RecommendCreate) createSpec() (*Recommend, *sqlgraph.CreateSpec) {
 		})
 		_node.EntID = value
 	}
-	if value, ok := rc.mutation.AppID(); ok {
+	if value, ok := rc.mutation.AppGoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: recommend.FieldAppID,
+			Column: recommend.FieldAppGoodID,
 		})
-		_node.AppID = value
-	}
-	if value, ok := rc.mutation.GoodID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: recommend.FieldGoodID,
-		})
-		_node.GoodID = value
+		_node.AppGoodID = value
 	}
 	if value, ok := rc.mutation.RecommenderID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -510,27 +505,21 @@ func (u *RecommendUpsert) UpdateEntID() *RecommendUpsert {
 	return u
 }
 
-// SetAppID sets the "app_id" field.
-func (u *RecommendUpsert) SetAppID(v uuid.UUID) *RecommendUpsert {
-	u.Set(recommend.FieldAppID, v)
+// SetAppGoodID sets the "app_good_id" field.
+func (u *RecommendUpsert) SetAppGoodID(v uuid.UUID) *RecommendUpsert {
+	u.Set(recommend.FieldAppGoodID, v)
 	return u
 }
 
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *RecommendUpsert) UpdateAppID() *RecommendUpsert {
-	u.SetExcluded(recommend.FieldAppID)
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *RecommendUpsert) UpdateAppGoodID() *RecommendUpsert {
+	u.SetExcluded(recommend.FieldAppGoodID)
 	return u
 }
 
-// SetGoodID sets the "good_id" field.
-func (u *RecommendUpsert) SetGoodID(v uuid.UUID) *RecommendUpsert {
-	u.Set(recommend.FieldGoodID, v)
-	return u
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *RecommendUpsert) UpdateGoodID() *RecommendUpsert {
-	u.SetExcluded(recommend.FieldGoodID)
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *RecommendUpsert) ClearAppGoodID() *RecommendUpsert {
+	u.SetNull(recommend.FieldAppGoodID)
 	return u
 }
 
@@ -715,31 +704,24 @@ func (u *RecommendUpsertOne) UpdateEntID() *RecommendUpsertOne {
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *RecommendUpsertOne) SetAppID(v uuid.UUID) *RecommendUpsertOne {
+// SetAppGoodID sets the "app_good_id" field.
+func (u *RecommendUpsertOne) SetAppGoodID(v uuid.UUID) *RecommendUpsertOne {
 	return u.Update(func(s *RecommendUpsert) {
-		s.SetAppID(v)
+		s.SetAppGoodID(v)
 	})
 }
 
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *RecommendUpsertOne) UpdateAppID() *RecommendUpsertOne {
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *RecommendUpsertOne) UpdateAppGoodID() *RecommendUpsertOne {
 	return u.Update(func(s *RecommendUpsert) {
-		s.UpdateAppID()
+		s.UpdateAppGoodID()
 	})
 }
 
-// SetGoodID sets the "good_id" field.
-func (u *RecommendUpsertOne) SetGoodID(v uuid.UUID) *RecommendUpsertOne {
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *RecommendUpsertOne) ClearAppGoodID() *RecommendUpsertOne {
 	return u.Update(func(s *RecommendUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *RecommendUpsertOne) UpdateGoodID() *RecommendUpsertOne {
-	return u.Update(func(s *RecommendUpsert) {
-		s.UpdateGoodID()
+		s.ClearAppGoodID()
 	})
 }
 
@@ -1098,31 +1080,24 @@ func (u *RecommendUpsertBulk) UpdateEntID() *RecommendUpsertBulk {
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *RecommendUpsertBulk) SetAppID(v uuid.UUID) *RecommendUpsertBulk {
+// SetAppGoodID sets the "app_good_id" field.
+func (u *RecommendUpsertBulk) SetAppGoodID(v uuid.UUID) *RecommendUpsertBulk {
 	return u.Update(func(s *RecommendUpsert) {
-		s.SetAppID(v)
+		s.SetAppGoodID(v)
 	})
 }
 
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *RecommendUpsertBulk) UpdateAppID() *RecommendUpsertBulk {
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *RecommendUpsertBulk) UpdateAppGoodID() *RecommendUpsertBulk {
 	return u.Update(func(s *RecommendUpsert) {
-		s.UpdateAppID()
+		s.UpdateAppGoodID()
 	})
 }
 
-// SetGoodID sets the "good_id" field.
-func (u *RecommendUpsertBulk) SetGoodID(v uuid.UUID) *RecommendUpsertBulk {
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *RecommendUpsertBulk) ClearAppGoodID() *RecommendUpsertBulk {
 	return u.Update(func(s *RecommendUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *RecommendUpsertBulk) UpdateGoodID() *RecommendUpsertBulk {
-	return u.Update(func(s *RecommendUpsert) {
-		s.UpdateGoodID()
+		s.ClearAppGoodID()
 	})
 }
 

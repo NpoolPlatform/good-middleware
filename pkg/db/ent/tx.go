@@ -92,6 +92,10 @@ type Tx struct {
 	TopMost *TopMostClient
 	// TopMostGood is the client for interacting with the TopMostGood builders.
 	TopMostGood *TopMostGoodClient
+	// TopMostGoodPoster is the client for interacting with the TopMostGoodPoster builders.
+	TopMostGoodPoster *TopMostGoodPosterClient
+	// TopMostPoster is the client for interacting with the TopMostPoster builders.
+	TopMostPoster *TopMostPosterClient
 	// VendorBrand is the client for interacting with the VendorBrand builders.
 	VendorBrand *VendorBrandClient
 	// VendorLocation is the client for interacting with the VendorLocation builders.
@@ -270,6 +274,8 @@ func (tx *Tx) init() {
 	tx.StockLock = NewStockLockClient(tx.config)
 	tx.TopMost = NewTopMostClient(tx.config)
 	tx.TopMostGood = NewTopMostGoodClient(tx.config)
+	tx.TopMostGoodPoster = NewTopMostGoodPosterClient(tx.config)
+	tx.TopMostPoster = NewTopMostPosterClient(tx.config)
 	tx.VendorBrand = NewVendorBrandClient(tx.config)
 	tx.VendorLocation = NewVendorLocationClient(tx.config)
 }

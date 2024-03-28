@@ -27,19 +27,7 @@ func (Comment) Mixin() []ent.Mixin {
 func (Comment) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("app_id", uuid.UUID{}).
-			Optional().
-			Default(func() uuid.UUID {
-				return uuid.Nil
-			}),
-		field.
 			UUID("user_id", uuid.UUID{}).
-			Optional().
-			Default(func() uuid.UUID {
-				return uuid.Nil
-			}),
-		field.
-			UUID("good_id", uuid.UUID{}).
 			Optional().
 			Default(func() uuid.UUID {
 				return uuid.Nil
@@ -99,6 +87,6 @@ func (Comment) Edges() []ent.Edge {
 
 func (Comment) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("app_id", "user_id", "good_id", "order_id"),
+		index.Fields("user_id", "app_good_id"),
 	}
 }

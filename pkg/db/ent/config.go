@@ -67,6 +67,8 @@ type hooks struct {
 	StockLock              []ent.Hook
 	TopMost                []ent.Hook
 	TopMostGood            []ent.Hook
+	TopMostGoodPoster      []ent.Hook
+	TopMostPoster          []ent.Hook
 	VendorBrand            []ent.Hook
 	VendorLocation         []ent.Hook
 }

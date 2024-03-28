@@ -26,19 +26,7 @@ func (Score) Mixin() []ent.Mixin {
 func (Score) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("app_id", uuid.UUID{}).
-			Optional().
-			Default(func() uuid.UUID {
-				return uuid.Nil
-			}),
-		field.
 			UUID("user_id", uuid.UUID{}).
-			Optional().
-			Default(func() uuid.UUID {
-				return uuid.Nil
-			}),
-		field.
-			UUID("good_id", uuid.UUID{}).
 			Optional().
 			Default(func() uuid.UUID {
 				return uuid.Nil
@@ -56,6 +44,12 @@ func (Score) Fields() []ent.Field {
 			}).
 			Optional().
 			Default(decimal.Decimal{}),
+		field.
+			UUID("comment_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 	}
 }
 

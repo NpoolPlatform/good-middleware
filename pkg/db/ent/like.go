@@ -28,8 +28,6 @@ type Like struct {
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID uuid.UUID `json:"user_id,omitempty"`
-	// GoodID holds the value of the "good_id" field.
-	GoodID uuid.UUID `json:"good_id,omitempty"`
 	// AppGoodID holds the value of the "app_good_id" field.
 	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// Like holds the value of the "like" field.
@@ -45,7 +43,7 @@ func (*Like) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullBool)
 		case like.FieldID, like.FieldCreatedAt, like.FieldUpdatedAt, like.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case like.FieldEntID, like.FieldAppID, like.FieldUserID, like.FieldGoodID, like.FieldAppGoodID:
+		case like.FieldEntID, like.FieldAppID, like.FieldUserID, like.FieldAppGoodID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Like", columns[i])
@@ -104,12 +102,6 @@ func (l *Like) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				l.UserID = *value
 			}
-		case like.FieldGoodID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field good_id", values[i])
-			} else if value != nil {
-				l.GoodID = *value
-			}
 		case like.FieldAppGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field app_good_id", values[i])
@@ -167,9 +159,6 @@ func (l *Like) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
 	builder.WriteString(fmt.Sprintf("%v", l.UserID))
-	builder.WriteString(", ")
-	builder.WriteString("good_id=")
-	builder.WriteString(fmt.Sprintf("%v", l.GoodID))
 	builder.WriteString(", ")
 	builder.WriteString("app_good_id=")
 	builder.WriteString(fmt.Sprintf("%v", l.AppGoodID))

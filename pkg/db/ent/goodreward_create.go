@@ -85,6 +85,14 @@ func (grc *GoodRewardCreate) SetGoodID(u uuid.UUID) *GoodRewardCreate {
 	return grc
 }
 
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (grc *GoodRewardCreate) SetNillableGoodID(u *uuid.UUID) *GoodRewardCreate {
+	if u != nil {
+		grc.SetGoodID(*u)
+	}
+	return grc
+}
+
 // SetRewardState sets the "reward_state" field.
 func (grc *GoodRewardCreate) SetRewardState(s string) *GoodRewardCreate {
 	grc.mutation.SetRewardState(s)
@@ -296,6 +304,13 @@ func (grc *GoodRewardCreate) defaults() error {
 		v := goodreward.DefaultEntID()
 		grc.mutation.SetEntID(v)
 	}
+	if _, ok := grc.mutation.GoodID(); !ok {
+		if goodreward.DefaultGoodID == nil {
+			return fmt.Errorf("ent: uninitialized goodreward.DefaultGoodID (forgotten import ent/runtime?)")
+		}
+		v := goodreward.DefaultGoodID()
+		grc.mutation.SetGoodID(v)
+	}
 	if _, ok := grc.mutation.RewardState(); !ok {
 		v := goodreward.DefaultRewardState
 		grc.mutation.SetRewardState(v)
@@ -343,9 +358,6 @@ func (grc *GoodRewardCreate) check() error {
 	}
 	if _, ok := grc.mutation.EntID(); !ok {
 		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "GoodReward.ent_id"`)}
-	}
-	if _, ok := grc.mutation.GoodID(); !ok {
-		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "GoodReward.good_id"`)}
 	}
 	return nil
 }
@@ -606,6 +618,12 @@ func (u *GoodRewardUpsert) SetGoodID(v uuid.UUID) *GoodRewardUpsert {
 // UpdateGoodID sets the "good_id" field to the value that was provided on create.
 func (u *GoodRewardUpsert) UpdateGoodID() *GoodRewardUpsert {
 	u.SetExcluded(goodreward.FieldGoodID)
+	return u
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (u *GoodRewardUpsert) ClearGoodID() *GoodRewardUpsert {
+	u.SetNull(goodreward.FieldGoodID)
 	return u
 }
 
@@ -879,6 +897,13 @@ func (u *GoodRewardUpsertOne) SetGoodID(v uuid.UUID) *GoodRewardUpsertOne {
 func (u *GoodRewardUpsertOne) UpdateGoodID() *GoodRewardUpsertOne {
 	return u.Update(func(s *GoodRewardUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (u *GoodRewardUpsertOne) ClearGoodID() *GoodRewardUpsertOne {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.ClearGoodID()
 	})
 }
 
@@ -1339,6 +1364,13 @@ func (u *GoodRewardUpsertBulk) SetGoodID(v uuid.UUID) *GoodRewardUpsertBulk {
 func (u *GoodRewardUpsertBulk) UpdateGoodID() *GoodRewardUpsertBulk {
 	return u.Update(func(s *GoodRewardUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (u *GoodRewardUpsertBulk) ClearGoodID() *GoodRewardUpsertBulk {
+	return u.Update(func(s *GoodRewardUpsert) {
+		s.ClearGoodID()
 	})
 }
 

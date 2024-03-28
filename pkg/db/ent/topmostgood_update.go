@@ -99,33 +99,43 @@ func (tmgu *TopMostGoodUpdate) SetNillableEntID(u *uuid.UUID) *TopMostGoodUpdate
 	return tmgu
 }
 
-// SetAppID sets the "app_id" field.
-func (tmgu *TopMostGoodUpdate) SetAppID(u uuid.UUID) *TopMostGoodUpdate {
-	tmgu.mutation.SetAppID(u)
-	return tmgu
-}
-
-// SetGoodID sets the "good_id" field.
-func (tmgu *TopMostGoodUpdate) SetGoodID(u uuid.UUID) *TopMostGoodUpdate {
-	tmgu.mutation.SetGoodID(u)
-	return tmgu
-}
-
 // SetAppGoodID sets the "app_good_id" field.
 func (tmgu *TopMostGoodUpdate) SetAppGoodID(u uuid.UUID) *TopMostGoodUpdate {
 	tmgu.mutation.SetAppGoodID(u)
 	return tmgu
 }
 
-// SetCoinTypeID sets the "coin_type_id" field.
-func (tmgu *TopMostGoodUpdate) SetCoinTypeID(u uuid.UUID) *TopMostGoodUpdate {
-	tmgu.mutation.SetCoinTypeID(u)
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (tmgu *TopMostGoodUpdate) SetNillableAppGoodID(u *uuid.UUID) *TopMostGoodUpdate {
+	if u != nil {
+		tmgu.SetAppGoodID(*u)
+	}
+	return tmgu
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (tmgu *TopMostGoodUpdate) ClearAppGoodID() *TopMostGoodUpdate {
+	tmgu.mutation.ClearAppGoodID()
 	return tmgu
 }
 
 // SetTopMostID sets the "top_most_id" field.
 func (tmgu *TopMostGoodUpdate) SetTopMostID(u uuid.UUID) *TopMostGoodUpdate {
 	tmgu.mutation.SetTopMostID(u)
+	return tmgu
+}
+
+// SetNillableTopMostID sets the "top_most_id" field if the given value is not nil.
+func (tmgu *TopMostGoodUpdate) SetNillableTopMostID(u *uuid.UUID) *TopMostGoodUpdate {
+	if u != nil {
+		tmgu.SetTopMostID(*u)
+	}
+	return tmgu
+}
+
+// ClearTopMostID clears the value of the "top_most_id" field.
+func (tmgu *TopMostGoodUpdate) ClearTopMostID() *TopMostGoodUpdate {
+	tmgu.mutation.ClearTopMostID()
 	return tmgu
 }
 
@@ -156,18 +166,6 @@ func (tmgu *TopMostGoodUpdate) ClearDisplayIndex() *TopMostGoodUpdate {
 	return tmgu
 }
 
-// SetPosters sets the "posters" field.
-func (tmgu *TopMostGoodUpdate) SetPosters(s []string) *TopMostGoodUpdate {
-	tmgu.mutation.SetPosters(s)
-	return tmgu
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (tmgu *TopMostGoodUpdate) ClearPosters() *TopMostGoodUpdate {
-	tmgu.mutation.ClearPosters()
-	return tmgu
-}
-
 // SetUnitPrice sets the "unit_price" field.
 func (tmgu *TopMostGoodUpdate) SetUnitPrice(d decimal.Decimal) *TopMostGoodUpdate {
 	tmgu.mutation.SetUnitPrice(d)
@@ -185,26 +183,6 @@ func (tmgu *TopMostGoodUpdate) SetNillableUnitPrice(d *decimal.Decimal) *TopMost
 // ClearUnitPrice clears the value of the "unit_price" field.
 func (tmgu *TopMostGoodUpdate) ClearUnitPrice() *TopMostGoodUpdate {
 	tmgu.mutation.ClearUnitPrice()
-	return tmgu
-}
-
-// SetPackagePrice sets the "package_price" field.
-func (tmgu *TopMostGoodUpdate) SetPackagePrice(d decimal.Decimal) *TopMostGoodUpdate {
-	tmgu.mutation.SetPackagePrice(d)
-	return tmgu
-}
-
-// SetNillablePackagePrice sets the "package_price" field if the given value is not nil.
-func (tmgu *TopMostGoodUpdate) SetNillablePackagePrice(d *decimal.Decimal) *TopMostGoodUpdate {
-	if d != nil {
-		tmgu.SetPackagePrice(*d)
-	}
-	return tmgu
-}
-
-// ClearPackagePrice clears the value of the "package_price" field.
-func (tmgu *TopMostGoodUpdate) ClearPackagePrice() *TopMostGoodUpdate {
-	tmgu.mutation.ClearPackagePrice()
 	return tmgu
 }
 
@@ -355,20 +333,6 @@ func (tmgu *TopMostGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: topmostgood.FieldEntID,
 		})
 	}
-	if value, ok := tmgu.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: topmostgood.FieldAppID,
-		})
-	}
-	if value, ok := tmgu.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: topmostgood.FieldGoodID,
-		})
-	}
 	if value, ok := tmgu.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -376,17 +340,22 @@ func (tmgu *TopMostGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: topmostgood.FieldAppGoodID,
 		})
 	}
-	if value, ok := tmgu.mutation.CoinTypeID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+	if tmgu.mutation.AppGoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Value:  value,
-			Column: topmostgood.FieldCoinTypeID,
+			Column: topmostgood.FieldAppGoodID,
 		})
 	}
 	if value, ok := tmgu.mutation.TopMostID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: topmostgood.FieldTopMostID,
+		})
+	}
+	if tmgu.mutation.TopMostIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: topmostgood.FieldTopMostID,
 		})
 	}
@@ -410,19 +379,6 @@ func (tmgu *TopMostGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: topmostgood.FieldDisplayIndex,
 		})
 	}
-	if value, ok := tmgu.mutation.Posters(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: topmostgood.FieldPosters,
-		})
-	}
-	if tmgu.mutation.PostersCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: topmostgood.FieldPosters,
-		})
-	}
 	if value, ok := tmgu.mutation.UnitPrice(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
@@ -434,19 +390,6 @@ func (tmgu *TopMostGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: topmostgood.FieldUnitPrice,
-		})
-	}
-	if value, ok := tmgu.mutation.PackagePrice(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: topmostgood.FieldPackagePrice,
-		})
-	}
-	if tmgu.mutation.PackagePriceCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: topmostgood.FieldPackagePrice,
 		})
 	}
 	_spec.Modifiers = tmgu.modifiers
@@ -539,33 +482,43 @@ func (tmguo *TopMostGoodUpdateOne) SetNillableEntID(u *uuid.UUID) *TopMostGoodUp
 	return tmguo
 }
 
-// SetAppID sets the "app_id" field.
-func (tmguo *TopMostGoodUpdateOne) SetAppID(u uuid.UUID) *TopMostGoodUpdateOne {
-	tmguo.mutation.SetAppID(u)
-	return tmguo
-}
-
-// SetGoodID sets the "good_id" field.
-func (tmguo *TopMostGoodUpdateOne) SetGoodID(u uuid.UUID) *TopMostGoodUpdateOne {
-	tmguo.mutation.SetGoodID(u)
-	return tmguo
-}
-
 // SetAppGoodID sets the "app_good_id" field.
 func (tmguo *TopMostGoodUpdateOne) SetAppGoodID(u uuid.UUID) *TopMostGoodUpdateOne {
 	tmguo.mutation.SetAppGoodID(u)
 	return tmguo
 }
 
-// SetCoinTypeID sets the "coin_type_id" field.
-func (tmguo *TopMostGoodUpdateOne) SetCoinTypeID(u uuid.UUID) *TopMostGoodUpdateOne {
-	tmguo.mutation.SetCoinTypeID(u)
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (tmguo *TopMostGoodUpdateOne) SetNillableAppGoodID(u *uuid.UUID) *TopMostGoodUpdateOne {
+	if u != nil {
+		tmguo.SetAppGoodID(*u)
+	}
+	return tmguo
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (tmguo *TopMostGoodUpdateOne) ClearAppGoodID() *TopMostGoodUpdateOne {
+	tmguo.mutation.ClearAppGoodID()
 	return tmguo
 }
 
 // SetTopMostID sets the "top_most_id" field.
 func (tmguo *TopMostGoodUpdateOne) SetTopMostID(u uuid.UUID) *TopMostGoodUpdateOne {
 	tmguo.mutation.SetTopMostID(u)
+	return tmguo
+}
+
+// SetNillableTopMostID sets the "top_most_id" field if the given value is not nil.
+func (tmguo *TopMostGoodUpdateOne) SetNillableTopMostID(u *uuid.UUID) *TopMostGoodUpdateOne {
+	if u != nil {
+		tmguo.SetTopMostID(*u)
+	}
+	return tmguo
+}
+
+// ClearTopMostID clears the value of the "top_most_id" field.
+func (tmguo *TopMostGoodUpdateOne) ClearTopMostID() *TopMostGoodUpdateOne {
+	tmguo.mutation.ClearTopMostID()
 	return tmguo
 }
 
@@ -596,18 +549,6 @@ func (tmguo *TopMostGoodUpdateOne) ClearDisplayIndex() *TopMostGoodUpdateOne {
 	return tmguo
 }
 
-// SetPosters sets the "posters" field.
-func (tmguo *TopMostGoodUpdateOne) SetPosters(s []string) *TopMostGoodUpdateOne {
-	tmguo.mutation.SetPosters(s)
-	return tmguo
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (tmguo *TopMostGoodUpdateOne) ClearPosters() *TopMostGoodUpdateOne {
-	tmguo.mutation.ClearPosters()
-	return tmguo
-}
-
 // SetUnitPrice sets the "unit_price" field.
 func (tmguo *TopMostGoodUpdateOne) SetUnitPrice(d decimal.Decimal) *TopMostGoodUpdateOne {
 	tmguo.mutation.SetUnitPrice(d)
@@ -625,26 +566,6 @@ func (tmguo *TopMostGoodUpdateOne) SetNillableUnitPrice(d *decimal.Decimal) *Top
 // ClearUnitPrice clears the value of the "unit_price" field.
 func (tmguo *TopMostGoodUpdateOne) ClearUnitPrice() *TopMostGoodUpdateOne {
 	tmguo.mutation.ClearUnitPrice()
-	return tmguo
-}
-
-// SetPackagePrice sets the "package_price" field.
-func (tmguo *TopMostGoodUpdateOne) SetPackagePrice(d decimal.Decimal) *TopMostGoodUpdateOne {
-	tmguo.mutation.SetPackagePrice(d)
-	return tmguo
-}
-
-// SetNillablePackagePrice sets the "package_price" field if the given value is not nil.
-func (tmguo *TopMostGoodUpdateOne) SetNillablePackagePrice(d *decimal.Decimal) *TopMostGoodUpdateOne {
-	if d != nil {
-		tmguo.SetPackagePrice(*d)
-	}
-	return tmguo
-}
-
-// ClearPackagePrice clears the value of the "package_price" field.
-func (tmguo *TopMostGoodUpdateOne) ClearPackagePrice() *TopMostGoodUpdateOne {
-	tmguo.mutation.ClearPackagePrice()
 	return tmguo
 }
 
@@ -825,20 +746,6 @@ func (tmguo *TopMostGoodUpdateOne) sqlSave(ctx context.Context) (_node *TopMostG
 			Column: topmostgood.FieldEntID,
 		})
 	}
-	if value, ok := tmguo.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: topmostgood.FieldAppID,
-		})
-	}
-	if value, ok := tmguo.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: topmostgood.FieldGoodID,
-		})
-	}
 	if value, ok := tmguo.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -846,17 +753,22 @@ func (tmguo *TopMostGoodUpdateOne) sqlSave(ctx context.Context) (_node *TopMostG
 			Column: topmostgood.FieldAppGoodID,
 		})
 	}
-	if value, ok := tmguo.mutation.CoinTypeID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+	if tmguo.mutation.AppGoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Value:  value,
-			Column: topmostgood.FieldCoinTypeID,
+			Column: topmostgood.FieldAppGoodID,
 		})
 	}
 	if value, ok := tmguo.mutation.TopMostID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: topmostgood.FieldTopMostID,
+		})
+	}
+	if tmguo.mutation.TopMostIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: topmostgood.FieldTopMostID,
 		})
 	}
@@ -880,19 +792,6 @@ func (tmguo *TopMostGoodUpdateOne) sqlSave(ctx context.Context) (_node *TopMostG
 			Column: topmostgood.FieldDisplayIndex,
 		})
 	}
-	if value, ok := tmguo.mutation.Posters(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: topmostgood.FieldPosters,
-		})
-	}
-	if tmguo.mutation.PostersCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: topmostgood.FieldPosters,
-		})
-	}
 	if value, ok := tmguo.mutation.UnitPrice(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
@@ -904,19 +803,6 @@ func (tmguo *TopMostGoodUpdateOne) sqlSave(ctx context.Context) (_node *TopMostG
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: topmostgood.FieldUnitPrice,
-		})
-	}
-	if value, ok := tmguo.mutation.PackagePrice(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: topmostgood.FieldPackagePrice,
-		})
-	}
-	if tmguo.mutation.PackagePriceCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: topmostgood.FieldPackagePrice,
 		})
 	}
 	_spec.Modifiers = tmguo.modifiers

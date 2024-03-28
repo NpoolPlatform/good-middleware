@@ -99,15 +99,23 @@ func (ru *RecommendUpdate) SetNillableEntID(u *uuid.UUID) *RecommendUpdate {
 	return ru
 }
 
-// SetAppID sets the "app_id" field.
-func (ru *RecommendUpdate) SetAppID(u uuid.UUID) *RecommendUpdate {
-	ru.mutation.SetAppID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (ru *RecommendUpdate) SetAppGoodID(u uuid.UUID) *RecommendUpdate {
+	ru.mutation.SetAppGoodID(u)
 	return ru
 }
 
-// SetGoodID sets the "good_id" field.
-func (ru *RecommendUpdate) SetGoodID(u uuid.UUID) *RecommendUpdate {
-	ru.mutation.SetGoodID(u)
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (ru *RecommendUpdate) SetNillableAppGoodID(u *uuid.UUID) *RecommendUpdate {
+	if u != nil {
+		ru.SetAppGoodID(*u)
+	}
+	return ru
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (ru *RecommendUpdate) ClearAppGoodID() *RecommendUpdate {
+	ru.mutation.ClearAppGoodID()
 	return ru
 }
 
@@ -318,18 +326,17 @@ func (ru *RecommendUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: recommend.FieldEntID,
 		})
 	}
-	if value, ok := ru.mutation.AppID(); ok {
+	if value, ok := ru.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: recommend.FieldAppID,
+			Column: recommend.FieldAppGoodID,
 		})
 	}
-	if value, ok := ru.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+	if ru.mutation.AppGoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Value:  value,
-			Column: recommend.FieldGoodID,
+			Column: recommend.FieldAppGoodID,
 		})
 	}
 	if value, ok := ru.mutation.RecommenderID(); ok {
@@ -461,15 +468,23 @@ func (ruo *RecommendUpdateOne) SetNillableEntID(u *uuid.UUID) *RecommendUpdateOn
 	return ruo
 }
 
-// SetAppID sets the "app_id" field.
-func (ruo *RecommendUpdateOne) SetAppID(u uuid.UUID) *RecommendUpdateOne {
-	ruo.mutation.SetAppID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (ruo *RecommendUpdateOne) SetAppGoodID(u uuid.UUID) *RecommendUpdateOne {
+	ruo.mutation.SetAppGoodID(u)
 	return ruo
 }
 
-// SetGoodID sets the "good_id" field.
-func (ruo *RecommendUpdateOne) SetGoodID(u uuid.UUID) *RecommendUpdateOne {
-	ruo.mutation.SetGoodID(u)
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (ruo *RecommendUpdateOne) SetNillableAppGoodID(u *uuid.UUID) *RecommendUpdateOne {
+	if u != nil {
+		ruo.SetAppGoodID(*u)
+	}
+	return ruo
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (ruo *RecommendUpdateOne) ClearAppGoodID() *RecommendUpdateOne {
+	ruo.mutation.ClearAppGoodID()
 	return ruo
 }
 
@@ -710,18 +725,17 @@ func (ruo *RecommendUpdateOne) sqlSave(ctx context.Context) (_node *Recommend, e
 			Column: recommend.FieldEntID,
 		})
 	}
-	if value, ok := ruo.mutation.AppID(); ok {
+	if value, ok := ruo.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: recommend.FieldAppID,
+			Column: recommend.FieldAppGoodID,
 		})
 	}
-	if value, ok := ruo.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+	if ruo.mutation.AppGoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Value:  value,
-			Column: recommend.FieldGoodID,
+			Column: recommend.FieldAppGoodID,
 		})
 	}
 	if value, ok := ruo.mutation.RecommenderID(); ok {

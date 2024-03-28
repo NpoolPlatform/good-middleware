@@ -99,23 +99,23 @@ func (eiu *ExtraInfoUpdate) SetNillableEntID(u *uuid.UUID) *ExtraInfoUpdate {
 	return eiu
 }
 
-// SetGoodID sets the "good_id" field.
-func (eiu *ExtraInfoUpdate) SetGoodID(u uuid.UUID) *ExtraInfoUpdate {
-	eiu.mutation.SetGoodID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (eiu *ExtraInfoUpdate) SetAppGoodID(u uuid.UUID) *ExtraInfoUpdate {
+	eiu.mutation.SetAppGoodID(u)
 	return eiu
 }
 
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (eiu *ExtraInfoUpdate) SetNillableGoodID(u *uuid.UUID) *ExtraInfoUpdate {
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (eiu *ExtraInfoUpdate) SetNillableAppGoodID(u *uuid.UUID) *ExtraInfoUpdate {
 	if u != nil {
-		eiu.SetGoodID(*u)
+		eiu.SetAppGoodID(*u)
 	}
 	return eiu
 }
 
-// ClearGoodID clears the value of the "good_id" field.
-func (eiu *ExtraInfoUpdate) ClearGoodID() *ExtraInfoUpdate {
-	eiu.mutation.ClearGoodID()
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (eiu *ExtraInfoUpdate) ClearAppGoodID() *ExtraInfoUpdate {
+	eiu.mutation.ClearAppGoodID()
 	return eiu
 }
 
@@ -421,17 +421,17 @@ func (eiu *ExtraInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: extrainfo.FieldEntID,
 		})
 	}
-	if value, ok := eiu.mutation.GoodID(); ok {
+	if value, ok := eiu.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: extrainfo.FieldGoodID,
+			Column: extrainfo.FieldAppGoodID,
 		})
 	}
-	if eiu.mutation.GoodIDCleared() {
+	if eiu.mutation.AppGoodIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Column: extrainfo.FieldGoodID,
+			Column: extrainfo.FieldAppGoodID,
 		})
 	}
 	if value, ok := eiu.mutation.Likes(); ok {
@@ -637,23 +637,23 @@ func (eiuo *ExtraInfoUpdateOne) SetNillableEntID(u *uuid.UUID) *ExtraInfoUpdateO
 	return eiuo
 }
 
-// SetGoodID sets the "good_id" field.
-func (eiuo *ExtraInfoUpdateOne) SetGoodID(u uuid.UUID) *ExtraInfoUpdateOne {
-	eiuo.mutation.SetGoodID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (eiuo *ExtraInfoUpdateOne) SetAppGoodID(u uuid.UUID) *ExtraInfoUpdateOne {
+	eiuo.mutation.SetAppGoodID(u)
 	return eiuo
 }
 
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (eiuo *ExtraInfoUpdateOne) SetNillableGoodID(u *uuid.UUID) *ExtraInfoUpdateOne {
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (eiuo *ExtraInfoUpdateOne) SetNillableAppGoodID(u *uuid.UUID) *ExtraInfoUpdateOne {
 	if u != nil {
-		eiuo.SetGoodID(*u)
+		eiuo.SetAppGoodID(*u)
 	}
 	return eiuo
 }
 
-// ClearGoodID clears the value of the "good_id" field.
-func (eiuo *ExtraInfoUpdateOne) ClearGoodID() *ExtraInfoUpdateOne {
-	eiuo.mutation.ClearGoodID()
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (eiuo *ExtraInfoUpdateOne) ClearAppGoodID() *ExtraInfoUpdateOne {
+	eiuo.mutation.ClearAppGoodID()
 	return eiuo
 }
 
@@ -989,17 +989,17 @@ func (eiuo *ExtraInfoUpdateOne) sqlSave(ctx context.Context) (_node *ExtraInfo, 
 			Column: extrainfo.FieldEntID,
 		})
 	}
-	if value, ok := eiuo.mutation.GoodID(); ok {
+	if value, ok := eiuo.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: extrainfo.FieldGoodID,
+			Column: extrainfo.FieldAppGoodID,
 		})
 	}
-	if eiuo.mutation.GoodIDCleared() {
+	if eiuo.mutation.AppGoodIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Column: extrainfo.FieldGoodID,
+			Column: extrainfo.FieldAppGoodID,
 		})
 	}
 	if value, ok := eiuo.mutation.Likes(); ok {

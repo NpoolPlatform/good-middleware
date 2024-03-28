@@ -25,10 +25,8 @@ type Recommend struct {
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// EntID holds the value of the "ent_id" field.
 	EntID uuid.UUID `json:"ent_id,omitempty"`
-	// AppID holds the value of the "app_id" field.
-	AppID uuid.UUID `json:"app_id,omitempty"`
-	// GoodID holds the value of the "good_id" field.
-	GoodID uuid.UUID `json:"good_id,omitempty"`
+	// AppGoodID holds the value of the "app_good_id" field.
+	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// RecommenderID holds the value of the "recommender_id" field.
 	RecommenderID uuid.UUID `json:"recommender_id,omitempty"`
 	// Message holds the value of the "message" field.
@@ -48,7 +46,7 @@ func (*Recommend) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case recommend.FieldMessage:
 			values[i] = new(sql.NullString)
-		case recommend.FieldEntID, recommend.FieldAppID, recommend.FieldGoodID, recommend.FieldRecommenderID:
+		case recommend.FieldEntID, recommend.FieldAppGoodID, recommend.FieldRecommenderID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Recommend", columns[i])
@@ -95,17 +93,11 @@ func (r *Recommend) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				r.EntID = *value
 			}
-		case recommend.FieldAppID:
+		case recommend.FieldAppGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field app_id", values[i])
+				return fmt.Errorf("unexpected type %T for field app_good_id", values[i])
 			} else if value != nil {
-				r.AppID = *value
-			}
-		case recommend.FieldGoodID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field good_id", values[i])
-			} else if value != nil {
-				r.GoodID = *value
+				r.AppGoodID = *value
 			}
 		case recommend.FieldRecommenderID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -165,11 +157,8 @@ func (r *Recommend) String() string {
 	builder.WriteString("ent_id=")
 	builder.WriteString(fmt.Sprintf("%v", r.EntID))
 	builder.WriteString(", ")
-	builder.WriteString("app_id=")
-	builder.WriteString(fmt.Sprintf("%v", r.AppID))
-	builder.WriteString(", ")
-	builder.WriteString("good_id=")
-	builder.WriteString(fmt.Sprintf("%v", r.GoodID))
+	builder.WriteString("app_good_id=")
+	builder.WriteString(fmt.Sprintf("%v", r.AppGoodID))
 	builder.WriteString(", ")
 	builder.WriteString("recommender_id=")
 	builder.WriteString(fmt.Sprintf("%v", r.RecommenderID))

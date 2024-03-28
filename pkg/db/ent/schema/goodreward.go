@@ -27,7 +27,11 @@ func (GoodReward) Mixin() []ent.Mixin {
 func (GoodReward) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("good_id", uuid.UUID{}),
+			UUID("good_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
 			String("reward_state").
 			Optional().

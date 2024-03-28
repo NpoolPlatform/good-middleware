@@ -27,14 +27,16 @@ func (Recommend) Mixin() []ent.Mixin {
 func (Recommend) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("app_id", uuid.UUID{}),
-		field.
-			UUID("good_id", uuid.UUID{}),
+			UUID("app_good_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
 			UUID("recommender_id", uuid.UUID{}).
 			Optional().
 			Default(func() uuid.UUID {
-				return uuid.UUID{}
+				return uuid.Nil
 			}),
 		field.
 			String("message").
@@ -53,6 +55,6 @@ func (Recommend) Fields() []ent.Field {
 // Indexes of the Recommend.
 func (Recommend) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("app_id", "good_id"),
+		index.Fields("app_good_id"),
 	}
 }
