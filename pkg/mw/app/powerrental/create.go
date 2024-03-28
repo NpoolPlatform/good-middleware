@@ -66,14 +66,14 @@ func (h *createHandler) constructAppMiningGoodStockSql(ctx context.Context) erro
 func (h *createHandler) constructAppGoodStockSql(ctx context.Context) error {
 	handler, err := appgoodstock1.NewHandler(
 		ctx,
-		appgoodstock1.WithEntID(func() *string { s := h.StockReq.EntID.String(); return &s }(), false),
-		appgoodstock1.WithAppGoodID(func() *string { s := h.StockReq.AppGoodID.String(); return &s }(), false),
-		appgoodstock1.WithReserved(func() *string { s := h.StockReq.Reserved.String(); return &s }(), true),
+		appgoodstock1.WithEntID(func() *string { s := h.AppGoodStockReq.EntID.String(); return &s }(), false),
+		appgoodstock1.WithAppGoodID(func() *string { s := h.AppGoodStockReq.AppGoodID.String(); return &s }(), false),
+		appgoodstock1.WithReserved(func() *string { s := h.AppGoodStockReq.Reserved.String(); return &s }(), true),
 	)
 	if err != nil {
 		return err
 	}
-	h.sqlStock = handler.ConstructCreateSql()
+	h.sqlAppGoodStock = handler.ConstructCreateSql()
 	return nil
 }
 
@@ -253,6 +253,19 @@ func (h *createHandler) _validateStock() error {
 	return h.stockValidator.validateStock()
 }
 
+func (h *createHandler) createAppStock(ctx context.Context, tx *ent.Tx) error {
+	return h.execSql(ctx, tx, h.sqlAppGoodStock)
+}
+
+func (h *createHandler) createAppMiningGoodStocks(ctx context.Context, tx *ent.Tx) error {
+	for _, _sql := range h.sqlAppMiningGoodStocks {
+		if err := h.execSql(ctx, tx, _sql); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	handler := &createHandler{
 		powerRentalAppGoodQueryHandler: &powerRentalAppGoodQueryHandler{
@@ -263,7 +276,7 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 		},
 	}
 
-	if err := handler.requireAppPowerRentalAppGood(ctx); err != nil {
+	if err := handler.requirePowerRentalGood(ctx); err != nil {
 		return err
 	}
 	if err := handler._validateStock(); err != nil {
@@ -286,6 +299,12 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createAppGoodBase(_ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.createAppStock(_ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.createAppMiningGoodStocks(_ctx, tx); err != nil {
 			return err
 		}
 		return handler.createAppPowerRental(_ctx, tx)

@@ -39,8 +39,10 @@ type Handler struct {
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
-		AppGoodBaseReq:      &appgoodbasecrud.Req{},
-		AppGoodStockReq:     &appgoodstockcrud.Req{},
+		AppGoodBaseReq: &appgoodbasecrud.Req{},
+		AppGoodStockReq: &appgoodstockcrud.Req{
+			Reserved: func() *decimal.Decimal { d := decimal.NewFromInt(0); return &d }(),
+		},
 		AppPowerRentalConds: &apppowerrentalcrud.Conds{},
 		PowerRentalConds:    &powerrentalcrud.Conds{},
 		AppGoodBaseConds:    &appgoodbasecrud.Conds{},
@@ -143,6 +145,7 @@ func WithAppGoodID(s *string, must bool) func(context.Context, *Handler) error {
 		}
 		h.AppGoodID = &id
 		h.AppGoodBaseReq.EntID = &id
+		h.AppGoodStockReq.AppGoodID = &id
 		return nil
 	}
 }

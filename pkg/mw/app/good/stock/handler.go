@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
-	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 
@@ -66,21 +65,17 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 
 func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		handler, err := appgoodbase1.NewHandler(
-			ctx,
-			appgoodbase1.WithEntID(id, true),
-		)
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid appgoodid")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
 		if err != nil {
 			return err
 		}
-		exist, err := handler.ExistGoodBase(ctx)
-		if err != nil {
-			return err
-		}
-		if !exist {
-			return fmt.Errorf("invalid appgood")
-		}
-		h.AppGoodID = handler.EntID
+		h.AppGoodID = &_id
 		return nil
 	}
 }
@@ -97,8 +92,8 @@ func WithReserved(s *string, must bool) func(context.Context, *Handler) error {
 		if err != nil {
 			return err
 		}
-		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
-			return fmt.Errorf("invalid locked")
+		if amount.Cmp(decimal.NewFromInt(0)) < 0 {
+			return fmt.Errorf("invalid reserved")
 		}
 		h.Reserved = &amount
 		return nil
