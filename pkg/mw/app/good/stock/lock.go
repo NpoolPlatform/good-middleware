@@ -8,6 +8,7 @@ import (
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
@@ -20,11 +21,35 @@ type lockHandler struct {
 }
 
 func (h *lockHandler) lockStock(ctx context.Context, stock *LockStock, tx *ent.Tx) error {
+	info1, err := tx.
+		AppStock.
+		Query().
+		Where(
+			entappstock.EntID(*stock.EntID),
+			entappstock.DeletedAt(0),
+		).
+		Only(ctx)
+	if err != nil {
+		return err
+	}
+
+	info2, err := tx.
+		AppGoodBase.
+		Query().
+		Where(
+			entappgoodbase.EntID(info1.AppGoodID),
+			entappgoodbase.DeletedAt(0),
+		).
+		Only(ctx)
+	if err != nil {
+		return err
+	}
+
 	info, err := tx.
 		Stock.
 		Query().
 		Where(
-			entstock.GoodID(*stock.GoodID),
+			entstock.GoodID(info2.GoodID),
 			entstock.DeletedAt(0),
 		).
 		ForUpdate().
@@ -101,15 +126,6 @@ func (h *lockHandler) lockAppStock(ctx context.Context, stock *LockStock, tx *en
 		return fmt.Errorf("invalid appstock")
 	}
 
-	if *h.AppID != info.AppID {
-		return fmt.Errorf("invalid appid")
-	}
-	if *stock.GoodID != info.GoodID {
-		return fmt.Errorf("invalid goodid")
-	}
-	if *stock.AppGoodID != info.AppGoodID {
-		return fmt.Errorf("invalid appgoodid")
-	}
 	spotQuantity := info.SpotQuantity
 	locked := info.Locked
 
@@ -149,8 +165,6 @@ func (h *Handler) LockStock(ctx context.Context) (*npool.Stock, error) {
 	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		stock := &LockStock{
 			EntID:         h.EntID,
-			GoodID:        h.GoodID,
-			AppGoodID:     h.AppGoodID,
 			Locked:        h.Locked,
 			AppSpotLocked: h.AppSpotLocked,
 		}

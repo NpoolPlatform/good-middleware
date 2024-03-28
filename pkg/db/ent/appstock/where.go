@@ -115,13 +115,6 @@ func AppGoodID(v uuid.UUID) predicate.AppStock {
 	})
 }
 
-// GoodStockID applies equality check predicate on the "good_stock_id" field. It's identical to GoodStockIDEQ.
-func GoodStockID(v uuid.UUID) predicate.AppStock {
-	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodStockID), v))
-	})
-}
-
 // Reserved applies equality check predicate on the "reserved" field. It's identical to ReservedEQ.
 func Reserved(v decimal.Decimal) predicate.AppStock {
 	return predicate.AppStock(func(s *sql.Selector) {
@@ -495,84 +488,6 @@ func AppGoodIDIsNil() predicate.AppStock {
 func AppGoodIDNotNil() predicate.AppStock {
 	return predicate.AppStock(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldAppGoodID)))
-	})
-}
-
-// GoodStockIDEQ applies the EQ predicate on the "good_stock_id" field.
-func GoodStockIDEQ(v uuid.UUID) predicate.AppStock {
-	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodStockID), v))
-	})
-}
-
-// GoodStockIDNEQ applies the NEQ predicate on the "good_stock_id" field.
-func GoodStockIDNEQ(v uuid.UUID) predicate.AppStock {
-	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldGoodStockID), v))
-	})
-}
-
-// GoodStockIDIn applies the In predicate on the "good_stock_id" field.
-func GoodStockIDIn(vs ...uuid.UUID) predicate.AppStock {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldGoodStockID), v...))
-	})
-}
-
-// GoodStockIDNotIn applies the NotIn predicate on the "good_stock_id" field.
-func GoodStockIDNotIn(vs ...uuid.UUID) predicate.AppStock {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldGoodStockID), v...))
-	})
-}
-
-// GoodStockIDGT applies the GT predicate on the "good_stock_id" field.
-func GoodStockIDGT(v uuid.UUID) predicate.AppStock {
-	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldGoodStockID), v))
-	})
-}
-
-// GoodStockIDGTE applies the GTE predicate on the "good_stock_id" field.
-func GoodStockIDGTE(v uuid.UUID) predicate.AppStock {
-	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldGoodStockID), v))
-	})
-}
-
-// GoodStockIDLT applies the LT predicate on the "good_stock_id" field.
-func GoodStockIDLT(v uuid.UUID) predicate.AppStock {
-	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldGoodStockID), v))
-	})
-}
-
-// GoodStockIDLTE applies the LTE predicate on the "good_stock_id" field.
-func GoodStockIDLTE(v uuid.UUID) predicate.AppStock {
-	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldGoodStockID), v))
-	})
-}
-
-// GoodStockIDIsNil applies the IsNil predicate on the "good_stock_id" field.
-func GoodStockIDIsNil() predicate.AppStock {
-	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldGoodStockID)))
-	})
-}
-
-// GoodStockIDNotNil applies the NotNil predicate on the "good_stock_id" field.
-func GoodStockIDNotNil() predicate.AppStock {
-	return predicate.AppStock(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldGoodStockID)))
 	})
 }
 

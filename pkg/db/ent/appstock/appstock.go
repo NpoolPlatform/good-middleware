@@ -23,8 +23,6 @@ const (
 	FieldEntID = "ent_id"
 	// FieldAppGoodID holds the string denoting the app_good_id field in the database.
 	FieldAppGoodID = "app_good_id"
-	// FieldGoodStockID holds the string denoting the good_stock_id field in the database.
-	FieldGoodStockID = "good_stock_id"
 	// FieldReserved holds the string denoting the reserved field in the database.
 	FieldReserved = "reserved"
 	// FieldSpotQuantity holds the string denoting the spot_quantity field in the database.
@@ -49,7 +47,6 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldEntID,
 	FieldAppGoodID,
-	FieldGoodStockID,
 	FieldReserved,
 	FieldSpotQuantity,
 	FieldLocked,
@@ -89,8 +86,6 @@ var (
 	DefaultEntID func() uuid.UUID
 	// DefaultAppGoodID holds the default value on creation for the "app_good_id" field.
 	DefaultAppGoodID func() uuid.UUID
-	// DefaultGoodStockID holds the default value on creation for the "good_stock_id" field.
-	DefaultGoodStockID func() uuid.UUID
 	// DefaultReserved holds the default value on creation for the "reserved" field.
 	DefaultReserved decimal.Decimal
 	// DefaultSpotQuantity holds the default value on creation for the "spot_quantity" field.

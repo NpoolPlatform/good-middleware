@@ -14121,7 +14121,6 @@ type AppStockMutation struct {
 	adddeleted_at *int32
 	ent_id        *uuid.UUID
 	app_good_id   *uuid.UUID
-	good_stock_id *uuid.UUID
 	reserved      *decimal.Decimal
 	spot_quantity *decimal.Decimal
 	locked        *decimal.Decimal
@@ -14491,55 +14490,6 @@ func (m *AppStockMutation) ResetAppGoodID() {
 	delete(m.clearedFields, appstock.FieldAppGoodID)
 }
 
-// SetGoodStockID sets the "good_stock_id" field.
-func (m *AppStockMutation) SetGoodStockID(u uuid.UUID) {
-	m.good_stock_id = &u
-}
-
-// GoodStockID returns the value of the "good_stock_id" field in the mutation.
-func (m *AppStockMutation) GoodStockID() (r uuid.UUID, exists bool) {
-	v := m.good_stock_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldGoodStockID returns the old "good_stock_id" field's value of the AppStock entity.
-// If the AppStock object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppStockMutation) OldGoodStockID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldGoodStockID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldGoodStockID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldGoodStockID: %w", err)
-	}
-	return oldValue.GoodStockID, nil
-}
-
-// ClearGoodStockID clears the value of the "good_stock_id" field.
-func (m *AppStockMutation) ClearGoodStockID() {
-	m.good_stock_id = nil
-	m.clearedFields[appstock.FieldGoodStockID] = struct{}{}
-}
-
-// GoodStockIDCleared returns if the "good_stock_id" field was cleared in this mutation.
-func (m *AppStockMutation) GoodStockIDCleared() bool {
-	_, ok := m.clearedFields[appstock.FieldGoodStockID]
-	return ok
-}
-
-// ResetGoodStockID resets all changes to the "good_stock_id" field.
-func (m *AppStockMutation) ResetGoodStockID() {
-	m.good_stock_id = nil
-	delete(m.clearedFields, appstock.FieldGoodStockID)
-}
-
 // SetReserved sets the "reserved" field.
 func (m *AppStockMutation) SetReserved(d decimal.Decimal) {
 	m.reserved = &d
@@ -14853,7 +14803,7 @@ func (m *AppStockMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppStockMutation) Fields() []string {
-	fields := make([]string, 0, 12)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, appstock.FieldCreatedAt)
 	}
@@ -14868,9 +14818,6 @@ func (m *AppStockMutation) Fields() []string {
 	}
 	if m.app_good_id != nil {
 		fields = append(fields, appstock.FieldAppGoodID)
-	}
-	if m.good_stock_id != nil {
-		fields = append(fields, appstock.FieldGoodStockID)
 	}
 	if m.reserved != nil {
 		fields = append(fields, appstock.FieldReserved)
@@ -14908,8 +14855,6 @@ func (m *AppStockMutation) Field(name string) (ent.Value, bool) {
 		return m.EntID()
 	case appstock.FieldAppGoodID:
 		return m.AppGoodID()
-	case appstock.FieldGoodStockID:
-		return m.GoodStockID()
 	case appstock.FieldReserved:
 		return m.Reserved()
 	case appstock.FieldSpotQuantity:
@@ -14941,8 +14886,6 @@ func (m *AppStockMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldEntID(ctx)
 	case appstock.FieldAppGoodID:
 		return m.OldAppGoodID(ctx)
-	case appstock.FieldGoodStockID:
-		return m.OldGoodStockID(ctx)
 	case appstock.FieldReserved:
 		return m.OldReserved(ctx)
 	case appstock.FieldSpotQuantity:
@@ -14998,13 +14941,6 @@ func (m *AppStockMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAppGoodID(v)
-		return nil
-	case appstock.FieldGoodStockID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetGoodStockID(v)
 		return nil
 	case appstock.FieldReserved:
 		v, ok := value.(decimal.Decimal)
@@ -15120,9 +15056,6 @@ func (m *AppStockMutation) ClearedFields() []string {
 	if m.FieldCleared(appstock.FieldAppGoodID) {
 		fields = append(fields, appstock.FieldAppGoodID)
 	}
-	if m.FieldCleared(appstock.FieldGoodStockID) {
-		fields = append(fields, appstock.FieldGoodStockID)
-	}
 	if m.FieldCleared(appstock.FieldReserved) {
 		fields = append(fields, appstock.FieldReserved)
 	}
@@ -15157,9 +15090,6 @@ func (m *AppStockMutation) ClearField(name string) error {
 	switch name {
 	case appstock.FieldAppGoodID:
 		m.ClearAppGoodID()
-		return nil
-	case appstock.FieldGoodStockID:
-		m.ClearGoodStockID()
 		return nil
 	case appstock.FieldReserved:
 		m.ClearReserved()
@@ -15201,9 +15131,6 @@ func (m *AppStockMutation) ResetField(name string) error {
 		return nil
 	case appstock.FieldAppGoodID:
 		m.ResetAppGoodID()
-		return nil
-	case appstock.FieldGoodStockID:
-		m.ResetGoodStockID()
 		return nil
 	case appstock.FieldReserved:
 		m.ResetReserved()

@@ -9,37 +9,19 @@ import (
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
-	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 
 	"github.com/shopspring/decimal"
 )
 
 type expireHandler struct {
-	*lockopHandler
+	*stockAppGoodQuery
+	lockOp *lockopHandler
 }
 
 func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	info, err := tx.
-		Stock.
-		Query().
-		Where(
-			entstock.GoodID(*h.GoodID),
-			entstock.DeletedAt(0),
-		).
-		ForUpdate().
-		Only(ctx)
-	if err != nil {
-		return err
-	}
-	if info == nil {
-		return fmt.Errorf("invalid stock")
-	}
-
-	inService := info.InService
-	spotQuantity := info.SpotQuantity
+	inService := h.stock.InService
+	spotQuantity := h.stock.SpotQuantity
 
 	inService = inService.Sub(lock.Units)
 	spotQuantity = spotQuantity.Add(lock.Units)
@@ -48,16 +30,16 @@ func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock,
 		return fmt.Errorf("invalid stock")
 	}
 
-	if inService.Add(info.WaitStart).
-		Add(info.Locked).
-		Add(info.AppReserved).
-		Add(info.SpotQuantity).
-		Cmp(info.Total) > 0 {
+	if inService.Add(h.stock.WaitStart).
+		Add(h.stock.Locked).
+		Add(h.stock.AppReserved).
+		Add(h.stock.SpotQuantity).
+		Cmp(h.stock.Total) > 0 {
 		return fmt.Errorf("stock exhausted")
 	}
 
 	if _, err := stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(info.ID),
+		tx.Stock.UpdateOneID(h.stock.ID),
 		&stockcrud.Req{
 			InService:    &inService,
 			SpotQuantity: &spotQuantity,
@@ -69,31 +51,14 @@ func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock,
 }
 
 func (h *expireHandler) expireAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	info, err := tx.
-		AppStock.
-		Query().
-		Where(
-			entappstock.EntID(*h.EntID),
-			entappstock.DeletedAt(0),
-		).
-		ForUpdate().
-		Only(ctx)
-	if err != nil {
-		return err
-	}
-	if info == nil {
-		return fmt.Errorf("invalid appstock")
-	}
-
-	h.GoodID = &info.GoodID
-	inService := info.InService
+	inService := h.appGoodStock.InService
 	inService = inService.Sub(lock.Units)
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
 	if _, err := appstockcrud.UpdateSet(
-		tx.AppStock.UpdateOneID(info.ID),
+		tx.AppStock.UpdateOneID(h.appGoodStock.ID),
 		&appstockcrud.Req{
 			InService: &inService,
 		},
@@ -104,20 +69,26 @@ func (h *expireHandler) expireAppStock(ctx context.Context, lock *ent.AppStockLo
 	return nil
 }
 
-func (h *Handler) ExpireStock(ctx context.Context) (*npool.Stock, error) {
+func (h *Handler) ExpireStock(ctx context.Context) error {
 	handler := &expireHandler{
-		lockopHandler: &lockopHandler{
+		stockAppGoodQuery: &stockAppGoodQuery{
+			Handler: h,
+		},
+		lockOp: &lockopHandler{
 			Handler: h,
 			state:   types.AppStockLockState_AppStockExpired.Enum(),
 		},
 	}
 
-	if err := handler.getLocks(ctx); err != nil {
-		return nil, err
+	if err := handler.lockOp.getLocks(ctx); err != nil {
+		return err
+	}
+	if err := handler.requireStockAppGood(ctx); err != nil {
+		return err
 	}
 
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		for _, lock := range handler.lockopHandler.locks {
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		for _, lock := range handler.lockOp.locks {
 			if err := handler.expireAppStock(ctx, lock, tx); err != nil {
 				return err
 			}
@@ -125,14 +96,9 @@ func (h *Handler) ExpireStock(ctx context.Context) (*npool.Stock, error) {
 				return err
 			}
 		}
-		if err := handler.updateLocks(ctx, tx); err != nil {
+		if err := handler.lockOp.updateLocks(ctx, tx); err != nil {
 			return err
 		}
 		return nil
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetStock(ctx)
 }

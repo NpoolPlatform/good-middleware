@@ -8,36 +8,17 @@ import (
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
-	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 
 	"github.com/shopspring/decimal"
 )
 
 type reserveHandler struct {
-	*Handler
+	*stockAppGoodQuery
 }
 
 func (h *reserveHandler) reserveStock(ctx context.Context, tx *ent.Tx) error {
-	info, err := tx.
-		Stock.
-		Query().
-		Where(
-			entstock.GoodID(*h.GoodID),
-			entstock.DeletedAt(0),
-		).
-		ForUpdate().
-		Only(ctx)
-	if err != nil {
-		return err
-	}
-	if info == nil {
-		return fmt.Errorf("invalid stock")
-	}
-
-	spotQuantity := info.SpotQuantity
-	appReserved := info.AppReserved
+	spotQuantity := h.stock.SpotQuantity
+	appReserved := h.stock.AppReserved
 
 	appReserved = h.Reserved.Add(appReserved)
 	spotQuantity = spotQuantity.Sub(*h.Reserved)
@@ -45,20 +26,20 @@ func (h *reserveHandler) reserveStock(ctx context.Context, tx *ent.Tx) error {
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
-	if spotQuantity.Cmp(info.Total) > 0 {
+	if spotQuantity.Cmp(h.stock.Total) > 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
-	if appReserved.Add(info.Locked).
-		Add(info.WaitStart).
-		Add(info.InService).
+	if appReserved.Add(h.stock.Locked).
+		Add(h.stock.WaitStart).
+		Add(h.stock.InService).
 		Add(spotQuantity).
-		Cmp(info.Total) > 0 {
+		Cmp(h.stock.Total) > 0 {
 		return fmt.Errorf("stock exhausted")
 	}
 
 	if _, err := stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(info.ID),
+		tx.Stock.UpdateOneID(h.stock.ID),
 		&stockcrud.Req{
 			SpotQuantity: &spotQuantity,
 			AppReserved:  &appReserved,
@@ -70,25 +51,8 @@ func (h *reserveHandler) reserveStock(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *reserveHandler) reserveAppStock(ctx context.Context, tx *ent.Tx) error {
-	info, err := tx.
-		AppStock.
-		Query().
-		Where(
-			entappstock.ID(*h.ID),
-			entappstock.DeletedAt(0),
-		).
-		ForUpdate().
-		Only(ctx)
-	if err != nil {
-		return err
-	}
-	if info == nil {
-		return fmt.Errorf("invalid appstock")
-	}
-
-	h.GoodID = &info.GoodID
-	spotQuantity := info.SpotQuantity
-	reserved := info.Reserved
+	spotQuantity := h.appGoodStock.SpotQuantity
+	reserved := h.appGoodStock.Reserved
 	spotQuantity = h.Reserved.Add(spotQuantity)
 	reserved = h.Reserved.Add(reserved)
 	if spotQuantity.Cmp(reserved) > 0 {
@@ -96,7 +60,7 @@ func (h *reserveHandler) reserveAppStock(ctx context.Context, tx *ent.Tx) error 
 	}
 
 	if _, err := appstockcrud.UpdateSet(
-		tx.AppStock.UpdateOneID(info.ID),
+		tx.AppStock.UpdateOneID(h.appGoodStock.ID),
 		&appstockcrud.Req{
 			SpotQuantity: &spotQuantity,
 			Reserved:     &reserved,
@@ -108,20 +72,18 @@ func (h *reserveHandler) reserveAppStock(ctx context.Context, tx *ent.Tx) error 
 	return nil
 }
 
-func (h *Handler) ReserveStock(ctx context.Context) (*npool.Stock, error) {
+func (h *Handler) ReserveStock(ctx context.Context) error {
 	handler := &reserveHandler{
-		Handler: h,
+		stockAppGoodQuery: &stockAppGoodQuery{
+			Handler: h,
+		},
 	}
-	info, err := h.GetStock(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if info == nil {
-		return nil, fmt.Errorf("invalid appstock")
-	}
-	h.ID = &info.ID
 
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	if err := handler.requireStockAppGood(ctx); err != nil {
+		return err
+	}
+
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.reserveAppStock(ctx, tx); err != nil {
 			return err
 		}
@@ -130,9 +92,4 @@ func (h *Handler) ReserveStock(ctx context.Context) (*npool.Stock, error) {
 		}
 		return nil
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetStock(ctx)
 }

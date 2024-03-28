@@ -16,8 +16,6 @@ import (
 
 type LockStock struct {
 	EntID         *uuid.UUID
-	GoodID        *uuid.UUID
-	AppGoodID     *uuid.UUID
 	Locked        *decimal.Decimal
 	AppSpotLocked *decimal.Decimal
 }

@@ -8,38 +8,20 @@ import (
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
-	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 
 	"github.com/shopspring/decimal"
 )
 
 type unlockHandler struct {
-	*lockopHandler
+	*stockAppGoodQuery
+	lockOp *lockopHandler
 }
 
 func (h *unlockHandler) unlockStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	info, err := tx.
-		Stock.
-		Query().
-		Where(
-			entstock.GoodID(*h.GoodID),
-			entstock.DeletedAt(0),
-		).
-		ForUpdate().
-		Only(ctx)
-	if err != nil {
-		return err
-	}
-	if info == nil {
-		return fmt.Errorf("stock not found")
-	}
-
-	spotQuantity := info.SpotQuantity
-	locked := info.Locked
-	appReserved := info.AppReserved
+	spotQuantity := h.stock.SpotQuantity
+	locked := h.stock.Locked
+	appReserved := h.stock.AppReserved
 
 	locked = locked.Sub(lock.Units)
 	platformLocked := lock.Units.Sub(lock.AppSpotUnits)
@@ -57,20 +39,20 @@ func (h *unlockHandler) unlockStock(ctx context.Context, lock *ent.AppStockLock,
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
-	if spotQuantity.Cmp(info.Total) > 0 {
+	if spotQuantity.Cmp(h.stock.Total) > 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
-	if locked.Add(info.InService).
-		Add(info.WaitStart).
+	if locked.Add(h.stock.InService).
+		Add(h.stock.WaitStart).
 		Add(appReserved).
 		Add(spotQuantity).
-		Cmp(info.Total) > 0 {
+		Cmp(h.stock.Total) > 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
 	if _, err := stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(info.ID),
+		tx.Stock.UpdateOneID(h.stock.ID),
 		&stockcrud.Req{
 			SpotQuantity: &spotQuantity,
 			Locked:       &locked,
@@ -83,32 +65,15 @@ func (h *unlockHandler) unlockStock(ctx context.Context, lock *ent.AppStockLock,
 }
 
 func (h *unlockHandler) unlockAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	info, err := tx.
-		AppStock.
-		Query().
-		Where(
-			entappstock.EntID(*h.EntID),
-			entappstock.DeletedAt(0),
-		).
-		ForUpdate().
-		Only(ctx)
-	if err != nil {
-		return err
-	}
-	if info == nil {
-		return fmt.Errorf("stock not found")
-	}
-
-	h.GoodID = &info.GoodID
-	locked := info.Locked
-	spotQuantity := info.SpotQuantity
+	locked := h.appGoodStock.Locked
+	spotQuantity := h.appGoodStock.SpotQuantity
 
 	locked = locked.Sub(lock.Units)
 	spotQuantity = lock.AppSpotUnits.Add(spotQuantity)
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid locked")
 	}
-	if spotQuantity.Cmp(info.Reserved) > 0 {
+	if spotQuantity.Cmp(h.appGoodStock.Reserved) > 0 {
 		return fmt.Errorf("invalid spotquantity")
 	}
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
@@ -116,7 +81,7 @@ func (h *unlockHandler) unlockAppStock(ctx context.Context, lock *ent.AppStockLo
 	}
 
 	if _, err := appstockcrud.UpdateSet(
-		tx.AppStock.UpdateOneID(info.ID),
+		tx.AppStock.UpdateOneID(h.appGoodStock.ID),
 		&appstockcrud.Req{
 			SpotQuantity: &spotQuantity,
 			Locked:       &locked,
@@ -127,27 +92,32 @@ func (h *unlockHandler) unlockAppStock(ctx context.Context, lock *ent.AppStockLo
 	return nil
 }
 
-func (h *Handler) UnlockStock(ctx context.Context) (*npool.Stock, error) {
+func (h *Handler) UnlockStock(ctx context.Context) error {
 	handler := &unlockHandler{
-		lockopHandler: &lockopHandler{
+		stockAppGoodQuery: &stockAppGoodQuery{
+			Handler: h,
+		},
+		lockOp: &lockopHandler{
 			Handler: h,
 			state:   types.AppStockLockState_AppStockRollback.Enum(),
 		},
 	}
 
-	if err := handler.getLocks(ctx); err != nil {
+	if err := handler.lockOp.getLocks(ctx); err != nil {
 		if ent.IsNotFound(err) && h.Rollback != nil && *h.Rollback {
-			return nil, nil
+			return nil
 		}
-		return nil, err
+		return err
 	}
-
 	if h.Rollback == nil || !*h.Rollback {
-		handler.state = types.AppStockLockState_AppStockCanceled.Enum()
+		handler.lockOp.state = types.AppStockLockState_AppStockCanceled.Enum()
+	}
+	if err := handler.requireStockAppGood(ctx); err != nil {
+		return err
 	}
 
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		for _, lock := range handler.lockopHandler.locks {
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		for _, lock := range handler.lockOp.locks {
 			if err := handler.unlockAppStock(ctx, lock, tx); err != nil {
 				return err
 			}
@@ -155,14 +125,9 @@ func (h *Handler) UnlockStock(ctx context.Context) (*npool.Stock, error) {
 				return err
 			}
 		}
-		if err := handler.updateLocks(ctx, tx); err != nil {
+		if err := handler.lockOp.updateLocks(ctx, tx); err != nil {
 			return err
 		}
 		return nil
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetStock(ctx)
 }

@@ -178,6 +178,20 @@ func (h *createHandler) createMiningGoodStocks(ctx context.Context, tx *ent.Tx) 
 	return nil
 }
 
+func (h *createHandler) _validateStock() error {
+	if h.StockReq.EntID == nil {
+		h.StockReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
+	}
+	for _, poolStock := range h.MiningGoodStockReqs {
+		poolStock.GoodStockID = h.StockReq.EntID
+	}
+	if h.GoodBaseReq.EntID == nil {
+		h.GoodBaseReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
+		h.StockReq.GoodID = h.GoodBaseReq.EntID
+	}
+	return h.validateStock()
+}
+
 func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	handler := &createHandler{
 		validateStockHandler: &validateStockHandler{
@@ -185,18 +199,7 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 		},
 	}
 
-	if handler.StockReq.EntID == nil {
-		handler.StockReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
-	}
-	for _, poolStock := range h.MiningGoodStockReqs {
-		poolStock.GoodStockID = handler.StockReq.EntID
-	}
-	if handler.GoodBaseReq.EntID == nil {
-		handler.GoodBaseReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
-		handler.StockReq.GoodID = handler.GoodBaseReq.EntID
-	}
-
-	if err := handler.validateStock(); err != nil {
+	if err := handler._validateStock(); err != nil {
 		return err
 	}
 

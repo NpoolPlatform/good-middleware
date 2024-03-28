@@ -8,14 +8,20 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
+	appgoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/stock"
+	appmininggoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/stock/mining"
 
+	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
 
 type createHandler struct {
 	*powerRentalAppGoodQueryHandler
-	sqlAppPowerRental string
-	sqlAppGoodBase    string
+	stockValidator         *validateStockHandler
+	sqlAppPowerRental      string
+	sqlAppGoodBase         string
+	sqlAppGoodStock        string
+	sqlAppMiningGoodStocks []string
 }
 
 func (h *createHandler) constructAppGoodBaseSql(ctx context.Context) error {
@@ -37,6 +43,37 @@ func (h *createHandler) constructAppGoodBaseSql(ctx context.Context) error {
 		return err
 	}
 	h.sqlAppGoodBase = handler.ConstructCreateSql()
+	return nil
+}
+
+func (h *createHandler) constructAppMiningGoodStockSql(ctx context.Context) error {
+	for _, poolStock := range h.AppMiningGoodStockReqs {
+		handler, err := appmininggoodstock1.NewHandler(
+			ctx,
+			appmininggoodstock1.WithEntID(func() *string { s := poolStock.EntID.String(); return &s }(), false),
+			appmininggoodstock1.WithAppGoodStockID(func() *string { s := poolStock.AppGoodStockID.String(); return &s }(), false),
+			appmininggoodstock1.WithMiningGoodStockID(func() *string { s := poolStock.MiningGoodStockID.String(); return &s }(), false),
+			appmininggoodstock1.WithReserved(func() *string { s := poolStock.Reserved.String(); return &s }(), true),
+		)
+		if err != nil {
+			return err
+		}
+		h.sqlAppMiningGoodStocks = append(h.sqlAppMiningGoodStocks, handler.ConstructCreateSql())
+	}
+	return nil
+}
+
+func (h *createHandler) constructAppGoodStockSql(ctx context.Context) error {
+	handler, err := appgoodstock1.NewHandler(
+		ctx,
+		appgoodstock1.WithEntID(func() *string { s := h.StockReq.EntID.String(); return &s }(), false),
+		appgoodstock1.WithAppGoodID(func() *string { s := h.StockReq.AppGoodID.String(); return &s }(), false),
+		appgoodstock1.WithReserved(func() *string { s := h.StockReq.Reserved.String(); return &s }(), true),
+	)
+	if err != nil {
+		return err
+	}
+	h.sqlStock = handler.ConstructCreateSql()
 	return nil
 }
 
@@ -193,9 +230,6 @@ func (h *createHandler) validateFixedDurationUnitPrice() error {
 }
 
 func (h *createHandler) validateUnitPrice(ctx context.Context) error {
-	if err := h.requirePowerRentalGood(ctx); err != nil {
-		return err
-	}
 	if h.FixedDuration != nil && *h.FixedDuration {
 		return h.validateFixedDurationUnitPrice()
 	}
@@ -205,19 +239,48 @@ func (h *createHandler) validateUnitPrice(ctx context.Context) error {
 	return nil
 }
 
+func (h *createHandler) _validateStock() error {
+	if h.AppGoodStockReq.EntID == nil {
+		h.AppGoodStockReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
+	}
+	for _, poolStock := range h.AppMiningGoodStockReqs {
+		poolStock.AppGoodStockID = h.AppGoodStockReq.EntID
+	}
+	if h.AppGoodBaseReq.EntID == nil {
+		h.AppGoodBaseReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
+		h.AppGoodStockReq.AppGoodID = h.AppGoodBaseReq.EntID
+	}
+	return h.stockValidator.validateStock()
+}
+
 func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	handler := &createHandler{
 		powerRentalAppGoodQueryHandler: &powerRentalAppGoodQueryHandler{
 			Handler: h,
 		},
+		stockValidator: &validateStockHandler{
+			Handler: h,
+		},
 	}
 
+	if err := handler.requireAppPowerRentalAppGood(ctx); err != nil {
+		return err
+	}
+	if err := handler._validateStock(); err != nil {
+		return err
+	}
 	if err := handler.validateUnitPrice(ctx); err != nil {
 		return err
 	}
 
 	handler.constructAppPowerRentalSql()
 	if err := handler.constructAppGoodBaseSql(ctx); err != nil {
+		return err
+	}
+	if err := handler.constructAppGoodStockSql(ctx); err != nil {
+		return err
+	}
+	if err := handler.constructAppMiningGoodStockSql(ctx); err != nil {
 		return err
 	}
 

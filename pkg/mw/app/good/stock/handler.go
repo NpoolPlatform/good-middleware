@@ -6,8 +6,7 @@ import (
 	"fmt"
 
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
-	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
-	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
+	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 
@@ -65,58 +64,20 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithAppID(id *string, must bool) func(context.Context, *Handler) error {
+func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		if id == nil {
-			if must {
-				return fmt.Errorf("invalid appid")
-			}
-			return nil
-		}
-		_id, err := uuid.Parse(*id)
-		if err != nil {
-			return err
-		}
-		h.AppID = &_id
-		return nil
-	}
-}
-
-func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		handler, err := good1.NewHandler(
+		handler, err := appgoodbase1.NewHandler(
 			ctx,
-			good1.WithEntID(id, true),
+			appgoodbase1.WithEntID(id, true),
 		)
 		if err != nil {
 			return err
 		}
-		exist, err := handler.ExistGood(ctx)
+		exist, err := handler.ExistGoodBase(ctx)
 		if err != nil {
 			return err
 		}
 		if !exist {
-			return fmt.Errorf("invalid good")
-		}
-		h.GoodID = handler.EntID
-		return nil
-	}
-}
-
-func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		handler, err := appgood1.NewHandler(
-			ctx,
-			appgood1.WithEntID(id, true),
-		)
-		if err != nil {
-			return err
-		}
-		info, err := handler.GetGood(ctx)
-		if err != nil {
-			return err
-		}
-		if info == nil {
 			return fmt.Errorf("invalid appgood")
 		}
 		h.AppGoodID = handler.EntID
@@ -291,18 +252,6 @@ func WithStocks(stocks []*npool.LocksRequest_XStock, must bool) func(context.Con
 				return err
 			}
 			_stock.EntID = &entID
-
-			goodID, err := uuid.Parse(stock.GoodID)
-			if err != nil {
-				return err
-			}
-			_stock.GoodID = &goodID
-
-			appGoodID, err := uuid.Parse(stock.AppGoodID)
-			if err != nil {
-				return err
-			}
-			_stock.AppGoodID = &appGoodID
 
 			units, err := decimal.NewFromString(stock.Units)
 			if err != nil {

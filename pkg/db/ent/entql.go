@@ -360,7 +360,6 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appstock.FieldDeletedAt:    {Type: field.TypeUint32, Column: appstock.FieldDeletedAt},
 			appstock.FieldEntID:        {Type: field.TypeUUID, Column: appstock.FieldEntID},
 			appstock.FieldAppGoodID:    {Type: field.TypeUUID, Column: appstock.FieldAppGoodID},
-			appstock.FieldGoodStockID:  {Type: field.TypeUUID, Column: appstock.FieldGoodStockID},
 			appstock.FieldReserved:     {Type: field.TypeOther, Column: appstock.FieldReserved},
 			appstock.FieldSpotQuantity: {Type: field.TypeOther, Column: appstock.FieldSpotQuantity},
 			appstock.FieldLocked:       {Type: field.TypeOther, Column: appstock.FieldLocked},
@@ -2243,11 +2242,6 @@ func (f *AppStockFilter) WhereEntID(p entql.ValueP) {
 // WhereAppGoodID applies the entql [16]byte predicate on the app_good_id field.
 func (f *AppStockFilter) WhereAppGoodID(p entql.ValueP) {
 	f.Where(p.Field(appstock.FieldAppGoodID))
-}
-
-// WhereGoodStockID applies the entql [16]byte predicate on the good_stock_id field.
-func (f *AppStockFilter) WhereGoodStockID(p entql.ValueP) {
-	f.Where(p.Field(appstock.FieldGoodStockID))
 }
 
 // WhereReserved applies the entql other predicate on the reserved field.

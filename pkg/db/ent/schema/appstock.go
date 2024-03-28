@@ -33,12 +33,6 @@ func (AppStock) Fields() []ent.Field {
 				return uuid.Nil
 			}),
 		field.
-			UUID("good_stock_id", uuid.UUID{}).
-			Optional().
-			Default(func() uuid.UUID {
-				return uuid.Nil
-			}),
-		field.
 			Other("reserved", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
