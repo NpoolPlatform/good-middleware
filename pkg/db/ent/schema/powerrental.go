@@ -80,7 +80,7 @@ func (PowerRental) Fields() []ent.Field {
 		field.
 			String("stock_mode").
 			Optional().
-			Default(types.GoodStockMode_GoodStockByMiningPool.String()),
+			Default(types.GoodStockMode_GoodStockByUnique.String()),
 	}
 }
 

@@ -18,7 +18,6 @@ type Handler struct {
 	appstockcrud.Req
 	AppSpotLocked     *decimal.Decimal
 	AppStockLockState *types.AppStockLockState
-	AppGoodID         *uuid.UUID
 	LockID            *uuid.UUID
 	Rollback          *bool
 	Stocks            []*LockStock

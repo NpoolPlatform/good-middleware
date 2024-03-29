@@ -19,7 +19,7 @@ type reserveHandler struct {
 func (h *reserveHandler) reserveStock(ctx context.Context, tx *ent.Tx) error {
 	stock, ok := h.stocks[*h.AppGoodID]
 	if !ok {
-		return fmt.Errorf("invalid stock")
+		return fmt.Errorf("invalid stock 1")
 	}
 
 	spotQuantity := stock.stock.SpotQuantity
@@ -29,10 +29,10 @@ func (h *reserveHandler) reserveStock(ctx context.Context, tx *ent.Tx) error {
 	spotQuantity = spotQuantity.Sub(*h.Reserved)
 
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return fmt.Errorf("invalid stock 2")
 	}
 	if spotQuantity.Cmp(stock.stock.Total) > 0 {
-		return fmt.Errorf("invalid stock")
+		return fmt.Errorf("invalid stock 3")
 	}
 
 	if appReserved.Add(stock.stock.Locked).
@@ -58,7 +58,7 @@ func (h *reserveHandler) reserveStock(ctx context.Context, tx *ent.Tx) error {
 func (h *reserveHandler) reserveAppStock(ctx context.Context, tx *ent.Tx) error {
 	stock, ok := h.stocks[*h.AppGoodID]
 	if !ok {
-		return fmt.Errorf("invalid stock")
+		return fmt.Errorf("invalid stock 4")
 	}
 
 	spotQuantity := stock.appGoodStock.SpotQuantity
@@ -66,7 +66,7 @@ func (h *reserveHandler) reserveAppStock(ctx context.Context, tx *ent.Tx) error 
 	spotQuantity = h.Reserved.Add(spotQuantity)
 	reserved = h.Reserved.Add(reserved)
 	if spotQuantity.Cmp(reserved) > 0 {
-		return fmt.Errorf("invalid stock")
+		return fmt.Errorf("invalid stock 5")
 	}
 
 	if _, err := appstockcrud.UpdateSet(

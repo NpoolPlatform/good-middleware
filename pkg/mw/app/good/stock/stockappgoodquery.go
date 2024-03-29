@@ -146,7 +146,7 @@ func (h *stockAppGoodQuery) getGoodStocks(ctx context.Context, cli *ent.Client) 
 		Stock.
 		Query().
 		Where(
-			entstock.EntIDIn(h.stockGoodIDs...),
+			entstock.GoodIDIn(h.stockGoodIDs...),
 			entstock.DeletedAt(0),
 		).
 		All(ctx)
