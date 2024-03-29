@@ -807,6 +807,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			powerrental.FieldDeliveryAt:         {Type: field.TypeUint32, Column: powerrental.FieldDeliveryAt},
 			powerrental.FieldUnitLockDeposit:    {Type: field.TypeOther, Column: powerrental.FieldUnitLockDeposit},
 			powerrental.FieldDurationType:       {Type: field.TypeString, Column: powerrental.FieldDurationType},
+			powerrental.FieldStockMode:          {Type: field.TypeString, Column: powerrental.FieldStockMode},
 		},
 	}
 	graph.Nodes[31] = &sqlgraph.Node{
@@ -4060,6 +4061,11 @@ func (f *PowerRentalFilter) WhereUnitLockDeposit(p entql.OtherP) {
 // WhereDurationType applies the entql string predicate on the duration_type field.
 func (f *PowerRentalFilter) WhereDurationType(p entql.StringP) {
 	f.Where(p.Field(powerrental.FieldDurationType))
+}
+
+// WhereStockMode applies the entql string predicate on the stock_mode field.
+func (f *PowerRentalFilter) WhereStockMode(p entql.StringP) {
+	f.Where(p.Field(powerrental.FieldStockMode))
 }
 
 // addPredicate implements the predicateAdder interface.

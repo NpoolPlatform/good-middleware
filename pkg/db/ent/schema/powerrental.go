@@ -77,6 +77,10 @@ func (PowerRental) Fields() []ent.Field {
 			String("duration_type").
 			Optional().
 			Default(types.GoodDurationType_GoodDurationByDay.String()),
+		field.
+			String("stock_mode").
+			Optional().
+			Default(types.GoodStockMode_GoodStockByMiningPool.String()),
 	}
 }
 

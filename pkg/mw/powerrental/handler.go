@@ -36,6 +36,9 @@ type Handler struct {
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
+		Req: powerrentalcrud.Req{
+			StockMode: types.GoodStockMode_GoodStockByUnique.Enum(),
+		},
 		GoodBaseReq:      &goodbasecrud.Req{},
 		StockReq:         &stockcrud.Req{},
 		PowerRentalConds: &powerrentalcrud.Conds{},
@@ -260,6 +263,25 @@ func WithDurationType(e *types.GoodDurationType, must bool) func(context.Context
 			return fmt.Errorf("invalid durationtype")
 		}
 		h.DurationType = e
+		return nil
+	}
+}
+
+func WithStockMode(e *types.GoodStockMode, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return fmt.Errorf("invalid stockmode")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodStockMode_GoodStockByMiningPool:
+		case types.GoodStockMode_GoodStockByUnique:
+		default:
+			return fmt.Errorf("invalid stockmode")
+		}
+		h.StockMode = e
 		return nil
 	}
 }

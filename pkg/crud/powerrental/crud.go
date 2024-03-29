@@ -23,6 +23,7 @@ type Req struct {
 	DeliveryAt         *uint32
 	UnitLockDeposit    *decimal.Decimal
 	DurationType       *types.GoodDurationType
+	StockMode          *types.GoodStockMode
 	DeletedAt          *uint32
 }
 
@@ -58,6 +59,9 @@ func CreateSet(c *ent.PowerRentalCreate, req *Req) *ent.PowerRentalCreate {
 	if req.DurationType != nil {
 		c.SetDurationType(req.DurationType.String())
 	}
+	if req.StockMode != nil {
+		c.SetStockMode(req.StockMode.String())
+	}
 	return c
 }
 
@@ -80,6 +84,9 @@ func UpdateSet(u *ent.PowerRentalUpdateOne, req *Req) *ent.PowerRentalUpdateOne 
 	}
 	if req.DurationType != nil {
 		u.SetDurationType(req.DurationType.String())
+	}
+	if req.StockMode != nil {
+		u.SetStockMode(req.StockMode.String())
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)

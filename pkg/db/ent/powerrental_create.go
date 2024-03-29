@@ -205,6 +205,20 @@ func (prc *PowerRentalCreate) SetNillableDurationType(s *string) *PowerRentalCre
 	return prc
 }
 
+// SetStockMode sets the "stock_mode" field.
+func (prc *PowerRentalCreate) SetStockMode(s string) *PowerRentalCreate {
+	prc.mutation.SetStockMode(s)
+	return prc
+}
+
+// SetNillableStockMode sets the "stock_mode" field if the given value is not nil.
+func (prc *PowerRentalCreate) SetNillableStockMode(s *string) *PowerRentalCreate {
+	if s != nil {
+		prc.SetStockMode(*s)
+	}
+	return prc
+}
+
 // SetID sets the "id" field.
 func (prc *PowerRentalCreate) SetID(u uint32) *PowerRentalCreate {
 	prc.mutation.SetID(u)
@@ -363,6 +377,10 @@ func (prc *PowerRentalCreate) defaults() error {
 		v := powerrental.DefaultDurationType
 		prc.mutation.SetDurationType(v)
 	}
+	if _, ok := prc.mutation.StockMode(); !ok {
+		v := powerrental.DefaultStockMode
+		prc.mutation.SetStockMode(v)
+	}
 	return nil
 }
 
@@ -517,6 +535,14 @@ func (prc *PowerRentalCreate) createSpec() (*PowerRental, *sqlgraph.CreateSpec) 
 			Column: powerrental.FieldDurationType,
 		})
 		_node.DurationType = value
+	}
+	if value, ok := prc.mutation.StockMode(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: powerrental.FieldStockMode,
+		})
+		_node.StockMode = value
 	}
 	return _node, _spec
 }
@@ -803,6 +829,24 @@ func (u *PowerRentalUpsert) UpdateDurationType() *PowerRentalUpsert {
 // ClearDurationType clears the value of the "duration_type" field.
 func (u *PowerRentalUpsert) ClearDurationType() *PowerRentalUpsert {
 	u.SetNull(powerrental.FieldDurationType)
+	return u
+}
+
+// SetStockMode sets the "stock_mode" field.
+func (u *PowerRentalUpsert) SetStockMode(v string) *PowerRentalUpsert {
+	u.Set(powerrental.FieldStockMode, v)
+	return u
+}
+
+// UpdateStockMode sets the "stock_mode" field to the value that was provided on create.
+func (u *PowerRentalUpsert) UpdateStockMode() *PowerRentalUpsert {
+	u.SetExcluded(powerrental.FieldStockMode)
+	return u
+}
+
+// ClearStockMode clears the value of the "stock_mode" field.
+func (u *PowerRentalUpsert) ClearStockMode() *PowerRentalUpsert {
+	u.SetNull(powerrental.FieldStockMode)
 	return u
 }
 
@@ -1126,6 +1170,27 @@ func (u *PowerRentalUpsertOne) UpdateDurationType() *PowerRentalUpsertOne {
 func (u *PowerRentalUpsertOne) ClearDurationType() *PowerRentalUpsertOne {
 	return u.Update(func(s *PowerRentalUpsert) {
 		s.ClearDurationType()
+	})
+}
+
+// SetStockMode sets the "stock_mode" field.
+func (u *PowerRentalUpsertOne) SetStockMode(v string) *PowerRentalUpsertOne {
+	return u.Update(func(s *PowerRentalUpsert) {
+		s.SetStockMode(v)
+	})
+}
+
+// UpdateStockMode sets the "stock_mode" field to the value that was provided on create.
+func (u *PowerRentalUpsertOne) UpdateStockMode() *PowerRentalUpsertOne {
+	return u.Update(func(s *PowerRentalUpsert) {
+		s.UpdateStockMode()
+	})
+}
+
+// ClearStockMode clears the value of the "stock_mode" field.
+func (u *PowerRentalUpsertOne) ClearStockMode() *PowerRentalUpsertOne {
+	return u.Update(func(s *PowerRentalUpsert) {
+		s.ClearStockMode()
 	})
 }
 
@@ -1614,6 +1679,27 @@ func (u *PowerRentalUpsertBulk) UpdateDurationType() *PowerRentalUpsertBulk {
 func (u *PowerRentalUpsertBulk) ClearDurationType() *PowerRentalUpsertBulk {
 	return u.Update(func(s *PowerRentalUpsert) {
 		s.ClearDurationType()
+	})
+}
+
+// SetStockMode sets the "stock_mode" field.
+func (u *PowerRentalUpsertBulk) SetStockMode(v string) *PowerRentalUpsertBulk {
+	return u.Update(func(s *PowerRentalUpsert) {
+		s.SetStockMode(v)
+	})
+}
+
+// UpdateStockMode sets the "stock_mode" field to the value that was provided on create.
+func (u *PowerRentalUpsertBulk) UpdateStockMode() *PowerRentalUpsertBulk {
+	return u.Update(func(s *PowerRentalUpsert) {
+		s.UpdateStockMode()
+	})
+}
+
+// ClearStockMode clears the value of the "stock_mode" field.
+func (u *PowerRentalUpsertBulk) ClearStockMode() *PowerRentalUpsertBulk {
+	return u.Update(func(s *PowerRentalUpsert) {
+		s.ClearStockMode()
 	})
 }
 

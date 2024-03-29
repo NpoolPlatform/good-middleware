@@ -34946,6 +34946,7 @@ type PowerRentalMutation struct {
 	adddelivery_at       *int32
 	unit_lock_deposit    *decimal.Decimal
 	duration_type        *string
+	stock_mode           *string
 	clearedFields        map[string]struct{}
 	done                 bool
 	oldValue             func(context.Context) (*PowerRental, error)
@@ -35722,6 +35723,55 @@ func (m *PowerRentalMutation) ResetDurationType() {
 	delete(m.clearedFields, powerrental.FieldDurationType)
 }
 
+// SetStockMode sets the "stock_mode" field.
+func (m *PowerRentalMutation) SetStockMode(s string) {
+	m.stock_mode = &s
+}
+
+// StockMode returns the value of the "stock_mode" field in the mutation.
+func (m *PowerRentalMutation) StockMode() (r string, exists bool) {
+	v := m.stock_mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStockMode returns the old "stock_mode" field's value of the PowerRental entity.
+// If the PowerRental object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PowerRentalMutation) OldStockMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStockMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStockMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStockMode: %w", err)
+	}
+	return oldValue.StockMode, nil
+}
+
+// ClearStockMode clears the value of the "stock_mode" field.
+func (m *PowerRentalMutation) ClearStockMode() {
+	m.stock_mode = nil
+	m.clearedFields[powerrental.FieldStockMode] = struct{}{}
+}
+
+// StockModeCleared returns if the "stock_mode" field was cleared in this mutation.
+func (m *PowerRentalMutation) StockModeCleared() bool {
+	_, ok := m.clearedFields[powerrental.FieldStockMode]
+	return ok
+}
+
+// ResetStockMode resets all changes to the "stock_mode" field.
+func (m *PowerRentalMutation) ResetStockMode() {
+	m.stock_mode = nil
+	delete(m.clearedFields, powerrental.FieldStockMode)
+}
+
 // Where appends a list predicates to the PowerRentalMutation builder.
 func (m *PowerRentalMutation) Where(ps ...predicate.PowerRental) {
 	m.predicates = append(m.predicates, ps...)
@@ -35741,7 +35791,7 @@ func (m *PowerRentalMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PowerRentalMutation) Fields() []string {
-	fields := make([]string, 0, 13)
+	fields := make([]string, 0, 14)
 	if m.created_at != nil {
 		fields = append(fields, powerrental.FieldCreatedAt)
 	}
@@ -35781,6 +35831,9 @@ func (m *PowerRentalMutation) Fields() []string {
 	if m.duration_type != nil {
 		fields = append(fields, powerrental.FieldDurationType)
 	}
+	if m.stock_mode != nil {
+		fields = append(fields, powerrental.FieldStockMode)
+	}
 	return fields
 }
 
@@ -35815,6 +35868,8 @@ func (m *PowerRentalMutation) Field(name string) (ent.Value, bool) {
 		return m.UnitLockDeposit()
 	case powerrental.FieldDurationType:
 		return m.DurationType()
+	case powerrental.FieldStockMode:
+		return m.StockMode()
 	}
 	return nil, false
 }
@@ -35850,6 +35905,8 @@ func (m *PowerRentalMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldUnitLockDeposit(ctx)
 	case powerrental.FieldDurationType:
 		return m.OldDurationType(ctx)
+	case powerrental.FieldStockMode:
+		return m.OldStockMode(ctx)
 	}
 	return nil, fmt.Errorf("unknown PowerRental field %s", name)
 }
@@ -35949,6 +36006,13 @@ func (m *PowerRentalMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDurationType(v)
+		return nil
+	case powerrental.FieldStockMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStockMode(v)
 		return nil
 	}
 	return fmt.Errorf("unknown PowerRental field %s", name)
@@ -36058,6 +36122,9 @@ func (m *PowerRentalMutation) ClearedFields() []string {
 	if m.FieldCleared(powerrental.FieldDurationType) {
 		fields = append(fields, powerrental.FieldDurationType)
 	}
+	if m.FieldCleared(powerrental.FieldStockMode) {
+		fields = append(fields, powerrental.FieldStockMode)
+	}
 	return fields
 }
 
@@ -36098,6 +36165,9 @@ func (m *PowerRentalMutation) ClearField(name string) error {
 		return nil
 	case powerrental.FieldDurationType:
 		m.ClearDurationType()
+		return nil
+	case powerrental.FieldStockMode:
+		m.ClearStockMode()
 		return nil
 	}
 	return fmt.Errorf("unknown PowerRental nullable field %s", name)
@@ -36145,6 +36215,9 @@ func (m *PowerRentalMutation) ResetField(name string) error {
 		return nil
 	case powerrental.FieldDurationType:
 		m.ResetDurationType()
+		return nil
+	case powerrental.FieldStockMode:
+		m.ResetStockMode()
 		return nil
 	}
 	return fmt.Errorf("unknown PowerRental field %s", name)

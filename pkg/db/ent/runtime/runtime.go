@@ -1984,6 +1984,10 @@ func init() {
 	powerrentalDescDurationType := powerrentalFields[8].Descriptor()
 	// powerrental.DefaultDurationType holds the default value on creation for the duration_type field.
 	powerrental.DefaultDurationType = powerrentalDescDurationType.Default.(string)
+	// powerrentalDescStockMode is the schema descriptor for stock_mode field.
+	powerrentalDescStockMode := powerrentalFields[9].Descriptor()
+	// powerrental.DefaultStockMode holds the default value on creation for the stock_mode field.
+	powerrental.DefaultStockMode = powerrentalDescStockMode.Default.(string)
 	recommendMixin := schema.Recommend{}.Mixin()
 	recommend.Policy = privacy.NewPolicies(recommendMixin[0], schema.Recommend{})
 	recommend.Hooks[0] = func(next ent.Mutator) ent.Mutator {

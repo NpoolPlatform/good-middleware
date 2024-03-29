@@ -60,6 +60,7 @@ var (
 		DeliveryAt:         uint32(time.Now().Unix()),
 		UnitLockDeposit:    decimal.NewFromInt(1).String(),
 		DurationType:       types.GoodDurationType_GoodDurationByDay,
+		StockMode:          types.GoodStockMode_GoodStockByUnique,
 
 		GoodType:                     types.GoodType_PowerRental,
 		BenefitType:                  types.BenefitType_BenefitTypePlatform,
@@ -104,6 +105,7 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.StartModeStr = ret.StartMode.String()
 	ret.CancelModeStr = ret.CancelMode.String()
 	ret.SaleModeStr = ret.SaleMode.String()
+	ret.StockModeStr = ret.StockMode.String()
 
 	manufacturerID := uuid.NewString()
 	h1, err := manufacturer1.NewHandler(

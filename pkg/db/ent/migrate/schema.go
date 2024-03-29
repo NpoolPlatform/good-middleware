@@ -932,6 +932,7 @@ var (
 		{Name: "delivery_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "unit_lock_deposit", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
+		{Name: "stock_mode", Type: field.TypeString, Nullable: true, Default: "GoodStockByMiningPool"},
 	}
 	// PowerRentalsTable holds the schema information for the "power_rentals" table.
 	PowerRentalsTable = &schema.Table{

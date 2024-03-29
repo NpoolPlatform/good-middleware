@@ -15,7 +15,7 @@ func (h *validateStockHandler) validateStock() error {
 	for _, poolStock := range h.AppMiningGoodStockReqs {
 		poolTotal = poolStock.Reserved.Add(poolTotal)
 	}
-	if h.AppGoodStockReq.Reserved.Cmp(poolTotal) < 0 {
+	if h.AppGoodStockReq.Reserved.Cmp(poolTotal) != 0 {
 		return fmt.Errorf("invalid stock total")
 	}
 	return nil

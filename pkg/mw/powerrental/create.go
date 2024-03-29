@@ -98,6 +98,9 @@ func (h *createHandler) constructPowerRentalSql() {
 	if h.DurationType != nil {
 		_sql += comma + "duration_type"
 	}
+	if h.StockMode != nil {
+		_sql += comma + "stock_mode"
+	}
 	_sql += comma + "created_at"
 	_sql += comma + "updated_at"
 	_sql += comma + "deleted_at"
@@ -121,6 +124,9 @@ func (h *createHandler) constructPowerRentalSql() {
 	}
 	if h.DurationType != nil {
 		_sql += fmt.Sprintf("%v'%v' as duration_type", comma, h.DurationType.String())
+	}
+	if h.StockMode != nil {
+		_sql += fmt.Sprintf("%v'%v' as stock_mode", comma, h.StockMode.String())
 	}
 	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
 	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)

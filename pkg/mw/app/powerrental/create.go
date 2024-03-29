@@ -10,6 +10,7 @@ import (
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	appgoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/stock"
 	appmininggoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/stock/mining"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -243,12 +244,15 @@ func (h *createHandler) _validateStock() error {
 	if h.AppGoodStockReq.EntID == nil {
 		h.AppGoodStockReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 	}
-	for _, poolStock := range h.AppMiningGoodStockReqs {
-		poolStock.AppGoodStockID = h.AppGoodStockReq.EntID
-	}
 	if h.AppGoodBaseReq.EntID == nil {
 		h.AppGoodBaseReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 		h.AppGoodStockReq.AppGoodID = h.AppGoodBaseReq.EntID
+	}
+	if h._ent.powerRental.StockMode != types.GoodStockMode_GoodStockByMiningPool.String() {
+		return nil
+	}
+	for _, poolStock := range h.AppMiningGoodStockReqs {
+		poolStock.AppGoodStockID = h.AppGoodStockReq.EntID
 	}
 	return h.stockValidator.validateStock()
 }

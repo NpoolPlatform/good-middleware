@@ -286,6 +286,26 @@ func (pru *PowerRentalUpdate) ClearDurationType() *PowerRentalUpdate {
 	return pru
 }
 
+// SetStockMode sets the "stock_mode" field.
+func (pru *PowerRentalUpdate) SetStockMode(s string) *PowerRentalUpdate {
+	pru.mutation.SetStockMode(s)
+	return pru
+}
+
+// SetNillableStockMode sets the "stock_mode" field if the given value is not nil.
+func (pru *PowerRentalUpdate) SetNillableStockMode(s *string) *PowerRentalUpdate {
+	if s != nil {
+		pru.SetStockMode(*s)
+	}
+	return pru
+}
+
+// ClearStockMode clears the value of the "stock_mode" field.
+func (pru *PowerRentalUpdate) ClearStockMode() *PowerRentalUpdate {
+	pru.mutation.ClearStockMode()
+	return pru
+}
+
 // Mutation returns the PowerRentalMutation object of the builder.
 func (pru *PowerRentalUpdate) Mutation() *PowerRentalMutation {
 	return pru.mutation
@@ -555,6 +575,19 @@ func (pru *PowerRentalUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: powerrental.FieldDurationType,
+		})
+	}
+	if value, ok := pru.mutation.StockMode(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: powerrental.FieldStockMode,
+		})
+	}
+	if pru.mutation.StockModeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: powerrental.FieldStockMode,
 		})
 	}
 	_spec.Modifiers = pru.modifiers
@@ -831,6 +864,26 @@ func (pruo *PowerRentalUpdateOne) SetNillableDurationType(s *string) *PowerRenta
 // ClearDurationType clears the value of the "duration_type" field.
 func (pruo *PowerRentalUpdateOne) ClearDurationType() *PowerRentalUpdateOne {
 	pruo.mutation.ClearDurationType()
+	return pruo
+}
+
+// SetStockMode sets the "stock_mode" field.
+func (pruo *PowerRentalUpdateOne) SetStockMode(s string) *PowerRentalUpdateOne {
+	pruo.mutation.SetStockMode(s)
+	return pruo
+}
+
+// SetNillableStockMode sets the "stock_mode" field if the given value is not nil.
+func (pruo *PowerRentalUpdateOne) SetNillableStockMode(s *string) *PowerRentalUpdateOne {
+	if s != nil {
+		pruo.SetStockMode(*s)
+	}
+	return pruo
+}
+
+// ClearStockMode clears the value of the "stock_mode" field.
+func (pruo *PowerRentalUpdateOne) ClearStockMode() *PowerRentalUpdateOne {
+	pruo.mutation.ClearStockMode()
 	return pruo
 }
 
@@ -1133,6 +1186,19 @@ func (pruo *PowerRentalUpdateOne) sqlSave(ctx context.Context) (_node *PowerRent
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: powerrental.FieldDurationType,
+		})
+	}
+	if value, ok := pruo.mutation.StockMode(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: powerrental.FieldStockMode,
+		})
+	}
+	if pruo.mutation.StockModeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: powerrental.FieldStockMode,
 		})
 	}
 	_spec.Modifiers = pruo.modifiers

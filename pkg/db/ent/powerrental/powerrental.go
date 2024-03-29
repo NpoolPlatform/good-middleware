@@ -39,6 +39,8 @@ const (
 	FieldUnitLockDeposit = "unit_lock_deposit"
 	// FieldDurationType holds the string denoting the duration_type field in the database.
 	FieldDurationType = "duration_type"
+	// FieldStockMode holds the string denoting the stock_mode field in the database.
+	FieldStockMode = "stock_mode"
 	// Table holds the table name of the powerrental in the database.
 	Table = "power_rentals"
 )
@@ -59,6 +61,7 @@ var Columns = []string{
 	FieldDeliveryAt,
 	FieldUnitLockDeposit,
 	FieldDurationType,
+	FieldStockMode,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -108,4 +111,6 @@ var (
 	DefaultUnitLockDeposit decimal.Decimal
 	// DefaultDurationType holds the default value on creation for the "duration_type" field.
 	DefaultDurationType string
+	// DefaultStockMode holds the default value on creation for the "stock_mode" field.
+	DefaultStockMode string
 )

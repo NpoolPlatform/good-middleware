@@ -171,6 +171,13 @@ func DurationType(v string) predicate.PowerRental {
 	})
 }
 
+// StockMode applies equality check predicate on the "stock_mode" field. It's identical to StockModeEQ.
+func StockMode(v string) predicate.PowerRental {
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldStockMode), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.PowerRental {
 	return predicate.PowerRental(func(s *sql.Selector) {
@@ -1196,6 +1203,119 @@ func DurationTypeEqualFold(v string) predicate.PowerRental {
 func DurationTypeContainsFold(v string) predicate.PowerRental {
 	return predicate.PowerRental(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldDurationType), v))
+	})
+}
+
+// StockModeEQ applies the EQ predicate on the "stock_mode" field.
+func StockModeEQ(v string) predicate.PowerRental {
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldStockMode), v))
+	})
+}
+
+// StockModeNEQ applies the NEQ predicate on the "stock_mode" field.
+func StockModeNEQ(v string) predicate.PowerRental {
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldStockMode), v))
+	})
+}
+
+// StockModeIn applies the In predicate on the "stock_mode" field.
+func StockModeIn(vs ...string) predicate.PowerRental {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldStockMode), v...))
+	})
+}
+
+// StockModeNotIn applies the NotIn predicate on the "stock_mode" field.
+func StockModeNotIn(vs ...string) predicate.PowerRental {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldStockMode), v...))
+	})
+}
+
+// StockModeGT applies the GT predicate on the "stock_mode" field.
+func StockModeGT(v string) predicate.PowerRental {
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldStockMode), v))
+	})
+}
+
+// StockModeGTE applies the GTE predicate on the "stock_mode" field.
+func StockModeGTE(v string) predicate.PowerRental {
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldStockMode), v))
+	})
+}
+
+// StockModeLT applies the LT predicate on the "stock_mode" field.
+func StockModeLT(v string) predicate.PowerRental {
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldStockMode), v))
+	})
+}
+
+// StockModeLTE applies the LTE predicate on the "stock_mode" field.
+func StockModeLTE(v string) predicate.PowerRental {
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldStockMode), v))
+	})
+}
+
+// StockModeContains applies the Contains predicate on the "stock_mode" field.
+func StockModeContains(v string) predicate.PowerRental {
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldStockMode), v))
+	})
+}
+
+// StockModeHasPrefix applies the HasPrefix predicate on the "stock_mode" field.
+func StockModeHasPrefix(v string) predicate.PowerRental {
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldStockMode), v))
+	})
+}
+
+// StockModeHasSuffix applies the HasSuffix predicate on the "stock_mode" field.
+func StockModeHasSuffix(v string) predicate.PowerRental {
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldStockMode), v))
+	})
+}
+
+// StockModeIsNil applies the IsNil predicate on the "stock_mode" field.
+func StockModeIsNil() predicate.PowerRental {
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldStockMode)))
+	})
+}
+
+// StockModeNotNil applies the NotNil predicate on the "stock_mode" field.
+func StockModeNotNil() predicate.PowerRental {
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldStockMode)))
+	})
+}
+
+// StockModeEqualFold applies the EqualFold predicate on the "stock_mode" field.
+func StockModeEqualFold(v string) predicate.PowerRental {
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldStockMode), v))
+	})
+}
+
+// StockModeContainsFold applies the ContainsFold predicate on the "stock_mode" field.
+func StockModeContainsFold(v string) predicate.PowerRental {
+	return predicate.PowerRental(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldStockMode), v))
 	})
 }
 

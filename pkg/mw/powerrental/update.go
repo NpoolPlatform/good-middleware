@@ -78,6 +78,10 @@ func (h *updateHandler) constructPowerRentalSql() error {
 		_sql += fmt.Sprintf("%vduration_type = '%v', ", set, h.DurationType.String())
 		set = ""
 	}
+	if h.StockMode != nil {
+		_sql += fmt.Sprintf("%vstock_mode = '%v', ", set, h.StockMode.String())
+		set = ""
+	}
 	if set != "" {
 		return cruder.ErrUpdateNothing
 	}
