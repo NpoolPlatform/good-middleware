@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
-	stocklockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/lock"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -14,14 +13,11 @@ import (
 type Handler struct {
 	ID *uint32
 	stockcrud.Req
-	LockReq  *stocklockcrud.Req
 	Rollback *bool
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
-	handler := &Handler{
-		LockReq: &stocklockcrud.Req{},
-	}
+	handler := &Handler{}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
 			return nil, err
@@ -113,23 +109,6 @@ func WithAppReserved(s *string, must bool) func(context.Context, *Handler) error
 			return fmt.Errorf("invalid appreserved")
 		}
 		h.AppReserved = &amount
-		return nil
-	}
-}
-
-func WithLockID(id *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if id == nil {
-			if must {
-				return fmt.Errorf("invalid lockid")
-			}
-			return nil
-		}
-		_id, err := uuid.Parse(*id)
-		if err != nil {
-			return err
-		}
-		h.LockReq.EntID = &_id
 		return nil
 	}
 }

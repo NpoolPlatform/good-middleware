@@ -5,9 +5,7 @@ import (
 	"fmt"
 
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
-	stocklockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/lock"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
-	// goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -17,7 +15,6 @@ type Handler struct {
 	ID *uint32
 	mininggoodstockcrud.Req
 	StockReq *stockcrud.Req
-	LockReq  *stocklockcrud.Req
 	Rollback *bool
 }
 

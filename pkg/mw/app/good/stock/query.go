@@ -6,13 +6,11 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
-	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 
 	"github.com/shopspring/decimal"
@@ -46,13 +44,7 @@ func (h *queryHandler) queryStock(cli *ent.Client) error {
 }
 
 func (h *queryHandler) queryStocks(cli *ent.Client) (*ent.AppStockSelect, error) {
-	stm, err := appstockcrud.SetQueryConds(cli.AppStock.Query(), &appstockcrud.Conds{
-		EntIDs: &cruder.Cond{Op: cruder.IN, Val: h.EntIDs},
-	})
-	if err != nil {
-		return nil, err
-	}
-	return h.selectStock(stm), nil
+	return nil, fmt.Errorf("NOT IMPLEMENTED")
 }
 
 func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
@@ -208,8 +200,6 @@ func (h *Handler) GetStocks(ctx context.Context) ([]*npool.Stock, uint32, error)
 		}
 		handler.total = uint32(total)
 
-		handler.stmSelect.
-			Limit(len(h.EntIDs))
 		return handler.scan(_ctx)
 	})
 	if err != nil {

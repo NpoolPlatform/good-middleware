@@ -202,10 +202,13 @@ func lockStock(t *testing.T) {
 		WithAppSpotLocked(&ret.Locked, true),
 	)
 	if assert.Nil(t, err) {
-		info, err := handler.LockStock(context.Background())
+		err = handler.LockStock(context.Background())
 		if assert.Nil(t, err) {
-			ret.UpdatedAt = info.UpdatedAt
-			assert.Equal(t, &ret, info)
+			info, err := handler.GetStock(context.Background())
+			if assert.Nil(t, err) {
+				ret.UpdatedAt = info.UpdatedAt
+				assert.Equal(t, &ret, info)
+			}
 		}
 	}
 }
@@ -242,7 +245,7 @@ func lockFailStock(t *testing.T) {
 		WithLockID(&lockID, true),
 	)
 	if assert.Nil(t, err) {
-		_, err := handler.LockStock(context.Background())
+		err = handler.LockStock(context.Background())
 		assert.NotNil(t, err)
 	}
 }
