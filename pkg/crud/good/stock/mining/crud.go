@@ -123,7 +123,7 @@ func SetQueryConds(q *ent.MiningGoodStockQuery, conds *Conds) (*ent.MiningGoodSt
 			return nil, fmt.Errorf("invalid goodstockids")
 		}
 		switch conds.GoodStockIDs.Op {
-		case cruder.EQ:
+		case cruder.IN:
 			q.Where(entmininggoodstock.GoodStockIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid mininggoodstock field")
