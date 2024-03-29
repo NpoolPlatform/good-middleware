@@ -20,8 +20,13 @@ type expireHandler struct {
 }
 
 func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	inService := h.stock.InService
-	spotQuantity := h.stock.SpotQuantity
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok {
+		return fmt.Errorf("invalid stock")
+	}
+
+	inService := stock.stock.InService
+	spotQuantity := stock.stock.SpotQuantity
 
 	inService = inService.Sub(lock.Units)
 	spotQuantity = spotQuantity.Add(lock.Units)
@@ -30,16 +35,16 @@ func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock,
 		return fmt.Errorf("invalid stock")
 	}
 
-	if inService.Add(h.stock.WaitStart).
-		Add(h.stock.Locked).
-		Add(h.stock.AppReserved).
-		Add(h.stock.SpotQuantity).
-		Cmp(h.stock.Total) > 0 {
+	if inService.Add(stock.stock.WaitStart).
+		Add(stock.stock.Locked).
+		Add(stock.stock.AppReserved).
+		Add(stock.stock.SpotQuantity).
+		Cmp(stock.stock.Total) > 0 {
 		return fmt.Errorf("stock exhausted")
 	}
 
 	if _, err := stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(h.stock.ID),
+		tx.Stock.UpdateOneID(stock.stock.ID),
 		&stockcrud.Req{
 			InService:    &inService,
 			SpotQuantity: &spotQuantity,
@@ -51,14 +56,19 @@ func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock,
 }
 
 func (h *expireHandler) expireAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	inService := h.appGoodStock.InService
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok {
+		return fmt.Errorf("invalid stock")
+	}
+
+	inService := stock.appGoodStock.InService
 	inService = inService.Sub(lock.Units)
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
 	if _, err := appstockcrud.UpdateSet(
-		tx.AppStock.UpdateOneID(h.appGoodStock.ID),
+		tx.AppStock.UpdateOneID(stock.appGoodStock.ID),
 		&appstockcrud.Req{
 			InService: &inService,
 		},
@@ -83,7 +93,8 @@ func (h *Handler) ExpireStock(ctx context.Context) error {
 	if err := handler.lockOp.getLocks(ctx); err != nil {
 		return err
 	}
-	if err := handler.requireStockAppGood(ctx); err != nil {
+	h.Stocks = handler.lockOp.lock2Stocks()
+	if err := handler.getStockAppGoods(ctx); err != nil {
 		return err
 	}
 

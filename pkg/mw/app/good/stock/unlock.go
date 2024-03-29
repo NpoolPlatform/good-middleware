@@ -19,9 +19,14 @@ type unlockHandler struct {
 }
 
 func (h *unlockHandler) unlockStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	spotQuantity := h.stock.SpotQuantity
-	locked := h.stock.Locked
-	appReserved := h.stock.AppReserved
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok {
+		return fmt.Errorf("invalid stock")
+	}
+
+	spotQuantity := stock.stock.SpotQuantity
+	locked := stock.stock.Locked
+	appReserved := stock.stock.AppReserved
 
 	locked = locked.Sub(lock.Units)
 	platformLocked := lock.Units.Sub(lock.AppSpotUnits)
@@ -39,20 +44,20 @@ func (h *unlockHandler) unlockStock(ctx context.Context, lock *ent.AppStockLock,
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
-	if spotQuantity.Cmp(h.stock.Total) > 0 {
+	if spotQuantity.Cmp(stock.stock.Total) > 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
-	if locked.Add(h.stock.InService).
-		Add(h.stock.WaitStart).
+	if locked.Add(stock.stock.InService).
+		Add(stock.stock.WaitStart).
 		Add(appReserved).
 		Add(spotQuantity).
-		Cmp(h.stock.Total) > 0 {
+		Cmp(stock.stock.Total) > 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
 	if _, err := stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(h.stock.ID),
+		tx.Stock.UpdateOneID(stock.stock.ID),
 		&stockcrud.Req{
 			SpotQuantity: &spotQuantity,
 			Locked:       &locked,
@@ -65,15 +70,20 @@ func (h *unlockHandler) unlockStock(ctx context.Context, lock *ent.AppStockLock,
 }
 
 func (h *unlockHandler) unlockAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	locked := h.appGoodStock.Locked
-	spotQuantity := h.appGoodStock.SpotQuantity
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok {
+		return fmt.Errorf("invalid stock")
+	}
+
+	locked := stock.appGoodStock.Locked
+	spotQuantity := stock.appGoodStock.SpotQuantity
 
 	locked = locked.Sub(lock.Units)
 	spotQuantity = lock.AppSpotUnits.Add(spotQuantity)
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid locked")
 	}
-	if spotQuantity.Cmp(h.appGoodStock.Reserved) > 0 {
+	if spotQuantity.Cmp(stock.appGoodStock.Reserved) > 0 {
 		return fmt.Errorf("invalid spotquantity")
 	}
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
@@ -81,7 +91,7 @@ func (h *unlockHandler) unlockAppStock(ctx context.Context, lock *ent.AppStockLo
 	}
 
 	if _, err := appstockcrud.UpdateSet(
-		tx.AppStock.UpdateOneID(h.appGoodStock.ID),
+		tx.AppStock.UpdateOneID(stock.appGoodStock.ID),
 		&appstockcrud.Req{
 			SpotQuantity: &spotQuantity,
 			Locked:       &locked,
@@ -112,7 +122,8 @@ func (h *Handler) UnlockStock(ctx context.Context) error {
 	if h.Rollback == nil || !*h.Rollback {
 		handler.lockOp.state = types.AppStockLockState_AppStockCanceled.Enum()
 	}
-	if err := handler.requireStockAppGood(ctx); err != nil {
+	h.Stocks = handler.lockOp.lock2Stocks()
+	if err := handler.getStockAppGoods(ctx); err != nil {
 		return err
 	}
 

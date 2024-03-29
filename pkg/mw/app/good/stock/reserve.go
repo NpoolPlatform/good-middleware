@@ -17,8 +17,13 @@ type reserveHandler struct {
 }
 
 func (h *reserveHandler) reserveStock(ctx context.Context, tx *ent.Tx) error {
-	spotQuantity := h.stock.SpotQuantity
-	appReserved := h.stock.AppReserved
+	stock, ok := h.stocks[*h.AppGoodID]
+	if !ok {
+		return fmt.Errorf("invalid stock")
+	}
+
+	spotQuantity := stock.stock.SpotQuantity
+	appReserved := stock.stock.AppReserved
 
 	appReserved = h.Reserved.Add(appReserved)
 	spotQuantity = spotQuantity.Sub(*h.Reserved)
@@ -26,20 +31,20 @@ func (h *reserveHandler) reserveStock(ctx context.Context, tx *ent.Tx) error {
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
-	if spotQuantity.Cmp(h.stock.Total) > 0 {
+	if spotQuantity.Cmp(stock.stock.Total) > 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
-	if appReserved.Add(h.stock.Locked).
-		Add(h.stock.WaitStart).
-		Add(h.stock.InService).
+	if appReserved.Add(stock.stock.Locked).
+		Add(stock.stock.WaitStart).
+		Add(stock.stock.InService).
 		Add(spotQuantity).
-		Cmp(h.stock.Total) > 0 {
+		Cmp(stock.stock.Total) > 0 {
 		return fmt.Errorf("stock exhausted")
 	}
 
 	if _, err := stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(h.stock.ID),
+		tx.Stock.UpdateOneID(stock.stock.ID),
 		&stockcrud.Req{
 			SpotQuantity: &spotQuantity,
 			AppReserved:  &appReserved,
@@ -51,8 +56,13 @@ func (h *reserveHandler) reserveStock(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *reserveHandler) reserveAppStock(ctx context.Context, tx *ent.Tx) error {
-	spotQuantity := h.appGoodStock.SpotQuantity
-	reserved := h.appGoodStock.Reserved
+	stock, ok := h.stocks[*h.AppGoodID]
+	if !ok {
+		return fmt.Errorf("invalid stock")
+	}
+
+	spotQuantity := stock.appGoodStock.SpotQuantity
+	reserved := stock.appGoodStock.Reserved
 	spotQuantity = h.Reserved.Add(spotQuantity)
 	reserved = h.Reserved.Add(reserved)
 	if spotQuantity.Cmp(reserved) > 0 {
@@ -60,7 +70,7 @@ func (h *reserveHandler) reserveAppStock(ctx context.Context, tx *ent.Tx) error 
 	}
 
 	if _, err := appstockcrud.UpdateSet(
-		tx.AppStock.UpdateOneID(h.appGoodStock.ID),
+		tx.AppStock.UpdateOneID(stock.appGoodStock.ID),
 		&appstockcrud.Req{
 			SpotQuantity: &spotQuantity,
 			Reserved:     &reserved,
@@ -79,7 +89,7 @@ func (h *Handler) ReserveStock(ctx context.Context) error {
 		},
 	}
 
-	if err := handler.requireStockAppGood(ctx); err != nil {
+	if err := handler.getStockAppGoods(ctx); err != nil {
 		return err
 	}
 

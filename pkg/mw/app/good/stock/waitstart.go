@@ -20,9 +20,14 @@ type waitStartHandler struct {
 }
 
 func (h *waitStartHandler) waitStartStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	locked := h.stock.Locked
-	sold := h.stock.Sold
-	waitStart := h.stock.WaitStart
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok {
+		return fmt.Errorf("invalid stock")
+	}
+
+	locked := stock.stock.Locked
+	sold := stock.stock.Sold
+	waitStart := stock.stock.WaitStart
 
 	waitStart = lock.Units.Add(waitStart)
 	locked = locked.Sub(lock.Units)
@@ -35,16 +40,16 @@ func (h *waitStartHandler) waitStartStock(ctx context.Context, lock *ent.AppStoc
 		return fmt.Errorf("invalid stock")
 	}
 
-	if locked.Add(h.stock.InService).
-		Add(h.stock.WaitStart).
-		Add(h.stock.AppReserved).
-		Add(h.stock.SpotQuantity).
-		Cmp(h.stock.Total) > 0 {
+	if locked.Add(stock.stock.InService).
+		Add(stock.stock.WaitStart).
+		Add(stock.stock.AppReserved).
+		Add(stock.stock.SpotQuantity).
+		Cmp(stock.stock.Total) > 0 {
 		return fmt.Errorf("stock exhausted")
 	}
 
 	if _, err := stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(h.stock.ID),
+		tx.Stock.UpdateOneID(stock.stock.ID),
 		&stockcrud.Req{
 			Locked:    &locked,
 			WaitStart: &waitStart,
@@ -57,10 +62,15 @@ func (h *waitStartHandler) waitStartStock(ctx context.Context, lock *ent.AppStoc
 }
 
 func (h *waitStartHandler) waitStartAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	h.ID = &h.appGoodStock.ID
-	locked := h.appGoodStock.Locked
-	sold := h.appGoodStock.Sold
-	waitStart := h.appGoodStock.WaitStart
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok {
+		return fmt.Errorf("invalid stock")
+	}
+
+	h.ID = &stock.appGoodStock.ID
+	locked := stock.appGoodStock.Locked
+	sold := stock.appGoodStock.Sold
+	waitStart := stock.appGoodStock.WaitStart
 
 	waitStart = lock.Units.Add(waitStart)
 	locked = locked.Sub(lock.Units)
@@ -74,7 +84,7 @@ func (h *waitStartHandler) waitStartAppStock(ctx context.Context, lock *ent.AppS
 	}
 
 	if _, err := appstockcrud.UpdateSet(
-		tx.AppStock.UpdateOneID(h.appGoodStock.ID),
+		tx.AppStock.UpdateOneID(stock.appGoodStock.ID),
 		&appstockcrud.Req{
 			Locked:    &locked,
 			WaitStart: &waitStart,
@@ -101,7 +111,8 @@ func (h *Handler) WaitStartStock(ctx context.Context) error {
 	if err := handler.lockOp.getLocks(ctx); err != nil {
 		return err
 	}
-	if err := handler.requireStockAppGood(ctx); err != nil {
+	h.Stocks = handler.lockOp.lock2Stocks()
+	if err := handler.getStockAppGoods(ctx); err != nil {
 		return err
 	}
 
