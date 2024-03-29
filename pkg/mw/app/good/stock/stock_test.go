@@ -278,8 +278,8 @@ func TestStock(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("reserveStock", reserveStock)
-	// t.Run("lockStock", lockStock)
-	// t.Run("waitStartStock", waitStartStock)
-	// t.Run("lockFailStock", lockFailStock)
-	// t.Run("chargeBackStock", chargeBackStock)
+	t.Run("lockStock", lockStock)
+	t.Run("waitStartStock", waitStartStock)
+	t.Run("lockFailStock", lockFailStock)
+	t.Run("chargeBackStock", chargeBackStock)
 }
