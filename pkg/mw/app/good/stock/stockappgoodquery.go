@@ -326,3 +326,11 @@ func (h *stockAppGoodQuery) getStockAppGoods(ctx context.Context) error {
 	}
 	return h.getAppGoodStocks(ctx)
 }
+
+func (h *stockAppGoodQuery) stockByMiningPool(appGoodID uuid.UUID) bool {
+	stock, ok := h.stocks[appGoodID]
+	if !ok {
+		return false
+	}
+	return stock.powerRental != nil && stock.powerRental.StockMode == types.GoodStockMode_GoodStockByMiningPool.String()
+}
