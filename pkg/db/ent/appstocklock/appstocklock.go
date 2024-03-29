@@ -23,6 +23,8 @@ const (
 	FieldEntID = "ent_id"
 	// FieldAppStockID holds the string denoting the app_stock_id field in the database.
 	FieldAppStockID = "app_stock_id"
+	// FieldAppGoodID holds the string denoting the app_good_id field in the database.
+	FieldAppGoodID = "app_good_id"
 	// FieldUnits holds the string denoting the units field in the database.
 	FieldUnits = "units"
 	// FieldAppSpotUnits holds the string denoting the app_spot_units field in the database.
@@ -45,6 +47,7 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldEntID,
 	FieldAppStockID,
+	FieldAppGoodID,
 	FieldUnits,
 	FieldAppSpotUnits,
 	FieldLockState,
@@ -83,6 +86,8 @@ var (
 	DefaultEntID func() uuid.UUID
 	// DefaultAppStockID holds the default value on creation for the "app_stock_id" field.
 	DefaultAppStockID func() uuid.UUID
+	// DefaultAppGoodID holds the default value on creation for the "app_good_id" field.
+	DefaultAppGoodID func() uuid.UUID
 	// DefaultUnits holds the default value on creation for the "units" field.
 	DefaultUnits decimal.Decimal
 	// DefaultAppSpotUnits holds the default value on creation for the "app_spot_units" field.

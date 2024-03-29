@@ -27,6 +27,8 @@ type AppStockLock struct {
 	EntID uuid.UUID `json:"ent_id,omitempty"`
 	// AppStockID holds the value of the "app_stock_id" field.
 	AppStockID uuid.UUID `json:"app_stock_id,omitempty"`
+	// AppGoodID holds the value of the "app_good_id" field.
+	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// Units holds the value of the "units" field.
 	Units decimal.Decimal `json:"units,omitempty"`
 	// AppSpotUnits holds the value of the "app_spot_units" field.
@@ -50,7 +52,7 @@ func (*AppStockLock) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case appstocklock.FieldLockState, appstocklock.FieldChargeBackState:
 			values[i] = new(sql.NullString)
-		case appstocklock.FieldEntID, appstocklock.FieldAppStockID, appstocklock.FieldExLockID:
+		case appstocklock.FieldEntID, appstocklock.FieldAppStockID, appstocklock.FieldAppGoodID, appstocklock.FieldExLockID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type AppStockLock", columns[i])
@@ -102,6 +104,12 @@ func (asl *AppStockLock) assignValues(columns []string, values []interface{}) er
 				return fmt.Errorf("unexpected type %T for field app_stock_id", values[i])
 			} else if value != nil {
 				asl.AppStockID = *value
+			}
+		case appstocklock.FieldAppGoodID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field app_good_id", values[i])
+			} else if value != nil {
+				asl.AppGoodID = *value
 			}
 		case appstocklock.FieldUnits:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
@@ -175,6 +183,9 @@ func (asl *AppStockLock) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("app_stock_id=")
 	builder.WriteString(fmt.Sprintf("%v", asl.AppStockID))
+	builder.WriteString(", ")
+	builder.WriteString("app_good_id=")
+	builder.WriteString(fmt.Sprintf("%v", asl.AppGoodID))
 	builder.WriteString(", ")
 	builder.WriteString("units=")
 	builder.WriteString(fmt.Sprintf("%v", asl.Units))

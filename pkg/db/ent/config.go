@@ -64,7 +64,6 @@ type hooks struct {
 	RequiredGood           []ent.Hook
 	Score                  []ent.Hook
 	Stock                  []ent.Hook
-	StockLock              []ent.Hook
 	TopMost                []ent.Hook
 	TopMostGood            []ent.Hook
 	TopMostGoodPoster      []ent.Hook

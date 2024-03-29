@@ -14,13 +14,14 @@ import (
 )
 
 type Handler struct {
+	ID *uint32
 	appstockcrud.Req
 	AppSpotLocked     *decimal.Decimal
 	AppStockLockState *types.AppStockLockState
+	AppGoodID         *uuid.UUID
 	LockID            *uuid.UUID
 	Rollback          *bool
 	Stocks            []*LockStock
-	EntIDs            []uuid.UUID
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -59,23 +60,6 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 			return err
 		}
 		h.EntID = &_id
-		return nil
-	}
-}
-
-func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if id == nil {
-			if must {
-				return fmt.Errorf("invalid appgoodid")
-			}
-			return nil
-		}
-		_id, err := uuid.Parse(*id)
-		if err != nil {
-			return err
-		}
-		h.AppGoodID = &_id
 		return nil
 	}
 }
@@ -233,6 +217,23 @@ func WithLockID(id *string, must bool) func(context.Context, *Handler) error {
 			return err
 		}
 		h.LockID = &_id
+		return nil
+	}
+}
+
+func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid appgoodid")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
+		if err != nil {
+			return err
+		}
+		h.AppGoodID = &_id
 		return nil
 	}
 }

@@ -119,6 +119,26 @@ func (aslu *AppStockLockUpdate) ClearAppStockID() *AppStockLockUpdate {
 	return aslu
 }
 
+// SetAppGoodID sets the "app_good_id" field.
+func (aslu *AppStockLockUpdate) SetAppGoodID(u uuid.UUID) *AppStockLockUpdate {
+	aslu.mutation.SetAppGoodID(u)
+	return aslu
+}
+
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (aslu *AppStockLockUpdate) SetNillableAppGoodID(u *uuid.UUID) *AppStockLockUpdate {
+	if u != nil {
+		aslu.SetAppGoodID(*u)
+	}
+	return aslu
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (aslu *AppStockLockUpdate) ClearAppGoodID() *AppStockLockUpdate {
+	aslu.mutation.ClearAppGoodID()
+	return aslu
+}
+
 // SetUnits sets the "units" field.
 func (aslu *AppStockLockUpdate) SetUnits(d decimal.Decimal) *AppStockLockUpdate {
 	aslu.mutation.SetUnits(d)
@@ -379,6 +399,19 @@ func (aslu *AppStockLockUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Column: appstocklock.FieldAppStockID,
 		})
 	}
+	if value, ok := aslu.mutation.AppGoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appstocklock.FieldAppGoodID,
+		})
+	}
+	if aslu.mutation.AppGoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appstocklock.FieldAppGoodID,
+		})
+	}
 	if value, ok := aslu.mutation.Units(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
@@ -551,6 +584,26 @@ func (asluo *AppStockLockUpdateOne) SetNillableAppStockID(u *uuid.UUID) *AppStoc
 // ClearAppStockID clears the value of the "app_stock_id" field.
 func (asluo *AppStockLockUpdateOne) ClearAppStockID() *AppStockLockUpdateOne {
 	asluo.mutation.ClearAppStockID()
+	return asluo
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (asluo *AppStockLockUpdateOne) SetAppGoodID(u uuid.UUID) *AppStockLockUpdateOne {
+	asluo.mutation.SetAppGoodID(u)
+	return asluo
+}
+
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (asluo *AppStockLockUpdateOne) SetNillableAppGoodID(u *uuid.UUID) *AppStockLockUpdateOne {
+	if u != nil {
+		asluo.SetAppGoodID(*u)
+	}
+	return asluo
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (asluo *AppStockLockUpdateOne) ClearAppGoodID() *AppStockLockUpdateOne {
+	asluo.mutation.ClearAppGoodID()
 	return asluo
 }
 
@@ -842,6 +895,19 @@ func (asluo *AppStockLockUpdateOne) sqlSave(ctx context.Context) (_node *AppStoc
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Column: appstocklock.FieldAppStockID,
+		})
+	}
+	if value, ok := asluo.mutation.AppGoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appstocklock.FieldAppGoodID,
+		})
+	}
+	if asluo.mutation.AppGoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appstocklock.FieldAppGoodID,
 		})
 	}
 	if value, ok := asluo.mutation.Units(); ok {

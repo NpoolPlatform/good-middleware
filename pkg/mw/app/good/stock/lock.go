@@ -8,62 +8,24 @@ import (
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
-	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
-	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 
 	"github.com/shopspring/decimal"
 )
 
 type lockHandler struct {
-	*lockopHandler
+	*stockAppGoodQuery
+	lockOp *lockopHandler
 }
 
 func (h *lockHandler) lockStock(ctx context.Context, stock *LockStock, tx *ent.Tx) error {
-	info1, err := tx.
-		AppStock.
-		Query().
-		Where(
-			entappstock.EntID(*stock.EntID),
-			entappstock.DeletedAt(0),
-		).
-		Only(ctx)
-	if err != nil {
-		return err
-	}
-
-	info2, err := tx.
-		AppGoodBase.
-		Query().
-		Where(
-			entappgoodbase.EntID(info1.AppGoodID),
-			entappgoodbase.DeletedAt(0),
-		).
-		Only(ctx)
-	if err != nil {
-		return err
-	}
-
-	info, err := tx.
-		Stock.
-		Query().
-		Where(
-			entstock.GoodID(info2.GoodID),
-			entstock.DeletedAt(0),
-		).
-		ForUpdate().
-		Only(ctx)
-	if err != nil {
-		return err
-	}
-	if info == nil {
+	_stock, ok := h.stocks[*stock.AppGoodID]
+	if !ok {
 		return fmt.Errorf("invalid stock")
 	}
 
-	spotQuantity := info.SpotQuantity
-	locked := info.Locked
-	appReserved := info.AppReserved
+	spotQuantity := _stock.stock.SpotQuantity
+	locked := _stock.stock.Locked
+	appReserved := _stock.stock.AppReserved
 
 	locked = stock.Locked.Add(locked)
 	platformLocked := *stock.Locked
@@ -81,23 +43,23 @@ func (h *lockHandler) lockStock(ctx context.Context, stock *LockStock, tx *ent.T
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
-	if spotQuantity.Cmp(info.Total) > 0 {
+	if spotQuantity.Cmp(_stock.stock.Total) > 0 {
 		return fmt.Errorf("invalid stock")
 	}
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
 		return fmt.Errorf("invalid stock")
 	}
 
-	if locked.Add(info.InService).
-		Add(info.WaitStart).
+	if locked.Add(_stock.stock.InService).
+		Add(_stock.stock.WaitStart).
 		Add(appReserved).
 		Add(spotQuantity).
-		Cmp(info.Total) > 0 {
+		Cmp(_stock.stock.Total) > 0 {
 		return fmt.Errorf("stock exhausted")
 	}
 
 	if _, err := stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(info.ID),
+		tx.Stock.UpdateOneID(_stock.stock.ID),
 		&stockcrud.Req{
 			SpotQuantity: &spotQuantity,
 			Locked:       &locked,
@@ -110,30 +72,19 @@ func (h *lockHandler) lockStock(ctx context.Context, stock *LockStock, tx *ent.T
 }
 
 func (h *lockHandler) lockAppStock(ctx context.Context, stock *LockStock, tx *ent.Tx) error {
-	info, err := tx.
-		AppStock.
-		Query().
-		Where(
-			entappstock.EntID(*stock.EntID),
-			entappstock.DeletedAt(0),
-		).
-		ForUpdate().
-		Only(ctx)
-	if err != nil {
-		return err
-	}
-	if info == nil {
-		return fmt.Errorf("invalid appstock")
+	_stock, ok := h.stocks[*stock.AppGoodID]
+	if !ok {
+		return fmt.Errorf("invalid stock")
 	}
 
-	spotQuantity := info.SpotQuantity
-	locked := info.Locked
+	spotQuantity := _stock.appGoodStock.SpotQuantity
+	locked := _stock.appGoodStock.Locked
 
 	locked = stock.Locked.Add(locked)
 	if stock.AppSpotLocked != nil {
 		spotQuantity = spotQuantity.Sub(*stock.AppSpotLocked)
 	}
-	if spotQuantity.Cmp(info.Reserved) > 0 {
+	if spotQuantity.Cmp(_stock.appGoodStock.Reserved) > 0 {
 		return fmt.Errorf("invalid stock")
 	}
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
@@ -144,7 +95,7 @@ func (h *lockHandler) lockAppStock(ctx context.Context, stock *LockStock, tx *en
 	}
 
 	if _, err := appstockcrud.UpdateSet(
-		tx.AppStock.UpdateOneID(info.ID),
+		tx.AppStock.UpdateOneID(_stock.appGoodStock.ID),
 		&appstockcrud.Req{
 			SpotQuantity: &spotQuantity,
 			Locked:       &locked,
@@ -156,15 +107,24 @@ func (h *lockHandler) lockAppStock(ctx context.Context, stock *LockStock, tx *en
 	return nil
 }
 
-func (h *Handler) LockStock(ctx context.Context) (*npool.Stock, error) {
+func (h *Handler) LockStock(ctx context.Context) error {
 	handler := &lockHandler{
-		lockopHandler: &lockopHandler{
+		stockAppGoodQuery: &stockAppGoodQuery{
+			Handler: h,
+		},
+		lockOp: &lockopHandler{
 			Handler: h,
 		},
 	}
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+
+	if err := handler.getStockAppGoods(ctx); err != nil {
+		return err
+	}
+
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		stock := &LockStock{
 			EntID:         h.EntID,
+			AppGoodID:     h.AppGoodID,
 			Locked:        h.Locked,
 			AppSpotLocked: h.AppSpotLocked,
 		}
@@ -174,46 +134,41 @@ func (h *Handler) LockStock(ctx context.Context) (*npool.Stock, error) {
 		if err := handler.lockStock(ctx, stock, tx); err != nil {
 			return err
 		}
-		if err := handler.createLocks(ctx, tx); err != nil {
+		// TODO: lock mining pool stock too
+		if err := handler.lockOp.createLocks(ctx, tx); err != nil {
 			return err
 		}
 		return nil
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetStock(ctx)
 }
 
-func (h *Handler) LockStocks(ctx context.Context) ([]*npool.Stock, error) {
+func (h *Handler) LockStocks(ctx context.Context) error {
 	handler := &lockHandler{
-		lockopHandler: &lockopHandler{
+		stockAppGoodQuery: &stockAppGoodQuery{
+			Handler: h,
+		},
+		lockOp: &lockopHandler{
 			Handler: h,
 		},
 	}
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+
+	if err := handler.getStockAppGoods(ctx); err != nil {
+		return err
+	}
+
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		for _, stock := range h.Stocks {
-			h.EntIDs = append(h.EntIDs, *stock.EntID)
 			if err := handler.lockAppStock(ctx, stock, tx); err != nil {
 				return err
 			}
 			if err := handler.lockStock(ctx, stock, tx); err != nil {
 				return err
 			}
+			// TODO: lock mining pool stock too
 		}
-		if err := handler.createLocks(ctx, tx); err != nil {
+		if err := handler.lockOp.createLocks(ctx, tx); err != nil {
 			return err
 		}
 		return nil
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	stocks, _, err := h.GetStocks(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return stocks, nil
 }

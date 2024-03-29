@@ -16,6 +16,7 @@ import (
 
 type LockStock struct {
 	EntID         *uuid.UUID
+	AppGoodID     *uuid.UUID
 	Locked        *decimal.Decimal
 	AppSpotLocked *decimal.Decimal
 }
@@ -110,6 +111,7 @@ func (h *lockopHandler) createLocks(ctx context.Context, tx *ent.Tx) error {
 			&appstocklockcrud.Req{
 				EntID:        h.LockID,
 				AppStockID:   h.EntID,
+				AppGoodID:    h.AppGoodID,
 				Units:        h.Locked,
 				AppSpotUnits: h.AppSpotLocked,
 				ExLockID:     h.LockID,
@@ -125,6 +127,7 @@ func (h *lockopHandler) createLocks(ctx context.Context, tx *ent.Tx) error {
 			tx.AppStockLock.Create(),
 			&appstocklockcrud.Req{
 				AppStockID:   stock.EntID,
+				AppGoodID:    h.AppGoodID,
 				Units:        stock.Locked,
 				AppSpotUnits: stock.AppSpotLocked,
 				ExLockID:     h.LockID,
