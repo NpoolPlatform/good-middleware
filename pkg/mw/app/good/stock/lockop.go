@@ -139,3 +139,15 @@ func (h *lockopHandler) createLocks(ctx context.Context, tx *ent.Tx) error {
 
 	return nil
 }
+
+func (h *lockopHandler) lock2Stocks() (reqs []*LockStock) {
+	for _, lock := range h.locks {
+		reqs = append(reqs, &LockStock{
+			EntID:         &lock.EntID,
+			AppGoodID:     &lock.AppGoodID,
+			Locked:        &lock.Units,
+			AppSpotLocked: &lock.AppSpotUnits,
+		})
+	}
+	return
+}

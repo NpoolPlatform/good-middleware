@@ -20,10 +20,15 @@ type chargeBackHandler struct {
 }
 
 func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	spotQuantity := h.stock.SpotQuantity
-	inService := h.stock.InService
-	waitStart := h.stock.WaitStart
-	sold := h.stock.Sold
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok {
+		return fmt.Errorf("invalid stock")
+	}
+
+	spotQuantity := stock.stock.SpotQuantity
+	inService := stock.stock.InService
+	waitStart := stock.stock.WaitStart
+	sold := stock.stock.Sold
 
 	switch lock.LockState {
 	case types.AppStockLockState_AppStockInService.String():
@@ -45,15 +50,15 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppSt
 	}
 
 	if inService.Add(waitStart).
-		Add(h.stock.Locked).
-		Add(h.stock.AppReserved).
+		Add(stock.stock.Locked).
+		Add(stock.stock.AppReserved).
 		Add(spotQuantity).
-		Cmp(h.stock.Total) > 0 {
+		Cmp(stock.stock.Total) > 0 {
 		return fmt.Errorf("stock exhausted")
 	}
 
 	if _, err := stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(h.stock.ID),
+		tx.Stock.UpdateOneID(stock.stock.ID),
 		&stockcrud.Req{
 			SpotQuantity: &spotQuantity,
 			InService:    &inService,
@@ -67,9 +72,14 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppSt
 }
 
 func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	inService := h.appGoodStock.InService
-	waitStart := h.appGoodStock.WaitStart
-	sold := h.appGoodStock.Sold
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok {
+		return fmt.Errorf("invalid stock")
+	}
+
+	inService := stock.appGoodStock.InService
+	waitStart := stock.appGoodStock.WaitStart
+	sold := stock.appGoodStock.Sold
 
 	switch lock.LockState {
 	case types.AppStockLockState_AppStockInService.String():
@@ -90,7 +100,7 @@ func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, lock *ent.Ap
 	}
 
 	if _, err := appstockcrud.UpdateSet(
-		tx.AppStock.UpdateOneID(h.appGoodStock.ID),
+		tx.AppStock.UpdateOneID(stock.appGoodStock.ID),
 		&appstockcrud.Req{
 			InService: &inService,
 			WaitStart: &waitStart,
@@ -117,7 +127,8 @@ func (h *Handler) ChargeBackStock(ctx context.Context) error {
 	if err := handler.lockOp.getLocks(ctx); err != nil {
 		return err
 	}
-	if err := handler.requireStockAppGood(ctx); err != nil {
+	h.Stocks = handler.lockOp.lock2Stocks()
+	if err := handler.getStockAppGoods(ctx); err != nil {
 		return err
 	}
 
