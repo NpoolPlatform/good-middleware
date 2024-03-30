@@ -367,7 +367,7 @@ func (h *Handler) GetPowerRentals(ctx context.Context) ([]*npool.PowerRental, ui
 			return err
 		}
 
-		return handler.getMiningGoodStocks(_ctx, cli.Debug())
+		return handler.getMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
 		return nil, 0, err
