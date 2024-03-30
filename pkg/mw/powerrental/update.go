@@ -11,6 +11,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 )
 
 type updateHandler struct {
@@ -155,6 +156,12 @@ func (h *updateHandler) updateMiningGoodStocks(ctx context.Context, tx *ent.Tx) 
 func (h *updateHandler) _validateStock() error {
 	if h.StockReq.Total == nil {
 		h.StockReq.Total = &h.stock.Total
+	}
+	if h.StockMode == nil {
+		h.StockMode = func() *types.GoodStockMode {
+			e := types.GoodStockMode(types.GoodStockMode_value[h.powerRental.StockMode])
+			return &e
+		}()
 	}
 
 	miningGoodStockReqs := h.MiningGoodStockReqs

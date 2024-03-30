@@ -256,6 +256,7 @@ func (h *queryHandler) getMiningGoodStocks(ctx context.Context, cli *ent.Client)
 	}
 
 	return stm.Select(
+		entmininggoodstock.FieldEntID,
 		entmininggoodstock.FieldGoodStockID,
 		entmininggoodstock.FieldMiningPoolID,
 		entmininggoodstock.FieldPoolGoodUserID,

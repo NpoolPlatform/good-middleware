@@ -78,11 +78,13 @@ var (
 
 		MiningGoodStocks: []*stockmwpb.MiningGoodStock{
 			{
+				EntID:          uuid.NewString(),
 				MiningPoolID:   uuid.NewString(),
 				PoolGoodUserID: uuid.NewString(),
 				Total:          decimal.NewFromInt(70).String(),
 			},
 			{
+				EntID:          uuid.NewString(),
 				MiningPoolID:   uuid.NewString(),
 				PoolGoodUserID: uuid.NewString(),
 				Total:          decimal.NewFromInt(50).String(),
@@ -170,6 +172,7 @@ func createPowerRental(t *testing.T) {
 	miningGoodStocks := func() (reqs []*stockmwpb.MiningGoodStockReq) {
 		for _, stock := range ret.MiningGoodStocks {
 			reqs = append(reqs, &stockmwpb.MiningGoodStockReq{
+				EntID:          &stock.EntID,
 				MiningPoolID:   &stock.MiningPoolID,
 				PoolGoodUserID: &stock.PoolGoodUserID,
 				Total:          &stock.Total,
@@ -248,6 +251,24 @@ func createPowerRental(t *testing.T) {
 
 func updatePowerRental(t *testing.T) {
 	ret.GoodTotal = decimal.NewFromInt(10000).String()
+	miningGoodStocks := func() (reqs []*stockmwpb.MiningGoodStockReq) {
+		remain := decimal.NewFromInt(0)
+		for i, stock := range ret.MiningGoodStocks {
+			if i == 0 {
+				remain = decimal.RequireFromString(ret.GoodTotal).Sub(decimal.RequireFromString(stock.Total))
+				continue
+			}
+			stock.Total = remain.String()
+			reqs = append(reqs, &stockmwpb.MiningGoodStockReq{
+				EntID:          &stock.EntID,
+				MiningPoolID:   &stock.MiningPoolID,
+				PoolGoodUserID: &stock.PoolGoodUserID,
+				Total:          &stock.Total,
+			})
+			return
+		}
+		return
+	}()
 
 	h1, err := NewHandler(
 		context.Background(),
@@ -272,6 +293,7 @@ func updatePowerRental(t *testing.T) {
 		WithPurchasable(&ret.Purchasable, true),
 		WithOnline(&ret.Online, true),
 		WithTotal(&ret.GoodTotal, true),
+		WithStocks(miningGoodStocks, true),
 	)
 	assert.Nil(t, err)
 

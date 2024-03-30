@@ -10,6 +10,7 @@ import (
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 	stock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/stock"
 	mininggoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/stock/mining"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 )
@@ -187,6 +188,9 @@ func (h *createHandler) createMiningGoodStocks(ctx context.Context, tx *ent.Tx) 
 func (h *createHandler) _validateStock() error {
 	if h.StockReq.EntID == nil {
 		h.StockReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
+	}
+	if h.StockMode == nil {
+		h.StockMode = types.GoodStockMode_GoodStockByUnique.Enum()
 	}
 	for _, poolStock := range h.MiningGoodStockReqs {
 		poolStock.GoodStockID = h.StockReq.EntID

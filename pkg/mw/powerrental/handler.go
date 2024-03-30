@@ -36,9 +36,7 @@ type Handler struct {
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
-		Req: powerrentalcrud.Req{
-			StockMode: types.GoodStockMode_GoodStockByUnique.Enum(),
-		},
+		Req:              powerrentalcrud.Req{},
 		GoodBaseReq:      &goodbasecrud.Req{},
 		StockReq:         &stockcrud.Req{},
 		PowerRentalConds: &powerrentalcrud.Conds{},
