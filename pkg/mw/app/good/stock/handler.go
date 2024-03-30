@@ -6,8 +6,10 @@ import (
 	"fmt"
 
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
+	appmininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
+	appmininggoodstockpwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock/mining"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -16,11 +18,12 @@ import (
 type Handler struct {
 	ID *uint32
 	appstockcrud.Req
-	AppSpotLocked     *decimal.Decimal
-	AppStockLockState *types.AppStockLockState
-	LockID            *uuid.UUID
-	Rollback          *bool
-	Stocks            []*LockStock
+	AppMiningGoodStockReqs []*appmininggoodstockcrud.Req
+	AppSpotLocked          *decimal.Decimal
+	AppStockLockState      *types.AppStockLockState
+	LockID                 *uuid.UUID
+	Rollback               *bool
+	Stocks                 []*LockStock
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -292,6 +295,34 @@ func WithAppStockLockState(e *types.AppStockLockState, must bool) func(context.C
 			return fmt.Errorf("invalid appstocklockstate")
 		}
 		h.AppStockLockState = e
+		return nil
+	}
+}
+
+func WithAppMiningGoodStocks(stocks []*appmininggoodstockpwpb.StockReq, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		for _, _stock := range stocks {
+			entID := func() *uuid.UUID {
+				uid, err := uuid.Parse(_stock.GetEntID())
+				if err != nil {
+					return nil
+				}
+				return &uid
+			}()
+			miningGoodStockID, err := uuid.Parse(_stock.GetMiningGoodStockID())
+			if err != nil {
+				return err
+			}
+			amount, err := decimal.NewFromString(_stock.GetReserved())
+			if err != nil {
+				return err
+			}
+			h.AppMiningGoodStockReqs = append(h.AppMiningGoodStockReqs, &appmininggoodstockcrud.Req{
+				EntID:             entID,
+				MiningGoodStockID: &miningGoodStockID,
+				Reserved:          &amount,
+			})
+		}
 		return nil
 	}
 }

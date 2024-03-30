@@ -7,7 +7,6 @@ import (
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	appgoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
-	appgoodminingstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
 	apppowerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
@@ -25,24 +24,21 @@ import (
 type Handler struct {
 	ID *uint32
 	apppowerrentalcrud.Req
-	AppGoodBaseReq         *appgoodbasecrud.Req
-	AppGoodStockReq        *appgoodstockcrud.Req
-	AppMiningGoodStockReqs []*appgoodminingstockcrud.Req
-	AppPowerRentalConds    *apppowerrentalcrud.Conds
-	PowerRentalConds       *powerrentalcrud.Conds
-	AppGoodBaseConds       *appgoodbasecrud.Conds
-	GoodBaseConds          *goodbasecrud.Conds
-	GoodCoinConds          *goodcoincrud.Conds
-	Offset                 int32
-	Limit                  int32
+	AppGoodBaseReq      *appgoodbasecrud.Req
+	AppGoodStockReq     *appgoodstockcrud.Req
+	AppPowerRentalConds *apppowerrentalcrud.Conds
+	PowerRentalConds    *powerrentalcrud.Conds
+	AppGoodBaseConds    *appgoodbasecrud.Conds
+	GoodBaseConds       *goodbasecrud.Conds
+	GoodCoinConds       *goodcoincrud.Conds
+	Offset              int32
+	Limit               int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
-		AppGoodBaseReq: &appgoodbasecrud.Req{},
-		AppGoodStockReq: &appgoodstockcrud.Req{
-			Reserved: func() *decimal.Decimal { d := decimal.NewFromInt(0); return &d }(),
-		},
+		AppGoodBaseReq:      &appgoodbasecrud.Req{},
+		AppGoodStockReq:     &appgoodstockcrud.Req{},
 		AppPowerRentalConds: &apppowerrentalcrud.Conds{},
 		PowerRentalConds:    &powerrentalcrud.Conds{},
 		AppGoodBaseConds:    &appgoodbasecrud.Conds{},
@@ -410,54 +406,6 @@ func WithAppGoodStockID(s *string, must bool) func(context.Context, *Handler) er
 			return err
 		}
 		h.AppGoodStockReq.EntID = &id
-		return nil
-	}
-}
-
-func WithReserved(s *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return fmt.Errorf("invalid reserved")
-			}
-			return nil
-		}
-		amount, err := decimal.NewFromString(*s)
-		if err != nil {
-			return err
-		}
-		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
-			return fmt.Errorf("invalid reserved")
-		}
-		h.AppGoodStockReq.Reserved = &amount
-		return nil
-	}
-}
-
-func WithMiningGoodStocks(stocks []*appminingstockmwpb.StockReq, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		for _, _stock := range stocks {
-			entID := func() *uuid.UUID {
-				uid, err := uuid.Parse(_stock.GetEntID())
-				if err != nil {
-					return nil
-				}
-				return &uid
-			}()
-			miningGoodStockID, err := uuid.Parse(_stock.GetMiningGoodStockID())
-			if err != nil {
-				return err
-			}
-			amount, err := decimal.NewFromString(_stock.GetReserved())
-			if err != nil {
-				return err
-			}
-			h.AppMiningGoodStockReqs = append(h.AppMiningGoodStockReqs, &appgoodminingstockcrud.Req{
-				EntID:             entID,
-				MiningGoodStockID: &miningGoodStockID,
-				Reserved:          &amount,
-			})
-		}
 		return nil
 	}
 }

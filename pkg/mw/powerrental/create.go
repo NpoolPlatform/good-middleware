@@ -13,6 +13,7 @@ import (
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 type createHandler struct {
@@ -205,6 +206,12 @@ func (h *createHandler) _validateStock() error {
 	return h.validateStock()
 }
 
+func (h *createHandler) formalizePowerRentalParameters() {
+	if h.UnitLockDeposit == nil {
+		h.UnitLockDeposit = func() *decimal.Decimal { amount := decimal.NewFromInt(0); return &amount }()
+	}
+}
+
 func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	handler := &createHandler{
 		validateStockHandler: &validateStockHandler{
@@ -212,6 +219,7 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 		},
 	}
 
+	handler.formalizePowerRentalParameters()
 	if err := handler._validateStock(); err != nil {
 		return err
 	}

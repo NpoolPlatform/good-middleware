@@ -285,6 +285,8 @@ func (h *stockAppGoodQuery) formalizeStockEntIDs() error {
 			return err
 		}
 	}
+	fmt.Printf("stock ent ids: %v\n", h.appGoodStockEntIDs)
+	fmt.Printf("mining stock ent ids: %v\n", h.appMiningGoodStockEntIDs)
 	if len(h.appGoodStockEntIDs) == 0 && len(h.appMiningGoodStockEntIDs) == 0 {
 		return fmt.Errorf("invalid stock")
 	}

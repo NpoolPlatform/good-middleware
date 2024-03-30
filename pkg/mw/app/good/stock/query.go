@@ -11,6 +11,8 @@ import (
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	entpowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
 
 	"github.com/shopspring/decimal"
@@ -49,7 +51,7 @@ func (h *queryHandler) queryStocks(cli *ent.Client) (*ent.AppStockSelect, error)
 
 func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 	t := sql.Table(entappstock.Table)
-	s.LeftJoin(t).
+	s.Join(t).
 		On(
 			s.C(entappstock.FieldID),
 			t.C(entappstock.FieldID),
@@ -71,22 +73,29 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
 	t1 := sql.Table(entappgoodbase.Table)
 	t2 := sql.Table(entgoodbase.Table)
+	t3 := sql.Table(entpowerrental.Table)
 
-	s.LeftJoin(t1).
+	s.Join(t1).
 		On(
 			s.C(entappstock.FieldAppGoodID),
 			t1.C(entappgoodbase.FieldEntID),
 		).
-		LeftJoin(t2).
+		Join(t2).
 		On(
 			t1.C(entappgoodbase.FieldGoodID),
 			t2.C(entgoodbase.FieldEntID),
+		).
+		LeftJoin(t3).
+		On(
+			t1.C(entappgoodbase.FieldGoodID),
+			t3.C(entpowerrental.FieldGoodID),
 		).
 		AppendSelect(
 			t1.C(entappgoodbase.FieldAppID),
 			t1.C(entappgoodbase.FieldGoodID),
 			sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
 			sql.As(t2.C(entgoodbase.FieldName), "good_name"),
+			t3.C(entpowerrental.FieldStockMode),
 		)
 }
 
@@ -109,42 +118,13 @@ func (h *queryHandler) scan(ctx context.Context) error {
 
 func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
-		amount, err := decimal.NewFromString(info.Reserved)
-		if err != nil {
-			info.Reserved = decimal.NewFromInt(0).String()
-		} else {
-			info.Reserved = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.Locked)
-		if err != nil {
-			info.Locked = decimal.NewFromInt(0).String()
-		} else {
-			info.Locked = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.InService)
-		if err != nil {
-			info.InService = decimal.NewFromInt(0).String()
-		} else {
-			info.InService = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.WaitStart)
-		if err != nil {
-			info.WaitStart = decimal.NewFromInt(0).String()
-		} else {
-			info.WaitStart = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.Sold)
-		if err != nil {
-			info.Sold = decimal.NewFromInt(0).String()
-		} else {
-			info.Sold = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.SpotQuantity)
-		if err != nil {
-			info.SpotQuantity = decimal.NewFromInt(0).String()
-		} else {
-			info.SpotQuantity = amount.String()
-		}
+		info.Reserved = func() string { amount, _ := decimal.NewFromString(info.Reserved); return amount.String() }()
+		info.SpotQuantity = func() string { amount, _ := decimal.NewFromString(info.SpotQuantity); return amount.String() }()
+		info.Locked = func() string { amount, _ := decimal.NewFromString(info.Locked); return amount.String() }()
+		info.InService = func() string { amount, _ := decimal.NewFromString(info.InService); return amount.String() }()
+		info.WaitStart = func() string { amount, _ := decimal.NewFromString(info.WaitStart); return amount.String() }()
+		info.Sold = func() string { amount, _ := decimal.NewFromString(info.Sold); return amount.String() }()
+		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
 	}
 }
 
