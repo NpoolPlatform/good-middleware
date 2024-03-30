@@ -8,6 +8,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
+	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
@@ -16,12 +17,15 @@ import (
 	entdevicetype "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	entmanufacturer "github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	entmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
 	entpowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	entvendorbrand "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	entvendorlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
+	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental"
+	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -29,10 +33,11 @@ import (
 
 type queryHandler struct {
 	*Handler
-	stmSelect *ent.AppGoodBaseSelect
-	stmCount  *ent.AppGoodBaseSelect
-	infos     []*npool.PowerRental
-	total     uint32
+	stmSelect        *ent.AppGoodBaseSelect
+	stmCount         *ent.AppGoodBaseSelect
+	infos            []*npool.PowerRental
+	miningGoodStocks []*stockmwpb.MiningGoodStockInfo
+	total            uint32
 }
 
 func (h *queryHandler) selectAppGoodBase(stm *ent.AppGoodBaseQuery) *ent.AppGoodBaseSelect {
@@ -287,8 +292,45 @@ func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
 }
 
+func (h *queryHandler) getMiningGoodStocks(ctx context.Context, cli *ent.Client) error {
+	goodStockIDs := func() (uids []uuid.UUID) {
+		for _, info := range h.infos {
+			if info.StockModeStr != types.GoodStockMode_GoodStockByMiningPool.String() {
+				continue
+			}
+			uids = append(uids, uuid.MustParse(info.GoodStockID))
+		}
+		return
+	}()
+
+	stm, err := mininggoodstockcrud.SetQueryConds(
+		cli.MiningGoodStock.Query(),
+		&mininggoodstockcrud.Conds{
+			GoodStockIDs: &cruder.Cond{Op: cruder.IN, Val: goodStockIDs},
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	return stm.Select(
+		entmininggoodstock.FieldGoodStockID,
+		entmininggoodstock.FieldMiningPoolID,
+		entmininggoodstock.FieldPoolGoodUserID,
+		entmininggoodstock.FieldTotal,
+		entmininggoodstock.FieldSpotQuantity,
+	).Scan(ctx, &h.miningGoodStocks)
+}
+
 //nolint:funlen,gocyclo
 func (h *queryHandler) formalize() {
+	goodMiningStocks := map[string][]*stockmwpb.MiningGoodStockInfo{}
+
+	for _, stock := range h.miningGoodStocks {
+		stock.Total = func() string { amount, _ := decimal.NewFromString(stock.Total); return amount.String() }()
+		stock.SpotQuantity = func() string { amount, _ := decimal.NewFromString(stock.SpotQuantity); return amount.String() }()
+		goodMiningStocks[stock.GoodStockID] = append(goodMiningStocks[stock.GoodStockID], stock)
+	}
 	for _, info := range h.infos {
 		info.UnitPrice = func() string { amount, _ := decimal.NewFromString(info.UnitPrice); return amount.String() }()
 		info.QuantityUnitAmount = func() string { amount, _ := decimal.NewFromString(info.QuantityUnitAmount); return amount.String() }()
@@ -306,6 +348,7 @@ func (h *queryHandler) formalize() {
 		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
+		info.MiningGoodStocks = goodMiningStocks[info.GoodStockID]
 	}
 }
 
@@ -324,7 +367,10 @@ func (h *Handler) GetPowerRental(ctx context.Context) (*npool.PowerRental, error
 		handler.stmSelect.
 			Offset(0).
 			Limit(2)
-		return handler.scan(_ctx)
+		if err := handler.scan(_ctx); err != nil {
+			return err
+		}
+		return handler.getMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
 		return nil, err
@@ -370,7 +416,10 @@ func (h *Handler) GetPowerRentals(ctx context.Context) ([]*npool.PowerRental, ui
 		handler.stmSelect.
 			Offset(int(handler.Offset)).
 			Limit(int(handler.Limit))
-		return handler.scan(_ctx)
+		if err := handler.scan(_ctx); err != nil {
+			return err
+		}
+		return handler.getMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
 		return nil, 0, err

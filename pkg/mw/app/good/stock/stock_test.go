@@ -114,6 +114,7 @@ func setup(t *testing.T) func(*testing.T) {
 		goodbase1.WithName(&ret.GoodName, true),
 		goodbase1.WithServiceStartAt(func() *uint32 { u := uint32(time.Now().Unix()); return &u }(), true),
 		goodbase1.WithStartMode(func() *types.GoodStartMode { e := types.GoodStartMode_GoodStartModeInstantly; return &e }(), true),
+		// Stock mode is unique in default
 	)
 	assert.Nil(t, err)
 
