@@ -190,6 +190,9 @@ func (h *createHandler) _validateStock() error {
 	}
 	for _, poolStock := range h.MiningGoodStockReqs {
 		poolStock.GoodStockID = h.StockReq.EntID
+		if poolStock.EntID == nil {
+			poolStock.EntID = func() *uuid.UUID { s := uuid.New(); return &s }()
+		}
 	}
 	if h.GoodBaseReq.EntID == nil {
 		h.GoodBaseReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()

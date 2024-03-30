@@ -14,6 +14,7 @@ import (
 	manufacturer1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device/manufacturer"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
+	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/powerrental"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -56,7 +57,7 @@ var (
 		QuantityUnitAmount: decimal.NewFromInt(2).String(),
 		DeliveryAt:         uint32(time.Now().Unix()),
 		DurationType:       types.GoodDurationType_GoodDurationByDay,
-		StockMode:          types.GoodStockMode_GoodStockByUnique,
+		StockMode:          types.GoodStockMode_GoodStockByMiningPool,
 
 		GoodType:             types.GoodType_PowerRental,
 		BenefitType:          types.BenefitType_BenefitTypePlatform,
@@ -74,6 +75,19 @@ var (
 		GoodWaitStart:    decimal.NewFromInt(0).String(),
 		GoodSold:         decimal.NewFromInt(0).String(),
 		GoodAppReserved:  decimal.NewFromInt(0).String(),
+
+		MiningGoodStocks: []*stockmwpb.MiningGoodStock{
+			{
+				MiningPoolID:   uuid.NewString(),
+				PoolGoodUserID: uuid.NewString(),
+				Total:          decimal.NewFromInt(70).String(),
+			},
+			{
+				MiningPoolID:   uuid.NewString(),
+				PoolGoodUserID: uuid.NewString(),
+				Total:          decimal.NewFromInt(50).String(),
+			},
+		},
 	}
 )
 
@@ -84,6 +98,14 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.DurationTypeStr = ret.DurationType.String()
 	ret.StartModeStr = ret.StartMode.String()
 	ret.StockModeStr = ret.StockMode.String()
+	for _, stock := range ret.MiningGoodStocks {
+		stock.GoodStockID = ret.GoodStockID
+		stock.SpotQuantity = stock.Total
+		stock.Locked = decimal.NewFromInt(0).String()
+		stock.InService = decimal.NewFromInt(0).String()
+		stock.WaitStart = decimal.NewFromInt(0).String()
+		stock.Sold = decimal.NewFromInt(0).String()
+	}
 
 	manufacturerID := uuid.NewString()
 	h1, err := manufacturer1.NewHandler(
@@ -145,6 +167,17 @@ func setup(t *testing.T) func(*testing.T) {
 }
 
 func createPowerRental(t *testing.T) {
+	miningGoodStocks := func() (reqs []*stockmwpb.MiningGoodStockReq) {
+		for _, stock := range ret.MiningGoodStocks {
+			reqs = append(reqs, &stockmwpb.MiningGoodStockReq{
+				MiningPoolID:   &stock.MiningPoolID,
+				PoolGoodUserID: &stock.PoolGoodUserID,
+				Total:          &stock.Total,
+			})
+		}
+		return
+	}()
+
 	h1, err := NewHandler(
 		context.Background(),
 		WithEntID(&ret.EntID, true),
@@ -168,6 +201,8 @@ func createPowerRental(t *testing.T) {
 		WithOnline(&ret.Online, true),
 		WithStockID(&ret.GoodStockID, true),
 		WithTotal(&ret.GoodTotal, true),
+		WithStockMode(&ret.StockMode, true),
+		WithStocks(miningGoodStocks, true),
 	)
 	assert.Nil(t, err)
 
@@ -307,7 +342,7 @@ func TestPowerRental(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createPowerRental", createPowerRental)
-	// t.Run("updatePowerRental", updatePowerRental)
+	t.Run("updatePowerRental", updatePowerRental)
 	// t.Run("getPowerRental", getPowerRental)
 	// t.Run("getPowerRentals", getPowerRentals)
 	// t.Run("deletePowerRental", deletePowerRental)

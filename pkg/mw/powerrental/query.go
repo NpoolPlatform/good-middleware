@@ -237,7 +237,7 @@ func (h *queryHandler) scan(ctx context.Context) error {
 func (h *queryHandler) getMiningGoodStocks(ctx context.Context, cli *ent.Client) error {
 	goodStockIDs := func() (uids []uuid.UUID) {
 		for _, info := range h.infos {
-			if info.StockMode != types.GoodStockMode_GoodStockByMiningPool {
+			if info.StockModeStr != types.GoodStockMode_GoodStockByMiningPool.String() {
 				continue
 			}
 			uids = append(uids, uuid.MustParse(info.GoodStockID))
@@ -257,6 +257,8 @@ func (h *queryHandler) getMiningGoodStocks(ctx context.Context, cli *ent.Client)
 
 	return stm.Select(
 		entmininggoodstock.FieldGoodStockID,
+		entmininggoodstock.FieldMiningPoolID,
+		entmininggoodstock.FieldPoolGoodUserID,
 		entmininggoodstock.FieldTotal,
 		entmininggoodstock.FieldSpotQuantity,
 		entmininggoodstock.FieldLocked,
@@ -360,7 +362,12 @@ func (h *Handler) GetPowerRentals(ctx context.Context) ([]*npool.PowerRental, ui
 		handler.stmSelect.
 			Offset(int(handler.Offset)).
 			Limit(int(handler.Limit))
-		return handler.scan(_ctx)
+
+		if err := handler.scan(_ctx); err != nil {
+			return err
+		}
+
+		return handler.getMiningGoodStocks(_ctx, cli.Debug())
 	})
 	if err != nil {
 		return nil, 0, err
