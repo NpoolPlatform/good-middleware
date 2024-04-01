@@ -46,14 +46,6 @@ func (h *Handler) CreateTopMost(ctx context.Context) (*npool.TopMost, error) {
 		return nil, err
 	}
 
-	key := fmt.Sprintf("%v:%v:%v", basetypes.Prefix_PrefixCreateTopMost, *h.AppID, h.TopMostType)
-	if err := redis2.TryLock(key, 0); err != nil {
-		return nil, err
-	}
-	defer func() {
-		_ = redis2.Unlock(key)
-	}()
-
 	if *h.TopMostType != types.GoodTopMostType_TopMostPromotion {
 		h.Conds = &topmostcrud.Conds{
 			AppID:       &cruder.Cond{Op: cruder.EQ, Val: *h.AppID},
