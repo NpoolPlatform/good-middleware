@@ -1831,16 +1831,12 @@ func init() {
 	likeDescEntID := likeMixinFields1[1].Descriptor()
 	// like.DefaultEntID holds the default value on creation for the ent_id field.
 	like.DefaultEntID = likeDescEntID.Default.(func() uuid.UUID)
-	// likeDescAppID is the schema descriptor for app_id field.
-	likeDescAppID := likeFields[0].Descriptor()
-	// like.DefaultAppID holds the default value on creation for the app_id field.
-	like.DefaultAppID = likeDescAppID.Default.(func() uuid.UUID)
 	// likeDescUserID is the schema descriptor for user_id field.
-	likeDescUserID := likeFields[1].Descriptor()
+	likeDescUserID := likeFields[0].Descriptor()
 	// like.DefaultUserID holds the default value on creation for the user_id field.
 	like.DefaultUserID = likeDescUserID.Default.(func() uuid.UUID)
 	// likeDescAppGoodID is the schema descriptor for app_good_id field.
-	likeDescAppGoodID := likeFields[2].Descriptor()
+	likeDescAppGoodID := likeFields[1].Descriptor()
 	// like.DefaultAppGoodID holds the default value on creation for the app_good_id field.
 	like.DefaultAppGoodID = likeDescAppGoodID.Default.(func() uuid.UUID)
 	mininggoodstockMixin := schema.MiningGoodStock{}.Mixin()

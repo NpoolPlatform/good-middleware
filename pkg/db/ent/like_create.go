@@ -78,20 +78,6 @@ func (lc *LikeCreate) SetNillableEntID(u *uuid.UUID) *LikeCreate {
 	return lc
 }
 
-// SetAppID sets the "app_id" field.
-func (lc *LikeCreate) SetAppID(u uuid.UUID) *LikeCreate {
-	lc.mutation.SetAppID(u)
-	return lc
-}
-
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (lc *LikeCreate) SetNillableAppID(u *uuid.UUID) *LikeCreate {
-	if u != nil {
-		lc.SetAppID(*u)
-	}
-	return lc
-}
-
 // SetUserID sets the "user_id" field.
 func (lc *LikeCreate) SetUserID(u uuid.UUID) *LikeCreate {
 	lc.mutation.SetUserID(u)
@@ -239,13 +225,6 @@ func (lc *LikeCreate) defaults() error {
 		v := like.DefaultEntID()
 		lc.mutation.SetEntID(v)
 	}
-	if _, ok := lc.mutation.AppID(); !ok {
-		if like.DefaultAppID == nil {
-			return fmt.Errorf("ent: uninitialized like.DefaultAppID (forgotten import ent/runtime?)")
-		}
-		v := like.DefaultAppID()
-		lc.mutation.SetAppID(v)
-	}
 	if _, ok := lc.mutation.UserID(); !ok {
 		if like.DefaultUserID == nil {
 			return fmt.Errorf("ent: uninitialized like.DefaultUserID (forgotten import ent/runtime?)")
@@ -345,14 +324,6 @@ func (lc *LikeCreate) createSpec() (*Like, *sqlgraph.CreateSpec) {
 			Column: like.FieldEntID,
 		})
 		_node.EntID = value
-	}
-	if value, ok := lc.mutation.AppID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: like.FieldAppID,
-		})
-		_node.AppID = value
 	}
 	if value, ok := lc.mutation.UserID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -495,24 +466,6 @@ func (u *LikeUpsert) SetEntID(v uuid.UUID) *LikeUpsert {
 // UpdateEntID sets the "ent_id" field to the value that was provided on create.
 func (u *LikeUpsert) UpdateEntID() *LikeUpsert {
 	u.SetExcluded(like.FieldEntID)
-	return u
-}
-
-// SetAppID sets the "app_id" field.
-func (u *LikeUpsert) SetAppID(v uuid.UUID) *LikeUpsert {
-	u.Set(like.FieldAppID, v)
-	return u
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *LikeUpsert) UpdateAppID() *LikeUpsert {
-	u.SetExcluded(like.FieldAppID)
-	return u
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (u *LikeUpsert) ClearAppID() *LikeUpsert {
-	u.SetNull(like.FieldAppID)
 	return u
 }
 
@@ -688,27 +641,6 @@ func (u *LikeUpsertOne) SetEntID(v uuid.UUID) *LikeUpsertOne {
 func (u *LikeUpsertOne) UpdateEntID() *LikeUpsertOne {
 	return u.Update(func(s *LikeUpsert) {
 		s.UpdateEntID()
-	})
-}
-
-// SetAppID sets the "app_id" field.
-func (u *LikeUpsertOne) SetAppID(v uuid.UUID) *LikeUpsertOne {
-	return u.Update(func(s *LikeUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *LikeUpsertOne) UpdateAppID() *LikeUpsertOne {
-	return u.Update(func(s *LikeUpsert) {
-		s.UpdateAppID()
-	})
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (u *LikeUpsertOne) ClearAppID() *LikeUpsertOne {
-	return u.Update(func(s *LikeUpsert) {
-		s.ClearAppID()
 	})
 }
 
@@ -1057,27 +989,6 @@ func (u *LikeUpsertBulk) SetEntID(v uuid.UUID) *LikeUpsertBulk {
 func (u *LikeUpsertBulk) UpdateEntID() *LikeUpsertBulk {
 	return u.Update(func(s *LikeUpsert) {
 		s.UpdateEntID()
-	})
-}
-
-// SetAppID sets the "app_id" field.
-func (u *LikeUpsertBulk) SetAppID(v uuid.UUID) *LikeUpsertBulk {
-	return u.Update(func(s *LikeUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *LikeUpsertBulk) UpdateAppID() *LikeUpsertBulk {
-	return u.Update(func(s *LikeUpsert) {
-		s.UpdateAppID()
-	})
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (u *LikeUpsertBulk) ClearAppID() *LikeUpsertBulk {
-	return u.Update(func(s *LikeUpsert) {
-		s.ClearAppID()
 	})
 }
 

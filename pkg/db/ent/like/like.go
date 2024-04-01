@@ -20,8 +20,6 @@ const (
 	FieldDeletedAt = "deleted_at"
 	// FieldEntID holds the string denoting the ent_id field in the database.
 	FieldEntID = "ent_id"
-	// FieldAppID holds the string denoting the app_id field in the database.
-	FieldAppID = "app_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
 	// FieldAppGoodID holds the string denoting the app_good_id field in the database.
@@ -39,7 +37,6 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldDeletedAt,
 	FieldEntID,
-	FieldAppID,
 	FieldUserID,
 	FieldAppGoodID,
 	FieldLike,
@@ -74,8 +71,6 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultEntID holds the default value on creation for the "ent_id" field.
 	DefaultEntID func() uuid.UUID
-	// DefaultAppID holds the default value on creation for the "app_id" field.
-	DefaultAppID func() uuid.UUID
 	// DefaultUserID holds the default value on creation for the "user_id" field.
 	DefaultUserID func() uuid.UUID
 	// DefaultAppGoodID holds the default value on creation for the "app_good_id" field.

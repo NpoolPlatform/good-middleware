@@ -32836,7 +32836,6 @@ type LikeMutation struct {
 	deleted_at    *uint32
 	adddeleted_at *int32
 	ent_id        *uuid.UUID
-	app_id        *uuid.UUID
 	user_id       *uuid.UUID
 	app_good_id   *uuid.UUID
 	like          *bool
@@ -33154,55 +33153,6 @@ func (m *LikeMutation) ResetEntID() {
 	m.ent_id = nil
 }
 
-// SetAppID sets the "app_id" field.
-func (m *LikeMutation) SetAppID(u uuid.UUID) {
-	m.app_id = &u
-}
-
-// AppID returns the value of the "app_id" field in the mutation.
-func (m *LikeMutation) AppID() (r uuid.UUID, exists bool) {
-	v := m.app_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAppID returns the old "app_id" field's value of the Like entity.
-// If the Like object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *LikeMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAppID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
-	}
-	return oldValue.AppID, nil
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (m *LikeMutation) ClearAppID() {
-	m.app_id = nil
-	m.clearedFields[like.FieldAppID] = struct{}{}
-}
-
-// AppIDCleared returns if the "app_id" field was cleared in this mutation.
-func (m *LikeMutation) AppIDCleared() bool {
-	_, ok := m.clearedFields[like.FieldAppID]
-	return ok
-}
-
-// ResetAppID resets all changes to the "app_id" field.
-func (m *LikeMutation) ResetAppID() {
-	m.app_id = nil
-	delete(m.clearedFields, like.FieldAppID)
-}
-
 // SetUserID sets the "user_id" field.
 func (m *LikeMutation) SetUserID(u uuid.UUID) {
 	m.user_id = &u
@@ -33356,7 +33306,7 @@ func (m *LikeMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *LikeMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 7)
 	if m.created_at != nil {
 		fields = append(fields, like.FieldCreatedAt)
 	}
@@ -33368,9 +33318,6 @@ func (m *LikeMutation) Fields() []string {
 	}
 	if m.ent_id != nil {
 		fields = append(fields, like.FieldEntID)
-	}
-	if m.app_id != nil {
-		fields = append(fields, like.FieldAppID)
 	}
 	if m.user_id != nil {
 		fields = append(fields, like.FieldUserID)
@@ -33397,8 +33344,6 @@ func (m *LikeMutation) Field(name string) (ent.Value, bool) {
 		return m.DeletedAt()
 	case like.FieldEntID:
 		return m.EntID()
-	case like.FieldAppID:
-		return m.AppID()
 	case like.FieldUserID:
 		return m.UserID()
 	case like.FieldAppGoodID:
@@ -33422,8 +33367,6 @@ func (m *LikeMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldDeletedAt(ctx)
 	case like.FieldEntID:
 		return m.OldEntID(ctx)
-	case like.FieldAppID:
-		return m.OldAppID(ctx)
 	case like.FieldUserID:
 		return m.OldUserID(ctx)
 	case like.FieldAppGoodID:
@@ -33466,13 +33409,6 @@ func (m *LikeMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEntID(v)
-		return nil
-	case like.FieldAppID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAppID(v)
 		return nil
 	case like.FieldUserID:
 		v, ok := value.(uuid.UUID)
@@ -33564,9 +33500,6 @@ func (m *LikeMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *LikeMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(like.FieldAppID) {
-		fields = append(fields, like.FieldAppID)
-	}
 	if m.FieldCleared(like.FieldUserID) {
 		fields = append(fields, like.FieldUserID)
 	}
@@ -33587,9 +33520,6 @@ func (m *LikeMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *LikeMutation) ClearField(name string) error {
 	switch name {
-	case like.FieldAppID:
-		m.ClearAppID()
-		return nil
 	case like.FieldUserID:
 		m.ClearUserID()
 		return nil
@@ -33615,9 +33545,6 @@ func (m *LikeMutation) ResetField(name string) error {
 		return nil
 	case like.FieldEntID:
 		m.ResetEntID()
-		return nil
-	case like.FieldAppID:
-		m.ResetAppID()
 		return nil
 	case like.FieldUserID:
 		m.ResetUserID()

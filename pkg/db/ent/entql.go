@@ -750,7 +750,6 @@ var schemaGraph = func() *sqlgraph.Schema {
 			like.FieldUpdatedAt: {Type: field.TypeUint32, Column: like.FieldUpdatedAt},
 			like.FieldDeletedAt: {Type: field.TypeUint32, Column: like.FieldDeletedAt},
 			like.FieldEntID:     {Type: field.TypeUUID, Column: like.FieldEntID},
-			like.FieldAppID:     {Type: field.TypeUUID, Column: like.FieldAppID},
 			like.FieldUserID:    {Type: field.TypeUUID, Column: like.FieldUserID},
 			like.FieldAppGoodID: {Type: field.TypeUUID, Column: like.FieldAppGoodID},
 			like.FieldLike:      {Type: field.TypeBool, Column: like.FieldLike},
@@ -3809,11 +3808,6 @@ func (f *LikeFilter) WhereDeletedAt(p entql.Uint32P) {
 // WhereEntID applies the entql [16]byte predicate on the ent_id field.
 func (f *LikeFilter) WhereEntID(p entql.ValueP) {
 	f.Where(p.Field(like.FieldEntID))
-}
-
-// WhereAppID applies the entql [16]byte predicate on the app_id field.
-func (f *LikeFilter) WhereAppID(p entql.ValueP) {
-	f.Where(p.Field(like.FieldAppID))
 }
 
 // WhereUserID applies the entql [16]byte predicate on the user_id field.

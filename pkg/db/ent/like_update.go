@@ -98,26 +98,6 @@ func (lu *LikeUpdate) SetNillableEntID(u *uuid.UUID) *LikeUpdate {
 	return lu
 }
 
-// SetAppID sets the "app_id" field.
-func (lu *LikeUpdate) SetAppID(u uuid.UUID) *LikeUpdate {
-	lu.mutation.SetAppID(u)
-	return lu
-}
-
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (lu *LikeUpdate) SetNillableAppID(u *uuid.UUID) *LikeUpdate {
-	if u != nil {
-		lu.SetAppID(*u)
-	}
-	return lu
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (lu *LikeUpdate) ClearAppID() *LikeUpdate {
-	lu.mutation.ClearAppID()
-	return lu
-}
-
 // SetUserID sets the "user_id" field.
 func (lu *LikeUpdate) SetUserID(u uuid.UUID) *LikeUpdate {
 	lu.mutation.SetUserID(u)
@@ -311,19 +291,6 @@ func (lu *LikeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: like.FieldEntID,
 		})
 	}
-	if value, ok := lu.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: like.FieldAppID,
-		})
-	}
-	if lu.mutation.AppIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: like.FieldAppID,
-		})
-	}
 	if value, ok := lu.mutation.UserID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -444,26 +411,6 @@ func (luo *LikeUpdateOne) SetNillableEntID(u *uuid.UUID) *LikeUpdateOne {
 	if u != nil {
 		luo.SetEntID(*u)
 	}
-	return luo
-}
-
-// SetAppID sets the "app_id" field.
-func (luo *LikeUpdateOne) SetAppID(u uuid.UUID) *LikeUpdateOne {
-	luo.mutation.SetAppID(u)
-	return luo
-}
-
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (luo *LikeUpdateOne) SetNillableAppID(u *uuid.UUID) *LikeUpdateOne {
-	if u != nil {
-		luo.SetAppID(*u)
-	}
-	return luo
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (luo *LikeUpdateOne) ClearAppID() *LikeUpdateOne {
-	luo.mutation.ClearAppID()
 	return luo
 }
 
@@ -688,19 +635,6 @@ func (luo *LikeUpdateOne) sqlSave(ctx context.Context) (_node *Like, err error) 
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: like.FieldEntID,
-		})
-	}
-	if value, ok := luo.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: like.FieldAppID,
-		})
-	}
-	if luo.mutation.AppIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: like.FieldAppID,
 		})
 	}
 	if value, ok := luo.mutation.UserID(); ok {
