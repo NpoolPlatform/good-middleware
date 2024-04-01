@@ -14,15 +14,10 @@ import (
 type Req struct {
 	ID           *uint32
 	EntID        *uuid.UUID
-	AppID        *uuid.UUID
-	GoodID       *uuid.UUID
 	AppGoodID    *uuid.UUID
-	CoinTypeID   *uuid.UUID
 	TopMostID    *uuid.UUID
 	DisplayIndex *uint32
-	Posters      []string
 	UnitPrice    *decimal.Decimal
-	PackagePrice *decimal.Decimal
 	DeletedAt    *uint32
 }
 
@@ -30,17 +25,8 @@ func CreateSet(c *ent.TopMostGoodCreate, req *Req) *ent.TopMostGoodCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
 	}
-	if req.AppID != nil {
-		c.SetAppID(*req.AppID)
-	}
-	if req.GoodID != nil {
-		c.SetGoodID(*req.GoodID)
-	}
 	if req.AppGoodID != nil {
 		c.SetAppGoodID(*req.AppGoodID)
-	}
-	if req.CoinTypeID != nil {
-		c.SetCoinTypeID(*req.CoinTypeID)
 	}
 	if req.TopMostID != nil {
 		c.SetTopMostID(*req.TopMostID)
@@ -48,27 +34,15 @@ func CreateSet(c *ent.TopMostGoodCreate, req *Req) *ent.TopMostGoodCreate {
 	if req.DisplayIndex != nil {
 		c.SetDisplayIndex(*req.DisplayIndex)
 	}
-	if len(req.Posters) > 0 {
-		c.SetPosters(req.Posters)
-	}
 	if req.UnitPrice != nil {
 		c.SetUnitPrice(*req.UnitPrice)
-	}
-	if req.PackagePrice != nil {
-		c.SetPackagePrice(*req.PackagePrice)
 	}
 	return c
 }
 
 func UpdateSet(u *ent.TopMostGoodUpdateOne, req *Req) *ent.TopMostGoodUpdateOne {
-	if req.GoodID != nil {
-		u.SetGoodID(*req.GoodID)
-	}
 	if req.AppGoodID != nil {
 		u.SetAppGoodID(*req.AppGoodID)
-	}
-	if req.CoinTypeID != nil {
-		u.SetCoinTypeID(*req.CoinTypeID)
 	}
 	if req.TopMostID != nil {
 		u.SetTopMostID(*req.TopMostID)
@@ -79,12 +53,6 @@ func UpdateSet(u *ent.TopMostGoodUpdateOne, req *Req) *ent.TopMostGoodUpdateOne 
 	if req.UnitPrice != nil {
 		u.SetUnitPrice(*req.UnitPrice)
 	}
-	if req.PackagePrice != nil {
-		u.SetPackagePrice(*req.PackagePrice)
-	}
-	if len(req.Posters) > 0 {
-		u.SetPosters(req.Posters)
-	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)
 	}
@@ -94,12 +62,10 @@ func UpdateSet(u *ent.TopMostGoodUpdateOne, req *Req) *ent.TopMostGoodUpdateOne 
 type Conds struct {
 	ID          *cruder.Cond
 	EntID       *cruder.Cond
-	AppID       *cruder.Cond
-	GoodID      *cruder.Cond
 	AppGoodID   *cruder.Cond
+	AppGoodIDs  *cruder.Cond
 	TopMostID   *cruder.Cond
 	TopMostType *cruder.Cond
-	AppGoodIDs  *cruder.Cond
 }
 
 //nolint:gocyclo,funlen
@@ -128,30 +94,6 @@ func SetQueryConds(q *ent.TopMostGoodQuery, conds *Conds) (*ent.TopMostGoodQuery
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(enttopmostgood.EntID(id))
-		default:
-			return nil, fmt.Errorf("invalid topmostgood field")
-		}
-	}
-	if conds.AppID != nil {
-		id, ok := conds.AppID.Val.(uuid.UUID)
-		if !ok {
-			return nil, fmt.Errorf("invalid appid")
-		}
-		switch conds.AppID.Op {
-		case cruder.EQ:
-			q.Where(enttopmostgood.AppID(id))
-		default:
-			return nil, fmt.Errorf("invalid topmostgood field")
-		}
-	}
-	if conds.GoodID != nil {
-		id, ok := conds.GoodID.Val.(uuid.UUID)
-		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
-		}
-		switch conds.GoodID.Op {
-		case cruder.EQ:
-			q.Where(enttopmostgood.GoodID(id))
 		default:
 			return nil, fmt.Errorf("invalid topmostgood field")
 		}
