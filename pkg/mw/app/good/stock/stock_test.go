@@ -282,8 +282,11 @@ func lockStock(t *testing.T) {
 
 func waitStartStock(t *testing.T) {
 	ret.WaitStart = ret.Locked
+	ret.AppMiningGoodStocks[0].WaitStart = ret.Locked
 	ret.Sold = ret.Locked
+	ret.AppMiningGoodStocks[0].Sold = ret.Locked
 	ret.Locked = decimal.NewFromInt(0).String()
+	ret.AppMiningGoodStocks[0].Locked = ret.Locked
 
 	handler, err := NewHandler(
 		context.Background(),
@@ -292,10 +295,16 @@ func waitStartStock(t *testing.T) {
 	if assert.Nil(t, err) {
 		err = handler.WaitStartStock(context.Background())
 		if assert.Nil(t, err) {
-			info, err := handler.GetStock(context.Background())
+			handler, err := NewHandler(
+				context.Background(),
+				WithEntID(&ret.EntID, true),
+			)
 			if assert.Nil(t, err) {
-				ret.UpdatedAt = info.UpdatedAt
-				assert.Equal(t, &ret, info)
+				info, err := handler.GetStock(context.Background())
+				if assert.Nil(t, err) {
+					ret.UpdatedAt = info.UpdatedAt
+					assert.Equal(t, &ret, info)
+				}
 			}
 		}
 	}

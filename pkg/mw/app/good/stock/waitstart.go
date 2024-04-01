@@ -6,7 +6,9 @@ import (
 	"fmt"
 
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
+	appmininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
+	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -61,6 +63,48 @@ func (h *waitStartHandler) waitStartStock(ctx context.Context, lock *ent.AppStoc
 	return nil
 }
 
+func (h *waitStartHandler) waitStartMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok {
+		return fmt.Errorf("invalid stock")
+	}
+
+	locked := stock.miningGoodStock.Locked
+	sold := stock.miningGoodStock.Sold
+	waitStart := stock.miningGoodStock.WaitStart
+
+	waitStart = lock.Units.Add(waitStart)
+	locked = locked.Sub(lock.Units)
+	sold = lock.Units.Add(sold)
+
+	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid stock")
+	}
+	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid stock")
+	}
+
+	if locked.Add(stock.miningGoodStock.InService).
+		Add(stock.miningGoodStock.WaitStart).
+		Add(stock.miningGoodStock.AppReserved).
+		Add(stock.miningGoodStock.SpotQuantity).
+		Cmp(stock.miningGoodStock.Total) > 0 {
+		return fmt.Errorf("stock exhausted")
+	}
+
+	if _, err := mininggoodstockcrud.UpdateSet(
+		tx.MiningGoodStock.UpdateOneID(stock.miningGoodStock.ID),
+		&mininggoodstockcrud.Req{
+			Locked:    &locked,
+			WaitStart: &waitStart,
+			Sold:      &sold,
+		},
+	).Save(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (h *waitStartHandler) waitStartAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	stock, ok := h.stocks[lock.AppGoodID]
 	if !ok {
@@ -97,6 +141,42 @@ func (h *waitStartHandler) waitStartAppStock(ctx context.Context, lock *ent.AppS
 	return nil
 }
 
+func (h *waitStartHandler) waitStartAppMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok {
+		return fmt.Errorf("invalid stock")
+	}
+
+	h.ID = &stock.appMiningGoodStock.ID
+	locked := stock.appMiningGoodStock.Locked
+	sold := stock.appMiningGoodStock.Sold
+	waitStart := stock.appMiningGoodStock.WaitStart
+
+	waitStart = lock.Units.Add(waitStart)
+	locked = locked.Sub(lock.Units)
+	sold = lock.Units.Add(sold)
+
+	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid stock")
+	}
+	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
+		return fmt.Errorf("invalid stock")
+	}
+
+	if _, err := appmininggoodstockcrud.UpdateSet(
+		tx.AppMiningGoodStock.UpdateOneID(stock.appMiningGoodStock.ID),
+		&appmininggoodstockcrud.Req{
+			Locked:    &locked,
+			WaitStart: &waitStart,
+			Sold:      &sold,
+		},
+	).Save(ctx); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (h *Handler) WaitStartStock(ctx context.Context) error {
 	handler := &waitStartHandler{
 		stockAppGoodQuery: &stockAppGoodQuery{
@@ -121,8 +201,18 @@ func (h *Handler) WaitStartStock(ctx context.Context) error {
 			if err := handler.waitStartAppStock(ctx, lock, tx); err != nil {
 				return err
 			}
+			if handler.stockByMiningPool(lock.AppGoodID) {
+				if err := handler.waitStartAppMiningGoodStock(ctx, lock, tx); err != nil {
+					return err
+				}
+			}
 			if err := handler.waitStartStock(ctx, lock, tx); err != nil {
 				return err
+			}
+			if handler.stockByMiningPool(lock.AppGoodID) {
+				if err := handler.waitStartMiningGoodStock(ctx, lock, tx); err != nil {
+					return err
+				}
 			}
 		}
 		if err := handler.lockOp.updateLocks(ctx, tx); err != nil {
