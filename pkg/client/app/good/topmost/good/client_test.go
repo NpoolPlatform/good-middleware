@@ -14,20 +14,16 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/client/app/good"
 	topmost1 "github.com/NpoolPlatform/good-middleware/pkg/client/app/good/topmost"
-	deviceinfo1 "github.com/NpoolPlatform/good-middleware/pkg/client/device"
-	good1 "github.com/NpoolPlatform/good-middleware/pkg/client/good"
+	devicetype1 "github.com/NpoolPlatform/good-middleware/pkg/client/device"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/client/vender/brand"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/client/vender/location"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
-	appgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	topmostmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/good"
-	deviceinfomwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
-	goodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
+	devicetypemwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 	vendorbrandmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/brand"
 	vendorlocationmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"
 
@@ -179,7 +175,7 @@ func setup(t *testing.T) func(*testing.T) {
 	})
 	assert.Nil(t, err)
 
-	device, err := deviceinfo1.CreateDeviceInfo(context.Background(), &deviceinfomwpb.DeviceInfoReq{
+	device, err := devicetype1.CreateDeviceInfo(context.Background(), &devicetypemwpb.DeviceInfoReq{
 		EntID:            &good.DeviceInfoID,
 		Type:             &good.DeviceType,
 		Manufacturer:     &good.DeviceManufacturer,
@@ -247,7 +243,7 @@ func setup(t *testing.T) func(*testing.T) {
 		_, _ = topmost1.DeleteTopMost(context.Background(), topmost.ID)
 		_, _ = appgood1.DeleteGood(context.Background(), appgood.ID)
 		_, _ = good1.DeleteGood(context.Background(), good.ID)
-		_, _ = deviceinfo1.DeleteDeviceInfo(context.Background(), device.ID)
+		_, _ = devicetype1.DeleteDeviceInfo(context.Background(), device.ID)
 		_, _ = vendorlocation1.DeleteLocation(context.Background(), vendorLocation.ID)
 		_, _ = vendorbrand1.DeleteBrand(context.Background(), info1.ID)
 	}
