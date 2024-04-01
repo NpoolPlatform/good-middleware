@@ -251,10 +251,12 @@ func reserveStock(t *testing.T) {
 func lockStock(t *testing.T) {
 	ret.Locked = decimal.NewFromInt(10).String()
 	ret.SpotQuantity = decimal.NewFromInt(90).String()
+	ret.AppMiningGoodStocks[0].Locked = ret.Locked
+	ret.AppMiningGoodStocks[0].SpotQuantity = ret.SpotQuantity
 
 	handler, err := NewHandler(
 		context.Background(),
-		WithEntID(&ret.EntID, true),
+		WithEntID(&ret.AppMiningGoodStocks[0].EntID, true), // For mining pool stock, here is the ent_id of mining pool stock
 		WithAppGoodID(&ret.AppGoodID, true),
 		WithLocked(&ret.Locked, true),
 		WithLockID(&lockID, true),
@@ -263,10 +265,16 @@ func lockStock(t *testing.T) {
 	if assert.Nil(t, err) {
 		err = handler.LockStock(context.Background())
 		if assert.Nil(t, err) {
-			info, err := handler.GetStock(context.Background())
+			handler, err := NewHandler(
+				context.Background(),
+				WithEntID(&ret.EntID, true),
+			)
 			if assert.Nil(t, err) {
-				ret.UpdatedAt = info.UpdatedAt
-				assert.Equal(t, &ret, info)
+				info, err := handler.GetStock(context.Background())
+				if assert.Nil(t, err) {
+					ret.UpdatedAt = info.UpdatedAt
+					assert.Equal(t, &ret, info)
+				}
 			}
 		}
 	}
@@ -337,8 +345,8 @@ func TestStock(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("reserveStock", reserveStock)
-	// t.Run("lockStock", lockStock)
-	// t.Run("waitStartStock", waitStartStock)
+	t.Run("lockStock", lockStock)
+	t.Run("waitStartStock", waitStartStock)
 	// t.Run("lockFailStock", lockFailStock)
 	// t.Run("chargeBackStock", chargeBackStock)
 }
