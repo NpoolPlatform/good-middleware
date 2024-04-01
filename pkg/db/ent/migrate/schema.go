@@ -1117,6 +1117,35 @@ var (
 			},
 		},
 	}
+	// TopMostConstraintsColumns holds the columns for the "top_most_constraints" table.
+	TopMostConstraintsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "top_most_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "constraint", Type: field.TypeString, Nullable: true, Default: "TopMostKycMust"},
+		{Name: "index", Type: field.TypeUint8, Nullable: true, Default: 0},
+	}
+	// TopMostConstraintsTable holds the schema information for the "top_most_constraints" table.
+	TopMostConstraintsTable = &schema.Table{
+		Name:       "top_most_constraints",
+		Columns:    TopMostConstraintsColumns,
+		PrimaryKey: []*schema.Column{TopMostConstraintsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "topmostconstraint_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{TopMostConstraintsColumns[4]},
+			},
+			{
+				Name:    "topmostconstraint_top_most_id",
+				Unique:  false,
+				Columns: []*schema.Column{TopMostConstraintsColumns[5]},
+			},
+		},
+	}
 	// TopMostGoodsColumns holds the columns for the "top_most_goods" table.
 	TopMostGoodsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -1139,6 +1168,35 @@ var (
 				Name:    "topmostgood_ent_id",
 				Unique:  true,
 				Columns: []*schema.Column{TopMostGoodsColumns[4]},
+			},
+		},
+	}
+	// TopMostGoodConstraintsColumns holds the columns for the "top_most_good_constraints" table.
+	TopMostGoodConstraintsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "top_most_good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "constraint", Type: field.TypeString, Nullable: true, Default: "TopMostKycMust"},
+		{Name: "index", Type: field.TypeUint8, Nullable: true, Default: 0},
+	}
+	// TopMostGoodConstraintsTable holds the schema information for the "top_most_good_constraints" table.
+	TopMostGoodConstraintsTable = &schema.Table{
+		Name:       "top_most_good_constraints",
+		Columns:    TopMostGoodConstraintsColumns,
+		PrimaryKey: []*schema.Column{TopMostGoodConstraintsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "topmostgoodconstraint_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{TopMostGoodConstraintsColumns[4]},
+			},
+			{
+				Name:    "topmostgoodconstraint_top_most_good_id",
+				Unique:  false,
+				Columns: []*schema.Column{TopMostGoodConstraintsColumns[5]},
 			},
 		},
 	}
@@ -1288,7 +1346,9 @@ var (
 		ScoresTable,
 		StocksV1Table,
 		TopMostsTable,
+		TopMostConstraintsTable,
 		TopMostGoodsTable,
+		TopMostGoodConstraintsTable,
 		TopMostGoodPostersTable,
 		TopMostPostersTable,
 		VendorBrandsTable,

@@ -65,7 +65,9 @@ type hooks struct {
 	Score                  []ent.Hook
 	Stock                  []ent.Hook
 	TopMost                []ent.Hook
+	TopMostConstraint      []ent.Hook
 	TopMostGood            []ent.Hook
+	TopMostGoodConstraint  []ent.Hook
 	TopMostGoodPoster      []ent.Hook
 	TopMostPoster          []ent.Hook
 	VendorBrand            []ent.Hook

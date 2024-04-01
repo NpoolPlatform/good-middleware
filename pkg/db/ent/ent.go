@@ -47,7 +47,9 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostconstraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodconstraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
@@ -109,7 +111,9 @@ func columnChecker(table string) func(string) error {
 		score.Table:                  score.ValidColumn,
 		stock.Table:                  stock.ValidColumn,
 		topmost.Table:                topmost.ValidColumn,
+		topmostconstraint.Table:      topmostconstraint.ValidColumn,
 		topmostgood.Table:            topmostgood.ValidColumn,
+		topmostgoodconstraint.Table:  topmostgoodconstraint.ValidColumn,
 		topmostgoodposter.Table:      topmostgoodposter.ValidColumn,
 		topmostposter.Table:          topmostposter.ValidColumn,
 		vendorbrand.Table:            vendorbrand.ValidColumn,

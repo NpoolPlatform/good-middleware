@@ -46,7 +46,9 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostconstraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodconstraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
@@ -103,7 +105,9 @@ const (
 	TypeScore                  = "Score"
 	TypeStock                  = "Stock"
 	TypeTopMost                = "TopMost"
+	TypeTopMostConstraint      = "TopMostConstraint"
 	TypeTopMostGood            = "TopMostGood"
+	TypeTopMostGoodConstraint  = "TopMostGoodConstraint"
 	TypeTopMostGoodPoster      = "TopMostGoodPoster"
 	TypeTopMostPoster          = "TopMostPoster"
 	TypeVendorBrand            = "VendorBrand"
@@ -41882,6 +41886,843 @@ func (m *TopMostMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown TopMost edge %s", name)
 }
 
+// TopMostConstraintMutation represents an operation that mutates the TopMostConstraint nodes in the graph.
+type TopMostConstraintMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *uint32
+	created_at    *uint32
+	addcreated_at *int32
+	updated_at    *uint32
+	addupdated_at *int32
+	deleted_at    *uint32
+	adddeleted_at *int32
+	ent_id        *uuid.UUID
+	top_most_id   *uuid.UUID
+	constraint    *string
+	index         *uint8
+	addindex      *int8
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*TopMostConstraint, error)
+	predicates    []predicate.TopMostConstraint
+}
+
+var _ ent.Mutation = (*TopMostConstraintMutation)(nil)
+
+// topmostconstraintOption allows management of the mutation configuration using functional options.
+type topmostconstraintOption func(*TopMostConstraintMutation)
+
+// newTopMostConstraintMutation creates new mutation for the TopMostConstraint entity.
+func newTopMostConstraintMutation(c config, op Op, opts ...topmostconstraintOption) *TopMostConstraintMutation {
+	m := &TopMostConstraintMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeTopMostConstraint,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withTopMostConstraintID sets the ID field of the mutation.
+func withTopMostConstraintID(id uint32) topmostconstraintOption {
+	return func(m *TopMostConstraintMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *TopMostConstraint
+		)
+		m.oldValue = func(ctx context.Context) (*TopMostConstraint, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().TopMostConstraint.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withTopMostConstraint sets the old TopMostConstraint of the mutation.
+func withTopMostConstraint(node *TopMostConstraint) topmostconstraintOption {
+	return func(m *TopMostConstraintMutation) {
+		m.oldValue = func(context.Context) (*TopMostConstraint, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m TopMostConstraintMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m TopMostConstraintMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of TopMostConstraint entities.
+func (m *TopMostConstraintMutation) SetID(id uint32) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *TopMostConstraintMutation) ID() (id uint32, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *TopMostConstraintMutation) IDs(ctx context.Context) ([]uint32, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uint32{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().TopMostConstraint.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *TopMostConstraintMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *TopMostConstraintMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the TopMostConstraint entity.
+// If the TopMostConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostConstraintMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *TopMostConstraintMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *TopMostConstraintMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *TopMostConstraintMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *TopMostConstraintMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *TopMostConstraintMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the TopMostConstraint entity.
+// If the TopMostConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostConstraintMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *TopMostConstraintMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *TopMostConstraintMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *TopMostConstraintMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *TopMostConstraintMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *TopMostConstraintMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the TopMostConstraint entity.
+// If the TopMostConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostConstraintMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *TopMostConstraintMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *TopMostConstraintMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *TopMostConstraintMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetEntID sets the "ent_id" field.
+func (m *TopMostConstraintMutation) SetEntID(u uuid.UUID) {
+	m.ent_id = &u
+}
+
+// EntID returns the value of the "ent_id" field in the mutation.
+func (m *TopMostConstraintMutation) EntID() (r uuid.UUID, exists bool) {
+	v := m.ent_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEntID returns the old "ent_id" field's value of the TopMostConstraint entity.
+// If the TopMostConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostConstraintMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEntID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEntID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEntID: %w", err)
+	}
+	return oldValue.EntID, nil
+}
+
+// ResetEntID resets all changes to the "ent_id" field.
+func (m *TopMostConstraintMutation) ResetEntID() {
+	m.ent_id = nil
+}
+
+// SetTopMostID sets the "top_most_id" field.
+func (m *TopMostConstraintMutation) SetTopMostID(u uuid.UUID) {
+	m.top_most_id = &u
+}
+
+// TopMostID returns the value of the "top_most_id" field in the mutation.
+func (m *TopMostConstraintMutation) TopMostID() (r uuid.UUID, exists bool) {
+	v := m.top_most_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTopMostID returns the old "top_most_id" field's value of the TopMostConstraint entity.
+// If the TopMostConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostConstraintMutation) OldTopMostID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTopMostID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTopMostID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTopMostID: %w", err)
+	}
+	return oldValue.TopMostID, nil
+}
+
+// ClearTopMostID clears the value of the "top_most_id" field.
+func (m *TopMostConstraintMutation) ClearTopMostID() {
+	m.top_most_id = nil
+	m.clearedFields[topmostconstraint.FieldTopMostID] = struct{}{}
+}
+
+// TopMostIDCleared returns if the "top_most_id" field was cleared in this mutation.
+func (m *TopMostConstraintMutation) TopMostIDCleared() bool {
+	_, ok := m.clearedFields[topmostconstraint.FieldTopMostID]
+	return ok
+}
+
+// ResetTopMostID resets all changes to the "top_most_id" field.
+func (m *TopMostConstraintMutation) ResetTopMostID() {
+	m.top_most_id = nil
+	delete(m.clearedFields, topmostconstraint.FieldTopMostID)
+}
+
+// SetConstraint sets the "constraint" field.
+func (m *TopMostConstraintMutation) SetConstraint(s string) {
+	m.constraint = &s
+}
+
+// Constraint returns the value of the "constraint" field in the mutation.
+func (m *TopMostConstraintMutation) Constraint() (r string, exists bool) {
+	v := m.constraint
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldConstraint returns the old "constraint" field's value of the TopMostConstraint entity.
+// If the TopMostConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostConstraintMutation) OldConstraint(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldConstraint is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldConstraint requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldConstraint: %w", err)
+	}
+	return oldValue.Constraint, nil
+}
+
+// ClearConstraint clears the value of the "constraint" field.
+func (m *TopMostConstraintMutation) ClearConstraint() {
+	m.constraint = nil
+	m.clearedFields[topmostconstraint.FieldConstraint] = struct{}{}
+}
+
+// ConstraintCleared returns if the "constraint" field was cleared in this mutation.
+func (m *TopMostConstraintMutation) ConstraintCleared() bool {
+	_, ok := m.clearedFields[topmostconstraint.FieldConstraint]
+	return ok
+}
+
+// ResetConstraint resets all changes to the "constraint" field.
+func (m *TopMostConstraintMutation) ResetConstraint() {
+	m.constraint = nil
+	delete(m.clearedFields, topmostconstraint.FieldConstraint)
+}
+
+// SetIndex sets the "index" field.
+func (m *TopMostConstraintMutation) SetIndex(u uint8) {
+	m.index = &u
+	m.addindex = nil
+}
+
+// Index returns the value of the "index" field in the mutation.
+func (m *TopMostConstraintMutation) Index() (r uint8, exists bool) {
+	v := m.index
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIndex returns the old "index" field's value of the TopMostConstraint entity.
+// If the TopMostConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostConstraintMutation) OldIndex(ctx context.Context) (v uint8, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIndex is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIndex requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIndex: %w", err)
+	}
+	return oldValue.Index, nil
+}
+
+// AddIndex adds u to the "index" field.
+func (m *TopMostConstraintMutation) AddIndex(u int8) {
+	if m.addindex != nil {
+		*m.addindex += u
+	} else {
+		m.addindex = &u
+	}
+}
+
+// AddedIndex returns the value that was added to the "index" field in this mutation.
+func (m *TopMostConstraintMutation) AddedIndex() (r int8, exists bool) {
+	v := m.addindex
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearIndex clears the value of the "index" field.
+func (m *TopMostConstraintMutation) ClearIndex() {
+	m.index = nil
+	m.addindex = nil
+	m.clearedFields[topmostconstraint.FieldIndex] = struct{}{}
+}
+
+// IndexCleared returns if the "index" field was cleared in this mutation.
+func (m *TopMostConstraintMutation) IndexCleared() bool {
+	_, ok := m.clearedFields[topmostconstraint.FieldIndex]
+	return ok
+}
+
+// ResetIndex resets all changes to the "index" field.
+func (m *TopMostConstraintMutation) ResetIndex() {
+	m.index = nil
+	m.addindex = nil
+	delete(m.clearedFields, topmostconstraint.FieldIndex)
+}
+
+// Where appends a list predicates to the TopMostConstraintMutation builder.
+func (m *TopMostConstraintMutation) Where(ps ...predicate.TopMostConstraint) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *TopMostConstraintMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (TopMostConstraint).
+func (m *TopMostConstraintMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *TopMostConstraintMutation) Fields() []string {
+	fields := make([]string, 0, 7)
+	if m.created_at != nil {
+		fields = append(fields, topmostconstraint.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, topmostconstraint.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, topmostconstraint.FieldDeletedAt)
+	}
+	if m.ent_id != nil {
+		fields = append(fields, topmostconstraint.FieldEntID)
+	}
+	if m.top_most_id != nil {
+		fields = append(fields, topmostconstraint.FieldTopMostID)
+	}
+	if m.constraint != nil {
+		fields = append(fields, topmostconstraint.FieldConstraint)
+	}
+	if m.index != nil {
+		fields = append(fields, topmostconstraint.FieldIndex)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *TopMostConstraintMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case topmostconstraint.FieldCreatedAt:
+		return m.CreatedAt()
+	case topmostconstraint.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case topmostconstraint.FieldDeletedAt:
+		return m.DeletedAt()
+	case topmostconstraint.FieldEntID:
+		return m.EntID()
+	case topmostconstraint.FieldTopMostID:
+		return m.TopMostID()
+	case topmostconstraint.FieldConstraint:
+		return m.Constraint()
+	case topmostconstraint.FieldIndex:
+		return m.Index()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *TopMostConstraintMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case topmostconstraint.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case topmostconstraint.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case topmostconstraint.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case topmostconstraint.FieldEntID:
+		return m.OldEntID(ctx)
+	case topmostconstraint.FieldTopMostID:
+		return m.OldTopMostID(ctx)
+	case topmostconstraint.FieldConstraint:
+		return m.OldConstraint(ctx)
+	case topmostconstraint.FieldIndex:
+		return m.OldIndex(ctx)
+	}
+	return nil, fmt.Errorf("unknown TopMostConstraint field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *TopMostConstraintMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case topmostconstraint.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case topmostconstraint.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case topmostconstraint.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case topmostconstraint.FieldEntID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEntID(v)
+		return nil
+	case topmostconstraint.FieldTopMostID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTopMostID(v)
+		return nil
+	case topmostconstraint.FieldConstraint:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetConstraint(v)
+		return nil
+	case topmostconstraint.FieldIndex:
+		v, ok := value.(uint8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIndex(v)
+		return nil
+	}
+	return fmt.Errorf("unknown TopMostConstraint field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *TopMostConstraintMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, topmostconstraint.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, topmostconstraint.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, topmostconstraint.FieldDeletedAt)
+	}
+	if m.addindex != nil {
+		fields = append(fields, topmostconstraint.FieldIndex)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *TopMostConstraintMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case topmostconstraint.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case topmostconstraint.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case topmostconstraint.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	case topmostconstraint.FieldIndex:
+		return m.AddedIndex()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *TopMostConstraintMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case topmostconstraint.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case topmostconstraint.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case topmostconstraint.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	case topmostconstraint.FieldIndex:
+		v, ok := value.(int8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddIndex(v)
+		return nil
+	}
+	return fmt.Errorf("unknown TopMostConstraint numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *TopMostConstraintMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(topmostconstraint.FieldTopMostID) {
+		fields = append(fields, topmostconstraint.FieldTopMostID)
+	}
+	if m.FieldCleared(topmostconstraint.FieldConstraint) {
+		fields = append(fields, topmostconstraint.FieldConstraint)
+	}
+	if m.FieldCleared(topmostconstraint.FieldIndex) {
+		fields = append(fields, topmostconstraint.FieldIndex)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *TopMostConstraintMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *TopMostConstraintMutation) ClearField(name string) error {
+	switch name {
+	case topmostconstraint.FieldTopMostID:
+		m.ClearTopMostID()
+		return nil
+	case topmostconstraint.FieldConstraint:
+		m.ClearConstraint()
+		return nil
+	case topmostconstraint.FieldIndex:
+		m.ClearIndex()
+		return nil
+	}
+	return fmt.Errorf("unknown TopMostConstraint nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *TopMostConstraintMutation) ResetField(name string) error {
+	switch name {
+	case topmostconstraint.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case topmostconstraint.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case topmostconstraint.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case topmostconstraint.FieldEntID:
+		m.ResetEntID()
+		return nil
+	case topmostconstraint.FieldTopMostID:
+		m.ResetTopMostID()
+		return nil
+	case topmostconstraint.FieldConstraint:
+		m.ResetConstraint()
+		return nil
+	case topmostconstraint.FieldIndex:
+		m.ResetIndex()
+		return nil
+	}
+	return fmt.Errorf("unknown TopMostConstraint field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *TopMostConstraintMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *TopMostConstraintMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *TopMostConstraintMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *TopMostConstraintMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *TopMostConstraintMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *TopMostConstraintMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *TopMostConstraintMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown TopMostConstraint unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *TopMostConstraintMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown TopMostConstraint edge %s", name)
+}
+
 // TopMostGoodMutation represents an operation that mutates the TopMostGood nodes in the graph.
 type TopMostGoodMutation struct {
 	config
@@ -42790,6 +43631,843 @@ func (m *TopMostGoodMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *TopMostGoodMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown TopMostGood edge %s", name)
+}
+
+// TopMostGoodConstraintMutation represents an operation that mutates the TopMostGoodConstraint nodes in the graph.
+type TopMostGoodConstraintMutation struct {
+	config
+	op               Op
+	typ              string
+	id               *uint32
+	created_at       *uint32
+	addcreated_at    *int32
+	updated_at       *uint32
+	addupdated_at    *int32
+	deleted_at       *uint32
+	adddeleted_at    *int32
+	ent_id           *uuid.UUID
+	top_most_good_id *uuid.UUID
+	constraint       *string
+	index            *uint8
+	addindex         *int8
+	clearedFields    map[string]struct{}
+	done             bool
+	oldValue         func(context.Context) (*TopMostGoodConstraint, error)
+	predicates       []predicate.TopMostGoodConstraint
+}
+
+var _ ent.Mutation = (*TopMostGoodConstraintMutation)(nil)
+
+// topmostgoodconstraintOption allows management of the mutation configuration using functional options.
+type topmostgoodconstraintOption func(*TopMostGoodConstraintMutation)
+
+// newTopMostGoodConstraintMutation creates new mutation for the TopMostGoodConstraint entity.
+func newTopMostGoodConstraintMutation(c config, op Op, opts ...topmostgoodconstraintOption) *TopMostGoodConstraintMutation {
+	m := &TopMostGoodConstraintMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeTopMostGoodConstraint,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withTopMostGoodConstraintID sets the ID field of the mutation.
+func withTopMostGoodConstraintID(id uint32) topmostgoodconstraintOption {
+	return func(m *TopMostGoodConstraintMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *TopMostGoodConstraint
+		)
+		m.oldValue = func(ctx context.Context) (*TopMostGoodConstraint, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().TopMostGoodConstraint.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withTopMostGoodConstraint sets the old TopMostGoodConstraint of the mutation.
+func withTopMostGoodConstraint(node *TopMostGoodConstraint) topmostgoodconstraintOption {
+	return func(m *TopMostGoodConstraintMutation) {
+		m.oldValue = func(context.Context) (*TopMostGoodConstraint, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m TopMostGoodConstraintMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m TopMostGoodConstraintMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of TopMostGoodConstraint entities.
+func (m *TopMostGoodConstraintMutation) SetID(id uint32) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *TopMostGoodConstraintMutation) ID() (id uint32, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *TopMostGoodConstraintMutation) IDs(ctx context.Context) ([]uint32, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uint32{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().TopMostGoodConstraint.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *TopMostGoodConstraintMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *TopMostGoodConstraintMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the TopMostGoodConstraint entity.
+// If the TopMostGoodConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodConstraintMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *TopMostGoodConstraintMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *TopMostGoodConstraintMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *TopMostGoodConstraintMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *TopMostGoodConstraintMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *TopMostGoodConstraintMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the TopMostGoodConstraint entity.
+// If the TopMostGoodConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodConstraintMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *TopMostGoodConstraintMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *TopMostGoodConstraintMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *TopMostGoodConstraintMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *TopMostGoodConstraintMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *TopMostGoodConstraintMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the TopMostGoodConstraint entity.
+// If the TopMostGoodConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodConstraintMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *TopMostGoodConstraintMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *TopMostGoodConstraintMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *TopMostGoodConstraintMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetEntID sets the "ent_id" field.
+func (m *TopMostGoodConstraintMutation) SetEntID(u uuid.UUID) {
+	m.ent_id = &u
+}
+
+// EntID returns the value of the "ent_id" field in the mutation.
+func (m *TopMostGoodConstraintMutation) EntID() (r uuid.UUID, exists bool) {
+	v := m.ent_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEntID returns the old "ent_id" field's value of the TopMostGoodConstraint entity.
+// If the TopMostGoodConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodConstraintMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEntID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEntID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEntID: %w", err)
+	}
+	return oldValue.EntID, nil
+}
+
+// ResetEntID resets all changes to the "ent_id" field.
+func (m *TopMostGoodConstraintMutation) ResetEntID() {
+	m.ent_id = nil
+}
+
+// SetTopMostGoodID sets the "top_most_good_id" field.
+func (m *TopMostGoodConstraintMutation) SetTopMostGoodID(u uuid.UUID) {
+	m.top_most_good_id = &u
+}
+
+// TopMostGoodID returns the value of the "top_most_good_id" field in the mutation.
+func (m *TopMostGoodConstraintMutation) TopMostGoodID() (r uuid.UUID, exists bool) {
+	v := m.top_most_good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTopMostGoodID returns the old "top_most_good_id" field's value of the TopMostGoodConstraint entity.
+// If the TopMostGoodConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodConstraintMutation) OldTopMostGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTopMostGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTopMostGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTopMostGoodID: %w", err)
+	}
+	return oldValue.TopMostGoodID, nil
+}
+
+// ClearTopMostGoodID clears the value of the "top_most_good_id" field.
+func (m *TopMostGoodConstraintMutation) ClearTopMostGoodID() {
+	m.top_most_good_id = nil
+	m.clearedFields[topmostgoodconstraint.FieldTopMostGoodID] = struct{}{}
+}
+
+// TopMostGoodIDCleared returns if the "top_most_good_id" field was cleared in this mutation.
+func (m *TopMostGoodConstraintMutation) TopMostGoodIDCleared() bool {
+	_, ok := m.clearedFields[topmostgoodconstraint.FieldTopMostGoodID]
+	return ok
+}
+
+// ResetTopMostGoodID resets all changes to the "top_most_good_id" field.
+func (m *TopMostGoodConstraintMutation) ResetTopMostGoodID() {
+	m.top_most_good_id = nil
+	delete(m.clearedFields, topmostgoodconstraint.FieldTopMostGoodID)
+}
+
+// SetConstraint sets the "constraint" field.
+func (m *TopMostGoodConstraintMutation) SetConstraint(s string) {
+	m.constraint = &s
+}
+
+// Constraint returns the value of the "constraint" field in the mutation.
+func (m *TopMostGoodConstraintMutation) Constraint() (r string, exists bool) {
+	v := m.constraint
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldConstraint returns the old "constraint" field's value of the TopMostGoodConstraint entity.
+// If the TopMostGoodConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodConstraintMutation) OldConstraint(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldConstraint is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldConstraint requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldConstraint: %w", err)
+	}
+	return oldValue.Constraint, nil
+}
+
+// ClearConstraint clears the value of the "constraint" field.
+func (m *TopMostGoodConstraintMutation) ClearConstraint() {
+	m.constraint = nil
+	m.clearedFields[topmostgoodconstraint.FieldConstraint] = struct{}{}
+}
+
+// ConstraintCleared returns if the "constraint" field was cleared in this mutation.
+func (m *TopMostGoodConstraintMutation) ConstraintCleared() bool {
+	_, ok := m.clearedFields[topmostgoodconstraint.FieldConstraint]
+	return ok
+}
+
+// ResetConstraint resets all changes to the "constraint" field.
+func (m *TopMostGoodConstraintMutation) ResetConstraint() {
+	m.constraint = nil
+	delete(m.clearedFields, topmostgoodconstraint.FieldConstraint)
+}
+
+// SetIndex sets the "index" field.
+func (m *TopMostGoodConstraintMutation) SetIndex(u uint8) {
+	m.index = &u
+	m.addindex = nil
+}
+
+// Index returns the value of the "index" field in the mutation.
+func (m *TopMostGoodConstraintMutation) Index() (r uint8, exists bool) {
+	v := m.index
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIndex returns the old "index" field's value of the TopMostGoodConstraint entity.
+// If the TopMostGoodConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodConstraintMutation) OldIndex(ctx context.Context) (v uint8, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIndex is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIndex requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIndex: %w", err)
+	}
+	return oldValue.Index, nil
+}
+
+// AddIndex adds u to the "index" field.
+func (m *TopMostGoodConstraintMutation) AddIndex(u int8) {
+	if m.addindex != nil {
+		*m.addindex += u
+	} else {
+		m.addindex = &u
+	}
+}
+
+// AddedIndex returns the value that was added to the "index" field in this mutation.
+func (m *TopMostGoodConstraintMutation) AddedIndex() (r int8, exists bool) {
+	v := m.addindex
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearIndex clears the value of the "index" field.
+func (m *TopMostGoodConstraintMutation) ClearIndex() {
+	m.index = nil
+	m.addindex = nil
+	m.clearedFields[topmostgoodconstraint.FieldIndex] = struct{}{}
+}
+
+// IndexCleared returns if the "index" field was cleared in this mutation.
+func (m *TopMostGoodConstraintMutation) IndexCleared() bool {
+	_, ok := m.clearedFields[topmostgoodconstraint.FieldIndex]
+	return ok
+}
+
+// ResetIndex resets all changes to the "index" field.
+func (m *TopMostGoodConstraintMutation) ResetIndex() {
+	m.index = nil
+	m.addindex = nil
+	delete(m.clearedFields, topmostgoodconstraint.FieldIndex)
+}
+
+// Where appends a list predicates to the TopMostGoodConstraintMutation builder.
+func (m *TopMostGoodConstraintMutation) Where(ps ...predicate.TopMostGoodConstraint) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *TopMostGoodConstraintMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (TopMostGoodConstraint).
+func (m *TopMostGoodConstraintMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *TopMostGoodConstraintMutation) Fields() []string {
+	fields := make([]string, 0, 7)
+	if m.created_at != nil {
+		fields = append(fields, topmostgoodconstraint.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, topmostgoodconstraint.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, topmostgoodconstraint.FieldDeletedAt)
+	}
+	if m.ent_id != nil {
+		fields = append(fields, topmostgoodconstraint.FieldEntID)
+	}
+	if m.top_most_good_id != nil {
+		fields = append(fields, topmostgoodconstraint.FieldTopMostGoodID)
+	}
+	if m.constraint != nil {
+		fields = append(fields, topmostgoodconstraint.FieldConstraint)
+	}
+	if m.index != nil {
+		fields = append(fields, topmostgoodconstraint.FieldIndex)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *TopMostGoodConstraintMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case topmostgoodconstraint.FieldCreatedAt:
+		return m.CreatedAt()
+	case topmostgoodconstraint.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case topmostgoodconstraint.FieldDeletedAt:
+		return m.DeletedAt()
+	case topmostgoodconstraint.FieldEntID:
+		return m.EntID()
+	case topmostgoodconstraint.FieldTopMostGoodID:
+		return m.TopMostGoodID()
+	case topmostgoodconstraint.FieldConstraint:
+		return m.Constraint()
+	case topmostgoodconstraint.FieldIndex:
+		return m.Index()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *TopMostGoodConstraintMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case topmostgoodconstraint.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case topmostgoodconstraint.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case topmostgoodconstraint.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case topmostgoodconstraint.FieldEntID:
+		return m.OldEntID(ctx)
+	case topmostgoodconstraint.FieldTopMostGoodID:
+		return m.OldTopMostGoodID(ctx)
+	case topmostgoodconstraint.FieldConstraint:
+		return m.OldConstraint(ctx)
+	case topmostgoodconstraint.FieldIndex:
+		return m.OldIndex(ctx)
+	}
+	return nil, fmt.Errorf("unknown TopMostGoodConstraint field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *TopMostGoodConstraintMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case topmostgoodconstraint.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case topmostgoodconstraint.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case topmostgoodconstraint.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case topmostgoodconstraint.FieldEntID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEntID(v)
+		return nil
+	case topmostgoodconstraint.FieldTopMostGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTopMostGoodID(v)
+		return nil
+	case topmostgoodconstraint.FieldConstraint:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetConstraint(v)
+		return nil
+	case topmostgoodconstraint.FieldIndex:
+		v, ok := value.(uint8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIndex(v)
+		return nil
+	}
+	return fmt.Errorf("unknown TopMostGoodConstraint field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *TopMostGoodConstraintMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, topmostgoodconstraint.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, topmostgoodconstraint.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, topmostgoodconstraint.FieldDeletedAt)
+	}
+	if m.addindex != nil {
+		fields = append(fields, topmostgoodconstraint.FieldIndex)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *TopMostGoodConstraintMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case topmostgoodconstraint.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case topmostgoodconstraint.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case topmostgoodconstraint.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	case topmostgoodconstraint.FieldIndex:
+		return m.AddedIndex()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *TopMostGoodConstraintMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case topmostgoodconstraint.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case topmostgoodconstraint.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case topmostgoodconstraint.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	case topmostgoodconstraint.FieldIndex:
+		v, ok := value.(int8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddIndex(v)
+		return nil
+	}
+	return fmt.Errorf("unknown TopMostGoodConstraint numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *TopMostGoodConstraintMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(topmostgoodconstraint.FieldTopMostGoodID) {
+		fields = append(fields, topmostgoodconstraint.FieldTopMostGoodID)
+	}
+	if m.FieldCleared(topmostgoodconstraint.FieldConstraint) {
+		fields = append(fields, topmostgoodconstraint.FieldConstraint)
+	}
+	if m.FieldCleared(topmostgoodconstraint.FieldIndex) {
+		fields = append(fields, topmostgoodconstraint.FieldIndex)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *TopMostGoodConstraintMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *TopMostGoodConstraintMutation) ClearField(name string) error {
+	switch name {
+	case topmostgoodconstraint.FieldTopMostGoodID:
+		m.ClearTopMostGoodID()
+		return nil
+	case topmostgoodconstraint.FieldConstraint:
+		m.ClearConstraint()
+		return nil
+	case topmostgoodconstraint.FieldIndex:
+		m.ClearIndex()
+		return nil
+	}
+	return fmt.Errorf("unknown TopMostGoodConstraint nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *TopMostGoodConstraintMutation) ResetField(name string) error {
+	switch name {
+	case topmostgoodconstraint.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case topmostgoodconstraint.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case topmostgoodconstraint.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case topmostgoodconstraint.FieldEntID:
+		m.ResetEntID()
+		return nil
+	case topmostgoodconstraint.FieldTopMostGoodID:
+		m.ResetTopMostGoodID()
+		return nil
+	case topmostgoodconstraint.FieldConstraint:
+		m.ResetConstraint()
+		return nil
+	case topmostgoodconstraint.FieldIndex:
+		m.ResetIndex()
+		return nil
+	}
+	return fmt.Errorf("unknown TopMostGoodConstraint field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *TopMostGoodConstraintMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *TopMostGoodConstraintMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *TopMostGoodConstraintMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *TopMostGoodConstraintMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *TopMostGoodConstraintMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *TopMostGoodConstraintMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *TopMostGoodConstraintMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown TopMostGoodConstraint unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *TopMostGoodConstraintMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown TopMostGoodConstraint edge %s", name)
 }
 
 // TopMostGoodPosterMutation represents an operation that mutates the TopMostGoodPoster nodes in the graph.

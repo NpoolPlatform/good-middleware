@@ -1038,6 +1038,30 @@ func (f TopMostMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutatio
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.TopMostMutation", m)
 }
 
+// The TopMostConstraintQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type TopMostConstraintQueryRuleFunc func(context.Context, *ent.TopMostConstraintQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f TopMostConstraintQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.TopMostConstraintQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.TopMostConstraintQuery", q)
+}
+
+// The TopMostConstraintMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type TopMostConstraintMutationRuleFunc func(context.Context, *ent.TopMostConstraintMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f TopMostConstraintMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.TopMostConstraintMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.TopMostConstraintMutation", m)
+}
+
 // The TopMostGoodQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type TopMostGoodQueryRuleFunc func(context.Context, *ent.TopMostGoodQuery) error
@@ -1060,6 +1084,30 @@ func (f TopMostGoodMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mut
 		return f(ctx, m)
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.TopMostGoodMutation", m)
+}
+
+// The TopMostGoodConstraintQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type TopMostGoodConstraintQueryRuleFunc func(context.Context, *ent.TopMostGoodConstraintQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f TopMostGoodConstraintQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.TopMostGoodConstraintQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.TopMostGoodConstraintQuery", q)
+}
+
+// The TopMostGoodConstraintMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type TopMostGoodConstraintMutationRuleFunc func(context.Context, *ent.TopMostGoodConstraintMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f TopMostGoodConstraintMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.TopMostGoodConstraintMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.TopMostGoodConstraintMutation", m)
 }
 
 // The TopMostGoodPosterQueryRuleFunc type is an adapter to allow the use of ordinary
@@ -1267,7 +1315,11 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.TopMostQuery:
 		return q.Filter(), nil
+	case *ent.TopMostConstraintQuery:
+		return q.Filter(), nil
 	case *ent.TopMostGoodQuery:
+		return q.Filter(), nil
+	case *ent.TopMostGoodConstraintQuery:
 		return q.Filter(), nil
 	case *ent.TopMostGoodPosterQuery:
 		return q.Filter(), nil
@@ -1358,7 +1410,11 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 		return m.Filter(), nil
 	case *ent.TopMostMutation:
 		return m.Filter(), nil
+	case *ent.TopMostConstraintMutation:
+		return m.Filter(), nil
 	case *ent.TopMostGoodMutation:
+		return m.Filter(), nil
+	case *ent.TopMostGoodConstraintMutation:
 		return m.Filter(), nil
 	case *ent.TopMostGoodPosterMutation:
 		return m.Filter(), nil

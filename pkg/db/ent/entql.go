@@ -40,7 +40,9 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostconstraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodconstraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
@@ -54,7 +56,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 42)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 44)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   appdefaultgood.Table,
@@ -942,6 +944,26 @@ var schemaGraph = func() *sqlgraph.Schema {
 	}
 	graph.Nodes[37] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
+			Table:   topmostconstraint.Table,
+			Columns: topmostconstraint.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: topmostconstraint.FieldID,
+			},
+		},
+		Type: "TopMostConstraint",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			topmostconstraint.FieldCreatedAt:  {Type: field.TypeUint32, Column: topmostconstraint.FieldCreatedAt},
+			topmostconstraint.FieldUpdatedAt:  {Type: field.TypeUint32, Column: topmostconstraint.FieldUpdatedAt},
+			topmostconstraint.FieldDeletedAt:  {Type: field.TypeUint32, Column: topmostconstraint.FieldDeletedAt},
+			topmostconstraint.FieldEntID:      {Type: field.TypeUUID, Column: topmostconstraint.FieldEntID},
+			topmostconstraint.FieldTopMostID:  {Type: field.TypeUUID, Column: topmostconstraint.FieldTopMostID},
+			topmostconstraint.FieldConstraint: {Type: field.TypeString, Column: topmostconstraint.FieldConstraint},
+			topmostconstraint.FieldIndex:      {Type: field.TypeUint8, Column: topmostconstraint.FieldIndex},
+		},
+	}
+	graph.Nodes[38] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
 			Table:   topmostgood.Table,
 			Columns: topmostgood.Columns,
 			ID: &sqlgraph.FieldSpec{
@@ -961,7 +983,27 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostgood.FieldUnitPrice:    {Type: field.TypeOther, Column: topmostgood.FieldUnitPrice},
 		},
 	}
-	graph.Nodes[38] = &sqlgraph.Node{
+	graph.Nodes[39] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   topmostgoodconstraint.Table,
+			Columns: topmostgoodconstraint.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: topmostgoodconstraint.FieldID,
+			},
+		},
+		Type: "TopMostGoodConstraint",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			topmostgoodconstraint.FieldCreatedAt:     {Type: field.TypeUint32, Column: topmostgoodconstraint.FieldCreatedAt},
+			topmostgoodconstraint.FieldUpdatedAt:     {Type: field.TypeUint32, Column: topmostgoodconstraint.FieldUpdatedAt},
+			topmostgoodconstraint.FieldDeletedAt:     {Type: field.TypeUint32, Column: topmostgoodconstraint.FieldDeletedAt},
+			topmostgoodconstraint.FieldEntID:         {Type: field.TypeUUID, Column: topmostgoodconstraint.FieldEntID},
+			topmostgoodconstraint.FieldTopMostGoodID: {Type: field.TypeUUID, Column: topmostgoodconstraint.FieldTopMostGoodID},
+			topmostgoodconstraint.FieldConstraint:    {Type: field.TypeString, Column: topmostgoodconstraint.FieldConstraint},
+			topmostgoodconstraint.FieldIndex:         {Type: field.TypeUint8, Column: topmostgoodconstraint.FieldIndex},
+		},
+	}
+	graph.Nodes[40] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   topmostgoodposter.Table,
 			Columns: topmostgoodposter.Columns,
@@ -981,7 +1023,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostgoodposter.FieldIndex:         {Type: field.TypeUint8, Column: topmostgoodposter.FieldIndex},
 		},
 	}
-	graph.Nodes[39] = &sqlgraph.Node{
+	graph.Nodes[41] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   topmostposter.Table,
 			Columns: topmostposter.Columns,
@@ -1001,7 +1043,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostposter.FieldIndex:     {Type: field.TypeUint8, Column: topmostposter.FieldIndex},
 		},
 	}
-	graph.Nodes[40] = &sqlgraph.Node{
+	graph.Nodes[42] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   vendorbrand.Table,
 			Columns: vendorbrand.Columns,
@@ -1020,7 +1062,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			vendorbrand.FieldLogo:      {Type: field.TypeString, Column: vendorbrand.FieldLogo},
 		},
 	}
-	graph.Nodes[41] = &sqlgraph.Node{
+	graph.Nodes[43] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   vendorlocation.Table,
 			Columns: vendorlocation.Columns,
@@ -4552,6 +4594,81 @@ func (f *TopMostFilter) WhereEndAt(p entql.Uint32P) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (tmcq *TopMostConstraintQuery) addPredicate(pred func(s *sql.Selector)) {
+	tmcq.predicates = append(tmcq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the TopMostConstraintQuery builder.
+func (tmcq *TopMostConstraintQuery) Filter() *TopMostConstraintFilter {
+	return &TopMostConstraintFilter{config: tmcq.config, predicateAdder: tmcq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *TopMostConstraintMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the TopMostConstraintMutation builder.
+func (m *TopMostConstraintMutation) Filter() *TopMostConstraintFilter {
+	return &TopMostConstraintFilter{config: m.config, predicateAdder: m}
+}
+
+// TopMostConstraintFilter provides a generic filtering capability at runtime for TopMostConstraintQuery.
+type TopMostConstraintFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *TopMostConstraintFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[37].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *TopMostConstraintFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(topmostconstraint.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *TopMostConstraintFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(topmostconstraint.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *TopMostConstraintFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(topmostconstraint.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *TopMostConstraintFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(topmostconstraint.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *TopMostConstraintFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(topmostconstraint.FieldEntID))
+}
+
+// WhereTopMostID applies the entql [16]byte predicate on the top_most_id field.
+func (f *TopMostConstraintFilter) WhereTopMostID(p entql.ValueP) {
+	f.Where(p.Field(topmostconstraint.FieldTopMostID))
+}
+
+// WhereConstraint applies the entql string predicate on the constraint field.
+func (f *TopMostConstraintFilter) WhereConstraint(p entql.StringP) {
+	f.Where(p.Field(topmostconstraint.FieldConstraint))
+}
+
+// WhereIndex applies the entql uint8 predicate on the index field.
+func (f *TopMostConstraintFilter) WhereIndex(p entql.Uint8P) {
+	f.Where(p.Field(topmostconstraint.FieldIndex))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (tmgq *TopMostGoodQuery) addPredicate(pred func(s *sql.Selector)) {
 	tmgq.predicates = append(tmgq.predicates, pred)
 }
@@ -4580,7 +4697,7 @@ type TopMostGoodFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *TopMostGoodFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[37].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[38].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4632,6 +4749,81 @@ func (f *TopMostGoodFilter) WhereUnitPrice(p entql.OtherP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (tmgcq *TopMostGoodConstraintQuery) addPredicate(pred func(s *sql.Selector)) {
+	tmgcq.predicates = append(tmgcq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the TopMostGoodConstraintQuery builder.
+func (tmgcq *TopMostGoodConstraintQuery) Filter() *TopMostGoodConstraintFilter {
+	return &TopMostGoodConstraintFilter{config: tmgcq.config, predicateAdder: tmgcq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *TopMostGoodConstraintMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the TopMostGoodConstraintMutation builder.
+func (m *TopMostGoodConstraintMutation) Filter() *TopMostGoodConstraintFilter {
+	return &TopMostGoodConstraintFilter{config: m.config, predicateAdder: m}
+}
+
+// TopMostGoodConstraintFilter provides a generic filtering capability at runtime for TopMostGoodConstraintQuery.
+type TopMostGoodConstraintFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *TopMostGoodConstraintFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[39].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *TopMostGoodConstraintFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(topmostgoodconstraint.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *TopMostGoodConstraintFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(topmostgoodconstraint.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *TopMostGoodConstraintFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(topmostgoodconstraint.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *TopMostGoodConstraintFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(topmostgoodconstraint.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *TopMostGoodConstraintFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(topmostgoodconstraint.FieldEntID))
+}
+
+// WhereTopMostGoodID applies the entql [16]byte predicate on the top_most_good_id field.
+func (f *TopMostGoodConstraintFilter) WhereTopMostGoodID(p entql.ValueP) {
+	f.Where(p.Field(topmostgoodconstraint.FieldTopMostGoodID))
+}
+
+// WhereConstraint applies the entql string predicate on the constraint field.
+func (f *TopMostGoodConstraintFilter) WhereConstraint(p entql.StringP) {
+	f.Where(p.Field(topmostgoodconstraint.FieldConstraint))
+}
+
+// WhereIndex applies the entql uint8 predicate on the index field.
+func (f *TopMostGoodConstraintFilter) WhereIndex(p entql.Uint8P) {
+	f.Where(p.Field(topmostgoodconstraint.FieldIndex))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (tmgpq *TopMostGoodPosterQuery) addPredicate(pred func(s *sql.Selector)) {
 	tmgpq.predicates = append(tmgpq.predicates, pred)
 }
@@ -4660,7 +4852,7 @@ type TopMostGoodPosterFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *TopMostGoodPosterFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[38].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[40].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4735,7 +4927,7 @@ type TopMostPosterFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *TopMostPosterFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[39].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[41].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4810,7 +5002,7 @@ type VendorBrandFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *VendorBrandFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[40].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[42].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4880,7 +5072,7 @@ type VendorLocationFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *VendorLocationFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[41].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[43].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})

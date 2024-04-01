@@ -117,8 +117,14 @@ type Stock func(*sql.Selector)
 // TopMost is the predicate function for topmost builders.
 type TopMost func(*sql.Selector)
 
+// TopMostConstraint is the predicate function for topmostconstraint builders.
+type TopMostConstraint func(*sql.Selector)
+
 // TopMostGood is the predicate function for topmostgood builders.
 type TopMostGood func(*sql.Selector)
+
+// TopMostGoodConstraint is the predicate function for topmostgoodconstraint builders.
+type TopMostGoodConstraint func(*sql.Selector)
 
 // TopMostGoodPoster is the predicate function for topmostgoodposter builders.
 type TopMostGoodPoster func(*sql.Selector)

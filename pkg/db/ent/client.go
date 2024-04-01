@@ -47,7 +47,9 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostconstraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodconstraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
@@ -136,8 +138,12 @@ type Client struct {
 	Stock *StockClient
 	// TopMost is the client for interacting with the TopMost builders.
 	TopMost *TopMostClient
+	// TopMostConstraint is the client for interacting with the TopMostConstraint builders.
+	TopMostConstraint *TopMostConstraintClient
 	// TopMostGood is the client for interacting with the TopMostGood builders.
 	TopMostGood *TopMostGoodClient
+	// TopMostGoodConstraint is the client for interacting with the TopMostGoodConstraint builders.
+	TopMostGoodConstraint *TopMostGoodConstraintClient
 	// TopMostGoodPoster is the client for interacting with the TopMostGoodPoster builders.
 	TopMostGoodPoster *TopMostGoodPosterClient
 	// TopMostPoster is the client for interacting with the TopMostPoster builders.
@@ -196,7 +202,9 @@ func (c *Client) init() {
 	c.Score = NewScoreClient(c.config)
 	c.Stock = NewStockClient(c.config)
 	c.TopMost = NewTopMostClient(c.config)
+	c.TopMostConstraint = NewTopMostConstraintClient(c.config)
 	c.TopMostGood = NewTopMostGoodClient(c.config)
+	c.TopMostGoodConstraint = NewTopMostGoodConstraintClient(c.config)
 	c.TopMostGoodPoster = NewTopMostGoodPosterClient(c.config)
 	c.TopMostPoster = NewTopMostPosterClient(c.config)
 	c.VendorBrand = NewVendorBrandClient(c.config)
@@ -271,7 +279,9 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Score:                  NewScoreClient(cfg),
 		Stock:                  NewStockClient(cfg),
 		TopMost:                NewTopMostClient(cfg),
+		TopMostConstraint:      NewTopMostConstraintClient(cfg),
 		TopMostGood:            NewTopMostGoodClient(cfg),
+		TopMostGoodConstraint:  NewTopMostGoodConstraintClient(cfg),
 		TopMostGoodPoster:      NewTopMostGoodPosterClient(cfg),
 		TopMostPoster:          NewTopMostPosterClient(cfg),
 		VendorBrand:            NewVendorBrandClient(cfg),
@@ -332,7 +342,9 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Score:                  NewScoreClient(cfg),
 		Stock:                  NewStockClient(cfg),
 		TopMost:                NewTopMostClient(cfg),
+		TopMostConstraint:      NewTopMostConstraintClient(cfg),
 		TopMostGood:            NewTopMostGoodClient(cfg),
+		TopMostGoodConstraint:  NewTopMostGoodConstraintClient(cfg),
 		TopMostGoodPoster:      NewTopMostGoodPosterClient(cfg),
 		TopMostPoster:          NewTopMostPosterClient(cfg),
 		VendorBrand:            NewVendorBrandClient(cfg),
@@ -403,7 +415,9 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Score.Use(hooks...)
 	c.Stock.Use(hooks...)
 	c.TopMost.Use(hooks...)
+	c.TopMostConstraint.Use(hooks...)
 	c.TopMostGood.Use(hooks...)
+	c.TopMostGoodConstraint.Use(hooks...)
 	c.TopMostGoodPoster.Use(hooks...)
 	c.TopMostPoster.Use(hooks...)
 	c.VendorBrand.Use(hooks...)
@@ -3777,6 +3791,97 @@ func (c *TopMostClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], topmost.Hooks[:]...)
 }
 
+// TopMostConstraintClient is a client for the TopMostConstraint schema.
+type TopMostConstraintClient struct {
+	config
+}
+
+// NewTopMostConstraintClient returns a client for the TopMostConstraint from the given config.
+func NewTopMostConstraintClient(c config) *TopMostConstraintClient {
+	return &TopMostConstraintClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `topmostconstraint.Hooks(f(g(h())))`.
+func (c *TopMostConstraintClient) Use(hooks ...Hook) {
+	c.hooks.TopMostConstraint = append(c.hooks.TopMostConstraint, hooks...)
+}
+
+// Create returns a builder for creating a TopMostConstraint entity.
+func (c *TopMostConstraintClient) Create() *TopMostConstraintCreate {
+	mutation := newTopMostConstraintMutation(c.config, OpCreate)
+	return &TopMostConstraintCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of TopMostConstraint entities.
+func (c *TopMostConstraintClient) CreateBulk(builders ...*TopMostConstraintCreate) *TopMostConstraintCreateBulk {
+	return &TopMostConstraintCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for TopMostConstraint.
+func (c *TopMostConstraintClient) Update() *TopMostConstraintUpdate {
+	mutation := newTopMostConstraintMutation(c.config, OpUpdate)
+	return &TopMostConstraintUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *TopMostConstraintClient) UpdateOne(tmc *TopMostConstraint) *TopMostConstraintUpdateOne {
+	mutation := newTopMostConstraintMutation(c.config, OpUpdateOne, withTopMostConstraint(tmc))
+	return &TopMostConstraintUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *TopMostConstraintClient) UpdateOneID(id uint32) *TopMostConstraintUpdateOne {
+	mutation := newTopMostConstraintMutation(c.config, OpUpdateOne, withTopMostConstraintID(id))
+	return &TopMostConstraintUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for TopMostConstraint.
+func (c *TopMostConstraintClient) Delete() *TopMostConstraintDelete {
+	mutation := newTopMostConstraintMutation(c.config, OpDelete)
+	return &TopMostConstraintDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *TopMostConstraintClient) DeleteOne(tmc *TopMostConstraint) *TopMostConstraintDeleteOne {
+	return c.DeleteOneID(tmc.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *TopMostConstraintClient) DeleteOneID(id uint32) *TopMostConstraintDeleteOne {
+	builder := c.Delete().Where(topmostconstraint.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TopMostConstraintDeleteOne{builder}
+}
+
+// Query returns a query builder for TopMostConstraint.
+func (c *TopMostConstraintClient) Query() *TopMostConstraintQuery {
+	return &TopMostConstraintQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a TopMostConstraint entity by its id.
+func (c *TopMostConstraintClient) Get(ctx context.Context, id uint32) (*TopMostConstraint, error) {
+	return c.Query().Where(topmostconstraint.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *TopMostConstraintClient) GetX(ctx context.Context, id uint32) *TopMostConstraint {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *TopMostConstraintClient) Hooks() []Hook {
+	hooks := c.hooks.TopMostConstraint
+	return append(hooks[:len(hooks):len(hooks)], topmostconstraint.Hooks[:]...)
+}
+
 // TopMostGoodClient is a client for the TopMostGood schema.
 type TopMostGoodClient struct {
 	config
@@ -3866,6 +3971,97 @@ func (c *TopMostGoodClient) GetX(ctx context.Context, id uint32) *TopMostGood {
 func (c *TopMostGoodClient) Hooks() []Hook {
 	hooks := c.hooks.TopMostGood
 	return append(hooks[:len(hooks):len(hooks)], topmostgood.Hooks[:]...)
+}
+
+// TopMostGoodConstraintClient is a client for the TopMostGoodConstraint schema.
+type TopMostGoodConstraintClient struct {
+	config
+}
+
+// NewTopMostGoodConstraintClient returns a client for the TopMostGoodConstraint from the given config.
+func NewTopMostGoodConstraintClient(c config) *TopMostGoodConstraintClient {
+	return &TopMostGoodConstraintClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `topmostgoodconstraint.Hooks(f(g(h())))`.
+func (c *TopMostGoodConstraintClient) Use(hooks ...Hook) {
+	c.hooks.TopMostGoodConstraint = append(c.hooks.TopMostGoodConstraint, hooks...)
+}
+
+// Create returns a builder for creating a TopMostGoodConstraint entity.
+func (c *TopMostGoodConstraintClient) Create() *TopMostGoodConstraintCreate {
+	mutation := newTopMostGoodConstraintMutation(c.config, OpCreate)
+	return &TopMostGoodConstraintCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of TopMostGoodConstraint entities.
+func (c *TopMostGoodConstraintClient) CreateBulk(builders ...*TopMostGoodConstraintCreate) *TopMostGoodConstraintCreateBulk {
+	return &TopMostGoodConstraintCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for TopMostGoodConstraint.
+func (c *TopMostGoodConstraintClient) Update() *TopMostGoodConstraintUpdate {
+	mutation := newTopMostGoodConstraintMutation(c.config, OpUpdate)
+	return &TopMostGoodConstraintUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *TopMostGoodConstraintClient) UpdateOne(tmgc *TopMostGoodConstraint) *TopMostGoodConstraintUpdateOne {
+	mutation := newTopMostGoodConstraintMutation(c.config, OpUpdateOne, withTopMostGoodConstraint(tmgc))
+	return &TopMostGoodConstraintUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *TopMostGoodConstraintClient) UpdateOneID(id uint32) *TopMostGoodConstraintUpdateOne {
+	mutation := newTopMostGoodConstraintMutation(c.config, OpUpdateOne, withTopMostGoodConstraintID(id))
+	return &TopMostGoodConstraintUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for TopMostGoodConstraint.
+func (c *TopMostGoodConstraintClient) Delete() *TopMostGoodConstraintDelete {
+	mutation := newTopMostGoodConstraintMutation(c.config, OpDelete)
+	return &TopMostGoodConstraintDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *TopMostGoodConstraintClient) DeleteOne(tmgc *TopMostGoodConstraint) *TopMostGoodConstraintDeleteOne {
+	return c.DeleteOneID(tmgc.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *TopMostGoodConstraintClient) DeleteOneID(id uint32) *TopMostGoodConstraintDeleteOne {
+	builder := c.Delete().Where(topmostgoodconstraint.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TopMostGoodConstraintDeleteOne{builder}
+}
+
+// Query returns a query builder for TopMostGoodConstraint.
+func (c *TopMostGoodConstraintClient) Query() *TopMostGoodConstraintQuery {
+	return &TopMostGoodConstraintQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a TopMostGoodConstraint entity by its id.
+func (c *TopMostGoodConstraintClient) Get(ctx context.Context, id uint32) (*TopMostGoodConstraint, error) {
+	return c.Query().Where(topmostgoodconstraint.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *TopMostGoodConstraintClient) GetX(ctx context.Context, id uint32) *TopMostGoodConstraint {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *TopMostGoodConstraintClient) Hooks() []Hook {
+	hooks := c.hooks.TopMostGoodConstraint
+	return append(hooks[:len(hooks):len(hooks)], topmostgoodconstraint.Hooks[:]...)
 }
 
 // TopMostGoodPosterClient is a client for the TopMostGoodPoster schema.

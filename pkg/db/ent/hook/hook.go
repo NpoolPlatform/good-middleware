@@ -490,6 +490,19 @@ func (f TopMostFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	return f(ctx, mv)
 }
 
+// The TopMostConstraintFunc type is an adapter to allow the use of ordinary
+// function as TopMostConstraint mutator.
+type TopMostConstraintFunc func(context.Context, *ent.TopMostConstraintMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f TopMostConstraintFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.TopMostConstraintMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TopMostConstraintMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The TopMostGoodFunc type is an adapter to allow the use of ordinary
 // function as TopMostGood mutator.
 type TopMostGoodFunc func(context.Context, *ent.TopMostGoodMutation) (ent.Value, error)
@@ -499,6 +512,19 @@ func (f TopMostGoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value,
 	mv, ok := m.(*ent.TopMostGoodMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TopMostGoodMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The TopMostGoodConstraintFunc type is an adapter to allow the use of ordinary
+// function as TopMostGoodConstraint mutator.
+type TopMostGoodConstraintFunc func(context.Context, *ent.TopMostGoodConstraintMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f TopMostGoodConstraintFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.TopMostGoodConstraintMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TopMostGoodConstraintMutation", m)
 	}
 	return f(ctx, mv)
 }

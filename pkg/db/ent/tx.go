@@ -88,8 +88,12 @@ type Tx struct {
 	Stock *StockClient
 	// TopMost is the client for interacting with the TopMost builders.
 	TopMost *TopMostClient
+	// TopMostConstraint is the client for interacting with the TopMostConstraint builders.
+	TopMostConstraint *TopMostConstraintClient
 	// TopMostGood is the client for interacting with the TopMostGood builders.
 	TopMostGood *TopMostGoodClient
+	// TopMostGoodConstraint is the client for interacting with the TopMostGoodConstraint builders.
+	TopMostGoodConstraint *TopMostGoodConstraintClient
 	// TopMostGoodPoster is the client for interacting with the TopMostGoodPoster builders.
 	TopMostGoodPoster *TopMostGoodPosterClient
 	// TopMostPoster is the client for interacting with the TopMostPoster builders.
@@ -270,7 +274,9 @@ func (tx *Tx) init() {
 	tx.Score = NewScoreClient(tx.config)
 	tx.Stock = NewStockClient(tx.config)
 	tx.TopMost = NewTopMostClient(tx.config)
+	tx.TopMostConstraint = NewTopMostConstraintClient(tx.config)
 	tx.TopMostGood = NewTopMostGoodClient(tx.config)
+	tx.TopMostGoodConstraint = NewTopMostGoodConstraintClient(tx.config)
 	tx.TopMostGoodPoster = NewTopMostGoodPosterClient(tx.config)
 	tx.TopMostPoster = NewTopMostPosterClient(tx.config)
 	tx.VendorBrand = NewVendorBrandClient(tx.config)

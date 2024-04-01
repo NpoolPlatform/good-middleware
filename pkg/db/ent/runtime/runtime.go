@@ -43,7 +43,9 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostconstraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodconstraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
@@ -2291,6 +2293,52 @@ func init() {
 	topmostDescEndAt := topmostFields[6].Descriptor()
 	// topmost.DefaultEndAt holds the default value on creation for the end_at field.
 	topmost.DefaultEndAt = topmostDescEndAt.Default.(uint32)
+	topmostconstraintMixin := schema.TopMostConstraint{}.Mixin()
+	topmostconstraint.Policy = privacy.NewPolicies(topmostconstraintMixin[0], schema.TopMostConstraint{})
+	topmostconstraint.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := topmostconstraint.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	topmostconstraintMixinFields0 := topmostconstraintMixin[0].Fields()
+	_ = topmostconstraintMixinFields0
+	topmostconstraintMixinFields1 := topmostconstraintMixin[1].Fields()
+	_ = topmostconstraintMixinFields1
+	topmostconstraintFields := schema.TopMostConstraint{}.Fields()
+	_ = topmostconstraintFields
+	// topmostconstraintDescCreatedAt is the schema descriptor for created_at field.
+	topmostconstraintDescCreatedAt := topmostconstraintMixinFields0[0].Descriptor()
+	// topmostconstraint.DefaultCreatedAt holds the default value on creation for the created_at field.
+	topmostconstraint.DefaultCreatedAt = topmostconstraintDescCreatedAt.Default.(func() uint32)
+	// topmostconstraintDescUpdatedAt is the schema descriptor for updated_at field.
+	topmostconstraintDescUpdatedAt := topmostconstraintMixinFields0[1].Descriptor()
+	// topmostconstraint.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	topmostconstraint.DefaultUpdatedAt = topmostconstraintDescUpdatedAt.Default.(func() uint32)
+	// topmostconstraint.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	topmostconstraint.UpdateDefaultUpdatedAt = topmostconstraintDescUpdatedAt.UpdateDefault.(func() uint32)
+	// topmostconstraintDescDeletedAt is the schema descriptor for deleted_at field.
+	topmostconstraintDescDeletedAt := topmostconstraintMixinFields0[2].Descriptor()
+	// topmostconstraint.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	topmostconstraint.DefaultDeletedAt = topmostconstraintDescDeletedAt.Default.(func() uint32)
+	// topmostconstraintDescEntID is the schema descriptor for ent_id field.
+	topmostconstraintDescEntID := topmostconstraintMixinFields1[1].Descriptor()
+	// topmostconstraint.DefaultEntID holds the default value on creation for the ent_id field.
+	topmostconstraint.DefaultEntID = topmostconstraintDescEntID.Default.(func() uuid.UUID)
+	// topmostconstraintDescTopMostID is the schema descriptor for top_most_id field.
+	topmostconstraintDescTopMostID := topmostconstraintFields[0].Descriptor()
+	// topmostconstraint.DefaultTopMostID holds the default value on creation for the top_most_id field.
+	topmostconstraint.DefaultTopMostID = topmostconstraintDescTopMostID.Default.(func() uuid.UUID)
+	// topmostconstraintDescConstraint is the schema descriptor for constraint field.
+	topmostconstraintDescConstraint := topmostconstraintFields[1].Descriptor()
+	// topmostconstraint.DefaultConstraint holds the default value on creation for the constraint field.
+	topmostconstraint.DefaultConstraint = topmostconstraintDescConstraint.Default.(string)
+	// topmostconstraintDescIndex is the schema descriptor for index field.
+	topmostconstraintDescIndex := topmostconstraintFields[2].Descriptor()
+	// topmostconstraint.DefaultIndex holds the default value on creation for the index field.
+	topmostconstraint.DefaultIndex = topmostconstraintDescIndex.Default.(uint8)
 	topmostgoodMixin := schema.TopMostGood{}.Mixin()
 	topmostgood.Policy = privacy.NewPolicies(topmostgoodMixin[0], schema.TopMostGood{})
 	topmostgood.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -2341,6 +2389,52 @@ func init() {
 	topmostgoodDescUnitPrice := topmostgoodFields[3].Descriptor()
 	// topmostgood.DefaultUnitPrice holds the default value on creation for the unit_price field.
 	topmostgood.DefaultUnitPrice = topmostgoodDescUnitPrice.Default.(decimal.Decimal)
+	topmostgoodconstraintMixin := schema.TopMostGoodConstraint{}.Mixin()
+	topmostgoodconstraint.Policy = privacy.NewPolicies(topmostgoodconstraintMixin[0], schema.TopMostGoodConstraint{})
+	topmostgoodconstraint.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := topmostgoodconstraint.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	topmostgoodconstraintMixinFields0 := topmostgoodconstraintMixin[0].Fields()
+	_ = topmostgoodconstraintMixinFields0
+	topmostgoodconstraintMixinFields1 := topmostgoodconstraintMixin[1].Fields()
+	_ = topmostgoodconstraintMixinFields1
+	topmostgoodconstraintFields := schema.TopMostGoodConstraint{}.Fields()
+	_ = topmostgoodconstraintFields
+	// topmostgoodconstraintDescCreatedAt is the schema descriptor for created_at field.
+	topmostgoodconstraintDescCreatedAt := topmostgoodconstraintMixinFields0[0].Descriptor()
+	// topmostgoodconstraint.DefaultCreatedAt holds the default value on creation for the created_at field.
+	topmostgoodconstraint.DefaultCreatedAt = topmostgoodconstraintDescCreatedAt.Default.(func() uint32)
+	// topmostgoodconstraintDescUpdatedAt is the schema descriptor for updated_at field.
+	topmostgoodconstraintDescUpdatedAt := topmostgoodconstraintMixinFields0[1].Descriptor()
+	// topmostgoodconstraint.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	topmostgoodconstraint.DefaultUpdatedAt = topmostgoodconstraintDescUpdatedAt.Default.(func() uint32)
+	// topmostgoodconstraint.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	topmostgoodconstraint.UpdateDefaultUpdatedAt = topmostgoodconstraintDescUpdatedAt.UpdateDefault.(func() uint32)
+	// topmostgoodconstraintDescDeletedAt is the schema descriptor for deleted_at field.
+	topmostgoodconstraintDescDeletedAt := topmostgoodconstraintMixinFields0[2].Descriptor()
+	// topmostgoodconstraint.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	topmostgoodconstraint.DefaultDeletedAt = topmostgoodconstraintDescDeletedAt.Default.(func() uint32)
+	// topmostgoodconstraintDescEntID is the schema descriptor for ent_id field.
+	topmostgoodconstraintDescEntID := topmostgoodconstraintMixinFields1[1].Descriptor()
+	// topmostgoodconstraint.DefaultEntID holds the default value on creation for the ent_id field.
+	topmostgoodconstraint.DefaultEntID = topmostgoodconstraintDescEntID.Default.(func() uuid.UUID)
+	// topmostgoodconstraintDescTopMostGoodID is the schema descriptor for top_most_good_id field.
+	topmostgoodconstraintDescTopMostGoodID := topmostgoodconstraintFields[0].Descriptor()
+	// topmostgoodconstraint.DefaultTopMostGoodID holds the default value on creation for the top_most_good_id field.
+	topmostgoodconstraint.DefaultTopMostGoodID = topmostgoodconstraintDescTopMostGoodID.Default.(func() uuid.UUID)
+	// topmostgoodconstraintDescConstraint is the schema descriptor for constraint field.
+	topmostgoodconstraintDescConstraint := topmostgoodconstraintFields[1].Descriptor()
+	// topmostgoodconstraint.DefaultConstraint holds the default value on creation for the constraint field.
+	topmostgoodconstraint.DefaultConstraint = topmostgoodconstraintDescConstraint.Default.(string)
+	// topmostgoodconstraintDescIndex is the schema descriptor for index field.
+	topmostgoodconstraintDescIndex := topmostgoodconstraintFields[2].Descriptor()
+	// topmostgoodconstraint.DefaultIndex holds the default value on creation for the index field.
+	topmostgoodconstraint.DefaultIndex = topmostgoodconstraintDescIndex.Default.(uint8)
 	topmostgoodposterMixin := schema.TopMostGoodPoster{}.Mixin()
 	topmostgoodposter.Policy = privacy.NewPolicies(topmostgoodposterMixin[0], schema.TopMostGoodPoster{})
 	topmostgoodposter.Hooks[0] = func(next ent.Mutator) ent.Mutator {
