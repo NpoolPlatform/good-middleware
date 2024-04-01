@@ -11,7 +11,6 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost"
 
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 type Handler struct {
@@ -114,13 +113,6 @@ func WithMessage(s *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithPosters(ss []string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		h.Posters = ss
-		return nil
-	}
-}
-
 func WithStartAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.StartAt = n
@@ -131,61 +123,6 @@ func WithStartAt(n *uint32, must bool) func(context.Context, *Handler) error {
 func WithEndAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.EndAt = n
-		return nil
-	}
-}
-
-func WithThresholdCredits(s *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return fmt.Errorf("invalid thresholdcredits")
-			}
-			return nil
-		}
-		amount, err := decimal.NewFromString(*s)
-		if err != nil {
-			return err
-		}
-		h.ThresholdCredits = &amount
-		return nil
-	}
-}
-
-func WithRegisterElapsedSeconds(n *uint32, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		h.RegisterElapsedSeconds = n
-		return nil
-	}
-}
-
-func WithThresholdPurchases(n *uint32, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		h.ThresholdPurchases = n
-		return nil
-	}
-}
-
-func WithThresholdPaymentAmount(s *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return fmt.Errorf("invalid thresholdpaymentamount")
-			}
-			return nil
-		}
-		amount, err := decimal.NewFromString(*s)
-		if err != nil {
-			return err
-		}
-		h.ThresholdPaymentAmount = &amount
-		return nil
-	}
-}
-
-func WithKycMust(b *bool, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		h.KycMust = b
 		return nil
 	}
 }

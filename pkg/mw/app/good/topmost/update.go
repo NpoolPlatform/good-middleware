@@ -17,16 +17,10 @@ func (h *updateHandler) updateTopMost(ctx context.Context, tx *ent.Tx) error {
 	if _, err := topmostcrud.UpdateSet(
 		tx.TopMost.UpdateOneID(*h.ID),
 		&topmostcrud.Req{
-			Title:                  h.Title,
-			Message:                h.Message,
-			Posters:                h.Posters,
-			StartAt:                h.StartAt,
-			EndAt:                  h.EndAt,
-			ThresholdCredits:       h.ThresholdCredits,
-			RegisterElapsedSeconds: h.RegisterElapsedSeconds,
-			ThresholdPurchases:     h.ThresholdPurchases,
-			ThresholdPaymentAmount: h.ThresholdPaymentAmount,
-			KycMust:                h.KycMust,
+			Title:   h.Title,
+			Message: h.Message,
+			StartAt: h.StartAt,
+			EndAt:   h.EndAt,
 		},
 	).Save(ctx); err != nil {
 		return err

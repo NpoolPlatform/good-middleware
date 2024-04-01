@@ -2,7 +2,6 @@ package topmost
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	"entgo.io/ent/dialect/sql"
@@ -13,8 +12,6 @@ import (
 	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost"
-
-	"github.com/shopspring/decimal"
 )
 
 type queryHandler struct {
@@ -65,14 +62,8 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t.C(enttopmost.FieldTopMostType), "top_most_type"),
 			sql.As(t.C(enttopmost.FieldTitle), "title"),
 			sql.As(t.C(enttopmost.FieldMessage), "message"),
-			sql.As(t.C(enttopmost.FieldPosters), "posters"),
 			sql.As(t.C(enttopmost.FieldStartAt), "start_at"),
 			sql.As(t.C(enttopmost.FieldEndAt), "end_at"),
-			sql.As(t.C(enttopmost.FieldThresholdCredits), "threshold_credits"),
-			sql.As(t.C(enttopmost.FieldRegisterElapsedSeconds), "register_elapsed_seconds"),
-			sql.As(t.C(enttopmost.FieldThresholdPurchases), "threshold_purchases"),
-			sql.As(t.C(enttopmost.FieldThresholdPaymentAmount), "threshold_payment_amount"),
-			sql.As(t.C(enttopmost.FieldKycMust), "kyc_must"),
 			sql.As(t.C(enttopmost.FieldCreatedAt), "created_at"),
 			sql.As(t.C(enttopmost.FieldUpdatedAt), "updated_at"),
 		)
@@ -96,19 +87,6 @@ func (h *queryHandler) scan(ctx context.Context) error {
 func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
 		info.TopMostType = types.GoodTopMostType(types.GoodTopMostType_value[info.TopMostTypeStr])
-		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
-		amount, err := decimal.NewFromString(info.ThresholdCredits)
-		if err != nil {
-			info.ThresholdCredits = decimal.NewFromInt(0).String()
-		} else {
-			info.ThresholdCredits = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.ThresholdPaymentAmount)
-		if err != nil {
-			info.ThresholdPaymentAmount = decimal.NewFromInt(0).String()
-		} else {
-			info.ThresholdPaymentAmount = amount.String()
-		}
 	}
 }
 
