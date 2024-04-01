@@ -7,7 +7,6 @@ import (
 	topmostcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost"
 )
 
 type deleteHandler struct {
@@ -27,28 +26,21 @@ func (h *deleteHandler) deleteTopMost(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *Handler) DeleteTopMost(ctx context.Context) (*npool.TopMost, error) {
+func (h *Handler) DeleteTopMost(ctx context.Context) error {
 	info, err := h.GetTopMost(ctx)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	if info == nil {
-		return nil, nil
+		return nil
 	}
 
+	h.ID = &info.ID
 	handler := &deleteHandler{
 		Handler: h,
 	}
 
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.deleteTopMost(_ctx, tx); err != nil {
-			return err
-		}
-		return nil
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		return handler.deleteTopMost(_ctx, tx)
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return info, nil
 }

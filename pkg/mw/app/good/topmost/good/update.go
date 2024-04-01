@@ -18,9 +18,7 @@ func (h *updateHandler) updateTopMostGood(ctx context.Context, tx *ent.Tx) error
 		tx.TopMostGood.UpdateOneID(*h.ID),
 		&topmostgoodcrud.Req{
 			DisplayIndex: h.DisplayIndex,
-			Posters:      h.Posters,
 			UnitPrice:    h.UnitPrice,
-			PackagePrice: h.PackagePrice,
 		},
 	).Save(ctx); err != nil {
 		return err

@@ -2,7 +2,6 @@ package topmostgood
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	"entgo.io/ent/dialect/sql"
@@ -10,8 +9,8 @@ import (
 	topmostgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
-	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
+	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	enttopmostgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -63,42 +62,34 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(enttopmostgood.FieldID),
 		).
 		AppendSelect(
-			sql.As(t.C(enttopmostgood.FieldEntID), "ent_id"),
-			sql.As(t.C(enttopmostgood.FieldAppID), "app_id"),
-			sql.As(t.C(enttopmostgood.FieldGoodID), "good_id"),
-			sql.As(t.C(enttopmostgood.FieldAppGoodID), "app_good_id"),
-			sql.As(t.C(enttopmostgood.FieldCoinTypeID), "coin_type_id"),
-			sql.As(t.C(enttopmostgood.FieldTopMostID), "top_most_id"),
-			sql.As(t.C(enttopmostgood.FieldDisplayIndex), "display_index"),
-			sql.As(t.C(enttopmostgood.FieldPosters), "posters"),
-			sql.As(t.C(enttopmostgood.FieldUnitPrice), "unit_price"),
-			sql.As(t.C(enttopmostgood.FieldPackagePrice), "package_price"),
-			sql.As(t.C(enttopmostgood.FieldCreatedAt), "created_at"),
-			sql.As(t.C(enttopmostgood.FieldUpdatedAt), "updated_at"),
-		)
-}
-
-func (h *queryHandler) queryJoinGood(s *sql.Selector) {
-	t := sql.Table(entgood.Table)
-	s.LeftJoin(t).
-		On(
-			s.C(enttopmostgood.FieldGoodID),
-			t.C(entgood.FieldEntID),
-		).
-		AppendSelect(
-			sql.As(t.C(entgood.FieldTitle), "good_name"),
+			t.C(enttopmostgood.FieldEntID),
+			t.C(enttopmostgood.FieldAppGoodID),
+			t.C(enttopmostgood.FieldTopMostID),
+			t.C(enttopmostgood.FieldDisplayIndex),
+			t.C(enttopmostgood.FieldUnitPrice),
+			t.C(enttopmostgood.FieldCreatedAt),
+			t.C(enttopmostgood.FieldUpdatedAt),
 		)
 }
 
 func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
-	t := sql.Table(entappgood.Table)
-	s.LeftJoin(t).
+	t1 := sql.Table(entappgoodbase.Table)
+	t2 := sql.Table(entgoodbase.Table)
+	s.Join(t1).
 		On(
 			s.C(enttopmostgood.FieldAppGoodID),
-			t.C(entappgood.FieldEntID),
+			t1.C(entappgoodbase.FieldEntID),
+		).
+		Join(t2).
+		On(
+			t1.C(entappgoodbase.FieldGoodID),
+			t2.C(entgoodbase.FieldEntID),
 		).
 		AppendSelect(
-			sql.As(t.C(entappgood.FieldGoodName), "app_good_name"),
+			t1.C(entappgoodbase.FieldAppID),
+			sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
+			sql.As(t2.C(entappgoodbase.FieldEntID), "good_id"),
+			sql.As(t2.C(entappgoodbase.FieldName), "good_name"),
 		)
 }
 
@@ -113,6 +104,7 @@ func (h *queryHandler) queryJoinTopMost(s *sql.Selector) {
 			sql.As(t.C(enttopmost.FieldTopMostType), "top_most_type"),
 			sql.As(t.C(enttopmost.FieldTitle), "top_most_title"),
 			sql.As(t.C(enttopmost.FieldMessage), "top_most_message"),
+			sql.As(t.C(enttopmost.FieldTargetURL), "top_most_target_url"),
 		)
 
 	if h.Conds != nil && h.Conds.TopMostType != nil {
@@ -129,7 +121,6 @@ func (h *queryHandler) queryJoinTopMost(s *sql.Selector) {
 func (h *queryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
-		h.queryJoinGood(s)
 		h.queryJoinTopMost(s)
 		h.queryJoinAppGood(s)
 	})
@@ -137,7 +128,6 @@ func (h *queryHandler) queryJoin() {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
-		h.queryJoinGood(s)
 		h.queryJoinTopMost(s)
 		h.queryJoinAppGood(s)
 	})
@@ -149,19 +139,7 @@ func (h *queryHandler) scan(ctx context.Context) error {
 
 func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
-		amount, err := decimal.NewFromString(info.UnitPrice)
-		if err != nil {
-			info.UnitPrice = decimal.NewFromInt(0).String()
-		} else {
-			info.UnitPrice = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.PackagePrice)
-		if err != nil {
-			info.PackagePrice = decimal.NewFromInt(0).String()
-		} else {
-			info.PackagePrice = amount.String()
-		}
-		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
+		info.UnitPrice = func() string { amount, _ := decimal.NewFromString(info.UnitPrice); return amount.String() }()
 		info.TopMostType = types.GoodTopMostType(types.GoodTopMostType_value[info.TopMostTypeStr])
 	}
 }

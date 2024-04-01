@@ -112,13 +112,6 @@ func WithDisplayIndex(n *uint32, must bool) func(context.Context, *Handler) erro
 	}
 }
 
-func WithPosters(ss []string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		h.Posters = ss
-		return nil
-	}
-}
-
 func WithUnitPrice(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
@@ -132,23 +125,6 @@ func WithUnitPrice(s *string, must bool) func(context.Context, *Handler) error {
 			return err
 		}
 		h.UnitPrice = &amount
-		return nil
-	}
-}
-
-func WithPackagePrice(s *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return fmt.Errorf("invalid packageprice")
-			}
-			return nil
-		}
-		amount, err := decimal.NewFromString(*s)
-		if err != nil {
-			return err
-		}
-		h.PackagePrice = &amount
 		return nil
 	}
 }
@@ -169,16 +145,6 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		}
 		if conds.ID != nil {
 			h.Conds.ID = &cruder.Cond{Op: conds.GetID().GetOp(), Val: conds.GetID().GetValue()}
-		}
-		if conds.AppID != nil {
-			id, err := uuid.Parse(conds.GetAppID().GetValue())
-			if err != nil {
-				return err
-			}
-			h.Conds.AppID = &cruder.Cond{
-				Op:  conds.GetAppID().GetOp(),
-				Val: id,
-			}
 		}
 		if conds.TopMostID != nil {
 			id, err := uuid.Parse(conds.GetTopMostID().GetValue())
@@ -212,16 +178,6 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			h.Conds.AppGoodIDs = &cruder.Cond{
 				Op:  conds.GetAppGoodIDs().GetOp(),
 				Val: ids,
-			}
-		}
-		if conds.GoodID != nil {
-			id, err := uuid.Parse(conds.GetGoodID().GetValue())
-			if err != nil {
-				return err
-			}
-			h.Conds.GoodID = &cruder.Cond{
-				Op:  conds.GetGoodID().GetOp(),
-				Val: id,
 			}
 		}
 		if conds.TopMostType != nil {
