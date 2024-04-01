@@ -314,8 +314,7 @@ func lockFailStock(t *testing.T) {
 	locked := decimal.NewFromInt(1999).String()
 	handler, err := NewHandler(
 		context.Background(),
-		WithID(&ret.ID, true),
-		WithEntID(&ret.EntID, true),
+		WithEntID(&ret.AppMiningGoodStocks[0].EntID, true), // For mining pool stock, here is the ent_id of mining pool stock
 		WithAppGoodID(&ret.AppGoodID, true),
 		WithLocked(&locked, true),
 		WithLockID(&lockID, true),
@@ -356,6 +355,6 @@ func TestStock(t *testing.T) {
 	t.Run("reserveStock", reserveStock)
 	t.Run("lockStock", lockStock)
 	t.Run("waitStartStock", waitStartStock)
-	// t.Run("lockFailStock", lockFailStock)
+	t.Run("lockFailStock", lockFailStock)
 	// t.Run("chargeBackStock", chargeBackStock)
 }
