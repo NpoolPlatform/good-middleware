@@ -333,12 +333,18 @@ func chargeBackStock(t *testing.T) {
 	if assert.Nil(t, err) {
 		err = handler.ChargeBackStock(context.Background())
 		if assert.Nil(t, err) {
-			info, err := handler.GetStock(context.Background())
+			handler, err := NewHandler(
+				context.Background(),
+				WithEntID(&ret.EntID, true),
+			)
 			if assert.Nil(t, err) {
-				ret.WaitStart = decimal.NewFromInt(0).String()
-				ret.Sold = decimal.NewFromInt(0).String()
-				ret.UpdatedAt = info.UpdatedAt
-				assert.Equal(t, &ret, info)
+				info, err := handler.GetStock(context.Background())
+				if assert.Nil(t, err) {
+					ret.WaitStart = decimal.NewFromInt(0).String()
+					ret.Sold = decimal.NewFromInt(0).String()
+					ret.UpdatedAt = info.UpdatedAt
+					assert.Equal(t, &ret, info)
+				}
 			}
 		}
 	}
@@ -356,5 +362,5 @@ func TestStock(t *testing.T) {
 	t.Run("lockStock", lockStock)
 	t.Run("waitStartStock", waitStartStock)
 	t.Run("lockFailStock", lockFailStock)
-	// t.Run("chargeBackStock", chargeBackStock)
+	t.Run("chargeBackStock", chargeBackStock)
 }

@@ -74,10 +74,6 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppSt
 }
 
 func (h *chargeBackHandler) chargeBackMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	if !h.stockByMiningPool(lock.AppGoodID) {
-		return nil
-	}
-
 	stock, ok := h.stocks[lock.AppGoodID]
 	if !ok {
 		return fmt.Errorf("invalid stock")
@@ -241,14 +237,18 @@ func (h *Handler) ChargeBackStock(ctx context.Context) error {
 			if err := handler.chargeBackAppStock(ctx, lock, tx); err != nil {
 				return err
 			}
+			if !handler.stockByMiningPool(lock.AppGoodID) {
+				if err := handler.chargeBackAppMiningGoodStock(ctx, lock, tx); err != nil {
+					return err
+				}
+			}
 			if err := handler.chargeBackStock(ctx, lock, tx); err != nil {
 				return err
 			}
-			if err := handler.chargeBackMiningGoodStock(ctx, lock, tx); err != nil {
-				return err
-			}
-			if err := handler.chargeBackAppMiningGoodStock(ctx, lock, tx); err != nil {
-				return err
+			if !handler.stockByMiningPool(lock.AppGoodID) {
+				if err := handler.chargeBackMiningGoodStock(ctx, lock, tx); err != nil {
+					return err
+				}
 			}
 		}
 		if err := handler.lockOp.updateLocks(ctx, tx); err != nil {
