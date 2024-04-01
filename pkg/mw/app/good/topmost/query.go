@@ -57,15 +57,16 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(enttopmost.FieldID),
 		).
 		AppendSelect(
-			sql.As(t.C(enttopmost.FieldEntID), "ent_id"),
-			sql.As(t.C(enttopmost.FieldAppID), "app_id"),
-			sql.As(t.C(enttopmost.FieldTopMostType), "top_most_type"),
-			sql.As(t.C(enttopmost.FieldTitle), "title"),
-			sql.As(t.C(enttopmost.FieldMessage), "message"),
-			sql.As(t.C(enttopmost.FieldStartAt), "start_at"),
-			sql.As(t.C(enttopmost.FieldEndAt), "end_at"),
-			sql.As(t.C(enttopmost.FieldCreatedAt), "created_at"),
-			sql.As(t.C(enttopmost.FieldUpdatedAt), "updated_at"),
+			t.C(enttopmost.FieldEntID),
+			t.C(enttopmost.FieldAppID),
+			t.C(enttopmost.FieldTopMostType),
+			t.C(enttopmost.FieldTitle),
+			t.C(enttopmost.FieldMessage),
+			t.C(enttopmost.FieldTargetURL),
+			t.C(enttopmost.FieldStartAt),
+			t.C(enttopmost.FieldEndAt),
+			t.C(enttopmost.FieldCreatedAt),
+			t.C(enttopmost.FieldUpdatedAt),
 		)
 }
 

@@ -35,6 +35,7 @@ var ret = npool.TopMost{
 	TopMostTypeStr: types.GoodTopMostType_TopMostInnovationStarter.String(),
 	Title:          uuid.NewString(),
 	Message:        uuid.NewString(),
+	TargetUrl:      uuid.NewString(),
 	StartAt:        uint32(time.Now().Unix() + 1000),
 	EndAt:          uint32(time.Now().Unix() + 6000),
 }
@@ -47,16 +48,20 @@ func createTopMost(t *testing.T) {
 		WithTopMostType(&ret.TopMostType, true),
 		WithTitle(&ret.Title, true),
 		WithMessage(&ret.Message, true),
+		WithTargetUrl(&ret.TargetUrl, true),
 		WithStartAt(&ret.StartAt, true),
 		WithEndAt(&ret.EndAt, true),
 	)
 	if assert.Nil(t, err) {
-		info, err := handler.CreateTopMost(context.Background())
+		err = handler.CreateTopMost(context.Background())
 		if assert.Nil(t, err) {
-			ret.CreatedAt = info.CreatedAt
-			ret.UpdatedAt = info.UpdatedAt
-			ret.ID = info.ID
-			assert.Equal(t, &ret, info)
+			info, err := handler.GetTopMost(context.Background())
+			if assert.Nil(t, err) {
+				ret.CreatedAt = info.CreatedAt
+				ret.UpdatedAt = info.UpdatedAt
+				ret.ID = info.ID
+				assert.Equal(t, &ret, info)
+			}
 		}
 	}
 }
