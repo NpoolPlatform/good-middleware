@@ -9,7 +9,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entscore "github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
-	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
+	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	appgoodpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/score"

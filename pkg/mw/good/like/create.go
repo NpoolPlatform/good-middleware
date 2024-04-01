@@ -9,7 +9,7 @@ import (
 	likecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
+	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 	appgoodpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"

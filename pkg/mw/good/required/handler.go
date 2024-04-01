@@ -6,7 +6,7 @@ import (
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	requiredcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/required"
-	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
+	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/required"
 

@@ -13,7 +13,7 @@ import (
 
 type Req struct {
 	EntID          *uuid.UUID
-	GoodID         *uuid.UUID
+	AppGoodID      *uuid.UUID
 	Likes          *uint32
 	Dislikes       *uint32
 	ScoreCount     *uint32
@@ -27,8 +27,8 @@ func CreateSet(c *ent.ExtraInfoCreate, req *Req) *ent.ExtraInfoCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
 	}
-	if req.GoodID != nil {
-		c.SetGoodID(*req.GoodID)
+	if req.AppGoodID != nil {
+		c.SetAppGoodID(*req.AppGoodID)
 	}
 	if req.Likes != nil {
 		c.SetLikes(*req.Likes)
@@ -77,8 +77,8 @@ func UpdateSet(u *ent.ExtraInfoUpdateOne, req *Req) *ent.ExtraInfoUpdateOne {
 }
 
 type Conds struct {
-	EntID  *cruder.Cond
-	GoodID *cruder.Cond
+	EntID     *cruder.Cond
+	AppGoodID *cruder.Cond
 }
 
 func SetQueryConds(q *ent.ExtraInfoQuery, conds *Conds) (*ent.ExtraInfoQuery, error) {
@@ -98,14 +98,14 @@ func SetQueryConds(q *ent.ExtraInfoQuery, conds *Conds) (*ent.ExtraInfoQuery, er
 			return nil, fmt.Errorf("invalid extrainfo field")
 		}
 	}
-	if conds.GoodID != nil {
-		id, ok := conds.GoodID.Val.(uuid.UUID)
+	if conds.AppGoodID != nil {
+		id, ok := conds.AppGoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
+			return nil, fmt.Errorf("invalid appgoodid")
 		}
-		switch conds.GoodID.Op {
+		switch conds.AppGoodID.Op {
 		case cruder.EQ:
-			q.Where(entextrainfo.GoodID(id))
+			q.Where(entextrainfo.AppGoodID(id))
 		default:
 			return nil, fmt.Errorf("invalid extrainfo field")
 		}

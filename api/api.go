@@ -3,14 +3,12 @@ package api
 import (
 	"context"
 
-	appgood "github.com/NpoolPlatform/good-middleware/api/app/good"
 	appdefaultgood "github.com/NpoolPlatform/good-middleware/api/app/good/default"
 	appsimulategood "github.com/NpoolPlatform/good-middleware/api/app/good/simulate"
 	appstock "github.com/NpoolPlatform/good-middleware/api/app/good/stock"
 	topmost "github.com/NpoolPlatform/good-middleware/api/app/good/topmost"
 	topmostgood "github.com/NpoolPlatform/good-middleware/api/app/good/topmost/good"
 	"github.com/NpoolPlatform/good-middleware/api/device"
-	"github.com/NpoolPlatform/good-middleware/api/good"
 	"github.com/NpoolPlatform/good-middleware/api/good/comment"
 	"github.com/NpoolPlatform/good-middleware/api/good/like"
 	"github.com/NpoolPlatform/good-middleware/api/good/recommend"
@@ -31,13 +29,11 @@ type Server struct {
 
 func Register(server grpc.ServiceRegistrar) {
 	goodmw.RegisterMiddlewareServer(server, &Server{})
-	appgood.Register(server)
 	appdefaultgood.Register(server)
 	appsimulategood.Register(server)
 	appstock.Register(server)
 	topmost.Register(server)
 	topmostgood.Register(server)
-	good.Register(server)
 	comment.Register(server)
 	like.Register(server)
 	recommend.Register(server)

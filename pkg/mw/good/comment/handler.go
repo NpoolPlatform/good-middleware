@@ -6,7 +6,7 @@ import (
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	commentcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/comment"
-	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
+	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
 
@@ -108,19 +108,19 @@ func WithUserID(id *string, must bool) func(context.Context, *Handler) error {
 
 func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		handler, err := appgood1.NewHandler(
+		handler, err := appgoodbase1.NewHandler(
 			ctx,
-			appgood1.WithEntID(id, true),
+			appgoodbase1.WithEntID(id, true),
 		)
 		if err != nil {
 			return err
 		}
-		exist, err := handler.ExistGood(ctx)
+		exist, err := handler.ExistGoodBase(ctx)
 		if err != nil {
 			return err
 		}
 		if !exist {
-			return fmt.Errorf("invalid app good")
+			return fmt.Errorf("invalid appgood")
 		}
 		h.AppGoodID = handler.EntID
 		return nil

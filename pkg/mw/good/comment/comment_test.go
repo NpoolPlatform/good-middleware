@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
-	device1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
-	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
+	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
+	devicetype1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
+	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"

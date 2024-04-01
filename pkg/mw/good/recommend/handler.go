@@ -6,7 +6,7 @@ import (
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	recommendcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/recommend"
-	good1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good"
+	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/recommend"
 
@@ -109,14 +109,14 @@ func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
 			}
 			return nil
 		}
-		handler, err := good1.NewHandler(
+		handler, err := goodbase1.NewHandler(
 			ctx,
-			good1.WithEntID(id, true),
+			goodbase1.WithEntID(id, true),
 		)
 		if err != nil {
 			return fmt.Errorf("invalid goodid")
 		}
-		exist, err := handler.ExistGood(ctx)
+		exist, err := handler.ExistGoodBase(ctx)
 		if err != nil {
 			return err
 		}

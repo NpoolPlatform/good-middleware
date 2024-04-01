@@ -24,15 +24,10 @@ func (h *createHandler) createTopMostGood(ctx context.Context, tx *ent.Tx) error
 		tx.TopMostGood.Create(),
 		&topmostgoodcrud.Req{
 			EntID:        h.EntID,
-			AppID:        h.AppID,
-			GoodID:       h.GoodID,
-			TopMostID:    h.TopMostID,
 			AppGoodID:    h.AppGoodID,
-			CoinTypeID:   h.CoinTypeID,
+			TopMostID:    h.TopMostID,
 			DisplayIndex: h.DisplayIndex,
-			Posters:      h.Posters,
 			UnitPrice:    h.UnitPrice,
-			PackagePrice: h.PackagePrice,
 		},
 	).Save(ctx); err != nil {
 		return err

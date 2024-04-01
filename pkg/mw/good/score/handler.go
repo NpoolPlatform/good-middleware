@@ -6,7 +6,7 @@ import (
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	scorecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/score"
-	appgood1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good"
+	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/score"
 
