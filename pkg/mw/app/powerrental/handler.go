@@ -14,7 +14,6 @@ import (
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
-	appminingstockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock/mining"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental"
 
 	"github.com/google/uuid"

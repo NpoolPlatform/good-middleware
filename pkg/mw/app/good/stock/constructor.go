@@ -34,8 +34,13 @@ func (h *Handler) ConstructCreateSql() string {
 	}
 	_sql += fmt.Sprintf("%v'%v' as app_good_id", comma, *h.AppGoodID)
 	comma = ", "
-	_sql += fmt.Sprintf("%v'%v' as reserved", comma, *h.Reserved)
-	_sql += fmt.Sprintf("%v'%v' as spot_quantity", comma, *h.Reserved)
+	if h.Reserved != nil {
+		_sql += fmt.Sprintf("%v'%v' as reserved", comma, *h.Reserved)
+		_sql += fmt.Sprintf("%v'%v' as spot_quantity", comma, *h.Reserved)
+	} else {
+		_sql += fmt.Sprintf("%v'0' as reserved", comma)
+		_sql += fmt.Sprintf("%v'0' as spot_quantity", comma)
+	}
 	_sql += fmt.Sprintf("%v'0' as locked", comma)
 	_sql += fmt.Sprintf("%v'0' as in_service", comma)
 	_sql += fmt.Sprintf("%v'0' as wait_start", comma)

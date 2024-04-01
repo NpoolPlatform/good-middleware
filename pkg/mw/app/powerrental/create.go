@@ -10,7 +10,6 @@ import (
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	appgoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/stock"
 	appmininggoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/stock/mining"
-	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -18,7 +17,6 @@ import (
 
 type createHandler struct {
 	*powerRentalAppGoodQueryHandler
-	stockValidator         *validateStockHandler
 	sqlAppPowerRental      string
 	sqlAppGoodBase         string
 	sqlAppGoodStock        string
@@ -48,13 +46,12 @@ func (h *createHandler) constructAppGoodBaseSql(ctx context.Context) error {
 }
 
 func (h *createHandler) constructAppMiningGoodStockSql(ctx context.Context) error {
-	for _, poolStock := range h.AppMiningGoodStockReqs {
+	for _, miningGoodStock := range h._ent.miningGoodStocks {
 		handler, err := appmininggoodstock1.NewHandler(
 			ctx,
-			appmininggoodstock1.WithEntID(func() *string { s := poolStock.EntID.String(); return &s }(), false),
-			appmininggoodstock1.WithAppGoodStockID(func() *string { s := poolStock.AppGoodStockID.String(); return &s }(), false),
-			appmininggoodstock1.WithMiningGoodStockID(func() *string { s := poolStock.MiningGoodStockID.String(); return &s }(), false),
-			appmininggoodstock1.WithReserved(func() *string { s := poolStock.Reserved.String(); return &s }(), true),
+			appmininggoodstock1.WithEntID(func() *string { s := uuid.NewString(); return &s }(), false),
+			appmininggoodstock1.WithAppGoodStockID(func() *string { s := h.AppGoodStockReq.EntID.String(); return &s }(), false),
+			appmininggoodstock1.WithMiningGoodStockID(func() *string { s := miningGoodStock.EntID.String(); return &s }(), false),
 		)
 		if err != nil {
 			return err
@@ -69,7 +66,6 @@ func (h *createHandler) constructAppGoodStockSql(ctx context.Context) error {
 		ctx,
 		appgoodstock1.WithEntID(func() *string { s := h.AppGoodStockReq.EntID.String(); return &s }(), false),
 		appgoodstock1.WithAppGoodID(func() *string { s := h.AppGoodStockReq.AppGoodID.String(); return &s }(), false),
-		appgoodstock1.WithReserved(func() *string { s := h.AppGoodStockReq.Reserved.String(); return &s }(), true),
 	)
 	if err != nil {
 		return err
@@ -240,7 +236,7 @@ func (h *createHandler) validateUnitPrice(ctx context.Context) error {
 	return nil
 }
 
-func (h *createHandler) _validateStock() error {
+func (h *createHandler) formalizeEntID() {
 	if h.AppGoodStockReq.EntID == nil {
 		h.AppGoodStockReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 	}
@@ -248,13 +244,6 @@ func (h *createHandler) _validateStock() error {
 		h.AppGoodBaseReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 		h.AppGoodStockReq.AppGoodID = h.AppGoodBaseReq.EntID
 	}
-	if h._ent.powerRental.StockMode != types.GoodStockMode_GoodStockByMiningPool.String() {
-		return nil
-	}
-	for _, poolStock := range h.AppMiningGoodStockReqs {
-		poolStock.AppGoodStockID = h.AppGoodStockReq.EntID
-	}
-	return h.stockValidator.validateStock()
 }
 
 func (h *createHandler) createAppStock(ctx context.Context, tx *ent.Tx) error {
@@ -275,17 +264,12 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 		powerRentalAppGoodQueryHandler: &powerRentalAppGoodQueryHandler{
 			Handler: h,
 		},
-		stockValidator: &validateStockHandler{
-			Handler: h,
-		},
 	}
 
 	if err := handler.requirePowerRentalGood(ctx); err != nil {
 		return err
 	}
-	if err := handler._validateStock(); err != nil {
-		return err
-	}
+	handler.formalizeEntID()
 	if err := handler.validateUnitPrice(ctx); err != nil {
 		return err
 	}
