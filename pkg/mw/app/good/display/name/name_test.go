@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"testing"
+	"time"
 
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
@@ -47,6 +48,10 @@ func setup(t *testing.T) func(*testing.T) {
 		goodbase1.WithEntID(&ret.GoodID, true),
 		goodbase1.WithGoodType(&goodType, true),
 		goodbase1.WithName(&ret.GoodName, true),
+		goodbase1.WithBenefitType(func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }(), true),
+		goodbase1.WithStartMode(func() *types.GoodStartMode { e := types.GoodStartMode_GoodStartModeInstantly; return &e }(), true),
+		goodbase1.WithServiceStartAt(func() *uint32 { u := uint32(time.Now().Unix()); return &u }(), true),
+		goodbase1.WithBenefitIntervalHours(func() *uint32 { u := uint32(24); return &u }(), true),
 	)
 	assert.Nil(t, err)
 
