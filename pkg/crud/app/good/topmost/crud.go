@@ -8,25 +8,18 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 type Req struct {
-	ID                     *uint32
-	EntID                  *uuid.UUID
-	AppID                  *uuid.UUID
-	TopMostType            *types.GoodTopMostType
-	Title                  *string
-	Message                *string
-	Posters                []string
-	StartAt                *uint32
-	EndAt                  *uint32
-	ThresholdCredits       *decimal.Decimal
-	RegisterElapsedSeconds *uint32
-	ThresholdPurchases     *uint32
-	ThresholdPaymentAmount *decimal.Decimal
-	KycMust                *bool
-	DeletedAt              *uint32
+	ID          *uint32
+	EntID       *uuid.UUID
+	AppID       *uuid.UUID
+	TopMostType *types.GoodTopMostType
+	Title       *string
+	Message     *string
+	StartAt     *uint32
+	EndAt       *uint32
+	DeletedAt   *uint32
 }
 
 func CreateSet(c *ent.TopMostCreate, req *Req) *ent.TopMostCreate {
@@ -45,29 +38,11 @@ func CreateSet(c *ent.TopMostCreate, req *Req) *ent.TopMostCreate {
 	if req.Message != nil {
 		c.SetMessage(*req.Message)
 	}
-	if len(req.Posters) > 0 {
-		c.SetPosters(req.Posters)
-	}
 	if req.StartAt != nil {
 		c.SetStartAt(*req.StartAt)
 	}
 	if req.EndAt != nil {
 		c.SetEndAt(*req.EndAt)
-	}
-	if req.ThresholdCredits != nil {
-		c.SetThresholdCredits(*req.ThresholdCredits)
-	}
-	if req.RegisterElapsedSeconds != nil {
-		c.SetRegisterElapsedSeconds(*req.RegisterElapsedSeconds)
-	}
-	if req.ThresholdPurchases != nil {
-		c.SetThresholdPurchases(*req.ThresholdPurchases)
-	}
-	if req.ThresholdPaymentAmount != nil {
-		c.SetThresholdPaymentAmount(*req.ThresholdPaymentAmount)
-	}
-	if req.KycMust != nil {
-		c.SetKycMust(*req.KycMust)
 	}
 	return c
 }
@@ -79,29 +54,11 @@ func UpdateSet(u *ent.TopMostUpdateOne, req *Req) *ent.TopMostUpdateOne {
 	if req.Message != nil {
 		u.SetMessage(*req.Message)
 	}
-	if len(req.Posters) > 0 {
-		u.SetPosters(req.Posters)
-	}
 	if req.StartAt != nil {
 		u.SetStartAt(*req.StartAt)
 	}
 	if req.EndAt != nil {
 		u.SetEndAt(*req.EndAt)
-	}
-	if req.ThresholdCredits != nil {
-		u.SetThresholdCredits(*req.ThresholdCredits)
-	}
-	if req.RegisterElapsedSeconds != nil {
-		u.SetRegisterElapsedSeconds(*req.RegisterElapsedSeconds)
-	}
-	if req.ThresholdPurchases != nil {
-		u.SetThresholdPurchases(*req.ThresholdPurchases)
-	}
-	if req.ThresholdPaymentAmount != nil {
-		u.SetThresholdPaymentAmount(*req.ThresholdPaymentAmount)
-	}
-	if req.KycMust != nil {
-		u.SetKycMust(*req.KycMust)
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)
