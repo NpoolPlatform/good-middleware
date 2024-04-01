@@ -13,9 +13,7 @@ import (
 
 type Req struct {
 	EntID     *uuid.UUID
-	AppID     *uuid.UUID
 	UserID    *uuid.UUID
-	GoodID    *uuid.UUID
 	AppGoodID *uuid.UUID
 	Score     *decimal.Decimal
 	DeletedAt *uint32
@@ -25,14 +23,8 @@ func CreateSet(c *ent.ScoreCreate, req *Req) *ent.ScoreCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
 	}
-	if req.AppID != nil {
-		c.SetAppID(*req.AppID)
-	}
 	if req.UserID != nil {
 		c.SetUserID(*req.UserID)
-	}
-	if req.GoodID != nil {
-		c.SetGoodID(*req.GoodID)
 	}
 	if req.AppGoodID != nil {
 		c.SetAppGoodID(*req.AppGoodID)
@@ -56,9 +48,7 @@ func UpdateSet(u *ent.ScoreUpdateOne, req *Req) *ent.ScoreUpdateOne {
 type Conds struct {
 	ID         *cruder.Cond
 	EntID      *cruder.Cond
-	AppID      *cruder.Cond
 	UserID     *cruder.Cond
-	GoodID     *cruder.Cond
 	AppGoodID  *cruder.Cond
 	AppGoodIDs *cruder.Cond
 }
@@ -93,18 +83,6 @@ func SetQueryConds(q *ent.ScoreQuery, conds *Conds) (*ent.ScoreQuery, error) {
 			return nil, fmt.Errorf("invalid score field")
 		}
 	}
-	if conds.AppID != nil {
-		id, ok := conds.AppID.Val.(uuid.UUID)
-		if !ok {
-			return nil, fmt.Errorf("invalid appid")
-		}
-		switch conds.AppID.Op {
-		case cruder.EQ:
-			q.Where(entscore.AppID(id))
-		default:
-			return nil, fmt.Errorf("invalid score field")
-		}
-	}
 	if conds.UserID != nil {
 		id, ok := conds.UserID.Val.(uuid.UUID)
 		if !ok {
@@ -115,18 +93,6 @@ func SetQueryConds(q *ent.ScoreQuery, conds *Conds) (*ent.ScoreQuery, error) {
 			q.Where(entscore.UserID(id))
 		default:
 			return nil, fmt.Errorf("invalid score field")
-		}
-	}
-	if conds.GoodID != nil {
-		id, ok := conds.GoodID.Val.(uuid.UUID)
-		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
-		}
-		switch conds.GoodID.Op {
-		case cruder.EQ:
-			q.Where(entscore.GoodID(id))
-		default:
-			return nil, fmt.Errorf("invalid goodid field")
 		}
 	}
 	if conds.AppGoodID != nil {
