@@ -13,8 +13,7 @@ import (
 
 type Req struct {
 	EntID          *uuid.UUID
-	AppID          *uuid.UUID
-	GoodID         *uuid.UUID
+	AppGoodID      *uuid.UUID
 	RecommenderID  *uuid.UUID
 	Message        *string
 	RecommendIndex *decimal.Decimal
@@ -25,11 +24,8 @@ func CreateSet(c *ent.RecommendCreate, req *Req) *ent.RecommendCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
 	}
-	if req.AppID != nil {
-		c.SetAppID(*req.AppID)
-	}
-	if req.GoodID != nil {
-		c.SetGoodID(*req.GoodID)
+	if req.AppGoodID != nil {
+		c.SetAppGoodID(*req.AppGoodID)
 	}
 	if req.RecommenderID != nil {
 		c.SetRecommenderID(*req.RecommenderID)
@@ -59,10 +55,9 @@ func UpdateSet(u *ent.RecommendUpdateOne, req *Req) *ent.RecommendUpdateOne {
 type Conds struct {
 	ID            *cruder.Cond
 	EntID         *cruder.Cond
-	AppID         *cruder.Cond
 	RecommenderID *cruder.Cond
-	GoodID        *cruder.Cond
-	GoodIDs       *cruder.Cond
+	AppGoodID     *cruder.Cond
+	AppGoodIDs    *cruder.Cond
 }
 
 //nolint:funlen,gocyclo
@@ -95,18 +90,6 @@ func SetQueryConds(q *ent.RecommendQuery, conds *Conds) (*ent.RecommendQuery, er
 			return nil, fmt.Errorf("invalid recommend field")
 		}
 	}
-	if conds.AppID != nil {
-		id, ok := conds.AppID.Val.(uuid.UUID)
-		if !ok {
-			return nil, fmt.Errorf("invalid appid")
-		}
-		switch conds.AppID.Op {
-		case cruder.EQ:
-			q.Where(entrecommend.AppID(id))
-		default:
-			return nil, fmt.Errorf("invalid recommend field")
-		}
-	}
 	if conds.RecommenderID != nil {
 		id, ok := conds.RecommenderID.Val.(uuid.UUID)
 		if !ok {
@@ -119,26 +102,26 @@ func SetQueryConds(q *ent.RecommendQuery, conds *Conds) (*ent.RecommendQuery, er
 			return nil, fmt.Errorf("invalid recommend field")
 		}
 	}
-	if conds.GoodID != nil {
-		id, ok := conds.GoodID.Val.(uuid.UUID)
+	if conds.AppGoodID != nil {
+		id, ok := conds.AppGoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
+			return nil, fmt.Errorf("invalid appgoodid")
 		}
-		switch conds.GoodID.Op {
+		switch conds.AppGoodID.Op {
 		case cruder.EQ:
-			q.Where(entrecommend.GoodID(id))
+			q.Where(entrecommend.AppGoodID(id))
 		default:
 			return nil, fmt.Errorf("invalid recommend field")
 		}
 	}
-	if conds.GoodIDs != nil {
-		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
+	if conds.AppGoodIDs != nil {
+		ids, ok := conds.AppGoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
+			return nil, fmt.Errorf("invalid appgoodids")
 		}
-		switch conds.GoodIDs.Op {
+		switch conds.AppGoodIDs.Op {
 		case cruder.IN:
-			q.Where(entrecommend.GoodIDIn(ids...))
+			q.Where(entrecommend.AppGoodIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid recommend field")
 		}
