@@ -178,6 +178,26 @@ func (tmu *TopMostUpdate) ClearMessage() *TopMostUpdate {
 	return tmu
 }
 
+// SetTargetURL sets the "target_url" field.
+func (tmu *TopMostUpdate) SetTargetURL(s string) *TopMostUpdate {
+	tmu.mutation.SetTargetURL(s)
+	return tmu
+}
+
+// SetNillableTargetURL sets the "target_url" field if the given value is not nil.
+func (tmu *TopMostUpdate) SetNillableTargetURL(s *string) *TopMostUpdate {
+	if s != nil {
+		tmu.SetTargetURL(*s)
+	}
+	return tmu
+}
+
+// ClearTargetURL clears the value of the "target_url" field.
+func (tmu *TopMostUpdate) ClearTargetURL() *TopMostUpdate {
+	tmu.mutation.ClearTargetURL()
+	return tmu
+}
+
 // SetStartAt sets the "start_at" field.
 func (tmu *TopMostUpdate) SetStartAt(u uint32) *TopMostUpdate {
 	tmu.mutation.ResetStartAt()
@@ -431,6 +451,19 @@ func (tmu *TopMostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: topmost.FieldMessage,
 		})
 	}
+	if value, ok := tmu.mutation.TargetURL(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: topmost.FieldTargetURL,
+		})
+	}
+	if tmu.mutation.TargetURLCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: topmost.FieldTargetURL,
+		})
+	}
 	if value, ok := tmu.mutation.StartAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -638,6 +671,26 @@ func (tmuo *TopMostUpdateOne) SetNillableMessage(s *string) *TopMostUpdateOne {
 // ClearMessage clears the value of the "message" field.
 func (tmuo *TopMostUpdateOne) ClearMessage() *TopMostUpdateOne {
 	tmuo.mutation.ClearMessage()
+	return tmuo
+}
+
+// SetTargetURL sets the "target_url" field.
+func (tmuo *TopMostUpdateOne) SetTargetURL(s string) *TopMostUpdateOne {
+	tmuo.mutation.SetTargetURL(s)
+	return tmuo
+}
+
+// SetNillableTargetURL sets the "target_url" field if the given value is not nil.
+func (tmuo *TopMostUpdateOne) SetNillableTargetURL(s *string) *TopMostUpdateOne {
+	if s != nil {
+		tmuo.SetTargetURL(*s)
+	}
+	return tmuo
+}
+
+// ClearTargetURL clears the value of the "target_url" field.
+func (tmuo *TopMostUpdateOne) ClearTargetURL() *TopMostUpdateOne {
+	tmuo.mutation.ClearTargetURL()
 	return tmuo
 }
 
@@ -922,6 +975,19 @@ func (tmuo *TopMostUpdateOne) sqlSave(ctx context.Context) (_node *TopMost, err 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: topmost.FieldMessage,
+		})
+	}
+	if value, ok := tmuo.mutation.TargetURL(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: topmost.FieldTargetURL,
+		})
+	}
+	if tmuo.mutation.TargetURLCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: topmost.FieldTargetURL,
 		})
 	}
 	if value, ok := tmuo.mutation.StartAt(); ok {

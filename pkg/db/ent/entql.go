@@ -935,6 +935,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmost.FieldTopMostType: {Type: field.TypeString, Column: topmost.FieldTopMostType},
 			topmost.FieldTitle:       {Type: field.TypeString, Column: topmost.FieldTitle},
 			topmost.FieldMessage:     {Type: field.TypeString, Column: topmost.FieldMessage},
+			topmost.FieldTargetURL:   {Type: field.TypeString, Column: topmost.FieldTargetURL},
 			topmost.FieldStartAt:     {Type: field.TypeUint32, Column: topmost.FieldStartAt},
 			topmost.FieldEndAt:       {Type: field.TypeUint32, Column: topmost.FieldEndAt},
 		},
@@ -4533,6 +4534,11 @@ func (f *TopMostFilter) WhereTitle(p entql.StringP) {
 // WhereMessage applies the entql string predicate on the message field.
 func (f *TopMostFilter) WhereMessage(p entql.StringP) {
 	f.Where(p.Field(topmost.FieldMessage))
+}
+
+// WhereTargetURL applies the entql string predicate on the target_url field.
+func (f *TopMostFilter) WhereTargetURL(p entql.StringP) {
+	f.Where(p.Field(topmost.FieldTargetURL))
 }
 
 // WhereStartAt applies the entql uint32 predicate on the start_at field.

@@ -135,6 +135,13 @@ func Message(v string) predicate.TopMost {
 	})
 }
 
+// TargetURL applies equality check predicate on the "target_url" field. It's identical to TargetURLEQ.
+func TargetURL(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTargetURL), v))
+	})
+}
+
 // StartAt applies equality check predicate on the "start_at" field. It's identical to StartAtEQ.
 func StartAt(v uint32) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
@@ -819,6 +826,119 @@ func MessageEqualFold(v string) predicate.TopMost {
 func MessageContainsFold(v string) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldMessage), v))
+	})
+}
+
+// TargetURLEQ applies the EQ predicate on the "target_url" field.
+func TargetURLEQ(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLNEQ applies the NEQ predicate on the "target_url" field.
+func TargetURLNEQ(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLIn applies the In predicate on the "target_url" field.
+func TargetURLIn(vs ...string) predicate.TopMost {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldTargetURL), v...))
+	})
+}
+
+// TargetURLNotIn applies the NotIn predicate on the "target_url" field.
+func TargetURLNotIn(vs ...string) predicate.TopMost {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldTargetURL), v...))
+	})
+}
+
+// TargetURLGT applies the GT predicate on the "target_url" field.
+func TargetURLGT(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLGTE applies the GTE predicate on the "target_url" field.
+func TargetURLGTE(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLLT applies the LT predicate on the "target_url" field.
+func TargetURLLT(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLLTE applies the LTE predicate on the "target_url" field.
+func TargetURLLTE(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLContains applies the Contains predicate on the "target_url" field.
+func TargetURLContains(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLHasPrefix applies the HasPrefix predicate on the "target_url" field.
+func TargetURLHasPrefix(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLHasSuffix applies the HasSuffix predicate on the "target_url" field.
+func TargetURLHasSuffix(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLIsNil applies the IsNil predicate on the "target_url" field.
+func TargetURLIsNil() predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldTargetURL)))
+	})
+}
+
+// TargetURLNotNil applies the NotNil predicate on the "target_url" field.
+func TargetURLNotNil() predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldTargetURL)))
+	})
+}
+
+// TargetURLEqualFold applies the EqualFold predicate on the "target_url" field.
+func TargetURLEqualFold(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLContainsFold applies the ContainsFold predicate on the "target_url" field.
+func TargetURLContainsFold(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldTargetURL), v))
 	})
 }
 

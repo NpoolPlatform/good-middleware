@@ -40736,6 +40736,7 @@ type TopMostMutation struct {
 	top_most_type *string
 	title         *string
 	message       *string
+	target_url    *string
 	start_at      *uint32
 	addstart_at   *int32
 	end_at        *uint32
@@ -41250,6 +41251,55 @@ func (m *TopMostMutation) ResetMessage() {
 	delete(m.clearedFields, topmost.FieldMessage)
 }
 
+// SetTargetURL sets the "target_url" field.
+func (m *TopMostMutation) SetTargetURL(s string) {
+	m.target_url = &s
+}
+
+// TargetURL returns the value of the "target_url" field in the mutation.
+func (m *TopMostMutation) TargetURL() (r string, exists bool) {
+	v := m.target_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTargetURL returns the old "target_url" field's value of the TopMost entity.
+// If the TopMost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostMutation) OldTargetURL(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTargetURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTargetURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTargetURL: %w", err)
+	}
+	return oldValue.TargetURL, nil
+}
+
+// ClearTargetURL clears the value of the "target_url" field.
+func (m *TopMostMutation) ClearTargetURL() {
+	m.target_url = nil
+	m.clearedFields[topmost.FieldTargetURL] = struct{}{}
+}
+
+// TargetURLCleared returns if the "target_url" field was cleared in this mutation.
+func (m *TopMostMutation) TargetURLCleared() bool {
+	_, ok := m.clearedFields[topmost.FieldTargetURL]
+	return ok
+}
+
+// ResetTargetURL resets all changes to the "target_url" field.
+func (m *TopMostMutation) ResetTargetURL() {
+	m.target_url = nil
+	delete(m.clearedFields, topmost.FieldTargetURL)
+}
+
 // SetStartAt sets the "start_at" field.
 func (m *TopMostMutation) SetStartAt(u uint32) {
 	m.start_at = &u
@@ -41409,7 +41459,7 @@ func (m *TopMostMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TopMostMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, topmost.FieldCreatedAt)
 	}
@@ -41433,6 +41483,9 @@ func (m *TopMostMutation) Fields() []string {
 	}
 	if m.message != nil {
 		fields = append(fields, topmost.FieldMessage)
+	}
+	if m.target_url != nil {
+		fields = append(fields, topmost.FieldTargetURL)
 	}
 	if m.start_at != nil {
 		fields = append(fields, topmost.FieldStartAt)
@@ -41464,6 +41517,8 @@ func (m *TopMostMutation) Field(name string) (ent.Value, bool) {
 		return m.Title()
 	case topmost.FieldMessage:
 		return m.Message()
+	case topmost.FieldTargetURL:
+		return m.TargetURL()
 	case topmost.FieldStartAt:
 		return m.StartAt()
 	case topmost.FieldEndAt:
@@ -41493,6 +41548,8 @@ func (m *TopMostMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldTitle(ctx)
 	case topmost.FieldMessage:
 		return m.OldMessage(ctx)
+	case topmost.FieldTargetURL:
+		return m.OldTargetURL(ctx)
 	case topmost.FieldStartAt:
 		return m.OldStartAt(ctx)
 	case topmost.FieldEndAt:
@@ -41561,6 +41618,13 @@ func (m *TopMostMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetMessage(v)
+		return nil
+	case topmost.FieldTargetURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTargetURL(v)
 		return nil
 	case topmost.FieldStartAt:
 		v, ok := value.(uint32)
@@ -41681,6 +41745,9 @@ func (m *TopMostMutation) ClearedFields() []string {
 	if m.FieldCleared(topmost.FieldMessage) {
 		fields = append(fields, topmost.FieldMessage)
 	}
+	if m.FieldCleared(topmost.FieldTargetURL) {
+		fields = append(fields, topmost.FieldTargetURL)
+	}
 	if m.FieldCleared(topmost.FieldStartAt) {
 		fields = append(fields, topmost.FieldStartAt)
 	}
@@ -41712,6 +41779,9 @@ func (m *TopMostMutation) ClearField(name string) error {
 		return nil
 	case topmost.FieldMessage:
 		m.ClearMessage()
+		return nil
+	case topmost.FieldTargetURL:
+		m.ClearTargetURL()
 		return nil
 	case topmost.FieldStartAt:
 		m.ClearStartAt()
@@ -41750,6 +41820,9 @@ func (m *TopMostMutation) ResetField(name string) error {
 		return nil
 	case topmost.FieldMessage:
 		m.ResetMessage()
+		return nil
+	case topmost.FieldTargetURL:
+		m.ResetTargetURL()
 		return nil
 	case topmost.FieldStartAt:
 		m.ResetStartAt()

@@ -32,6 +32,8 @@ type TopMost struct {
 	Title string `json:"title,omitempty"`
 	// Message holds the value of the "message" field.
 	Message string `json:"message,omitempty"`
+	// TargetURL holds the value of the "target_url" field.
+	TargetURL string `json:"target_url,omitempty"`
 	// StartAt holds the value of the "start_at" field.
 	StartAt uint32 `json:"start_at,omitempty"`
 	// EndAt holds the value of the "end_at" field.
@@ -45,7 +47,7 @@ func (*TopMost) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case topmost.FieldID, topmost.FieldCreatedAt, topmost.FieldUpdatedAt, topmost.FieldDeletedAt, topmost.FieldStartAt, topmost.FieldEndAt:
 			values[i] = new(sql.NullInt64)
-		case topmost.FieldTopMostType, topmost.FieldTitle, topmost.FieldMessage:
+		case topmost.FieldTopMostType, topmost.FieldTitle, topmost.FieldMessage, topmost.FieldTargetURL:
 			values[i] = new(sql.NullString)
 		case topmost.FieldEntID, topmost.FieldAppID:
 			values[i] = new(uuid.UUID)
@@ -118,6 +120,12 @@ func (tm *TopMost) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				tm.Message = value.String
 			}
+		case topmost.FieldTargetURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field target_url", values[i])
+			} else if value.Valid {
+				tm.TargetURL = value.String
+			}
 		case topmost.FieldStartAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field start_at", values[i])
@@ -181,6 +189,9 @@ func (tm *TopMost) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("message=")
 	builder.WriteString(tm.Message)
+	builder.WriteString(", ")
+	builder.WriteString("target_url=")
+	builder.WriteString(tm.TargetURL)
 	builder.WriteString(", ")
 	builder.WriteString("start_at=")
 	builder.WriteString(fmt.Sprintf("%v", tm.StartAt))

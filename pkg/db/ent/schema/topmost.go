@@ -43,6 +43,10 @@ func (TopMost) Fields() []ent.Field {
 			Optional().
 			Default(""),
 		field.
+			String("target_url").
+			Optional().
+			Default(""),
+		field.
 			Uint32("start_at").
 			Optional().
 			Default(0),

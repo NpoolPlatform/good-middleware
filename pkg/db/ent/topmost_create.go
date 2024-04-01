@@ -134,6 +134,20 @@ func (tmc *TopMostCreate) SetNillableMessage(s *string) *TopMostCreate {
 	return tmc
 }
 
+// SetTargetURL sets the "target_url" field.
+func (tmc *TopMostCreate) SetTargetURL(s string) *TopMostCreate {
+	tmc.mutation.SetTargetURL(s)
+	return tmc
+}
+
+// SetNillableTargetURL sets the "target_url" field if the given value is not nil.
+func (tmc *TopMostCreate) SetNillableTargetURL(s *string) *TopMostCreate {
+	if s != nil {
+		tmc.SetTargetURL(*s)
+	}
+	return tmc
+}
+
 // SetStartAt sets the "start_at" field.
 func (tmc *TopMostCreate) SetStartAt(u uint32) *TopMostCreate {
 	tmc.mutation.SetStartAt(u)
@@ -294,6 +308,10 @@ func (tmc *TopMostCreate) defaults() error {
 		v := topmost.DefaultMessage
 		tmc.mutation.SetMessage(v)
 	}
+	if _, ok := tmc.mutation.TargetURL(); !ok {
+		v := topmost.DefaultTargetURL
+		tmc.mutation.SetTargetURL(v)
+	}
 	if _, ok := tmc.mutation.StartAt(); !ok {
 		v := topmost.DefaultStartAt
 		tmc.mutation.SetStartAt(v)
@@ -416,6 +434,14 @@ func (tmc *TopMostCreate) createSpec() (*TopMost, *sqlgraph.CreateSpec) {
 			Column: topmost.FieldMessage,
 		})
 		_node.Message = value
+	}
+	if value, ok := tmc.mutation.TargetURL(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: topmost.FieldTargetURL,
+		})
+		_node.TargetURL = value
 	}
 	if value, ok := tmc.mutation.StartAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -622,6 +648,24 @@ func (u *TopMostUpsert) UpdateMessage() *TopMostUpsert {
 // ClearMessage clears the value of the "message" field.
 func (u *TopMostUpsert) ClearMessage() *TopMostUpsert {
 	u.SetNull(topmost.FieldMessage)
+	return u
+}
+
+// SetTargetURL sets the "target_url" field.
+func (u *TopMostUpsert) SetTargetURL(v string) *TopMostUpsert {
+	u.Set(topmost.FieldTargetURL, v)
+	return u
+}
+
+// UpdateTargetURL sets the "target_url" field to the value that was provided on create.
+func (u *TopMostUpsert) UpdateTargetURL() *TopMostUpsert {
+	u.SetExcluded(topmost.FieldTargetURL)
+	return u
+}
+
+// ClearTargetURL clears the value of the "target_url" field.
+func (u *TopMostUpsert) ClearTargetURL() *TopMostUpsert {
+	u.SetNull(topmost.FieldTargetURL)
 	return u
 }
 
@@ -881,6 +925,27 @@ func (u *TopMostUpsertOne) UpdateMessage() *TopMostUpsertOne {
 func (u *TopMostUpsertOne) ClearMessage() *TopMostUpsertOne {
 	return u.Update(func(s *TopMostUpsert) {
 		s.ClearMessage()
+	})
+}
+
+// SetTargetURL sets the "target_url" field.
+func (u *TopMostUpsertOne) SetTargetURL(v string) *TopMostUpsertOne {
+	return u.Update(func(s *TopMostUpsert) {
+		s.SetTargetURL(v)
+	})
+}
+
+// UpdateTargetURL sets the "target_url" field to the value that was provided on create.
+func (u *TopMostUpsertOne) UpdateTargetURL() *TopMostUpsertOne {
+	return u.Update(func(s *TopMostUpsert) {
+		s.UpdateTargetURL()
+	})
+}
+
+// ClearTargetURL clears the value of the "target_url" field.
+func (u *TopMostUpsertOne) ClearTargetURL() *TopMostUpsertOne {
+	return u.Update(func(s *TopMostUpsert) {
+		s.ClearTargetURL()
 	})
 }
 
@@ -1313,6 +1378,27 @@ func (u *TopMostUpsertBulk) UpdateMessage() *TopMostUpsertBulk {
 func (u *TopMostUpsertBulk) ClearMessage() *TopMostUpsertBulk {
 	return u.Update(func(s *TopMostUpsert) {
 		s.ClearMessage()
+	})
+}
+
+// SetTargetURL sets the "target_url" field.
+func (u *TopMostUpsertBulk) SetTargetURL(v string) *TopMostUpsertBulk {
+	return u.Update(func(s *TopMostUpsert) {
+		s.SetTargetURL(v)
+	})
+}
+
+// UpdateTargetURL sets the "target_url" field to the value that was provided on create.
+func (u *TopMostUpsertBulk) UpdateTargetURL() *TopMostUpsertBulk {
+	return u.Update(func(s *TopMostUpsert) {
+		s.UpdateTargetURL()
+	})
+}
+
+// ClearTargetURL clears the value of the "target_url" field.
+func (u *TopMostUpsertBulk) ClearTargetURL() *TopMostUpsertBulk {
+	return u.Update(func(s *TopMostUpsert) {
+		s.ClearTargetURL()
 	})
 }
 

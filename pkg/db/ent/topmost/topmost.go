@@ -28,6 +28,8 @@ const (
 	FieldTitle = "title"
 	// FieldMessage holds the string denoting the message field in the database.
 	FieldMessage = "message"
+	// FieldTargetURL holds the string denoting the target_url field in the database.
+	FieldTargetURL = "target_url"
 	// FieldStartAt holds the string denoting the start_at field in the database.
 	FieldStartAt = "start_at"
 	// FieldEndAt holds the string denoting the end_at field in the database.
@@ -47,6 +49,7 @@ var Columns = []string{
 	FieldTopMostType,
 	FieldTitle,
 	FieldMessage,
+	FieldTargetURL,
 	FieldStartAt,
 	FieldEndAt,
 }
@@ -88,6 +91,8 @@ var (
 	DefaultTitle string
 	// DefaultMessage holds the default value on creation for the "message" field.
 	DefaultMessage string
+	// DefaultTargetURL holds the default value on creation for the "target_url" field.
+	DefaultTargetURL string
 	// DefaultStartAt holds the default value on creation for the "start_at" field.
 	DefaultStartAt uint32
 	// DefaultEndAt holds the default value on creation for the "end_at" field.

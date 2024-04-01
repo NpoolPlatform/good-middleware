@@ -2279,12 +2279,16 @@ func init() {
 	topmostDescMessage := topmostFields[3].Descriptor()
 	// topmost.DefaultMessage holds the default value on creation for the message field.
 	topmost.DefaultMessage = topmostDescMessage.Default.(string)
+	// topmostDescTargetURL is the schema descriptor for target_url field.
+	topmostDescTargetURL := topmostFields[4].Descriptor()
+	// topmost.DefaultTargetURL holds the default value on creation for the target_url field.
+	topmost.DefaultTargetURL = topmostDescTargetURL.Default.(string)
 	// topmostDescStartAt is the schema descriptor for start_at field.
-	topmostDescStartAt := topmostFields[4].Descriptor()
+	topmostDescStartAt := topmostFields[5].Descriptor()
 	// topmost.DefaultStartAt holds the default value on creation for the start_at field.
 	topmost.DefaultStartAt = topmostDescStartAt.Default.(uint32)
 	// topmostDescEndAt is the schema descriptor for end_at field.
-	topmostDescEndAt := topmostFields[5].Descriptor()
+	topmostDescEndAt := topmostFields[6].Descriptor()
 	// topmost.DefaultEndAt holds the default value on creation for the end_at field.
 	topmost.DefaultEndAt = topmostDescEndAt.Default.(uint32)
 	topmostgoodMixin := schema.TopMostGood{}.Mixin()
