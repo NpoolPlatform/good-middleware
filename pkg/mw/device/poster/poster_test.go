@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	devicetype1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
+	manufacturer1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device/manufacturer"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device/poster"
@@ -36,11 +37,22 @@ var ret = npool.Poster{
 }
 
 func setup(t *testing.T) func(*testing.T) {
+	manufacturerID := uuid.NewString()
+	h10, err := manufacturer1.NewHandler(
+		context.Background(),
+		manufacturer1.WithEntID(&manufacturerID, true),
+		manufacturer1.WithName(&ret.Manufacturer, true),
+	)
+	assert.Nil(t, err)
+
+	err = h10.CreateManufacturer(context.Background())
+	assert.Nil(t, err)
+
 	h1, err := devicetype1.NewHandler(
 		context.Background(),
 		devicetype1.WithEntID(&ret.DeviceTypeID, true),
 		devicetype1.WithType(&ret.DeviceType, true),
-		devicetype1.WithManufacturer(&ret.Manufacturer, true),
+		devicetype1.WithManufacturerID(&manufacturerID, true),
 	)
 	assert.Nil(t, err)
 
@@ -49,6 +61,7 @@ func setup(t *testing.T) func(*testing.T) {
 
 	return func(*testing.T) {
 		_ = h1.DeleteDeviceType(context.Background())
+		_ = h10.DeleteManufacturer(context.Background())
 	}
 }
 

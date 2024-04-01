@@ -162,8 +162,8 @@ func TestDeviceType(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createDeviceType", createDeviceType)
-	// t.Run("updateDeviceType", updateDeviceType)
-	// t.Run("getDeviceType", getDeviceType)
-	// t.Run("getDeviceTypes", getDeviceTypes)
-	// t.Run("deleteDeviceType", deleteDeviceType)
+	t.Run("updateDeviceType", updateDeviceType)
+	t.Run("getDeviceType", getDeviceType)
+	t.Run("getDeviceTypes", getDeviceTypes)
+	t.Run("deleteDeviceType", deleteDeviceType)
 }

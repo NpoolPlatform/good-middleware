@@ -10,6 +10,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entdevicetype "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
+	entmanufacturer "github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 	entdeviceposter "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceposter"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device/poster"
 )
@@ -51,7 +52,7 @@ func (h *queryHandler) queryPosters(cli *ent.Client) (*ent.DevicePosterSelect, e
 
 func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 	t := sql.Table(entdeviceposter.Table)
-	s.LeftJoin(t).
+	s.Join(t).
 		On(
 			s.C(entdeviceposter.FieldID),
 			t.C(entdeviceposter.FieldID),
@@ -68,14 +69,20 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 
 func (h *queryHandler) queryJoinDeviceType(s *sql.Selector) {
 	t1 := sql.Table(entdevicetype.Table)
-	s.LeftJoin(t1).
+	t2 := sql.Table(entmanufacturer.Table)
+	s.Join(t1).
 		On(
 			s.C(entdeviceposter.FieldDeviceTypeID),
 			t1.C(entdevicetype.FieldEntID),
 		).
+		Join(t2).
+		On(
+			t1.C(entdevicetype.FieldManufacturerID),
+			t2.C(entmanufacturer.FieldEntID),
+		).
 		AppendSelect(
 			sql.As(t1.C(entdevicetype.FieldType), "device_type"),
-			t1.C(entdevicetype.FieldManufacturer),
+			sql.As(t2.C(entmanufacturer.FieldName), "manufacturer"),
 		)
 }
 
