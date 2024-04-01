@@ -216,6 +216,8 @@ func setup(t *testing.T) func(*testing.T) {
 
 func reserveStock(t *testing.T) {
 	ret.SpotQuantity = ret.Reserved
+	ret.AppMiningGoodStocks[0].Reserved = ret.Reserved
+	ret.AppMiningGoodStocks[0].SpotQuantity = ret.Reserved
 
 	handler, err := NewHandler(
 		context.Background(),
