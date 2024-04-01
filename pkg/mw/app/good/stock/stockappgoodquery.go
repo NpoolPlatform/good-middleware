@@ -36,6 +36,8 @@ type stockAppGoodQuery struct {
 	appMiningGoodStockEntIDs []uuid.UUID
 	miningGoodStockEntIDs    []uuid.UUID
 	stockGoodIDs             []uuid.UUID
+	appMiningGoodStocks      []*ent.AppMiningGoodStock
+	miningGoodStocks         []*ent.MiningGoodStock
 }
 
 func (h *stockAppGoodQuery) _getAppGoodStocks(ctx context.Context, cli *ent.Client) (err error) {
@@ -61,7 +63,7 @@ func (h *stockAppGoodQuery) _getAppGoodStocks(ctx context.Context, cli *ent.Clie
 }
 
 func (h *stockAppGoodQuery) getAppMiningGoodStocks(ctx context.Context, cli *ent.Client) (err error) {
-	appMiningGoodStocks, err := cli.
+	h.appMiningGoodStocks, err = cli.
 		AppMiningGoodStock.
 		Query().
 		Where(
@@ -72,31 +74,32 @@ func (h *stockAppGoodQuery) getAppMiningGoodStocks(ctx context.Context, cli *ent
 	if err != nil {
 		return err
 	}
-	for _, stock := range appMiningGoodStocks {
-		_stock, err := func() (*stockAppGood, error) {
-			for _, _stock := range h.Stocks {
-				if stock.EntID != *_stock.EntID {
-					continue
-				}
-				__stock, ok := h.stocks[*_stock.AppGoodID]
-				if !ok {
-					return nil, fmt.Errorf("invalid stock")
-				}
-				if __stock.powerRental == nil || __stock.powerRental.StockMode != types.GoodStockMode_GoodStockByUnique.String() {
-					continue
-				}
-				return __stock, nil
-			}
-			return nil, fmt.Errorf("invalid stock")
-		}()
-		if err != nil {
-			return err
-		}
-		_stock.appMiningGoodStock = stock
+	for _, stock := range h.appMiningGoodStocks {
 		h.appGoodStockEntIDs = append(h.appGoodStockEntIDs, stock.AppGoodStockID)
 		h.miningGoodStockEntIDs = append(h.miningGoodStockEntIDs, stock.MiningGoodStockID)
 	}
 	return nil
+}
+
+func (h *stockAppGoodQuery) formalizeMiningGoodStocks() {
+	for _, stock := range h.stocks {
+		for _, miningGoodStock := range h.miningGoodStocks {
+			if miningGoodStock.GoodStockID == stock.stock.EntID {
+				stock.miningGoodStock = miningGoodStock
+			}
+		}
+	}
+}
+
+func (h *stockAppGoodQuery) formalizeAppMiningGoodStocks() {
+	for _, stock := range h.stocks {
+		for _, appMiningGoodStock := range h.appMiningGoodStocks {
+			if appMiningGoodStock.AppGoodStockID == stock.appGoodStock.EntID &&
+				appMiningGoodStock.MiningGoodStockID == stock.miningGoodStock.EntID {
+				stock.appMiningGoodStock = appMiningGoodStock
+			}
+		}
+	}
 }
 
 func (h *stockAppGoodQuery) getAppGoodBases(ctx context.Context, cli *ent.Client) (err error) {
@@ -119,7 +122,7 @@ func (h *stockAppGoodQuery) getAppGoodBases(ctx context.Context, cli *ent.Client
 }
 
 func (h *stockAppGoodQuery) getMiningGoodStocks(ctx context.Context, cli *ent.Client) (err error) {
-	stocks, err := cli.
+	h.miningGoodStocks, err = cli.
 		MiningGoodStock.
 		Query().
 		Where(
@@ -129,14 +132,6 @@ func (h *stockAppGoodQuery) getMiningGoodStocks(ctx context.Context, cli *ent.Cl
 		All(ctx)
 	if err != nil {
 		return err
-	}
-	for _, stock := range h.stocks {
-		for _, _stock := range stocks {
-			if _stock.EntID == stock.appGoodStock.EntID {
-				stock.miningGoodStock = _stock
-				break
-			}
-		}
 	}
 	return nil
 }
@@ -285,8 +280,6 @@ func (h *stockAppGoodQuery) formalizeStockEntIDs() error {
 			return err
 		}
 	}
-	fmt.Printf("stock ent ids: %v\n", h.appGoodStockEntIDs)
-	fmt.Printf("mining stock ent ids: %v\n", h.appMiningGoodStockEntIDs)
 	if len(h.appGoodStockEntIDs) == 0 && len(h.appMiningGoodStockEntIDs) == 0 {
 		return fmt.Errorf("invalid stock")
 	}
@@ -305,12 +298,16 @@ func (h *stockAppGoodQuery) getAppGoodStocks(ctx context.Context) error {
 				return err
 			}
 		}
+		if len(h.miningGoodStockEntIDs) > 0 {
+			if err := h.getMiningGoodStocks(_ctx, cli); err != nil {
+				return err
+			}
+		}
 		if err := h.getGoodStocks(_ctx, cli); err != nil {
 			return err
 		}
-		if len(h.miningGoodStockEntIDs) > 0 {
-			return h.getMiningGoodStocks(_ctx, cli)
-		}
+		h.formalizeMiningGoodStocks()
+		h.formalizeAppMiningGoodStocks()
 		return nil
 	})
 }
@@ -327,6 +324,14 @@ func (h *stockAppGoodQuery) getStockAppGoods(ctx context.Context) error {
 		return err
 	}
 	return h.getAppGoodStocks(ctx)
+}
+
+func (h *stockAppGoodQuery) getStockGoods(ctx context.Context) error {
+	h.stocks = map[uuid.UUID]*stockAppGood{}
+	if err := h.formalizeAppGoodIDs(); err != nil {
+		return err
+	}
+	return h.getAppGoods(ctx)
 }
 
 func (h *stockAppGoodQuery) stockByMiningPool(appGoodID uuid.UUID) bool {

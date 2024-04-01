@@ -2,15 +2,11 @@ package appstock
 
 import (
 	"context"
-	"fmt"
 
 	appgoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	appmininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	powerrental1 "github.com/NpoolPlatform/good-middleware/pkg/mw/powerrental"
-
-	"github.com/google/uuid"
 )
 
 type createHandler struct {
@@ -28,27 +24,15 @@ func (h *createHandler) _createStock(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *createHandler) createAppGoodMiningStocks(ctx context.Context, tx *ent.Tx) error {
-	stock, ok := h.stocks[*h.AppGoodID]
-	if !ok {
-		return fmt.Errorf("invalid stock")
-	}
-	handler, err := powerrental1.NewHandler(
-		ctx,
-		powerrental1.WithGoodID(func() *string { s := stock.powerRental.GoodID.String(); return &s }(), true),
-	)
-	if err != nil {
-		return err
-	}
-	powerRental, err := handler.GetPowerRental(ctx)
-	if err != nil {
-		return err
-	}
-	for _, stock := range powerRental.MiningGoodStocks {
+	for _, req := range h.AppMiningGoodStockReqs {
 		if _, err := appmininggoodstockcrud.CreateSet(
 			tx.AppMiningGoodStock.Create(),
 			&appmininggoodstockcrud.Req{
+				EntID:             req.EntID,
 				AppGoodStockID:    h.EntID,
-				MiningGoodStockID: func() *uuid.UUID { uid := uuid.MustParse(stock.EntID); return &uid }(),
+				MiningGoodStockID: req.MiningGoodStockID,
+				Reserved:          req.Reserved,
+				SpotQuantity:      req.Reserved,
 			},
 		).Save(ctx); err != nil {
 			return err
@@ -64,10 +48,10 @@ func (h *Handler) createStock(ctx context.Context) error {
 			Handler: h,
 		},
 	}
-	if err := handler.getStockAppGoods(ctx); err != nil {
+	if err := handler.getStockGoods(ctx); err != nil {
 		return err
 	}
-	return db.WithDebugTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if handler.stockByMiningPool(*h.AppGoodID) {
 			if err := handler.createAppGoodMiningStocks(_ctx, tx); err != nil {
 				return err

@@ -52,17 +52,17 @@ var ret = npool.Stock{
 		{
 			EntID:             uuid.NewString(),
 			MiningGoodStockID: uuid.NewString(),
-			Reserved:          decimal.NewFromInt(345).String(),
+			Reserved:          decimal.NewFromInt(0).String(),
 		},
 		{
 			EntID:             uuid.NewString(),
 			MiningGoodStockID: uuid.NewString(),
-			Reserved:          decimal.NewFromInt(745).String(),
+			Reserved:          decimal.NewFromInt(0).String(),
 		},
 		{
 			EntID:             uuid.NewString(),
 			MiningGoodStockID: uuid.NewString(),
-			Reserved:          decimal.NewFromInt(1345).String(),
+			Reserved:          decimal.NewFromInt(0).String(),
 		},
 	},
 }
@@ -70,6 +70,16 @@ var ret = npool.Stock{
 var lockID = uuid.NewString()
 
 func setup(t *testing.T) func(*testing.T) {
+	ret.StockModeStr = ret.StockMode.String()
+	for _, stock := range ret.AppMiningGoodStocks {
+		stock.AppGoodStockID = ret.EntID
+		stock.SpotQuantity = stock.Reserved
+		stock.Locked = decimal.NewFromInt(0).String()
+		stock.InService = decimal.NewFromInt(0).String()
+		stock.WaitStart = decimal.NewFromInt(0).String()
+		stock.Sold = decimal.NewFromInt(0).String()
+	}
+
 	brandID := uuid.NewString()
 	h1, err := vendorbrand1.NewHandler(
 		context.Background(),
@@ -172,10 +182,21 @@ func setup(t *testing.T) func(*testing.T) {
 	err = h5.CreateGoodBase(context.Background())
 	assert.Nil(t, err)
 
+	appMiningGoodStocks := func() (reqs []*appmininggoodstockmwpb.StockReq) {
+		for _, stock := range ret.AppMiningGoodStocks {
+			reqs = append(reqs, &appmininggoodstockmwpb.StockReq{
+				EntID:             &stock.EntID,
+				MiningGoodStockID: &stock.MiningGoodStockID,
+				Reserved:          func() *string { s := decimal.NewFromInt(0).String(); return &s }(),
+			})
+		}
+		return
+	}()
 	h6, err := NewHandler(
 		context.Background(),
 		WithEntID(&ret.EntID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
+		WithAppMiningGoodStocks(appMiningGoodStocks, true),
 	)
 	assert.Nil(t, err)
 
@@ -205,12 +226,21 @@ func reserveStock(t *testing.T) {
 	if assert.Nil(t, err) {
 		err = handler.ReserveStock(context.Background())
 		if assert.Nil(t, err) {
-			info, err := handler.GetStock(context.Background())
+			handler, err := NewHandler(
+				context.Background(),
+				WithEntID(&ret.EntID, true),
+			)
 			if assert.Nil(t, err) {
-				ret.CreatedAt = info.CreatedAt
-				ret.UpdatedAt = info.UpdatedAt
-				ret.ID = info.ID
-				assert.Equal(t, &ret, info)
+				info, err := handler.GetStock(context.Background())
+				if assert.Nil(t, err) {
+					ret.CreatedAt = info.CreatedAt
+					ret.UpdatedAt = info.UpdatedAt
+					ret.ID = info.ID
+					for i, stock := range info.AppMiningGoodStocks {
+						ret.AppMiningGoodStocks[i].ID = stock.ID
+					}
+					assert.Equal(t, &ret, info)
+				}
 			}
 		}
 	}
