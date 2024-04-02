@@ -3,72 +3,80 @@ package like
 import (
 	"context"
 	"fmt"
+	"time"
 
-	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
-	likecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/like"
-
-	"github.com/google/uuid"
 )
 
 type createHandler struct {
 	*Handler
-	appgood *appgoodpb.Good
+	sql string
 }
 
-func (h *createHandler) getAppGood(ctx context.Context) error {
-	handler, err := appgood1.NewHandler(ctx)
-	if err != nil {
-		return err
+func (h *createHandler) constructSql() {
+	comma := ""
+	now := uint32(time.Now().Unix())
+	_sql := "insert into likes "
+	_sql += "("
+	if h.EntID != nil {
+		_sql += "ent_id"
+		comma = ", "
 	}
-	handler.EntID = h.AppGoodID
-	info, err := handler.GetGood(ctx)
-	if err != nil {
-		return err
+	_sql += comma + "user_id"
+	comma = ", "
+	_sql += comma + "app_good_id"
+	_sql += comma + "`like`"
+	_sql += comma + "created_at"
+	_sql += comma + "updated_at"
+	_sql += comma + "deleted_at"
+	_sql += ")"
+	comma = ""
+	_sql += " select * from (select "
+	if h.EntID != nil {
+		_sql += fmt.Sprintf("'%v' as ent_id ", *h.EntID)
+		comma = ", "
 	}
-	if info == nil {
-		return fmt.Errorf("app good not found %v", *h.AppGoodID)
-	}
-	h.appgood = info
-	return nil
+	_sql += fmt.Sprintf("%v'%v' as user_id", comma, *h.UserID)
+	comma = ", "
+	_sql += fmt.Sprintf("%v'%v' as app_good_id", comma, *h.AppGoodID)
+	_sql += fmt.Sprintf("%v%v as `like`", comma, *h.Like)
+	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
+	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
+	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
+	_sql += " limit 1) as tmp "
+	_sql += "where not exists ("
+	_sql += "select 1 from likes "
+	_sql += fmt.Sprintf("where user_id = '%v' and app_good_id = '%v'", *h.UserID, *h.AppGoodID)
+	_sql += " limit 1)"
+	h.sql = _sql
 }
 
 func (h *createHandler) createLike(ctx context.Context, tx *ent.Tx) error {
-	goodid := uuid.MustParse(h.appgood.GoodID)
-	if _, err := likecrud.CreateSet(
-		tx.Like.Create(),
-		&likecrud.Req{
-			EntID:     h.EntID,
-			AppID:     h.AppID,
-			UserID:    h.UserID,
-			GoodID:    &goodid,
-			AppGoodID: h.AppGoodID,
-			Like:      h.Like,
-		},
-	).Save(ctx); err != nil {
+	rc, err := tx.ExecContext(ctx, h.sql)
+	if err != nil {
 		return err
+	}
+	n, err := rc.RowsAffected()
+	if err != nil || n != 1 {
+		return fmt.Errorf("fail create like: %v", err)
 	}
 	return nil
 }
 
 func (h *createHandler) addGoodLike(ctx context.Context, tx *ent.Tx) error {
-	goodid := uuid.MustParse(h.appgood.GoodID)
 	stm, err := extrainfocrud.SetQueryConds(
 		tx.ExtraInfo.Query(),
 		&extrainfocrud.Conds{
-			GoodID: &cruder.Cond{Op: cruder.EQ, Val: goodid},
+			AppGoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.AppGoodID},
 		},
 	)
 	if err != nil {
 		return err
 	}
-	info, err := stm.Only(ctx)
+	info, err := stm.ForUpdate().Only(ctx)
 	if err != nil {
 		return err
 	}
@@ -89,52 +97,15 @@ func (h *createHandler) addGoodLike(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *Handler) CreateLike(ctx context.Context) (*npool.Like, error) {
-	key := fmt.Sprintf("%v:%v:%v:%v", basetypes.Prefix_PrefixLikeGood, *h.AppID, *h.UserID, *h.AppGoodID)
-	if err := redis2.TryLock(key, 0); err != nil {
-		return nil, err
-	}
-	defer func() {
-		_ = redis2.Unlock(key)
-	}()
-
-	h.Conds = &likecrud.Conds{
-		AppID:     &cruder.Cond{Op: cruder.EQ, Val: *h.AppID},
-		UserID:    &cruder.Cond{Op: cruder.EQ, Val: *h.UserID},
-		AppGoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.AppGoodID},
-	}
-	exist, err := h.ExistLikeConds(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if exist {
-		return nil, fmt.Errorf("already exists")
-	}
-
-	id := uuid.New()
-	if h.EntID == nil {
-		h.EntID = &id
-	}
-
+func (h *Handler) CreateLike(ctx context.Context) error {
 	handler := &createHandler{
 		Handler: h,
 	}
-	if err := handler.getAppGood(ctx); err != nil {
-		return nil, err
-	}
-
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	handler.constructSql()
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createLike(ctx, tx); err != nil {
 			return err
 		}
-		if err := handler.addGoodLike(ctx, tx); err != nil {
-			return err
-		}
-		return nil
+		return handler.addGoodLike(ctx, tx)
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetLike(ctx)
 }

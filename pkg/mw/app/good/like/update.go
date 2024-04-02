@@ -9,34 +9,14 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entlike "github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
-	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/like"
 
 	"github.com/google/uuid"
 )
 
 type updateHandler struct {
 	*Handler
-	like    int
-	appgood *appgoodpb.Good
-}
-
-func (h *updateHandler) getAppGood(ctx context.Context) error {
-	handler, err := appgood1.NewHandler(ctx)
-	if err != nil {
-		return err
-	}
-	handler.EntID = h.AppGoodID
-	info, err := handler.GetGood(ctx)
-	if err != nil {
-		return err
-	}
-	if info == nil {
-		return fmt.Errorf("app good not found %v", *h.AppGoodID)
-	}
-	h.appgood = info
-	return nil
+	like int
 }
 
 func (h *updateHandler) updateLike(ctx context.Context, tx *ent.Tx) error {
@@ -71,11 +51,10 @@ func (h *updateHandler) updateLike(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *updateHandler) updateGoodLike(ctx context.Context, tx *ent.Tx) error {
-	goodid := uuid.MustParse(h.appgood.GoodID)
 	stm, err := extrainfocrud.SetQueryConds(
 		tx.ExtraInfo.Query(),
 		&extrainfocrud.Conds{
-			GoodID: &cruder.Cond{Op: cruder.EQ, Val: goodid},
+			AppGoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.AppGoodID},
 		},
 	)
 	if err != nil {
@@ -101,40 +80,25 @@ func (h *updateHandler) updateGoodLike(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *Handler) UpdateLike(ctx context.Context) (*npool.Like, error) {
+func (h *Handler) UpdateLike(ctx context.Context) error {
 	info, err := h.GetLike(ctx)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	if info == nil {
-		return nil, fmt.Errorf("invalid like")
+		return fmt.Errorf("invalid like")
 	}
 
-	if h.Like == nil {
-		return info, nil
-	}
-
-	appGoodID := uuid.MustParse(info.AppGoodID)
-	h.AppGoodID = &appGoodID
+	h.AppGoodID = func() *uuid.UUID { uid, _ := uuid.Parse(info.AppGoodID); return &uid }()
+	h.ID = &info.ID
 	handler := &updateHandler{
 		Handler: h,
 	}
-	if err := handler.getAppGood(ctx); err != nil {
-		return nil, err
-	}
 
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateLike(ctx, tx); err != nil {
 			return err
 		}
-		if err := handler.updateGoodLike(ctx, tx); err != nil {
-			return err
-		}
-		return nil
+		return handler.updateGoodLike(ctx, tx)
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetLike(ctx)
 }
