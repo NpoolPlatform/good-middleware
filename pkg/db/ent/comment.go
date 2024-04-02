@@ -9,7 +9,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // Comment is the model entity for the Comment schema.
@@ -43,8 +42,6 @@ type Comment struct {
 	PurchasedUser bool `json:"purchased_user,omitempty"`
 	// OrderFirstComment holds the value of the "order_first_comment" field.
 	OrderFirstComment bool `json:"order_first_comment,omitempty"`
-	// Score holds the value of the "score" field.
-	Score decimal.Decimal `json:"score,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -52,8 +49,6 @@ func (*Comment) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case comment.FieldScore:
-			values[i] = new(decimal.Decimal)
 		case comment.FieldAnonymous, comment.FieldTrialUser, comment.FieldPurchasedUser, comment.FieldOrderFirstComment:
 			values[i] = new(sql.NullBool)
 		case comment.FieldID, comment.FieldCreatedAt, comment.FieldUpdatedAt, comment.FieldDeletedAt:
@@ -161,12 +156,6 @@ func (c *Comment) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				c.OrderFirstComment = value.Bool
 			}
-		case comment.FieldScore:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field score", values[i])
-			} else if value != nil {
-				c.Score = *value
-			}
 		}
 	}
 	return nil
@@ -233,9 +222,6 @@ func (c *Comment) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("order_first_comment=")
 	builder.WriteString(fmt.Sprintf("%v", c.OrderFirstComment))
-	builder.WriteString(", ")
-	builder.WriteString("score=")
-	builder.WriteString(fmt.Sprintf("%v", c.Score))
 	builder.WriteByte(')')
 	return builder.String()
 }

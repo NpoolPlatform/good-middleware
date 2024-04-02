@@ -12,7 +12,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // CommentCreate is the builder for creating a Comment entity.
@@ -205,20 +204,6 @@ func (cc *CommentCreate) SetNillableOrderFirstComment(b *bool) *CommentCreate {
 	return cc
 }
 
-// SetScore sets the "score" field.
-func (cc *CommentCreate) SetScore(d decimal.Decimal) *CommentCreate {
-	cc.mutation.SetScore(d)
-	return cc
-}
-
-// SetNillableScore sets the "score" field if the given value is not nil.
-func (cc *CommentCreate) SetNillableScore(d *decimal.Decimal) *CommentCreate {
-	if d != nil {
-		cc.SetScore(*d)
-	}
-	return cc
-}
-
 // SetID sets the "id" field.
 func (cc *CommentCreate) SetID(u uint32) *CommentCreate {
 	cc.mutation.SetID(u)
@@ -380,10 +365,6 @@ func (cc *CommentCreate) defaults() error {
 		v := comment.DefaultOrderFirstComment
 		cc.mutation.SetOrderFirstComment(v)
 	}
-	if _, ok := cc.mutation.Score(); !ok {
-		v := comment.DefaultScore
-		cc.mutation.SetScore(v)
-	}
 	return nil
 }
 
@@ -538,14 +519,6 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 			Column: comment.FieldOrderFirstComment,
 		})
 		_node.OrderFirstComment = value
-	}
-	if value, ok := cc.mutation.Score(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: comment.FieldScore,
-		})
-		_node.Score = value
 	}
 	return _node, _spec
 }
@@ -826,24 +799,6 @@ func (u *CommentUpsert) UpdateOrderFirstComment() *CommentUpsert {
 // ClearOrderFirstComment clears the value of the "order_first_comment" field.
 func (u *CommentUpsert) ClearOrderFirstComment() *CommentUpsert {
 	u.SetNull(comment.FieldOrderFirstComment)
-	return u
-}
-
-// SetScore sets the "score" field.
-func (u *CommentUpsert) SetScore(v decimal.Decimal) *CommentUpsert {
-	u.Set(comment.FieldScore, v)
-	return u
-}
-
-// UpdateScore sets the "score" field to the value that was provided on create.
-func (u *CommentUpsert) UpdateScore() *CommentUpsert {
-	u.SetExcluded(comment.FieldScore)
-	return u
-}
-
-// ClearScore clears the value of the "score" field.
-func (u *CommentUpsert) ClearScore() *CommentUpsert {
-	u.SetNull(comment.FieldScore)
 	return u
 }
 
@@ -1160,27 +1115,6 @@ func (u *CommentUpsertOne) UpdateOrderFirstComment() *CommentUpsertOne {
 func (u *CommentUpsertOne) ClearOrderFirstComment() *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.ClearOrderFirstComment()
-	})
-}
-
-// SetScore sets the "score" field.
-func (u *CommentUpsertOne) SetScore(v decimal.Decimal) *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.SetScore(v)
-	})
-}
-
-// UpdateScore sets the "score" field to the value that was provided on create.
-func (u *CommentUpsertOne) UpdateScore() *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.UpdateScore()
-	})
-}
-
-// ClearScore clears the value of the "score" field.
-func (u *CommentUpsertOne) ClearScore() *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.ClearScore()
 	})
 }
 
@@ -1662,27 +1596,6 @@ func (u *CommentUpsertBulk) UpdateOrderFirstComment() *CommentUpsertBulk {
 func (u *CommentUpsertBulk) ClearOrderFirstComment() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.ClearOrderFirstComment()
-	})
-}
-
-// SetScore sets the "score" field.
-func (u *CommentUpsertBulk) SetScore(v decimal.Decimal) *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.SetScore(v)
-	})
-}
-
-// UpdateScore sets the "score" field to the value that was provided on create.
-func (u *CommentUpsertBulk) UpdateScore() *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.UpdateScore()
-	})
-}
-
-// ClearScore clears the value of the "score" field.
-func (u *CommentUpsertBulk) ClearScore() *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.ClearScore()
 	})
 }
 

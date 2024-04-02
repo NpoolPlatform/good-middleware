@@ -16,6 +16,7 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/comment"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/testinit"
@@ -41,6 +42,7 @@ var ret = npool.Comment{
 	ReplyToID:         uuid.NewString(),
 	GoodID:            uuid.NewString(),
 	OrderFirstComment: true,
+	Score:             decimal.RequireFromString("4.99").String(),
 }
 
 //nolint
@@ -102,6 +104,7 @@ func createComment(t *testing.T) {
 		WithOrderID(&ret.OrderID, true),
 		WithContent(&ret.Content, true),
 		WithReplyToID(&ret.ReplyToID, true),
+		WithScore(&ret.Score, true),
 	)
 	if assert.Nil(t, err) {
 		err = handler.CreateComment(context.Background())
@@ -124,6 +127,7 @@ func createComment(t *testing.T) {
 		info, err := h1.GetGoodBase(context.Background())
 		if assert.Nil(t, err) {
 			assert.Equal(t, uint32(2), info.CommentCount())
+			assert.Equal(t, ret.Score, info.Score().String())
 		}
 	}
 }

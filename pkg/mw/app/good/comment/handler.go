@@ -7,6 +7,7 @@ import (
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	commentcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/comment"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
+	scorecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/score"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -19,6 +20,7 @@ import (
 type Handler struct {
 	ID *uint32
 	commentcrud.Req
+	ScoreReq         *scorecrud.Req
 	CommentConds     *commentcrud.Conds
 	AppGoodBaseConds *appgoodbasecrud.Conds
 	GoodBaseConds    *goodbasecrud.Conds
@@ -28,6 +30,7 @@ type Handler struct {
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
+		ScoreReq:         &scorecrud.Req{},
 		CommentConds:     &commentcrud.Conds{},
 		AppGoodBaseConds: &appgoodbasecrud.Conds{},
 		GoodBaseConds:    &goodbasecrud.Conds{},
@@ -66,6 +69,7 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 			return err
 		}
 		h.EntID = &_id
+		h.ScoreReq.CommentID = &_id
 		return nil
 	}
 }
@@ -83,6 +87,7 @@ func WithUserID(id *string, must bool) func(context.Context, *Handler) error {
 			return err
 		}
 		h.UserID = &_id
+		h.ScoreReq.UserID = &_id
 		return nil
 	}
 }
@@ -104,6 +109,7 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 			return fmt.Errorf("invalid appgood")
 		}
 		h.AppGoodID = handler.EntID
+		h.ScoreReq.AppGoodID = handler.EntID
 		return nil
 	}
 }
@@ -202,7 +208,7 @@ func WithScore(s *string, must bool) func(context.Context, *Handler) error {
 		if err != nil {
 			return err
 		}
-		h.Score = &score
+		h.ScoreReq.Score = &score
 		return nil
 	}
 }

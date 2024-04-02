@@ -11,7 +11,10 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entcomment "github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
+	entscore "github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/comment"
+
+	"github.com/shopspring/decimal"
 )
 
 type queryHandler struct {
@@ -57,18 +60,18 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(entcomment.FieldID),
 		).
 		AppendSelect(
-			sql.As(t.C(entcomment.FieldEntID), "ent_id"),
-			sql.As(t.C(entcomment.FieldUserID), "user_id"),
-			sql.As(t.C(entcomment.FieldAppGoodID), "app_good_id"),
-			sql.As(t.C(entcomment.FieldOrderID), "order_id"),
-			sql.As(t.C(entcomment.FieldContent), "content"),
-			sql.As(t.C(entcomment.FieldReplyToID), "reply_to_id"),
-			sql.As(t.C(entcomment.FieldAnonymous), "anonymous"),
-			sql.As(t.C(entcomment.FieldPurchasedUser), "purchased_user"),
-			sql.As(t.C(entcomment.FieldTrialUser), "trial_user"),
-			sql.As(t.C(entcomment.FieldOrderFirstComment), "order_first_comment"),
-			sql.As(t.C(entcomment.FieldCreatedAt), "created_at"),
-			sql.As(t.C(entcomment.FieldUpdatedAt), "updated_at"),
+			t.C(entcomment.FieldEntID),
+			t.C(entcomment.FieldUserID),
+			t.C(entcomment.FieldAppGoodID),
+			t.C(entcomment.FieldOrderID),
+			t.C(entcomment.FieldContent),
+			t.C(entcomment.FieldReplyToID),
+			t.C(entcomment.FieldAnonymous),
+			t.C(entcomment.FieldPurchasedUser),
+			t.C(entcomment.FieldTrialUser),
+			t.C(entcomment.FieldOrderFirstComment),
+			t.C(entcomment.FieldCreatedAt),
+			t.C(entcomment.FieldUpdatedAt),
 		)
 }
 
@@ -86,21 +89,41 @@ func (h *queryHandler) queryJoinAppGoodBase(s *sql.Selector) {
 		)
 }
 
+func (h *queryHandler) queryJoinScore(s *sql.Selector) {
+	t := sql.Table(entscore.Table)
+	s.LeftJoin(t).
+		On(
+			s.C(entcomment.FieldEntID),
+			t.C(entscore.FieldCommentID),
+		).
+		AppendSelect(
+			t.C(entscore.FieldScore),
+		)
+}
+
 func (h *queryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
 		h.queryJoinAppGoodBase(s)
+		h.queryJoinScore(s)
 	})
 	if h.stmCount == nil {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
 		h.queryJoinAppGoodBase(s)
+		h.queryJoinScore(s)
 	})
 }
 
 func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
+}
+
+func (h *queryHandler) formalize() {
+	for _, info := range h.infos {
+		info.Score = func() string { amount, _ := decimal.NewFromString(info.Score); return amount.String() }()
+	}
 }
 
 func (h *Handler) GetComment(ctx context.Context) (*npool.Comment, error) {
@@ -124,6 +147,8 @@ func (h *Handler) GetComment(ctx context.Context) (*npool.Comment, error) {
 	if len(handler.infos) > 1 {
 		return nil, fmt.Errorf("too many records")
 	}
+
+	handler.formalize()
 
 	return handler.infos[0], nil
 }
@@ -161,6 +186,8 @@ func (h *Handler) GetComments(ctx context.Context) ([]*npool.Comment, uint32, er
 	if err != nil {
 		return nil, 0, err
 	}
+
+	handler.formalize()
 
 	return handler.infos, handler.total, nil
 }

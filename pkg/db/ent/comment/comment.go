@@ -5,7 +5,6 @@ package comment
 import (
 	"entgo.io/ent"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 const (
@@ -39,8 +38,6 @@ const (
 	FieldPurchasedUser = "purchased_user"
 	// FieldOrderFirstComment holds the string denoting the order_first_comment field in the database.
 	FieldOrderFirstComment = "order_first_comment"
-	// FieldScore holds the string denoting the score field in the database.
-	FieldScore = "score"
 	// Table holds the table name of the comment in the database.
 	Table = "comments"
 )
@@ -61,7 +58,6 @@ var Columns = []string{
 	FieldTrialUser,
 	FieldPurchasedUser,
 	FieldOrderFirstComment,
-	FieldScore,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -111,6 +107,4 @@ var (
 	DefaultPurchasedUser bool
 	// DefaultOrderFirstComment holds the default value on creation for the "order_first_comment" field.
 	DefaultOrderFirstComment bool
-	// DefaultScore holds the default value on creation for the "score" field.
-	DefaultScore decimal.Decimal
 )

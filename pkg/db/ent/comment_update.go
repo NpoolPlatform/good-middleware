@@ -13,7 +13,6 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // CommentUpdate is the builder for updating Comment entities.
@@ -279,26 +278,6 @@ func (cu *CommentUpdate) ClearOrderFirstComment() *CommentUpdate {
 	return cu
 }
 
-// SetScore sets the "score" field.
-func (cu *CommentUpdate) SetScore(d decimal.Decimal) *CommentUpdate {
-	cu.mutation.SetScore(d)
-	return cu
-}
-
-// SetNillableScore sets the "score" field if the given value is not nil.
-func (cu *CommentUpdate) SetNillableScore(d *decimal.Decimal) *CommentUpdate {
-	if d != nil {
-		cu.SetScore(*d)
-	}
-	return cu
-}
-
-// ClearScore clears the value of the "score" field.
-func (cu *CommentUpdate) ClearScore() *CommentUpdate {
-	cu.mutation.ClearScore()
-	return cu
-}
-
 // Mutation returns the CommentMutation object of the builder.
 func (cu *CommentUpdate) Mutation() *CommentMutation {
 	return cu.mutation
@@ -561,19 +540,6 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Column: comment.FieldOrderFirstComment,
-		})
-	}
-	if value, ok := cu.mutation.Score(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: comment.FieldScore,
-		})
-	}
-	if cu.mutation.ScoreCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: comment.FieldScore,
 		})
 	}
 	_spec.Modifiers = cu.modifiers
@@ -843,26 +809,6 @@ func (cuo *CommentUpdateOne) SetNillableOrderFirstComment(b *bool) *CommentUpdat
 // ClearOrderFirstComment clears the value of the "order_first_comment" field.
 func (cuo *CommentUpdateOne) ClearOrderFirstComment() *CommentUpdateOne {
 	cuo.mutation.ClearOrderFirstComment()
-	return cuo
-}
-
-// SetScore sets the "score" field.
-func (cuo *CommentUpdateOne) SetScore(d decimal.Decimal) *CommentUpdateOne {
-	cuo.mutation.SetScore(d)
-	return cuo
-}
-
-// SetNillableScore sets the "score" field if the given value is not nil.
-func (cuo *CommentUpdateOne) SetNillableScore(d *decimal.Decimal) *CommentUpdateOne {
-	if d != nil {
-		cuo.SetScore(*d)
-	}
-	return cuo
-}
-
-// ClearScore clears the value of the "score" field.
-func (cuo *CommentUpdateOne) ClearScore() *CommentUpdateOne {
-	cuo.mutation.ClearScore()
 	return cuo
 }
 
@@ -1158,19 +1104,6 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Column: comment.FieldOrderFirstComment,
-		})
-	}
-	if value, ok := cuo.mutation.Score(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: comment.FieldScore,
-		})
-	}
-	if cuo.mutation.ScoreCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: comment.FieldScore,
 		})
 	}
 	_spec.Modifiers = cuo.modifiers

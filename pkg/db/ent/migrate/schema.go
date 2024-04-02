@@ -492,7 +492,6 @@ var (
 		{Name: "trial_user", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "purchased_user", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "order_first_comment", Type: field.TypeBool, Nullable: true, Default: false},
-		{Name: "score", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}
 	// CommentsTable holds the schema information for the "comments" table.
 	CommentsTable = &schema.Table{

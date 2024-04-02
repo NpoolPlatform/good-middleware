@@ -8,6 +8,7 @@ import (
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	score1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/score"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	"github.com/shopspring/decimal"
@@ -17,6 +18,7 @@ type createHandler struct {
 	*Handler
 	orderFirstComment bool
 	sql               string
+	sqlScore          string
 }
 
 func (h *createHandler) constructSql() {
@@ -50,7 +52,6 @@ func (h *createHandler) constructSql() {
 	if h.OrderID != nil {
 		_sql += comma + "order_first_comment"
 	}
-	_sql += comma + "score"
 	_sql += comma + "created_at"
 	_sql += comma + "updated_at"
 	_sql += comma + "deleted_at"
@@ -87,11 +88,6 @@ func (h *createHandler) constructSql() {
 			*h.UserID,
 			*h.OrderID,
 		)
-	}
-	if h.Score != nil {
-		_sql += fmt.Sprintf("%v'%v' as score", comma, *h.Score)
-	} else {
-		_sql += fmt.Sprintf("%v'0' as score", comma)
 	}
 	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
 	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
@@ -149,10 +145,10 @@ func (h *createHandler) updateGoodComment(ctx context.Context, tx *ent.Tx) error
 	req := &extrainfocrud.Req{
 		CommentCount: &commentCount,
 	}
-	if h.orderFirstComment && h.Score != nil {
+	if h.orderFirstComment && h.ScoreReq.Score != nil {
 		scoreCount := info.ScoreCount + 1
 		req.ScoreCount = &scoreCount
-		score := h.Score.Add(
+		score := h.ScoreReq.Score.Add(
 			info.Score.Mul(
 				decimal.NewFromInt(int64(info.ScoreCount)),
 			),
@@ -166,6 +162,12 @@ func (h *createHandler) updateGoodComment(ctx context.Context, tx *ent.Tx) error
 	return nil
 }
 
+func (h *createHandler) createScore(ctx context.Context, tx *ent.Tx) error {
+	handler, _ := score1.NewHandler(ctx)
+	handler.Req = *h.ScoreReq
+	return handler.CreateScoreWithTx(ctx, tx)
+}
+
 func (h *Handler) CreateComment(ctx context.Context) error {
 	handler := &createHandler{
 		Handler: h,
@@ -174,6 +176,11 @@ func (h *Handler) CreateComment(ctx context.Context) error {
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createComment(ctx, tx); err != nil {
 			return err
+		}
+		if handler.ScoreReq.Score != nil && handler.ScoreReq.Score.Cmp(decimal.NewFromInt(0)) > 0 {
+			if err := handler.createScore(ctx, tx); err != nil {
+				return err
+			}
 		}
 		return handler.updateGoodComment(ctx, tx)
 	})

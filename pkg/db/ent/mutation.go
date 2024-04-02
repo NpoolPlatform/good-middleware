@@ -17383,7 +17383,6 @@ type CommentMutation struct {
 	trial_user          *bool
 	purchased_user      *bool
 	order_first_comment *bool
-	score               *decimal.Decimal
 	clearedFields       map[string]struct{}
 	done                bool
 	oldValue            func(context.Context) (*Comment, error)
@@ -18139,55 +18138,6 @@ func (m *CommentMutation) ResetOrderFirstComment() {
 	delete(m.clearedFields, comment.FieldOrderFirstComment)
 }
 
-// SetScore sets the "score" field.
-func (m *CommentMutation) SetScore(d decimal.Decimal) {
-	m.score = &d
-}
-
-// Score returns the value of the "score" field in the mutation.
-func (m *CommentMutation) Score() (r decimal.Decimal, exists bool) {
-	v := m.score
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldScore returns the old "score" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldScore(ctx context.Context) (v decimal.Decimal, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldScore is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldScore requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldScore: %w", err)
-	}
-	return oldValue.Score, nil
-}
-
-// ClearScore clears the value of the "score" field.
-func (m *CommentMutation) ClearScore() {
-	m.score = nil
-	m.clearedFields[comment.FieldScore] = struct{}{}
-}
-
-// ScoreCleared returns if the "score" field was cleared in this mutation.
-func (m *CommentMutation) ScoreCleared() bool {
-	_, ok := m.clearedFields[comment.FieldScore]
-	return ok
-}
-
-// ResetScore resets all changes to the "score" field.
-func (m *CommentMutation) ResetScore() {
-	m.score = nil
-	delete(m.clearedFields, comment.FieldScore)
-}
-
 // Where appends a list predicates to the CommentMutation builder.
 func (m *CommentMutation) Where(ps ...predicate.Comment) {
 	m.predicates = append(m.predicates, ps...)
@@ -18207,7 +18157,7 @@ func (m *CommentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *CommentMutation) Fields() []string {
-	fields := make([]string, 0, 14)
+	fields := make([]string, 0, 13)
 	if m.created_at != nil {
 		fields = append(fields, comment.FieldCreatedAt)
 	}
@@ -18247,9 +18197,6 @@ func (m *CommentMutation) Fields() []string {
 	if m.order_first_comment != nil {
 		fields = append(fields, comment.FieldOrderFirstComment)
 	}
-	if m.score != nil {
-		fields = append(fields, comment.FieldScore)
-	}
 	return fields
 }
 
@@ -18284,8 +18231,6 @@ func (m *CommentMutation) Field(name string) (ent.Value, bool) {
 		return m.PurchasedUser()
 	case comment.FieldOrderFirstComment:
 		return m.OrderFirstComment()
-	case comment.FieldScore:
-		return m.Score()
 	}
 	return nil, false
 }
@@ -18321,8 +18266,6 @@ func (m *CommentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldPurchasedUser(ctx)
 	case comment.FieldOrderFirstComment:
 		return m.OldOrderFirstComment(ctx)
-	case comment.FieldScore:
-		return m.OldScore(ctx)
 	}
 	return nil, fmt.Errorf("unknown Comment field %s", name)
 }
@@ -18423,13 +18366,6 @@ func (m *CommentMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetOrderFirstComment(v)
 		return nil
-	case comment.FieldScore:
-		v, ok := value.(decimal.Decimal)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetScore(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Comment field %s", name)
 }
@@ -18526,9 +18462,6 @@ func (m *CommentMutation) ClearedFields() []string {
 	if m.FieldCleared(comment.FieldOrderFirstComment) {
 		fields = append(fields, comment.FieldOrderFirstComment)
 	}
-	if m.FieldCleared(comment.FieldScore) {
-		fields = append(fields, comment.FieldScore)
-	}
 	return fields
 }
 
@@ -18569,9 +18502,6 @@ func (m *CommentMutation) ClearField(name string) error {
 		return nil
 	case comment.FieldOrderFirstComment:
 		m.ClearOrderFirstComment()
-		return nil
-	case comment.FieldScore:
-		m.ClearScore()
 		return nil
 	}
 	return fmt.Errorf("unknown Comment nullable field %s", name)
@@ -18619,9 +18549,6 @@ func (m *CommentMutation) ResetField(name string) error {
 		return nil
 	case comment.FieldOrderFirstComment:
 		m.ResetOrderFirstComment()
-		return nil
-	case comment.FieldScore:
-		m.ResetScore()
 		return nil
 	}
 	return fmt.Errorf("unknown Comment field %s", name)

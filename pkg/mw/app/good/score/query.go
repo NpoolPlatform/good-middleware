@@ -29,7 +29,7 @@ func (h *queryHandler) selectScore(stm *ent.ScoreQuery) *ent.ScoreSelect {
 }
 
 func (h *queryHandler) queryScore(cli *ent.Client) error {
-	if h.ID == nil && h.EntID == nil {
+	if h.ID == nil && h.EntID == nil && h.CommentID == nil {
 		return fmt.Errorf("invalid id")
 	}
 	stm := cli.Score.Query().Where(entscore.DeletedAt(0))
@@ -38,6 +38,9 @@ func (h *queryHandler) queryScore(cli *ent.Client) error {
 	}
 	if h.EntID != nil {
 		stm.Where(entscore.EntID(*h.EntID))
+	}
+	if h.CommentID != nil {
+		stm.Where(entscore.CommentID(*h.CommentID))
 	}
 	h.stmSelect = h.selectScore(stm)
 	return nil
@@ -102,12 +105,7 @@ func (h *queryHandler) scan(ctx context.Context) error {
 
 func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
-		amount, err := decimal.NewFromString(info.Score)
-		if err != nil {
-			info.Score = decimal.NewFromInt(0).String()
-		} else {
-			info.Score = amount.String()
-		}
+		info.Score = func() string { amount, _ := decimal.NewFromString(info.Score); return amount.String() }()
 	}
 }
 

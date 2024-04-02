@@ -10,6 +10,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
+	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
 
@@ -18,7 +19,7 @@ type createHandler struct {
 	sql string
 }
 
-func (h *createHandler) ConstructCreateSql() string {
+func (h *createHandler) constructSql() {
 	comma := ""
 	now := uint32(time.Now().Unix())
 	_sql := "insert into scores "
@@ -62,8 +63,7 @@ func (h *createHandler) ConstructCreateSql() string {
 	_sql += "select 1 from scores "
 	_sql += fmt.Sprintf("where user_id = '%v' and app_good_id = '%v'", *h.UserID, *h.AppGoodID)
 	_sql += " limit 1)"
-
-	return _sql
+	h.sql = _sql
 }
 
 func (h *createHandler) createScore(ctx context.Context, tx *ent.Tx) error {
@@ -108,11 +108,28 @@ func (h *createHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
+func (h *Handler) CreateScoreWithTx(ctx context.Context, tx *ent.Tx) error {
+	handler := &createHandler{
+		Handler: h,
+	}
+	if h.EntID == nil {
+		h.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
+	}
+	handler.constructSql()
+	if err := handler.createScore(ctx, tx); err != nil {
+		return err
+	}
+	return handler.updateGoodScore(ctx, tx)
+}
+
 func (h *Handler) CreateScore(ctx context.Context) error {
 	handler := &createHandler{
 		Handler: h,
 	}
-	handler.sql = handler.ConstructCreateSql()
+	if h.EntID == nil {
+		h.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
+	}
+	handler.constructSql()
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createScore(ctx, tx); err != nil {
 			return err
