@@ -82,7 +82,7 @@ func (h *createHandler) constructSql() {
 	}
 	if h.OrderID != nil {
 		_sql += fmt.Sprintf(
-			"%vif(exists (select 1 from comments where user_id = '%v' and order_id = '%v'), false, true) as order_first_comment",
+			"%vif(exists (select 1 from comments where user_id = '%v' and order_id = '%v' limit 1), false, true) as order_first_comment",
 			comma,
 			*h.UserID,
 			*h.OrderID,
