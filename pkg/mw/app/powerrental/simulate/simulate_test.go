@@ -118,6 +118,8 @@ func setup(t *testing.T) func(*testing.T) {
 		powerrental1.WithName(&ret.GoodName, true),
 		powerrental1.WithServiceStartAt(func() *uint32 { u := uint32(time.Now().Unix()); return &u }(), true),
 		powerrental1.WithStartMode(func() *types.GoodStartMode { e := types.GoodStartMode_GoodStartModeInstantly; return &e }(), true),
+		powerrental1.WithStockMode(func() *types.GoodStockMode { e := types.GoodStockMode_GoodStockByUnique; return &e }(), true),
+		powerrental1.WithTotal(func() *string { s := decimal.NewFromInt(120).String(); return &s }(), true),
 		powerrental1.WithTestOnly(func() *bool { b := true; return &b }(), true),
 		powerrental1.WithBenefitIntervalHours(func() *uint32 { n := uint32(24); return &n }(), true),
 		powerrental1.WithPurchasable(func() *bool { b := true; return &b }(), true),
