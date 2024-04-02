@@ -16,7 +16,9 @@ import (
 	entapppowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
 	entdevicetype "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	entmanufacturer "github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
+	entextrainfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	entgoodreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	entmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
 	entpowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
@@ -113,6 +115,44 @@ func (h *queryHandler) queryJoinGoodBase(s *sql.Selector) {
 			t1.C(entgoodbase.FieldBenefitIntervalHours),
 			sql.As(t1.C(entgoodbase.FieldPurchasable), "good_purchasable"),
 			sql.As(t1.C(entgoodbase.FieldOnline), "good_online"),
+		)
+}
+
+func (h *queryHandler) queryJoinGoodReward(s *sql.Selector) {
+	t := sql.Table(entgoodreward.Table)
+	s.LeftJoin(t).
+		On(
+			s.C(entappgoodbase.FieldGoodID),
+			t.C(entgoodreward.FieldGoodID),
+		).
+		OnP(
+			sql.EQ(t.C(entextrainfo.FieldDeletedAt), 0),
+		).
+		AppendSelect(
+			t.C(entgoodreward.FieldLastRewardAt),
+			t.C(entgoodreward.FieldLastRewardAmount),
+			t.C(entgoodreward.FieldTotalRewardAmount),
+			t.C(entgoodreward.FieldLastUnitRewardAmount),
+		)
+}
+
+func (h *queryHandler) queryJoinExtraInfo(s *sql.Selector) {
+	t := sql.Table(entextrainfo.Table)
+	s.LeftJoin(t).
+		On(
+			s.C(entappgoodbase.FieldEntID),
+			t.C(entextrainfo.FieldAppGoodID),
+		).
+		OnP(
+			sql.EQ(t.C(entextrainfo.FieldDeletedAt), 0),
+		).
+		AppendSelect(
+			t.C(entextrainfo.FieldLikes),
+			t.C(entextrainfo.FieldDislikes),
+			t.C(entextrainfo.FieldScoreCount),
+			t.C(entextrainfo.FieldRecommendCount),
+			t.C(entextrainfo.FieldCommentCount),
+			t.C(entextrainfo.FieldScore),
 		)
 }
 
@@ -265,6 +305,8 @@ func (h *queryHandler) queryJoin() error {
 		h.queryJoinMyself(s)
 		h.queryJoinGoodBase(s)
 		h.queryJoinGoodStock(s)
+		h.queryJoinGoodReward(s)
+		h.queryJoinExtraInfo(s)
 		h.queryJoinAppPowerRental(s)
 		h.queryJoinAppLegacyPowerRental(s)
 		err = h.queryJoinPowerRental(s)
@@ -278,6 +320,8 @@ func (h *queryHandler) queryJoin() error {
 	h.stmCount.Modify(func(s *sql.Selector) {
 		h.queryJoinGoodBase(s)
 		h.queryJoinGoodStock(s)
+		h.queryJoinGoodReward(s)
+		h.queryJoinExtraInfo(s)
 		h.queryJoinAppPowerRental(s)
 		h.queryJoinAppLegacyPowerRental(s)
 		err = h.queryJoinPowerRental(s)
@@ -341,6 +385,9 @@ func (h *queryHandler) formalize() {
 		info.TechniqueFeeRatio = func() string { amount, _ := decimal.NewFromString(info.TechniqueFeeRatio); return amount.String() }()
 		info.GoodTotal = func() string { amount, _ := decimal.NewFromString(info.GoodTotal); return amount.String() }()
 		info.GoodSpotQuantity = func() string { amount, _ := decimal.NewFromString(info.GoodSpotQuantity); return amount.String() }()
+		info.LastRewardAmount = func() string { amount, _ := decimal.NewFromString(info.LastRewardAmount); return amount.String() }()
+		info.LastUnitRewardAmount = func() string { amount, _ := decimal.NewFromString(info.LastUnitRewardAmount); return amount.String() }()
+		info.TotalRewardAmount = func() string { amount, _ := decimal.NewFromString(info.TotalRewardAmount); return amount.String() }()
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.CancelMode = types.CancelMode(types.CancelMode_value[info.CancelModeStr])
 		info.SaleMode = types.GoodSaleMode(types.GoodSaleMode_value[info.SaleModeStr])

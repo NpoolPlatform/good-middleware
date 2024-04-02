@@ -108,6 +108,10 @@ var (
 				Total:          decimal.NewFromInt(50).String(),
 			},
 		},
+
+		LastRewardAmount:     decimal.NewFromInt(0).String(),
+		LastUnitRewardAmount: decimal.NewFromInt(0).String(),
+		TotalRewardAmount:    decimal.NewFromInt(0).String(),
 	}
 )
 
