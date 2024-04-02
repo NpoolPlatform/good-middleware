@@ -10,7 +10,6 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/recommend"
 
 	"github.com/google/uuid"
 )
@@ -36,13 +35,13 @@ func (h *deleteHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 	stm, err := extrainfocrud.SetQueryConds(
 		tx.ExtraInfo.Query(),
 		&extrainfocrud.Conds{
-			GoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.GoodID},
+			AppGoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.AppGoodID},
 		},
 	)
 	if err != nil {
 		return err
 	}
-	info, err := stm.Only(ctx)
+	info, err := stm.ForUpdate().Only(ctx)
 	if err != nil {
 		return err
 	}
@@ -63,36 +62,25 @@ func (h *deleteHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *Handler) DeleteRecommend(ctx context.Context) (*npool.Recommend, error) {
+func (h *Handler) DeleteRecommend(ctx context.Context) error {
 	info, err := h.GetRecommend(ctx)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	if info == nil {
-		return nil, nil
+		return nil
 	}
 
-	goodID, err := uuid.Parse(info.GoodID)
-	if err != nil {
-		return nil, err
-	}
-	h.GoodID = &goodID
+	h.ID = &info.ID
+	h.AppGoodID = func() *uuid.UUID { uid, _ := uuid.Parse(info.AppGoodID); return &uid }()
 	handler := &deleteHandler{
 		Handler: h,
 	}
 
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.deleteRecommend(ctx, tx); err != nil {
 			return err
 		}
-		if err := handler.updateGoodScore(ctx, tx); err != nil {
-			return err
-		}
-		return nil
+		return handler.updateGoodScore(ctx, tx)
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return info, nil
 }

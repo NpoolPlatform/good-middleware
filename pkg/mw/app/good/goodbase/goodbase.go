@@ -19,6 +19,7 @@ type AppGoodBase interface {
 	DisplayIndex() int32
 	Banner() string
 	CommentCount() uint32
+	RecommendCount() uint32
 }
 
 type goodBase struct {
@@ -88,4 +89,8 @@ func (gb *goodBase) DeletedAt() uint32 {
 
 func (gb *goodBase) CommentCount() uint32 {
 	return gb._extraEnt.CommentCount
+}
+
+func (gb *goodBase) RecommendCount() uint32 {
+	return gb._extraEnt.RecommendCount
 }

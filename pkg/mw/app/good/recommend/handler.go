@@ -5,8 +5,10 @@ import (
 	"fmt"
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
+	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	recommendcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/recommend"
-	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
+	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
+	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/recommend"
 
@@ -15,20 +17,21 @@ import (
 )
 
 type Handler struct {
-	ID             *uint32
-	EntID          *uuid.UUID
-	AppID          *uuid.UUID
-	RecommenderID  *uuid.UUID
-	GoodID         *uuid.UUID
-	Message        *string
-	RecommendIndex *decimal.Decimal
-	Conds          *recommendcrud.Conds
-	Offset         int32
-	Limit          int32
+	ID *uint32
+	recommendcrud.Req
+	RecommendConds   *recommendcrud.Conds
+	AppGoodBaseConds *appgoodbasecrud.Conds
+	GoodBaseConds    *goodbasecrud.Conds
+	Offset           int32
+	Limit            int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
-	handler := &Handler{}
+	handler := &Handler{
+		RecommendConds:   &recommendcrud.Conds{},
+		AppGoodBaseConds: &appgoodbasecrud.Conds{},
+		GoodBaseConds:    &goodbasecrud.Conds{},
+	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
 			return nil, err
@@ -67,23 +70,6 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithAppID(id *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if id == nil {
-			if must {
-				return fmt.Errorf("invalid appid")
-			}
-			return nil
-		}
-		_id, err := uuid.Parse(*id)
-		if err != nil {
-			return err
-		}
-		h.AppID = &_id
-		return nil
-	}
-}
-
 func WithRecommenderID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
@@ -101,29 +87,29 @@ func WithRecommenderID(id *string, must bool) func(context.Context, *Handler) er
 	}
 }
 
-func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
+func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid goodid")
+				return fmt.Errorf("invalid appgoodid")
 			}
 			return nil
 		}
-		handler, err := goodbase1.NewHandler(
+		handler, err := appgoodbase1.NewHandler(
 			ctx,
-			goodbase1.WithEntID(id, true),
+			appgoodbase1.WithEntID(id, true),
 		)
 		if err != nil {
-			return fmt.Errorf("invalid goodid")
+			return fmt.Errorf("invalid appgoodid")
 		}
 		exist, err := handler.ExistGoodBase(ctx)
 		if err != nil {
 			return err
 		}
 		if !exist {
-			return fmt.Errorf("invalid good")
+			return fmt.Errorf("invalid appgood")
 		}
-		h.GoodID = handler.EntID
+		h.AppGoodID = handler.EntID
 		return nil
 	}
 }
@@ -162,67 +148,91 @@ func WithRecommendIndex(s *string, must bool) func(context.Context, *Handler) er
 	}
 }
 
+func (h *Handler) withRecommendConds(conds *npool.Conds) error {
+	if conds.ID != nil {
+		h.RecommendConds.ID = &cruder.Cond{
+			Op: conds.GetID().GetOp(), Val: conds.GetID().GetValue(),
+		}
+	}
+	if conds.EntID != nil {
+		id, err := uuid.Parse(conds.GetEntID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.RecommendConds.EntID = &cruder.Cond{Op: conds.GetEntID().GetOp(), Val: id}
+	}
+	if conds.RecommenderID != nil {
+		id, err := uuid.Parse(conds.GetRecommenderID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.RecommendConds.RecommenderID = &cruder.Cond{
+			Op:  conds.GetRecommenderID().GetOp(),
+			Val: id,
+		}
+	}
+	if conds.AppGoodID != nil {
+		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.RecommendConds.AppGoodID = &cruder.Cond{
+			Op:  conds.GetAppGoodID().GetOp(),
+			Val: id,
+		}
+	}
+	if conds.AppGoodIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range conds.GetAppGoodIDs().GetValue() {
+			_id, err := uuid.Parse(id)
+			if err != nil {
+				return err
+			}
+			ids = append(ids, _id)
+		}
+		h.RecommendConds.AppGoodIDs = &cruder.Cond{
+			Op:  conds.GetAppGoodIDs().GetOp(),
+			Val: ids,
+		}
+	}
+	return nil
+}
+
+func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
+	if conds.AppGoodID != nil {
+		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.AppGoodBaseConds.EntID = &cruder.Cond{
+			Op: conds.GetAppGoodID().GetOp(), Val: id,
+		}
+	}
+	if conds.AppGoodIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range conds.GetAppGoodIDs().GetValue() {
+			_id, err := uuid.Parse(id)
+			if err != nil {
+				return err
+			}
+			ids = append(ids, _id)
+		}
+		h.AppGoodBaseConds.EntIDs = &cruder.Cond{
+			Op: conds.GetAppGoodIDs().GetOp(), Val: ids,
+		}
+	}
+	return nil
+}
+
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.Conds = &recommendcrud.Conds{}
 		if conds == nil {
 			return nil
 		}
-		if conds.EntID != nil {
-			id, err := uuid.Parse(conds.GetEntID().GetValue())
-			if err != nil {
-				return err
-			}
-			h.Conds.EntID = &cruder.Cond{Op: conds.GetEntID().GetOp(), Val: id}
+		if err := h.withRecommendConds(conds); err != nil {
+			return err
 		}
-		if conds.ID != nil {
-			h.Conds.ID = &cruder.Cond{Op: conds.GetID().GetOp(), Val: conds.GetID().GetValue()}
-		}
-		if conds.AppID != nil {
-			id, err := uuid.Parse(conds.GetAppID().GetValue())
-			if err != nil {
-				return err
-			}
-			h.Conds.AppID = &cruder.Cond{
-				Op:  conds.GetAppID().GetOp(),
-				Val: id,
-			}
-		}
-		if conds.RecommenderID != nil {
-			id, err := uuid.Parse(conds.GetRecommenderID().GetValue())
-			if err != nil {
-				return err
-			}
-			h.Conds.RecommenderID = &cruder.Cond{
-				Op:  conds.GetRecommenderID().GetOp(),
-				Val: id,
-			}
-		}
-		if conds.GoodID != nil {
-			id, err := uuid.Parse(conds.GetGoodID().GetValue())
-			if err != nil {
-				return err
-			}
-			h.Conds.GoodID = &cruder.Cond{
-				Op:  conds.GetGoodID().GetOp(),
-				Val: id,
-			}
-		}
-		if conds.GoodIDs != nil {
-			ids := []uuid.UUID{}
-			for _, id := range conds.GetGoodIDs().GetValue() {
-				_id, err := uuid.Parse(id)
-				if err != nil {
-					return err
-				}
-				ids = append(ids, _id)
-			}
-			h.Conds.GoodIDs = &cruder.Cond{
-				Op:  conds.GetGoodIDs().GetOp(),
-				Val: ids,
-			}
-		}
-		return nil
+		return h.withAppGoodBaseConds(conds)
 	}
 }
 

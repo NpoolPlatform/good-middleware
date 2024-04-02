@@ -11,7 +11,7 @@ import (
 func (h *Handler) ExistRecommendConds(ctx context.Context) (bool, error) {
 	exist := false
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := recommendcrud.SetQueryConds(cli.Recommend.Query(), h.Conds)
+		stm, err := recommendcrud.SetQueryConds(cli.Recommend.Query(), h.RecommendConds)
 		if err != nil {
 			return err
 		}

@@ -50,6 +50,9 @@ func (h *createHandler) constructSql() {
 	_sql += "where not exists ("
 	_sql += "select 1 from likes "
 	_sql += fmt.Sprintf("where user_id = '%v' and app_good_id = '%v'", *h.UserID, *h.AppGoodID)
+	_sql += " limit 1) and exists ("
+	_sql += "select 1 from app_good_bases "
+	_sql += fmt.Sprintf("where ent_id = '%v'", *h.AppGoodID)
 	_sql += " limit 1)"
 	h.sql = _sql
 }

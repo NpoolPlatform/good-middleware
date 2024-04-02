@@ -2,11 +2,11 @@ package recommend
 
 import (
 	"context"
+	"fmt"
 
 	recommendcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/recommend"
 )
 
 type updateHandler struct {
@@ -26,20 +26,21 @@ func (h *updateHandler) updateRecommend(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *Handler) UpdateRecommend(ctx context.Context) (*npool.Recommend, error) {
+func (h *Handler) UpdateRecommend(ctx context.Context) error {
+	info, err := h.GetRecommend(ctx)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		return fmt.Errorf("invalid recommend")
+	}
+
+	h.ID = &info.ID
 	handler := &updateHandler{
 		Handler: h,
 	}
 
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.updateRecommend(ctx, tx); err != nil {
-			return err
-		}
-		return nil
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		return handler.updateRecommend(ctx, tx)
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetRecommend(ctx)
 }

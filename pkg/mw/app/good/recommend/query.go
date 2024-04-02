@@ -9,7 +9,7 @@ import (
 	recommendcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entrecommend "github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/recommend"
 
@@ -44,7 +44,7 @@ func (h *queryHandler) queryRecommend(cli *ent.Client) error {
 }
 
 func (h *queryHandler) queryRecommends(cli *ent.Client) (*ent.RecommendSelect, error) {
-	stm, err := recommendcrud.SetQueryConds(cli.Recommend.Query(), h.Conds)
+	stm, err := recommendcrud.SetQueryConds(cli.Recommend.Query(), h.RecommendConds)
 	if err != nil {
 		return nil, err
 	}
@@ -59,26 +59,26 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(entrecommend.FieldID),
 		).
 		AppendSelect(
-			sql.As(t.C(entrecommend.FieldEntID), "ent_id"),
-			sql.As(t.C(entrecommend.FieldAppID), "app_id"),
-			sql.As(t.C(entrecommend.FieldRecommenderID), "recommender_id"),
-			sql.As(t.C(entrecommend.FieldGoodID), "good_id"),
-			sql.As(t.C(entrecommend.FieldMessage), "message"),
-			sql.As(t.C(entrecommend.FieldRecommendIndex), "recommend_index"),
-			sql.As(t.C(entrecommend.FieldCreatedAt), "created_at"),
-			sql.As(t.C(entrecommend.FieldUpdatedAt), "updated_at"),
+			t.C(entrecommend.FieldEntID),
+			t.C(entrecommend.FieldRecommenderID),
+			t.C(entrecommend.FieldAppGoodID),
+			t.C(entrecommend.FieldMessage),
+			t.C(entrecommend.FieldRecommendIndex),
+			t.C(entrecommend.FieldCreatedAt),
+			t.C(entrecommend.FieldUpdatedAt),
 		)
 }
 
 func (h *queryHandler) queryJoinGood(s *sql.Selector) {
-	t := sql.Table(entgood.Table)
+	t := sql.Table(entappgoodbase.Table)
 	s.LeftJoin(t).
 		On(
-			s.C(entrecommend.FieldGoodID),
-			t.C(entgood.FieldEntID),
+			s.C(entrecommend.FieldAppGoodID),
+			t.C(entappgoodbase.FieldEntID),
 		).
 		AppendSelect(
-			sql.As(t.C(entgood.FieldTitle), "good_name"),
+			t.C(entappgoodbase.FieldAppID),
+			sql.As(t.C(entappgoodbase.FieldName), "good_name"),
 		)
 }
 
