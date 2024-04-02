@@ -21,8 +21,8 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/like"
 	devicetypemwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/like"
 	vendorbrandmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/brand"
 	vendorlocationmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"
 

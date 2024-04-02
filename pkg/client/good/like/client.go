@@ -8,7 +8,7 @@ import (
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/like"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/like"
 
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
 )

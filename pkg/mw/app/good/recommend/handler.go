@@ -1,23 +1,30 @@
-package required
+package recommend
 
 import (
 	"context"
 	"fmt"
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
-	requiredcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/required"
+	recommendcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/recommend"
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/required"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/recommend"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 type Handler struct {
-	requiredcrud.Req
-	Conds  *requiredcrud.Conds
-	Offset int32
-	Limit  int32
+	ID             *uint32
+	EntID          *uuid.UUID
+	AppID          *uuid.UUID
+	RecommenderID  *uuid.UUID
+	GoodID         *uuid.UUID
+	Message        *string
+	RecommendIndex *decimal.Decimal
+	Conds          *recommendcrud.Conds
+	Offset         int32
+	Limit          int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -60,14 +67,54 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithMainGoodID(id *string, must bool) func(context.Context, *Handler) error {
+func WithAppID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid appid")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
+		if err != nil {
+			return err
+		}
+		h.AppID = &_id
+		return nil
+	}
+}
+
+func WithRecommenderID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid recommenderid")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
+		if err != nil {
+			return err
+		}
+		h.RecommenderID = &_id
+		return nil
+	}
+}
+
+func WithGoodID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid goodid")
+			}
+			return nil
+		}
 		handler, err := goodbase1.NewHandler(
 			ctx,
 			goodbase1.WithEntID(id, true),
 		)
 		if err != nil {
-			return err
+			return fmt.Errorf("invalid goodid")
 		}
 		exist, err := handler.ExistGoodBase(ctx)
 		if err != nil {
@@ -76,42 +123,48 @@ func WithMainGoodID(id *string, must bool) func(context.Context, *Handler) error
 		if !exist {
 			return fmt.Errorf("invalid good")
 		}
-		h.MainGoodID = handler.EntID
+		h.GoodID = handler.EntID
 		return nil
 	}
 }
 
-func WithRequiredGoodID(id *string, must bool) func(context.Context, *Handler) error {
+func WithMessage(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		handler, err := goodbase1.NewHandler(
-			ctx,
-			goodbase1.WithEntID(id, true),
-		)
-		if err != nil {
-			return err
+		const leastMessageLen = 10
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid message")
+			}
+			return nil
 		}
-		exist, err := handler.ExistGoodBase(ctx)
-		if err != nil {
-			return err
+		if len(*s) < leastMessageLen {
+			return fmt.Errorf("invalid message")
 		}
-		if !exist {
-			return fmt.Errorf("invalid good")
-		}
-		h.RequiredGoodID = handler.EntID
+		h.Message = s
 		return nil
 	}
 }
 
-func WithMust(b *bool, must bool) func(context.Context, *Handler) error {
+func WithRecommendIndex(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.Must = b
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid recommendindex")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.RecommendIndex = &amount
 		return nil
 	}
 }
 
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.Conds = &requiredcrud.Conds{}
+		h.Conds = &recommendcrud.Conds{}
 		if conds == nil {
 			return nil
 		}
@@ -125,23 +178,23 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if conds.ID != nil {
 			h.Conds.ID = &cruder.Cond{Op: conds.GetID().GetOp(), Val: conds.GetID().GetValue()}
 		}
-		if conds.MainGoodID != nil {
-			id, err := uuid.Parse(conds.GetMainGoodID().GetValue())
+		if conds.AppID != nil {
+			id, err := uuid.Parse(conds.GetAppID().GetValue())
 			if err != nil {
 				return err
 			}
-			h.Conds.MainGoodID = &cruder.Cond{
-				Op:  conds.GetMainGoodID().GetOp(),
+			h.Conds.AppID = &cruder.Cond{
+				Op:  conds.GetAppID().GetOp(),
 				Val: id,
 			}
 		}
-		if conds.RequiredGoodID != nil {
-			id, err := uuid.Parse(conds.GetRequiredGoodID().GetValue())
+		if conds.RecommenderID != nil {
+			id, err := uuid.Parse(conds.GetRecommenderID().GetValue())
 			if err != nil {
 				return err
 			}
-			h.Conds.RequiredGoodID = &cruder.Cond{
-				Op:  conds.GetRequiredGoodID().GetOp(),
+			h.Conds.RecommenderID = &cruder.Cond{
+				Op:  conds.GetRecommenderID().GetOp(),
 				Val: id,
 			}
 		}
@@ -167,12 +220,6 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			h.Conds.GoodIDs = &cruder.Cond{
 				Op:  conds.GetGoodIDs().GetOp(),
 				Val: ids,
-			}
-		}
-		if conds.Must != nil {
-			h.Conds.Must = &cruder.Cond{
-				Op:  conds.GetMust().GetOp(),
-				Val: conds.GetMust().GetValue(),
 			}
 		}
 		return nil

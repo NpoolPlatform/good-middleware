@@ -1,23 +1,29 @@
-package required
+package score
 
 import (
 	"context"
 	"fmt"
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
-	requiredcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/required"
-	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
+	scorecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/score"
+	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/required"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/score"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 type Handler struct {
-	requiredcrud.Req
-	Conds  *requiredcrud.Conds
-	Offset int32
-	Limit  int32
+	ID        *uint32
+	EntID     *uuid.UUID
+	AppID     *uuid.UUID
+	UserID    *uuid.UUID
+	AppGoodID *uuid.UUID
+	Score     *decimal.Decimal
+	Conds     *scorecrud.Conds
+	Offset    int32
+	Limit     int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -60,58 +66,82 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithMainGoodID(id *string, must bool) func(context.Context, *Handler) error {
+func WithAppID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		handler, err := goodbase1.NewHandler(
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid appid")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
+		if err != nil {
+			return err
+		}
+		h.AppID = &_id
+		return nil
+	}
+}
+
+func WithUserID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid userid")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
+		if err != nil {
+			return err
+		}
+		h.UserID = &_id
+		return nil
+	}
+}
+
+func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		handler, err := appgood1.NewHandler(
 			ctx,
-			goodbase1.WithEntID(id, true),
+			appgood1.WithEntID(id, true),
 		)
 		if err != nil {
 			return err
 		}
-		exist, err := handler.ExistGoodBase(ctx)
+		exist, err := handler.ExistGood(ctx)
 		if err != nil {
 			return err
 		}
 		if !exist {
-			return fmt.Errorf("invalid good")
+			return fmt.Errorf("invalid app good")
 		}
-		h.MainGoodID = handler.EntID
+		h.AppGoodID = handler.EntID
 		return nil
 	}
 }
 
-func WithRequiredGoodID(id *string, must bool) func(context.Context, *Handler) error {
+func WithScore(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		handler, err := goodbase1.NewHandler(
-			ctx,
-			goodbase1.WithEntID(id, true),
-		)
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid score")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
 		if err != nil {
 			return err
 		}
-		exist, err := handler.ExistGoodBase(ctx)
-		if err != nil {
-			return err
-		}
-		if !exist {
-			return fmt.Errorf("invalid good")
-		}
-		h.RequiredGoodID = handler.EntID
+		h.Score = &amount
 		return nil
 	}
 }
 
-func WithMust(b *bool, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		h.Must = b
-		return nil
-	}
-}
-
+//nolint:gocyclo
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.Conds = &requiredcrud.Conds{}
+		h.Conds = &scorecrud.Conds{}
 		if conds == nil {
 			return nil
 		}
@@ -125,24 +155,22 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if conds.ID != nil {
 			h.Conds.ID = &cruder.Cond{Op: conds.GetID().GetOp(), Val: conds.GetID().GetValue()}
 		}
-		if conds.MainGoodID != nil {
-			id, err := uuid.Parse(conds.GetMainGoodID().GetValue())
+		if conds.AppID != nil {
+			id, err := uuid.Parse(conds.GetAppID().GetValue())
 			if err != nil {
 				return err
 			}
-			h.Conds.MainGoodID = &cruder.Cond{
-				Op:  conds.GetMainGoodID().GetOp(),
-				Val: id,
+			h.Conds.AppID = &cruder.Cond{
+				Op: conds.GetAppID().GetOp(), Val: id,
 			}
 		}
-		if conds.RequiredGoodID != nil {
-			id, err := uuid.Parse(conds.GetRequiredGoodID().GetValue())
+		if conds.UserID != nil {
+			id, err := uuid.Parse(conds.GetUserID().GetValue())
 			if err != nil {
 				return err
 			}
-			h.Conds.RequiredGoodID = &cruder.Cond{
-				Op:  conds.GetRequiredGoodID().GetOp(),
-				Val: id,
+			h.Conds.UserID = &cruder.Cond{
+				Op: conds.GetUserID().GetOp(), Val: id,
 			}
 		}
 		if conds.GoodID != nil {
@@ -151,28 +179,29 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 				return err
 			}
 			h.Conds.GoodID = &cruder.Cond{
-				Op:  conds.GetGoodID().GetOp(),
-				Val: id,
+				Op: conds.GetGoodID().GetOp(), Val: id,
 			}
 		}
-		if conds.GoodIDs != nil {
+		if conds.AppGoodID != nil {
+			id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
+			if err != nil {
+				return err
+			}
+			h.Conds.AppGoodID = &cruder.Cond{
+				Op: conds.GetAppGoodID().GetOp(), Val: id,
+			}
+		}
+		if conds.AppGoodIDs != nil {
 			ids := []uuid.UUID{}
-			for _, id := range conds.GetGoodIDs().GetValue() {
+			for _, id := range conds.GetAppGoodIDs().GetValue() {
 				_id, err := uuid.Parse(id)
 				if err != nil {
 					return err
 				}
 				ids = append(ids, _id)
 			}
-			h.Conds.GoodIDs = &cruder.Cond{
-				Op:  conds.GetGoodIDs().GetOp(),
-				Val: ids,
-			}
-		}
-		if conds.Must != nil {
-			h.Conds.Must = &cruder.Cond{
-				Op:  conds.GetMust().GetOp(),
-				Val: conds.GetMust().GetValue(),
+			h.Conds.AppGoodIDs = &cruder.Cond{
+				Op: conds.GetAppGoodIDs().GetOp(), Val: ids,
 			}
 		}
 		return nil
