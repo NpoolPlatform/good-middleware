@@ -4,6 +4,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 type AppGoodBase interface {
@@ -20,6 +21,7 @@ type AppGoodBase interface {
 	Banner() string
 	CommentCount() uint32
 	RecommendCount() uint32
+	Score() decimal.Decimal
 }
 
 type goodBase struct {
@@ -93,4 +95,8 @@ func (gb *goodBase) CommentCount() uint32 {
 
 func (gb *goodBase) RecommendCount() uint32 {
 	return gb._extraEnt.RecommendCount
+}
+
+func (gb *goodBase) Score() decimal.Decimal {
+	return gb._extraEnt.Score
 }

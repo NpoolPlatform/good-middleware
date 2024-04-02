@@ -9,7 +9,7 @@ import (
 	scorecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
+	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entscore "github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/score"
 
@@ -44,7 +44,7 @@ func (h *queryHandler) queryScore(cli *ent.Client) error {
 }
 
 func (h *queryHandler) queryScores(cli *ent.Client) (*ent.ScoreSelect, error) {
-	stm, err := scorecrud.SetQueryConds(cli.Score.Query(), h.Conds)
+	stm, err := scorecrud.SetQueryConds(cli.Score.Query(), h.ScoreConds)
 	if err != nil {
 		return nil, err
 	}
@@ -59,26 +59,27 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(entscore.FieldID),
 		).
 		AppendSelect(
-			sql.As(t.C(entscore.FieldEntID), "ent_id"),
-			sql.As(t.C(entscore.FieldAppID), "app_id"),
-			sql.As(t.C(entscore.FieldUserID), "user_id"),
-			sql.As(t.C(entscore.FieldGoodID), "good_id"),
-			sql.As(t.C(entscore.FieldAppGoodID), "app_good_id"),
-			sql.As(t.C(entscore.FieldScore), "score"),
-			sql.As(t.C(entscore.FieldCreatedAt), "created_at"),
-			sql.As(t.C(entscore.FieldUpdatedAt), "updated_at"),
+			t.C(entscore.FieldEntID),
+			t.C(entscore.FieldUserID),
+			t.C(entscore.FieldAppGoodID),
+			t.C(entscore.FieldScore),
+			t.C(entscore.FieldCommentID),
+			t.C(entscore.FieldCreatedAt),
+			t.C(entscore.FieldUpdatedAt),
 		)
 }
 
 func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
-	t := sql.Table(entappgood.Table)
+	t := sql.Table(entappgoodbase.Table)
 	s.LeftJoin(t).
 		On(
 			s.C(entscore.FieldAppGoodID),
-			t.C(entappgood.FieldEntID),
+			t.C(entappgoodbase.FieldEntID),
 		).
 		AppendSelect(
-			sql.As(t.C(entappgood.FieldGoodName), "good_name"),
+			t.C(entappgoodbase.FieldAppID),
+			t.C(entappgoodbase.FieldGoodID),
+			sql.As(t.C(entappgoodbase.FieldName), "good_name"),
 		)
 }
 

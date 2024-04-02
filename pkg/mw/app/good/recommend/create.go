@@ -66,7 +66,7 @@ func (h *createHandler) createRecommend(ctx context.Context, tx *ent.Tx) error {
 	}
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
-		return fmt.Errorf("fail create comment: %v", err)
+		return fmt.Errorf("fail create recommend: %v", err)
 	}
 	return nil
 }

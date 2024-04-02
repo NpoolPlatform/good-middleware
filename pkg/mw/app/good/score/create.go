@@ -3,72 +3,91 @@ package score
 import (
 	"context"
 	"fmt"
+	"time"
 
-	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
-	scorecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/score"
 
-	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
 
 type createHandler struct {
 	*Handler
-	appgood *appgoodpb.Good
+	sql string
 }
 
-func (h *createHandler) getAppGood(ctx context.Context) error {
-	handler, err := appgood1.NewHandler(ctx)
-	if err != nil {
-		return err
+func (h *createHandler) ConstructCreateSql() string {
+	comma := ""
+	now := uint32(time.Now().Unix())
+	_sql := "insert into scores "
+	_sql += "("
+	if h.EntID != nil {
+		_sql += "ent_id"
+		comma = ", "
 	}
-	handler.EntID = h.AppGoodID
-	info, err := handler.GetGood(ctx)
-	if err != nil {
-		return err
+	_sql += comma + "user_id"
+	comma = ", "
+	_sql += comma + "app_good_id"
+	_sql += comma + "score"
+	if h.CommentID != nil {
+		_sql += comma + "comment_id"
 	}
-	if info == nil {
-		return fmt.Errorf("app good not found %v", *h.AppGoodID)
+	_sql += comma + "created_at"
+	_sql += comma + "updated_at"
+	_sql += comma + "deleted_at"
+	_sql += ")"
+	comma = ""
+	_sql += " select * from (select "
+	if h.EntID != nil {
+		_sql += fmt.Sprintf("'%v' as ent_id ", *h.EntID)
+		comma = ", "
 	}
-	h.appgood = info
-	return nil
+	_sql += fmt.Sprintf("%v'%v' as user_id", comma, *h.UserID)
+	comma = ", "
+	_sql += fmt.Sprintf("%v'%v' as app_good_id", comma, *h.AppGoodID)
+	_sql += fmt.Sprintf("%v'%v' as score", comma, *h.Score)
+	if h.CommentID != nil {
+		_sql += fmt.Sprintf("%v'%v' as comment_id", comma, *h.CommentID)
+	}
+	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
+	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
+	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
+	_sql += " limit 1) as tmp "
+	_sql += "where exists ("
+	_sql += "select 1 from app_good_bases "
+	_sql += fmt.Sprintf("where ent_id='%v'", *h.AppGoodID)
+	_sql += " limit 1) and not exists ("
+	_sql += "select 1 from scores "
+	_sql += fmt.Sprintf("where user_id = '%v' and app_good_id = '%v'", *h.UserID, *h.AppGoodID)
+	_sql += " limit 1)"
+
+	return _sql
 }
 
 func (h *createHandler) createScore(ctx context.Context, tx *ent.Tx) error {
-	goodid := uuid.MustParse(h.appgood.GoodID)
-	if _, err := scorecrud.CreateSet(
-		tx.Score.Create(),
-		&scorecrud.Req{
-			EntID:     h.EntID,
-			AppID:     h.AppID,
-			UserID:    h.UserID,
-			GoodID:    &goodid,
-			AppGoodID: h.AppGoodID,
-			Score:     h.Score,
-		},
-	).Save(ctx); err != nil {
+	rc, err := tx.ExecContext(ctx, h.sql)
+	if err != nil {
 		return err
+	}
+	n, err := rc.RowsAffected()
+	if err != nil || n != 1 {
+		return fmt.Errorf("fail create score: %v", err)
 	}
 	return nil
 }
 
 func (h *createHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
-	goodid := uuid.MustParse(h.appgood.GoodID)
 	stm, err := extrainfocrud.SetQueryConds(
 		tx.ExtraInfo.Query(),
 		&extrainfocrud.Conds{
-			GoodID: &cruder.Cond{Op: cruder.EQ, Val: goodid},
+			AppGoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.AppGoodID},
 		})
 	if err != nil {
 		return err
 	}
-	info, err := stm.Only(ctx)
+	info, err := stm.ForUpdate().Only(ctx)
 	if err != nil {
 		return err
 	}
@@ -89,52 +108,15 @@ func (h *createHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *Handler) CreateScore(ctx context.Context) (*npool.Score, error) {
-	key := fmt.Sprintf("%v:%v:%v:%v", basetypes.Prefix_PrefixScoreGood, *h.AppID, *h.UserID, *h.AppGoodID)
-	if err := redis2.TryLock(key, 0); err != nil {
-		return nil, err
-	}
-	defer func() {
-		_ = redis2.Unlock(key)
-	}()
-
-	h.Conds = &scorecrud.Conds{
-		AppID:     &cruder.Cond{Op: cruder.EQ, Val: *h.AppID},
-		UserID:    &cruder.Cond{Op: cruder.EQ, Val: *h.UserID},
-		AppGoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.AppGoodID},
-	}
-	exist, err := h.ExistScoreConds(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if exist {
-		return nil, fmt.Errorf("already exists")
-	}
-
-	id := uuid.New()
-	if h.EntID == nil {
-		h.EntID = &id
-	}
-
+func (h *Handler) CreateScore(ctx context.Context) error {
 	handler := &createHandler{
 		Handler: h,
 	}
-	if err := handler.getAppGood(ctx); err != nil {
-		return nil, err
-	}
-
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	handler.sql = handler.ConstructCreateSql()
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createScore(ctx, tx); err != nil {
 			return err
 		}
-		if err := handler.updateGoodScore(ctx, tx); err != nil {
-			return err
-		}
-		return nil
+		return handler.updateGoodScore(ctx, tx)
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetScore(ctx)
 }

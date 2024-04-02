@@ -16,6 +16,7 @@ type Req struct {
 	UserID    *uuid.UUID
 	AppGoodID *uuid.UUID
 	Score     *decimal.Decimal
+	CommentID *uuid.UUID
 	DeletedAt *uint32
 }
 
@@ -32,6 +33,9 @@ func CreateSet(c *ent.ScoreCreate, req *Req) *ent.ScoreCreate {
 	if req.Score != nil {
 		c.SetScore(*req.Score)
 	}
+	if req.CommentID != nil {
+		c.SetCommentID(*req.CommentID)
+	}
 	return c
 }
 
@@ -41,6 +45,9 @@ func UpdateSet(u *ent.ScoreUpdateOne, req *Req) *ent.ScoreUpdateOne {
 	}
 	if req.Score != nil {
 		u.SetScore(*req.Score)
+	}
+	if req.CommentID != nil {
+		u.SetCommentID(*req.CommentID)
 	}
 	return u
 }
