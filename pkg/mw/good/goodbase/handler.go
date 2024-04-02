@@ -96,6 +96,7 @@ func WithBenefitType(e *types.BenefitType, must bool) func(context.Context, *Han
 		case types.BenefitType_BenefitTypePlatform:
 		case types.BenefitType_BenefitTypePool:
 		case types.BenefitType_BenefitTypeOffline:
+		case types.BenefitType_BenefitTypeNone:
 		default:
 			return fmt.Errorf("invalid benefittype")
 		}

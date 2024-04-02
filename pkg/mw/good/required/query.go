@@ -9,7 +9,7 @@ import (
 	requiredcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/required"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 	entrequiredgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/required"
 )
@@ -67,26 +67,26 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 }
 
 func (h *queryHandler) queryJoinMainGood(s *sql.Selector) {
-	t := sql.Table(entgood.Table)
+	t := sql.Table(entgoodbase.Table)
 	s.LeftJoin(t).
 		On(
 			s.C(entrequiredgood.FieldMainGoodID),
-			t.C(entgood.FieldEntID),
+			t.C(entgoodbase.FieldEntID),
 		).
 		AppendSelect(
-			sql.As(t.C(entgood.FieldTitle), "main_good_name"),
+			sql.As(t.C(entgoodbase.FieldName), "main_good_name"),
 		)
 }
 
 func (h *queryHandler) queryJoinRequiredGood(s *sql.Selector) {
-	t := sql.Table(entgood.Table)
+	t := sql.Table(entgoodbase.Table)
 	s.LeftJoin(t).
 		On(
 			s.C(entrequiredgood.FieldRequiredGoodID),
-			t.C(entgood.FieldEntID),
+			t.C(entgoodbase.FieldEntID),
 		).
 		AppendSelect(
-			sql.As(t.C(entgood.FieldTitle), "required_good_name"),
+			sql.As(t.C(entgoodbase.FieldName), "required_good_name"),
 		)
 }
 

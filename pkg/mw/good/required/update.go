@@ -6,11 +6,10 @@ import (
 	requiredcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/required"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/required"
 )
 
-func (h *Handler) UpdateRequired(ctx context.Context) (*npool.Required, error) {
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+func (h *Handler) UpdateRequired(ctx context.Context) error {
+	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if _, err := requiredcrud.UpdateSet(
 			cli.RequiredGood.UpdateOneID(*h.ID),
 			&requiredcrud.Req{
@@ -21,8 +20,4 @@ func (h *Handler) UpdateRequired(ctx context.Context) (*npool.Required, error) {
 		}
 		return nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return h.GetRequired(ctx)
 }

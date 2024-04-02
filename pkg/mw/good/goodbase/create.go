@@ -23,7 +23,7 @@ func (h *createHandler) createGoodBase(ctx context.Context, tx *ent.Tx) error {
 		return err
 	}
 	if n, err := rc.RowsAffected(); err != nil || n != 1 {
-		return fmt.Errorf("fail create goodbase")
+		return fmt.Errorf("fail create goodbase: %v", err)
 	}
 	return nil
 }
