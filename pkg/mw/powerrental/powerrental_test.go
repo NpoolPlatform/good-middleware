@@ -90,6 +90,13 @@ var (
 				Total:          decimal.NewFromInt(50).String(),
 			},
 		},
+
+		RewardState:           types.BenefitState_BenefitWait,
+		RewardTID:             uuid.Nil.String(),
+		NextRewardStartAmount: decimal.NewFromInt(0).String(),
+		LastRewardAmount:      decimal.NewFromInt(0).String(),
+		LastUnitRewardAmount:  decimal.NewFromInt(0).String(),
+		TotalRewardAmount:     decimal.NewFromInt(0).String(),
 	}
 )
 
@@ -108,6 +115,7 @@ func setup(t *testing.T) func(*testing.T) {
 		stock.WaitStart = decimal.NewFromInt(0).String()
 		stock.Sold = decimal.NewFromInt(0).String()
 	}
+	ret.RewardStateStr = ret.RewardState.String()
 
 	manufacturerID := uuid.NewString()
 	h1, err := manufacturer1.NewHandler(
@@ -299,6 +307,12 @@ func updatePowerRental(t *testing.T) {
 
 	err = h1.UpdatePowerRental(context.Background())
 	assert.Nil(t, err)
+
+	info, err := h1.GetPowerRental(context.Background())
+	if assert.Nil(t, err) {
+		ret.UpdatedAt = info.UpdatedAt
+		assert.Equal(t, info, &ret)
+	}
 }
 
 func getPowerRental(t *testing.T) {

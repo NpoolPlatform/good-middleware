@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	rewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward"
+	rewardhistorycrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward/history"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -188,6 +190,112 @@ func (h *updateHandler) _validateStock() error {
 	return h.stockValidator.validateStock()
 }
 
+func (h *updateHandler) validateRewardState() error {
+	if h.RewardReq.RewardState == nil {
+		return nil
+	}
+
+	switch h.goodReward.RewardState {
+	case types.BenefitState_BenefitWait.String():
+		switch *h.RewardReq.RewardState {
+		case types.BenefitState_BenefitTransferring:
+		case types.BenefitState_BenefitFail:
+		default:
+			return fmt.Errorf("broken rewardstate %v -> %v", h.goodReward.RewardState, *h.RewardReq.RewardState)
+		}
+	case types.BenefitState_BenefitTransferring.String():
+		switch *h.RewardReq.RewardState {
+		case types.BenefitState_BenefitBookKeeping:
+		case types.BenefitState_BenefitFail:
+		default:
+			return fmt.Errorf("broken rewardstate %v -> %v", h.goodReward.RewardState, *h.RewardReq.RewardState)
+		}
+	case types.BenefitState_BenefitBookKeeping.String():
+		switch *h.RewardReq.RewardState {
+		case types.BenefitState_BenefitUserBookKeeping:
+		default:
+			return fmt.Errorf("broken rewardstate %v -> %v", h.goodReward.RewardState, *h.RewardReq.RewardState)
+		}
+	case types.BenefitState_BenefitUserBookKeeping.String():
+		switch *h.RewardReq.RewardState {
+		case types.BenefitState_BenefitSimulateBookKeeping:
+		case types.BenefitState_BenefitDone:
+		default:
+			return fmt.Errorf("broken rewardstate %v -> %v", h.goodReward.RewardState, *h.RewardReq.RewardState)
+		}
+	case types.BenefitState_BenefitSimulateBookKeeping.String():
+		switch *h.RewardReq.RewardState {
+		case types.BenefitState_BenefitDone:
+		default:
+			return fmt.Errorf("broken rewardstate %v -> %v", h.goodReward.RewardState, *h.RewardReq.RewardState)
+		}
+	case types.BenefitState_BenefitDone.String():
+		fallthrough //nolint
+	case types.BenefitState_BenefitFail.String():
+		if *h.RewardReq.RewardState != types.BenefitState_BenefitWait {
+			return fmt.Errorf("broken rewardstate %v -> %v", h.goodReward.RewardState, *h.RewardReq.RewardState)
+		}
+	default:
+		return fmt.Errorf("invalid rewardstate")
+	}
+	return nil
+}
+
+func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
+	if h.RewardReq.RewardState == nil {
+		return nil
+	}
+
+	totalReward := h.goodReward.TotalRewardAmount
+	if *h.RewardReq.RewardState == types.BenefitState_BenefitSimulateBookKeeping {
+		if h.RewardReq.LastRewardAmount != nil {
+			totalReward = h.RewardReq.LastRewardAmount.Add(totalReward)
+		}
+	}
+	h.RewardReq.TotalRewardAmount = &totalReward
+
+	if _, err := rewardcrud.UpdateSet(h.goodReward.Update(), h.RewardReq).Save(ctx); err != nil {
+		return err
+	}
+
+	if *h.RewardReq.RewardState != types.BenefitState_BenefitSimulateBookKeeping {
+		return nil
+	}
+	if h.RewardReq.LastRewardAt == nil {
+		return fmt.Errorf("invalid rewardat")
+	}
+
+	stm, err := rewardhistorycrud.SetQueryConds(tx.GoodRewardHistory.Query(), &rewardhistorycrud.Conds{
+		GoodID:     &cruder.Cond{Op: cruder.EQ, Val: *h.EntID},
+		RewardDate: &cruder.Cond{Op: cruder.EQ, Val: *h.RewardReq.LastRewardAt},
+	})
+	if err != nil {
+		return err
+	}
+	exist, err := stm.Exist(ctx)
+	if err != nil {
+		return err
+	}
+	if exist {
+		return fmt.Errorf("already exists")
+	}
+
+	if _, err := rewardhistorycrud.CreateSet(
+		tx.GoodRewardHistory.Create(),
+		&rewardhistorycrud.Req{
+			GoodID:     h.EntID,
+			RewardDate: h.RewardReq.LastRewardAt,
+			TID:        h.RewardReq.RewardTID,
+			Amount:     h.RewardReq.LastRewardAmount,
+			UnitAmount: h.RewardReq.LastUnitRewardAmount,
+		},
+	).Save(ctx); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 	handler := &updateHandler{
 		powerRentalGoodQueryHandler: &powerRentalGoodQueryHandler{
@@ -204,6 +312,9 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 	if err := handler._validateStock(); err != nil {
 		return err
 	}
+	if err := handler.validateRewardState(); err != nil {
+		return err
+	}
 
 	handler.constructPowerRentalSql()
 	if err := handler.constructGoodBaseSql(ctx); err != nil {
@@ -218,6 +329,9 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 			return err
 		}
 		if err := handler.updateMiningGoodStocks(_ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.updateReward(_ctx, tx); err != nil {
 			return err
 		}
 		return handler.updatePowerRental(_ctx, tx)

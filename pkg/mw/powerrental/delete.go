@@ -5,6 +5,7 @@ import (
 	"time"
 
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
+	rewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	powerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/powerrental"
@@ -53,6 +54,18 @@ func (h *deleteHandler) deleteStock(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
+func (h *deleteHandler) deleteReward(ctx context.Context, tx *ent.Tx) error {
+	if _, err := rewardcrud.UpdateSet(
+		tx.GoodReward.UpdateOneID(h.stock.ID),
+		&rewardcrud.Req{
+			DeletedAt: &h.now,
+		},
+	).Save(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (h *deleteHandler) deleteMiningGoodStock(ctx context.Context, tx *ent.Tx) error {
 	for _, poolStock := range h.miningGoodStocks {
 		if _, err := mininggoodstockcrud.UpdateSet(
@@ -87,6 +100,9 @@ func (h *Handler) DeletePowerRental(ctx context.Context) error {
 			return err
 		}
 		if err := handler.deleteStock(_ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.deleteReward(_ctx, tx); err != nil {
 			return err
 		}
 		if err := handler.deleteMiningGoodStock(_ctx, tx); err != nil {

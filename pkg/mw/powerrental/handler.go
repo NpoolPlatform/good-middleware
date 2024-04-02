@@ -7,6 +7,7 @@ import (
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
+	rewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	powerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/powerrental"
@@ -26,10 +27,12 @@ type Handler struct {
 	powerrentalcrud.Req
 	GoodBaseReq         *goodbasecrud.Req
 	StockReq            *stockcrud.Req
+	RewardReq           *rewardcrud.Req
 	MiningGoodStockReqs []*mininggoodstockcrud.Req
 	PowerRentalConds    *powerrentalcrud.Conds
 	GoodBaseConds       *goodbasecrud.Conds
 	GoodCoinConds       *goodcoincrud.Conds
+	RewardConds         *rewardcrud.Conds
 	Offset              int32
 	Limit               int32
 }
@@ -39,9 +42,11 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 		Req:              powerrentalcrud.Req{},
 		GoodBaseReq:      &goodbasecrud.Req{},
 		StockReq:         &stockcrud.Req{},
+		RewardReq:        &rewardcrud.Req{},
 		PowerRentalConds: &powerrentalcrud.Conds{},
 		GoodBaseConds:    &goodbasecrud.Conds{},
 		GoodCoinConds:    &goodcoincrud.Conds{},
+		RewardConds:      &rewardcrud.Conds{},
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
@@ -96,6 +101,7 @@ func WithGoodID(s *string, must bool) func(context.Context, *Handler) error {
 		h.GoodID = &id
 		h.GoodBaseReq.EntID = &id
 		h.StockReq.GoodID = &id
+		h.RewardReq.GoodID = &id
 		return nil
 	}
 }
@@ -467,6 +473,111 @@ func WithStocks(stocks []*stockmwpb.MiningGoodStockReq, must bool) func(context.
 	}
 }
 
+func WithRewardState(e *types.BenefitState, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return fmt.Errorf("invalid rewardstate")
+			}
+			return nil
+		}
+		switch *e {
+		case types.BenefitState_BenefitWait:
+		case types.BenefitState_BenefitTransferring:
+		case types.BenefitState_BenefitBookKeeping:
+		case types.BenefitState_BenefitUserBookKeeping:
+		case types.BenefitState_BenefitSimulateBookKeeping:
+		case types.BenefitState_BenefitDone:
+		case types.BenefitState_BenefitFail:
+		default:
+			return fmt.Errorf("invalid rewardstate")
+		}
+		h.RewardReq.RewardState = e
+		return nil
+	}
+}
+
+func WithRewardTID(id *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return fmt.Errorf("invalid rewardtid")
+			}
+			return nil
+		}
+		_id, err := uuid.Parse(*id)
+		if err != nil {
+			return err
+		}
+		h.RewardReq.RewardTID = &_id
+		return nil
+	}
+}
+
+func WithRewardAt(n *uint32, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if n == nil {
+			if must {
+				return fmt.Errorf("invalid rewardat")
+			}
+			return nil
+		}
+		h.RewardReq.LastRewardAt = n
+		return nil
+	}
+}
+
+func WithNextRewardStartAmount(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid nextrewardstartamount")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.RewardReq.NextRewardStartAmount = &amount
+		return nil
+	}
+}
+
+func WithRewardAmount(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid rewardamount")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.RewardReq.LastRewardAmount = &amount
+		return nil
+	}
+}
+
+func WithUnitRewardAmount(s *string, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid unitrewardamount")
+			}
+			return nil
+		}
+		amount, err := decimal.NewFromString(*s)
+		if err != nil {
+			return err
+		}
+		h.RewardReq.LastUnitRewardAmount = &amount
+		return nil
+	}
+}
+
 func (h *Handler) withPowerRentalConds(conds *npool.Conds) error {
 	if conds.ID != nil {
 		h.PowerRentalConds.ID = &cruder.Cond{
@@ -607,6 +718,32 @@ func (h *Handler) withGoodCoinConds(conds *npool.Conds) error {
 	return nil
 }
 
+func (h *Handler) withRewardConds(conds *npool.Conds) error {
+	if conds.RewardState != nil {
+		h.RewardConds.RewardState = &cruder.Cond{
+			Op:  conds.GetRewardState().GetOp(),
+			Val: types.BenefitState(conds.GetRewardState().GetValue()),
+		}
+	}
+	if conds.RewardAt != nil {
+		h.RewardConds.RewardAt = &cruder.Cond{
+			Op:  conds.GetRewardAt().GetOp(),
+			Val: conds.GetRewardAt().GetValue(),
+		}
+	}
+	if conds.GoodID != nil {
+		id, err := uuid.Parse(conds.GetGoodID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.RewardConds.GoodID = &cruder.Cond{
+			Op:  conds.GetGoodID().GetOp(),
+			Val: id,
+		}
+	}
+	return nil
+}
+
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if conds == nil {
@@ -616,6 +753,9 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			return err
 		}
 		if err := h.withGoodCoinConds(conds); err != nil {
+			return err
+		}
+		if err := h.withRewardConds(conds); err != nil {
 			return err
 		}
 		return h.withGoodBaseConds(conds)

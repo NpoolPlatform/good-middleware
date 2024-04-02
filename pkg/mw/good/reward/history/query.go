@@ -8,7 +8,7 @@ import (
 	historycrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward/history"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
+	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 	enthistory "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/reward/history"
 
@@ -43,26 +43,26 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(enthistory.FieldID),
 		).
 		AppendSelect(
-			sql.As(t.C(enthistory.FieldEntID), "ent_id"),
-			sql.As(t.C(enthistory.FieldGoodID), "good_id"),
-			sql.As(t.C(enthistory.FieldRewardDate), "reward_date"),
-			sql.As(t.C(enthistory.FieldTid), "tid"),
-			sql.As(t.C(enthistory.FieldAmount), "amount"),
-			sql.As(t.C(enthistory.FieldUnitAmount), "unit_amount"),
-			sql.As(t.C(enthistory.FieldCreatedAt), "created_at"),
-			sql.As(t.C(enthistory.FieldUpdatedAt), "updated_at"),
+			t.C(enthistory.FieldEntID),
+			t.C(enthistory.FieldGoodID),
+			t.C(enthistory.FieldRewardDate),
+			t.C(enthistory.FieldTid),
+			t.C(enthistory.FieldAmount),
+			t.C(enthistory.FieldUnitAmount),
+			t.C(enthistory.FieldCreatedAt),
+			t.C(enthistory.FieldUpdatedAt),
 		)
 }
 
 func (h *queryHandler) queryJoinGood(s *sql.Selector) {
-	t := sql.Table(entgood.Table)
+	t := sql.Table(entgoodbase.Table)
 	s.LeftJoin(t).
 		On(
 			s.C(enthistory.FieldGoodID),
-			t.C(entgood.FieldEntID),
+			t.C(entgoodbase.FieldEntID),
 		).
 		AppendSelect(
-			sql.As(t.C(entgood.FieldTitle), "good_name"),
+			sql.As(t.C(entgoodbase.FieldName), "good_name"),
 		)
 }
 

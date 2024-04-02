@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	rewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
@@ -186,6 +187,18 @@ func (h *createHandler) createMiningGoodStocks(ctx context.Context, tx *ent.Tx) 
 	return nil
 }
 
+func (h *createHandler) createReward(ctx context.Context, tx *ent.Tx) error {
+	if _, err := rewardcrud.CreateSet(
+		tx.GoodReward.Create(),
+		&rewardcrud.Req{
+			GoodID: h.GoodID,
+		},
+	).Save(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (h *createHandler) _validateStock() error {
 	if h.StockReq.EntID == nil {
 		h.StockReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
@@ -243,6 +256,9 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 			return err
 		}
 		if err := handler.createMiningGoodStocks(_ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.createReward(_ctx, tx); err != nil {
 			return err
 		}
 		return handler.createPowerRental(_ctx, tx)

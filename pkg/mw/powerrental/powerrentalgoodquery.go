@@ -7,6 +7,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	entgoodreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	entmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
 	entpowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
@@ -16,6 +17,7 @@ type powerRentalGoodQueryHandler struct {
 	*Handler
 	powerRental      *ent.PowerRental
 	goodBase         *ent.GoodBase
+	goodReward       *ent.GoodReward
 	stock            *ent.Stock
 	miningGoodStocks []*ent.MiningGoodStock
 }
@@ -47,6 +49,22 @@ func (h *powerRentalGoodQueryHandler) getGoodBase(ctx context.Context, cli *ent.
 		Where(
 			entgoodbase.EntID(h.powerRental.GoodID),
 			entgoodbase.DeletedAt(0),
+		).Only(ctx); err != nil {
+		if ent.IsNotFound(err) && !must {
+			return nil
+		}
+		return err
+	}
+	return nil
+}
+
+func (h *powerRentalGoodQueryHandler) getGoodReward(ctx context.Context, cli *ent.Client, must bool) (err error) {
+	if h.goodReward, err = cli.
+		GoodReward.
+		Query().
+		Where(
+			entgoodreward.GoodID(h.powerRental.GoodID),
+			entgoodreward.DeletedAt(0),
 		).Only(ctx); err != nil {
 		if ent.IsNotFound(err) && !must {
 			return nil
@@ -98,6 +116,9 @@ func (h *powerRentalGoodQueryHandler) _getPowerRentalGood(ctx context.Context, m
 			return nil
 		}
 		if err := h.getGoodBase(_ctx, cli, must); err != nil {
+			return err
+		}
+		if err := h.getGoodReward(_ctx, cli, must); err != nil {
 			return err
 		}
 		if err := h.getGoodStock(_ctx, cli, must); err != nil {

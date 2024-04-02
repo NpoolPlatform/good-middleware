@@ -14,6 +14,7 @@ import (
 	entdevicetype "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	entmanufacturer "github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	entgoodreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	entmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
 	entpowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
@@ -188,6 +189,40 @@ func (h *queryHandler) queryJoinPowerRental(s *sql.Selector) error {
 	return nil
 }
 
+func (h *queryHandler) queryJoinReward(s *sql.Selector) {
+	t := sql.Table(entgoodreward.Table)
+	s.LeftJoin(t).
+		On(
+			s.C(entgoodbase.FieldEntID),
+			t.C(entgoodreward.FieldGoodID),
+		).
+		OnP(
+			sql.EQ(t.C(entgoodreward.FieldDeletedAt), 0),
+		)
+	if h.RewardConds != nil && h.RewardConds.RewardState != nil {
+		s.OnP(
+			sql.EQ(t.C(entgoodreward.FieldRewardState), h.RewardConds.RewardState.Val.(types.BenefitState).String()),
+		)
+	}
+	if h.RewardConds != nil && h.RewardConds.RewardAt != nil {
+		switch h.RewardConds.RewardAt.Op {
+		case cruder.EQ:
+			s.OnP(sql.EQ(t.C(entgoodreward.FieldLastRewardAt), h.RewardConds.RewardAt.Val))
+		case cruder.NEQ:
+			s.OnP(sql.NEQ(t.C(entgoodreward.FieldLastRewardAt), h.RewardConds.RewardAt.Val))
+		}
+	}
+	s.AppendSelect(
+		t.C(entgoodreward.FieldRewardState),
+		t.C(entgoodreward.FieldLastRewardAt),
+		t.C(entgoodreward.FieldRewardTid),
+		t.C(entgoodreward.FieldNextRewardStartAmount),
+		t.C(entgoodreward.FieldLastRewardAmount),
+		t.C(entgoodreward.FieldLastUnitRewardAmount),
+		t.C(entgoodreward.FieldTotalRewardAmount),
+	)
+}
+
 func (h *queryHandler) queryJoinStock(s *sql.Selector) {
 	t1 := sql.Table(entstock.Table)
 	s.Join(t1).
@@ -212,6 +247,7 @@ func (h *queryHandler) queryJoin() error {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
 		h.queryJoinStock(s)
+		h.queryJoinReward(s)
 		err = h.queryJoinPowerRental(s)
 	})
 	if err != nil {
@@ -222,6 +258,7 @@ func (h *queryHandler) queryJoin() error {
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
 		h.queryJoinStock(s)
+		h.queryJoinReward(s)
 		err = h.queryJoinPowerRental(s)
 	})
 	if err != nil {
@@ -293,11 +330,16 @@ func (h *queryHandler) formalize() {
 		info.GoodWaitStart = func() string { amount, _ := decimal.NewFromString(info.GoodWaitStart); return amount.String() }()
 		info.GoodSold = func() string { amount, _ := decimal.NewFromString(info.GoodSold); return amount.String() }()
 		info.GoodAppReserved = func() string { amount, _ := decimal.NewFromString(info.GoodAppReserved); return amount.String() }()
+		info.LastRewardAmount = func() string { amount, _ := decimal.NewFromString(info.LastRewardAmount); return amount.String() }()
+		info.NextRewardStartAmount = func() string { amount, _ := decimal.NewFromString(info.NextRewardStartAmount); return amount.String() }()
+		info.LastUnitRewardAmount = func() string { amount, _ := decimal.NewFromString(info.LastUnitRewardAmount); return amount.String() }()
+		info.TotalRewardAmount = func() string { amount, _ := decimal.NewFromString(info.TotalRewardAmount); return amount.String() }()
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
+		info.RewardState = types.BenefitState(types.BenefitState_value[info.RewardStateStr])
 		info.MiningGoodStocks = goodMiningStocks[info.GoodStockID]
 	}
 }
