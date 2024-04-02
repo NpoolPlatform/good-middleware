@@ -18,10 +18,12 @@ type AppGoodBase interface {
 	Name() string
 	DisplayIndex() int32
 	Banner() string
+	CommentCount() uint32
 }
 
 type goodBase struct {
-	_ent *ent.AppGoodBase
+	_ent      *ent.AppGoodBase
+	_extraEnt *ent.ExtraInfo
 }
 
 func (gb *goodBase) ID() uint32 {
@@ -82,4 +84,8 @@ func (gb *goodBase) UpdatedAt() uint32 {
 
 func (gb *goodBase) DeletedAt() uint32 {
 	return gb._ent.DeletedAt
+}
+
+func (gb *goodBase) CommentCount() uint32 {
+	return gb._extraEnt.CommentCount
 }

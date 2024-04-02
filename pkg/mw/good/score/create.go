@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
-	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/extrainfo"
+	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	scorecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"

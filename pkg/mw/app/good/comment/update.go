@@ -3,10 +3,9 @@ package comment
 import (
 	"context"
 
-	commentcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/comment"
+	commentcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
 )
 
 type updateHandler struct {
@@ -25,20 +24,12 @@ func (h *updateHandler) updateComment(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *Handler) UpdateComment(ctx context.Context) (*npool.Comment, error) {
+func (h *Handler) UpdateComment(ctx context.Context) error {
 	handler := &updateHandler{
 		Handler: h,
 	}
 
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.updateComment(ctx, tx); err != nil {
-			return err
-		}
-		return nil
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		return handler.updateComment(ctx, tx)
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetComment(ctx)
 }

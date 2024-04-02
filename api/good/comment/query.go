@@ -8,8 +8,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	comment1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/comment"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
+	comment1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/comment"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/comment"
 )
 
 func (s *Server) GetComment(ctx context.Context, in *npool.GetCommentRequest) (*npool.GetCommentResponse, error) {

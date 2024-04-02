@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/extrainfo"
+	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	recommendcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"

@@ -6,12 +6,12 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
-	commentcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/comment"
+	commentcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
+	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entcomment "github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/comment"
 )
 
 type queryHandler struct {
@@ -42,7 +42,7 @@ func (h *queryHandler) queryComment(cli *ent.Client) error {
 }
 
 func (h *queryHandler) queryComments(cli *ent.Client) (*ent.CommentSelect, error) {
-	stm, err := commentcrud.SetQueryConds(cli.Comment.Query(), h.Conds)
+	stm, err := commentcrud.SetQueryConds(cli.Comment.Query(), h.CommentConds)
 	if err != nil {
 		return nil, err
 	}
@@ -58,9 +58,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 		).
 		AppendSelect(
 			sql.As(t.C(entcomment.FieldEntID), "ent_id"),
-			sql.As(t.C(entcomment.FieldAppID), "app_id"),
 			sql.As(t.C(entcomment.FieldUserID), "user_id"),
-			sql.As(t.C(entcomment.FieldGoodID), "good_id"),
 			sql.As(t.C(entcomment.FieldAppGoodID), "app_good_id"),
 			sql.As(t.C(entcomment.FieldOrderID), "order_id"),
 			sql.As(t.C(entcomment.FieldContent), "content"),
@@ -74,28 +72,30 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 		)
 }
 
-func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
-	t := sql.Table(entappgood.Table)
+func (h *queryHandler) queryJoinAppGoodBase(s *sql.Selector) {
+	t := sql.Table(entappgoodbase.Table)
 	s.LeftJoin(t).
 		On(
 			s.C(entcomment.FieldAppGoodID),
-			t.C(entappgood.FieldEntID),
+			t.C(entappgoodbase.FieldEntID),
 		).
 		AppendSelect(
-			sql.As(t.C(entappgood.FieldGoodName), "good_name"),
+			t.C(entappgoodbase.FieldAppID),
+			t.C(entappgoodbase.FieldGoodID),
+			sql.As(t.C(entappgoodbase.FieldName), "good_name"),
 		)
 }
 
 func (h *queryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
-		h.queryJoinAppGood(s)
+		h.queryJoinAppGoodBase(s)
 	})
 	if h.stmCount == nil {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
-		h.queryJoinAppGood(s)
+		h.queryJoinAppGoodBase(s)
 	})
 }
 

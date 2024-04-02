@@ -3,13 +3,13 @@ package comment
 import (
 	"context"
 
-	comment1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/comment"
+	comment1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/comment"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/comment"
 )
 
 func (s *Server) DeleteComment(ctx context.Context, in *npool.DeleteCommentRequest) (*npool.DeleteCommentResponse, error) {

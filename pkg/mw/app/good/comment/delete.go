@@ -4,10 +4,9 @@ import (
 	"context"
 	"time"
 
-	commentcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/comment"
+	commentcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
 )
 
 type deleteHandler struct {
@@ -27,28 +26,21 @@ func (h *deleteHandler) deleteComment(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *Handler) DeleteComment(ctx context.Context) (*npool.Comment, error) {
+func (h *Handler) DeleteComment(ctx context.Context) error {
 	info, err := h.GetComment(ctx)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	if info == nil {
-		return nil, nil
+		return nil
 	}
 
+	h.ID = &info.ID
 	handler := &deleteHandler{
 		Handler: h,
 	}
 
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.deleteComment(ctx, tx); err != nil {
-			return err
-		}
-		return nil
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		return handler.deleteComment(ctx, tx)
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return info, nil
 }

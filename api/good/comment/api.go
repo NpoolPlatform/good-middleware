@@ -1,7 +1,7 @@
 package comment
 
 import (
-	"github.com/NpoolPlatform/message/npool/good/mw/v1/good/comment"
+	"github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/comment"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"

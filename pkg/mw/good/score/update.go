@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/extrainfo"
+	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	scorecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
