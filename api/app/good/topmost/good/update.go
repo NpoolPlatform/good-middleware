@@ -25,9 +25,7 @@ func (s *Server) UpdateTopMostGood(ctx context.Context, in *npool.UpdateTopMostG
 		ctx,
 		topmostgood1.WithID(req.ID, true),
 		topmostgood1.WithDisplayIndex(req.DisplayIndex, false),
-		topmostgood1.WithPosters(req.Posters, false),
 		topmostgood1.WithUnitPrice(req.UnitPrice, false),
-		topmostgood1.WithPackagePrice(req.PackagePrice, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
@@ -38,8 +36,7 @@ func (s *Server) UpdateTopMostGood(ctx context.Context, in *npool.UpdateTopMostG
 		return &npool.UpdateTopMostGoodResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.UpdateTopMostGood(ctx)
-	if err != nil {
+	if err := handler.UpdateTopMostGood(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"UpdateTopMostGood",
 			"In", in,
@@ -48,7 +45,5 @@ func (s *Server) UpdateTopMostGood(ctx context.Context, in *npool.UpdateTopMostG
 		return &npool.UpdateTopMostGoodResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.UpdateTopMostGoodResponse{
-		Info: info,
-	}, nil
+	return &npool.UpdateTopMostGoodResponse{}, nil
 }

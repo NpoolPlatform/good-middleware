@@ -34,8 +34,7 @@ func (s *Server) DeleteTopMost(ctx context.Context, in *npool.DeleteTopMostReque
 		return &npool.DeleteTopMostResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.DeleteTopMost(ctx)
-	if err != nil {
+	if err := handler.DeleteTopMost(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"DeleteTopMost",
 			"In", in,
@@ -44,7 +43,5 @@ func (s *Server) DeleteTopMost(ctx context.Context, in *npool.DeleteTopMostReque
 		return &npool.DeleteTopMostResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.DeleteTopMostResponse{
-		Info: info,
-	}, nil
+	return &npool.DeleteTopMostResponse{}, nil
 }

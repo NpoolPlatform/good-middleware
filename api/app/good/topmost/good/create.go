@@ -27,9 +27,7 @@ func (s *Server) CreateTopMostGood(ctx context.Context, in *npool.CreateTopMostG
 		topmostgood1.WithAppGoodID(req.AppGoodID, true),
 		topmostgood1.WithTopMostID(req.TopMostID, true),
 		topmostgood1.WithDisplayIndex(req.DisplayIndex, true),
-		topmostgood1.WithPosters(req.Posters, true),
 		topmostgood1.WithUnitPrice(req.UnitPrice, false),
-		topmostgood1.WithPackagePrice(req.PackagePrice, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
@@ -40,8 +38,7 @@ func (s *Server) CreateTopMostGood(ctx context.Context, in *npool.CreateTopMostG
 		return &npool.CreateTopMostGoodResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.CreateTopMostGood(ctx)
-	if err != nil {
+	if err := handler.CreateTopMostGood(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"CreateTopMostGood",
 			"In", in,
@@ -50,7 +47,5 @@ func (s *Server) CreateTopMostGood(ctx context.Context, in *npool.CreateTopMostG
 		return &npool.CreateTopMostGoodResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.CreateTopMostGoodResponse{
-		Info: info,
-	}, nil
+	return &npool.CreateTopMostGoodResponse{}, nil
 }

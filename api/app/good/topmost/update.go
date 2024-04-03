@@ -29,14 +29,8 @@ func (s *Server) UpdateTopMost(ctx context.Context, in *npool.UpdateTopMostReque
 		topmost1.WithTopMostType(req.TopMostType, false),
 		topmost1.WithTitle(req.Title, false),
 		topmost1.WithMessage(req.Message, false),
-		topmost1.WithPosters(req.Posters, false),
 		topmost1.WithStartAt(req.StartAt, false),
 		topmost1.WithEndAt(req.EndAt, false),
-		topmost1.WithThresholdCredits(req.ThresholdCredits, false),
-		topmost1.WithRegisterElapsedSeconds(req.RegisterElapsedSeconds, false),
-		topmost1.WithThresholdPurchases(req.ThresholdPurchases, false),
-		topmost1.WithThresholdPaymentAmount(req.ThresholdPaymentAmount, false),
-		topmost1.WithKycMust(req.KycMust, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
@@ -47,8 +41,7 @@ func (s *Server) UpdateTopMost(ctx context.Context, in *npool.UpdateTopMostReque
 		return &npool.UpdateTopMostResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.UpdateTopMost(ctx)
-	if err != nil {
+	if err := handler.UpdateTopMost(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"UpdateTopMost",
 			"In", in,
@@ -57,7 +50,5 @@ func (s *Server) UpdateTopMost(ctx context.Context, in *npool.UpdateTopMostReque
 		return &npool.UpdateTopMostResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.UpdateTopMostResponse{
-		Info: info,
-	}, nil
+	return &npool.UpdateTopMostResponse{}, nil
 }
