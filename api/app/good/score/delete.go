@@ -34,8 +34,7 @@ func (s *Server) DeleteScore(ctx context.Context, in *npool.DeleteScoreRequest) 
 		return &npool.DeleteScoreResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.DeleteScore(ctx)
-	if err != nil {
+	if err := handler.DeleteScore(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"DeleteScore",
 			"In", in,
@@ -44,7 +43,5 @@ func (s *Server) DeleteScore(ctx context.Context, in *npool.DeleteScoreRequest) 
 		return &npool.DeleteScoreResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.DeleteScoreResponse{
-		Info: info,
-	}, nil
+	return &npool.DeleteScoreResponse{}, nil
 }

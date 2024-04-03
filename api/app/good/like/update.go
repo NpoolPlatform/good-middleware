@@ -23,7 +23,8 @@ func (s *Server) UpdateLike(ctx context.Context, in *npool.UpdateLikeRequest) (*
 	}
 	handler, err := like1.NewHandler(
 		ctx,
-		like1.WithID(req.ID, true),
+		like1.WithID(req.ID, false),
+		like1.WithEntID(req.EntID, false),
 		like1.WithLike(req.Like, false),
 	)
 	if err != nil {
@@ -35,8 +36,7 @@ func (s *Server) UpdateLike(ctx context.Context, in *npool.UpdateLikeRequest) (*
 		return &npool.UpdateLikeResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.UpdateLike(ctx)
-	if err != nil {
+	if err := handler.UpdateLike(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"UpdateLike",
 			"In", in,
@@ -45,7 +45,5 @@ func (s *Server) UpdateLike(ctx context.Context, in *npool.UpdateLikeRequest) (*
 		return &npool.UpdateLikeResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.UpdateLikeResponse{
-		Info: info,
-	}, nil
+	return &npool.UpdateLikeResponse{}, nil
 }

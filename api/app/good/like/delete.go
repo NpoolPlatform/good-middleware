@@ -34,8 +34,7 @@ func (s *Server) DeleteLike(ctx context.Context, in *npool.DeleteLikeRequest) (*
 		return &npool.DeleteLikeResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.DeleteLike(ctx)
-	if err != nil {
+	if err := handler.DeleteLike(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"DeleteLike",
 			"In", in,
@@ -44,7 +43,5 @@ func (s *Server) DeleteLike(ctx context.Context, in *npool.DeleteLikeRequest) (*
 		return &npool.DeleteLikeResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.DeleteLikeResponse{
-		Info: info,
-	}, nil
+	return &npool.DeleteLikeResponse{}, nil
 }

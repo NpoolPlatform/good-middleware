@@ -24,8 +24,7 @@ func (s *Server) CreateRecommend(ctx context.Context, in *npool.CreateRecommendR
 	handler, err := recommend1.NewHandler(
 		ctx,
 		recommend1.WithEntID(req.EntID, false),
-		recommend1.WithAppID(req.AppID, true),
-		recommend1.WithGoodID(req.GoodID, true),
+		recommend1.WithAppGoodID(req.AppGoodID, true),
 		recommend1.WithRecommenderID(req.RecommenderID, true),
 		recommend1.WithRecommendIndex(req.RecommendIndex, true),
 		recommend1.WithMessage(req.Message, true),
@@ -39,8 +38,7 @@ func (s *Server) CreateRecommend(ctx context.Context, in *npool.CreateRecommendR
 		return &npool.CreateRecommendResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.CreateRecommend(ctx)
-	if err != nil {
+	if err := handler.CreateRecommend(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"CreateRecommend",
 			"In", in,
@@ -49,7 +47,5 @@ func (s *Server) CreateRecommend(ctx context.Context, in *npool.CreateRecommendR
 		return &npool.CreateRecommendResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.CreateRecommendResponse{
-		Info: info,
-	}, nil
+	return &npool.CreateRecommendResponse{}, nil
 }

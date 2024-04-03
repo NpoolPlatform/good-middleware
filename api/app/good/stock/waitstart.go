@@ -27,8 +27,7 @@ func (s *Server) WaitStart(ctx context.Context, in *npool.WaitStartRequest) (*np
 		return &npool.WaitStartResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.WaitStartStock(ctx)
-	if err != nil {
+	if err := handler.WaitStartStock(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"WaitStart",
 			"In", in,
@@ -37,7 +36,5 @@ func (s *Server) WaitStart(ctx context.Context, in *npool.WaitStartRequest) (*np
 		return &npool.WaitStartResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.WaitStartResponse{
-		Info: info,
-	}, nil
+	return &npool.WaitStartResponse{}, nil
 }

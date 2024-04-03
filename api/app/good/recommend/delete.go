@@ -34,8 +34,7 @@ func (s *Server) DeleteRecommend(ctx context.Context, in *npool.DeleteRecommendR
 		return &npool.DeleteRecommendResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.DeleteRecommend(ctx)
-	if err != nil {
+	if err := handler.DeleteRecommend(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"DeleteRecommend",
 			"In", in,
@@ -44,7 +43,5 @@ func (s *Server) DeleteRecommend(ctx context.Context, in *npool.DeleteRecommendR
 		return &npool.DeleteRecommendResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.DeleteRecommendResponse{
-		Info: info,
-	}, nil
+	return &npool.DeleteRecommendResponse{}, nil
 }

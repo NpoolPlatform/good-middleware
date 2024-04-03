@@ -36,8 +36,7 @@ func (s *Server) UpdateRecommend(ctx context.Context, in *npool.UpdateRecommendR
 		return &npool.UpdateRecommendResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.UpdateRecommend(ctx)
-	if err != nil {
+	if err := handler.UpdateRecommend(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"UpdateRecommend",
 			"In", in,
@@ -46,7 +45,5 @@ func (s *Server) UpdateRecommend(ctx context.Context, in *npool.UpdateRecommendR
 		return &npool.UpdateRecommendResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.UpdateRecommendResponse{
-		Info: info,
-	}, nil
+	return &npool.UpdateRecommendResponse{}, nil
 }

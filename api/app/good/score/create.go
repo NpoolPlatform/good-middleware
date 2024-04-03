@@ -24,7 +24,6 @@ func (s *Server) CreateScore(ctx context.Context, in *npool.CreateScoreRequest) 
 	handler, err := score1.NewHandler(
 		ctx,
 		score1.WithEntID(req.EntID, false),
-		score1.WithAppID(req.AppID, true),
 		score1.WithUserID(req.UserID, true),
 		score1.WithAppGoodID(req.AppGoodID, true),
 		score1.WithScore(req.Score, true),
@@ -38,8 +37,7 @@ func (s *Server) CreateScore(ctx context.Context, in *npool.CreateScoreRequest) 
 		return &npool.CreateScoreResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.CreateScore(ctx)
-	if err != nil {
+	if err := handler.CreateScore(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"CreateScore",
 			"In", in,
@@ -48,7 +46,5 @@ func (s *Server) CreateScore(ctx context.Context, in *npool.CreateScoreRequest) 
 		return &npool.CreateScoreResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.CreateScoreResponse{
-		Info: info,
-	}, nil
+	return &npool.CreateScoreResponse{}, nil
 }

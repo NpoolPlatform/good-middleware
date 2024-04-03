@@ -35,8 +35,7 @@ func (s *Server) UpdateScore(ctx context.Context, in *npool.UpdateScoreRequest) 
 		return &npool.UpdateScoreResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.UpdateScore(ctx)
-	if err != nil {
+	if err := handler.UpdateScore(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"UpdateScore",
 			"In", in,
@@ -45,7 +44,5 @@ func (s *Server) UpdateScore(ctx context.Context, in *npool.UpdateScoreRequest) 
 		return &npool.UpdateScoreResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.UpdateScoreResponse{
-		Info: info,
-	}, nil
+	return &npool.UpdateScoreResponse{}, nil
 }

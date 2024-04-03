@@ -24,10 +24,8 @@ func (s *Server) CreateLike(ctx context.Context, in *npool.CreateLikeRequest) (*
 	handler, err := like1.NewHandler(
 		ctx,
 		like1.WithEntID(req.EntID, false),
-		like1.WithAppID(req.AppID, true),
 		like1.WithAppGoodID(req.AppGoodID, true),
-		like1.WithUserID(req.UserID, true),
-		like1.WithLike(req.Like, true),
+		like1.WithLike(req.Like, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
@@ -38,8 +36,7 @@ func (s *Server) CreateLike(ctx context.Context, in *npool.CreateLikeRequest) (*
 		return &npool.CreateLikeResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.CreateLike(ctx)
-	if err != nil {
+	if err := handler.CreateLike(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"CreateLike",
 			"In", in,
@@ -48,7 +45,5 @@ func (s *Server) CreateLike(ctx context.Context, in *npool.CreateLikeRequest) (*
 		return &npool.CreateLikeResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.CreateLikeResponse{
-		Info: info,
-	}, nil
+	return &npool.CreateLikeResponse{}, nil
 }

@@ -27,8 +27,7 @@ func (s *Server) InService(ctx context.Context, in *npool.InServiceRequest) (*np
 		return &npool.InServiceResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.InServiceStock(ctx)
-	if err != nil {
+	if err := handler.InServiceStock(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"InService",
 			"In", in,
@@ -37,7 +36,5 @@ func (s *Server) InService(ctx context.Context, in *npool.InServiceRequest) (*np
 		return &npool.InServiceResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.InServiceResponse{
-		Info: info,
-	}, nil
+	return &npool.InServiceResponse{}, nil
 }

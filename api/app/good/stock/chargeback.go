@@ -27,8 +27,7 @@ func (s *Server) ChargeBack(ctx context.Context, in *npool.ChargeBackRequest) (*
 		return &npool.ChargeBackResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.ChargeBackStock(ctx)
-	if err != nil {
+	if err := handler.ChargeBackStock(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"ChargeBack",
 			"In", in,
@@ -37,7 +36,5 @@ func (s *Server) ChargeBack(ctx context.Context, in *npool.ChargeBackRequest) (*
 		return &npool.ChargeBackResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.ChargeBackResponse{
-		Info: info,
-	}, nil
+	return &npool.ChargeBackResponse{}, nil
 }
