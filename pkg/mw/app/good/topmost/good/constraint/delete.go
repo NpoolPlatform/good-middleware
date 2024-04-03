@@ -1,10 +1,10 @@
-package topmostgood
+package constraint
 
 import (
 	"context"
 	"time"
 
-	topmostgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good"
+	constraintcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good/constraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 )
@@ -14,10 +14,10 @@ type deleteHandler struct {
 	now uint32
 }
 
-func (h *deleteHandler) deleteTopMostGood(ctx context.Context, tx *ent.Tx) error {
-	if _, err := topmostgoodcrud.UpdateSet(
-		tx.TopMostGood.UpdateOneID(*h.ID),
-		&topmostgoodcrud.Req{
+func (h *deleteHandler) deleteConstraint(ctx context.Context, tx *ent.Tx) error {
+	if _, err := constraintcrud.UpdateSet(
+		tx.TopMostGoodConstraint.UpdateOneID(*h.ID),
+		&constraintcrud.Req{
 			DeletedAt: &h.now,
 		},
 	).Save(ctx); err != nil {
@@ -26,8 +26,8 @@ func (h *deleteHandler) deleteTopMostGood(ctx context.Context, tx *ent.Tx) error
 	return nil
 }
 
-func (h *Handler) DeleteTopMostGood(ctx context.Context) error {
-	info, err := h.GetTopMostGood(ctx)
+func (h *Handler) DeleteConstraint(ctx context.Context) error {
+	info, err := h.GetConstraint(ctx)
 	if err != nil {
 		return err
 	}
@@ -42,6 +42,6 @@ func (h *Handler) DeleteTopMostGood(ctx context.Context) error {
 	}
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		return handler.deleteTopMostGood(_ctx, tx)
+		return handler.deleteConstraint(_ctx, tx)
 	})
 }
