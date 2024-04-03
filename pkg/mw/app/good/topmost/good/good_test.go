@@ -135,10 +135,13 @@ func updateTopMostGood(t *testing.T) {
 		WithDisplayIndex(&ret.DisplayIndex, true),
 	)
 	if assert.Nil(t, err) {
-		info, err := handler.UpdateTopMostGood(context.Background())
+		err = handler.UpdateTopMostGood(context.Background())
 		if assert.Nil(t, err) {
-			ret.UpdatedAt = info.UpdatedAt
-			assert.Equal(t, &ret, info)
+			info, err := handler.GetTopMostGood(context.Background())
+			if assert.Nil(t, err) {
+				ret.UpdatedAt = info.UpdatedAt
+				assert.Equal(t, &ret, info)
+			}
 		}
 	}
 }
@@ -185,12 +188,10 @@ func deleteTopMostGood(t *testing.T) {
 		WithID(&ret.ID, true),
 	)
 	if assert.Nil(t, err) {
-		info, err := handler.DeleteTopMostGood(context.Background())
-		if assert.Nil(t, err) {
-			assert.Equal(t, &ret, info)
-		}
+		err = handler.DeleteTopMostGood(context.Background())
+		assert.Nil(t, err)
 
-		info, err = handler.GetTopMostGood(context.Background())
+		info, err := handler.GetTopMostGood(context.Background())
 		assert.Nil(t, err)
 		assert.Nil(t, info)
 	}

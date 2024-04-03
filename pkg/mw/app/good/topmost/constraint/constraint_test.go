@@ -171,8 +171,8 @@ func TestConstraint(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createConstraint", createConstraint)
-	// t.Run("updateConstraint", updateConstraint)
-	// t.Run("getConstraint", getConstraint)
-	// t.Run("getConstraints", getConstraints)
-	// t.Run("deleteConstraint", deleteConstraint)
+	t.Run("updateConstraint", updateConstraint)
+	t.Run("getConstraint", getConstraint)
+	t.Run("getConstraints", getConstraints)
+	t.Run("deleteConstraint", deleteConstraint)
 }

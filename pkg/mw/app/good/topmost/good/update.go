@@ -6,7 +6,6 @@ import (
 	topmostgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/good"
 )
 
 type updateHandler struct {
@@ -26,20 +25,12 @@ func (h *updateHandler) updateTopMostGood(ctx context.Context, tx *ent.Tx) error
 	return nil
 }
 
-func (h *Handler) UpdateTopMostGood(ctx context.Context) (*npool.TopMostGood, error) {
+func (h *Handler) UpdateTopMostGood(ctx context.Context) error {
 	handler := &updateHandler{
 		Handler: h,
 	}
 
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.updateTopMostGood(_ctx, tx); err != nil {
-			return err
-		}
-		return nil
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		return handler.updateTopMostGood(_ctx, tx)
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetTopMostGood(ctx)
 }
