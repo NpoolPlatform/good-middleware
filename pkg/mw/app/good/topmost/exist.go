@@ -9,10 +9,7 @@ import (
 	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 )
 
-func (h *Handler) ExistTopMost(ctx context.Context) (bool, error) {
-	exist := false
-	var err error
-
+func (h *Handler) ExistTopMost(ctx context.Context) (exist bool, err error) {
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		exist, err = cli.
 			TopMost.
@@ -33,10 +30,8 @@ func (h *Handler) ExistTopMost(ctx context.Context) (bool, error) {
 	return exist, nil
 }
 
-func (h *Handler) ExistTopMostConds(ctx context.Context) (bool, error) {
-	exist := false
-
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+func (h *Handler) ExistTopMostConds(ctx context.Context) (exist bool, err error) {
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := topmostcrud.SetQueryConds(cli.TopMost.Query(), h.Conds)
 		if err != nil {
 			return err

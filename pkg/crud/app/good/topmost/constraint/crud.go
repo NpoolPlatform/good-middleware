@@ -9,14 +9,16 @@ import (
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 type Req struct {
-	EntID      *uuid.UUID
-	TopMostID  *uuid.UUID
-	Constraint *types.GoodTopMostConstraint
-	Index      *uint8
-	DeletedAt  *uint32
+	EntID       *uuid.UUID
+	TopMostID   *uuid.UUID
+	Constraint  *types.GoodTopMostConstraint
+	TargetValue *decimal.Decimal
+	Index       *uint8
+	DeletedAt   *uint32
 }
 
 //nolint:gocyclo,funlen
@@ -30,6 +32,9 @@ func CreateSet(c *ent.TopMostConstraintCreate, req *Req) *ent.TopMostConstraintC
 	if req.Constraint != nil {
 		c.SetConstraint(req.Constraint.String())
 	}
+	if req.TargetValue != nil {
+		c.SetTargetValue(*req.TargetValue)
+	}
 	if req.Index != nil {
 		c.SetIndex(*req.Index)
 	}
@@ -40,6 +45,9 @@ func CreateSet(c *ent.TopMostConstraintCreate, req *Req) *ent.TopMostConstraintC
 func UpdateSet(u *ent.TopMostConstraintUpdateOne, req *Req) *ent.TopMostConstraintUpdateOne {
 	if req.Constraint != nil {
 		u.SetConstraint(req.Constraint.String())
+	}
+	if req.TargetValue != nil {
+		u.SetTargetValue(*req.TargetValue)
 	}
 	if req.Index != nil {
 		u.SetIndex(*req.Index)
