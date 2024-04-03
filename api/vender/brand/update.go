@@ -37,8 +37,7 @@ func (s *Server) UpdateBrand(ctx context.Context, in *npool.UpdateBrandRequest) 
 		return &npool.UpdateBrandResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.UpdateBrand(ctx)
-	if err != nil {
+	if err := handler.UpdateBrand(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"UpdateBrand",
 			"In", in,
@@ -47,7 +46,5 @@ func (s *Server) UpdateBrand(ctx context.Context, in *npool.UpdateBrandRequest) 
 		return &npool.UpdateBrandResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.UpdateBrandResponse{
-		Info: info,
-	}, nil
+	return &npool.UpdateBrandResponse{}, nil
 }

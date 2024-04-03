@@ -40,8 +40,7 @@ func (s *Server) UpdateLocation(ctx context.Context, in *npool.UpdateLocationReq
 		return &npool.UpdateLocationResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.UpdateLocation(ctx)
-	if err != nil {
+	if err := handler.UpdateLocation(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"UpdateLocation",
 			"In", in,
@@ -50,7 +49,5 @@ func (s *Server) UpdateLocation(ctx context.Context, in *npool.UpdateLocationReq
 		return &npool.UpdateLocationResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.UpdateLocationResponse{
-		Info: info,
-	}, nil
+	return &npool.UpdateLocationResponse{}, nil
 }

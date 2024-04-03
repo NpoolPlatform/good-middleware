@@ -34,8 +34,7 @@ func (s *Server) DeleteBrand(ctx context.Context, in *npool.DeleteBrandRequest) 
 		return &npool.DeleteBrandResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.DeleteBrand(ctx)
-	if err != nil {
+	if err := handler.DeleteBrand(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"DeleteBrand",
 			"In", in,
@@ -44,7 +43,5 @@ func (s *Server) DeleteBrand(ctx context.Context, in *npool.DeleteBrandRequest) 
 		return &npool.DeleteBrandResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.DeleteBrandResponse{
-		Info: info,
-	}, nil
+	return &npool.DeleteBrandResponse{}, nil
 }

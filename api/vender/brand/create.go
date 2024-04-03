@@ -37,8 +37,7 @@ func (s *Server) CreateBrand(ctx context.Context, in *npool.CreateBrandRequest) 
 		return &npool.CreateBrandResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.CreateBrand(ctx)
-	if err != nil {
+	if err := handler.CreateBrand(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"CreateBrand",
 			"In", in,
@@ -47,7 +46,5 @@ func (s *Server) CreateBrand(ctx context.Context, in *npool.CreateBrandRequest) 
 		return &npool.CreateBrandResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.CreateBrandResponse{
-		Info: info,
-	}, nil
+	return &npool.CreateBrandResponse{}, nil
 }
