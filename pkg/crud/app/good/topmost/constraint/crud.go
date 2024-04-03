@@ -43,9 +43,6 @@ func CreateSet(c *ent.TopMostConstraintCreate, req *Req) *ent.TopMostConstraintC
 
 //nolint:gocyclo,funlen
 func UpdateSet(u *ent.TopMostConstraintUpdateOne, req *Req) *ent.TopMostConstraintUpdateOne {
-	if req.Constraint != nil {
-		u.SetConstraint(req.Constraint.String())
-	}
 	if req.TargetValue != nil {
 		u.SetTargetValue(*req.TargetValue)
 	}
