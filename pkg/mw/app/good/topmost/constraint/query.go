@@ -62,6 +62,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 		AppendSelect(
 			t.C(enttopmostconstraint.FieldEntID),
 			t.C(enttopmostconstraint.FieldTopMostID),
+			t.C(enttopmostconstraint.FieldConstraint),
 			t.C(enttopmostconstraint.FieldTargetValue),
 			t.C(enttopmostconstraint.FieldIndex),
 			t.C(enttopmostconstraint.FieldCreatedAt),
@@ -77,10 +78,11 @@ func (h *queryHandler) queryJoinTopMost(s *sql.Selector) {
 			t.C(enttopmost.FieldEntID),
 		).
 		AppendSelect(
+			t.C(enttopmost.FieldAppID),
 			t.C(enttopmost.FieldTopMostType),
-			t.C(enttopmost.FieldTitle),
-			t.C(enttopmost.FieldMessage),
-			t.C(enttopmost.FieldTargetURL),
+			sql.As(t.C(enttopmost.FieldTitle), "top_most_title"),
+			sql.As(t.C(enttopmost.FieldMessage), "top_most_message"),
+			sql.As(t.C(enttopmost.FieldTargetURL), "top_most_target_url"),
 		)
 }
 
@@ -104,6 +106,7 @@ func (h *queryHandler) scan(ctx context.Context) error {
 func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
 		info.TopMostType = types.GoodTopMostType(types.GoodTopMostType_value[info.TopMostTypeStr])
+		info.Constraint = types.GoodTopMostConstraint(types.GoodTopMostConstraint_value[info.ConstraintStr])
 		info.TargetValue = func() string { amount, _ := decimal.NewFromString(info.TargetValue); return amount.String() }()
 	}
 }

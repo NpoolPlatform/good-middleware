@@ -24,10 +24,10 @@ func (h *createHandler) constructSql() {
 	}
 	_sql += comma + "top_most_id"
 	comma = ", "
-	_sql += comma + "constraint"
+	_sql += comma + "`constraint`"
 	_sql += comma + "target_value"
 	if h.Index != nil {
-		_sql += comma + "index"
+		_sql += comma + "`index`"
 	}
 	_sql += comma + "created_at"
 	_sql += comma + "updated_at"
@@ -42,10 +42,10 @@ func (h *createHandler) constructSql() {
 	}
 	_sql += fmt.Sprintf("%v'%v' as top_most_id", comma, *h.TopMostID)
 	comma = ", "
-	_sql += fmt.Sprintf("%v'%v' as constraint", comma, h.Constraint.String())
+	_sql += fmt.Sprintf("%v'%v' as `constraint`", comma, h.Constraint.String())
 	_sql += fmt.Sprintf("%v'%v' as target_value", comma, *h.TargetValue)
 	if h.Index != nil {
-		_sql += fmt.Sprintf("%v%v as index", comma, *h.Index)
+		_sql += fmt.Sprintf("%v%v as `index`", comma, *h.Index)
 	}
 	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
 	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
