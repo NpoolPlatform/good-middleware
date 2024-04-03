@@ -36,8 +36,7 @@ func (s *Server) UpdateDefault(ctx context.Context, in *npool.UpdateDefaultReque
 		return &npool.UpdateDefaultResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.UpdateDefault(ctx)
-	if err != nil {
+	if err := handler.UpdateDefault(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"UpdateDefault",
 			"In", in,
@@ -46,7 +45,5 @@ func (s *Server) UpdateDefault(ctx context.Context, in *npool.UpdateDefaultReque
 		return &npool.UpdateDefaultResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.UpdateDefaultResponse{
-		Info: info,
-	}, nil
+	return &npool.UpdateDefaultResponse{}, nil
 }
