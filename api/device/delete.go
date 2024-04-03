@@ -12,14 +12,14 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 )
 
-func (s *Server) DeleteDeviceInfo(ctx context.Context, in *npool.DeleteDeviceInfoRequest) (*npool.DeleteDeviceInfoResponse, error) {
+func (s *Server) DeleteDeviceType(ctx context.Context, in *npool.DeleteDeviceTypeRequest) (*npool.DeleteDeviceTypeResponse, error) {
 	req := in.GetInfo()
 	if req == nil {
 		logger.Sugar().Errorw(
-			"DeleteDeviceInfo",
+			"DeleteDeviceType",
 			"In", in,
 		)
-		return &npool.DeleteDeviceInfoResponse{}, status.Error(codes.Aborted, "invalid argument")
+		return &npool.DeleteDeviceTypeResponse{}, status.Error(codes.Aborted, "invalid argument")
 	}
 	handler, err := device1.NewHandler(
 		ctx,
@@ -27,24 +27,21 @@ func (s *Server) DeleteDeviceInfo(ctx context.Context, in *npool.DeleteDeviceInf
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
-			"DeleteDeviceInfo",
+			"DeleteDeviceType",
 			"In", in,
 			"Error", err,
 		)
-		return &npool.DeleteDeviceInfoResponse{}, status.Error(codes.Aborted, err.Error())
+		return &npool.DeleteDeviceTypeResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.DeleteDeviceInfo(ctx)
-	if err != nil {
+	if err := handler.DeleteDeviceType(ctx); err != nil {
 		logger.Sugar().Errorw(
-			"DeleteDeviceInfo",
+			"DeleteDeviceType",
 			"In", in,
 			"Error", err,
 		)
-		return &npool.DeleteDeviceInfoResponse{}, status.Error(codes.Aborted, err.Error())
+		return &npool.DeleteDeviceTypeResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.DeleteDeviceInfoResponse{
-		Info: info,
-	}, nil
+	return &npool.DeleteDeviceTypeResponse{}, nil
 }

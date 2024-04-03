@@ -12,36 +12,36 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 )
 
-func (s *Server) GetDeviceInfo(ctx context.Context, in *npool.GetDeviceInfoRequest) (*npool.GetDeviceInfoResponse, error) {
+func (s *Server) GetDeviceType(ctx context.Context, in *npool.GetDeviceTypeRequest) (*npool.GetDeviceTypeResponse, error) {
 	handler, err := device1.NewHandler(
 		ctx,
 		device1.WithEntID(&in.EntID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
-			"GetDeviceInfo",
+			"GetDeviceType",
 			"In", in,
 			"Error", err,
 		)
-		return &npool.GetDeviceInfoResponse{}, status.Error(codes.Aborted, err.Error())
+		return &npool.GetDeviceTypeResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.GetDeviceInfo(ctx)
+	info, err := handler.GetDeviceType(ctx)
 	if err != nil {
 		logger.Sugar().Errorw(
-			"GetDeviceInfo",
+			"GetDeviceType",
 			"In", in,
 			"Error", err,
 		)
-		return &npool.GetDeviceInfoResponse{}, status.Error(codes.Aborted, err.Error())
+		return &npool.GetDeviceTypeResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.GetDeviceInfoResponse{
+	return &npool.GetDeviceTypeResponse{
 		Info: info,
 	}, nil
 }
 
-func (s *Server) GetDeviceInfos(ctx context.Context, in *npool.GetDeviceInfosRequest) (*npool.GetDeviceInfosResponse, error) {
+func (s *Server) GetDeviceTypes(ctx context.Context, in *npool.GetDeviceTypesRequest) (*npool.GetDeviceTypesResponse, error) {
 	handler, err := device1.NewHandler(
 		ctx,
 		device1.WithConds(in.GetConds()),
@@ -50,24 +50,24 @@ func (s *Server) GetDeviceInfos(ctx context.Context, in *npool.GetDeviceInfosReq
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
-			"GetDeviceInfos",
+			"GetDeviceTypes",
 			"In", in,
 			"Error", err,
 		)
-		return &npool.GetDeviceInfosResponse{}, status.Error(codes.Aborted, err.Error())
+		return &npool.GetDeviceTypesResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	infos, total, err := handler.GetDeviceInfos(ctx)
+	infos, total, err := handler.GetDeviceTypes(ctx)
 	if err != nil {
 		logger.Sugar().Errorw(
-			"GetDeviceInfos",
+			"GetDeviceTypes",
 			"In", in,
 			"Error", err,
 		)
-		return &npool.GetDeviceInfosResponse{}, status.Error(codes.Aborted, err.Error())
+		return &npool.GetDeviceTypesResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.GetDeviceInfosResponse{
+	return &npool.GetDeviceTypesResponse{
 		Infos: infos,
 		Total: total,
 	}, nil
