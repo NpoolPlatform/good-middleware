@@ -2331,8 +2331,12 @@ func init() {
 	topmostconstraintDescConstraint := topmostconstraintFields[1].Descriptor()
 	// topmostconstraint.DefaultConstraint holds the default value on creation for the constraint field.
 	topmostconstraint.DefaultConstraint = topmostconstraintDescConstraint.Default.(string)
+	// topmostconstraintDescTargetValue is the schema descriptor for target_value field.
+	topmostconstraintDescTargetValue := topmostconstraintFields[2].Descriptor()
+	// topmostconstraint.DefaultTargetValue holds the default value on creation for the target_value field.
+	topmostconstraint.DefaultTargetValue = topmostconstraintDescTargetValue.Default.(decimal.Decimal)
 	// topmostconstraintDescIndex is the schema descriptor for index field.
-	topmostconstraintDescIndex := topmostconstraintFields[2].Descriptor()
+	topmostconstraintDescIndex := topmostconstraintFields[3].Descriptor()
 	// topmostconstraint.DefaultIndex holds the default value on creation for the index field.
 	topmostconstraint.DefaultIndex = topmostconstraintDescIndex.Default.(uint8)
 	topmostgoodMixin := schema.TopMostGood{}.Mixin()
@@ -2427,8 +2431,12 @@ func init() {
 	topmostgoodconstraintDescConstraint := topmostgoodconstraintFields[1].Descriptor()
 	// topmostgoodconstraint.DefaultConstraint holds the default value on creation for the constraint field.
 	topmostgoodconstraint.DefaultConstraint = topmostgoodconstraintDescConstraint.Default.(string)
+	// topmostgoodconstraintDescTargetValue is the schema descriptor for target_value field.
+	topmostgoodconstraintDescTargetValue := topmostgoodconstraintFields[2].Descriptor()
+	// topmostgoodconstraint.DefaultTargetValue holds the default value on creation for the target_value field.
+	topmostgoodconstraint.DefaultTargetValue = topmostgoodconstraintDescTargetValue.Default.(decimal.Decimal)
 	// topmostgoodconstraintDescIndex is the schema descriptor for index field.
-	topmostgoodconstraintDescIndex := topmostgoodconstraintFields[2].Descriptor()
+	topmostgoodconstraintDescIndex := topmostgoodconstraintFields[3].Descriptor()
 	// topmostgoodconstraint.DefaultIndex holds the default value on creation for the index field.
 	topmostgoodconstraint.DefaultIndex = topmostgoodconstraintDescIndex.Default.(uint8)
 	topmostgoodposterMixin := schema.TopMostGoodPoster{}.Mixin()

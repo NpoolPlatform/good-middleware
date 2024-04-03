@@ -9,6 +9,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostconstraint"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // TopMostConstraint is the model entity for the TopMostConstraint schema.
@@ -28,6 +29,8 @@ type TopMostConstraint struct {
 	TopMostID uuid.UUID `json:"top_most_id,omitempty"`
 	// Constraint holds the value of the "constraint" field.
 	Constraint string `json:"constraint,omitempty"`
+	// TargetValue holds the value of the "target_value" field.
+	TargetValue decimal.Decimal `json:"target_value,omitempty"`
 	// Index holds the value of the "index" field.
 	Index uint8 `json:"index,omitempty"`
 }
@@ -37,6 +40,8 @@ func (*TopMostConstraint) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case topmostconstraint.FieldTargetValue:
+			values[i] = new(decimal.Decimal)
 		case topmostconstraint.FieldID, topmostconstraint.FieldCreatedAt, topmostconstraint.FieldUpdatedAt, topmostconstraint.FieldDeletedAt, topmostconstraint.FieldIndex:
 			values[i] = new(sql.NullInt64)
 		case topmostconstraint.FieldConstraint:
@@ -100,6 +105,12 @@ func (tmc *TopMostConstraint) assignValues(columns []string, values []interface{
 			} else if value.Valid {
 				tmc.Constraint = value.String
 			}
+		case topmostconstraint.FieldTargetValue:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field target_value", values[i])
+			} else if value != nil {
+				tmc.TargetValue = *value
+			}
 		case topmostconstraint.FieldIndex:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field index", values[i])
@@ -151,6 +162,9 @@ func (tmc *TopMostConstraint) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("constraint=")
 	builder.WriteString(tmc.Constraint)
+	builder.WriteString(", ")
+	builder.WriteString("target_value=")
+	builder.WriteString(fmt.Sprintf("%v", tmc.TargetValue))
 	builder.WriteString(", ")
 	builder.WriteString("index=")
 	builder.WriteString(fmt.Sprintf("%v", tmc.Index))

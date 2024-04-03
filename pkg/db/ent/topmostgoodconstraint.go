@@ -9,6 +9,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodconstraint"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // TopMostGoodConstraint is the model entity for the TopMostGoodConstraint schema.
@@ -28,6 +29,8 @@ type TopMostGoodConstraint struct {
 	TopMostGoodID uuid.UUID `json:"top_most_good_id,omitempty"`
 	// Constraint holds the value of the "constraint" field.
 	Constraint string `json:"constraint,omitempty"`
+	// TargetValue holds the value of the "target_value" field.
+	TargetValue decimal.Decimal `json:"target_value,omitempty"`
 	// Index holds the value of the "index" field.
 	Index uint8 `json:"index,omitempty"`
 }
@@ -37,6 +40,8 @@ func (*TopMostGoodConstraint) scanValues(columns []string) ([]interface{}, error
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case topmostgoodconstraint.FieldTargetValue:
+			values[i] = new(decimal.Decimal)
 		case topmostgoodconstraint.FieldID, topmostgoodconstraint.FieldCreatedAt, topmostgoodconstraint.FieldUpdatedAt, topmostgoodconstraint.FieldDeletedAt, topmostgoodconstraint.FieldIndex:
 			values[i] = new(sql.NullInt64)
 		case topmostgoodconstraint.FieldConstraint:
@@ -100,6 +105,12 @@ func (tmgc *TopMostGoodConstraint) assignValues(columns []string, values []inter
 			} else if value.Valid {
 				tmgc.Constraint = value.String
 			}
+		case topmostgoodconstraint.FieldTargetValue:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field target_value", values[i])
+			} else if value != nil {
+				tmgc.TargetValue = *value
+			}
 		case topmostgoodconstraint.FieldIndex:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field index", values[i])
@@ -151,6 +162,9 @@ func (tmgc *TopMostGoodConstraint) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("constraint=")
 	builder.WriteString(tmgc.Constraint)
+	builder.WriteString(", ")
+	builder.WriteString("target_value=")
+	builder.WriteString(fmt.Sprintf("%v", tmgc.TargetValue))
 	builder.WriteString(", ")
 	builder.WriteString("index=")
 	builder.WriteString(fmt.Sprintf("%v", tmgc.Index))

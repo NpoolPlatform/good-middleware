@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // ID filters vertices based on their ID field.
@@ -118,6 +119,13 @@ func TopMostID(v uuid.UUID) predicate.TopMostConstraint {
 func Constraint(v string) predicate.TopMostConstraint {
 	return predicate.TopMostConstraint(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldConstraint), v))
+	})
+}
+
+// TargetValue applies equality check predicate on the "target_value" field. It's identical to TargetValueEQ.
+func TargetValue(v decimal.Decimal) predicate.TopMostConstraint {
+	return predicate.TopMostConstraint(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTargetValue), v))
 	})
 }
 
@@ -572,6 +580,84 @@ func ConstraintEqualFold(v string) predicate.TopMostConstraint {
 func ConstraintContainsFold(v string) predicate.TopMostConstraint {
 	return predicate.TopMostConstraint(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldConstraint), v))
+	})
+}
+
+// TargetValueEQ applies the EQ predicate on the "target_value" field.
+func TargetValueEQ(v decimal.Decimal) predicate.TopMostConstraint {
+	return predicate.TopMostConstraint(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTargetValue), v))
+	})
+}
+
+// TargetValueNEQ applies the NEQ predicate on the "target_value" field.
+func TargetValueNEQ(v decimal.Decimal) predicate.TopMostConstraint {
+	return predicate.TopMostConstraint(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldTargetValue), v))
+	})
+}
+
+// TargetValueIn applies the In predicate on the "target_value" field.
+func TargetValueIn(vs ...decimal.Decimal) predicate.TopMostConstraint {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.TopMostConstraint(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldTargetValue), v...))
+	})
+}
+
+// TargetValueNotIn applies the NotIn predicate on the "target_value" field.
+func TargetValueNotIn(vs ...decimal.Decimal) predicate.TopMostConstraint {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.TopMostConstraint(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldTargetValue), v...))
+	})
+}
+
+// TargetValueGT applies the GT predicate on the "target_value" field.
+func TargetValueGT(v decimal.Decimal) predicate.TopMostConstraint {
+	return predicate.TopMostConstraint(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldTargetValue), v))
+	})
+}
+
+// TargetValueGTE applies the GTE predicate on the "target_value" field.
+func TargetValueGTE(v decimal.Decimal) predicate.TopMostConstraint {
+	return predicate.TopMostConstraint(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldTargetValue), v))
+	})
+}
+
+// TargetValueLT applies the LT predicate on the "target_value" field.
+func TargetValueLT(v decimal.Decimal) predicate.TopMostConstraint {
+	return predicate.TopMostConstraint(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldTargetValue), v))
+	})
+}
+
+// TargetValueLTE applies the LTE predicate on the "target_value" field.
+func TargetValueLTE(v decimal.Decimal) predicate.TopMostConstraint {
+	return predicate.TopMostConstraint(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldTargetValue), v))
+	})
+}
+
+// TargetValueIsNil applies the IsNil predicate on the "target_value" field.
+func TargetValueIsNil() predicate.TopMostConstraint {
+	return predicate.TopMostConstraint(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldTargetValue)))
+	})
+}
+
+// TargetValueNotNil applies the NotNil predicate on the "target_value" field.
+func TargetValueNotNil() predicate.TopMostConstraint {
+	return predicate.TopMostConstraint(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldTargetValue)))
 	})
 }
 

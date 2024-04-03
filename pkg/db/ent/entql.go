@@ -952,13 +952,14 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "TopMostConstraint",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			topmostconstraint.FieldCreatedAt:  {Type: field.TypeUint32, Column: topmostconstraint.FieldCreatedAt},
-			topmostconstraint.FieldUpdatedAt:  {Type: field.TypeUint32, Column: topmostconstraint.FieldUpdatedAt},
-			topmostconstraint.FieldDeletedAt:  {Type: field.TypeUint32, Column: topmostconstraint.FieldDeletedAt},
-			topmostconstraint.FieldEntID:      {Type: field.TypeUUID, Column: topmostconstraint.FieldEntID},
-			topmostconstraint.FieldTopMostID:  {Type: field.TypeUUID, Column: topmostconstraint.FieldTopMostID},
-			topmostconstraint.FieldConstraint: {Type: field.TypeString, Column: topmostconstraint.FieldConstraint},
-			topmostconstraint.FieldIndex:      {Type: field.TypeUint8, Column: topmostconstraint.FieldIndex},
+			topmostconstraint.FieldCreatedAt:   {Type: field.TypeUint32, Column: topmostconstraint.FieldCreatedAt},
+			topmostconstraint.FieldUpdatedAt:   {Type: field.TypeUint32, Column: topmostconstraint.FieldUpdatedAt},
+			topmostconstraint.FieldDeletedAt:   {Type: field.TypeUint32, Column: topmostconstraint.FieldDeletedAt},
+			topmostconstraint.FieldEntID:       {Type: field.TypeUUID, Column: topmostconstraint.FieldEntID},
+			topmostconstraint.FieldTopMostID:   {Type: field.TypeUUID, Column: topmostconstraint.FieldTopMostID},
+			topmostconstraint.FieldConstraint:  {Type: field.TypeString, Column: topmostconstraint.FieldConstraint},
+			topmostconstraint.FieldTargetValue: {Type: field.TypeOther, Column: topmostconstraint.FieldTargetValue},
+			topmostconstraint.FieldIndex:       {Type: field.TypeUint8, Column: topmostconstraint.FieldIndex},
 		},
 	}
 	graph.Nodes[38] = &sqlgraph.Node{
@@ -999,6 +1000,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostgoodconstraint.FieldEntID:         {Type: field.TypeUUID, Column: topmostgoodconstraint.FieldEntID},
 			topmostgoodconstraint.FieldTopMostGoodID: {Type: field.TypeUUID, Column: topmostgoodconstraint.FieldTopMostGoodID},
 			topmostgoodconstraint.FieldConstraint:    {Type: field.TypeString, Column: topmostgoodconstraint.FieldConstraint},
+			topmostgoodconstraint.FieldTargetValue:   {Type: field.TypeOther, Column: topmostgoodconstraint.FieldTargetValue},
 			topmostgoodconstraint.FieldIndex:         {Type: field.TypeUint8, Column: topmostgoodconstraint.FieldIndex},
 		},
 	}
@@ -4657,6 +4659,11 @@ func (f *TopMostConstraintFilter) WhereConstraint(p entql.StringP) {
 	f.Where(p.Field(topmostconstraint.FieldConstraint))
 }
 
+// WhereTargetValue applies the entql other predicate on the target_value field.
+func (f *TopMostConstraintFilter) WhereTargetValue(p entql.OtherP) {
+	f.Where(p.Field(topmostconstraint.FieldTargetValue))
+}
+
 // WhereIndex applies the entql uint8 predicate on the index field.
 func (f *TopMostConstraintFilter) WhereIndex(p entql.Uint8P) {
 	f.Where(p.Field(topmostconstraint.FieldIndex))
@@ -4810,6 +4817,11 @@ func (f *TopMostGoodConstraintFilter) WhereTopMostGoodID(p entql.ValueP) {
 // WhereConstraint applies the entql string predicate on the constraint field.
 func (f *TopMostGoodConstraintFilter) WhereConstraint(p entql.StringP) {
 	f.Where(p.Field(topmostgoodconstraint.FieldConstraint))
+}
+
+// WhereTargetValue applies the entql other predicate on the target_value field.
+func (f *TopMostGoodConstraintFilter) WhereTargetValue(p entql.OtherP) {
+	f.Where(p.Field(topmostgoodconstraint.FieldTargetValue))
 }
 
 // WhereIndex applies the entql uint8 predicate on the index field.

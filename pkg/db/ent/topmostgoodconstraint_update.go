@@ -13,6 +13,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodconstraint"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // TopMostGoodConstraintUpdate is the builder for updating TopMostGoodConstraint entities.
@@ -135,6 +136,26 @@ func (tmgcu *TopMostGoodConstraintUpdate) SetNillableConstraint(s *string) *TopM
 // ClearConstraint clears the value of the "constraint" field.
 func (tmgcu *TopMostGoodConstraintUpdate) ClearConstraint() *TopMostGoodConstraintUpdate {
 	tmgcu.mutation.ClearConstraint()
+	return tmgcu
+}
+
+// SetTargetValue sets the "target_value" field.
+func (tmgcu *TopMostGoodConstraintUpdate) SetTargetValue(d decimal.Decimal) *TopMostGoodConstraintUpdate {
+	tmgcu.mutation.SetTargetValue(d)
+	return tmgcu
+}
+
+// SetNillableTargetValue sets the "target_value" field if the given value is not nil.
+func (tmgcu *TopMostGoodConstraintUpdate) SetNillableTargetValue(d *decimal.Decimal) *TopMostGoodConstraintUpdate {
+	if d != nil {
+		tmgcu.SetTargetValue(*d)
+	}
+	return tmgcu
+}
+
+// ClearTargetValue clears the value of the "target_value" field.
+func (tmgcu *TopMostGoodConstraintUpdate) ClearTargetValue() *TopMostGoodConstraintUpdate {
+	tmgcu.mutation.ClearTargetValue()
 	return tmgcu
 }
 
@@ -338,6 +359,19 @@ func (tmgcu *TopMostGoodConstraintUpdate) sqlSave(ctx context.Context) (n int, e
 			Column: topmostgoodconstraint.FieldConstraint,
 		})
 	}
+	if value, ok := tmgcu.mutation.TargetValue(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: topmostgoodconstraint.FieldTargetValue,
+		})
+	}
+	if tmgcu.mutation.TargetValueCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: topmostgoodconstraint.FieldTargetValue,
+		})
+	}
 	if value, ok := tmgcu.mutation.Index(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint8,
@@ -485,6 +519,26 @@ func (tmgcuo *TopMostGoodConstraintUpdateOne) SetNillableConstraint(s *string) *
 // ClearConstraint clears the value of the "constraint" field.
 func (tmgcuo *TopMostGoodConstraintUpdateOne) ClearConstraint() *TopMostGoodConstraintUpdateOne {
 	tmgcuo.mutation.ClearConstraint()
+	return tmgcuo
+}
+
+// SetTargetValue sets the "target_value" field.
+func (tmgcuo *TopMostGoodConstraintUpdateOne) SetTargetValue(d decimal.Decimal) *TopMostGoodConstraintUpdateOne {
+	tmgcuo.mutation.SetTargetValue(d)
+	return tmgcuo
+}
+
+// SetNillableTargetValue sets the "target_value" field if the given value is not nil.
+func (tmgcuo *TopMostGoodConstraintUpdateOne) SetNillableTargetValue(d *decimal.Decimal) *TopMostGoodConstraintUpdateOne {
+	if d != nil {
+		tmgcuo.SetTargetValue(*d)
+	}
+	return tmgcuo
+}
+
+// ClearTargetValue clears the value of the "target_value" field.
+func (tmgcuo *TopMostGoodConstraintUpdateOne) ClearTargetValue() *TopMostGoodConstraintUpdateOne {
+	tmgcuo.mutation.ClearTargetValue()
 	return tmgcuo
 }
 
@@ -716,6 +770,19 @@ func (tmgcuo *TopMostGoodConstraintUpdateOne) sqlSave(ctx context.Context) (_nod
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: topmostgoodconstraint.FieldConstraint,
+		})
+	}
+	if value, ok := tmgcuo.mutation.TargetValue(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: topmostgoodconstraint.FieldTargetValue,
+		})
+	}
+	if tmgcuo.mutation.TargetValueCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: topmostgoodconstraint.FieldTargetValue,
 		})
 	}
 	if value, ok := tmgcuo.mutation.Index(); ok {

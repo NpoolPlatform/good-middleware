@@ -1125,6 +1125,7 @@ var (
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
 		{Name: "top_most_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "constraint", Type: field.TypeString, Nullable: true, Default: "TopMostKycMust"},
+		{Name: "target_value", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "index", Type: field.TypeUint8, Nullable: true, Default: 0},
 	}
 	// TopMostConstraintsTable holds the schema information for the "top_most_constraints" table.
@@ -1179,6 +1180,7 @@ var (
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
 		{Name: "top_most_good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "constraint", Type: field.TypeString, Nullable: true, Default: "TopMostKycMust"},
+		{Name: "target_value", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "index", Type: field.TypeUint8, Nullable: true, Default: 0},
 	}
 	// TopMostGoodConstraintsTable holds the schema information for the "top_most_good_constraints" table.

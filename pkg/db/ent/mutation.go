@@ -41828,6 +41828,7 @@ type TopMostConstraintMutation struct {
 	ent_id        *uuid.UUID
 	top_most_id   *uuid.UUID
 	constraint    *string
+	target_value  *decimal.Decimal
 	index         *uint8
 	addindex      *int8
 	clearedFields map[string]struct{}
@@ -42242,6 +42243,55 @@ func (m *TopMostConstraintMutation) ResetConstraint() {
 	delete(m.clearedFields, topmostconstraint.FieldConstraint)
 }
 
+// SetTargetValue sets the "target_value" field.
+func (m *TopMostConstraintMutation) SetTargetValue(d decimal.Decimal) {
+	m.target_value = &d
+}
+
+// TargetValue returns the value of the "target_value" field in the mutation.
+func (m *TopMostConstraintMutation) TargetValue() (r decimal.Decimal, exists bool) {
+	v := m.target_value
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTargetValue returns the old "target_value" field's value of the TopMostConstraint entity.
+// If the TopMostConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostConstraintMutation) OldTargetValue(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTargetValue is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTargetValue requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTargetValue: %w", err)
+	}
+	return oldValue.TargetValue, nil
+}
+
+// ClearTargetValue clears the value of the "target_value" field.
+func (m *TopMostConstraintMutation) ClearTargetValue() {
+	m.target_value = nil
+	m.clearedFields[topmostconstraint.FieldTargetValue] = struct{}{}
+}
+
+// TargetValueCleared returns if the "target_value" field was cleared in this mutation.
+func (m *TopMostConstraintMutation) TargetValueCleared() bool {
+	_, ok := m.clearedFields[topmostconstraint.FieldTargetValue]
+	return ok
+}
+
+// ResetTargetValue resets all changes to the "target_value" field.
+func (m *TopMostConstraintMutation) ResetTargetValue() {
+	m.target_value = nil
+	delete(m.clearedFields, topmostconstraint.FieldTargetValue)
+}
+
 // SetIndex sets the "index" field.
 func (m *TopMostConstraintMutation) SetIndex(u uint8) {
 	m.index = &u
@@ -42331,7 +42381,7 @@ func (m *TopMostConstraintMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TopMostConstraintMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 8)
 	if m.created_at != nil {
 		fields = append(fields, topmostconstraint.FieldCreatedAt)
 	}
@@ -42349,6 +42399,9 @@ func (m *TopMostConstraintMutation) Fields() []string {
 	}
 	if m.constraint != nil {
 		fields = append(fields, topmostconstraint.FieldConstraint)
+	}
+	if m.target_value != nil {
+		fields = append(fields, topmostconstraint.FieldTargetValue)
 	}
 	if m.index != nil {
 		fields = append(fields, topmostconstraint.FieldIndex)
@@ -42373,6 +42426,8 @@ func (m *TopMostConstraintMutation) Field(name string) (ent.Value, bool) {
 		return m.TopMostID()
 	case topmostconstraint.FieldConstraint:
 		return m.Constraint()
+	case topmostconstraint.FieldTargetValue:
+		return m.TargetValue()
 	case topmostconstraint.FieldIndex:
 		return m.Index()
 	}
@@ -42396,6 +42451,8 @@ func (m *TopMostConstraintMutation) OldField(ctx context.Context, name string) (
 		return m.OldTopMostID(ctx)
 	case topmostconstraint.FieldConstraint:
 		return m.OldConstraint(ctx)
+	case topmostconstraint.FieldTargetValue:
+		return m.OldTargetValue(ctx)
 	case topmostconstraint.FieldIndex:
 		return m.OldIndex(ctx)
 	}
@@ -42448,6 +42505,13 @@ func (m *TopMostConstraintMutation) SetField(name string, value ent.Value) error
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetConstraint(v)
+		return nil
+	case topmostconstraint.FieldTargetValue:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTargetValue(v)
 		return nil
 	case topmostconstraint.FieldIndex:
 		v, ok := value.(uint8)
@@ -42543,6 +42607,9 @@ func (m *TopMostConstraintMutation) ClearedFields() []string {
 	if m.FieldCleared(topmostconstraint.FieldConstraint) {
 		fields = append(fields, topmostconstraint.FieldConstraint)
 	}
+	if m.FieldCleared(topmostconstraint.FieldTargetValue) {
+		fields = append(fields, topmostconstraint.FieldTargetValue)
+	}
 	if m.FieldCleared(topmostconstraint.FieldIndex) {
 		fields = append(fields, topmostconstraint.FieldIndex)
 	}
@@ -42565,6 +42632,9 @@ func (m *TopMostConstraintMutation) ClearField(name string) error {
 		return nil
 	case topmostconstraint.FieldConstraint:
 		m.ClearConstraint()
+		return nil
+	case topmostconstraint.FieldTargetValue:
+		m.ClearTargetValue()
 		return nil
 	case topmostconstraint.FieldIndex:
 		m.ClearIndex()
@@ -42594,6 +42664,9 @@ func (m *TopMostConstraintMutation) ResetField(name string) error {
 		return nil
 	case topmostconstraint.FieldConstraint:
 		m.ResetConstraint()
+		return nil
+	case topmostconstraint.FieldTargetValue:
+		m.ResetTargetValue()
 		return nil
 	case topmostconstraint.FieldIndex:
 		m.ResetIndex()
@@ -43575,6 +43648,7 @@ type TopMostGoodConstraintMutation struct {
 	ent_id           *uuid.UUID
 	top_most_good_id *uuid.UUID
 	constraint       *string
+	target_value     *decimal.Decimal
 	index            *uint8
 	addindex         *int8
 	clearedFields    map[string]struct{}
@@ -43989,6 +44063,55 @@ func (m *TopMostGoodConstraintMutation) ResetConstraint() {
 	delete(m.clearedFields, topmostgoodconstraint.FieldConstraint)
 }
 
+// SetTargetValue sets the "target_value" field.
+func (m *TopMostGoodConstraintMutation) SetTargetValue(d decimal.Decimal) {
+	m.target_value = &d
+}
+
+// TargetValue returns the value of the "target_value" field in the mutation.
+func (m *TopMostGoodConstraintMutation) TargetValue() (r decimal.Decimal, exists bool) {
+	v := m.target_value
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTargetValue returns the old "target_value" field's value of the TopMostGoodConstraint entity.
+// If the TopMostGoodConstraint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TopMostGoodConstraintMutation) OldTargetValue(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTargetValue is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTargetValue requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTargetValue: %w", err)
+	}
+	return oldValue.TargetValue, nil
+}
+
+// ClearTargetValue clears the value of the "target_value" field.
+func (m *TopMostGoodConstraintMutation) ClearTargetValue() {
+	m.target_value = nil
+	m.clearedFields[topmostgoodconstraint.FieldTargetValue] = struct{}{}
+}
+
+// TargetValueCleared returns if the "target_value" field was cleared in this mutation.
+func (m *TopMostGoodConstraintMutation) TargetValueCleared() bool {
+	_, ok := m.clearedFields[topmostgoodconstraint.FieldTargetValue]
+	return ok
+}
+
+// ResetTargetValue resets all changes to the "target_value" field.
+func (m *TopMostGoodConstraintMutation) ResetTargetValue() {
+	m.target_value = nil
+	delete(m.clearedFields, topmostgoodconstraint.FieldTargetValue)
+}
+
 // SetIndex sets the "index" field.
 func (m *TopMostGoodConstraintMutation) SetIndex(u uint8) {
 	m.index = &u
@@ -44078,7 +44201,7 @@ func (m *TopMostGoodConstraintMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TopMostGoodConstraintMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 8)
 	if m.created_at != nil {
 		fields = append(fields, topmostgoodconstraint.FieldCreatedAt)
 	}
@@ -44096,6 +44219,9 @@ func (m *TopMostGoodConstraintMutation) Fields() []string {
 	}
 	if m.constraint != nil {
 		fields = append(fields, topmostgoodconstraint.FieldConstraint)
+	}
+	if m.target_value != nil {
+		fields = append(fields, topmostgoodconstraint.FieldTargetValue)
 	}
 	if m.index != nil {
 		fields = append(fields, topmostgoodconstraint.FieldIndex)
@@ -44120,6 +44246,8 @@ func (m *TopMostGoodConstraintMutation) Field(name string) (ent.Value, bool) {
 		return m.TopMostGoodID()
 	case topmostgoodconstraint.FieldConstraint:
 		return m.Constraint()
+	case topmostgoodconstraint.FieldTargetValue:
+		return m.TargetValue()
 	case topmostgoodconstraint.FieldIndex:
 		return m.Index()
 	}
@@ -44143,6 +44271,8 @@ func (m *TopMostGoodConstraintMutation) OldField(ctx context.Context, name strin
 		return m.OldTopMostGoodID(ctx)
 	case topmostgoodconstraint.FieldConstraint:
 		return m.OldConstraint(ctx)
+	case topmostgoodconstraint.FieldTargetValue:
+		return m.OldTargetValue(ctx)
 	case topmostgoodconstraint.FieldIndex:
 		return m.OldIndex(ctx)
 	}
@@ -44195,6 +44325,13 @@ func (m *TopMostGoodConstraintMutation) SetField(name string, value ent.Value) e
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetConstraint(v)
+		return nil
+	case topmostgoodconstraint.FieldTargetValue:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTargetValue(v)
 		return nil
 	case topmostgoodconstraint.FieldIndex:
 		v, ok := value.(uint8)
@@ -44290,6 +44427,9 @@ func (m *TopMostGoodConstraintMutation) ClearedFields() []string {
 	if m.FieldCleared(topmostgoodconstraint.FieldConstraint) {
 		fields = append(fields, topmostgoodconstraint.FieldConstraint)
 	}
+	if m.FieldCleared(topmostgoodconstraint.FieldTargetValue) {
+		fields = append(fields, topmostgoodconstraint.FieldTargetValue)
+	}
 	if m.FieldCleared(topmostgoodconstraint.FieldIndex) {
 		fields = append(fields, topmostgoodconstraint.FieldIndex)
 	}
@@ -44312,6 +44452,9 @@ func (m *TopMostGoodConstraintMutation) ClearField(name string) error {
 		return nil
 	case topmostgoodconstraint.FieldConstraint:
 		m.ClearConstraint()
+		return nil
+	case topmostgoodconstraint.FieldTargetValue:
+		m.ClearTargetValue()
 		return nil
 	case topmostgoodconstraint.FieldIndex:
 		m.ClearIndex()
@@ -44341,6 +44484,9 @@ func (m *TopMostGoodConstraintMutation) ResetField(name string) error {
 		return nil
 	case topmostgoodconstraint.FieldConstraint:
 		m.ResetConstraint()
+		return nil
+	case topmostgoodconstraint.FieldTargetValue:
+		m.ResetTargetValue()
 		return nil
 	case topmostgoodconstraint.FieldIndex:
 		m.ResetIndex()

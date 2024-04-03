@@ -5,6 +5,7 @@ package topmostconstraint
 import (
 	"entgo.io/ent"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 const (
@@ -24,6 +25,8 @@ const (
 	FieldTopMostID = "top_most_id"
 	// FieldConstraint holds the string denoting the constraint field in the database.
 	FieldConstraint = "constraint"
+	// FieldTargetValue holds the string denoting the target_value field in the database.
+	FieldTargetValue = "target_value"
 	// FieldIndex holds the string denoting the index field in the database.
 	FieldIndex = "index"
 	// Table holds the table name of the topmostconstraint in the database.
@@ -39,6 +42,7 @@ var Columns = []string{
 	FieldEntID,
 	FieldTopMostID,
 	FieldConstraint,
+	FieldTargetValue,
 	FieldIndex,
 }
 
@@ -75,6 +79,8 @@ var (
 	DefaultTopMostID func() uuid.UUID
 	// DefaultConstraint holds the default value on creation for the "constraint" field.
 	DefaultConstraint string
+	// DefaultTargetValue holds the default value on creation for the "target_value" field.
+	DefaultTargetValue decimal.Decimal
 	// DefaultIndex holds the default value on creation for the "index" field.
 	DefaultIndex uint8
 )

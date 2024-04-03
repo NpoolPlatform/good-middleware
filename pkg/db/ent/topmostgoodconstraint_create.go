@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodconstraint"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // TopMostGoodConstraintCreate is the builder for creating a TopMostGoodConstraint entity.
@@ -102,6 +103,20 @@ func (tmgcc *TopMostGoodConstraintCreate) SetConstraint(s string) *TopMostGoodCo
 func (tmgcc *TopMostGoodConstraintCreate) SetNillableConstraint(s *string) *TopMostGoodConstraintCreate {
 	if s != nil {
 		tmgcc.SetConstraint(*s)
+	}
+	return tmgcc
+}
+
+// SetTargetValue sets the "target_value" field.
+func (tmgcc *TopMostGoodConstraintCreate) SetTargetValue(d decimal.Decimal) *TopMostGoodConstraintCreate {
+	tmgcc.mutation.SetTargetValue(d)
+	return tmgcc
+}
+
+// SetNillableTargetValue sets the "target_value" field if the given value is not nil.
+func (tmgcc *TopMostGoodConstraintCreate) SetNillableTargetValue(d *decimal.Decimal) *TopMostGoodConstraintCreate {
+	if d != nil {
+		tmgcc.SetTargetValue(*d)
 	}
 	return tmgcc
 }
@@ -244,6 +259,10 @@ func (tmgcc *TopMostGoodConstraintCreate) defaults() error {
 		v := topmostgoodconstraint.DefaultConstraint
 		tmgcc.mutation.SetConstraint(v)
 	}
+	if _, ok := tmgcc.mutation.TargetValue(); !ok {
+		v := topmostgoodconstraint.DefaultTargetValue
+		tmgcc.mutation.SetTargetValue(v)
+	}
 	if _, ok := tmgcc.mutation.Index(); !ok {
 		v := topmostgoodconstraint.DefaultIndex
 		tmgcc.mutation.SetIndex(v)
@@ -346,6 +365,14 @@ func (tmgcc *TopMostGoodConstraintCreate) createSpec() (*TopMostGoodConstraint, 
 			Column: topmostgoodconstraint.FieldConstraint,
 		})
 		_node.Constraint = value
+	}
+	if value, ok := tmgcc.mutation.TargetValue(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: topmostgoodconstraint.FieldTargetValue,
+		})
+		_node.TargetValue = value
 	}
 	if value, ok := tmgcc.mutation.Index(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -508,6 +535,24 @@ func (u *TopMostGoodConstraintUpsert) UpdateConstraint() *TopMostGoodConstraintU
 // ClearConstraint clears the value of the "constraint" field.
 func (u *TopMostGoodConstraintUpsert) ClearConstraint() *TopMostGoodConstraintUpsert {
 	u.SetNull(topmostgoodconstraint.FieldConstraint)
+	return u
+}
+
+// SetTargetValue sets the "target_value" field.
+func (u *TopMostGoodConstraintUpsert) SetTargetValue(v decimal.Decimal) *TopMostGoodConstraintUpsert {
+	u.Set(topmostgoodconstraint.FieldTargetValue, v)
+	return u
+}
+
+// UpdateTargetValue sets the "target_value" field to the value that was provided on create.
+func (u *TopMostGoodConstraintUpsert) UpdateTargetValue() *TopMostGoodConstraintUpsert {
+	u.SetExcluded(topmostgoodconstraint.FieldTargetValue)
+	return u
+}
+
+// ClearTargetValue clears the value of the "target_value" field.
+func (u *TopMostGoodConstraintUpsert) ClearTargetValue() *TopMostGoodConstraintUpsert {
+	u.SetNull(topmostgoodconstraint.FieldTargetValue)
 	return u
 }
 
@@ -701,6 +746,27 @@ func (u *TopMostGoodConstraintUpsertOne) UpdateConstraint() *TopMostGoodConstrai
 func (u *TopMostGoodConstraintUpsertOne) ClearConstraint() *TopMostGoodConstraintUpsertOne {
 	return u.Update(func(s *TopMostGoodConstraintUpsert) {
 		s.ClearConstraint()
+	})
+}
+
+// SetTargetValue sets the "target_value" field.
+func (u *TopMostGoodConstraintUpsertOne) SetTargetValue(v decimal.Decimal) *TopMostGoodConstraintUpsertOne {
+	return u.Update(func(s *TopMostGoodConstraintUpsert) {
+		s.SetTargetValue(v)
+	})
+}
+
+// UpdateTargetValue sets the "target_value" field to the value that was provided on create.
+func (u *TopMostGoodConstraintUpsertOne) UpdateTargetValue() *TopMostGoodConstraintUpsertOne {
+	return u.Update(func(s *TopMostGoodConstraintUpsert) {
+		s.UpdateTargetValue()
+	})
+}
+
+// ClearTargetValue clears the value of the "target_value" field.
+func (u *TopMostGoodConstraintUpsertOne) ClearTargetValue() *TopMostGoodConstraintUpsertOne {
+	return u.Update(func(s *TopMostGoodConstraintUpsert) {
+		s.ClearTargetValue()
 	})
 }
 
@@ -1063,6 +1129,27 @@ func (u *TopMostGoodConstraintUpsertBulk) UpdateConstraint() *TopMostGoodConstra
 func (u *TopMostGoodConstraintUpsertBulk) ClearConstraint() *TopMostGoodConstraintUpsertBulk {
 	return u.Update(func(s *TopMostGoodConstraintUpsert) {
 		s.ClearConstraint()
+	})
+}
+
+// SetTargetValue sets the "target_value" field.
+func (u *TopMostGoodConstraintUpsertBulk) SetTargetValue(v decimal.Decimal) *TopMostGoodConstraintUpsertBulk {
+	return u.Update(func(s *TopMostGoodConstraintUpsert) {
+		s.SetTargetValue(v)
+	})
+}
+
+// UpdateTargetValue sets the "target_value" field to the value that was provided on create.
+func (u *TopMostGoodConstraintUpsertBulk) UpdateTargetValue() *TopMostGoodConstraintUpsertBulk {
+	return u.Update(func(s *TopMostGoodConstraintUpsert) {
+		s.UpdateTargetValue()
+	})
+}
+
+// ClearTargetValue clears the value of the "target_value" field.
+func (u *TopMostGoodConstraintUpsertBulk) ClearTargetValue() *TopMostGoodConstraintUpsertBulk {
+	return u.Update(func(s *TopMostGoodConstraintUpsert) {
+		s.ClearTargetValue()
 	})
 }
 
