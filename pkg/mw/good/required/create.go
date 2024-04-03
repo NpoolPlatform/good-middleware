@@ -7,6 +7,8 @@ import (
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+
+	"github.com/google/uuid"
 )
 
 type createHandler struct {
@@ -78,6 +80,10 @@ func (h *createHandler) createRequired(ctx context.Context, tx *ent.Tx) error {
 func (h *Handler) CreateRequired(ctx context.Context) error {
 	if *h.MainGoodID == *h.RequiredGoodID {
 		return fmt.Errorf("invalid goodid")
+	}
+
+	if h.EntID == nil {
+		h.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 	}
 
 	handler := &createHandler{

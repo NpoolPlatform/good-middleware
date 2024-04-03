@@ -50,8 +50,8 @@ type Conds struct {
 	EntID             *cruder.Cond
 	MainAppGoodID     *cruder.Cond
 	RequiredAppGoodID *cruder.Cond
-	GoodID            *cruder.Cond
-	GoodIDs           *cruder.Cond
+	AppGoodID         *cruder.Cond
+	AppGoodIDs        *cruder.Cond
 	Must              *cruder.Cond
 }
 
@@ -109,12 +109,12 @@ func SetQueryConds(q *ent.RequiredAppGoodQuery, conds *Conds) (*ent.RequiredAppG
 			return nil, fmt.Errorf("invalid requiredappgood field")
 		}
 	}
-	if conds.GoodID != nil {
-		id, ok := conds.GoodID.Val.(uuid.UUID)
+	if conds.AppGoodID != nil {
+		id, ok := conds.AppGoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
+			return nil, fmt.Errorf("invalid appgoodid")
 		}
-		switch conds.GoodID.Op {
+		switch conds.AppGoodID.Op {
 		case cruder.EQ:
 			q.Where(
 				entrequiredappgood.Or(
@@ -126,12 +126,12 @@ func SetQueryConds(q *ent.RequiredAppGoodQuery, conds *Conds) (*ent.RequiredAppG
 			return nil, fmt.Errorf("invalid requiredappgood field")
 		}
 	}
-	if conds.GoodIDs != nil {
-		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
+	if conds.AppGoodIDs != nil {
+		ids, ok := conds.AppGoodIDs.Val.([]uuid.UUID)
 		if !ok {
 			return nil, fmt.Errorf("invalid goodids")
 		}
-		switch conds.GoodIDs.Op {
+		switch conds.AppGoodIDs.Op {
 		case cruder.IN:
 			q.Where(
 				entrequiredappgood.Or(
