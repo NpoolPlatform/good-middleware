@@ -24,7 +24,6 @@ func (s *Server) CreateComment(ctx context.Context, in *npool.CreateCommentReque
 	handler, err := comment1.NewHandler(
 		ctx,
 		comment1.WithEntID(req.EntID, false),
-		comment1.WithAppID(req.AppID, true),
 		comment1.WithUserID(req.UserID, true),
 		comment1.WithAppGoodID(req.AppGoodID, true),
 		comment1.WithOrderID(req.OrderID, false),
@@ -44,8 +43,7 @@ func (s *Server) CreateComment(ctx context.Context, in *npool.CreateCommentReque
 		return &npool.CreateCommentResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.CreateComment(ctx)
-	if err != nil {
+	if err := handler.CreateComment(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"CreateComment",
 			"In", in,
@@ -54,7 +52,5 @@ func (s *Server) CreateComment(ctx context.Context, in *npool.CreateCommentReque
 		return &npool.CreateCommentResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.CreateCommentResponse{
-		Info: info,
-	}, nil
+	return &npool.CreateCommentResponse{}, nil
 }

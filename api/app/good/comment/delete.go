@@ -34,8 +34,7 @@ func (s *Server) DeleteComment(ctx context.Context, in *npool.DeleteCommentReque
 		return &npool.DeleteCommentResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.DeleteComment(ctx)
-	if err != nil {
+	if err := handler.DeleteComment(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"DeleteComment",
 			"In", in,
@@ -44,7 +43,5 @@ func (s *Server) DeleteComment(ctx context.Context, in *npool.DeleteCommentReque
 		return &npool.DeleteCommentResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.DeleteCommentResponse{
-		Info: info,
-	}, nil
+	return &npool.DeleteCommentResponse{}, nil
 }

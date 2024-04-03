@@ -35,8 +35,7 @@ func (s *Server) UpdateComment(ctx context.Context, in *npool.UpdateCommentReque
 		return &npool.UpdateCommentResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.UpdateComment(ctx)
-	if err != nil {
+	if err := handler.UpdateComment(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"UpdateComment",
 			"In", in,
@@ -45,7 +44,5 @@ func (s *Server) UpdateComment(ctx context.Context, in *npool.UpdateCommentReque
 		return &npool.UpdateCommentResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.UpdateCommentResponse{
-		Info: info,
-	}, nil
+	return &npool.UpdateCommentResponse{}, nil
 }
