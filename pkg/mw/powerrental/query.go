@@ -7,6 +7,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
+	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -14,6 +15,7 @@ import (
 	entdevicetype "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	entmanufacturer "github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	entgoodcoin "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
 	entgoodreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	entmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
 	entpowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
@@ -22,6 +24,7 @@ import (
 	entvendorlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
+	goodcoinmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin"
 	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/powerrental"
 
@@ -35,6 +38,7 @@ type queryHandler struct {
 	stmCount         *ent.GoodBaseSelect
 	infos            []*npool.PowerRental
 	miningGoodStocks []*stockmwpb.MiningGoodStock
+	goodCoins        []*goodcoinmwpb.GoodCoinInfo
 	total            uint32
 }
 
@@ -274,9 +278,6 @@ func (h *queryHandler) scan(ctx context.Context) error {
 func (h *queryHandler) getMiningGoodStocks(ctx context.Context, cli *ent.Client) error {
 	goodStockIDs := func() (uids []uuid.UUID) {
 		for _, info := range h.infos {
-			if info.StockModeStr != types.GoodStockMode_GoodStockByMiningPool.String() {
-				continue
-			}
 			uids = append(uids, uuid.MustParse(info.GoodStockID))
 		}
 		return
@@ -306,9 +307,36 @@ func (h *queryHandler) getMiningGoodStocks(ctx context.Context, cli *ent.Client)
 	).Scan(ctx, &h.miningGoodStocks)
 }
 
+func (h *queryHandler) getGoodCoins(ctx context.Context, cli *ent.Client) error {
+	goodIDs := func() (uids []uuid.UUID) {
+		for _, info := range h.infos {
+			uids = append(uids, uuid.MustParse(info.GoodID))
+		}
+		return
+	}()
+
+	stm, err := goodcoincrud.SetQueryConds(
+		cli.GoodCoin.Query(),
+		&goodcoincrud.Conds{
+			GoodIDs: &cruder.Cond{Op: cruder.IN, Val: goodIDs},
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	return stm.Select(
+		entgoodcoin.FieldGoodID,
+		entgoodcoin.FieldCoinTypeID,
+		entgoodcoin.FieldMain,
+		entgoodcoin.FieldIndex,
+	).Scan(ctx, &h.goodCoins)
+}
+
 //nolint:funlen,gocyclo
 func (h *queryHandler) formalize() {
 	goodMiningStocks := map[string][]*stockmwpb.MiningGoodStock{}
+	goodCoins := map[string][]*goodcoinmwpb.GoodCoinInfo{}
 
 	for _, stock := range h.miningGoodStocks {
 		stock.Total = func() string { amount, _ := decimal.NewFromString(stock.Total); return amount.String() }()
@@ -318,6 +346,9 @@ func (h *queryHandler) formalize() {
 		stock.InService = func() string { amount, _ := decimal.NewFromString(stock.InService); return amount.String() }()
 		stock.Sold = func() string { amount, _ := decimal.NewFromString(stock.Sold); return amount.String() }()
 		goodMiningStocks[stock.GoodStockID] = append(goodMiningStocks[stock.GoodStockID], stock)
+	}
+	for _, goodCoin := range h.goodCoins {
+		goodCoins[goodCoin.GoodID] = append(goodCoins[goodCoin.GoodID], goodCoin)
 	}
 	for _, info := range h.infos {
 		info.UnitPrice = func() string { amount, _ := decimal.NewFromString(info.UnitPrice); return amount.String() }()
@@ -341,6 +372,7 @@ func (h *queryHandler) formalize() {
 		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
 		info.RewardState = types.BenefitState(types.BenefitState_value[info.RewardStateStr])
 		info.MiningGoodStocks = goodMiningStocks[info.GoodStockID]
+		info.GoodCoins = goodCoins[info.GoodID]
 	}
 }
 
@@ -357,6 +389,9 @@ func (h *Handler) GetPowerRental(ctx context.Context) (*npool.PowerRental, error
 			return err
 		}
 		if err := handler.scan(_ctx); err != nil {
+			return err
+		}
+		if err := handler.getGoodCoins(_ctx, cli); err != nil {
 			return err
 		}
 		return handler.getMiningGoodStocks(_ctx, cli)
@@ -409,7 +444,9 @@ func (h *Handler) GetPowerRentals(ctx context.Context) ([]*npool.PowerRental, ui
 		if err := handler.scan(_ctx); err != nil {
 			return err
 		}
-
+		if err := handler.getGoodCoins(_ctx, cli); err != nil {
+			return err
+		}
 		return handler.getMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {

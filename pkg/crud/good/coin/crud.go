@@ -109,7 +109,7 @@ func SetQueryConds(q *ent.GoodCoinQuery, conds *Conds) (*ent.GoodCoinQuery, erro
 		}
 		switch conds.GoodIDs.Op {
 		case cruder.IN:
-			q.Where(entgoodcoin.CoinTypeIDIn(ids...))
+			q.Where(entgoodcoin.GoodIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid goodids field")
 		}
