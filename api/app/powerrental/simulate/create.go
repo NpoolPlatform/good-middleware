@@ -25,8 +25,8 @@ func (s *Server) CreateSimulate(ctx context.Context, in *npool.CreateSimulateReq
 		ctx,
 		appsimulategood1.WithEntID(req.EntID, false),
 		appsimulategood1.WithAppGoodID(req.AppGoodID, true),
-		appsimulategood1.WithFixedOrderUnits(req.FixedOrderUnits, true),
-		appsimulategood1.WithFixedOrderDuration(req.FixedOrderDuration, true),
+		appsimulategood1.WithOrderUnits(req.OrderUnits, true),
+		appsimulategood1.WithOrderDuration(req.OrderDuration, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
@@ -37,8 +37,7 @@ func (s *Server) CreateSimulate(ctx context.Context, in *npool.CreateSimulateReq
 		return &npool.CreateSimulateResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.CreateSimulate(ctx)
-	if err != nil {
+	if err := handler.CreateSimulate(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"CreateSimulate",
 			"In", in,
@@ -47,7 +46,5 @@ func (s *Server) CreateSimulate(ctx context.Context, in *npool.CreateSimulateReq
 		return &npool.CreateSimulateResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.CreateSimulateResponse{
-		Info: info,
-	}, nil
+	return &npool.CreateSimulateResponse{}, nil
 }

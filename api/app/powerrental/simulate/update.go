@@ -23,9 +23,10 @@ func (s *Server) UpdateSimulate(ctx context.Context, in *npool.UpdateSimulateReq
 	}
 	handler, err := appsimulategood1.NewHandler(
 		ctx,
-		appsimulategood1.WithID(req.ID, true),
-		appsimulategood1.WithFixedOrderUnits(req.FixedOrderUnits, false),
-		appsimulategood1.WithFixedOrderDuration(req.FixedOrderDuration, false),
+		appsimulategood1.WithID(req.ID, false),
+		appsimulategood1.WithEntID(req.EntID, false),
+		appsimulategood1.WithOrderUnits(req.OrderUnits, false),
+		appsimulategood1.WithOrderDuration(req.OrderDuration, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
@@ -36,8 +37,7 @@ func (s *Server) UpdateSimulate(ctx context.Context, in *npool.UpdateSimulateReq
 		return &npool.UpdateSimulateResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.UpdateSimulate(ctx)
-	if err != nil {
+	if err := handler.UpdateSimulate(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"UpdateSimulate",
 			"In", in,
@@ -46,7 +46,5 @@ func (s *Server) UpdateSimulate(ctx context.Context, in *npool.UpdateSimulateReq
 		return &npool.UpdateSimulateResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.UpdateSimulateResponse{
-		Info: info,
-	}, nil
+	return &npool.UpdateSimulateResponse{}, nil
 }

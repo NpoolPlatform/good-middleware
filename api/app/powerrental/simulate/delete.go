@@ -35,8 +35,7 @@ func (s *Server) DeleteSimulate(ctx context.Context, in *npool.DeleteSimulateReq
 		return &npool.DeleteSimulateResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.DeleteSimulate(ctx)
-	if err != nil {
+	if err := handler.DeleteSimulate(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"DeleteSimulate",
 			"In", in,
@@ -45,7 +44,5 @@ func (s *Server) DeleteSimulate(ctx context.Context, in *npool.DeleteSimulateReq
 		return &npool.DeleteSimulateResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.DeleteSimulateResponse{
-		Info: info,
-	}, nil
+	return &npool.DeleteSimulateResponse{}, nil
 }
