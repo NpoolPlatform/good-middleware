@@ -7,12 +7,16 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
+	appgooddescriptioncrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/description"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
+	appgoodpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/poster"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
+	entappgooddescription "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddescription"
+	entappgoodposter "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	entapplegacypowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
 	entapppowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
 	entdevicetype "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
@@ -28,6 +32,8 @@ import (
 	entvendorlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
+	appgooddescriptionmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/description"
+	appgoodpostermwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/poster"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental"
 	goodcoinmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin"
 	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
@@ -43,6 +49,8 @@ type queryHandler struct {
 	infos            []*npool.PowerRental
 	miningGoodStocks []*stockmwpb.MiningGoodStockInfo
 	goodCoins        []*goodcoinmwpb.GoodCoinInfo
+	descriptions     []*appgooddescriptionmwpb.DescriptionInfo
+	posters          []*appgoodpostermwpb.PosterInfo
 	total            uint32
 }
 
@@ -396,10 +404,62 @@ func (h *queryHandler) getGoodCoins(ctx context.Context, cli *ent.Client) error 
 	).Scan(ctx, &h.goodCoins)
 }
 
+func (h *queryHandler) getDescriptions(ctx context.Context, cli *ent.Client) error {
+	appGoodIDs := func() (uids []uuid.UUID) {
+		for _, info := range h.infos {
+			uids = append(uids, uuid.MustParse(info.AppGoodID))
+		}
+		return
+	}()
+
+	stm, err := appgooddescriptioncrud.SetQueryConds(
+		cli.AppGoodDescription.Query(),
+		&appgooddescriptioncrud.Conds{
+			AppGoodIDs: &cruder.Cond{Op: cruder.IN, Val: appGoodIDs},
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	return stm.Select(
+		entappgooddescription.FieldAppGoodID,
+		entappgooddescription.FieldDescription,
+		entappgooddescription.FieldIndex,
+	).Scan(ctx, &h.descriptions)
+}
+
+func (h *queryHandler) getPosters(ctx context.Context, cli *ent.Client) error {
+	appGoodIDs := func() (uids []uuid.UUID) {
+		for _, info := range h.infos {
+			uids = append(uids, uuid.MustParse(info.AppGoodID))
+		}
+		return
+	}()
+
+	stm, err := appgoodpostercrud.SetQueryConds(
+		cli.AppGoodPoster.Query(),
+		&appgoodpostercrud.Conds{
+			AppGoodIDs: &cruder.Cond{Op: cruder.IN, Val: appGoodIDs},
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	return stm.Select(
+		entappgoodposter.FieldAppGoodID,
+		entappgoodposter.FieldPoster,
+		entappgoodposter.FieldIndex,
+	).Scan(ctx, &h.posters)
+}
+
 //nolint:funlen,gocyclo
 func (h *queryHandler) formalize() {
 	goodMiningStocks := map[string][]*stockmwpb.MiningGoodStockInfo{}
 	goodCoins := map[string][]*goodcoinmwpb.GoodCoinInfo{}
+	descriptions := map[string][]*appgooddescriptionmwpb.DescriptionInfo{}
+	posters := map[string][]*appgoodpostermwpb.PosterInfo{}
 
 	for _, stock := range h.miningGoodStocks {
 		stock.Total = func() string { amount, _ := decimal.NewFromString(stock.Total); return amount.String() }()
@@ -408,6 +468,12 @@ func (h *queryHandler) formalize() {
 	}
 	for _, goodCoin := range h.goodCoins {
 		goodCoins[goodCoin.GoodID] = append(goodCoins[goodCoin.GoodID], goodCoin)
+	}
+	for _, description := range h.descriptions {
+		descriptions[description.AppGoodID] = append(descriptions[description.AppGoodID], description)
+	}
+	for _, poster := range h.posters {
+		posters[poster.AppGoodID] = append(posters[poster.AppGoodID], poster)
 	}
 	for _, info := range h.infos {
 		info.UnitPrice = func() string { amount, _ := decimal.NewFromString(info.UnitPrice); return amount.String() }()
@@ -431,6 +497,8 @@ func (h *queryHandler) formalize() {
 		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
 		info.MiningGoodStocks = goodMiningStocks[info.GoodStockID]
 		info.GoodCoins = goodCoins[info.GoodID]
+		info.Descriptions = descriptions[info.AppGoodID]
+		info.Posters = posters[info.AppGoodID]
 	}
 }
 
@@ -455,7 +523,12 @@ func (h *Handler) GetPowerRental(ctx context.Context) (*npool.PowerRental, error
 		if err := handler.getGoodCoins(_ctx, cli); err != nil {
 			return err
 		}
-
+		if err := handler.getDescriptions(_ctx, cli); err != nil {
+			return err
+		}
+		if err := handler.getPosters(_ctx, cli); err != nil {
+			return err
+		}
 		return handler.getMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
@@ -508,7 +581,12 @@ func (h *Handler) GetPowerRentals(ctx context.Context) ([]*npool.PowerRental, ui
 		if err := handler.getGoodCoins(_ctx, cli); err != nil {
 			return err
 		}
-
+		if err := handler.getDescriptions(_ctx, cli); err != nil {
+			return err
+		}
+		if err := handler.getPosters(_ctx, cli); err != nil {
+			return err
+		}
 		return handler.getMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
