@@ -12,10 +12,12 @@ import (
 
 	devicetype1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
 	manufacturer1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device/manufacturer"
+	goodcoin1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/coin"
 	powerrental1 "github.com/NpoolPlatform/good-middleware/pkg/mw/powerrental"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental"
+	goodcoinmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin"
 	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -96,6 +98,22 @@ var (
 		GoodStockID:      uuid.NewString(),
 		GoodTotal:        decimal.NewFromInt(120).String(),
 		GoodSpotQuantity: decimal.NewFromInt(120).String(),
+
+		GoodCoins: []*goodcoinmwpb.GoodCoinInfo{
+			{
+				CoinTypeID: uuid.NewString(),
+				Main:       true,
+			},
+			{
+				CoinTypeID: uuid.NewString(),
+				Main:       true,
+			},
+			{
+				CoinTypeID: uuid.NewString(),
+				Main:       true,
+			},
+		},
+
 		MiningGoodStocks: []*stockmwpb.MiningGoodStockInfo{
 			{
 				MiningPoolID:   uuid.NewString(),
@@ -221,7 +239,28 @@ func setup(t *testing.T) func(*testing.T) {
 	err = h5.CreatePowerRental(context.Background())
 	assert.Nil(t, err)
 
+	h6s := []*goodcoin1.Handler{}
+	for _, goodCoin := range ret.GoodCoins {
+		goodCoin.GoodID = ret.GoodID
+		h6, err := goodcoin1.NewHandler(
+			context.Background(),
+			goodcoin1.WithGoodID(&ret.GoodID, true),
+			goodcoin1.WithCoinTypeID(&goodCoin.CoinTypeID, true),
+			goodcoin1.WithMain(&goodCoin.Main, true),
+			goodcoin1.WithIndex(&goodCoin.Index, true),
+		)
+		assert.Nil(t, err)
+
+		err = h6.CreateGoodCoin(context.Background())
+		assert.Nil(t, err)
+
+		h6s = append(h6s, h6)
+	}
+
 	return func(*testing.T) {
+		for _, h6 := range h6s {
+			_ = h6.DeleteGoodCoin(context.Background())
+		}
 		_ = h5.DeletePowerRental(context.Background())
 		_ = h4.DeleteLocation(context.Background())
 		_ = h3.DeleteBrand(context.Background())

@@ -8,6 +8,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
+	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -18,6 +19,7 @@ import (
 	entmanufacturer "github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 	entextrainfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	entgoodcoin "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
 	entgoodreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	entmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
 	entpowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
@@ -27,6 +29,7 @@ import (
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental"
+	goodcoinmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin"
 	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
 
 	"github.com/google/uuid"
@@ -39,6 +42,7 @@ type queryHandler struct {
 	stmCount         *ent.AppGoodBaseSelect
 	infos            []*npool.PowerRental
 	miningGoodStocks []*stockmwpb.MiningGoodStockInfo
+	goodCoins        []*goodcoinmwpb.GoodCoinInfo
 	total            uint32
 }
 
@@ -366,14 +370,44 @@ func (h *queryHandler) getMiningGoodStocks(ctx context.Context, cli *ent.Client)
 	).Scan(ctx, &h.miningGoodStocks)
 }
 
+func (h *queryHandler) getGoodCoins(ctx context.Context, cli *ent.Client) error {
+	goodIDs := func() (uids []uuid.UUID) {
+		for _, info := range h.infos {
+			uids = append(uids, uuid.MustParse(info.GoodID))
+		}
+		return
+	}()
+
+	stm, err := goodcoincrud.SetQueryConds(
+		cli.GoodCoin.Query(),
+		&goodcoincrud.Conds{
+			GoodIDs: &cruder.Cond{Op: cruder.IN, Val: goodIDs},
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	return stm.Select(
+		entgoodcoin.FieldGoodID,
+		entgoodcoin.FieldCoinTypeID,
+		entgoodcoin.FieldMain,
+		entgoodcoin.FieldIndex,
+	).Scan(ctx, &h.goodCoins)
+}
+
 //nolint:funlen,gocyclo
 func (h *queryHandler) formalize() {
 	goodMiningStocks := map[string][]*stockmwpb.MiningGoodStockInfo{}
+	goodCoins := map[string][]*goodcoinmwpb.GoodCoinInfo{}
 
 	for _, stock := range h.miningGoodStocks {
 		stock.Total = func() string { amount, _ := decimal.NewFromString(stock.Total); return amount.String() }()
 		stock.SpotQuantity = func() string { amount, _ := decimal.NewFromString(stock.SpotQuantity); return amount.String() }()
 		goodMiningStocks[stock.GoodStockID] = append(goodMiningStocks[stock.GoodStockID], stock)
+	}
+	for _, goodCoin := range h.goodCoins {
+		goodCoins[goodCoin.GoodID] = append(goodCoins[goodCoin.GoodID], goodCoin)
 	}
 	for _, info := range h.infos {
 		info.UnitPrice = func() string { amount, _ := decimal.NewFromString(info.UnitPrice); return amount.String() }()
@@ -396,6 +430,7 @@ func (h *queryHandler) formalize() {
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
 		info.MiningGoodStocks = goodMiningStocks[info.GoodStockID]
+		info.GoodCoins = goodCoins[info.GoodID]
 	}
 }
 
@@ -417,6 +452,10 @@ func (h *Handler) GetPowerRental(ctx context.Context) (*npool.PowerRental, error
 		if err := handler.scan(_ctx); err != nil {
 			return err
 		}
+		if err := handler.getGoodCoins(_ctx, cli); err != nil {
+			return err
+		}
+
 		return handler.getMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
@@ -466,6 +505,10 @@ func (h *Handler) GetPowerRentals(ctx context.Context) ([]*npool.PowerRental, ui
 		if err := handler.scan(_ctx); err != nil {
 			return err
 		}
+		if err := handler.getGoodCoins(_ctx, cli); err != nil {
+			return err
+		}
+
 		return handler.getMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
