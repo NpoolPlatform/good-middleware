@@ -16,6 +16,7 @@ import (
 	powerrental1 "github.com/NpoolPlatform/good-middleware/pkg/mw/powerrental"
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
+	appmininggoodstockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock/mining"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental"
 	goodcoinmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin"
 	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
@@ -99,6 +100,14 @@ var (
 		GoodTotal:        decimal.NewFromInt(120).String(),
 		GoodSpotQuantity: decimal.NewFromInt(120).String(),
 
+		AppGoodStockID:      uuid.NewString(),
+		AppGoodReserved:     decimal.NewFromInt(0).String(),
+		AppGoodSpotQuantity: decimal.NewFromInt(0).String(),
+		AppGoodLocked:       decimal.NewFromInt(0).String(),
+		AppGoodInService:    decimal.NewFromInt(0).String(),
+		AppGoodWaitStart:    decimal.NewFromInt(0).String(),
+		AppGoodSold:         decimal.NewFromInt(0).String(),
+
 		GoodCoins: []*goodcoinmwpb.GoodCoinInfo{
 			{
 				CoinTypeID: uuid.NewString(),
@@ -116,14 +125,35 @@ var (
 
 		MiningGoodStocks: []*stockmwpb.MiningGoodStockInfo{
 			{
+				EntID:          uuid.NewString(),
 				MiningPoolID:   uuid.NewString(),
 				PoolGoodUserID: uuid.NewString(),
 				Total:          decimal.NewFromInt(70).String(),
 			},
 			{
+				EntID:          uuid.NewString(),
 				MiningPoolID:   uuid.NewString(),
 				PoolGoodUserID: uuid.NewString(),
 				Total:          decimal.NewFromInt(50).String(),
+			},
+		},
+
+		AppMiningGoodStocks: []*appmininggoodstockmwpb.StockInfo{
+			{
+				Reserved:     decimal.NewFromInt(0).String(),
+				SpotQuantity: decimal.NewFromInt(0).String(),
+				Locked:       decimal.NewFromInt(0).String(),
+				WaitStart:    decimal.NewFromInt(0).String(),
+				InService:    decimal.NewFromInt(0).String(),
+				Sold:         decimal.NewFromInt(0).String(),
+			},
+			{
+				Reserved:     decimal.NewFromInt(0).String(),
+				SpotQuantity: decimal.NewFromInt(0).String(),
+				Locked:       decimal.NewFromInt(0).String(),
+				WaitStart:    decimal.NewFromInt(0).String(),
+				InService:    decimal.NewFromInt(0).String(),
+				Sold:         decimal.NewFromInt(0).String(),
 			},
 		},
 
@@ -144,6 +174,10 @@ func setup(t *testing.T) func(*testing.T) {
 	for _, stock := range ret.MiningGoodStocks {
 		stock.GoodStockID = ret.GoodStockID
 		stock.SpotQuantity = stock.Total
+	}
+	for i, stock := range ret.AppMiningGoodStocks {
+		stock.AppGoodStockID = ret.AppGoodStockID
+		stock.MiningGoodStockID = ret.MiningGoodStocks[i].EntID
 	}
 
 	manufacturerID := uuid.NewString()
@@ -201,6 +235,7 @@ func setup(t *testing.T) func(*testing.T) {
 	miningGoodStocks := func() (reqs []*stockmwpb.MiningGoodStockReq) {
 		for _, stock := range ret.MiningGoodStocks {
 			reqs = append(reqs, &stockmwpb.MiningGoodStockReq{
+				EntID:          &stock.EntID,
 				MiningPoolID:   &stock.MiningPoolID,
 				PoolGoodUserID: &stock.PoolGoodUserID,
 				Total:          &stock.Total,
@@ -299,6 +334,7 @@ func createPowerRental(t *testing.T) {
 		WithSaleMode(&ret.SaleMode, true),
 		WithFixedDuration(&ret.FixedDuration, true),
 		WithPackageWithRequireds(&ret.PackageWithRequireds, true),
+		WithAppGoodStockID(&ret.AppGoodStockID, true),
 	)
 	assert.Nil(t, err)
 
@@ -306,6 +342,10 @@ func createPowerRental(t *testing.T) {
 	if assert.Nil(t, err) {
 		info, err := h1.GetPowerRental(context.Background())
 		if assert.Nil(t, err) {
+			for i, stock := range info.AppMiningGoodStocks {
+				ret.AppMiningGoodStocks[i].ID = stock.ID
+				ret.AppMiningGoodStocks[i].EntID = stock.EntID
+			}
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			ret.ID = info.ID

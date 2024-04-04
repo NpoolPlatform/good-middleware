@@ -12,6 +12,7 @@ import (
 	appgooddisplaynamecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/display/name"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	appgoodpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/poster"
+	appmininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -22,7 +23,9 @@ import (
 	entappgooddisplayname "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplayname"
 	entappgoodposter "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	entapplegacypowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
+	entappmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
 	entapppowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
+	entappgoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
 	entdevicetype "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	entmanufacturer "github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 	entextrainfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
@@ -40,6 +43,7 @@ import (
 	appgooddisplaycolormwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/display/color"
 	appgooddisplaynamemwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/display/name"
 	appgoodpostermwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/poster"
+	appmininggoodstockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock/mining"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental"
 	goodcoinmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin"
 	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
@@ -50,16 +54,17 @@ import (
 
 type queryHandler struct {
 	*Handler
-	stmSelect        *ent.AppGoodBaseSelect
-	stmCount         *ent.AppGoodBaseSelect
-	infos            []*npool.PowerRental
-	miningGoodStocks []*stockmwpb.MiningGoodStockInfo
-	goodCoins        []*goodcoinmwpb.GoodCoinInfo
-	descriptions     []*appgooddescriptionmwpb.DescriptionInfo
-	posters          []*appgoodpostermwpb.PosterInfo
-	displayNames     []*appgooddisplaynamemwpb.DisplayNameInfo
-	displayColors    []*appgooddisplaycolormwpb.DisplayColorInfo
-	total            uint32
+	stmSelect           *ent.AppGoodBaseSelect
+	stmCount            *ent.AppGoodBaseSelect
+	infos               []*npool.PowerRental
+	miningGoodStocks    []*stockmwpb.MiningGoodStockInfo
+	appMiningGoodStocks []*appmininggoodstockmwpb.StockInfo
+	goodCoins           []*goodcoinmwpb.GoodCoinInfo
+	descriptions        []*appgooddescriptionmwpb.DescriptionInfo
+	posters             []*appgoodpostermwpb.PosterInfo
+	displayNames        []*appgooddisplaynamemwpb.DisplayNameInfo
+	displayColors       []*appgooddisplaycolormwpb.DisplayColorInfo
+	total               uint32
 }
 
 func (h *queryHandler) selectAppGoodBase(stm *ent.AppGoodBaseQuery) *ent.AppGoodBaseSelect {
@@ -187,6 +192,24 @@ func (h *queryHandler) queryJoinGoodStock(s *sql.Selector) {
 			sql.As(t1.C(entstock.FieldEntID), "good_stock_id"),
 			sql.As(t1.C(entstock.FieldTotal), "good_total"),
 			sql.As(t1.C(entstock.FieldSpotQuantity), "good_spot_quantity"),
+		)
+}
+
+func (h *queryHandler) queryJoinAppGoodStock(s *sql.Selector) {
+	t1 := sql.Table(entappgoodstock.Table)
+	s.Join(t1).
+		On(
+			s.C(entappgoodbase.FieldEntID),
+			t1.C(entappgoodstock.FieldAppGoodID),
+		).
+		AppendSelect(
+			sql.As(t1.C(entappgoodstock.FieldEntID), "app_good_stock_id"),
+			sql.As(t1.C(entappgoodstock.FieldReserved), "app_good_reserved"),
+			sql.As(t1.C(entappgoodstock.FieldSpotQuantity), "app_good_spot_quantity"),
+			sql.As(t1.C(entappgoodstock.FieldLocked), "app_good_locked"),
+			sql.As(t1.C(entappgoodstock.FieldWaitStart), "app_good_wait_start"),
+			sql.As(t1.C(entappgoodstock.FieldInService), "app_good_in_service"),
+			sql.As(t1.C(entappgoodstock.FieldSold), "app_good_sold"),
 		)
 }
 
@@ -325,6 +348,7 @@ func (h *queryHandler) queryJoin() error {
 		h.queryJoinMyself(s)
 		h.queryJoinGoodBase(s)
 		h.queryJoinGoodStock(s)
+		h.queryJoinAppGoodStock(s)
 		h.queryJoinGoodReward(s)
 		h.queryJoinExtraInfo(s)
 		h.queryJoinAppPowerRental(s)
@@ -340,6 +364,7 @@ func (h *queryHandler) queryJoin() error {
 	h.stmCount.Modify(func(s *sql.Selector) {
 		h.queryJoinGoodBase(s)
 		h.queryJoinGoodStock(s)
+		h.queryJoinAppGoodStock(s)
 		h.queryJoinGoodReward(s)
 		h.queryJoinExtraInfo(s)
 		h.queryJoinAppPowerRental(s)
@@ -359,9 +384,6 @@ func (h *queryHandler) scan(ctx context.Context) error {
 func (h *queryHandler) getMiningGoodStocks(ctx context.Context, cli *ent.Client) error {
 	goodStockIDs := func() (uids []uuid.UUID) {
 		for _, info := range h.infos {
-			if info.StockModeStr != types.GoodStockMode_GoodStockByMiningPool.String() {
-				continue
-			}
 			uids = append(uids, uuid.MustParse(info.GoodStockID))
 		}
 		return
@@ -378,12 +400,45 @@ func (h *queryHandler) getMiningGoodStocks(ctx context.Context, cli *ent.Client)
 	}
 
 	return stm.Select(
+		entmininggoodstock.FieldEntID,
 		entmininggoodstock.FieldGoodStockID,
 		entmininggoodstock.FieldMiningPoolID,
 		entmininggoodstock.FieldPoolGoodUserID,
 		entmininggoodstock.FieldTotal,
 		entmininggoodstock.FieldSpotQuantity,
 	).Scan(ctx, &h.miningGoodStocks)
+}
+
+func (h *queryHandler) getAppMiningGoodStocks(ctx context.Context, cli *ent.Client) error {
+	appGoodStockIDs := func() (uids []uuid.UUID) {
+		for _, info := range h.infos {
+			uids = append(uids, uuid.MustParse(info.AppGoodStockID))
+		}
+		return
+	}()
+
+	stm, err := appmininggoodstockcrud.SetQueryConds(
+		cli.AppMiningGoodStock.Query(),
+		&appmininggoodstockcrud.Conds{
+			AppGoodStockIDs: &cruder.Cond{Op: cruder.IN, Val: appGoodStockIDs},
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	return stm.Select(
+		entappmininggoodstock.FieldID,
+		entappmininggoodstock.FieldEntID,
+		entappmininggoodstock.FieldAppGoodStockID,
+		entappmininggoodstock.FieldMiningGoodStockID,
+		entappmininggoodstock.FieldReserved,
+		entappmininggoodstock.FieldSpotQuantity,
+		entappmininggoodstock.FieldLocked,
+		entappmininggoodstock.FieldWaitStart,
+		entappmininggoodstock.FieldInService,
+		entappmininggoodstock.FieldSold,
+	).Scan(ctx, &h.appMiningGoodStocks)
 }
 
 func (h *queryHandler) getGoodCoins(ctx context.Context, cli *ent.Client) error {
@@ -514,7 +569,8 @@ func (h *queryHandler) getDisplayColors(ctx context.Context, cli *ent.Client) er
 
 //nolint:funlen,gocyclo
 func (h *queryHandler) formalize() {
-	goodMiningStocks := map[string][]*stockmwpb.MiningGoodStockInfo{}
+	miningGoodStocks := map[string][]*stockmwpb.MiningGoodStockInfo{}
+	appMiningGoodStocks := map[string][]*appmininggoodstockmwpb.StockInfo{}
 	goodCoins := map[string][]*goodcoinmwpb.GoodCoinInfo{}
 	descriptions := map[string][]*appgooddescriptionmwpb.DescriptionInfo{}
 	posters := map[string][]*appgoodpostermwpb.PosterInfo{}
@@ -524,7 +580,16 @@ func (h *queryHandler) formalize() {
 	for _, stock := range h.miningGoodStocks {
 		stock.Total = func() string { amount, _ := decimal.NewFromString(stock.Total); return amount.String() }()
 		stock.SpotQuantity = func() string { amount, _ := decimal.NewFromString(stock.SpotQuantity); return amount.String() }()
-		goodMiningStocks[stock.GoodStockID] = append(goodMiningStocks[stock.GoodStockID], stock)
+		miningGoodStocks[stock.GoodStockID] = append(miningGoodStocks[stock.GoodStockID], stock)
+	}
+	for _, stock := range h.appMiningGoodStocks {
+		stock.Reserved = func() string { amount, _ := decimal.NewFromString(stock.Reserved); return amount.String() }()
+		stock.SpotQuantity = func() string { amount, _ := decimal.NewFromString(stock.SpotQuantity); return amount.String() }()
+		stock.Locked = func() string { amount, _ := decimal.NewFromString(stock.Locked); return amount.String() }()
+		stock.WaitStart = func() string { amount, _ := decimal.NewFromString(stock.WaitStart); return amount.String() }()
+		stock.InService = func() string { amount, _ := decimal.NewFromString(stock.InService); return amount.String() }()
+		stock.Sold = func() string { amount, _ := decimal.NewFromString(stock.Sold); return amount.String() }()
+		appMiningGoodStocks[stock.AppGoodStockID] = append(appMiningGoodStocks[stock.AppGoodStockID], stock)
 	}
 	for _, goodCoin := range h.goodCoins {
 		goodCoins[goodCoin.GoodID] = append(goodCoins[goodCoin.GoodID], goodCoin)
@@ -551,6 +616,12 @@ func (h *queryHandler) formalize() {
 		info.TechniqueFeeRatio = func() string { amount, _ := decimal.NewFromString(info.TechniqueFeeRatio); return amount.String() }()
 		info.GoodTotal = func() string { amount, _ := decimal.NewFromString(info.GoodTotal); return amount.String() }()
 		info.GoodSpotQuantity = func() string { amount, _ := decimal.NewFromString(info.GoodSpotQuantity); return amount.String() }()
+		info.AppGoodReserved = func() string { amount, _ := decimal.NewFromString(info.AppGoodReserved); return amount.String() }()
+		info.AppGoodSpotQuantity = func() string { amount, _ := decimal.NewFromString(info.AppGoodSpotQuantity); return amount.String() }()
+		info.AppGoodLocked = func() string { amount, _ := decimal.NewFromString(info.AppGoodLocked); return amount.String() }()
+		info.AppGoodWaitStart = func() string { amount, _ := decimal.NewFromString(info.AppGoodWaitStart); return amount.String() }()
+		info.AppGoodInService = func() string { amount, _ := decimal.NewFromString(info.AppGoodInService); return amount.String() }()
+		info.AppGoodSold = func() string { amount, _ := decimal.NewFromString(info.AppGoodSold); return amount.String() }()
 		info.LastRewardAmount = func() string { amount, _ := decimal.NewFromString(info.LastRewardAmount); return amount.String() }()
 		info.LastUnitRewardAmount = func() string { amount, _ := decimal.NewFromString(info.LastUnitRewardAmount); return amount.String() }()
 		info.TotalRewardAmount = func() string { amount, _ := decimal.NewFromString(info.TotalRewardAmount); return amount.String() }()
@@ -561,7 +632,8 @@ func (h *queryHandler) formalize() {
 		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
-		info.MiningGoodStocks = goodMiningStocks[info.GoodStockID]
+		info.MiningGoodStocks = miningGoodStocks[info.GoodStockID]
+		info.AppMiningGoodStocks = appMiningGoodStocks[info.AppGoodStockID]
 		info.GoodCoins = goodCoins[info.GoodID]
 		info.Descriptions = descriptions[info.AppGoodID]
 		info.Posters = posters[info.AppGoodID]
@@ -598,6 +670,9 @@ func (h *Handler) GetPowerRental(ctx context.Context) (*npool.PowerRental, error
 			return err
 		}
 		if err := handler.getDisplayNames(_ctx, cli); err != nil {
+			return err
+		}
+		if err := handler.getAppMiningGoodStocks(_ctx, cli); err != nil {
 			return err
 		}
 		return handler.getMiningGoodStocks(_ctx, cli)
@@ -659,6 +734,9 @@ func (h *Handler) GetPowerRentals(ctx context.Context) ([]*npool.PowerRental, ui
 			return err
 		}
 		if err := handler.getDisplayNames(_ctx, cli); err != nil {
+			return err
+		}
+		if err := handler.getAppMiningGoodStocks(_ctx, cli); err != nil {
 			return err
 		}
 		return handler.getMiningGoodStocks(_ctx, cli)
