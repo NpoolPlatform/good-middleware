@@ -11,6 +11,7 @@ import (
 	appgooddisplaycolorcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/display/color"
 	appgooddisplaynamecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/display/name"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
+	appgoodlabelcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/label"
 	appgoodpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/poster"
 	appmininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
@@ -21,6 +22,7 @@ import (
 	entappgooddescription "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddescription"
 	entappgooddisplaycolor "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplaycolor"
 	entappgooddisplayname "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplayname"
+	entappgoodlabel "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodlabel"
 	entappgoodposter "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	entapplegacypowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
 	entappmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
@@ -42,6 +44,7 @@ import (
 	appgooddescriptionmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/description"
 	appgooddisplaycolormwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/display/color"
 	appgooddisplaynamemwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/display/name"
+	appgoodlabelmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/label"
 	appgoodpostermwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/poster"
 	appmininggoodstockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock/mining"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental"
@@ -62,6 +65,7 @@ type queryHandler struct {
 	goodCoins           []*goodcoinmwpb.GoodCoinInfo
 	descriptions        []*appgooddescriptionmwpb.DescriptionInfo
 	posters             []*appgoodpostermwpb.PosterInfo
+	labels              []*appgoodlabelmwpb.LabelInfo
 	displayNames        []*appgooddisplaynamemwpb.DisplayNameInfo
 	displayColors       []*appgooddisplaycolormwpb.DisplayColorInfo
 	total               uint32

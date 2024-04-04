@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	"github.com/google/uuid"
 )
 
@@ -41,7 +42,7 @@ func (AppGoodLabel) Fields() []ent.Field {
 		field.
 			String("label").
 			Optional().
-			Default(""),
+			Default(types.GoodLabel_DefaultGoodLabel.String()),
 		field.
 			String("label_bg_color").
 			Optional().

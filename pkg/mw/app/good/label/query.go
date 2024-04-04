@@ -12,6 +12,7 @@ import (
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entappgoodlabel "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodlabel"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/label"
 )
 
@@ -111,6 +112,12 @@ func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
 }
 
+func (h *queryHandler) formalize() {
+	for _, info := range h.infos {
+		info.Label = types.GoodLabel(types.GoodLabel_value[info.LabelStr])
+	}
+}
+
 func (h *Handler) GetLabel(ctx context.Context) (*npool.Label, error) {
 	handler := &queryHandler{
 		Handler: h,
@@ -132,6 +139,8 @@ func (h *Handler) GetLabel(ctx context.Context) (*npool.Label, error) {
 	if len(handler.infos) > 1 {
 		return nil, fmt.Errorf("too many records")
 	}
+
+	handler.formalize()
 
 	return handler.infos[0], nil
 }
@@ -169,6 +178,8 @@ func (h *Handler) GetLabels(ctx context.Context) ([]*npool.Label, uint32, error)
 	if err != nil {
 		return nil, 0, err
 	}
+
+	handler.formalize()
 
 	return handler.infos, handler.total, nil
 }

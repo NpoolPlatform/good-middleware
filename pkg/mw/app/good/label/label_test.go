@@ -39,11 +39,13 @@ var ret = npool.Label{
 	AppGoodName:  uuid.NewString(),
 	Icon:         uuid.NewString(),
 	IconBgColor:  uuid.NewString(),
-	Label:        uuid.NewString(),
+	Label:        types.GoodLabel_GoodLabelPromotion,
 	LabelBgColor: uuid.NewString(),
 }
 
 func setup(t *testing.T) func(*testing.T) {
+	ret.LabelStr = ret.Label.String()
+
 	h1, err := goodbase1.NewHandler(
 		context.Background(),
 		goodbase1.WithEntID(&ret.GoodID, true),

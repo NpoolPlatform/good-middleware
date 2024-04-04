@@ -245,7 +245,7 @@ var (
 		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "icon", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "icon_bg_color", Type: field.TypeString, Nullable: true, Default: ""},
-		{Name: "label", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "label", Type: field.TypeString, Nullable: true, Default: "DefaultGoodLabel"},
 		{Name: "label_bg_color", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "index", Type: field.TypeUint8, Nullable: true, Default: 0},
 	}

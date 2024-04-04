@@ -9,6 +9,7 @@ import (
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/label"
 
 	"github.com/google/uuid"
@@ -101,9 +102,23 @@ func WithIconBgColor(s *string, must bool) func(context.Context, *Handler) error
 	}
 }
 
-func WithLabel(s *string, must bool) func(context.Context, *Handler) error {
+func WithLabel(e *types.GoodLabel, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.Label = s
+		if e == nil {
+			if must {
+				return fmt.Errorf("invalid label")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodLabel_GoodLabelPromotion:
+		case types.GoodLabel_GoodLabelNoviceExclusive:
+		case types.GoodLabel_GoodLabelInnovationStarter:
+		case types.GoodLabel_GoodLabelLoyaltyExclusive:
+		default:
+			return fmt.Errorf("invalid label")
+		}
+		h.Label = e
 		return nil
 	}
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodlabel "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodlabel"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 )
@@ -15,7 +16,7 @@ type Req struct {
 	AppGoodID    *uuid.UUID
 	Icon         *string
 	IconBgColor  *string
-	Label        *string
+	Label        *types.GoodLabel
 	LabelBgColor *string
 	Index        *uint8
 	DeletedAt    *uint32
@@ -36,7 +37,7 @@ func CreateSet(c *ent.AppGoodLabelCreate, req *Req) *ent.AppGoodLabelCreate {
 		c.SetIconBgColor(*req.IconBgColor)
 	}
 	if req.Label != nil {
-		c.SetLabel(*req.Label)
+		c.SetLabel(req.Label.String())
 	}
 	if req.LabelBgColor != nil {
 		c.SetLabelBgColor(*req.LabelBgColor)
@@ -56,7 +57,7 @@ func UpdateSet(u *ent.AppGoodLabelUpdateOne, req *Req) *ent.AppGoodLabelUpdateOn
 		u.SetIconBgColor(*req.IconBgColor)
 	}
 	if req.Label != nil {
-		u.SetLabel(*req.Label)
+		u.SetLabel(req.Label.String())
 	}
 	if req.LabelBgColor != nil {
 		u.SetLabelBgColor(*req.LabelBgColor)
