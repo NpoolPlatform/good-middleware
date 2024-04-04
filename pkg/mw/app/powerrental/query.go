@@ -521,6 +521,34 @@ func (h *queryHandler) getPosters(ctx context.Context, cli *ent.Client) error {
 	).Scan(ctx, &h.posters)
 }
 
+func (h *queryHandler) getLabels(ctx context.Context, cli *ent.Client) error {
+	appGoodIDs := func() (uids []uuid.UUID) {
+		for _, info := range h.infos {
+			uids = append(uids, uuid.MustParse(info.AppGoodID))
+		}
+		return
+	}()
+
+	stm, err := appgoodlabelcrud.SetQueryConds(
+		cli.AppGoodLabel.Query(),
+		&appgoodlabelcrud.Conds{
+			AppGoodIDs: &cruder.Cond{Op: cruder.IN, Val: appGoodIDs},
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	return stm.Select(
+		entappgoodlabel.FieldAppGoodID,
+		entappgoodlabel.FieldIcon,
+		entappgoodlabel.FieldIconBgColor,
+		entappgoodlabel.FieldLabel,
+		entappgoodlabel.FieldLabelBgColor,
+		entappgoodlabel.FieldIndex,
+	).Scan(ctx, &h.labels)
+}
+
 func (h *queryHandler) getDisplayNames(ctx context.Context, cli *ent.Client) error {
 	appGoodIDs := func() (uids []uuid.UUID) {
 		for _, info := range h.infos {
@@ -578,6 +606,7 @@ func (h *queryHandler) formalize() {
 	goodCoins := map[string][]*goodcoinmwpb.GoodCoinInfo{}
 	descriptions := map[string][]*appgooddescriptionmwpb.DescriptionInfo{}
 	posters := map[string][]*appgoodpostermwpb.PosterInfo{}
+	labels := map[string][]*appgoodlabelmwpb.LabelInfo{}
 	displayNames := map[string][]*appgooddisplaynamemwpb.DisplayNameInfo{}
 	displayColors := map[string][]*appgooddisplaycolormwpb.DisplayColorInfo{}
 
@@ -603,6 +632,10 @@ func (h *queryHandler) formalize() {
 	}
 	for _, poster := range h.posters {
 		posters[poster.AppGoodID] = append(posters[poster.AppGoodID], poster)
+	}
+	for _, label := range h.labels {
+		label.Label = types.GoodLabel(types.GoodLabel_value[label.LabelStr])
+		labels[label.AppGoodID] = append(labels[label.AppGoodID], label)
 	}
 	for _, displayName := range h.displayNames {
 		displayNames[displayName.AppGoodID] = append(displayNames[displayName.AppGoodID], displayName)
@@ -641,6 +674,7 @@ func (h *queryHandler) formalize() {
 		info.GoodCoins = goodCoins[info.GoodID]
 		info.Descriptions = descriptions[info.AppGoodID]
 		info.Posters = posters[info.AppGoodID]
+		info.Labels = labels[info.AppGoodID]
 		info.DisplayNames = displayNames[info.AppGoodID]
 		info.DisplayColors = displayColors[info.AppGoodID]
 	}
@@ -671,6 +705,9 @@ func (h *Handler) GetPowerRental(ctx context.Context) (*npool.PowerRental, error
 			return err
 		}
 		if err := handler.getPosters(_ctx, cli); err != nil {
+			return err
+		}
+		if err := handler.getLabels(_ctx, cli); err != nil {
 			return err
 		}
 		if err := handler.getDisplayNames(_ctx, cli); err != nil {
@@ -735,6 +772,9 @@ func (h *Handler) GetPowerRentals(ctx context.Context) ([]*npool.PowerRental, ui
 			return err
 		}
 		if err := handler.getPosters(_ctx, cli); err != nil {
+			return err
+		}
+		if err := handler.getLabels(_ctx, cli); err != nil {
 			return err
 		}
 		if err := handler.getDisplayNames(_ctx, cli); err != nil {
