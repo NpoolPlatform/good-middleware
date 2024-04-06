@@ -7,6 +7,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
+	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -30,7 +31,7 @@ type queryHandler struct {
 }
 
 func (h *queryHandler) selectAppGoodBase(stm *ent.AppGoodBaseQuery) *ent.AppGoodBaseSelect {
-	return stm.Select(entappgoodbase.FieldID)
+	return stm.Select(entappgoodbase.FieldCreatedAt)
 }
 
 func (h *queryHandler) queryAppGoodBase(cli *ent.Client) error {
@@ -58,7 +59,7 @@ func (h *queryHandler) queryAppGoodBases(cli *ent.Client) (*ent.AppGoodBaseSelec
 
 func (h *queryHandler) queryJoinMyself(s *sql.Selector) error {
 	t1 := sql.Table(entappgoodbase.Table)
-	s.LeftJoin(t1).
+	s.Join(t1).
 		On(
 			s.C(entappgoodbase.FieldID),
 			t1.C(entappgoodbase.FieldID),
@@ -77,7 +78,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) error {
 		)
 
 	t2 := sql.Table(entgoodbase.Table)
-	s.LeftJoin(t2).
+	s.Join(t2).
 		On(
 			t1.C(entappgoodbase.FieldGoodID),
 			t2.C(entgoodbase.FieldEntID),
@@ -103,14 +104,24 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) error {
 		if !ok {
 			return fmt.Errorf("invalid goodids")
 		}
-		s.OnP(sql.In(t2.C(entgoodbase.FieldEntID), []interface{}{uids}...))
+		s.OnP(
+			sql.In(
+				t2.C(entgoodbase.FieldEntID),
+				func() (_uids []interface{}) {
+					for _, uid := range uids {
+						_uids = append(_uids, uid)
+					}
+					return _uids
+				}()...,
+			),
+		)
 	}
 	s.AppendSelect(
 		t2.C(entgoodbase.FieldGoodType),
 	)
 
 	t3 := sql.Table(entfee.Table)
-	s.LeftJoin(t3).
+	s.Join(t3).
 		On(
 			t2.C(entgoodbase.FieldEntID),
 			t3.C(entfee.FieldGoodID),
@@ -130,11 +141,20 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) error {
 		if !ok {
 			return fmt.Errorf("invalid goodids")
 		}
-		s.OnP(sql.In(t3.C(entfee.FieldGoodID), []interface{}{uids}...))
+		s.OnP(
+			sql.In(
+				t3.C(entfee.FieldGoodID),
+				func() (_uids []interface{}) {
+					for _, uid := range uids {
+						_uids = append(_uids, uid)
+					}
+					return _uids
+				}()...,
+			),
+		)
 	}
 	s.AppendSelect(
 		t3.C(entfee.FieldSettlementType),
-		t3.C(entfee.FieldUnitValue),
 		t3.C(entfee.FieldDurationType),
 	)
 	return nil
@@ -142,7 +162,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) error {
 
 func (h *queryHandler) queryJoinAppFee(s *sql.Selector) error {
 	t1 := sql.Table(entappfee.Table)
-	s.LeftJoin(t1).
+	s.Join(t1).
 		On(
 			s.C(entappgoodbase.FieldEntID),
 			t1.C(entappfee.FieldAppGoodID),
@@ -162,12 +182,17 @@ func (h *queryHandler) queryJoinAppFee(s *sql.Selector) error {
 		if !ok {
 			return fmt.Errorf("invalid ids")
 		}
-		s.OnP(sql.In(t1.C(entappfee.FieldID), func() (_ids []interface{}) {
-			for _, id := range ids {
-				_ids = append(_ids, id)
-			}
-			return
-		}()...))
+		s.OnP(
+			sql.In(
+				t1.C(entappfee.FieldID),
+				func() (_ids []interface{}) {
+					for _, id := range ids {
+						_ids = append(_ids, id)
+					}
+					return
+				}()...,
+			),
+		)
 	}
 	if h.AppFeeConds != nil && h.AppFeeConds.EntID != nil {
 		uid, ok := h.AppFeeConds.EntID.Val.(uuid.UUID)
@@ -181,7 +206,17 @@ func (h *queryHandler) queryJoinAppFee(s *sql.Selector) error {
 		if !ok {
 			return fmt.Errorf("invalid entids")
 		}
-		s.OnP(sql.In(t1.C(entappfee.FieldEntID), []interface{}{uids}...))
+		s.OnP(
+			sql.In(
+				t1.C(entappfee.FieldEntID),
+				func() (_uids []interface{}) {
+					for _, uid := range uids {
+						_uids = append(_uids, uid)
+					}
+					return _uids
+				}()...,
+			),
+		)
 	}
 	if h.AppFeeConds != nil && h.AppFeeConds.AppGoodID != nil {
 		uid, ok := h.AppFeeConds.AppGoodID.Val.(uuid.UUID)
@@ -195,7 +230,17 @@ func (h *queryHandler) queryJoinAppFee(s *sql.Selector) error {
 		if !ok {
 			return fmt.Errorf("invalid appgoodids")
 		}
-		s.OnP(sql.In(t1.C(entappfee.FieldAppGoodID), []interface{}{uids}...))
+		s.OnP(
+			sql.In(
+				t1.C(entappfee.FieldAppGoodID),
+				func() (_uids []interface{}) {
+					for _, uid := range uids {
+						_uids = append(_uids, uid)
+					}
+					return _uids
+				}()...,
+			),
+		)
 	}
 	s.AppendSelect(
 		t1.C(entappfee.FieldID),
@@ -206,24 +251,40 @@ func (h *queryHandler) queryJoinAppFee(s *sql.Selector) error {
 	return nil
 }
 
-func (h *queryHandler) queryJoin() error {
-	var err error
+func (h *queryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
-		h.queryJoinMyself(s)
-		h.queryJoinAppFee(s)
+		if err := h.queryJoinMyself(s); err != nil {
+			logger.Sugar().Errorw(
+				"queryJoinMySelf",
+				"Error", err,
+			)
+			return
+		}
+		if err := h.queryJoinAppFee(s); err != nil {
+			logger.Sugar().Errorw(
+				"queryJoinAppFee",
+				"Error", err,
+			)
+		}
 	})
-	if err != nil {
-		return err
-	}
 	if h.stmCount == nil {
-		return nil
+		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
+		if err := h.queryJoinMyself(s); err != nil {
+			logger.Sugar().Errorw(
+				"queryJoinMySelf",
+				"Error", err,
+			)
+			return
+		}
+		if err := h.queryJoinAppFee(s); err != nil {
+			logger.Sugar().Errorw(
+				"queryJoinAppFee",
+				"Error", err,
+			)
+		}
 	})
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func (h *queryHandler) scan(ctx context.Context) error {
@@ -250,9 +311,7 @@ func (h *Handler) GetFee(ctx context.Context) (*npool.Fee, error) {
 		if err := handler.queryAppGoodBase(cli); err != nil {
 			return err
 		}
-		if err := handler.queryJoin(); err != nil {
-			return err
-		}
+		handler.queryJoin()
 		return handler.scan(_ctx)
 	})
 	if err != nil {
@@ -286,9 +345,7 @@ func (h *Handler) GetFees(ctx context.Context) ([]*npool.Fee, uint32, error) {
 			return err
 		}
 
-		if err := handler.queryJoin(); err != nil {
-			return err
-		}
+		handler.queryJoin()
 
 		total, err := handler.stmCount.Count(_ctx)
 		if err != nil {

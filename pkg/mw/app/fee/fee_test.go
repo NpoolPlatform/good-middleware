@@ -135,8 +135,12 @@ func getFees(t *testing.T) {
 	conds := &npool.Conds{
 		ID:         &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
 		IDs:        &basetypes.Uint32SliceVal{Op: cruder.IN, Value: []uint32{ret.ID}},
+		AppID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+		AppIDs:     &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppID, ret.AppID}},
 		EntID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
 		EntIDs:     &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.EntID, ret.EntID}},
+		GoodID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
+		GoodIDs:    &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
 		AppGoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
 		AppGoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppGoodID}},
 	}
@@ -150,9 +154,9 @@ func getFees(t *testing.T) {
 	assert.Nil(t, err)
 
 	infos, _, err := handler.GetFees(context.Background())
-	if !assert.Nil(t, err) {
-		assert.Equal(t, len(infos), 1)
-		assert.Equal(t, infos[0], &ret)
+	if assert.Nil(t, err) {
+		assert.Equal(t, 1, len(infos))
+		assert.Equal(t, &ret, infos[0])
 	}
 }
 

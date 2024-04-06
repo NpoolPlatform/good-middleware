@@ -139,7 +139,7 @@ func getFees(t *testing.T) {
 	}
 	infos, total, err := GetFees(context.Background(), conds, 0, 2)
 	if assert.Nil(t, err) {
-		assert.Equal(t, total, 1)
+		assert.Equal(t, total, uint32(1))
 		assert.Equal(t, len(infos), 1)
 		assert.Equal(t, infos[0], ret)
 	}
