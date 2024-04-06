@@ -266,7 +266,7 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 	}
 
 	stm, err := rewardhistorycrud.SetQueryConds(tx.GoodRewardHistory.Query(), &rewardhistorycrud.Conds{
-		GoodID:     &cruder.Cond{Op: cruder.EQ, Val: *h.EntID},
+		GoodID:     &cruder.Cond{Op: cruder.EQ, Val: *h.GoodID},
 		RewardDate: &cruder.Cond{Op: cruder.EQ, Val: *h.RewardReq.LastRewardAt},
 	})
 	if err != nil {
@@ -283,7 +283,7 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 	if _, err := rewardhistorycrud.CreateSet(
 		tx.GoodRewardHistory.Create(),
 		&rewardhistorycrud.Req{
-			GoodID:     h.EntID,
+			GoodID:     h.GoodID,
 			RewardDate: h.RewardReq.LastRewardAt,
 			TID:        h.RewardReq.RewardTID,
 			Amount:     h.RewardReq.LastRewardAmount,
@@ -308,6 +308,10 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 
 	if err := handler.requirePowerRentalGood(ctx); err != nil {
 		return err
+	}
+	if h.GoodID == nil {
+		h.GoodID = &handler.powerRental.GoodID
+		h.GoodBaseReq.EntID = h.GoodID
 	}
 	if err := handler._validateStock(); err != nil {
 		return err

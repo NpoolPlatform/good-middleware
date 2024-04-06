@@ -32,10 +32,10 @@ func CreatePowerRental(ctx context.Context, req *npool.PowerRentalReq) error {
 	return err
 }
 
-func GetPowerRental(ctx context.Context, id string) (*npool.PowerRental, error) {
+func GetPowerRental(ctx context.Context, goodID string) (*npool.PowerRental, error) {
 	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetPowerRental(ctx, &npool.GetPowerRentalRequest{
-			EntID: id,
+			GoodID: goodID,
 		})
 		if err != nil {
 			return nil, err
@@ -91,12 +91,13 @@ func GetPowerRentalOnly(ctx context.Context, conds *npool.Conds) (*npool.PowerRe
 	return infos.([]*npool.PowerRental)[0], nil
 }
 
-func DeletePowerRental(ctx context.Context, id *uint32, entID *string) error {
+func DeletePowerRental(ctx context.Context, id *uint32, entID *string, goodID *string) error {
 	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		return cli.DeletePowerRental(_ctx, &npool.DeletePowerRentalRequest{
 			Info: &npool.PowerRentalReq{
-				ID:    id,
-				EntID: entID,
+				ID:     id,
+				EntID:  entID,
+				GoodID: goodID,
 			},
 		})
 	})
