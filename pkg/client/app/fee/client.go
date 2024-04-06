@@ -30,3 +30,92 @@ func CreateFee(ctx context.Context, req *npool.FeeReq) error {
 	})
 	return err
 }
+
+func UpdateFee(ctx context.Context, req *npool.FeeReq) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.UpdateFee(_ctx, &npool.UpdateFeeRequest{
+			Info: req,
+		})
+	})
+	return err
+}
+
+func GetFee(ctx context.Context, appGoodID string) (*npool.Fee, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.GetFee(_ctx, &npool.GetFeeRequest{
+			AppGoodID: appGoodID,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.Fee), nil
+}
+
+func GetFees(ctx context.Context, conds *npool.Conds, offset, limit int32) (infos []*npool.Fee, total uint32, err error) {
+	_infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.GetFees(_ctx, &npool.GetFeesRequest{
+			Conds:  conds,
+			Offset: offset,
+			Limit:  limit,
+		})
+		if err != nil {
+			return nil, err
+		}
+		total = resp.Total
+		return resp.Infos, nil
+	})
+	if err != nil {
+		return nil, 0, err
+	}
+	return _infos.([]*npool.Fee), total, nil
+}
+
+func ExistFee(ctx context.Context, appGoodID string) (exist bool, err error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistFee(_ctx, &npool.ExistFeeRequest{
+			AppGoodID: appGoodID,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
+func ExistFeeConds(ctx context.Context, conds *npool.Conds) (exist bool, err error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistFeeConds(_ctx, &npool.ExistFeeCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
+func DeleteFee(ctx context.Context, id *uint32, entID *string, appGoodID *string) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.DeleteFee(_ctx, &npool.DeleteFeeRequest{
+			Info: &npool.FeeReq{
+				ID:        id,
+				EntID:     entID,
+				AppGoodID: appGoodID,
+			},
+		})
+	})
+	return err
+}
