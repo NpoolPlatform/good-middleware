@@ -134,7 +134,7 @@ func getLocations(t *testing.T) {
 	assert.Nil(t, err)
 
 	infos, _, err := handler.GetLocations(context.Background())
-	if !assert.Nil(t, err) {
+	if assert.Nil(t, err) {
 		assert.Equal(t, len(infos), 1)
 		assert.Equal(t, infos[0], &ret)
 	}

@@ -125,11 +125,10 @@ func (h *Handler) GetLocation(ctx context.Context) (*npool.Location, error) {
 	return handler.infos[0], nil
 }
 
-func (h *Handler) GetLocations(ctx context.Context) ([]*npool.Location, uint32, error) {
+func (h *Handler) GetLocations(ctx context.Context) (infos []*npool.Location, total uint32, err error) {
 	handler := &queryHandler{
 		Handler: h,
 	}
-	var err error
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if handler.stmSelect, err = handler.queryVendorLocations(_ctx, cli); err != nil {
 			return err
@@ -137,6 +136,15 @@ func (h *Handler) GetLocations(ctx context.Context) ([]*npool.Location, uint32, 
 		if handler.stmCount, err = handler.queryVendorLocations(_ctx, cli); err != nil {
 			return err
 		}
+
+		handler.queryJoin()
+
+		_total, err := handler.stmCount.Count(_ctx)
+		if err != nil {
+			return err
+		}
+		handler.total = uint32(_total)
+
 		handler.stmSelect.
 			Offset(int(h.Offset)).
 			Limit(int(h.Limit))
