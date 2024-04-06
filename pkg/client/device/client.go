@@ -1,4 +1,4 @@
-package device
+package devicetype
 
 import (
 	"context"
@@ -6,52 +6,35 @@ import (
 	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
-
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
-
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
+	"google.golang.org/grpc"
 )
 
-var timeout = 10 * time.Second
-
-type handler func(context.Context, npool.MiddlewareClient) (cruder.Any, error)
-
-func do(ctx context.Context, handler handler) (cruder.Any, error) {
-	_ctx, cancel := context.WithTimeout(ctx, timeout)
-	defer cancel()
-
-	conn, err := grpc2.GetGRPCConn(servicename.ServiceDomain, grpc2.GRPCTAG)
-	if err != nil {
-		return nil, err
-	}
-
-	defer conn.Close()
-
-	cli := npool.NewMiddlewareClient(conn)
-
-	return handler(_ctx, cli)
+func withClient(ctx context.Context, handler func(context.Context, npool.MiddlewareClient) (interface{}, error)) (interface{}, error) {
+	return grpc2.WithGRPCConn(
+		ctx,
+		servicename.ServiceDomain,
+		10*time.Second,
+		func(_ctx context.Context, conn *grpc.ClientConn) (interface{}, error) {
+			return handler(_ctx, npool.NewMiddlewareClient(conn))
+		},
+		grpc2.GRPCTAG,
+	)
 }
 
-func CreateDeviceInfo(ctx context.Context, in *npool.DeviceInfoReq) (*npool.DeviceInfo, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.CreateDeviceInfo(ctx, &npool.CreateDeviceInfoRequest{
-			Info: in,
+func CreateDeviceType(ctx context.Context, req *npool.DeviceTypeReq) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.CreateDeviceType(_ctx, &npool.CreateDeviceTypeRequest{
+			Info: req,
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.DeviceInfo), nil
+	return err
 }
 
-func GetDeviceInfo(ctx context.Context, id string) (*npool.DeviceInfo, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.GetDeviceInfo(ctx, &npool.GetDeviceInfoRequest{
+func GetDeviceType(ctx context.Context, id string) (*npool.DeviceType, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.GetDeviceType(ctx, &npool.GetDeviceTypeRequest{
 			EntID: id,
 		})
 		if err != nil {
@@ -62,14 +45,12 @@ func GetDeviceInfo(ctx context.Context, id string) (*npool.DeviceInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	return info.(*npool.DeviceInfo), nil
+	return info.(*npool.DeviceType), nil
 }
 
-func GetDeviceInfos(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.DeviceInfo, uint32, error) {
-	total := uint32(0)
-
-	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.GetDeviceInfos(ctx, &npool.GetDeviceInfosRequest{
+func GetDeviceTypes(ctx context.Context, conds *npool.Conds, offset, limit int32) (infos []*npool.DeviceType, total uint32, err error) {
+	_infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.GetDeviceTypes(ctx, &npool.GetDeviceTypesRequest{
 			Conds:  conds,
 			Offset: offset,
 			Limit:  limit,
@@ -77,24 +58,21 @@ func GetDeviceInfos(ctx context.Context, conds *npool.Conds, offset, limit int32
 		if err != nil {
 			return nil, err
 		}
-
 		total = resp.Total
-
 		return resp.Infos, nil
 	})
 	if err != nil {
 		return nil, 0, err
 	}
-	return infos.([]*npool.DeviceInfo), total, nil
+	return _infos.([]*npool.DeviceType), total, nil
 }
 
-func GetDeviceInfoOnly(ctx context.Context, conds *npool.Conds) (*npool.DeviceInfo, error) {
-	const limit = 2
-	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.GetDeviceInfos(ctx, &npool.GetDeviceInfosRequest{
+func GetDeviceTypeOnly(ctx context.Context, conds *npool.Conds) (*npool.DeviceType, error) {
+	infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.GetDeviceTypes(ctx, &npool.GetDeviceTypesRequest{
 			Conds:  conds,
 			Offset: 0,
-			Limit:  limit,
+			Limit:  2,
 		})
 		if err != nil {
 			return nil, err
@@ -104,45 +82,32 @@ func GetDeviceInfoOnly(ctx context.Context, conds *npool.Conds) (*npool.DeviceIn
 	if err != nil {
 		return nil, err
 	}
-	if len(infos.([]*npool.DeviceInfo)) == 0 {
+	if len(infos.([]*npool.DeviceType)) == 0 {
 		return nil, nil
 	}
-	if len(infos.([]*npool.DeviceInfo)) > 1 {
+	if len(infos.([]*npool.DeviceType)) > 1 {
 		return nil, fmt.Errorf("too many records")
 	}
-	return infos.([]*npool.DeviceInfo)[0], nil
+	return infos.([]*npool.DeviceType)[0], nil
 }
 
-func DeleteDeviceInfo(ctx context.Context, id uint32) (*npool.DeviceInfo, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.DeleteDeviceInfo(ctx, &npool.DeleteDeviceInfoRequest{
-			Info: &npool.DeviceInfoReq{
-				ID: &id,
+func DeleteDeviceType(ctx context.Context, id *uint32, entID *string) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.DeleteDeviceType(_ctx, &npool.DeleteDeviceTypeRequest{
+			Info: &npool.DeviceTypeReq{
+				ID:    id,
+				EntID: entID,
 			},
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.DeviceInfo), nil
+	return err
 }
 
-func UpdateDeviceInfo(ctx context.Context, in *npool.DeviceInfoReq) (*npool.DeviceInfo, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.UpdateDeviceInfo(ctx, &npool.UpdateDeviceInfoRequest{
-			Info: in,
+func UpdateDeviceType(ctx context.Context, req *npool.DeviceTypeReq) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.UpdateDeviceType(_ctx, &npool.UpdateDeviceTypeRequest{
+			Info: req,
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.DeviceInfo), nil
+	return err
 }
