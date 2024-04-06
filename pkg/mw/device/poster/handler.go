@@ -77,7 +77,7 @@ func WithDeviceTypeID(id *string, must bool) func(context.Context, *Handler) err
 			return err
 		}
 		if !exist {
-			return fmt.Errorf("invalid appgood")
+			return fmt.Errorf("invalid devicetype")
 		}
 		h.DeviceTypeID = handler.EntID
 		return nil

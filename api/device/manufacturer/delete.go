@@ -23,7 +23,8 @@ func (s *Server) DeleteManufacturer(ctx context.Context, in *npool.DeleteManufac
 	}
 	handler, err := manufacturer1.NewHandler(
 		ctx,
-		manufacturer1.WithID(req.ID, true),
+		manufacturer1.WithID(req.ID, false),
+		manufacturer1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

@@ -119,7 +119,7 @@ func (h *Handler) GetPoster(ctx context.Context) (*npool.Poster, error) {
 		return nil, err
 	}
 	if len(handler.infos) == 0 {
-		return nil, fmt.Errorf("invalid deviceposter")
+		return nil, nil
 	}
 	if len(handler.infos) > 1 {
 		return nil, fmt.Errorf("too many records")

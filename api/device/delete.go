@@ -23,7 +23,8 @@ func (s *Server) DeleteDeviceType(ctx context.Context, in *npool.DeleteDeviceTyp
 	}
 	handler, err := device1.NewHandler(
 		ctx,
-		device1.WithID(req.ID, true),
+		device1.WithID(req.ID, false),
+		device1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
