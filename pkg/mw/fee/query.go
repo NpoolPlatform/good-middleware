@@ -7,6 +7,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
+	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -122,25 +123,27 @@ func (h *queryHandler) queryJoinFee(s *sql.Selector) error {
 	return nil
 }
 
-func (h *queryHandler) queryJoin() error {
-	var err error
+func (h *queryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
-		err = h.queryJoinFee(s)
+		if err := h.queryJoinFee(s); err != nil {
+			logger.Sugar().Errorw(
+				"queryJoinFee",
+				"Error", err,
+			)
+		}
 	})
-	if err != nil {
-		return err
-	}
 	if h.stmCount == nil {
-		return nil
+		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
-		err = h.queryJoinFee(s)
+		if err := h.queryJoinFee(s); err != nil {
+			logger.Sugar().Errorw(
+				"queryJoinFee",
+				"Error", err,
+			)
+		}
 	})
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func (h *queryHandler) scan(ctx context.Context) error {
@@ -167,9 +170,7 @@ func (h *Handler) GetFee(ctx context.Context) (*npool.Fee, error) {
 		if err := handler.queryGoodBase(cli); err != nil {
 			return err
 		}
-		if err := handler.queryJoin(); err != nil {
-			return err
-		}
+		handler.queryJoin()
 		return handler.scan(_ctx)
 	})
 	if err != nil {
@@ -203,9 +204,7 @@ func (h *Handler) GetFees(ctx context.Context) ([]*npool.Fee, uint32, error) {
 			return err
 		}
 
-		if err := handler.queryJoin(); err != nil {
-			return err
-		}
+		handler.queryJoin()
 
 		total, err := handler.stmCount.Count(_ctx)
 		if err != nil {
