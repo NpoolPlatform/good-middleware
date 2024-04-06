@@ -57,7 +57,6 @@ func Register(server grpc.ServiceRegistrar) {
 	topmostposter.Register(server)
 	topmostgood.Register(server)
 	comment.Register(server)
-	recommend.Register(server)
 	appgoodposter.Register(server)
 	label.Register(server)
 	displayname.Register(server)
