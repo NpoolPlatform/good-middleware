@@ -68,12 +68,12 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) error {
 		).
 		AppendSelect(
 			sql.As(t1.C(entappgoodbase.FieldEntID), "app_good_id"),
-			sql.As(t1.C(entappgoodbase.FieldAppID), "app_id"),
-			sql.As(t1.C(entappgoodbase.FieldGoodID), "good_id"),
-			sql.As(t1.C(entappgoodbase.FieldName), "name"),
-			sql.As(t1.C(entappgoodbase.FieldBanner), "banner"),
-			sql.As(t1.C(entappgoodbase.FieldCreatedAt), "created_at"),
-			sql.As(t1.C(entappgoodbase.FieldUpdatedAt), "updated_at"),
+			t1.C(entappgoodbase.FieldAppID),
+			t1.C(entappgoodbase.FieldGoodID),
+			t1.C(entappgoodbase.FieldName),
+			t1.C(entappgoodbase.FieldBanner),
+			t1.C(entappgoodbase.FieldCreatedAt),
+			t1.C(entappgoodbase.FieldUpdatedAt),
 		)
 
 	t2 := sql.Table(entgoodbase.Table)
@@ -103,10 +103,10 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) error {
 		if !ok {
 			return fmt.Errorf("invalid goodids")
 		}
-		s.OnP(sql.In(t2.C(entgoodbase.FieldEntID), uids))
+		s.OnP(sql.In(t2.C(entgoodbase.FieldEntID), []interface{}{uids}...))
 	}
 	s.AppendSelect(
-		sql.As(t2.C(entgoodbase.FieldGoodType), "good_type"),
+		t2.C(entgoodbase.FieldGoodType),
 	)
 
 	t3 := sql.Table(entfee.Table)
@@ -130,7 +130,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) error {
 		if !ok {
 			return fmt.Errorf("invalid goodids")
 		}
-		s.OnP(sql.In(t3.C(entfee.FieldGoodID), uids))
+		s.OnP(sql.In(t3.C(entfee.FieldGoodID), []interface{}{uids}...))
 	}
 	s.AppendSelect(
 		t3.C(entfee.FieldSettlementType),
@@ -162,7 +162,12 @@ func (h *queryHandler) queryJoinAppFee(s *sql.Selector) error {
 		if !ok {
 			return fmt.Errorf("invalid ids")
 		}
-		s.OnP(sql.In(t1.C(entappfee.FieldID), ids))
+		s.OnP(sql.In(t1.C(entappfee.FieldID), func() (_ids []interface{}) {
+			for _, id := range ids {
+				_ids = append(_ids, id)
+			}
+			return
+		}()...))
 	}
 	if h.AppFeeConds != nil && h.AppFeeConds.EntID != nil {
 		uid, ok := h.AppFeeConds.EntID.Val.(uuid.UUID)
@@ -176,7 +181,7 @@ func (h *queryHandler) queryJoinAppFee(s *sql.Selector) error {
 		if !ok {
 			return fmt.Errorf("invalid entids")
 		}
-		s.OnP(sql.In(t1.C(entappfee.FieldEntID), uids))
+		s.OnP(sql.In(t1.C(entappfee.FieldEntID), []interface{}{uids}...))
 	}
 	if h.AppFeeConds != nil && h.AppFeeConds.AppGoodID != nil {
 		uid, ok := h.AppFeeConds.AppGoodID.Val.(uuid.UUID)
@@ -190,13 +195,13 @@ func (h *queryHandler) queryJoinAppFee(s *sql.Selector) error {
 		if !ok {
 			return fmt.Errorf("invalid appgoodids")
 		}
-		s.OnP(sql.In(t1.C(entappfee.FieldAppGoodID), uids))
+		s.OnP(sql.In(t1.C(entappfee.FieldAppGoodID), []interface{}{uids}...))
 	}
 	s.AppendSelect(
-		sql.As(t1.C(entappfee.FieldID), "id"),
-		sql.As(t1.C(entappfee.FieldEntID), "ent_id"),
-		sql.As(t1.C(entappfee.FieldUnitValue), "unit_value"),
-		sql.As(t1.C(entappfee.FieldMinOrderDuration), "min_order_duration"),
+		t1.C(entappfee.FieldID),
+		t1.C(entappfee.FieldEntID),
+		t1.C(entappfee.FieldUnitValue),
+		t1.C(entappfee.FieldMinOrderDuration),
 	)
 	return nil
 }

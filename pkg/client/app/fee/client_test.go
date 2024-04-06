@@ -6,7 +6,6 @@ import (
 	"os"
 	"strconv"
 	"testing"
-	"time"
 
 	"bou.ke/monkey"
 	"github.com/NpoolPlatform/go-service-framework/pkg/config"
@@ -19,6 +18,7 @@ import (
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/fee"
+	feemwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/fee"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -55,22 +55,118 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.DurationTypeStr = ret.DurationType.String()
 
 	feeEntID := uuid.NewString()
-	h1, err := fee1.NewHandler(
-		context.Background(),
-		fee1.WithEntID(&feeEntID, true),
-		fee1.WithGoodID(&ret.GoodID, true),
-		fee1.WithGoodType(&ret.GoodType, true),
-		fee1.WithName(&ret.Name, true),
-		fee1.WithSettlementType(&ret.SettlementType, true),
-		fee1.WithUnitValue(&ret.UnitValue, true),
-		fee1.WithDurationType(&ret.DurationType, true),
-	)
-	assert.Nil(t, err)
-
-	err = h1.CreateFee(context.Background())
+	err := fee1.CreateFee(context.Background(), &feemwpb.FeeReq{
+		EntID:          &feeEntID,
+		GoodID:         &ret.GoodID,
+		GoodType:       &ret.GoodType,
+		Name:           &ret.Name,
+		SettlementType: &ret.SettlementType,
+		UnitValue:      &ret.UnitValue,
+		DurationType:   &ret.DurationType,
+	})
 	assert.Nil(t, err)
 
 	return func(*testing.T) {
-		_ = h1.DeleteFee(context.Background())
+		_ = fee1.DeleteFee(context.Background(), &ret.ID, &ret.EntID, &ret.GoodID)
 	}
+}
+
+func createFee(t *testing.T) {
+	err := CreateFee(context.Background(), &npool.FeeReq{
+		EntID:            &ret.EntID,
+		AppID:            &ret.AppID,
+		GoodID:           &ret.GoodID,
+		AppGoodID:        &ret.AppGoodID,
+		ProductPage:      &ret.ProductPage,
+		Name:             &ret.Name,
+		Banner:           &ret.Banner,
+		UnitValue:        &ret.UnitValue,
+		MinOrderDuration: &ret.MinOrderDuration,
+	})
+	assert.Nil(t, err)
+
+	info, err := GetFee(context.Background(), ret.AppGoodID)
+	if assert.Nil(t, err) {
+		ret.CreatedAt = info.CreatedAt
+		ret.UpdatedAt = info.UpdatedAt
+		ret.ID = info.ID
+		assert.Equal(t, info, ret)
+	}
+}
+
+func updateFee(t *testing.T) {
+	err := UpdateFee(context.Background(), &npool.FeeReq{
+		ID:               &ret.ID,
+		EntID:            &ret.EntID,
+		AppID:            &ret.AppID,
+		GoodID:           &ret.GoodID,
+		AppGoodID:        &ret.AppGoodID,
+		ProductPage:      &ret.ProductPage,
+		Name:             &ret.Name,
+		Banner:           &ret.Banner,
+		UnitValue:        &ret.UnitValue,
+		MinOrderDuration: &ret.MinOrderDuration,
+	})
+	assert.Nil(t, err)
+
+	info, err := GetFee(context.Background(), ret.AppGoodID)
+	if assert.Nil(t, err) {
+		ret.UpdatedAt = info.UpdatedAt
+		assert.Equal(t, info, ret)
+	}
+}
+
+func getFee(t *testing.T) {
+	info, err := GetFee(context.Background(), ret.AppGoodID)
+	if assert.Nil(t, err) {
+		assert.Equal(t, info, ret)
+	}
+}
+
+func getFees(t *testing.T) {
+	conds := &npool.Conds{
+		ID:             &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		IDs:            &basetypes.Uint32SliceVal{Op: cruder.IN, Value: []uint32{ret.ID}},
+		AppID:          &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppID},
+		AppIDs:         &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppID}},
+		EntID:          &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
+		EntIDs:         &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.EntID}},
+		GoodID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
+		GoodIDs:        &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
+		AppGoodID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+		AppGoodIDs:     &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppGoodID}},
+		SettlementType: &basetypes.Uint32Val{Op: cruder.EQ, Value: uint32(ret.SettlementType)},
+	}
+	infos, total, err := GetFees(context.Background(), conds, 0, 2)
+	if assert.Nil(t, err) {
+		assert.Equal(t, total, 1)
+		assert.Equal(t, len(infos), 1)
+		assert.Equal(t, infos[0], ret)
+	}
+}
+
+func TestFee(t *testing.T) {
+	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
+		return
+	}
+
+	gport := config.GetIntValueWithNameSpace("", config.KeyGRPCPort)
+
+	monkey.Patch(grpc2.GetGRPCConn, func(service string, tags ...string) (*grpc.ClientConn, error) {
+		return grpc.Dial(fmt.Sprintf("localhost:%v", gport), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	})
+	monkey.Patch(grpc2.GetGRPCConnV1, func(service string, recvMsgBytes int, tags ...string) (*grpc.ClientConn, error) {
+		return grpc.Dial(fmt.Sprintf("localhost:%v", gport), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	})
+
+	// If test depend on another service, then it should be set up before mock
+	// Routine from the same service should be set up after mock
+	teardown := setup(t)
+	defer teardown(t)
+
+	t.Run("createFee", createFee)
+	t.Run("updateFee", updateFee)
+	t.Run("getFee", getFee)
+	t.Run("getFees", getFees)
+	// t.Run("deleteFee", deleteFee)
 }

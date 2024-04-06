@@ -133,9 +133,12 @@ func getFee(t *testing.T) {
 
 func getFees(t *testing.T) {
 	conds := &npool.Conds{
-		ID:        &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
-		EntID:     &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
-		AppGoodID: &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+		ID:         &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		IDs:        &basetypes.Uint32SliceVal{Op: cruder.IN, Value: []uint32{ret.ID}},
+		EntID:      &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
+		EntIDs:     &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.EntID, ret.EntID}},
+		AppGoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.AppGoodID},
+		AppGoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.AppGoodID}},
 	}
 
 	handler, err := NewHandler(
