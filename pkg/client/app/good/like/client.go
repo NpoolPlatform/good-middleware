@@ -6,53 +6,34 @@ import (
 	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
-
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/like"
-
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/like"
+	"google.golang.org/grpc"
 )
 
-var timeout = 10 * time.Second
-
-type handler func(context.Context, npool.MiddlewareClient) (cruder.Any, error)
-
-func do(ctx context.Context, handler handler) (cruder.Any, error) {
-	_ctx, cancel := context.WithTimeout(ctx, timeout)
-	defer cancel()
-
-	conn, err := grpc2.GetGRPCConn(servicename.ServiceDomain, grpc2.GRPCTAG)
-	if err != nil {
-		return nil, err
-	}
-
-	defer conn.Close()
-
-	cli := npool.NewMiddlewareClient(conn)
-
-	return handler(_ctx, cli)
+func withClient(ctx context.Context, handler func(context.Context, npool.MiddlewareClient) (interface{}, error)) (interface{}, error) {
+	return grpc2.WithGRPCConn(
+		ctx,
+		servicename.ServiceDomain,
+		10*time.Second,
+		func(_ctx context.Context, conn *grpc.ClientConn) (interface{}, error) {
+			return handler(_ctx, npool.NewMiddlewareClient(conn))
+		},
+		grpc2.GRPCTAG,
+	)
 }
 
-func CreateLike(ctx context.Context, in *npool.LikeReq) (*npool.Like, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.CreateLike(ctx, &npool.CreateLikeRequest{
-			Info: in,
+func CreateLike(ctx context.Context, req *npool.LikeReq) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.CreateLike(_ctx, &npool.CreateLikeRequest{
+			Info: req,
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Like), nil
+	return err
 }
 
-func GetLikes(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.Like, uint32, error) {
-	total := uint32(0)
-
-	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+func GetLikes(ctx context.Context, conds *npool.Conds, offset, limit int32) (intos []*npool.Like, total uint32, err error) {
+	_infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetLikes(ctx, &npool.GetLikesRequest{
 			Conds:  conds,
 			Offset: offset,
@@ -61,24 +42,21 @@ func GetLikes(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*
 		if err != nil {
 			return nil, err
 		}
-
 		total = resp.Total
-
 		return resp.Infos, nil
 	})
 	if err != nil {
 		return nil, 0, err
 	}
-	return infos.([]*npool.Like), total, nil
+	return _infos.([]*npool.Like), total, nil
 }
 
 func GetLikeOnly(ctx context.Context, conds *npool.Conds) (*npool.Like, error) {
-	const limit = 2
-	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+	infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetLikes(ctx, &npool.GetLikesRequest{
 			Conds:  conds,
 			Offset: 0,
-			Limit:  limit,
+			Limit:  2,
 		})
 		if err != nil {
 			return nil, err
@@ -98,7 +76,7 @@ func GetLikeOnly(ctx context.Context, conds *npool.Conds) (*npool.Like, error) {
 }
 
 func ExistLikeConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.ExistLikeConds(ctx, &npool.ExistLikeCondsRequest{
 			Conds: conds,
 		})
@@ -113,44 +91,31 @@ func ExistLikeConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 	return info.(bool), nil
 }
 
-func DeleteLike(ctx context.Context, id uint32) (*npool.Like, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.DeleteLike(ctx, &npool.DeleteLikeRequest{
+func UpdateLike(ctx context.Context, req *npool.LikeReq) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.UpdateLike(_ctx, &npool.UpdateLikeRequest{
+			Info: req,
+		})
+	})
+	return err
+}
+
+func DeleteLike(ctx context.Context, id *uint32, entID *string) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.DeleteLike(_ctx, &npool.DeleteLikeRequest{
 			Info: &npool.LikeReq{
-				ID: &id,
+				ID:    id,
+				EntID: entID,
 			},
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Like), nil
+	return err
 }
 
 func GetLike(ctx context.Context, id string) (*npool.Like, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetLike(ctx, &npool.GetLikeRequest{
 			EntID: id,
-		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
-	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Like), nil
-}
-
-func UpdateLike(ctx context.Context, in *npool.LikeReq) (*npool.Like, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.UpdateLike(ctx, &npool.UpdateLikeRequest{
-			Info: in,
 		})
 		if err != nil {
 			return nil, err

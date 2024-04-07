@@ -24,8 +24,9 @@ func (s *Server) CreateLike(ctx context.Context, in *npool.CreateLikeRequest) (*
 	handler, err := like1.NewHandler(
 		ctx,
 		like1.WithEntID(req.EntID, false),
+		like1.WithUserID(req.UserID, true),
 		like1.WithAppGoodID(req.AppGoodID, true),
-		like1.WithLike(req.Like, false),
+		like1.WithLike(req.Like, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
