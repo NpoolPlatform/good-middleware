@@ -24,7 +24,7 @@ func (s *Server) CreatePowerRental(ctx context.Context, in *npool.CreatePowerRen
 	handler, err := powerrental1.NewHandler(
 		ctx,
 		powerrental1.WithEntID(req.EntID, false),
-		powerrental1.WithGoodID(req.GoodID, true),
+		powerrental1.WithGoodID(req.GoodID, false),
 		powerrental1.WithDeviceTypeID(req.DeviceTypeID, true),
 		powerrental1.WithVendorLocationID(req.VendorLocationID, true),
 		powerrental1.WithUnitPrice(req.UnitPrice, true),

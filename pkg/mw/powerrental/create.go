@@ -237,6 +237,13 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 		return err
 	}
 
+	if h.EntID == nil {
+		h.EntID = func() *uuid.UUID { s := uuid.New(); return &s }()
+	}
+	if h.GoodID == nil {
+		h.GoodID = func() *uuid.UUID { s := uuid.New(); return &s }()
+	}
+
 	handler.constructPowerRentalSql()
 	if err := handler.constructGoodBaseSql(ctx); err != nil {
 		return err

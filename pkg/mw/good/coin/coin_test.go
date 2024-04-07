@@ -37,6 +37,7 @@ var (
 		GoodName:   uuid.NewString(),
 		CoinTypeID: uuid.NewString(),
 		Main:       true,
+		Index:      5,
 	}
 )
 
@@ -69,6 +70,8 @@ func createGoodCoin(t *testing.T) {
 		WithEntID(&ret.EntID, true),
 		WithGoodID(&ret.GoodID, true),
 		WithCoinTypeID(&ret.CoinTypeID, true),
+		WithMain(&ret.Main, true),
+		WithIndex(&ret.Index, true),
 	)
 	assert.Nil(t, err)
 
@@ -101,6 +104,8 @@ func updateGoodCoin(t *testing.T) {
 		WithEntID(&ret.EntID, true),
 		WithGoodID(&ret.GoodID, true),
 		WithCoinTypeID(&ret.CoinTypeID, true),
+		WithMain(&ret.Main, true),
+		WithIndex(&ret.Index, true),
 	)
 	assert.Nil(t, err)
 

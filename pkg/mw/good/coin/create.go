@@ -28,6 +28,12 @@ func (h *createHandler) constructSql() {
 	_sql += comma + "good_id"
 	comma = ", "
 	_sql += comma + "coin_type_id"
+	if h.Main != nil {
+		_sql += comma + "main"
+	}
+	if h.Index != nil {
+		_sql += comma + "`index`"
+	}
 	_sql += comma + "created_at"
 	_sql += comma + "updated_at"
 	_sql += comma + "deleted_at"
@@ -41,6 +47,12 @@ func (h *createHandler) constructSql() {
 	_sql += fmt.Sprintf("%v'%v' as good_id", comma, *h.GoodID)
 	comma = ", "
 	_sql += fmt.Sprintf("%v'%v' as coin_type_id", comma, *h.CoinTypeID)
+	if h.Main != nil {
+		_sql += fmt.Sprintf("%v%v as main", comma, *h.Main)
+	}
+	if h.Index != nil {
+		_sql += fmt.Sprintf("%v%v as `index`", comma, *h.Index)
+	}
 	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
 	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
 	_sql += fmt.Sprintf("%v0 as deleted_at", comma)

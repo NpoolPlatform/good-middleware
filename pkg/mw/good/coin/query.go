@@ -89,11 +89,16 @@ func (h *queryHandler) queryJoinGoodBase(s *sql.Selector) error {
 		s.OnP(sql.EQ(t1.C(entgoodbase.FieldEntID), uid))
 	}
 	if h.GoodBaseConds != nil && h.GoodBaseConds.EntIDs != nil {
-		uid, ok := h.GoodBaseConds.EntIDs.Val.(uuid.UUID)
+		uids, ok := h.GoodBaseConds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
 			return fmt.Errorf("invalid goodids")
 		}
-		s.OnP(sql.In(t1.C(entgoodbase.FieldEntID), uid))
+		s.OnP(sql.In(t1.C(entgoodbase.FieldEntID), func() (_uids []interface{}) {
+			for _, uid := range uids {
+				_uids = append(_uids, interface{}(uid))
+			}
+			return _uids
+		}()...))
 	}
 	s.AppendSelect(
 		sql.As(t1.C(entgoodbase.FieldName), "good_name"),
@@ -153,7 +158,7 @@ func (h *Handler) GetGoodCoin(ctx context.Context) (*npool.GoodCoin, error) {
 		return nil, fmt.Errorf("too many records")
 	}
 	if len(handler.infos) == 0 {
-		return nil, fmt.Errorf("invalid goodcoin")
+		return nil, nil
 	}
 
 	handler.formalize()

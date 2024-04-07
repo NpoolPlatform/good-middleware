@@ -16,13 +16,21 @@ import (
 
 	devicetype1 "github.com/NpoolPlatform/good-middleware/pkg/client/device"
 	manufacturer1 "github.com/NpoolPlatform/good-middleware/pkg/client/device/manufacturer"
+	powerrental1 "github.com/NpoolPlatform/good-middleware/pkg/client/powerrental"
+	brand1 "github.com/NpoolPlatform/good-middleware/pkg/client/vender/brand"
+	location1 "github.com/NpoolPlatform/good-middleware/pkg/client/vender/location"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 	devicetypemwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 	manufacturermwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/device/manufacturer"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin"
+	powerrentalmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/powerrental"
+	brandmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/brand"
+	locationmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/testinit"
@@ -37,50 +45,96 @@ func init() {
 	}
 }
 
-var ret = &npool.Poster{
-	EntID:        uuid.NewString(),
-	DeviceTypeID: uuid.NewString(),
-	DeviceType:   uuid.NewString(),
-	Manufacturer: uuid.NewString(),
-	Poster:       uuid.NewString(),
-	Index:        5,
+var ret = &npool.GoodCoin{
+	EntID:      uuid.NewString(),
+	GoodID:     uuid.NewString(),
+	GoodName:   uuid.NewString(),
+	GoodType:   types.GoodType_PowerRental,
+	CoinTypeID: uuid.NewString(),
+	Main:       true,
+	Index:      5,
 }
 
 func setup(t *testing.T) func(*testing.T) {
+	ret.GoodTypeStr = ret.GoodType.String()
+
 	manufacturerID := uuid.NewString()
 	err := manufacturer1.CreateManufacturer(context.Background(), &manufacturermwpb.ManufacturerReq{
 		EntID: &manufacturerID,
-		Name:  &ret.Manufacturer,
+		Name:  func() *string { s := uuid.NewString(); return &s }(),
 		Logo:  func() *string { s := uuid.NewString(); return &s }(),
 	})
 	assert.Nil(t, err)
 
+	deviceTypeID := uuid.NewString()
 	err = devicetype1.CreateDeviceType(context.Background(), &devicetypemwpb.DeviceTypeReq{
-		EntID:            &ret.DeviceTypeID,
-		Type:             &ret.DeviceType,
+		EntID:            &deviceTypeID,
+		Type:             func() *string { s := uuid.NewString(); return &s }(),
 		ManufacturerID:   &manufacturerID,
 		PowerConsumption: func() *uint32 { u := uint32(120); return &u }(),
 		ShipmentAt:       func() *uint32 { u := uint32(time.Now().Unix()); return &u }(),
 	})
 	assert.Nil(t, err)
 
+	brandID := uuid.NewString()
+	err = brand1.CreateBrand(context.Background(), &brandmwpb.BrandReq{
+		EntID: &brandID,
+		Name:  func() *string { s := uuid.NewString(); return &s }(),
+		Logo:  func() *string { s := uuid.NewString(); return &s }(),
+	})
+	assert.Nil(t, err)
+
+	locationID := uuid.NewString()
+	err = location1.CreateLocation(context.Background(), &locationmwpb.LocationReq{
+		EntID:    &locationID,
+		Country:  func() *string { s := uuid.NewString(); return &s }(),
+		Province: func() *string { s := uuid.NewString(); return &s }(),
+		City:     func() *string { s := uuid.NewString(); return &s }(),
+		Address:  func() *string { s := uuid.NewString(); return &s }(),
+		BrandID:  &brandID,
+	})
+	assert.Nil(t, err)
+
+	err = powerrental1.CreatePowerRental(context.Background(), &powerrentalmwpb.PowerRentalReq{
+		GoodID:               &ret.GoodID,
+		DeviceTypeID:         &deviceTypeID,
+		VendorLocationID:     &locationID,
+		UnitPrice:            func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
+		QuantityUnit:         func() *string { s := "TiB"; return &s }(),
+		QuantityUnitAmount:   func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
+		DeliveryAt:           func() *uint32 { u := uint32(time.Now().Unix()); return &u }(),
+		GoodType:             &ret.GoodType,
+		BenefitType:          func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }(),
+		Name:                 &ret.GoodName,
+		ServiceStartAt:       func() *uint32 { u := uint32(time.Now().Unix()); return &u }(),
+		StartMode:            func() *types.GoodStartMode { e := types.GoodStartMode_GoodStartModeInstantly; return &e }(),
+		TestOnly:             func() *bool { b := true; return &b }(),
+		BenefitIntervalHours: func() *uint32 { u := uint32(24); return &u }(),
+		StockMode:            func() *types.GoodStockMode { e := types.GoodStockMode_GoodStockByUnique; return &e }(),
+		Total:                func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
+	})
+	assert.Nil(t, err)
+
 	return func(*testing.T) {
-		_ = devicetype1.DeleteDeviceType(context.Background(), nil, &ret.DeviceTypeID)
+		_ = powerrental1.DeletePowerRental(context.Background(), nil, nil, &ret.GoodID)
+		_ = location1.DeleteLocation(context.Background(), nil, &locationID)
+		_ = brand1.DeleteBrand(context.Background(), nil, &brandID)
+		_ = devicetype1.DeleteDeviceType(context.Background(), nil, &deviceTypeID)
 		_ = manufacturer1.DeleteManufacturer(context.Background(), nil, &manufacturerID)
 	}
 
 	return func(*testing.T) {}
 }
 
-func createPoster(t *testing.T) {
-	err := CreatePoster(context.Background(), &npool.PosterReq{
-		EntID:        &ret.EntID,
-		DeviceTypeID: &ret.DeviceTypeID,
-		Poster:       &ret.Poster,
-		Index:        &ret.Index,
+func createGoodCoin(t *testing.T) {
+	err := CreateGoodCoin(context.Background(), &npool.GoodCoinReq{
+		EntID:      &ret.EntID,
+		GoodID:     &ret.GoodID,
+		CoinTypeID: &ret.CoinTypeID,
+		Index:      &ret.Index,
 	})
 	if assert.Nil(t, err) {
-		info, err := GetPoster(context.Background(), ret.EntID)
+		info, err := GetGoodCoin(context.Background(), ret.EntID)
 		if assert.Nil(t, err) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
@@ -90,16 +144,15 @@ func createPoster(t *testing.T) {
 	}
 }
 
-func updatePoster(t *testing.T) {
-	err := UpdatePoster(context.Background(), &npool.PosterReq{
-		ID:           &ret.ID,
-		EntID:        &ret.EntID,
-		DeviceTypeID: &ret.DeviceTypeID,
-		Poster:       &ret.Poster,
-		Index:        &ret.Index,
+func updateGoodCoin(t *testing.T) {
+	err := UpdateGoodCoin(context.Background(), &npool.GoodCoinReq{
+		ID:    &ret.ID,
+		EntID: &ret.EntID,
+		Main:  &ret.Main,
+		Index: &ret.Index,
 	})
 	if assert.Nil(t, err) {
-		info, err := GetPoster(context.Background(), ret.EntID)
+		info, err := GetGoodCoin(context.Background(), ret.EntID)
 		if assert.Nil(t, err) {
 			ret.UpdatedAt = info.UpdatedAt
 			assert.Equal(t, info, ret)
@@ -107,37 +160,37 @@ func updatePoster(t *testing.T) {
 	}
 }
 
-func getPoster(t *testing.T) {
-	info, err := GetPoster(context.Background(), ret.EntID)
+func getGoodCoin(t *testing.T) {
+	info, err := GetGoodCoin(context.Background(), ret.EntID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, info, ret)
 	}
 }
 
-func getPosters(t *testing.T) {
+func getGoodCoins(t *testing.T) {
 	conds := &npool.Conds{
-		ID:            &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
-		EntID:         &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
-		DeviceTypeID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.DeviceTypeID},
-		DeviceTypeIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.DeviceTypeID}},
+		ID:      &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
+		EntID:   &basetypes.StringVal{Op: cruder.EQ, Value: ret.EntID},
+		GoodID:  &basetypes.StringVal{Op: cruder.EQ, Value: ret.GoodID},
+		GoodIDs: &basetypes.StringSliceVal{Op: cruder.IN, Value: []string{ret.GoodID}},
 	}
-	infos, _, err := GetPosters(context.Background(), conds, 0, 2)
+	infos, _, err := GetGoodCoins(context.Background(), conds, 0, 2)
 	if assert.Nil(t, err) {
 		assert.Equal(t, len(infos), 1)
 		assert.Equal(t, infos[0], ret)
 	}
 }
 
-func deletePoster(t *testing.T) {
-	err := DeletePoster(context.Background(), &ret.ID, &ret.EntID)
+func deleteGoodCoin(t *testing.T) {
+	err := DeleteGoodCoin(context.Background(), &ret.ID, &ret.EntID)
 	assert.Nil(t, err)
 
-	info, err := GetPoster(context.Background(), ret.EntID)
+	info, err := GetGoodCoin(context.Background(), ret.EntID)
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }
 
-func TestPoster(t *testing.T) {
+func TestGoodCoin(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
 	}
@@ -154,9 +207,9 @@ func TestPoster(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
 
-	t.Run("createPoster", createPoster)
-	t.Run("updatePoster", updatePoster)
-	t.Run("getPoster", getPoster)
-	t.Run("getPosters", getPosters)
-	t.Run("deletePoster", deletePoster)
+	t.Run("createGoodCoin", createGoodCoin)
+	t.Run("updateGoodCoin", updateGoodCoin)
+	t.Run("getGoodCoin", getGoodCoin)
+	t.Run("getGoodCoins", getGoodCoins)
+	t.Run("deleteGoodCoin", deleteGoodCoin)
 }
