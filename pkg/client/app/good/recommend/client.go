@@ -6,53 +6,34 @@ import (
 	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
-
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/recommend"
-
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/recommend"
+	"google.golang.org/grpc"
 )
 
-var timeout = 10 * time.Second
-
-type handler func(context.Context, npool.MiddlewareClient) (cruder.Any, error)
-
-func do(ctx context.Context, handler handler) (cruder.Any, error) {
-	_ctx, cancel := context.WithTimeout(ctx, timeout)
-	defer cancel()
-
-	conn, err := grpc2.GetGRPCConn(servicename.ServiceDomain, grpc2.GRPCTAG)
-	if err != nil {
-		return nil, err
-	}
-
-	defer conn.Close()
-
-	cli := npool.NewMiddlewareClient(conn)
-
-	return handler(_ctx, cli)
+func withClient(ctx context.Context, handler func(context.Context, npool.MiddlewareClient) (interface{}, error)) (interface{}, error) {
+	return grpc2.WithGRPCConn(
+		ctx,
+		servicename.ServiceDomain,
+		10*time.Second,
+		func(_ctx context.Context, conn *grpc.ClientConn) (interface{}, error) {
+			return handler(_ctx, npool.NewMiddlewareClient(conn))
+		},
+		grpc2.GRPCTAG,
+	)
 }
 
-func CreateRecommend(ctx context.Context, in *npool.RecommendReq) (*npool.Recommend, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.CreateRecommend(ctx, &npool.CreateRecommendRequest{
-			Info: in,
+func CreateRecommend(ctx context.Context, req *npool.RecommendReq) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.CreateRecommend(_ctx, &npool.CreateRecommendRequest{
+			Info: req,
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Recommend), nil
+	return err
 }
 
-func GetRecommends(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.Recommend, uint32, error) {
-	total := uint32(0)
-
-	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+func GetRecommends(ctx context.Context, conds *npool.Conds, offset, limit int32) (intos []*npool.Recommend, total uint32, err error) {
+	_infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetRecommends(ctx, &npool.GetRecommendsRequest{
 			Conds:  conds,
 			Offset: offset,
@@ -61,24 +42,21 @@ func GetRecommends(ctx context.Context, conds *npool.Conds, offset, limit int32)
 		if err != nil {
 			return nil, err
 		}
-
 		total = resp.Total
-
 		return resp.Infos, nil
 	})
 	if err != nil {
 		return nil, 0, err
 	}
-	return infos.([]*npool.Recommend), total, nil
+	return _infos.([]*npool.Recommend), total, nil
 }
 
 func GetRecommendOnly(ctx context.Context, conds *npool.Conds) (*npool.Recommend, error) {
-	const limit = 2
-	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+	infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetRecommends(ctx, &npool.GetRecommendsRequest{
 			Conds:  conds,
 			Offset: 0,
-			Limit:  limit,
+			Limit:  2,
 		})
 		if err != nil {
 			return nil, err
@@ -98,7 +76,7 @@ func GetRecommendOnly(ctx context.Context, conds *npool.Conds) (*npool.Recommend
 }
 
 func ExistRecommendConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.ExistRecommendConds(ctx, &npool.ExistRecommendCondsRequest{
 			Conds: conds,
 		})
@@ -113,42 +91,29 @@ func ExistRecommendConds(ctx context.Context, conds *npool.Conds) (bool, error) 
 	return info.(bool), nil
 }
 
-func UpdateRecommend(ctx context.Context, in *npool.RecommendReq) (*npool.Recommend, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.UpdateRecommend(ctx, &npool.UpdateRecommendRequest{
-			Info: in,
+func UpdateRecommend(ctx context.Context, req *npool.RecommendReq) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.UpdateRecommend(_ctx, &npool.UpdateRecommendRequest{
+			Info: req,
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Recommend), nil
+	return err
 }
 
-func DeleteRecommend(ctx context.Context, id uint32) (*npool.Recommend, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.DeleteRecommend(ctx, &npool.DeleteRecommendRequest{
+func DeleteRecommend(ctx context.Context, id *uint32, entID *string) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.DeleteRecommend(_ctx, &npool.DeleteRecommendRequest{
 			Info: &npool.RecommendReq{
-				ID: &id,
+				ID:    id,
+				EntID: entID,
 			},
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Recommend), nil
+	return err
 }
 
 func GetRecommend(ctx context.Context, id string) (*npool.Recommend, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetRecommend(ctx, &npool.GetRecommendRequest{
 			EntID: id,
 		})
