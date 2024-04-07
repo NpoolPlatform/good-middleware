@@ -23,7 +23,8 @@ func (s *Server) DeleteTopMost(ctx context.Context, in *npool.DeleteTopMostReque
 	}
 	handler, err := topmost1.NewHandler(
 		ctx,
-		topmost1.WithID(req.ID, true),
+		topmost1.WithID(req.ID, false),
+		topmost1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
