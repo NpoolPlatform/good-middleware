@@ -32,17 +32,16 @@ func init() {
 }
 
 var ret = npool.Comment{
-	EntID:             uuid.NewString(),
-	AppID:             uuid.NewString(),
-	UserID:            uuid.NewString(),
-	AppGoodID:         uuid.NewString(),
-	GoodName:          uuid.NewString(),
-	OrderID:           uuid.NewString(),
-	Content:           uuid.NewString(),
-	ReplyToID:         uuid.NewString(),
-	GoodID:            uuid.NewString(),
-	OrderFirstComment: true,
-	Score:             decimal.RequireFromString("4.99").String(),
+	EntID:     uuid.NewString(),
+	AppID:     uuid.NewString(),
+	UserID:    uuid.NewString(),
+	AppGoodID: uuid.NewString(),
+	GoodName:  uuid.NewString(),
+	OrderID:   uuid.NewString(),
+	Content:   uuid.NewString(),
+	ReplyToID: uuid.NewString(),
+	GoodID:    uuid.NewString(),
+	Score:     decimal.RequireFromString("4.99").String(),
 }
 
 //nolint

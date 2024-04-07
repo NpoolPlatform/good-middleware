@@ -41,138 +41,30 @@ func init() {
 	}
 }
 
-var good = goodmwpb.Good{
-	EntID:                  uuid.NewString(),
-	DeviceInfoID:           uuid.NewString(),
-	DeviceType:             uuid.NewString(),
-	DeviceManufacturer:     uuid.NewString(),
-	DevicePowerConsumption: 120,
-	DeviceShipmentAt:       uint32(time.Now().Unix() - 1000),
-	DevicePosters:          []string{uuid.NewString(), uuid.NewString()},
-	CoinTypeID:             uuid.NewString(),
-	VendorLocationID:       uuid.NewString(),
-	VendorLocationCountry:  uuid.NewString(),
-	VendorLocationProvince: uuid.NewString(),
-	VendorLocationCity:     uuid.NewString(),
-	VendorLocationAddress:  uuid.NewString(),
-	VendorBrandName:        uuid.NewString(),
-	VendorBrandLogo:        uuid.NewString(),
-	GoodType:               types.GoodType_PowerRental,
-	BenefitType:            types.BenefitType_BenefitTypePlatform,
-	UnitPrice:              decimal.NewFromInt(123).String(),
-	Title:                  uuid.NewString(),
-	QuantityUnit:           "TiB",
-	QuantityUnitAmount:     "1",
-	TestOnly:               true,
-	Posters:                []string{uuid.NewString(), uuid.NewString()},
-	Labels: []types.GoodLabel{
-		types.GoodLabel_GoodLabelInnovationStarter,
-		types.GoodLabel_GoodLabelNoviceExclusive,
-	},
-	GoodTotal:            decimal.NewFromInt(1000).String(),
-	GoodLocked:           decimal.NewFromInt(0).String(),
-	GoodInService:        decimal.NewFromInt(0).String(),
-	GoodWaitStart:        decimal.NewFromInt(0).String(),
-	GoodSold:             decimal.NewFromInt(0).String(),
-	DeliveryAt:           uint32(time.Now().Unix() + 1000),
-	StartAt:              uint32(time.Now().Unix() + 1000),
-	BenefitIntervalHours: 24,
-	GoodAppReserved:      decimal.NewFromInt(0).String(),
-	UnitLockDeposit:      decimal.NewFromInt(1).String(),
-}
-
-var appgood = appgoodmwpb.Good{
-	EntID:        uuid.NewString(),
-	AppID:        uuid.NewString(),
-	GoodID:       good.EntID,
-	GoodName:     uuid.NewString(),
-	UnitPrice:    decimal.NewFromInt(123).String(),
-	PackagePrice: decimal.NewFromInt(123).String(),
-}
-
 var comment = npool.Comment{
 	EntID:     uuid.NewString(),
-	AppID:     appgood.AppID,
+	AppID:     uuid.NewString(),
 	UserID:    uuid.NewString(),
-	GoodID:    appgood.GoodID,
-	AppGoodID: appgood.EntID,
+	GoodID:    uuid.NewString(),
+	AppGoodID: uuid.NewString(),
 	OrderID:   uuid.NewString(),
 	Content:   uuid.NewString(),
 }
 
 var ret = npool.Comment{
-	EntID:     uuid.NewString(),
-	AppID:     comment.AppID,
-	UserID:    uuid.NewString(),
-	GoodID:    appgood.GoodID,
-	AppGoodID: appgood.EntID,
-	Content:   uuid.NewString(),
-	OrderID:   uuid.Nil.String(),
-	ReplyToID: comment.EntID,
-	GoodName:  appgood.GoodName,
+	EntID:             uuid.NewString(),
+	AppID:             comment.AppID,
+	UserID:            uuid.NewString(),
+	GoodID:            comment.GoodID,
+	AppGoodID:         comment.AppGoodID,
+	GoodName:          uuid.NewString(),
+	Content:           uuid.NewString(),
+	OrderID:           uuid.Nil.String(),
+	ReplyToID:         comment.EntID,
+	OrderFirstComment: false,
 }
 
 func setup(t *testing.T) func(*testing.T) {
-	info1, err := vendorbrand1.CreateBrand(context.Background(), &vendorbrandmwpb.BrandReq{
-		Name: &good.VendorBrandName,
-		Logo: &good.VendorBrandLogo,
-	})
-	assert.Nil(t, err)
-	assert.NotNil(t, info1)
-
-	vendorLocation, err := vendorlocation1.CreateLocation(context.Background(), &vendorlocationmwpb.LocationReq{
-		EntID:    &good.VendorLocationID,
-		Country:  &good.VendorLocationCountry,
-		Province: &good.VendorLocationProvince,
-		City:     &good.VendorLocationCity,
-		Address:  &good.VendorLocationAddress,
-		BrandID:  &info1.EntID,
-	})
-	assert.Nil(t, err)
-
-	device, err := devicetype1.CreateDeviceInfo(context.Background(), &devicetypemwpb.DeviceInfoReq{
-		EntID:            &good.DeviceInfoID,
-		Type:             &good.DeviceType,
-		Manufacturer:     &good.DeviceManufacturer,
-		PowerConsumption: &good.DevicePowerConsumption,
-		ShipmentAt:       &good.DeviceShipmentAt,
-		Posters:          good.DevicePosters,
-	})
-	assert.Nil(t, err)
-
-	_, err = good1.CreateGood(context.Background(), &goodmwpb.GoodReq{
-		EntID:                &good.EntID,
-		DeviceInfoID:         &good.DeviceInfoID,
-		CoinTypeID:           &good.CoinTypeID,
-		VendorLocationID:     &good.VendorLocationID,
-		UnitPrice:            &good.UnitPrice,
-		BenefitType:          &good.BenefitType,
-		GoodType:             &good.GoodType,
-		Title:                &good.Title,
-		QuantityUnit:         &good.QuantityUnit,
-		QuantityUnitAmount:   &good.QuantityUnitAmount,
-		DeliveryAt:           &good.DeliveryAt,
-		StartAt:              &good.StartAt,
-		TestOnly:             &good.TestOnly,
-		BenefitIntervalHours: &good.BenefitIntervalHours,
-		UnitLockDeposit:      &good.UnitLockDeposit,
-		Total:                &good.GoodTotal,
-		Posters:              good.Posters,
-		Labels:               good.Labels,
-	})
-	assert.Nil(t, err)
-
-	_, err = appgood1.CreateGood(context.Background(), &appgoodmwpb.GoodReq{
-		EntID:            &appgood.EntID,
-		AppID:            &appgood.AppID,
-		GoodID:           &appgood.GoodID,
-		GoodName:         &appgood.GoodName,
-		UnitPrice:        &appgood.UnitPrice,
-		PackagePrice:     &appgood.PackagePrice,
-		MinOrderDuration: &appgood.MinOrderDuration,
-		MaxOrderDuration: &appgood.MaxOrderDuration,
-	})
-	assert.Nil(t, err)
 
 	_, err = CreateComment(context.Background(), &npool.CommentReq{
 		EntID:     &comment.EntID,

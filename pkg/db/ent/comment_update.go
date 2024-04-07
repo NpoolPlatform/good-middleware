@@ -258,26 +258,6 @@ func (cu *CommentUpdate) ClearPurchasedUser() *CommentUpdate {
 	return cu
 }
 
-// SetOrderFirstComment sets the "order_first_comment" field.
-func (cu *CommentUpdate) SetOrderFirstComment(b bool) *CommentUpdate {
-	cu.mutation.SetOrderFirstComment(b)
-	return cu
-}
-
-// SetNillableOrderFirstComment sets the "order_first_comment" field if the given value is not nil.
-func (cu *CommentUpdate) SetNillableOrderFirstComment(b *bool) *CommentUpdate {
-	if b != nil {
-		cu.SetOrderFirstComment(*b)
-	}
-	return cu
-}
-
-// ClearOrderFirstComment clears the value of the "order_first_comment" field.
-func (cu *CommentUpdate) ClearOrderFirstComment() *CommentUpdate {
-	cu.mutation.ClearOrderFirstComment()
-	return cu
-}
-
 // Mutation returns the CommentMutation object of the builder.
 func (cu *CommentUpdate) Mutation() *CommentMutation {
 	return cu.mutation
@@ -529,19 +509,6 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: comment.FieldPurchasedUser,
 		})
 	}
-	if value, ok := cu.mutation.OrderFirstComment(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: comment.FieldOrderFirstComment,
-		})
-	}
-	if cu.mutation.OrderFirstCommentCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Column: comment.FieldOrderFirstComment,
-		})
-	}
 	_spec.Modifiers = cu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -789,26 +756,6 @@ func (cuo *CommentUpdateOne) SetNillablePurchasedUser(b *bool) *CommentUpdateOne
 // ClearPurchasedUser clears the value of the "purchased_user" field.
 func (cuo *CommentUpdateOne) ClearPurchasedUser() *CommentUpdateOne {
 	cuo.mutation.ClearPurchasedUser()
-	return cuo
-}
-
-// SetOrderFirstComment sets the "order_first_comment" field.
-func (cuo *CommentUpdateOne) SetOrderFirstComment(b bool) *CommentUpdateOne {
-	cuo.mutation.SetOrderFirstComment(b)
-	return cuo
-}
-
-// SetNillableOrderFirstComment sets the "order_first_comment" field if the given value is not nil.
-func (cuo *CommentUpdateOne) SetNillableOrderFirstComment(b *bool) *CommentUpdateOne {
-	if b != nil {
-		cuo.SetOrderFirstComment(*b)
-	}
-	return cuo
-}
-
-// ClearOrderFirstComment clears the value of the "order_first_comment" field.
-func (cuo *CommentUpdateOne) ClearOrderFirstComment() *CommentUpdateOne {
-	cuo.mutation.ClearOrderFirstComment()
 	return cuo
 }
 
@@ -1091,19 +1038,6 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Column: comment.FieldPurchasedUser,
-		})
-	}
-	if value, ok := cuo.mutation.OrderFirstComment(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: comment.FieldOrderFirstComment,
-		})
-	}
-	if cuo.mutation.OrderFirstCommentCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Column: comment.FieldOrderFirstComment,
 		})
 	}
 	_spec.Modifiers = cuo.modifiers

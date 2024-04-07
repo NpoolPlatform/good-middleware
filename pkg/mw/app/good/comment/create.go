@@ -11,14 +11,23 @@ import (
 	score1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/score"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
+	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
 
 type createHandler struct {
 	*Handler
-	orderFirstComment bool
-	sql               string
-	sqlScore          string
+	sql         string
+	sqlScore    string
+	updateScore bool
+}
+
+func (h *createHandler) constructScoreSql(ctx context.Context) {
+	handler, _ := score1.NewHandler(ctx)
+	h.ScoreReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
+	h.ScoreReq.CommentID = h.EntID
+	handler.Req = *h.ScoreReq
+	h.sqlScore = handler.ConstructCreateSql()
 }
 
 func (h *createHandler) constructSql() {
@@ -49,9 +58,6 @@ func (h *createHandler) constructSql() {
 	if h.PurchasedUser != nil {
 		_sql += comma + "purchased_user"
 	}
-	if h.OrderID != nil {
-		_sql += comma + "order_first_comment"
-	}
 	_sql += comma + "created_at"
 	_sql += comma + "updated_at"
 	_sql += comma + "deleted_at"
@@ -81,14 +87,6 @@ func (h *createHandler) constructSql() {
 	if h.PurchasedUser != nil {
 		_sql += fmt.Sprintf("%v%v as purchased_user", comma, *h.PurchasedUser)
 	}
-	if h.OrderID != nil {
-		_sql += fmt.Sprintf(
-			"%vif(exists (select 1 from comments where user_id = '%v' and order_id = '%v' limit 1), false, true) as order_first_comment",
-			comma,
-			*h.UserID,
-			*h.OrderID,
-		)
-	}
 	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
 	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
 	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
@@ -115,15 +113,6 @@ func (h *createHandler) createComment(ctx context.Context, tx *ent.Tx) error {
 	if err != nil || n != 1 {
 		return fmt.Errorf("fail create comment: %v", err)
 	}
-	id, err := rc.LastInsertId()
-	if err != nil {
-		return err
-	}
-	info, err := tx.Comment.Get(ctx, uint32(id))
-	if err != nil {
-		return err
-	}
-	h.orderFirstComment = info.OrderFirstComment
 	return nil
 }
 
@@ -145,7 +134,8 @@ func (h *createHandler) updateGoodComment(ctx context.Context, tx *ent.Tx) error
 	req := &extrainfocrud.Req{
 		CommentCount: &commentCount,
 	}
-	if h.orderFirstComment && h.ScoreReq.Score != nil {
+
+	if h.updateScore {
 		scoreCount := info.ScoreCount + 1
 		req.ScoreCount = &scoreCount
 		score := h.ScoreReq.Score.Add(
@@ -163,16 +153,32 @@ func (h *createHandler) updateGoodComment(ctx context.Context, tx *ent.Tx) error
 }
 
 func (h *createHandler) createScore(ctx context.Context, tx *ent.Tx) error {
-	handler, _ := score1.NewHandler(ctx)
-	handler.Req = *h.ScoreReq
-	return handler.CreateScoreWithTx(ctx, tx)
+	rc, err := tx.ExecContext(ctx, h.sqlScore)
+	if err != nil {
+		return err
+	}
+	n, err := rc.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if n == 0 {
+		return nil
+	}
+	h.updateScore = true
+	return nil
 }
 
 func (h *Handler) CreateComment(ctx context.Context) error {
 	handler := &createHandler{
 		Handler: h,
 	}
+	if h.EntID == nil {
+		h.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
+	}
 	handler.constructSql()
+	if handler.ScoreReq.Score != nil && handler.ScoreReq.Score.Cmp(decimal.NewFromInt(0)) > 0 {
+		handler.constructScoreSql(ctx)
+	}
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createComment(ctx, tx); err != nil {
 			return err

@@ -19,7 +19,7 @@ type createHandler struct {
 	sql string
 }
 
-func (h *createHandler) constructSql() {
+func (h *Handler) ConstructCreateSql() string {
 	comma := ""
 	now := uint32(time.Now().Unix())
 	_sql := "insert into scores "
@@ -63,7 +63,7 @@ func (h *createHandler) constructSql() {
 	_sql += "select 1 from scores "
 	_sql += fmt.Sprintf("where user_id = '%v' and app_good_id = '%v'", *h.UserID, *h.AppGoodID)
 	_sql += " limit 1)"
-	h.sql = _sql
+	return _sql
 }
 
 func (h *createHandler) createScore(ctx context.Context, tx *ent.Tx) error {
@@ -108,20 +108,6 @@ func (h *createHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *Handler) CreateScoreWithTx(ctx context.Context, tx *ent.Tx) error {
-	handler := &createHandler{
-		Handler: h,
-	}
-	if h.EntID == nil {
-		h.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
-	}
-	handler.constructSql()
-	if err := handler.createScore(ctx, tx); err != nil {
-		return err
-	}
-	return handler.updateGoodScore(ctx, tx)
-}
-
 func (h *Handler) CreateScore(ctx context.Context) error {
 	handler := &createHandler{
 		Handler: h,
@@ -129,7 +115,7 @@ func (h *Handler) CreateScore(ctx context.Context) error {
 	if h.EntID == nil {
 		h.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 	}
-	handler.constructSql()
+	handler.sql = handler.ConstructCreateSql()
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createScore(ctx, tx); err != nil {
 			return err

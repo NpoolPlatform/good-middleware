@@ -6,53 +6,34 @@ import (
 	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
-
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/comment"
-
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/comment"
+	"google.golang.org/grpc"
 )
 
-var timeout = 10 * time.Second
-
-type handler func(context.Context, npool.MiddlewareClient) (cruder.Any, error)
-
-func do(ctx context.Context, handler handler) (cruder.Any, error) {
-	_ctx, cancel := context.WithTimeout(ctx, timeout)
-	defer cancel()
-
-	conn, err := grpc2.GetGRPCConn(servicename.ServiceDomain, grpc2.GRPCTAG)
-	if err != nil {
-		return nil, err
-	}
-
-	defer conn.Close()
-
-	cli := npool.NewMiddlewareClient(conn)
-
-	return handler(_ctx, cli)
+func withClient(ctx context.Context, handler func(context.Context, npool.MiddlewareClient) (interface{}, error)) (interface{}, error) {
+	return grpc2.WithGRPCConn(
+		ctx,
+		servicename.ServiceDomain,
+		10*time.Second,
+		func(_ctx context.Context, conn *grpc.ClientConn) (interface{}, error) {
+			return handler(_ctx, npool.NewMiddlewareClient(conn))
+		},
+		grpc2.GRPCTAG,
+	)
 }
 
-func CreateComment(ctx context.Context, in *npool.CommentReq) (*npool.Comment, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.CreateComment(ctx, &npool.CreateCommentRequest{
-			Info: in,
+func CreateComment(ctx context.Context, req *npool.CommentReq) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.CreateComment(_ctx, &npool.CreateCommentRequest{
+			Info: req,
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Comment), nil
+	return err
 }
 
-func GetComments(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.Comment, uint32, error) {
-	total := uint32(0)
-
-	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+func GetComments(ctx context.Context, conds *npool.Conds, offset, limit int32) (intos []*npool.Comment, total uint32, err error) {
+	_infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetComments(ctx, &npool.GetCommentsRequest{
 			Conds:  conds,
 			Offset: offset,
@@ -61,24 +42,21 @@ func GetComments(ctx context.Context, conds *npool.Conds, offset, limit int32) (
 		if err != nil {
 			return nil, err
 		}
-
 		total = resp.Total
-
 		return resp.Infos, nil
 	})
 	if err != nil {
 		return nil, 0, err
 	}
-	return infos.([]*npool.Comment), total, nil
+	return _infos.([]*npool.Comment), total, nil
 }
 
 func GetCommentOnly(ctx context.Context, conds *npool.Conds) (*npool.Comment, error) {
-	const limit = 2
-	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+	infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetComments(ctx, &npool.GetCommentsRequest{
 			Conds:  conds,
 			Offset: 0,
-			Limit:  limit,
+			Limit:  2,
 		})
 		if err != nil {
 			return nil, err
@@ -98,7 +76,7 @@ func GetCommentOnly(ctx context.Context, conds *npool.Conds) (*npool.Comment, er
 }
 
 func ExistCommentConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.ExistCommentConds(ctx, &npool.ExistCommentCondsRequest{
 			Conds: conds,
 		})
@@ -113,42 +91,29 @@ func ExistCommentConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 	return info.(bool), nil
 }
 
-func UpdateComment(ctx context.Context, in *npool.CommentReq) (*npool.Comment, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.UpdateComment(ctx, &npool.UpdateCommentRequest{
-			Info: in,
+func UpdateComment(ctx context.Context, req *npool.CommentReq) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.UpdateComment(_ctx, &npool.UpdateCommentRequest{
+			Info: req,
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Comment), nil
+	return err
 }
 
-func DeleteComment(ctx context.Context, id uint32) (*npool.Comment, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.DeleteComment(ctx, &npool.DeleteCommentRequest{
+func DeleteComment(ctx context.Context, id *uint32, entID *string) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.DeleteComment(_ctx, &npool.DeleteCommentRequest{
 			Info: &npool.CommentReq{
-				ID: &id,
+				ID:    id,
+				EntID: entID,
 			},
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Comment), nil
+	return err
 }
 
 func GetComment(ctx context.Context, id string) (*npool.Comment, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetComment(ctx, &npool.GetCommentRequest{
 			EntID: id,
 		})

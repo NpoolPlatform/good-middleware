@@ -163,13 +163,6 @@ func PurchasedUser(v bool) predicate.Comment {
 	})
 }
 
-// OrderFirstComment applies equality check predicate on the "order_first_comment" field. It's identical to OrderFirstCommentEQ.
-func OrderFirstComment(v bool) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldOrderFirstComment), v))
-	})
-}
-
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
@@ -932,34 +925,6 @@ func PurchasedUserIsNil() predicate.Comment {
 func PurchasedUserNotNil() predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldPurchasedUser)))
-	})
-}
-
-// OrderFirstCommentEQ applies the EQ predicate on the "order_first_comment" field.
-func OrderFirstCommentEQ(v bool) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldOrderFirstComment), v))
-	})
-}
-
-// OrderFirstCommentNEQ applies the NEQ predicate on the "order_first_comment" field.
-func OrderFirstCommentNEQ(v bool) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldOrderFirstComment), v))
-	})
-}
-
-// OrderFirstCommentIsNil applies the IsNil predicate on the "order_first_comment" field.
-func OrderFirstCommentIsNil() predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldOrderFirstComment)))
-	})
-}
-
-// OrderFirstCommentNotNil applies the NotNil predicate on the "order_first_comment" field.
-func OrderFirstCommentNotNil() predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldOrderFirstComment)))
 	})
 }
 

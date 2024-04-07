@@ -69,7 +69,6 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(entcomment.FieldAnonymous),
 			t.C(entcomment.FieldPurchasedUser),
 			t.C(entcomment.FieldTrialUser),
-			t.C(entcomment.FieldOrderFirstComment),
 			t.C(entcomment.FieldCreatedAt),
 			t.C(entcomment.FieldUpdatedAt),
 		)

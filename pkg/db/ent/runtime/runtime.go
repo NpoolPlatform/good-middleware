@@ -1041,10 +1041,6 @@ func init() {
 	commentDescPurchasedUser := commentFields[7].Descriptor()
 	// comment.DefaultPurchasedUser holds the default value on creation for the purchased_user field.
 	comment.DefaultPurchasedUser = commentDescPurchasedUser.Default.(bool)
-	// commentDescOrderFirstComment is the schema descriptor for order_first_comment field.
-	commentDescOrderFirstComment := commentFields[8].Descriptor()
-	// comment.DefaultOrderFirstComment holds the default value on creation for the order_first_comment field.
-	comment.DefaultOrderFirstComment = commentDescOrderFirstComment.Default.(bool)
 	delegatedstakingMixin := schema.DelegatedStaking{}.Mixin()
 	delegatedstaking.Policy = privacy.NewPolicies(delegatedstakingMixin[0], schema.DelegatedStaking{})
 	delegatedstaking.Hooks[0] = func(next ent.Mutator) ent.Mutator {
