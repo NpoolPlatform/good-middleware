@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
+	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	appgoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	apppowerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental"
@@ -25,6 +26,7 @@ type Handler struct {
 	apppowerrentalcrud.Req
 	AppGoodBaseReq      *appgoodbasecrud.Req
 	AppGoodStockReq     *appgoodstockcrud.Req
+	ExtraInfoReq        *extrainfocrud.Req
 	AppPowerRentalConds *apppowerrentalcrud.Conds
 	PowerRentalConds    *powerrentalcrud.Conds
 	AppGoodBaseConds    *appgoodbasecrud.Conds
@@ -38,6 +40,7 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 	handler := &Handler{
 		AppGoodBaseReq:      &appgoodbasecrud.Req{},
 		AppGoodStockReq:     &appgoodstockcrud.Req{},
+		ExtraInfoReq:        &extrainfocrud.Req{},
 		AppPowerRentalConds: &apppowerrentalcrud.Conds{},
 		PowerRentalConds:    &powerrentalcrud.Conds{},
 		AppGoodBaseConds:    &appgoodbasecrud.Conds{},
@@ -141,6 +144,7 @@ func WithAppGoodID(s *string, must bool) func(context.Context, *Handler) error {
 		h.AppGoodID = &id
 		h.AppGoodBaseReq.EntID = &id
 		h.AppGoodStockReq.AppGoodID = &id
+		h.ExtraInfoReq.AppGoodID = &id
 		return nil
 	}
 }

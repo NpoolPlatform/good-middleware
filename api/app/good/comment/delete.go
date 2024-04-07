@@ -23,7 +23,8 @@ func (s *Server) DeleteComment(ctx context.Context, in *npool.DeleteCommentReque
 	}
 	handler, err := comment1.NewHandler(
 		ctx,
-		comment1.WithID(req.ID, true),
+		comment1.WithID(req.ID, false),
+		comment1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

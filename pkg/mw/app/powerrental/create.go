@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
@@ -215,6 +216,13 @@ func (h *createHandler) createAppGoodBase(ctx context.Context, tx *ent.Tx) error
 	return h.execSql(ctx, tx, h.sqlAppGoodBase)
 }
 
+func (h *createHandler) createExtraInfo(ctx context.Context, tx *ent.Tx) error {
+	if _, err := extrainfocrud.CreateSet(tx.ExtraInfo.Create(), h.ExtraInfoReq).Save(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (h *createHandler) validateFixedDurationUnitPrice() error {
 	if h.MinOrderDuration != h.MaxOrderDuration {
 		return fmt.Errorf("invalid order duration")
@@ -290,6 +298,9 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createAppGoodBase(_ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.createExtraInfo(_ctx, tx); err != nil {
 			return err
 		}
 		if err := handler.createAppStock(_ctx, tx); err != nil {
