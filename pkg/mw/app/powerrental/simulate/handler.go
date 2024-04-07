@@ -9,9 +9,9 @@ import (
 	apppowerrental1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/powerrental"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental/simulate"
-	"github.com/shopspring/decimal"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // Here we actually only have simulate order for PowerRental good

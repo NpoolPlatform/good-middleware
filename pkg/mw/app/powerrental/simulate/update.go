@@ -8,6 +8,8 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+
+	"github.com/shopspring/decimal"
 )
 
 type updateHandler struct {
@@ -69,8 +71,8 @@ func (h *updateHandler) validateOrderUnits() error {
 	if h.OrderUnits == nil {
 		return nil
 	}
-	if h.OrderUnits.Cmp(h.appPowerRental.MinOrderAmount()) < 0 ||
-		h.OrderUnits.Cmp(h.appPowerRental.MaxOrderAmount()) > 0 {
+	if (h.appPowerRental.MinOrderAmount().Cmp(decimal.NewFromInt(0)) > 0 && h.OrderUnits.Cmp(h.appPowerRental.MinOrderAmount()) < 0) ||
+		(h.appPowerRental.MaxOrderAmount().Cmp(decimal.NewFromInt(0)) > 0 && h.OrderUnits.Cmp(h.appPowerRental.MaxOrderAmount()) > 0) {
 		return fmt.Errorf("invalid orderunits")
 	}
 	return nil
@@ -80,8 +82,8 @@ func (h *updateHandler) validateOrderDuration() error {
 	if h.OrderDuration == nil {
 		return nil
 	}
-	if *h.OrderDuration < h.appPowerRental.MinOrderDuration() ||
-		*h.OrderDuration > h.appPowerRental.MaxOrderDuration() {
+	if (h.appPowerRental.MinOrderDuration() > 0 && *h.OrderDuration < h.appPowerRental.MinOrderDuration()) ||
+		(h.appPowerRental.MaxOrderDuration() > 0 && *h.OrderDuration > h.appPowerRental.MaxOrderDuration()) {
 		return fmt.Errorf("invalid orderduration")
 	}
 	return nil

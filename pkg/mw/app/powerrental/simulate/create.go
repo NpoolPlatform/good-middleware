@@ -7,6 +7,8 @@ import (
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+
+	"github.com/shopspring/decimal"
 )
 
 type createHandler struct {
@@ -66,16 +68,16 @@ func (h *createHandler) createSimulate(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *createHandler) validateOrderUnits() error {
-	if h.OrderUnits.Cmp(h.appPowerRental.MinOrderAmount()) < 0 ||
-		h.OrderUnits.Cmp(h.appPowerRental.MaxOrderAmount()) > 0 {
+	if (h.appPowerRental.MinOrderAmount().Cmp(decimal.NewFromInt(0)) > 0 && h.OrderUnits.Cmp(h.appPowerRental.MinOrderAmount()) < 0) ||
+		(h.appPowerRental.MaxOrderAmount().Cmp(decimal.NewFromInt(0)) > 0 && h.OrderUnits.Cmp(h.appPowerRental.MaxOrderAmount()) > 0) {
 		return fmt.Errorf("invalid orderunits")
 	}
 	return nil
 }
 
 func (h *createHandler) validateOrderDuration() error {
-	if *h.OrderDuration < h.appPowerRental.MinOrderDuration() ||
-		*h.OrderDuration > h.appPowerRental.MaxOrderDuration() {
+	if (h.appPowerRental.MinOrderDuration() > 0 && *h.OrderDuration < h.appPowerRental.MinOrderDuration()) ||
+		(h.appPowerRental.MaxOrderDuration() > 0 && *h.OrderDuration > h.appPowerRental.MaxOrderDuration()) {
 		return fmt.Errorf("invalid orderduration")
 	}
 	return nil
