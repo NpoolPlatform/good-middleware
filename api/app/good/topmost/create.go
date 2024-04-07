@@ -29,6 +29,7 @@ func (s *Server) CreateTopMost(ctx context.Context, in *npool.CreateTopMostReque
 		topmost1.WithTopMostType(req.TopMostType, true),
 		topmost1.WithTitle(req.Title, true),
 		topmost1.WithMessage(req.Message, true),
+		topmost1.WithTargetUrl(req.TargetUrl, false),
 		topmost1.WithStartAt(req.StartAt, true),
 		topmost1.WithEndAt(req.EndAt, true),
 	)

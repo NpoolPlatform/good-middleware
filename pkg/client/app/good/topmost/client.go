@@ -6,51 +6,34 @@ import (
 	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
-
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost"
-
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost"
+	"google.golang.org/grpc"
 )
 
-var timeout = 10 * time.Second
-
-type handler func(context.Context, npool.MiddlewareClient) (cruder.Any, error)
-
-func do(ctx context.Context, handler handler) (cruder.Any, error) {
-	_ctx, cancel := context.WithTimeout(ctx, timeout)
-	defer cancel()
-
-	conn, err := grpc2.GetGRPCConn(servicename.ServiceDomain, grpc2.GRPCTAG)
-	if err != nil {
-		return nil, err
-	}
-
-	defer conn.Close()
-
-	cli := npool.NewMiddlewareClient(conn)
-
-	return handler(_ctx, cli)
+func withClient(ctx context.Context, handler func(context.Context, npool.MiddlewareClient) (interface{}, error)) (interface{}, error) {
+	return grpc2.WithGRPCConn(
+		ctx,
+		servicename.ServiceDomain,
+		10*time.Second,
+		func(_ctx context.Context, conn *grpc.ClientConn) (interface{}, error) {
+			return handler(_ctx, npool.NewMiddlewareClient(conn))
+		},
+		grpc2.GRPCTAG,
+	)
 }
 
-func CreateTopMost(ctx context.Context, in *npool.TopMostReq) (*npool.TopMost, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.CreateTopMost(ctx, &npool.CreateTopMostRequest{
-			Info: in,
+func CreateTopMost(ctx context.Context, req *npool.TopMostReq) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.CreateTopMost(_ctx, &npool.CreateTopMostRequest{
+			Info: req,
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.TopMost), nil
+	return err
 }
 
 func GetTopMost(ctx context.Context, id string) (*npool.TopMost, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetTopMost(ctx, &npool.GetTopMostRequest{
 			EntID: id,
 		})
@@ -65,10 +48,8 @@ func GetTopMost(ctx context.Context, id string) (*npool.TopMost, error) {
 	return info.(*npool.TopMost), nil
 }
 
-func GetTopMosts(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.TopMost, uint32, error) {
-	total := uint32(0)
-
-	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+func GetTopMosts(ctx context.Context, conds *npool.Conds, offset, limit int32) (infos []*npool.TopMost, total uint32, err error) {
+	_infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetTopMosts(ctx, &npool.GetTopMostsRequest{
 			Conds:  conds,
 			Offset: offset,
@@ -77,24 +58,21 @@ func GetTopMosts(ctx context.Context, conds *npool.Conds, offset, limit int32) (
 		if err != nil {
 			return nil, err
 		}
-
 		total = resp.Total
-
 		return resp.Infos, nil
 	})
 	if err != nil {
 		return nil, 0, err
 	}
-	return infos.([]*npool.TopMost), total, nil
+	return _infos.([]*npool.TopMost), total, nil
 }
 
 func GetTopMostOnly(ctx context.Context, conds *npool.Conds) (*npool.TopMost, error) {
-	const limit = 2
-	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+	infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetTopMosts(ctx, &npool.GetTopMostsRequest{
 			Conds:  conds,
 			Offset: 0,
-			Limit:  limit,
+			Limit:  2,
 		})
 		if err != nil {
 			return nil, err
@@ -113,36 +91,23 @@ func GetTopMostOnly(ctx context.Context, conds *npool.Conds) (*npool.TopMost, er
 	return infos.([]*npool.TopMost)[0], nil
 }
 
-func DeleteTopMost(ctx context.Context, id uint32) (*npool.TopMost, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.DeleteTopMost(ctx, &npool.DeleteTopMostRequest{
+func DeleteTopMost(ctx context.Context, id *uint32, entID *string) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.DeleteTopMost(_ctx, &npool.DeleteTopMostRequest{
 			Info: &npool.TopMostReq{
-				ID: &id,
+				ID:    id,
+				EntID: entID,
 			},
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.TopMost), nil
+	return err
 }
 
-func UpdateTopMost(ctx context.Context, in *npool.TopMostReq) (*npool.TopMost, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.UpdateTopMost(ctx, &npool.UpdateTopMostRequest{
-			Info: in,
+func UpdateTopMost(ctx context.Context, req *npool.TopMostReq) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.UpdateTopMost(_ctx, &npool.UpdateTopMostRequest{
+			Info: req,
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.TopMost), nil
+	return err
 }

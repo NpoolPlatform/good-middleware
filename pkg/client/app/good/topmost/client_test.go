@@ -37,55 +37,54 @@ func init() {
 }
 
 var ret = &npool.TopMost{
-	EntID:                  uuid.NewString(),
-	AppID:                  uuid.NewString(),
-	TopMostType:            types.GoodTopMostType_TopMostNoviceExclusive,
-	TopMostTypeStr:         types.GoodTopMostType_TopMostNoviceExclusive.String(),
-	Title:                  uuid.NewString(),
-	Message:                uuid.NewString(),
-	Posters:                []string{uuid.NewString(), uuid.NewString()},
-	StartAt:                uint32(time.Now().Unix() + 1000),
-	EndAt:                  uint32(time.Now().Unix() + 6000),
-	ThresholdCredits:       "0",
-	RegisterElapsedSeconds: 3000,
-	ThresholdPurchases:     3000,
-	ThresholdPaymentAmount: "3000",
-	KycMust:                true,
-}
-
-var req = &npool.TopMostReq{
-	EntID:                  &ret.EntID,
-	AppID:                  &ret.AppID,
-	TopMostType:            &ret.TopMostType,
-	Title:                  &ret.Title,
-	Message:                &ret.Message,
-	Posters:                ret.Posters,
-	StartAt:                &ret.StartAt,
-	EndAt:                  &ret.EndAt,
-	ThresholdCredits:       &ret.ThresholdCredits,
-	RegisterElapsedSeconds: &ret.RegisterElapsedSeconds,
-	ThresholdPurchases:     &ret.ThresholdPurchases,
-	ThresholdPaymentAmount: &ret.ThresholdPaymentAmount,
-	KycMust:                &ret.KycMust,
+	EntID:          uuid.NewString(),
+	AppID:          uuid.NewString(),
+	TopMostType:    types.GoodTopMostType_TopMostNoviceExclusive,
+	TopMostTypeStr: types.GoodTopMostType_TopMostNoviceExclusive.String(),
+	Title:          uuid.NewString(),
+	Message:        uuid.NewString(),
+	StartAt:        uint32(time.Now().Unix() + 1000),
+	EndAt:          uint32(time.Now().Unix() + 6000),
 }
 
 func createTopMost(t *testing.T) {
-	info, err := CreateTopMost(context.Background(), req)
+	err := CreateTopMost(context.Background(), &npool.TopMostReq{
+		EntID:       &ret.EntID,
+		AppID:       &ret.AppID,
+		TopMostType: &ret.TopMostType,
+		Title:       &ret.Title,
+		Message:     &ret.Message,
+		StartAt:     &ret.StartAt,
+		EndAt:       &ret.EndAt,
+	})
 	if assert.Nil(t, err) {
-		ret.PostersStr = info.PostersStr
-		ret.CreatedAt = info.CreatedAt
-		ret.UpdatedAt = info.UpdatedAt
-		ret.ID = info.ID
-		assert.Equal(t, ret, info)
+		info, err := GetTopMost(context.Background(), ret.EntID)
+		if assert.Nil(t, err) {
+			ret.CreatedAt = info.CreatedAt
+			ret.UpdatedAt = info.UpdatedAt
+			ret.ID = info.ID
+			assert.Equal(t, ret, info)
+		}
 	}
 }
 
 func updateTopMost(t *testing.T) {
-	req.ID = &ret.ID
-	info, err := UpdateTopMost(context.Background(), req)
+	err := UpdateTopMost(context.Background(), &npool.TopMostReq{
+		ID:          &ret.ID,
+		EntID:       &ret.EntID,
+		AppID:       &ret.AppID,
+		TopMostType: &ret.TopMostType,
+		Title:       &ret.Title,
+		Message:     &ret.Message,
+		StartAt:     &ret.StartAt,
+		EndAt:       &ret.EndAt,
+	})
 	if assert.Nil(t, err) {
-		ret.UpdatedAt = info.UpdatedAt
-		assert.Equal(t, ret, info)
+		info, err := GetTopMost(context.Background(), ret.EntID)
+		if assert.Nil(t, err) {
+			ret.UpdatedAt = info.UpdatedAt
+			assert.Equal(t, ret, info)
+		}
 	}
 }
 
@@ -125,12 +124,10 @@ func getTopMostOnly(t *testing.T) {
 }
 
 func deleteTopMost(t *testing.T) {
-	info, err := DeleteTopMost(context.Background(), ret.ID)
-	if assert.Nil(t, err) {
-		assert.Equal(t, ret, info)
-	}
+	err := DeleteTopMost(context.Background(), &ret.ID, &ret.EntID)
+	assert.Nil(t, err)
 
-	info, err = GetTopMost(context.Background(), ret.EntID)
+	info, err := GetTopMost(context.Background(), ret.EntID)
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }
