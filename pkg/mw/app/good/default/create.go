@@ -48,8 +48,9 @@ func (h *createHandler) constructSql() {
 	_sql += fmt.Sprintf("where adg.app_good_id = '%v' and adg.coin_type_id='%v'", *h.AppGoodID, *h.CoinTypeID)
 	_sql += " limit 1) and exists ("
 	_sql += "select 1 from app_good_bases as agb "
-	_sql += "left join good_bases as gb on agb.good_id = gb.ent_id "
-	_sql += fmt.Sprintf("left join good_coins as gc on agb.good_id = gc.good_id and gc.coin_type_id = '%v'", *h.CoinTypeID)
+	_sql += "join good_bases as gb on agb.good_id = gb.ent_id "
+	_sql += "join good_coins as gc on agb.good_id = gc.good_id "
+	_sql += fmt.Sprintf("where gc.coin_type_id = '%v'", *h.CoinTypeID)
 	_sql += " limit 1)"
 
 	h.sql = _sql

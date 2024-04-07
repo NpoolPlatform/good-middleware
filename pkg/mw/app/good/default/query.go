@@ -12,6 +12,7 @@ import (
 	entappdefaultgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/default"
 )
 
@@ -87,6 +88,7 @@ func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
 		AppendSelect(
 			sql.As(t2.C(entgoodbase.FieldEntID), "good_id"),
 			sql.As(t2.C(entgoodbase.FieldName), "good_name"),
+			t2.C(entgoodbase.FieldGoodType),
 		)
 }
 
@@ -107,6 +109,12 @@ func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
 }
 
+func (h *queryHandler) formalize() {
+	for _, info := range h.infos {
+		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
+	}
+}
+
 func (h *Handler) GetDefault(ctx context.Context) (*npool.Default, error) {
 	handler := &queryHandler{
 		Handler: h,
@@ -123,11 +131,13 @@ func (h *Handler) GetDefault(ctx context.Context) (*npool.Default, error) {
 		return nil, err
 	}
 	if len(handler.infos) == 0 {
-		return nil, fmt.Errorf("invalid appdefaultgood")
+		return nil, nil
 	}
 	if len(handler.infos) > 1 {
 		return nil, fmt.Errorf("too many records")
 	}
+
+	handler.formalize()
 
 	return handler.infos[0], nil
 }
@@ -165,6 +175,8 @@ func (h *Handler) GetDefaults(ctx context.Context) ([]*npool.Default, uint32, er
 	if err != nil {
 		return nil, 0, err
 	}
+
+	handler.formalize()
 
 	return handler.infos, handler.total, nil
 }

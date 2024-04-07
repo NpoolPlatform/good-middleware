@@ -23,7 +23,8 @@ func (s *Server) DeleteDefault(ctx context.Context, in *npool.DeleteDefaultReque
 	}
 	handler, err := appdefaultgood1.NewHandler(
 		ctx,
-		appdefaultgood1.WithID(req.ID, true),
+		appdefaultgood1.WithID(req.ID, false),
+		appdefaultgood1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

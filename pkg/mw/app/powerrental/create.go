@@ -95,15 +95,9 @@ func (h *createHandler) constructAppPowerRentalSql() {
 	if h.EnableSetCommission != nil {
 		_sql += comma + "enable_set_commission"
 	}
-	if h.MinOrderAmount != nil {
-		_sql += comma + "min_order_amount"
-	}
-	if h.MaxOrderAmount != nil {
-		_sql += comma + "max_order_amount"
-	}
-	if h.MaxUserAmount != nil {
-		_sql += comma + "max_user_amount"
-	}
+	_sql += comma + "min_order_amount"
+	_sql += comma + "max_order_amount"
+	_sql += comma + "max_user_amount"
 	if h.MinOrderDuration != nil {
 		_sql += comma + "min_order_duration"
 	}
@@ -149,13 +143,19 @@ func (h *createHandler) constructAppPowerRentalSql() {
 		_sql += fmt.Sprintf("%v%v as enable_set_commission", comma, *h.EnableSetCommission)
 	}
 	if h.MinOrderAmount != nil {
-		_sql += fmt.Sprintf("%v%v as min_order_amount", comma, *h.MinOrderAmount)
+		_sql += fmt.Sprintf("%v'%v' as min_order_amount", comma, *h.MinOrderAmount)
+	} else {
+		_sql += fmt.Sprintf("%v'0' as min_order_amount", comma)
 	}
 	if h.MaxOrderAmount != nil {
-		_sql += fmt.Sprintf("%v%v as max_order_amount", comma, *h.MaxOrderAmount)
+		_sql += fmt.Sprintf("%v'%v' as max_order_amount", comma, *h.MaxOrderAmount)
+	} else {
+		_sql += fmt.Sprintf("%v'0' as max_order_amount", comma)
 	}
 	if h.MaxUserAmount != nil {
-		_sql += fmt.Sprintf("%v%v as max_user_amount", comma, *h.MaxUserAmount)
+		_sql += fmt.Sprintf("%v'%v' as max_user_amount", comma, *h.MaxUserAmount)
+	} else {
+		_sql += fmt.Sprintf("%v'0' as max_user_amount", comma)
 	}
 	if h.MinOrderDuration != nil {
 		_sql += fmt.Sprintf("%v%v as min_order_duration", comma, *h.MinOrderDuration)
@@ -243,6 +243,9 @@ func (h *createHandler) formalizeEntID() {
 	if h.AppGoodBaseReq.EntID == nil {
 		h.AppGoodBaseReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 		h.AppGoodStockReq.AppGoodID = h.AppGoodBaseReq.EntID
+	}
+	if h.EntID == nil {
+		h.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 	}
 }
 

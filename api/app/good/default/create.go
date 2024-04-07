@@ -26,6 +26,7 @@ func (s *Server) CreateDefault(ctx context.Context, in *npool.CreateDefaultReque
 		ctx,
 		appdefaultgood1.WithEntID(req.EntID, false),
 		appdefaultgood1.WithAppGoodID(req.AppGoodID, true),
+		appdefaultgood1.WithCoinTypeID(req.CoinTypeID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

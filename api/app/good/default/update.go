@@ -24,7 +24,8 @@ func (s *Server) UpdateDefault(ctx context.Context, in *npool.UpdateDefaultReque
 	}
 	handler, err := appdefaultgood1.NewHandler(
 		ctx,
-		appdefaultgood1.WithID(req.ID, true),
+		appdefaultgood1.WithID(req.ID, false),
+		appdefaultgood1.WithEntID(req.EntID, false),
 		appdefaultgood1.WithAppGoodID(req.AppGoodID, false),
 	)
 	if err != nil {

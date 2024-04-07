@@ -23,7 +23,8 @@ func (s *Server) DeleteGoodCoin(ctx context.Context, in *npool.DeleteGoodCoinReq
 	}
 	handler, err := coin1.NewHandler(
 		ctx,
-		coin1.WithID(req.ID, true),
+		coin1.WithID(req.ID, false),
+		coin1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
