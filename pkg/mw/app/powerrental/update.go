@@ -38,8 +38,8 @@ func (h *updateHandler) constructAppGoodBaseSql(ctx context.Context) error {
 		return err
 	}
 	h.sqlAppGoodBase, err = handler.ConstructUpdateSql()
-	if err == cruder.ErrUpdateNothing {
-		return nil
+	if err != cruder.ErrUpdateNothing {
+		return err
 	}
 	return nil
 }
@@ -120,6 +120,9 @@ func (h *updateHandler) constructAppPowerRentalSql() error {
 }
 
 func (h *updateHandler) execSql(ctx context.Context, tx *ent.Tx, sql string) error {
+	if sql == "" {
+		return nil
+	}
 	rc, err := tx.ExecContext(ctx, sql)
 	if err != nil {
 		return err
@@ -193,8 +196,15 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 	if h.EntID == nil {
 		h.EntID = &handler._ent.appPowerRental.EntID
 	}
+	if h.AppGoodBaseReq.GoodID == nil {
+		h.AppGoodBaseReq.GoodID = &handler._ent.appGoodBase.GoodID
+	}
 	if h.AppGoodID == nil {
 		h.AppGoodID = &handler._ent.appPowerRental.AppGoodID
+		h.AppGoodBaseReq.EntID = h.AppGoodID
+	}
+	if h.AppGoodBaseReq.AppID == nil {
+		h.AppGoodBaseReq.AppID = &handler._ent.appGoodBase.AppID
 	}
 
 	if err := handler.validateUnitPrice(ctx); err != nil {

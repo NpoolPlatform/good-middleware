@@ -662,6 +662,7 @@ func (h *queryHandler) formalize() {
 		info.LastRewardAmount = func() string { amount, _ := decimal.NewFromString(info.LastRewardAmount); return amount.String() }()
 		info.LastUnitRewardAmount = func() string { amount, _ := decimal.NewFromString(info.LastUnitRewardAmount); return amount.String() }()
 		info.TotalRewardAmount = func() string { amount, _ := decimal.NewFromString(info.TotalRewardAmount); return amount.String() }()
+		info.Score = func() string { amount, _ := decimal.NewFromString(info.Score); return amount.String() }()
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.CancelMode = types.CancelMode(types.CancelMode_value[info.CancelModeStr])
 		info.SaleMode = types.GoodSaleMode(types.GoodSaleMode_value[info.SaleModeStr])

@@ -213,6 +213,12 @@ func WithBanner(s *string, must bool) func(context.Context, *Handler) error {
 
 func WithServiceStartAt(u *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if u == nil {
+			if must {
+				return fmt.Errorf("invalid servicestartat")
+			}
+			return nil
+		}
 		h.ServiceStartAt = u
 		return nil
 	}

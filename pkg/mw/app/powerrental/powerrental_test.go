@@ -160,6 +160,8 @@ var (
 		LastRewardAmount:     decimal.NewFromInt(0).String(),
 		LastUnitRewardAmount: decimal.NewFromInt(0).String(),
 		TotalRewardAmount:    decimal.NewFromInt(0).String(),
+
+		Score: decimal.NewFromInt(0).String(),
 	}
 )
 

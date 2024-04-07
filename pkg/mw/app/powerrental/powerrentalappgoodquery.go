@@ -197,6 +197,10 @@ func (h *powerRentalAppGoodQueryHandler) _getAppPowerRentalAppGood(ctx context.C
 		return err
 	}
 
+	if h._ent.appGoodBase == nil {
+		return fmt.Errorf("invalid appgoodbase")
+	}
+
 	h.AppGoodBaseReq.GoodID = &h._ent.appGoodBase.GoodID
 	return h._getPowerRentalGood(ctx, must)
 }
