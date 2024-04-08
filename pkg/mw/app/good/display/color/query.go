@@ -12,6 +12,7 @@ import (
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entappgooddisplaycolor "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplaycolor"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/display/color"
 )
 
@@ -58,12 +59,12 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(entappgooddisplaycolor.FieldID),
 		).
 		AppendSelect(
-			sql.As(t.C(entappgooddisplaycolor.FieldEntID), "ent_id"),
-			sql.As(t.C(entappgooddisplaycolor.FieldAppGoodID), "app_good_id"),
-			sql.As(t.C(entappgooddisplaycolor.FieldColor), "color"),
-			sql.As(t.C(entappgooddisplaycolor.FieldIndex), "index"),
-			sql.As(t.C(entappgooddisplaycolor.FieldCreatedAt), "created_at"),
-			sql.As(t.C(entappgooddisplaycolor.FieldUpdatedAt), "updated_at"),
+			t.C(entappgooddisplaycolor.FieldEntID),
+			t.C(entappgooddisplaycolor.FieldAppGoodID),
+			t.C(entappgooddisplaycolor.FieldColor),
+			t.C(entappgooddisplaycolor.FieldIndex),
+			t.C(entappgooddisplaycolor.FieldCreatedAt),
+			t.C(entappgooddisplaycolor.FieldUpdatedAt),
 		)
 }
 
@@ -75,7 +76,7 @@ func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
 			t1.C(entappgoodbase.FieldEntID),
 		).
 		AppendSelect(
-			sql.As(t1.C(entappgoodbase.FieldAppID), "app_id"),
+			t1.C(entappgoodbase.FieldAppID),
 			sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
 		)
 
@@ -88,6 +89,7 @@ func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
 		AppendSelect(
 			sql.As(t2.C(entgoodbase.FieldEntID), "good_id"),
 			sql.As(t2.C(entgoodbase.FieldName), "good_name"),
+			t2.C(entgoodbase.FieldGoodType),
 		)
 }
 
@@ -106,6 +108,12 @@ func (h *queryHandler) queryJoin() {
 
 func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
+}
+
+func (h *queryHandler) formalize() {
+	for _, info := range h.infos {
+		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
+	}
 }
 
 func (h *Handler) GetDisplayColor(ctx context.Context) (*npool.DisplayColor, error) {
@@ -129,6 +137,8 @@ func (h *Handler) GetDisplayColor(ctx context.Context) (*npool.DisplayColor, err
 	if len(handler.infos) > 1 {
 		return nil, fmt.Errorf("too many records")
 	}
+
+	handler.formalize()
 
 	return handler.infos[0], nil
 }
@@ -166,6 +176,8 @@ func (h *Handler) GetDisplayColors(ctx context.Context) ([]*npool.DisplayColor, 
 	if err != nil {
 		return nil, 0, err
 	}
+
+	handler.formalize()
 
 	return handler.infos, handler.total, nil
 }
