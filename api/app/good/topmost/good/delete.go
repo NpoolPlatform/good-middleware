@@ -23,7 +23,8 @@ func (s *Server) DeleteTopMostGood(ctx context.Context, in *npool.DeleteTopMostG
 	}
 	handler, err := topmostgood1.NewHandler(
 		ctx,
-		topmostgood1.WithID(req.ID, true),
+		topmostgood1.WithID(req.ID, false),
+		topmostgood1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
