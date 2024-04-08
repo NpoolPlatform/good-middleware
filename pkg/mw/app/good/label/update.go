@@ -16,7 +16,7 @@ type updateHandler struct {
 	appGoodID string
 }
 
-func (h *updateHandler) constructSql() error {
+func (h *updateHandler) constructSQL() error {
 	set := "set "
 	now := uint32(time.Now().Unix())
 
@@ -79,7 +79,9 @@ func (h *Handler) UpdateLabel(ctx context.Context) error {
 	}
 
 	handler.appGoodID = info.AppGoodID
-	handler.constructSql()
+	if err := handler.constructSQL(); err != nil {
+		return err
+	}
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		return handler.updateLabel(_ctx, tx)

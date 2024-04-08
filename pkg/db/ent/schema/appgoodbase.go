@@ -21,7 +21,6 @@ func (AppGoodBase) Mixin() []ent.Mixin {
 	}
 }
 
-//nolint:funlen
 func (AppGoodBase) Fields() []ent.Field {
 	return []ent.Field{
 		field.

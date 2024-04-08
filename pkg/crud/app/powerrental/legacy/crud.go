@@ -18,7 +18,6 @@ type Req struct {
 	DeletedAt         *uint32
 }
 
-//nolint:gocyclo,funlen
 func CreateSet(c *ent.AppLegacyPowerRentalCreate, req *Req) *ent.AppLegacyPowerRentalCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
@@ -32,7 +31,6 @@ func CreateSet(c *ent.AppLegacyPowerRentalCreate, req *Req) *ent.AppLegacyPowerR
 	return c
 }
 
-//nolint:gocyclo,funlen
 func UpdateSet(u *ent.AppLegacyPowerRentalUpdateOne, req *Req) *ent.AppLegacyPowerRentalUpdateOne {
 	if req.TechniqueFeeRatio != nil {
 		u.SetTechniqueFeeRatio(*req.TechniqueFeeRatio)

@@ -172,7 +172,6 @@ func updateDescription(t *testing.T) {
 	}
 }
 
-//nolint
 func getDescriptions(t *testing.T) {
 	infos, total, err := GetDescriptions(context.Background(), &npool.Conds{
 		ID:         &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},

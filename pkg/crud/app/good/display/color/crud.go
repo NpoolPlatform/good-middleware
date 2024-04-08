@@ -18,7 +18,6 @@ type Req struct {
 	DeletedAt *uint32
 }
 
-//nolint:gocyclo,funlen
 func CreateSet(c *ent.AppGoodDisplayColorCreate, req *Req) *ent.AppGoodDisplayColorCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
@@ -35,7 +34,6 @@ func CreateSet(c *ent.AppGoodDisplayColorCreate, req *Req) *ent.AppGoodDisplayCo
 	return c
 }
 
-//nolint:gocyclo,funlen
 func UpdateSet(u *ent.AppGoodDisplayColorUpdateOne, req *Req) *ent.AppGoodDisplayColorUpdateOne {
 	if req.Color != nil {
 		u.SetColor(*req.Color)

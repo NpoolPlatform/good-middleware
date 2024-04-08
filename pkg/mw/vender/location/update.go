@@ -19,7 +19,7 @@ type updateHandler struct {
 	brandID  string
 }
 
-func (h *updateHandler) constructSql() error {
+func (h *updateHandler) constructSQL() error {
 	set := "set "
 	now := uint32(time.Now().Unix())
 
@@ -120,7 +120,7 @@ func (h *Handler) UpdateLocation(ctx context.Context) error {
 		handler.brandID = h.BrandID.String()
 	}
 
-	if err := handler.constructSql(); err != nil {
+	if err := handler.constructSQL(); err != nil {
 		return err
 	}
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {

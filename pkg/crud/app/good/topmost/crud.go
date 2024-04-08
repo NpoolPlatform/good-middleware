@@ -17,7 +17,7 @@ type Req struct {
 	TopMostType *types.GoodTopMostType
 	Title       *string
 	Message     *string
-	TargetUrl   *string
+	TargetURL   *string
 	StartAt     *uint32
 	EndAt       *uint32
 	DeletedAt   *uint32
@@ -39,8 +39,8 @@ func CreateSet(c *ent.TopMostCreate, req *Req) *ent.TopMostCreate {
 	if req.Message != nil {
 		c.SetMessage(*req.Message)
 	}
-	if req.TargetUrl != nil {
-		c.SetTargetURL(*req.TargetUrl)
+	if req.TargetURL != nil {
+		c.SetTargetURL(*req.TargetURL)
 	}
 	if req.StartAt != nil {
 		c.SetStartAt(*req.StartAt)
@@ -58,8 +58,8 @@ func UpdateSet(u *ent.TopMostUpdateOne, req *Req) *ent.TopMostUpdateOne {
 	if req.Message != nil {
 		u.SetMessage(*req.Message)
 	}
-	if req.TargetUrl != nil {
-		u.SetTargetURL(*req.TargetUrl)
+	if req.TargetURL != nil {
+		u.SetTargetURL(*req.TargetURL)
 	}
 	if req.StartAt != nil {
 		u.SetStartAt(*req.StartAt)

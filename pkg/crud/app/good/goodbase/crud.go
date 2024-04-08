@@ -26,7 +26,6 @@ type Req struct {
 	DeletedAt         *uint32
 }
 
-//nolint:gocyclo,funlen
 func CreateSet(c *ent.AppGoodBaseCreate, req *Req) *ent.AppGoodBaseCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
@@ -64,7 +63,6 @@ func CreateSet(c *ent.AppGoodBaseCreate, req *Req) *ent.AppGoodBaseCreate {
 	return c
 }
 
-//nolint:gocyclo,funlen
 func UpdateSet(u *ent.AppGoodBaseUpdateOne, req *Req) *ent.AppGoodBaseUpdateOne {
 	if req.Purchasable != nil {
 		u.SetPurchasable(*req.Purchasable)

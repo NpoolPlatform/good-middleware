@@ -14,7 +14,8 @@ type createHandler struct {
 	sql string
 }
 
-func (h *createHandler) constructSql() {
+//nolint:goconst
+func (h *createHandler) constructSQL() {
 	now := uint32(time.Now().Unix())
 	comma := ""
 	_sql := "insert into device_manufacturers ("
@@ -71,7 +72,7 @@ func (h *Handler) CreateManufacturer(ctx context.Context) error {
 	handler := &createHandler{
 		Handler: h,
 	}
-	handler.constructSql()
+	handler.constructSQL()
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		return handler.createManufacturer(_ctx, tx)
 	})

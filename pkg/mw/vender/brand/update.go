@@ -14,7 +14,7 @@ type updateHandler struct {
 	sql string
 }
 
-func (h *updateHandler) constructSql() error {
+func (h *updateHandler) constructSQL() error {
 	set := "set "
 	now := uint32(time.Now().Unix())
 
@@ -61,7 +61,7 @@ func (h *Handler) UpdateBrand(ctx context.Context) error {
 	handler := &updateHandler{
 		Handler: h,
 	}
-	if err := handler.constructSql(); err != nil {
+	if err := handler.constructSQL(); err != nil {
 		return err
 	}
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {

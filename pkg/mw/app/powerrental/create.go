@@ -1,3 +1,4 @@
+//nolint:dupl
 package powerrental
 
 import (
@@ -24,7 +25,7 @@ type createHandler struct {
 	sqlAppMiningGoodStocks []string
 }
 
-func (h *createHandler) constructAppGoodBaseSql(ctx context.Context) error {
+func (h *createHandler) constructAppGoodBaseSQL(ctx context.Context) error {
 	handler, err := appgoodbase1.NewHandler(
 		ctx,
 		appgoodbase1.WithEntID(func() *string { s := h.AppGoodBaseReq.EntID.String(); return &s }(), false),
@@ -42,11 +43,11 @@ func (h *createHandler) constructAppGoodBaseSql(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	h.sqlAppGoodBase = handler.ConstructCreateSql()
+	h.sqlAppGoodBase = handler.ConstructCreateSQL()
 	return nil
 }
 
-func (h *createHandler) constructAppMiningGoodStockSql(ctx context.Context) error {
+func (h *createHandler) constructAppMiningGoodStockSQL(ctx context.Context) error {
 	for _, miningGoodStock := range h._ent.miningGoodStocks {
 		handler, err := appmininggoodstock1.NewHandler(
 			ctx,
@@ -57,12 +58,12 @@ func (h *createHandler) constructAppMiningGoodStockSql(ctx context.Context) erro
 		if err != nil {
 			return err
 		}
-		h.sqlAppMiningGoodStocks = append(h.sqlAppMiningGoodStocks, handler.ConstructCreateSql())
+		h.sqlAppMiningGoodStocks = append(h.sqlAppMiningGoodStocks, handler.ConstructCreateSQL())
 	}
 	return nil
 }
 
-func (h *createHandler) constructAppGoodStockSql(ctx context.Context) error {
+func (h *createHandler) constructAppGoodStockSQL(ctx context.Context) error {
 	handler, err := appgoodstock1.NewHandler(
 		ctx,
 		appgoodstock1.WithEntID(func() *string { s := h.AppGoodStockReq.EntID.String(); return &s }(), false),
@@ -71,11 +72,12 @@ func (h *createHandler) constructAppGoodStockSql(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	h.sqlAppGoodStock = handler.ConstructCreateSql()
+	h.sqlAppGoodStock = handler.ConstructCreateSQL()
 	return nil
 }
 
-func (h *createHandler) constructAppPowerRentalSql() {
+//nolint:funlen,gocyclo,goconst
+func (h *createHandler) constructAppPowerRentalSQL() {
 	comma := ""
 	now := uint32(time.Now().Unix())
 	_sql := "insert into app_power_rentals "
@@ -196,7 +198,7 @@ func (h *createHandler) constructAppPowerRentalSql() {
 	h.sqlAppPowerRental = _sql
 }
 
-func (h *createHandler) execSql(ctx context.Context, tx *ent.Tx, sql string) error {
+func (h *createHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) error {
 	rc, err := tx.ExecContext(ctx, sql)
 	if err != nil {
 		return err
@@ -209,11 +211,11 @@ func (h *createHandler) execSql(ctx context.Context, tx *ent.Tx, sql string) err
 }
 
 func (h *createHandler) createAppPowerRental(ctx context.Context, tx *ent.Tx) error {
-	return h.execSql(ctx, tx, h.sqlAppPowerRental)
+	return h.execSQL(ctx, tx, h.sqlAppPowerRental)
 }
 
 func (h *createHandler) createAppGoodBase(ctx context.Context, tx *ent.Tx) error {
-	return h.execSql(ctx, tx, h.sqlAppGoodBase)
+	return h.execSQL(ctx, tx, h.sqlAppGoodBase)
 }
 
 func (h *createHandler) createExtraInfo(ctx context.Context, tx *ent.Tx) error {
@@ -234,7 +236,7 @@ func (h *createHandler) validateFixedDurationUnitPrice() error {
 	return nil
 }
 
-func (h *createHandler) validateUnitPrice(ctx context.Context) error {
+func (h *createHandler) validateUnitPrice() error {
 	if h.FixedDuration != nil && *h.FixedDuration {
 		return h.validateFixedDurationUnitPrice()
 	}
@@ -258,12 +260,12 @@ func (h *createHandler) formalizeEntID() {
 }
 
 func (h *createHandler) createAppStock(ctx context.Context, tx *ent.Tx) error {
-	return h.execSql(ctx, tx, h.sqlAppGoodStock)
+	return h.execSQL(ctx, tx, h.sqlAppGoodStock)
 }
 
 func (h *createHandler) createAppMiningGoodStocks(ctx context.Context, tx *ent.Tx) error {
 	for _, _sql := range h.sqlAppMiningGoodStocks {
-		if err := h.execSql(ctx, tx, _sql); err != nil {
+		if err := h.execSQL(ctx, tx, _sql); err != nil {
 			return err
 		}
 	}
@@ -281,18 +283,18 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 		return err
 	}
 	handler.formalizeEntID()
-	if err := handler.validateUnitPrice(ctx); err != nil {
+	if err := handler.validateUnitPrice(); err != nil {
 		return err
 	}
 
-	handler.constructAppPowerRentalSql()
-	if err := handler.constructAppGoodBaseSql(ctx); err != nil {
+	handler.constructAppPowerRentalSQL()
+	if err := handler.constructAppGoodBaseSQL(ctx); err != nil {
 		return err
 	}
-	if err := handler.constructAppGoodStockSql(ctx); err != nil {
+	if err := handler.constructAppGoodStockSQL(ctx); err != nil {
 		return err
 	}
-	if err := handler.constructAppMiningGoodStockSql(ctx); err != nil {
+	if err := handler.constructAppMiningGoodStockSQL(ctx); err != nil {
 		return err
 	}
 

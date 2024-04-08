@@ -1,3 +1,4 @@
+//nolint:dupl
 package appstock
 
 import (
@@ -188,6 +189,7 @@ func (h *unlockHandler) unlockAppMiningGoodStock(ctx context.Context, lock *ent.
 	return nil
 }
 
+//nolint:gocyclo
 func (h *Handler) UnlockStock(ctx context.Context) error {
 	handler := &unlockHandler{
 		stockAppGoodQuery: &stockAppGoodQuery{

@@ -54,7 +54,6 @@ type Conds struct {
 	AppGoodID *cruder.Cond
 }
 
-//nolint:gocyclo,funlen
 func SetQueryConds(q *ent.AppSimulatePowerRentalQuery, conds *Conds) (*ent.AppSimulatePowerRentalQuery, error) {
 	q.Where(entappsimulatepowerrental.DeletedAt(0))
 	if conds == nil {

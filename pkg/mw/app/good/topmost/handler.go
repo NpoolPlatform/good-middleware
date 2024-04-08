@@ -113,9 +113,9 @@ func WithMessage(s *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithTargetUrl(s *string, must bool) func(context.Context, *Handler) error {
+func WithTargetURL(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.TargetUrl = s
+		h.TargetURL = s
 		return nil
 	}
 }

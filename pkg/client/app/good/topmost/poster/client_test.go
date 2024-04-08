@@ -100,7 +100,6 @@ func updatePoster(t *testing.T) {
 	}
 }
 
-//nolint
 func getPosters(t *testing.T) {
 	infos, total, err := GetPosters(context.Background(), &npool.Conds{
 		ID:         &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},

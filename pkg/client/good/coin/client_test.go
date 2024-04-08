@@ -122,8 +122,6 @@ func setup(t *testing.T) func(*testing.T) {
 		_ = devicetype1.DeleteDeviceType(context.Background(), nil, &deviceTypeID)
 		_ = manufacturer1.DeleteManufacturer(context.Background(), nil, &manufacturerID)
 	}
-
-	return func(*testing.T) {}
 }
 
 func createGoodCoin(t *testing.T) {

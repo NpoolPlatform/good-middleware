@@ -46,6 +46,7 @@ var ret = npool.Simulate{
 	OrderDuration: 11,
 }
 
+//nolint:funlen
 func setup(t *testing.T) func(*testing.T) {
 	manufacturerID := uuid.NewString()
 	h1, err := manufacturer1.NewHandler(

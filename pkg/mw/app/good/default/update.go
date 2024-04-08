@@ -15,7 +15,7 @@ type updateHandler struct {
 	coinTypeID string
 }
 
-func (h *updateHandler) constructSql() {
+func (h *updateHandler) constructSQL() {
 	now := uint32(time.Now().Unix())
 
 	_sql := "update app_default_goods "
@@ -61,7 +61,7 @@ func (h *Handler) UpdateDefault(ctx context.Context) error {
 	}
 
 	handler.coinTypeID = info.CoinTypeID
-	handler.constructSql()
+	handler.constructSQL()
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		return handler.updateDefault(_ctx, tx)

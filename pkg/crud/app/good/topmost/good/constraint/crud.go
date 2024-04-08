@@ -21,7 +21,6 @@ type Req struct {
 	DeletedAt     *uint32
 }
 
-//nolint:gocyclo,funlen
 func CreateSet(c *ent.TopMostGoodConstraintCreate, req *Req) *ent.TopMostGoodConstraintCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
@@ -41,7 +40,6 @@ func CreateSet(c *ent.TopMostGoodConstraintCreate, req *Req) *ent.TopMostGoodCon
 	return c
 }
 
-//nolint:gocyclo,funlen
 func UpdateSet(u *ent.TopMostGoodConstraintUpdateOne, req *Req) *ent.TopMostGoodConstraintUpdateOne {
 	if req.TargetValue != nil {
 		u.SetTargetValue(*req.TargetValue)

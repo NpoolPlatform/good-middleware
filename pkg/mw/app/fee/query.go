@@ -1,4 +1,3 @@
-//nolint:dupl
 package fee
 
 import (
@@ -160,6 +159,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) error {
 	return nil
 }
 
+//nolint:gocyclo
 func (h *queryHandler) queryJoinAppFee(s *sql.Selector) error {
 	t1 := sql.Table(entappfee.Table)
 	s.Join(t1).
@@ -291,7 +291,6 @@ func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
 }
 
-//nolint:funlen,gocyclo
 func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
 		amount, _ := decimal.NewFromString(info.UnitValue)

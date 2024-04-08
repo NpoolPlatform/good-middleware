@@ -104,7 +104,6 @@ func updateTopMostConstraint(t *testing.T) {
 	}
 }
 
-//nolint
 func getTopMostConstraints(t *testing.T) {
 	infos, total, err := GetTopMostConstraints(context.Background(), &npool.Conds{
 		ID:        &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
@@ -119,7 +118,6 @@ func getTopMostConstraints(t *testing.T) {
 	}
 }
 
-//nolint
 func getTopMostConstraintOnly(t *testing.T) {
 	info, err := GetTopMostConstraintOnly(context.Background(), &npool.Conds{
 		ID:        &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
@@ -132,7 +130,6 @@ func getTopMostConstraintOnly(t *testing.T) {
 	}
 }
 
-//nolint
 func deleteTopMostConstraint(t *testing.T) {
 	err := DeleteTopMostConstraint(context.Background(), &ret.ID, &ret.EntID)
 	assert.Nil(t, err)

@@ -213,6 +213,7 @@ func WithScore(s *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
+//nolint:gocyclo
 func (h *Handler) withCommentConds(conds *npool.Conds) error {
 	if conds.ID != nil {
 		h.CommentConds.ID = &cruder.Cond{
@@ -343,7 +344,6 @@ func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
 	return nil
 }
 
-//nolint:gocyclo
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if conds == nil {
@@ -352,7 +352,10 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if err := h.withCommentConds(conds); err != nil {
 			return err
 		}
-		return nil
+		if err := h.withAppGoodBaseConds(conds); err != nil {
+			return err
+		}
+		return h.withGoodBaseConds(conds)
 	}
 }
 

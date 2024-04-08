@@ -18,7 +18,6 @@ type Req struct {
 	DeletedAt     *uint32
 }
 
-//nolint:gocyclo,funlen
 func CreateSet(c *ent.TopMostGoodPosterCreate, req *Req) *ent.TopMostGoodPosterCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
@@ -35,7 +34,6 @@ func CreateSet(c *ent.TopMostGoodPosterCreate, req *Req) *ent.TopMostGoodPosterC
 	return c
 }
 
-//nolint:gocyclo,funlen
 func UpdateSet(u *ent.TopMostGoodPosterUpdateOne, req *Req) *ent.TopMostGoodPosterUpdateOne {
 	if req.Poster != nil {
 		u.SetPoster(*req.Poster)

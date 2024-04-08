@@ -23,7 +23,6 @@ func (AppLegacyPowerRental) Mixin() []ent.Mixin {
 	}
 }
 
-//nolint:funlen
 func (AppLegacyPowerRental) Fields() []ent.Field {
 	return []ent.Field{
 		field.

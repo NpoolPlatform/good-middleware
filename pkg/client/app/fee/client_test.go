@@ -145,6 +145,15 @@ func getFees(t *testing.T) {
 	}
 }
 
+func deleteFee(t *testing.T) {
+	err := DeleteFee(context.Background(), nil, &ret.EntID, &ret.AppGoodID)
+	assert.Nil(t, err)
+
+	info, err := GetFee(context.Background(), ret.AppGoodID)
+	assert.Nil(t, err)
+	assert.Nil(t, info)
+}
+
 func TestFee(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
@@ -168,5 +177,5 @@ func TestFee(t *testing.T) {
 	t.Run("updateFee", updateFee)
 	t.Run("getFee", getFee)
 	t.Run("getFees", getFees)
-	// t.Run("deleteFee", deleteFee)
+	t.Run("deleteFee", deleteFee)
 }

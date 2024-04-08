@@ -1,3 +1,4 @@
+//nolint:dupl
 package powerrental
 
 import (
@@ -176,7 +177,7 @@ func (h *powerRentalAppGoodQueryHandler) _getAppPowerRentalAppGood(ctx context.C
 		return fmt.Errorf("invalid appgoodid")
 	}
 
-	if err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+	if err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := h.getAppPowerRental(_ctx, cli, must); err != nil {
 			return err
 		}
@@ -205,6 +206,7 @@ func (h *powerRentalAppGoodQueryHandler) _getAppPowerRentalAppGood(ctx context.C
 	return h._getPowerRentalGood(ctx, must)
 }
 
+//nolint:unused
 func (h *powerRentalAppGoodQueryHandler) getPowerRentalGood(ctx context.Context) error {
 	return h._getPowerRentalGood(ctx, false)
 }

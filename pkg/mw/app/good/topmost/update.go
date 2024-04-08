@@ -18,7 +18,7 @@ func (h *updateHandler) updateTopMost(ctx context.Context, tx *ent.Tx) error {
 		&topmostcrud.Req{
 			Title:     h.Title,
 			Message:   h.Message,
-			TargetUrl: h.TargetUrl,
+			TargetURL: h.TargetURL,
 			StartAt:   h.StartAt,
 			EndAt:     h.EndAt,
 		},

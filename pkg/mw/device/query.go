@@ -104,7 +104,7 @@ func (h *queryHandler) scan(ctx context.Context) error {
 }
 
 func (h *queryHandler) formalize() {
-	// TODO
+	// TODO: nothing todo
 }
 
 func (h *Handler) GetDeviceType(ctx context.Context) (*npool.DeviceType, error) {

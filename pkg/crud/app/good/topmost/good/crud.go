@@ -1,3 +1,4 @@
+//nolint:dupl
 package topmostgood
 
 import (
@@ -68,7 +69,7 @@ type Conds struct {
 	TopMostType *cruder.Cond
 }
 
-//nolint:gocyclo,funlen
+//nolint:gocyclo
 func SetQueryConds(q *ent.TopMostGoodQuery, conds *Conds) (*ent.TopMostGoodQuery, error) {
 	q.Where(enttopmostgood.DeletedAt(0))
 	if conds == nil {

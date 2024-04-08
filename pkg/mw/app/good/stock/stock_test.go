@@ -69,6 +69,7 @@ var ret = npool.Stock{
 
 var lockID = uuid.NewString()
 
+//nolint:funlen
 func setup(t *testing.T) func(*testing.T) {
 	ret.StockModeStr = ret.StockMode.String()
 	for _, stock := range ret.AppMiningGoodStocks {

@@ -14,7 +14,7 @@ func withClient(ctx context.Context, handler func(context.Context, npool.Middlew
 	return grpc2.WithGRPCConn(
 		ctx,
 		servicename.ServiceDomain,
-		10*time.Second,
+		10*time.Second, //nolint
 		func(_ctx context.Context, conn *grpc.ClientConn) (interface{}, error) {
 			return handler(_ctx, npool.NewMiddlewareClient(conn))
 		},
@@ -75,7 +75,7 @@ func GetFees(ctx context.Context, conds *npool.Conds, offset, limit int32) (info
 	return _infos.([]*npool.Fee), total, nil
 }
 
-func DeleteFee(ctx context.Context, id *uint32, entID *string, goodID *string) error {
+func DeleteFee(ctx context.Context, id *uint32, entID, goodID *string) error {
 	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		return cli.DeleteFee(_ctx, &npool.DeleteFeeRequest{
 			Info: &npool.FeeReq{

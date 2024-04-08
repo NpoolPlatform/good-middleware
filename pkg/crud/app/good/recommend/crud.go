@@ -60,7 +60,7 @@ type Conds struct {
 	AppGoodIDs    *cruder.Cond
 }
 
-//nolint:funlen,gocyclo
+//nolint:gocyclo
 func SetQueryConds(q *ent.RecommendQuery, conds *Conds) (*ent.RecommendQuery, error) {
 	q.Where(entrecommend.DeletedAt(0))
 	if conds == nil {

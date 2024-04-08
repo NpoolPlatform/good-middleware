@@ -22,7 +22,6 @@ type Req struct {
 	DeletedAt    *uint32
 }
 
-//nolint:gocyclo,funlen
 func CreateSet(c *ent.AppGoodLabelCreate, req *Req) *ent.AppGoodLabelCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
@@ -48,7 +47,6 @@ func CreateSet(c *ent.AppGoodLabelCreate, req *Req) *ent.AppGoodLabelCreate {
 	return c
 }
 
-//nolint:gocyclo,funlen
 func UpdateSet(u *ent.AppGoodLabelUpdateOne, req *Req) *ent.AppGoodLabelUpdateOne {
 	if req.Icon != nil {
 		u.SetIcon(*req.Icon)

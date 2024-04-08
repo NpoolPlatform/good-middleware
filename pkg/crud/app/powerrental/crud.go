@@ -33,7 +33,7 @@ type Req struct {
 	DeletedAt                    *uint32
 }
 
-//nolint:gocyclo,funlen
+//nolint:gocyclo
 func CreateSet(c *ent.AppPowerRentalCreate, req *Req) *ent.AppPowerRentalCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
@@ -89,7 +89,7 @@ func CreateSet(c *ent.AppPowerRentalCreate, req *Req) *ent.AppPowerRentalCreate 
 	return c
 }
 
-//nolint:gocyclo,funlen
+//nolint:gocyclo
 func UpdateSet(u *ent.AppPowerRentalUpdateOne, req *Req) *ent.AppPowerRentalUpdateOne {
 	if req.ServiceStartAt != nil {
 		u.SetServiceStartAt(*req.ServiceStartAt)

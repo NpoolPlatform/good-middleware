@@ -599,7 +599,7 @@ func (h *queryHandler) getDisplayColors(ctx context.Context, cli *ent.Client) er
 	).Scan(ctx, &h.displayColors)
 }
 
-//nolint:funlen,gocyclo
+//nolint:funlen
 func (h *queryHandler) formalize() {
 	miningGoodStocks := map[string][]*stockmwpb.MiningGoodStockInfo{}
 	appMiningGoodStocks := map[string][]*appmininggoodstockmwpb.StockInfo{}
@@ -714,6 +714,9 @@ func (h *Handler) GetPowerRental(ctx context.Context) (*npool.PowerRental, error
 		if err := handler.getDisplayNames(_ctx, cli); err != nil {
 			return err
 		}
+		if err := handler.getDisplayColors(_ctx, cli); err != nil {
+			return err
+		}
 		if err := handler.getAppMiningGoodStocks(_ctx, cli); err != nil {
 			return err
 		}
@@ -779,6 +782,9 @@ func (h *Handler) GetPowerRentals(ctx context.Context) ([]*npool.PowerRental, ui
 			return err
 		}
 		if err := handler.getDisplayNames(_ctx, cli); err != nil {
+			return err
+		}
+		if err := handler.getDisplayColors(_ctx, cli); err != nil {
 			return err
 		}
 		if err := handler.getAppMiningGoodStocks(_ctx, cli); err != nil {

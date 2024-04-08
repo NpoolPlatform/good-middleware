@@ -24,7 +24,6 @@ func (AppPowerRental) Mixin() []ent.Mixin {
 	}
 }
 
-//nolint:funlen
 func (AppPowerRental) Fields() []ent.Field {
 	return []ent.Field{
 		field.

@@ -1,3 +1,4 @@
+//nolint:dupl
 package schema
 
 import (
@@ -21,7 +22,6 @@ func (TopMostPoster) Mixin() []ent.Mixin {
 	}
 }
 
-//nolint:funlen
 func (TopMostPoster) Fields() []ent.Field {
 	return []ent.Field{
 		field.

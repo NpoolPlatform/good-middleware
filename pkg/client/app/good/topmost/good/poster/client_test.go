@@ -66,6 +66,7 @@ var ret = npool.Poster{
 	Index:            5,
 }
 
+//nolint:funlen
 func setup(t *testing.T) func(*testing.T) {
 	ret.TopMostTypeStr = ret.TopMostType.String()
 
@@ -202,7 +203,6 @@ func updatePoster(t *testing.T) {
 	}
 }
 
-//nolint
 func getPosters(t *testing.T) {
 	infos, total, err := GetPosters(context.Background(), &npool.Conds{
 		ID:            &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
@@ -217,7 +217,6 @@ func getPosters(t *testing.T) {
 	}
 }
 
-//nolint
 func getPosterOnly(t *testing.T) {
 	info, err := GetPosterOnly(context.Background(), &npool.Conds{
 		ID:            &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
@@ -230,7 +229,6 @@ func getPosterOnly(t *testing.T) {
 	}
 }
 
-//nolint
 func deletePoster(t *testing.T) {
 	err := DeletePoster(context.Background(), &ret.ID, &ret.EntID)
 	assert.Nil(t, err)

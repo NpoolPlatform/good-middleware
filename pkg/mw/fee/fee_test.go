@@ -40,6 +40,7 @@ var (
 	}
 )
 
+//nolint:unparam
 func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.SettlementTypeStr = ret.SettlementType.String()

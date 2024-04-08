@@ -5,7 +5,8 @@ import (
 	"time"
 )
 
-func (h *Handler) ConstructCreateSql() string {
+//nolint:goconst
+func (h *Handler) ConstructCreateSQL() string {
 	comma := ""
 	now := uint32(time.Now().Unix())
 	_sql := "insert into app_mining_good_stocks "

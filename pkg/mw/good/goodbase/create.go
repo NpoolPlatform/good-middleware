@@ -13,8 +13,8 @@ type createHandler struct {
 	sql string
 }
 
-func (h *createHandler) constructSql() {
-	h.sql = h.ConstructCreateSql()
+func (h *createHandler) constructSQL() {
+	h.sql = h.ConstructCreateSQL()
 }
 
 func (h *createHandler) createGoodBase(ctx context.Context, tx *ent.Tx) error {
@@ -32,7 +32,7 @@ func (h *Handler) CreateGoodBase(ctx context.Context) error {
 	handler := &createHandler{
 		Handler: h,
 	}
-	handler.constructSql()
+	handler.constructSQL()
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		return handler.createGoodBase(_ctx, tx)
 	})

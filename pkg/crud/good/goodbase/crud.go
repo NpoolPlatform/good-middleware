@@ -25,7 +25,6 @@ type Req struct {
 	DeletedAt            *uint32
 }
 
-//nolint:gocyclo
 func CreateSet(c *ent.GoodBaseCreate, req *Req) *ent.GoodBaseCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
@@ -60,7 +59,6 @@ func CreateSet(c *ent.GoodBaseCreate, req *Req) *ent.GoodBaseCreate {
 	return c
 }
 
-//nolint:gocyclo
 func UpdateSet(u *ent.GoodBaseUpdateOne, req *Req) *ent.GoodBaseUpdateOne {
 	if req.GoodType != nil {
 		u.SetGoodType(req.GoodType.String())

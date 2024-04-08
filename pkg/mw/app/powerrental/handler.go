@@ -1,3 +1,4 @@
+//nolint:dupl
 package powerrental
 
 import (
@@ -192,7 +193,6 @@ func WithName(s *string, must bool) func(context.Context, *Handler) error {
 			}
 			return nil
 		}
-		const leastNameLen = 3
 		if len(*s) < 3 {
 			return fmt.Errorf("invalid name")
 		}

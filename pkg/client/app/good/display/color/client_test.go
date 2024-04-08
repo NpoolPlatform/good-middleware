@@ -172,7 +172,6 @@ func updateDisplayColor(t *testing.T) {
 	}
 }
 
-//nolint
 func getDisplayColors(t *testing.T) {
 	infos, total, err := GetDisplayColors(context.Background(), &npool.Conds{
 		ID:         &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},

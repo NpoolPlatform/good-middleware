@@ -331,6 +331,7 @@ func (h *Handler) withAppFeeConds(conds *npool.Conds) error {
 	return nil
 }
 
+//nolint:gocyclo
 func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 	if conds.AppGoodID != nil {
 		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())

@@ -75,7 +75,7 @@ func (FbmCrowdFunding) Fields() []ent.Field {
 		field.
 			Uint32("redeem_delay_hours").
 			Optional().
-			Default(8),
+			Default(8), //nolint
 		field.
 			String("duration_type").
 			Optional().
@@ -83,7 +83,7 @@ func (FbmCrowdFunding) Fields() []ent.Field {
 		field.
 			Uint32("duration").
 			Optional().
-			Default(365),
+			Default(365), //nolint
 	}
 }
 

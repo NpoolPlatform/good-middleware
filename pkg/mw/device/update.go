@@ -15,7 +15,7 @@ type updateHandler struct {
 	manufacturerID string
 }
 
-func (h *updateHandler) constructSql() {
+func (h *updateHandler) constructSQL() {
 	comma := ""
 	now := uint32(time.Now().Unix())
 
@@ -73,7 +73,7 @@ func (h *Handler) UpdateDeviceType(ctx context.Context) error {
 		handler.manufacturerID = h.ManufacturerID.String()
 	}
 
-	handler.constructSql()
+	handler.constructSQL()
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		return handler.updateDeviceType(_ctx, tx)
 	})

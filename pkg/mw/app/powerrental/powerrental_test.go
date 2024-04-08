@@ -1,3 +1,4 @@
+//nolint:dupl
 package powerrental
 
 import (
@@ -165,6 +166,7 @@ var (
 	}
 )
 
+//nolint:funlen
 func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.BenefitTypeStr = ret.BenefitType.String()

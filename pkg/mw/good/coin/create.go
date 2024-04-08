@@ -16,7 +16,8 @@ type createHandler struct {
 	sql string
 }
 
-func (h *createHandler) constructSql() {
+//nolint:goconst
+func (h *createHandler) constructSQL() {
 	comma := ""
 	now := uint32(time.Now().Unix())
 	_sql := "insert into good_coins "
@@ -83,7 +84,7 @@ func (h *Handler) CreateGoodCoin(ctx context.Context) error {
 	if h.EntID == nil {
 		h.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 	}
-	handler.constructSql()
+	handler.constructSQL()
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		return handler.createGoodCoin(_ctx, tx)
 	})

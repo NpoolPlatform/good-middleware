@@ -68,6 +68,7 @@ var ret = npool.Required{
 	Must:                true,
 }
 
+//nolint:funlen
 func setup(t *testing.T) func(*testing.T) {
 	manufacturerID := uuid.NewString()
 	err := manufacturer1.CreateManufacturer(context.Background(), &manufacturermwpb.ManufacturerReq{

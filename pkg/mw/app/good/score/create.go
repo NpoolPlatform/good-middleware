@@ -19,7 +19,8 @@ type createHandler struct {
 	sql string
 }
 
-func (h *Handler) ConstructCreateSql() string {
+//nolint:goconst
+func (h *Handler) ConstructCreateSQL() string {
 	comma := ""
 	now := uint32(time.Now().Unix())
 	_sql := "insert into scores "
@@ -115,7 +116,7 @@ func (h *Handler) CreateScore(ctx context.Context) error {
 	if h.EntID == nil {
 		h.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 	}
-	handler.sql = handler.ConstructCreateSql()
+	handler.sql = handler.ConstructCreateSQL()
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createScore(ctx, tx); err != nil {
 			return err

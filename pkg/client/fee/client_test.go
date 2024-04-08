@@ -44,6 +44,7 @@ var ret = &npool.Fee{
 	DurationType:   types.GoodDurationType_GoodDurationByDay,
 }
 
+//nolint:unparam
 func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.SettlementTypeStr = ret.SettlementType.String()

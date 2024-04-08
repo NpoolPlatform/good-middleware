@@ -179,7 +179,6 @@ func updateLabel(t *testing.T) {
 	}
 }
 
-//nolint
 func getLabels(t *testing.T) {
 	infos, total, err := GetLabels(context.Background(), &npool.Conds{
 		ID:         &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},

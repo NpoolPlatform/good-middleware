@@ -20,7 +20,6 @@ type Req struct {
 	DeletedAt                *uint32
 }
 
-//nolint:gocyclo
 func CreateSet(c *ent.DelegatedStakingCreate, req *Req) *ent.DelegatedStakingCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
@@ -43,7 +42,6 @@ func CreateSet(c *ent.DelegatedStakingCreate, req *Req) *ent.DelegatedStakingCre
 	return c
 }
 
-//nolint:gocyclo
 func UpdateSet(u *ent.DelegatedStakingUpdateOne, req *Req) *ent.DelegatedStakingUpdateOne {
 	if req.NoStakeRedeemDelayHours != nil {
 		u.SetNoStakeRedeemDelayHours(*req.NoStakeRedeemDelayHours)

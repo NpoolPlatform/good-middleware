@@ -1,3 +1,4 @@
+//nolint:dupl
 package schema
 
 import (
@@ -21,7 +22,6 @@ func (AppGoodDescription) Mixin() []ent.Mixin {
 	}
 }
 
-//nolint:funlen
 func (AppGoodDescription) Fields() []ent.Field {
 	return []ent.Field{
 		field.

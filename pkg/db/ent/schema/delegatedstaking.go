@@ -32,11 +32,11 @@ func (DelegatedStaking) Fields() []ent.Field {
 		field.
 			Uint32("no_stake_redeem_delay_hours").
 			Optional().
-			Default(8),
+			Default(8), //nolint
 		field.
 			Uint32("max_redeem_delay_hours").
 			Optional().
-			Default(96),
+			Default(96), //nolint
 		field.
 			String("contract_address").
 			Optional().
@@ -44,7 +44,7 @@ func (DelegatedStaking) Fields() []ent.Field {
 		field.
 			Uint32("no_stake_benefit_delay_hours").
 			Optional().
-			Default(24),
+			Default(24), //nolint
 	}
 }
 

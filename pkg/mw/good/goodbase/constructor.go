@@ -7,7 +7,8 @@ import (
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 )
 
-func (h *Handler) ConstructCreateSql() string {
+//nolint:goconst,funlen
+func (h *Handler) ConstructCreateSQL() string {
 	comma := ""
 	now := uint32(time.Now().Unix())
 	_sql := "insert into good_bases "
@@ -70,7 +71,8 @@ func (h *Handler) ConstructCreateSql() string {
 	return _sql
 }
 
-func (h *Handler) ConstructUpdateSql() (string, error) {
+//nolint:gocyclo
+func (h *Handler) ConstructUpdateSQL() (string, error) {
 	if h.ID == nil && h.EntID == nil {
 		return "", fmt.Errorf("invalid goodid")
 	}

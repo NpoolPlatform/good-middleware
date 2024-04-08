@@ -172,7 +172,6 @@ func updateDisplayName(t *testing.T) {
 	}
 }
 
-//nolint
 func getDisplayNames(t *testing.T) {
 	infos, total, err := GetDisplayNames(context.Background(), &npool.Conds{
 		ID:         &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},

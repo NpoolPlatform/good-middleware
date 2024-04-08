@@ -27,7 +27,7 @@ func (h *createHandler) constructSql() {
 	_sql += comma + "top_most_type"
 	_sql += comma + "title"
 	_sql += comma + "message"
-	if h.TargetUrl != nil {
+	if h.TargetURL != nil {
 		_sql += comma + "target_url"
 	}
 	_sql += comma + "start_at"
@@ -48,8 +48,8 @@ func (h *createHandler) constructSql() {
 	_sql += fmt.Sprintf("%v'%v' as top_most_type", comma, h.TopMostType.String())
 	_sql += fmt.Sprintf("%v'%v' as title", comma, *h.Title)
 	_sql += fmt.Sprintf("%v'%v' as message", comma, *h.Message)
-	if h.TargetUrl != nil {
-		_sql += fmt.Sprintf("%v'%v' as target_url", comma, *h.TargetUrl)
+	if h.TargetURL != nil {
+		_sql += fmt.Sprintf("%v'%v' as target_url", comma, *h.TargetURL)
 	}
 	_sql += fmt.Sprintf("%v'%v' as start_at", comma, *h.StartAt)
 	_sql += fmt.Sprintf("%v'%v' as end_at", comma, *h.EndAt)

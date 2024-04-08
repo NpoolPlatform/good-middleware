@@ -1,4 +1,3 @@
-//nolint:dupl
 package powerrental
 
 import (
@@ -333,7 +332,6 @@ func (h *queryHandler) getGoodCoins(ctx context.Context, cli *ent.Client) error 
 	).Scan(ctx, &h.goodCoins)
 }
 
-//nolint:funlen,gocyclo
 func (h *queryHandler) formalize() {
 	goodMiningStocks := map[string][]*stockmwpb.MiningGoodStock{}
 	goodCoins := map[string][]*goodcoinmwpb.GoodCoinInfo{}

@@ -41,7 +41,6 @@ var (
 )
 
 func setup(t *testing.T) func(*testing.T) {
-
 	h1, err := manufacturer1.NewHandler(
 		context.Background(),
 		manufacturer1.WithEntID(&ret.ManufacturerID, true),

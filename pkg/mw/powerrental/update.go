@@ -1,3 +1,4 @@
+//nolint:dupl
 package powerrental
 
 import (
@@ -18,13 +19,12 @@ import (
 
 type updateHandler struct {
 	*powerRentalGoodQueryHandler
-	stockValidator      *validateStockHandler
-	sqlPowerRental      string
-	sqlGoodBase         string
-	sqlMiningGoodStocks []string
+	stockValidator *validateStockHandler
+	sqlPowerRental string
+	sqlGoodBase    string
 }
 
-func (h *updateHandler) constructGoodBaseSql(ctx context.Context) error {
+func (h *updateHandler) constructGoodBaseSQL(ctx context.Context) error {
 	handler, err := goodbase1.NewHandler(
 		ctx,
 		goodbase1.WithEntID(func() *string { s := h.GoodBaseReq.EntID.String(); return &s }(), false),
@@ -41,14 +41,14 @@ func (h *updateHandler) constructGoodBaseSql(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	h.sqlGoodBase, err = handler.ConstructUpdateSql()
+	h.sqlGoodBase, err = handler.ConstructUpdateSQL()
 	if err == cruder.ErrUpdateNothing {
 		return nil
 	}
 	return err
 }
 
-func (h *updateHandler) constructPowerRentalSql() error {
+func (h *updateHandler) constructPowerRentalSQL() {
 	set := "set "
 	now := uint32(time.Now().Unix())
 
@@ -86,7 +86,7 @@ func (h *updateHandler) constructPowerRentalSql() error {
 		set = ""
 	}
 	if set != "" {
-		return cruder.ErrUpdateNothing
+		return
 	}
 	_sql += fmt.Sprintf("updated_at = %v ", now)
 	_sql += fmt.Sprintf("where id = %v ", *h.ID)
@@ -108,10 +108,9 @@ func (h *updateHandler) constructPowerRentalSql() error {
 		_sql += " limit 1) "
 	}
 	h.sqlPowerRental = _sql
-	return nil
 }
 
-func (h *updateHandler) execSql(ctx context.Context, tx *ent.Tx, sql string) error {
+func (h *updateHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) error {
 	rc, err := tx.ExecContext(ctx, sql)
 	if err != nil {
 		return err
@@ -123,14 +122,17 @@ func (h *updateHandler) execSql(ctx context.Context, tx *ent.Tx, sql string) err
 }
 
 func (h *updateHandler) updatePowerRental(ctx context.Context, tx *ent.Tx) error {
-	return h.execSql(ctx, tx, h.sqlPowerRental)
+	if h.sqlPowerRental == "" {
+		return nil
+	}
+	return h.execSQL(ctx, tx, h.sqlPowerRental)
 }
 
 func (h *updateHandler) updateGoodBase(ctx context.Context, tx *ent.Tx) error {
 	if h.sqlGoodBase == "" {
 		return nil
 	}
-	return h.execSql(ctx, tx, h.sqlGoodBase)
+	return h.execSQL(ctx, tx, h.sqlGoodBase)
 }
 
 func (h *updateHandler) updateStock(ctx context.Context, tx *ent.Tx) error {
@@ -190,6 +192,7 @@ func (h *updateHandler) _validateStock() error {
 	return h.stockValidator.validateStock()
 }
 
+//nolint:gocyclo
 func (h *updateHandler) validateRewardState() error {
 	if h.RewardReq.RewardState == nil {
 		return nil
@@ -320,8 +323,8 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		return err
 	}
 
-	handler.constructPowerRentalSql()
-	if err := handler.constructGoodBaseSql(ctx); err != nil {
+	handler.constructPowerRentalSQL()
+	if err := handler.constructGoodBaseSQL(ctx); err != nil {
 		return err
 	}
 

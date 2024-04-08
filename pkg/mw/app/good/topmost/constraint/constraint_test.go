@@ -43,7 +43,6 @@ var ret = npool.TopMostConstraint{
 	Index:            1,
 }
 
-//nolint:funlen
 func setup(t *testing.T) func(*testing.T) {
 	ret.TopMostTypeStr = ret.TopMostType.String()
 	ret.ConstraintStr = ret.Constraint.String()

@@ -15,7 +15,7 @@ func withClient(ctx context.Context, handler func(context.Context, npool.Middlew
 	return grpc2.WithGRPCConn(
 		ctx,
 		servicename.ServiceDomain,
-		10*time.Second,
+		10*time.Second, //nolint
 		func(_ctx context.Context, conn *grpc.ClientConn) (interface{}, error) {
 			return handler(_ctx, npool.NewMiddlewareClient(conn))
 		},

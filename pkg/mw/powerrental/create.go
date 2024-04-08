@@ -1,3 +1,4 @@
+//nolint:dupl
 package powerrental
 
 import (
@@ -25,7 +26,7 @@ type createHandler struct {
 	sqlStock            string
 }
 
-func (h *createHandler) constructGoodBaseSql(ctx context.Context) error {
+func (h *createHandler) constructGoodBaseSQL(ctx context.Context) error {
 	handler, err := goodbase1.NewHandler(
 		ctx,
 		goodbase1.WithEntID(func() *string { s := h.GoodBaseReq.EntID.String(); return &s }(), false),
@@ -42,11 +43,11 @@ func (h *createHandler) constructGoodBaseSql(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	h.sqlGoodBase = handler.ConstructCreateSql()
+	h.sqlGoodBase = handler.ConstructCreateSQL()
 	return nil
 }
 
-func (h *createHandler) constructMiningGoodStockSql(ctx context.Context) error {
+func (h *createHandler) constructMiningGoodStockSQL(ctx context.Context) error {
 	for _, poolStock := range h.MiningGoodStockReqs {
 		handler, err := mininggoodstock1.NewHandler(
 			ctx,
@@ -59,12 +60,12 @@ func (h *createHandler) constructMiningGoodStockSql(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
-		h.sqlMiningGoodStocks = append(h.sqlMiningGoodStocks, handler.ConstructCreateSql())
+		h.sqlMiningGoodStocks = append(h.sqlMiningGoodStocks, handler.ConstructCreateSQL())
 	}
 	return nil
 }
 
-func (h *createHandler) constructStockSql(ctx context.Context) error {
+func (h *createHandler) constructStockSQL(ctx context.Context) error {
 	handler, err := stock1.NewHandler(
 		ctx,
 		stock1.WithEntID(func() *string { s := h.StockReq.EntID.String(); return &s }(), false),
@@ -74,11 +75,12 @@ func (h *createHandler) constructStockSql(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	h.sqlStock = handler.ConstructCreateSql()
+	h.sqlStock = handler.ConstructCreateSQL()
 	return nil
 }
 
-func (h *createHandler) constructPowerRentalSql() {
+//nolint:goconst,funlen
+func (h *createHandler) constructPowerRentalSQL() {
 	comma := ""
 	now := uint32(time.Now().Unix())
 	_sql := "insert into power_rentals "
@@ -154,7 +156,7 @@ func (h *createHandler) constructPowerRentalSql() {
 	h.sqlPowerRental = _sql
 }
 
-func (h *createHandler) execSql(ctx context.Context, tx *ent.Tx, sql string) error {
+func (h *createHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) error {
 	rc, err := tx.ExecContext(ctx, sql)
 	if err != nil {
 		return err
@@ -167,20 +169,20 @@ func (h *createHandler) execSql(ctx context.Context, tx *ent.Tx, sql string) err
 }
 
 func (h *createHandler) createPowerRental(ctx context.Context, tx *ent.Tx) error {
-	return h.execSql(ctx, tx, h.sqlPowerRental)
+	return h.execSQL(ctx, tx, h.sqlPowerRental)
 }
 
 func (h *createHandler) createGoodBase(ctx context.Context, tx *ent.Tx) error {
-	return h.execSql(ctx, tx, h.sqlGoodBase)
+	return h.execSQL(ctx, tx, h.sqlGoodBase)
 }
 
 func (h *createHandler) createStock(ctx context.Context, tx *ent.Tx) error {
-	return h.execSql(ctx, tx, h.sqlStock)
+	return h.execSQL(ctx, tx, h.sqlStock)
 }
 
 func (h *createHandler) createMiningGoodStocks(ctx context.Context, tx *ent.Tx) error {
 	for _, _sql := range h.sqlMiningGoodStocks {
-		if err := h.execSql(ctx, tx, _sql); err != nil {
+		if err := h.execSQL(ctx, tx, _sql); err != nil {
 			return err
 		}
 	}
@@ -244,14 +246,14 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 		h.GoodID = func() *uuid.UUID { s := uuid.New(); return &s }()
 	}
 
-	handler.constructPowerRentalSql()
-	if err := handler.constructGoodBaseSql(ctx); err != nil {
+	handler.constructPowerRentalSQL()
+	if err := handler.constructGoodBaseSQL(ctx); err != nil {
 		return err
 	}
-	if err := handler.constructStockSql(ctx); err != nil {
+	if err := handler.constructStockSQL(ctx); err != nil {
 		return err
 	}
-	if err := handler.constructMiningGoodStockSql(ctx); err != nil {
+	if err := handler.constructMiningGoodStockSQL(ctx); err != nil {
 		return err
 	}
 

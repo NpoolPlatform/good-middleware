@@ -256,7 +256,7 @@ func (h *stockAppGoodQuery) formalizeAppGoodIDs() error {
 	return nil
 }
 
-func (h *stockAppGoodQuery) formalizeStockEntID(appGoodID uuid.UUID, entID uuid.UUID) error {
+func (h *stockAppGoodQuery) formalizeStockEntID(appGoodID, entID uuid.UUID) error {
 	_stock, ok := h.stocks[appGoodID]
 	if !ok {
 		return fmt.Errorf("invalid stock")

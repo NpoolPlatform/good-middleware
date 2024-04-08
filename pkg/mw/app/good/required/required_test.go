@@ -46,7 +46,6 @@ var ret = npool.Required{
 	Must:                true,
 }
 
-//nolint:funlen
 func setup(t *testing.T) func(*testing.T) {
 	h1, err := goodbase1.NewHandler(
 		context.Background(),

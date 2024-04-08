@@ -67,6 +67,7 @@ var ret = npool.TopMostGoodConstraint{
 	Index:            5,
 }
 
+//nolint:funlen
 func setup(t *testing.T) func(*testing.T) {
 	ret.TopMostTypeStr = ret.TopMostType.String()
 	ret.ConstraintStr = ret.Constraint.String()
@@ -205,7 +206,6 @@ func updateTopMostGoodConstraint(t *testing.T) {
 	}
 }
 
-//nolint
 func getTopMostGoodConstraints(t *testing.T) {
 	infos, total, err := GetTopMostGoodConstraints(context.Background(), &npool.Conds{
 		ID:        &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
@@ -220,7 +220,6 @@ func getTopMostGoodConstraints(t *testing.T) {
 	}
 }
 
-//nolint
 func getTopMostGoodConstraintOnly(t *testing.T) {
 	info, err := GetTopMostGoodConstraintOnly(context.Background(), &npool.Conds{
 		ID:        &basetypes.Uint32Val{Op: cruder.EQ, Value: ret.ID},
@@ -233,7 +232,6 @@ func getTopMostGoodConstraintOnly(t *testing.T) {
 	}
 }
 
-//nolint
 func deleteTopMostGoodConstraint(t *testing.T) {
 	err := DeleteTopMostGoodConstraint(context.Background(), &ret.ID, &ret.EntID)
 	assert.Nil(t, err)

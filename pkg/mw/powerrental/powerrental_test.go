@@ -409,8 +409,8 @@ func TestPowerRental(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createPowerRental", createPowerRental)
-	// t.Run("updatePowerRental", updatePowerRental)
-	// t.Run("getPowerRental", getPowerRental)
-	// t.Run("getPowerRentals", getPowerRentals)
-	// t.Run("deletePowerRental", deletePowerRental)
+	t.Run("updatePowerRental", updatePowerRental)
+	t.Run("getPowerRental", getPowerRental)
+	t.Run("getPowerRentals", getPowerRentals)
+	t.Run("deletePowerRental", deletePowerRental)
 }

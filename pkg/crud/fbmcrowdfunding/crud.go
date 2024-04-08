@@ -29,7 +29,6 @@ type Req struct {
 	DeletedAt         *uint32
 }
 
-//nolint:gocyclo
 func CreateSet(c *ent.FbmCrowdFundingCreate, req *Req) *ent.FbmCrowdFundingCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
@@ -73,7 +72,6 @@ func CreateSet(c *ent.FbmCrowdFundingCreate, req *Req) *ent.FbmCrowdFundingCreat
 	return c
 }
 
-//nolint:gocyclo
 func UpdateSet(u *ent.FbmCrowdFundingUpdateOne, req *Req) *ent.FbmCrowdFundingUpdateOne {
 	if req.MinDepositAmount != nil {
 		u.SetMinDepositAmount(*req.MinDepositAmount)

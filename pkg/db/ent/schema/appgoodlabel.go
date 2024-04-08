@@ -22,7 +22,6 @@ func (AppGoodLabel) Mixin() []ent.Mixin {
 	}
 }
 
-//nolint:funlen
 func (AppGoodLabel) Fields() []ent.Field {
 	return []ent.Field{
 		field.

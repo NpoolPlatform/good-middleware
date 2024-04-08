@@ -1,4 +1,3 @@
-//nolint:dupl
 package appdefaultgood
 
 import (
@@ -50,7 +49,7 @@ type Conds struct {
 	CoinTypeIDs *cruder.Cond
 }
 
-//nolint:gocyclo,funlen
+//nolint:gocyclo
 func SetQueryConds(q *ent.AppDefaultGoodQuery, conds *Conds) (*ent.AppDefaultGoodQuery, error) {
 	q.Where(entappdefaultgood.DeletedAt(0))
 	if conds == nil {

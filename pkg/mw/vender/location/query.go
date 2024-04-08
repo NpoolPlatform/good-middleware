@@ -41,7 +41,7 @@ func (h *queryHandler) queryVendorLocation(cli *ent.Client) error {
 	return nil
 }
 
-func (h *queryHandler) queryVendorLocations(ctx context.Context, cli *ent.Client) (*ent.VendorLocationSelect, error) {
+func (h *queryHandler) queryVendorLocations(cli *ent.Client) (*ent.VendorLocationSelect, error) {
 	stm, err := locationcrud.SetQueryConds(cli.VendorLocation.Query(), h.Conds)
 	if err != nil {
 		return nil, err
@@ -130,10 +130,10 @@ func (h *Handler) GetLocations(ctx context.Context) (infos []*npool.Location, to
 		Handler: h,
 	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if handler.stmSelect, err = handler.queryVendorLocations(_ctx, cli); err != nil {
+		if handler.stmSelect, err = handler.queryVendorLocations(cli); err != nil {
 			return err
 		}
-		if handler.stmCount, err = handler.queryVendorLocations(_ctx, cli); err != nil {
+		if handler.stmCount, err = handler.queryVendorLocations(cli); err != nil {
 			return err
 		}
 

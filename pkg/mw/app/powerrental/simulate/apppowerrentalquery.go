@@ -39,7 +39,7 @@ func (h *appPowerRentalHandler) queryAppPowerRental(ctx context.Context) (err er
 		return h.queryAppPowerRentalEnt(ctx)
 	}
 
-	if err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+	if err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm := cli.AppSimulatePowerRental.Query()
 		if h.ID != nil {
 			stm.Where(entappsimulatepowerrental.ID(*h.ID))

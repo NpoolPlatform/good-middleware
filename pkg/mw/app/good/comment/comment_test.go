@@ -44,7 +44,6 @@ var ret = npool.Comment{
 	Score:     decimal.RequireFromString("4.99").String(),
 }
 
-//nolint
 func setup(t *testing.T) func(*testing.T) {
 	goodType := types.GoodType_PowerRental
 

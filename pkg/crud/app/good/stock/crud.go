@@ -84,7 +84,7 @@ type Conds struct {
 	AppGoodIDs *cruder.Cond
 }
 
-//nolint:funlen,gocyclo
+//nolint:gocyclo
 func SetQueryConds(q *ent.AppStockQuery, conds *Conds) (*ent.AppStockQuery, error) {
 	q.Where(entappstock.DeletedAt(0))
 	if conds == nil {

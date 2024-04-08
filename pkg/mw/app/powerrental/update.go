@@ -1,3 +1,4 @@
+//nolint:dupl
 package powerrental
 
 import (
@@ -19,7 +20,7 @@ type updateHandler struct {
 	sqlAppGoodBase    string
 }
 
-func (h *updateHandler) constructAppGoodBaseSql(ctx context.Context) error {
+func (h *updateHandler) constructAppGoodBaseSQL(ctx context.Context) error {
 	handler, err := appgoodbase1.NewHandler(
 		ctx,
 		appgoodbase1.WithEntID(func() *string { s := h.AppGoodBaseReq.EntID.String(); return &s }(), true),
@@ -37,14 +38,15 @@ func (h *updateHandler) constructAppGoodBaseSql(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	h.sqlAppGoodBase, err = handler.ConstructUpdateSql()
+	h.sqlAppGoodBase, err = handler.ConstructUpdateSQL()
 	if err != cruder.ErrUpdateNothing {
 		return err
 	}
 	return nil
 }
 
-func (h *updateHandler) constructAppPowerRentalSql() error {
+//nolint:funlen,gocyclo
+func (h *updateHandler) constructAppPowerRentalSQL() {
 	set := "set "
 	now := uint32(time.Now().Unix())
 	_sql := "update app_power_rentals "
@@ -109,17 +111,16 @@ func (h *updateHandler) constructAppPowerRentalSql() error {
 		set = ""
 	}
 	if set != "" {
-		return cruder.ErrUpdateNothing
+		return
 	}
 	_sql += fmt.Sprintf("updated_at = %v", now)
 	_sql += fmt.Sprintf(" where id = %v ", *h.ID)
 	_sql += fmt.Sprintf(" and ent_id = '%v' ", *h.EntID)
 	_sql += fmt.Sprintf(" and app_good_id = '%v'", *h.AppGoodID)
 	h.sqlAppPowerRental = _sql
-	return nil
 }
 
-func (h *updateHandler) execSql(ctx context.Context, tx *ent.Tx, sql string) error {
+func (h *updateHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) error {
 	if sql == "" {
 		return nil
 	}
@@ -134,11 +135,14 @@ func (h *updateHandler) execSql(ctx context.Context, tx *ent.Tx, sql string) err
 }
 
 func (h *updateHandler) updateAppPowerRental(ctx context.Context, tx *ent.Tx) error {
-	return h.execSql(ctx, tx, h.sqlAppPowerRental)
+	if h.sqlAppPowerRental == "" {
+		return nil
+	}
+	return h.execSQL(ctx, tx, h.sqlAppPowerRental)
 }
 
 func (h *updateHandler) updateAppGoodBase(ctx context.Context, tx *ent.Tx) error {
-	return h.execSql(ctx, tx, h.sqlAppGoodBase)
+	return h.execSQL(ctx, tx, h.sqlAppGoodBase)
 }
 
 func (h *updateHandler) validateFixedDurationUnitPrice() error {
@@ -152,7 +156,7 @@ func (h *updateHandler) validateFixedDurationUnitPrice() error {
 	return nil
 }
 
-func (h *updateHandler) validateUnitPrice(ctx context.Context) error {
+func (h *updateHandler) validateUnitPrice() error {
 	if h.UnitPrice == nil && h.FixedDuration == nil && h.MinOrderDuration == nil && h.MaxOrderDuration == nil {
 		return nil
 	}
@@ -207,12 +211,12 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		h.AppGoodBaseReq.AppID = &handler._ent.appGoodBase.AppID
 	}
 
-	if err := handler.validateUnitPrice(ctx); err != nil {
+	if err := handler.validateUnitPrice(); err != nil {
 		return err
 	}
 
-	handler.constructAppPowerRentalSql()
-	if err := handler.constructAppGoodBaseSql(ctx); err != nil {
+	handler.constructAppPowerRentalSQL()
+	if err := handler.constructAppGoodBaseSQL(ctx); err != nil {
 		return err
 	}
 

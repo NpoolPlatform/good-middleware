@@ -134,11 +134,10 @@ func (h *queryHandler) formalize() {
 	}
 }
 
-func (h *Handler) GetGoodCoin(ctx context.Context) (*npool.GoodCoin, error) {
+func (h *Handler) GetGoodCoin(ctx context.Context) (info *npool.GoodCoin, err error) {
 	handler := &queryHandler{
 		Handler: h,
 	}
-	var err error
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := handler.queryGoodCoin(cli); err != nil {
 			return nil

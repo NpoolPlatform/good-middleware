@@ -1,3 +1,4 @@
+//nolint:dupl
 package schema
 
 import (
@@ -21,7 +22,6 @@ func (AppGoodDisplayColor) Mixin() []ent.Mixin {
 	}
 }
 
-//nolint:funlen
 func (AppGoodDisplayColor) Fields() []ent.Field {
 	return []ent.Field{
 		field.

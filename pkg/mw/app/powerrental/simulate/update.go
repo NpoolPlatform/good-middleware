@@ -17,7 +17,7 @@ type updateHandler struct {
 	sql string
 }
 
-func (h *updateHandler) constructSql() error {
+func (h *updateHandler) constructSQL() error {
 	if h.ID == nil && h.EntID == nil && h.AppGoodID == nil {
 		return fmt.Errorf("invalid simulateid")
 	}
@@ -50,7 +50,6 @@ func (h *updateHandler) constructSql() error {
 	}
 	if h.AppGoodID != nil {
 		_sql += fmt.Sprintf("%vapp_good_id = '%v' ", and, *h.AppGoodID)
-		and = "and "
 	}
 	h.sql = _sql
 	return nil
@@ -106,7 +105,7 @@ func (h *Handler) UpdateSimulate(ctx context.Context) error {
 		return err
 	}
 
-	if err := handler.constructSql(); err != nil {
+	if err := handler.constructSQL(); err != nil {
 		return err
 	}
 

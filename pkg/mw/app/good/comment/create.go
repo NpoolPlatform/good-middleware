@@ -22,15 +22,16 @@ type createHandler struct {
 	updateScore bool
 }
 
-func (h *createHandler) constructScoreSql(ctx context.Context) {
+func (h *createHandler) constructScoreSQL(ctx context.Context) {
 	handler, _ := score1.NewHandler(ctx)
 	h.ScoreReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 	h.ScoreReq.CommentID = h.EntID
 	handler.Req = *h.ScoreReq
-	h.sqlScore = handler.ConstructCreateSql()
+	h.sqlScore = handler.ConstructCreateSQL()
 }
 
-func (h *createHandler) constructSql() {
+//nolint:funlen,goconst
+func (h *createHandler) constructSQL() {
 	comma := ""
 	now := uint32(time.Now().Unix())
 	_sql := "insert into comments "
@@ -175,9 +176,9 @@ func (h *Handler) CreateComment(ctx context.Context) error {
 	if h.EntID == nil {
 		h.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 	}
-	handler.constructSql()
+	handler.constructSQL()
 	if handler.ScoreReq.Score != nil && handler.ScoreReq.Score.Cmp(decimal.NewFromInt(0)) > 0 {
-		handler.constructScoreSql(ctx)
+		handler.constructScoreSQL(ctx)
 	}
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createComment(ctx, tx); err != nil {
