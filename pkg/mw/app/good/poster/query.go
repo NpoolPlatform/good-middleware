@@ -12,6 +12,7 @@ import (
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entappgoodposter "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/poster"
 )
 
@@ -58,12 +59,12 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(entappgoodposter.FieldID),
 		).
 		AppendSelect(
-			sql.As(t.C(entappgoodposter.FieldEntID), "ent_id"),
-			sql.As(t.C(entappgoodposter.FieldAppGoodID), "app_good_id"),
-			sql.As(t.C(entappgoodposter.FieldPoster), "poster"),
-			sql.As(t.C(entappgoodposter.FieldIndex), "index"),
-			sql.As(t.C(entappgoodposter.FieldCreatedAt), "created_at"),
-			sql.As(t.C(entappgoodposter.FieldUpdatedAt), "updated_at"),
+			t.C(entappgoodposter.FieldEntID),
+			t.C(entappgoodposter.FieldAppGoodID),
+			t.C(entappgoodposter.FieldPoster),
+			t.C(entappgoodposter.FieldIndex),
+			t.C(entappgoodposter.FieldCreatedAt),
+			t.C(entappgoodposter.FieldUpdatedAt),
 		)
 }
 
@@ -75,7 +76,7 @@ func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
 			t1.C(entappgoodbase.FieldEntID),
 		).
 		AppendSelect(
-			sql.As(t1.C(entappgoodbase.FieldAppID), "app_id"),
+			t1.C(entappgoodbase.FieldAppID),
 			sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
 		)
 
@@ -88,6 +89,7 @@ func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
 		AppendSelect(
 			sql.As(t2.C(entgoodbase.FieldEntID), "good_id"),
 			sql.As(t2.C(entgoodbase.FieldName), "good_name"),
+			t2.C(entgoodbase.FieldGoodType),
 		)
 }
 
@@ -106,6 +108,12 @@ func (h *queryHandler) queryJoin() {
 
 func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
+}
+
+func (h *queryHandler) formalize() {
+	for _, info := range h.infos {
+		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
+	}
 }
 
 func (h *Handler) GetPoster(ctx context.Context) (*npool.Poster, error) {
@@ -129,6 +137,8 @@ func (h *Handler) GetPoster(ctx context.Context) (*npool.Poster, error) {
 	if len(handler.infos) > 1 {
 		return nil, fmt.Errorf("too many records")
 	}
+
+	handler.formalize()
 
 	return handler.infos[0], nil
 }
@@ -166,6 +176,8 @@ func (h *Handler) GetPosters(ctx context.Context) ([]*npool.Poster, uint32, erro
 	if err != nil {
 		return nil, 0, err
 	}
+
+	handler.formalize()
 
 	return handler.infos, handler.total, nil
 }

@@ -34,6 +34,7 @@ var ret = npool.Poster{
 	EntID:       uuid.NewString(),
 	AppID:       uuid.NewString(),
 	GoodID:      uuid.NewString(),
+	GoodType:    types.GoodType_PowerRental,
 	GoodName:    uuid.NewString(),
 	AppGoodID:   uuid.NewString(),
 	AppGoodName: uuid.NewString(),
@@ -41,12 +42,12 @@ var ret = npool.Poster{
 }
 
 func setup(t *testing.T) func(*testing.T) {
-	goodType := types.GoodType_PowerRental
+	ret.GoodTypeStr = ret.GoodType.String()
 
 	h1, err := goodbase1.NewHandler(
 		context.Background(),
 		goodbase1.WithEntID(&ret.GoodID, true),
-		goodbase1.WithGoodType(&goodType, true),
+		goodbase1.WithGoodType(&ret.GoodType, true),
 		goodbase1.WithName(&ret.GoodName, true),
 		goodbase1.WithBenefitType(func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }(), true),
 		goodbase1.WithStartMode(func() *types.GoodStartMode { e := types.GoodStartMode_GoodStartModeInstantly; return &e }(), true),
