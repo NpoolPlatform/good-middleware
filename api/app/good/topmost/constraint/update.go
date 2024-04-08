@@ -25,7 +25,7 @@ func (s *Server) UpdateTopMostConstraint(ctx context.Context, in *npool.UpdateTo
 		ctx,
 		constraint1.WithID(req.ID, false),
 		constraint1.WithEntID(req.EntID, false),
-		constraint1.WithTargetValue(req.TargetValue, true),
+		constraint1.WithTargetValue(req.TargetValue, false),
 		constraint1.WithIndex(req.Index, false),
 	)
 	if err != nil {
