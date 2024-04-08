@@ -34,6 +34,7 @@ var ret = npool.Label{
 	EntID:        uuid.NewString(),
 	AppID:        uuid.NewString(),
 	GoodID:       uuid.NewString(),
+	GoodType:     types.GoodType_PowerRental,
 	GoodName:     uuid.NewString(),
 	AppGoodID:    uuid.NewString(),
 	AppGoodName:  uuid.NewString(),
@@ -41,17 +42,19 @@ var ret = npool.Label{
 	IconBgColor:  uuid.NewString(),
 	Label:        types.GoodLabel_GoodLabelPromotion,
 	LabelBgColor: uuid.NewString(),
+	Index:        5,
 }
 
 func setup(t *testing.T) func(*testing.T) {
 	ret.LabelStr = ret.Label.String()
+	ret.GoodTypeStr = ret.GoodType.String()
 
 	h1, err := goodbase1.NewHandler(
 		context.Background(),
 		goodbase1.WithEntID(&ret.GoodID, true),
 		goodbase1.WithName(&ret.GoodName, true),
 		goodbase1.WithBenefitType(func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }(), true),
-		goodbase1.WithGoodType(func() *types.GoodType { e := types.GoodType_PowerRental; return &e }(), true),
+		goodbase1.WithGoodType(&ret.GoodType, true),
 		goodbase1.WithTestOnly(func() *bool { b := true; return &b }(), false),
 		goodbase1.WithBenefitIntervalHours(func() *uint32 { u := uint32(24); return &u }(), true),
 		goodbase1.WithServiceStartAt(func() *uint32 { u := uint32(time.Now().Unix()); return &u }(), true),
@@ -89,6 +92,7 @@ func createLabel(t *testing.T) {
 		WithIconBgColor(&ret.IconBgColor, true),
 		WithLabel(&ret.Label, true),
 		WithLabelBgColor(&ret.LabelBgColor, true),
+		WithIndex(func() *uint8 { u := uint8(ret.Index); return &u }(), true),
 	)
 	assert.Nil(t, err)
 

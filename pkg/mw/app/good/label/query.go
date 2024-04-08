@@ -79,7 +79,7 @@ func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
 			t1.C(entappgoodbase.FieldEntID),
 		).
 		AppendSelect(
-			sql.As(t1.C(entappgoodbase.FieldAppID), "app_id"),
+			t1.C(entappgoodbase.FieldAppID),
 			sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
 		)
 
@@ -92,6 +92,7 @@ func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
 		AppendSelect(
 			sql.As(t2.C(entgoodbase.FieldEntID), "good_id"),
 			sql.As(t2.C(entgoodbase.FieldName), "good_name"),
+			t2.C(entgoodbase.FieldGoodType),
 		)
 }
 
@@ -115,6 +116,7 @@ func (h *queryHandler) scan(ctx context.Context) error {
 func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
 		info.Label = types.GoodLabel(types.GoodLabel_value[info.LabelStr])
+		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 	}
 }
 

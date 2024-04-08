@@ -34,6 +34,9 @@ func (h *createHandler) constructSql() {
 	if h.LabelBgColor != nil {
 		_sql += comma + "label_bg_color"
 	}
+	if h.Index != nil {
+		_sql += comma + "`index`"
+	}
 	_sql += comma + "created_at"
 	_sql += comma + "updated_at"
 	_sql += comma + "deleted_at"
@@ -56,6 +59,9 @@ func (h *createHandler) constructSql() {
 	_sql += fmt.Sprintf("%v'%v' as label", comma, *h.Label)
 	if h.LabelBgColor != nil {
 		_sql += fmt.Sprintf("%v'%v' as label_bg_color", comma, *h.LabelBgColor)
+	}
+	if h.Index != nil {
+		_sql += fmt.Sprintf("%v%v as `index`", comma, *h.Index)
 	}
 	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
 	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
