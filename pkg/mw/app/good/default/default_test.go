@@ -35,6 +35,7 @@ var ret = npool.Default{
 	EntID:       uuid.NewString(),
 	AppID:       uuid.NewString(),
 	GoodID:      uuid.NewString(),
+	GoodType:    types.GoodType_PowerRental,
 	GoodName:    uuid.NewString(),
 	AppGoodID:   uuid.NewString(),
 	AppGoodName: uuid.NewString(),
@@ -43,13 +44,12 @@ var ret = npool.Default{
 var appGoodID2 = uuid.NewString()
 
 func setup(t *testing.T) func(*testing.T) {
-	goodType := types.GoodType_PowerRental
-	goodCoinEntID := uuid.NewString()
+	ret.GoodTypeStr = ret.GoodType.String()
 
 	h1, err := goodbase1.NewHandler(
 		context.Background(),
 		goodbase1.WithEntID(&ret.GoodID, true),
-		goodbase1.WithGoodType(&goodType, true),
+		goodbase1.WithGoodType(&ret.GoodType, true),
 		goodbase1.WithName(&ret.GoodName, true),
 		goodbase1.WithBenefitType(func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }(), true),
 		goodbase1.WithStartMode(func() *types.GoodStartMode { e := types.GoodStartMode_GoodStartModeInstantly; return &e }(), true),
@@ -73,6 +73,7 @@ func setup(t *testing.T) func(*testing.T) {
 	err = h2.CreateGoodBase(context.Background())
 	assert.Nil(t, err)
 
+	goodCoinEntID := uuid.NewString()
 	h3, err := goodcoin1.NewHandler(
 		context.Background(),
 		goodcoin1.WithEntID(&goodCoinEntID, true),
@@ -203,7 +204,7 @@ func deleteDefault(t *testing.T) {
 		assert.Nil(t, err)
 
 		info, err := handler.GetDefault(context.Background())
-		assert.NotNil(t, err)
+		assert.Nil(t, err)
 		assert.Nil(t, info)
 	}
 }

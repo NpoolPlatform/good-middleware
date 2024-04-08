@@ -48,7 +48,6 @@ var ret = npool.TopMostGood{
 	UnitPrice:        decimal.NewFromInt(234).String(),
 }
 
-//nolint:funlen
 func setup(t *testing.T) func(*testing.T) {
 	ret.TopMostTypeStr = ret.TopMostType.String()
 
@@ -86,7 +85,7 @@ func setup(t *testing.T) func(*testing.T) {
 		topmost1.WithTopMostType(&ret.TopMostType, true),
 		topmost1.WithTitle(&ret.TopMostTitle, true),
 		topmost1.WithMessage(&ret.TopMostMessage, true),
-		topmost1.WithTargetUrl(&ret.TopMostTargetUrl, true),
+		topmost1.WithTargetURL(&ret.TopMostTargetUrl, true),
 		topmost1.WithStartAt(func() *uint32 { u := uint32(time.Now().Unix()); return &u }(), true),
 		topmost1.WithEndAt(func() *uint32 { u := uint32(time.Now().Unix() + 10000); return &u }(), true),
 	)

@@ -159,7 +159,6 @@ func (h *Handler) withTopMostConds(conds *npool.Conds) error {
 	return nil
 }
 
-//nolint:gocyclo
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if conds == nil {

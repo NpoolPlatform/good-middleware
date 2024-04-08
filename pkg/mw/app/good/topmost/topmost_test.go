@@ -48,7 +48,7 @@ func createTopMost(t *testing.T) {
 		WithTopMostType(&ret.TopMostType, true),
 		WithTitle(&ret.Title, true),
 		WithMessage(&ret.Message, true),
-		WithTargetUrl(&ret.TargetUrl, true),
+		WithTargetURL(&ret.TargetUrl, true),
 		WithStartAt(&ret.StartAt, true),
 		WithEndAt(&ret.EndAt, true),
 	)
