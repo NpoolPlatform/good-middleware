@@ -2,6 +2,7 @@ package coin
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
@@ -73,6 +74,30 @@ func GetGoodCoins(ctx context.Context, conds *npool.Conds, offset, limit int32) 
 		return nil, 0, err
 	}
 	return _infos.([]*npool.GoodCoin), total, nil
+}
+
+func GetGoodCoinOnly(ctx context.Context, conds *npool.Conds) (info *npool.GoodCoin, err error) {
+	_infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.GetGoodCoins(_ctx, &npool.GetGoodCoinsRequest{
+			Conds:  conds,
+			Offset: 0,
+			Limit:  2,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Infos, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	if len(_infos.([]*npool.GoodCoin)) == 0 {
+		return nil, fmt.Errorf("invalid goodcoin")
+	}
+	if len(_infos.([]*npool.GoodCoin)) > 1 {
+		return nil, fmt.Errorf("too many goodcoins")
+	}
+	return _infos.([]*npool.GoodCoin)[0], nil
 }
 
 func ExistGoodCoinConds(ctx context.Context, conds *npool.Conds) (exist bool, err error) {
