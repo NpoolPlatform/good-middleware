@@ -159,6 +159,30 @@ func (h *Handler) withGoodCoinConds(conds *npool.Conds) error {
 			Val: ids,
 		}
 	}
+	if conds.CoinTypeID != nil {
+		id, err := uuid.Parse(conds.GetCoinTypeID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.GoodCoinConds.CoinTypeID = &cruder.Cond{
+			Op:  conds.GetCoinTypeID().GetOp(),
+			Val: id,
+		}
+	}
+	if conds.CoinTypeIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range conds.GetCoinTypeIDs().GetValue() {
+			_id, err := uuid.Parse(id)
+			if err != nil {
+				return err
+			}
+			ids = append(ids, _id)
+		}
+		h.GoodCoinConds.CoinTypeIDs = &cruder.Cond{
+			Op:  conds.GetCoinTypeIDs().GetOp(),
+			Val: ids,
+		}
+	}
 	return nil
 }
 
