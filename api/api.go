@@ -28,6 +28,7 @@ import (
 	manufacturer "github.com/NpoolPlatform/good-middleware/api/device/manufacturer"
 	deviceposter "github.com/NpoolPlatform/good-middleware/api/device/poster"
 	fee "github.com/NpoolPlatform/good-middleware/api/fee"
+	good "github.com/NpoolPlatform/good-middleware/api/good"
 	goodcoin "github.com/NpoolPlatform/good-middleware/api/good/coin"
 	goodrequired "github.com/NpoolPlatform/good-middleware/api/good/required"
 	"github.com/NpoolPlatform/good-middleware/api/good/reward/history"
@@ -77,6 +78,7 @@ func Register(server grpc.ServiceRegistrar) {
 	appfee.Register(server)
 	fee.Register(server)
 	powerrental.Register(server)
+	good.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
