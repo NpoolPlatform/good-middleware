@@ -40,6 +40,10 @@ type Comment struct {
 	TrialUser bool `json:"trial_user,omitempty"`
 	// PurchasedUser holds the value of the "purchased_user" field.
 	PurchasedUser bool `json:"purchased_user,omitempty"`
+	// Hide holds the value of the "hide" field.
+	Hide bool `json:"hide,omitempty"`
+	// HideReason holds the value of the "hide_reason" field.
+	HideReason string `json:"hide_reason,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -47,11 +51,11 @@ func (*Comment) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case comment.FieldAnonymous, comment.FieldTrialUser, comment.FieldPurchasedUser:
+		case comment.FieldAnonymous, comment.FieldTrialUser, comment.FieldPurchasedUser, comment.FieldHide:
 			values[i] = new(sql.NullBool)
 		case comment.FieldID, comment.FieldCreatedAt, comment.FieldUpdatedAt, comment.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case comment.FieldContent:
+		case comment.FieldContent, comment.FieldHideReason:
 			values[i] = new(sql.NullString)
 		case comment.FieldEntID, comment.FieldUserID, comment.FieldAppGoodID, comment.FieldOrderID, comment.FieldReplyToID:
 			values[i] = new(uuid.UUID)
@@ -148,6 +152,18 @@ func (c *Comment) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				c.PurchasedUser = value.Bool
 			}
+		case comment.FieldHide:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field hide", values[i])
+			} else if value.Valid {
+				c.Hide = value.Bool
+			}
+		case comment.FieldHideReason:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field hide_reason", values[i])
+			} else if value.Valid {
+				c.HideReason = value.String
+			}
 		}
 	}
 	return nil
@@ -211,6 +227,12 @@ func (c *Comment) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("purchased_user=")
 	builder.WriteString(fmt.Sprintf("%v", c.PurchasedUser))
+	builder.WriteString(", ")
+	builder.WriteString("hide=")
+	builder.WriteString(fmt.Sprintf("%v", c.Hide))
+	builder.WriteString(", ")
+	builder.WriteString("hide_reason=")
+	builder.WriteString(c.HideReason)
 	builder.WriteByte(')')
 	return builder.String()
 }

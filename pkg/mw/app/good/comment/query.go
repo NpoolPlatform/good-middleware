@@ -12,6 +12,7 @@ import (
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entcomment "github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	entscore "github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/comment"
 
 	"github.com/shopspring/decimal"
@@ -69,6 +70,8 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(entcomment.FieldAnonymous),
 			t.C(entcomment.FieldPurchasedUser),
 			t.C(entcomment.FieldTrialUser),
+			t.C(entcomment.FieldHide),
+			t.C(entcomment.FieldHideReason),
 			t.C(entcomment.FieldCreatedAt),
 			t.C(entcomment.FieldUpdatedAt),
 		)
@@ -122,6 +125,7 @@ func (h *queryHandler) scan(ctx context.Context) error {
 func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
 		info.Score = func() string { amount, _ := decimal.NewFromString(info.Score); return amount.String() }()
+		info.HideReason = types.GoodCommentHideReason(types.GoodCommentHideReason_value[info.HideReasonStr])
 	}
 }
 

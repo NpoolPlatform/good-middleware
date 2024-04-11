@@ -6,6 +6,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entcomment "github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 )
@@ -20,6 +21,8 @@ type Req struct {
 	Anonymous     *bool
 	PurchasedUser *bool
 	TrialUser     *bool
+	Hide          *bool
+	HideReason    *types.GoodCommentHideReason
 	DeletedAt     *uint32
 }
 
@@ -57,6 +60,12 @@ func CreateSet(c *ent.CommentCreate, req *Req) *ent.CommentCreate {
 func UpdateSet(u *ent.CommentUpdateOne, req *Req) *ent.CommentUpdateOne {
 	if req.Content != nil {
 		u.SetContent(*req.Content)
+	}
+	if req.Hide != nil {
+		u.SetHide(*req.Hide)
+	}
+	if req.HideReason != nil {
+		u.SetHideReason(req.HideReason.String())
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)

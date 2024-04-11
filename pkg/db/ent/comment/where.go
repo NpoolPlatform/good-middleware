@@ -163,6 +163,20 @@ func PurchasedUser(v bool) predicate.Comment {
 	})
 }
 
+// Hide applies equality check predicate on the "hide" field. It's identical to HideEQ.
+func Hide(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldHide), v))
+	})
+}
+
+// HideReason applies equality check predicate on the "hide_reason" field. It's identical to HideReasonEQ.
+func HideReason(v string) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldHideReason), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
@@ -925,6 +939,147 @@ func PurchasedUserIsNil() predicate.Comment {
 func PurchasedUserNotNil() predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldPurchasedUser)))
+	})
+}
+
+// HideEQ applies the EQ predicate on the "hide" field.
+func HideEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldHide), v))
+	})
+}
+
+// HideNEQ applies the NEQ predicate on the "hide" field.
+func HideNEQ(v bool) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldHide), v))
+	})
+}
+
+// HideIsNil applies the IsNil predicate on the "hide" field.
+func HideIsNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldHide)))
+	})
+}
+
+// HideNotNil applies the NotNil predicate on the "hide" field.
+func HideNotNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldHide)))
+	})
+}
+
+// HideReasonEQ applies the EQ predicate on the "hide_reason" field.
+func HideReasonEQ(v string) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonNEQ applies the NEQ predicate on the "hide_reason" field.
+func HideReasonNEQ(v string) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonIn applies the In predicate on the "hide_reason" field.
+func HideReasonIn(vs ...string) predicate.Comment {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldHideReason), v...))
+	})
+}
+
+// HideReasonNotIn applies the NotIn predicate on the "hide_reason" field.
+func HideReasonNotIn(vs ...string) predicate.Comment {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldHideReason), v...))
+	})
+}
+
+// HideReasonGT applies the GT predicate on the "hide_reason" field.
+func HideReasonGT(v string) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonGTE applies the GTE predicate on the "hide_reason" field.
+func HideReasonGTE(v string) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonLT applies the LT predicate on the "hide_reason" field.
+func HideReasonLT(v string) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonLTE applies the LTE predicate on the "hide_reason" field.
+func HideReasonLTE(v string) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonContains applies the Contains predicate on the "hide_reason" field.
+func HideReasonContains(v string) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonHasPrefix applies the HasPrefix predicate on the "hide_reason" field.
+func HideReasonHasPrefix(v string) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonHasSuffix applies the HasSuffix predicate on the "hide_reason" field.
+func HideReasonHasSuffix(v string) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonIsNil applies the IsNil predicate on the "hide_reason" field.
+func HideReasonIsNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldHideReason)))
+	})
+}
+
+// HideReasonNotNil applies the NotNil predicate on the "hide_reason" field.
+func HideReasonNotNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldHideReason)))
+	})
+}
+
+// HideReasonEqualFold applies the EqualFold predicate on the "hide_reason" field.
+func HideReasonEqualFold(v string) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonContainsFold applies the ContainsFold predicate on the "hide_reason" field.
+func HideReasonContainsFold(v string) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldHideReason), v))
 	})
 }
 

@@ -190,6 +190,34 @@ func (cc *CommentCreate) SetNillablePurchasedUser(b *bool) *CommentCreate {
 	return cc
 }
 
+// SetHide sets the "hide" field.
+func (cc *CommentCreate) SetHide(b bool) *CommentCreate {
+	cc.mutation.SetHide(b)
+	return cc
+}
+
+// SetNillableHide sets the "hide" field if the given value is not nil.
+func (cc *CommentCreate) SetNillableHide(b *bool) *CommentCreate {
+	if b != nil {
+		cc.SetHide(*b)
+	}
+	return cc
+}
+
+// SetHideReason sets the "hide_reason" field.
+func (cc *CommentCreate) SetHideReason(s string) *CommentCreate {
+	cc.mutation.SetHideReason(s)
+	return cc
+}
+
+// SetNillableHideReason sets the "hide_reason" field if the given value is not nil.
+func (cc *CommentCreate) SetNillableHideReason(s *string) *CommentCreate {
+	if s != nil {
+		cc.SetHideReason(*s)
+	}
+	return cc
+}
+
 // SetID sets the "id" field.
 func (cc *CommentCreate) SetID(u uint32) *CommentCreate {
 	cc.mutation.SetID(u)
@@ -347,6 +375,14 @@ func (cc *CommentCreate) defaults() error {
 		v := comment.DefaultPurchasedUser
 		cc.mutation.SetPurchasedUser(v)
 	}
+	if _, ok := cc.mutation.Hide(); !ok {
+		v := comment.DefaultHide
+		cc.mutation.SetHide(v)
+	}
+	if _, ok := cc.mutation.HideReason(); !ok {
+		v := comment.DefaultHideReason
+		cc.mutation.SetHideReason(v)
+	}
 	return nil
 }
 
@@ -493,6 +529,22 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 			Column: comment.FieldPurchasedUser,
 		})
 		_node.PurchasedUser = value
+	}
+	if value, ok := cc.mutation.Hide(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: comment.FieldHide,
+		})
+		_node.Hide = value
+	}
+	if value, ok := cc.mutation.HideReason(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: comment.FieldHideReason,
+		})
+		_node.HideReason = value
 	}
 	return _node, _spec
 }
@@ -755,6 +807,42 @@ func (u *CommentUpsert) UpdatePurchasedUser() *CommentUpsert {
 // ClearPurchasedUser clears the value of the "purchased_user" field.
 func (u *CommentUpsert) ClearPurchasedUser() *CommentUpsert {
 	u.SetNull(comment.FieldPurchasedUser)
+	return u
+}
+
+// SetHide sets the "hide" field.
+func (u *CommentUpsert) SetHide(v bool) *CommentUpsert {
+	u.Set(comment.FieldHide, v)
+	return u
+}
+
+// UpdateHide sets the "hide" field to the value that was provided on create.
+func (u *CommentUpsert) UpdateHide() *CommentUpsert {
+	u.SetExcluded(comment.FieldHide)
+	return u
+}
+
+// ClearHide clears the value of the "hide" field.
+func (u *CommentUpsert) ClearHide() *CommentUpsert {
+	u.SetNull(comment.FieldHide)
+	return u
+}
+
+// SetHideReason sets the "hide_reason" field.
+func (u *CommentUpsert) SetHideReason(v string) *CommentUpsert {
+	u.Set(comment.FieldHideReason, v)
+	return u
+}
+
+// UpdateHideReason sets the "hide_reason" field to the value that was provided on create.
+func (u *CommentUpsert) UpdateHideReason() *CommentUpsert {
+	u.SetExcluded(comment.FieldHideReason)
+	return u
+}
+
+// ClearHideReason clears the value of the "hide_reason" field.
+func (u *CommentUpsert) ClearHideReason() *CommentUpsert {
+	u.SetNull(comment.FieldHideReason)
 	return u
 }
 
@@ -1050,6 +1138,48 @@ func (u *CommentUpsertOne) UpdatePurchasedUser() *CommentUpsertOne {
 func (u *CommentUpsertOne) ClearPurchasedUser() *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.ClearPurchasedUser()
+	})
+}
+
+// SetHide sets the "hide" field.
+func (u *CommentUpsertOne) SetHide(v bool) *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetHide(v)
+	})
+}
+
+// UpdateHide sets the "hide" field to the value that was provided on create.
+func (u *CommentUpsertOne) UpdateHide() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateHide()
+	})
+}
+
+// ClearHide clears the value of the "hide" field.
+func (u *CommentUpsertOne) ClearHide() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearHide()
+	})
+}
+
+// SetHideReason sets the "hide_reason" field.
+func (u *CommentUpsertOne) SetHideReason(v string) *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetHideReason(v)
+	})
+}
+
+// UpdateHideReason sets the "hide_reason" field to the value that was provided on create.
+func (u *CommentUpsertOne) UpdateHideReason() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateHideReason()
+	})
+}
+
+// ClearHideReason clears the value of the "hide_reason" field.
+func (u *CommentUpsertOne) ClearHideReason() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearHideReason()
 	})
 }
 
@@ -1510,6 +1640,48 @@ func (u *CommentUpsertBulk) UpdatePurchasedUser() *CommentUpsertBulk {
 func (u *CommentUpsertBulk) ClearPurchasedUser() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.ClearPurchasedUser()
+	})
+}
+
+// SetHide sets the "hide" field.
+func (u *CommentUpsertBulk) SetHide(v bool) *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetHide(v)
+	})
+}
+
+// UpdateHide sets the "hide" field to the value that was provided on create.
+func (u *CommentUpsertBulk) UpdateHide() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateHide()
+	})
+}
+
+// ClearHide clears the value of the "hide" field.
+func (u *CommentUpsertBulk) ClearHide() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearHide()
+	})
+}
+
+// SetHideReason sets the "hide_reason" field.
+func (u *CommentUpsertBulk) SetHideReason(v string) *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetHideReason(v)
+	})
+}
+
+// UpdateHideReason sets the "hide_reason" field to the value that was provided on create.
+func (u *CommentUpsertBulk) UpdateHideReason() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateHideReason()
+	})
+}
+
+// ClearHideReason clears the value of the "hide_reason" field.
+func (u *CommentUpsertBulk) ClearHideReason() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.ClearHideReason()
 	})
 }
 

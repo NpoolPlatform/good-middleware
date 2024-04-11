@@ -442,6 +442,8 @@ var schemaGraph = func() *sqlgraph.Schema {
 			comment.FieldAnonymous:     {Type: field.TypeBool, Column: comment.FieldAnonymous},
 			comment.FieldTrialUser:     {Type: field.TypeBool, Column: comment.FieldTrialUser},
 			comment.FieldPurchasedUser: {Type: field.TypeBool, Column: comment.FieldPurchasedUser},
+			comment.FieldHide:          {Type: field.TypeBool, Column: comment.FieldHide},
+			comment.FieldHideReason:    {Type: field.TypeString, Column: comment.FieldHideReason},
 		},
 	}
 	graph.Nodes[16] = &sqlgraph.Node{
@@ -2626,6 +2628,16 @@ func (f *CommentFilter) WhereTrialUser(p entql.BoolP) {
 // WherePurchasedUser applies the entql bool predicate on the purchased_user field.
 func (f *CommentFilter) WherePurchasedUser(p entql.BoolP) {
 	f.Where(p.Field(comment.FieldPurchasedUser))
+}
+
+// WhereHide applies the entql bool predicate on the hide field.
+func (f *CommentFilter) WhereHide(p entql.BoolP) {
+	f.Where(p.Field(comment.FieldHide))
+}
+
+// WhereHideReason applies the entql string predicate on the hide_reason field.
+func (f *CommentFilter) WhereHideReason(p entql.StringP) {
+	f.Where(p.Field(comment.FieldHideReason))
 }
 
 // addPredicate implements the predicateAdder interface.

@@ -11,6 +11,7 @@ import (
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/comment"
 
 	"github.com/google/uuid"
@@ -209,6 +210,33 @@ func WithScore(s *string, must bool) func(context.Context, *Handler) error {
 			return err
 		}
 		h.ScoreReq.Score = &score
+		return nil
+	}
+}
+
+func WithHide(b *bool, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.Hide = b
+		return nil
+	}
+}
+
+func WithHideReason(e *types.GoodCommentHideReason, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return fmt.Errorf("invalid hidereason")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodCommentHideReason_GoodCommentHideBySpam:
+		case types.GoodCommentHideReason_GoodCommentHideByNotThisGood:
+		case types.GoodCommentHideReason_GoodCommentHideByFalseDescription:
+		default:
+			return fmt.Errorf("invalid hidereason")
+		}
+		h.HideReason = e
 		return nil
 	}
 }

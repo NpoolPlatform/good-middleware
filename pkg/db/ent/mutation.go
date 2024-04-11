@@ -17382,6 +17382,8 @@ type CommentMutation struct {
 	anonymous      *bool
 	trial_user     *bool
 	purchased_user *bool
+	hide           *bool
+	hide_reason    *string
 	clearedFields  map[string]struct{}
 	done           bool
 	oldValue       func(context.Context) (*Comment, error)
@@ -18088,6 +18090,104 @@ func (m *CommentMutation) ResetPurchasedUser() {
 	delete(m.clearedFields, comment.FieldPurchasedUser)
 }
 
+// SetHide sets the "hide" field.
+func (m *CommentMutation) SetHide(b bool) {
+	m.hide = &b
+}
+
+// Hide returns the value of the "hide" field in the mutation.
+func (m *CommentMutation) Hide() (r bool, exists bool) {
+	v := m.hide
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHide returns the old "hide" field's value of the Comment entity.
+// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CommentMutation) OldHide(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHide is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHide requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHide: %w", err)
+	}
+	return oldValue.Hide, nil
+}
+
+// ClearHide clears the value of the "hide" field.
+func (m *CommentMutation) ClearHide() {
+	m.hide = nil
+	m.clearedFields[comment.FieldHide] = struct{}{}
+}
+
+// HideCleared returns if the "hide" field was cleared in this mutation.
+func (m *CommentMutation) HideCleared() bool {
+	_, ok := m.clearedFields[comment.FieldHide]
+	return ok
+}
+
+// ResetHide resets all changes to the "hide" field.
+func (m *CommentMutation) ResetHide() {
+	m.hide = nil
+	delete(m.clearedFields, comment.FieldHide)
+}
+
+// SetHideReason sets the "hide_reason" field.
+func (m *CommentMutation) SetHideReason(s string) {
+	m.hide_reason = &s
+}
+
+// HideReason returns the value of the "hide_reason" field in the mutation.
+func (m *CommentMutation) HideReason() (r string, exists bool) {
+	v := m.hide_reason
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHideReason returns the old "hide_reason" field's value of the Comment entity.
+// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CommentMutation) OldHideReason(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHideReason is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHideReason requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHideReason: %w", err)
+	}
+	return oldValue.HideReason, nil
+}
+
+// ClearHideReason clears the value of the "hide_reason" field.
+func (m *CommentMutation) ClearHideReason() {
+	m.hide_reason = nil
+	m.clearedFields[comment.FieldHideReason] = struct{}{}
+}
+
+// HideReasonCleared returns if the "hide_reason" field was cleared in this mutation.
+func (m *CommentMutation) HideReasonCleared() bool {
+	_, ok := m.clearedFields[comment.FieldHideReason]
+	return ok
+}
+
+// ResetHideReason resets all changes to the "hide_reason" field.
+func (m *CommentMutation) ResetHideReason() {
+	m.hide_reason = nil
+	delete(m.clearedFields, comment.FieldHideReason)
+}
+
 // Where appends a list predicates to the CommentMutation builder.
 func (m *CommentMutation) Where(ps ...predicate.Comment) {
 	m.predicates = append(m.predicates, ps...)
@@ -18107,7 +18207,7 @@ func (m *CommentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *CommentMutation) Fields() []string {
-	fields := make([]string, 0, 12)
+	fields := make([]string, 0, 14)
 	if m.created_at != nil {
 		fields = append(fields, comment.FieldCreatedAt)
 	}
@@ -18144,6 +18244,12 @@ func (m *CommentMutation) Fields() []string {
 	if m.purchased_user != nil {
 		fields = append(fields, comment.FieldPurchasedUser)
 	}
+	if m.hide != nil {
+		fields = append(fields, comment.FieldHide)
+	}
+	if m.hide_reason != nil {
+		fields = append(fields, comment.FieldHideReason)
+	}
 	return fields
 }
 
@@ -18176,6 +18282,10 @@ func (m *CommentMutation) Field(name string) (ent.Value, bool) {
 		return m.TrialUser()
 	case comment.FieldPurchasedUser:
 		return m.PurchasedUser()
+	case comment.FieldHide:
+		return m.Hide()
+	case comment.FieldHideReason:
+		return m.HideReason()
 	}
 	return nil, false
 }
@@ -18209,6 +18319,10 @@ func (m *CommentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldTrialUser(ctx)
 	case comment.FieldPurchasedUser:
 		return m.OldPurchasedUser(ctx)
+	case comment.FieldHide:
+		return m.OldHide(ctx)
+	case comment.FieldHideReason:
+		return m.OldHideReason(ctx)
 	}
 	return nil, fmt.Errorf("unknown Comment field %s", name)
 }
@@ -18301,6 +18415,20 @@ func (m *CommentMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetPurchasedUser(v)
+		return nil
+	case comment.FieldHide:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHide(v)
+		return nil
+	case comment.FieldHideReason:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHideReason(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Comment field %s", name)
@@ -18395,6 +18523,12 @@ func (m *CommentMutation) ClearedFields() []string {
 	if m.FieldCleared(comment.FieldPurchasedUser) {
 		fields = append(fields, comment.FieldPurchasedUser)
 	}
+	if m.FieldCleared(comment.FieldHide) {
+		fields = append(fields, comment.FieldHide)
+	}
+	if m.FieldCleared(comment.FieldHideReason) {
+		fields = append(fields, comment.FieldHideReason)
+	}
 	return fields
 }
 
@@ -18432,6 +18566,12 @@ func (m *CommentMutation) ClearField(name string) error {
 		return nil
 	case comment.FieldPurchasedUser:
 		m.ClearPurchasedUser()
+		return nil
+	case comment.FieldHide:
+		m.ClearHide()
+		return nil
+	case comment.FieldHideReason:
+		m.ClearHideReason()
 		return nil
 	}
 	return fmt.Errorf("unknown Comment nullable field %s", name)
@@ -18476,6 +18616,12 @@ func (m *CommentMutation) ResetField(name string) error {
 		return nil
 	case comment.FieldPurchasedUser:
 		m.ResetPurchasedUser()
+		return nil
+	case comment.FieldHide:
+		m.ResetHide()
+		return nil
+	case comment.FieldHideReason:
+		m.ResetHideReason()
 		return nil
 	}
 	return fmt.Errorf("unknown Comment field %s", name)

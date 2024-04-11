@@ -46,6 +46,7 @@ var ret = npool.Comment{
 
 func setup(t *testing.T) func(*testing.T) {
 	goodType := types.GoodType_PowerRental
+	ret.HideReasonStr = ret.HideReason.String()
 
 	h1, err := goodbase1.NewHandler(
 		context.Background(),

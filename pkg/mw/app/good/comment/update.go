@@ -16,7 +16,9 @@ func (h *updateHandler) updateComment(ctx context.Context, tx *ent.Tx) error {
 	if _, err := commentcrud.UpdateSet(
 		tx.Comment.UpdateOneID(*h.ID),
 		&commentcrud.Req{
-			Content: h.Content,
+			Content:    h.Content,
+			Hide:       h.Hide,
+			HideReason: h.HideReason,
 		},
 	).Save(ctx); err != nil {
 		return err

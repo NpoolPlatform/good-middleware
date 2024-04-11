@@ -258,6 +258,46 @@ func (cu *CommentUpdate) ClearPurchasedUser() *CommentUpdate {
 	return cu
 }
 
+// SetHide sets the "hide" field.
+func (cu *CommentUpdate) SetHide(b bool) *CommentUpdate {
+	cu.mutation.SetHide(b)
+	return cu
+}
+
+// SetNillableHide sets the "hide" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableHide(b *bool) *CommentUpdate {
+	if b != nil {
+		cu.SetHide(*b)
+	}
+	return cu
+}
+
+// ClearHide clears the value of the "hide" field.
+func (cu *CommentUpdate) ClearHide() *CommentUpdate {
+	cu.mutation.ClearHide()
+	return cu
+}
+
+// SetHideReason sets the "hide_reason" field.
+func (cu *CommentUpdate) SetHideReason(s string) *CommentUpdate {
+	cu.mutation.SetHideReason(s)
+	return cu
+}
+
+// SetNillableHideReason sets the "hide_reason" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableHideReason(s *string) *CommentUpdate {
+	if s != nil {
+		cu.SetHideReason(*s)
+	}
+	return cu
+}
+
+// ClearHideReason clears the value of the "hide_reason" field.
+func (cu *CommentUpdate) ClearHideReason() *CommentUpdate {
+	cu.mutation.ClearHideReason()
+	return cu
+}
+
 // Mutation returns the CommentMutation object of the builder.
 func (cu *CommentUpdate) Mutation() *CommentMutation {
 	return cu.mutation
@@ -509,6 +549,32 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: comment.FieldPurchasedUser,
 		})
 	}
+	if value, ok := cu.mutation.Hide(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: comment.FieldHide,
+		})
+	}
+	if cu.mutation.HideCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: comment.FieldHide,
+		})
+	}
+	if value, ok := cu.mutation.HideReason(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: comment.FieldHideReason,
+		})
+	}
+	if cu.mutation.HideReasonCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: comment.FieldHideReason,
+		})
+	}
 	_spec.Modifiers = cu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -756,6 +822,46 @@ func (cuo *CommentUpdateOne) SetNillablePurchasedUser(b *bool) *CommentUpdateOne
 // ClearPurchasedUser clears the value of the "purchased_user" field.
 func (cuo *CommentUpdateOne) ClearPurchasedUser() *CommentUpdateOne {
 	cuo.mutation.ClearPurchasedUser()
+	return cuo
+}
+
+// SetHide sets the "hide" field.
+func (cuo *CommentUpdateOne) SetHide(b bool) *CommentUpdateOne {
+	cuo.mutation.SetHide(b)
+	return cuo
+}
+
+// SetNillableHide sets the "hide" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableHide(b *bool) *CommentUpdateOne {
+	if b != nil {
+		cuo.SetHide(*b)
+	}
+	return cuo
+}
+
+// ClearHide clears the value of the "hide" field.
+func (cuo *CommentUpdateOne) ClearHide() *CommentUpdateOne {
+	cuo.mutation.ClearHide()
+	return cuo
+}
+
+// SetHideReason sets the "hide_reason" field.
+func (cuo *CommentUpdateOne) SetHideReason(s string) *CommentUpdateOne {
+	cuo.mutation.SetHideReason(s)
+	return cuo
+}
+
+// SetNillableHideReason sets the "hide_reason" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableHideReason(s *string) *CommentUpdateOne {
+	if s != nil {
+		cuo.SetHideReason(*s)
+	}
+	return cuo
+}
+
+// ClearHideReason clears the value of the "hide_reason" field.
+func (cuo *CommentUpdateOne) ClearHideReason() *CommentUpdateOne {
+	cuo.mutation.ClearHideReason()
 	return cuo
 }
 
@@ -1038,6 +1144,32 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Column: comment.FieldPurchasedUser,
+		})
+	}
+	if value, ok := cuo.mutation.Hide(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: comment.FieldHide,
+		})
+	}
+	if cuo.mutation.HideCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: comment.FieldHide,
+		})
+	}
+	if value, ok := cuo.mutation.HideReason(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: comment.FieldHideReason,
+		})
+	}
+	if cuo.mutation.HideReasonCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: comment.FieldHideReason,
 		})
 	}
 	_spec.Modifiers = cuo.modifiers

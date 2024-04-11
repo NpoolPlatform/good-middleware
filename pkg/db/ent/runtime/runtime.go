@@ -1041,6 +1041,14 @@ func init() {
 	commentDescPurchasedUser := commentFields[7].Descriptor()
 	// comment.DefaultPurchasedUser holds the default value on creation for the purchased_user field.
 	comment.DefaultPurchasedUser = commentDescPurchasedUser.Default.(bool)
+	// commentDescHide is the schema descriptor for hide field.
+	commentDescHide := commentFields[8].Descriptor()
+	// comment.DefaultHide holds the default value on creation for the hide field.
+	comment.DefaultHide = commentDescHide.Default.(bool)
+	// commentDescHideReason is the schema descriptor for hide_reason field.
+	commentDescHideReason := commentFields[9].Descriptor()
+	// comment.DefaultHideReason holds the default value on creation for the hide_reason field.
+	comment.DefaultHideReason = commentDescHideReason.Default.(string)
 	delegatedstakingMixin := schema.DelegatedStaking{}.Mixin()
 	delegatedstaking.Policy = privacy.NewPolicies(delegatedstakingMixin[0], schema.DelegatedStaking{})
 	delegatedstaking.Hooks[0] = func(next ent.Mutator) ent.Mutator {

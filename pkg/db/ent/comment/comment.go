@@ -36,6 +36,10 @@ const (
 	FieldTrialUser = "trial_user"
 	// FieldPurchasedUser holds the string denoting the purchased_user field in the database.
 	FieldPurchasedUser = "purchased_user"
+	// FieldHide holds the string denoting the hide field in the database.
+	FieldHide = "hide"
+	// FieldHideReason holds the string denoting the hide_reason field in the database.
+	FieldHideReason = "hide_reason"
 	// Table holds the table name of the comment in the database.
 	Table = "comments"
 )
@@ -55,6 +59,8 @@ var Columns = []string{
 	FieldAnonymous,
 	FieldTrialUser,
 	FieldPurchasedUser,
+	FieldHide,
+	FieldHideReason,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -102,4 +108,8 @@ var (
 	DefaultTrialUser bool
 	// DefaultPurchasedUser holds the default value on creation for the "purchased_user" field.
 	DefaultPurchasedUser bool
+	// DefaultHide holds the default value on creation for the "hide" field.
+	DefaultHide bool
+	// DefaultHideReason holds the default value on creation for the "hide_reason" field.
+	DefaultHideReason string
 )

@@ -491,6 +491,8 @@ var (
 		{Name: "anonymous", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "trial_user", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "purchased_user", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "hide", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "hide_reason", Type: field.TypeString, Nullable: true, Default: "DefaultGoodCommentHideReason"},
 	}
 	// CommentsTable holds the schema information for the "comments" table.
 	CommentsTable = &schema.Table{
