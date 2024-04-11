@@ -4,6 +4,7 @@ import (
 	"context"
 
 	appfee "github.com/NpoolPlatform/good-middleware/api/app/fee"
+	appgood "github.com/NpoolPlatform/good-middleware/api/app/good"
 	"github.com/NpoolPlatform/good-middleware/api/app/good/comment"
 	appdefaultgood "github.com/NpoolPlatform/good-middleware/api/app/good/default"
 	"github.com/NpoolPlatform/good-middleware/api/app/good/description"
@@ -79,6 +80,7 @@ func Register(server grpc.ServiceRegistrar) {
 	fee.Register(server)
 	powerrental.Register(server)
 	good.Register(server)
+	appgood.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
