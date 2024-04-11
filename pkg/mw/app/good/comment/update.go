@@ -17,6 +17,7 @@ func (h *updateHandler) updateComment(ctx context.Context, tx *ent.Tx) error {
 		tx.Comment.UpdateOneID(*h.ID),
 		&commentcrud.Req{
 			Content:    h.Content,
+			Anonymous:  h.Anonymous,
 			Hide:       h.Hide,
 			HideReason: h.HideReason,
 		},

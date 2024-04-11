@@ -61,6 +61,9 @@ func UpdateSet(u *ent.CommentUpdateOne, req *Req) *ent.CommentUpdateOne {
 	if req.Content != nil {
 		u.SetContent(*req.Content)
 	}
+	if req.Anonymous != nil {
+		u.SetAnonymous(*req.Anonymous)
+	}
 	if req.Hide != nil {
 		u.SetHide(*req.Hide)
 	}

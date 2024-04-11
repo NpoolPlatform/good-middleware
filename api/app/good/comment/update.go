@@ -26,6 +26,7 @@ func (s *Server) UpdateComment(ctx context.Context, in *npool.UpdateCommentReque
 		ctx,
 		comment1.WithID(req.ID, true),
 		comment1.WithContent(req.Content, false),
+		comment1.WithAnonymous(req.Anonymous, false),
 		comment1.WithHide(req.Hide, false),
 		comment1.WithHideReason(req.HideReason, false),
 	)
