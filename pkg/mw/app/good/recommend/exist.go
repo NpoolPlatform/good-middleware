@@ -8,9 +8,8 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 )
 
-func (h *Handler) ExistRecommendConds(ctx context.Context) (bool, error) {
-	exist := false
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+func (h *Handler) ExistRecommendConds(ctx context.Context) (exist bool, err error) {
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := recommendcrud.SetQueryConds(cli.Recommend.Query(), h.RecommendConds)
 		if err != nil {
 			return err
