@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	apppowerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entapppowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
@@ -31,6 +32,20 @@ func (h *Handler) ExistPowerRental(ctx context.Context) (exist bool, err error) 
 		return nil
 	})
 	if err != nil {
+		return false, err
+	}
+	return exist, nil
+}
+
+func (h *Handler) ExistPowerRentalConds(ctx context.Context) (exist bool, err error) {
+	if err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		stm, err := apppowerrentalcrud.SetQueryConds(cli.AppPowerRental.Query(), h.AppPowerRentalConds)
+		if err != nil {
+			return err
+		}
+		exist, err = stm.Exist(_ctx)
+		return err
+	}); err != nil {
 		return false, err
 	}
 	return exist, nil
