@@ -75,6 +75,22 @@ func GetTopMostGoodConstraintOnly(ctx context.Context, conds *npool.Conds) (*npo
 	return infos.([]*npool.TopMostGoodConstraint)[0], nil
 }
 
+func ExistTopMostGoodConstraintConds(ctx context.Context, conds *npool.Conds) (bool, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistTopMostGoodConstraintConds(ctx, &npool.ExistTopMostGoodConstraintCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return false, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
 func UpdateTopMostGoodConstraint(ctx context.Context, req *npool.TopMostGoodConstraintReq) error {
 	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		return cli.UpdateTopMostGoodConstraint(_ctx, &npool.UpdateTopMostGoodConstraintRequest{

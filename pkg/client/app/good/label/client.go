@@ -75,6 +75,22 @@ func GetLabelOnly(ctx context.Context, conds *npool.Conds) (*npool.Label, error)
 	return infos.([]*npool.Label)[0], nil
 }
 
+func ExistLabelConds(ctx context.Context, conds *npool.Conds) (bool, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistLabelConds(ctx, &npool.ExistLabelCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return false, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
 func UpdateLabel(ctx context.Context, req *npool.LabelReq) error {
 	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		return cli.UpdateLabel(_ctx, &npool.UpdateLabelRequest{

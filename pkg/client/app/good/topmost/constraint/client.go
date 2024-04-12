@@ -75,6 +75,22 @@ func GetTopMostConstraintOnly(ctx context.Context, conds *npool.Conds) (*npool.T
 	return infos.([]*npool.TopMostConstraint)[0], nil
 }
 
+func ExistTopMostConstraintConds(ctx context.Context, conds *npool.Conds) (bool, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistTopMostConstraintConds(ctx, &npool.ExistTopMostConstraintCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return false, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
 func UpdateTopMostConstraint(ctx context.Context, req *npool.TopMostConstraintReq) error {
 	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		return cli.UpdateTopMostConstraint(_ctx, &npool.UpdateTopMostConstraintRequest{

@@ -91,6 +91,22 @@ func GetTopMostGoodOnly(ctx context.Context, conds *npool.Conds) (*npool.TopMost
 	return infos.([]*npool.TopMostGood)[0], nil
 }
 
+func ExistTopMostGoodConds(ctx context.Context, conds *npool.Conds) (bool, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistTopMostGoodConds(ctx, &npool.ExistTopMostGoodCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return false, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
 func DeleteTopMostGood(ctx context.Context, id *uint32, entID *string) error {
 	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		return cli.DeleteTopMostGood(_ctx, &npool.DeleteTopMostGoodRequest{

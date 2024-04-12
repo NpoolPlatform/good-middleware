@@ -91,6 +91,22 @@ func GetDefaultOnly(ctx context.Context, conds *npool.Conds) (*npool.Default, er
 	return infos.([]*npool.Default)[0], nil
 }
 
+func ExistDefaultConds(ctx context.Context, conds *npool.Conds) (bool, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistDefaultConds(ctx, &npool.ExistDefaultCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return false, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
 func DeleteDefault(ctx context.Context, id *uint32, entID *string) error {
 	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		return cli.DeleteDefault(_ctx, &npool.DeleteDefaultRequest{

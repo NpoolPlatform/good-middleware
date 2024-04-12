@@ -75,6 +75,22 @@ func GetDisplayNameOnly(ctx context.Context, conds *npool.Conds) (*npool.Display
 	return infos.([]*npool.DisplayName)[0], nil
 }
 
+func ExistDisplayNameConds(ctx context.Context, conds *npool.Conds) (bool, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistDisplayNameConds(ctx, &npool.ExistDisplayNameCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return false, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
 func UpdateDisplayName(ctx context.Context, req *npool.DisplayNameReq) error {
 	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		return cli.UpdateDisplayName(_ctx, &npool.UpdateDisplayNameRequest{
