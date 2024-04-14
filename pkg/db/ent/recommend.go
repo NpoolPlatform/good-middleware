@@ -33,6 +33,10 @@ type Recommend struct {
 	Message string `json:"message,omitempty"`
 	// RecommendIndex holds the value of the "recommend_index" field.
 	RecommendIndex decimal.Decimal `json:"recommend_index,omitempty"`
+	// Hide holds the value of the "hide" field.
+	Hide bool `json:"hide,omitempty"`
+	// HideReason holds the value of the "hide_reason" field.
+	HideReason string `json:"hide_reason,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -42,9 +46,11 @@ func (*Recommend) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case recommend.FieldRecommendIndex:
 			values[i] = new(decimal.Decimal)
+		case recommend.FieldHide:
+			values[i] = new(sql.NullBool)
 		case recommend.FieldID, recommend.FieldCreatedAt, recommend.FieldUpdatedAt, recommend.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case recommend.FieldMessage:
+		case recommend.FieldMessage, recommend.FieldHideReason:
 			values[i] = new(sql.NullString)
 		case recommend.FieldEntID, recommend.FieldAppGoodID, recommend.FieldRecommenderID:
 			values[i] = new(uuid.UUID)
@@ -117,6 +123,18 @@ func (r *Recommend) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				r.RecommendIndex = *value
 			}
+		case recommend.FieldHide:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field hide", values[i])
+			} else if value.Valid {
+				r.Hide = value.Bool
+			}
+		case recommend.FieldHideReason:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field hide_reason", values[i])
+			} else if value.Valid {
+				r.HideReason = value.String
+			}
 		}
 	}
 	return nil
@@ -168,6 +186,12 @@ func (r *Recommend) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("recommend_index=")
 	builder.WriteString(fmt.Sprintf("%v", r.RecommendIndex))
+	builder.WriteString(", ")
+	builder.WriteString("hide=")
+	builder.WriteString(fmt.Sprintf("%v", r.Hide))
+	builder.WriteString(", ")
+	builder.WriteString("hide_reason=")
+	builder.WriteString(r.HideReason)
 	builder.WriteByte(')')
 	return builder.String()
 }

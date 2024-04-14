@@ -958,6 +958,8 @@ var (
 		{Name: "recommender_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "message", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "recommend_index", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "hide", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "hide_reason", Type: field.TypeString, Nullable: true, Default: "DefaultGoodCommentHideReason"},
 	}
 	// RecommendsTable holds the schema information for the "recommends" table.
 	RecommendsTable = &schema.Table{

@@ -1,4 +1,3 @@
-//nolint:dupl
 package schema
 
 import (
@@ -8,6 +7,7 @@ import (
 	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
@@ -50,6 +50,14 @@ func (Recommend) Fields() []ent.Field {
 			}).
 			Optional().
 			Default(decimal.Decimal{}),
+		field.
+			Bool("hide").
+			Optional().
+			Default(false),
+		field.
+			String("hide_reason").
+			Optional().
+			Default(types.GoodCommentHideReason_DefaultGoodCommentHideReason.String()),
 	}
 }
 

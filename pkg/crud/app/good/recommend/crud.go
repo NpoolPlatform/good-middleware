@@ -6,6 +6,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entrecommend "github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -17,6 +18,8 @@ type Req struct {
 	RecommenderID  *uuid.UUID
 	Message        *string
 	RecommendIndex *decimal.Decimal
+	Hide           *bool
+	HideReason     *types.GoodCommentHideReason
 	DeletedAt      *uint32
 }
 
@@ -45,6 +48,12 @@ func UpdateSet(u *ent.RecommendUpdateOne, req *Req) *ent.RecommendUpdateOne {
 	}
 	if req.RecommendIndex != nil {
 		u.SetRecommendIndex(*req.RecommendIndex)
+	}
+	if req.Hide != nil {
+		u.SetHide(*req.Hide)
+	}
+	if req.HideReason != nil {
+		u.SetHideReason(req.HideReason.String())
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)

@@ -36290,6 +36290,8 @@ type RecommendMutation struct {
 	recommender_id  *uuid.UUID
 	message         *string
 	recommend_index *decimal.Decimal
+	hide            *bool
+	hide_reason     *string
 	clearedFields   map[string]struct{}
 	done            bool
 	oldValue        func(context.Context) (*Recommend, error)
@@ -36800,6 +36802,104 @@ func (m *RecommendMutation) ResetRecommendIndex() {
 	delete(m.clearedFields, recommend.FieldRecommendIndex)
 }
 
+// SetHide sets the "hide" field.
+func (m *RecommendMutation) SetHide(b bool) {
+	m.hide = &b
+}
+
+// Hide returns the value of the "hide" field in the mutation.
+func (m *RecommendMutation) Hide() (r bool, exists bool) {
+	v := m.hide
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHide returns the old "hide" field's value of the Recommend entity.
+// If the Recommend object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RecommendMutation) OldHide(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHide is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHide requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHide: %w", err)
+	}
+	return oldValue.Hide, nil
+}
+
+// ClearHide clears the value of the "hide" field.
+func (m *RecommendMutation) ClearHide() {
+	m.hide = nil
+	m.clearedFields[recommend.FieldHide] = struct{}{}
+}
+
+// HideCleared returns if the "hide" field was cleared in this mutation.
+func (m *RecommendMutation) HideCleared() bool {
+	_, ok := m.clearedFields[recommend.FieldHide]
+	return ok
+}
+
+// ResetHide resets all changes to the "hide" field.
+func (m *RecommendMutation) ResetHide() {
+	m.hide = nil
+	delete(m.clearedFields, recommend.FieldHide)
+}
+
+// SetHideReason sets the "hide_reason" field.
+func (m *RecommendMutation) SetHideReason(s string) {
+	m.hide_reason = &s
+}
+
+// HideReason returns the value of the "hide_reason" field in the mutation.
+func (m *RecommendMutation) HideReason() (r string, exists bool) {
+	v := m.hide_reason
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHideReason returns the old "hide_reason" field's value of the Recommend entity.
+// If the Recommend object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RecommendMutation) OldHideReason(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHideReason is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHideReason requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHideReason: %w", err)
+	}
+	return oldValue.HideReason, nil
+}
+
+// ClearHideReason clears the value of the "hide_reason" field.
+func (m *RecommendMutation) ClearHideReason() {
+	m.hide_reason = nil
+	m.clearedFields[recommend.FieldHideReason] = struct{}{}
+}
+
+// HideReasonCleared returns if the "hide_reason" field was cleared in this mutation.
+func (m *RecommendMutation) HideReasonCleared() bool {
+	_, ok := m.clearedFields[recommend.FieldHideReason]
+	return ok
+}
+
+// ResetHideReason resets all changes to the "hide_reason" field.
+func (m *RecommendMutation) ResetHideReason() {
+	m.hide_reason = nil
+	delete(m.clearedFields, recommend.FieldHideReason)
+}
+
 // Where appends a list predicates to the RecommendMutation builder.
 func (m *RecommendMutation) Where(ps ...predicate.Recommend) {
 	m.predicates = append(m.predicates, ps...)
@@ -36819,7 +36919,7 @@ func (m *RecommendMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RecommendMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 10)
 	if m.created_at != nil {
 		fields = append(fields, recommend.FieldCreatedAt)
 	}
@@ -36843,6 +36943,12 @@ func (m *RecommendMutation) Fields() []string {
 	}
 	if m.recommend_index != nil {
 		fields = append(fields, recommend.FieldRecommendIndex)
+	}
+	if m.hide != nil {
+		fields = append(fields, recommend.FieldHide)
+	}
+	if m.hide_reason != nil {
+		fields = append(fields, recommend.FieldHideReason)
 	}
 	return fields
 }
@@ -36868,6 +36974,10 @@ func (m *RecommendMutation) Field(name string) (ent.Value, bool) {
 		return m.Message()
 	case recommend.FieldRecommendIndex:
 		return m.RecommendIndex()
+	case recommend.FieldHide:
+		return m.Hide()
+	case recommend.FieldHideReason:
+		return m.HideReason()
 	}
 	return nil, false
 }
@@ -36893,6 +37003,10 @@ func (m *RecommendMutation) OldField(ctx context.Context, name string) (ent.Valu
 		return m.OldMessage(ctx)
 	case recommend.FieldRecommendIndex:
 		return m.OldRecommendIndex(ctx)
+	case recommend.FieldHide:
+		return m.OldHide(ctx)
+	case recommend.FieldHideReason:
+		return m.OldHideReason(ctx)
 	}
 	return nil, fmt.Errorf("unknown Recommend field %s", name)
 }
@@ -36957,6 +37071,20 @@ func (m *RecommendMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetRecommendIndex(v)
+		return nil
+	case recommend.FieldHide:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHide(v)
+		return nil
+	case recommend.FieldHideReason:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHideReason(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Recommend field %s", name)
@@ -37039,6 +37167,12 @@ func (m *RecommendMutation) ClearedFields() []string {
 	if m.FieldCleared(recommend.FieldRecommendIndex) {
 		fields = append(fields, recommend.FieldRecommendIndex)
 	}
+	if m.FieldCleared(recommend.FieldHide) {
+		fields = append(fields, recommend.FieldHide)
+	}
+	if m.FieldCleared(recommend.FieldHideReason) {
+		fields = append(fields, recommend.FieldHideReason)
+	}
 	return fields
 }
 
@@ -37064,6 +37198,12 @@ func (m *RecommendMutation) ClearField(name string) error {
 		return nil
 	case recommend.FieldRecommendIndex:
 		m.ClearRecommendIndex()
+		return nil
+	case recommend.FieldHide:
+		m.ClearHide()
+		return nil
+	case recommend.FieldHideReason:
+		m.ClearHideReason()
 		return nil
 	}
 	return fmt.Errorf("unknown Recommend nullable field %s", name)
@@ -37096,6 +37236,12 @@ func (m *RecommendMutation) ResetField(name string) error {
 		return nil
 	case recommend.FieldRecommendIndex:
 		m.ResetRecommendIndex()
+		return nil
+	case recommend.FieldHide:
+		m.ResetHide()
+		return nil
+	case recommend.FieldHideReason:
+		m.ResetHideReason()
 		return nil
 	}
 	return fmt.Errorf("unknown Recommend field %s", name)

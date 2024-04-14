@@ -29,6 +29,10 @@ const (
 	FieldMessage = "message"
 	// FieldRecommendIndex holds the string denoting the recommend_index field in the database.
 	FieldRecommendIndex = "recommend_index"
+	// FieldHide holds the string denoting the hide field in the database.
+	FieldHide = "hide"
+	// FieldHideReason holds the string denoting the hide_reason field in the database.
+	FieldHideReason = "hide_reason"
 	// Table holds the table name of the recommend in the database.
 	Table = "recommends"
 )
@@ -44,6 +48,8 @@ var Columns = []string{
 	FieldRecommenderID,
 	FieldMessage,
 	FieldRecommendIndex,
+	FieldHide,
+	FieldHideReason,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -83,4 +89,8 @@ var (
 	DefaultMessage string
 	// DefaultRecommendIndex holds the default value on creation for the "recommend_index" field.
 	DefaultRecommendIndex decimal.Decimal
+	// DefaultHide holds the default value on creation for the "hide" field.
+	DefaultHide bool
+	// DefaultHideReason holds the default value on creation for the "hide_reason" field.
+	DefaultHideReason string
 )

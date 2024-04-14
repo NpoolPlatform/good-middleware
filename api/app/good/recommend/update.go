@@ -1,3 +1,4 @@
+//nolint:dupl
 package recommend
 
 import (
@@ -26,6 +27,8 @@ func (s *Server) UpdateRecommend(ctx context.Context, in *npool.UpdateRecommendR
 		recommend1.WithID(req.ID, true),
 		recommend1.WithRecommendIndex(req.RecommendIndex, false),
 		recommend1.WithMessage(req.Message, false),
+		recommend1.WithHide(req.Hide, false),
+		recommend1.WithHideReason(req.HideReason, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

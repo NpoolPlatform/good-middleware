@@ -135,6 +135,34 @@ func (rc *RecommendCreate) SetNillableRecommendIndex(d *decimal.Decimal) *Recomm
 	return rc
 }
 
+// SetHide sets the "hide" field.
+func (rc *RecommendCreate) SetHide(b bool) *RecommendCreate {
+	rc.mutation.SetHide(b)
+	return rc
+}
+
+// SetNillableHide sets the "hide" field if the given value is not nil.
+func (rc *RecommendCreate) SetNillableHide(b *bool) *RecommendCreate {
+	if b != nil {
+		rc.SetHide(*b)
+	}
+	return rc
+}
+
+// SetHideReason sets the "hide_reason" field.
+func (rc *RecommendCreate) SetHideReason(s string) *RecommendCreate {
+	rc.mutation.SetHideReason(s)
+	return rc
+}
+
+// SetNillableHideReason sets the "hide_reason" field if the given value is not nil.
+func (rc *RecommendCreate) SetNillableHideReason(s *string) *RecommendCreate {
+	if s != nil {
+		rc.SetHideReason(*s)
+	}
+	return rc
+}
+
 // SetID sets the "id" field.
 func (rc *RecommendCreate) SetID(u uint32) *RecommendCreate {
 	rc.mutation.SetID(u)
@@ -270,6 +298,14 @@ func (rc *RecommendCreate) defaults() error {
 		v := recommend.DefaultRecommendIndex
 		rc.mutation.SetRecommendIndex(v)
 	}
+	if _, ok := rc.mutation.Hide(); !ok {
+		v := recommend.DefaultHide
+		rc.mutation.SetHide(v)
+	}
+	if _, ok := rc.mutation.HideReason(); !ok {
+		v := recommend.DefaultHideReason
+		rc.mutation.SetHideReason(v)
+	}
 	return nil
 }
 
@@ -384,6 +420,22 @@ func (rc *RecommendCreate) createSpec() (*Recommend, *sqlgraph.CreateSpec) {
 			Column: recommend.FieldRecommendIndex,
 		})
 		_node.RecommendIndex = value
+	}
+	if value, ok := rc.mutation.Hide(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: recommend.FieldHide,
+		})
+		_node.Hide = value
+	}
+	if value, ok := rc.mutation.HideReason(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: recommend.FieldHideReason,
+		})
+		_node.HideReason = value
 	}
 	return _node, _spec
 }
@@ -574,6 +626,42 @@ func (u *RecommendUpsert) UpdateRecommendIndex() *RecommendUpsert {
 // ClearRecommendIndex clears the value of the "recommend_index" field.
 func (u *RecommendUpsert) ClearRecommendIndex() *RecommendUpsert {
 	u.SetNull(recommend.FieldRecommendIndex)
+	return u
+}
+
+// SetHide sets the "hide" field.
+func (u *RecommendUpsert) SetHide(v bool) *RecommendUpsert {
+	u.Set(recommend.FieldHide, v)
+	return u
+}
+
+// UpdateHide sets the "hide" field to the value that was provided on create.
+func (u *RecommendUpsert) UpdateHide() *RecommendUpsert {
+	u.SetExcluded(recommend.FieldHide)
+	return u
+}
+
+// ClearHide clears the value of the "hide" field.
+func (u *RecommendUpsert) ClearHide() *RecommendUpsert {
+	u.SetNull(recommend.FieldHide)
+	return u
+}
+
+// SetHideReason sets the "hide_reason" field.
+func (u *RecommendUpsert) SetHideReason(v string) *RecommendUpsert {
+	u.Set(recommend.FieldHideReason, v)
+	return u
+}
+
+// UpdateHideReason sets the "hide_reason" field to the value that was provided on create.
+func (u *RecommendUpsert) UpdateHideReason() *RecommendUpsert {
+	u.SetExcluded(recommend.FieldHideReason)
+	return u
+}
+
+// ClearHideReason clears the value of the "hide_reason" field.
+func (u *RecommendUpsert) ClearHideReason() *RecommendUpsert {
+	u.SetNull(recommend.FieldHideReason)
 	return u
 }
 
@@ -785,6 +873,48 @@ func (u *RecommendUpsertOne) UpdateRecommendIndex() *RecommendUpsertOne {
 func (u *RecommendUpsertOne) ClearRecommendIndex() *RecommendUpsertOne {
 	return u.Update(func(s *RecommendUpsert) {
 		s.ClearRecommendIndex()
+	})
+}
+
+// SetHide sets the "hide" field.
+func (u *RecommendUpsertOne) SetHide(v bool) *RecommendUpsertOne {
+	return u.Update(func(s *RecommendUpsert) {
+		s.SetHide(v)
+	})
+}
+
+// UpdateHide sets the "hide" field to the value that was provided on create.
+func (u *RecommendUpsertOne) UpdateHide() *RecommendUpsertOne {
+	return u.Update(func(s *RecommendUpsert) {
+		s.UpdateHide()
+	})
+}
+
+// ClearHide clears the value of the "hide" field.
+func (u *RecommendUpsertOne) ClearHide() *RecommendUpsertOne {
+	return u.Update(func(s *RecommendUpsert) {
+		s.ClearHide()
+	})
+}
+
+// SetHideReason sets the "hide_reason" field.
+func (u *RecommendUpsertOne) SetHideReason(v string) *RecommendUpsertOne {
+	return u.Update(func(s *RecommendUpsert) {
+		s.SetHideReason(v)
+	})
+}
+
+// UpdateHideReason sets the "hide_reason" field to the value that was provided on create.
+func (u *RecommendUpsertOne) UpdateHideReason() *RecommendUpsertOne {
+	return u.Update(func(s *RecommendUpsert) {
+		s.UpdateHideReason()
+	})
+}
+
+// ClearHideReason clears the value of the "hide_reason" field.
+func (u *RecommendUpsertOne) ClearHideReason() *RecommendUpsertOne {
+	return u.Update(func(s *RecommendUpsert) {
+		s.ClearHideReason()
 	})
 }
 
@@ -1161,6 +1291,48 @@ func (u *RecommendUpsertBulk) UpdateRecommendIndex() *RecommendUpsertBulk {
 func (u *RecommendUpsertBulk) ClearRecommendIndex() *RecommendUpsertBulk {
 	return u.Update(func(s *RecommendUpsert) {
 		s.ClearRecommendIndex()
+	})
+}
+
+// SetHide sets the "hide" field.
+func (u *RecommendUpsertBulk) SetHide(v bool) *RecommendUpsertBulk {
+	return u.Update(func(s *RecommendUpsert) {
+		s.SetHide(v)
+	})
+}
+
+// UpdateHide sets the "hide" field to the value that was provided on create.
+func (u *RecommendUpsertBulk) UpdateHide() *RecommendUpsertBulk {
+	return u.Update(func(s *RecommendUpsert) {
+		s.UpdateHide()
+	})
+}
+
+// ClearHide clears the value of the "hide" field.
+func (u *RecommendUpsertBulk) ClearHide() *RecommendUpsertBulk {
+	return u.Update(func(s *RecommendUpsert) {
+		s.ClearHide()
+	})
+}
+
+// SetHideReason sets the "hide_reason" field.
+func (u *RecommendUpsertBulk) SetHideReason(v string) *RecommendUpsertBulk {
+	return u.Update(func(s *RecommendUpsert) {
+		s.SetHideReason(v)
+	})
+}
+
+// UpdateHideReason sets the "hide_reason" field to the value that was provided on create.
+func (u *RecommendUpsertBulk) UpdateHideReason() *RecommendUpsertBulk {
+	return u.Update(func(s *RecommendUpsert) {
+		s.UpdateHideReason()
+	})
+}
+
+// ClearHideReason clears the value of the "hide_reason" field.
+func (u *RecommendUpsertBulk) ClearHideReason() *RecommendUpsertBulk {
+	return u.Update(func(s *RecommendUpsert) {
+		s.ClearHideReason()
 	})
 }
 

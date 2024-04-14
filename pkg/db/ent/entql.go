@@ -830,6 +830,8 @@ var schemaGraph = func() *sqlgraph.Schema {
 			recommend.FieldRecommenderID:  {Type: field.TypeUUID, Column: recommend.FieldRecommenderID},
 			recommend.FieldMessage:        {Type: field.TypeString, Column: recommend.FieldMessage},
 			recommend.FieldRecommendIndex: {Type: field.TypeOther, Column: recommend.FieldRecommendIndex},
+			recommend.FieldHide:           {Type: field.TypeBool, Column: recommend.FieldHide},
+			recommend.FieldHideReason:     {Type: field.TypeString, Column: recommend.FieldHideReason},
 		},
 	}
 	graph.Nodes[32] = &sqlgraph.Node{
@@ -4168,6 +4170,16 @@ func (f *RecommendFilter) WhereMessage(p entql.StringP) {
 // WhereRecommendIndex applies the entql other predicate on the recommend_index field.
 func (f *RecommendFilter) WhereRecommendIndex(p entql.OtherP) {
 	f.Where(p.Field(recommend.FieldRecommendIndex))
+}
+
+// WhereHide applies the entql bool predicate on the hide field.
+func (f *RecommendFilter) WhereHide(p entql.BoolP) {
+	f.Where(p.Field(recommend.FieldHide))
+}
+
+// WhereHideReason applies the entql string predicate on the hide_reason field.
+func (f *RecommendFilter) WhereHideReason(p entql.StringP) {
+	f.Where(p.Field(recommend.FieldHideReason))
 }
 
 // addPredicate implements the predicateAdder interface.

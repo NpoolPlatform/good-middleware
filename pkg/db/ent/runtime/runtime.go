@@ -2039,6 +2039,14 @@ func init() {
 	recommendDescRecommendIndex := recommendFields[3].Descriptor()
 	// recommend.DefaultRecommendIndex holds the default value on creation for the recommend_index field.
 	recommend.DefaultRecommendIndex = recommendDescRecommendIndex.Default.(decimal.Decimal)
+	// recommendDescHide is the schema descriptor for hide field.
+	recommendDescHide := recommendFields[4].Descriptor()
+	// recommend.DefaultHide holds the default value on creation for the hide field.
+	recommend.DefaultHide = recommendDescHide.Default.(bool)
+	// recommendDescHideReason is the schema descriptor for hide_reason field.
+	recommendDescHideReason := recommendFields[5].Descriptor()
+	// recommend.DefaultHideReason holds the default value on creation for the hide_reason field.
+	recommend.DefaultHideReason = recommendDescHideReason.Default.(string)
 	requiredappgoodMixin := schema.RequiredAppGood{}.Mixin()
 	requiredappgood.Policy = privacy.NewPolicies(requiredappgoodMixin[0], schema.RequiredAppGood{})
 	requiredappgood.Hooks[0] = func(next ent.Mutator) ent.Mutator {

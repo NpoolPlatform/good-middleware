@@ -19,6 +19,8 @@ func (h *updateHandler) updateRecommend(ctx context.Context, tx *ent.Tx) error {
 		&recommendcrud.Req{
 			Message:        h.Message,
 			RecommendIndex: h.RecommendIndex,
+			Hide:           h.Hide,
+			HideReason:     h.HideReason,
 		},
 	).Save(ctx); err != nil {
 		return err
