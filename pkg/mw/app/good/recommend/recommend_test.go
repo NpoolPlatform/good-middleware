@@ -44,6 +44,7 @@ var ret = npool.Recommend{
 func setup(t *testing.T) func(*testing.T) {
 	goodType := types.GoodType_PowerRental
 	goodID := uuid.NewString()
+	ret.HideReasonStr = ret.HideReason.String()
 
 	h1, err := goodbase1.NewHandler(
 		context.Background(),

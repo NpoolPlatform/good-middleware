@@ -11,6 +11,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entrecommend "github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/recommend"
 
 	"github.com/shopspring/decimal"
@@ -64,6 +65,8 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t.C(entrecommend.FieldAppGoodID),
 			t.C(entrecommend.FieldMessage),
 			t.C(entrecommend.FieldRecommendIndex),
+			t.C(entrecommend.FieldHide),
+			t.C(entrecommend.FieldHideReason),
 			t.C(entrecommend.FieldCreatedAt),
 			t.C(entrecommend.FieldUpdatedAt),
 		)
@@ -101,12 +104,8 @@ func (h *queryHandler) scan(ctx context.Context) error {
 
 func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
-		amount, err := decimal.NewFromString(info.RecommendIndex)
-		if err != nil {
-			info.RecommendIndex = decimal.NewFromInt(0).String()
-		} else {
-			info.RecommendIndex = amount.String()
-		}
+		info.RecommendIndex = func() string { amount, _ := decimal.NewFromString(info.RecommendIndex); return amount.String() }()
+		info.HideReason = types.GoodCommentHideReason(types.GoodCommentHideReason_value[info.HideReasonStr])
 	}
 }
 

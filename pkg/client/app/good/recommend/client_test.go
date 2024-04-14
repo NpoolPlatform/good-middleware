@@ -58,6 +58,8 @@ var ret = npool.Recommend{
 }
 
 func setup(t *testing.T) func(*testing.T) {
+	ret.HideReasonStr = ret.HideReason.String()
+
 	manufacturerID := uuid.NewString()
 	err := manufacturer1.CreateManufacturer(context.Background(), &manufacturermwpb.ManufacturerReq{
 		EntID: &manufacturerID,
