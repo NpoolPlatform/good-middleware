@@ -75,6 +75,22 @@ func GetFees(ctx context.Context, conds *npool.Conds, offset, limit int32) (info
 	return _infos.([]*npool.Fee), total, nil
 }
 
+func ExistFeeConds(ctx context.Context, conds *npool.Conds) (exist bool, err error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistFeeConds(_ctx, &npool.ExistFeeCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
 func DeleteFee(ctx context.Context, id *uint32, entID, goodID *string) error {
 	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		return cli.DeleteFee(_ctx, &npool.DeleteFeeRequest{
