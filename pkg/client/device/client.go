@@ -67,6 +67,22 @@ func GetDeviceTypes(ctx context.Context, conds *npool.Conds, offset, limit int32
 	return _infos.([]*npool.DeviceType), total, nil
 }
 
+func ExistDeviceTypeConds(ctx context.Context, conds *npool.Conds, offset, limit int32) (exist bool, err error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistDeviceTypeConds(ctx, &npool.ExistDeviceTypeCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
 func GetDeviceTypeOnly(ctx context.Context, conds *npool.Conds) (*npool.DeviceType, error) {
 	infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetDeviceTypes(ctx, &npool.GetDeviceTypesRequest{
