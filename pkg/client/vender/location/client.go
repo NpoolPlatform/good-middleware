@@ -67,6 +67,22 @@ func GetLocations(ctx context.Context, conds *npool.Conds, offset, limit int32) 
 	return _infos.([]*npool.Location), total, nil
 }
 
+func ExistLocationConds(ctx context.Context, conds *npool.Conds) (exist bool, err error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistLocationConds(ctx, &npool.ExistLocationCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
 func GetLocationOnly(ctx context.Context, conds *npool.Conds) (*npool.Location, error) {
 	infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetLocations(ctx, &npool.GetLocationsRequest{

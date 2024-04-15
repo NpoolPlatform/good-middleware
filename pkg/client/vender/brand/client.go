@@ -67,6 +67,22 @@ func GetBrands(ctx context.Context, conds *npool.Conds, offset, limit int32) (in
 	return _infos.([]*npool.Brand), total, nil
 }
 
+func ExistBrandConds(ctx context.Context, conds *npool.Conds) (exist bool, err error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistBrandConds(ctx, &npool.ExistBrandCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
 func GetBrandOnly(ctx context.Context, conds *npool.Conds) (*npool.Brand, error) {
 	infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetBrands(ctx, &npool.GetBrandsRequest{
