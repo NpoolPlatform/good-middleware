@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
+	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	appsimulatepowerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental/simulate"
 	apppowerrental1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/powerrental"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -20,6 +21,7 @@ type Handler struct {
 	ID *uint32
 	appsimulatepowerrentalcrud.Req
 	AppSimulatePowerRentalConds *appsimulatepowerrentalcrud.Conds
+	AppGoodBaseConds            *appgoodbasecrud.Conds
 	Offset                      int32
 	Limit                       int32
 }
@@ -27,6 +29,7 @@ type Handler struct {
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
 		AppSimulatePowerRentalConds: &appsimulatepowerrentalcrud.Conds{},
+		AppGoodBaseConds:            &appgoodbasecrud.Conds{},
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
@@ -129,6 +132,20 @@ func WithOrderDuration(duration *uint32, must bool) func(context.Context, *Handl
 	}
 }
 
+func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
+	if conds.AppID != nil {
+		id, err := uuid.Parse(conds.GetAppID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.AppGoodBaseConds.AppID = &cruder.Cond{
+			Op:  conds.GetAppID().GetOp(),
+			Val: id,
+		}
+	}
+	return nil
+}
+
 func (h *Handler) withAppSimulatePowerRentalConds(conds *npool.Conds) error {
 	if conds.ID != nil {
 		h.AppSimulatePowerRentalConds.ID = &cruder.Cond{
@@ -163,6 +180,9 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if conds == nil {
 			return nil
+		}
+		if err := h.withAppGoodBaseConds(conds); err != nil {
+			return err
 		}
 		return h.withAppSimulatePowerRentalConds(conds)
 	}
