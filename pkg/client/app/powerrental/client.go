@@ -67,6 +67,22 @@ func GetPowerRentals(ctx context.Context, conds *npool.Conds, offset, limit int3
 	return _infos.([]*npool.PowerRental), total, nil
 }
 
+func ExistPowerRentalConds(ctx context.Context, conds *npool.Conds) (exist bool, err error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistPowerRentalConds(ctx, &npool.ExistPowerRentalCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
 func GetPowerRentalOnly(ctx context.Context, conds *npool.Conds) (*npool.PowerRental, error) {
 	infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetPowerRentals(ctx, &npool.GetPowerRentalsRequest{
