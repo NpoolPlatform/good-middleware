@@ -75,6 +75,22 @@ func GetPosters(ctx context.Context, conds *npool.Conds, offset, limit int32) (i
 	return _infos.([]*npool.Poster), total, nil
 }
 
+func ExistPosterConds(ctx context.Context, conds *npool.Conds) (exist bool, err error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistPosterConds(_ctx, &npool.ExistPosterCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
+}
+
 func DeletePoster(ctx context.Context, id *uint32, entID *string) error {
 	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		return cli.DeletePoster(_ctx, &npool.DeletePosterRequest{
