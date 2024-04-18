@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
@@ -14,15 +13,10 @@ import (
 type Handler struct {
 	ID *uint32
 	goodbasecrud.Req
-	Conds  *goodbasecrud.Conds
-	Offset int32
-	Limit  int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
-	handler := &Handler{
-		Conds: &goodbasecrud.Conds{},
-	}
+	handler := &Handler{}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
 			return nil, err
@@ -190,30 +184,6 @@ func WithPurchasable(b *bool, must bool) func(context.Context, *Handler) error {
 func WithOnline(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Online = b
-		return nil
-	}
-}
-
-func WithConds(conds *goodbasecrud.Conds) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		h.Conds = conds
-		return nil
-	}
-}
-
-func WithOffset(offset int32) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		h.Offset = offset
-		return nil
-	}
-}
-
-func WithLimit(limit int32) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if limit == 0 {
-			limit = constant.DefaultRowLimit
-		}
-		h.Limit = limit
 		return nil
 	}
 }
