@@ -8,6 +8,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 
+	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
 
@@ -89,6 +90,9 @@ func (h *Handler) CreateSimulate(ctx context.Context) error {
 		appPowerRentalHandler: &appPowerRentalHandler{
 			Handler: h,
 		},
+	}
+	if h.EntID == nil {
+		h.EntID = func() *uuid.UUID { s := uuid.New(); return &s }()
 	}
 
 	if err := handler.queryAppPowerRental(ctx); err != nil {

@@ -4,57 +4,17 @@ import (
 	"context"
 	"fmt"
 
-	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
 )
 
 type queryHandler struct {
-	*Handler
-	stmSelect *ent.GoodBaseSelect
-	stmCount  *ent.GoodBaseSelect
-	infos     []*npool.Good
-	total     uint32
-}
-
-func (h *queryHandler) selectGood(stm *ent.GoodBaseQuery) *ent.GoodBaseSelect {
-	return stm.Select(
-		entgoodbase.FieldID,
-		entgoodbase.FieldEntID,
-		entgoodbase.FieldGoodType,
-		entgoodbase.FieldBenefitType,
-		entgoodbase.FieldName,
-		entgoodbase.FieldServiceStartAt,
-		entgoodbase.FieldStartMode,
-		entgoodbase.FieldTestOnly,
-		entgoodbase.FieldBenefitIntervalHours,
-		entgoodbase.FieldPurchasable,
-		entgoodbase.FieldOnline,
-		entgoodbase.FieldCreatedAt,
-		entgoodbase.FieldUpdatedAt,
-	)
-}
-
-func (h *queryHandler) queryGood(cli *ent.Client) {
-	h.stmSelect = h.selectGood(
-		cli.GoodBase.
-			Query().
-			Where(
-				entgoodbase.EntID(*h.EntID),
-				entgoodbase.DeletedAt(0),
-			),
-	)
-}
-
-func (h *queryHandler) queryGoods(cli *ent.Client) (*ent.GoodBaseSelect, error) {
-	stm, err := goodbasecrud.SetQueryConds(cli.GoodBase.Query(), h.GoodConds)
-	if err != nil {
-		return nil, err
-	}
-	return h.selectGood(stm), nil
+	*baseQueryHandler
+	stmCount *ent.GoodBaseSelect
+	infos    []*npool.Good
+	total    uint32
 }
 
 func (h *queryHandler) scan(ctx context.Context) error {
@@ -71,7 +31,9 @@ func (h *queryHandler) formalize() {
 
 func (h *Handler) GetGood(ctx context.Context) (*npool.Good, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
 	if err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		handler.queryGood(cli)
@@ -96,7 +58,9 @@ func (h *Handler) GetGood(ctx context.Context) (*npool.Good, error) {
 
 func (h *Handler) GetGoods(ctx context.Context) (infos []*npool.Good, total uint32, err error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
 	if err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if handler.stmSelect, err = handler.queryGoods(cli); err != nil {
