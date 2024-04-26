@@ -7,6 +7,8 @@ import (
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+
+	"github.com/google/uuid"
 )
 
 type createHandler struct {
@@ -72,6 +74,9 @@ func (h *createHandler) createDefault(ctx context.Context, tx *ent.Tx) error {
 func (h *Handler) CreateDefault(ctx context.Context) error {
 	handler := &createHandler{
 		Handler: h,
+	}
+	if h.EntID == nil {
+		h.EntID = func() *uuid.UUID { s := uuid.New(); return &s }()
 	}
 	handler.constructSQL()
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
