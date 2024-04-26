@@ -35,33 +35,33 @@ func init() {
 }
 
 var ret = &npool.Fee{
-	EntID:          uuid.NewString(),
-	GoodID:         uuid.NewString(),
-	GoodType:       types.GoodType_TechniqueServiceFee,
-	Name:           uuid.NewString(),
-	SettlementType: types.GoodSettlementType_GoodSettledByProfitPercent,
-	UnitValue:      decimal.NewFromInt(20).String(),
-	DurationType:   types.GoodDurationType_GoodDurationByDay,
+	EntID:               uuid.NewString(),
+	GoodID:              uuid.NewString(),
+	GoodType:            types.GoodType_TechniqueServiceFee,
+	Name:                uuid.NewString(),
+	SettlementType:      types.GoodSettlementType_GoodSettledByProfitPercent,
+	UnitValue:           decimal.NewFromInt(20).String(),
+	DurationDisplayType: types.GoodDurationType_GoodDurationByDay,
 }
 
 //nolint:unparam
 func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.SettlementTypeStr = ret.SettlementType.String()
-	ret.DurationTypeStr = ret.DurationType.String()
+	ret.DurationDisplayTypeStr = ret.DurationDisplayType.String()
 
 	return func(*testing.T) {}
 }
 
 func createFee(t *testing.T) {
 	err := CreateFee(context.Background(), &npool.FeeReq{
-		EntID:          &ret.EntID,
-		GoodID:         &ret.GoodID,
-		GoodType:       &ret.GoodType,
-		Name:           &ret.Name,
-		SettlementType: &ret.SettlementType,
-		UnitValue:      &ret.UnitValue,
-		DurationType:   &ret.DurationType,
+		EntID:               &ret.EntID,
+		GoodID:              &ret.GoodID,
+		GoodType:            &ret.GoodType,
+		Name:                &ret.Name,
+		SettlementType:      &ret.SettlementType,
+		UnitValue:           &ret.UnitValue,
+		DurationDisplayType: &ret.DurationDisplayType,
 	})
 	if assert.Nil(t, err) {
 		info, err := GetFee(context.Background(), ret.GoodID)
@@ -76,14 +76,14 @@ func createFee(t *testing.T) {
 
 func updateFee(t *testing.T) {
 	err := UpdateFee(context.Background(), &npool.FeeReq{
-		ID:             &ret.ID,
-		EntID:          &ret.EntID,
-		GoodID:         &ret.GoodID,
-		GoodType:       &ret.GoodType,
-		Name:           &ret.Name,
-		SettlementType: &ret.SettlementType,
-		UnitValue:      &ret.UnitValue,
-		DurationType:   &ret.DurationType,
+		ID:                  &ret.ID,
+		EntID:               &ret.EntID,
+		GoodID:              &ret.GoodID,
+		GoodType:            &ret.GoodType,
+		Name:                &ret.Name,
+		SettlementType:      &ret.SettlementType,
+		UnitValue:           &ret.UnitValue,
+		DurationDisplayType: &ret.DurationDisplayType,
 	})
 	if assert.Nil(t, err) {
 		info, err := GetFee(context.Background(), ret.GoodID)

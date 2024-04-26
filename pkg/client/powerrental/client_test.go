@@ -64,7 +64,7 @@ var ret = &npool.PowerRental{
 	QuantityUnitAmount:     decimal.NewFromInt(10).String(),
 	DeliveryAt:             uint32(time.Now().Unix()),
 	UnitLockDeposit:        decimal.NewFromInt(20).String(),
-	DurationType:           types.GoodDurationType_GoodDurationByDay,
+	DurationDisplayType:    types.GoodDurationType_GoodDurationByDay,
 	GoodType:               types.GoodType_PowerRental,
 	BenefitType:            types.BenefitType_BenefitTypePlatform,
 	Name:                   uuid.NewString(),
@@ -92,7 +92,7 @@ var ret = &npool.PowerRental{
 }
 
 func setup(t *testing.T) func(*testing.T) {
-	ret.DurationTypeStr = ret.DurationType.String()
+	ret.DurationDisplayTypeStr = ret.DurationDisplayType.String()
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.BenefitTypeStr = ret.BenefitType.String()
 	ret.StockModeStr = ret.StockMode.String()
@@ -153,7 +153,7 @@ func createPowerRental(t *testing.T) {
 		QuantityUnitAmount:   &ret.QuantityUnitAmount,
 		DeliveryAt:           &ret.DeliveryAt,
 		UnitLockDeposit:      &ret.UnitLockDeposit,
-		DurationType:         &ret.DurationType,
+		DurationDisplayType:  &ret.DurationDisplayType,
 		GoodType:             &ret.GoodType,
 		BenefitType:          &ret.BenefitType,
 		Name:                 &ret.Name,
@@ -189,7 +189,7 @@ func updatePowerRental(t *testing.T) {
 		QuantityUnitAmount:   &ret.QuantityUnitAmount,
 		DeliveryAt:           &ret.DeliveryAt,
 		UnitLockDeposit:      &ret.UnitLockDeposit,
-		DurationType:         &ret.DurationType,
+		DurationDisplayType:  &ret.DurationDisplayType,
 		GoodType:             &ret.GoodType,
 		BenefitType:          &ret.BenefitType,
 		Name:                 &ret.Name,

@@ -149,14 +149,14 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	err = appfee1.CreateFee(context.Background(), &appfeemwpb.FeeReq{
-		AppID:            &ret.AppID,
-		GoodID:           &ret.RequiredGoodID,
-		AppGoodID:        &ret.RequiredAppGoodID,
-		ProductPage:      func() *string { s := uuid.NewString(); return &s }(),
-		Name:             &ret.RequiredAppGoodName,
-		Banner:           func() *string { s := uuid.NewString(); return &s }(),
-		UnitValue:        func() *string { s := decimal.NewFromInt(20).String(); return &s }(),
-		MinOrderDuration: func() *uint32 { u := uint32(12); return &u }(),
+		AppID:                   &ret.AppID,
+		GoodID:                  &ret.RequiredGoodID,
+		AppGoodID:               &ret.RequiredAppGoodID,
+		ProductPage:             func() *string { s := uuid.NewString(); return &s }(),
+		Name:                    &ret.RequiredAppGoodName,
+		Banner:                  func() *string { s := uuid.NewString(); return &s }(),
+		UnitValue:               func() *string { s := decimal.NewFromInt(20).String(); return &s }(),
+		MinOrderDurationSeconds: func() *uint32 { u := uint32(12); return &u }(),
 	})
 	assert.Nil(t, err)
 

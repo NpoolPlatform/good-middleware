@@ -31,23 +31,23 @@ func init() {
 
 var (
 	ret = npool.Fee{
-		EntID:            uuid.NewString(),
-		AppID:            uuid.NewString(),
-		GoodID:           uuid.NewString(),
-		AppGoodID:        uuid.NewString(),
-		GoodType:         types.GoodType_TechniqueServiceFee,
-		Name:             uuid.NewString(),
-		SettlementType:   types.GoodSettlementType_GoodSettledByProfitPercent,
-		UnitValue:        decimal.NewFromInt(20).String(),
-		DurationType:     types.GoodDurationType_GoodDurationByDay,
-		MinOrderDuration: 20,
+		EntID:                   uuid.NewString(),
+		AppID:                   uuid.NewString(),
+		GoodID:                  uuid.NewString(),
+		AppGoodID:               uuid.NewString(),
+		GoodType:                types.GoodType_TechniqueServiceFee,
+		Name:                    uuid.NewString(),
+		SettlementType:          types.GoodSettlementType_GoodSettledByProfitPercent,
+		UnitValue:               decimal.NewFromInt(20).String(),
+		DurationDisplayType:     types.GoodDurationType_GoodDurationByDay,
+		MinOrderDurationSeconds: 20,
 	}
 )
 
 func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.SettlementTypeStr = ret.SettlementType.String()
-	ret.DurationTypeStr = ret.DurationType.String()
+	ret.DurationDisplayTypeStr = ret.DurationDisplayType.String()
 
 	feeEntID := uuid.NewString()
 	h1, err := fee1.NewHandler(
@@ -58,7 +58,7 @@ func setup(t *testing.T) func(*testing.T) {
 		fee1.WithName(&ret.Name, true),
 		fee1.WithSettlementType(&ret.SettlementType, true),
 		fee1.WithUnitValue(&ret.UnitValue, true),
-		fee1.WithDurationType(&ret.DurationType, true),
+		fee1.WithDurationDisplayType(&ret.DurationDisplayType, true),
 	)
 	assert.Nil(t, err)
 
@@ -79,7 +79,7 @@ func createFee(t *testing.T) {
 		WithAppGoodID(&ret.AppGoodID, true),
 		WithName(&ret.Name, true),
 		WithUnitValue(&ret.UnitValue, true),
-		WithMinOrderDuration(&ret.MinOrderDuration, true),
+		WithMinOrderDurationSeconds(&ret.MinOrderDurationSeconds, true),
 	)
 	assert.Nil(t, err)
 
@@ -102,7 +102,7 @@ func updateFee(t *testing.T) {
 		WithAppGoodID(&ret.AppGoodID, true),
 		WithName(&ret.Name, true),
 		WithUnitValue(&ret.UnitValue, true),
-		WithMinOrderDuration(&ret.MinOrderDuration, true),
+		WithMinOrderDurationSeconds(&ret.MinOrderDurationSeconds, true),
 	)
 	assert.Nil(t, err)
 

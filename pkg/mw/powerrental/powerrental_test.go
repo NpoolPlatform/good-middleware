@@ -54,12 +54,12 @@ var (
 		VendorCountry:    uuid.NewString(),
 		VendorProvince:   uuid.NewString(),
 
-		UnitPrice:          decimal.NewFromInt(120).String(),
-		QuantityUnit:       "TiB",
-		QuantityUnitAmount: decimal.NewFromInt(2).String(),
-		DeliveryAt:         uint32(time.Now().Unix()),
-		DurationType:       types.GoodDurationType_GoodDurationByDay,
-		StockMode:          types.GoodStockMode_GoodStockByMiningPool,
+		UnitPrice:           decimal.NewFromInt(120).String(),
+		QuantityUnit:        "TiB",
+		QuantityUnitAmount:  decimal.NewFromInt(2).String(),
+		DeliveryAt:          uint32(time.Now().Unix()),
+		DurationDisplayType: types.GoodDurationType_GoodDurationByDay,
+		StockMode:           types.GoodStockMode_GoodStockByMiningPool,
 
 		GoodType:             types.GoodType_PowerRental,
 		BenefitType:          types.BenefitType_BenefitTypePlatform,
@@ -121,7 +121,7 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.BenefitTypeStr = ret.BenefitType.String()
 	ret.StartModeStr = ret.StartMode.String()
-	ret.DurationTypeStr = ret.DurationType.String()
+	ret.DurationDisplayTypeStr = ret.DurationDisplayType.String()
 	ret.StartModeStr = ret.StartMode.String()
 	ret.StockModeStr = ret.StockMode.String()
 	for _, stock := range ret.MiningGoodStocks {
@@ -217,7 +217,7 @@ func createPowerRental(t *testing.T) {
 		WithQuantityUnitAmount(&ret.QuantityUnitAmount, true),
 		WithDeliveryAt(&ret.DeliveryAt, true),
 		WithUnitLockDeposit(&ret.UnitLockDeposit, true),
-		WithDurationType(&ret.DurationType, true),
+		WithDurationDisplayType(&ret.DurationDisplayType, true),
 		WithGoodType(&ret.GoodType, true),
 		WithBenefitType(&ret.BenefitType, true),
 		WithName(&ret.Name, true),
@@ -269,7 +269,7 @@ func createPowerRental(t *testing.T) {
 		WithQuantityUnitAmount(&ret.QuantityUnitAmount, true),
 		WithDeliveryAt(&ret.DeliveryAt, true),
 		WithUnitLockDeposit(&ret.UnitLockDeposit, true),
-		WithDurationType(&ret.DurationType, true),
+		WithDurationDisplayType(&ret.DurationDisplayType, true),
 		WithGoodType(&ret.GoodType, true),
 		WithBenefitType(&ret.BenefitType, true),
 		WithName(&ret.Name, true),
@@ -321,7 +321,7 @@ func updatePowerRental(t *testing.T) {
 		WithQuantityUnitAmount(&ret.QuantityUnitAmount, true),
 		WithDeliveryAt(&ret.DeliveryAt, true),
 		WithUnitLockDeposit(&ret.UnitLockDeposit, true),
-		WithDurationType(&ret.DurationType, true),
+		WithDurationDisplayType(&ret.DurationDisplayType, true),
 		WithGoodType(&ret.GoodType, true),
 		WithBenefitType(&ret.BenefitType, true),
 		WithName(&ret.Name, true),

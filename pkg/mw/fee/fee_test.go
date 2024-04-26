@@ -30,13 +30,13 @@ func init() {
 
 var (
 	ret = npool.Fee{
-		EntID:          uuid.NewString(),
-		GoodID:         uuid.NewString(),
-		GoodType:       types.GoodType_TechniqueServiceFee,
-		Name:           uuid.NewString(),
-		SettlementType: types.GoodSettlementType_GoodSettledByProfitPercent,
-		UnitValue:      decimal.NewFromInt(20).String(),
-		DurationType:   types.GoodDurationType_GoodDurationByDay,
+		EntID:               uuid.NewString(),
+		GoodID:              uuid.NewString(),
+		GoodType:            types.GoodType_TechniqueServiceFee,
+		Name:                uuid.NewString(),
+		SettlementType:      types.GoodSettlementType_GoodSettledByProfitPercent,
+		UnitValue:           decimal.NewFromInt(20).String(),
+		DurationDisplayType: types.GoodDurationType_GoodDurationByDay,
 	}
 )
 
@@ -44,7 +44,7 @@ var (
 func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.SettlementTypeStr = ret.SettlementType.String()
-	ret.DurationTypeStr = ret.DurationType.String()
+	ret.DurationDisplayTypeStr = ret.DurationDisplayType.String()
 	return func(*testing.T) {}
 }
 
@@ -57,7 +57,7 @@ func createFee(t *testing.T) {
 		WithName(&ret.Name, true),
 		WithSettlementType(&ret.SettlementType, true),
 		WithUnitValue(&ret.UnitValue, true),
-		WithDurationType(&ret.DurationType, true),
+		WithDurationDisplayType(&ret.DurationDisplayType, true),
 	)
 	assert.Nil(t, err)
 
@@ -82,7 +82,7 @@ func updateFee(t *testing.T) {
 		WithName(&ret.Name, true),
 		WithSettlementType(&ret.SettlementType, true),
 		WithUnitValue(&ret.UnitValue, true),
-		WithDurationType(&ret.DurationType, true),
+		WithDurationDisplayType(&ret.DurationDisplayType, true),
 	)
 	assert.Nil(t, err)
 

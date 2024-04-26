@@ -48,14 +48,14 @@ func init() {
 }
 
 var ret = npool.Simulate{
-	EntID:         uuid.NewString(),
-	AppID:         uuid.NewString(),
-	GoodID:        uuid.NewString(),
-	GoodName:      uuid.NewString(),
-	AppGoodID:     uuid.NewString(),
-	AppGoodName:   uuid.NewString(),
-	OrderUnits:    decimal.NewFromInt(2).String(),
-	OrderDuration: 3,
+	EntID:                uuid.NewString(),
+	AppID:                uuid.NewString(),
+	GoodID:               uuid.NewString(),
+	GoodName:             uuid.NewString(),
+	AppGoodID:            uuid.NewString(),
+	AppGoodName:          uuid.NewString(),
+	OrderUnits:           decimal.NewFromInt(2).String(),
+	OrderDurationSeconds: 3,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -139,10 +139,10 @@ func setup(t *testing.T) func(*testing.T) {
 
 func createSimulate(t *testing.T) {
 	err := CreateSimulate(context.Background(), &npool.SimulateReq{
-		EntID:         &ret.EntID,
-		AppGoodID:     &ret.AppGoodID,
-		OrderUnits:    &ret.OrderUnits,
-		OrderDuration: &ret.OrderDuration,
+		EntID:                &ret.EntID,
+		AppGoodID:            &ret.AppGoodID,
+		OrderUnits:           &ret.OrderUnits,
+		OrderDurationSeconds: &ret.OrderDurationSeconds,
 	})
 	if assert.Nil(t, err) {
 		info, err := GetSimulate(context.Background(), ret.EntID)

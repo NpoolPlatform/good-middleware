@@ -59,13 +59,13 @@ var (
 		VendorCountry:    uuid.NewString(),
 		VendorProvince:   uuid.NewString(),
 
-		UnitPrice:          decimal.NewFromInt(120).String(),
-		QuantityUnit:       "TiB",
-		QuantityUnitAmount: decimal.NewFromInt(2).String(),
-		DeliveryAt:         uint32(time.Now().Unix()),
-		UnitLockDeposit:    decimal.NewFromInt(1).String(),
-		DurationType:       types.GoodDurationType_GoodDurationByDay,
-		StockMode:          types.GoodStockMode_GoodStockByMiningPool,
+		UnitPrice:           decimal.NewFromInt(120).String(),
+		QuantityUnit:        "TiB",
+		QuantityUnitAmount:  decimal.NewFromInt(2).String(),
+		DeliveryAt:          uint32(time.Now().Unix()),
+		UnitLockDeposit:     decimal.NewFromInt(1).String(),
+		DurationDisplayType: types.GoodDurationType_GoodDurationByDay,
+		StockMode:           types.GoodStockMode_GoodStockByMiningPool,
 
 		GoodType:                     types.GoodType_PowerRental,
 		BenefitType:                  types.BenefitType_BenefitTypePlatform,
@@ -90,8 +90,8 @@ var (
 		MinOrderAmount:               "1",
 		MaxOrderAmount:               "10",
 		MaxUserAmount:                "10",
-		MinOrderDuration:             1,
-		MaxOrderDuration:             10,
+		MinOrderDurationSeconds:      1,
+		MaxOrderDurationSeconds:      10,
 		SaleMode:                     types.GoodSaleMode_GoodSaleModeMainnetSpot,
 		FixedDuration:                false,
 		PackageWithRequireds:         false,
@@ -170,7 +170,7 @@ var (
 func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.BenefitTypeStr = ret.BenefitType.String()
-	ret.DurationTypeStr = ret.DurationType.String()
+	ret.DurationDisplayTypeStr = ret.DurationDisplayType.String()
 	ret.StartModeStr = ret.StartMode.String()
 	ret.CancelModeStr = ret.CancelMode.String()
 	ret.SaleModeStr = ret.SaleMode.String()
@@ -258,7 +258,7 @@ func setup(t *testing.T) func(*testing.T) {
 		powerrental1.WithQuantityUnitAmount(&ret.QuantityUnitAmount, true),
 		powerrental1.WithDeliveryAt(&ret.DeliveryAt, true),
 		powerrental1.WithUnitLockDeposit(&ret.UnitLockDeposit, true),
-		powerrental1.WithDurationType(&ret.DurationType, true),
+		powerrental1.WithDurationDisplayType(&ret.DurationDisplayType, true),
 		powerrental1.WithGoodType(&ret.GoodType, true),
 		powerrental1.WithBenefitType(&ret.BenefitType, true),
 		powerrental1.WithName(&ret.GoodName, true),
@@ -330,8 +330,8 @@ func createPowerRental(t *testing.T) {
 		WithMinOrderAmount(&ret.MinOrderAmount, true),
 		WithMaxOrderAmount(&ret.MaxOrderAmount, true),
 		WithMaxUserAmount(&ret.MaxUserAmount, true),
-		WithMinOrderDuration(&ret.MinOrderDuration, true),
-		WithMaxOrderDuration(&ret.MaxOrderDuration, true),
+		WithMinOrderDurationSeconds(&ret.MinOrderDurationSeconds, true),
+		WithMaxOrderDurationSeconds(&ret.MaxOrderDurationSeconds, true),
 		WithUnitPrice(&ret.UnitPrice, true),
 		WithSaleStartAt(&ret.SaleStartAt, true),
 		WithSaleEndAt(&ret.SaleEndAt, true),
@@ -381,8 +381,8 @@ func updatePowerRental(t *testing.T) {
 		WithMinOrderAmount(&ret.MinOrderAmount, true),
 		WithMaxOrderAmount(&ret.MaxOrderAmount, true),
 		WithMaxUserAmount(&ret.MaxUserAmount, true),
-		WithMinOrderDuration(&ret.MinOrderDuration, true),
-		WithMaxOrderDuration(&ret.MaxOrderDuration, true),
+		WithMinOrderDurationSeconds(&ret.MinOrderDurationSeconds, true),
+		WithMaxOrderDurationSeconds(&ret.MaxOrderDurationSeconds, true),
 		WithUnitPrice(&ret.UnitPrice, true),
 		WithSaleStartAt(&ret.SaleStartAt, true),
 		WithSaleEndAt(&ret.SaleEndAt, true),

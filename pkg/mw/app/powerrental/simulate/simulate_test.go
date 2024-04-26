@@ -36,14 +36,14 @@ func init() {
 }
 
 var ret = npool.Simulate{
-	EntID:         uuid.NewString(),
-	AppID:         uuid.NewString(),
-	GoodID:        uuid.NewString(),
-	GoodName:      uuid.NewString(),
-	AppGoodID:     uuid.NewString(),
-	AppGoodName:   uuid.NewString(),
-	OrderUnits:    "10",
-	OrderDuration: 11,
+	EntID:                uuid.NewString(),
+	AppID:                uuid.NewString(),
+	GoodID:               uuid.NewString(),
+	GoodName:             uuid.NewString(),
+	AppGoodID:            uuid.NewString(),
+	AppGoodName:          uuid.NewString(),
+	OrderUnits:           "10",
+	OrderDurationSeconds: 11,
 }
 
 //nolint:funlen
@@ -152,8 +152,8 @@ func setup(t *testing.T) func(*testing.T) {
 		apppowerrental1.WithMinOrderAmount(func() *string { s := decimal.NewFromInt(10).String(); return &s }(), true),
 		apppowerrental1.WithMaxOrderAmount(func() *string { s := decimal.NewFromInt(90).String(); return &s }(), true),
 		apppowerrental1.WithMaxUserAmount(func() *string { s := decimal.NewFromInt(90).String(); return &s }(), true),
-		apppowerrental1.WithMinOrderDuration(func() *uint32 { n := uint32(10); return &n }(), true),
-		apppowerrental1.WithMaxOrderDuration(func() *uint32 { n := uint32(24); return &n }(), true),
+		apppowerrental1.WithMinOrderDurationSeconds(func() *uint32 { n := uint32(10); return &n }(), true),
+		apppowerrental1.WithMaxOrderDurationSeconds(func() *uint32 { n := uint32(24); return &n }(), true),
 		apppowerrental1.WithUnitPrice(func() *string { s := decimal.NewFromInt(100).String(); return &s }(), true),
 		apppowerrental1.WithSaleStartAt(func() *uint32 { n := uint32(24); return &n }(), true),
 		apppowerrental1.WithSaleEndAt(func() *uint32 { n := uint32(24); return &n }(), true),
@@ -182,7 +182,7 @@ func createSimulate(t *testing.T) {
 		WithEntID(&ret.EntID, true),
 		WithAppGoodID(&ret.AppGoodID, true),
 		WithOrderUnits(&ret.OrderUnits, true),
-		WithOrderDuration(&ret.OrderDuration, true),
+		WithOrderDurationSeconds(&ret.OrderDurationSeconds, true),
 	)
 	if assert.Nil(t, err) {
 		err = handler.CreateSimulate(context.Background())
@@ -200,12 +200,12 @@ func createSimulate(t *testing.T) {
 
 func updateSimulate(t *testing.T) {
 	ret.OrderUnits = "20"
-	ret.OrderDuration = 12
+	ret.OrderDurationSeconds = 12
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithOrderUnits(&ret.OrderUnits, true),
-		WithOrderDuration(&ret.OrderDuration, true),
+		WithOrderDurationSeconds(&ret.OrderDurationSeconds, true),
 	)
 	if assert.Nil(t, err) {
 		err = handler.UpdateSimulate(context.Background())

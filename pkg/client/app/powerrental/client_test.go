@@ -65,12 +65,12 @@ var ret = &npool.PowerRental{
 	VendorCountry:    uuid.NewString(),
 	VendorProvince:   uuid.NewString(),
 
-	UnitPrice:          decimal.NewFromInt(120).String(),
-	QuantityUnit:       "TiB",
-	QuantityUnitAmount: decimal.NewFromInt(10).String(),
-	DeliveryAt:         uint32(time.Now().Unix()),
-	UnitLockDeposit:    decimal.NewFromInt(100).String(),
-	DurationType:       types.GoodDurationType_GoodDurationByDay,
+	UnitPrice:           decimal.NewFromInt(120).String(),
+	QuantityUnit:        "TiB",
+	QuantityUnitAmount:  decimal.NewFromInt(10).String(),
+	DeliveryAt:          uint32(time.Now().Unix()),
+	UnitLockDeposit:     decimal.NewFromInt(100).String(),
+	DurationDisplayType: types.GoodDurationType_GoodDurationByDay,
 
 	GoodType:             types.GoodType_PowerRental,
 	BenefitType:          types.BenefitType_BenefitTypePlatform,
@@ -97,8 +97,8 @@ var ret = &npool.PowerRental{
 	MinOrderAmount:               decimal.NewFromInt(10).String(),
 	MaxOrderAmount:               decimal.NewFromInt(100).String(),
 	MaxUserAmount:                decimal.NewFromInt(200).String(),
-	MinOrderDuration:             uint32(1),
-	MaxOrderDuration:             uint32(10),
+	MinOrderDurationSeconds:      uint32(1),
+	MaxOrderDurationSeconds:      uint32(10),
 	SaleStartAt:                  uint32(time.Now().Unix()),
 	SaleEndAt:                    uint32(time.Now().Unix() + 10000),
 	SaleMode:                     types.GoodSaleMode_GoodSaleModeMainnetSpot,
@@ -127,7 +127,7 @@ var ret = &npool.PowerRental{
 }
 
 func setup(t *testing.T) func(*testing.T) {
-	ret.DurationTypeStr = ret.DurationType.String()
+	ret.DurationDisplayTypeStr = ret.DurationDisplayType.String()
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.BenefitTypeStr = ret.BenefitType.String()
 	ret.StockModeStr = ret.StockMode.String()
@@ -217,8 +217,8 @@ func createPowerRental(t *testing.T) {
 		MinOrderAmount:               &ret.MinOrderAmount,
 		MaxOrderAmount:               &ret.MaxOrderAmount,
 		MaxUserAmount:                &ret.MaxUserAmount,
-		MinOrderDuration:             &ret.MinOrderDuration,
-		MaxOrderDuration:             &ret.MaxOrderDuration,
+		MinOrderDurationSeconds:      &ret.MinOrderDurationSeconds,
+		MaxOrderDurationSeconds:      &ret.MaxOrderDurationSeconds,
 		EnableProductPage:            &ret.EnableProductPage,
 		ProductPage:                  &ret.ProductPage,
 		Purchasable:                  &ret.AppGoodPurchasable,

@@ -37,32 +37,32 @@ func init() {
 }
 
 var ret = &npool.Fee{
-	EntID:            uuid.NewString(),
-	AppID:            uuid.NewString(),
-	GoodID:           uuid.NewString(),
-	AppGoodID:        uuid.NewString(),
-	GoodType:         types.GoodType_TechniqueServiceFee,
-	Name:             uuid.NewString(),
-	SettlementType:   types.GoodSettlementType_GoodSettledByProfitPercent,
-	UnitValue:        decimal.NewFromInt(20).String(),
-	DurationType:     types.GoodDurationType_GoodDurationByDay,
-	MinOrderDuration: 20,
+	EntID:                   uuid.NewString(),
+	AppID:                   uuid.NewString(),
+	GoodID:                  uuid.NewString(),
+	AppGoodID:               uuid.NewString(),
+	GoodType:                types.GoodType_TechniqueServiceFee,
+	Name:                    uuid.NewString(),
+	SettlementType:          types.GoodSettlementType_GoodSettledByProfitPercent,
+	UnitValue:               decimal.NewFromInt(20).String(),
+	DurationDisplayType:     types.GoodDurationType_GoodDurationByDay,
+	MinOrderDurationSeconds: 20,
 }
 
 func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.SettlementTypeStr = ret.SettlementType.String()
-	ret.DurationTypeStr = ret.DurationType.String()
+	ret.DurationDisplayTypeStr = ret.DurationDisplayType.String()
 
 	feeEntID := uuid.NewString()
 	err := fee1.CreateFee(context.Background(), &feemwpb.FeeReq{
-		EntID:          &feeEntID,
-		GoodID:         &ret.GoodID,
-		GoodType:       &ret.GoodType,
-		Name:           &ret.Name,
-		SettlementType: &ret.SettlementType,
-		UnitValue:      &ret.UnitValue,
-		DurationType:   &ret.DurationType,
+		EntID:               &feeEntID,
+		GoodID:              &ret.GoodID,
+		GoodType:            &ret.GoodType,
+		Name:                &ret.Name,
+		SettlementType:      &ret.SettlementType,
+		UnitValue:           &ret.UnitValue,
+		DurationDisplayType: &ret.DurationDisplayType,
 	})
 	assert.Nil(t, err)
 
@@ -73,15 +73,15 @@ func setup(t *testing.T) func(*testing.T) {
 
 func createFee(t *testing.T) {
 	err := CreateFee(context.Background(), &npool.FeeReq{
-		EntID:            &ret.EntID,
-		AppID:            &ret.AppID,
-		GoodID:           &ret.GoodID,
-		AppGoodID:        &ret.AppGoodID,
-		ProductPage:      &ret.ProductPage,
-		Name:             &ret.Name,
-		Banner:           &ret.Banner,
-		UnitValue:        &ret.UnitValue,
-		MinOrderDuration: &ret.MinOrderDuration,
+		EntID:                   &ret.EntID,
+		AppID:                   &ret.AppID,
+		GoodID:                  &ret.GoodID,
+		AppGoodID:               &ret.AppGoodID,
+		ProductPage:             &ret.ProductPage,
+		Name:                    &ret.Name,
+		Banner:                  &ret.Banner,
+		UnitValue:               &ret.UnitValue,
+		MinOrderDurationSeconds: &ret.MinOrderDurationSeconds,
 	})
 	assert.Nil(t, err)
 
@@ -96,16 +96,16 @@ func createFee(t *testing.T) {
 
 func updateFee(t *testing.T) {
 	err := UpdateFee(context.Background(), &npool.FeeReq{
-		ID:               &ret.ID,
-		EntID:            &ret.EntID,
-		AppID:            &ret.AppID,
-		GoodID:           &ret.GoodID,
-		AppGoodID:        &ret.AppGoodID,
-		ProductPage:      &ret.ProductPage,
-		Name:             &ret.Name,
-		Banner:           &ret.Banner,
-		UnitValue:        &ret.UnitValue,
-		MinOrderDuration: &ret.MinOrderDuration,
+		ID:                      &ret.ID,
+		EntID:                   &ret.EntID,
+		AppID:                   &ret.AppID,
+		GoodID:                  &ret.GoodID,
+		AppGoodID:               &ret.AppGoodID,
+		ProductPage:             &ret.ProductPage,
+		Name:                    &ret.Name,
+		Banner:                  &ret.Banner,
+		UnitValue:               &ret.UnitValue,
+		MinOrderDurationSeconds: &ret.MinOrderDurationSeconds,
 	})
 	assert.Nil(t, err)
 
