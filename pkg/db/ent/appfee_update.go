@@ -139,30 +139,30 @@ func (afu *AppFeeUpdate) ClearUnitValue() *AppFeeUpdate {
 	return afu
 }
 
-// SetMinOrderDuration sets the "min_order_duration" field.
-func (afu *AppFeeUpdate) SetMinOrderDuration(u uint32) *AppFeeUpdate {
-	afu.mutation.ResetMinOrderDuration()
-	afu.mutation.SetMinOrderDuration(u)
+// SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
+func (afu *AppFeeUpdate) SetMinOrderDurationSeconds(u uint32) *AppFeeUpdate {
+	afu.mutation.ResetMinOrderDurationSeconds()
+	afu.mutation.SetMinOrderDurationSeconds(u)
 	return afu
 }
 
-// SetNillableMinOrderDuration sets the "min_order_duration" field if the given value is not nil.
-func (afu *AppFeeUpdate) SetNillableMinOrderDuration(u *uint32) *AppFeeUpdate {
+// SetNillableMinOrderDurationSeconds sets the "min_order_duration_seconds" field if the given value is not nil.
+func (afu *AppFeeUpdate) SetNillableMinOrderDurationSeconds(u *uint32) *AppFeeUpdate {
 	if u != nil {
-		afu.SetMinOrderDuration(*u)
+		afu.SetMinOrderDurationSeconds(*u)
 	}
 	return afu
 }
 
-// AddMinOrderDuration adds u to the "min_order_duration" field.
-func (afu *AppFeeUpdate) AddMinOrderDuration(u int32) *AppFeeUpdate {
-	afu.mutation.AddMinOrderDuration(u)
+// AddMinOrderDurationSeconds adds u to the "min_order_duration_seconds" field.
+func (afu *AppFeeUpdate) AddMinOrderDurationSeconds(u int32) *AppFeeUpdate {
+	afu.mutation.AddMinOrderDurationSeconds(u)
 	return afu
 }
 
-// ClearMinOrderDuration clears the value of the "min_order_duration" field.
-func (afu *AppFeeUpdate) ClearMinOrderDuration() *AppFeeUpdate {
-	afu.mutation.ClearMinOrderDuration()
+// ClearMinOrderDurationSeconds clears the value of the "min_order_duration_seconds" field.
+func (afu *AppFeeUpdate) ClearMinOrderDurationSeconds() *AppFeeUpdate {
+	afu.mutation.ClearMinOrderDurationSeconds()
 	return afu
 }
 
@@ -339,24 +339,24 @@ func (afu *AppFeeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appfee.FieldUnitValue,
 		})
 	}
-	if value, ok := afu.mutation.MinOrderDuration(); ok {
+	if value, ok := afu.mutation.MinOrderDurationSeconds(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appfee.FieldMinOrderDuration,
+			Column: appfee.FieldMinOrderDurationSeconds,
 		})
 	}
-	if value, ok := afu.mutation.AddedMinOrderDuration(); ok {
+	if value, ok := afu.mutation.AddedMinOrderDurationSeconds(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appfee.FieldMinOrderDuration,
+			Column: appfee.FieldMinOrderDurationSeconds,
 		})
 	}
-	if afu.mutation.MinOrderDurationCleared() {
+	if afu.mutation.MinOrderDurationSecondsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: appfee.FieldMinOrderDuration,
+			Column: appfee.FieldMinOrderDurationSeconds,
 		})
 	}
 	_spec.Modifiers = afu.modifiers
@@ -489,30 +489,30 @@ func (afuo *AppFeeUpdateOne) ClearUnitValue() *AppFeeUpdateOne {
 	return afuo
 }
 
-// SetMinOrderDuration sets the "min_order_duration" field.
-func (afuo *AppFeeUpdateOne) SetMinOrderDuration(u uint32) *AppFeeUpdateOne {
-	afuo.mutation.ResetMinOrderDuration()
-	afuo.mutation.SetMinOrderDuration(u)
+// SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
+func (afuo *AppFeeUpdateOne) SetMinOrderDurationSeconds(u uint32) *AppFeeUpdateOne {
+	afuo.mutation.ResetMinOrderDurationSeconds()
+	afuo.mutation.SetMinOrderDurationSeconds(u)
 	return afuo
 }
 
-// SetNillableMinOrderDuration sets the "min_order_duration" field if the given value is not nil.
-func (afuo *AppFeeUpdateOne) SetNillableMinOrderDuration(u *uint32) *AppFeeUpdateOne {
+// SetNillableMinOrderDurationSeconds sets the "min_order_duration_seconds" field if the given value is not nil.
+func (afuo *AppFeeUpdateOne) SetNillableMinOrderDurationSeconds(u *uint32) *AppFeeUpdateOne {
 	if u != nil {
-		afuo.SetMinOrderDuration(*u)
+		afuo.SetMinOrderDurationSeconds(*u)
 	}
 	return afuo
 }
 
-// AddMinOrderDuration adds u to the "min_order_duration" field.
-func (afuo *AppFeeUpdateOne) AddMinOrderDuration(u int32) *AppFeeUpdateOne {
-	afuo.mutation.AddMinOrderDuration(u)
+// AddMinOrderDurationSeconds adds u to the "min_order_duration_seconds" field.
+func (afuo *AppFeeUpdateOne) AddMinOrderDurationSeconds(u int32) *AppFeeUpdateOne {
+	afuo.mutation.AddMinOrderDurationSeconds(u)
 	return afuo
 }
 
-// ClearMinOrderDuration clears the value of the "min_order_duration" field.
-func (afuo *AppFeeUpdateOne) ClearMinOrderDuration() *AppFeeUpdateOne {
-	afuo.mutation.ClearMinOrderDuration()
+// ClearMinOrderDurationSeconds clears the value of the "min_order_duration_seconds" field.
+func (afuo *AppFeeUpdateOne) ClearMinOrderDurationSeconds() *AppFeeUpdateOne {
+	afuo.mutation.ClearMinOrderDurationSeconds()
 	return afuo
 }
 
@@ -719,24 +719,24 @@ func (afuo *AppFeeUpdateOne) sqlSave(ctx context.Context) (_node *AppFee, err er
 			Column: appfee.FieldUnitValue,
 		})
 	}
-	if value, ok := afuo.mutation.MinOrderDuration(); ok {
+	if value, ok := afuo.mutation.MinOrderDurationSeconds(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appfee.FieldMinOrderDuration,
+			Column: appfee.FieldMinOrderDurationSeconds,
 		})
 	}
-	if value, ok := afuo.mutation.AddedMinOrderDuration(); ok {
+	if value, ok := afuo.mutation.AddedMinOrderDurationSeconds(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appfee.FieldMinOrderDuration,
+			Column: appfee.FieldMinOrderDurationSeconds,
 		})
 	}
-	if afuo.mutation.MinOrderDurationCleared() {
+	if afuo.mutation.MinOrderDurationSecondsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: appfee.FieldMinOrderDuration,
+			Column: appfee.FieldMinOrderDurationSeconds,
 		})
 	}
 	_spec.Modifiers = afuo.modifiers

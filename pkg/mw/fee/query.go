@@ -44,7 +44,7 @@ func (h *queryHandler) formalize() {
 		info.UnitValue = amount.String()
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.SettlementType = types.GoodSettlementType(types.GoodSettlementType_value[info.SettlementTypeStr])
-		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
+		info.DurationDisplayType = types.GoodDurationType(types.GoodDurationType_value[info.DurationDisplayTypeStr])
 	}
 }
 

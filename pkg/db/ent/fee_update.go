@@ -159,23 +159,23 @@ func (fu *FeeUpdate) ClearUnitValue() *FeeUpdate {
 	return fu
 }
 
-// SetDurationType sets the "duration_type" field.
-func (fu *FeeUpdate) SetDurationType(s string) *FeeUpdate {
-	fu.mutation.SetDurationType(s)
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (fu *FeeUpdate) SetDurationDisplayType(s string) *FeeUpdate {
+	fu.mutation.SetDurationDisplayType(s)
 	return fu
 }
 
-// SetNillableDurationType sets the "duration_type" field if the given value is not nil.
-func (fu *FeeUpdate) SetNillableDurationType(s *string) *FeeUpdate {
+// SetNillableDurationDisplayType sets the "duration_display_type" field if the given value is not nil.
+func (fu *FeeUpdate) SetNillableDurationDisplayType(s *string) *FeeUpdate {
 	if s != nil {
-		fu.SetDurationType(*s)
+		fu.SetDurationDisplayType(*s)
 	}
 	return fu
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (fu *FeeUpdate) ClearDurationType() *FeeUpdate {
-	fu.mutation.ClearDurationType()
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (fu *FeeUpdate) ClearDurationDisplayType() *FeeUpdate {
+	fu.mutation.ClearDurationDisplayType()
 	return fu
 }
 
@@ -365,17 +365,17 @@ func (fu *FeeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: fee.FieldUnitValue,
 		})
 	}
-	if value, ok := fu.mutation.DurationType(); ok {
+	if value, ok := fu.mutation.DurationDisplayType(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: fee.FieldDurationType,
+			Column: fee.FieldDurationDisplayType,
 		})
 	}
-	if fu.mutation.DurationTypeCleared() {
+	if fu.mutation.DurationDisplayTypeCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: fee.FieldDurationType,
+			Column: fee.FieldDurationDisplayType,
 		})
 	}
 	_spec.Modifiers = fu.modifiers
@@ -528,23 +528,23 @@ func (fuo *FeeUpdateOne) ClearUnitValue() *FeeUpdateOne {
 	return fuo
 }
 
-// SetDurationType sets the "duration_type" field.
-func (fuo *FeeUpdateOne) SetDurationType(s string) *FeeUpdateOne {
-	fuo.mutation.SetDurationType(s)
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (fuo *FeeUpdateOne) SetDurationDisplayType(s string) *FeeUpdateOne {
+	fuo.mutation.SetDurationDisplayType(s)
 	return fuo
 }
 
-// SetNillableDurationType sets the "duration_type" field if the given value is not nil.
-func (fuo *FeeUpdateOne) SetNillableDurationType(s *string) *FeeUpdateOne {
+// SetNillableDurationDisplayType sets the "duration_display_type" field if the given value is not nil.
+func (fuo *FeeUpdateOne) SetNillableDurationDisplayType(s *string) *FeeUpdateOne {
 	if s != nil {
-		fuo.SetDurationType(*s)
+		fuo.SetDurationDisplayType(*s)
 	}
 	return fuo
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (fuo *FeeUpdateOne) ClearDurationType() *FeeUpdateOne {
-	fuo.mutation.ClearDurationType()
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (fuo *FeeUpdateOne) ClearDurationDisplayType() *FeeUpdateOne {
+	fuo.mutation.ClearDurationDisplayType()
 	return fuo
 }
 
@@ -764,17 +764,17 @@ func (fuo *FeeUpdateOne) sqlSave(ctx context.Context) (_node *Fee, err error) {
 			Column: fee.FieldUnitValue,
 		})
 	}
-	if value, ok := fuo.mutation.DurationType(); ok {
+	if value, ok := fuo.mutation.DurationDisplayType(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: fee.FieldDurationType,
+			Column: fee.FieldDurationDisplayType,
 		})
 	}
-	if fuo.mutation.DurationTypeCleared() {
+	if fuo.mutation.DurationDisplayTypeCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: fee.FieldDurationType,
+			Column: fee.FieldDurationDisplayType,
 		})
 	}
 	_spec.Modifiers = fuo.modifiers

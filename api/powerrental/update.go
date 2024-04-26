@@ -34,7 +34,7 @@ func (s *Server) UpdatePowerRental(ctx context.Context, in *npool.UpdatePowerRen
 		powerrental1.WithQuantityUnitAmount(req.QuantityUnitAmount, false),
 		powerrental1.WithDeliveryAt(req.DeliveryAt, false),
 		powerrental1.WithUnitLockDeposit(req.UnitLockDeposit, false),
-		powerrental1.WithDurationType(req.DurationType, false),
+		powerrental1.WithDurationDisplayType(req.DurationDisplayType, false),
 
 		powerrental1.WithGoodType(req.GoodType, false),
 		powerrental1.WithBenefitType(req.BenefitType, false),

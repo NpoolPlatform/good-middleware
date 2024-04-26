@@ -266,23 +266,23 @@ func (pru *PowerRentalUpdate) ClearUnitLockDeposit() *PowerRentalUpdate {
 	return pru
 }
 
-// SetDurationType sets the "duration_type" field.
-func (pru *PowerRentalUpdate) SetDurationType(s string) *PowerRentalUpdate {
-	pru.mutation.SetDurationType(s)
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (pru *PowerRentalUpdate) SetDurationDisplayType(s string) *PowerRentalUpdate {
+	pru.mutation.SetDurationDisplayType(s)
 	return pru
 }
 
-// SetNillableDurationType sets the "duration_type" field if the given value is not nil.
-func (pru *PowerRentalUpdate) SetNillableDurationType(s *string) *PowerRentalUpdate {
+// SetNillableDurationDisplayType sets the "duration_display_type" field if the given value is not nil.
+func (pru *PowerRentalUpdate) SetNillableDurationDisplayType(s *string) *PowerRentalUpdate {
 	if s != nil {
-		pru.SetDurationType(*s)
+		pru.SetDurationDisplayType(*s)
 	}
 	return pru
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (pru *PowerRentalUpdate) ClearDurationType() *PowerRentalUpdate {
-	pru.mutation.ClearDurationType()
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (pru *PowerRentalUpdate) ClearDurationDisplayType() *PowerRentalUpdate {
+	pru.mutation.ClearDurationDisplayType()
 	return pru
 }
 
@@ -564,17 +564,17 @@ func (pru *PowerRentalUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: powerrental.FieldUnitLockDeposit,
 		})
 	}
-	if value, ok := pru.mutation.DurationType(); ok {
+	if value, ok := pru.mutation.DurationDisplayType(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: powerrental.FieldDurationType,
+			Column: powerrental.FieldDurationDisplayType,
 		})
 	}
-	if pru.mutation.DurationTypeCleared() {
+	if pru.mutation.DurationDisplayTypeCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: powerrental.FieldDurationType,
+			Column: powerrental.FieldDurationDisplayType,
 		})
 	}
 	if value, ok := pru.mutation.StockMode(); ok {
@@ -847,23 +847,23 @@ func (pruo *PowerRentalUpdateOne) ClearUnitLockDeposit() *PowerRentalUpdateOne {
 	return pruo
 }
 
-// SetDurationType sets the "duration_type" field.
-func (pruo *PowerRentalUpdateOne) SetDurationType(s string) *PowerRentalUpdateOne {
-	pruo.mutation.SetDurationType(s)
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (pruo *PowerRentalUpdateOne) SetDurationDisplayType(s string) *PowerRentalUpdateOne {
+	pruo.mutation.SetDurationDisplayType(s)
 	return pruo
 }
 
-// SetNillableDurationType sets the "duration_type" field if the given value is not nil.
-func (pruo *PowerRentalUpdateOne) SetNillableDurationType(s *string) *PowerRentalUpdateOne {
+// SetNillableDurationDisplayType sets the "duration_display_type" field if the given value is not nil.
+func (pruo *PowerRentalUpdateOne) SetNillableDurationDisplayType(s *string) *PowerRentalUpdateOne {
 	if s != nil {
-		pruo.SetDurationType(*s)
+		pruo.SetDurationDisplayType(*s)
 	}
 	return pruo
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (pruo *PowerRentalUpdateOne) ClearDurationType() *PowerRentalUpdateOne {
-	pruo.mutation.ClearDurationType()
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (pruo *PowerRentalUpdateOne) ClearDurationDisplayType() *PowerRentalUpdateOne {
+	pruo.mutation.ClearDurationDisplayType()
 	return pruo
 }
 
@@ -1175,17 +1175,17 @@ func (pruo *PowerRentalUpdateOne) sqlSave(ctx context.Context) (_node *PowerRent
 			Column: powerrental.FieldUnitLockDeposit,
 		})
 	}
-	if value, ok := pruo.mutation.DurationType(); ok {
+	if value, ok := pruo.mutation.DurationDisplayType(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: powerrental.FieldDurationType,
+			Column: powerrental.FieldDurationDisplayType,
 		})
 	}
-	if pruo.mutation.DurationTypeCleared() {
+	if pruo.mutation.DurationDisplayTypeCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: powerrental.FieldDurationType,
+			Column: powerrental.FieldDurationDisplayType,
 		})
 	}
 	if value, ok := pruo.mutation.StockMode(); ok {

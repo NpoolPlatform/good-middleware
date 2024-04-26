@@ -77,11 +77,11 @@ func (FbmCrowdFunding) Fields() []ent.Field {
 			Optional().
 			Default(8), //nolint
 		field.
-			String("duration_type").
+			String("duration_display_type").
 			Optional().
 			Default(types.GoodDurationType_GoodDurationByDay.String()),
 		field.
-			Uint32("duration").
+			Uint32("duration_seconds").
 			Optional().
 			Default(365), //nolint
 	}

@@ -30,8 +30,8 @@ func (h *updateHandler) constructSQL() error {
 		_sql += fmt.Sprintf("%vorder_units= '%v', ", set, *h.OrderUnits)
 		set = ""
 	}
-	if h.OrderDuration != nil {
-		_sql += fmt.Sprintf("%vorder_duration= %v, ", set, *h.OrderDuration)
+	if h.OrderDurationSeconds != nil {
+		_sql += fmt.Sprintf("%vorder_duration= %v, ", set, *h.OrderDurationSeconds)
 		set = ""
 	}
 	if set != "" {
@@ -77,12 +77,12 @@ func (h *updateHandler) validateOrderUnits() error {
 	return nil
 }
 
-func (h *updateHandler) validateOrderDuration() error {
-	if h.OrderDuration == nil {
+func (h *updateHandler) validateOrderDurationSeconds() error {
+	if h.OrderDurationSeconds == nil {
 		return nil
 	}
-	if (h.appPowerRental.MinOrderDuration() > 0 && *h.OrderDuration < h.appPowerRental.MinOrderDuration()) ||
-		(h.appPowerRental.MaxOrderDuration() > 0 && *h.OrderDuration > h.appPowerRental.MaxOrderDuration()) {
+	if (h.appPowerRental.MinOrderDurationSeconds() > 0 && *h.OrderDurationSeconds < h.appPowerRental.MinOrderDurationSeconds()) ||
+		(h.appPowerRental.MaxOrderDurationSeconds() > 0 && *h.OrderDurationSeconds > h.appPowerRental.MaxOrderDurationSeconds()) {
 		return fmt.Errorf("invalid orderduration")
 	}
 	return nil
@@ -101,7 +101,7 @@ func (h *Handler) UpdateSimulate(ctx context.Context) error {
 	if err := handler.validateOrderUnits(); err != nil {
 		return err
 	}
-	if err := handler.validateOrderDuration(); err != nil {
+	if err := handler.validateOrderDurationSeconds(); err != nil {
 		return err
 	}
 

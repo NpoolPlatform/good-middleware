@@ -847,24 +847,24 @@ func (m *AppDefaultGoodMutation) ResetEdge(name string) error {
 // AppFeeMutation represents an operation that mutates the AppFee nodes in the graph.
 type AppFeeMutation struct {
 	config
-	op                    Op
-	typ                   string
-	id                    *uint32
-	created_at            *uint32
-	addcreated_at         *int32
-	updated_at            *uint32
-	addupdated_at         *int32
-	deleted_at            *uint32
-	adddeleted_at         *int32
-	ent_id                *uuid.UUID
-	app_good_id           *uuid.UUID
-	unit_value            *decimal.Decimal
-	min_order_duration    *uint32
-	addmin_order_duration *int32
-	clearedFields         map[string]struct{}
-	done                  bool
-	oldValue              func(context.Context) (*AppFee, error)
-	predicates            []predicate.AppFee
+	op                            Op
+	typ                           string
+	id                            *uint32
+	created_at                    *uint32
+	addcreated_at                 *int32
+	updated_at                    *uint32
+	addupdated_at                 *int32
+	deleted_at                    *uint32
+	adddeleted_at                 *int32
+	ent_id                        *uuid.UUID
+	app_good_id                   *uuid.UUID
+	unit_value                    *decimal.Decimal
+	min_order_duration_seconds    *uint32
+	addmin_order_duration_seconds *int32
+	clearedFields                 map[string]struct{}
+	done                          bool
+	oldValue                      func(context.Context) (*AppFee, error)
+	predicates                    []predicate.AppFee
 }
 
 var _ ent.Mutation = (*AppFeeMutation)(nil)
@@ -1273,74 +1273,74 @@ func (m *AppFeeMutation) ResetUnitValue() {
 	delete(m.clearedFields, appfee.FieldUnitValue)
 }
 
-// SetMinOrderDuration sets the "min_order_duration" field.
-func (m *AppFeeMutation) SetMinOrderDuration(u uint32) {
-	m.min_order_duration = &u
-	m.addmin_order_duration = nil
+// SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
+func (m *AppFeeMutation) SetMinOrderDurationSeconds(u uint32) {
+	m.min_order_duration_seconds = &u
+	m.addmin_order_duration_seconds = nil
 }
 
-// MinOrderDuration returns the value of the "min_order_duration" field in the mutation.
-func (m *AppFeeMutation) MinOrderDuration() (r uint32, exists bool) {
-	v := m.min_order_duration
+// MinOrderDurationSeconds returns the value of the "min_order_duration_seconds" field in the mutation.
+func (m *AppFeeMutation) MinOrderDurationSeconds() (r uint32, exists bool) {
+	v := m.min_order_duration_seconds
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldMinOrderDuration returns the old "min_order_duration" field's value of the AppFee entity.
+// OldMinOrderDurationSeconds returns the old "min_order_duration_seconds" field's value of the AppFee entity.
 // If the AppFee object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppFeeMutation) OldMinOrderDuration(ctx context.Context) (v uint32, err error) {
+func (m *AppFeeMutation) OldMinOrderDurationSeconds(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldMinOrderDuration is only allowed on UpdateOne operations")
+		return v, errors.New("OldMinOrderDurationSeconds is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldMinOrderDuration requires an ID field in the mutation")
+		return v, errors.New("OldMinOrderDurationSeconds requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldMinOrderDuration: %w", err)
+		return v, fmt.Errorf("querying old value for OldMinOrderDurationSeconds: %w", err)
 	}
-	return oldValue.MinOrderDuration, nil
+	return oldValue.MinOrderDurationSeconds, nil
 }
 
-// AddMinOrderDuration adds u to the "min_order_duration" field.
-func (m *AppFeeMutation) AddMinOrderDuration(u int32) {
-	if m.addmin_order_duration != nil {
-		*m.addmin_order_duration += u
+// AddMinOrderDurationSeconds adds u to the "min_order_duration_seconds" field.
+func (m *AppFeeMutation) AddMinOrderDurationSeconds(u int32) {
+	if m.addmin_order_duration_seconds != nil {
+		*m.addmin_order_duration_seconds += u
 	} else {
-		m.addmin_order_duration = &u
+		m.addmin_order_duration_seconds = &u
 	}
 }
 
-// AddedMinOrderDuration returns the value that was added to the "min_order_duration" field in this mutation.
-func (m *AppFeeMutation) AddedMinOrderDuration() (r int32, exists bool) {
-	v := m.addmin_order_duration
+// AddedMinOrderDurationSeconds returns the value that was added to the "min_order_duration_seconds" field in this mutation.
+func (m *AppFeeMutation) AddedMinOrderDurationSeconds() (r int32, exists bool) {
+	v := m.addmin_order_duration_seconds
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ClearMinOrderDuration clears the value of the "min_order_duration" field.
-func (m *AppFeeMutation) ClearMinOrderDuration() {
-	m.min_order_duration = nil
-	m.addmin_order_duration = nil
-	m.clearedFields[appfee.FieldMinOrderDuration] = struct{}{}
+// ClearMinOrderDurationSeconds clears the value of the "min_order_duration_seconds" field.
+func (m *AppFeeMutation) ClearMinOrderDurationSeconds() {
+	m.min_order_duration_seconds = nil
+	m.addmin_order_duration_seconds = nil
+	m.clearedFields[appfee.FieldMinOrderDurationSeconds] = struct{}{}
 }
 
-// MinOrderDurationCleared returns if the "min_order_duration" field was cleared in this mutation.
-func (m *AppFeeMutation) MinOrderDurationCleared() bool {
-	_, ok := m.clearedFields[appfee.FieldMinOrderDuration]
+// MinOrderDurationSecondsCleared returns if the "min_order_duration_seconds" field was cleared in this mutation.
+func (m *AppFeeMutation) MinOrderDurationSecondsCleared() bool {
+	_, ok := m.clearedFields[appfee.FieldMinOrderDurationSeconds]
 	return ok
 }
 
-// ResetMinOrderDuration resets all changes to the "min_order_duration" field.
-func (m *AppFeeMutation) ResetMinOrderDuration() {
-	m.min_order_duration = nil
-	m.addmin_order_duration = nil
-	delete(m.clearedFields, appfee.FieldMinOrderDuration)
+// ResetMinOrderDurationSeconds resets all changes to the "min_order_duration_seconds" field.
+func (m *AppFeeMutation) ResetMinOrderDurationSeconds() {
+	m.min_order_duration_seconds = nil
+	m.addmin_order_duration_seconds = nil
+	delete(m.clearedFields, appfee.FieldMinOrderDurationSeconds)
 }
 
 // Where appends a list predicates to the AppFeeMutation builder.
@@ -1381,8 +1381,8 @@ func (m *AppFeeMutation) Fields() []string {
 	if m.unit_value != nil {
 		fields = append(fields, appfee.FieldUnitValue)
 	}
-	if m.min_order_duration != nil {
-		fields = append(fields, appfee.FieldMinOrderDuration)
+	if m.min_order_duration_seconds != nil {
+		fields = append(fields, appfee.FieldMinOrderDurationSeconds)
 	}
 	return fields
 }
@@ -1404,8 +1404,8 @@ func (m *AppFeeMutation) Field(name string) (ent.Value, bool) {
 		return m.AppGoodID()
 	case appfee.FieldUnitValue:
 		return m.UnitValue()
-	case appfee.FieldMinOrderDuration:
-		return m.MinOrderDuration()
+	case appfee.FieldMinOrderDurationSeconds:
+		return m.MinOrderDurationSeconds()
 	}
 	return nil, false
 }
@@ -1427,8 +1427,8 @@ func (m *AppFeeMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldAppGoodID(ctx)
 	case appfee.FieldUnitValue:
 		return m.OldUnitValue(ctx)
-	case appfee.FieldMinOrderDuration:
-		return m.OldMinOrderDuration(ctx)
+	case appfee.FieldMinOrderDurationSeconds:
+		return m.OldMinOrderDurationSeconds(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppFee field %s", name)
 }
@@ -1480,12 +1480,12 @@ func (m *AppFeeMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUnitValue(v)
 		return nil
-	case appfee.FieldMinOrderDuration:
+	case appfee.FieldMinOrderDurationSeconds:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetMinOrderDuration(v)
+		m.SetMinOrderDurationSeconds(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppFee field %s", name)
@@ -1504,8 +1504,8 @@ func (m *AppFeeMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, appfee.FieldDeletedAt)
 	}
-	if m.addmin_order_duration != nil {
-		fields = append(fields, appfee.FieldMinOrderDuration)
+	if m.addmin_order_duration_seconds != nil {
+		fields = append(fields, appfee.FieldMinOrderDurationSeconds)
 	}
 	return fields
 }
@@ -1521,8 +1521,8 @@ func (m *AppFeeMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdatedAt()
 	case appfee.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case appfee.FieldMinOrderDuration:
-		return m.AddedMinOrderDuration()
+	case appfee.FieldMinOrderDurationSeconds:
+		return m.AddedMinOrderDurationSeconds()
 	}
 	return nil, false
 }
@@ -1553,12 +1553,12 @@ func (m *AppFeeMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddDeletedAt(v)
 		return nil
-	case appfee.FieldMinOrderDuration:
+	case appfee.FieldMinOrderDurationSeconds:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddMinOrderDuration(v)
+		m.AddMinOrderDurationSeconds(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppFee numeric field %s", name)
@@ -1574,8 +1574,8 @@ func (m *AppFeeMutation) ClearedFields() []string {
 	if m.FieldCleared(appfee.FieldUnitValue) {
 		fields = append(fields, appfee.FieldUnitValue)
 	}
-	if m.FieldCleared(appfee.FieldMinOrderDuration) {
-		fields = append(fields, appfee.FieldMinOrderDuration)
+	if m.FieldCleared(appfee.FieldMinOrderDurationSeconds) {
+		fields = append(fields, appfee.FieldMinOrderDurationSeconds)
 	}
 	return fields
 }
@@ -1597,8 +1597,8 @@ func (m *AppFeeMutation) ClearField(name string) error {
 	case appfee.FieldUnitValue:
 		m.ClearUnitValue()
 		return nil
-	case appfee.FieldMinOrderDuration:
-		m.ClearMinOrderDuration()
+	case appfee.FieldMinOrderDurationSeconds:
+		m.ClearMinOrderDurationSeconds()
 		return nil
 	}
 	return fmt.Errorf("unknown AppFee nullable field %s", name)
@@ -1626,8 +1626,8 @@ func (m *AppFeeMutation) ResetField(name string) error {
 	case appfee.FieldUnitValue:
 		m.ResetUnitValue()
 		return nil
-	case appfee.FieldMinOrderDuration:
-		m.ResetMinOrderDuration()
+	case appfee.FieldMinOrderDurationSeconds:
+		m.ResetMinOrderDurationSeconds()
 		return nil
 	}
 	return fmt.Errorf("unknown AppFee field %s", name)
@@ -12328,10 +12328,10 @@ type AppPowerRentalMutation struct {
 	min_order_amount                   *decimal.Decimal
 	max_order_amount                   *decimal.Decimal
 	max_user_amount                    *decimal.Decimal
-	min_order_duration                 *uint32
-	addmin_order_duration              *int32
-	max_order_duration                 *uint32
-	addmax_order_duration              *int32
+	min_order_duration_seconds         *uint32
+	addmin_order_duration_seconds      *int32
+	max_order_duration_seconds         *uint32
+	addmax_order_duration_seconds      *int32
 	unit_price                         *decimal.Decimal
 	sale_start_at                      *uint32
 	addsale_start_at                   *int32
@@ -13088,144 +13088,144 @@ func (m *AppPowerRentalMutation) ResetMaxUserAmount() {
 	delete(m.clearedFields, apppowerrental.FieldMaxUserAmount)
 }
 
-// SetMinOrderDuration sets the "min_order_duration" field.
-func (m *AppPowerRentalMutation) SetMinOrderDuration(u uint32) {
-	m.min_order_duration = &u
-	m.addmin_order_duration = nil
+// SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
+func (m *AppPowerRentalMutation) SetMinOrderDurationSeconds(u uint32) {
+	m.min_order_duration_seconds = &u
+	m.addmin_order_duration_seconds = nil
 }
 
-// MinOrderDuration returns the value of the "min_order_duration" field in the mutation.
-func (m *AppPowerRentalMutation) MinOrderDuration() (r uint32, exists bool) {
-	v := m.min_order_duration
+// MinOrderDurationSeconds returns the value of the "min_order_duration_seconds" field in the mutation.
+func (m *AppPowerRentalMutation) MinOrderDurationSeconds() (r uint32, exists bool) {
+	v := m.min_order_duration_seconds
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldMinOrderDuration returns the old "min_order_duration" field's value of the AppPowerRental entity.
+// OldMinOrderDurationSeconds returns the old "min_order_duration_seconds" field's value of the AppPowerRental entity.
 // If the AppPowerRental object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppPowerRentalMutation) OldMinOrderDuration(ctx context.Context) (v uint32, err error) {
+func (m *AppPowerRentalMutation) OldMinOrderDurationSeconds(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldMinOrderDuration is only allowed on UpdateOne operations")
+		return v, errors.New("OldMinOrderDurationSeconds is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldMinOrderDuration requires an ID field in the mutation")
+		return v, errors.New("OldMinOrderDurationSeconds requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldMinOrderDuration: %w", err)
+		return v, fmt.Errorf("querying old value for OldMinOrderDurationSeconds: %w", err)
 	}
-	return oldValue.MinOrderDuration, nil
+	return oldValue.MinOrderDurationSeconds, nil
 }
 
-// AddMinOrderDuration adds u to the "min_order_duration" field.
-func (m *AppPowerRentalMutation) AddMinOrderDuration(u int32) {
-	if m.addmin_order_duration != nil {
-		*m.addmin_order_duration += u
+// AddMinOrderDurationSeconds adds u to the "min_order_duration_seconds" field.
+func (m *AppPowerRentalMutation) AddMinOrderDurationSeconds(u int32) {
+	if m.addmin_order_duration_seconds != nil {
+		*m.addmin_order_duration_seconds += u
 	} else {
-		m.addmin_order_duration = &u
+		m.addmin_order_duration_seconds = &u
 	}
 }
 
-// AddedMinOrderDuration returns the value that was added to the "min_order_duration" field in this mutation.
-func (m *AppPowerRentalMutation) AddedMinOrderDuration() (r int32, exists bool) {
-	v := m.addmin_order_duration
+// AddedMinOrderDurationSeconds returns the value that was added to the "min_order_duration_seconds" field in this mutation.
+func (m *AppPowerRentalMutation) AddedMinOrderDurationSeconds() (r int32, exists bool) {
+	v := m.addmin_order_duration_seconds
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ClearMinOrderDuration clears the value of the "min_order_duration" field.
-func (m *AppPowerRentalMutation) ClearMinOrderDuration() {
-	m.min_order_duration = nil
-	m.addmin_order_duration = nil
-	m.clearedFields[apppowerrental.FieldMinOrderDuration] = struct{}{}
+// ClearMinOrderDurationSeconds clears the value of the "min_order_duration_seconds" field.
+func (m *AppPowerRentalMutation) ClearMinOrderDurationSeconds() {
+	m.min_order_duration_seconds = nil
+	m.addmin_order_duration_seconds = nil
+	m.clearedFields[apppowerrental.FieldMinOrderDurationSeconds] = struct{}{}
 }
 
-// MinOrderDurationCleared returns if the "min_order_duration" field was cleared in this mutation.
-func (m *AppPowerRentalMutation) MinOrderDurationCleared() bool {
-	_, ok := m.clearedFields[apppowerrental.FieldMinOrderDuration]
+// MinOrderDurationSecondsCleared returns if the "min_order_duration_seconds" field was cleared in this mutation.
+func (m *AppPowerRentalMutation) MinOrderDurationSecondsCleared() bool {
+	_, ok := m.clearedFields[apppowerrental.FieldMinOrderDurationSeconds]
 	return ok
 }
 
-// ResetMinOrderDuration resets all changes to the "min_order_duration" field.
-func (m *AppPowerRentalMutation) ResetMinOrderDuration() {
-	m.min_order_duration = nil
-	m.addmin_order_duration = nil
-	delete(m.clearedFields, apppowerrental.FieldMinOrderDuration)
+// ResetMinOrderDurationSeconds resets all changes to the "min_order_duration_seconds" field.
+func (m *AppPowerRentalMutation) ResetMinOrderDurationSeconds() {
+	m.min_order_duration_seconds = nil
+	m.addmin_order_duration_seconds = nil
+	delete(m.clearedFields, apppowerrental.FieldMinOrderDurationSeconds)
 }
 
-// SetMaxOrderDuration sets the "max_order_duration" field.
-func (m *AppPowerRentalMutation) SetMaxOrderDuration(u uint32) {
-	m.max_order_duration = &u
-	m.addmax_order_duration = nil
+// SetMaxOrderDurationSeconds sets the "max_order_duration_seconds" field.
+func (m *AppPowerRentalMutation) SetMaxOrderDurationSeconds(u uint32) {
+	m.max_order_duration_seconds = &u
+	m.addmax_order_duration_seconds = nil
 }
 
-// MaxOrderDuration returns the value of the "max_order_duration" field in the mutation.
-func (m *AppPowerRentalMutation) MaxOrderDuration() (r uint32, exists bool) {
-	v := m.max_order_duration
+// MaxOrderDurationSeconds returns the value of the "max_order_duration_seconds" field in the mutation.
+func (m *AppPowerRentalMutation) MaxOrderDurationSeconds() (r uint32, exists bool) {
+	v := m.max_order_duration_seconds
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldMaxOrderDuration returns the old "max_order_duration" field's value of the AppPowerRental entity.
+// OldMaxOrderDurationSeconds returns the old "max_order_duration_seconds" field's value of the AppPowerRental entity.
 // If the AppPowerRental object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppPowerRentalMutation) OldMaxOrderDuration(ctx context.Context) (v uint32, err error) {
+func (m *AppPowerRentalMutation) OldMaxOrderDurationSeconds(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldMaxOrderDuration is only allowed on UpdateOne operations")
+		return v, errors.New("OldMaxOrderDurationSeconds is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldMaxOrderDuration requires an ID field in the mutation")
+		return v, errors.New("OldMaxOrderDurationSeconds requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldMaxOrderDuration: %w", err)
+		return v, fmt.Errorf("querying old value for OldMaxOrderDurationSeconds: %w", err)
 	}
-	return oldValue.MaxOrderDuration, nil
+	return oldValue.MaxOrderDurationSeconds, nil
 }
 
-// AddMaxOrderDuration adds u to the "max_order_duration" field.
-func (m *AppPowerRentalMutation) AddMaxOrderDuration(u int32) {
-	if m.addmax_order_duration != nil {
-		*m.addmax_order_duration += u
+// AddMaxOrderDurationSeconds adds u to the "max_order_duration_seconds" field.
+func (m *AppPowerRentalMutation) AddMaxOrderDurationSeconds(u int32) {
+	if m.addmax_order_duration_seconds != nil {
+		*m.addmax_order_duration_seconds += u
 	} else {
-		m.addmax_order_duration = &u
+		m.addmax_order_duration_seconds = &u
 	}
 }
 
-// AddedMaxOrderDuration returns the value that was added to the "max_order_duration" field in this mutation.
-func (m *AppPowerRentalMutation) AddedMaxOrderDuration() (r int32, exists bool) {
-	v := m.addmax_order_duration
+// AddedMaxOrderDurationSeconds returns the value that was added to the "max_order_duration_seconds" field in this mutation.
+func (m *AppPowerRentalMutation) AddedMaxOrderDurationSeconds() (r int32, exists bool) {
+	v := m.addmax_order_duration_seconds
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ClearMaxOrderDuration clears the value of the "max_order_duration" field.
-func (m *AppPowerRentalMutation) ClearMaxOrderDuration() {
-	m.max_order_duration = nil
-	m.addmax_order_duration = nil
-	m.clearedFields[apppowerrental.FieldMaxOrderDuration] = struct{}{}
+// ClearMaxOrderDurationSeconds clears the value of the "max_order_duration_seconds" field.
+func (m *AppPowerRentalMutation) ClearMaxOrderDurationSeconds() {
+	m.max_order_duration_seconds = nil
+	m.addmax_order_duration_seconds = nil
+	m.clearedFields[apppowerrental.FieldMaxOrderDurationSeconds] = struct{}{}
 }
 
-// MaxOrderDurationCleared returns if the "max_order_duration" field was cleared in this mutation.
-func (m *AppPowerRentalMutation) MaxOrderDurationCleared() bool {
-	_, ok := m.clearedFields[apppowerrental.FieldMaxOrderDuration]
+// MaxOrderDurationSecondsCleared returns if the "max_order_duration_seconds" field was cleared in this mutation.
+func (m *AppPowerRentalMutation) MaxOrderDurationSecondsCleared() bool {
+	_, ok := m.clearedFields[apppowerrental.FieldMaxOrderDurationSeconds]
 	return ok
 }
 
-// ResetMaxOrderDuration resets all changes to the "max_order_duration" field.
-func (m *AppPowerRentalMutation) ResetMaxOrderDuration() {
-	m.max_order_duration = nil
-	m.addmax_order_duration = nil
-	delete(m.clearedFields, apppowerrental.FieldMaxOrderDuration)
+// ResetMaxOrderDurationSeconds resets all changes to the "max_order_duration_seconds" field.
+func (m *AppPowerRentalMutation) ResetMaxOrderDurationSeconds() {
+	m.max_order_duration_seconds = nil
+	m.addmax_order_duration_seconds = nil
+	delete(m.clearedFields, apppowerrental.FieldMaxOrderDurationSeconds)
 }
 
 // SetUnitPrice sets the "unit_price" field.
@@ -13620,11 +13620,11 @@ func (m *AppPowerRentalMutation) Fields() []string {
 	if m.max_user_amount != nil {
 		fields = append(fields, apppowerrental.FieldMaxUserAmount)
 	}
-	if m.min_order_duration != nil {
-		fields = append(fields, apppowerrental.FieldMinOrderDuration)
+	if m.min_order_duration_seconds != nil {
+		fields = append(fields, apppowerrental.FieldMinOrderDurationSeconds)
 	}
-	if m.max_order_duration != nil {
-		fields = append(fields, apppowerrental.FieldMaxOrderDuration)
+	if m.max_order_duration_seconds != nil {
+		fields = append(fields, apppowerrental.FieldMaxOrderDurationSeconds)
 	}
 	if m.unit_price != nil {
 		fields = append(fields, apppowerrental.FieldUnitPrice)
@@ -13676,10 +13676,10 @@ func (m *AppPowerRentalMutation) Field(name string) (ent.Value, bool) {
 		return m.MaxOrderAmount()
 	case apppowerrental.FieldMaxUserAmount:
 		return m.MaxUserAmount()
-	case apppowerrental.FieldMinOrderDuration:
-		return m.MinOrderDuration()
-	case apppowerrental.FieldMaxOrderDuration:
-		return m.MaxOrderDuration()
+	case apppowerrental.FieldMinOrderDurationSeconds:
+		return m.MinOrderDurationSeconds()
+	case apppowerrental.FieldMaxOrderDurationSeconds:
+		return m.MaxOrderDurationSeconds()
 	case apppowerrental.FieldUnitPrice:
 		return m.UnitPrice()
 	case apppowerrental.FieldSaleStartAt:
@@ -13725,10 +13725,10 @@ func (m *AppPowerRentalMutation) OldField(ctx context.Context, name string) (ent
 		return m.OldMaxOrderAmount(ctx)
 	case apppowerrental.FieldMaxUserAmount:
 		return m.OldMaxUserAmount(ctx)
-	case apppowerrental.FieldMinOrderDuration:
-		return m.OldMinOrderDuration(ctx)
-	case apppowerrental.FieldMaxOrderDuration:
-		return m.OldMaxOrderDuration(ctx)
+	case apppowerrental.FieldMinOrderDurationSeconds:
+		return m.OldMinOrderDurationSeconds(ctx)
+	case apppowerrental.FieldMaxOrderDurationSeconds:
+		return m.OldMaxOrderDurationSeconds(ctx)
 	case apppowerrental.FieldUnitPrice:
 		return m.OldUnitPrice(ctx)
 	case apppowerrental.FieldSaleStartAt:
@@ -13834,19 +13834,19 @@ func (m *AppPowerRentalMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetMaxUserAmount(v)
 		return nil
-	case apppowerrental.FieldMinOrderDuration:
+	case apppowerrental.FieldMinOrderDurationSeconds:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetMinOrderDuration(v)
+		m.SetMinOrderDurationSeconds(v)
 		return nil
-	case apppowerrental.FieldMaxOrderDuration:
+	case apppowerrental.FieldMaxOrderDurationSeconds:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetMaxOrderDuration(v)
+		m.SetMaxOrderDurationSeconds(v)
 		return nil
 	case apppowerrental.FieldUnitPrice:
 		v, ok := value.(decimal.Decimal)
@@ -13913,11 +13913,11 @@ func (m *AppPowerRentalMutation) AddedFields() []string {
 	if m.addcancelable_before_start_seconds != nil {
 		fields = append(fields, apppowerrental.FieldCancelableBeforeStartSeconds)
 	}
-	if m.addmin_order_duration != nil {
-		fields = append(fields, apppowerrental.FieldMinOrderDuration)
+	if m.addmin_order_duration_seconds != nil {
+		fields = append(fields, apppowerrental.FieldMinOrderDurationSeconds)
 	}
-	if m.addmax_order_duration != nil {
-		fields = append(fields, apppowerrental.FieldMaxOrderDuration)
+	if m.addmax_order_duration_seconds != nil {
+		fields = append(fields, apppowerrental.FieldMaxOrderDurationSeconds)
 	}
 	if m.addsale_start_at != nil {
 		fields = append(fields, apppowerrental.FieldSaleStartAt)
@@ -13943,10 +13943,10 @@ func (m *AppPowerRentalMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedServiceStartAt()
 	case apppowerrental.FieldCancelableBeforeStartSeconds:
 		return m.AddedCancelableBeforeStartSeconds()
-	case apppowerrental.FieldMinOrderDuration:
-		return m.AddedMinOrderDuration()
-	case apppowerrental.FieldMaxOrderDuration:
-		return m.AddedMaxOrderDuration()
+	case apppowerrental.FieldMinOrderDurationSeconds:
+		return m.AddedMinOrderDurationSeconds()
+	case apppowerrental.FieldMaxOrderDurationSeconds:
+		return m.AddedMaxOrderDurationSeconds()
 	case apppowerrental.FieldSaleStartAt:
 		return m.AddedSaleStartAt()
 	case apppowerrental.FieldSaleEndAt:
@@ -13995,19 +13995,19 @@ func (m *AppPowerRentalMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddCancelableBeforeStartSeconds(v)
 		return nil
-	case apppowerrental.FieldMinOrderDuration:
+	case apppowerrental.FieldMinOrderDurationSeconds:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddMinOrderDuration(v)
+		m.AddMinOrderDurationSeconds(v)
 		return nil
-	case apppowerrental.FieldMaxOrderDuration:
+	case apppowerrental.FieldMaxOrderDurationSeconds:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddMaxOrderDuration(v)
+		m.AddMaxOrderDurationSeconds(v)
 		return nil
 	case apppowerrental.FieldSaleStartAt:
 		v, ok := value.(int32)
@@ -14055,11 +14055,11 @@ func (m *AppPowerRentalMutation) ClearedFields() []string {
 	if m.FieldCleared(apppowerrental.FieldMaxUserAmount) {
 		fields = append(fields, apppowerrental.FieldMaxUserAmount)
 	}
-	if m.FieldCleared(apppowerrental.FieldMinOrderDuration) {
-		fields = append(fields, apppowerrental.FieldMinOrderDuration)
+	if m.FieldCleared(apppowerrental.FieldMinOrderDurationSeconds) {
+		fields = append(fields, apppowerrental.FieldMinOrderDurationSeconds)
 	}
-	if m.FieldCleared(apppowerrental.FieldMaxOrderDuration) {
-		fields = append(fields, apppowerrental.FieldMaxOrderDuration)
+	if m.FieldCleared(apppowerrental.FieldMaxOrderDurationSeconds) {
+		fields = append(fields, apppowerrental.FieldMaxOrderDurationSeconds)
 	}
 	if m.FieldCleared(apppowerrental.FieldUnitPrice) {
 		fields = append(fields, apppowerrental.FieldUnitPrice)
@@ -14117,11 +14117,11 @@ func (m *AppPowerRentalMutation) ClearField(name string) error {
 	case apppowerrental.FieldMaxUserAmount:
 		m.ClearMaxUserAmount()
 		return nil
-	case apppowerrental.FieldMinOrderDuration:
-		m.ClearMinOrderDuration()
+	case apppowerrental.FieldMinOrderDurationSeconds:
+		m.ClearMinOrderDurationSeconds()
 		return nil
-	case apppowerrental.FieldMaxOrderDuration:
-		m.ClearMaxOrderDuration()
+	case apppowerrental.FieldMaxOrderDurationSeconds:
+		m.ClearMaxOrderDurationSeconds()
 		return nil
 	case apppowerrental.FieldUnitPrice:
 		m.ClearUnitPrice()
@@ -14185,11 +14185,11 @@ func (m *AppPowerRentalMutation) ResetField(name string) error {
 	case apppowerrental.FieldMaxUserAmount:
 		m.ResetMaxUserAmount()
 		return nil
-	case apppowerrental.FieldMinOrderDuration:
-		m.ResetMinOrderDuration()
+	case apppowerrental.FieldMinOrderDurationSeconds:
+		m.ResetMinOrderDurationSeconds()
 		return nil
-	case apppowerrental.FieldMaxOrderDuration:
-		m.ResetMaxOrderDuration()
+	case apppowerrental.FieldMaxOrderDurationSeconds:
+		m.ResetMaxOrderDurationSeconds()
 		return nil
 	case apppowerrental.FieldUnitPrice:
 		m.ResetUnitPrice()
@@ -14264,25 +14264,25 @@ func (m *AppPowerRentalMutation) ResetEdge(name string) error {
 // AppSimulatePowerRentalMutation represents an operation that mutates the AppSimulatePowerRental nodes in the graph.
 type AppSimulatePowerRentalMutation struct {
 	config
-	op                Op
-	typ               string
-	id                *uint32
-	created_at        *uint32
-	addcreated_at     *int32
-	updated_at        *uint32
-	addupdated_at     *int32
-	deleted_at        *uint32
-	adddeleted_at     *int32
-	ent_id            *uuid.UUID
-	app_good_id       *uuid.UUID
-	coin_type_id      *uuid.UUID
-	order_units       *decimal.Decimal
-	order_duration    *uint32
-	addorder_duration *int32
-	clearedFields     map[string]struct{}
-	done              bool
-	oldValue          func(context.Context) (*AppSimulatePowerRental, error)
-	predicates        []predicate.AppSimulatePowerRental
+	op                        Op
+	typ                       string
+	id                        *uint32
+	created_at                *uint32
+	addcreated_at             *int32
+	updated_at                *uint32
+	addupdated_at             *int32
+	deleted_at                *uint32
+	adddeleted_at             *int32
+	ent_id                    *uuid.UUID
+	app_good_id               *uuid.UUID
+	coin_type_id              *uuid.UUID
+	order_units               *decimal.Decimal
+	order_duration_seconds    *uint32
+	addorder_duration_seconds *int32
+	clearedFields             map[string]struct{}
+	done                      bool
+	oldValue                  func(context.Context) (*AppSimulatePowerRental, error)
+	predicates                []predicate.AppSimulatePowerRental
 }
 
 var _ ent.Mutation = (*AppSimulatePowerRentalMutation)(nil)
@@ -14740,74 +14740,74 @@ func (m *AppSimulatePowerRentalMutation) ResetOrderUnits() {
 	delete(m.clearedFields, appsimulatepowerrental.FieldOrderUnits)
 }
 
-// SetOrderDuration sets the "order_duration" field.
-func (m *AppSimulatePowerRentalMutation) SetOrderDuration(u uint32) {
-	m.order_duration = &u
-	m.addorder_duration = nil
+// SetOrderDurationSeconds sets the "order_duration_seconds" field.
+func (m *AppSimulatePowerRentalMutation) SetOrderDurationSeconds(u uint32) {
+	m.order_duration_seconds = &u
+	m.addorder_duration_seconds = nil
 }
 
-// OrderDuration returns the value of the "order_duration" field in the mutation.
-func (m *AppSimulatePowerRentalMutation) OrderDuration() (r uint32, exists bool) {
-	v := m.order_duration
+// OrderDurationSeconds returns the value of the "order_duration_seconds" field in the mutation.
+func (m *AppSimulatePowerRentalMutation) OrderDurationSeconds() (r uint32, exists bool) {
+	v := m.order_duration_seconds
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldOrderDuration returns the old "order_duration" field's value of the AppSimulatePowerRental entity.
+// OldOrderDurationSeconds returns the old "order_duration_seconds" field's value of the AppSimulatePowerRental entity.
 // If the AppSimulatePowerRental object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppSimulatePowerRentalMutation) OldOrderDuration(ctx context.Context) (v uint32, err error) {
+func (m *AppSimulatePowerRentalMutation) OldOrderDurationSeconds(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldOrderDuration is only allowed on UpdateOne operations")
+		return v, errors.New("OldOrderDurationSeconds is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldOrderDuration requires an ID field in the mutation")
+		return v, errors.New("OldOrderDurationSeconds requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldOrderDuration: %w", err)
+		return v, fmt.Errorf("querying old value for OldOrderDurationSeconds: %w", err)
 	}
-	return oldValue.OrderDuration, nil
+	return oldValue.OrderDurationSeconds, nil
 }
 
-// AddOrderDuration adds u to the "order_duration" field.
-func (m *AppSimulatePowerRentalMutation) AddOrderDuration(u int32) {
-	if m.addorder_duration != nil {
-		*m.addorder_duration += u
+// AddOrderDurationSeconds adds u to the "order_duration_seconds" field.
+func (m *AppSimulatePowerRentalMutation) AddOrderDurationSeconds(u int32) {
+	if m.addorder_duration_seconds != nil {
+		*m.addorder_duration_seconds += u
 	} else {
-		m.addorder_duration = &u
+		m.addorder_duration_seconds = &u
 	}
 }
 
-// AddedOrderDuration returns the value that was added to the "order_duration" field in this mutation.
-func (m *AppSimulatePowerRentalMutation) AddedOrderDuration() (r int32, exists bool) {
-	v := m.addorder_duration
+// AddedOrderDurationSeconds returns the value that was added to the "order_duration_seconds" field in this mutation.
+func (m *AppSimulatePowerRentalMutation) AddedOrderDurationSeconds() (r int32, exists bool) {
+	v := m.addorder_duration_seconds
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ClearOrderDuration clears the value of the "order_duration" field.
-func (m *AppSimulatePowerRentalMutation) ClearOrderDuration() {
-	m.order_duration = nil
-	m.addorder_duration = nil
-	m.clearedFields[appsimulatepowerrental.FieldOrderDuration] = struct{}{}
+// ClearOrderDurationSeconds clears the value of the "order_duration_seconds" field.
+func (m *AppSimulatePowerRentalMutation) ClearOrderDurationSeconds() {
+	m.order_duration_seconds = nil
+	m.addorder_duration_seconds = nil
+	m.clearedFields[appsimulatepowerrental.FieldOrderDurationSeconds] = struct{}{}
 }
 
-// OrderDurationCleared returns if the "order_duration" field was cleared in this mutation.
-func (m *AppSimulatePowerRentalMutation) OrderDurationCleared() bool {
-	_, ok := m.clearedFields[appsimulatepowerrental.FieldOrderDuration]
+// OrderDurationSecondsCleared returns if the "order_duration_seconds" field was cleared in this mutation.
+func (m *AppSimulatePowerRentalMutation) OrderDurationSecondsCleared() bool {
+	_, ok := m.clearedFields[appsimulatepowerrental.FieldOrderDurationSeconds]
 	return ok
 }
 
-// ResetOrderDuration resets all changes to the "order_duration" field.
-func (m *AppSimulatePowerRentalMutation) ResetOrderDuration() {
-	m.order_duration = nil
-	m.addorder_duration = nil
-	delete(m.clearedFields, appsimulatepowerrental.FieldOrderDuration)
+// ResetOrderDurationSeconds resets all changes to the "order_duration_seconds" field.
+func (m *AppSimulatePowerRentalMutation) ResetOrderDurationSeconds() {
+	m.order_duration_seconds = nil
+	m.addorder_duration_seconds = nil
+	delete(m.clearedFields, appsimulatepowerrental.FieldOrderDurationSeconds)
 }
 
 // Where appends a list predicates to the AppSimulatePowerRentalMutation builder.
@@ -14851,8 +14851,8 @@ func (m *AppSimulatePowerRentalMutation) Fields() []string {
 	if m.order_units != nil {
 		fields = append(fields, appsimulatepowerrental.FieldOrderUnits)
 	}
-	if m.order_duration != nil {
-		fields = append(fields, appsimulatepowerrental.FieldOrderDuration)
+	if m.order_duration_seconds != nil {
+		fields = append(fields, appsimulatepowerrental.FieldOrderDurationSeconds)
 	}
 	return fields
 }
@@ -14876,8 +14876,8 @@ func (m *AppSimulatePowerRentalMutation) Field(name string) (ent.Value, bool) {
 		return m.CoinTypeID()
 	case appsimulatepowerrental.FieldOrderUnits:
 		return m.OrderUnits()
-	case appsimulatepowerrental.FieldOrderDuration:
-		return m.OrderDuration()
+	case appsimulatepowerrental.FieldOrderDurationSeconds:
+		return m.OrderDurationSeconds()
 	}
 	return nil, false
 }
@@ -14901,8 +14901,8 @@ func (m *AppSimulatePowerRentalMutation) OldField(ctx context.Context, name stri
 		return m.OldCoinTypeID(ctx)
 	case appsimulatepowerrental.FieldOrderUnits:
 		return m.OldOrderUnits(ctx)
-	case appsimulatepowerrental.FieldOrderDuration:
-		return m.OldOrderDuration(ctx)
+	case appsimulatepowerrental.FieldOrderDurationSeconds:
+		return m.OldOrderDurationSeconds(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppSimulatePowerRental field %s", name)
 }
@@ -14961,12 +14961,12 @@ func (m *AppSimulatePowerRentalMutation) SetField(name string, value ent.Value) 
 		}
 		m.SetOrderUnits(v)
 		return nil
-	case appsimulatepowerrental.FieldOrderDuration:
+	case appsimulatepowerrental.FieldOrderDurationSeconds:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetOrderDuration(v)
+		m.SetOrderDurationSeconds(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppSimulatePowerRental field %s", name)
@@ -14985,8 +14985,8 @@ func (m *AppSimulatePowerRentalMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, appsimulatepowerrental.FieldDeletedAt)
 	}
-	if m.addorder_duration != nil {
-		fields = append(fields, appsimulatepowerrental.FieldOrderDuration)
+	if m.addorder_duration_seconds != nil {
+		fields = append(fields, appsimulatepowerrental.FieldOrderDurationSeconds)
 	}
 	return fields
 }
@@ -15002,8 +15002,8 @@ func (m *AppSimulatePowerRentalMutation) AddedField(name string) (ent.Value, boo
 		return m.AddedUpdatedAt()
 	case appsimulatepowerrental.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case appsimulatepowerrental.FieldOrderDuration:
-		return m.AddedOrderDuration()
+	case appsimulatepowerrental.FieldOrderDurationSeconds:
+		return m.AddedOrderDurationSeconds()
 	}
 	return nil, false
 }
@@ -15034,12 +15034,12 @@ func (m *AppSimulatePowerRentalMutation) AddField(name string, value ent.Value) 
 		}
 		m.AddDeletedAt(v)
 		return nil
-	case appsimulatepowerrental.FieldOrderDuration:
+	case appsimulatepowerrental.FieldOrderDurationSeconds:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddOrderDuration(v)
+		m.AddOrderDurationSeconds(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppSimulatePowerRental numeric field %s", name)
@@ -15058,8 +15058,8 @@ func (m *AppSimulatePowerRentalMutation) ClearedFields() []string {
 	if m.FieldCleared(appsimulatepowerrental.FieldOrderUnits) {
 		fields = append(fields, appsimulatepowerrental.FieldOrderUnits)
 	}
-	if m.FieldCleared(appsimulatepowerrental.FieldOrderDuration) {
-		fields = append(fields, appsimulatepowerrental.FieldOrderDuration)
+	if m.FieldCleared(appsimulatepowerrental.FieldOrderDurationSeconds) {
+		fields = append(fields, appsimulatepowerrental.FieldOrderDurationSeconds)
 	}
 	return fields
 }
@@ -15084,8 +15084,8 @@ func (m *AppSimulatePowerRentalMutation) ClearField(name string) error {
 	case appsimulatepowerrental.FieldOrderUnits:
 		m.ClearOrderUnits()
 		return nil
-	case appsimulatepowerrental.FieldOrderDuration:
-		m.ClearOrderDuration()
+	case appsimulatepowerrental.FieldOrderDurationSeconds:
+		m.ClearOrderDurationSeconds()
 		return nil
 	}
 	return fmt.Errorf("unknown AppSimulatePowerRental nullable field %s", name)
@@ -15116,8 +15116,8 @@ func (m *AppSimulatePowerRentalMutation) ResetField(name string) error {
 	case appsimulatepowerrental.FieldOrderUnits:
 		m.ResetOrderUnits()
 		return nil
-	case appsimulatepowerrental.FieldOrderDuration:
-		m.ResetOrderDuration()
+	case appsimulatepowerrental.FieldOrderDurationSeconds:
+		m.ResetOrderDurationSeconds()
 		return nil
 	}
 	return fmt.Errorf("unknown AppSimulatePowerRental field %s", name)
@@ -23529,9 +23529,9 @@ type FbmCrowdFundingMutation struct {
 	redeemable            *bool
 	redeem_delay_hours    *uint32
 	addredeem_delay_hours *int32
-	duration_type         *string
-	duration              *uint32
-	addduration           *int32
+	duration_display_type *string
+	duration_seconds      *uint32
+	addduration_seconds   *int32
 	clearedFields         map[string]struct{}
 	done                  bool
 	oldValue              func(context.Context) (*FbmCrowdFunding, error)
@@ -24420,123 +24420,123 @@ func (m *FbmCrowdFundingMutation) ResetRedeemDelayHours() {
 	delete(m.clearedFields, fbmcrowdfunding.FieldRedeemDelayHours)
 }
 
-// SetDurationType sets the "duration_type" field.
-func (m *FbmCrowdFundingMutation) SetDurationType(s string) {
-	m.duration_type = &s
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (m *FbmCrowdFundingMutation) SetDurationDisplayType(s string) {
+	m.duration_display_type = &s
 }
 
-// DurationType returns the value of the "duration_type" field in the mutation.
-func (m *FbmCrowdFundingMutation) DurationType() (r string, exists bool) {
-	v := m.duration_type
+// DurationDisplayType returns the value of the "duration_display_type" field in the mutation.
+func (m *FbmCrowdFundingMutation) DurationDisplayType() (r string, exists bool) {
+	v := m.duration_display_type
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldDurationType returns the old "duration_type" field's value of the FbmCrowdFunding entity.
+// OldDurationDisplayType returns the old "duration_display_type" field's value of the FbmCrowdFunding entity.
 // If the FbmCrowdFunding object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FbmCrowdFundingMutation) OldDurationType(ctx context.Context) (v string, err error) {
+func (m *FbmCrowdFundingMutation) OldDurationDisplayType(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDurationType is only allowed on UpdateOne operations")
+		return v, errors.New("OldDurationDisplayType is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDurationType requires an ID field in the mutation")
+		return v, errors.New("OldDurationDisplayType requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDurationType: %w", err)
+		return v, fmt.Errorf("querying old value for OldDurationDisplayType: %w", err)
 	}
-	return oldValue.DurationType, nil
+	return oldValue.DurationDisplayType, nil
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (m *FbmCrowdFundingMutation) ClearDurationType() {
-	m.duration_type = nil
-	m.clearedFields[fbmcrowdfunding.FieldDurationType] = struct{}{}
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (m *FbmCrowdFundingMutation) ClearDurationDisplayType() {
+	m.duration_display_type = nil
+	m.clearedFields[fbmcrowdfunding.FieldDurationDisplayType] = struct{}{}
 }
 
-// DurationTypeCleared returns if the "duration_type" field was cleared in this mutation.
-func (m *FbmCrowdFundingMutation) DurationTypeCleared() bool {
-	_, ok := m.clearedFields[fbmcrowdfunding.FieldDurationType]
+// DurationDisplayTypeCleared returns if the "duration_display_type" field was cleared in this mutation.
+func (m *FbmCrowdFundingMutation) DurationDisplayTypeCleared() bool {
+	_, ok := m.clearedFields[fbmcrowdfunding.FieldDurationDisplayType]
 	return ok
 }
 
-// ResetDurationType resets all changes to the "duration_type" field.
-func (m *FbmCrowdFundingMutation) ResetDurationType() {
-	m.duration_type = nil
-	delete(m.clearedFields, fbmcrowdfunding.FieldDurationType)
+// ResetDurationDisplayType resets all changes to the "duration_display_type" field.
+func (m *FbmCrowdFundingMutation) ResetDurationDisplayType() {
+	m.duration_display_type = nil
+	delete(m.clearedFields, fbmcrowdfunding.FieldDurationDisplayType)
 }
 
-// SetDuration sets the "duration" field.
-func (m *FbmCrowdFundingMutation) SetDuration(u uint32) {
-	m.duration = &u
-	m.addduration = nil
+// SetDurationSeconds sets the "duration_seconds" field.
+func (m *FbmCrowdFundingMutation) SetDurationSeconds(u uint32) {
+	m.duration_seconds = &u
+	m.addduration_seconds = nil
 }
 
-// Duration returns the value of the "duration" field in the mutation.
-func (m *FbmCrowdFundingMutation) Duration() (r uint32, exists bool) {
-	v := m.duration
+// DurationSeconds returns the value of the "duration_seconds" field in the mutation.
+func (m *FbmCrowdFundingMutation) DurationSeconds() (r uint32, exists bool) {
+	v := m.duration_seconds
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldDuration returns the old "duration" field's value of the FbmCrowdFunding entity.
+// OldDurationSeconds returns the old "duration_seconds" field's value of the FbmCrowdFunding entity.
 // If the FbmCrowdFunding object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FbmCrowdFundingMutation) OldDuration(ctx context.Context) (v uint32, err error) {
+func (m *FbmCrowdFundingMutation) OldDurationSeconds(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDuration is only allowed on UpdateOne operations")
+		return v, errors.New("OldDurationSeconds is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDuration requires an ID field in the mutation")
+		return v, errors.New("OldDurationSeconds requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDuration: %w", err)
+		return v, fmt.Errorf("querying old value for OldDurationSeconds: %w", err)
 	}
-	return oldValue.Duration, nil
+	return oldValue.DurationSeconds, nil
 }
 
-// AddDuration adds u to the "duration" field.
-func (m *FbmCrowdFundingMutation) AddDuration(u int32) {
-	if m.addduration != nil {
-		*m.addduration += u
+// AddDurationSeconds adds u to the "duration_seconds" field.
+func (m *FbmCrowdFundingMutation) AddDurationSeconds(u int32) {
+	if m.addduration_seconds != nil {
+		*m.addduration_seconds += u
 	} else {
-		m.addduration = &u
+		m.addduration_seconds = &u
 	}
 }
 
-// AddedDuration returns the value that was added to the "duration" field in this mutation.
-func (m *FbmCrowdFundingMutation) AddedDuration() (r int32, exists bool) {
-	v := m.addduration
+// AddedDurationSeconds returns the value that was added to the "duration_seconds" field in this mutation.
+func (m *FbmCrowdFundingMutation) AddedDurationSeconds() (r int32, exists bool) {
+	v := m.addduration_seconds
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ClearDuration clears the value of the "duration" field.
-func (m *FbmCrowdFundingMutation) ClearDuration() {
-	m.duration = nil
-	m.addduration = nil
-	m.clearedFields[fbmcrowdfunding.FieldDuration] = struct{}{}
+// ClearDurationSeconds clears the value of the "duration_seconds" field.
+func (m *FbmCrowdFundingMutation) ClearDurationSeconds() {
+	m.duration_seconds = nil
+	m.addduration_seconds = nil
+	m.clearedFields[fbmcrowdfunding.FieldDurationSeconds] = struct{}{}
 }
 
-// DurationCleared returns if the "duration" field was cleared in this mutation.
-func (m *FbmCrowdFundingMutation) DurationCleared() bool {
-	_, ok := m.clearedFields[fbmcrowdfunding.FieldDuration]
+// DurationSecondsCleared returns if the "duration_seconds" field was cleared in this mutation.
+func (m *FbmCrowdFundingMutation) DurationSecondsCleared() bool {
+	_, ok := m.clearedFields[fbmcrowdfunding.FieldDurationSeconds]
 	return ok
 }
 
-// ResetDuration resets all changes to the "duration" field.
-func (m *FbmCrowdFundingMutation) ResetDuration() {
-	m.duration = nil
-	m.addduration = nil
-	delete(m.clearedFields, fbmcrowdfunding.FieldDuration)
+// ResetDurationSeconds resets all changes to the "duration_seconds" field.
+func (m *FbmCrowdFundingMutation) ResetDurationSeconds() {
+	m.duration_seconds = nil
+	m.addduration_seconds = nil
+	delete(m.clearedFields, fbmcrowdfunding.FieldDurationSeconds)
 }
 
 // Where appends a list predicates to the FbmCrowdFundingMutation builder.
@@ -24601,11 +24601,11 @@ func (m *FbmCrowdFundingMutation) Fields() []string {
 	if m.redeem_delay_hours != nil {
 		fields = append(fields, fbmcrowdfunding.FieldRedeemDelayHours)
 	}
-	if m.duration_type != nil {
-		fields = append(fields, fbmcrowdfunding.FieldDurationType)
+	if m.duration_display_type != nil {
+		fields = append(fields, fbmcrowdfunding.FieldDurationDisplayType)
 	}
-	if m.duration != nil {
-		fields = append(fields, fbmcrowdfunding.FieldDuration)
+	if m.duration_seconds != nil {
+		fields = append(fields, fbmcrowdfunding.FieldDurationSeconds)
 	}
 	return fields
 }
@@ -24643,10 +24643,10 @@ func (m *FbmCrowdFundingMutation) Field(name string) (ent.Value, bool) {
 		return m.Redeemable()
 	case fbmcrowdfunding.FieldRedeemDelayHours:
 		return m.RedeemDelayHours()
-	case fbmcrowdfunding.FieldDurationType:
-		return m.DurationType()
-	case fbmcrowdfunding.FieldDuration:
-		return m.Duration()
+	case fbmcrowdfunding.FieldDurationDisplayType:
+		return m.DurationDisplayType()
+	case fbmcrowdfunding.FieldDurationSeconds:
+		return m.DurationSeconds()
 	}
 	return nil, false
 }
@@ -24684,10 +24684,10 @@ func (m *FbmCrowdFundingMutation) OldField(ctx context.Context, name string) (en
 		return m.OldRedeemable(ctx)
 	case fbmcrowdfunding.FieldRedeemDelayHours:
 		return m.OldRedeemDelayHours(ctx)
-	case fbmcrowdfunding.FieldDurationType:
-		return m.OldDurationType(ctx)
-	case fbmcrowdfunding.FieldDuration:
-		return m.OldDuration(ctx)
+	case fbmcrowdfunding.FieldDurationDisplayType:
+		return m.OldDurationDisplayType(ctx)
+	case fbmcrowdfunding.FieldDurationSeconds:
+		return m.OldDurationSeconds(ctx)
 	}
 	return nil, fmt.Errorf("unknown FbmCrowdFunding field %s", name)
 }
@@ -24795,19 +24795,19 @@ func (m *FbmCrowdFundingMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetRedeemDelayHours(v)
 		return nil
-	case fbmcrowdfunding.FieldDurationType:
+	case fbmcrowdfunding.FieldDurationDisplayType:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetDurationType(v)
+		m.SetDurationDisplayType(v)
 		return nil
-	case fbmcrowdfunding.FieldDuration:
+	case fbmcrowdfunding.FieldDurationSeconds:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetDuration(v)
+		m.SetDurationSeconds(v)
 		return nil
 	}
 	return fmt.Errorf("unknown FbmCrowdFunding field %s", name)
@@ -24838,8 +24838,8 @@ func (m *FbmCrowdFundingMutation) AddedFields() []string {
 	if m.addredeem_delay_hours != nil {
 		fields = append(fields, fbmcrowdfunding.FieldRedeemDelayHours)
 	}
-	if m.addduration != nil {
-		fields = append(fields, fbmcrowdfunding.FieldDuration)
+	if m.addduration_seconds != nil {
+		fields = append(fields, fbmcrowdfunding.FieldDurationSeconds)
 	}
 	return fields
 }
@@ -24863,8 +24863,8 @@ func (m *FbmCrowdFundingMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedDepositEndAt()
 	case fbmcrowdfunding.FieldRedeemDelayHours:
 		return m.AddedRedeemDelayHours()
-	case fbmcrowdfunding.FieldDuration:
-		return m.AddedDuration()
+	case fbmcrowdfunding.FieldDurationSeconds:
+		return m.AddedDurationSeconds()
 	}
 	return nil, false
 }
@@ -24923,12 +24923,12 @@ func (m *FbmCrowdFundingMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddRedeemDelayHours(v)
 		return nil
-	case fbmcrowdfunding.FieldDuration:
+	case fbmcrowdfunding.FieldDurationSeconds:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddDuration(v)
+		m.AddDurationSeconds(v)
 		return nil
 	}
 	return fmt.Errorf("unknown FbmCrowdFunding numeric field %s", name)
@@ -24968,11 +24968,11 @@ func (m *FbmCrowdFundingMutation) ClearedFields() []string {
 	if m.FieldCleared(fbmcrowdfunding.FieldRedeemDelayHours) {
 		fields = append(fields, fbmcrowdfunding.FieldRedeemDelayHours)
 	}
-	if m.FieldCleared(fbmcrowdfunding.FieldDurationType) {
-		fields = append(fields, fbmcrowdfunding.FieldDurationType)
+	if m.FieldCleared(fbmcrowdfunding.FieldDurationDisplayType) {
+		fields = append(fields, fbmcrowdfunding.FieldDurationDisplayType)
 	}
-	if m.FieldCleared(fbmcrowdfunding.FieldDuration) {
-		fields = append(fields, fbmcrowdfunding.FieldDuration)
+	if m.FieldCleared(fbmcrowdfunding.FieldDurationSeconds) {
+		fields = append(fields, fbmcrowdfunding.FieldDurationSeconds)
 	}
 	return fields
 }
@@ -25018,11 +25018,11 @@ func (m *FbmCrowdFundingMutation) ClearField(name string) error {
 	case fbmcrowdfunding.FieldRedeemDelayHours:
 		m.ClearRedeemDelayHours()
 		return nil
-	case fbmcrowdfunding.FieldDurationType:
-		m.ClearDurationType()
+	case fbmcrowdfunding.FieldDurationDisplayType:
+		m.ClearDurationDisplayType()
 		return nil
-	case fbmcrowdfunding.FieldDuration:
-		m.ClearDuration()
+	case fbmcrowdfunding.FieldDurationSeconds:
+		m.ClearDurationSeconds()
 		return nil
 	}
 	return fmt.Errorf("unknown FbmCrowdFunding nullable field %s", name)
@@ -25074,11 +25074,11 @@ func (m *FbmCrowdFundingMutation) ResetField(name string) error {
 	case fbmcrowdfunding.FieldRedeemDelayHours:
 		m.ResetRedeemDelayHours()
 		return nil
-	case fbmcrowdfunding.FieldDurationType:
-		m.ResetDurationType()
+	case fbmcrowdfunding.FieldDurationDisplayType:
+		m.ResetDurationDisplayType()
 		return nil
-	case fbmcrowdfunding.FieldDuration:
-		m.ResetDuration()
+	case fbmcrowdfunding.FieldDurationSeconds:
+		m.ResetDurationSeconds()
 		return nil
 	}
 	return fmt.Errorf("unknown FbmCrowdFunding field %s", name)
@@ -25135,24 +25135,24 @@ func (m *FbmCrowdFundingMutation) ResetEdge(name string) error {
 // FeeMutation represents an operation that mutates the Fee nodes in the graph.
 type FeeMutation struct {
 	config
-	op              Op
-	typ             string
-	id              *uint32
-	created_at      *uint32
-	addcreated_at   *int32
-	updated_at      *uint32
-	addupdated_at   *int32
-	deleted_at      *uint32
-	adddeleted_at   *int32
-	ent_id          *uuid.UUID
-	good_id         *uuid.UUID
-	settlement_type *string
-	unit_value      *decimal.Decimal
-	duration_type   *string
-	clearedFields   map[string]struct{}
-	done            bool
-	oldValue        func(context.Context) (*Fee, error)
-	predicates      []predicate.Fee
+	op                    Op
+	typ                   string
+	id                    *uint32
+	created_at            *uint32
+	addcreated_at         *int32
+	updated_at            *uint32
+	addupdated_at         *int32
+	deleted_at            *uint32
+	adddeleted_at         *int32
+	ent_id                *uuid.UUID
+	good_id               *uuid.UUID
+	settlement_type       *string
+	unit_value            *decimal.Decimal
+	duration_display_type *string
+	clearedFields         map[string]struct{}
+	done                  bool
+	oldValue              func(context.Context) (*Fee, error)
+	predicates            []predicate.Fee
 }
 
 var _ ent.Mutation = (*FeeMutation)(nil)
@@ -25610,53 +25610,53 @@ func (m *FeeMutation) ResetUnitValue() {
 	delete(m.clearedFields, fee.FieldUnitValue)
 }
 
-// SetDurationType sets the "duration_type" field.
-func (m *FeeMutation) SetDurationType(s string) {
-	m.duration_type = &s
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (m *FeeMutation) SetDurationDisplayType(s string) {
+	m.duration_display_type = &s
 }
 
-// DurationType returns the value of the "duration_type" field in the mutation.
-func (m *FeeMutation) DurationType() (r string, exists bool) {
-	v := m.duration_type
+// DurationDisplayType returns the value of the "duration_display_type" field in the mutation.
+func (m *FeeMutation) DurationDisplayType() (r string, exists bool) {
+	v := m.duration_display_type
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldDurationType returns the old "duration_type" field's value of the Fee entity.
+// OldDurationDisplayType returns the old "duration_display_type" field's value of the Fee entity.
 // If the Fee object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FeeMutation) OldDurationType(ctx context.Context) (v string, err error) {
+func (m *FeeMutation) OldDurationDisplayType(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDurationType is only allowed on UpdateOne operations")
+		return v, errors.New("OldDurationDisplayType is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDurationType requires an ID field in the mutation")
+		return v, errors.New("OldDurationDisplayType requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDurationType: %w", err)
+		return v, fmt.Errorf("querying old value for OldDurationDisplayType: %w", err)
 	}
-	return oldValue.DurationType, nil
+	return oldValue.DurationDisplayType, nil
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (m *FeeMutation) ClearDurationType() {
-	m.duration_type = nil
-	m.clearedFields[fee.FieldDurationType] = struct{}{}
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (m *FeeMutation) ClearDurationDisplayType() {
+	m.duration_display_type = nil
+	m.clearedFields[fee.FieldDurationDisplayType] = struct{}{}
 }
 
-// DurationTypeCleared returns if the "duration_type" field was cleared in this mutation.
-func (m *FeeMutation) DurationTypeCleared() bool {
-	_, ok := m.clearedFields[fee.FieldDurationType]
+// DurationDisplayTypeCleared returns if the "duration_display_type" field was cleared in this mutation.
+func (m *FeeMutation) DurationDisplayTypeCleared() bool {
+	_, ok := m.clearedFields[fee.FieldDurationDisplayType]
 	return ok
 }
 
-// ResetDurationType resets all changes to the "duration_type" field.
-func (m *FeeMutation) ResetDurationType() {
-	m.duration_type = nil
-	delete(m.clearedFields, fee.FieldDurationType)
+// ResetDurationDisplayType resets all changes to the "duration_display_type" field.
+func (m *FeeMutation) ResetDurationDisplayType() {
+	m.duration_display_type = nil
+	delete(m.clearedFields, fee.FieldDurationDisplayType)
 }
 
 // Where appends a list predicates to the FeeMutation builder.
@@ -25700,8 +25700,8 @@ func (m *FeeMutation) Fields() []string {
 	if m.unit_value != nil {
 		fields = append(fields, fee.FieldUnitValue)
 	}
-	if m.duration_type != nil {
-		fields = append(fields, fee.FieldDurationType)
+	if m.duration_display_type != nil {
+		fields = append(fields, fee.FieldDurationDisplayType)
 	}
 	return fields
 }
@@ -25725,8 +25725,8 @@ func (m *FeeMutation) Field(name string) (ent.Value, bool) {
 		return m.SettlementType()
 	case fee.FieldUnitValue:
 		return m.UnitValue()
-	case fee.FieldDurationType:
-		return m.DurationType()
+	case fee.FieldDurationDisplayType:
+		return m.DurationDisplayType()
 	}
 	return nil, false
 }
@@ -25750,8 +25750,8 @@ func (m *FeeMutation) OldField(ctx context.Context, name string) (ent.Value, err
 		return m.OldSettlementType(ctx)
 	case fee.FieldUnitValue:
 		return m.OldUnitValue(ctx)
-	case fee.FieldDurationType:
-		return m.OldDurationType(ctx)
+	case fee.FieldDurationDisplayType:
+		return m.OldDurationDisplayType(ctx)
 	}
 	return nil, fmt.Errorf("unknown Fee field %s", name)
 }
@@ -25810,12 +25810,12 @@ func (m *FeeMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUnitValue(v)
 		return nil
-	case fee.FieldDurationType:
+	case fee.FieldDurationDisplayType:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetDurationType(v)
+		m.SetDurationDisplayType(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Fee field %s", name)
@@ -25895,8 +25895,8 @@ func (m *FeeMutation) ClearedFields() []string {
 	if m.FieldCleared(fee.FieldUnitValue) {
 		fields = append(fields, fee.FieldUnitValue)
 	}
-	if m.FieldCleared(fee.FieldDurationType) {
-		fields = append(fields, fee.FieldDurationType)
+	if m.FieldCleared(fee.FieldDurationDisplayType) {
+		fields = append(fields, fee.FieldDurationDisplayType)
 	}
 	return fields
 }
@@ -25921,8 +25921,8 @@ func (m *FeeMutation) ClearField(name string) error {
 	case fee.FieldUnitValue:
 		m.ClearUnitValue()
 		return nil
-	case fee.FieldDurationType:
-		m.ClearDurationType()
+	case fee.FieldDurationDisplayType:
+		m.ClearDurationDisplayType()
 		return nil
 	}
 	return fmt.Errorf("unknown Fee nullable field %s", name)
@@ -25953,8 +25953,8 @@ func (m *FeeMutation) ResetField(name string) error {
 	case fee.FieldUnitValue:
 		m.ResetUnitValue()
 		return nil
-	case fee.FieldDurationType:
-		m.ResetDurationType()
+	case fee.FieldDurationDisplayType:
+		m.ResetDurationDisplayType()
 		return nil
 	}
 	return fmt.Errorf("unknown Fee field %s", name)
@@ -34928,31 +34928,31 @@ func (m *MiningGoodStockMutation) ResetEdge(name string) error {
 // PowerRentalMutation represents an operation that mutates the PowerRental nodes in the graph.
 type PowerRentalMutation struct {
 	config
-	op                   Op
-	typ                  string
-	id                   *uint32
-	created_at           *uint32
-	addcreated_at        *int32
-	updated_at           *uint32
-	addupdated_at        *int32
-	deleted_at           *uint32
-	adddeleted_at        *int32
-	ent_id               *uuid.UUID
-	good_id              *uuid.UUID
-	device_type_id       *uuid.UUID
-	vendor_location_id   *uuid.UUID
-	unit_price           *decimal.Decimal
-	quantity_unit        *string
-	quantity_unit_amount *decimal.Decimal
-	delivery_at          *uint32
-	adddelivery_at       *int32
-	unit_lock_deposit    *decimal.Decimal
-	duration_type        *string
-	stock_mode           *string
-	clearedFields        map[string]struct{}
-	done                 bool
-	oldValue             func(context.Context) (*PowerRental, error)
-	predicates           []predicate.PowerRental
+	op                    Op
+	typ                   string
+	id                    *uint32
+	created_at            *uint32
+	addcreated_at         *int32
+	updated_at            *uint32
+	addupdated_at         *int32
+	deleted_at            *uint32
+	adddeleted_at         *int32
+	ent_id                *uuid.UUID
+	good_id               *uuid.UUID
+	device_type_id        *uuid.UUID
+	vendor_location_id    *uuid.UUID
+	unit_price            *decimal.Decimal
+	quantity_unit         *string
+	quantity_unit_amount  *decimal.Decimal
+	delivery_at           *uint32
+	adddelivery_at        *int32
+	unit_lock_deposit     *decimal.Decimal
+	duration_display_type *string
+	stock_mode            *string
+	clearedFields         map[string]struct{}
+	done                  bool
+	oldValue              func(context.Context) (*PowerRental, error)
+	predicates            []predicate.PowerRental
 }
 
 var _ ent.Mutation = (*PowerRentalMutation)(nil)
@@ -35676,53 +35676,53 @@ func (m *PowerRentalMutation) ResetUnitLockDeposit() {
 	delete(m.clearedFields, powerrental.FieldUnitLockDeposit)
 }
 
-// SetDurationType sets the "duration_type" field.
-func (m *PowerRentalMutation) SetDurationType(s string) {
-	m.duration_type = &s
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (m *PowerRentalMutation) SetDurationDisplayType(s string) {
+	m.duration_display_type = &s
 }
 
-// DurationType returns the value of the "duration_type" field in the mutation.
-func (m *PowerRentalMutation) DurationType() (r string, exists bool) {
-	v := m.duration_type
+// DurationDisplayType returns the value of the "duration_display_type" field in the mutation.
+func (m *PowerRentalMutation) DurationDisplayType() (r string, exists bool) {
+	v := m.duration_display_type
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldDurationType returns the old "duration_type" field's value of the PowerRental entity.
+// OldDurationDisplayType returns the old "duration_display_type" field's value of the PowerRental entity.
 // If the PowerRental object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PowerRentalMutation) OldDurationType(ctx context.Context) (v string, err error) {
+func (m *PowerRentalMutation) OldDurationDisplayType(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDurationType is only allowed on UpdateOne operations")
+		return v, errors.New("OldDurationDisplayType is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDurationType requires an ID field in the mutation")
+		return v, errors.New("OldDurationDisplayType requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDurationType: %w", err)
+		return v, fmt.Errorf("querying old value for OldDurationDisplayType: %w", err)
 	}
-	return oldValue.DurationType, nil
+	return oldValue.DurationDisplayType, nil
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (m *PowerRentalMutation) ClearDurationType() {
-	m.duration_type = nil
-	m.clearedFields[powerrental.FieldDurationType] = struct{}{}
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (m *PowerRentalMutation) ClearDurationDisplayType() {
+	m.duration_display_type = nil
+	m.clearedFields[powerrental.FieldDurationDisplayType] = struct{}{}
 }
 
-// DurationTypeCleared returns if the "duration_type" field was cleared in this mutation.
-func (m *PowerRentalMutation) DurationTypeCleared() bool {
-	_, ok := m.clearedFields[powerrental.FieldDurationType]
+// DurationDisplayTypeCleared returns if the "duration_display_type" field was cleared in this mutation.
+func (m *PowerRentalMutation) DurationDisplayTypeCleared() bool {
+	_, ok := m.clearedFields[powerrental.FieldDurationDisplayType]
 	return ok
 }
 
-// ResetDurationType resets all changes to the "duration_type" field.
-func (m *PowerRentalMutation) ResetDurationType() {
-	m.duration_type = nil
-	delete(m.clearedFields, powerrental.FieldDurationType)
+// ResetDurationDisplayType resets all changes to the "duration_display_type" field.
+func (m *PowerRentalMutation) ResetDurationDisplayType() {
+	m.duration_display_type = nil
+	delete(m.clearedFields, powerrental.FieldDurationDisplayType)
 }
 
 // SetStockMode sets the "stock_mode" field.
@@ -35830,8 +35830,8 @@ func (m *PowerRentalMutation) Fields() []string {
 	if m.unit_lock_deposit != nil {
 		fields = append(fields, powerrental.FieldUnitLockDeposit)
 	}
-	if m.duration_type != nil {
-		fields = append(fields, powerrental.FieldDurationType)
+	if m.duration_display_type != nil {
+		fields = append(fields, powerrental.FieldDurationDisplayType)
 	}
 	if m.stock_mode != nil {
 		fields = append(fields, powerrental.FieldStockMode)
@@ -35868,8 +35868,8 @@ func (m *PowerRentalMutation) Field(name string) (ent.Value, bool) {
 		return m.DeliveryAt()
 	case powerrental.FieldUnitLockDeposit:
 		return m.UnitLockDeposit()
-	case powerrental.FieldDurationType:
-		return m.DurationType()
+	case powerrental.FieldDurationDisplayType:
+		return m.DurationDisplayType()
 	case powerrental.FieldStockMode:
 		return m.StockMode()
 	}
@@ -35905,8 +35905,8 @@ func (m *PowerRentalMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldDeliveryAt(ctx)
 	case powerrental.FieldUnitLockDeposit:
 		return m.OldUnitLockDeposit(ctx)
-	case powerrental.FieldDurationType:
-		return m.OldDurationType(ctx)
+	case powerrental.FieldDurationDisplayType:
+		return m.OldDurationDisplayType(ctx)
 	case powerrental.FieldStockMode:
 		return m.OldStockMode(ctx)
 	}
@@ -36002,12 +36002,12 @@ func (m *PowerRentalMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUnitLockDeposit(v)
 		return nil
-	case powerrental.FieldDurationType:
+	case powerrental.FieldDurationDisplayType:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetDurationType(v)
+		m.SetDurationDisplayType(v)
 		return nil
 	case powerrental.FieldStockMode:
 		v, ok := value.(string)
@@ -36121,8 +36121,8 @@ func (m *PowerRentalMutation) ClearedFields() []string {
 	if m.FieldCleared(powerrental.FieldUnitLockDeposit) {
 		fields = append(fields, powerrental.FieldUnitLockDeposit)
 	}
-	if m.FieldCleared(powerrental.FieldDurationType) {
-		fields = append(fields, powerrental.FieldDurationType)
+	if m.FieldCleared(powerrental.FieldDurationDisplayType) {
+		fields = append(fields, powerrental.FieldDurationDisplayType)
 	}
 	if m.FieldCleared(powerrental.FieldStockMode) {
 		fields = append(fields, powerrental.FieldStockMode)
@@ -36165,8 +36165,8 @@ func (m *PowerRentalMutation) ClearField(name string) error {
 	case powerrental.FieldUnitLockDeposit:
 		m.ClearUnitLockDeposit()
 		return nil
-	case powerrental.FieldDurationType:
-		m.ClearDurationType()
+	case powerrental.FieldDurationDisplayType:
+		m.ClearDurationDisplayType()
 		return nil
 	case powerrental.FieldStockMode:
 		m.ClearStockMode()
@@ -36215,8 +36215,8 @@ func (m *PowerRentalMutation) ResetField(name string) error {
 	case powerrental.FieldUnitLockDeposit:
 		m.ResetUnitLockDeposit()
 		return nil
-	case powerrental.FieldDurationType:
-		m.ResetDurationType()
+	case powerrental.FieldDurationDisplayType:
+		m.ResetDurationDisplayType()
 		return nil
 	case powerrental.FieldStockMode:
 		m.ResetStockMode()

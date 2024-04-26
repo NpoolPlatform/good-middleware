@@ -319,16 +319,16 @@ func WithMaxUserAmount(s *string, must bool) func(context.Context, *Handler) err
 	}
 }
 
-func WithMinOrderDuration(u *uint32, must bool) func(context.Context, *Handler) error {
+func WithMinOrderDurationSeconds(u *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.MinOrderDuration = u
+		h.MinOrderDurationSeconds = u
 		return nil
 	}
 }
 
-func WithMaxOrderDuration(u *uint32, must bool) func(context.Context, *Handler) error {
+func WithMaxOrderDurationSeconds(u *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.MaxOrderDuration = u
+		h.MaxOrderDurationSeconds = u
 		return nil
 	}
 }

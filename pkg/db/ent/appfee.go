@@ -29,8 +29,8 @@ type AppFee struct {
 	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// UnitValue holds the value of the "unit_value" field.
 	UnitValue decimal.Decimal `json:"unit_value,omitempty"`
-	// MinOrderDuration holds the value of the "min_order_duration" field.
-	MinOrderDuration uint32 `json:"min_order_duration,omitempty"`
+	// MinOrderDurationSeconds holds the value of the "min_order_duration_seconds" field.
+	MinOrderDurationSeconds uint32 `json:"min_order_duration_seconds,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -40,7 +40,7 @@ func (*AppFee) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appfee.FieldUnitValue:
 			values[i] = new(decimal.Decimal)
-		case appfee.FieldID, appfee.FieldCreatedAt, appfee.FieldUpdatedAt, appfee.FieldDeletedAt, appfee.FieldMinOrderDuration:
+		case appfee.FieldID, appfee.FieldCreatedAt, appfee.FieldUpdatedAt, appfee.FieldDeletedAt, appfee.FieldMinOrderDurationSeconds:
 			values[i] = new(sql.NullInt64)
 		case appfee.FieldEntID, appfee.FieldAppGoodID:
 			values[i] = new(uuid.UUID)
@@ -101,11 +101,11 @@ func (af *AppFee) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				af.UnitValue = *value
 			}
-		case appfee.FieldMinOrderDuration:
+		case appfee.FieldMinOrderDurationSeconds:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field min_order_duration", values[i])
+				return fmt.Errorf("unexpected type %T for field min_order_duration_seconds", values[i])
 			} else if value.Valid {
-				af.MinOrderDuration = uint32(value.Int64)
+				af.MinOrderDurationSeconds = uint32(value.Int64)
 			}
 		}
 	}
@@ -153,8 +153,8 @@ func (af *AppFee) String() string {
 	builder.WriteString("unit_value=")
 	builder.WriteString(fmt.Sprintf("%v", af.UnitValue))
 	builder.WriteString(", ")
-	builder.WriteString("min_order_duration=")
-	builder.WriteString(fmt.Sprintf("%v", af.MinOrderDuration))
+	builder.WriteString("min_order_duration_seconds=")
+	builder.WriteString(fmt.Sprintf("%v", af.MinOrderDurationSeconds))
 	builder.WriteByte(')')
 	return builder.String()
 }

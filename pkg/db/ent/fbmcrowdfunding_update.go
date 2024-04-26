@@ -327,50 +327,50 @@ func (fcfu *FbmCrowdFundingUpdate) ClearRedeemDelayHours() *FbmCrowdFundingUpdat
 	return fcfu
 }
 
-// SetDurationType sets the "duration_type" field.
-func (fcfu *FbmCrowdFundingUpdate) SetDurationType(s string) *FbmCrowdFundingUpdate {
-	fcfu.mutation.SetDurationType(s)
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (fcfu *FbmCrowdFundingUpdate) SetDurationDisplayType(s string) *FbmCrowdFundingUpdate {
+	fcfu.mutation.SetDurationDisplayType(s)
 	return fcfu
 }
 
-// SetNillableDurationType sets the "duration_type" field if the given value is not nil.
-func (fcfu *FbmCrowdFundingUpdate) SetNillableDurationType(s *string) *FbmCrowdFundingUpdate {
+// SetNillableDurationDisplayType sets the "duration_display_type" field if the given value is not nil.
+func (fcfu *FbmCrowdFundingUpdate) SetNillableDurationDisplayType(s *string) *FbmCrowdFundingUpdate {
 	if s != nil {
-		fcfu.SetDurationType(*s)
+		fcfu.SetDurationDisplayType(*s)
 	}
 	return fcfu
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (fcfu *FbmCrowdFundingUpdate) ClearDurationType() *FbmCrowdFundingUpdate {
-	fcfu.mutation.ClearDurationType()
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (fcfu *FbmCrowdFundingUpdate) ClearDurationDisplayType() *FbmCrowdFundingUpdate {
+	fcfu.mutation.ClearDurationDisplayType()
 	return fcfu
 }
 
-// SetDuration sets the "duration" field.
-func (fcfu *FbmCrowdFundingUpdate) SetDuration(u uint32) *FbmCrowdFundingUpdate {
-	fcfu.mutation.ResetDuration()
-	fcfu.mutation.SetDuration(u)
+// SetDurationSeconds sets the "duration_seconds" field.
+func (fcfu *FbmCrowdFundingUpdate) SetDurationSeconds(u uint32) *FbmCrowdFundingUpdate {
+	fcfu.mutation.ResetDurationSeconds()
+	fcfu.mutation.SetDurationSeconds(u)
 	return fcfu
 }
 
-// SetNillableDuration sets the "duration" field if the given value is not nil.
-func (fcfu *FbmCrowdFundingUpdate) SetNillableDuration(u *uint32) *FbmCrowdFundingUpdate {
+// SetNillableDurationSeconds sets the "duration_seconds" field if the given value is not nil.
+func (fcfu *FbmCrowdFundingUpdate) SetNillableDurationSeconds(u *uint32) *FbmCrowdFundingUpdate {
 	if u != nil {
-		fcfu.SetDuration(*u)
+		fcfu.SetDurationSeconds(*u)
 	}
 	return fcfu
 }
 
-// AddDuration adds u to the "duration" field.
-func (fcfu *FbmCrowdFundingUpdate) AddDuration(u int32) *FbmCrowdFundingUpdate {
-	fcfu.mutation.AddDuration(u)
+// AddDurationSeconds adds u to the "duration_seconds" field.
+func (fcfu *FbmCrowdFundingUpdate) AddDurationSeconds(u int32) *FbmCrowdFundingUpdate {
+	fcfu.mutation.AddDurationSeconds(u)
 	return fcfu
 }
 
-// ClearDuration clears the value of the "duration" field.
-func (fcfu *FbmCrowdFundingUpdate) ClearDuration() *FbmCrowdFundingUpdate {
-	fcfu.mutation.ClearDuration()
+// ClearDurationSeconds clears the value of the "duration_seconds" field.
+func (fcfu *FbmCrowdFundingUpdate) ClearDurationSeconds() *FbmCrowdFundingUpdate {
+	fcfu.mutation.ClearDurationSeconds()
 	return fcfu
 }
 
@@ -679,37 +679,37 @@ func (fcfu *FbmCrowdFundingUpdate) sqlSave(ctx context.Context) (n int, err erro
 			Column: fbmcrowdfunding.FieldRedeemDelayHours,
 		})
 	}
-	if value, ok := fcfu.mutation.DurationType(); ok {
+	if value, ok := fcfu.mutation.DurationDisplayType(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: fbmcrowdfunding.FieldDurationType,
+			Column: fbmcrowdfunding.FieldDurationDisplayType,
 		})
 	}
-	if fcfu.mutation.DurationTypeCleared() {
+	if fcfu.mutation.DurationDisplayTypeCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: fbmcrowdfunding.FieldDurationType,
+			Column: fbmcrowdfunding.FieldDurationDisplayType,
 		})
 	}
-	if value, ok := fcfu.mutation.Duration(); ok {
+	if value, ok := fcfu.mutation.DurationSeconds(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: fbmcrowdfunding.FieldDuration,
+			Column: fbmcrowdfunding.FieldDurationSeconds,
 		})
 	}
-	if value, ok := fcfu.mutation.AddedDuration(); ok {
+	if value, ok := fcfu.mutation.AddedDurationSeconds(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: fbmcrowdfunding.FieldDuration,
+			Column: fbmcrowdfunding.FieldDurationSeconds,
 		})
 	}
-	if fcfu.mutation.DurationCleared() {
+	if fcfu.mutation.DurationSecondsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: fbmcrowdfunding.FieldDuration,
+			Column: fbmcrowdfunding.FieldDurationSeconds,
 		})
 	}
 	_spec.Modifiers = fcfu.modifiers
@@ -1030,50 +1030,50 @@ func (fcfuo *FbmCrowdFundingUpdateOne) ClearRedeemDelayHours() *FbmCrowdFundingU
 	return fcfuo
 }
 
-// SetDurationType sets the "duration_type" field.
-func (fcfuo *FbmCrowdFundingUpdateOne) SetDurationType(s string) *FbmCrowdFundingUpdateOne {
-	fcfuo.mutation.SetDurationType(s)
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (fcfuo *FbmCrowdFundingUpdateOne) SetDurationDisplayType(s string) *FbmCrowdFundingUpdateOne {
+	fcfuo.mutation.SetDurationDisplayType(s)
 	return fcfuo
 }
 
-// SetNillableDurationType sets the "duration_type" field if the given value is not nil.
-func (fcfuo *FbmCrowdFundingUpdateOne) SetNillableDurationType(s *string) *FbmCrowdFundingUpdateOne {
+// SetNillableDurationDisplayType sets the "duration_display_type" field if the given value is not nil.
+func (fcfuo *FbmCrowdFundingUpdateOne) SetNillableDurationDisplayType(s *string) *FbmCrowdFundingUpdateOne {
 	if s != nil {
-		fcfuo.SetDurationType(*s)
+		fcfuo.SetDurationDisplayType(*s)
 	}
 	return fcfuo
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (fcfuo *FbmCrowdFundingUpdateOne) ClearDurationType() *FbmCrowdFundingUpdateOne {
-	fcfuo.mutation.ClearDurationType()
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (fcfuo *FbmCrowdFundingUpdateOne) ClearDurationDisplayType() *FbmCrowdFundingUpdateOne {
+	fcfuo.mutation.ClearDurationDisplayType()
 	return fcfuo
 }
 
-// SetDuration sets the "duration" field.
-func (fcfuo *FbmCrowdFundingUpdateOne) SetDuration(u uint32) *FbmCrowdFundingUpdateOne {
-	fcfuo.mutation.ResetDuration()
-	fcfuo.mutation.SetDuration(u)
+// SetDurationSeconds sets the "duration_seconds" field.
+func (fcfuo *FbmCrowdFundingUpdateOne) SetDurationSeconds(u uint32) *FbmCrowdFundingUpdateOne {
+	fcfuo.mutation.ResetDurationSeconds()
+	fcfuo.mutation.SetDurationSeconds(u)
 	return fcfuo
 }
 
-// SetNillableDuration sets the "duration" field if the given value is not nil.
-func (fcfuo *FbmCrowdFundingUpdateOne) SetNillableDuration(u *uint32) *FbmCrowdFundingUpdateOne {
+// SetNillableDurationSeconds sets the "duration_seconds" field if the given value is not nil.
+func (fcfuo *FbmCrowdFundingUpdateOne) SetNillableDurationSeconds(u *uint32) *FbmCrowdFundingUpdateOne {
 	if u != nil {
-		fcfuo.SetDuration(*u)
+		fcfuo.SetDurationSeconds(*u)
 	}
 	return fcfuo
 }
 
-// AddDuration adds u to the "duration" field.
-func (fcfuo *FbmCrowdFundingUpdateOne) AddDuration(u int32) *FbmCrowdFundingUpdateOne {
-	fcfuo.mutation.AddDuration(u)
+// AddDurationSeconds adds u to the "duration_seconds" field.
+func (fcfuo *FbmCrowdFundingUpdateOne) AddDurationSeconds(u int32) *FbmCrowdFundingUpdateOne {
+	fcfuo.mutation.AddDurationSeconds(u)
 	return fcfuo
 }
 
-// ClearDuration clears the value of the "duration" field.
-func (fcfuo *FbmCrowdFundingUpdateOne) ClearDuration() *FbmCrowdFundingUpdateOne {
-	fcfuo.mutation.ClearDuration()
+// ClearDurationSeconds clears the value of the "duration_seconds" field.
+func (fcfuo *FbmCrowdFundingUpdateOne) ClearDurationSeconds() *FbmCrowdFundingUpdateOne {
+	fcfuo.mutation.ClearDurationSeconds()
 	return fcfuo
 }
 
@@ -1412,37 +1412,37 @@ func (fcfuo *FbmCrowdFundingUpdateOne) sqlSave(ctx context.Context) (_node *FbmC
 			Column: fbmcrowdfunding.FieldRedeemDelayHours,
 		})
 	}
-	if value, ok := fcfuo.mutation.DurationType(); ok {
+	if value, ok := fcfuo.mutation.DurationDisplayType(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: fbmcrowdfunding.FieldDurationType,
+			Column: fbmcrowdfunding.FieldDurationDisplayType,
 		})
 	}
-	if fcfuo.mutation.DurationTypeCleared() {
+	if fcfuo.mutation.DurationDisplayTypeCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: fbmcrowdfunding.FieldDurationType,
+			Column: fbmcrowdfunding.FieldDurationDisplayType,
 		})
 	}
-	if value, ok := fcfuo.mutation.Duration(); ok {
+	if value, ok := fcfuo.mutation.DurationSeconds(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: fbmcrowdfunding.FieldDuration,
+			Column: fbmcrowdfunding.FieldDurationSeconds,
 		})
 	}
-	if value, ok := fcfuo.mutation.AddedDuration(); ok {
+	if value, ok := fcfuo.mutation.AddedDurationSeconds(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: fbmcrowdfunding.FieldDuration,
+			Column: fbmcrowdfunding.FieldDurationSeconds,
 		})
 	}
-	if fcfuo.mutation.DurationCleared() {
+	if fcfuo.mutation.DurationSecondsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: fbmcrowdfunding.FieldDuration,
+			Column: fbmcrowdfunding.FieldDurationSeconds,
 		})
 	}
 	_spec.Modifiers = fcfuo.modifiers

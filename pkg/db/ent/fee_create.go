@@ -121,16 +121,16 @@ func (fc *FeeCreate) SetNillableUnitValue(d *decimal.Decimal) *FeeCreate {
 	return fc
 }
 
-// SetDurationType sets the "duration_type" field.
-func (fc *FeeCreate) SetDurationType(s string) *FeeCreate {
-	fc.mutation.SetDurationType(s)
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (fc *FeeCreate) SetDurationDisplayType(s string) *FeeCreate {
+	fc.mutation.SetDurationDisplayType(s)
 	return fc
 }
 
-// SetNillableDurationType sets the "duration_type" field if the given value is not nil.
-func (fc *FeeCreate) SetNillableDurationType(s *string) *FeeCreate {
+// SetNillableDurationDisplayType sets the "duration_display_type" field if the given value is not nil.
+func (fc *FeeCreate) SetNillableDurationDisplayType(s *string) *FeeCreate {
 	if s != nil {
-		fc.SetDurationType(*s)
+		fc.SetDurationDisplayType(*s)
 	}
 	return fc
 }
@@ -263,9 +263,9 @@ func (fc *FeeCreate) defaults() error {
 		v := fee.DefaultUnitValue
 		fc.mutation.SetUnitValue(v)
 	}
-	if _, ok := fc.mutation.DurationType(); !ok {
-		v := fee.DefaultDurationType
-		fc.mutation.SetDurationType(v)
+	if _, ok := fc.mutation.DurationDisplayType(); !ok {
+		v := fee.DefaultDurationDisplayType
+		fc.mutation.SetDurationDisplayType(v)
 	}
 	return nil
 }
@@ -374,13 +374,13 @@ func (fc *FeeCreate) createSpec() (*Fee, *sqlgraph.CreateSpec) {
 		})
 		_node.UnitValue = value
 	}
-	if value, ok := fc.mutation.DurationType(); ok {
+	if value, ok := fc.mutation.DurationDisplayType(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: fee.FieldDurationType,
+			Column: fee.FieldDurationDisplayType,
 		})
-		_node.DurationType = value
+		_node.DurationDisplayType = value
 	}
 	return _node, _spec
 }
@@ -556,21 +556,21 @@ func (u *FeeUpsert) ClearUnitValue() *FeeUpsert {
 	return u
 }
 
-// SetDurationType sets the "duration_type" field.
-func (u *FeeUpsert) SetDurationType(v string) *FeeUpsert {
-	u.Set(fee.FieldDurationType, v)
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (u *FeeUpsert) SetDurationDisplayType(v string) *FeeUpsert {
+	u.Set(fee.FieldDurationDisplayType, v)
 	return u
 }
 
-// UpdateDurationType sets the "duration_type" field to the value that was provided on create.
-func (u *FeeUpsert) UpdateDurationType() *FeeUpsert {
-	u.SetExcluded(fee.FieldDurationType)
+// UpdateDurationDisplayType sets the "duration_display_type" field to the value that was provided on create.
+func (u *FeeUpsert) UpdateDurationDisplayType() *FeeUpsert {
+	u.SetExcluded(fee.FieldDurationDisplayType)
 	return u
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (u *FeeUpsert) ClearDurationType() *FeeUpsert {
-	u.SetNull(fee.FieldDurationType)
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (u *FeeUpsert) ClearDurationDisplayType() *FeeUpsert {
+	u.SetNull(fee.FieldDurationDisplayType)
 	return u
 }
 
@@ -764,24 +764,24 @@ func (u *FeeUpsertOne) ClearUnitValue() *FeeUpsertOne {
 	})
 }
 
-// SetDurationType sets the "duration_type" field.
-func (u *FeeUpsertOne) SetDurationType(v string) *FeeUpsertOne {
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (u *FeeUpsertOne) SetDurationDisplayType(v string) *FeeUpsertOne {
 	return u.Update(func(s *FeeUpsert) {
-		s.SetDurationType(v)
+		s.SetDurationDisplayType(v)
 	})
 }
 
-// UpdateDurationType sets the "duration_type" field to the value that was provided on create.
-func (u *FeeUpsertOne) UpdateDurationType() *FeeUpsertOne {
+// UpdateDurationDisplayType sets the "duration_display_type" field to the value that was provided on create.
+func (u *FeeUpsertOne) UpdateDurationDisplayType() *FeeUpsertOne {
 	return u.Update(func(s *FeeUpsert) {
-		s.UpdateDurationType()
+		s.UpdateDurationDisplayType()
 	})
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (u *FeeUpsertOne) ClearDurationType() *FeeUpsertOne {
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (u *FeeUpsertOne) ClearDurationDisplayType() *FeeUpsertOne {
 	return u.Update(func(s *FeeUpsert) {
-		s.ClearDurationType()
+		s.ClearDurationDisplayType()
 	})
 }
 
@@ -1140,24 +1140,24 @@ func (u *FeeUpsertBulk) ClearUnitValue() *FeeUpsertBulk {
 	})
 }
 
-// SetDurationType sets the "duration_type" field.
-func (u *FeeUpsertBulk) SetDurationType(v string) *FeeUpsertBulk {
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (u *FeeUpsertBulk) SetDurationDisplayType(v string) *FeeUpsertBulk {
 	return u.Update(func(s *FeeUpsert) {
-		s.SetDurationType(v)
+		s.SetDurationDisplayType(v)
 	})
 }
 
-// UpdateDurationType sets the "duration_type" field to the value that was provided on create.
-func (u *FeeUpsertBulk) UpdateDurationType() *FeeUpsertBulk {
+// UpdateDurationDisplayType sets the "duration_display_type" field to the value that was provided on create.
+func (u *FeeUpsertBulk) UpdateDurationDisplayType() *FeeUpsertBulk {
 	return u.Update(func(s *FeeUpsert) {
-		s.UpdateDurationType()
+		s.UpdateDurationDisplayType()
 	})
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (u *FeeUpsertBulk) ClearDurationType() *FeeUpsertBulk {
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (u *FeeUpsertBulk) ClearDurationDisplayType() *FeeUpsertBulk {
 	return u.Update(func(s *FeeUpsert) {
-		s.ClearDurationType()
+		s.ClearDurationDisplayType()
 	})
 }
 

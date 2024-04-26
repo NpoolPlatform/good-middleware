@@ -191,30 +191,30 @@ func (aprc *AppPowerRentalCreate) SetNillableMaxUserAmount(d *decimal.Decimal) *
 	return aprc
 }
 
-// SetMinOrderDuration sets the "min_order_duration" field.
-func (aprc *AppPowerRentalCreate) SetMinOrderDuration(u uint32) *AppPowerRentalCreate {
-	aprc.mutation.SetMinOrderDuration(u)
+// SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
+func (aprc *AppPowerRentalCreate) SetMinOrderDurationSeconds(u uint32) *AppPowerRentalCreate {
+	aprc.mutation.SetMinOrderDurationSeconds(u)
 	return aprc
 }
 
-// SetNillableMinOrderDuration sets the "min_order_duration" field if the given value is not nil.
-func (aprc *AppPowerRentalCreate) SetNillableMinOrderDuration(u *uint32) *AppPowerRentalCreate {
+// SetNillableMinOrderDurationSeconds sets the "min_order_duration_seconds" field if the given value is not nil.
+func (aprc *AppPowerRentalCreate) SetNillableMinOrderDurationSeconds(u *uint32) *AppPowerRentalCreate {
 	if u != nil {
-		aprc.SetMinOrderDuration(*u)
+		aprc.SetMinOrderDurationSeconds(*u)
 	}
 	return aprc
 }
 
-// SetMaxOrderDuration sets the "max_order_duration" field.
-func (aprc *AppPowerRentalCreate) SetMaxOrderDuration(u uint32) *AppPowerRentalCreate {
-	aprc.mutation.SetMaxOrderDuration(u)
+// SetMaxOrderDurationSeconds sets the "max_order_duration_seconds" field.
+func (aprc *AppPowerRentalCreate) SetMaxOrderDurationSeconds(u uint32) *AppPowerRentalCreate {
+	aprc.mutation.SetMaxOrderDurationSeconds(u)
 	return aprc
 }
 
-// SetNillableMaxOrderDuration sets the "max_order_duration" field if the given value is not nil.
-func (aprc *AppPowerRentalCreate) SetNillableMaxOrderDuration(u *uint32) *AppPowerRentalCreate {
+// SetNillableMaxOrderDurationSeconds sets the "max_order_duration_seconds" field if the given value is not nil.
+func (aprc *AppPowerRentalCreate) SetNillableMaxOrderDurationSeconds(u *uint32) *AppPowerRentalCreate {
 	if u != nil {
-		aprc.SetMaxOrderDuration(*u)
+		aprc.SetMaxOrderDurationSeconds(*u)
 	}
 	return aprc
 }
@@ -451,13 +451,13 @@ func (aprc *AppPowerRentalCreate) defaults() error {
 		v := apppowerrental.DefaultMaxUserAmount
 		aprc.mutation.SetMaxUserAmount(v)
 	}
-	if _, ok := aprc.mutation.MinOrderDuration(); !ok {
-		v := apppowerrental.DefaultMinOrderDuration
-		aprc.mutation.SetMinOrderDuration(v)
+	if _, ok := aprc.mutation.MinOrderDurationSeconds(); !ok {
+		v := apppowerrental.DefaultMinOrderDurationSeconds
+		aprc.mutation.SetMinOrderDurationSeconds(v)
 	}
-	if _, ok := aprc.mutation.MaxOrderDuration(); !ok {
-		v := apppowerrental.DefaultMaxOrderDuration
-		aprc.mutation.SetMaxOrderDuration(v)
+	if _, ok := aprc.mutation.MaxOrderDurationSeconds(); !ok {
+		v := apppowerrental.DefaultMaxOrderDurationSeconds
+		aprc.mutation.SetMaxOrderDurationSeconds(v)
 	}
 	if _, ok := aprc.mutation.UnitPrice(); !ok {
 		v := apppowerrental.DefaultUnitPrice
@@ -630,21 +630,21 @@ func (aprc *AppPowerRentalCreate) createSpec() (*AppPowerRental, *sqlgraph.Creat
 		})
 		_node.MaxUserAmount = value
 	}
-	if value, ok := aprc.mutation.MinOrderDuration(); ok {
+	if value, ok := aprc.mutation.MinOrderDurationSeconds(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: apppowerrental.FieldMinOrderDuration,
+			Column: apppowerrental.FieldMinOrderDurationSeconds,
 		})
-		_node.MinOrderDuration = value
+		_node.MinOrderDurationSeconds = value
 	}
-	if value, ok := aprc.mutation.MaxOrderDuration(); ok {
+	if value, ok := aprc.mutation.MaxOrderDurationSeconds(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: apppowerrental.FieldMaxOrderDuration,
+			Column: apppowerrental.FieldMaxOrderDurationSeconds,
 		})
-		_node.MaxOrderDuration = value
+		_node.MaxOrderDurationSeconds = value
 	}
 	if value, ok := aprc.mutation.UnitPrice(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -970,51 +970,51 @@ func (u *AppPowerRentalUpsert) ClearMaxUserAmount() *AppPowerRentalUpsert {
 	return u
 }
 
-// SetMinOrderDuration sets the "min_order_duration" field.
-func (u *AppPowerRentalUpsert) SetMinOrderDuration(v uint32) *AppPowerRentalUpsert {
-	u.Set(apppowerrental.FieldMinOrderDuration, v)
+// SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
+func (u *AppPowerRentalUpsert) SetMinOrderDurationSeconds(v uint32) *AppPowerRentalUpsert {
+	u.Set(apppowerrental.FieldMinOrderDurationSeconds, v)
 	return u
 }
 
-// UpdateMinOrderDuration sets the "min_order_duration" field to the value that was provided on create.
-func (u *AppPowerRentalUpsert) UpdateMinOrderDuration() *AppPowerRentalUpsert {
-	u.SetExcluded(apppowerrental.FieldMinOrderDuration)
+// UpdateMinOrderDurationSeconds sets the "min_order_duration_seconds" field to the value that was provided on create.
+func (u *AppPowerRentalUpsert) UpdateMinOrderDurationSeconds() *AppPowerRentalUpsert {
+	u.SetExcluded(apppowerrental.FieldMinOrderDurationSeconds)
 	return u
 }
 
-// AddMinOrderDuration adds v to the "min_order_duration" field.
-func (u *AppPowerRentalUpsert) AddMinOrderDuration(v uint32) *AppPowerRentalUpsert {
-	u.Add(apppowerrental.FieldMinOrderDuration, v)
+// AddMinOrderDurationSeconds adds v to the "min_order_duration_seconds" field.
+func (u *AppPowerRentalUpsert) AddMinOrderDurationSeconds(v uint32) *AppPowerRentalUpsert {
+	u.Add(apppowerrental.FieldMinOrderDurationSeconds, v)
 	return u
 }
 
-// ClearMinOrderDuration clears the value of the "min_order_duration" field.
-func (u *AppPowerRentalUpsert) ClearMinOrderDuration() *AppPowerRentalUpsert {
-	u.SetNull(apppowerrental.FieldMinOrderDuration)
+// ClearMinOrderDurationSeconds clears the value of the "min_order_duration_seconds" field.
+func (u *AppPowerRentalUpsert) ClearMinOrderDurationSeconds() *AppPowerRentalUpsert {
+	u.SetNull(apppowerrental.FieldMinOrderDurationSeconds)
 	return u
 }
 
-// SetMaxOrderDuration sets the "max_order_duration" field.
-func (u *AppPowerRentalUpsert) SetMaxOrderDuration(v uint32) *AppPowerRentalUpsert {
-	u.Set(apppowerrental.FieldMaxOrderDuration, v)
+// SetMaxOrderDurationSeconds sets the "max_order_duration_seconds" field.
+func (u *AppPowerRentalUpsert) SetMaxOrderDurationSeconds(v uint32) *AppPowerRentalUpsert {
+	u.Set(apppowerrental.FieldMaxOrderDurationSeconds, v)
 	return u
 }
 
-// UpdateMaxOrderDuration sets the "max_order_duration" field to the value that was provided on create.
-func (u *AppPowerRentalUpsert) UpdateMaxOrderDuration() *AppPowerRentalUpsert {
-	u.SetExcluded(apppowerrental.FieldMaxOrderDuration)
+// UpdateMaxOrderDurationSeconds sets the "max_order_duration_seconds" field to the value that was provided on create.
+func (u *AppPowerRentalUpsert) UpdateMaxOrderDurationSeconds() *AppPowerRentalUpsert {
+	u.SetExcluded(apppowerrental.FieldMaxOrderDurationSeconds)
 	return u
 }
 
-// AddMaxOrderDuration adds v to the "max_order_duration" field.
-func (u *AppPowerRentalUpsert) AddMaxOrderDuration(v uint32) *AppPowerRentalUpsert {
-	u.Add(apppowerrental.FieldMaxOrderDuration, v)
+// AddMaxOrderDurationSeconds adds v to the "max_order_duration_seconds" field.
+func (u *AppPowerRentalUpsert) AddMaxOrderDurationSeconds(v uint32) *AppPowerRentalUpsert {
+	u.Add(apppowerrental.FieldMaxOrderDurationSeconds, v)
 	return u
 }
 
-// ClearMaxOrderDuration clears the value of the "max_order_duration" field.
-func (u *AppPowerRentalUpsert) ClearMaxOrderDuration() *AppPowerRentalUpsert {
-	u.SetNull(apppowerrental.FieldMaxOrderDuration)
+// ClearMaxOrderDurationSeconds clears the value of the "max_order_duration_seconds" field.
+func (u *AppPowerRentalUpsert) ClearMaxOrderDurationSeconds() *AppPowerRentalUpsert {
+	u.SetNull(apppowerrental.FieldMaxOrderDurationSeconds)
 	return u
 }
 
@@ -1447,59 +1447,59 @@ func (u *AppPowerRentalUpsertOne) ClearMaxUserAmount() *AppPowerRentalUpsertOne 
 	})
 }
 
-// SetMinOrderDuration sets the "min_order_duration" field.
-func (u *AppPowerRentalUpsertOne) SetMinOrderDuration(v uint32) *AppPowerRentalUpsertOne {
+// SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
+func (u *AppPowerRentalUpsertOne) SetMinOrderDurationSeconds(v uint32) *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.SetMinOrderDuration(v)
+		s.SetMinOrderDurationSeconds(v)
 	})
 }
 
-// AddMinOrderDuration adds v to the "min_order_duration" field.
-func (u *AppPowerRentalUpsertOne) AddMinOrderDuration(v uint32) *AppPowerRentalUpsertOne {
+// AddMinOrderDurationSeconds adds v to the "min_order_duration_seconds" field.
+func (u *AppPowerRentalUpsertOne) AddMinOrderDurationSeconds(v uint32) *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.AddMinOrderDuration(v)
+		s.AddMinOrderDurationSeconds(v)
 	})
 }
 
-// UpdateMinOrderDuration sets the "min_order_duration" field to the value that was provided on create.
-func (u *AppPowerRentalUpsertOne) UpdateMinOrderDuration() *AppPowerRentalUpsertOne {
+// UpdateMinOrderDurationSeconds sets the "min_order_duration_seconds" field to the value that was provided on create.
+func (u *AppPowerRentalUpsertOne) UpdateMinOrderDurationSeconds() *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.UpdateMinOrderDuration()
+		s.UpdateMinOrderDurationSeconds()
 	})
 }
 
-// ClearMinOrderDuration clears the value of the "min_order_duration" field.
-func (u *AppPowerRentalUpsertOne) ClearMinOrderDuration() *AppPowerRentalUpsertOne {
+// ClearMinOrderDurationSeconds clears the value of the "min_order_duration_seconds" field.
+func (u *AppPowerRentalUpsertOne) ClearMinOrderDurationSeconds() *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.ClearMinOrderDuration()
+		s.ClearMinOrderDurationSeconds()
 	})
 }
 
-// SetMaxOrderDuration sets the "max_order_duration" field.
-func (u *AppPowerRentalUpsertOne) SetMaxOrderDuration(v uint32) *AppPowerRentalUpsertOne {
+// SetMaxOrderDurationSeconds sets the "max_order_duration_seconds" field.
+func (u *AppPowerRentalUpsertOne) SetMaxOrderDurationSeconds(v uint32) *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.SetMaxOrderDuration(v)
+		s.SetMaxOrderDurationSeconds(v)
 	})
 }
 
-// AddMaxOrderDuration adds v to the "max_order_duration" field.
-func (u *AppPowerRentalUpsertOne) AddMaxOrderDuration(v uint32) *AppPowerRentalUpsertOne {
+// AddMaxOrderDurationSeconds adds v to the "max_order_duration_seconds" field.
+func (u *AppPowerRentalUpsertOne) AddMaxOrderDurationSeconds(v uint32) *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.AddMaxOrderDuration(v)
+		s.AddMaxOrderDurationSeconds(v)
 	})
 }
 
-// UpdateMaxOrderDuration sets the "max_order_duration" field to the value that was provided on create.
-func (u *AppPowerRentalUpsertOne) UpdateMaxOrderDuration() *AppPowerRentalUpsertOne {
+// UpdateMaxOrderDurationSeconds sets the "max_order_duration_seconds" field to the value that was provided on create.
+func (u *AppPowerRentalUpsertOne) UpdateMaxOrderDurationSeconds() *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.UpdateMaxOrderDuration()
+		s.UpdateMaxOrderDurationSeconds()
 	})
 }
 
-// ClearMaxOrderDuration clears the value of the "max_order_duration" field.
-func (u *AppPowerRentalUpsertOne) ClearMaxOrderDuration() *AppPowerRentalUpsertOne {
+// ClearMaxOrderDurationSeconds clears the value of the "max_order_duration_seconds" field.
+func (u *AppPowerRentalUpsertOne) ClearMaxOrderDurationSeconds() *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.ClearMaxOrderDuration()
+		s.ClearMaxOrderDurationSeconds()
 	})
 }
 
@@ -2117,59 +2117,59 @@ func (u *AppPowerRentalUpsertBulk) ClearMaxUserAmount() *AppPowerRentalUpsertBul
 	})
 }
 
-// SetMinOrderDuration sets the "min_order_duration" field.
-func (u *AppPowerRentalUpsertBulk) SetMinOrderDuration(v uint32) *AppPowerRentalUpsertBulk {
+// SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
+func (u *AppPowerRentalUpsertBulk) SetMinOrderDurationSeconds(v uint32) *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.SetMinOrderDuration(v)
+		s.SetMinOrderDurationSeconds(v)
 	})
 }
 
-// AddMinOrderDuration adds v to the "min_order_duration" field.
-func (u *AppPowerRentalUpsertBulk) AddMinOrderDuration(v uint32) *AppPowerRentalUpsertBulk {
+// AddMinOrderDurationSeconds adds v to the "min_order_duration_seconds" field.
+func (u *AppPowerRentalUpsertBulk) AddMinOrderDurationSeconds(v uint32) *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.AddMinOrderDuration(v)
+		s.AddMinOrderDurationSeconds(v)
 	})
 }
 
-// UpdateMinOrderDuration sets the "min_order_duration" field to the value that was provided on create.
-func (u *AppPowerRentalUpsertBulk) UpdateMinOrderDuration() *AppPowerRentalUpsertBulk {
+// UpdateMinOrderDurationSeconds sets the "min_order_duration_seconds" field to the value that was provided on create.
+func (u *AppPowerRentalUpsertBulk) UpdateMinOrderDurationSeconds() *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.UpdateMinOrderDuration()
+		s.UpdateMinOrderDurationSeconds()
 	})
 }
 
-// ClearMinOrderDuration clears the value of the "min_order_duration" field.
-func (u *AppPowerRentalUpsertBulk) ClearMinOrderDuration() *AppPowerRentalUpsertBulk {
+// ClearMinOrderDurationSeconds clears the value of the "min_order_duration_seconds" field.
+func (u *AppPowerRentalUpsertBulk) ClearMinOrderDurationSeconds() *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.ClearMinOrderDuration()
+		s.ClearMinOrderDurationSeconds()
 	})
 }
 
-// SetMaxOrderDuration sets the "max_order_duration" field.
-func (u *AppPowerRentalUpsertBulk) SetMaxOrderDuration(v uint32) *AppPowerRentalUpsertBulk {
+// SetMaxOrderDurationSeconds sets the "max_order_duration_seconds" field.
+func (u *AppPowerRentalUpsertBulk) SetMaxOrderDurationSeconds(v uint32) *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.SetMaxOrderDuration(v)
+		s.SetMaxOrderDurationSeconds(v)
 	})
 }
 
-// AddMaxOrderDuration adds v to the "max_order_duration" field.
-func (u *AppPowerRentalUpsertBulk) AddMaxOrderDuration(v uint32) *AppPowerRentalUpsertBulk {
+// AddMaxOrderDurationSeconds adds v to the "max_order_duration_seconds" field.
+func (u *AppPowerRentalUpsertBulk) AddMaxOrderDurationSeconds(v uint32) *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.AddMaxOrderDuration(v)
+		s.AddMaxOrderDurationSeconds(v)
 	})
 }
 
-// UpdateMaxOrderDuration sets the "max_order_duration" field to the value that was provided on create.
-func (u *AppPowerRentalUpsertBulk) UpdateMaxOrderDuration() *AppPowerRentalUpsertBulk {
+// UpdateMaxOrderDurationSeconds sets the "max_order_duration_seconds" field to the value that was provided on create.
+func (u *AppPowerRentalUpsertBulk) UpdateMaxOrderDurationSeconds() *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.UpdateMaxOrderDuration()
+		s.UpdateMaxOrderDurationSeconds()
 	})
 }
 
-// ClearMaxOrderDuration clears the value of the "max_order_duration" field.
-func (u *AppPowerRentalUpsertBulk) ClearMaxOrderDuration() *AppPowerRentalUpsertBulk {
+// ClearMaxOrderDurationSeconds clears the value of the "max_order_duration_seconds" field.
+func (u *AppPowerRentalUpsertBulk) ClearMaxOrderDurationSeconds() *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
-		s.ClearMaxOrderDuration()
+		s.ClearMaxOrderDurationSeconds()
 	})
 }
 

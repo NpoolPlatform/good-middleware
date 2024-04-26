@@ -107,16 +107,16 @@ func (afc *AppFeeCreate) SetNillableUnitValue(d *decimal.Decimal) *AppFeeCreate 
 	return afc
 }
 
-// SetMinOrderDuration sets the "min_order_duration" field.
-func (afc *AppFeeCreate) SetMinOrderDuration(u uint32) *AppFeeCreate {
-	afc.mutation.SetMinOrderDuration(u)
+// SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
+func (afc *AppFeeCreate) SetMinOrderDurationSeconds(u uint32) *AppFeeCreate {
+	afc.mutation.SetMinOrderDurationSeconds(u)
 	return afc
 }
 
-// SetNillableMinOrderDuration sets the "min_order_duration" field if the given value is not nil.
-func (afc *AppFeeCreate) SetNillableMinOrderDuration(u *uint32) *AppFeeCreate {
+// SetNillableMinOrderDurationSeconds sets the "min_order_duration_seconds" field if the given value is not nil.
+func (afc *AppFeeCreate) SetNillableMinOrderDurationSeconds(u *uint32) *AppFeeCreate {
 	if u != nil {
-		afc.SetMinOrderDuration(*u)
+		afc.SetMinOrderDurationSeconds(*u)
 	}
 	return afc
 }
@@ -245,9 +245,9 @@ func (afc *AppFeeCreate) defaults() error {
 		v := appfee.DefaultUnitValue
 		afc.mutation.SetUnitValue(v)
 	}
-	if _, ok := afc.mutation.MinOrderDuration(); !ok {
-		v := appfee.DefaultMinOrderDuration
-		afc.mutation.SetMinOrderDuration(v)
+	if _, ok := afc.mutation.MinOrderDurationSeconds(); !ok {
+		v := appfee.DefaultMinOrderDurationSeconds
+		afc.mutation.SetMinOrderDurationSeconds(v)
 	}
 	return nil
 }
@@ -348,13 +348,13 @@ func (afc *AppFeeCreate) createSpec() (*AppFee, *sqlgraph.CreateSpec) {
 		})
 		_node.UnitValue = value
 	}
-	if value, ok := afc.mutation.MinOrderDuration(); ok {
+	if value, ok := afc.mutation.MinOrderDurationSeconds(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appfee.FieldMinOrderDuration,
+			Column: appfee.FieldMinOrderDurationSeconds,
 		})
-		_node.MinOrderDuration = value
+		_node.MinOrderDurationSeconds = value
 	}
 	return _node, _spec
 }
@@ -512,27 +512,27 @@ func (u *AppFeeUpsert) ClearUnitValue() *AppFeeUpsert {
 	return u
 }
 
-// SetMinOrderDuration sets the "min_order_duration" field.
-func (u *AppFeeUpsert) SetMinOrderDuration(v uint32) *AppFeeUpsert {
-	u.Set(appfee.FieldMinOrderDuration, v)
+// SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
+func (u *AppFeeUpsert) SetMinOrderDurationSeconds(v uint32) *AppFeeUpsert {
+	u.Set(appfee.FieldMinOrderDurationSeconds, v)
 	return u
 }
 
-// UpdateMinOrderDuration sets the "min_order_duration" field to the value that was provided on create.
-func (u *AppFeeUpsert) UpdateMinOrderDuration() *AppFeeUpsert {
-	u.SetExcluded(appfee.FieldMinOrderDuration)
+// UpdateMinOrderDurationSeconds sets the "min_order_duration_seconds" field to the value that was provided on create.
+func (u *AppFeeUpsert) UpdateMinOrderDurationSeconds() *AppFeeUpsert {
+	u.SetExcluded(appfee.FieldMinOrderDurationSeconds)
 	return u
 }
 
-// AddMinOrderDuration adds v to the "min_order_duration" field.
-func (u *AppFeeUpsert) AddMinOrderDuration(v uint32) *AppFeeUpsert {
-	u.Add(appfee.FieldMinOrderDuration, v)
+// AddMinOrderDurationSeconds adds v to the "min_order_duration_seconds" field.
+func (u *AppFeeUpsert) AddMinOrderDurationSeconds(v uint32) *AppFeeUpsert {
+	u.Add(appfee.FieldMinOrderDurationSeconds, v)
 	return u
 }
 
-// ClearMinOrderDuration clears the value of the "min_order_duration" field.
-func (u *AppFeeUpsert) ClearMinOrderDuration() *AppFeeUpsert {
-	u.SetNull(appfee.FieldMinOrderDuration)
+// ClearMinOrderDurationSeconds clears the value of the "min_order_duration_seconds" field.
+func (u *AppFeeUpsert) ClearMinOrderDurationSeconds() *AppFeeUpsert {
+	u.SetNull(appfee.FieldMinOrderDurationSeconds)
 	return u
 }
 
@@ -705,31 +705,31 @@ func (u *AppFeeUpsertOne) ClearUnitValue() *AppFeeUpsertOne {
 	})
 }
 
-// SetMinOrderDuration sets the "min_order_duration" field.
-func (u *AppFeeUpsertOne) SetMinOrderDuration(v uint32) *AppFeeUpsertOne {
+// SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
+func (u *AppFeeUpsertOne) SetMinOrderDurationSeconds(v uint32) *AppFeeUpsertOne {
 	return u.Update(func(s *AppFeeUpsert) {
-		s.SetMinOrderDuration(v)
+		s.SetMinOrderDurationSeconds(v)
 	})
 }
 
-// AddMinOrderDuration adds v to the "min_order_duration" field.
-func (u *AppFeeUpsertOne) AddMinOrderDuration(v uint32) *AppFeeUpsertOne {
+// AddMinOrderDurationSeconds adds v to the "min_order_duration_seconds" field.
+func (u *AppFeeUpsertOne) AddMinOrderDurationSeconds(v uint32) *AppFeeUpsertOne {
 	return u.Update(func(s *AppFeeUpsert) {
-		s.AddMinOrderDuration(v)
+		s.AddMinOrderDurationSeconds(v)
 	})
 }
 
-// UpdateMinOrderDuration sets the "min_order_duration" field to the value that was provided on create.
-func (u *AppFeeUpsertOne) UpdateMinOrderDuration() *AppFeeUpsertOne {
+// UpdateMinOrderDurationSeconds sets the "min_order_duration_seconds" field to the value that was provided on create.
+func (u *AppFeeUpsertOne) UpdateMinOrderDurationSeconds() *AppFeeUpsertOne {
 	return u.Update(func(s *AppFeeUpsert) {
-		s.UpdateMinOrderDuration()
+		s.UpdateMinOrderDurationSeconds()
 	})
 }
 
-// ClearMinOrderDuration clears the value of the "min_order_duration" field.
-func (u *AppFeeUpsertOne) ClearMinOrderDuration() *AppFeeUpsertOne {
+// ClearMinOrderDurationSeconds clears the value of the "min_order_duration_seconds" field.
+func (u *AppFeeUpsertOne) ClearMinOrderDurationSeconds() *AppFeeUpsertOne {
 	return u.Update(func(s *AppFeeUpsert) {
-		s.ClearMinOrderDuration()
+		s.ClearMinOrderDurationSeconds()
 	})
 }
 
@@ -1067,31 +1067,31 @@ func (u *AppFeeUpsertBulk) ClearUnitValue() *AppFeeUpsertBulk {
 	})
 }
 
-// SetMinOrderDuration sets the "min_order_duration" field.
-func (u *AppFeeUpsertBulk) SetMinOrderDuration(v uint32) *AppFeeUpsertBulk {
+// SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
+func (u *AppFeeUpsertBulk) SetMinOrderDurationSeconds(v uint32) *AppFeeUpsertBulk {
 	return u.Update(func(s *AppFeeUpsert) {
-		s.SetMinOrderDuration(v)
+		s.SetMinOrderDurationSeconds(v)
 	})
 }
 
-// AddMinOrderDuration adds v to the "min_order_duration" field.
-func (u *AppFeeUpsertBulk) AddMinOrderDuration(v uint32) *AppFeeUpsertBulk {
+// AddMinOrderDurationSeconds adds v to the "min_order_duration_seconds" field.
+func (u *AppFeeUpsertBulk) AddMinOrderDurationSeconds(v uint32) *AppFeeUpsertBulk {
 	return u.Update(func(s *AppFeeUpsert) {
-		s.AddMinOrderDuration(v)
+		s.AddMinOrderDurationSeconds(v)
 	})
 }
 
-// UpdateMinOrderDuration sets the "min_order_duration" field to the value that was provided on create.
-func (u *AppFeeUpsertBulk) UpdateMinOrderDuration() *AppFeeUpsertBulk {
+// UpdateMinOrderDurationSeconds sets the "min_order_duration_seconds" field to the value that was provided on create.
+func (u *AppFeeUpsertBulk) UpdateMinOrderDurationSeconds() *AppFeeUpsertBulk {
 	return u.Update(func(s *AppFeeUpsert) {
-		s.UpdateMinOrderDuration()
+		s.UpdateMinOrderDurationSeconds()
 	})
 }
 
-// ClearMinOrderDuration clears the value of the "min_order_duration" field.
-func (u *AppFeeUpsertBulk) ClearMinOrderDuration() *AppFeeUpsertBulk {
+// ClearMinOrderDurationSeconds clears the value of the "min_order_duration_seconds" field.
+func (u *AppFeeUpsertBulk) ClearMinOrderDurationSeconds() *AppFeeUpsertBulk {
 	return u.Update(func(s *AppFeeUpsert) {
-		s.ClearMinOrderDuration()
+		s.ClearMinOrderDurationSeconds()
 	})
 }
 

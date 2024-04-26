@@ -41,10 +41,10 @@ const (
 	FieldRedeemable = "redeemable"
 	// FieldRedeemDelayHours holds the string denoting the redeem_delay_hours field in the database.
 	FieldRedeemDelayHours = "redeem_delay_hours"
-	// FieldDurationType holds the string denoting the duration_type field in the database.
-	FieldDurationType = "duration_type"
-	// FieldDuration holds the string denoting the duration field in the database.
-	FieldDuration = "duration"
+	// FieldDurationDisplayType holds the string denoting the duration_display_type field in the database.
+	FieldDurationDisplayType = "duration_display_type"
+	// FieldDurationSeconds holds the string denoting the duration_seconds field in the database.
+	FieldDurationSeconds = "duration_seconds"
 	// Table holds the table name of the fbmcrowdfunding in the database.
 	Table = "fbm_crowd_fundings"
 )
@@ -66,8 +66,8 @@ var Columns = []string{
 	FieldDepositCoinTypeID,
 	FieldRedeemable,
 	FieldRedeemDelayHours,
-	FieldDurationType,
-	FieldDuration,
+	FieldDurationDisplayType,
+	FieldDurationSeconds,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -119,8 +119,8 @@ var (
 	DefaultRedeemable bool
 	// DefaultRedeemDelayHours holds the default value on creation for the "redeem_delay_hours" field.
 	DefaultRedeemDelayHours uint32
-	// DefaultDurationType holds the default value on creation for the "duration_type" field.
-	DefaultDurationType string
-	// DefaultDuration holds the default value on creation for the "duration" field.
-	DefaultDuration uint32
+	// DefaultDurationDisplayType holds the default value on creation for the "duration_display_type" field.
+	DefaultDurationDisplayType string
+	// DefaultDurationSeconds holds the default value on creation for the "duration_seconds" field.
+	DefaultDurationSeconds uint32
 )

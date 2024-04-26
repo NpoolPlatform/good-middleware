@@ -137,10 +137,10 @@ func init() {
 	appfeeDescUnitValue := appfeeFields[1].Descriptor()
 	// appfee.DefaultUnitValue holds the default value on creation for the unit_value field.
 	appfee.DefaultUnitValue = appfeeDescUnitValue.Default.(decimal.Decimal)
-	// appfeeDescMinOrderDuration is the schema descriptor for min_order_duration field.
-	appfeeDescMinOrderDuration := appfeeFields[2].Descriptor()
-	// appfee.DefaultMinOrderDuration holds the default value on creation for the min_order_duration field.
-	appfee.DefaultMinOrderDuration = appfeeDescMinOrderDuration.Default.(uint32)
+	// appfeeDescMinOrderDurationSeconds is the schema descriptor for min_order_duration_seconds field.
+	appfeeDescMinOrderDurationSeconds := appfeeFields[2].Descriptor()
+	// appfee.DefaultMinOrderDurationSeconds holds the default value on creation for the min_order_duration_seconds field.
+	appfee.DefaultMinOrderDurationSeconds = appfeeDescMinOrderDurationSeconds.Default.(uint32)
 	appgoodMixin := schema.AppGood{}.Mixin()
 	appgood.Policy = privacy.NewPolicies(appgoodMixin[0], schema.AppGood{})
 	appgood.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -777,14 +777,14 @@ func init() {
 	apppowerrentalDescMaxUserAmount := apppowerrentalFields[7].Descriptor()
 	// apppowerrental.DefaultMaxUserAmount holds the default value on creation for the max_user_amount field.
 	apppowerrental.DefaultMaxUserAmount = apppowerrentalDescMaxUserAmount.Default.(decimal.Decimal)
-	// apppowerrentalDescMinOrderDuration is the schema descriptor for min_order_duration field.
-	apppowerrentalDescMinOrderDuration := apppowerrentalFields[8].Descriptor()
-	// apppowerrental.DefaultMinOrderDuration holds the default value on creation for the min_order_duration field.
-	apppowerrental.DefaultMinOrderDuration = apppowerrentalDescMinOrderDuration.Default.(uint32)
-	// apppowerrentalDescMaxOrderDuration is the schema descriptor for max_order_duration field.
-	apppowerrentalDescMaxOrderDuration := apppowerrentalFields[9].Descriptor()
-	// apppowerrental.DefaultMaxOrderDuration holds the default value on creation for the max_order_duration field.
-	apppowerrental.DefaultMaxOrderDuration = apppowerrentalDescMaxOrderDuration.Default.(uint32)
+	// apppowerrentalDescMinOrderDurationSeconds is the schema descriptor for min_order_duration_seconds field.
+	apppowerrentalDescMinOrderDurationSeconds := apppowerrentalFields[8].Descriptor()
+	// apppowerrental.DefaultMinOrderDurationSeconds holds the default value on creation for the min_order_duration_seconds field.
+	apppowerrental.DefaultMinOrderDurationSeconds = apppowerrentalDescMinOrderDurationSeconds.Default.(uint32)
+	// apppowerrentalDescMaxOrderDurationSeconds is the schema descriptor for max_order_duration_seconds field.
+	apppowerrentalDescMaxOrderDurationSeconds := apppowerrentalFields[9].Descriptor()
+	// apppowerrental.DefaultMaxOrderDurationSeconds holds the default value on creation for the max_order_duration_seconds field.
+	apppowerrental.DefaultMaxOrderDurationSeconds = apppowerrentalDescMaxOrderDurationSeconds.Default.(uint32)
 	// apppowerrentalDescUnitPrice is the schema descriptor for unit_price field.
 	apppowerrentalDescUnitPrice := apppowerrentalFields[10].Descriptor()
 	// apppowerrental.DefaultUnitPrice holds the default value on creation for the unit_price field.
@@ -847,10 +847,10 @@ func init() {
 	appsimulatepowerrentalDescOrderUnits := appsimulatepowerrentalFields[2].Descriptor()
 	// appsimulatepowerrental.DefaultOrderUnits holds the default value on creation for the order_units field.
 	appsimulatepowerrental.DefaultOrderUnits = appsimulatepowerrentalDescOrderUnits.Default.(decimal.Decimal)
-	// appsimulatepowerrentalDescOrderDuration is the schema descriptor for order_duration field.
-	appsimulatepowerrentalDescOrderDuration := appsimulatepowerrentalFields[3].Descriptor()
-	// appsimulatepowerrental.DefaultOrderDuration holds the default value on creation for the order_duration field.
-	appsimulatepowerrental.DefaultOrderDuration = appsimulatepowerrentalDescOrderDuration.Default.(uint32)
+	// appsimulatepowerrentalDescOrderDurationSeconds is the schema descriptor for order_duration_seconds field.
+	appsimulatepowerrentalDescOrderDurationSeconds := appsimulatepowerrentalFields[3].Descriptor()
+	// appsimulatepowerrental.DefaultOrderDurationSeconds holds the default value on creation for the order_duration_seconds field.
+	appsimulatepowerrental.DefaultOrderDurationSeconds = appsimulatepowerrentalDescOrderDurationSeconds.Default.(uint32)
 	appstockMixin := schema.AppStock{}.Mixin()
 	appstock.Policy = privacy.NewPolicies(appstockMixin[0], schema.AppStock{})
 	appstock.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -1383,14 +1383,14 @@ func init() {
 	fbmcrowdfundingDescRedeemDelayHours := fbmcrowdfundingFields[9].Descriptor()
 	// fbmcrowdfunding.DefaultRedeemDelayHours holds the default value on creation for the redeem_delay_hours field.
 	fbmcrowdfunding.DefaultRedeemDelayHours = fbmcrowdfundingDescRedeemDelayHours.Default.(uint32)
-	// fbmcrowdfundingDescDurationType is the schema descriptor for duration_type field.
-	fbmcrowdfundingDescDurationType := fbmcrowdfundingFields[10].Descriptor()
-	// fbmcrowdfunding.DefaultDurationType holds the default value on creation for the duration_type field.
-	fbmcrowdfunding.DefaultDurationType = fbmcrowdfundingDescDurationType.Default.(string)
-	// fbmcrowdfundingDescDuration is the schema descriptor for duration field.
-	fbmcrowdfundingDescDuration := fbmcrowdfundingFields[11].Descriptor()
-	// fbmcrowdfunding.DefaultDuration holds the default value on creation for the duration field.
-	fbmcrowdfunding.DefaultDuration = fbmcrowdfundingDescDuration.Default.(uint32)
+	// fbmcrowdfundingDescDurationDisplayType is the schema descriptor for duration_display_type field.
+	fbmcrowdfundingDescDurationDisplayType := fbmcrowdfundingFields[10].Descriptor()
+	// fbmcrowdfunding.DefaultDurationDisplayType holds the default value on creation for the duration_display_type field.
+	fbmcrowdfunding.DefaultDurationDisplayType = fbmcrowdfundingDescDurationDisplayType.Default.(string)
+	// fbmcrowdfundingDescDurationSeconds is the schema descriptor for duration_seconds field.
+	fbmcrowdfundingDescDurationSeconds := fbmcrowdfundingFields[11].Descriptor()
+	// fbmcrowdfunding.DefaultDurationSeconds holds the default value on creation for the duration_seconds field.
+	fbmcrowdfunding.DefaultDurationSeconds = fbmcrowdfundingDescDurationSeconds.Default.(uint32)
 	feeMixin := schema.Fee{}.Mixin()
 	fee.Policy = privacy.NewPolicies(feeMixin[0], schema.Fee{})
 	fee.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -1437,10 +1437,10 @@ func init() {
 	feeDescUnitValue := feeFields[2].Descriptor()
 	// fee.DefaultUnitValue holds the default value on creation for the unit_value field.
 	fee.DefaultUnitValue = feeDescUnitValue.Default.(decimal.Decimal)
-	// feeDescDurationType is the schema descriptor for duration_type field.
-	feeDescDurationType := feeFields[3].Descriptor()
-	// fee.DefaultDurationType holds the default value on creation for the duration_type field.
-	fee.DefaultDurationType = feeDescDurationType.Default.(string)
+	// feeDescDurationDisplayType is the schema descriptor for duration_display_type field.
+	feeDescDurationDisplayType := feeFields[3].Descriptor()
+	// fee.DefaultDurationDisplayType holds the default value on creation for the duration_display_type field.
+	fee.DefaultDurationDisplayType = feeDescDurationDisplayType.Default.(string)
 	goodMixin := schema.Good{}.Mixin()
 	good.Policy = privacy.NewPolicies(goodMixin[0], schema.Good{})
 	good.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -1981,10 +1981,10 @@ func init() {
 	powerrentalDescUnitLockDeposit := powerrentalFields[7].Descriptor()
 	// powerrental.DefaultUnitLockDeposit holds the default value on creation for the unit_lock_deposit field.
 	powerrental.DefaultUnitLockDeposit = powerrentalDescUnitLockDeposit.Default.(decimal.Decimal)
-	// powerrentalDescDurationType is the schema descriptor for duration_type field.
-	powerrentalDescDurationType := powerrentalFields[8].Descriptor()
-	// powerrental.DefaultDurationType holds the default value on creation for the duration_type field.
-	powerrental.DefaultDurationType = powerrentalDescDurationType.Default.(string)
+	// powerrentalDescDurationDisplayType is the schema descriptor for duration_display_type field.
+	powerrentalDescDurationDisplayType := powerrentalFields[8].Descriptor()
+	// powerrental.DefaultDurationDisplayType holds the default value on creation for the duration_display_type field.
+	powerrental.DefaultDurationDisplayType = powerrentalDescDurationDisplayType.Default.(string)
 	// powerrentalDescStockMode is the schema descriptor for stock_mode field.
 	powerrentalDescStockMode := powerrentalFields[9].Descriptor()
 	// powerrental.DefaultStockMode holds the default value on creation for the stock_mode field.

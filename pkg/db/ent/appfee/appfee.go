@@ -25,8 +25,8 @@ const (
 	FieldAppGoodID = "app_good_id"
 	// FieldUnitValue holds the string denoting the unit_value field in the database.
 	FieldUnitValue = "unit_value"
-	// FieldMinOrderDuration holds the string denoting the min_order_duration field in the database.
-	FieldMinOrderDuration = "min_order_duration"
+	// FieldMinOrderDurationSeconds holds the string denoting the min_order_duration_seconds field in the database.
+	FieldMinOrderDurationSeconds = "min_order_duration_seconds"
 	// Table holds the table name of the appfee in the database.
 	Table = "app_fees"
 )
@@ -40,7 +40,7 @@ var Columns = []string{
 	FieldEntID,
 	FieldAppGoodID,
 	FieldUnitValue,
-	FieldMinOrderDuration,
+	FieldMinOrderDurationSeconds,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -76,6 +76,6 @@ var (
 	DefaultAppGoodID func() uuid.UUID
 	// DefaultUnitValue holds the default value on creation for the "unit_value" field.
 	DefaultUnitValue decimal.Decimal
-	// DefaultMinOrderDuration holds the default value on creation for the "min_order_duration" field.
-	DefaultMinOrderDuration uint32
+	// DefaultMinOrderDurationSeconds holds the default value on creation for the "min_order_duration_seconds" field.
+	DefaultMinOrderDurationSeconds uint32
 )

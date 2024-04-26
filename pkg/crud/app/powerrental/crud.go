@@ -22,8 +22,8 @@ type Req struct {
 	MinOrderAmount               *decimal.Decimal
 	MaxOrderAmount               *decimal.Decimal
 	MaxUserAmount                *decimal.Decimal
-	MinOrderDuration             *uint32
-	MaxOrderDuration             *uint32
+	MinOrderDurationSeconds      *uint32
+	MaxOrderDurationSeconds      *uint32
 	UnitPrice                    *decimal.Decimal
 	SaleStartAt                  *uint32
 	SaleEndAt                    *uint32
@@ -62,11 +62,11 @@ func CreateSet(c *ent.AppPowerRentalCreate, req *Req) *ent.AppPowerRentalCreate 
 	if req.MaxUserAmount != nil {
 		c.SetMaxUserAmount(*req.MaxUserAmount)
 	}
-	if req.MinOrderDuration != nil {
-		c.SetMinOrderDuration(*req.MinOrderDuration)
+	if req.MinOrderDurationSeconds != nil {
+		c.SetMinOrderDurationSeconds(*req.MinOrderDurationSeconds)
 	}
-	if req.MaxOrderDuration != nil {
-		c.SetMaxOrderDuration(*req.MaxOrderDuration)
+	if req.MaxOrderDurationSeconds != nil {
+		c.SetMaxOrderDurationSeconds(*req.MaxOrderDurationSeconds)
 	}
 	if req.UnitPrice != nil {
 		c.SetUnitPrice(*req.UnitPrice)
@@ -112,11 +112,11 @@ func UpdateSet(u *ent.AppPowerRentalUpdateOne, req *Req) *ent.AppPowerRentalUpda
 	if req.MaxUserAmount != nil {
 		u.SetMaxUserAmount(*req.MaxUserAmount)
 	}
-	if req.MinOrderDuration != nil {
-		u.SetMinOrderDuration(*req.MinOrderDuration)
+	if req.MinOrderDurationSeconds != nil {
+		u.SetMinOrderDurationSeconds(*req.MinOrderDurationSeconds)
 	}
-	if req.MaxOrderDuration != nil {
-		u.SetMaxOrderDuration(*req.MaxOrderDuration)
+	if req.MaxOrderDurationSeconds != nil {
+		u.SetMaxOrderDurationSeconds(*req.MaxOrderDurationSeconds)
 	}
 	if req.UnitPrice != nil {
 		u.SetUnitPrice(*req.UnitPrice)

@@ -27,8 +27,8 @@ const (
 	FieldSettlementType = "settlement_type"
 	// FieldUnitValue holds the string denoting the unit_value field in the database.
 	FieldUnitValue = "unit_value"
-	// FieldDurationType holds the string denoting the duration_type field in the database.
-	FieldDurationType = "duration_type"
+	// FieldDurationDisplayType holds the string denoting the duration_display_type field in the database.
+	FieldDurationDisplayType = "duration_display_type"
 	// Table holds the table name of the fee in the database.
 	Table = "fees"
 )
@@ -43,7 +43,7 @@ var Columns = []string{
 	FieldGoodID,
 	FieldSettlementType,
 	FieldUnitValue,
-	FieldDurationType,
+	FieldDurationDisplayType,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -81,6 +81,6 @@ var (
 	DefaultSettlementType string
 	// DefaultUnitValue holds the default value on creation for the "unit_value" field.
 	DefaultUnitValue decimal.Decimal
-	// DefaultDurationType holds the default value on creation for the "duration_type" field.
-	DefaultDurationType string
+	// DefaultDurationDisplayType holds the default value on creation for the "duration_display_type" field.
+	DefaultDurationDisplayType string
 )

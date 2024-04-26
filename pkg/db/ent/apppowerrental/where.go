@@ -164,17 +164,17 @@ func MaxUserAmount(v decimal.Decimal) predicate.AppPowerRental {
 	})
 }
 
-// MinOrderDuration applies equality check predicate on the "min_order_duration" field. It's identical to MinOrderDurationEQ.
-func MinOrderDuration(v uint32) predicate.AppPowerRental {
+// MinOrderDurationSeconds applies equality check predicate on the "min_order_duration_seconds" field. It's identical to MinOrderDurationSecondsEQ.
+func MinOrderDurationSeconds(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMinOrderDuration), v))
+		s.Where(sql.EQ(s.C(FieldMinOrderDurationSeconds), v))
 	})
 }
 
-// MaxOrderDuration applies equality check predicate on the "max_order_duration" field. It's identical to MaxOrderDurationEQ.
-func MaxOrderDuration(v uint32) predicate.AppPowerRental {
+// MaxOrderDurationSeconds applies equality check predicate on the "max_order_duration_seconds" field. It's identical to MaxOrderDurationSecondsEQ.
+func MaxOrderDurationSeconds(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMaxOrderDuration), v))
+		s.Where(sql.EQ(s.C(FieldMaxOrderDurationSeconds), v))
 	})
 }
 
@@ -1085,159 +1085,159 @@ func MaxUserAmountNotNil() predicate.AppPowerRental {
 	})
 }
 
-// MinOrderDurationEQ applies the EQ predicate on the "min_order_duration" field.
-func MinOrderDurationEQ(v uint32) predicate.AppPowerRental {
+// MinOrderDurationSecondsEQ applies the EQ predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsEQ(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMinOrderDuration), v))
+		s.Where(sql.EQ(s.C(FieldMinOrderDurationSeconds), v))
 	})
 }
 
-// MinOrderDurationNEQ applies the NEQ predicate on the "min_order_duration" field.
-func MinOrderDurationNEQ(v uint32) predicate.AppPowerRental {
+// MinOrderDurationSecondsNEQ applies the NEQ predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsNEQ(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldMinOrderDuration), v))
+		s.Where(sql.NEQ(s.C(FieldMinOrderDurationSeconds), v))
 	})
 }
 
-// MinOrderDurationIn applies the In predicate on the "min_order_duration" field.
-func MinOrderDurationIn(vs ...uint32) predicate.AppPowerRental {
+// MinOrderDurationSecondsIn applies the In predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsIn(vs ...uint32) predicate.AppPowerRental {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldMinOrderDuration), v...))
+		s.Where(sql.In(s.C(FieldMinOrderDurationSeconds), v...))
 	})
 }
 
-// MinOrderDurationNotIn applies the NotIn predicate on the "min_order_duration" field.
-func MinOrderDurationNotIn(vs ...uint32) predicate.AppPowerRental {
+// MinOrderDurationSecondsNotIn applies the NotIn predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsNotIn(vs ...uint32) predicate.AppPowerRental {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldMinOrderDuration), v...))
+		s.Where(sql.NotIn(s.C(FieldMinOrderDurationSeconds), v...))
 	})
 }
 
-// MinOrderDurationGT applies the GT predicate on the "min_order_duration" field.
-func MinOrderDurationGT(v uint32) predicate.AppPowerRental {
+// MinOrderDurationSecondsGT applies the GT predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsGT(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldMinOrderDuration), v))
+		s.Where(sql.GT(s.C(FieldMinOrderDurationSeconds), v))
 	})
 }
 
-// MinOrderDurationGTE applies the GTE predicate on the "min_order_duration" field.
-func MinOrderDurationGTE(v uint32) predicate.AppPowerRental {
+// MinOrderDurationSecondsGTE applies the GTE predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsGTE(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldMinOrderDuration), v))
+		s.Where(sql.GTE(s.C(FieldMinOrderDurationSeconds), v))
 	})
 }
 
-// MinOrderDurationLT applies the LT predicate on the "min_order_duration" field.
-func MinOrderDurationLT(v uint32) predicate.AppPowerRental {
+// MinOrderDurationSecondsLT applies the LT predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsLT(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldMinOrderDuration), v))
+		s.Where(sql.LT(s.C(FieldMinOrderDurationSeconds), v))
 	})
 }
 
-// MinOrderDurationLTE applies the LTE predicate on the "min_order_duration" field.
-func MinOrderDurationLTE(v uint32) predicate.AppPowerRental {
+// MinOrderDurationSecondsLTE applies the LTE predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsLTE(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldMinOrderDuration), v))
+		s.Where(sql.LTE(s.C(FieldMinOrderDurationSeconds), v))
 	})
 }
 
-// MinOrderDurationIsNil applies the IsNil predicate on the "min_order_duration" field.
-func MinOrderDurationIsNil() predicate.AppPowerRental {
+// MinOrderDurationSecondsIsNil applies the IsNil predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsIsNil() predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldMinOrderDuration)))
+		s.Where(sql.IsNull(s.C(FieldMinOrderDurationSeconds)))
 	})
 }
 
-// MinOrderDurationNotNil applies the NotNil predicate on the "min_order_duration" field.
-func MinOrderDurationNotNil() predicate.AppPowerRental {
+// MinOrderDurationSecondsNotNil applies the NotNil predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsNotNil() predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldMinOrderDuration)))
+		s.Where(sql.NotNull(s.C(FieldMinOrderDurationSeconds)))
 	})
 }
 
-// MaxOrderDurationEQ applies the EQ predicate on the "max_order_duration" field.
-func MaxOrderDurationEQ(v uint32) predicate.AppPowerRental {
+// MaxOrderDurationSecondsEQ applies the EQ predicate on the "max_order_duration_seconds" field.
+func MaxOrderDurationSecondsEQ(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMaxOrderDuration), v))
+		s.Where(sql.EQ(s.C(FieldMaxOrderDurationSeconds), v))
 	})
 }
 
-// MaxOrderDurationNEQ applies the NEQ predicate on the "max_order_duration" field.
-func MaxOrderDurationNEQ(v uint32) predicate.AppPowerRental {
+// MaxOrderDurationSecondsNEQ applies the NEQ predicate on the "max_order_duration_seconds" field.
+func MaxOrderDurationSecondsNEQ(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldMaxOrderDuration), v))
+		s.Where(sql.NEQ(s.C(FieldMaxOrderDurationSeconds), v))
 	})
 }
 
-// MaxOrderDurationIn applies the In predicate on the "max_order_duration" field.
-func MaxOrderDurationIn(vs ...uint32) predicate.AppPowerRental {
+// MaxOrderDurationSecondsIn applies the In predicate on the "max_order_duration_seconds" field.
+func MaxOrderDurationSecondsIn(vs ...uint32) predicate.AppPowerRental {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldMaxOrderDuration), v...))
+		s.Where(sql.In(s.C(FieldMaxOrderDurationSeconds), v...))
 	})
 }
 
-// MaxOrderDurationNotIn applies the NotIn predicate on the "max_order_duration" field.
-func MaxOrderDurationNotIn(vs ...uint32) predicate.AppPowerRental {
+// MaxOrderDurationSecondsNotIn applies the NotIn predicate on the "max_order_duration_seconds" field.
+func MaxOrderDurationSecondsNotIn(vs ...uint32) predicate.AppPowerRental {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldMaxOrderDuration), v...))
+		s.Where(sql.NotIn(s.C(FieldMaxOrderDurationSeconds), v...))
 	})
 }
 
-// MaxOrderDurationGT applies the GT predicate on the "max_order_duration" field.
-func MaxOrderDurationGT(v uint32) predicate.AppPowerRental {
+// MaxOrderDurationSecondsGT applies the GT predicate on the "max_order_duration_seconds" field.
+func MaxOrderDurationSecondsGT(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldMaxOrderDuration), v))
+		s.Where(sql.GT(s.C(FieldMaxOrderDurationSeconds), v))
 	})
 }
 
-// MaxOrderDurationGTE applies the GTE predicate on the "max_order_duration" field.
-func MaxOrderDurationGTE(v uint32) predicate.AppPowerRental {
+// MaxOrderDurationSecondsGTE applies the GTE predicate on the "max_order_duration_seconds" field.
+func MaxOrderDurationSecondsGTE(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldMaxOrderDuration), v))
+		s.Where(sql.GTE(s.C(FieldMaxOrderDurationSeconds), v))
 	})
 }
 
-// MaxOrderDurationLT applies the LT predicate on the "max_order_duration" field.
-func MaxOrderDurationLT(v uint32) predicate.AppPowerRental {
+// MaxOrderDurationSecondsLT applies the LT predicate on the "max_order_duration_seconds" field.
+func MaxOrderDurationSecondsLT(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldMaxOrderDuration), v))
+		s.Where(sql.LT(s.C(FieldMaxOrderDurationSeconds), v))
 	})
 }
 
-// MaxOrderDurationLTE applies the LTE predicate on the "max_order_duration" field.
-func MaxOrderDurationLTE(v uint32) predicate.AppPowerRental {
+// MaxOrderDurationSecondsLTE applies the LTE predicate on the "max_order_duration_seconds" field.
+func MaxOrderDurationSecondsLTE(v uint32) predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldMaxOrderDuration), v))
+		s.Where(sql.LTE(s.C(FieldMaxOrderDurationSeconds), v))
 	})
 }
 
-// MaxOrderDurationIsNil applies the IsNil predicate on the "max_order_duration" field.
-func MaxOrderDurationIsNil() predicate.AppPowerRental {
+// MaxOrderDurationSecondsIsNil applies the IsNil predicate on the "max_order_duration_seconds" field.
+func MaxOrderDurationSecondsIsNil() predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldMaxOrderDuration)))
+		s.Where(sql.IsNull(s.C(FieldMaxOrderDurationSeconds)))
 	})
 }
 
-// MaxOrderDurationNotNil applies the NotNil predicate on the "max_order_duration" field.
-func MaxOrderDurationNotNil() predicate.AppPowerRental {
+// MaxOrderDurationSecondsNotNil applies the NotNil predicate on the "max_order_duration_seconds" field.
+func MaxOrderDurationSecondsNotNil() predicate.AppPowerRental {
 	return predicate.AppPowerRental(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldMaxOrderDuration)))
+		s.Where(sql.NotNull(s.C(FieldMaxOrderDurationSeconds)))
 	})
 }
 

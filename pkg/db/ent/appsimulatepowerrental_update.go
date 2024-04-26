@@ -159,30 +159,30 @@ func (aspru *AppSimulatePowerRentalUpdate) ClearOrderUnits() *AppSimulatePowerRe
 	return aspru
 }
 
-// SetOrderDuration sets the "order_duration" field.
-func (aspru *AppSimulatePowerRentalUpdate) SetOrderDuration(u uint32) *AppSimulatePowerRentalUpdate {
-	aspru.mutation.ResetOrderDuration()
-	aspru.mutation.SetOrderDuration(u)
+// SetOrderDurationSeconds sets the "order_duration_seconds" field.
+func (aspru *AppSimulatePowerRentalUpdate) SetOrderDurationSeconds(u uint32) *AppSimulatePowerRentalUpdate {
+	aspru.mutation.ResetOrderDurationSeconds()
+	aspru.mutation.SetOrderDurationSeconds(u)
 	return aspru
 }
 
-// SetNillableOrderDuration sets the "order_duration" field if the given value is not nil.
-func (aspru *AppSimulatePowerRentalUpdate) SetNillableOrderDuration(u *uint32) *AppSimulatePowerRentalUpdate {
+// SetNillableOrderDurationSeconds sets the "order_duration_seconds" field if the given value is not nil.
+func (aspru *AppSimulatePowerRentalUpdate) SetNillableOrderDurationSeconds(u *uint32) *AppSimulatePowerRentalUpdate {
 	if u != nil {
-		aspru.SetOrderDuration(*u)
+		aspru.SetOrderDurationSeconds(*u)
 	}
 	return aspru
 }
 
-// AddOrderDuration adds u to the "order_duration" field.
-func (aspru *AppSimulatePowerRentalUpdate) AddOrderDuration(u int32) *AppSimulatePowerRentalUpdate {
-	aspru.mutation.AddOrderDuration(u)
+// AddOrderDurationSeconds adds u to the "order_duration_seconds" field.
+func (aspru *AppSimulatePowerRentalUpdate) AddOrderDurationSeconds(u int32) *AppSimulatePowerRentalUpdate {
+	aspru.mutation.AddOrderDurationSeconds(u)
 	return aspru
 }
 
-// ClearOrderDuration clears the value of the "order_duration" field.
-func (aspru *AppSimulatePowerRentalUpdate) ClearOrderDuration() *AppSimulatePowerRentalUpdate {
-	aspru.mutation.ClearOrderDuration()
+// ClearOrderDurationSeconds clears the value of the "order_duration_seconds" field.
+func (aspru *AppSimulatePowerRentalUpdate) ClearOrderDurationSeconds() *AppSimulatePowerRentalUpdate {
+	aspru.mutation.ClearOrderDurationSeconds()
 	return aspru
 }
 
@@ -372,24 +372,24 @@ func (aspru *AppSimulatePowerRentalUpdate) sqlSave(ctx context.Context) (n int, 
 			Column: appsimulatepowerrental.FieldOrderUnits,
 		})
 	}
-	if value, ok := aspru.mutation.OrderDuration(); ok {
+	if value, ok := aspru.mutation.OrderDurationSeconds(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appsimulatepowerrental.FieldOrderDuration,
+			Column: appsimulatepowerrental.FieldOrderDurationSeconds,
 		})
 	}
-	if value, ok := aspru.mutation.AddedOrderDuration(); ok {
+	if value, ok := aspru.mutation.AddedOrderDurationSeconds(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appsimulatepowerrental.FieldOrderDuration,
+			Column: appsimulatepowerrental.FieldOrderDurationSeconds,
 		})
 	}
-	if aspru.mutation.OrderDurationCleared() {
+	if aspru.mutation.OrderDurationSecondsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: appsimulatepowerrental.FieldOrderDuration,
+			Column: appsimulatepowerrental.FieldOrderDurationSeconds,
 		})
 	}
 	_spec.Modifiers = aspru.modifiers
@@ -542,30 +542,30 @@ func (aspruo *AppSimulatePowerRentalUpdateOne) ClearOrderUnits() *AppSimulatePow
 	return aspruo
 }
 
-// SetOrderDuration sets the "order_duration" field.
-func (aspruo *AppSimulatePowerRentalUpdateOne) SetOrderDuration(u uint32) *AppSimulatePowerRentalUpdateOne {
-	aspruo.mutation.ResetOrderDuration()
-	aspruo.mutation.SetOrderDuration(u)
+// SetOrderDurationSeconds sets the "order_duration_seconds" field.
+func (aspruo *AppSimulatePowerRentalUpdateOne) SetOrderDurationSeconds(u uint32) *AppSimulatePowerRentalUpdateOne {
+	aspruo.mutation.ResetOrderDurationSeconds()
+	aspruo.mutation.SetOrderDurationSeconds(u)
 	return aspruo
 }
 
-// SetNillableOrderDuration sets the "order_duration" field if the given value is not nil.
-func (aspruo *AppSimulatePowerRentalUpdateOne) SetNillableOrderDuration(u *uint32) *AppSimulatePowerRentalUpdateOne {
+// SetNillableOrderDurationSeconds sets the "order_duration_seconds" field if the given value is not nil.
+func (aspruo *AppSimulatePowerRentalUpdateOne) SetNillableOrderDurationSeconds(u *uint32) *AppSimulatePowerRentalUpdateOne {
 	if u != nil {
-		aspruo.SetOrderDuration(*u)
+		aspruo.SetOrderDurationSeconds(*u)
 	}
 	return aspruo
 }
 
-// AddOrderDuration adds u to the "order_duration" field.
-func (aspruo *AppSimulatePowerRentalUpdateOne) AddOrderDuration(u int32) *AppSimulatePowerRentalUpdateOne {
-	aspruo.mutation.AddOrderDuration(u)
+// AddOrderDurationSeconds adds u to the "order_duration_seconds" field.
+func (aspruo *AppSimulatePowerRentalUpdateOne) AddOrderDurationSeconds(u int32) *AppSimulatePowerRentalUpdateOne {
+	aspruo.mutation.AddOrderDurationSeconds(u)
 	return aspruo
 }
 
-// ClearOrderDuration clears the value of the "order_duration" field.
-func (aspruo *AppSimulatePowerRentalUpdateOne) ClearOrderDuration() *AppSimulatePowerRentalUpdateOne {
-	aspruo.mutation.ClearOrderDuration()
+// ClearOrderDurationSeconds clears the value of the "order_duration_seconds" field.
+func (aspruo *AppSimulatePowerRentalUpdateOne) ClearOrderDurationSeconds() *AppSimulatePowerRentalUpdateOne {
+	aspruo.mutation.ClearOrderDurationSeconds()
 	return aspruo
 }
 
@@ -785,24 +785,24 @@ func (aspruo *AppSimulatePowerRentalUpdateOne) sqlSave(ctx context.Context) (_no
 			Column: appsimulatepowerrental.FieldOrderUnits,
 		})
 	}
-	if value, ok := aspruo.mutation.OrderDuration(); ok {
+	if value, ok := aspruo.mutation.OrderDurationSeconds(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appsimulatepowerrental.FieldOrderDuration,
+			Column: appsimulatepowerrental.FieldOrderDurationSeconds,
 		})
 	}
-	if value, ok := aspruo.mutation.AddedOrderDuration(); ok {
+	if value, ok := aspruo.mutation.AddedOrderDurationSeconds(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appsimulatepowerrental.FieldOrderDuration,
+			Column: appsimulatepowerrental.FieldOrderDurationSeconds,
 		})
 	}
-	if aspruo.mutation.OrderDurationCleared() {
+	if aspruo.mutation.OrderDurationSecondsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: appsimulatepowerrental.FieldOrderDuration,
+			Column: appsimulatepowerrental.FieldOrderDurationSeconds,
 		})
 	}
 	_spec.Modifiers = aspruo.modifiers

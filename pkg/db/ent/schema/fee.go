@@ -45,7 +45,7 @@ func (Fee) Fields() []ent.Field {
 			Optional().
 			Default(decimal.Decimal{}),
 		field.
-			String("duration_type").
+			String("duration_display_type").
 			Optional().
 			Default(types.GoodDurationType_GoodDurationByDay.String()),
 	}

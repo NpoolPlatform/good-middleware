@@ -32,7 +32,7 @@ func (s *Server) CreatePowerRental(ctx context.Context, in *npool.CreatePowerRen
 		powerrental1.WithQuantityUnitAmount(req.QuantityUnitAmount, true),
 		powerrental1.WithDeliveryAt(req.DeliveryAt, true),
 		powerrental1.WithUnitLockDeposit(req.UnitLockDeposit, false),
-		powerrental1.WithDurationType(req.DurationType, false),
+		powerrental1.WithDurationDisplayType(req.DurationDisplayType, false),
 
 		powerrental1.WithGoodType(req.GoodType, true),
 		powerrental1.WithBenefitType(req.BenefitType, true),

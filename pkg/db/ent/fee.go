@@ -31,8 +31,8 @@ type Fee struct {
 	SettlementType string `json:"settlement_type,omitempty"`
 	// UnitValue holds the value of the "unit_value" field.
 	UnitValue decimal.Decimal `json:"unit_value,omitempty"`
-	// DurationType holds the value of the "duration_type" field.
-	DurationType string `json:"duration_type,omitempty"`
+	// DurationDisplayType holds the value of the "duration_display_type" field.
+	DurationDisplayType string `json:"duration_display_type,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -44,7 +44,7 @@ func (*Fee) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case fee.FieldID, fee.FieldCreatedAt, fee.FieldUpdatedAt, fee.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case fee.FieldSettlementType, fee.FieldDurationType:
+		case fee.FieldSettlementType, fee.FieldDurationDisplayType:
 			values[i] = new(sql.NullString)
 		case fee.FieldEntID, fee.FieldGoodID:
 			values[i] = new(uuid.UUID)
@@ -111,11 +111,11 @@ func (f *Fee) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				f.UnitValue = *value
 			}
-		case fee.FieldDurationType:
+		case fee.FieldDurationDisplayType:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field duration_type", values[i])
+				return fmt.Errorf("unexpected type %T for field duration_display_type", values[i])
 			} else if value.Valid {
-				f.DurationType = value.String
+				f.DurationDisplayType = value.String
 			}
 		}
 	}
@@ -166,8 +166,8 @@ func (f *Fee) String() string {
 	builder.WriteString("unit_value=")
 	builder.WriteString(fmt.Sprintf("%v", f.UnitValue))
 	builder.WriteString(", ")
-	builder.WriteString("duration_type=")
-	builder.WriteString(f.DurationType)
+	builder.WriteString("duration_display_type=")
+	builder.WriteString(f.DurationDisplayType)
 	builder.WriteByte(')')
 	return builder.String()
 }

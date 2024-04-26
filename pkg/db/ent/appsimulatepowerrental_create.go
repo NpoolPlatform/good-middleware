@@ -121,16 +121,16 @@ func (asprc *AppSimulatePowerRentalCreate) SetNillableOrderUnits(d *decimal.Deci
 	return asprc
 }
 
-// SetOrderDuration sets the "order_duration" field.
-func (asprc *AppSimulatePowerRentalCreate) SetOrderDuration(u uint32) *AppSimulatePowerRentalCreate {
-	asprc.mutation.SetOrderDuration(u)
+// SetOrderDurationSeconds sets the "order_duration_seconds" field.
+func (asprc *AppSimulatePowerRentalCreate) SetOrderDurationSeconds(u uint32) *AppSimulatePowerRentalCreate {
+	asprc.mutation.SetOrderDurationSeconds(u)
 	return asprc
 }
 
-// SetNillableOrderDuration sets the "order_duration" field if the given value is not nil.
-func (asprc *AppSimulatePowerRentalCreate) SetNillableOrderDuration(u *uint32) *AppSimulatePowerRentalCreate {
+// SetNillableOrderDurationSeconds sets the "order_duration_seconds" field if the given value is not nil.
+func (asprc *AppSimulatePowerRentalCreate) SetNillableOrderDurationSeconds(u *uint32) *AppSimulatePowerRentalCreate {
 	if u != nil {
-		asprc.SetOrderDuration(*u)
+		asprc.SetOrderDurationSeconds(*u)
 	}
 	return asprc
 }
@@ -252,9 +252,9 @@ func (asprc *AppSimulatePowerRentalCreate) defaults() error {
 		v := appsimulatepowerrental.DefaultOrderUnits
 		asprc.mutation.SetOrderUnits(v)
 	}
-	if _, ok := asprc.mutation.OrderDuration(); !ok {
-		v := appsimulatepowerrental.DefaultOrderDuration
-		asprc.mutation.SetOrderDuration(v)
+	if _, ok := asprc.mutation.OrderDurationSeconds(); !ok {
+		v := appsimulatepowerrental.DefaultOrderDurationSeconds
+		asprc.mutation.SetOrderDurationSeconds(v)
 	}
 	return nil
 }
@@ -363,13 +363,13 @@ func (asprc *AppSimulatePowerRentalCreate) createSpec() (*AppSimulatePowerRental
 		})
 		_node.OrderUnits = value
 	}
-	if value, ok := asprc.mutation.OrderDuration(); ok {
+	if value, ok := asprc.mutation.OrderDurationSeconds(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appsimulatepowerrental.FieldOrderDuration,
+			Column: appsimulatepowerrental.FieldOrderDurationSeconds,
 		})
-		_node.OrderDuration = value
+		_node.OrderDurationSeconds = value
 	}
 	return _node, _spec
 }
@@ -545,27 +545,27 @@ func (u *AppSimulatePowerRentalUpsert) ClearOrderUnits() *AppSimulatePowerRental
 	return u
 }
 
-// SetOrderDuration sets the "order_duration" field.
-func (u *AppSimulatePowerRentalUpsert) SetOrderDuration(v uint32) *AppSimulatePowerRentalUpsert {
-	u.Set(appsimulatepowerrental.FieldOrderDuration, v)
+// SetOrderDurationSeconds sets the "order_duration_seconds" field.
+func (u *AppSimulatePowerRentalUpsert) SetOrderDurationSeconds(v uint32) *AppSimulatePowerRentalUpsert {
+	u.Set(appsimulatepowerrental.FieldOrderDurationSeconds, v)
 	return u
 }
 
-// UpdateOrderDuration sets the "order_duration" field to the value that was provided on create.
-func (u *AppSimulatePowerRentalUpsert) UpdateOrderDuration() *AppSimulatePowerRentalUpsert {
-	u.SetExcluded(appsimulatepowerrental.FieldOrderDuration)
+// UpdateOrderDurationSeconds sets the "order_duration_seconds" field to the value that was provided on create.
+func (u *AppSimulatePowerRentalUpsert) UpdateOrderDurationSeconds() *AppSimulatePowerRentalUpsert {
+	u.SetExcluded(appsimulatepowerrental.FieldOrderDurationSeconds)
 	return u
 }
 
-// AddOrderDuration adds v to the "order_duration" field.
-func (u *AppSimulatePowerRentalUpsert) AddOrderDuration(v uint32) *AppSimulatePowerRentalUpsert {
-	u.Add(appsimulatepowerrental.FieldOrderDuration, v)
+// AddOrderDurationSeconds adds v to the "order_duration_seconds" field.
+func (u *AppSimulatePowerRentalUpsert) AddOrderDurationSeconds(v uint32) *AppSimulatePowerRentalUpsert {
+	u.Add(appsimulatepowerrental.FieldOrderDurationSeconds, v)
 	return u
 }
 
-// ClearOrderDuration clears the value of the "order_duration" field.
-func (u *AppSimulatePowerRentalUpsert) ClearOrderDuration() *AppSimulatePowerRentalUpsert {
-	u.SetNull(appsimulatepowerrental.FieldOrderDuration)
+// ClearOrderDurationSeconds clears the value of the "order_duration_seconds" field.
+func (u *AppSimulatePowerRentalUpsert) ClearOrderDurationSeconds() *AppSimulatePowerRentalUpsert {
+	u.SetNull(appsimulatepowerrental.FieldOrderDurationSeconds)
 	return u
 }
 
@@ -759,31 +759,31 @@ func (u *AppSimulatePowerRentalUpsertOne) ClearOrderUnits() *AppSimulatePowerRen
 	})
 }
 
-// SetOrderDuration sets the "order_duration" field.
-func (u *AppSimulatePowerRentalUpsertOne) SetOrderDuration(v uint32) *AppSimulatePowerRentalUpsertOne {
+// SetOrderDurationSeconds sets the "order_duration_seconds" field.
+func (u *AppSimulatePowerRentalUpsertOne) SetOrderDurationSeconds(v uint32) *AppSimulatePowerRentalUpsertOne {
 	return u.Update(func(s *AppSimulatePowerRentalUpsert) {
-		s.SetOrderDuration(v)
+		s.SetOrderDurationSeconds(v)
 	})
 }
 
-// AddOrderDuration adds v to the "order_duration" field.
-func (u *AppSimulatePowerRentalUpsertOne) AddOrderDuration(v uint32) *AppSimulatePowerRentalUpsertOne {
+// AddOrderDurationSeconds adds v to the "order_duration_seconds" field.
+func (u *AppSimulatePowerRentalUpsertOne) AddOrderDurationSeconds(v uint32) *AppSimulatePowerRentalUpsertOne {
 	return u.Update(func(s *AppSimulatePowerRentalUpsert) {
-		s.AddOrderDuration(v)
+		s.AddOrderDurationSeconds(v)
 	})
 }
 
-// UpdateOrderDuration sets the "order_duration" field to the value that was provided on create.
-func (u *AppSimulatePowerRentalUpsertOne) UpdateOrderDuration() *AppSimulatePowerRentalUpsertOne {
+// UpdateOrderDurationSeconds sets the "order_duration_seconds" field to the value that was provided on create.
+func (u *AppSimulatePowerRentalUpsertOne) UpdateOrderDurationSeconds() *AppSimulatePowerRentalUpsertOne {
 	return u.Update(func(s *AppSimulatePowerRentalUpsert) {
-		s.UpdateOrderDuration()
+		s.UpdateOrderDurationSeconds()
 	})
 }
 
-// ClearOrderDuration clears the value of the "order_duration" field.
-func (u *AppSimulatePowerRentalUpsertOne) ClearOrderDuration() *AppSimulatePowerRentalUpsertOne {
+// ClearOrderDurationSeconds clears the value of the "order_duration_seconds" field.
+func (u *AppSimulatePowerRentalUpsertOne) ClearOrderDurationSeconds() *AppSimulatePowerRentalUpsertOne {
 	return u.Update(func(s *AppSimulatePowerRentalUpsert) {
-		s.ClearOrderDuration()
+		s.ClearOrderDurationSeconds()
 	})
 }
 
@@ -1142,31 +1142,31 @@ func (u *AppSimulatePowerRentalUpsertBulk) ClearOrderUnits() *AppSimulatePowerRe
 	})
 }
 
-// SetOrderDuration sets the "order_duration" field.
-func (u *AppSimulatePowerRentalUpsertBulk) SetOrderDuration(v uint32) *AppSimulatePowerRentalUpsertBulk {
+// SetOrderDurationSeconds sets the "order_duration_seconds" field.
+func (u *AppSimulatePowerRentalUpsertBulk) SetOrderDurationSeconds(v uint32) *AppSimulatePowerRentalUpsertBulk {
 	return u.Update(func(s *AppSimulatePowerRentalUpsert) {
-		s.SetOrderDuration(v)
+		s.SetOrderDurationSeconds(v)
 	})
 }
 
-// AddOrderDuration adds v to the "order_duration" field.
-func (u *AppSimulatePowerRentalUpsertBulk) AddOrderDuration(v uint32) *AppSimulatePowerRentalUpsertBulk {
+// AddOrderDurationSeconds adds v to the "order_duration_seconds" field.
+func (u *AppSimulatePowerRentalUpsertBulk) AddOrderDurationSeconds(v uint32) *AppSimulatePowerRentalUpsertBulk {
 	return u.Update(func(s *AppSimulatePowerRentalUpsert) {
-		s.AddOrderDuration(v)
+		s.AddOrderDurationSeconds(v)
 	})
 }
 
-// UpdateOrderDuration sets the "order_duration" field to the value that was provided on create.
-func (u *AppSimulatePowerRentalUpsertBulk) UpdateOrderDuration() *AppSimulatePowerRentalUpsertBulk {
+// UpdateOrderDurationSeconds sets the "order_duration_seconds" field to the value that was provided on create.
+func (u *AppSimulatePowerRentalUpsertBulk) UpdateOrderDurationSeconds() *AppSimulatePowerRentalUpsertBulk {
 	return u.Update(func(s *AppSimulatePowerRentalUpsert) {
-		s.UpdateOrderDuration()
+		s.UpdateOrderDurationSeconds()
 	})
 }
 
-// ClearOrderDuration clears the value of the "order_duration" field.
-func (u *AppSimulatePowerRentalUpsertBulk) ClearOrderDuration() *AppSimulatePowerRentalUpsertBulk {
+// ClearOrderDurationSeconds clears the value of the "order_duration_seconds" field.
+func (u *AppSimulatePowerRentalUpsertBulk) ClearOrderDurationSeconds() *AppSimulatePowerRentalUpsertBulk {
 	return u.Update(func(s *AppSimulatePowerRentalUpsert) {
-		s.ClearOrderDuration()
+		s.ClearOrderDurationSeconds()
 	})
 }
 

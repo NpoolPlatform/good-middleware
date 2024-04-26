@@ -37,10 +37,10 @@ const (
 	FieldMaxOrderAmount = "max_order_amount"
 	// FieldMaxUserAmount holds the string denoting the max_user_amount field in the database.
 	FieldMaxUserAmount = "max_user_amount"
-	// FieldMinOrderDuration holds the string denoting the min_order_duration field in the database.
-	FieldMinOrderDuration = "min_order_duration"
-	// FieldMaxOrderDuration holds the string denoting the max_order_duration field in the database.
-	FieldMaxOrderDuration = "max_order_duration"
+	// FieldMinOrderDurationSeconds holds the string denoting the min_order_duration_seconds field in the database.
+	FieldMinOrderDurationSeconds = "min_order_duration_seconds"
+	// FieldMaxOrderDurationSeconds holds the string denoting the max_order_duration_seconds field in the database.
+	FieldMaxOrderDurationSeconds = "max_order_duration_seconds"
 	// FieldUnitPrice holds the string denoting the unit_price field in the database.
 	FieldUnitPrice = "unit_price"
 	// FieldSaleStartAt holds the string denoting the sale_start_at field in the database.
@@ -72,8 +72,8 @@ var Columns = []string{
 	FieldMinOrderAmount,
 	FieldMaxOrderAmount,
 	FieldMaxUserAmount,
-	FieldMinOrderDuration,
-	FieldMaxOrderDuration,
+	FieldMinOrderDurationSeconds,
+	FieldMaxOrderDurationSeconds,
 	FieldUnitPrice,
 	FieldSaleStartAt,
 	FieldSaleEndAt,
@@ -127,10 +127,10 @@ var (
 	DefaultMaxOrderAmount decimal.Decimal
 	// DefaultMaxUserAmount holds the default value on creation for the "max_user_amount" field.
 	DefaultMaxUserAmount decimal.Decimal
-	// DefaultMinOrderDuration holds the default value on creation for the "min_order_duration" field.
-	DefaultMinOrderDuration uint32
-	// DefaultMaxOrderDuration holds the default value on creation for the "max_order_duration" field.
-	DefaultMaxOrderDuration uint32
+	// DefaultMinOrderDurationSeconds holds the default value on creation for the "min_order_duration_seconds" field.
+	DefaultMinOrderDurationSeconds uint32
+	// DefaultMaxOrderDurationSeconds holds the default value on creation for the "max_order_duration_seconds" field.
+	DefaultMaxOrderDurationSeconds uint32
 	// DefaultUnitPrice holds the default value on creation for the "unit_price" field.
 	DefaultUnitPrice decimal.Decimal
 	// DefaultSaleStartAt holds the default value on creation for the "sale_start_at" field.

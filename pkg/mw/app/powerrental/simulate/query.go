@@ -65,7 +65,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 			t1.C(entappsimulatepowerrental.FieldEntID),
 			t1.C(entappsimulatepowerrental.FieldAppGoodID),
 			t1.C(entappsimulatepowerrental.FieldOrderUnits),
-			t1.C(entappsimulatepowerrental.FieldOrderDuration),
+			t1.C(entappsimulatepowerrental.FieldOrderDurationSeconds),
 			t1.C(entappsimulatepowerrental.FieldCreatedAt),
 			t1.C(entappsimulatepowerrental.FieldUpdatedAt),
 		)

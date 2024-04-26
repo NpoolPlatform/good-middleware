@@ -13,12 +13,12 @@ import (
 )
 
 type Req struct {
-	EntID          *uuid.UUID
-	GoodID         *uuid.UUID
-	SettlementType *types.GoodSettlementType
-	UnitValue      *decimal.Decimal // Per unit per duration, cash or from profit
-	DurationType   *types.GoodDurationType
-	DeletedAt      *uint32
+	EntID               *uuid.UUID
+	GoodID              *uuid.UUID
+	SettlementType      *types.GoodSettlementType
+	UnitValue           *decimal.Decimal // Per unit per duration, cash or from profit
+	DurationDisplayType *types.GoodDurationType
+	DeletedAt           *uint32
 }
 
 func CreateSet(c *ent.FeeCreate, req *Req) *ent.FeeCreate {
@@ -34,8 +34,8 @@ func CreateSet(c *ent.FeeCreate, req *Req) *ent.FeeCreate {
 	if req.UnitValue != nil {
 		c.SetUnitValue(*req.UnitValue)
 	}
-	if req.DurationType != nil {
-		c.SetDurationType(req.DurationType.String())
+	if req.DurationDisplayType != nil {
+		c.SetDurationDisplayType(req.DurationDisplayType.String())
 	}
 	return c
 }
@@ -47,8 +47,8 @@ func UpdateSet(u *ent.FeeUpdateOne, req *Req) *ent.FeeUpdateOne {
 	if req.UnitValue != nil {
 		u.SetUnitValue(*req.UnitValue)
 	}
-	if req.DurationType != nil {
-		u.SetDurationType(req.DurationType.String())
+	if req.DurationDisplayType != nil {
+		u.SetDurationDisplayType(req.DurationDisplayType.String())
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)

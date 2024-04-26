@@ -40,9 +40,9 @@ func (AppFee) Fields() []ent.Field {
 			Default(decimal.Decimal{}),
 		// Here we do not need duration calculate type
 		// If you need the child order duration same as parent
-		// just set min_order_duration the the same as the parent duration
+		// just set min_order_duration_seconds the the same as the parent duration
 		field.
-			Uint32("min_order_duration").
+			Uint32("min_order_duration_seconds").
 			Optional().
 			Default(3),
 	}

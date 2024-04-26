@@ -219,30 +219,30 @@ func (fcfc *FbmCrowdFundingCreate) SetNillableRedeemDelayHours(u *uint32) *FbmCr
 	return fcfc
 }
 
-// SetDurationType sets the "duration_type" field.
-func (fcfc *FbmCrowdFundingCreate) SetDurationType(s string) *FbmCrowdFundingCreate {
-	fcfc.mutation.SetDurationType(s)
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (fcfc *FbmCrowdFundingCreate) SetDurationDisplayType(s string) *FbmCrowdFundingCreate {
+	fcfc.mutation.SetDurationDisplayType(s)
 	return fcfc
 }
 
-// SetNillableDurationType sets the "duration_type" field if the given value is not nil.
-func (fcfc *FbmCrowdFundingCreate) SetNillableDurationType(s *string) *FbmCrowdFundingCreate {
+// SetNillableDurationDisplayType sets the "duration_display_type" field if the given value is not nil.
+func (fcfc *FbmCrowdFundingCreate) SetNillableDurationDisplayType(s *string) *FbmCrowdFundingCreate {
 	if s != nil {
-		fcfc.SetDurationType(*s)
+		fcfc.SetDurationDisplayType(*s)
 	}
 	return fcfc
 }
 
-// SetDuration sets the "duration" field.
-func (fcfc *FbmCrowdFundingCreate) SetDuration(u uint32) *FbmCrowdFundingCreate {
-	fcfc.mutation.SetDuration(u)
+// SetDurationSeconds sets the "duration_seconds" field.
+func (fcfc *FbmCrowdFundingCreate) SetDurationSeconds(u uint32) *FbmCrowdFundingCreate {
+	fcfc.mutation.SetDurationSeconds(u)
 	return fcfc
 }
 
-// SetNillableDuration sets the "duration" field if the given value is not nil.
-func (fcfc *FbmCrowdFundingCreate) SetNillableDuration(u *uint32) *FbmCrowdFundingCreate {
+// SetNillableDurationSeconds sets the "duration_seconds" field if the given value is not nil.
+func (fcfc *FbmCrowdFundingCreate) SetNillableDurationSeconds(u *uint32) *FbmCrowdFundingCreate {
 	if u != nil {
-		fcfc.SetDuration(*u)
+		fcfc.SetDurationSeconds(*u)
 	}
 	return fcfc
 }
@@ -406,13 +406,13 @@ func (fcfc *FbmCrowdFundingCreate) defaults() error {
 		v := fbmcrowdfunding.DefaultRedeemDelayHours
 		fcfc.mutation.SetRedeemDelayHours(v)
 	}
-	if _, ok := fcfc.mutation.DurationType(); !ok {
-		v := fbmcrowdfunding.DefaultDurationType
-		fcfc.mutation.SetDurationType(v)
+	if _, ok := fcfc.mutation.DurationDisplayType(); !ok {
+		v := fbmcrowdfunding.DefaultDurationDisplayType
+		fcfc.mutation.SetDurationDisplayType(v)
 	}
-	if _, ok := fcfc.mutation.Duration(); !ok {
-		v := fbmcrowdfunding.DefaultDuration
-		fcfc.mutation.SetDuration(v)
+	if _, ok := fcfc.mutation.DurationSeconds(); !ok {
+		v := fbmcrowdfunding.DefaultDurationSeconds
+		fcfc.mutation.SetDurationSeconds(v)
 	}
 	return nil
 }
@@ -577,21 +577,21 @@ func (fcfc *FbmCrowdFundingCreate) createSpec() (*FbmCrowdFunding, *sqlgraph.Cre
 		})
 		_node.RedeemDelayHours = value
 	}
-	if value, ok := fcfc.mutation.DurationType(); ok {
+	if value, ok := fcfc.mutation.DurationDisplayType(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: fbmcrowdfunding.FieldDurationType,
+			Column: fbmcrowdfunding.FieldDurationDisplayType,
 		})
-		_node.DurationType = value
+		_node.DurationDisplayType = value
 	}
-	if value, ok := fcfc.mutation.Duration(); ok {
+	if value, ok := fcfc.mutation.DurationSeconds(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: fbmcrowdfunding.FieldDuration,
+			Column: fbmcrowdfunding.FieldDurationSeconds,
 		})
-		_node.Duration = value
+		_node.DurationSeconds = value
 	}
 	return _node, _spec
 }
@@ -917,45 +917,45 @@ func (u *FbmCrowdFundingUpsert) ClearRedeemDelayHours() *FbmCrowdFundingUpsert {
 	return u
 }
 
-// SetDurationType sets the "duration_type" field.
-func (u *FbmCrowdFundingUpsert) SetDurationType(v string) *FbmCrowdFundingUpsert {
-	u.Set(fbmcrowdfunding.FieldDurationType, v)
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (u *FbmCrowdFundingUpsert) SetDurationDisplayType(v string) *FbmCrowdFundingUpsert {
+	u.Set(fbmcrowdfunding.FieldDurationDisplayType, v)
 	return u
 }
 
-// UpdateDurationType sets the "duration_type" field to the value that was provided on create.
-func (u *FbmCrowdFundingUpsert) UpdateDurationType() *FbmCrowdFundingUpsert {
-	u.SetExcluded(fbmcrowdfunding.FieldDurationType)
+// UpdateDurationDisplayType sets the "duration_display_type" field to the value that was provided on create.
+func (u *FbmCrowdFundingUpsert) UpdateDurationDisplayType() *FbmCrowdFundingUpsert {
+	u.SetExcluded(fbmcrowdfunding.FieldDurationDisplayType)
 	return u
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (u *FbmCrowdFundingUpsert) ClearDurationType() *FbmCrowdFundingUpsert {
-	u.SetNull(fbmcrowdfunding.FieldDurationType)
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (u *FbmCrowdFundingUpsert) ClearDurationDisplayType() *FbmCrowdFundingUpsert {
+	u.SetNull(fbmcrowdfunding.FieldDurationDisplayType)
 	return u
 }
 
-// SetDuration sets the "duration" field.
-func (u *FbmCrowdFundingUpsert) SetDuration(v uint32) *FbmCrowdFundingUpsert {
-	u.Set(fbmcrowdfunding.FieldDuration, v)
+// SetDurationSeconds sets the "duration_seconds" field.
+func (u *FbmCrowdFundingUpsert) SetDurationSeconds(v uint32) *FbmCrowdFundingUpsert {
+	u.Set(fbmcrowdfunding.FieldDurationSeconds, v)
 	return u
 }
 
-// UpdateDuration sets the "duration" field to the value that was provided on create.
-func (u *FbmCrowdFundingUpsert) UpdateDuration() *FbmCrowdFundingUpsert {
-	u.SetExcluded(fbmcrowdfunding.FieldDuration)
+// UpdateDurationSeconds sets the "duration_seconds" field to the value that was provided on create.
+func (u *FbmCrowdFundingUpsert) UpdateDurationSeconds() *FbmCrowdFundingUpsert {
+	u.SetExcluded(fbmcrowdfunding.FieldDurationSeconds)
 	return u
 }
 
-// AddDuration adds v to the "duration" field.
-func (u *FbmCrowdFundingUpsert) AddDuration(v uint32) *FbmCrowdFundingUpsert {
-	u.Add(fbmcrowdfunding.FieldDuration, v)
+// AddDurationSeconds adds v to the "duration_seconds" field.
+func (u *FbmCrowdFundingUpsert) AddDurationSeconds(v uint32) *FbmCrowdFundingUpsert {
+	u.Add(fbmcrowdfunding.FieldDurationSeconds, v)
 	return u
 }
 
-// ClearDuration clears the value of the "duration" field.
-func (u *FbmCrowdFundingUpsert) ClearDuration() *FbmCrowdFundingUpsert {
-	u.SetNull(fbmcrowdfunding.FieldDuration)
+// ClearDurationSeconds clears the value of the "duration_seconds" field.
+func (u *FbmCrowdFundingUpsert) ClearDurationSeconds() *FbmCrowdFundingUpsert {
+	u.SetNull(fbmcrowdfunding.FieldDurationSeconds)
 	return u
 }
 
@@ -1324,52 +1324,52 @@ func (u *FbmCrowdFundingUpsertOne) ClearRedeemDelayHours() *FbmCrowdFundingUpser
 	})
 }
 
-// SetDurationType sets the "duration_type" field.
-func (u *FbmCrowdFundingUpsertOne) SetDurationType(v string) *FbmCrowdFundingUpsertOne {
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (u *FbmCrowdFundingUpsertOne) SetDurationDisplayType(v string) *FbmCrowdFundingUpsertOne {
 	return u.Update(func(s *FbmCrowdFundingUpsert) {
-		s.SetDurationType(v)
+		s.SetDurationDisplayType(v)
 	})
 }
 
-// UpdateDurationType sets the "duration_type" field to the value that was provided on create.
-func (u *FbmCrowdFundingUpsertOne) UpdateDurationType() *FbmCrowdFundingUpsertOne {
+// UpdateDurationDisplayType sets the "duration_display_type" field to the value that was provided on create.
+func (u *FbmCrowdFundingUpsertOne) UpdateDurationDisplayType() *FbmCrowdFundingUpsertOne {
 	return u.Update(func(s *FbmCrowdFundingUpsert) {
-		s.UpdateDurationType()
+		s.UpdateDurationDisplayType()
 	})
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (u *FbmCrowdFundingUpsertOne) ClearDurationType() *FbmCrowdFundingUpsertOne {
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (u *FbmCrowdFundingUpsertOne) ClearDurationDisplayType() *FbmCrowdFundingUpsertOne {
 	return u.Update(func(s *FbmCrowdFundingUpsert) {
-		s.ClearDurationType()
+		s.ClearDurationDisplayType()
 	})
 }
 
-// SetDuration sets the "duration" field.
-func (u *FbmCrowdFundingUpsertOne) SetDuration(v uint32) *FbmCrowdFundingUpsertOne {
+// SetDurationSeconds sets the "duration_seconds" field.
+func (u *FbmCrowdFundingUpsertOne) SetDurationSeconds(v uint32) *FbmCrowdFundingUpsertOne {
 	return u.Update(func(s *FbmCrowdFundingUpsert) {
-		s.SetDuration(v)
+		s.SetDurationSeconds(v)
 	})
 }
 
-// AddDuration adds v to the "duration" field.
-func (u *FbmCrowdFundingUpsertOne) AddDuration(v uint32) *FbmCrowdFundingUpsertOne {
+// AddDurationSeconds adds v to the "duration_seconds" field.
+func (u *FbmCrowdFundingUpsertOne) AddDurationSeconds(v uint32) *FbmCrowdFundingUpsertOne {
 	return u.Update(func(s *FbmCrowdFundingUpsert) {
-		s.AddDuration(v)
+		s.AddDurationSeconds(v)
 	})
 }
 
-// UpdateDuration sets the "duration" field to the value that was provided on create.
-func (u *FbmCrowdFundingUpsertOne) UpdateDuration() *FbmCrowdFundingUpsertOne {
+// UpdateDurationSeconds sets the "duration_seconds" field to the value that was provided on create.
+func (u *FbmCrowdFundingUpsertOne) UpdateDurationSeconds() *FbmCrowdFundingUpsertOne {
 	return u.Update(func(s *FbmCrowdFundingUpsert) {
-		s.UpdateDuration()
+		s.UpdateDurationSeconds()
 	})
 }
 
-// ClearDuration clears the value of the "duration" field.
-func (u *FbmCrowdFundingUpsertOne) ClearDuration() *FbmCrowdFundingUpsertOne {
+// ClearDurationSeconds clears the value of the "duration_seconds" field.
+func (u *FbmCrowdFundingUpsertOne) ClearDurationSeconds() *FbmCrowdFundingUpsertOne {
 	return u.Update(func(s *FbmCrowdFundingUpsert) {
-		s.ClearDuration()
+		s.ClearDurationSeconds()
 	})
 }
 
@@ -1903,52 +1903,52 @@ func (u *FbmCrowdFundingUpsertBulk) ClearRedeemDelayHours() *FbmCrowdFundingUpse
 	})
 }
 
-// SetDurationType sets the "duration_type" field.
-func (u *FbmCrowdFundingUpsertBulk) SetDurationType(v string) *FbmCrowdFundingUpsertBulk {
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (u *FbmCrowdFundingUpsertBulk) SetDurationDisplayType(v string) *FbmCrowdFundingUpsertBulk {
 	return u.Update(func(s *FbmCrowdFundingUpsert) {
-		s.SetDurationType(v)
+		s.SetDurationDisplayType(v)
 	})
 }
 
-// UpdateDurationType sets the "duration_type" field to the value that was provided on create.
-func (u *FbmCrowdFundingUpsertBulk) UpdateDurationType() *FbmCrowdFundingUpsertBulk {
+// UpdateDurationDisplayType sets the "duration_display_type" field to the value that was provided on create.
+func (u *FbmCrowdFundingUpsertBulk) UpdateDurationDisplayType() *FbmCrowdFundingUpsertBulk {
 	return u.Update(func(s *FbmCrowdFundingUpsert) {
-		s.UpdateDurationType()
+		s.UpdateDurationDisplayType()
 	})
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (u *FbmCrowdFundingUpsertBulk) ClearDurationType() *FbmCrowdFundingUpsertBulk {
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (u *FbmCrowdFundingUpsertBulk) ClearDurationDisplayType() *FbmCrowdFundingUpsertBulk {
 	return u.Update(func(s *FbmCrowdFundingUpsert) {
-		s.ClearDurationType()
+		s.ClearDurationDisplayType()
 	})
 }
 
-// SetDuration sets the "duration" field.
-func (u *FbmCrowdFundingUpsertBulk) SetDuration(v uint32) *FbmCrowdFundingUpsertBulk {
+// SetDurationSeconds sets the "duration_seconds" field.
+func (u *FbmCrowdFundingUpsertBulk) SetDurationSeconds(v uint32) *FbmCrowdFundingUpsertBulk {
 	return u.Update(func(s *FbmCrowdFundingUpsert) {
-		s.SetDuration(v)
+		s.SetDurationSeconds(v)
 	})
 }
 
-// AddDuration adds v to the "duration" field.
-func (u *FbmCrowdFundingUpsertBulk) AddDuration(v uint32) *FbmCrowdFundingUpsertBulk {
+// AddDurationSeconds adds v to the "duration_seconds" field.
+func (u *FbmCrowdFundingUpsertBulk) AddDurationSeconds(v uint32) *FbmCrowdFundingUpsertBulk {
 	return u.Update(func(s *FbmCrowdFundingUpsert) {
-		s.AddDuration(v)
+		s.AddDurationSeconds(v)
 	})
 }
 
-// UpdateDuration sets the "duration" field to the value that was provided on create.
-func (u *FbmCrowdFundingUpsertBulk) UpdateDuration() *FbmCrowdFundingUpsertBulk {
+// UpdateDurationSeconds sets the "duration_seconds" field to the value that was provided on create.
+func (u *FbmCrowdFundingUpsertBulk) UpdateDurationSeconds() *FbmCrowdFundingUpsertBulk {
 	return u.Update(func(s *FbmCrowdFundingUpsert) {
-		s.UpdateDuration()
+		s.UpdateDurationSeconds()
 	})
 }
 
-// ClearDuration clears the value of the "duration" field.
-func (u *FbmCrowdFundingUpsertBulk) ClearDuration() *FbmCrowdFundingUpsertBulk {
+// ClearDurationSeconds clears the value of the "duration_seconds" field.
+func (u *FbmCrowdFundingUpsertBulk) ClearDurationSeconds() *FbmCrowdFundingUpsertBulk {
 	return u.Update(func(s *FbmCrowdFundingUpsert) {
-		s.ClearDuration()
+		s.ClearDurationSeconds()
 	})
 }
 

@@ -27,8 +27,8 @@ const (
 	FieldCoinTypeID = "coin_type_id"
 	// FieldOrderUnits holds the string denoting the order_units field in the database.
 	FieldOrderUnits = "order_units"
-	// FieldOrderDuration holds the string denoting the order_duration field in the database.
-	FieldOrderDuration = "order_duration"
+	// FieldOrderDurationSeconds holds the string denoting the order_duration_seconds field in the database.
+	FieldOrderDurationSeconds = "order_duration_seconds"
 	// Table holds the table name of the appsimulatepowerrental in the database.
 	Table = "app_simulate_power_rentals"
 )
@@ -43,7 +43,7 @@ var Columns = []string{
 	FieldAppGoodID,
 	FieldCoinTypeID,
 	FieldOrderUnits,
-	FieldOrderDuration,
+	FieldOrderDurationSeconds,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -77,6 +77,6 @@ var (
 	DefaultEntID func() uuid.UUID
 	// DefaultOrderUnits holds the default value on creation for the "order_units" field.
 	DefaultOrderUnits decimal.Decimal
-	// DefaultOrderDuration holds the default value on creation for the "order_duration" field.
-	DefaultOrderDuration uint32
+	// DefaultOrderDurationSeconds holds the default value on creation for the "order_duration_seconds" field.
+	DefaultOrderDurationSeconds uint32
 )

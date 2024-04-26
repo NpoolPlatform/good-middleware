@@ -129,10 +129,10 @@ func UnitValue(v decimal.Decimal) predicate.Fee {
 	})
 }
 
-// DurationType applies equality check predicate on the "duration_type" field. It's identical to DurationTypeEQ.
-func DurationType(v string) predicate.Fee {
+// DurationDisplayType applies equality check predicate on the "duration_display_type" field. It's identical to DurationDisplayTypeEQ.
+func DurationDisplayType(v string) predicate.Fee {
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDurationType), v))
+		s.Where(sql.EQ(s.C(FieldDurationDisplayType), v))
 	})
 }
 
@@ -661,116 +661,116 @@ func UnitValueNotNil() predicate.Fee {
 	})
 }
 
-// DurationTypeEQ applies the EQ predicate on the "duration_type" field.
-func DurationTypeEQ(v string) predicate.Fee {
+// DurationDisplayTypeEQ applies the EQ predicate on the "duration_display_type" field.
+func DurationDisplayTypeEQ(v string) predicate.Fee {
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDurationType), v))
+		s.Where(sql.EQ(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeNEQ applies the NEQ predicate on the "duration_type" field.
-func DurationTypeNEQ(v string) predicate.Fee {
+// DurationDisplayTypeNEQ applies the NEQ predicate on the "duration_display_type" field.
+func DurationDisplayTypeNEQ(v string) predicate.Fee {
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDurationType), v))
+		s.Where(sql.NEQ(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeIn applies the In predicate on the "duration_type" field.
-func DurationTypeIn(vs ...string) predicate.Fee {
+// DurationDisplayTypeIn applies the In predicate on the "duration_display_type" field.
+func DurationDisplayTypeIn(vs ...string) predicate.Fee {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldDurationType), v...))
+		s.Where(sql.In(s.C(FieldDurationDisplayType), v...))
 	})
 }
 
-// DurationTypeNotIn applies the NotIn predicate on the "duration_type" field.
-func DurationTypeNotIn(vs ...string) predicate.Fee {
+// DurationDisplayTypeNotIn applies the NotIn predicate on the "duration_display_type" field.
+func DurationDisplayTypeNotIn(vs ...string) predicate.Fee {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldDurationType), v...))
+		s.Where(sql.NotIn(s.C(FieldDurationDisplayType), v...))
 	})
 }
 
-// DurationTypeGT applies the GT predicate on the "duration_type" field.
-func DurationTypeGT(v string) predicate.Fee {
+// DurationDisplayTypeGT applies the GT predicate on the "duration_display_type" field.
+func DurationDisplayTypeGT(v string) predicate.Fee {
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDurationType), v))
+		s.Where(sql.GT(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeGTE applies the GTE predicate on the "duration_type" field.
-func DurationTypeGTE(v string) predicate.Fee {
+// DurationDisplayTypeGTE applies the GTE predicate on the "duration_display_type" field.
+func DurationDisplayTypeGTE(v string) predicate.Fee {
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDurationType), v))
+		s.Where(sql.GTE(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeLT applies the LT predicate on the "duration_type" field.
-func DurationTypeLT(v string) predicate.Fee {
+// DurationDisplayTypeLT applies the LT predicate on the "duration_display_type" field.
+func DurationDisplayTypeLT(v string) predicate.Fee {
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDurationType), v))
+		s.Where(sql.LT(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeLTE applies the LTE predicate on the "duration_type" field.
-func DurationTypeLTE(v string) predicate.Fee {
+// DurationDisplayTypeLTE applies the LTE predicate on the "duration_display_type" field.
+func DurationDisplayTypeLTE(v string) predicate.Fee {
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDurationType), v))
+		s.Where(sql.LTE(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeContains applies the Contains predicate on the "duration_type" field.
-func DurationTypeContains(v string) predicate.Fee {
+// DurationDisplayTypeContains applies the Contains predicate on the "duration_display_type" field.
+func DurationDisplayTypeContains(v string) predicate.Fee {
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldDurationType), v))
+		s.Where(sql.Contains(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeHasPrefix applies the HasPrefix predicate on the "duration_type" field.
-func DurationTypeHasPrefix(v string) predicate.Fee {
+// DurationDisplayTypeHasPrefix applies the HasPrefix predicate on the "duration_display_type" field.
+func DurationDisplayTypeHasPrefix(v string) predicate.Fee {
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldDurationType), v))
+		s.Where(sql.HasPrefix(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeHasSuffix applies the HasSuffix predicate on the "duration_type" field.
-func DurationTypeHasSuffix(v string) predicate.Fee {
+// DurationDisplayTypeHasSuffix applies the HasSuffix predicate on the "duration_display_type" field.
+func DurationDisplayTypeHasSuffix(v string) predicate.Fee {
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldDurationType), v))
+		s.Where(sql.HasSuffix(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeIsNil applies the IsNil predicate on the "duration_type" field.
-func DurationTypeIsNil() predicate.Fee {
+// DurationDisplayTypeIsNil applies the IsNil predicate on the "duration_display_type" field.
+func DurationDisplayTypeIsNil() predicate.Fee {
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldDurationType)))
+		s.Where(sql.IsNull(s.C(FieldDurationDisplayType)))
 	})
 }
 
-// DurationTypeNotNil applies the NotNil predicate on the "duration_type" field.
-func DurationTypeNotNil() predicate.Fee {
+// DurationDisplayTypeNotNil applies the NotNil predicate on the "duration_display_type" field.
+func DurationDisplayTypeNotNil() predicate.Fee {
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldDurationType)))
+		s.Where(sql.NotNull(s.C(FieldDurationDisplayType)))
 	})
 }
 
-// DurationTypeEqualFold applies the EqualFold predicate on the "duration_type" field.
-func DurationTypeEqualFold(v string) predicate.Fee {
+// DurationDisplayTypeEqualFold applies the EqualFold predicate on the "duration_display_type" field.
+func DurationDisplayTypeEqualFold(v string) predicate.Fee {
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldDurationType), v))
+		s.Where(sql.EqualFold(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeContainsFold applies the ContainsFold predicate on the "duration_type" field.
-func DurationTypeContainsFold(v string) predicate.Fee {
+// DurationDisplayTypeContainsFold applies the ContainsFold predicate on the "duration_display_type" field.
+func DurationDisplayTypeContainsFold(v string) predicate.Fee {
 	return predicate.Fee(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldDurationType), v))
+		s.Where(sql.ContainsFold(s.C(FieldDurationDisplayType), v))
 	})
 }
 

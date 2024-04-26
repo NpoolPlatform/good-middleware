@@ -41,10 +41,10 @@ type AppPowerRental struct {
 	MaxOrderAmount decimal.Decimal `json:"max_order_amount,omitempty"`
 	// MaxUserAmount holds the value of the "max_user_amount" field.
 	MaxUserAmount decimal.Decimal `json:"max_user_amount,omitempty"`
-	// MinOrderDuration holds the value of the "min_order_duration" field.
-	MinOrderDuration uint32 `json:"min_order_duration,omitempty"`
-	// MaxOrderDuration holds the value of the "max_order_duration" field.
-	MaxOrderDuration uint32 `json:"max_order_duration,omitempty"`
+	// MinOrderDurationSeconds holds the value of the "min_order_duration_seconds" field.
+	MinOrderDurationSeconds uint32 `json:"min_order_duration_seconds,omitempty"`
+	// MaxOrderDurationSeconds holds the value of the "max_order_duration_seconds" field.
+	MaxOrderDurationSeconds uint32 `json:"max_order_duration_seconds,omitempty"`
 	// UnitPrice holds the value of the "unit_price" field.
 	UnitPrice decimal.Decimal `json:"unit_price,omitempty"`
 	// SaleStartAt holds the value of the "sale_start_at" field.
@@ -68,7 +68,7 @@ func (*AppPowerRental) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case apppowerrental.FieldEnableSetCommission, apppowerrental.FieldFixedDuration, apppowerrental.FieldPackageWithRequireds:
 			values[i] = new(sql.NullBool)
-		case apppowerrental.FieldID, apppowerrental.FieldCreatedAt, apppowerrental.FieldUpdatedAt, apppowerrental.FieldDeletedAt, apppowerrental.FieldServiceStartAt, apppowerrental.FieldCancelableBeforeStartSeconds, apppowerrental.FieldMinOrderDuration, apppowerrental.FieldMaxOrderDuration, apppowerrental.FieldSaleStartAt, apppowerrental.FieldSaleEndAt:
+		case apppowerrental.FieldID, apppowerrental.FieldCreatedAt, apppowerrental.FieldUpdatedAt, apppowerrental.FieldDeletedAt, apppowerrental.FieldServiceStartAt, apppowerrental.FieldCancelableBeforeStartSeconds, apppowerrental.FieldMinOrderDurationSeconds, apppowerrental.FieldMaxOrderDurationSeconds, apppowerrental.FieldSaleStartAt, apppowerrental.FieldSaleEndAt:
 			values[i] = new(sql.NullInt64)
 		case apppowerrental.FieldCancelMode, apppowerrental.FieldSaleMode:
 			values[i] = new(sql.NullString)
@@ -167,17 +167,17 @@ func (apr *AppPowerRental) assignValues(columns []string, values []interface{}) 
 			} else if value != nil {
 				apr.MaxUserAmount = *value
 			}
-		case apppowerrental.FieldMinOrderDuration:
+		case apppowerrental.FieldMinOrderDurationSeconds:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field min_order_duration", values[i])
+				return fmt.Errorf("unexpected type %T for field min_order_duration_seconds", values[i])
 			} else if value.Valid {
-				apr.MinOrderDuration = uint32(value.Int64)
+				apr.MinOrderDurationSeconds = uint32(value.Int64)
 			}
-		case apppowerrental.FieldMaxOrderDuration:
+		case apppowerrental.FieldMaxOrderDurationSeconds:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field max_order_duration", values[i])
+				return fmt.Errorf("unexpected type %T for field max_order_duration_seconds", values[i])
 			} else if value.Valid {
-				apr.MaxOrderDuration = uint32(value.Int64)
+				apr.MaxOrderDurationSeconds = uint32(value.Int64)
 			}
 		case apppowerrental.FieldUnitPrice:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
@@ -279,11 +279,11 @@ func (apr *AppPowerRental) String() string {
 	builder.WriteString("max_user_amount=")
 	builder.WriteString(fmt.Sprintf("%v", apr.MaxUserAmount))
 	builder.WriteString(", ")
-	builder.WriteString("min_order_duration=")
-	builder.WriteString(fmt.Sprintf("%v", apr.MinOrderDuration))
+	builder.WriteString("min_order_duration_seconds=")
+	builder.WriteString(fmt.Sprintf("%v", apr.MinOrderDurationSeconds))
 	builder.WriteString(", ")
-	builder.WriteString("max_order_duration=")
-	builder.WriteString(fmt.Sprintf("%v", apr.MaxOrderDuration))
+	builder.WriteString("max_order_duration_seconds=")
+	builder.WriteString(fmt.Sprintf("%v", apr.MaxOrderDurationSeconds))
 	builder.WriteString(", ")
 	builder.WriteString("unit_price=")
 	builder.WriteString(fmt.Sprintf("%v", apr.UnitPrice))

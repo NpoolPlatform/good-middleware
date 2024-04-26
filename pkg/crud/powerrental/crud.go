@@ -13,18 +13,18 @@ import (
 )
 
 type Req struct {
-	EntID              *uuid.UUID
-	GoodID             *uuid.UUID
-	DeviceTypeID       *uuid.UUID
-	VendorLocationID   *uuid.UUID
-	UnitPrice          *decimal.Decimal
-	QuantityUnit       *string
-	QuantityUnitAmount *decimal.Decimal
-	DeliveryAt         *uint32
-	UnitLockDeposit    *decimal.Decimal
-	DurationType       *types.GoodDurationType
-	StockMode          *types.GoodStockMode
-	DeletedAt          *uint32
+	EntID               *uuid.UUID
+	GoodID              *uuid.UUID
+	DeviceTypeID        *uuid.UUID
+	VendorLocationID    *uuid.UUID
+	UnitPrice           *decimal.Decimal
+	QuantityUnit        *string
+	QuantityUnitAmount  *decimal.Decimal
+	DeliveryAt          *uint32
+	UnitLockDeposit     *decimal.Decimal
+	DurationDisplayType *types.GoodDurationType
+	StockMode           *types.GoodStockMode
+	DeletedAt           *uint32
 }
 
 func CreateSet(c *ent.PowerRentalCreate, req *Req) *ent.PowerRentalCreate {
@@ -55,8 +55,8 @@ func CreateSet(c *ent.PowerRentalCreate, req *Req) *ent.PowerRentalCreate {
 	if req.UnitLockDeposit != nil {
 		c.SetUnitLockDeposit(*req.UnitLockDeposit)
 	}
-	if req.DurationType != nil {
-		c.SetDurationType(req.DurationType.String())
+	if req.DurationDisplayType != nil {
+		c.SetDurationDisplayType(req.DurationDisplayType.String())
 	}
 	if req.StockMode != nil {
 		c.SetStockMode(req.StockMode.String())
@@ -80,8 +80,8 @@ func UpdateSet(u *ent.PowerRentalUpdateOne, req *Req) *ent.PowerRentalUpdateOne 
 	if req.UnitLockDeposit != nil {
 		u.SetUnitLockDeposit(*req.UnitLockDeposit)
 	}
-	if req.DurationType != nil {
-		u.SetDurationType(req.DurationType.String())
+	if req.DurationDisplayType != nil {
+		u.SetDurationDisplayType(req.DurationDisplayType.String())
 	}
 	if req.StockMode != nil {
 		u.SetStockMode(req.StockMode.String())

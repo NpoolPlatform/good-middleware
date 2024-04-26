@@ -87,13 +87,13 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppFee",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			appfee.FieldCreatedAt:        {Type: field.TypeUint32, Column: appfee.FieldCreatedAt},
-			appfee.FieldUpdatedAt:        {Type: field.TypeUint32, Column: appfee.FieldUpdatedAt},
-			appfee.FieldDeletedAt:        {Type: field.TypeUint32, Column: appfee.FieldDeletedAt},
-			appfee.FieldEntID:            {Type: field.TypeUUID, Column: appfee.FieldEntID},
-			appfee.FieldAppGoodID:        {Type: field.TypeUUID, Column: appfee.FieldAppGoodID},
-			appfee.FieldUnitValue:        {Type: field.TypeOther, Column: appfee.FieldUnitValue},
-			appfee.FieldMinOrderDuration: {Type: field.TypeUint32, Column: appfee.FieldMinOrderDuration},
+			appfee.FieldCreatedAt:               {Type: field.TypeUint32, Column: appfee.FieldCreatedAt},
+			appfee.FieldUpdatedAt:               {Type: field.TypeUint32, Column: appfee.FieldUpdatedAt},
+			appfee.FieldDeletedAt:               {Type: field.TypeUint32, Column: appfee.FieldDeletedAt},
+			appfee.FieldEntID:                   {Type: field.TypeUUID, Column: appfee.FieldEntID},
+			appfee.FieldAppGoodID:               {Type: field.TypeUUID, Column: appfee.FieldAppGoodID},
+			appfee.FieldUnitValue:               {Type: field.TypeOther, Column: appfee.FieldUnitValue},
+			appfee.FieldMinOrderDurationSeconds: {Type: field.TypeUint32, Column: appfee.FieldMinOrderDurationSeconds},
 		},
 	}
 	graph.Nodes[2] = &sqlgraph.Node{
@@ -340,8 +340,8 @@ var schemaGraph = func() *sqlgraph.Schema {
 			apppowerrental.FieldMinOrderAmount:               {Type: field.TypeOther, Column: apppowerrental.FieldMinOrderAmount},
 			apppowerrental.FieldMaxOrderAmount:               {Type: field.TypeOther, Column: apppowerrental.FieldMaxOrderAmount},
 			apppowerrental.FieldMaxUserAmount:                {Type: field.TypeOther, Column: apppowerrental.FieldMaxUserAmount},
-			apppowerrental.FieldMinOrderDuration:             {Type: field.TypeUint32, Column: apppowerrental.FieldMinOrderDuration},
-			apppowerrental.FieldMaxOrderDuration:             {Type: field.TypeUint32, Column: apppowerrental.FieldMaxOrderDuration},
+			apppowerrental.FieldMinOrderDurationSeconds:      {Type: field.TypeUint32, Column: apppowerrental.FieldMinOrderDurationSeconds},
+			apppowerrental.FieldMaxOrderDurationSeconds:      {Type: field.TypeUint32, Column: apppowerrental.FieldMaxOrderDurationSeconds},
 			apppowerrental.FieldUnitPrice:                    {Type: field.TypeOther, Column: apppowerrental.FieldUnitPrice},
 			apppowerrental.FieldSaleStartAt:                  {Type: field.TypeUint32, Column: apppowerrental.FieldSaleStartAt},
 			apppowerrental.FieldSaleEndAt:                    {Type: field.TypeUint32, Column: apppowerrental.FieldSaleEndAt},
@@ -361,14 +361,14 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppSimulatePowerRental",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			appsimulatepowerrental.FieldCreatedAt:     {Type: field.TypeUint32, Column: appsimulatepowerrental.FieldCreatedAt},
-			appsimulatepowerrental.FieldUpdatedAt:     {Type: field.TypeUint32, Column: appsimulatepowerrental.FieldUpdatedAt},
-			appsimulatepowerrental.FieldDeletedAt:     {Type: field.TypeUint32, Column: appsimulatepowerrental.FieldDeletedAt},
-			appsimulatepowerrental.FieldEntID:         {Type: field.TypeUUID, Column: appsimulatepowerrental.FieldEntID},
-			appsimulatepowerrental.FieldAppGoodID:     {Type: field.TypeUUID, Column: appsimulatepowerrental.FieldAppGoodID},
-			appsimulatepowerrental.FieldCoinTypeID:    {Type: field.TypeUUID, Column: appsimulatepowerrental.FieldCoinTypeID},
-			appsimulatepowerrental.FieldOrderUnits:    {Type: field.TypeOther, Column: appsimulatepowerrental.FieldOrderUnits},
-			appsimulatepowerrental.FieldOrderDuration: {Type: field.TypeUint32, Column: appsimulatepowerrental.FieldOrderDuration},
+			appsimulatepowerrental.FieldCreatedAt:            {Type: field.TypeUint32, Column: appsimulatepowerrental.FieldCreatedAt},
+			appsimulatepowerrental.FieldUpdatedAt:            {Type: field.TypeUint32, Column: appsimulatepowerrental.FieldUpdatedAt},
+			appsimulatepowerrental.FieldDeletedAt:            {Type: field.TypeUint32, Column: appsimulatepowerrental.FieldDeletedAt},
+			appsimulatepowerrental.FieldEntID:                {Type: field.TypeUUID, Column: appsimulatepowerrental.FieldEntID},
+			appsimulatepowerrental.FieldAppGoodID:            {Type: field.TypeUUID, Column: appsimulatepowerrental.FieldAppGoodID},
+			appsimulatepowerrental.FieldCoinTypeID:           {Type: field.TypeUUID, Column: appsimulatepowerrental.FieldCoinTypeID},
+			appsimulatepowerrental.FieldOrderUnits:           {Type: field.TypeOther, Column: appsimulatepowerrental.FieldOrderUnits},
+			appsimulatepowerrental.FieldOrderDurationSeconds: {Type: field.TypeUint32, Column: appsimulatepowerrental.FieldOrderDurationSeconds},
 		},
 	}
 	graph.Nodes[13] = &sqlgraph.Node{
@@ -563,22 +563,22 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "FbmCrowdFunding",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			fbmcrowdfunding.FieldCreatedAt:         {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldCreatedAt},
-			fbmcrowdfunding.FieldUpdatedAt:         {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldUpdatedAt},
-			fbmcrowdfunding.FieldDeletedAt:         {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldDeletedAt},
-			fbmcrowdfunding.FieldEntID:             {Type: field.TypeUUID, Column: fbmcrowdfunding.FieldEntID},
-			fbmcrowdfunding.FieldGoodID:            {Type: field.TypeUUID, Column: fbmcrowdfunding.FieldGoodID},
-			fbmcrowdfunding.FieldMinDepositAmount:  {Type: field.TypeOther, Column: fbmcrowdfunding.FieldMinDepositAmount},
-			fbmcrowdfunding.FieldDeliveryAt:        {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldDeliveryAt},
-			fbmcrowdfunding.FieldTargetAmount:      {Type: field.TypeOther, Column: fbmcrowdfunding.FieldTargetAmount},
-			fbmcrowdfunding.FieldDepositStartAt:    {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldDepositStartAt},
-			fbmcrowdfunding.FieldDepositEndAt:      {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldDepositEndAt},
-			fbmcrowdfunding.FieldContractAddress:   {Type: field.TypeString, Column: fbmcrowdfunding.FieldContractAddress},
-			fbmcrowdfunding.FieldDepositCoinTypeID: {Type: field.TypeUUID, Column: fbmcrowdfunding.FieldDepositCoinTypeID},
-			fbmcrowdfunding.FieldRedeemable:        {Type: field.TypeBool, Column: fbmcrowdfunding.FieldRedeemable},
-			fbmcrowdfunding.FieldRedeemDelayHours:  {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldRedeemDelayHours},
-			fbmcrowdfunding.FieldDurationType:      {Type: field.TypeString, Column: fbmcrowdfunding.FieldDurationType},
-			fbmcrowdfunding.FieldDuration:          {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldDuration},
+			fbmcrowdfunding.FieldCreatedAt:           {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldCreatedAt},
+			fbmcrowdfunding.FieldUpdatedAt:           {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldUpdatedAt},
+			fbmcrowdfunding.FieldDeletedAt:           {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldDeletedAt},
+			fbmcrowdfunding.FieldEntID:               {Type: field.TypeUUID, Column: fbmcrowdfunding.FieldEntID},
+			fbmcrowdfunding.FieldGoodID:              {Type: field.TypeUUID, Column: fbmcrowdfunding.FieldGoodID},
+			fbmcrowdfunding.FieldMinDepositAmount:    {Type: field.TypeOther, Column: fbmcrowdfunding.FieldMinDepositAmount},
+			fbmcrowdfunding.FieldDeliveryAt:          {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldDeliveryAt},
+			fbmcrowdfunding.FieldTargetAmount:        {Type: field.TypeOther, Column: fbmcrowdfunding.FieldTargetAmount},
+			fbmcrowdfunding.FieldDepositStartAt:      {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldDepositStartAt},
+			fbmcrowdfunding.FieldDepositEndAt:        {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldDepositEndAt},
+			fbmcrowdfunding.FieldContractAddress:     {Type: field.TypeString, Column: fbmcrowdfunding.FieldContractAddress},
+			fbmcrowdfunding.FieldDepositCoinTypeID:   {Type: field.TypeUUID, Column: fbmcrowdfunding.FieldDepositCoinTypeID},
+			fbmcrowdfunding.FieldRedeemable:          {Type: field.TypeBool, Column: fbmcrowdfunding.FieldRedeemable},
+			fbmcrowdfunding.FieldRedeemDelayHours:    {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldRedeemDelayHours},
+			fbmcrowdfunding.FieldDurationDisplayType: {Type: field.TypeString, Column: fbmcrowdfunding.FieldDurationDisplayType},
+			fbmcrowdfunding.FieldDurationSeconds:     {Type: field.TypeUint32, Column: fbmcrowdfunding.FieldDurationSeconds},
 		},
 	}
 	graph.Nodes[22] = &sqlgraph.Node{
@@ -592,14 +592,14 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Fee",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			fee.FieldCreatedAt:      {Type: field.TypeUint32, Column: fee.FieldCreatedAt},
-			fee.FieldUpdatedAt:      {Type: field.TypeUint32, Column: fee.FieldUpdatedAt},
-			fee.FieldDeletedAt:      {Type: field.TypeUint32, Column: fee.FieldDeletedAt},
-			fee.FieldEntID:          {Type: field.TypeUUID, Column: fee.FieldEntID},
-			fee.FieldGoodID:         {Type: field.TypeUUID, Column: fee.FieldGoodID},
-			fee.FieldSettlementType: {Type: field.TypeString, Column: fee.FieldSettlementType},
-			fee.FieldUnitValue:      {Type: field.TypeOther, Column: fee.FieldUnitValue},
-			fee.FieldDurationType:   {Type: field.TypeString, Column: fee.FieldDurationType},
+			fee.FieldCreatedAt:           {Type: field.TypeUint32, Column: fee.FieldCreatedAt},
+			fee.FieldUpdatedAt:           {Type: field.TypeUint32, Column: fee.FieldUpdatedAt},
+			fee.FieldDeletedAt:           {Type: field.TypeUint32, Column: fee.FieldDeletedAt},
+			fee.FieldEntID:               {Type: field.TypeUUID, Column: fee.FieldEntID},
+			fee.FieldGoodID:              {Type: field.TypeUUID, Column: fee.FieldGoodID},
+			fee.FieldSettlementType:      {Type: field.TypeString, Column: fee.FieldSettlementType},
+			fee.FieldUnitValue:           {Type: field.TypeOther, Column: fee.FieldUnitValue},
+			fee.FieldDurationDisplayType: {Type: field.TypeString, Column: fee.FieldDurationDisplayType},
 		},
 	}
 	graph.Nodes[23] = &sqlgraph.Node{
@@ -795,20 +795,20 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "PowerRental",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			powerrental.FieldCreatedAt:          {Type: field.TypeUint32, Column: powerrental.FieldCreatedAt},
-			powerrental.FieldUpdatedAt:          {Type: field.TypeUint32, Column: powerrental.FieldUpdatedAt},
-			powerrental.FieldDeletedAt:          {Type: field.TypeUint32, Column: powerrental.FieldDeletedAt},
-			powerrental.FieldEntID:              {Type: field.TypeUUID, Column: powerrental.FieldEntID},
-			powerrental.FieldGoodID:             {Type: field.TypeUUID, Column: powerrental.FieldGoodID},
-			powerrental.FieldDeviceTypeID:       {Type: field.TypeUUID, Column: powerrental.FieldDeviceTypeID},
-			powerrental.FieldVendorLocationID:   {Type: field.TypeUUID, Column: powerrental.FieldVendorLocationID},
-			powerrental.FieldUnitPrice:          {Type: field.TypeOther, Column: powerrental.FieldUnitPrice},
-			powerrental.FieldQuantityUnit:       {Type: field.TypeString, Column: powerrental.FieldQuantityUnit},
-			powerrental.FieldQuantityUnitAmount: {Type: field.TypeOther, Column: powerrental.FieldQuantityUnitAmount},
-			powerrental.FieldDeliveryAt:         {Type: field.TypeUint32, Column: powerrental.FieldDeliveryAt},
-			powerrental.FieldUnitLockDeposit:    {Type: field.TypeOther, Column: powerrental.FieldUnitLockDeposit},
-			powerrental.FieldDurationType:       {Type: field.TypeString, Column: powerrental.FieldDurationType},
-			powerrental.FieldStockMode:          {Type: field.TypeString, Column: powerrental.FieldStockMode},
+			powerrental.FieldCreatedAt:           {Type: field.TypeUint32, Column: powerrental.FieldCreatedAt},
+			powerrental.FieldUpdatedAt:           {Type: field.TypeUint32, Column: powerrental.FieldUpdatedAt},
+			powerrental.FieldDeletedAt:           {Type: field.TypeUint32, Column: powerrental.FieldDeletedAt},
+			powerrental.FieldEntID:               {Type: field.TypeUUID, Column: powerrental.FieldEntID},
+			powerrental.FieldGoodID:              {Type: field.TypeUUID, Column: powerrental.FieldGoodID},
+			powerrental.FieldDeviceTypeID:        {Type: field.TypeUUID, Column: powerrental.FieldDeviceTypeID},
+			powerrental.FieldVendorLocationID:    {Type: field.TypeUUID, Column: powerrental.FieldVendorLocationID},
+			powerrental.FieldUnitPrice:           {Type: field.TypeOther, Column: powerrental.FieldUnitPrice},
+			powerrental.FieldQuantityUnit:        {Type: field.TypeString, Column: powerrental.FieldQuantityUnit},
+			powerrental.FieldQuantityUnitAmount:  {Type: field.TypeOther, Column: powerrental.FieldQuantityUnitAmount},
+			powerrental.FieldDeliveryAt:          {Type: field.TypeUint32, Column: powerrental.FieldDeliveryAt},
+			powerrental.FieldUnitLockDeposit:     {Type: field.TypeOther, Column: powerrental.FieldUnitLockDeposit},
+			powerrental.FieldDurationDisplayType: {Type: field.TypeString, Column: powerrental.FieldDurationDisplayType},
+			powerrental.FieldStockMode:           {Type: field.TypeString, Column: powerrental.FieldStockMode},
 		},
 	}
 	graph.Nodes[31] = &sqlgraph.Node{
@@ -1237,9 +1237,9 @@ func (f *AppFeeFilter) WhereUnitValue(p entql.OtherP) {
 	f.Where(p.Field(appfee.FieldUnitValue))
 }
 
-// WhereMinOrderDuration applies the entql uint32 predicate on the min_order_duration field.
-func (f *AppFeeFilter) WhereMinOrderDuration(p entql.Uint32P) {
-	f.Where(p.Field(appfee.FieldMinOrderDuration))
+// WhereMinOrderDurationSeconds applies the entql uint32 predicate on the min_order_duration_seconds field.
+func (f *AppFeeFilter) WhereMinOrderDurationSeconds(p entql.Uint32P) {
+	f.Where(p.Field(appfee.FieldMinOrderDurationSeconds))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -2222,14 +2222,14 @@ func (f *AppPowerRentalFilter) WhereMaxUserAmount(p entql.OtherP) {
 	f.Where(p.Field(apppowerrental.FieldMaxUserAmount))
 }
 
-// WhereMinOrderDuration applies the entql uint32 predicate on the min_order_duration field.
-func (f *AppPowerRentalFilter) WhereMinOrderDuration(p entql.Uint32P) {
-	f.Where(p.Field(apppowerrental.FieldMinOrderDuration))
+// WhereMinOrderDurationSeconds applies the entql uint32 predicate on the min_order_duration_seconds field.
+func (f *AppPowerRentalFilter) WhereMinOrderDurationSeconds(p entql.Uint32P) {
+	f.Where(p.Field(apppowerrental.FieldMinOrderDurationSeconds))
 }
 
-// WhereMaxOrderDuration applies the entql uint32 predicate on the max_order_duration field.
-func (f *AppPowerRentalFilter) WhereMaxOrderDuration(p entql.Uint32P) {
-	f.Where(p.Field(apppowerrental.FieldMaxOrderDuration))
+// WhereMaxOrderDurationSeconds applies the entql uint32 predicate on the max_order_duration_seconds field.
+func (f *AppPowerRentalFilter) WhereMaxOrderDurationSeconds(p entql.Uint32P) {
+	f.Where(p.Field(apppowerrental.FieldMaxOrderDurationSeconds))
 }
 
 // WhereUnitPrice applies the entql other predicate on the unit_price field.
@@ -2337,9 +2337,9 @@ func (f *AppSimulatePowerRentalFilter) WhereOrderUnits(p entql.OtherP) {
 	f.Where(p.Field(appsimulatepowerrental.FieldOrderUnits))
 }
 
-// WhereOrderDuration applies the entql uint32 predicate on the order_duration field.
-func (f *AppSimulatePowerRentalFilter) WhereOrderDuration(p entql.Uint32P) {
-	f.Where(p.Field(appsimulatepowerrental.FieldOrderDuration))
+// WhereOrderDurationSeconds applies the entql uint32 predicate on the order_duration_seconds field.
+func (f *AppSimulatePowerRentalFilter) WhereOrderDurationSeconds(p entql.Uint32P) {
+	f.Where(p.Field(appsimulatepowerrental.FieldOrderDurationSeconds))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -3157,14 +3157,14 @@ func (f *FbmCrowdFundingFilter) WhereRedeemDelayHours(p entql.Uint32P) {
 	f.Where(p.Field(fbmcrowdfunding.FieldRedeemDelayHours))
 }
 
-// WhereDurationType applies the entql string predicate on the duration_type field.
-func (f *FbmCrowdFundingFilter) WhereDurationType(p entql.StringP) {
-	f.Where(p.Field(fbmcrowdfunding.FieldDurationType))
+// WhereDurationDisplayType applies the entql string predicate on the duration_display_type field.
+func (f *FbmCrowdFundingFilter) WhereDurationDisplayType(p entql.StringP) {
+	f.Where(p.Field(fbmcrowdfunding.FieldDurationDisplayType))
 }
 
-// WhereDuration applies the entql uint32 predicate on the duration field.
-func (f *FbmCrowdFundingFilter) WhereDuration(p entql.Uint32P) {
-	f.Where(p.Field(fbmcrowdfunding.FieldDuration))
+// WhereDurationSeconds applies the entql uint32 predicate on the duration_seconds field.
+func (f *FbmCrowdFundingFilter) WhereDurationSeconds(p entql.Uint32P) {
+	f.Where(p.Field(fbmcrowdfunding.FieldDurationSeconds))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -3242,9 +3242,9 @@ func (f *FeeFilter) WhereUnitValue(p entql.OtherP) {
 	f.Where(p.Field(fee.FieldUnitValue))
 }
 
-// WhereDurationType applies the entql string predicate on the duration_type field.
-func (f *FeeFilter) WhereDurationType(p entql.StringP) {
-	f.Where(p.Field(fee.FieldDurationType))
+// WhereDurationDisplayType applies the entql string predicate on the duration_display_type field.
+func (f *FeeFilter) WhereDurationDisplayType(p entql.StringP) {
+	f.Where(p.Field(fee.FieldDurationDisplayType))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -4082,9 +4082,9 @@ func (f *PowerRentalFilter) WhereUnitLockDeposit(p entql.OtherP) {
 	f.Where(p.Field(powerrental.FieldUnitLockDeposit))
 }
 
-// WhereDurationType applies the entql string predicate on the duration_type field.
-func (f *PowerRentalFilter) WhereDurationType(p entql.StringP) {
-	f.Where(p.Field(powerrental.FieldDurationType))
+// WhereDurationDisplayType applies the entql string predicate on the duration_display_type field.
+func (f *PowerRentalFilter) WhereDurationDisplayType(p entql.StringP) {
+	f.Where(p.Field(powerrental.FieldDurationDisplayType))
 }
 
 // WhereStockMode applies the entql string predicate on the stock_mode field.

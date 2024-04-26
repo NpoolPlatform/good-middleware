@@ -189,7 +189,7 @@ func WithUnitValue(s *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithMinOrderDuration(n *uint32, must bool) func(context.Context, *Handler) error {
+func WithMinOrderDurationSeconds(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if n == nil {
 			if must {
@@ -200,7 +200,7 @@ func WithMinOrderDuration(n *uint32, must bool) func(context.Context, *Handler) 
 		if *n == 0 {
 			return fmt.Errorf("invalid minorderduration")
 		}
-		h.MinOrderDuration = n
+		h.MinOrderDurationSeconds = n
 		return nil
 	}
 }

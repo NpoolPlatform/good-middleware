@@ -191,16 +191,16 @@ func (prc *PowerRentalCreate) SetNillableUnitLockDeposit(d *decimal.Decimal) *Po
 	return prc
 }
 
-// SetDurationType sets the "duration_type" field.
-func (prc *PowerRentalCreate) SetDurationType(s string) *PowerRentalCreate {
-	prc.mutation.SetDurationType(s)
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (prc *PowerRentalCreate) SetDurationDisplayType(s string) *PowerRentalCreate {
+	prc.mutation.SetDurationDisplayType(s)
 	return prc
 }
 
-// SetNillableDurationType sets the "duration_type" field if the given value is not nil.
-func (prc *PowerRentalCreate) SetNillableDurationType(s *string) *PowerRentalCreate {
+// SetNillableDurationDisplayType sets the "duration_display_type" field if the given value is not nil.
+func (prc *PowerRentalCreate) SetNillableDurationDisplayType(s *string) *PowerRentalCreate {
 	if s != nil {
-		prc.SetDurationType(*s)
+		prc.SetDurationDisplayType(*s)
 	}
 	return prc
 }
@@ -373,9 +373,9 @@ func (prc *PowerRentalCreate) defaults() error {
 		v := powerrental.DefaultUnitLockDeposit
 		prc.mutation.SetUnitLockDeposit(v)
 	}
-	if _, ok := prc.mutation.DurationType(); !ok {
-		v := powerrental.DefaultDurationType
-		prc.mutation.SetDurationType(v)
+	if _, ok := prc.mutation.DurationDisplayType(); !ok {
+		v := powerrental.DefaultDurationDisplayType
+		prc.mutation.SetDurationDisplayType(v)
 	}
 	if _, ok := prc.mutation.StockMode(); !ok {
 		v := powerrental.DefaultStockMode
@@ -528,13 +528,13 @@ func (prc *PowerRentalCreate) createSpec() (*PowerRental, *sqlgraph.CreateSpec) 
 		})
 		_node.UnitLockDeposit = value
 	}
-	if value, ok := prc.mutation.DurationType(); ok {
+	if value, ok := prc.mutation.DurationDisplayType(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: powerrental.FieldDurationType,
+			Column: powerrental.FieldDurationDisplayType,
 		})
-		_node.DurationType = value
+		_node.DurationDisplayType = value
 	}
 	if value, ok := prc.mutation.StockMode(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -814,21 +814,21 @@ func (u *PowerRentalUpsert) ClearUnitLockDeposit() *PowerRentalUpsert {
 	return u
 }
 
-// SetDurationType sets the "duration_type" field.
-func (u *PowerRentalUpsert) SetDurationType(v string) *PowerRentalUpsert {
-	u.Set(powerrental.FieldDurationType, v)
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (u *PowerRentalUpsert) SetDurationDisplayType(v string) *PowerRentalUpsert {
+	u.Set(powerrental.FieldDurationDisplayType, v)
 	return u
 }
 
-// UpdateDurationType sets the "duration_type" field to the value that was provided on create.
-func (u *PowerRentalUpsert) UpdateDurationType() *PowerRentalUpsert {
-	u.SetExcluded(powerrental.FieldDurationType)
+// UpdateDurationDisplayType sets the "duration_display_type" field to the value that was provided on create.
+func (u *PowerRentalUpsert) UpdateDurationDisplayType() *PowerRentalUpsert {
+	u.SetExcluded(powerrental.FieldDurationDisplayType)
 	return u
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (u *PowerRentalUpsert) ClearDurationType() *PowerRentalUpsert {
-	u.SetNull(powerrental.FieldDurationType)
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (u *PowerRentalUpsert) ClearDurationDisplayType() *PowerRentalUpsert {
+	u.SetNull(powerrental.FieldDurationDisplayType)
 	return u
 }
 
@@ -1152,24 +1152,24 @@ func (u *PowerRentalUpsertOne) ClearUnitLockDeposit() *PowerRentalUpsertOne {
 	})
 }
 
-// SetDurationType sets the "duration_type" field.
-func (u *PowerRentalUpsertOne) SetDurationType(v string) *PowerRentalUpsertOne {
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (u *PowerRentalUpsertOne) SetDurationDisplayType(v string) *PowerRentalUpsertOne {
 	return u.Update(func(s *PowerRentalUpsert) {
-		s.SetDurationType(v)
+		s.SetDurationDisplayType(v)
 	})
 }
 
-// UpdateDurationType sets the "duration_type" field to the value that was provided on create.
-func (u *PowerRentalUpsertOne) UpdateDurationType() *PowerRentalUpsertOne {
+// UpdateDurationDisplayType sets the "duration_display_type" field to the value that was provided on create.
+func (u *PowerRentalUpsertOne) UpdateDurationDisplayType() *PowerRentalUpsertOne {
 	return u.Update(func(s *PowerRentalUpsert) {
-		s.UpdateDurationType()
+		s.UpdateDurationDisplayType()
 	})
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (u *PowerRentalUpsertOne) ClearDurationType() *PowerRentalUpsertOne {
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (u *PowerRentalUpsertOne) ClearDurationDisplayType() *PowerRentalUpsertOne {
 	return u.Update(func(s *PowerRentalUpsert) {
-		s.ClearDurationType()
+		s.ClearDurationDisplayType()
 	})
 }
 
@@ -1661,24 +1661,24 @@ func (u *PowerRentalUpsertBulk) ClearUnitLockDeposit() *PowerRentalUpsertBulk {
 	})
 }
 
-// SetDurationType sets the "duration_type" field.
-func (u *PowerRentalUpsertBulk) SetDurationType(v string) *PowerRentalUpsertBulk {
+// SetDurationDisplayType sets the "duration_display_type" field.
+func (u *PowerRentalUpsertBulk) SetDurationDisplayType(v string) *PowerRentalUpsertBulk {
 	return u.Update(func(s *PowerRentalUpsert) {
-		s.SetDurationType(v)
+		s.SetDurationDisplayType(v)
 	})
 }
 
-// UpdateDurationType sets the "duration_type" field to the value that was provided on create.
-func (u *PowerRentalUpsertBulk) UpdateDurationType() *PowerRentalUpsertBulk {
+// UpdateDurationDisplayType sets the "duration_display_type" field to the value that was provided on create.
+func (u *PowerRentalUpsertBulk) UpdateDurationDisplayType() *PowerRentalUpsertBulk {
 	return u.Update(func(s *PowerRentalUpsert) {
-		s.UpdateDurationType()
+		s.UpdateDurationDisplayType()
 	})
 }
 
-// ClearDurationType clears the value of the "duration_type" field.
-func (u *PowerRentalUpsertBulk) ClearDurationType() *PowerRentalUpsertBulk {
+// ClearDurationDisplayType clears the value of the "duration_display_type" field.
+func (u *PowerRentalUpsertBulk) ClearDurationDisplayType() *PowerRentalUpsertBulk {
 	return u.Update(func(s *PowerRentalUpsert) {
-		s.ClearDurationType()
+		s.ClearDurationDisplayType()
 	})
 }
 

@@ -251,11 +251,11 @@ func WithUnitLockDeposit(s *string, must bool) func(context.Context, *Handler) e
 	}
 }
 
-func WithDurationType(e *types.GoodDurationType, must bool) func(context.Context, *Handler) error {
+func WithDurationDisplayType(e *types.GoodDurationType, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid durationtype")
+				return fmt.Errorf("invalid durationdisplaytype")
 			}
 			return nil
 		}
@@ -265,9 +265,9 @@ func WithDurationType(e *types.GoodDurationType, must bool) func(context.Context
 		case types.GoodDurationType_GoodDurationByMonth:
 		case types.GoodDurationType_GoodDurationByYear:
 		default:
-			return fmt.Errorf("invalid durationtype")
+			return fmt.Errorf("invalid durationdisplaytype")
 		}
-		h.DurationType = e
+		h.DurationDisplayType = e
 		return nil
 	}
 }

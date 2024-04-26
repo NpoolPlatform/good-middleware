@@ -70,11 +70,11 @@ func (AppPowerRental) Fields() []ent.Field {
 			Optional().
 			Default(decimal.Decimal{}),
 		field.
-			Uint32("min_order_duration").
+			Uint32("min_order_duration_seconds").
 			Optional().
 			Default(0),
 		field.
-			Uint32("max_order_duration").
+			Uint32("max_order_duration_seconds").
 			Optional().
 			Default(0),
 		field.

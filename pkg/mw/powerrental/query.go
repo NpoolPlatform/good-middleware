@@ -174,7 +174,7 @@ func (h *queryHandler) queryJoinPowerRental(s *sql.Selector) error {
 		t1.C(entpowerrental.FieldQuantityUnitAmount),
 		t1.C(entpowerrental.FieldDeliveryAt),
 		t1.C(entpowerrental.FieldUnitLockDeposit),
-		t1.C(entpowerrental.FieldDurationType),
+		t1.C(entpowerrental.FieldDurationDisplayType),
 		t1.C(entpowerrental.FieldUnitLockDeposit),
 		t1.C(entpowerrental.FieldStockMode),
 
@@ -365,7 +365,7 @@ func (h *queryHandler) formalize() {
 		info.TotalRewardAmount = func() string { amount, _ := decimal.NewFromString(info.TotalRewardAmount); return amount.String() }()
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
-		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
+		info.DurationDisplayType = types.GoodDurationType(types.GoodDurationType_value[info.DurationDisplayTypeStr])
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
 		info.RewardState = types.BenefitState(types.BenefitState_value[info.RewardStateStr])

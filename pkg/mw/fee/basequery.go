@@ -110,7 +110,7 @@ func (h *baseQueryHandler) queryJoinFee(s *sql.Selector) error {
 		t1.C(entfee.FieldGoodID),
 		t1.C(entfee.FieldSettlementType),
 		t1.C(entfee.FieldUnitValue),
-		t1.C(entfee.FieldDurationType),
+		t1.C(entfee.FieldDurationDisplayType),
 	)
 	return nil
 }

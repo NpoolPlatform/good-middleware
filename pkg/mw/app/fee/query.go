@@ -154,7 +154,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) error {
 	}
 	s.AppendSelect(
 		t3.C(entfee.FieldSettlementType),
-		t3.C(entfee.FieldDurationType),
+		t3.C(entfee.FieldDurationDisplayType),
 	)
 	return nil
 }
@@ -246,7 +246,7 @@ func (h *queryHandler) queryJoinAppFee(s *sql.Selector) error {
 		t1.C(entappfee.FieldID),
 		t1.C(entappfee.FieldEntID),
 		t1.C(entappfee.FieldUnitValue),
-		t1.C(entappfee.FieldMinOrderDuration),
+		t1.C(entappfee.FieldMinOrderDurationSeconds),
 	)
 	return nil
 }
@@ -297,7 +297,7 @@ func (h *queryHandler) formalize() {
 		info.UnitValue = amount.String()
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.SettlementType = types.GoodSettlementType(types.GoodSettlementType_value[info.SettlementTypeStr])
-		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
+		info.DurationDisplayType = types.GoodDurationType(types.GoodDurationType_value[info.DurationDisplayTypeStr])
 	}
 }
 

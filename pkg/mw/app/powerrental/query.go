@@ -234,8 +234,8 @@ func (h *queryHandler) queryJoinAppPowerRental(s *sql.Selector) {
 			t1.C(entapppowerrental.FieldMinOrderAmount),
 			t1.C(entapppowerrental.FieldMaxOrderAmount),
 			t1.C(entapppowerrental.FieldMaxUserAmount),
-			t1.C(entapppowerrental.FieldMinOrderDuration),
-			t1.C(entapppowerrental.FieldMaxOrderDuration),
+			t1.C(entapppowerrental.FieldMinOrderDurationSeconds),
+			t1.C(entapppowerrental.FieldMaxOrderDurationSeconds),
 			t1.C(entapppowerrental.FieldSaleStartAt),
 			t1.C(entapppowerrental.FieldSaleEndAt),
 			t1.C(entapppowerrental.FieldSaleMode),
@@ -328,7 +328,7 @@ func (h *queryHandler) queryJoinPowerRental(s *sql.Selector) error {
 		t1.C(entpowerrental.FieldQuantityUnitAmount),
 		t1.C(entpowerrental.FieldDeliveryAt),
 		t1.C(entpowerrental.FieldUnitLockDeposit),
-		t1.C(entpowerrental.FieldDurationType),
+		t1.C(entpowerrental.FieldDurationDisplayType),
 		t1.C(entpowerrental.FieldUnitLockDeposit),
 		t1.C(entpowerrental.FieldStockMode),
 
@@ -667,7 +667,7 @@ func (h *queryHandler) formalize() {
 		info.CancelMode = types.CancelMode(types.CancelMode_value[info.CancelModeStr])
 		info.SaleMode = types.GoodSaleMode(types.GoodSaleMode_value[info.SaleModeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
-		info.DurationType = types.GoodDurationType(types.GoodDurationType_value[info.DurationTypeStr])
+		info.DurationDisplayType = types.GoodDurationType(types.GoodDurationType_value[info.DurationDisplayTypeStr])
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
 		info.MiningGoodStocks = miningGoodStocks[info.GoodStockID]

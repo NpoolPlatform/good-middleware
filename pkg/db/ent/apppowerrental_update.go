@@ -273,57 +273,57 @@ func (apru *AppPowerRentalUpdate) ClearMaxUserAmount() *AppPowerRentalUpdate {
 	return apru
 }
 
-// SetMinOrderDuration sets the "min_order_duration" field.
-func (apru *AppPowerRentalUpdate) SetMinOrderDuration(u uint32) *AppPowerRentalUpdate {
-	apru.mutation.ResetMinOrderDuration()
-	apru.mutation.SetMinOrderDuration(u)
+// SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
+func (apru *AppPowerRentalUpdate) SetMinOrderDurationSeconds(u uint32) *AppPowerRentalUpdate {
+	apru.mutation.ResetMinOrderDurationSeconds()
+	apru.mutation.SetMinOrderDurationSeconds(u)
 	return apru
 }
 
-// SetNillableMinOrderDuration sets the "min_order_duration" field if the given value is not nil.
-func (apru *AppPowerRentalUpdate) SetNillableMinOrderDuration(u *uint32) *AppPowerRentalUpdate {
+// SetNillableMinOrderDurationSeconds sets the "min_order_duration_seconds" field if the given value is not nil.
+func (apru *AppPowerRentalUpdate) SetNillableMinOrderDurationSeconds(u *uint32) *AppPowerRentalUpdate {
 	if u != nil {
-		apru.SetMinOrderDuration(*u)
+		apru.SetMinOrderDurationSeconds(*u)
 	}
 	return apru
 }
 
-// AddMinOrderDuration adds u to the "min_order_duration" field.
-func (apru *AppPowerRentalUpdate) AddMinOrderDuration(u int32) *AppPowerRentalUpdate {
-	apru.mutation.AddMinOrderDuration(u)
+// AddMinOrderDurationSeconds adds u to the "min_order_duration_seconds" field.
+func (apru *AppPowerRentalUpdate) AddMinOrderDurationSeconds(u int32) *AppPowerRentalUpdate {
+	apru.mutation.AddMinOrderDurationSeconds(u)
 	return apru
 }
 
-// ClearMinOrderDuration clears the value of the "min_order_duration" field.
-func (apru *AppPowerRentalUpdate) ClearMinOrderDuration() *AppPowerRentalUpdate {
-	apru.mutation.ClearMinOrderDuration()
+// ClearMinOrderDurationSeconds clears the value of the "min_order_duration_seconds" field.
+func (apru *AppPowerRentalUpdate) ClearMinOrderDurationSeconds() *AppPowerRentalUpdate {
+	apru.mutation.ClearMinOrderDurationSeconds()
 	return apru
 }
 
-// SetMaxOrderDuration sets the "max_order_duration" field.
-func (apru *AppPowerRentalUpdate) SetMaxOrderDuration(u uint32) *AppPowerRentalUpdate {
-	apru.mutation.ResetMaxOrderDuration()
-	apru.mutation.SetMaxOrderDuration(u)
+// SetMaxOrderDurationSeconds sets the "max_order_duration_seconds" field.
+func (apru *AppPowerRentalUpdate) SetMaxOrderDurationSeconds(u uint32) *AppPowerRentalUpdate {
+	apru.mutation.ResetMaxOrderDurationSeconds()
+	apru.mutation.SetMaxOrderDurationSeconds(u)
 	return apru
 }
 
-// SetNillableMaxOrderDuration sets the "max_order_duration" field if the given value is not nil.
-func (apru *AppPowerRentalUpdate) SetNillableMaxOrderDuration(u *uint32) *AppPowerRentalUpdate {
+// SetNillableMaxOrderDurationSeconds sets the "max_order_duration_seconds" field if the given value is not nil.
+func (apru *AppPowerRentalUpdate) SetNillableMaxOrderDurationSeconds(u *uint32) *AppPowerRentalUpdate {
 	if u != nil {
-		apru.SetMaxOrderDuration(*u)
+		apru.SetMaxOrderDurationSeconds(*u)
 	}
 	return apru
 }
 
-// AddMaxOrderDuration adds u to the "max_order_duration" field.
-func (apru *AppPowerRentalUpdate) AddMaxOrderDuration(u int32) *AppPowerRentalUpdate {
-	apru.mutation.AddMaxOrderDuration(u)
+// AddMaxOrderDurationSeconds adds u to the "max_order_duration_seconds" field.
+func (apru *AppPowerRentalUpdate) AddMaxOrderDurationSeconds(u int32) *AppPowerRentalUpdate {
+	apru.mutation.AddMaxOrderDurationSeconds(u)
 	return apru
 }
 
-// ClearMaxOrderDuration clears the value of the "max_order_duration" field.
-func (apru *AppPowerRentalUpdate) ClearMaxOrderDuration() *AppPowerRentalUpdate {
-	apru.mutation.ClearMaxOrderDuration()
+// ClearMaxOrderDurationSeconds clears the value of the "max_order_duration_seconds" field.
+func (apru *AppPowerRentalUpdate) ClearMaxOrderDurationSeconds() *AppPowerRentalUpdate {
+	apru.mutation.ClearMaxOrderDurationSeconds()
 	return apru
 }
 
@@ -726,44 +726,44 @@ func (apru *AppPowerRentalUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: apppowerrental.FieldMaxUserAmount,
 		})
 	}
-	if value, ok := apru.mutation.MinOrderDuration(); ok {
+	if value, ok := apru.mutation.MinOrderDurationSeconds(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: apppowerrental.FieldMinOrderDuration,
+			Column: apppowerrental.FieldMinOrderDurationSeconds,
 		})
 	}
-	if value, ok := apru.mutation.AddedMinOrderDuration(); ok {
+	if value, ok := apru.mutation.AddedMinOrderDurationSeconds(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: apppowerrental.FieldMinOrderDuration,
+			Column: apppowerrental.FieldMinOrderDurationSeconds,
 		})
 	}
-	if apru.mutation.MinOrderDurationCleared() {
+	if apru.mutation.MinOrderDurationSecondsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: apppowerrental.FieldMinOrderDuration,
+			Column: apppowerrental.FieldMinOrderDurationSeconds,
 		})
 	}
-	if value, ok := apru.mutation.MaxOrderDuration(); ok {
+	if value, ok := apru.mutation.MaxOrderDurationSeconds(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: apppowerrental.FieldMaxOrderDuration,
+			Column: apppowerrental.FieldMaxOrderDurationSeconds,
 		})
 	}
-	if value, ok := apru.mutation.AddedMaxOrderDuration(); ok {
+	if value, ok := apru.mutation.AddedMaxOrderDurationSeconds(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: apppowerrental.FieldMaxOrderDuration,
+			Column: apppowerrental.FieldMaxOrderDurationSeconds,
 		})
 	}
-	if apru.mutation.MaxOrderDurationCleared() {
+	if apru.mutation.MaxOrderDurationSecondsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: apppowerrental.FieldMaxOrderDuration,
+			Column: apppowerrental.FieldMaxOrderDurationSeconds,
 		})
 	}
 	if value, ok := apru.mutation.UnitPrice(); ok {
@@ -1122,57 +1122,57 @@ func (apruo *AppPowerRentalUpdateOne) ClearMaxUserAmount() *AppPowerRentalUpdate
 	return apruo
 }
 
-// SetMinOrderDuration sets the "min_order_duration" field.
-func (apruo *AppPowerRentalUpdateOne) SetMinOrderDuration(u uint32) *AppPowerRentalUpdateOne {
-	apruo.mutation.ResetMinOrderDuration()
-	apruo.mutation.SetMinOrderDuration(u)
+// SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
+func (apruo *AppPowerRentalUpdateOne) SetMinOrderDurationSeconds(u uint32) *AppPowerRentalUpdateOne {
+	apruo.mutation.ResetMinOrderDurationSeconds()
+	apruo.mutation.SetMinOrderDurationSeconds(u)
 	return apruo
 }
 
-// SetNillableMinOrderDuration sets the "min_order_duration" field if the given value is not nil.
-func (apruo *AppPowerRentalUpdateOne) SetNillableMinOrderDuration(u *uint32) *AppPowerRentalUpdateOne {
+// SetNillableMinOrderDurationSeconds sets the "min_order_duration_seconds" field if the given value is not nil.
+func (apruo *AppPowerRentalUpdateOne) SetNillableMinOrderDurationSeconds(u *uint32) *AppPowerRentalUpdateOne {
 	if u != nil {
-		apruo.SetMinOrderDuration(*u)
+		apruo.SetMinOrderDurationSeconds(*u)
 	}
 	return apruo
 }
 
-// AddMinOrderDuration adds u to the "min_order_duration" field.
-func (apruo *AppPowerRentalUpdateOne) AddMinOrderDuration(u int32) *AppPowerRentalUpdateOne {
-	apruo.mutation.AddMinOrderDuration(u)
+// AddMinOrderDurationSeconds adds u to the "min_order_duration_seconds" field.
+func (apruo *AppPowerRentalUpdateOne) AddMinOrderDurationSeconds(u int32) *AppPowerRentalUpdateOne {
+	apruo.mutation.AddMinOrderDurationSeconds(u)
 	return apruo
 }
 
-// ClearMinOrderDuration clears the value of the "min_order_duration" field.
-func (apruo *AppPowerRentalUpdateOne) ClearMinOrderDuration() *AppPowerRentalUpdateOne {
-	apruo.mutation.ClearMinOrderDuration()
+// ClearMinOrderDurationSeconds clears the value of the "min_order_duration_seconds" field.
+func (apruo *AppPowerRentalUpdateOne) ClearMinOrderDurationSeconds() *AppPowerRentalUpdateOne {
+	apruo.mutation.ClearMinOrderDurationSeconds()
 	return apruo
 }
 
-// SetMaxOrderDuration sets the "max_order_duration" field.
-func (apruo *AppPowerRentalUpdateOne) SetMaxOrderDuration(u uint32) *AppPowerRentalUpdateOne {
-	apruo.mutation.ResetMaxOrderDuration()
-	apruo.mutation.SetMaxOrderDuration(u)
+// SetMaxOrderDurationSeconds sets the "max_order_duration_seconds" field.
+func (apruo *AppPowerRentalUpdateOne) SetMaxOrderDurationSeconds(u uint32) *AppPowerRentalUpdateOne {
+	apruo.mutation.ResetMaxOrderDurationSeconds()
+	apruo.mutation.SetMaxOrderDurationSeconds(u)
 	return apruo
 }
 
-// SetNillableMaxOrderDuration sets the "max_order_duration" field if the given value is not nil.
-func (apruo *AppPowerRentalUpdateOne) SetNillableMaxOrderDuration(u *uint32) *AppPowerRentalUpdateOne {
+// SetNillableMaxOrderDurationSeconds sets the "max_order_duration_seconds" field if the given value is not nil.
+func (apruo *AppPowerRentalUpdateOne) SetNillableMaxOrderDurationSeconds(u *uint32) *AppPowerRentalUpdateOne {
 	if u != nil {
-		apruo.SetMaxOrderDuration(*u)
+		apruo.SetMaxOrderDurationSeconds(*u)
 	}
 	return apruo
 }
 
-// AddMaxOrderDuration adds u to the "max_order_duration" field.
-func (apruo *AppPowerRentalUpdateOne) AddMaxOrderDuration(u int32) *AppPowerRentalUpdateOne {
-	apruo.mutation.AddMaxOrderDuration(u)
+// AddMaxOrderDurationSeconds adds u to the "max_order_duration_seconds" field.
+func (apruo *AppPowerRentalUpdateOne) AddMaxOrderDurationSeconds(u int32) *AppPowerRentalUpdateOne {
+	apruo.mutation.AddMaxOrderDurationSeconds(u)
 	return apruo
 }
 
-// ClearMaxOrderDuration clears the value of the "max_order_duration" field.
-func (apruo *AppPowerRentalUpdateOne) ClearMaxOrderDuration() *AppPowerRentalUpdateOne {
-	apruo.mutation.ClearMaxOrderDuration()
+// ClearMaxOrderDurationSeconds clears the value of the "max_order_duration_seconds" field.
+func (apruo *AppPowerRentalUpdateOne) ClearMaxOrderDurationSeconds() *AppPowerRentalUpdateOne {
+	apruo.mutation.ClearMaxOrderDurationSeconds()
 	return apruo
 }
 
@@ -1605,44 +1605,44 @@ func (apruo *AppPowerRentalUpdateOne) sqlSave(ctx context.Context) (_node *AppPo
 			Column: apppowerrental.FieldMaxUserAmount,
 		})
 	}
-	if value, ok := apruo.mutation.MinOrderDuration(); ok {
+	if value, ok := apruo.mutation.MinOrderDurationSeconds(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: apppowerrental.FieldMinOrderDuration,
+			Column: apppowerrental.FieldMinOrderDurationSeconds,
 		})
 	}
-	if value, ok := apruo.mutation.AddedMinOrderDuration(); ok {
+	if value, ok := apruo.mutation.AddedMinOrderDurationSeconds(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: apppowerrental.FieldMinOrderDuration,
+			Column: apppowerrental.FieldMinOrderDurationSeconds,
 		})
 	}
-	if apruo.mutation.MinOrderDurationCleared() {
+	if apruo.mutation.MinOrderDurationSecondsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: apppowerrental.FieldMinOrderDuration,
+			Column: apppowerrental.FieldMinOrderDurationSeconds,
 		})
 	}
-	if value, ok := apruo.mutation.MaxOrderDuration(); ok {
+	if value, ok := apruo.mutation.MaxOrderDurationSeconds(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: apppowerrental.FieldMaxOrderDuration,
+			Column: apppowerrental.FieldMaxOrderDurationSeconds,
 		})
 	}
-	if value, ok := apruo.mutation.AddedMaxOrderDuration(); ok {
+	if value, ok := apruo.mutation.AddedMaxOrderDurationSeconds(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: apppowerrental.FieldMaxOrderDuration,
+			Column: apppowerrental.FieldMaxOrderDurationSeconds,
 		})
 	}
-	if apruo.mutation.MaxOrderDurationCleared() {
+	if apruo.mutation.MaxOrderDurationSecondsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
-			Column: apppowerrental.FieldMaxOrderDuration,
+			Column: apppowerrental.FieldMaxOrderDurationSeconds,
 		})
 	}
 	if value, ok := apruo.mutation.UnitPrice(); ok {

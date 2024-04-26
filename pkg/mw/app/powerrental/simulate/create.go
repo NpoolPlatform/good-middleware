@@ -28,7 +28,7 @@ func (h *createHandler) constructSQL() {
 	_sql += comma + "app_good_id"
 	comma = ", "
 	_sql += comma + "order_units"
-	_sql += comma + "order_duration"
+	_sql += comma + "order_duration_seconds"
 	_sql += comma + "created_at"
 	_sql += comma + "updated_at"
 	_sql += comma + "deleted_at"
@@ -43,7 +43,7 @@ func (h *createHandler) constructSQL() {
 	_sql += fmt.Sprintf("%v'%v' as app_good_id", comma, *h.AppGoodID)
 	comma = ", "
 	_sql += fmt.Sprintf("%v'%v' as order_units", comma, *h.OrderUnits)
-	_sql += fmt.Sprintf("%v%v as order_duration", comma, *h.OrderDuration)
+	_sql += fmt.Sprintf("%v%v as order_duration_seconds", comma, *h.OrderDurationSeconds)
 	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
 	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
 	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
@@ -76,9 +76,9 @@ func (h *createHandler) validateOrderUnits() error {
 	return nil
 }
 
-func (h *createHandler) validateOrderDuration() error {
-	if (h.appPowerRental.MinOrderDuration() > 0 && *h.OrderDuration < h.appPowerRental.MinOrderDuration()) ||
-		(h.appPowerRental.MaxOrderDuration() > 0 && *h.OrderDuration > h.appPowerRental.MaxOrderDuration()) {
+func (h *createHandler) validateOrderDurationSeconds() error {
+	if (h.appPowerRental.MinOrderDurationSeconds() > 0 && *h.OrderDurationSeconds < h.appPowerRental.MinOrderDurationSeconds()) ||
+		(h.appPowerRental.MaxOrderDurationSeconds() > 0 && *h.OrderDurationSeconds > h.appPowerRental.MaxOrderDurationSeconds()) {
 		return fmt.Errorf("invalid orderduration")
 	}
 	return nil
@@ -97,7 +97,7 @@ func (h *Handler) CreateSimulate(ctx context.Context) error {
 	if err := handler.validateOrderUnits(); err != nil {
 		return err
 	}
-	if err := handler.validateOrderDuration(); err != nil {
+	if err := handler.validateOrderDurationSeconds(); err != nil {
 		return err
 	}
 

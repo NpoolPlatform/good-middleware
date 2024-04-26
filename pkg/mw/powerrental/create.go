@@ -100,8 +100,8 @@ func (h *createHandler) constructPowerRentalSQL() {
 	if h.UnitLockDeposit != nil {
 		_sql += comma + "unit_lock_deposit"
 	}
-	if h.DurationType != nil {
-		_sql += comma + "duration_type"
+	if h.DurationDisplayType != nil {
+		_sql += comma + "duration_display_type"
 	}
 	if h.StockMode != nil {
 		_sql += comma + "stock_mode"
@@ -127,8 +127,8 @@ func (h *createHandler) constructPowerRentalSQL() {
 	if h.UnitLockDeposit != nil {
 		_sql += fmt.Sprintf("%v%v as unit_lock_deposit", comma, *h.UnitLockDeposit)
 	}
-	if h.DurationType != nil {
-		_sql += fmt.Sprintf("%v'%v' as duration_type", comma, h.DurationType.String())
+	if h.DurationDisplayType != nil {
+		_sql += fmt.Sprintf("%v'%v' as duration_display_type", comma, h.DurationDisplayType.String())
 	}
 	if h.StockMode != nil {
 		_sql += fmt.Sprintf("%v'%v' as stock_mode", comma, h.StockMode.String())

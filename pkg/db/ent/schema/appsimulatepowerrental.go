@@ -38,7 +38,7 @@ func (AppSimulatePowerRental) Fields() []ent.Field {
 			Optional().
 			Default(decimal.Decimal{}),
 		field.
-			Uint32("order_duration").
+			Uint32("order_duration_seconds").
 			Optional().
 			Default(0),
 	}

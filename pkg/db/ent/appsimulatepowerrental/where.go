@@ -129,10 +129,10 @@ func OrderUnits(v decimal.Decimal) predicate.AppSimulatePowerRental {
 	})
 }
 
-// OrderDuration applies equality check predicate on the "order_duration" field. It's identical to OrderDurationEQ.
-func OrderDuration(v uint32) predicate.AppSimulatePowerRental {
+// OrderDurationSeconds applies equality check predicate on the "order_duration_seconds" field. It's identical to OrderDurationSecondsEQ.
+func OrderDurationSeconds(v uint32) predicate.AppSimulatePowerRental {
 	return predicate.AppSimulatePowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldOrderDuration), v))
+		s.Where(sql.EQ(s.C(FieldOrderDurationSeconds), v))
 	})
 }
 
@@ -626,81 +626,81 @@ func OrderUnitsNotNil() predicate.AppSimulatePowerRental {
 	})
 }
 
-// OrderDurationEQ applies the EQ predicate on the "order_duration" field.
-func OrderDurationEQ(v uint32) predicate.AppSimulatePowerRental {
+// OrderDurationSecondsEQ applies the EQ predicate on the "order_duration_seconds" field.
+func OrderDurationSecondsEQ(v uint32) predicate.AppSimulatePowerRental {
 	return predicate.AppSimulatePowerRental(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldOrderDuration), v))
+		s.Where(sql.EQ(s.C(FieldOrderDurationSeconds), v))
 	})
 }
 
-// OrderDurationNEQ applies the NEQ predicate on the "order_duration" field.
-func OrderDurationNEQ(v uint32) predicate.AppSimulatePowerRental {
+// OrderDurationSecondsNEQ applies the NEQ predicate on the "order_duration_seconds" field.
+func OrderDurationSecondsNEQ(v uint32) predicate.AppSimulatePowerRental {
 	return predicate.AppSimulatePowerRental(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldOrderDuration), v))
+		s.Where(sql.NEQ(s.C(FieldOrderDurationSeconds), v))
 	})
 }
 
-// OrderDurationIn applies the In predicate on the "order_duration" field.
-func OrderDurationIn(vs ...uint32) predicate.AppSimulatePowerRental {
+// OrderDurationSecondsIn applies the In predicate on the "order_duration_seconds" field.
+func OrderDurationSecondsIn(vs ...uint32) predicate.AppSimulatePowerRental {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.AppSimulatePowerRental(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldOrderDuration), v...))
+		s.Where(sql.In(s.C(FieldOrderDurationSeconds), v...))
 	})
 }
 
-// OrderDurationNotIn applies the NotIn predicate on the "order_duration" field.
-func OrderDurationNotIn(vs ...uint32) predicate.AppSimulatePowerRental {
+// OrderDurationSecondsNotIn applies the NotIn predicate on the "order_duration_seconds" field.
+func OrderDurationSecondsNotIn(vs ...uint32) predicate.AppSimulatePowerRental {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.AppSimulatePowerRental(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldOrderDuration), v...))
+		s.Where(sql.NotIn(s.C(FieldOrderDurationSeconds), v...))
 	})
 }
 
-// OrderDurationGT applies the GT predicate on the "order_duration" field.
-func OrderDurationGT(v uint32) predicate.AppSimulatePowerRental {
+// OrderDurationSecondsGT applies the GT predicate on the "order_duration_seconds" field.
+func OrderDurationSecondsGT(v uint32) predicate.AppSimulatePowerRental {
 	return predicate.AppSimulatePowerRental(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldOrderDuration), v))
+		s.Where(sql.GT(s.C(FieldOrderDurationSeconds), v))
 	})
 }
 
-// OrderDurationGTE applies the GTE predicate on the "order_duration" field.
-func OrderDurationGTE(v uint32) predicate.AppSimulatePowerRental {
+// OrderDurationSecondsGTE applies the GTE predicate on the "order_duration_seconds" field.
+func OrderDurationSecondsGTE(v uint32) predicate.AppSimulatePowerRental {
 	return predicate.AppSimulatePowerRental(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldOrderDuration), v))
+		s.Where(sql.GTE(s.C(FieldOrderDurationSeconds), v))
 	})
 }
 
-// OrderDurationLT applies the LT predicate on the "order_duration" field.
-func OrderDurationLT(v uint32) predicate.AppSimulatePowerRental {
+// OrderDurationSecondsLT applies the LT predicate on the "order_duration_seconds" field.
+func OrderDurationSecondsLT(v uint32) predicate.AppSimulatePowerRental {
 	return predicate.AppSimulatePowerRental(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldOrderDuration), v))
+		s.Where(sql.LT(s.C(FieldOrderDurationSeconds), v))
 	})
 }
 
-// OrderDurationLTE applies the LTE predicate on the "order_duration" field.
-func OrderDurationLTE(v uint32) predicate.AppSimulatePowerRental {
+// OrderDurationSecondsLTE applies the LTE predicate on the "order_duration_seconds" field.
+func OrderDurationSecondsLTE(v uint32) predicate.AppSimulatePowerRental {
 	return predicate.AppSimulatePowerRental(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldOrderDuration), v))
+		s.Where(sql.LTE(s.C(FieldOrderDurationSeconds), v))
 	})
 }
 
-// OrderDurationIsNil applies the IsNil predicate on the "order_duration" field.
-func OrderDurationIsNil() predicate.AppSimulatePowerRental {
+// OrderDurationSecondsIsNil applies the IsNil predicate on the "order_duration_seconds" field.
+func OrderDurationSecondsIsNil() predicate.AppSimulatePowerRental {
 	return predicate.AppSimulatePowerRental(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldOrderDuration)))
+		s.Where(sql.IsNull(s.C(FieldOrderDurationSeconds)))
 	})
 }
 
-// OrderDurationNotNil applies the NotNil predicate on the "order_duration" field.
-func OrderDurationNotNil() predicate.AppSimulatePowerRental {
+// OrderDurationSecondsNotNil applies the NotNil predicate on the "order_duration_seconds" field.
+func OrderDurationSecondsNotNil() predicate.AppSimulatePowerRental {
 	return predicate.AppSimulatePowerRental(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldOrderDuration)))
+		s.Where(sql.NotNull(s.C(FieldOrderDurationSeconds)))
 	})
 }
 

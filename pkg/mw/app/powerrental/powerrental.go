@@ -8,8 +8,8 @@ import (
 type PowerRental interface {
 	MinOrderAmount() decimal.Decimal
 	MaxOrderAmount() decimal.Decimal
-	MinOrderDuration() uint32
-	MaxOrderDuration() uint32
+	MinOrderDurationSeconds() uint32
+	MaxOrderDurationSeconds() uint32
 }
 
 type powerRental struct {
@@ -31,10 +31,10 @@ func (pr *powerRental) MaxOrderAmount() decimal.Decimal {
 	return pr.appPowerRental.MaxOrderAmount
 }
 
-func (pr *powerRental) MinOrderDuration() uint32 {
-	return pr.appPowerRental.MinOrderDuration
+func (pr *powerRental) MinOrderDurationSeconds() uint32 {
+	return pr.appPowerRental.MinOrderDurationSeconds
 }
 
-func (pr *powerRental) MaxOrderDuration() uint32 {
-	return pr.appPowerRental.MaxOrderDuration
+func (pr *powerRental) MaxOrderDurationSeconds() uint32 {
+	return pr.appPowerRental.MaxOrderDurationSeconds
 }

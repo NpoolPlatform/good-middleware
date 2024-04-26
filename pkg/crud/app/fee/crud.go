@@ -12,11 +12,11 @@ import (
 )
 
 type Req struct {
-	EntID            *uuid.UUID
-	AppGoodID        *uuid.UUID
-	UnitValue        *decimal.Decimal // Per unit per duration, cash or from profit
-	MinOrderDuration *uint32
-	DeletedAt        *uint32
+	EntID                   *uuid.UUID
+	AppGoodID               *uuid.UUID
+	UnitValue               *decimal.Decimal // Per unit per duration, cash or from profit
+	MinOrderDurationSeconds *uint32
+	DeletedAt               *uint32
 }
 
 func CreateSet(c *ent.AppFeeCreate, req *Req) *ent.AppFeeCreate {
@@ -29,8 +29,8 @@ func CreateSet(c *ent.AppFeeCreate, req *Req) *ent.AppFeeCreate {
 	if req.UnitValue != nil {
 		c.SetUnitValue(*req.UnitValue)
 	}
-	if req.MinOrderDuration != nil {
-		c.SetMinOrderDuration(*req.MinOrderDuration)
+	if req.MinOrderDurationSeconds != nil {
+		c.SetMinOrderDurationSeconds(*req.MinOrderDurationSeconds)
 	}
 	return c
 }
@@ -39,8 +39,8 @@ func UpdateSet(u *ent.AppFeeUpdateOne, req *Req) *ent.AppFeeUpdateOne {
 	if req.UnitValue != nil {
 		u.SetUnitValue(*req.UnitValue)
 	}
-	if req.MinOrderDuration != nil {
-		u.SetMinOrderDuration(*req.MinOrderDuration)
+	if req.MinOrderDurationSeconds != nil {
+		u.SetMinOrderDurationSeconds(*req.MinOrderDurationSeconds)
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)

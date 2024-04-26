@@ -29,7 +29,7 @@ func (s *Server) CreateFee(ctx context.Context, in *npool.CreateFeeRequest) (*np
 		fee1.WithName(req.Name, true),
 		fee1.WithSettlementType(req.SettlementType, true),
 		fee1.WithUnitValue(req.UnitValue, false),
-		fee1.WithDurationType(req.DurationType, false),
+		fee1.WithDurationDisplayType(req.DurationDisplayType, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

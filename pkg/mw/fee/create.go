@@ -36,11 +36,11 @@ func (h *createHandler) createFee(ctx context.Context, tx *ent.Tx) error {
 	if _, err := feecrud.CreateSet(
 		tx.Fee.Create(),
 		&feecrud.Req{
-			EntID:          h.EntID,
-			GoodID:         h.GoodID,
-			SettlementType: h.SettlementType,
-			UnitValue:      h.UnitValue,
-			DurationType:   h.DurationType,
+			EntID:               h.EntID,
+			GoodID:              h.GoodID,
+			SettlementType:      h.SettlementType,
+			UnitValue:           h.UnitValue,
+			DurationDisplayType: h.DurationDisplayType,
 		},
 	).Save(ctx); err != nil {
 		return err

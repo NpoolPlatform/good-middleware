@@ -31,8 +31,8 @@ type AppSimulatePowerRental struct {
 	CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
 	// OrderUnits holds the value of the "order_units" field.
 	OrderUnits decimal.Decimal `json:"order_units,omitempty"`
-	// OrderDuration holds the value of the "order_duration" field.
-	OrderDuration uint32 `json:"order_duration,omitempty"`
+	// OrderDurationSeconds holds the value of the "order_duration_seconds" field.
+	OrderDurationSeconds uint32 `json:"order_duration_seconds,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -42,7 +42,7 @@ func (*AppSimulatePowerRental) scanValues(columns []string) ([]interface{}, erro
 		switch columns[i] {
 		case appsimulatepowerrental.FieldOrderUnits:
 			values[i] = new(decimal.Decimal)
-		case appsimulatepowerrental.FieldID, appsimulatepowerrental.FieldCreatedAt, appsimulatepowerrental.FieldUpdatedAt, appsimulatepowerrental.FieldDeletedAt, appsimulatepowerrental.FieldOrderDuration:
+		case appsimulatepowerrental.FieldID, appsimulatepowerrental.FieldCreatedAt, appsimulatepowerrental.FieldUpdatedAt, appsimulatepowerrental.FieldDeletedAt, appsimulatepowerrental.FieldOrderDurationSeconds:
 			values[i] = new(sql.NullInt64)
 		case appsimulatepowerrental.FieldEntID, appsimulatepowerrental.FieldAppGoodID, appsimulatepowerrental.FieldCoinTypeID:
 			values[i] = new(uuid.UUID)
@@ -109,11 +109,11 @@ func (aspr *AppSimulatePowerRental) assignValues(columns []string, values []inte
 			} else if value != nil {
 				aspr.OrderUnits = *value
 			}
-		case appsimulatepowerrental.FieldOrderDuration:
+		case appsimulatepowerrental.FieldOrderDurationSeconds:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field order_duration", values[i])
+				return fmt.Errorf("unexpected type %T for field order_duration_seconds", values[i])
 			} else if value.Valid {
-				aspr.OrderDuration = uint32(value.Int64)
+				aspr.OrderDurationSeconds = uint32(value.Int64)
 			}
 		}
 	}
@@ -164,8 +164,8 @@ func (aspr *AppSimulatePowerRental) String() string {
 	builder.WriteString("order_units=")
 	builder.WriteString(fmt.Sprintf("%v", aspr.OrderUnits))
 	builder.WriteString(", ")
-	builder.WriteString("order_duration=")
-	builder.WriteString(fmt.Sprintf("%v", aspr.OrderDuration))
+	builder.WriteString("order_duration_seconds=")
+	builder.WriteString(fmt.Sprintf("%v", aspr.OrderDurationSeconds))
 	builder.WriteByte(')')
 	return builder.String()
 }

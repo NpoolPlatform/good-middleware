@@ -78,12 +78,12 @@ func (h *updateHandler) constructAppPowerRentalSQL() {
 		_sql += fmt.Sprintf("%vmax_user_amount = '%v',", set, *h.MaxUserAmount)
 		set = ""
 	}
-	if h.MinOrderDuration != nil {
-		_sql += fmt.Sprintf("%vmin_order_duration = %v,", set, *h.MinOrderDuration)
+	if h.MinOrderDurationSeconds != nil {
+		_sql += fmt.Sprintf("%vmin_order_duration = %v,", set, *h.MinOrderDurationSeconds)
 		set = ""
 	}
-	if h.MaxOrderDuration != nil {
-		_sql += fmt.Sprintf("%vmax_order_duration = %v,", set, *h.MaxOrderDuration)
+	if h.MaxOrderDurationSeconds != nil {
+		_sql += fmt.Sprintf("%vmax_order_duration = %v,", set, *h.MaxOrderDurationSeconds)
 		set = ""
 	}
 	if h.UnitPrice != nil {
@@ -146,10 +146,10 @@ func (h *updateHandler) updateAppGoodBase(ctx context.Context, tx *ent.Tx) error
 }
 
 func (h *updateHandler) validateFixedDurationUnitPrice() error {
-	if h.MinOrderDuration != h.MaxOrderDuration {
+	if h.MinOrderDurationSeconds != h.MaxOrderDurationSeconds {
 		return fmt.Errorf("invalid order duration")
 	}
-	unitPrice := h._ent.powerRental.UnitPrice.Mul(decimal.NewFromInt(int64(*h.MaxOrderDuration)))
+	unitPrice := h._ent.powerRental.UnitPrice.Mul(decimal.NewFromInt(int64(*h.MaxOrderDurationSeconds)))
 	if h.UnitPrice.Cmp(unitPrice) < 0 {
 		return fmt.Errorf("invalid unitprice")
 	}
@@ -157,18 +157,18 @@ func (h *updateHandler) validateFixedDurationUnitPrice() error {
 }
 
 func (h *updateHandler) validateUnitPrice() error {
-	if h.UnitPrice == nil && h.FixedDuration == nil && h.MinOrderDuration == nil && h.MaxOrderDuration == nil {
+	if h.UnitPrice == nil && h.FixedDuration == nil && h.MinOrderDurationSeconds == nil && h.MaxOrderDurationSeconds == nil {
 		return nil
 	}
 
 	if h.FixedDuration == nil {
 		h.FixedDuration = &h._ent.appPowerRental.FixedDuration
 	}
-	if h.MinOrderDuration == nil {
-		h.MinOrderDuration = &h._ent.appPowerRental.MinOrderDuration
+	if h.MinOrderDurationSeconds == nil {
+		h.MinOrderDurationSeconds = &h._ent.appPowerRental.MinOrderDurationSeconds
 	}
-	if h.MaxOrderDuration == nil {
-		h.MaxOrderDuration = &h._ent.appPowerRental.MaxOrderDuration
+	if h.MaxOrderDurationSeconds == nil {
+		h.MaxOrderDurationSeconds = &h._ent.appPowerRental.MaxOrderDurationSeconds
 	}
 	if h.UnitPrice == nil {
 		h.UnitPrice = &h._ent.appPowerRental.UnitPrice

@@ -12,11 +12,11 @@ import (
 )
 
 type Req struct {
-	EntID         *uuid.UUID
-	AppGoodID     *uuid.UUID
-	OrderUnits    *decimal.Decimal
-	OrderDuration *uint32
-	DeletedAt     *uint32
+	EntID                *uuid.UUID
+	AppGoodID            *uuid.UUID
+	OrderUnits           *decimal.Decimal
+	OrderDurationSeconds *uint32
+	DeletedAt            *uint32
 }
 
 func CreateSet(c *ent.AppSimulatePowerRentalCreate, req *Req) *ent.AppSimulatePowerRentalCreate {
@@ -29,8 +29,8 @@ func CreateSet(c *ent.AppSimulatePowerRentalCreate, req *Req) *ent.AppSimulatePo
 	if req.OrderUnits != nil {
 		c.SetOrderUnits(*req.OrderUnits)
 	}
-	if req.OrderDuration != nil {
-		c.SetOrderDuration(*req.OrderDuration)
+	if req.OrderDurationSeconds != nil {
+		c.SetOrderDurationSeconds(*req.OrderDurationSeconds)
 	}
 	return c
 }
@@ -39,8 +39,8 @@ func UpdateSet(u *ent.AppSimulatePowerRentalUpdateOne, req *Req) *ent.AppSimulat
 	if req.OrderUnits != nil {
 		u.SetOrderUnits(*req.OrderUnits)
 	}
-	if req.OrderDuration != nil {
-		u.SetOrderDuration(*req.OrderDuration)
+	if req.OrderDurationSeconds != nil {
+		u.SetOrderDurationSeconds(*req.OrderDurationSeconds)
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)

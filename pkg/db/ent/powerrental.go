@@ -41,8 +41,8 @@ type PowerRental struct {
 	DeliveryAt uint32 `json:"delivery_at,omitempty"`
 	// UnitLockDeposit holds the value of the "unit_lock_deposit" field.
 	UnitLockDeposit decimal.Decimal `json:"unit_lock_deposit,omitempty"`
-	// DurationType holds the value of the "duration_type" field.
-	DurationType string `json:"duration_type,omitempty"`
+	// DurationDisplayType holds the value of the "duration_display_type" field.
+	DurationDisplayType string `json:"duration_display_type,omitempty"`
 	// StockMode holds the value of the "stock_mode" field.
 	StockMode string `json:"stock_mode,omitempty"`
 }
@@ -56,7 +56,7 @@ func (*PowerRental) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case powerrental.FieldID, powerrental.FieldCreatedAt, powerrental.FieldUpdatedAt, powerrental.FieldDeletedAt, powerrental.FieldDeliveryAt:
 			values[i] = new(sql.NullInt64)
-		case powerrental.FieldQuantityUnit, powerrental.FieldDurationType, powerrental.FieldStockMode:
+		case powerrental.FieldQuantityUnit, powerrental.FieldDurationDisplayType, powerrental.FieldStockMode:
 			values[i] = new(sql.NullString)
 		case powerrental.FieldEntID, powerrental.FieldGoodID, powerrental.FieldDeviceTypeID, powerrental.FieldVendorLocationID:
 			values[i] = new(uuid.UUID)
@@ -153,11 +153,11 @@ func (pr *PowerRental) assignValues(columns []string, values []interface{}) erro
 			} else if value != nil {
 				pr.UnitLockDeposit = *value
 			}
-		case powerrental.FieldDurationType:
+		case powerrental.FieldDurationDisplayType:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field duration_type", values[i])
+				return fmt.Errorf("unexpected type %T for field duration_display_type", values[i])
 			} else if value.Valid {
-				pr.DurationType = value.String
+				pr.DurationDisplayType = value.String
 			}
 		case powerrental.FieldStockMode:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -229,8 +229,8 @@ func (pr *PowerRental) String() string {
 	builder.WriteString("unit_lock_deposit=")
 	builder.WriteString(fmt.Sprintf("%v", pr.UnitLockDeposit))
 	builder.WriteString(", ")
-	builder.WriteString("duration_type=")
-	builder.WriteString(pr.DurationType)
+	builder.WriteString("duration_display_type=")
+	builder.WriteString(pr.DurationDisplayType)
 	builder.WriteString(", ")
 	builder.WriteString("stock_mode=")
 	builder.WriteString(pr.StockMode)

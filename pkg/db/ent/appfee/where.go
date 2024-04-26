@@ -122,10 +122,10 @@ func UnitValue(v decimal.Decimal) predicate.AppFee {
 	})
 }
 
-// MinOrderDuration applies equality check predicate on the "min_order_duration" field. It's identical to MinOrderDurationEQ.
-func MinOrderDuration(v uint32) predicate.AppFee {
+// MinOrderDurationSeconds applies equality check predicate on the "min_order_duration_seconds" field. It's identical to MinOrderDurationSecondsEQ.
+func MinOrderDurationSeconds(v uint32) predicate.AppFee {
 	return predicate.AppFee(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMinOrderDuration), v))
+		s.Where(sql.EQ(s.C(FieldMinOrderDurationSeconds), v))
 	})
 }
 
@@ -541,81 +541,81 @@ func UnitValueNotNil() predicate.AppFee {
 	})
 }
 
-// MinOrderDurationEQ applies the EQ predicate on the "min_order_duration" field.
-func MinOrderDurationEQ(v uint32) predicate.AppFee {
+// MinOrderDurationSecondsEQ applies the EQ predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsEQ(v uint32) predicate.AppFee {
 	return predicate.AppFee(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMinOrderDuration), v))
+		s.Where(sql.EQ(s.C(FieldMinOrderDurationSeconds), v))
 	})
 }
 
-// MinOrderDurationNEQ applies the NEQ predicate on the "min_order_duration" field.
-func MinOrderDurationNEQ(v uint32) predicate.AppFee {
+// MinOrderDurationSecondsNEQ applies the NEQ predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsNEQ(v uint32) predicate.AppFee {
 	return predicate.AppFee(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldMinOrderDuration), v))
+		s.Where(sql.NEQ(s.C(FieldMinOrderDurationSeconds), v))
 	})
 }
 
-// MinOrderDurationIn applies the In predicate on the "min_order_duration" field.
-func MinOrderDurationIn(vs ...uint32) predicate.AppFee {
+// MinOrderDurationSecondsIn applies the In predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsIn(vs ...uint32) predicate.AppFee {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.AppFee(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldMinOrderDuration), v...))
+		s.Where(sql.In(s.C(FieldMinOrderDurationSeconds), v...))
 	})
 }
 
-// MinOrderDurationNotIn applies the NotIn predicate on the "min_order_duration" field.
-func MinOrderDurationNotIn(vs ...uint32) predicate.AppFee {
+// MinOrderDurationSecondsNotIn applies the NotIn predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsNotIn(vs ...uint32) predicate.AppFee {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.AppFee(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldMinOrderDuration), v...))
+		s.Where(sql.NotIn(s.C(FieldMinOrderDurationSeconds), v...))
 	})
 }
 
-// MinOrderDurationGT applies the GT predicate on the "min_order_duration" field.
-func MinOrderDurationGT(v uint32) predicate.AppFee {
+// MinOrderDurationSecondsGT applies the GT predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsGT(v uint32) predicate.AppFee {
 	return predicate.AppFee(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldMinOrderDuration), v))
+		s.Where(sql.GT(s.C(FieldMinOrderDurationSeconds), v))
 	})
 }
 
-// MinOrderDurationGTE applies the GTE predicate on the "min_order_duration" field.
-func MinOrderDurationGTE(v uint32) predicate.AppFee {
+// MinOrderDurationSecondsGTE applies the GTE predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsGTE(v uint32) predicate.AppFee {
 	return predicate.AppFee(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldMinOrderDuration), v))
+		s.Where(sql.GTE(s.C(FieldMinOrderDurationSeconds), v))
 	})
 }
 
-// MinOrderDurationLT applies the LT predicate on the "min_order_duration" field.
-func MinOrderDurationLT(v uint32) predicate.AppFee {
+// MinOrderDurationSecondsLT applies the LT predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsLT(v uint32) predicate.AppFee {
 	return predicate.AppFee(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldMinOrderDuration), v))
+		s.Where(sql.LT(s.C(FieldMinOrderDurationSeconds), v))
 	})
 }
 
-// MinOrderDurationLTE applies the LTE predicate on the "min_order_duration" field.
-func MinOrderDurationLTE(v uint32) predicate.AppFee {
+// MinOrderDurationSecondsLTE applies the LTE predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsLTE(v uint32) predicate.AppFee {
 	return predicate.AppFee(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldMinOrderDuration), v))
+		s.Where(sql.LTE(s.C(FieldMinOrderDurationSeconds), v))
 	})
 }
 
-// MinOrderDurationIsNil applies the IsNil predicate on the "min_order_duration" field.
-func MinOrderDurationIsNil() predicate.AppFee {
+// MinOrderDurationSecondsIsNil applies the IsNil predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsIsNil() predicate.AppFee {
 	return predicate.AppFee(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldMinOrderDuration)))
+		s.Where(sql.IsNull(s.C(FieldMinOrderDurationSeconds)))
 	})
 }
 
-// MinOrderDurationNotNil applies the NotNil predicate on the "min_order_duration" field.
-func MinOrderDurationNotNil() predicate.AppFee {
+// MinOrderDurationSecondsNotNil applies the NotNil predicate on the "min_order_duration_seconds" field.
+func MinOrderDurationSecondsNotNil() predicate.AppFee {
 	return predicate.AppFee(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldMinOrderDuration)))
+		s.Where(sql.NotNull(s.C(FieldMinOrderDurationSeconds)))
 	})
 }
 

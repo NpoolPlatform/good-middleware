@@ -178,17 +178,17 @@ func RedeemDelayHours(v uint32) predicate.FbmCrowdFunding {
 	})
 }
 
-// DurationType applies equality check predicate on the "duration_type" field. It's identical to DurationTypeEQ.
-func DurationType(v string) predicate.FbmCrowdFunding {
+// DurationDisplayType applies equality check predicate on the "duration_display_type" field. It's identical to DurationDisplayTypeEQ.
+func DurationDisplayType(v string) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDurationType), v))
+		s.Where(sql.EQ(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// Duration applies equality check predicate on the "duration" field. It's identical to DurationEQ.
-func Duration(v uint32) predicate.FbmCrowdFunding {
+// DurationSeconds applies equality check predicate on the "duration_seconds" field. It's identical to DurationSecondsEQ.
+func DurationSeconds(v uint32) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDuration), v))
+		s.Where(sql.EQ(s.C(FieldDurationSeconds), v))
 	})
 }
 
@@ -1213,194 +1213,194 @@ func RedeemDelayHoursNotNil() predicate.FbmCrowdFunding {
 	})
 }
 
-// DurationTypeEQ applies the EQ predicate on the "duration_type" field.
-func DurationTypeEQ(v string) predicate.FbmCrowdFunding {
+// DurationDisplayTypeEQ applies the EQ predicate on the "duration_display_type" field.
+func DurationDisplayTypeEQ(v string) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDurationType), v))
+		s.Where(sql.EQ(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeNEQ applies the NEQ predicate on the "duration_type" field.
-func DurationTypeNEQ(v string) predicate.FbmCrowdFunding {
+// DurationDisplayTypeNEQ applies the NEQ predicate on the "duration_display_type" field.
+func DurationDisplayTypeNEQ(v string) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDurationType), v))
+		s.Where(sql.NEQ(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeIn applies the In predicate on the "duration_type" field.
-func DurationTypeIn(vs ...string) predicate.FbmCrowdFunding {
+// DurationDisplayTypeIn applies the In predicate on the "duration_display_type" field.
+func DurationDisplayTypeIn(vs ...string) predicate.FbmCrowdFunding {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldDurationType), v...))
+		s.Where(sql.In(s.C(FieldDurationDisplayType), v...))
 	})
 }
 
-// DurationTypeNotIn applies the NotIn predicate on the "duration_type" field.
-func DurationTypeNotIn(vs ...string) predicate.FbmCrowdFunding {
+// DurationDisplayTypeNotIn applies the NotIn predicate on the "duration_display_type" field.
+func DurationDisplayTypeNotIn(vs ...string) predicate.FbmCrowdFunding {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldDurationType), v...))
+		s.Where(sql.NotIn(s.C(FieldDurationDisplayType), v...))
 	})
 }
 
-// DurationTypeGT applies the GT predicate on the "duration_type" field.
-func DurationTypeGT(v string) predicate.FbmCrowdFunding {
+// DurationDisplayTypeGT applies the GT predicate on the "duration_display_type" field.
+func DurationDisplayTypeGT(v string) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDurationType), v))
+		s.Where(sql.GT(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeGTE applies the GTE predicate on the "duration_type" field.
-func DurationTypeGTE(v string) predicate.FbmCrowdFunding {
+// DurationDisplayTypeGTE applies the GTE predicate on the "duration_display_type" field.
+func DurationDisplayTypeGTE(v string) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDurationType), v))
+		s.Where(sql.GTE(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeLT applies the LT predicate on the "duration_type" field.
-func DurationTypeLT(v string) predicate.FbmCrowdFunding {
+// DurationDisplayTypeLT applies the LT predicate on the "duration_display_type" field.
+func DurationDisplayTypeLT(v string) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDurationType), v))
+		s.Where(sql.LT(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeLTE applies the LTE predicate on the "duration_type" field.
-func DurationTypeLTE(v string) predicate.FbmCrowdFunding {
+// DurationDisplayTypeLTE applies the LTE predicate on the "duration_display_type" field.
+func DurationDisplayTypeLTE(v string) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDurationType), v))
+		s.Where(sql.LTE(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeContains applies the Contains predicate on the "duration_type" field.
-func DurationTypeContains(v string) predicate.FbmCrowdFunding {
+// DurationDisplayTypeContains applies the Contains predicate on the "duration_display_type" field.
+func DurationDisplayTypeContains(v string) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldDurationType), v))
+		s.Where(sql.Contains(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeHasPrefix applies the HasPrefix predicate on the "duration_type" field.
-func DurationTypeHasPrefix(v string) predicate.FbmCrowdFunding {
+// DurationDisplayTypeHasPrefix applies the HasPrefix predicate on the "duration_display_type" field.
+func DurationDisplayTypeHasPrefix(v string) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldDurationType), v))
+		s.Where(sql.HasPrefix(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeHasSuffix applies the HasSuffix predicate on the "duration_type" field.
-func DurationTypeHasSuffix(v string) predicate.FbmCrowdFunding {
+// DurationDisplayTypeHasSuffix applies the HasSuffix predicate on the "duration_display_type" field.
+func DurationDisplayTypeHasSuffix(v string) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldDurationType), v))
+		s.Where(sql.HasSuffix(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeIsNil applies the IsNil predicate on the "duration_type" field.
-func DurationTypeIsNil() predicate.FbmCrowdFunding {
+// DurationDisplayTypeIsNil applies the IsNil predicate on the "duration_display_type" field.
+func DurationDisplayTypeIsNil() predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldDurationType)))
+		s.Where(sql.IsNull(s.C(FieldDurationDisplayType)))
 	})
 }
 
-// DurationTypeNotNil applies the NotNil predicate on the "duration_type" field.
-func DurationTypeNotNil() predicate.FbmCrowdFunding {
+// DurationDisplayTypeNotNil applies the NotNil predicate on the "duration_display_type" field.
+func DurationDisplayTypeNotNil() predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldDurationType)))
+		s.Where(sql.NotNull(s.C(FieldDurationDisplayType)))
 	})
 }
 
-// DurationTypeEqualFold applies the EqualFold predicate on the "duration_type" field.
-func DurationTypeEqualFold(v string) predicate.FbmCrowdFunding {
+// DurationDisplayTypeEqualFold applies the EqualFold predicate on the "duration_display_type" field.
+func DurationDisplayTypeEqualFold(v string) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldDurationType), v))
+		s.Where(sql.EqualFold(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationTypeContainsFold applies the ContainsFold predicate on the "duration_type" field.
-func DurationTypeContainsFold(v string) predicate.FbmCrowdFunding {
+// DurationDisplayTypeContainsFold applies the ContainsFold predicate on the "duration_display_type" field.
+func DurationDisplayTypeContainsFold(v string) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldDurationType), v))
+		s.Where(sql.ContainsFold(s.C(FieldDurationDisplayType), v))
 	})
 }
 
-// DurationEQ applies the EQ predicate on the "duration" field.
-func DurationEQ(v uint32) predicate.FbmCrowdFunding {
+// DurationSecondsEQ applies the EQ predicate on the "duration_seconds" field.
+func DurationSecondsEQ(v uint32) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDuration), v))
+		s.Where(sql.EQ(s.C(FieldDurationSeconds), v))
 	})
 }
 
-// DurationNEQ applies the NEQ predicate on the "duration" field.
-func DurationNEQ(v uint32) predicate.FbmCrowdFunding {
+// DurationSecondsNEQ applies the NEQ predicate on the "duration_seconds" field.
+func DurationSecondsNEQ(v uint32) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDuration), v))
+		s.Where(sql.NEQ(s.C(FieldDurationSeconds), v))
 	})
 }
 
-// DurationIn applies the In predicate on the "duration" field.
-func DurationIn(vs ...uint32) predicate.FbmCrowdFunding {
+// DurationSecondsIn applies the In predicate on the "duration_seconds" field.
+func DurationSecondsIn(vs ...uint32) predicate.FbmCrowdFunding {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldDuration), v...))
+		s.Where(sql.In(s.C(FieldDurationSeconds), v...))
 	})
 }
 
-// DurationNotIn applies the NotIn predicate on the "duration" field.
-func DurationNotIn(vs ...uint32) predicate.FbmCrowdFunding {
+// DurationSecondsNotIn applies the NotIn predicate on the "duration_seconds" field.
+func DurationSecondsNotIn(vs ...uint32) predicate.FbmCrowdFunding {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldDuration), v...))
+		s.Where(sql.NotIn(s.C(FieldDurationSeconds), v...))
 	})
 }
 
-// DurationGT applies the GT predicate on the "duration" field.
-func DurationGT(v uint32) predicate.FbmCrowdFunding {
+// DurationSecondsGT applies the GT predicate on the "duration_seconds" field.
+func DurationSecondsGT(v uint32) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDuration), v))
+		s.Where(sql.GT(s.C(FieldDurationSeconds), v))
 	})
 }
 
-// DurationGTE applies the GTE predicate on the "duration" field.
-func DurationGTE(v uint32) predicate.FbmCrowdFunding {
+// DurationSecondsGTE applies the GTE predicate on the "duration_seconds" field.
+func DurationSecondsGTE(v uint32) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDuration), v))
+		s.Where(sql.GTE(s.C(FieldDurationSeconds), v))
 	})
 }
 
-// DurationLT applies the LT predicate on the "duration" field.
-func DurationLT(v uint32) predicate.FbmCrowdFunding {
+// DurationSecondsLT applies the LT predicate on the "duration_seconds" field.
+func DurationSecondsLT(v uint32) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDuration), v))
+		s.Where(sql.LT(s.C(FieldDurationSeconds), v))
 	})
 }
 
-// DurationLTE applies the LTE predicate on the "duration" field.
-func DurationLTE(v uint32) predicate.FbmCrowdFunding {
+// DurationSecondsLTE applies the LTE predicate on the "duration_seconds" field.
+func DurationSecondsLTE(v uint32) predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDuration), v))
+		s.Where(sql.LTE(s.C(FieldDurationSeconds), v))
 	})
 }
 
-// DurationIsNil applies the IsNil predicate on the "duration" field.
-func DurationIsNil() predicate.FbmCrowdFunding {
+// DurationSecondsIsNil applies the IsNil predicate on the "duration_seconds" field.
+func DurationSecondsIsNil() predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldDuration)))
+		s.Where(sql.IsNull(s.C(FieldDurationSeconds)))
 	})
 }
 
-// DurationNotNil applies the NotNil predicate on the "duration" field.
-func DurationNotNil() predicate.FbmCrowdFunding {
+// DurationSecondsNotNil applies the NotNil predicate on the "duration_seconds" field.
+func DurationSecondsNotNil() predicate.FbmCrowdFunding {
 	return predicate.FbmCrowdFunding(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldDuration)))
+		s.Where(sql.NotNull(s.C(FieldDurationSeconds)))
 	})
 }
 

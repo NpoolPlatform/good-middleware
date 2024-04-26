@@ -132,7 +132,7 @@ func migrateGood(ctx context.Context, conn *sql.DB) error {
 		TestOnly             bool
 		BenefitIntervalHours uint32
 		UnitLockDeposit      decimal.Decimal
-		DurationType         string
+		DurationDisplayType  string
 		SettlementType       string
 		CreatedAt            uint32
 		UpdatedAt            uint32
@@ -158,7 +158,7 @@ func migrateGood(ctx context.Context, conn *sql.DB) error {
 			&_g.TestOnly,
 			&_g.BenefitIntervalHours,
 			&_g.UnitLockDeposit,
-			&_g.DurationType,
+			&_g.DurationDisplayType,
 			&_g.SettlementType,
 			&_g.CreatedAt,
 			&_g.UpdatedAt,
@@ -249,7 +249,7 @@ func migrateGood(ctx context.Context, conn *sql.DB) error {
 					SetQuantityUnitAmount(good.QuantityUnitAmount).
 					SetDeliveryAt(good.DeliveryAt).
 					SetUnitLockDeposit(good.UnitLockDeposit).
-					SetDurationType(good.DurationType).
+					SetDurationDisplayType(good.DurationDisplayType).
 					SetStockMode(types.GoodStockMode_GoodStockByUnique.String()).
 					SetCreatedAt(good.CreatedAt).
 					Save(_ctx); err != nil {
@@ -264,7 +264,7 @@ func migrateGood(ctx context.Context, conn *sql.DB) error {
 					SetGoodID(good.EntID).
 					SetSettlementType(good.SettlementType).
 					SetUnitValue(good.UnitPrice).
-					SetDurationType(good.DurationType).
+					SetDurationDisplayType(good.DurationDisplayType).
 					SetCreatedAt(good.CreatedAt).
 					Save(_ctx); err != nil {
 					return err
@@ -328,44 +328,44 @@ func migrateAppGood(ctx context.Context, conn *sql.DB) error {
 		return err
 	}
 	type _appGood struct {
-		ID                    uint32
-		EntID                 uuid.UUID
-		AppID                 uuid.UUID
-		GoodID                uuid.UUID
-		Online                bool
-		Visible               bool
-		GoodName              string
-		UnitPrice             decimal.Decimal
-		PackagePrice          decimal.Decimal
-		DisplayIndex          int32
-		SaleStartAt           uint32
-		SaleEndAt             uint32
-		ServiceStartAt        uint32
-		TechniqueFeeRatio     decimal.Decimal
-		DescriptionsStr       string
-		Descriptions          []string
-		GoodBanner            string
-		DisplayNamesStr       string
-		DisplayNames          []string
-		EnablePurchase        bool
-		EnableProductPage     bool
-		CancelMode            string
-		DisplayColorsStr      string
-		DisplayColors         []string
-		CancelableBeforeStart uint32
-		ProductPage           string
-		EnableSetCommission   bool
-		PostersStr            string
-		Posters               []string
-		MinOrderAmount        decimal.Decimal
-		MaxOrderAmount        decimal.Decimal
-		MaxUserAmount         decimal.Decimal
-		MinOrderDuration      uint32
-		MaxOrderDuration      uint32
-		PackageWithRequireds  bool
-		GoodType              string
-		CreatedAt             uint32
-		UpdatedAt             uint32
+		ID                      uint32
+		EntID                   uuid.UUID
+		AppID                   uuid.UUID
+		GoodID                  uuid.UUID
+		Online                  bool
+		Visible                 bool
+		GoodName                string
+		UnitPrice               decimal.Decimal
+		PackagePrice            decimal.Decimal
+		DisplayIndex            int32
+		SaleStartAt             uint32
+		SaleEndAt               uint32
+		ServiceStartAt          uint32
+		TechniqueFeeRatio       decimal.Decimal
+		DescriptionsStr         string
+		Descriptions            []string
+		GoodBanner              string
+		DisplayNamesStr         string
+		DisplayNames            []string
+		EnablePurchase          bool
+		EnableProductPage       bool
+		CancelMode              string
+		DisplayColorsStr        string
+		DisplayColors           []string
+		CancelableBeforeStart   uint32
+		ProductPage             string
+		EnableSetCommission     bool
+		PostersStr              string
+		Posters                 []string
+		MinOrderAmount          decimal.Decimal
+		MaxOrderAmount          decimal.Decimal
+		MaxUserAmount           decimal.Decimal
+		MinOrderDurationSeconds uint32
+		MaxOrderDurationSeconds uint32
+		PackageWithRequireds    bool
+		GoodType                string
+		CreatedAt               uint32
+		UpdatedAt               uint32
 	}
 	_appGoods := []*_appGood{}
 	for rows.Next() {
@@ -399,8 +399,8 @@ func migrateAppGood(ctx context.Context, conn *sql.DB) error {
 			&_ag.MinOrderAmount,
 			&_ag.MaxOrderAmount,
 			&_ag.MaxUserAmount,
-			&_ag.MinOrderDuration,
-			&_ag.MaxOrderDuration,
+			&_ag.MinOrderDurationSeconds,
+			&_ag.MaxOrderDurationSeconds,
 			&_ag.PackageWithRequireds,
 			&_ag.GoodType,
 			&_ag.CreatedAt,
@@ -471,8 +471,8 @@ func migrateAppGood(ctx context.Context, conn *sql.DB) error {
 					SetMinOrderAmount(appGood.MinOrderAmount).
 					SetMaxOrderAmount(appGood.MaxOrderAmount).
 					SetMaxUserAmount(appGood.MaxUserAmount).
-					SetMinOrderDuration(appGood.MinOrderDuration).
-					SetMaxOrderDuration(appGood.MaxOrderDuration)
+					SetMinOrderDurationSeconds(appGood.MinOrderDurationSeconds).
+					SetMaxOrderDurationSeconds(appGood.MaxOrderDurationSeconds)
 				if appGood.PackagePrice.Cmp(decimal.NewFromInt(0)) > 0 {
 					stm.
 						SetUnitPrice(appGood.PackagePrice).
@@ -495,7 +495,7 @@ func migrateAppGood(ctx context.Context, conn *sql.DB) error {
 					Create().
 					SetAppGoodID(appGood.EntID).
 					SetUnitValue(appGood.UnitPrice).
-					SetMinOrderDuration(appGood.MinOrderDuration).
+					SetMinOrderDurationSeconds(appGood.MinOrderDurationSeconds).
 					Save(_ctx); err != nil {
 					return err
 				}

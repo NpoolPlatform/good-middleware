@@ -41,7 +41,7 @@ var (
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
 		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "unit_value", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
-		{Name: "min_order_duration", Type: field.TypeUint32, Nullable: true, Default: 3},
+		{Name: "min_order_duration_seconds", Type: field.TypeUint32, Nullable: true, Default: 3},
 	}
 	// AppFeesTable holds the schema information for the "app_fees" table.
 	AppFeesTable = &schema.Table{
@@ -368,8 +368,8 @@ var (
 		{Name: "min_order_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "max_order_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "max_user_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
-		{Name: "min_order_duration", Type: field.TypeUint32, Nullable: true, Default: 0},
-		{Name: "max_order_duration", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "min_order_duration_seconds", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "max_order_duration_seconds", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "unit_price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "sale_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "sale_end_at", Type: field.TypeUint32, Nullable: true, Default: 0},
@@ -405,7 +405,7 @@ var (
 		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "coin_type_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "order_units", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
-		{Name: "order_duration", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "order_duration_seconds", Type: field.TypeUint32, Nullable: true, Default: 0},
 	}
 	// AppSimulatePowerRentalsTable holds the schema information for the "app_simulate_power_rentals" table.
 	AppSimulatePowerRentalsTable = &schema.Table{
@@ -665,8 +665,8 @@ var (
 		{Name: "deposit_coin_type_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "redeemable", Type: field.TypeBool, Nullable: true, Default: true},
 		{Name: "redeem_delay_hours", Type: field.TypeUint32, Nullable: true, Default: 8},
-		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
-		{Name: "duration", Type: field.TypeUint32, Nullable: true, Default: 365},
+		{Name: "duration_display_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
+		{Name: "duration_seconds", Type: field.TypeUint32, Nullable: true, Default: 365},
 	}
 	// FbmCrowdFundingsTable holds the schema information for the "fbm_crowd_fundings" table.
 	FbmCrowdFundingsTable = &schema.Table{
@@ -691,7 +691,7 @@ var (
 		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "settlement_type", Type: field.TypeString, Nullable: true, Default: "GoodSettledByPaymentAmount"},
 		{Name: "unit_value", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
-		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
+		{Name: "duration_display_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
 	}
 	// FeesTable holds the schema information for the "fees" table.
 	FeesTable = &schema.Table{
@@ -931,7 +931,7 @@ var (
 		{Name: "quantity_unit_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "delivery_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "unit_lock_deposit", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
-		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
+		{Name: "duration_display_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
 		{Name: "stock_mode", Type: field.TypeString, Nullable: true, Default: "GoodStockByUnique"},
 	}
 	// PowerRentalsTable holds the schema information for the "power_rentals" table.

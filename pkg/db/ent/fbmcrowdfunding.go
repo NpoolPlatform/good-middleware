@@ -45,10 +45,10 @@ type FbmCrowdFunding struct {
 	Redeemable bool `json:"redeemable,omitempty"`
 	// RedeemDelayHours holds the value of the "redeem_delay_hours" field.
 	RedeemDelayHours uint32 `json:"redeem_delay_hours,omitempty"`
-	// DurationType holds the value of the "duration_type" field.
-	DurationType string `json:"duration_type,omitempty"`
-	// Duration holds the value of the "duration" field.
-	Duration uint32 `json:"duration,omitempty"`
+	// DurationDisplayType holds the value of the "duration_display_type" field.
+	DurationDisplayType string `json:"duration_display_type,omitempty"`
+	// DurationSeconds holds the value of the "duration_seconds" field.
+	DurationSeconds uint32 `json:"duration_seconds,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -60,9 +60,9 @@ func (*FbmCrowdFunding) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case fbmcrowdfunding.FieldRedeemable:
 			values[i] = new(sql.NullBool)
-		case fbmcrowdfunding.FieldID, fbmcrowdfunding.FieldCreatedAt, fbmcrowdfunding.FieldUpdatedAt, fbmcrowdfunding.FieldDeletedAt, fbmcrowdfunding.FieldDeliveryAt, fbmcrowdfunding.FieldDepositStartAt, fbmcrowdfunding.FieldDepositEndAt, fbmcrowdfunding.FieldRedeemDelayHours, fbmcrowdfunding.FieldDuration:
+		case fbmcrowdfunding.FieldID, fbmcrowdfunding.FieldCreatedAt, fbmcrowdfunding.FieldUpdatedAt, fbmcrowdfunding.FieldDeletedAt, fbmcrowdfunding.FieldDeliveryAt, fbmcrowdfunding.FieldDepositStartAt, fbmcrowdfunding.FieldDepositEndAt, fbmcrowdfunding.FieldRedeemDelayHours, fbmcrowdfunding.FieldDurationSeconds:
 			values[i] = new(sql.NullInt64)
-		case fbmcrowdfunding.FieldContractAddress, fbmcrowdfunding.FieldDurationType:
+		case fbmcrowdfunding.FieldContractAddress, fbmcrowdfunding.FieldDurationDisplayType:
 			values[i] = new(sql.NullString)
 		case fbmcrowdfunding.FieldEntID, fbmcrowdfunding.FieldGoodID, fbmcrowdfunding.FieldDepositCoinTypeID:
 			values[i] = new(uuid.UUID)
@@ -171,17 +171,17 @@ func (fcf *FbmCrowdFunding) assignValues(columns []string, values []interface{})
 			} else if value.Valid {
 				fcf.RedeemDelayHours = uint32(value.Int64)
 			}
-		case fbmcrowdfunding.FieldDurationType:
+		case fbmcrowdfunding.FieldDurationDisplayType:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field duration_type", values[i])
+				return fmt.Errorf("unexpected type %T for field duration_display_type", values[i])
 			} else if value.Valid {
-				fcf.DurationType = value.String
+				fcf.DurationDisplayType = value.String
 			}
-		case fbmcrowdfunding.FieldDuration:
+		case fbmcrowdfunding.FieldDurationSeconds:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field duration", values[i])
+				return fmt.Errorf("unexpected type %T for field duration_seconds", values[i])
 			} else if value.Valid {
-				fcf.Duration = uint32(value.Int64)
+				fcf.DurationSeconds = uint32(value.Int64)
 			}
 		}
 	}
@@ -253,11 +253,11 @@ func (fcf *FbmCrowdFunding) String() string {
 	builder.WriteString("redeem_delay_hours=")
 	builder.WriteString(fmt.Sprintf("%v", fcf.RedeemDelayHours))
 	builder.WriteString(", ")
-	builder.WriteString("duration_type=")
-	builder.WriteString(fcf.DurationType)
+	builder.WriteString("duration_display_type=")
+	builder.WriteString(fcf.DurationDisplayType)
 	builder.WriteString(", ")
-	builder.WriteString("duration=")
-	builder.WriteString(fmt.Sprintf("%v", fcf.Duration))
+	builder.WriteString("duration_seconds=")
+	builder.WriteString(fmt.Sprintf("%v", fcf.DurationSeconds))
 	builder.WriteByte(')')
 	return builder.String()
 }

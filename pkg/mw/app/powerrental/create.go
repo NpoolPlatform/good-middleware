@@ -101,10 +101,10 @@ func (h *createHandler) constructAppPowerRentalSQL() {
 	_sql += comma + "min_order_amount"
 	_sql += comma + "max_order_amount"
 	_sql += comma + "max_user_amount"
-	if h.MinOrderDuration != nil {
+	if h.MinOrderDurationSeconds != nil {
 		_sql += comma + "min_order_duration"
 	}
-	if h.MaxOrderDuration != nil {
+	if h.MaxOrderDurationSeconds != nil {
 		_sql += comma + "max_order_duration"
 	}
 	_sql += comma + "unit_price"
@@ -160,11 +160,11 @@ func (h *createHandler) constructAppPowerRentalSQL() {
 	} else {
 		_sql += fmt.Sprintf("%v'0' as max_user_amount", comma)
 	}
-	if h.MinOrderDuration != nil {
-		_sql += fmt.Sprintf("%v%v as min_order_duration", comma, *h.MinOrderDuration)
+	if h.MinOrderDurationSeconds != nil {
+		_sql += fmt.Sprintf("%v%v as min_order_duration", comma, *h.MinOrderDurationSeconds)
 	}
-	if h.MaxOrderDuration != nil {
-		_sql += fmt.Sprintf("%v%v as max_order_duration", comma, *h.MaxOrderDuration)
+	if h.MaxOrderDurationSeconds != nil {
+		_sql += fmt.Sprintf("%v%v as max_order_duration", comma, *h.MaxOrderDurationSeconds)
 	}
 	_sql += fmt.Sprintf("%v'%v' as unit_price", comma, *h.UnitPrice)
 	if h.SaleStartAt != nil {
@@ -226,10 +226,10 @@ func (h *createHandler) createExtraInfo(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *createHandler) validateFixedDurationUnitPrice() error {
-	if h.MinOrderDuration != h.MaxOrderDuration {
+	if h.MinOrderDurationSeconds != h.MaxOrderDurationSeconds {
 		return fmt.Errorf("invalid order duration")
 	}
-	unitPrice := h._ent.powerRental.UnitPrice.Mul(decimal.NewFromInt(int64(*h.MaxOrderDuration)))
+	unitPrice := h._ent.powerRental.UnitPrice.Mul(decimal.NewFromInt(int64(*h.MaxOrderDurationSeconds)))
 	if h.UnitPrice.Cmp(unitPrice) < 0 {
 		return fmt.Errorf("invalid unitprice")
 	}

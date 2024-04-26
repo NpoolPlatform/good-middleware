@@ -77,8 +77,8 @@ func (h *updateHandler) constructPowerRentalSQL() {
 		_sql += fmt.Sprintf("%vdelivery_at = %v, ", set, *h.DeliveryAt)
 		set = ""
 	}
-	if h.DurationType != nil {
-		_sql += fmt.Sprintf("%vduration_type = '%v', ", set, h.DurationType.String())
+	if h.DurationDisplayType != nil {
+		_sql += fmt.Sprintf("%vduration_display_type = '%v', ", set, h.DurationDisplayType.String())
 		set = ""
 	}
 	if h.StockMode != nil {

@@ -30,9 +30,9 @@ func (h *updateHandler) updateFee(ctx context.Context, tx *ent.Tx) error {
 	if _, err := feecrud.UpdateSet(
 		tx.Fee.UpdateOneID(*h.ID),
 		&feecrud.Req{
-			SettlementType: h.SettlementType,
-			UnitValue:      h.UnitValue,
-			DurationType:   h.DurationType,
+			SettlementType:      h.SettlementType,
+			UnitValue:           h.UnitValue,
+			DurationDisplayType: h.DurationDisplayType,
 		},
 	).Save(ctx); err != nil {
 		return err
