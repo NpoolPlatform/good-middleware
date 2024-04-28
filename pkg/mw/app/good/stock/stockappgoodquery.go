@@ -115,6 +115,7 @@ func (h *stockAppGoodQuery) getAppGoodBases(ctx context.Context, cli *ent.Client
 		return err
 	}
 	for _, appGoodBase := range appGoodBases {
+		h.stocks[appGoodBase.EntID] = &stockAppGood{}
 		h.stocks[appGoodBase.EntID].appGoodBase = appGoodBase
 		h.stockGoodIDs = append(h.stockGoodIDs, appGoodBase.GoodID)
 	}
@@ -161,9 +162,9 @@ func (h *stockAppGoodQuery) getGoodStocks(ctx context.Context, cli *ent.Client) 
 
 func (h *stockAppGoodQuery) getGoodBases(ctx context.Context, cli *ent.Client) (err error) {
 	goodIDs := []uuid.UUID{}
-	for appGoodID, stock := range h.stocks {
+	for _, stock := range h.stocks {
 		if stock.appGoodBase == nil {
-			return fmt.Errorf("invalid appgoodbase, app_good_id=%v, stocks=%v", appGoodID, h.stocks)
+			return fmt.Errorf("invalid appgoodbase")
 		}
 		goodIDs = append(goodIDs, stock.appGoodBase.GoodID)
 	}
@@ -250,9 +251,6 @@ func (h *stockAppGoodQuery) formalizeAppGoodIDs() error {
 	}
 	if len(h.appGoodIDs) == 0 {
 		return fmt.Errorf("invalid appgoodids")
-	}
-	for _, appGoodID := range h.appGoodIDs {
-		h.stocks[appGoodID] = &stockAppGood{}
 	}
 	return nil
 }
