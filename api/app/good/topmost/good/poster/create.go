@@ -26,7 +26,7 @@ func (s *Server) CreatePoster(ctx context.Context, in *npool.CreatePosterRequest
 		ctx,
 		poster1.WithEntID(req.EntID, false),
 		poster1.WithTopMostGoodID(req.TopMostGoodID, true),
-		poster1.WithPoster(req.Poster, false),
+		poster1.WithPoster(req.Poster, true),
 		poster1.WithIndex(func() *uint8 {
 			if req.Index == nil {
 				return nil
