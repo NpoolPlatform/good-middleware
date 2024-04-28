@@ -127,7 +127,7 @@ func (h *lockopHandler) createLocks(ctx context.Context, tx *ent.Tx) error {
 			tx.AppStockLock.Create(),
 			&appstocklockcrud.Req{
 				AppStockID:   stock.EntID,
-				AppGoodID:    h.AppGoodID,
+				AppGoodID:    stock.AppGoodID,
 				Units:        stock.Locked,
 				AppSpotUnits: stock.AppSpotLocked,
 				ExLockID:     h.LockID,
