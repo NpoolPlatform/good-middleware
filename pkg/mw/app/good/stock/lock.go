@@ -22,7 +22,7 @@ type lockHandler struct {
 
 func (h *lockHandler) lockStock(ctx context.Context, stock *LockStock, tx *ent.Tx) error {
 	_stock, ok := h.stocks[*stock.AppGoodID]
-	if !ok {
+	if !ok || _stock.stock == nil {
 		return fmt.Errorf("invalid stock")
 	}
 
@@ -76,8 +76,8 @@ func (h *lockHandler) lockStock(ctx context.Context, stock *LockStock, tx *ent.T
 
 func (h *lockHandler) lockMiningGoodStock(ctx context.Context, stock *LockStock, tx *ent.Tx) error {
 	_stock, ok := h.stocks[*stock.AppGoodID]
-	if !ok {
-		return fmt.Errorf("invalid stock")
+	if !ok || _stock.miningGoodStock == nil {
+		return fmt.Errorf("invalid mininggoodstock")
 	}
 
 	spotQuantity := _stock.miningGoodStock.SpotQuantity
@@ -130,8 +130,8 @@ func (h *lockHandler) lockMiningGoodStock(ctx context.Context, stock *LockStock,
 
 func (h *lockHandler) lockAppStock(ctx context.Context, stock *LockStock, tx *ent.Tx) error {
 	_stock, ok := h.stocks[*stock.AppGoodID]
-	if !ok {
-		return fmt.Errorf("invalid stock")
+	if !ok || _stock.appGoodStock == nil {
+		return fmt.Errorf("invalid appstock")
 	}
 
 	spotQuantity := _stock.appGoodStock.SpotQuantity
@@ -166,8 +166,8 @@ func (h *lockHandler) lockAppStock(ctx context.Context, stock *LockStock, tx *en
 
 func (h *lockHandler) lockAppMiningGoodStock(ctx context.Context, stock *LockStock, tx *ent.Tx) error {
 	_stock, ok := h.stocks[*stock.AppGoodID]
-	if !ok {
-		return fmt.Errorf("invalid stock")
+	if !ok || _stock.appMiningGoodStock == nil {
+		return fmt.Errorf("invalid appmininggoodstock")
 	}
 
 	spotQuantity := _stock.appMiningGoodStock.SpotQuantity
