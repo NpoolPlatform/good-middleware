@@ -156,6 +156,16 @@ func (h *Handler) withTopMostConds(conds *npool.Conds) error {
 			Val: id,
 		}
 	}
+	if conds.AppID != nil {
+		id, err := uuid.Parse(conds.GetAppID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.TopMostConds.AppID = &cruder.Cond{
+			Op:  conds.GetAppID().GetOp(),
+			Val: id,
+		}
+	}
 	return nil
 }
 
