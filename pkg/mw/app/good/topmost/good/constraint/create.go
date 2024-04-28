@@ -56,7 +56,7 @@ func (h *createHandler) constructSQL() {
 	_sql += ") as tmp "
 	_sql += "where not exists ("
 	_sql += "select 1 from top_most_good_constraints as tmgc "
-	_sql += fmt.Sprintf("where tmgc.top_most_good_id = '%v' and tmgc.constraint = '%v'", *h.TopMostGoodID, h.Constraint.String())
+	_sql += fmt.Sprintf("where tmgc.top_most_good_id = '%v' and tmgc.constraint = '%v' and deleted_at = 0", *h.TopMostGoodID, h.Constraint.String())
 	_sql += " limit 1) and exists ("
 	_sql += "select 1 from top_most_goods "
 	_sql += fmt.Sprintf("where ent_id = '%v'", *h.TopMostGoodID)

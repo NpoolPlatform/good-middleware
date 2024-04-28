@@ -105,7 +105,7 @@ func (h *baseQueryHandler) queryJoinTopMostGood(s *sql.Selector) error {
 	s.AppendSelect(
 		t2.C(enttopmost.FieldAppID),
 		t1.C(enttopmostgood.FieldTopMostID),
-		sql.As(t2.C(enttopmost.FieldTopMostType), "top_most_type"),
+		t2.C(enttopmost.FieldTopMostType),
 		sql.As(t2.C(enttopmost.FieldTitle), "top_most_title"),
 		sql.As(t2.C(enttopmost.FieldMessage), "top_most_message"),
 		sql.As(t2.C(enttopmost.FieldTargetURL), "top_most_target_url"),
