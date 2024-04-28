@@ -2,6 +2,7 @@ package poster
 
 import (
 	"context"
+	"fmt"
 
 	topmostgoodpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good/poster"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -23,6 +24,15 @@ func (h *updateHandler) updatePoster(ctx context.Context, cli *ent.Client) error
 }
 
 func (h *Handler) UpdatePoster(ctx context.Context) error {
+	info, err := h.GetPoster(ctx)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		return fmt.Errorf("invalid poster")
+	}
+
+	h.ID = &info.ID
 	handler := &updateHandler{
 		Handler: h,
 	}
