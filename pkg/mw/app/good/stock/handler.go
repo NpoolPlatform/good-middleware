@@ -251,6 +251,12 @@ func WithStocks(stocks []*npool.LocksRequest_XStock, must bool) func(context.Con
 			}
 			_stock.EntID = &entID
 
+			appGoodID, err := uuid.Parse(stock.AppGoodID)
+			if err != nil {
+				return err
+			}
+			_stock.AppGoodID = &appGoodID
+
 			units, err := decimal.NewFromString(stock.Units)
 			if err != nil {
 				return err
