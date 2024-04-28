@@ -160,12 +160,13 @@ func (h *stockAppGoodQuery) getGoodStocks(ctx context.Context, cli *ent.Client) 
 }
 
 func (h *stockAppGoodQuery) getGoodBases(ctx context.Context, cli *ent.Client) (err error) {
-	goodIDs := func() (uids []uuid.UUID) {
-		for _, stock := range h.stocks {
-			uids = append(uids, stock.appGoodBase.GoodID)
+	goodIDs := []uuid.UUID{}
+	for appGoodID, stock := range h.stocks {
+		if stock.appGoodBase == nil {
+			return fmt.Errorf("invalid appgoodbase, app_good_id=%v, stocks=%v", appGoodID, h.stocks)
 		}
-		return
-	}()
+		goodIDs = append(goodIDs, stock.appGoodBase.GoodID)
+	}
 
 	goodBases, err := cli.
 		GoodBase.
