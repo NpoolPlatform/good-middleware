@@ -101,6 +101,12 @@ func WithTopMostType(e *types.GoodTopMostType, must bool) func(context.Context, 
 
 func WithTitle(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid title")
+			}
+			return nil
+		}
 		h.Title = s
 		return nil
 	}
@@ -108,6 +114,12 @@ func WithTitle(s *string, must bool) func(context.Context, *Handler) error {
 
 func WithMessage(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return fmt.Errorf("invalid message")
+			}
+			return nil
+		}
 		h.Message = s
 		return nil
 	}
