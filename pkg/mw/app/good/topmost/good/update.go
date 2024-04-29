@@ -35,6 +35,7 @@ func (h *Handler) UpdateTopMostGood(ctx context.Context) error {
 		return fmt.Errorf("invalid topmostgood")
 	}
 
+	h.ID = &info.ID
 	handler := &updateHandler{
 		Handler: h,
 	}
