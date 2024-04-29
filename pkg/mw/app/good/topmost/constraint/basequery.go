@@ -10,6 +10,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	enttopmostconstraint "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostconstraint"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 )
@@ -87,6 +88,15 @@ func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 		}
 		s.OnP(
 			sql.EQ(t.C(enttopmost.FieldEntID), id),
+		)
+	}
+	if h.TopMostConds.TopMostType != nil {
+		_type, ok := h.TopMostConds.TopMostType.Val.(types.GoodTopMostType)
+		if !ok {
+			return fmt.Errorf("invalid topmosttype")
+		}
+		s.OnP(
+			sql.EQ(t.C(enttopmost.FieldTopMostType), _type.String()),
 		)
 	}
 	s.AppendSelect(
