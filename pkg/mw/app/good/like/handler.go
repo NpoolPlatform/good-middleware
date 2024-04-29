@@ -2,8 +2,8 @@ package like
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	likecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/like"
@@ -43,7 +43,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -56,7 +56,7 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
@@ -73,7 +73,7 @@ func WithUserID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid userid")
+				return wlog.Errorf("invalid userid")
 			}
 			return nil
 		}
@@ -90,7 +90,7 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid appgoodid")
+				return wlog.Errorf("invalid appgoodid")
 			}
 			return nil
 		}
@@ -99,14 +99,14 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 			appgoodbase1.WithEntID(id, true),
 		)
 		if err != nil {
-			return fmt.Errorf("invalid appgoodid")
+			return wlog.Errorf("invalid appgoodid")
 		}
 		exist, err := handler.ExistGoodBase(ctx)
 		if err != nil {
 			return err
 		}
 		if !exist {
-			return fmt.Errorf("invalid app good")
+			return wlog.Errorf("invalid app good")
 		}
 		h.AppGoodID = handler.EntID
 		return nil
@@ -115,6 +115,12 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 
 func WithLike(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if b == nil {
+			if must {
+				return wlog.Errorf("invalid like")
+			}
+			return nil
+		}
 		h.Like = b
 		return nil
 	}
