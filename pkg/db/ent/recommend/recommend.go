@@ -34,7 +34,7 @@ const (
 	// FieldHideReason holds the string denoting the hide_reason field in the database.
 	FieldHideReason = "hide_reason"
 	// Table holds the table name of the recommend in the database.
-	Table = "recommends"
+	Table = "app_good_recommends"
 )
 
 // Columns holds all SQL columns for recommend fields.

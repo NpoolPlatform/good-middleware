@@ -2,6 +2,8 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
@@ -84,5 +86,11 @@ func (Comment) Edges() []ent.Edge {
 func (Comment) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("user_id", "app_good_id"),
+	}
+}
+
+func (Comment) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Annotation{Table: "app_good_comments"},
 	}
 }

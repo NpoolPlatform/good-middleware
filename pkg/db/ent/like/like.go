@@ -27,7 +27,7 @@ const (
 	// FieldLike holds the string denoting the like field in the database.
 	FieldLike = "like"
 	// Table holds the table name of the like in the database.
-	Table = "likes"
+	Table = "app_good_likes"
 )
 
 // Columns holds all SQL columns for like fields.

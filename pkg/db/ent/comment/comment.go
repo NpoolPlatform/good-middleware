@@ -41,7 +41,7 @@ const (
 	// FieldHideReason holds the string denoting the hide_reason field in the database.
 	FieldHideReason = "hide_reason"
 	// Table holds the table name of the comment in the database.
-	Table = "comments"
+	Table = "app_good_comments"
 )
 
 // Columns holds all SQL columns for comment fields.

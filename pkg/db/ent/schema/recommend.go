@@ -3,6 +3,8 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
@@ -65,5 +67,11 @@ func (Recommend) Fields() []ent.Field {
 func (Recommend) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("app_good_id"),
+	}
+}
+
+func (Recommend) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Annotation{Table: "app_good_recommends"},
 	}
 }

@@ -476,8 +476,8 @@ var (
 			},
 		},
 	}
-	// CommentsColumns holds the columns for the "comments" table.
-	CommentsColumns = []*schema.Column{
+	// AppGoodCommentsColumns holds the columns for the "app_good_comments" table.
+	AppGoodCommentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
@@ -494,21 +494,21 @@ var (
 		{Name: "hide", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "hide_reason", Type: field.TypeString, Nullable: true, Default: "DefaultGoodCommentHideReason"},
 	}
-	// CommentsTable holds the schema information for the "comments" table.
-	CommentsTable = &schema.Table{
-		Name:       "comments",
-		Columns:    CommentsColumns,
-		PrimaryKey: []*schema.Column{CommentsColumns[0]},
+	// AppGoodCommentsTable holds the schema information for the "app_good_comments" table.
+	AppGoodCommentsTable = &schema.Table{
+		Name:       "app_good_comments",
+		Columns:    AppGoodCommentsColumns,
+		PrimaryKey: []*schema.Column{AppGoodCommentsColumns[0]},
 		Indexes: []*schema.Index{
 			{
 				Name:    "comment_ent_id",
 				Unique:  true,
-				Columns: []*schema.Column{CommentsColumns[4]},
+				Columns: []*schema.Column{AppGoodCommentsColumns[4]},
 			},
 			{
 				Name:    "comment_user_id_app_good_id",
 				Unique:  false,
-				Columns: []*schema.Column{CommentsColumns[5], CommentsColumns[6]},
+				Columns: []*schema.Column{AppGoodCommentsColumns[5], AppGoodCommentsColumns[6]},
 			},
 		},
 	}
@@ -861,8 +861,8 @@ var (
 			},
 		},
 	}
-	// LikesColumns holds the columns for the "likes" table.
-	LikesColumns = []*schema.Column{
+	// AppGoodLikesColumns holds the columns for the "app_good_likes" table.
+	AppGoodLikesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
@@ -872,16 +872,16 @@ var (
 		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "like", Type: field.TypeBool},
 	}
-	// LikesTable holds the schema information for the "likes" table.
-	LikesTable = &schema.Table{
-		Name:       "likes",
-		Columns:    LikesColumns,
-		PrimaryKey: []*schema.Column{LikesColumns[0]},
+	// AppGoodLikesTable holds the schema information for the "app_good_likes" table.
+	AppGoodLikesTable = &schema.Table{
+		Name:       "app_good_likes",
+		Columns:    AppGoodLikesColumns,
+		PrimaryKey: []*schema.Column{AppGoodLikesColumns[0]},
 		Indexes: []*schema.Index{
 			{
 				Name:    "like_ent_id",
 				Unique:  true,
-				Columns: []*schema.Column{LikesColumns[4]},
+				Columns: []*schema.Column{AppGoodLikesColumns[4]},
 			},
 		},
 	}
@@ -947,8 +947,8 @@ var (
 			},
 		},
 	}
-	// RecommendsColumns holds the columns for the "recommends" table.
-	RecommendsColumns = []*schema.Column{
+	// AppGoodRecommendsColumns holds the columns for the "app_good_recommends" table.
+	AppGoodRecommendsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
@@ -961,21 +961,21 @@ var (
 		{Name: "hide", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "hide_reason", Type: field.TypeString, Nullable: true, Default: "DefaultGoodCommentHideReason"},
 	}
-	// RecommendsTable holds the schema information for the "recommends" table.
-	RecommendsTable = &schema.Table{
-		Name:       "recommends",
-		Columns:    RecommendsColumns,
-		PrimaryKey: []*schema.Column{RecommendsColumns[0]},
+	// AppGoodRecommendsTable holds the schema information for the "app_good_recommends" table.
+	AppGoodRecommendsTable = &schema.Table{
+		Name:       "app_good_recommends",
+		Columns:    AppGoodRecommendsColumns,
+		PrimaryKey: []*schema.Column{AppGoodRecommendsColumns[0]},
 		Indexes: []*schema.Index{
 			{
 				Name:    "recommend_ent_id",
 				Unique:  true,
-				Columns: []*schema.Column{RecommendsColumns[4]},
+				Columns: []*schema.Column{AppGoodRecommendsColumns[4]},
 			},
 			{
 				Name:    "recommend_app_good_id",
 				Unique:  false,
-				Columns: []*schema.Column{RecommendsColumns[5]},
+				Columns: []*schema.Column{AppGoodRecommendsColumns[5]},
 			},
 		},
 	}
@@ -1328,7 +1328,7 @@ var (
 		AppSimulatePowerRentalsTable,
 		AppStocksTable,
 		AppStockLocksTable,
-		CommentsTable,
+		AppGoodCommentsTable,
 		DelegatedStakingsTable,
 		DeviceInfosTable,
 		DeviceManufacturersTable,
@@ -1341,10 +1341,10 @@ var (
 		GoodCoinsTable,
 		GoodRewardsTable,
 		GoodRewardHistoriesTable,
-		LikesTable,
+		AppGoodLikesTable,
 		MiningGoodStocksTable,
 		PowerRentalsTable,
-		RecommendsTable,
+		AppGoodRecommendsTable,
 		RequiredAppGoodsTable,
 		RequiredGoodsTable,
 		ScoresTable,
@@ -1361,6 +1361,15 @@ var (
 )
 
 func init() {
+	AppGoodCommentsTable.Annotation = &entsql.Annotation{
+		Table: "app_good_comments",
+	}
+	AppGoodLikesTable.Annotation = &entsql.Annotation{
+		Table: "app_good_likes",
+	}
+	AppGoodRecommendsTable.Annotation = &entsql.Annotation{
+		Table: "app_good_recommends",
+	}
 	StocksV1Table.Annotation = &entsql.Annotation{
 		Table: "stocks_v1",
 	}
