@@ -67,8 +67,8 @@ func (h *createHandler) constructSQL() {
 		*h.AppID,
 		h.TopMostType.String(),
 	)
-	_sql += fmt.Sprintf("(start_at < %v and %v < end_at) or ", *h.StartAt, *h.StartAt)
-	_sql += fmt.Sprintf("(start_at < %v and %v < end_at) ", *h.EndAt, *h.EndAt)
+	_sql += fmt.Sprintf("(start_at <= %v and %v < end_at) or ", *h.StartAt, *h.StartAt)
+	_sql += fmt.Sprintf("(start_at < %v and %v <= end_at) ", *h.EndAt, *h.EndAt)
 	_sql += ") limit 1)"
 
 	h.sql = _sql

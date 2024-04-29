@@ -64,8 +64,8 @@ func (h *updateHandler) constructSQL() error {
 			h.topMostType.String(),
 			h.appID,
 		)
-		_sql += fmt.Sprintf("(start_at < %v and %v < end_at) or ", h.startAt, h.startAt)
-		_sql += fmt.Sprintf("(start_at < %v and %v < end_at)", h.endAt, h.endAt)
+		_sql += fmt.Sprintf("(start_at <= %v and %v < end_at) or ", h.startAt, h.startAt)
+		_sql += fmt.Sprintf("(start_at < %v and %v <= end_at)", h.endAt, h.endAt)
 		_sql += ") limit 1) as tmp)"
 	}
 
