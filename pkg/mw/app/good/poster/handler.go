@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
+	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	appgoodpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/poster"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
@@ -17,16 +18,18 @@ import (
 type Handler struct {
 	ID *uint32
 	appgoodpostercrud.Req
-	PosterConds   *appgoodpostercrud.Conds
-	GoodBaseConds *goodbasecrud.Conds
-	Offset        int32
-	Limit         int32
+	PosterConds      *appgoodpostercrud.Conds
+	GoodBaseConds    *goodbasecrud.Conds
+	AppGoodBaseConds *appgoodbasecrud.Conds
+	Offset           int32
+	Limit            int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
-		PosterConds:   &appgoodpostercrud.Conds{},
-		GoodBaseConds: &goodbasecrud.Conds{},
+		PosterConds:      &appgoodpostercrud.Conds{},
+		GoodBaseConds:    &goodbasecrud.Conds{},
+		AppGoodBaseConds: &appgoodbasecrud.Conds{},
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
@@ -173,6 +176,68 @@ func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
 	return nil
 }
 
+func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
+	if conds.AppGoodID != nil {
+		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.AppGoodBaseConds.EntID = &cruder.Cond{
+			Op:  conds.GetAppGoodID().GetOp(),
+			Val: id,
+		}
+	}
+	if conds.AppGoodIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range conds.GetAppGoodIDs().GetValue() {
+			_id, err := uuid.Parse(id)
+			if err != nil {
+				return err
+			}
+			ids = append(ids, _id)
+		}
+		h.AppGoodBaseConds.EntIDs = &cruder.Cond{
+			Op:  conds.GetAppGoodIDs().GetOp(),
+			Val: ids,
+		}
+	}
+	if conds.AppID != nil {
+		id, err := uuid.Parse(conds.GetAppID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.AppGoodBaseConds.AppID = &cruder.Cond{
+			Op:  conds.GetAppID().GetOp(),
+			Val: id,
+		}
+	}
+	if conds.GoodID != nil {
+		id, err := uuid.Parse(conds.GetGoodID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.AppGoodBaseConds.GoodID = &cruder.Cond{
+			Op:  conds.GetGoodID().GetOp(),
+			Val: id,
+		}
+	}
+	if conds.GoodIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range conds.GetGoodIDs().GetValue() {
+			_id, err := uuid.Parse(id)
+			if err != nil {
+				return err
+			}
+			ids = append(ids, _id)
+		}
+		h.AppGoodBaseConds.EntIDs = &cruder.Cond{
+			Op:  conds.GetGoodIDs().GetOp(),
+			Val: ids,
+		}
+	}
+	return nil
+}
+
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if conds == nil {
@@ -184,7 +249,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if err := h.withGoodBaseConds(conds); err != nil {
 			return err
 		}
-		return nil
+		return h.withAppGoodBaseConds(conds)
 	}
 }
 
