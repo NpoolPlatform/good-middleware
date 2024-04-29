@@ -3,6 +3,7 @@ package poster
 import (
 	"context"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appgoodpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/poster"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -23,6 +24,15 @@ func (h *updateHandler) updatePoster(ctx context.Context, cli *ent.Client) error
 }
 
 func (h *Handler) UpdatePoster(ctx context.Context) error {
+	info, err := h.GetPoster(ctx)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		return wlog.Errorf("invalid poster")
+	}
+
+	h.ID = &info.ID
 	handler := &updateHandler{
 		Handler: h,
 	}
