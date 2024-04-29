@@ -23,7 +23,8 @@ func (s *Server) DeleteRequired(ctx context.Context, in *npool.DeleteRequiredReq
 	}
 	handler, err := required1.NewHandler(
 		ctx,
-		required1.WithID(req.ID, true),
+		required1.WithID(req.ID, false),
+		required1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
