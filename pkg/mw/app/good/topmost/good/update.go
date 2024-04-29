@@ -2,6 +2,7 @@ package topmostgood
 
 import (
 	"context"
+	"fmt"
 
 	topmostgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -26,10 +27,17 @@ func (h *updateHandler) updateTopMostGood(ctx context.Context, tx *ent.Tx) error
 }
 
 func (h *Handler) UpdateTopMostGood(ctx context.Context) error {
+	info, err := h.GetTopMostGood(ctx)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		return fmt.Errorf("invalid topmostgood")
+	}
+
 	handler := &updateHandler{
 		Handler: h,
 	}
-
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		return handler.updateTopMostGood(_ctx, tx)
 	})
