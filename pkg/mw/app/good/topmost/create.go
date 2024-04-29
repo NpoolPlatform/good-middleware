@@ -62,8 +62,10 @@ func (h *createHandler) constructSQL() {
 	_sql += ") as tmp "
 	_sql += "where not exists ("
 	_sql += "select 1 from top_mosts as tm "
-	_sql += fmt.Sprintf("where tm.app_id = '%v' and tm.top_most_type ='%v'", *h.AppID, h.TopMostType.String())
-	_sql += " limit 1)"
+	_sql += fmt.Sprintf("where tm.app_id = '%v' and tm.top_most_type ='%v' and (", *h.AppID, h.TopMostType.String())
+	_sql += fmt.Sprintf("(start_at < %v and %v < end_at) or ", *h.StartAt, *h.StartAt)
+	_sql += fmt.Sprintf("(start_at < %v and %v < end_at) ", *h.EndAt, *h.EndAt)
+	_sql += ") limit 1)"
 
 	h.sql = _sql
 }
@@ -81,13 +83,6 @@ func (h *createHandler) createTopMost(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) CreateTopMost(ctx context.Context) error {
-	if err := h.formalizeStartEnd(ctx); err != nil {
-		return err
-	}
-	if err := h.checkPromotion(ctx); err != nil {
-		return err
-	}
-
 	handler := &createHandler{
 		Handler: h,
 	}

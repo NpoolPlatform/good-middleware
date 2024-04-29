@@ -67,9 +67,13 @@ func createTopMost(t *testing.T) {
 }
 
 func updateTopMost(t *testing.T) {
+	ret.Title = uuid.NewString()
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
+		WithTitle(&ret.Title, true),
+		WithStartAt(&ret.StartAt, true),
+		WithEndAt(&ret.EndAt, true),
 	)
 	if assert.Nil(t, err) {
 		err = handler.UpdateTopMost(context.Background())
