@@ -6,88 +6,21 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
-	topmostpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/poster"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
-	enttopmostposter "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostposter"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/poster"
 )
 
 type queryHandler struct {
-	*Handler
-	stmSelect *ent.TopMostPosterSelect
-	stmCount  *ent.TopMostPosterSelect
-	infos     []*npool.Poster
-	total     uint32
-}
-
-func (h *queryHandler) selectPoster(stm *ent.TopMostPosterQuery) *ent.TopMostPosterSelect {
-	return stm.Select(enttopmostposter.FieldID)
-}
-
-func (h *queryHandler) queryPoster(cli *ent.Client) error {
-	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
-	}
-	stm := cli.TopMostPoster.Query().Where(enttopmostposter.DeletedAt(0))
-	if h.ID != nil {
-		stm.Where(enttopmostposter.ID(*h.ID))
-	}
-	if h.EntID != nil {
-		stm.Where(enttopmostposter.EntID(*h.EntID))
-	}
-	h.stmSelect = h.selectPoster(stm)
-	return nil
-}
-
-func (h *queryHandler) queryPosters(cli *ent.Client) (*ent.TopMostPosterSelect, error) {
-	stm, err := topmostpostercrud.SetQueryConds(cli.TopMostPoster.Query(), h.PosterConds)
-	if err != nil {
-		return nil, err
-	}
-	return h.selectPoster(stm), nil
-}
-
-func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
-	t := sql.Table(enttopmostposter.Table)
-	s.LeftJoin(t).
-		On(
-			s.C(enttopmostposter.FieldID),
-			t.C(enttopmostposter.FieldID),
-		).
-		AppendSelect(
-			t.C(enttopmostposter.FieldEntID),
-			t.C(enttopmostposter.FieldTopMostID),
-			t.C(enttopmostposter.FieldPoster),
-			t.C(enttopmostposter.FieldIndex),
-			t.C(enttopmostposter.FieldCreatedAt),
-			t.C(enttopmostposter.FieldUpdatedAt),
-		)
-}
-
-func (h *queryHandler) queryJoinTopMost(s *sql.Selector) {
-	t1 := sql.Table(enttopmost.Table)
-	s.LeftJoin(t1).
-		On(
-			s.C(enttopmostposter.FieldTopMostID),
-			t1.C(enttopmost.FieldEntID),
-		).
-		AppendSelect(
-			t1.C(enttopmost.FieldAppID),
-			sql.As(t1.C(enttopmost.FieldTopMostType), "top_most_type"),
-			sql.As(t1.C(enttopmost.FieldTitle), "top_most_title"),
-			sql.As(t1.C(enttopmost.FieldMessage), "top_most_message"),
-			sql.As(t1.C(enttopmost.FieldTargetURL), "top_most_target_url"),
-		)
+	*baseQueryHandler
+	stmCount *ent.TopMostPosterSelect
+	infos    []*npool.Poster
+	total    uint32
 }
 
 func (h *queryHandler) queryJoin() {
-	h.stmSelect.Modify(func(s *sql.Selector) {
-		h.queryJoinMyself(s)
-		h.queryJoinTopMost(s)
-	})
+	h.baseQueryHandler.queryJoin()
 	if h.stmCount == nil {
 		return
 	}
@@ -108,7 +41,9 @@ func (h *queryHandler) formalize() {
 
 func (h *Handler) GetPoster(ctx context.Context) (*npool.Poster, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -135,7 +70,9 @@ func (h *Handler) GetPoster(ctx context.Context) (*npool.Poster, error) {
 
 func (h *Handler) GetPosters(ctx context.Context) ([]*npool.Poster, uint32, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
 
 	var err error

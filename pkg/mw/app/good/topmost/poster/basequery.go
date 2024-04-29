@@ -1,0 +1,84 @@
+package poster
+
+import (
+	"fmt"
+
+	"entgo.io/ent/dialect/sql"
+
+	topmostpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/poster"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
+	enttopmostposter "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostposter"
+)
+
+type baseQueryHandler struct {
+	*Handler
+	stmSelect *ent.TopMostPosterSelect
+}
+
+func (h *baseQueryHandler) selectPoster(stm *ent.TopMostPosterQuery) *ent.TopMostPosterSelect {
+	return stm.Select(enttopmostposter.FieldID)
+}
+
+func (h *baseQueryHandler) queryPoster(cli *ent.Client) error {
+	if h.ID == nil && h.EntID == nil {
+		return fmt.Errorf("invalid id")
+	}
+	stm := cli.TopMostPoster.Query().Where(enttopmostposter.DeletedAt(0))
+	if h.ID != nil {
+		stm.Where(enttopmostposter.ID(*h.ID))
+	}
+	if h.EntID != nil {
+		stm.Where(enttopmostposter.EntID(*h.EntID))
+	}
+	h.stmSelect = h.selectPoster(stm)
+	return nil
+}
+
+func (h *baseQueryHandler) queryPosters(cli *ent.Client) (*ent.TopMostPosterSelect, error) {
+	stm, err := topmostpostercrud.SetQueryConds(cli.TopMostPoster.Query(), h.PosterConds)
+	if err != nil {
+		return nil, err
+	}
+	return h.selectPoster(stm), nil
+}
+
+func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
+	t := sql.Table(enttopmostposter.Table)
+	s.LeftJoin(t).
+		On(
+			s.C(enttopmostposter.FieldID),
+			t.C(enttopmostposter.FieldID),
+		).
+		AppendSelect(
+			t.C(enttopmostposter.FieldEntID),
+			t.C(enttopmostposter.FieldTopMostID),
+			t.C(enttopmostposter.FieldPoster),
+			t.C(enttopmostposter.FieldIndex),
+			t.C(enttopmostposter.FieldCreatedAt),
+			t.C(enttopmostposter.FieldUpdatedAt),
+		)
+}
+
+func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) {
+	t1 := sql.Table(enttopmost.Table)
+	s.LeftJoin(t1).
+		On(
+			s.C(enttopmostposter.FieldTopMostID),
+			t1.C(enttopmost.FieldEntID),
+		).
+		AppendSelect(
+			t1.C(enttopmost.FieldAppID),
+			t1.C(enttopmost.FieldTopMostType),
+			sql.As(t1.C(enttopmost.FieldTitle), "top_most_title"),
+			sql.As(t1.C(enttopmost.FieldMessage), "top_most_message"),
+			sql.As(t1.C(enttopmost.FieldTargetURL), "top_most_target_url"),
+		)
+}
+
+func (h *baseQueryHandler) queryJoin() {
+	h.stmSelect.Modify(func(s *sql.Selector) {
+		h.queryJoinMyself(s)
+		h.queryJoinTopMost(s)
+	})
+}
