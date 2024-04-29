@@ -23,7 +23,8 @@ func (s *Server) UpdateTopMostGood(ctx context.Context, in *npool.UpdateTopMostG
 	}
 	handler, err := topmostgood1.NewHandler(
 		ctx,
-		topmostgood1.WithID(req.ID, true),
+		topmostgood1.WithID(req.ID, false),
+		topmostgood1.WithEntID(req.EntID, false),
 		topmostgood1.WithDisplayIndex(req.DisplayIndex, false),
 		topmostgood1.WithUnitPrice(req.UnitPrice, false),
 	)
