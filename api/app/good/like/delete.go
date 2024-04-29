@@ -23,7 +23,8 @@ func (s *Server) DeleteLike(ctx context.Context, in *npool.DeleteLikeRequest) (*
 	}
 	handler, err := like1.NewHandler(
 		ctx,
-		like1.WithID(req.ID, true),
+		like1.WithID(req.ID, false),
+		like1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
