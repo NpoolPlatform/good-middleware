@@ -81,6 +81,10 @@ func (h *updateHandler) updateGoodLike(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) UpdateLike(ctx context.Context) error {
+	if h.Like == nil {
+		return wlog.Errorf(cruder.ErrUpdateNothing)
+	}
+
 	info, err := h.GetLike(ctx)
 	if err != nil {
 		return err
