@@ -25,7 +25,7 @@ func (s *Server) CreateTopMostConstraint(ctx context.Context, in *npool.CreateTo
 		ctx,
 		constraint1.WithEntID(req.EntID, false),
 		constraint1.WithTopMostID(req.TopMostID, true),
-		constraint1.WithConstraint(req.Constraint, false),
+		constraint1.WithConstraint(req.Constraint, true),
 		constraint1.WithTargetValue(req.TargetValue, true),
 		constraint1.WithIndex(req.Index, false),
 	)
