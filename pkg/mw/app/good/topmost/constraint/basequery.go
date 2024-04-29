@@ -5,10 +5,13 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
+	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	constraintcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/constraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	enttopmostconstraint "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostconstraint"
+
+	"github.com/google/uuid"
 )
 
 type baseQueryHandler struct {
@@ -61,25 +64,46 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 		)
 }
 
-func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) {
+func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 	t := sql.Table(enttopmost.Table)
 	s.LeftJoin(t).
 		On(
 			s.C(enttopmostconstraint.FieldTopMostID),
 			t.C(enttopmost.FieldEntID),
-		).
-		AppendSelect(
-			t.C(enttopmost.FieldAppID),
-			t.C(enttopmost.FieldTopMostType),
-			sql.As(t.C(enttopmost.FieldTitle), "top_most_title"),
-			sql.As(t.C(enttopmost.FieldMessage), "top_most_message"),
-			sql.As(t.C(enttopmost.FieldTargetURL), "top_most_target_url"),
 		)
+	if h.TopMostConds.AppID != nil {
+		id, ok := h.TopMostConds.AppID.Val.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("invalid appid")
+		}
+		s.OnP(
+			sql.EQ(t.C(enttopmost.FieldAppID), id),
+		)
+	}
+	if h.TopMostConds.EntID != nil {
+		id, ok := h.TopMostConds.EntID.Val.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("invalid entid")
+		}
+		s.OnP(
+			sql.EQ(t.C(enttopmost.FieldEntID), id),
+		)
+	}
+	s.AppendSelect(
+		t.C(enttopmost.FieldAppID),
+		t.C(enttopmost.FieldTopMostType),
+		sql.As(t.C(enttopmost.FieldTitle), "top_most_title"),
+		sql.As(t.C(enttopmost.FieldMessage), "top_most_message"),
+		sql.As(t.C(enttopmost.FieldTargetURL), "top_most_target_url"),
+	)
+	return nil
 }
 
 func (h *baseQueryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
-		h.queryJoinTopMost(s)
+		if err := h.queryJoinTopMost(s); err != nil {
+			logger.Sugar().Errorw("queryJoinTopMost", "Error", err)
+		}
 	})
 }
