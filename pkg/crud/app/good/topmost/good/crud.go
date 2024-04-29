@@ -61,12 +61,11 @@ func UpdateSet(u *ent.TopMostGoodUpdateOne, req *Req) *ent.TopMostGoodUpdateOne 
 }
 
 type Conds struct {
-	ID          *cruder.Cond
-	EntID       *cruder.Cond
-	AppGoodID   *cruder.Cond
-	AppGoodIDs  *cruder.Cond
-	TopMostID   *cruder.Cond
-	TopMostType *cruder.Cond
+	ID         *cruder.Cond
+	EntID      *cruder.Cond
+	AppGoodID  *cruder.Cond
+	AppGoodIDs *cruder.Cond
+	TopMostID  *cruder.Cond
 }
 
 //nolint:gocyclo
