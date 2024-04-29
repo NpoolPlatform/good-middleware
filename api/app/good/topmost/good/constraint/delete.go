@@ -23,7 +23,8 @@ func (s *Server) DeleteTopMostGoodConstraint(ctx context.Context, in *npool.Dele
 	}
 	handler, err := constraint1.NewHandler(
 		ctx,
-		constraint1.WithID(req.ID, true),
+		constraint1.WithID(req.ID, false),
+		constraint1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
