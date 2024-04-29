@@ -2,8 +2,8 @@ package like
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	likecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -86,7 +86,7 @@ func (h *Handler) UpdateLike(ctx context.Context) error {
 		return err
 	}
 	if info == nil {
-		return fmt.Errorf("invalid like")
+		return wlog.Errorf("invalid like")
 	}
 
 	h.AppGoodID = func() *uuid.UUID { uid, _ := uuid.Parse(info.AppGoodID); return &uid }()

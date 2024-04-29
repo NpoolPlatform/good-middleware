@@ -2,9 +2,9 @@ package like
 
 import (
 	"context"
-	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	likecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -50,7 +50,7 @@ func (h *deleteHandler) subGoodLike(ctx context.Context, tx *ent.Tx, like bool) 
 	} else if info.Dislikes >= 1 {
 		info.Dislikes -= 1
 	} else {
-		return fmt.Errorf("not allowed")
+		return wlog.Errorf("not allowed")
 	}
 	if _, err := extrainfocrud.UpdateSet(
 		info.Update(),

@@ -3,22 +3,27 @@ package like
 import (
 	"context"
 
-	likecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 )
 
+type existHandler struct {
+	*baseQueryHandler
+}
+
 func (h *Handler) ExistLikeConds(ctx context.Context) (exist bool, err error) {
+	handler := &existHandler{
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := likecrud.SetQueryConds(cli.Like.Query(), h.LikeConds)
-		if err != nil {
+		if handler.stmSelect, err = handler.queryLikes(cli); err != nil {
 			return err
 		}
-		exist, err = stm.Exist(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return err
 	})
 	if err != nil {
 		return false, err
