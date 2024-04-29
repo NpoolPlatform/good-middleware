@@ -227,6 +227,15 @@ func (h *Handler) withRecommendConds(conds *npool.Conds) error {
 }
 
 func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
+	if conds.AppID != nil {
+		id, err := uuid.Parse(conds.GetAppID().GetValue())
+		if err != nil {
+			return err
+		}
+		h.AppGoodBaseConds.AppID = &cruder.Cond{
+			Op: conds.GetAppID().GetOp(), Val: id,
+		}
+	}
 	if conds.AppGoodID != nil {
 		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
 		if err != nil {

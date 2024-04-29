@@ -3,22 +3,27 @@ package recommend
 import (
 	"context"
 
-	recommendcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 )
 
+type existHandler struct {
+	*baseQueryHandler
+}
+
 func (h *Handler) ExistRecommendConds(ctx context.Context) (exist bool, err error) {
+	handler := &existHandler{
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := recommendcrud.SetQueryConds(cli.Recommend.Query(), h.RecommendConds)
-		if err != nil {
+		if handler.stmSelect, err = handler.queryRecommends(cli); err != nil {
 			return err
 		}
-		exist, err = stm.Exist(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return err
 	})
 	if err != nil {
 		return false, err
