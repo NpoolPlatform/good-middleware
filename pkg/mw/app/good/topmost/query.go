@@ -4,81 +4,17 @@ import (
 	"context"
 	"fmt"
 
-	"entgo.io/ent/dialect/sql"
-
-	topmostcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost"
 )
 
 type queryHandler struct {
-	*Handler
-	stmSelect *ent.TopMostSelect
-	stmCount  *ent.TopMostSelect
-	infos     []*npool.TopMost
-	total     uint32
-}
-
-func (h *queryHandler) selectTopMost(stm *ent.TopMostQuery) *ent.TopMostSelect {
-	return stm.Select(enttopmost.FieldID)
-}
-
-func (h *queryHandler) queryTopMost(cli *ent.Client) error {
-	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
-	}
-	stm := cli.TopMost.Query().Where(enttopmost.DeletedAt(0))
-	if h.ID != nil {
-		stm.Where(enttopmost.ID(*h.ID))
-	}
-	if h.EntID != nil {
-		stm.Where(enttopmost.EntID(*h.EntID))
-	}
-	h.stmSelect = h.selectTopMost(stm)
-	return nil
-}
-
-func (h *queryHandler) queryTopMosts(cli *ent.Client) (*ent.TopMostSelect, error) {
-	stm, err := topmostcrud.SetQueryConds(cli.TopMost.Query(), h.Conds)
-	if err != nil {
-		return nil, err
-	}
-	return h.selectTopMost(stm), nil
-}
-
-func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
-	t := sql.Table(enttopmost.Table)
-	s.LeftJoin(t).
-		On(
-			s.C(enttopmost.FieldID),
-			t.C(enttopmost.FieldID),
-		).
-		AppendSelect(
-			t.C(enttopmost.FieldEntID),
-			t.C(enttopmost.FieldAppID),
-			t.C(enttopmost.FieldTopMostType),
-			t.C(enttopmost.FieldTitle),
-			t.C(enttopmost.FieldMessage),
-			t.C(enttopmost.FieldTargetURL),
-			t.C(enttopmost.FieldStartAt),
-			t.C(enttopmost.FieldEndAt),
-			t.C(enttopmost.FieldCreatedAt),
-			t.C(enttopmost.FieldUpdatedAt),
-		)
-}
-
-func (h *queryHandler) queryJoin() {
-	h.stmSelect.Modify(func(s *sql.Selector) {
-		h.queryJoinMyself(s)
-	})
-	if h.stmCount == nil {
-		return
-	}
-	h.stmCount.Modify(func(s *sql.Selector) {
-	})
+	*baseQueryHandler
+	stmCount *ent.TopMostSelect
+	infos    []*npool.TopMost
+	total    uint32
 }
 
 func (h *queryHandler) scan(ctx context.Context) error {
@@ -93,7 +29,9 @@ func (h *queryHandler) formalize() {
 
 func (h *Handler) GetTopMost(ctx context.Context) (*npool.TopMost, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -120,7 +58,9 @@ func (h *Handler) GetTopMost(ctx context.Context) (*npool.TopMost, error) {
 
 func (h *Handler) GetTopMosts(ctx context.Context) ([]*npool.TopMost, uint32, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
 
 	var err error

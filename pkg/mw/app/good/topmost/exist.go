@@ -3,26 +3,27 @@ package topmost
 import (
 	"context"
 
-	topmostcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 )
 
+type existHandler struct {
+	*baseQueryHandler
+}
+
 func (h *Handler) ExistTopMost(ctx context.Context) (exist bool, err error) {
+	handler := &existHandler{
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		exist, err = cli.
-			TopMost.
-			Query().
-			Where(
-				enttopmost.EntID(*h.EntID),
-				enttopmost.DeletedAt(0),
-			).
-			Exist(_ctx)
-		if err != nil {
+		if err := handler.queryTopMost(cli); err != nil {
 			return err
 		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return err
 	})
 	if err != nil {
 		return false, err
@@ -31,16 +32,18 @@ func (h *Handler) ExistTopMost(ctx context.Context) (exist bool, err error) {
 }
 
 func (h *Handler) ExistTopMostConds(ctx context.Context) (exist bool, err error) {
+	handler := &existHandler{
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := topmostcrud.SetQueryConds(cli.TopMost.Query(), h.Conds)
-		if err != nil {
+		if handler.stmSelect, err = handler.queryTopMosts(cli); err != nil {
 			return err
 		}
-		exist, err = stm.Exist(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return err
 	})
 	if err != nil {
 		return false, err
