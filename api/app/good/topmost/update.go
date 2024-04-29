@@ -23,8 +23,8 @@ func (s *Server) UpdateTopMost(ctx context.Context, in *npool.UpdateTopMostReque
 	}
 	handler, err := topmost1.NewHandler(
 		ctx,
-		topmost1.WithID(req.ID, true),
-		topmost1.WithAppID(req.AppID, true),
+		topmost1.WithID(req.ID, false),
+		topmost1.WithEntID(req.EntID, false),
 		topmost1.WithTopMostType(req.TopMostType, false),
 		topmost1.WithTitle(req.Title, false),
 		topmost1.WithMessage(req.Message, false),
