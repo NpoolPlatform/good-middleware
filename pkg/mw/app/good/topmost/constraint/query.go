@@ -6,11 +6,8 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
-	constraintcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/constraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
-	enttopmostconstraint "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostconstraint"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/constraint"
 
@@ -18,79 +15,14 @@ import (
 )
 
 type queryHandler struct {
-	*Handler
-	stmSelect *ent.TopMostConstraintSelect
-	stmCount  *ent.TopMostConstraintSelect
-	infos     []*npool.TopMostConstraint
-	total     uint32
-}
-
-func (h *queryHandler) selectTopMostConstraint(stm *ent.TopMostConstraintQuery) *ent.TopMostConstraintSelect {
-	return stm.Select(enttopmostconstraint.FieldID)
-}
-
-func (h *queryHandler) queryTopMostConstraint(cli *ent.Client) error {
-	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
-	}
-	stm := cli.TopMostConstraint.Query().Where(enttopmostconstraint.DeletedAt(0))
-	if h.ID != nil {
-		stm.Where(enttopmostconstraint.ID(*h.ID))
-	}
-	if h.EntID != nil {
-		stm.Where(enttopmostconstraint.EntID(*h.EntID))
-	}
-	h.stmSelect = h.selectTopMostConstraint(stm)
-	return nil
-}
-
-func (h *queryHandler) queryTopMostConstraints(cli *ent.Client) (*ent.TopMostConstraintSelect, error) {
-	stm, err := constraintcrud.SetQueryConds(cli.TopMostConstraint.Query(), h.ConstraintConds)
-	if err != nil {
-		return nil, err
-	}
-	return h.selectTopMostConstraint(stm), nil
-}
-
-func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
-	t := sql.Table(enttopmostconstraint.Table)
-	s.LeftJoin(t).
-		On(
-			s.C(enttopmostconstraint.FieldID),
-			t.C(enttopmostconstraint.FieldID),
-		).
-		AppendSelect(
-			t.C(enttopmostconstraint.FieldEntID),
-			t.C(enttopmostconstraint.FieldTopMostID),
-			t.C(enttopmostconstraint.FieldConstraint),
-			t.C(enttopmostconstraint.FieldTargetValue),
-			t.C(enttopmostconstraint.FieldIndex),
-			t.C(enttopmostconstraint.FieldCreatedAt),
-			t.C(enttopmostconstraint.FieldUpdatedAt),
-		)
-}
-
-func (h *queryHandler) queryJoinTopMost(s *sql.Selector) {
-	t := sql.Table(enttopmost.Table)
-	s.LeftJoin(t).
-		On(
-			s.C(enttopmostconstraint.FieldTopMostID),
-			t.C(enttopmost.FieldEntID),
-		).
-		AppendSelect(
-			t.C(enttopmost.FieldAppID),
-			t.C(enttopmost.FieldTopMostType),
-			sql.As(t.C(enttopmost.FieldTitle), "top_most_title"),
-			sql.As(t.C(enttopmost.FieldMessage), "top_most_message"),
-			sql.As(t.C(enttopmost.FieldTargetURL), "top_most_target_url"),
-		)
+	*baseQueryHandler
+	stmCount *ent.TopMostConstraintSelect
+	infos    []*npool.TopMostConstraint
+	total    uint32
 }
 
 func (h *queryHandler) queryJoin() {
-	h.stmSelect.Modify(func(s *sql.Selector) {
-		h.queryJoinMyself(s)
-		h.queryJoinTopMost(s)
-	})
+	h.baseQueryHandler.queryJoin()
 	if h.stmCount == nil {
 		return
 	}
@@ -113,7 +45,9 @@ func (h *queryHandler) formalize() {
 
 func (h *Handler) GetConstraint(ctx context.Context) (*npool.TopMostConstraint, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -140,7 +74,9 @@ func (h *Handler) GetConstraint(ctx context.Context) (*npool.TopMostConstraint, 
 
 func (h *Handler) GetConstraints(ctx context.Context) ([]*npool.TopMostConstraint, uint32, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
 
 	var err error
