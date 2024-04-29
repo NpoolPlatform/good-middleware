@@ -3,26 +3,30 @@ package required
 import (
 	"context"
 
-	requiredcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/required"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 )
 
+type existHandler struct {
+	*baseQueryHandler
+}
+
 func (h *Handler) ExistRequiredConds(ctx context.Context) (exist bool, err error) {
+	handler := &queryHandler{
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := requiredcrud.SetQueryConds(cli.RequiredAppGood.Query(), h.RequiredConds)
-		if err != nil {
+		if handler.stmSelect, err = handler.queryRequireds(cli); err != nil {
 			return err
 		}
-		exist, err = stm.Exist(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return err
 	})
 	if err != nil {
 		return false, err
 	}
-
 	return exist, nil
 }
