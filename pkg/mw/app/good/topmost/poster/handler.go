@@ -177,10 +177,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if err := h.withTopMostPosterConds(conds); err != nil {
 			return err
 		}
-		if err := h.withTopMostConds(conds); err != nil {
-			return err
-		}
-		return nil
+		return h.withTopMostConds(conds)
 	}
 }
 

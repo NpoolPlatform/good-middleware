@@ -76,6 +76,7 @@ func UpdateSet(u *ent.TopMostUpdateOne, req *Req) *ent.TopMostUpdateOne {
 type Conds struct {
 	ID          *cruder.Cond
 	EntID       *cruder.Cond
+	EntIDs      *cruder.Cond
 	AppID       *cruder.Cond
 	TopMostType *cruder.Cond
 	Title       *cruder.Cond
@@ -112,6 +113,18 @@ func SetQueryConds(q *ent.TopMostQuery, conds *Conds) (*ent.TopMostQuery, error)
 			q.Where(enttopmost.EntID(id))
 		case cruder.NEQ:
 			q.Where(enttopmost.EntIDNEQ(id))
+		default:
+			return nil, fmt.Errorf("invalid topmostgood field")
+		}
+	}
+	if conds.EntIDs != nil {
+		ids, ok := conds.EntIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, fmt.Errorf("invalid ids")
+		}
+		switch conds.EntIDs.Op {
+		case cruder.IN:
+			q.Where(enttopmost.EntIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid topmostgood field")
 		}

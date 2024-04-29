@@ -9,6 +9,8 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	enttopmostposter "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostposter"
+
+	"github.com/google/uuid"
 )
 
 type baseQueryHandler struct {
@@ -60,20 +62,53 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 		)
 }
 
-func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) {
+func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 	t1 := sql.Table(enttopmost.Table)
 	s.LeftJoin(t1).
 		On(
 			s.C(enttopmostposter.FieldTopMostID),
 			t1.C(enttopmost.FieldEntID),
-		).
-		AppendSelect(
-			t1.C(enttopmost.FieldAppID),
-			t1.C(enttopmost.FieldTopMostType),
-			sql.As(t1.C(enttopmost.FieldTitle), "top_most_title"),
-			sql.As(t1.C(enttopmost.FieldMessage), "top_most_message"),
-			sql.As(t1.C(enttopmost.FieldTargetURL), "top_most_target_url"),
 		)
+	if h.TopMostConds.AppID != nil {
+		id, ok := h.TopMostConds.AppID.Val.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("invalid appid")
+		}
+		s.OnP(
+			sql.EQ(t1.C(enttopmost.FieldAppID), id),
+		)
+	}
+	if h.TopMostConds.EntID != nil {
+		id, ok := h.TopMostConds.EntID.Val.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("invalid entid")
+		}
+		s.OnP(
+			sql.EQ(t1.C(enttopmost.FieldEntID), id),
+		)
+	}
+	if h.TopMostConds.EntIDs != nil {
+		ids, ok := h.TopMostConds.EntIDs.Val.([]uuid.UUID)
+		if !ok {
+			return fmt.Errorf("invalid entids")
+		}
+		s.OnP(
+			sql.EQ(t1.C(enttopmost.FieldEntID), func() (_ids []interface{}) {
+				for _, id := range ids {
+					_ids = append(_ids, interface{}(id))
+				}
+				return
+			}),
+		)
+	}
+	s.AppendSelect(
+		t1.C(enttopmost.FieldAppID),
+		t1.C(enttopmost.FieldTopMostType),
+		sql.As(t1.C(enttopmost.FieldTitle), "top_most_title"),
+		sql.As(t1.C(enttopmost.FieldMessage), "top_most_message"),
+		sql.As(t1.C(enttopmost.FieldTargetURL), "top_most_target_url"),
+	)
+	return nil
 }
 
 func (h *baseQueryHandler) queryJoin() {

@@ -95,7 +95,7 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 			return fmt.Errorf("invalid appgoodid")
 		}
 		s.OnP(
-			sql.EQ(t2.C(entappgoodbase.FieldEntID), id),
+			sql.EQ(t1.C(entappgoodbase.FieldEntID), id),
 		)
 	}
 	if h.AppGoodBaseConds.EntIDs != nil {
@@ -104,12 +104,21 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 			return fmt.Errorf("invalid appgoodids")
 		}
 		s.OnP(
-			sql.In(t2.C(entappgoodbase.FieldEntID), func() (_ids []interface{}) {
+			sql.In(t1.C(entappgoodbase.FieldEntID), func() (_ids []interface{}) {
 				for _, id := range ids {
 					_ids = append(_ids, interface{}(id))
 				}
 				return
 			}),
+		)
+	}
+	if h.AppGoodBaseConds.AppID != nil {
+		id, ok := h.AppGoodBaseConds.AppID.Val.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("invalid appid")
+		}
+		s.OnP(
+			sql.EQ(t1.C(entappgoodbase.FieldAppID), id),
 		)
 	}
 	s.AppendSelect(
@@ -128,6 +137,15 @@ func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 			s.C(enttopmostgood.FieldTopMostID),
 			t.C(enttopmost.FieldEntID),
 		)
+	if h.TopMostConds.AppID != nil {
+		id, ok := h.TopMostConds.AppID.Val.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("invalid appid")
+		}
+		s.OnP(
+			sql.EQ(t.C(enttopmost.FieldAppID), id),
+		)
+	}
 	if h.TopMostConds.EntID != nil {
 		id, ok := h.TopMostConds.EntID.Val.(uuid.UUID)
 		if !ok {
