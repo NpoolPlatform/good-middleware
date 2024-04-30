@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -38,7 +39,7 @@ func (h *updateHandler) constructSQL() error {
 		set = ""
 	}
 	if set != "" {
-		return cruder.ErrUpdateNothing
+		return wlog.WrapError(cruder.ErrUpdateNothing)
 	}
 	_sql += fmt.Sprintf("updated_at = %v ", now)
 	_sql += "where "
@@ -59,26 +60,27 @@ func (h *updateHandler) updateLabel(ctx context.Context, tx *ent.Tx) error {
 	if err != nil {
 		return err
 	}
-	if _, err := rc.RowsAffected(); err != nil {
-		return err
+	n, err := rc.RowsAffected()
+	if err != nil || n != 1 {
+		return wlog.Errorf("fail update label: %v", err)
 	}
 	return nil
 }
 
 func (h *Handler) UpdateLabel(ctx context.Context) error {
-	handler := &updateHandler{
-		Handler: h,
-	}
-
 	info, err := h.GetLabel(ctx)
 	if err != nil {
 		return err
 	}
 	if info == nil {
-		return fmt.Errorf("invalid label")
+		return wlog.Errorf("invalid label")
 	}
 
-	handler.appGoodID = info.AppGoodID
+	handler := &updateHandler{
+		Handler:   h,
+		appGoodID: info.AppGoodID,
+	}
+	h.ID = &info.ID
 	if err := handler.constructSQL(); err != nil {
 		return err
 	}
