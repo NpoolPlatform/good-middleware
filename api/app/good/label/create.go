@@ -28,7 +28,7 @@ func (s *Server) CreateLabel(ctx context.Context, in *npool.CreateLabelRequest) 
 		label1.WithAppGoodID(req.AppGoodID, true),
 		label1.WithIcon(req.Icon, false),
 		label1.WithIconBgColor(req.IconBgColor, false),
-		label1.WithLabel(req.Label, false),
+		label1.WithLabel(req.Label, true),
 		label1.WithLabelBgColor(req.LabelBgColor, false),
 		label1.WithIndex(func() *uint8 {
 			if req.Index == nil {
