@@ -3,26 +3,27 @@ package label
 import (
 	"context"
 
-	labelcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/label"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entlabel "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodlabel"
 )
 
+type existHandler struct {
+	*baseQueryHandler
+}
+
 func (h *Handler) ExistLabel(ctx context.Context) (exist bool, err error) {
+	handler := &existHandler{
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		exist, err = cli.
-			AppGoodLabel.
-			Query().
-			Where(
-				entlabel.EntID(*h.EntID),
-				entlabel.DeletedAt(0),
-			).
-			Exist(_ctx)
-		if err != nil {
+		if err := handler.queryLabel(cli); err != nil {
 			return err
 		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return err
 	})
 	if err != nil {
 		return false, err
@@ -31,16 +32,18 @@ func (h *Handler) ExistLabel(ctx context.Context) (exist bool, err error) {
 }
 
 func (h *Handler) ExistLabelConds(ctx context.Context) (exist bool, err error) {
+	handler := &existHandler{
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := labelcrud.SetQueryConds(cli.AppGoodLabel.Query(), h.LabelConds)
-		if err != nil {
+		if handler.stmSelect, err = handler.queryLabels(cli); err != nil {
 			return err
 		}
-		exist, err = stm.Exist(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return err
 	})
 	if err != nil {
 		return false, err
