@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
@@ -18,6 +19,7 @@ type updateHandler struct {
 	*powerRentalAppGoodQueryHandler
 	sqlAppPowerRental string
 	sqlAppGoodBase    string
+	updateNothing     bool
 }
 
 func (h *updateHandler) constructAppGoodBaseSQL(ctx context.Context) error {
@@ -36,17 +38,17 @@ func (h *updateHandler) constructAppGoodBaseSQL(ctx context.Context) error {
 		appgoodbase1.WithBanner(h.AppGoodBaseReq.Banner, false),
 	)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	h.sqlAppGoodBase, err = handler.ConstructUpdateSQL()
 	if err != cruder.ErrUpdateNothing {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
 
 //nolint:funlen,gocyclo
-func (h *updateHandler) constructAppPowerRentalSQL() {
+func (h *updateHandler) constructAppPowerRentalSQL() error {
 	set := "set "
 	now := uint32(time.Now().Unix())
 	_sql := "update app_power_rentals "
@@ -111,13 +113,15 @@ func (h *updateHandler) constructAppPowerRentalSQL() {
 		set = ""
 	}
 	if set != "" {
-		return
+		return cruder.ErrUpdateNothing
 	}
 	_sql += fmt.Sprintf("updated_at = %v", now)
 	_sql += fmt.Sprintf(" where id = %v ", *h.ID)
 	_sql += fmt.Sprintf(" and ent_id = '%v' ", *h.EntID)
 	_sql += fmt.Sprintf(" and app_good_id = '%v'", *h.AppGoodID)
+
 	h.sqlAppPowerRental = _sql
+	return nil
 }
 
 func (h *updateHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) error {
@@ -126,10 +130,10 @@ func (h *updateHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) err
 	}
 	rc, err := tx.ExecContext(ctx, sql)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if _, err := rc.RowsAffected(); err != nil {
-		return fmt.Errorf("fail update apppowerrental: %v", err)
+		return wlog.Errorf("fail update apppowerrental: %v", err)
 	}
 	return nil
 }
@@ -147,11 +151,11 @@ func (h *updateHandler) updateAppGoodBase(ctx context.Context, tx *ent.Tx) error
 
 func (h *updateHandler) validateFixedDurationUnitPrice() error {
 	if h.MinOrderDurationSeconds != h.MaxOrderDurationSeconds {
-		return fmt.Errorf("invalid order duration")
+		return wlog.Errorf("invalid order duration")
 	}
 	unitPrice := h._ent.powerRental.UnitPrice.Mul(decimal.NewFromInt(int64(*h.MaxOrderDurationSeconds)))
 	if h.UnitPrice.Cmp(unitPrice) < 0 {
-		return fmt.Errorf("invalid unitprice")
+		return wlog.Errorf("invalid unitprice")
 	}
 	return nil
 }
@@ -178,7 +182,7 @@ func (h *updateHandler) validateUnitPrice() error {
 		return h.validateFixedDurationUnitPrice()
 	}
 	if h.UnitPrice.Cmp(h._ent.powerRental.UnitPrice) < 0 {
-		return fmt.Errorf("invalid unitprice")
+		return wlog.Errorf("invalid unitprice")
 	}
 	return nil
 }
@@ -191,7 +195,7 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 	}
 
 	if err := handler.requireAppPowerRentalAppGood(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	if h.ID == nil {
@@ -212,17 +216,19 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 	}
 
 	if err := handler.validateUnitPrice(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
-	handler.constructAppPowerRentalSQL()
+	if err := handler.constructAppPowerRentalSQL(); err != nil {
+		return wlog.WrapError(err)
+	}
 	if err := handler.constructAppGoodBaseSQL(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateAppGoodBase(_ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return handler.updateAppPowerRental(_ctx, tx)
 	})

@@ -2,34 +2,26 @@ package powerrental
 
 import (
 	"context"
-	"fmt"
 
-	apppowerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entapppowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
 )
 
 func (h *Handler) ExistPowerRental(ctx context.Context) (exist bool, err error) {
 	if h.ID == nil && h.EntID == nil && h.AppGoodID == nil {
-		return false, fmt.Errorf("invalid appgoodid")
+		return false, wlog.Errorf("invalid appgoodid")
+	}
+	handler := &baseQueryHandler{
+		Handler: h,
 	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm := cli.AppPowerRental.Query()
-		if h.ID != nil {
-			stm.Where(entapppowerrental.ID(*h.ID))
+		if err := handler.queryAppGoodBase(cli); err != nil {
+			return wlog.WrapError(err)
 		}
-		if h.EntID != nil {
-			stm.Where(entapppowerrental.EntID(*h.EntID))
-		}
-		if h.AppGoodID != nil {
-			stm.Where(entapppowerrental.AppGoodID(*h.AppGoodID))
-		}
-		exist, err = stm.Exist(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return wlog.WrapError(err)
 	})
 	if err != nil {
 		return false, err
@@ -38,13 +30,16 @@ func (h *Handler) ExistPowerRental(ctx context.Context) (exist bool, err error) 
 }
 
 func (h *Handler) ExistPowerRentalConds(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
+	}
 	if err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := apppowerrentalcrud.SetQueryConds(cli.AppPowerRental.Query(), h.AppPowerRentalConds)
-		if err != nil {
-			return err
+		if handler.stmSelect, err = handler.queryAppGoodBases(cli); err != nil {
+			return wlog.WrapError(err)
 		}
-		exist, err = stm.Exist(_ctx)
-		return err
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return wlog.WrapError(err)
 	}); err != nil {
 		return false, err
 	}

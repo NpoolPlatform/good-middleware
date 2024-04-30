@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -41,7 +42,7 @@ func (h *createHandler) constructAppGoodBaseSQL(ctx context.Context) error {
 		appgoodbase1.WithBanner(h.AppGoodBaseReq.Banner, false),
 	)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	h.sqlAppGoodBase = handler.ConstructCreateSQL()
 	return nil
@@ -56,7 +57,7 @@ func (h *createHandler) constructAppMiningGoodStockSQL(ctx context.Context) erro
 			appmininggoodstock1.WithMiningGoodStockID(func() *string { s := miningGoodStock.EntID.String(); return &s }(), false),
 		)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.sqlAppMiningGoodStocks = append(h.sqlAppMiningGoodStocks, handler.ConstructCreateSQL())
 	}
@@ -70,7 +71,7 @@ func (h *createHandler) constructAppGoodStockSQL(ctx context.Context) error {
 		appgoodstock1.WithAppGoodID(func() *string { s := h.AppGoodStockReq.AppGoodID.String(); return &s }(), false),
 	)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	h.sqlAppGoodStock = handler.ConstructCreateSQL()
 	return nil
@@ -201,11 +202,11 @@ func (h *createHandler) constructAppPowerRentalSQL() {
 func (h *createHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) error {
 	rc, err := tx.ExecContext(ctx, sql)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
-		return fmt.Errorf("fail create apppowerrental: %v", err)
+		return wlog.Errorf("fail create apppowerrental: %v", err)
 	}
 	return nil
 }
@@ -220,18 +221,18 @@ func (h *createHandler) createAppGoodBase(ctx context.Context, tx *ent.Tx) error
 
 func (h *createHandler) createExtraInfo(ctx context.Context, tx *ent.Tx) error {
 	if _, err := extrainfocrud.CreateSet(tx.ExtraInfo.Create(), h.ExtraInfoReq).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
 
 func (h *createHandler) validateFixedDurationUnitPrice() error {
 	if h.MinOrderDurationSeconds != h.MaxOrderDurationSeconds {
-		return fmt.Errorf("invalid order duration")
+		return wlog.Errorf("invalid order duration")
 	}
 	unitPrice := h._ent.powerRental.UnitPrice.Mul(decimal.NewFromInt(int64(*h.MaxOrderDurationSeconds)))
 	if h.UnitPrice.Cmp(unitPrice) < 0 {
-		return fmt.Errorf("invalid unitprice")
+		return wlog.Errorf("invalid unitprice")
 	}
 	return nil
 }
@@ -241,7 +242,7 @@ func (h *createHandler) validateUnitPrice() error {
 		return h.validateFixedDurationUnitPrice()
 	}
 	if h.UnitPrice.Cmp(h._ent.powerRental.UnitPrice) < 0 {
-		return fmt.Errorf("invalid unitprice")
+		return wlog.Errorf("invalid unitprice")
 	}
 	return nil
 }
@@ -266,7 +267,7 @@ func (h *createHandler) createAppStock(ctx context.Context, tx *ent.Tx) error {
 func (h *createHandler) createAppMiningGoodStocks(ctx context.Context, tx *ent.Tx) error {
 	for _, _sql := range h.sqlAppMiningGoodStocks {
 		if err := h.execSQL(ctx, tx, _sql); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 	}
 	return nil
@@ -280,36 +281,36 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	}
 
 	if err := handler.requirePowerRentalGood(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	handler.formalizeEntID()
 	if err := handler.validateUnitPrice(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	handler.constructAppPowerRentalSQL()
 	if err := handler.constructAppGoodBaseSQL(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if err := handler.constructAppGoodStockSQL(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if err := handler.constructAppMiningGoodStockSQL(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createAppGoodBase(_ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := handler.createExtraInfo(_ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := handler.createAppStock(_ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := handler.createAppMiningGoodStocks(_ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return handler.createAppPowerRental(_ctx, tx)
 	})

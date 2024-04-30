@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	apppowerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -22,7 +23,7 @@ func (h *deleteHandler) deleteAppGoodBase(ctx context.Context, tx *ent.Tx) error
 			DeletedAt: &h.now,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -34,7 +35,7 @@ func (h *deleteHandler) deletePowerRental(ctx context.Context, tx *ent.Tx) error
 			DeletedAt: &h.now,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -48,7 +49,7 @@ func (h *Handler) DeletePowerRental(ctx context.Context) error {
 	}
 
 	if err := handler.getAppPowerRentalAppGood(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if handler._ent.appPowerRental == nil {
 		return nil
@@ -56,7 +57,7 @@ func (h *Handler) DeletePowerRental(ctx context.Context) error {
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.deleteAppGoodBase(_ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return handler.deletePowerRental(_ctx, tx)
 	})
