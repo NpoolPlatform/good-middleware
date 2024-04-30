@@ -23,7 +23,8 @@ func (s *Server) DeleteDescription(ctx context.Context, in *npool.DeleteDescript
 	}
 	handler, err := description1.NewHandler(
 		ctx,
-		description1.WithID(req.ID, true),
+		description1.WithID(req.ID, false),
+		description1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

@@ -1,0 +1,128 @@
+package description
+
+import (
+	"entgo.io/ent/dialect/sql"
+
+	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
+	appgooddescriptioncrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/description"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
+	entappgooddescription "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddescription"
+	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+
+	"github.com/google/uuid"
+)
+
+type baseQueryHandler struct {
+	*Handler
+	stmSelect *ent.AppGoodDescriptionSelect
+}
+
+func (h *baseQueryHandler) selectDescription(stm *ent.AppGoodDescriptionQuery) *ent.AppGoodDescriptionSelect {
+	return stm.Select(entappgooddescription.FieldID)
+}
+
+func (h *baseQueryHandler) queryDescription(cli *ent.Client) error {
+	if h.ID == nil && h.EntID == nil {
+		return wlog.Errorf("invalid id")
+	}
+	stm := cli.AppGoodDescription.Query().Where(entappgooddescription.DeletedAt(0))
+	if h.ID != nil {
+		stm.Where(entappgooddescription.ID(*h.ID))
+	}
+	if h.EntID != nil {
+		stm.Where(entappgooddescription.EntID(*h.EntID))
+	}
+	h.stmSelect = h.selectDescription(stm)
+	return nil
+}
+
+func (h *baseQueryHandler) queryDescriptions(cli *ent.Client) (*ent.AppGoodDescriptionSelect, error) {
+	stm, err := appgooddescriptioncrud.SetQueryConds(cli.AppGoodDescription.Query(), h.DescriptionConds)
+	if err != nil {
+		return nil, err
+	}
+	return h.selectDescription(stm), nil
+}
+
+func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
+	t := sql.Table(entappgooddescription.Table)
+	s.LeftJoin(t).
+		On(
+			s.C(entappgooddescription.FieldID),
+			t.C(entappgooddescription.FieldID),
+		).
+		AppendSelect(
+			t.C(entappgooddescription.FieldEntID),
+			t.C(entappgooddescription.FieldAppGoodID),
+			t.C(entappgooddescription.FieldDescription),
+			t.C(entappgooddescription.FieldIndex),
+			t.C(entappgooddescription.FieldCreatedAt),
+			t.C(entappgooddescription.FieldUpdatedAt),
+		)
+}
+
+func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
+	t1 := sql.Table(entappgoodbase.Table)
+	t2 := sql.Table(entgoodbase.Table)
+	s.LeftJoin(t1).
+		On(
+			s.C(entappgooddescription.FieldAppGoodID),
+			t1.C(entappgoodbase.FieldEntID),
+		).
+		LeftJoin(t2).
+		On(
+			t1.C(entappgoodbase.FieldGoodID),
+			t2.C(entgoodbase.FieldEntID),
+		)
+	if h.AppGoodBaseConds.EntID != nil {
+		id, ok := h.AppGoodBaseConds.EntID.Val.(uuid.UUID)
+		if !ok {
+			return wlog.Errorf("invalid appgoodid")
+		}
+		s.OnP(
+			sql.EQ(t1.C(entappgoodbase.FieldEntID), id),
+		)
+	}
+	if h.AppGoodBaseConds.EntIDs != nil {
+		ids, ok := h.AppGoodBaseConds.EntIDs.Val.([]uuid.UUID)
+		if !ok {
+			return wlog.Errorf("invalid appgoodids")
+		}
+		s.OnP(
+			sql.In(t1.C(entappgoodbase.FieldEntID), func() (_ids []interface{}) {
+				for _, id := range ids {
+					_ids = append(_ids, interface{}(id))
+				}
+				return
+			}),
+		)
+	}
+	if h.AppGoodBaseConds.AppID != nil {
+		id, ok := h.AppGoodBaseConds.AppID.Val.(uuid.UUID)
+		if !ok {
+			return wlog.Errorf("invalid appid")
+		}
+		s.OnP(
+			sql.EQ(t1.C(entappgoodbase.FieldAppID), id),
+		)
+	}
+	s.AppendSelect(
+		t1.C(entappgoodbase.FieldAppID),
+		sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
+		sql.As(t2.C(entgoodbase.FieldEntID), "good_id"),
+		sql.As(t2.C(entgoodbase.FieldName), "good_name"),
+		t2.C(entgoodbase.FieldGoodType),
+	)
+	return nil
+}
+
+func (h *baseQueryHandler) queryJoin() {
+	h.stmSelect.Modify(func(s *sql.Selector) {
+		h.queryJoinMyself(s)
+		if err := h.queryJoinAppGood(s); err != nil {
+			logger.Sugar().Errorw("queryJoinAppGood", "Error", err)
+		}
+	})
+}

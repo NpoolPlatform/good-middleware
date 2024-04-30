@@ -3,6 +3,7 @@ package description
 import (
 	"context"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appgooddescriptioncrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/description"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -23,6 +24,15 @@ func (h *updateHandler) updateDescription(ctx context.Context, cli *ent.Client) 
 }
 
 func (h *Handler) UpdateDescription(ctx context.Context) error {
+	info, err := h.GetDescription(ctx)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	if info == nil {
+		return wlog.Errorf("invalid description")
+	}
+
+	h.ID = &info.ID
 	handler := &updateHandler{
 		Handler: h,
 	}
