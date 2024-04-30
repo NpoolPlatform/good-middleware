@@ -19,7 +19,7 @@ type updateHandler struct {
 	*powerRentalAppGoodQueryHandler
 	sqlAppPowerRental string
 	sqlAppGoodBase    string
-	updateNothing     bool
+	updated           bool
 }
 
 func (h *updateHandler) constructAppGoodBaseSQL(ctx context.Context) error {
@@ -132,9 +132,11 @@ func (h *updateHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) err
 	if err != nil {
 		return wlog.WrapError(err)
 	}
-	if _, err := rc.RowsAffected(); err != nil {
+	n, err := rc.RowsAffected()
+	if err != nil {
 		return wlog.Errorf("fail update apppowerrental: %v", err)
 	}
+	h.updated = n == 1
 	return nil
 }
 
@@ -230,6 +232,12 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		if err := handler.updateAppGoodBase(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
 		}
-		return handler.updateAppPowerRental(_ctx, tx)
+		if err := handler.updateAppPowerRental(_ctx, tx); err != nil {
+			return wlog.WrapError(err)
+		}
+		if !handler.updated {
+			return wlog.WrapError(cruder.ErrUpdateNothing)
+		}
+		return nil
 	})
 }
