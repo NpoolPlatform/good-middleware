@@ -26,7 +26,7 @@ func (s *Server) CreateDisplayName(ctx context.Context, in *npool.CreateDisplayN
 		ctx,
 		name1.WithEntID(req.EntID, false),
 		name1.WithAppGoodID(req.AppGoodID, true),
-		name1.WithName(req.Name, false),
+		name1.WithName(req.Name, true),
 		name1.WithIndex(func() *uint8 {
 			if req.Index == nil {
 				return nil
