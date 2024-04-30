@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appsimulatepowerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental/simulate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -27,6 +28,15 @@ func (h *deleteHandler) deleteSimulate(ctx context.Context, cli *ent.Client) err
 }
 
 func (h *Handler) DeleteSimulate(ctx context.Context) error {
+	info, err := h.GetSimulate(ctx)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	if info == nil {
+		return wlog.Errorf("invalid simulate")
+	}
+
+	h.ID = &info.ID
 	handler := &deleteHandler{
 		Handler: h,
 		now:     uint32(time.Now().Unix()),
