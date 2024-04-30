@@ -23,7 +23,8 @@ func (s *Server) DeleteLabel(ctx context.Context, in *npool.DeleteLabelRequest) 
 	}
 	handler, err := label1.NewHandler(
 		ctx,
-		label1.WithID(req.ID, true),
+		label1.WithID(req.ID, false),
+		label1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
