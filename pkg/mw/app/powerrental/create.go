@@ -290,6 +290,9 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	if *h.MaxOrderDurationSeconds < *h.MinOrderDurationSeconds {
 		return wlog.Errorf("invalid orderdurationseconds")
 	}
+	if h.MaxOrderAmount.LessThan(*h.MinOrderAmount) {
+		return wlog.Errorf("invalid orderamount")
+	}
 
 	handler.constructAppPowerRentalSQL()
 	if err := handler.constructAppGoodBaseSQL(ctx); err != nil {
