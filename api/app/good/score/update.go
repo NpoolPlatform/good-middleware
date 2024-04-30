@@ -23,7 +23,8 @@ func (s *Server) UpdateScore(ctx context.Context, in *npool.UpdateScoreRequest) 
 	}
 	handler, err := score1.NewHandler(
 		ctx,
-		score1.WithID(req.ID, true),
+		score1.WithID(req.ID, false),
+		score1.WithEntID(req.EntID, false),
 		score1.WithScore(req.Score, false),
 	)
 	if err != nil {

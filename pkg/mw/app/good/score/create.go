@@ -62,7 +62,11 @@ func (h *Handler) ConstructCreateSQL() string {
 	_sql += fmt.Sprintf("where ent_id='%v'", *h.AppGoodID)
 	_sql += " limit 1) and not exists ("
 	_sql += "select 1 from scores "
-	_sql += fmt.Sprintf("where user_id = '%v' and app_good_id = '%v'", *h.UserID, *h.AppGoodID)
+	_sql += fmt.Sprintf(
+		"where user_id = '%v' and app_good_id = '%v' and deleted_at = 0",
+		*h.UserID,
+		*h.AppGoodID,
+	)
 	_sql += " limit 1)"
 	return _sql
 }
