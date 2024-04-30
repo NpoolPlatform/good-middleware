@@ -3,6 +3,7 @@ package comment
 import (
 	"context"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	commentcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -28,10 +29,17 @@ func (h *updateHandler) updateComment(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) UpdateComment(ctx context.Context) error {
+	info, err := h.GetComment(ctx)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	if info == nil {
+		return wlog.Errorf("invalid comment")
+	}
+
 	handler := &updateHandler{
 		Handler: h,
 	}
-
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		return handler.updateComment(ctx, tx)
 	})

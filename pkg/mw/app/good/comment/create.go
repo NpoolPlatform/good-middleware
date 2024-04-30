@@ -99,7 +99,7 @@ func (h *createHandler) constructSQL() {
 	if h.ReplyToID != nil {
 		_sql += " and exists ("
 		_sql += "select 1 from comments "
-		_sql += fmt.Sprintf("where ent_id = '%v'", *h.ReplyToID)
+		_sql += fmt.Sprintf("where ent_id = '%v' and deleted_at = 0", *h.ReplyToID)
 		_sql += " limit 1)"
 	}
 	h.sql = _sql

@@ -3,26 +3,21 @@ package comment
 import (
 	"context"
 
-	commentcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entcomment "github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 )
 
 func (h *Handler) ExistComment(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		exist, err = cli.
-			Comment.
-			Query().
-			Where(
-				entcomment.EntID(*h.EntID),
-				entcomment.DeletedAt(0),
-			).
-			Exist(_ctx)
-		if err != nil {
+		if err := handler.queryComment(cli); err != nil {
 			return err
 		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return err
 	})
 	if err != nil {
 		return false, err
@@ -31,16 +26,16 @@ func (h *Handler) ExistComment(ctx context.Context) (exist bool, err error) {
 }
 
 func (h *Handler) ExistCommentConds(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := commentcrud.SetQueryConds(cli.Comment.Query(), h.CommentConds)
-		if err != nil {
+		if handler.stmSelect, err = handler.queryComments(cli); err != nil {
 			return err
 		}
-		exist, err = stm.Exist(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return err
 	})
 	if err != nil {
 		return false, err

@@ -2,16 +2,13 @@ package comment
 
 import (
 	"context"
-	"fmt"
 
 	"entgo.io/ent/dialect/sql"
 
-	commentcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/comment"
+	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
-	entcomment "github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
-	entscore "github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/comment"
 
@@ -19,101 +16,21 @@ import (
 )
 
 type queryHandler struct {
-	*Handler
-	stmSelect *ent.CommentSelect
-	stmCount  *ent.CommentSelect
-	infos     []*npool.Comment
-	total     uint32
-}
-
-func (h *queryHandler) selectComment(stm *ent.CommentQuery) *ent.CommentSelect {
-	return stm.Select(entcomment.FieldID)
-}
-
-func (h *queryHandler) queryComment(cli *ent.Client) error {
-	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
-	}
-	stm := cli.Comment.Query().Where(entcomment.DeletedAt(0))
-	if h.ID != nil {
-		stm.Where(entcomment.ID(*h.ID))
-	}
-	if h.EntID != nil {
-		stm.Where(entcomment.EntID(*h.EntID))
-	}
-	h.stmSelect = h.selectComment(stm)
-	return nil
-}
-
-func (h *queryHandler) queryComments(cli *ent.Client) (*ent.CommentSelect, error) {
-	stm, err := commentcrud.SetQueryConds(cli.Comment.Query(), h.CommentConds)
-	if err != nil {
-		return nil, err
-	}
-	return h.selectComment(stm), nil
-}
-
-func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
-	t := sql.Table(entcomment.Table)
-	s.LeftJoin(t).
-		On(
-			s.C(entcomment.FieldID),
-			t.C(entcomment.FieldID),
-		).
-		AppendSelect(
-			t.C(entcomment.FieldEntID),
-			t.C(entcomment.FieldUserID),
-			t.C(entcomment.FieldAppGoodID),
-			t.C(entcomment.FieldOrderID),
-			t.C(entcomment.FieldContent),
-			t.C(entcomment.FieldReplyToID),
-			t.C(entcomment.FieldAnonymous),
-			t.C(entcomment.FieldPurchasedUser),
-			t.C(entcomment.FieldTrialUser),
-			t.C(entcomment.FieldHide),
-			t.C(entcomment.FieldHideReason),
-			t.C(entcomment.FieldCreatedAt),
-			t.C(entcomment.FieldUpdatedAt),
-		)
-}
-
-func (h *queryHandler) queryJoinAppGoodBase(s *sql.Selector) {
-	t := sql.Table(entappgoodbase.Table)
-	s.LeftJoin(t).
-		On(
-			s.C(entcomment.FieldAppGoodID),
-			t.C(entappgoodbase.FieldEntID),
-		).
-		AppendSelect(
-			t.C(entappgoodbase.FieldAppID),
-			t.C(entappgoodbase.FieldGoodID),
-			sql.As(t.C(entappgoodbase.FieldName), "good_name"),
-		)
-}
-
-func (h *queryHandler) queryJoinScore(s *sql.Selector) {
-	t := sql.Table(entscore.Table)
-	s.LeftJoin(t).
-		On(
-			s.C(entcomment.FieldEntID),
-			t.C(entscore.FieldCommentID),
-		).
-		AppendSelect(
-			t.C(entscore.FieldScore),
-		)
+	*baseQueryHandler
+	stmCount *ent.CommentSelect
+	infos    []*npool.Comment
+	total    uint32
 }
 
 func (h *queryHandler) queryJoin() {
-	h.stmSelect.Modify(func(s *sql.Selector) {
-		h.queryJoinMyself(s)
-		h.queryJoinAppGoodBase(s)
-		h.queryJoinScore(s)
-	})
+	h.baseQueryHandler.queryJoin()
 	if h.stmCount == nil {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
-		h.queryJoinAppGoodBase(s)
+		if err := h.queryJoinAppGoodBase(s); err != nil {
+			logger.Sugar().Errorw("queryJoinAppGoodBase", "Error", err)
+		}
 		h.queryJoinScore(s)
 	})
 }
@@ -131,12 +48,14 @@ func (h *queryHandler) formalize() {
 
 func (h *Handler) GetComment(ctx context.Context) (*npool.Comment, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := handler.queryComment(cli); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.queryJoin()
 		return handler.scan(ctx)
@@ -148,7 +67,7 @@ func (h *Handler) GetComment(ctx context.Context) (*npool.Comment, error) {
 		return nil, nil
 	}
 	if len(handler.infos) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 
 	handler.formalize()
@@ -158,25 +77,27 @@ func (h *Handler) GetComment(ctx context.Context) (*npool.Comment, error) {
 
 func (h *Handler) GetComments(ctx context.Context) ([]*npool.Comment, uint32, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
 
 	var err error
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		handler.stmSelect, err = handler.queryComments(cli)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.stmCount, err = handler.queryComments(cli)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 
 		handler.queryJoin()
 
 		total, err := handler.stmCount.Count(_ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.total = uint32(total)
 

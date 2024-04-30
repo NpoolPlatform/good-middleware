@@ -23,7 +23,8 @@ func (s *Server) UpdateComment(ctx context.Context, in *npool.UpdateCommentReque
 	}
 	handler, err := comment1.NewHandler(
 		ctx,
-		comment1.WithID(req.ID, true),
+		comment1.WithID(req.ID, false),
+		comment1.WithEntID(req.EntID, false),
 		comment1.WithContent(req.Content, false),
 		comment1.WithAnonymous(req.Anonymous, false),
 		comment1.WithHide(req.Hide, false),
