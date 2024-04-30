@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 )
 
 type updateHandler struct {
@@ -25,7 +27,12 @@ func (h *updateHandler) constructSQL() {
 	_sql += fmt.Sprintf("id = %v ", *h.ID)
 	_sql += "and not exists ("
 	_sql += "select 1 from (select * from app_default_goods) as adg "
-	_sql += fmt.Sprintf("where adg.app_good_id = '%v' and adg.coin_type_id = '%v' and adg.id != %v", *h.AppGoodID, h.coinTypeID, *h.ID)
+	_sql += fmt.Sprintf(
+		"where adg.app_good_id = '%v' and adg.coin_type_id = '%v' and adg.id != %v",
+		*h.AppGoodID,
+		h.coinTypeID,
+		*h.ID,
+	)
 	_sql += " limit 1) and exists ("
 	_sql += "select 1 from app_good_bases as agb "
 	_sql += "left join good_bases as gb on agb.good_id = gb.ent_id "
@@ -39,25 +46,29 @@ func (h *updateHandler) constructSQL() {
 func (h *updateHandler) updateDefault(ctx context.Context, tx *ent.Tx) error {
 	rc, err := tx.ExecContext(ctx, h.sql)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if _, err := rc.RowsAffected(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
 
 func (h *Handler) UpdateDefault(ctx context.Context) error {
+	if h.AppGoodID == nil {
+		return wlog.WrapError(cruder.ErrUpdateNothing)
+	}
+
 	handler := &updateHandler{
 		Handler: h,
 	}
 
 	info, err := h.GetDefault(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if info == nil {
-		return fmt.Errorf("invalid appdefaultgood")
+		return wlog.Errorf("invalid appdefaultgood")
 	}
 
 	h.ID = &info.ID

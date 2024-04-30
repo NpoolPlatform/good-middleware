@@ -70,9 +70,15 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 
 func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if id == nil {
+			if must {
+				return wlog.Errorf("invalid appgoodid")
+			}
+			return nil
+		}
 		handler, err := appgoodbase1.NewHandler(
 			ctx,
-			appgoodbase1.WithEntID(id, true),
+			appgoodbase1.WithEntID(id, must),
 		)
 		if err != nil {
 			return wlog.WrapError(err)
