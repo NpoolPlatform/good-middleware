@@ -60,6 +60,7 @@ func (h *Handler) UpdateDefault(ctx context.Context) error {
 		return fmt.Errorf("invalid appdefaultgood")
 	}
 
+	h.ID = &info.ID
 	handler.coinTypeID = info.CoinTypeID
 	handler.constructSQL()
 
