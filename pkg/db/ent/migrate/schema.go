@@ -803,6 +803,11 @@ var (
 				Unique:  true,
 				Columns: []*schema.Column{GoodCoinsColumns[4]},
 			},
+			{
+				Name:    "goodcoin_good_id",
+				Unique:  false,
+				Columns: []*schema.Column{GoodCoinsColumns[5]},
+			},
 		},
 	}
 	// GoodRewardsColumns holds the columns for the "good_rewards" table.
@@ -831,6 +836,11 @@ var (
 				Name:    "goodreward_ent_id",
 				Unique:  true,
 				Columns: []*schema.Column{GoodRewardsColumns[4]},
+			},
+			{
+				Name:    "goodreward_good_id",
+				Unique:  false,
+				Columns: []*schema.Column{GoodRewardsColumns[5]},
 			},
 		},
 	}
@@ -914,6 +924,11 @@ var (
 				Unique:  true,
 				Columns: []*schema.Column{MiningGoodStocksColumns[4]},
 			},
+			{
+				Name:    "mininggoodstock_good_stock_id",
+				Unique:  false,
+				Columns: []*schema.Column{MiningGoodStocksColumns[5]},
+			},
 		},
 	}
 	// PowerRentalsColumns holds the columns for the "power_rentals" table.
@@ -944,6 +959,11 @@ var (
 				Name:    "powerrental_ent_id",
 				Unique:  true,
 				Columns: []*schema.Column{PowerRentalsColumns[4]},
+			},
+			{
+				Name:    "powerrental_good_id",
+				Unique:  false,
+				Columns: []*schema.Column{PowerRentalsColumns[5]},
 			},
 		},
 	}
@@ -1088,6 +1108,11 @@ var (
 				Name:    "stock_ent_id",
 				Unique:  true,
 				Columns: []*schema.Column{StocksV1Columns[4]},
+			},
+			{
+				Name:    "stock_good_id",
+				Unique:  false,
+				Columns: []*schema.Column{StocksV1Columns[5]},
 			},
 		},
 	}

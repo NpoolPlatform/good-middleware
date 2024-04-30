@@ -3,6 +3,7 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
 	"github.com/google/uuid"
@@ -52,5 +53,7 @@ func (GoodCoin) Edges() []ent.Edge {
 }
 
 func (GoodCoin) Indexes() []ent.Index {
-	return nil
+	return []ent.Index{
+		index.Fields("good_id"),
+	}
 }
