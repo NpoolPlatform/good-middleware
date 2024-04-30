@@ -227,7 +227,7 @@ func (h *createHandler) createExtraInfo(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *createHandler) validateFixedDurationUnitPrice() error {
-	if h.MinOrderDurationSeconds != h.MaxOrderDurationSeconds {
+	if *h.MinOrderDurationSeconds != *h.MaxOrderDurationSeconds {
 		return wlog.Errorf("invalid order duration")
 	}
 	unitPrice := h._ent.powerRental.UnitPrice.Mul(decimal.NewFromInt(int64(*h.MaxOrderDurationSeconds)))
@@ -286,6 +286,9 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	handler.formalizeEntID()
 	if err := handler.validateUnitPrice(); err != nil {
 		return wlog.WrapError(err)
+	}
+	if *h.MaxOrderDurationSeconds < *h.MinOrderDurationSeconds {
+		return wlog.Errorf("invalid orderdurationseconds")
 	}
 
 	handler.constructAppPowerRentalSQL()
