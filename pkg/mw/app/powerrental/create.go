@@ -254,6 +254,7 @@ func (h *createHandler) formalizeEntID() {
 	if h.AppGoodBaseReq.EntID == nil {
 		h.AppGoodBaseReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 		h.AppGoodStockReq.AppGoodID = h.AppGoodBaseReq.EntID
+		h.AppGoodID = h.AppGoodBaseReq.EntID
 	}
 	if h.EntID == nil {
 		h.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
