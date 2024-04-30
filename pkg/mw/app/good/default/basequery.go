@@ -10,6 +10,7 @@ import (
 	entappdefaultgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 )
@@ -114,6 +115,15 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 		}
 		s.OnP(
 			sql.EQ(t1.C(entappgoodbase.FieldGoodID), id),
+		)
+	}
+	if h.GoodBaseConds.GoodType != nil {
+		_type, ok := h.GoodBaseConds.GoodType.Val.(types.GoodType)
+		if !ok {
+			return wlog.Errorf("invalid goodtype")
+		}
+		s.OnP(
+			sql.EQ(t1.C(entgoodbase.FieldGoodType), _type.String()),
 		)
 	}
 	if h.AppGoodBaseConds.GoodIDs != nil {
