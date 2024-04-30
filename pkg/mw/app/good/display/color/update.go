@@ -3,6 +3,7 @@ package displaycolor
 import (
 	"context"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appgooddisplaycolorcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/display/color"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -23,6 +24,15 @@ func (h *updateHandler) updateDisplayColor(ctx context.Context, cli *ent.Client)
 }
 
 func (h *Handler) UpdateDisplayColor(ctx context.Context) error {
+	info, err := h.GetDisplayColor(ctx)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	if info == nil {
+		return wlog.Errorf("invalid displayname")
+	}
+
+	h.ID = &info.ID
 	handler := &updateHandler{
 		Handler: h,
 	}

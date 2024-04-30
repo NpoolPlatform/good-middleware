@@ -26,7 +26,7 @@ func (s *Server) CreateDisplayColor(ctx context.Context, in *npool.CreateDisplay
 		ctx,
 		color1.WithEntID(req.EntID, false),
 		color1.WithAppGoodID(req.AppGoodID, true),
-		color1.WithColor(req.Color, false),
+		color1.WithColor(req.Color, true),
 		color1.WithIndex(func() *uint8 {
 			if req.Index == nil {
 				return nil

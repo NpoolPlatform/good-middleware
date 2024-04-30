@@ -23,7 +23,8 @@ func (s *Server) DeleteDisplayColor(ctx context.Context, in *npool.DeleteDisplay
 	}
 	handler, err := color1.NewHandler(
 		ctx,
-		color1.WithID(req.ID, true),
+		color1.WithID(req.ID, false),
+		color1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
