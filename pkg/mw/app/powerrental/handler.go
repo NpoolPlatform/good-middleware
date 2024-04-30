@@ -321,6 +321,12 @@ func WithMaxUserAmount(s *string, must bool) func(context.Context, *Handler) err
 
 func WithMinOrderDurationSeconds(u *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if u == nil {
+			if must {
+				return wlog.Errorf("invalid minorderdurationseconds")
+			}
+			return nil
+		}
 		h.MinOrderDurationSeconds = u
 		return nil
 	}
@@ -328,6 +334,12 @@ func WithMinOrderDurationSeconds(u *uint32, must bool) func(context.Context, *Ha
 
 func WithMaxOrderDurationSeconds(u *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if u == nil {
+			if must {
+				return wlog.Errorf("invalid maxorderdurationseconds")
+			}
+			return nil
+		}
 		h.MaxOrderDurationSeconds = u
 		return nil
 	}
