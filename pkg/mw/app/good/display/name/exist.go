@@ -3,26 +3,21 @@ package displayname
 import (
 	"context"
 
-	displaynamecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/display/name"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entdisplayname "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplayname"
 )
 
 func (h *Handler) ExistDisplayName(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		exist, err = cli.
-			AppGoodDisplayName.
-			Query().
-			Where(
-				entdisplayname.EntID(*h.EntID),
-				entdisplayname.DeletedAt(0),
-			).
-			Exist(_ctx)
-		if err != nil {
+		if err := handler.queryDisplayName(cli); err != nil {
 			return err
 		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return err
 	})
 	if err != nil {
 		return false, err
@@ -31,16 +26,16 @@ func (h *Handler) ExistDisplayName(ctx context.Context) (exist bool, err error) 
 }
 
 func (h *Handler) ExistDisplayNameConds(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := displaynamecrud.SetQueryConds(cli.AppGoodDisplayName.Query(), h.DisplayNameConds)
-		if err != nil {
+		if handler.stmSelect, err = handler.queryDisplayNames(cli); err != nil {
 			return err
 		}
-		exist, err = stm.Exist(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return err
 	})
 	if err != nil {
 		return false, err

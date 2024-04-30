@@ -3,6 +3,7 @@ package displayname
 import (
 	"context"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appgooddisplaynamecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/display/name"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -23,6 +24,15 @@ func (h *updateHandler) updateDisplayName(ctx context.Context, cli *ent.Client) 
 }
 
 func (h *Handler) UpdateDisplayName(ctx context.Context) error {
+	info, err := h.GetDisplayName(ctx)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	if info == nil {
+		return wlog.Errorf("invalid displayname")
+	}
+
+	h.ID = &info.ID
 	handler := &updateHandler{
 		Handler: h,
 	}

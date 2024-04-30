@@ -23,7 +23,8 @@ func (s *Server) DeleteDisplayName(ctx context.Context, in *npool.DeleteDisplayN
 	}
 	handler, err := name1.NewHandler(
 		ctx,
-		name1.WithID(req.ID, true),
+		name1.WithID(req.ID, false),
+		name1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
