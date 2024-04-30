@@ -4,6 +4,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -90,5 +91,7 @@ func (PowerRental) Edges() []ent.Edge {
 }
 
 func (PowerRental) Indexes() []ent.Index {
-	return nil
+	return []ent.Index{
+		index.Fields("good_id"),
+	}
 }

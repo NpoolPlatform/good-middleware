@@ -3,8 +3,8 @@ package powerrental
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
@@ -61,7 +61,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -74,13 +74,13 @@ func WithEntID(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		id, err := uuid.Parse(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &id
 		return nil
@@ -91,13 +91,13 @@ func WithGoodID(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid goodid")
+				return wlog.Errorf("invalid goodid")
 			}
 			return nil
 		}
 		id, err := uuid.Parse(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.GoodID = &id
 		h.GoodBaseReq.EntID = &id
@@ -111,7 +111,7 @@ func WithDeviceTypeID(id *string, must bool) func(context.Context, *Handler) err
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid devicetypeid")
+				return wlog.Errorf("invalid devicetypeid")
 			}
 			return nil
 		}
@@ -120,14 +120,14 @@ func WithDeviceTypeID(id *string, must bool) func(context.Context, *Handler) err
 			device1.WithEntID(id, true),
 		)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		exist, err := handler.ExistDeviceType(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if !exist {
-			return fmt.Errorf("invalid devicetypeid")
+			return wlog.Errorf("invalid devicetypeid")
 		}
 		h.DeviceTypeID = handler.EntID
 		return nil
@@ -138,7 +138,7 @@ func WithVendorLocationID(id *string, must bool) func(context.Context, *Handler)
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid vendorlocationid")
+				return wlog.Errorf("invalid vendorlocationid")
 			}
 			return nil
 		}
@@ -147,14 +147,14 @@ func WithVendorLocationID(id *string, must bool) func(context.Context, *Handler)
 			vendorlocation1.WithEntID(id, true),
 		)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		exist, err := handler.ExistLocation(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if !exist {
-			return fmt.Errorf("invalid vendorlocation")
+			return wlog.Errorf("invalid vendorlocation")
 		}
 		h.VendorLocationID = handler.EntID
 		return nil
@@ -165,16 +165,16 @@ func WithUnitPrice(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid unitprice")
+				return wlog.Errorf("invalid unitprice")
 			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
-			return fmt.Errorf("invalid unitprice")
+			return wlog.Errorf("invalid unitprice")
 		}
 		h.UnitPrice = &amount
 		return nil
@@ -185,13 +185,13 @@ func WithQuantityUnit(s *string, must bool) func(context.Context, *Handler) erro
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid quantityunit")
+				return wlog.Errorf("invalid quantityunit")
 			}
 			return nil
 		}
 		const leastUnitLen = 2
 		if len(*s) < leastUnitLen {
-			return fmt.Errorf("invalid quantityunit")
+			return wlog.Errorf("invalid quantityunit")
 		}
 		h.QuantityUnit = s
 		return nil
@@ -202,16 +202,16 @@ func WithQuantityUnitAmount(s *string, must bool) func(context.Context, *Handler
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid quantityunitamount")
+				return wlog.Errorf("invalid quantityunitamount")
 			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
-			return fmt.Errorf("invalid quantityunitamount")
+			return wlog.Errorf("invalid quantityunitamount")
 		}
 		h.QuantityUnitAmount = &amount
 		return nil
@@ -222,7 +222,7 @@ func WithDeliveryAt(n *uint32, must bool) func(context.Context, *Handler) error 
 	return func(ctx context.Context, h *Handler) error {
 		if n == nil {
 			if must {
-				return fmt.Errorf("invalid deliveryat")
+				return wlog.Errorf("invalid deliveryat")
 			}
 			return nil
 		}
@@ -235,16 +235,16 @@ func WithUnitLockDeposit(s *string, must bool) func(context.Context, *Handler) e
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid unitlockdeposit")
+				return wlog.Errorf("invalid unitlockdeposit")
 			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
-			return fmt.Errorf("invalid unitlockdeposit")
+			return wlog.Errorf("invalid unitlockdeposit")
 		}
 		h.UnitLockDeposit = &amount
 		return nil
@@ -255,7 +255,7 @@ func WithDurationDisplayType(e *types.GoodDurationType, must bool) func(context.
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid durationdisplaytype")
+				return wlog.Errorf("invalid durationdisplaytype")
 			}
 			return nil
 		}
@@ -265,7 +265,7 @@ func WithDurationDisplayType(e *types.GoodDurationType, must bool) func(context.
 		case types.GoodDurationType_GoodDurationByMonth:
 		case types.GoodDurationType_GoodDurationByYear:
 		default:
-			return fmt.Errorf("invalid durationdisplaytype")
+			return wlog.Errorf("invalid durationdisplaytype")
 		}
 		h.DurationDisplayType = e
 		return nil
@@ -276,7 +276,7 @@ func WithStockMode(e *types.GoodStockMode, must bool) func(context.Context, *Han
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid stockmode")
+				return wlog.Errorf("invalid stockmode")
 			}
 			return nil
 		}
@@ -284,7 +284,7 @@ func WithStockMode(e *types.GoodStockMode, must bool) func(context.Context, *Han
 		case types.GoodStockMode_GoodStockByMiningPool:
 		case types.GoodStockMode_GoodStockByUnique:
 		default:
-			return fmt.Errorf("invalid stockmode")
+			return wlog.Errorf("invalid stockmode")
 		}
 		h.StockMode = e
 		return nil
@@ -295,7 +295,7 @@ func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) 
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid goodtype")
+				return wlog.Errorf("invalid goodtype")
 			}
 			return nil
 		}
@@ -303,7 +303,7 @@ func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) 
 		case types.GoodType_PowerRental:
 		case types.GoodType_LegacyPowerRental:
 		default:
-			return fmt.Errorf("invalid goodtype")
+			return wlog.Errorf("invalid goodtype")
 		}
 		h.GoodBaseReq.GoodType = e
 		return nil
@@ -314,7 +314,7 @@ func WithBenefitType(e *types.BenefitType, must bool) func(context.Context, *Han
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid benefittype")
+				return wlog.Errorf("invalid benefittype")
 			}
 			return nil
 		}
@@ -323,7 +323,7 @@ func WithBenefitType(e *types.BenefitType, must bool) func(context.Context, *Han
 		case types.BenefitType_BenefitTypePool:
 		case types.BenefitType_BenefitTypeOffline:
 		default:
-			return fmt.Errorf("invalid benefittype")
+			return wlog.Errorf("invalid benefittype")
 		}
 		h.GoodBaseReq.BenefitType = e
 		return nil
@@ -334,13 +334,13 @@ func WithName(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid name")
+				return wlog.Errorf("invalid name")
 			}
 			return nil
 		}
 		const leastNameLen = 3
 		if len(*s) < leastNameLen {
-			return fmt.Errorf("invalid name")
+			return wlog.Errorf("invalid name")
 		}
 		h.GoodBaseReq.Name = s
 		return nil
@@ -358,7 +358,7 @@ func WithStartMode(e *types.GoodStartMode, must bool) func(context.Context, *Han
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid startmode")
+				return wlog.Errorf("invalid startmode")
 			}
 			return nil
 		}
@@ -369,7 +369,7 @@ func WithStartMode(e *types.GoodStartMode, must bool) func(context.Context, *Han
 		case types.GoodStartMode_GoodStartModeInstantly:
 		case types.GoodStartMode_GoodStartModePreset:
 		default:
-			return fmt.Errorf("invalid startmode")
+			return wlog.Errorf("invalid startmode")
 		}
 		h.GoodBaseReq.StartMode = e
 		return nil
@@ -408,13 +408,13 @@ func WithStockID(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid stockid")
+				return wlog.Errorf("invalid stockid")
 			}
 			return nil
 		}
 		id, err := uuid.Parse(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.StockReq.EntID = &id
 		return nil
@@ -425,16 +425,16 @@ func WithTotal(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid total")
+				return wlog.Errorf("invalid total")
 			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
-			return fmt.Errorf("invalid total")
+			return wlog.Errorf("invalid total")
 		}
 		h.StockReq.Total = &amount
 		return nil
@@ -453,15 +453,15 @@ func WithStocks(stocks []*stockmwpb.MiningGoodStockReq, must bool) func(context.
 			}()
 			poolID, err := uuid.Parse(_stock.GetMiningPoolID())
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			poolUserID, err := uuid.Parse(_stock.GetPoolGoodUserID())
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			amount, err := decimal.NewFromString(_stock.GetTotal())
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, &mininggoodstockcrud.Req{
 				EntID:          entID,
@@ -478,7 +478,7 @@ func WithRewardState(e *types.BenefitState, must bool) func(context.Context, *Ha
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid rewardstate")
+				return wlog.Errorf("invalid rewardstate")
 			}
 			return nil
 		}
@@ -491,7 +491,7 @@ func WithRewardState(e *types.BenefitState, must bool) func(context.Context, *Ha
 		case types.BenefitState_BenefitDone:
 		case types.BenefitState_BenefitFail:
 		default:
-			return fmt.Errorf("invalid rewardstate")
+			return wlog.Errorf("invalid rewardstate")
 		}
 		h.RewardReq.RewardState = e
 		return nil
@@ -502,13 +502,13 @@ func WithRewardTID(id *string, must bool) func(context.Context, *Handler) error 
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid rewardtid")
+				return wlog.Errorf("invalid rewardtid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.RewardReq.RewardTID = &_id
 		return nil
@@ -519,7 +519,7 @@ func WithRewardAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if n == nil {
 			if must {
-				return fmt.Errorf("invalid rewardat")
+				return wlog.Errorf("invalid rewardat")
 			}
 			return nil
 		}
@@ -532,13 +532,13 @@ func WithNextRewardStartAmount(s *string, must bool) func(context.Context, *Hand
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid nextrewardstartamount")
+				return wlog.Errorf("invalid nextrewardstartamount")
 			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.RewardReq.NextRewardStartAmount = &amount
 		return nil
@@ -549,13 +549,13 @@ func WithRewardAmount(s *string, must bool) func(context.Context, *Handler) erro
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid rewardamount")
+				return wlog.Errorf("invalid rewardamount")
 			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.RewardReq.LastRewardAmount = &amount
 		return nil
@@ -566,13 +566,13 @@ func WithUnitRewardAmount(s *string, must bool) func(context.Context, *Handler) 
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid unitrewardamount")
+				return wlog.Errorf("invalid unitrewardamount")
 			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.RewardReq.LastUnitRewardAmount = &amount
 		return nil
@@ -589,7 +589,7 @@ func (h *Handler) withPowerRentalConds(conds *npool.Conds) error {
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.PowerRentalConds.EntID = &cruder.Cond{
 			Op:  conds.GetEntID().GetOp(),
@@ -599,7 +599,7 @@ func (h *Handler) withPowerRentalConds(conds *npool.Conds) error {
 	if conds.GoodID != nil {
 		id, err := uuid.Parse(conds.GetGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.PowerRentalConds.GoodID = &cruder.Cond{
 			Op:  conds.GetGoodID().GetOp(),
@@ -611,7 +611,7 @@ func (h *Handler) withPowerRentalConds(conds *npool.Conds) error {
 		for _, id := range conds.GetGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -627,7 +627,7 @@ func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
 	if conds.GoodID != nil {
 		id, err := uuid.Parse(conds.GetGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.GoodBaseConds.EntID = &cruder.Cond{
 			Op:  conds.GetGoodID().GetOp(),
@@ -639,7 +639,7 @@ func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
 		for _, id := range conds.GetGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -671,7 +671,7 @@ func (h *Handler) withGoodCoinConds(conds *npool.Conds) error {
 	if conds.GoodID != nil {
 		id, err := uuid.Parse(conds.GetGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.GoodCoinConds.GoodID = &cruder.Cond{
 			Op:  conds.GetGoodID().GetOp(),
@@ -683,7 +683,7 @@ func (h *Handler) withGoodCoinConds(conds *npool.Conds) error {
 		for _, id := range conds.GetGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -695,7 +695,7 @@ func (h *Handler) withGoodCoinConds(conds *npool.Conds) error {
 	if conds.CoinTypeID != nil {
 		id, err := uuid.Parse(conds.GetCoinTypeID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.GoodCoinConds.CoinTypeID = &cruder.Cond{
 			Op:  conds.GetCoinTypeID().GetOp(),
@@ -707,7 +707,7 @@ func (h *Handler) withGoodCoinConds(conds *npool.Conds) error {
 		for _, id := range conds.GetCoinTypeIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -735,7 +735,7 @@ func (h *Handler) withRewardConds(conds *npool.Conds) error {
 	if conds.GoodID != nil {
 		id, err := uuid.Parse(conds.GetGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.RewardConds.GoodID = &cruder.Cond{
 			Op:  conds.GetGoodID().GetOp(),
@@ -751,13 +751,13 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			return nil
 		}
 		if err := h.withPowerRentalConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := h.withGoodCoinConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := h.withRewardConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return h.withGoodBaseConds(conds)
 	}
