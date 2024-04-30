@@ -2,8 +2,8 @@ package score
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	scorecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -31,7 +31,7 @@ func (h *updateHandler) updateScore(ctx context.Context, tx *ent.Tx) error {
 		ForUpdate().
 		Only(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	h.score = info.Score
@@ -42,7 +42,7 @@ func (h *updateHandler) updateScore(ctx context.Context, tx *ent.Tx) error {
 			Score: h.Score,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -55,11 +55,11 @@ func (h *updateHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 		},
 	)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	info, err := stm.Only(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	info.Score = info.Score.
@@ -74,22 +74,22 @@ func (h *updateHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 			Score: &info.Score,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
 
 func (h *Handler) UpdateScore(ctx context.Context) error {
 	if h.Score == nil {
-		return nil
+		return wlog.WrapError(cruder.ErrUpdateNothing)
 	}
 
 	info, err := h.GetScore(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if info == nil {
-		return fmt.Errorf("invalid score")
+		return wlog.Errorf("invalid score")
 	}
 
 	h.ID = &info.ID
@@ -100,7 +100,7 @@ func (h *Handler) UpdateScore(ctx context.Context) error {
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateScore(ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return handler.updateGoodScore(ctx, tx)
 	})
