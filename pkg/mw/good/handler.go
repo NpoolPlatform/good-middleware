@@ -111,6 +111,9 @@ func (h *Handler) withGoodConds(conds *npool.Conds) error {
 
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if conds == nil {
+			return nil
+		}
 		return h.withGoodConds(conds)
 	}
 }
