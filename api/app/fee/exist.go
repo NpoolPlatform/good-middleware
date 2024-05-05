@@ -12,6 +12,35 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/fee"
 )
 
+func (s *Server) ExistFee(ctx context.Context, in *npool.ExistFeeRequest) (*npool.ExistFeeResponse, error) {
+	handler, err := fee1.NewHandler(
+		ctx,
+		fee1.WithAppGoodID(&in.AppGoodID, true),
+	)
+	if err != nil {
+		logger.Sugar().Errorw(
+			"ExistFee",
+			"In", in,
+			"Error", err,
+		)
+		return &npool.ExistFeeResponse{}, status.Error(codes.Aborted, err.Error())
+	}
+
+	exist, err := handler.ExistFee(ctx)
+	if err != nil {
+		logger.Sugar().Errorw(
+			"ExistFee",
+			"In", in,
+			"Error", err,
+		)
+		return &npool.ExistFeeResponse{}, status.Error(codes.Aborted, err.Error())
+	}
+
+	return &npool.ExistFeeResponse{
+		Info: exist,
+	}, nil
+}
+
 func (s *Server) ExistFeeConds(ctx context.Context, in *npool.ExistFeeCondsRequest) (*npool.ExistFeeCondsResponse, error) {
 	handler, err := fee1.NewHandler(
 		ctx,
