@@ -40,6 +40,9 @@ func (h *queryHandler) queryJoin() {
 	h.stmCount.Modify(func(s *sql.Selector) {
 		h.queryJoinStock(s)
 		h.queryJoinReward(s)
+		if err := h.queryJoinGoodCoin(s); err != nil {
+			logger.Sugar().Errorw("queryJoinGoodCoin", "Error", err)
+		}
 		if err := h.queryJoinPowerRental(s); err != nil {
 			logger.Sugar().Errorw("queryJoinPowerRental", "Error", err)
 		}
