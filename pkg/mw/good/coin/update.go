@@ -24,16 +24,17 @@ func (h *Handler) updateGoodCoin(ctx context.Context, cli *ent.Client) error {
 }
 
 func (h *Handler) UpdateGoodCoin(ctx context.Context) error {
-	handler := &updateHandler{
-		Handler: h,
-	}
-
 	info, err := h.GetGoodCoin(ctx)
 	if err != nil {
 		return err
 	}
 	if info == nil {
 		return fmt.Errorf("invalid goodcoin")
+	}
+
+	h.ID = &info.ID
+	handler := &updateHandler{
+		Handler: h,
 	}
 
 	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {

@@ -27,10 +27,6 @@ func (h *deleteHandler) deleteGoodCoin(ctx context.Context, cli *ent.Client) err
 }
 
 func (h *Handler) DeleteGoodCoin(ctx context.Context) error {
-	handler := &deleteHandler{
-		Handler: h,
-		now:     uint32(time.Now().Unix()),
-	}
 	info, err := h.GetGoodCoin(ctx)
 	if err != nil {
 		return err
@@ -39,6 +35,10 @@ func (h *Handler) DeleteGoodCoin(ctx context.Context) error {
 		return nil
 	}
 	h.ID = &info.ID
+	handler := &deleteHandler{
+		Handler: h,
+		now:     uint32(time.Now().Unix()),
+	}
 	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		return handler.deleteGoodCoin(_ctx, cli)
 	})
