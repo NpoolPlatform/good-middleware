@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	feecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/fee"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -16,6 +17,9 @@ type deleteHandler struct {
 }
 
 func (h *deleteHandler) deleteGoodBase(ctx context.Context, tx *ent.Tx) error {
+	if h.goodBase == nil {
+		return wlog.Errorf("invalid goodbase")
+	}
 	if _, err := goodbasecrud.UpdateSet(
 		tx.GoodBase.UpdateOneID(h.goodBase.ID),
 		&goodbasecrud.Req{
@@ -28,6 +32,9 @@ func (h *deleteHandler) deleteGoodBase(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *deleteHandler) deleteFee(ctx context.Context, tx *ent.Tx) error {
+	if h.fee == nil {
+		return wlog.Errorf("invalid fee")
+	}
 	if _, err := feecrud.UpdateSet(
 		tx.Fee.UpdateOneID(h.fee.ID),
 		&feecrud.Req{
