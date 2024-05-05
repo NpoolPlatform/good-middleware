@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	rewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
@@ -19,6 +20,9 @@ type deleteHandler struct {
 }
 
 func (h *deleteHandler) deleteGoodBase(ctx context.Context, tx *ent.Tx) error {
+	if h.goodBase == nil {
+		return wlog.Errorf("invalid goodbase")
+	}
 	if _, err := goodbasecrud.UpdateSet(
 		tx.GoodBase.UpdateOneID(h.goodBase.ID),
 		&goodbasecrud.Req{
@@ -31,6 +35,9 @@ func (h *deleteHandler) deleteGoodBase(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *deleteHandler) deletePowerRental(ctx context.Context, tx *ent.Tx) error {
+	if h.powerRental == nil {
+		return wlog.Errorf("invalid powerrental")
+	}
 	if _, err := powerrentalcrud.UpdateSet(
 		tx.PowerRental.UpdateOneID(h.powerRental.ID),
 		&powerrentalcrud.Req{
@@ -43,6 +50,9 @@ func (h *deleteHandler) deletePowerRental(ctx context.Context, tx *ent.Tx) error
 }
 
 func (h *deleteHandler) deleteStock(ctx context.Context, tx *ent.Tx) error {
+	if h.stock == nil {
+		return wlog.Errorf("invalid stock")
+	}
 	if _, err := stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(h.stock.ID),
 		&stockcrud.Req{
@@ -55,8 +65,11 @@ func (h *deleteHandler) deleteStock(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *deleteHandler) deleteReward(ctx context.Context, tx *ent.Tx) error {
+	if h.goodReward == nil {
+		return nil
+	}
 	if _, err := rewardcrud.UpdateSet(
-		tx.GoodReward.UpdateOneID(h.stock.ID),
+		tx.GoodReward.UpdateOneID(h.goodReward.ID),
 		&rewardcrud.Req{
 			DeletedAt: &h.now,
 		},
