@@ -25,8 +25,8 @@ func (s *Server) CreateGoodCoin(ctx context.Context, in *npool.CreateGoodCoinReq
 		ctx,
 		coin1.WithEntID(req.EntID, false),
 		coin1.WithGoodID(req.GoodID, true),
-		coin1.WithCoinTypeID(req.CoinTypeID, false),
-		coin1.WithMain(req.Main, true),
+		coin1.WithCoinTypeID(req.CoinTypeID, true),
+		coin1.WithMain(req.Main, false),
 		coin1.WithIndex(req.Index, false),
 	)
 	if err != nil {
