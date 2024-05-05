@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appfeecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/fee"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -16,6 +17,9 @@ type deleteHandler struct {
 }
 
 func (h *deleteHandler) deleteAppGoodBase(ctx context.Context, tx *ent.Tx) error {
+	if h.appGoodBase == nil {
+		return wlog.Errorf("invalid appgoodbase")
+	}
 	if _, err := appgoodbasecrud.UpdateSet(
 		tx.AppGoodBase.UpdateOneID(h.appGoodBase.ID),
 		&appgoodbasecrud.Req{
