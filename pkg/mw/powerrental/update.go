@@ -15,6 +15,8 @@ import (
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
+
+	"github.com/shopspring/decimal"
 )
 
 type updateHandler struct {
@@ -167,6 +169,10 @@ func (h *updateHandler) _validateStock() error {
 			return &e
 		}()
 	}
+	h.StockReq.SpotQuantity = func() *decimal.Decimal {
+		d := h.stock.SpotQuantity.Add(h.StockReq.Total.Sub(h.stock.Total))
+		return &d
+	}()
 
 	miningGoodStockReqs := h.MiningGoodStockReqs
 	defer func() { h.MiningGoodStockReqs = miningGoodStockReqs }()
@@ -176,6 +182,10 @@ func (h *updateHandler) _validateStock() error {
 			for _, _poolStock := range h.MiningGoodStockReqs {
 				if *_poolStock.EntID == poolStock.EntID {
 					_poolStock.ID = &poolStock.ID
+					_poolStock.SpotQuantity = func() *decimal.Decimal {
+						d := poolStock.SpotQuantity.Add(_poolStock.Total.Sub(poolStock.Total))
+						return &d
+					}()
 					return true
 				}
 			}
