@@ -322,6 +322,7 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 	if err := handler.requirePowerRentalGood(ctx); err != nil {
 		return err
 	}
+	h.ID = &handler.powerRental.ID
 	if h.GoodID == nil {
 		h.GoodID = &handler.powerRental.GoodID
 		h.GoodBaseReq.EntID = h.GoodID

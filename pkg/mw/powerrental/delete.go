@@ -107,6 +107,7 @@ func (h *Handler) DeletePowerRental(ctx context.Context) error {
 	if handler.powerRental == nil {
 		return nil
 	}
+	h.ID = &handler.powerRental.ID
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.deleteGoodBase(_ctx, tx); err != nil {
