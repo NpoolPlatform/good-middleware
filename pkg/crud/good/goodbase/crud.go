@@ -186,7 +186,7 @@ func SetQueryConds(q *ent.GoodBaseQuery, conds *Conds) (*ent.GoodBaseQuery, erro
 			es = append(es, _type.String())
 		}
 		switch conds.GoodTypes.Op {
-		case cruder.EQ:
+		case cruder.IN:
 			q.Where(entgoodbase.GoodTypeIn(es...))
 		default:
 			return nil, fmt.Errorf("invalid goodbase field")
