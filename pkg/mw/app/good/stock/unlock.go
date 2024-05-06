@@ -3,8 +3,8 @@ package appstock
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	appmininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
@@ -23,8 +23,8 @@ type unlockHandler struct {
 
 func (h *unlockHandler) unlockStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	stock, ok := h.stocks[lock.AppGoodID]
-	if !ok {
-		return fmt.Errorf("invalid stock")
+	if !ok || stock.stock == nil {
+		return wlog.Errorf("invalid stock")
 	}
 
 	spotQuantity := stock.stock.SpotQuantity
@@ -35,20 +35,20 @@ func (h *unlockHandler) unlockStock(ctx context.Context, lock *ent.AppStockLock,
 	platformLocked := lock.Units.Sub(lock.AppSpotUnits)
 	appReserved = lock.AppSpotUnits.Add(appReserved)
 	if platformLocked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid appspotlocked")
+		return wlog.Errorf("invalid appspotlocked")
 	}
 	spotQuantity = platformLocked.Add(spotQuantity)
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid locked")
+		return wlog.Errorf("invalid locked")
 	}
 	if appReserved.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid appreserved")
+		return wlog.Errorf("invalid appreserved")
 	}
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 	if spotQuantity.Cmp(stock.stock.Total) > 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 
 	if locked.Add(stock.stock.InService).
@@ -56,7 +56,7 @@ func (h *unlockHandler) unlockStock(ctx context.Context, lock *ent.AppStockLock,
 		Add(appReserved).
 		Add(spotQuantity).
 		Cmp(stock.stock.Total) > 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 
 	if _, err := stockcrud.UpdateSet(
@@ -67,15 +67,15 @@ func (h *unlockHandler) unlockStock(ctx context.Context, lock *ent.AppStockLock,
 			AppReserved:  &appReserved,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
 
 func (h *unlockHandler) unlockMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	stock, ok := h.stocks[lock.AppGoodID]
-	if !ok {
-		return fmt.Errorf("invalid stock")
+	if !ok || stock.miningGoodStock == nil {
+		return wlog.Errorf("invalid stock")
 	}
 
 	spotQuantity := stock.miningGoodStock.SpotQuantity
@@ -86,20 +86,20 @@ func (h *unlockHandler) unlockMiningGoodStock(ctx context.Context, lock *ent.App
 	platformLocked := lock.Units.Sub(lock.AppSpotUnits)
 	appReserved = lock.AppSpotUnits.Add(appReserved)
 	if platformLocked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid appspotlocked")
+		return wlog.Errorf("invalid appspotlocked")
 	}
 	spotQuantity = platformLocked.Add(spotQuantity)
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid locked")
+		return wlog.Errorf("invalid locked")
 	}
 	if appReserved.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid appreserved")
+		return wlog.Errorf("invalid appreserved")
 	}
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 	if spotQuantity.Cmp(stock.miningGoodStock.Total) > 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 
 	if locked.Add(stock.miningGoodStock.InService).
@@ -107,7 +107,7 @@ func (h *unlockHandler) unlockMiningGoodStock(ctx context.Context, lock *ent.App
 		Add(appReserved).
 		Add(spotQuantity).
 		Cmp(stock.miningGoodStock.Total) > 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 
 	if _, err := mininggoodstockcrud.UpdateSet(
@@ -118,15 +118,15 @@ func (h *unlockHandler) unlockMiningGoodStock(ctx context.Context, lock *ent.App
 			AppReserved:  &appReserved,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
 
 func (h *unlockHandler) unlockAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	stock, ok := h.stocks[lock.AppGoodID]
-	if !ok {
-		return fmt.Errorf("invalid stock")
+	if !ok || stock.appGoodStock == nil {
+		return wlog.Errorf("invalid stock")
 	}
 
 	locked := stock.appGoodStock.Locked
@@ -135,10 +135,10 @@ func (h *unlockHandler) unlockAppStock(ctx context.Context, lock *ent.AppStockLo
 	locked = locked.Sub(lock.Units)
 	spotQuantity = lock.AppSpotUnits.Add(spotQuantity)
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid locked")
+		return wlog.Errorf("invalid locked")
 	}
 	if spotQuantity.Cmp(stock.appGoodStock.Reserved) > 0 {
-		return fmt.Errorf("invalid spotquantity")
+		return wlog.Errorf("invalid spotquantity")
 	}
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
 		spotQuantity = decimal.NewFromInt(0)
@@ -151,15 +151,15 @@ func (h *unlockHandler) unlockAppStock(ctx context.Context, lock *ent.AppStockLo
 			Locked:       &locked,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
 
 func (h *unlockHandler) unlockAppMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	stock, ok := h.stocks[lock.AppGoodID]
-	if !ok {
-		return fmt.Errorf("invalid stock")
+	if !ok || stock.appMiningGoodStock == nil {
+		return wlog.Errorf("invalid stock")
 	}
 
 	locked := stock.appMiningGoodStock.Locked
@@ -168,10 +168,10 @@ func (h *unlockHandler) unlockAppMiningGoodStock(ctx context.Context, lock *ent.
 	locked = locked.Sub(lock.Units)
 	spotQuantity = lock.AppSpotUnits.Add(spotQuantity)
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid locked")
+		return wlog.Errorf("invalid locked")
 	}
 	if spotQuantity.Cmp(stock.appMiningGoodStock.Reserved) > 0 {
-		return fmt.Errorf("invalid spotquantity")
+		return wlog.Errorf("invalid spotquantity")
 	}
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
 		spotQuantity = decimal.NewFromInt(0)
@@ -184,7 +184,7 @@ func (h *unlockHandler) unlockAppMiningGoodStock(ctx context.Context, lock *ent.
 			Locked:       &locked,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -205,37 +205,37 @@ func (h *Handler) UnlockStock(ctx context.Context) error {
 		if ent.IsNotFound(err) && h.Rollback != nil && *h.Rollback {
 			return nil
 		}
-		return err
+		return wlog.WrapError(err)
 	}
 	if h.Rollback == nil || !*h.Rollback {
 		handler.lockOp.state = types.AppStockLockState_AppStockCanceled.Enum()
 	}
 	h.Stocks = handler.lockOp.lock2Stocks()
 	if err := handler.getStockAppGoods(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		for _, lock := range handler.lockOp.locks {
 			if err := handler.unlockAppStock(ctx, lock, tx); err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			if !handler.stockByMiningPool(lock.AppGoodID) {
 				if err := handler.unlockAppMiningGoodStock(ctx, lock, tx); err != nil {
-					return err
+					return wlog.WrapError(err)
 				}
 			}
 			if err := handler.unlockStock(ctx, lock, tx); err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			if !handler.stockByMiningPool(lock.AppGoodID) {
 				if err := handler.unlockMiningGoodStock(ctx, lock, tx); err != nil {
-					return err
+					return wlog.WrapError(err)
 				}
 			}
 		}
 		if err := handler.lockOp.updateLocks(ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return nil
 	})
