@@ -2,8 +2,8 @@ package fee
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	feecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/fee"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
@@ -27,7 +27,10 @@ type Handler struct {
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
-		GoodBaseReq:   &goodbasecrud.Req{},
+		GoodBaseReq: &goodbasecrud.Req{
+			BenefitType: types.BenefitType_BenefitTypeNone.Enum(),
+			StartMode:   types.GoodStartMode_GoodStartModeWithParent.Enum(),
+		},
 		FeeConds:      &feecrud.Conds{},
 		GoodBaseConds: &goodbasecrud.Conds{},
 	}
@@ -43,7 +46,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -56,13 +59,13 @@ func WithEntID(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		id, err := uuid.Parse(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &id
 		return nil
@@ -73,15 +76,16 @@ func WithGoodID(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid goodid")
+				return wlog.Errorf("invalid goodid")
 			}
 			return nil
 		}
 		id, err := uuid.Parse(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.GoodID = &id
+		h.GoodBaseReq.EntID = &id
 		return nil
 	}
 }
@@ -90,7 +94,7 @@ func WithSettlementType(e *types.GoodSettlementType, must bool) func(context.Con
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid settlementtype")
+				return wlog.Errorf("invalid settlementtype")
 			}
 			return nil
 		}
@@ -99,7 +103,7 @@ func WithSettlementType(e *types.GoodSettlementType, must bool) func(context.Con
 		case types.GoodSettlementType_GoodSettledByPaymentAmount:
 		case types.GoodSettlementType_GoodSettledByProfitPercent:
 		default:
-			return fmt.Errorf("invalid settlementtype")
+			return wlog.Errorf("invalid settlementtype")
 		}
 		h.SettlementType = e
 		return nil
@@ -110,16 +114,16 @@ func WithUnitValue(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid unitvalue")
+				return wlog.Errorf("invalid unitvalue")
 			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if amount.LessThanOrEqual(decimal.NewFromInt(0)) {
-			return fmt.Errorf("invalid unitvalue")
+			return wlog.Errorf("invalid unitvalue")
 		}
 		h.UnitValue = &amount
 		return nil
@@ -130,7 +134,7 @@ func WithDurationDisplayType(e *types.GoodDurationType, must bool) func(context.
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid durationtype")
+				return wlog.Errorf("invalid durationtype")
 			}
 			return nil
 		}
@@ -140,7 +144,7 @@ func WithDurationDisplayType(e *types.GoodDurationType, must bool) func(context.
 		case types.GoodDurationType_GoodDurationByMonth:
 		case types.GoodDurationType_GoodDurationByYear:
 		default:
-			return fmt.Errorf("invalid durationtype")
+			return wlog.Errorf("invalid durationtype")
 		}
 		h.DurationDisplayType = e
 		return nil
@@ -151,7 +155,7 @@ func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) 
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid goodtype")
+				return wlog.Errorf("invalid goodtype")
 			}
 			return nil
 		}
@@ -159,7 +163,7 @@ func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) 
 		case types.GoodType_TechniqueServiceFee:
 		case types.GoodType_ElectricityFee:
 		default:
-			return fmt.Errorf("invalid goodtype")
+			return wlog.Errorf("invalid goodtype")
 		}
 		h.GoodBaseReq.GoodType = e
 		return nil
@@ -170,12 +174,12 @@ func WithName(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid name")
+				return wlog.Errorf("invalid name")
 			}
 			return nil
 		}
 		if *s == "" {
-			return fmt.Errorf("invalid name")
+			return wlog.Errorf("invalid name")
 		}
 		h.GoodBaseReq.Name = s
 		return nil
@@ -198,7 +202,7 @@ func (h *Handler) withFeeConds(conds *npool.Conds) error {
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.FeeConds.EntID = &cruder.Cond{
 			Op:  conds.GetEntID().GetOp(),
@@ -210,7 +214,7 @@ func (h *Handler) withFeeConds(conds *npool.Conds) error {
 		for _, id := range conds.GetEntIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -222,7 +226,7 @@ func (h *Handler) withFeeConds(conds *npool.Conds) error {
 	if conds.GoodID != nil {
 		id, err := uuid.Parse(conds.GetGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.FeeConds.GoodID = &cruder.Cond{
 			Op:  conds.GetGoodID().GetOp(),
@@ -234,7 +238,7 @@ func (h *Handler) withFeeConds(conds *npool.Conds) error {
 		for _, id := range conds.GetGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -256,7 +260,7 @@ func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
 	if conds.GoodID != nil {
 		id, err := uuid.Parse(conds.GetGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.GoodBaseConds.EntID = &cruder.Cond{
 			Op:  conds.GetGoodID().GetOp(),
@@ -268,7 +272,7 @@ func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
 		for _, id := range conds.GetGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -286,10 +290,10 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			return nil
 		}
 		if err := h.withFeeConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := h.withGoodBaseConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return nil
 	}

@@ -26,7 +26,9 @@ func (h *Handler) ConstructCreateSQL() string {
 	if h.TestOnly != nil {
 		_sql += comma + "test_only"
 	}
-	_sql += comma + "benefit_interval_hours"
+	if h.BenefitIntervalHours != nil {
+		_sql += comma + "benefit_interval_hours"
+	}
 	if h.Purchasable != nil {
 		_sql += comma + "purchasable"
 	}
@@ -52,7 +54,9 @@ func (h *Handler) ConstructCreateSQL() string {
 	if h.TestOnly != nil {
 		_sql += fmt.Sprintf("%v%v as test_only", comma, *h.TestOnly)
 	}
-	_sql += fmt.Sprintf("%v'%v' as benefit_interval_hours", comma, *h.BenefitIntervalHours)
+	if h.BenefitIntervalHours != nil {
+		_sql += fmt.Sprintf("%v'%v' as benefit_interval_hours", comma, *h.BenefitIntervalHours)
+	}
 	if h.Purchasable != nil {
 		_sql += fmt.Sprintf("%v%v as purchasable", comma, *h.Purchasable)
 	}
@@ -119,10 +123,13 @@ func (h *Handler) ConstructUpdateSQL() (string, error) {
 		return "", cruder.ErrUpdateNothing
 	}
 	_sql += fmt.Sprintf("updated_at = %v ", now)
+	whereAnd := "where"
 	if h.ID != nil {
-		_sql += fmt.Sprintf("where id = %v", *h.ID)
-	} else if h.EntID != nil {
-		_sql += fmt.Sprintf("where ent_id = '%v'", *h.EntID)
+		_sql += fmt.Sprintf("%v id = %v", whereAnd, *h.ID)
+		whereAnd = "and"
+	}
+	if h.EntID != nil {
+		_sql += fmt.Sprintf("%v ent_id = '%v'", whereAnd, *h.EntID)
 	}
 	if h.Name != nil {
 		_sql += " and not exists ("

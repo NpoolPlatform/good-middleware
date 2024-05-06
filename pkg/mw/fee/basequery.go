@@ -1,11 +1,10 @@
 package fee
 
 import (
-	"fmt"
-
 	"entgo.io/ent/dialect/sql"
 
-	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entfee "github.com/NpoolPlatform/good-middleware/pkg/db/ent/fee"
@@ -26,7 +25,7 @@ func (h *baseQueryHandler) selectGoodBase(stm *ent.GoodBaseQuery) *ent.GoodBaseS
 
 func (h *baseQueryHandler) queryGoodBase(cli *ent.Client) error {
 	if h.GoodID == nil {
-		return fmt.Errorf("invalid goodid")
+		return wlog.Errorf("invalid goodid")
 	}
 	h.stmSelect = h.selectGoodBase(
 		cli.GoodBase.
@@ -79,28 +78,28 @@ func (h *baseQueryHandler) queryJoinFee(s *sql.Selector) error {
 	if h.FeeConds != nil && h.FeeConds.ID != nil {
 		u, ok := h.FeeConds.ID.Val.(uint32)
 		if !ok {
-			return fmt.Errorf("invalid id")
+			return wlog.Errorf("invalid id")
 		}
 		s.OnP(sql.EQ(t1.C(entfee.FieldID), u))
 	}
 	if h.FeeConds != nil && h.FeeConds.IDs != nil {
 		ids, ok := h.FeeConds.IDs.Val.([]uint32)
 		if !ok {
-			return fmt.Errorf("invalid ids")
+			return wlog.Errorf("invalid ids")
 		}
 		s.OnP(sql.In(t1.C(entfee.FieldID), ids))
 	}
 	if h.FeeConds != nil && h.FeeConds.EntID != nil {
 		uid, ok := h.FeeConds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid entid")
+			return wlog.Errorf("invalid entid")
 		}
 		s.OnP(sql.EQ(t1.C(entfee.FieldEntID), uid))
 	}
 	if h.FeeConds != nil && h.FeeConds.EntIDs != nil {
 		uids, ok := h.FeeConds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid entids")
+			return wlog.Errorf("invalid entids")
 		}
 		s.OnP(sql.In(t1.C(entfee.FieldEntID), uids))
 	}

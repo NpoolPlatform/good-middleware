@@ -2,32 +2,40 @@ package fee
 
 import (
 	"context"
+	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	feecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/fee"
-	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 
 	"github.com/google/uuid"
 )
 
 type createHandler struct {
 	*Handler
+	sqlGoodBase string
+}
+
+func (h *createHandler) constructGoodBaseSQL(ctx context.Context) {
+	handler, _ := goodbase1.NewHandler(ctx)
+
+	h.GoodBaseReq.Purchasable = func() *bool { b := true; return &b }()
+	h.GoodBaseReq.Online = func() *bool { b := true; return &b }()
+	handler.Req = *h.GoodBaseReq
+
+	h.sqlGoodBase = handler.ConstructCreateSQL()
 }
 
 func (h *createHandler) createGoodBase(ctx context.Context, tx *ent.Tx) error {
-	valueTrue := true
-	if _, err := goodbasecrud.CreateSet(
-		tx.GoodBase.Create(),
-		&goodbasecrud.Req{
-			EntID:       h.GoodID,
-			GoodType:    h.GoodBaseReq.GoodType,
-			Name:        h.GoodBaseReq.Name,
-			Purchasable: &valueTrue,
-			Online:      &valueTrue,
-		},
-	).Save(ctx); err != nil {
-		return err
+	rc, err := tx.ExecContext(ctx, h.sqlGoodBase)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	n, err := rc.RowsAffected()
+	if err != nil || n != 1 {
+		return wlog.Errorf("fail create fee: %v", err)
 	}
 	return nil
 }
@@ -49,18 +57,21 @@ func (h *createHandler) createFee(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) CreateFee(ctx context.Context) error {
-	entID := uuid.New()
 	if h.EntID == nil {
-		h.EntID = &entID
+		h.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 	}
-	goodID := uuid.New()
 	if h.GoodID == nil {
-		h.GoodID = &goodID
+		h.GoodID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
+		h.GoodBaseReq.EntID = h.GoodID
+	}
+	if h.GoodBaseReq.ServiceStartAt == nil {
+		h.GoodBaseReq.ServiceStartAt = func() *uint32 { u := uint32(time.Now().Unix()); return &u }()
 	}
 
 	handler := &createHandler{
 		Handler: h,
 	}
+	handler.constructGoodBaseSQL(ctx)
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createGoodBase(ctx, tx); err != nil {
