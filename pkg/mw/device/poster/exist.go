@@ -3,47 +3,43 @@ package poster
 import (
 	"context"
 
-	postercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device/poster"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entposter "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceposter"
 )
 
 func (h *Handler) ExistPoster(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		exist, err = cli.
-			DevicePoster.
-			Query().
-			Where(
-				entposter.EntID(*h.EntID),
-				entposter.DeletedAt(0),
-			).
-			Exist(_ctx)
-		if err != nil {
-			return err
+		if err := handler.queryPoster(cli); err != nil {
+			return wlog.WrapError(err)
 		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return wlog.WrapError(err)
 	})
 	if err != nil {
-		return false, err
+		return false, wlog.WrapError(err)
 	}
 	return exist, nil
 }
 
 func (h *Handler) ExistPosterConds(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := postercrud.SetQueryConds(cli.DevicePoster.Query(), h.PosterConds)
-		if err != nil {
-			return err
+		if handler.stmSelect, err = handler.queryPosters(cli); err != nil {
+			return wlog.WrapError(err)
 		}
-		exist, err = stm.Exist(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return wlog.WrapError(err)
 	})
 	if err != nil {
-		return false, err
+		return false, wlog.WrapError(err)
 	}
 	return exist, nil
 }
