@@ -75,33 +75,49 @@ func (h *baseQueryHandler) queryJoinFee(s *sql.Selector) error {
 		OnP(
 			sql.EQ(t1.C(entfee.FieldDeletedAt), 0),
 		)
-	if h.FeeConds != nil && h.FeeConds.ID != nil {
+	if h.ID != nil {
+		s.OnP(sql.EQ(t1.C(entfee.FieldID), *h.ID))
+	}
+	if h.FeeConds.ID != nil {
 		u, ok := h.FeeConds.ID.Val.(uint32)
 		if !ok {
 			return wlog.Errorf("invalid id")
 		}
 		s.OnP(sql.EQ(t1.C(entfee.FieldID), u))
 	}
-	if h.FeeConds != nil && h.FeeConds.IDs != nil {
+	if h.FeeConds.IDs != nil {
 		ids, ok := h.FeeConds.IDs.Val.([]uint32)
 		if !ok {
 			return wlog.Errorf("invalid ids")
 		}
-		s.OnP(sql.In(t1.C(entfee.FieldID), ids))
+		s.OnP(sql.In(t1.C(entfee.FieldID), func() (_ids []interface{}) {
+			for _, id := range ids {
+				_ids = append(_ids, id)
+			}
+			return
+		}))
 	}
-	if h.FeeConds != nil && h.FeeConds.EntID != nil {
+	if h.EntID != nil {
+		s.OnP(sql.EQ(t1.C(entfee.FieldEntID), *h.EntID))
+	}
+	if h.FeeConds.EntID != nil {
 		uid, ok := h.FeeConds.EntID.Val.(uuid.UUID)
 		if !ok {
 			return wlog.Errorf("invalid entid")
 		}
 		s.OnP(sql.EQ(t1.C(entfee.FieldEntID), uid))
 	}
-	if h.FeeConds != nil && h.FeeConds.EntIDs != nil {
+	if h.FeeConds.EntIDs != nil {
 		uids, ok := h.FeeConds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
 			return wlog.Errorf("invalid entids")
 		}
-		s.OnP(sql.In(t1.C(entfee.FieldEntID), uids))
+		s.OnP(sql.In(t1.C(entfee.FieldEntID), func() (_uids []interface{}) {
+			for _, uid := range uids {
+				_uids = append(_uids, uid)
+			}
+			return
+		}))
 	}
 	s.AppendSelect(
 		t1.C(entfee.FieldID),
