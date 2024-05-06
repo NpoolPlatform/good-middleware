@@ -59,10 +59,10 @@ func (h *createHandler) constructSQL() {
 	_sql += fmt.Sprintf("and vl.city = '%v' ", *h.City)
 	_sql += fmt.Sprintf("and vl.address = '%v' ", *h.Address)
 	_sql += fmt.Sprintf("and vl.brand_id = '%v'", *h.BrandID)
-	_sql += " limit 1) "
+	_sql += " and deleted_at = 0 limit 1) "
 	_sql += "and exists ("
 	_sql += "select 1 from vendor_brands "
-	_sql += fmt.Sprintf("where ent_id = '%v' limit 1", *h.BrandID)
+	_sql += fmt.Sprintf("where ent_id = '%v' and deleted_at = 0 limit 1", *h.BrandID)
 	_sql += ")"
 
 	h.sql = _sql

@@ -62,10 +62,10 @@ func (h *updateHandler) constructSQL() error {
 	_sql += fmt.Sprintf("and vl.address = '%v' ", h.address)
 	_sql += fmt.Sprintf("and vl.brand_id = '%v' ", h.brandID)
 	_sql += fmt.Sprintf("and vl.id != %v ", *h.ID)
-	_sql += "limit 1) as vl) "
+	_sql += "and deleted_at = 0 limit 1) as vl) "
 	_sql += "and exists ("
 	_sql += "select 1 from vendor_brands "
-	_sql += fmt.Sprintf("where ent_id = '%v'", h.brandID)
+	_sql += fmt.Sprintf("where ent_id = '%v' and deleted_at = 0", h.brandID)
 	_sql += " limit 1)"
 
 	h.sql = _sql
