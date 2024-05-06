@@ -38,7 +38,11 @@ func (h *updateHandler) constructSQL() error {
 	if h.Name != nil {
 		_sql += "and not exists ("
 		_sql += "select 1 from (select * from device_manufacturers) as dm "
-		_sql += fmt.Sprintf("where dm.name = '%v' and dm.id != %v", *h.Name, *h.ID)
+		_sql += fmt.Sprintf(
+			"where dm.name = '%v' and dm.id != %v and deleted_at = 0",
+			*h.Name,
+			*h.ID,
+		)
 		_sql += " limit 1)"
 	}
 
