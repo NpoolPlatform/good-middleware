@@ -31,7 +31,7 @@ func (GoodBase) Fields() []ent.Field {
 		field.
 			String("benefit_type").
 			Optional().
-			Default(types.BenefitType_DefaultBenefitType.String()),
+			Default(types.BenefitType_BenefitTypeNone.String()),
 		field.
 			String("name").
 			Optional().

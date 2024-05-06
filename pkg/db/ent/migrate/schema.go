@@ -758,7 +758,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
 		{Name: "good_type", Type: field.TypeString, Nullable: true, Default: "DefaultGoodType"},
-		{Name: "benefit_type", Type: field.TypeString, Nullable: true, Default: "DefaultBenefitType"},
+		{Name: "benefit_type", Type: field.TypeString, Nullable: true, Default: "BenefitTypeNone"},
 		{Name: "name", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "service_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "start_mode", Type: field.TypeString, Nullable: true, Default: "GoodStartModeNextDay"},
