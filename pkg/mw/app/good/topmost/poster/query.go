@@ -2,10 +2,11 @@ package poster
 
 import (
 	"context"
-	"fmt"
 
 	"entgo.io/ent/dialect/sql"
 
+	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -25,7 +26,9 @@ func (h *queryHandler) queryJoin() {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
-		h.queryJoinTopMost(s)
+		if err := h.queryJoinTopMost(s); err != nil {
+			logger.Sugar().Errorw("queryJoinTopMost", "Error", err)
+		}
 	})
 }
 
@@ -48,7 +51,7 @@ func (h *Handler) GetPoster(ctx context.Context) (*npool.Poster, error) {
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := handler.queryPoster(cli); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.queryJoin()
 		return handler.scan(ctx)
@@ -57,10 +60,10 @@ func (h *Handler) GetPoster(ctx context.Context) (*npool.Poster, error) {
 		return nil, err
 	}
 	if len(handler.infos) == 0 {
-		return nil, fmt.Errorf("invalid topmostposter")
+		return nil, wlog.Errorf("invalid topmostposter")
 	}
 	if len(handler.infos) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 
 	handler.formalize()
@@ -80,18 +83,18 @@ func (h *Handler) GetPosters(ctx context.Context) ([]*npool.Poster, uint32, erro
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		handler.stmSelect, err = handler.queryPosters(cli)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.stmCount, err = handler.queryPosters(cli)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 
 		handler.queryJoin()
 
 		total, err := handler.stmCount.Count(_ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.total = uint32(total)
 

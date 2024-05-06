@@ -2,10 +2,11 @@ package topmostgood
 
 import (
 	"context"
-	"fmt"
 
 	"entgo.io/ent/dialect/sql"
 
+	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -27,8 +28,12 @@ func (h *queryHandler) queryJoin() {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
-		h.queryJoinTopMost(s)
-		h.queryJoinAppGood(s)
+		if err := h.queryJoinTopMost(s); err != nil {
+			logger.Sugar().Errorw("queryJoinTopMost", "Error", err)
+		}
+		if err := h.queryJoinAppGood(s); err != nil {
+			logger.Sugar().Errorw("queryJoinAppGood", "Error", err)
+		}
 	})
 }
 
@@ -52,7 +57,7 @@ func (h *Handler) GetTopMostGood(ctx context.Context) (*npool.TopMostGood, error
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := handler.queryTopMostGood(cli); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.queryJoin()
 		return handler.scan(ctx)
@@ -64,7 +69,7 @@ func (h *Handler) GetTopMostGood(ctx context.Context) (*npool.TopMostGood, error
 		return nil, nil
 	}
 	if len(handler.infos) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 
 	handler.formalize()
@@ -84,18 +89,18 @@ func (h *Handler) GetTopMostGoods(ctx context.Context) ([]*npool.TopMostGood, ui
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		handler.stmSelect, err = handler.queryTopMostGoods(cli)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.stmCount, err = handler.queryTopMostGoods(cli)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 
 		handler.queryJoin()
 
 		total, err := handler.stmCount.Count(_ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.total = uint32(total)
 

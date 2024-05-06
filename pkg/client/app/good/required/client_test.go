@@ -139,12 +139,12 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	err = fee1.CreateFee(context.Background(), &feemwpb.FeeReq{
-		GoodID:         &ret.RequiredGoodID,
-		GoodType:       func() *types.GoodType { e := types.GoodType_TechniqueServiceFee; return &e }(),
-		Name:           &ret.RequiredGoodName,
-		SettlementType: func() *types.GoodSettlementType { e := types.GoodSettlementType_GoodSettledByProfitPercent; return &e }(),
-		UnitValue:      func() *string { s := decimal.NewFromInt(20).String(); return &s }(),
-		DurationType:   func() *types.GoodDurationType { e := types.GoodDurationType_GoodDurationByDay; return &e }(),
+		GoodID:              &ret.RequiredGoodID,
+		GoodType:            func() *types.GoodType { e := types.GoodType_TechniqueServiceFee; return &e }(),
+		Name:                &ret.RequiredGoodName,
+		SettlementType:      func() *types.GoodSettlementType { e := types.GoodSettlementType_GoodSettledByProfitPercent; return &e }(),
+		UnitValue:           func() *string { s := decimal.NewFromInt(20).String(); return &s }(),
+		DurationDisplayType: func() *types.GoodDurationType { e := types.GoodDurationType_GoodDurationByDay; return &e }(),
 	})
 	assert.Nil(t, err)
 

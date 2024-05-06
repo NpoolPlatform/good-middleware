@@ -1,11 +1,10 @@
 package constraint
 
 import (
-	"fmt"
-
 	"entgo.io/ent/dialect/sql"
 
 	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constraintcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/constraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
@@ -26,7 +25,7 @@ func (h *baseQueryHandler) selectTopMostConstraint(stm *ent.TopMostConstraintQue
 
 func (h *baseQueryHandler) queryTopMostConstraint(cli *ent.Client) error {
 	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
+		return wlog.Errorf("invalid id")
 	}
 	stm := cli.TopMostConstraint.Query().Where(enttopmostconstraint.DeletedAt(0))
 	if h.ID != nil {
@@ -75,7 +74,7 @@ func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 	if h.TopMostConds.AppID != nil {
 		id, ok := h.TopMostConds.AppID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid appid")
+			return wlog.Errorf("invalid appid")
 		}
 		s.OnP(
 			sql.EQ(t.C(enttopmost.FieldAppID), id),
@@ -84,7 +83,7 @@ func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 	if h.TopMostConds.EntID != nil {
 		id, ok := h.TopMostConds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid entid")
+			return wlog.Errorf("invalid entid")
 		}
 		s.OnP(
 			sql.EQ(t.C(enttopmost.FieldEntID), id),
@@ -93,7 +92,7 @@ func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 	if h.TopMostConds.TopMostType != nil {
 		_type, ok := h.TopMostConds.TopMostType.Val.(types.GoodTopMostType)
 		if !ok {
-			return fmt.Errorf("invalid topmosttype")
+			return wlog.Errorf("invalid topmosttype")
 		}
 		s.OnP(
 			sql.EQ(t.C(enttopmost.FieldTopMostType), _type.String()),

@@ -2,10 +2,11 @@ package constraint
 
 import (
 	"context"
-	"fmt"
 
 	"entgo.io/ent/dialect/sql"
 
+	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -27,7 +28,9 @@ func (h *queryHandler) queryJoin() {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
-		h.queryJoinTopMost(s)
+		if err := h.queryJoinTopMost(s); err != nil {
+			logger.Sugar().Errorw("queryJoinTopMost", "Error", err)
+		}
 	})
 }
 
@@ -52,7 +55,7 @@ func (h *Handler) GetConstraint(ctx context.Context) (*npool.TopMostConstraint, 
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := handler.queryTopMostConstraint(cli); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.queryJoin()
 		return handler.scan(ctx)
@@ -64,7 +67,7 @@ func (h *Handler) GetConstraint(ctx context.Context) (*npool.TopMostConstraint, 
 		return nil, nil
 	}
 	if len(handler.infos) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 
 	handler.formalize()
@@ -84,18 +87,18 @@ func (h *Handler) GetConstraints(ctx context.Context) ([]*npool.TopMostConstrain
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		handler.stmSelect, err = handler.queryTopMostConstraints(cli)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.stmCount, err = handler.queryTopMostConstraints(cli)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 
 		handler.queryJoin()
 
 		total, err := handler.stmCount.Count(_ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.total = uint32(total)
 

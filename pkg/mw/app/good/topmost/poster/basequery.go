@@ -1,10 +1,10 @@
 package poster
 
 import (
-	"fmt"
-
 	"entgo.io/ent/dialect/sql"
 
+	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	topmostpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/poster"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
@@ -24,7 +24,7 @@ func (h *baseQueryHandler) selectPoster(stm *ent.TopMostPosterQuery) *ent.TopMos
 
 func (h *baseQueryHandler) queryPoster(cli *ent.Client) error {
 	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
+		return wlog.Errorf("invalid id")
 	}
 	stm := cli.TopMostPoster.Query().Where(enttopmostposter.DeletedAt(0))
 	if h.ID != nil {
@@ -72,7 +72,7 @@ func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 	if h.TopMostConds.AppID != nil {
 		id, ok := h.TopMostConds.AppID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid appid")
+			return wlog.Errorf("invalid appid")
 		}
 		s.OnP(
 			sql.EQ(t1.C(enttopmost.FieldAppID), id),
@@ -81,7 +81,7 @@ func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 	if h.TopMostConds.EntID != nil {
 		id, ok := h.TopMostConds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid entid")
+			return wlog.Errorf("invalid entid")
 		}
 		s.OnP(
 			sql.EQ(t1.C(enttopmost.FieldEntID), id),
@@ -90,7 +90,7 @@ func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 	if h.TopMostConds.EntIDs != nil {
 		ids, ok := h.TopMostConds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid entids")
+			return wlog.Errorf("invalid entids")
 		}
 		s.OnP(
 			sql.EQ(t1.C(enttopmost.FieldEntID), func() (_ids []interface{}) {
@@ -114,6 +114,8 @@ func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 func (h *baseQueryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
-		h.queryJoinTopMost(s)
+		if err := h.queryJoinTopMost(s); err != nil {
+			logger.Sugar().Errorw("queryJoinTopMost", "Error", err)
+		}
 	})
 }

@@ -113,7 +113,7 @@ func setup(t *testing.T) func(*testing.T) {
 		powerrental1.WithQuantityUnitAmount(func() *string { s := decimal.NewFromInt(100).String(); return &s }(), true),
 		powerrental1.WithDeliveryAt(func() *uint32 { u := uint32(time.Now().Unix()); return &u }(), true),
 		powerrental1.WithUnitLockDeposit(func() *string { s := decimal.NewFromInt(90).String(); return &s }(), true),
-		powerrental1.WithDurationType(func() *types.GoodDurationType { e := types.GoodDurationType_GoodDurationByDay; return &e }(), true),
+		powerrental1.WithDurationDisplayType(func() *types.GoodDurationType { e := types.GoodDurationType_GoodDurationByDay; return &e }(), true),
 		powerrental1.WithGoodType(func() *types.GoodType { e := types.GoodType_PowerRental; return &e }(), true),
 		powerrental1.WithBenefitType(func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }(), true),
 		powerrental1.WithName(&ret.GoodName, true),

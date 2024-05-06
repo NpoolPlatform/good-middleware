@@ -13,20 +13,20 @@ import (
 )
 
 type Req struct {
-	EntID             *uuid.UUID
-	GoodID            *uuid.UUID
-	MinDepositAmount  *decimal.Decimal
-	DeliveryAt        *uint32
-	TargetAmount      *decimal.Decimal
-	DepositStartAt    *uint32
-	DepositEndAt      *uint32
-	ContractAddress   *string
-	DepositCoinTypeID *uuid.UUID
-	Redeemable        *bool
-	RedeemDelayHours  *uint32
-	DurationType      *types.GoodDurationType
-	Duration          *uint32
-	DeletedAt         *uint32
+	EntID               *uuid.UUID
+	GoodID              *uuid.UUID
+	MinDepositAmount    *decimal.Decimal
+	DeliveryAt          *uint32
+	TargetAmount        *decimal.Decimal
+	DepositStartAt      *uint32
+	DepositEndAt        *uint32
+	ContractAddress     *string
+	DepositCoinTypeID   *uuid.UUID
+	Redeemable          *bool
+	RedeemDelayHours    *uint32
+	DurationDisplayType *types.GoodDurationType
+	DurationSeconds     *uint32
+	DeletedAt           *uint32
 }
 
 func CreateSet(c *ent.FbmCrowdFundingCreate, req *Req) *ent.FbmCrowdFundingCreate {
@@ -63,11 +63,11 @@ func CreateSet(c *ent.FbmCrowdFundingCreate, req *Req) *ent.FbmCrowdFundingCreat
 	if req.RedeemDelayHours != nil {
 		c.SetRedeemDelayHours(*req.RedeemDelayHours)
 	}
-	if req.DurationType != nil {
-		c.SetDurationType(req.DurationType.String())
+	if req.DurationDisplayType != nil {
+		c.SetDurationDisplayType(req.DurationDisplayType.String())
 	}
-	if req.Duration != nil {
-		c.SetDuration(*req.Duration)
+	if req.DurationSeconds != nil {
+		c.SetDurationSeconds(*req.DurationSeconds)
 	}
 	return c
 }
@@ -100,11 +100,11 @@ func UpdateSet(u *ent.FbmCrowdFundingUpdateOne, req *Req) *ent.FbmCrowdFundingUp
 	if req.RedeemDelayHours != nil {
 		u.SetRedeemDelayHours(*req.RedeemDelayHours)
 	}
-	if req.DurationType != nil {
-		u.SetDurationType(req.DurationType.String())
+	if req.DurationDisplayType != nil {
+		u.SetDurationDisplayType(req.DurationDisplayType.String())
 	}
-	if req.Duration != nil {
-		u.SetDuration(*req.Duration)
+	if req.DurationSeconds != nil {
+		u.SetDurationSeconds(*req.DurationSeconds)
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)

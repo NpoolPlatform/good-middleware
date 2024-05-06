@@ -20,7 +20,6 @@ type updateHandler struct {
 	sql         string
 }
 
-//nolint:goconst
 func (h *updateHandler) constructSQL() error {
 	now := uint32(time.Now().Unix())
 	set := "set "

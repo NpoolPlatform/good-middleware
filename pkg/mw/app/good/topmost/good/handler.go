@@ -280,7 +280,6 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		}
 		return h.withAppGoodBaseConds(conds)
 	}
-	return nil
 }
 
 func WithOffset(value int32) func(context.Context, *Handler) error {
