@@ -290,6 +290,7 @@ func createPowerRental(t *testing.T) {
 
 func updatePowerRental(t *testing.T) {
 	ret.GoodTotal = decimal.NewFromInt(10000).String()
+	ret.GoodSpotQuantity = ret.GoodTotal
 	miningGoodStocks := func() (reqs []*stockmwpb.MiningGoodStockReq) {
 		remain := decimal.NewFromInt(0)
 		for i, stock := range ret.MiningGoodStocks {
@@ -298,6 +299,7 @@ func updatePowerRental(t *testing.T) {
 				continue
 			}
 			stock.Total = remain.String()
+			stock.SpotQuantity = stock.Total
 			reqs = append(reqs, &stockmwpb.MiningGoodStockReq{
 				EntID:          &stock.EntID,
 				MiningPoolID:   &stock.MiningPoolID,

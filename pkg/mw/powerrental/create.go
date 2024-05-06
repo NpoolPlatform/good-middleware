@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	rewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -41,7 +42,7 @@ func (h *createHandler) constructGoodBaseSQL(ctx context.Context) error {
 		goodbase1.WithOnline(h.GoodBaseReq.Online, false),
 	)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	h.sqlGoodBase = handler.ConstructCreateSQL()
 	return nil
@@ -58,7 +59,7 @@ func (h *createHandler) constructMiningGoodStockSQL(ctx context.Context) error {
 			mininggoodstock1.WithTotal(func() *string { s := poolStock.Total.String(); return &s }(), true),
 		)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.sqlMiningGoodStocks = append(h.sqlMiningGoodStocks, handler.ConstructCreateSQL())
 	}
@@ -73,7 +74,7 @@ func (h *createHandler) constructStockSQL(ctx context.Context) error {
 		stock1.WithTotal(func() *string { s := h.StockReq.Total.String(); return &s }(), true),
 	)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	h.sqlStock = handler.ConstructCreateSQL()
 	return nil
@@ -159,11 +160,11 @@ func (h *createHandler) constructPowerRentalSQL() {
 func (h *createHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) error {
 	rc, err := tx.ExecContext(ctx, sql)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
-		return fmt.Errorf("fail create powerrental: %v", err)
+		return wlog.Errorf("fail create powerrental: %v", err)
 	}
 	return nil
 }
@@ -183,7 +184,7 @@ func (h *createHandler) createStock(ctx context.Context, tx *ent.Tx) error {
 func (h *createHandler) createMiningGoodStocks(ctx context.Context, tx *ent.Tx) error {
 	for _, _sql := range h.sqlMiningGoodStocks {
 		if err := h.execSQL(ctx, tx, _sql); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 	}
 	return nil
@@ -196,7 +197,7 @@ func (h *createHandler) createReward(ctx context.Context, tx *ent.Tx) error {
 			GoodID: h.GoodID,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -207,6 +208,9 @@ func (h *createHandler) _validateStock() error {
 	}
 	if h.StockMode == nil {
 		h.StockMode = types.GoodStockMode_GoodStockByUnique.Enum()
+	}
+	if len(h.MiningGoodStockReqs) > 0 && *h.StockMode == types.GoodStockMode_GoodStockByUnique {
+		return wlog.Errorf("invalid stockmode")
 	}
 	for _, poolStock := range h.MiningGoodStockReqs {
 		poolStock.GoodStockID = h.StockReq.EntID
@@ -236,7 +240,7 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 
 	handler.formalizePowerRentalParameters()
 	if err := handler._validateStock(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	if h.EntID == nil {
@@ -248,27 +252,27 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 
 	handler.constructPowerRentalSQL()
 	if err := handler.constructGoodBaseSQL(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if err := handler.constructStockSQL(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if err := handler.constructMiningGoodStockSQL(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createGoodBase(_ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := handler.createStock(_ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := handler.createMiningGoodStocks(_ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := handler.createReward(_ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return handler.createPowerRental(_ctx, tx)
 	})
