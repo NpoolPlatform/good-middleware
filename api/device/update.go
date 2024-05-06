@@ -24,7 +24,8 @@ func (s *Server) UpdateDeviceType(ctx context.Context, in *npool.UpdateDeviceTyp
 	}
 	handler, err := device1.NewHandler(
 		ctx,
-		device1.WithID(req.ID, true),
+		device1.WithID(req.ID, false),
+		device1.WithEntID(req.EntID, false),
 		device1.WithType(req.Type, false),
 		device1.WithManufacturerID(req.ManufacturerID, false),
 		device1.WithPowerConsumption(req.PowerConsumption, false),

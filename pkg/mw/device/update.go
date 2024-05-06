@@ -62,10 +62,10 @@ func (h *updateHandler) constructSQL() error {
 func (h *updateHandler) updateDeviceType(ctx context.Context, tx *ent.Tx) error {
 	rc, err := tx.ExecContext(ctx, h.sql)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if _, err := rc.RowsAffected(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -77,10 +77,10 @@ func (h *Handler) UpdateDeviceType(ctx context.Context) error {
 
 	info, err := h.GetDeviceType(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if info == nil {
-		return fmt.Errorf("invalid devicetype")
+		return wlog.Errorf("invalid devicetype")
 	}
 
 	if h.Type == nil {
