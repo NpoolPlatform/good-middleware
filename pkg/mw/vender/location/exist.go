@@ -2,57 +2,44 @@ package location
 
 import (
 	"context"
-	"fmt"
 
-	locationcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/vender/location"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entvendorlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 )
 
-func (h *Handler) ExistLocation(ctx context.Context) (bool, error) {
-	if h.EntID == nil {
-		return false, fmt.Errorf("invalid entid")
+func (h *Handler) ExistLocation(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
 	}
-
-	exist := false
-	var err error
-
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		exist, err = cli.
-			VendorLocation.
-			Query().
-			Where(
-				entvendorlocation.EntID(*h.EntID),
-				entvendorlocation.DeletedAt(0),
-			).
-			Exist(_ctx)
-		if err != nil {
-			return err
+		if err := handler.queryVendorLocation(cli); err != nil {
+			return wlog.WrapError(err)
 		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return wlog.WrapError(err)
 	})
 	if err != nil {
-		return false, err
+		return false, wlog.WrapError(err)
 	}
 	return exist, nil
 }
 
-func (h *Handler) ExistLocationConds(ctx context.Context) (bool, error) {
-	exist := false
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := locationcrud.SetQueryConds(cli.VendorLocation.Query(), h.Conds)
-		if err != nil {
-			return err
+func (h *Handler) ExistLocationConds(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
+	}
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		if handler.stmSelect, err = handler.queryVendorLocations(cli); err != nil {
+			return wlog.WrapError(err)
 		}
-		exist, err = stm.Exist(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return wlog.WrapError(err)
 	})
 	if err != nil {
-		return false, err
+		return false, wlog.WrapError(err)
 	}
 	return exist, nil
 }

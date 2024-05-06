@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 )
 
 type updateHandler struct {
@@ -45,7 +47,7 @@ func (h *updateHandler) constructSQL() error {
 		set = ""
 	}
 	if set != "" {
-		return fmt.Errorf("update nothing")
+		return wlog.WrapError(cruder.ErrUpdateNothing)
 	}
 
 	_sql += fmt.Sprintf("updated_at = %v ", now)
@@ -82,10 +84,6 @@ func (h *updateHandler) updateLocation(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) UpdateLocation(ctx context.Context) error {
-	handler := &updateHandler{
-		Handler: h,
-	}
-
 	info, err := h.GetLocation(ctx)
 	if err != nil {
 		return err
@@ -93,6 +91,11 @@ func (h *Handler) UpdateLocation(ctx context.Context) error {
 	if info == nil {
 		return fmt.Errorf("invalid vendorlocation")
 	}
+
+	handler := &updateHandler{
+		Handler: h,
+	}
+	h.ID = &info.ID
 
 	if h.Country == nil {
 		handler.country = info.Country
