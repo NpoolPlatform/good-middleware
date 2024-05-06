@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -108,11 +109,11 @@ func (h *createHandler) constructSQL() {
 func (h *createHandler) createComment(ctx context.Context, tx *ent.Tx) error {
 	rc, err := tx.ExecContext(ctx, h.sql)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
-		return fmt.Errorf("fail create comment: %v", err)
+		return wlog.Errorf("fail create comment: %v", err)
 	}
 	return nil
 }
@@ -124,11 +125,11 @@ func (h *createHandler) updateGoodComment(ctx context.Context, tx *ent.Tx) error
 			AppGoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.AppGoodID},
 		})
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	info, err := stm.ForUpdate().Only(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	commentCount := info.CommentCount + 1
@@ -148,7 +149,7 @@ func (h *createHandler) updateGoodComment(ctx context.Context, tx *ent.Tx) error
 	}
 
 	if _, err := extrainfocrud.UpdateSet(info.Update(), req).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -156,11 +157,11 @@ func (h *createHandler) updateGoodComment(ctx context.Context, tx *ent.Tx) error
 func (h *createHandler) createScore(ctx context.Context, tx *ent.Tx) error {
 	rc, err := tx.ExecContext(ctx, h.sqlScore)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	n, err := rc.RowsAffected()
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if n == 0 {
 		return nil
@@ -182,11 +183,11 @@ func (h *Handler) CreateComment(ctx context.Context) error {
 	}
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createComment(ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if handler.ScoreReq.Score != nil && handler.ScoreReq.Score.Cmp(decimal.NewFromInt(0)) > 0 {
 			if err := handler.createScore(ctx, tx); err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 		}
 		return handler.updateGoodComment(ctx, tx)

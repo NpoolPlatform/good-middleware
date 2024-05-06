@@ -1,8 +1,7 @@
 package fee
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entfee "github.com/NpoolPlatform/good-middleware/pkg/db/ent/fee"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -75,79 +74,79 @@ func SetQueryConds(q *ent.FeeQuery, conds *Conds) (*ent.FeeQuery, error) {
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entfee.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid fee field")
+			return nil, wlog.Errorf("invalid fee field")
 		}
 	}
 	if conds.IDs != nil {
 		ids, ok := conds.IDs.Val.([]uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid ids")
+			return nil, wlog.Errorf("invalid ids")
 		}
 		switch conds.IDs.Op {
 		case cruder.IN:
 			q.Where(entfee.IDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid fee field")
+			return nil, wlog.Errorf("invalid fee field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entid")
+			return nil, wlog.Errorf("invalid entid")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(entfee.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid fee field")
+			return nil, wlog.Errorf("invalid fee field")
 		}
 	}
 	if conds.EntIDs != nil {
 		ids, ok := conds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entids")
+			return nil, wlog.Errorf("invalid entids")
 		}
 		switch conds.EntIDs.Op {
 		case cruder.IN:
 			q.Where(entfee.EntIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid fee field")
+			return nil, wlog.Errorf("invalid fee field")
 		}
 	}
 	if conds.GoodID != nil {
 		id, ok := conds.GoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
+			return nil, wlog.Errorf("invalid goodid")
 		}
 		switch conds.GoodID.Op {
 		case cruder.EQ:
 			q.Where(entfee.GoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid fee field")
+			return nil, wlog.Errorf("invalid fee field")
 		}
 	}
 	if conds.GoodIDs != nil {
 		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
+			return nil, wlog.Errorf("invalid goodids")
 		}
 		switch conds.GoodIDs.Op {
 		case cruder.IN:
 			q.Where(entfee.GoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid fee field")
+			return nil, wlog.Errorf("invalid fee field")
 		}
 	}
 	if conds.SettlementType != nil {
 		e, ok := conds.SettlementType.Val.(types.GoodSettlementType)
 		if !ok {
-			return nil, fmt.Errorf("invalid settlementtype")
+			return nil, wlog.Errorf("invalid settlementtype")
 		}
 		switch conds.SettlementType.Op {
 		case cruder.EQ:
@@ -155,7 +154,7 @@ func SetQueryConds(q *ent.FeeQuery, conds *Conds) (*ent.FeeQuery, error) {
 		case cruder.NEQ:
 			q.Where(entfee.SettlementTypeNEQ(e.String()))
 		default:
-			return nil, fmt.Errorf("invalid settlementtype")
+			return nil, wlog.Errorf("invalid settlementtype")
 		}
 	}
 	return q, nil

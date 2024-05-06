@@ -29,20 +29,18 @@ func init() {
 	}
 }
 
-var (
-	ret = npool.Fee{
-		EntID:                   uuid.NewString(),
-		AppID:                   uuid.NewString(),
-		GoodID:                  uuid.NewString(),
-		AppGoodID:               uuid.NewString(),
-		GoodType:                types.GoodType_TechniqueServiceFee,
-		Name:                    uuid.NewString(),
-		SettlementType:          types.GoodSettlementType_GoodSettledByProfitPercent,
-		UnitValue:               decimal.NewFromInt(20).String(),
-		DurationDisplayType:     types.GoodDurationType_GoodDurationByDay,
-		MinOrderDurationSeconds: 20,
-	}
-)
+var ret = npool.Fee{
+	EntID:                   uuid.NewString(),
+	AppID:                   uuid.NewString(),
+	GoodID:                  uuid.NewString(),
+	AppGoodID:               uuid.NewString(),
+	GoodType:                types.GoodType_TechniqueServiceFee,
+	Name:                    uuid.NewString(),
+	SettlementType:          types.GoodSettlementType_GoodSettledByProfitPercent,
+	UnitValue:               decimal.NewFromInt(20).String(),
+	DurationDisplayType:     types.GoodDurationType_GoodDurationByDay,
+	MinOrderDurationSeconds: 20,
+}
 
 func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()

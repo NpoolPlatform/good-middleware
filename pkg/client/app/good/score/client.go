@@ -2,8 +2,9 @@ package score
 
 import (
 	"context"
-	"fmt"
 	"time"
+
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
@@ -70,7 +71,7 @@ func GetScoreOnly(ctx context.Context, conds *npool.Conds) (*npool.Score, error)
 		return nil, nil
 	}
 	if len(infos.([]*npool.Score)) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 	return infos.([]*npool.Score)[0], nil
 }

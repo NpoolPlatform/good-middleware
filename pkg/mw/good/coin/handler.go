@@ -2,8 +2,8 @@ package coin
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
@@ -40,7 +40,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -53,13 +53,13 @@ func WithEntID(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		id, err := uuid.Parse(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &id
 		return nil
@@ -73,14 +73,14 @@ func WithGoodID(s *string, must bool) func(context.Context, *Handler) error {
 			goodbase1.WithEntID(s, true),
 		)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		exist, err := handler.ExistGoodBase(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if !exist {
-			return fmt.Errorf("invalid goodid")
+			return wlog.Errorf("invalid goodid")
 		}
 		h.GoodID = handler.EntID
 		return nil
@@ -91,13 +91,13 @@ func WithCoinTypeID(s *string, must bool) func(context.Context, *Handler) error 
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid cointypeid")
+				return wlog.Errorf("invalid cointypeid")
 			}
 			return nil
 		}
 		id, err := uuid.Parse(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.CoinTypeID = &id
 		return nil
@@ -128,7 +128,7 @@ func (h *Handler) withGoodCoinConds(conds *npool.Conds) error {
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.GoodCoinConds.EntID = &cruder.Cond{
 			Op:  conds.GetEntID().GetOp(),
@@ -138,7 +138,7 @@ func (h *Handler) withGoodCoinConds(conds *npool.Conds) error {
 	if conds.GoodID != nil {
 		id, err := uuid.Parse(conds.GetGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.GoodCoinConds.GoodID = &cruder.Cond{
 			Op:  conds.GetGoodID().GetOp(),
@@ -150,7 +150,7 @@ func (h *Handler) withGoodCoinConds(conds *npool.Conds) error {
 		for _, id := range conds.GetGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -162,7 +162,7 @@ func (h *Handler) withGoodCoinConds(conds *npool.Conds) error {
 	if conds.CoinTypeID != nil {
 		id, err := uuid.Parse(conds.GetCoinTypeID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.GoodCoinConds.CoinTypeID = &cruder.Cond{
 			Op:  conds.GetCoinTypeID().GetOp(),
@@ -174,7 +174,7 @@ func (h *Handler) withGoodCoinConds(conds *npool.Conds) error {
 		for _, id := range conds.GetCoinTypeIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -190,7 +190,7 @@ func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
 	if conds.GoodID != nil {
 		id, err := uuid.Parse(conds.GetGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.GoodBaseConds.EntID = &cruder.Cond{
 			Op:  conds.GetGoodID().GetOp(),
@@ -202,7 +202,7 @@ func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
 		for _, id := range conds.GetGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -220,10 +220,10 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			return nil
 		}
 		if err := h.withGoodCoinConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := h.withGoodBaseConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return nil
 	}

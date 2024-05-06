@@ -1,7 +1,7 @@
 package appgoodbase
 
 import (
-	"fmt"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
@@ -114,97 +114,97 @@ func SetQueryConds(q *ent.AppGoodBaseQuery, conds *Conds) (*ent.AppGoodBaseQuery
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entappgoodbase.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid appgoodbase field")
+			return nil, wlog.Errorf("invalid appgoodbase field")
 		}
 	}
 	if conds.IDs != nil {
 		ids, ok := conds.IDs.Val.([]uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid ids")
+			return nil, wlog.Errorf("invalid ids")
 		}
 		switch conds.IDs.Op {
 		case cruder.IN:
 			q.Where(entappgoodbase.IDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid appgoodbase field")
+			return nil, wlog.Errorf("invalid appgoodbase field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entid")
+			return nil, wlog.Errorf("invalid entid")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(entappgoodbase.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid appgoodbase field")
+			return nil, wlog.Errorf("invalid appgoodbase field")
 		}
 	}
 	if conds.EntIDs != nil {
 		ids, ok := conds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entids")
+			return nil, wlog.Errorf("invalid entids")
 		}
 		switch conds.EntIDs.Op {
 		case cruder.IN:
 			q.Where(entappgoodbase.EntIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid appgoodbase field")
+			return nil, wlog.Errorf("invalid appgoodbase field")
 		}
 	}
 	if conds.AppID != nil {
 		id, ok := conds.AppID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appid")
+			return nil, wlog.Errorf("invalid appid")
 		}
 		switch conds.AppID.Op {
 		case cruder.EQ:
 			q.Where(entappgoodbase.AppID(id))
 		default:
-			return nil, fmt.Errorf("invalid appgoodbase field")
+			return nil, wlog.Errorf("invalid appgoodbase field")
 		}
 	}
 	if conds.AppIDs != nil {
 		ids, ok := conds.AppIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appids")
+			return nil, wlog.Errorf("invalid appids")
 		}
 		switch conds.AppIDs.Op {
 		case cruder.IN:
 			q.Where(entappgoodbase.AppIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid appgoodbase field")
+			return nil, wlog.Errorf("invalid appgoodbase field")
 		}
 	}
 	if conds.GoodID != nil {
 		id, ok := conds.GoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
+			return nil, wlog.Errorf("invalid goodid")
 		}
 		switch conds.GoodID.Op {
 		case cruder.EQ:
 			q.Where(entappgoodbase.GoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid appgoodbase field")
+			return nil, wlog.Errorf("invalid appgoodbase field")
 		}
 	}
 	if conds.GoodIDs != nil {
 		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
+			return nil, wlog.Errorf("invalid goodids")
 		}
 		switch conds.GoodIDs.Op {
 		case cruder.IN:
 			q.Where(entappgoodbase.GoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid appgoodbase field")
+			return nil, wlog.Errorf("invalid appgoodbase field")
 		}
 	}
 	return q, nil

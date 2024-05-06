@@ -1,10 +1,9 @@
 package topmost
 
 import (
-	"fmt"
-
 	"entgo.io/ent/dialect/sql"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	topmostcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
@@ -21,7 +20,7 @@ func (h *baseQueryHandler) selectTopMost(stm *ent.TopMostQuery) *ent.TopMostSele
 
 func (h *baseQueryHandler) queryTopMost(cli *ent.Client) error {
 	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
+		return wlog.Errorf("invalid id")
 	}
 	stm := cli.TopMost.Query().Where(enttopmost.DeletedAt(0))
 	if h.ID != nil {

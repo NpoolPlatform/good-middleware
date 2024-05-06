@@ -2,9 +2,9 @@ package appstock
 
 import (
 	"context"
-	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appgoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -18,7 +18,7 @@ type deleteHandler struct {
 
 func (h *deleteHandler) _deleteStock(ctx context.Context, cli *ent.Client) error {
 	if h.ID == nil && h.EntID == nil && h.AppGoodID == nil {
-		return fmt.Errorf("invalid stockid")
+		return wlog.Errorf("invalid stockid")
 	}
 
 	stm := cli.AppStock.Query()
@@ -36,7 +36,7 @@ func (h *deleteHandler) _deleteStock(ctx context.Context, cli *ent.Client) error
 		if ent.IsNotFound(err) {
 			return nil
 		}
-		return err
+		return wlog.WrapError(err)
 	}
 
 	if _, err := appgoodstockcrud.UpdateSet(
@@ -45,7 +45,7 @@ func (h *deleteHandler) _deleteStock(ctx context.Context, cli *ent.Client) error
 			DeletedAt: &h.now,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }

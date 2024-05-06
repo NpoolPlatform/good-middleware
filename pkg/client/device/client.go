@@ -2,8 +2,9 @@ package devicetype
 
 import (
 	"context"
-	"fmt"
 	"time"
+
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
@@ -102,7 +103,7 @@ func GetDeviceTypeOnly(ctx context.Context, conds *npool.Conds) (*npool.DeviceTy
 		return nil, nil
 	}
 	if len(infos.([]*npool.DeviceType)) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 	return infos.([]*npool.DeviceType)[0], nil
 }

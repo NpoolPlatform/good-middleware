@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -74,11 +75,11 @@ func (h *Handler) ConstructCreateSQL() string {
 func (h *createHandler) createScore(ctx context.Context, tx *ent.Tx) error {
 	rc, err := tx.ExecContext(ctx, h.sql)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
-		return fmt.Errorf("fail create score: %v", err)
+		return wlog.Errorf("fail create score: %v", err)
 	}
 	return nil
 }
@@ -90,11 +91,11 @@ func (h *createHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 			AppGoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.AppGoodID},
 		})
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	info, err := stm.ForUpdate().Only(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	scoreCount := info.ScoreCount + 1
 	score := info.Score.
@@ -108,7 +109,7 @@ func (h *createHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 			Score:      &score,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -123,7 +124,7 @@ func (h *Handler) CreateScore(ctx context.Context) error {
 	handler.sql = handler.ConstructCreateSQL()
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createScore(ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return handler.updateGoodScore(ctx, tx)
 	})

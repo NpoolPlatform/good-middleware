@@ -3,6 +3,7 @@ package good
 import (
 	"entgo.io/ent/dialect/sql"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
@@ -32,7 +33,7 @@ func (h *baseQueryHandler) queryGood(cli *ent.Client) {
 func (h *baseQueryHandler) queryGoods(cli *ent.Client) (*ent.AppGoodBaseSelect, error) {
 	stm, err := goodbasecrud.SetQueryConds(cli.AppGoodBase.Query(), h.AppGoodConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectGood(stm), nil
 }

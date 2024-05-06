@@ -3,8 +3,8 @@ package appstock
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -21,8 +21,8 @@ type expireHandler struct {
 
 func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	stock, ok := h.stocks[lock.AppGoodID]
-	if !ok {
-		return fmt.Errorf("invalid stock")
+	if !ok || stock.stock == nil {
+		return wlog.Errorf("invalid stock")
 	}
 
 	inService := stock.stock.InService
@@ -32,7 +32,7 @@ func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock,
 	spotQuantity = spotQuantity.Add(lock.Units)
 
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 
 	if inService.Add(stock.stock.WaitStart).
@@ -40,7 +40,7 @@ func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock,
 		Add(stock.stock.AppReserved).
 		Add(stock.stock.SpotQuantity).
 		Cmp(stock.stock.Total) > 0 {
-		return fmt.Errorf("stock exhausted")
+		return wlog.Errorf("stock exhausted")
 	}
 
 	if _, err := stockcrud.UpdateSet(
@@ -50,21 +50,21 @@ func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock,
 			SpotQuantity: &spotQuantity,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
 
 func (h *expireHandler) expireAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	stock, ok := h.stocks[lock.AppGoodID]
-	if !ok {
-		return fmt.Errorf("invalid stock")
+	if !ok || stock.appGoodStock == nil {
+		return wlog.Errorf("invalid stock")
 	}
 
 	inService := stock.appGoodStock.InService
 	inService = inService.Sub(lock.Units)
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 
 	if _, err := appstockcrud.UpdateSet(
@@ -73,7 +73,7 @@ func (h *expireHandler) expireAppStock(ctx context.Context, lock *ent.AppStockLo
 			InService: &inService,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	return nil
@@ -91,24 +91,24 @@ func (h *Handler) ExpireStock(ctx context.Context) error {
 	}
 
 	if err := handler.lockOp.getLocks(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	h.Stocks = handler.lockOp.lock2Stocks()
 	if err := handler.getStockAppGoods(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		for _, lock := range handler.lockOp.locks {
 			if err := handler.expireAppStock(ctx, lock, tx); err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			if err := handler.expireStock(ctx, lock, tx); err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 		}
 		if err := handler.lockOp.updateLocks(ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return nil
 	})

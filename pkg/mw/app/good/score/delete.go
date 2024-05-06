@@ -2,9 +2,9 @@ package score
 
 import (
 	"context"
-	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	scorecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/score"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -28,7 +28,7 @@ func (h *deleteHandler) deleteScore(ctx context.Context, tx *ent.Tx) error {
 			DeletedAt: &now,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -41,15 +41,15 @@ func (h *deleteHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 		},
 	)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	info, err := stm.Only(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	if info.ScoreCount == 0 {
-		return fmt.Errorf("invalid scorecount")
+		return wlog.Errorf("invalid scorecount")
 	}
 
 	if info.ScoreCount == 1 {
@@ -69,7 +69,7 @@ func (h *deleteHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 			ScoreCount: &info.ScoreCount,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -77,7 +77,7 @@ func (h *deleteHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 func (h *Handler) DeleteScore(ctx context.Context) error {
 	info, err := h.GetScore(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if info == nil {
 		return nil
@@ -91,7 +91,7 @@ func (h *Handler) DeleteScore(ctx context.Context) error {
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.deleteScore(ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return handler.updateGoodScore(ctx, tx)
 	})

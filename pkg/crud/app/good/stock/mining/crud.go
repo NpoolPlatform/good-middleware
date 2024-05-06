@@ -1,7 +1,7 @@
 package mining
 
 import (
-	"fmt"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
@@ -99,85 +99,85 @@ func SetQueryConds(q *ent.AppMiningGoodStockQuery, conds *Conds) (*ent.AppMining
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entappmininggoodstock.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid appmininggoodstock field")
+			return nil, wlog.Errorf("invalid appmininggoodstock field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entid")
+			return nil, wlog.Errorf("invalid entid")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(entappmininggoodstock.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid appmininggoodstock field")
+			return nil, wlog.Errorf("invalid appmininggoodstock field")
 		}
 	}
 	if conds.EntIDs != nil {
 		ids, ok := conds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entids")
+			return nil, wlog.Errorf("invalid entids")
 		}
 		switch conds.EntIDs.Op {
 		case cruder.IN:
 			q.Where(entappmininggoodstock.EntIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid appmininggoodstock field")
+			return nil, wlog.Errorf("invalid appmininggoodstock field")
 		}
 	}
 	if conds.AppGoodStockID != nil {
 		id, ok := conds.AppGoodStockID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appgoodstockid")
+			return nil, wlog.Errorf("invalid appgoodstockid")
 		}
 		switch conds.AppGoodStockID.Op {
 		case cruder.EQ:
 			q.Where(entappmininggoodstock.AppGoodStockID(id))
 		default:
-			return nil, fmt.Errorf("invalid appmininggoodstock field")
+			return nil, wlog.Errorf("invalid appmininggoodstock field")
 		}
 	}
 	if conds.AppGoodStockIDs != nil {
 		ids, ok := conds.AppGoodStockIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appgoodstockids")
+			return nil, wlog.Errorf("invalid appgoodstockids")
 		}
 		switch conds.AppGoodStockIDs.Op {
 		case cruder.IN:
 			q.Where(entappmininggoodstock.AppGoodStockIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid appmininggoodstock field")
+			return nil, wlog.Errorf("invalid appmininggoodstock field")
 		}
 	}
 	if conds.MiningGoodStockID != nil {
 		id, ok := conds.MiningGoodStockID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid mininggoodstockid")
+			return nil, wlog.Errorf("invalid mininggoodstockid")
 		}
 		switch conds.MiningGoodStockID.Op {
 		case cruder.EQ:
 			q.Where(entappmininggoodstock.MiningGoodStockID(id))
 		default:
-			return nil, fmt.Errorf("invalid appmininggoodstock field")
+			return nil, wlog.Errorf("invalid appmininggoodstock field")
 		}
 	}
 	if conds.MiningGoodStockIDs != nil {
 		ids, ok := conds.MiningGoodStockIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid mininggoodstockids")
+			return nil, wlog.Errorf("invalid mininggoodstockids")
 		}
 		switch conds.MiningGoodStockIDs.Op {
 		case cruder.IN:
 			q.Where(entappmininggoodstock.MiningGoodStockIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid appmininggoodstock field")
+			return nil, wlog.Errorf("invalid appmininggoodstock field")
 		}
 	}
 	return q, nil

@@ -2,8 +2,8 @@ package good
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -49,7 +49,7 @@ func (h *Handler) GetGood(ctx context.Context) (*npool.Good, error) {
 		return nil, nil
 	}
 	if len(handler.infos) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 
 	handler.formalize()
@@ -65,15 +65,15 @@ func (h *Handler) GetGoods(ctx context.Context) (infos []*npool.Good, total uint
 	}
 	if err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if handler.stmSelect, err = handler.queryGoods(cli); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if handler.stmCount, err = handler.queryGoods(cli); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.queryJoin()
 		_total, err := handler.stmCount.Count(_ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.total = uint32(_total)
 		handler.stmSelect.

@@ -2,8 +2,8 @@ package appsimulatepowerrental
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappsimulatepowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulatepowerrental"
@@ -22,17 +22,17 @@ func (h *appPowerRentalHandler) queryAppPowerRentalEnt(ctx context.Context) (err
 		apppowerrental1.WithAppGoodID(func() *string { s := h.AppGoodID.String(); return &s }(), true),
 	)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if h.appPowerRental, err = handler.QueryPowerRentalEnt(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
 
 func (h *appPowerRentalHandler) queryAppPowerRental(ctx context.Context) (err error) {
 	if h.ID == nil && h.EntID == nil && h.AppGoodID == nil {
-		return fmt.Errorf("invalid simulateid")
+		return wlog.Errorf("invalid simulateid")
 	}
 
 	if h.AppGoodID != nil {
@@ -49,12 +49,12 @@ func (h *appPowerRentalHandler) queryAppPowerRental(ctx context.Context) (err er
 		}
 		h.simulate, err = stm.Only(_ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppGoodID = &h.simulate.AppGoodID
 		return nil
 	}); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	return h.queryAppPowerRentalEnt(ctx)

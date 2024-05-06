@@ -27,18 +27,16 @@ func init() {
 	}
 }
 
-var (
-	ret = npool.Location{
-		EntID:     uuid.NewString(),
-		Country:   uuid.NewString(),
-		Province:  uuid.NewString(),
-		City:      uuid.NewString(),
-		Address:   uuid.NewString(),
-		BrandID:   uuid.NewString(),
-		BrandName: uuid.NewString(),
-		BrandLogo: uuid.NewString(),
-	}
-)
+var ret = npool.Location{
+	EntID:     uuid.NewString(),
+	Country:   uuid.NewString(),
+	Province:  uuid.NewString(),
+	City:      uuid.NewString(),
+	Address:   uuid.NewString(),
+	BrandID:   uuid.NewString(),
+	BrandName: uuid.NewString(),
+	BrandLogo: uuid.NewString(),
+}
 
 func setup(t *testing.T) func(*testing.T) {
 	h1, err := brand1.NewHandler(

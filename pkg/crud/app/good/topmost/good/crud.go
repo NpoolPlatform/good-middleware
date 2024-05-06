@@ -2,7 +2,7 @@
 package topmostgood
 
 import (
-	"fmt"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	enttopmostgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
@@ -77,61 +77,61 @@ func SetQueryConds(q *ent.TopMostGoodQuery, conds *Conds) (*ent.TopMostGoodQuery
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(enttopmostgood.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid topmostgood field")
+			return nil, wlog.Errorf("invalid topmostgood field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(enttopmostgood.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid topmostgood field")
+			return nil, wlog.Errorf("invalid topmostgood field")
 		}
 	}
 	if conds.AppGoodID != nil {
 		id, ok := conds.AppGoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appgoodid")
+			return nil, wlog.Errorf("invalid appgoodid")
 		}
 		switch conds.AppGoodID.Op {
 		case cruder.EQ:
 			q.Where(enttopmostgood.AppGoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid topmostgood field")
+			return nil, wlog.Errorf("invalid topmostgood field")
 		}
 	}
 	if conds.AppGoodIDs != nil {
 		ids, ok := conds.AppGoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appgoodids")
+			return nil, wlog.Errorf("invalid appgoodids")
 		}
 		switch conds.AppGoodIDs.Op {
 		case cruder.IN:
 			q.Where(enttopmostgood.AppGoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid topmostgood field")
+			return nil, wlog.Errorf("invalid topmostgood field")
 		}
 	}
 	if conds.TopMostID != nil {
 		id, ok := conds.TopMostID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid topmostid")
+			return nil, wlog.Errorf("invalid topmostid")
 		}
 		switch conds.TopMostID.Op {
 		case cruder.EQ:
 			q.Where(enttopmostgood.TopMostID(id))
 		default:
-			return nil, fmt.Errorf("invalid topmostgood field")
+			return nil, wlog.Errorf("invalid topmostgood field")
 		}
 	}
 	return q, nil

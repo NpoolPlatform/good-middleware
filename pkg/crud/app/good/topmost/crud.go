@@ -1,7 +1,7 @@
 package topmost
 
 import (
-	"fmt"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
@@ -92,7 +92,7 @@ func SetQueryConds(q *ent.TopMostQuery, conds *Conds) (*ent.TopMostQuery, error)
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
@@ -100,13 +100,13 @@ func SetQueryConds(q *ent.TopMostQuery, conds *Conds) (*ent.TopMostQuery, error)
 		case cruder.NEQ:
 			q.Where(enttopmost.IDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid topmostgood field")
+			return nil, wlog.Errorf("invalid topmostgood field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
@@ -114,61 +114,61 @@ func SetQueryConds(q *ent.TopMostQuery, conds *Conds) (*ent.TopMostQuery, error)
 		case cruder.NEQ:
 			q.Where(enttopmost.EntIDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid topmostgood field")
+			return nil, wlog.Errorf("invalid topmostgood field")
 		}
 	}
 	if conds.EntIDs != nil {
 		ids, ok := conds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid ids")
+			return nil, wlog.Errorf("invalid ids")
 		}
 		switch conds.EntIDs.Op {
 		case cruder.IN:
 			q.Where(enttopmost.EntIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid topmostgood field")
+			return nil, wlog.Errorf("invalid topmostgood field")
 		}
 	}
 	if conds.AppID != nil {
 		id, ok := conds.AppID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appid")
+			return nil, wlog.Errorf("invalid appid")
 		}
 		switch conds.AppID.Op {
 		case cruder.EQ:
 			q.Where(enttopmost.AppID(id))
 		default:
-			return nil, fmt.Errorf("invalid topmostgood field")
+			return nil, wlog.Errorf("invalid topmostgood field")
 		}
 	}
 	if conds.TopMostType != nil {
 		_type, ok := conds.TopMostType.Val.(types.GoodTopMostType)
 		if !ok {
-			return nil, fmt.Errorf("invalid topmosttype")
+			return nil, wlog.Errorf("invalid topmosttype")
 		}
 		switch conds.TopMostType.Op {
 		case cruder.EQ:
 			q.Where(enttopmost.TopMostType(_type.String()))
 		default:
-			return nil, fmt.Errorf("invalid good field")
+			return nil, wlog.Errorf("invalid good field")
 		}
 	}
 	if conds.Title != nil {
 		title, ok := conds.Title.Val.(string)
 		if !ok {
-			return nil, fmt.Errorf("invalid title")
+			return nil, wlog.Errorf("invalid title")
 		}
 		switch conds.Title.Op {
 		case cruder.EQ:
 			q.Where(enttopmost.Title(title))
 		default:
-			return nil, fmt.Errorf("invalid good field")
+			return nil, wlog.Errorf("invalid good field")
 		}
 	}
 	if conds.StartEnd != nil {
 		ats, ok := conds.StartEnd.Val.([]uint32)
 		if !ok || len(ats) != 2 {
-			return nil, fmt.Errorf("invalid startend")
+			return nil, wlog.Errorf("invalid startend")
 		}
 		switch conds.StartEnd.Op {
 		case cruder.OVERLAP:
@@ -189,7 +189,7 @@ func SetQueryConds(q *ent.TopMostQuery, conds *Conds) (*ent.TopMostQuery, error)
 				),
 			)
 		default:
-			return nil, fmt.Errorf("invalid good field")
+			return nil, wlog.Errorf("invalid good field")
 		}
 	}
 	return q, nil

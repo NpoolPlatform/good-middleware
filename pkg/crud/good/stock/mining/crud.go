@@ -1,8 +1,7 @@
 package mining
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -96,37 +95,37 @@ func SetQueryConds(q *ent.MiningGoodStockQuery, conds *Conds) (*ent.MiningGoodSt
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(entmininggoodstock.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid mininggoodstock field")
+			return nil, wlog.Errorf("invalid mininggoodstock field")
 		}
 	}
 	if conds.GoodStockID != nil {
 		id, ok := conds.GoodStockID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodstockid")
+			return nil, wlog.Errorf("invalid goodstockid")
 		}
 		switch conds.GoodStockID.Op {
 		case cruder.EQ:
 			q.Where(entmininggoodstock.GoodStockID(id))
 		default:
-			return nil, fmt.Errorf("invalid mininggoodstock field")
+			return nil, wlog.Errorf("invalid mininggoodstock field")
 		}
 	}
 	if conds.GoodStockIDs != nil {
 		ids, ok := conds.GoodStockIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodstockids")
+			return nil, wlog.Errorf("invalid goodstockids")
 		}
 		switch conds.GoodStockIDs.Op {
 		case cruder.IN:
 			q.Where(entmininggoodstock.GoodStockIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid mininggoodstock field")
+			return nil, wlog.Errorf("invalid mininggoodstock field")
 		}
 	}
 	return q, nil

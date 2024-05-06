@@ -2,8 +2,9 @@ package like
 
 import (
 	"context"
-	"fmt"
 	"time"
+
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
@@ -70,7 +71,7 @@ func GetLikeOnly(ctx context.Context, conds *npool.Conds) (*npool.Like, error) {
 		return nil, nil
 	}
 	if len(infos.([]*npool.Like)) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 	return infos.([]*npool.Like)[0], nil
 }

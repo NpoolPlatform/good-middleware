@@ -36,86 +36,84 @@ func init() {
 	}
 }
 
-var (
-	ret = npool.PowerRental{
-		EntID:  uuid.NewString(),
-		GoodID: uuid.NewString(),
+var ret = npool.PowerRental{
+	EntID:  uuid.NewString(),
+	GoodID: uuid.NewString(),
 
-		DeviceTypeID:           uuid.NewString(),
-		DeviceType:             uuid.NewString(),
-		DeviceManufacturerName: uuid.NewString(),
-		DeviceManufacturerLogo: uuid.NewString(),
-		DevicePowerConsumption: 120,
-		DeviceShipmentAt:       uint32(time.Now().Unix()),
+	DeviceTypeID:           uuid.NewString(),
+	DeviceType:             uuid.NewString(),
+	DeviceManufacturerName: uuid.NewString(),
+	DeviceManufacturerLogo: uuid.NewString(),
+	DevicePowerConsumption: 120,
+	DeviceShipmentAt:       uint32(time.Now().Unix()),
 
-		VendorLocationID: uuid.NewString(),
-		VendorBrand:      uuid.NewString(),
-		VendorLogo:       uuid.NewString(),
-		VendorCountry:    uuid.NewString(),
-		VendorProvince:   uuid.NewString(),
+	VendorLocationID: uuid.NewString(),
+	VendorBrand:      uuid.NewString(),
+	VendorLogo:       uuid.NewString(),
+	VendorCountry:    uuid.NewString(),
+	VendorProvince:   uuid.NewString(),
 
-		UnitPrice:           decimal.NewFromInt(120).String(),
-		QuantityUnit:        "TiB",
-		QuantityUnitAmount:  decimal.NewFromInt(2).String(),
-		DeliveryAt:          uint32(time.Now().Unix()),
-		DurationDisplayType: types.GoodDurationType_GoodDurationByDay,
-		StockMode:           types.GoodStockMode_GoodStockByMiningPool,
+	UnitPrice:           decimal.NewFromInt(120).String(),
+	QuantityUnit:        "TiB",
+	QuantityUnitAmount:  decimal.NewFromInt(2).String(),
+	DeliveryAt:          uint32(time.Now().Unix()),
+	DurationDisplayType: types.GoodDurationType_GoodDurationByDay,
+	StockMode:           types.GoodStockMode_GoodStockByMiningPool,
 
-		GoodType:             types.GoodType_PowerRental,
-		BenefitType:          types.BenefitType_BenefitTypePlatform,
-		Name:                 uuid.NewString(),
-		ServiceStartAt:       uint32(time.Now().Unix()),
-		StartMode:            types.GoodStartMode_GoodStartModeInstantly,
-		BenefitIntervalHours: 20,
-		UnitLockDeposit:      decimal.NewFromInt(1).String(),
+	GoodType:             types.GoodType_PowerRental,
+	BenefitType:          types.BenefitType_BenefitTypePlatform,
+	Name:                 uuid.NewString(),
+	ServiceStartAt:       uint32(time.Now().Unix()),
+	StartMode:            types.GoodStartMode_GoodStartModeInstantly,
+	BenefitIntervalHours: 20,
+	UnitLockDeposit:      decimal.NewFromInt(1).String(),
 
-		GoodStockID:      uuid.NewString(),
-		GoodTotal:        decimal.NewFromInt(120).String(),
-		GoodSpotQuantity: decimal.NewFromInt(120).String(),
-		GoodLocked:       decimal.NewFromInt(0).String(),
-		GoodInService:    decimal.NewFromInt(0).String(),
-		GoodWaitStart:    decimal.NewFromInt(0).String(),
-		GoodSold:         decimal.NewFromInt(0).String(),
-		GoodAppReserved:  decimal.NewFromInt(0).String(),
+	GoodStockID:      uuid.NewString(),
+	GoodTotal:        decimal.NewFromInt(120).String(),
+	GoodSpotQuantity: decimal.NewFromInt(120).String(),
+	GoodLocked:       decimal.NewFromInt(0).String(),
+	GoodInService:    decimal.NewFromInt(0).String(),
+	GoodWaitStart:    decimal.NewFromInt(0).String(),
+	GoodSold:         decimal.NewFromInt(0).String(),
+	GoodAppReserved:  decimal.NewFromInt(0).String(),
 
-		GoodCoins: []*goodcoinmwpb.GoodCoinInfo{
-			{
-				CoinTypeID: uuid.NewString(),
-				Main:       true,
-			},
-			{
-				CoinTypeID: uuid.NewString(),
-				Main:       true,
-			},
-			{
-				CoinTypeID: uuid.NewString(),
-				Main:       true,
-			},
+	GoodCoins: []*goodcoinmwpb.GoodCoinInfo{
+		{
+			CoinTypeID: uuid.NewString(),
+			Main:       true,
 		},
-
-		MiningGoodStocks: []*stockmwpb.MiningGoodStock{
-			{
-				EntID:          uuid.NewString(),
-				MiningPoolID:   uuid.NewString(),
-				PoolGoodUserID: uuid.NewString(),
-				Total:          decimal.NewFromInt(70).String(),
-			},
-			{
-				EntID:          uuid.NewString(),
-				MiningPoolID:   uuid.NewString(),
-				PoolGoodUserID: uuid.NewString(),
-				Total:          decimal.NewFromInt(50).String(),
-			},
+		{
+			CoinTypeID: uuid.NewString(),
+			Main:       true,
 		},
+		{
+			CoinTypeID: uuid.NewString(),
+			Main:       true,
+		},
+	},
 
-		RewardState:           types.BenefitState_BenefitWait,
-		RewardTID:             uuid.Nil.String(),
-		NextRewardStartAmount: decimal.NewFromInt(0).String(),
-		LastRewardAmount:      decimal.NewFromInt(0).String(),
-		LastUnitRewardAmount:  decimal.NewFromInt(0).String(),
-		TotalRewardAmount:     decimal.NewFromInt(0).String(),
-	}
-)
+	MiningGoodStocks: []*stockmwpb.MiningGoodStock{
+		{
+			EntID:          uuid.NewString(),
+			MiningPoolID:   uuid.NewString(),
+			PoolGoodUserID: uuid.NewString(),
+			Total:          decimal.NewFromInt(70).String(),
+		},
+		{
+			EntID:          uuid.NewString(),
+			MiningPoolID:   uuid.NewString(),
+			PoolGoodUserID: uuid.NewString(),
+			Total:          decimal.NewFromInt(50).String(),
+		},
+	},
+
+	RewardState:           types.BenefitState_BenefitWait,
+	RewardTID:             uuid.Nil.String(),
+	NextRewardStartAmount: decimal.NewFromInt(0).String(),
+	LastRewardAmount:      decimal.NewFromInt(0).String(),
+	LastUnitRewardAmount:  decimal.NewFromInt(0).String(),
+	TotalRewardAmount:     decimal.NewFromInt(0).String(),
+}
 
 func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()

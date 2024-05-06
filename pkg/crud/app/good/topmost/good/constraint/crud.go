@@ -1,7 +1,7 @@
 package topmostgoodconstraint
 
 import (
-	"fmt"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	enttopmostgoodconstraint "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodconstraint"
@@ -71,73 +71,73 @@ func SetQueryConds(q *ent.TopMostGoodConstraintQuery, conds *Conds) (*ent.TopMos
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(enttopmostgoodconstraint.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid topmostgoodconstraint field")
+			return nil, wlog.Errorf("invalid topmostgoodconstraint field")
 		}
 	}
 	if conds.IDs != nil {
 		ids, ok := conds.IDs.Val.([]uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid ids")
+			return nil, wlog.Errorf("invalid ids")
 		}
 		switch conds.IDs.Op {
 		case cruder.IN:
 			q.Where(enttopmostgoodconstraint.IDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid topmostgoodconstraint field")
+			return nil, wlog.Errorf("invalid topmostgoodconstraint field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entid")
+			return nil, wlog.Errorf("invalid entid")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(enttopmostgoodconstraint.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid topmostgoodconstraint field")
+			return nil, wlog.Errorf("invalid topmostgoodconstraint field")
 		}
 	}
 	if conds.EntIDs != nil {
 		ids, ok := conds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entids")
+			return nil, wlog.Errorf("invalid entids")
 		}
 		switch conds.EntIDs.Op {
 		case cruder.IN:
 			q.Where(enttopmostgoodconstraint.EntIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid topmostgoodconstraint field")
+			return nil, wlog.Errorf("invalid topmostgoodconstraint field")
 		}
 	}
 	if conds.TopMostGoodID != nil {
 		id, ok := conds.TopMostGoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid topmostgoodid")
+			return nil, wlog.Errorf("invalid topmostgoodid")
 		}
 		switch conds.TopMostGoodID.Op {
 		case cruder.EQ:
 			q.Where(enttopmostgoodconstraint.TopMostGoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid topmostgoodconstraint field")
+			return nil, wlog.Errorf("invalid topmostgoodconstraint field")
 		}
 	}
 	if conds.TopMostGoodIDs != nil {
 		ids, ok := conds.TopMostGoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid topmostgoodids")
+			return nil, wlog.Errorf("invalid topmostgoodids")
 		}
 		switch conds.TopMostGoodIDs.Op {
 		case cruder.IN:
 			q.Where(enttopmostgoodconstraint.TopMostGoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid topmostgoodconstraint field")
+			return nil, wlog.Errorf("invalid topmostgoodconstraint field")
 		}
 	}
 	return q, nil

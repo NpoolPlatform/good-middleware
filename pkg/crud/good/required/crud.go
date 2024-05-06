@@ -1,8 +1,7 @@
 package requiredgood
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entrequiredgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredgood"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -64,55 +63,55 @@ func SetQueryConds(q *ent.RequiredGoodQuery, conds *Conds) (*ent.RequiredGoodQue
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entrequiredgood.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid requiredgood field")
+			return nil, wlog.Errorf("invalid requiredgood field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(entrequiredgood.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid requiredgood field")
+			return nil, wlog.Errorf("invalid requiredgood field")
 		}
 	}
 	if conds.MainGoodID != nil {
 		id, ok := conds.MainGoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid maingoodid")
+			return nil, wlog.Errorf("invalid maingoodid")
 		}
 		switch conds.MainGoodID.Op {
 		case cruder.EQ:
 			q.Where(entrequiredgood.MainGoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid requiredgood field")
+			return nil, wlog.Errorf("invalid requiredgood field")
 		}
 	}
 	if conds.RequiredGoodID != nil {
 		id, ok := conds.RequiredGoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid requiredgoodid")
+			return nil, wlog.Errorf("invalid requiredgoodid")
 		}
 		switch conds.RequiredGoodID.Op {
 		case cruder.EQ:
 			q.Where(entrequiredgood.RequiredGoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid requiredgood field")
+			return nil, wlog.Errorf("invalid requiredgood field")
 		}
 	}
 	if conds.GoodID != nil {
 		id, ok := conds.GoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
+			return nil, wlog.Errorf("invalid goodid")
 		}
 		switch conds.GoodID.Op {
 		case cruder.EQ:
@@ -123,13 +122,13 @@ func SetQueryConds(q *ent.RequiredGoodQuery, conds *Conds) (*ent.RequiredGoodQue
 				),
 			)
 		default:
-			return nil, fmt.Errorf("invalid requiredgood field")
+			return nil, wlog.Errorf("invalid requiredgood field")
 		}
 	}
 	if conds.GoodIDs != nil {
 		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
+			return nil, wlog.Errorf("invalid goodids")
 		}
 		switch conds.GoodIDs.Op {
 		case cruder.IN:
@@ -140,19 +139,19 @@ func SetQueryConds(q *ent.RequiredGoodQuery, conds *Conds) (*ent.RequiredGoodQue
 				),
 			)
 		default:
-			return nil, fmt.Errorf("invalid requiredgood field")
+			return nil, wlog.Errorf("invalid requiredgood field")
 		}
 	}
 	if conds.Must != nil {
 		must, ok := conds.Must.Val.(bool)
 		if !ok {
-			return nil, fmt.Errorf("invalid must")
+			return nil, wlog.Errorf("invalid must")
 		}
 		switch conds.Must.Op {
 		case cruder.EQ:
 			q.Where(entrequiredgood.MustEQ(must))
 		default:
-			return nil, fmt.Errorf("invalid requiredgood field")
+			return nil, wlog.Errorf("invalid requiredgood field")
 		}
 	}
 	return q, nil

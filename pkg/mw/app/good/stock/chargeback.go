@@ -3,8 +3,8 @@ package appstock
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	appmininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
@@ -23,8 +23,8 @@ type chargeBackHandler struct {
 
 func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	stock, ok := h.stocks[lock.AppGoodID]
-	if !ok {
-		return fmt.Errorf("invalid stock")
+	if !ok || stock.stock == nil {
+		return wlog.Errorf("invalid stock")
 	}
 
 	spotQuantity := stock.stock.SpotQuantity
@@ -42,13 +42,13 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppSt
 	spotQuantity = spotQuantity.Add(lock.Units)
 
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 	if sold.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 
 	if inService.Add(waitStart).
@@ -56,7 +56,7 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppSt
 		Add(stock.stock.AppReserved).
 		Add(spotQuantity).
 		Cmp(stock.stock.Total) > 0 {
-		return fmt.Errorf("stock exhausted")
+		return wlog.Errorf("stock exhausted")
 	}
 
 	if _, err := stockcrud.UpdateSet(
@@ -68,15 +68,15 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppSt
 			Sold:         &sold,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
 
 func (h *chargeBackHandler) chargeBackMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	stock, ok := h.stocks[lock.AppGoodID]
-	if !ok {
-		return fmt.Errorf("invalid stock")
+	if !ok || stock.miningGoodStock == nil {
+		return wlog.Errorf("invalid stock")
 	}
 
 	spotQuantity := stock.miningGoodStock.SpotQuantity
@@ -94,13 +94,13 @@ func (h *chargeBackHandler) chargeBackMiningGoodStock(ctx context.Context, lock 
 	spotQuantity = spotQuantity.Add(lock.Units)
 
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 	if sold.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 
 	if inService.Add(waitStart).
@@ -108,7 +108,7 @@ func (h *chargeBackHandler) chargeBackMiningGoodStock(ctx context.Context, lock 
 		Add(stock.miningGoodStock.AppReserved).
 		Add(spotQuantity).
 		Cmp(stock.miningGoodStock.Total) > 0 {
-		return fmt.Errorf("stock exhausted")
+		return wlog.Errorf("stock exhausted")
 	}
 
 	if _, err := mininggoodstockcrud.UpdateSet(
@@ -120,15 +120,15 @@ func (h *chargeBackHandler) chargeBackMiningGoodStock(ctx context.Context, lock 
 			Sold:         &sold,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
 
 func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	stock, ok := h.stocks[lock.AppGoodID]
-	if !ok {
-		return fmt.Errorf("invalid stock")
+	if !ok || stock.appGoodStock == nil {
+		return wlog.Errorf("invalid stock")
 	}
 
 	inService := stock.appGoodStock.InService
@@ -144,13 +144,13 @@ func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, lock *ent.Ap
 	sold = sold.Sub(lock.Units)
 
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 	if sold.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 
 	if _, err := appstockcrud.UpdateSet(
@@ -161,7 +161,7 @@ func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, lock *ent.Ap
 			Sold:      &sold,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	return nil
@@ -173,8 +173,8 @@ func (h *chargeBackHandler) chargeBackAppMiningGoodStock(ctx context.Context, lo
 	}
 
 	stock, ok := h.stocks[lock.AppGoodID]
-	if !ok {
-		return fmt.Errorf("invalid stock")
+	if !ok || stock.appMiningGoodStock == nil {
+		return wlog.Errorf("invalid stock")
 	}
 
 	inService := stock.appMiningGoodStock.InService
@@ -190,13 +190,13 @@ func (h *chargeBackHandler) chargeBackAppMiningGoodStock(ctx context.Context, lo
 	sold = sold.Sub(lock.Units)
 
 	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 	if sold.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 
 	if _, err := appmininggoodstockcrud.UpdateSet(
@@ -207,7 +207,7 @@ func (h *chargeBackHandler) chargeBackAppMiningGoodStock(ctx context.Context, lo
 			Sold:      &sold,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	return nil
@@ -225,34 +225,34 @@ func (h *Handler) ChargeBackStock(ctx context.Context) error {
 	}
 
 	if err := handler.lockOp.getLocks(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	h.Stocks = handler.lockOp.lock2Stocks()
 	if err := handler.getStockAppGoods(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		for _, lock := range handler.lockOp.locks {
 			if err := handler.chargeBackAppStock(ctx, lock, tx); err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			if !handler.stockByMiningPool(lock.AppGoodID) {
 				if err := handler.chargeBackAppMiningGoodStock(ctx, lock, tx); err != nil {
-					return err
+					return wlog.WrapError(err)
 				}
 			}
 			if err := handler.chargeBackStock(ctx, lock, tx); err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			if !handler.stockByMiningPool(lock.AppGoodID) {
 				if err := handler.chargeBackMiningGoodStock(ctx, lock, tx); err != nil {
-					return err
+					return wlog.WrapError(err)
 				}
 			}
 		}
 		if err := handler.lockOp.updateLocks(ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return nil
 	})

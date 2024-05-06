@@ -2,8 +2,8 @@ package appstock
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appstocklockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/lock"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -38,7 +38,7 @@ func (h *lockopHandler) getLocks(ctx context.Context) error {
 			).
 			All(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.locks = locks
 		if len(locks) > 0 {
@@ -67,7 +67,7 @@ func (h *lockopHandler) checkState() error {
 			}
 		}
 		if !validState {
-			return fmt.Errorf("invalid state")
+			return wlog.Errorf("invalid state")
 		}
 	}
 	return nil
@@ -75,10 +75,10 @@ func (h *lockopHandler) checkState() error {
 
 func (h *lockopHandler) updateLocks(ctx context.Context, tx *ent.Tx) error {
 	if len(h.locks) == 0 {
-		return fmt.Errorf("invalid locks")
+		return wlog.Errorf("invalid locks")
 	}
 	if err := h.checkState(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	lockIDs := []uint32{}
 	for _, lock := range h.locks {
@@ -99,7 +99,7 @@ func (h *lockopHandler) updateLocks(ctx context.Context, tx *ent.Tx) error {
 		stm.SetChargeBackState(h.locks[0].LockState)
 	}
 	if _, err := stm.Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -117,7 +117,7 @@ func (h *lockopHandler) createLocks(ctx context.Context, tx *ent.Tx) error {
 				ExLockID:     h.LockID,
 			},
 		).Save(ctx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return nil
 	}
@@ -133,7 +133,7 @@ func (h *lockopHandler) createLocks(ctx context.Context, tx *ent.Tx) error {
 				ExLockID:     h.LockID,
 			},
 		).Save(ctx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 	}
 

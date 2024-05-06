@@ -2,8 +2,7 @@
 package deviceinfo
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entdeviceinfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -75,7 +74,7 @@ func SetQueryConds(q *ent.DeviceInfoQuery, conds *Conds) (*ent.DeviceInfoQuery, 
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
@@ -83,13 +82,13 @@ func SetQueryConds(q *ent.DeviceInfoQuery, conds *Conds) (*ent.DeviceInfoQuery, 
 		case cruder.NEQ:
 			q.Where(entdeviceinfo.IDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid deviceinfo field")
+			return nil, wlog.Errorf("invalid deviceinfo field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
@@ -97,31 +96,31 @@ func SetQueryConds(q *ent.DeviceInfoQuery, conds *Conds) (*ent.DeviceInfoQuery, 
 		case cruder.NEQ:
 			q.Where(entdeviceinfo.EntIDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid deviceinfo field")
+			return nil, wlog.Errorf("invalid deviceinfo field")
 		}
 	}
 	if conds.Type != nil {
 		_type, ok := conds.Type.Val.(string)
 		if !ok {
-			return nil, fmt.Errorf("invalid type")
+			return nil, wlog.Errorf("invalid type")
 		}
 		switch conds.Type.Op {
 		case cruder.EQ:
 			q.Where(entdeviceinfo.Type(_type))
 		default:
-			return nil, fmt.Errorf("invalid deviceinfo field")
+			return nil, wlog.Errorf("invalid deviceinfo field")
 		}
 	}
 	if conds.ManufacturerID != nil {
 		manufacturer, ok := conds.ManufacturerID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid manufacturerid")
+			return nil, wlog.Errorf("invalid manufacturerid")
 		}
 		switch conds.ManufacturerID.Op {
 		case cruder.EQ:
 			q.Where(entdeviceinfo.ManufacturerID(manufacturer))
 		default:
-			return nil, fmt.Errorf("invalid deviceinfo field")
+			return nil, wlog.Errorf("invalid deviceinfo field")
 		}
 	}
 	return q, nil

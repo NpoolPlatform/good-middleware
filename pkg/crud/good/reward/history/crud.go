@@ -1,8 +1,7 @@
 package goodrewardhistory
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entgoodrewardhistory "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -65,55 +64,55 @@ func SetQueryConds(q *ent.GoodRewardHistoryQuery, conds *Conds) (*ent.GoodReward
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entgoodrewardhistory.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid goodrewardhistory field")
+			return nil, wlog.Errorf("invalid goodrewardhistory field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(entgoodrewardhistory.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid goodrewardhistory field")
+			return nil, wlog.Errorf("invalid goodrewardhistory field")
 		}
 	}
 	if conds.GoodID != nil {
 		id, ok := conds.GoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
+			return nil, wlog.Errorf("invalid goodid")
 		}
 		switch conds.GoodID.Op {
 		case cruder.EQ:
 			q.Where(entgoodrewardhistory.GoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid goodrewardhistory field")
+			return nil, wlog.Errorf("invalid goodrewardhistory field")
 		}
 	}
 	if conds.GoodIDs != nil {
 		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
+			return nil, wlog.Errorf("invalid goodids")
 		}
 		switch conds.GoodIDs.Op {
 		case cruder.IN:
 			q.Where(entgoodrewardhistory.GoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid goodrewardhistory field")
+			return nil, wlog.Errorf("invalid goodrewardhistory field")
 		}
 	}
 	if conds.RewardDate != nil {
 		date, ok := conds.RewardDate.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid rewarddate")
+			return nil, wlog.Errorf("invalid rewarddate")
 		}
 		switch conds.RewardDate.Op {
 		case cruder.EQ:
@@ -123,20 +122,20 @@ func SetQueryConds(q *ent.GoodRewardHistoryQuery, conds *Conds) (*ent.GoodReward
 		case cruder.GTE:
 			q.Where(entgoodrewardhistory.RewardDateGTE(date))
 		default:
-			return nil, fmt.Errorf("invalid goodrewardhistory field")
+			return nil, wlog.Errorf("invalid goodrewardhistory field")
 		}
 	}
 	if conds.StartAt != nil {
 		date, ok := conds.StartAt.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid startat")
+			return nil, wlog.Errorf("invalid startat")
 		}
 		q.Where(entgoodrewardhistory.RewardDateGTE(date))
 	}
 	if conds.EndAt != nil {
 		date, ok := conds.EndAt.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid endat")
+			return nil, wlog.Errorf("invalid endat")
 		}
 		q.Where(entgoodrewardhistory.RewardDateLTE(date))
 	}

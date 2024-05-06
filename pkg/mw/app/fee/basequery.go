@@ -1,11 +1,10 @@
 package fee
 
 import (
-	"fmt"
-
 	"entgo.io/ent/dialect/sql"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappfee "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appfee"
@@ -28,7 +27,7 @@ func (h *baseQueryHandler) selectAppGoodBase(stm *ent.AppGoodBaseQuery) *ent.App
 
 func (h *baseQueryHandler) queryAppGoodBase(cli *ent.Client) error {
 	if h.AppGoodID == nil {
-		return fmt.Errorf("invalid appgoodid")
+		return wlog.Errorf("invalid appgoodid")
 	}
 	h.stmSelect = h.selectAppGoodBase(
 		cli.AppGoodBase.
@@ -89,14 +88,14 @@ func (h *baseQueryHandler) queryJoinGood(s *sql.Selector) error {
 	if h.GoodBaseConds.EntID != nil {
 		uid, ok := h.GoodBaseConds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid goodid")
+			return wlog.Errorf("invalid goodid")
 		}
 		s.OnP(sql.EQ(t1.C(entgoodbase.FieldEntID), uid))
 	}
 	if h.GoodBaseConds.EntIDs != nil {
 		uids, ok := h.GoodBaseConds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid goodids")
+			return wlog.Errorf("invalid goodids")
 		}
 		s.OnP(
 			sql.In(
@@ -129,14 +128,14 @@ func (h *baseQueryHandler) queryJoinFee(s *sql.Selector) error {
 	if h.FeeConds.GoodID != nil {
 		uid, ok := h.FeeConds.GoodID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid goodid")
+			return wlog.Errorf("invalid goodid")
 		}
 		s.OnP(sql.EQ(t1.C(entfee.FieldGoodID), uid))
 	}
 	if h.FeeConds.GoodIDs != nil {
 		uids, ok := h.FeeConds.GoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid goodids")
+			return wlog.Errorf("invalid goodids")
 		}
 		s.OnP(
 			sql.In(
@@ -153,7 +152,7 @@ func (h *baseQueryHandler) queryJoinFee(s *sql.Selector) error {
 	if h.FeeConds.SettlementType != nil {
 		_type, ok := h.FeeConds.SettlementType.Val.(types.GoodSettlementType)
 		if !ok {
-			return fmt.Errorf("invalid settlementtype")
+			return wlog.Errorf("invalid settlementtype")
 		}
 		s.OnP(
 			sql.EQ(t1.C(entfee.FieldSettlementType), _type.String()),
@@ -183,14 +182,14 @@ func (h *baseQueryHandler) queryJoinAppFee(s *sql.Selector) error {
 	if h.AppFeeConds.ID != nil {
 		u, ok := h.AppFeeConds.ID.Val.(uint32)
 		if !ok {
-			return fmt.Errorf("invalid id")
+			return wlog.Errorf("invalid id")
 		}
 		s.OnP(sql.EQ(t1.C(entappfee.FieldID), u))
 	}
 	if h.AppFeeConds.IDs != nil {
 		ids, ok := h.AppFeeConds.IDs.Val.([]uint32)
 		if !ok {
-			return fmt.Errorf("invalid ids")
+			return wlog.Errorf("invalid ids")
 		}
 		s.OnP(
 			sql.In(
@@ -210,14 +209,14 @@ func (h *baseQueryHandler) queryJoinAppFee(s *sql.Selector) error {
 	if h.AppFeeConds.EntID != nil {
 		uid, ok := h.AppFeeConds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid entid")
+			return wlog.Errorf("invalid entid")
 		}
 		s.OnP(sql.EQ(t1.C(entappfee.FieldEntID), uid))
 	}
 	if h.AppFeeConds.EntIDs != nil {
 		uids, ok := h.AppFeeConds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid entids")
+			return wlog.Errorf("invalid entids")
 		}
 		s.OnP(
 			sql.In(
@@ -234,14 +233,14 @@ func (h *baseQueryHandler) queryJoinAppFee(s *sql.Selector) error {
 	if h.AppFeeConds.AppGoodID != nil {
 		uid, ok := h.AppFeeConds.AppGoodID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid appgoodid")
+			return wlog.Errorf("invalid appgoodid")
 		}
 		s.OnP(sql.EQ(t1.C(entappfee.FieldAppGoodID), uid))
 	}
 	if h.AppFeeConds.AppGoodIDs != nil {
 		uids, ok := h.AppFeeConds.AppGoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid appgoodids")
+			return wlog.Errorf("invalid appgoodids")
 		}
 		s.OnP(
 			sql.In(

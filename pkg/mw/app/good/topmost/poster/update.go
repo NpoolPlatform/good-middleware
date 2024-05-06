@@ -2,8 +2,8 @@ package poster
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	topmostpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/poster"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -18,7 +18,7 @@ func (h *updateHandler) updatePoster(ctx context.Context, cli *ent.Client) error
 		cli.TopMostPoster.UpdateOneID(*h.ID),
 		&h.Req,
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -26,10 +26,10 @@ func (h *updateHandler) updatePoster(ctx context.Context, cli *ent.Client) error
 func (h *Handler) UpdatePoster(ctx context.Context) error {
 	info, err := h.GetPoster(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if info == nil {
-		return fmt.Errorf("invalid poster")
+		return wlog.Errorf("invalid poster")
 	}
 
 	h.ID = &info.ID

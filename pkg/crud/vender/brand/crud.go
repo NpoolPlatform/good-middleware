@@ -1,8 +1,7 @@
 package brand
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entvendorbrand "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -58,7 +57,7 @@ func SetQueryConds(q *ent.VendorBrandQuery, conds *Conds) (*ent.VendorBrandQuery
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
@@ -66,13 +65,13 @@ func SetQueryConds(q *ent.VendorBrandQuery, conds *Conds) (*ent.VendorBrandQuery
 		case cruder.NEQ:
 			q.Where(entvendorbrand.IDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid vendorbrand field")
+			return nil, wlog.Errorf("invalid vendorbrand field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
@@ -80,19 +79,19 @@ func SetQueryConds(q *ent.VendorBrandQuery, conds *Conds) (*ent.VendorBrandQuery
 		case cruder.NEQ:
 			q.Where(entvendorbrand.EntIDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid vendorbrand field")
+			return nil, wlog.Errorf("invalid vendorbrand field")
 		}
 	}
 	if conds.Name != nil {
 		name, ok := conds.Name.Val.(string)
 		if !ok {
-			return nil, fmt.Errorf("invalid name")
+			return nil, wlog.Errorf("invalid name")
 		}
 		switch conds.Name.Op {
 		case cruder.EQ:
 			q.Where(entvendorbrand.Name(name))
 		default:
-			return nil, fmt.Errorf("invalid vendorbrand field")
+			return nil, wlog.Errorf("invalid vendorbrand field")
 		}
 	}
 	return q, nil

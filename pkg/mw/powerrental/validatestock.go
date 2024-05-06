@@ -1,8 +1,7 @@
 package powerrental
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/shopspring/decimal"
@@ -21,7 +20,7 @@ func (h *validateStockHandler) validateStock() error {
 		poolTotal = poolStock.Total.Add(poolTotal)
 	}
 	if h.StockReq.Total.Cmp(poolTotal) != 0 {
-		return fmt.Errorf("invalid stock total")
+		return wlog.Errorf("invalid stock total")
 	}
 	return nil
 }

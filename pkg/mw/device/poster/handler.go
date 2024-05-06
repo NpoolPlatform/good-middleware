@@ -2,8 +2,8 @@ package poster
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	devicepostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device/poster"
 	device1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device"
@@ -37,7 +37,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -50,13 +50,13 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &_id
 		return nil
@@ -70,14 +70,14 @@ func WithDeviceTypeID(id *string, must bool) func(context.Context, *Handler) err
 			device1.WithEntID(id, true),
 		)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		exist, err := handler.ExistDeviceType(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if !exist {
-			return fmt.Errorf("invalid devicetype")
+			return wlog.Errorf("invalid devicetype")
 		}
 		h.DeviceTypeID = handler.EntID
 		return nil
@@ -108,7 +108,7 @@ func (h *Handler) withAppPosterGoodConds(conds *npool.Conds) error {
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.PosterConds.EntID = &cruder.Cond{
 			Op:  conds.GetEntID().GetOp(),
@@ -118,7 +118,7 @@ func (h *Handler) withAppPosterGoodConds(conds *npool.Conds) error {
 	if conds.DeviceTypeID != nil {
 		id, err := uuid.Parse(conds.GetDeviceTypeID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.PosterConds.DeviceTypeID = &cruder.Cond{
 			Op:  conds.GetDeviceTypeID().GetOp(),
@@ -130,7 +130,7 @@ func (h *Handler) withAppPosterGoodConds(conds *npool.Conds) error {
 		for _, id := range conds.GetDeviceTypeIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}

@@ -2,8 +2,8 @@ package topmostgood
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	topmostgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -21,7 +21,7 @@ func (h *updateHandler) updateTopMostGood(ctx context.Context, tx *ent.Tx) error
 			UnitPrice:    h.UnitPrice,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -29,10 +29,10 @@ func (h *updateHandler) updateTopMostGood(ctx context.Context, tx *ent.Tx) error
 func (h *Handler) UpdateTopMostGood(ctx context.Context) error {
 	info, err := h.GetTopMostGood(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if info == nil {
-		return fmt.Errorf("invalid topmostgood")
+		return wlog.Errorf("invalid topmostgood")
 	}
 
 	h.ID = &info.ID

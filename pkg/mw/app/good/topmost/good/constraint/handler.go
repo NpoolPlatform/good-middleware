@@ -2,8 +2,8 @@ package constraint
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	topmostcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost"
 	topmostgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good"
@@ -45,7 +45,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -58,13 +58,13 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &_id
 		return nil
@@ -78,14 +78,14 @@ func WithTopMostGoodID(id *string, must bool) func(context.Context, *Handler) er
 			topmostgood1.WithEntID(id, true),
 		)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		exist, err := handler.ExistTopMostGood(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if !exist {
-			return fmt.Errorf("invalid topmostgood")
+			return wlog.Errorf("invalid topmostgood")
 		}
 		h.TopMostGoodID = handler.EntID
 		return nil
@@ -96,7 +96,7 @@ func WithConstraint(e *types.GoodTopMostConstraint, must bool) func(context.Cont
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid constraint")
+				return wlog.Errorf("invalid constraint")
 			}
 			return nil
 		}
@@ -107,7 +107,7 @@ func WithConstraint(e *types.GoodTopMostConstraint, must bool) func(context.Cont
 		case types.GoodTopMostConstraint_TopMostPaymentAmount:
 		case types.GoodTopMostConstraint_TopMostKycMust:
 		default:
-			return fmt.Errorf("invalid constraint")
+			return wlog.Errorf("invalid constraint")
 		}
 		h.Constraint = e
 		return nil
@@ -118,16 +118,16 @@ func WithTargetValue(s *string, must bool) func(context.Context, *Handler) error
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid targetvalue")
+				return wlog.Errorf("invalid targetvalue")
 			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
-			return fmt.Errorf("invalid targetvalue")
+			return wlog.Errorf("invalid targetvalue")
 		}
 		h.TargetValue = &amount
 		return nil
@@ -138,7 +138,7 @@ func WithIndex(u *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if u == nil {
 			if must {
-				return fmt.Errorf("invalid index")
+				return wlog.Errorf("invalid index")
 			}
 			return nil
 		}
@@ -157,7 +157,7 @@ func (h *Handler) withConstraintConds(conds *npool.Conds) error {
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.ConstraintConds.EntID = &cruder.Cond{
 			Op:  conds.GetEntID().GetOp(),
@@ -171,7 +171,7 @@ func (h *Handler) withTopMostConds(conds *npool.Conds) error {
 	if conds.AppID != nil {
 		id, err := uuid.Parse(conds.GetAppID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.TopMostConds.AppID = &cruder.Cond{
 			Op:  conds.GetAppID().GetOp(),
@@ -181,7 +181,7 @@ func (h *Handler) withTopMostConds(conds *npool.Conds) error {
 	if conds.TopMostID != nil {
 		id, err := uuid.Parse(conds.GetTopMostID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.TopMostConds.EntID = &cruder.Cond{
 			Op:  conds.GetTopMostID().GetOp(),
@@ -201,7 +201,7 @@ func (h *Handler) withTopMostGoodConds(conds *npool.Conds) error {
 	if conds.AppGoodID != nil {
 		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.TopMostGoodConds.AppGoodID = &cruder.Cond{
 			Op:  conds.GetAppGoodID().GetOp(),
@@ -211,7 +211,7 @@ func (h *Handler) withTopMostGoodConds(conds *npool.Conds) error {
 	if conds.TopMostID != nil {
 		id, err := uuid.Parse(conds.GetTopMostID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.TopMostGoodConds.TopMostID = &cruder.Cond{
 			Op:  conds.GetTopMostID().GetOp(),
@@ -227,10 +227,10 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			return nil
 		}
 		if err := h.withTopMostConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := h.withTopMostGoodConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return h.withConstraintConds(conds)
 	}

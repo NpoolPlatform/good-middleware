@@ -28,17 +28,15 @@ func init() {
 	}
 }
 
-var (
-	ret = npool.DeviceType{
-		EntID:            uuid.NewString(),
-		Type:             uuid.NewString(),
-		ManufacturerID:   uuid.NewString(),
-		ManufacturerName: uuid.NewString(),
-		ManufacturerLogo: uuid.NewString(),
-		PowerConsumption: 120,
-		ShipmentAt:       uint32(time.Now().Unix()),
-	}
-)
+var ret = npool.DeviceType{
+	EntID:            uuid.NewString(),
+	Type:             uuid.NewString(),
+	ManufacturerID:   uuid.NewString(),
+	ManufacturerName: uuid.NewString(),
+	ManufacturerLogo: uuid.NewString(),
+	PowerConsumption: 120,
+	ShipmentAt:       uint32(time.Now().Unix()),
+}
 
 func setup(t *testing.T) func(*testing.T) {
 	h1, err := manufacturer1.NewHandler(

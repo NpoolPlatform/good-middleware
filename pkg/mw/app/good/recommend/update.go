@@ -2,8 +2,8 @@ package recommend
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	recommendcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -23,7 +23,7 @@ func (h *updateHandler) updateRecommend(ctx context.Context, tx *ent.Tx) error {
 			HideReason:     h.HideReason,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -31,10 +31,10 @@ func (h *updateHandler) updateRecommend(ctx context.Context, tx *ent.Tx) error {
 func (h *Handler) UpdateRecommend(ctx context.Context) error {
 	info, err := h.GetRecommend(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if info == nil {
-		return fmt.Errorf("invalid recommend")
+		return wlog.Errorf("invalid recommend")
 	}
 
 	h.ID = &info.ID

@@ -26,13 +26,11 @@ func init() {
 	}
 }
 
-var (
-	ret = npool.Manufacturer{
-		EntID: uuid.NewString(),
-		Name:  uuid.NewString(),
-		Logo:  uuid.NewString(),
-	}
-)
+var ret = npool.Manufacturer{
+	EntID: uuid.NewString(),
+	Name:  uuid.NewString(),
+	Logo:  uuid.NewString(),
+}
 
 func setup(t *testing.T) func(*testing.T) {
 	return func(*testing.T) {}

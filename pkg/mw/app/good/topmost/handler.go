@@ -2,8 +2,8 @@ package topmost
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	topmostcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -34,7 +34,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -47,13 +47,13 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &_id
 		return nil
@@ -64,13 +64,13 @@ func WithAppID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid appid")
+				return wlog.Errorf("invalid appid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppID = &_id
 		return nil
@@ -81,7 +81,7 @@ func WithTopMostType(e *types.GoodTopMostType, must bool) func(context.Context, 
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid topmosttype")
+				return wlog.Errorf("invalid topmosttype")
 			}
 			return nil
 		}
@@ -92,7 +92,7 @@ func WithTopMostType(e *types.GoodTopMostType, must bool) func(context.Context, 
 		case types.GoodTopMostType_TopMostInnovationStarter:
 		case types.GoodTopMostType_TopMostLoyaltyExclusive:
 		default:
-			return fmt.Errorf("invalid topmosttype")
+			return wlog.Errorf("invalid topmosttype")
 		}
 		h.TopMostType = e
 		return nil
@@ -103,7 +103,7 @@ func WithTitle(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid title")
+				return wlog.Errorf("invalid title")
 			}
 			return nil
 		}
@@ -116,7 +116,7 @@ func WithMessage(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid message")
+				return wlog.Errorf("invalid message")
 			}
 			return nil
 		}
@@ -155,7 +155,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if conds.EntID != nil {
 			id, err := uuid.Parse(conds.GetEntID().GetValue())
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			h.Conds.EntID = &cruder.Cond{Op: conds.GetEntID().GetOp(), Val: id}
 		}
@@ -165,7 +165,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if conds.AppID != nil {
 			id, err := uuid.Parse(conds.GetAppID().GetValue())
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			h.Conds.AppID = &cruder.Cond{
 				Op:  conds.GetAppID().GetOp(),

@@ -1,11 +1,10 @@
 package poster
 
 import (
-	"fmt"
-
 	"entgo.io/ent/dialect/sql"
 
 	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	topmostgoodpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good/poster"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
@@ -27,7 +26,7 @@ func (h *baseQueryHandler) selectPoster(stm *ent.TopMostGoodPosterQuery) *ent.To
 
 func (h *baseQueryHandler) queryPoster(cli *ent.Client) error {
 	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
+		return wlog.Errorf("invalid id")
 	}
 	stm := cli.TopMostGoodPoster.Query().Where(enttopmostgoodposter.DeletedAt(0))
 	if h.ID != nil {
@@ -87,7 +86,7 @@ func (h *baseQueryHandler) queryJoinTopMostGood(s *sql.Selector) error {
 	if h.TopMostConds.EntID != nil {
 		entID, ok := h.TopMostConds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid topmostentid")
+			return wlog.Errorf("invalid topmostentid")
 		}
 		s.OnP(
 			sql.EQ(t2.C(enttopmost.FieldEntID), entID),
@@ -96,7 +95,7 @@ func (h *baseQueryHandler) queryJoinTopMostGood(s *sql.Selector) error {
 	if h.TopMostConds.AppID != nil {
 		appID, ok := h.TopMostConds.AppID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid appid")
+			return wlog.Errorf("invalid appid")
 		}
 		s.OnP(
 			sql.EQ(t2.C(enttopmost.FieldAppID), appID),

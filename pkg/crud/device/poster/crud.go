@@ -1,8 +1,7 @@
 package deviceposter
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entdeviceposter "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceposter"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -65,73 +64,73 @@ func SetQueryConds(q *ent.DevicePosterQuery, conds *Conds) (*ent.DevicePosterQue
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entdeviceposter.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid deviceposter field")
+			return nil, wlog.Errorf("invalid deviceposter field")
 		}
 	}
 	if conds.IDs != nil {
 		ids, ok := conds.IDs.Val.([]uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid ids")
+			return nil, wlog.Errorf("invalid ids")
 		}
 		switch conds.IDs.Op {
 		case cruder.IN:
 			q.Where(entdeviceposter.IDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid deviceposter field")
+			return nil, wlog.Errorf("invalid deviceposter field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entid")
+			return nil, wlog.Errorf("invalid entid")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(entdeviceposter.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid deviceposter field")
+			return nil, wlog.Errorf("invalid deviceposter field")
 		}
 	}
 	if conds.EntIDs != nil {
 		ids, ok := conds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entids")
+			return nil, wlog.Errorf("invalid entids")
 		}
 		switch conds.EntIDs.Op {
 		case cruder.IN:
 			q.Where(entdeviceposter.EntIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid deviceposter field")
+			return nil, wlog.Errorf("invalid deviceposter field")
 		}
 	}
 	if conds.DeviceTypeID != nil {
 		id, ok := conds.DeviceTypeID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid devicetypeid")
+			return nil, wlog.Errorf("invalid devicetypeid")
 		}
 		switch conds.DeviceTypeID.Op {
 		case cruder.EQ:
 			q.Where(entdeviceposter.DeviceTypeID(id))
 		default:
-			return nil, fmt.Errorf("invalid deviceposter field")
+			return nil, wlog.Errorf("invalid deviceposter field")
 		}
 	}
 	if conds.DeviceTypeIDs != nil {
 		ids, ok := conds.DeviceTypeIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid devicetypeids")
+			return nil, wlog.Errorf("invalid devicetypeids")
 		}
 		switch conds.DeviceTypeIDs.Op {
 		case cruder.IN:
 			q.Where(entdeviceposter.DeviceTypeIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid deviceposter field")
+			return nil, wlog.Errorf("invalid deviceposter field")
 		}
 	}
 	return q, nil

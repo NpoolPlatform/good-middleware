@@ -2,8 +2,8 @@ package device
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	devicecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device"
 	manufacturer1 "github.com/NpoolPlatform/good-middleware/pkg/mw/device/manufacturer"
@@ -36,7 +36,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -49,13 +49,13 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &_id
 		return nil
@@ -66,13 +66,13 @@ func WithType(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid type")
+				return wlog.Errorf("invalid type")
 			}
 			return nil
 		}
 		const leastTypeLen = 3
 		if len(*s) <= leastTypeLen {
-			return fmt.Errorf("invalid type")
+			return wlog.Errorf("invalid type")
 		}
 		h.Type = s
 		return nil
@@ -83,7 +83,7 @@ func WithManufacturerID(s *string, must bool) func(context.Context, *Handler) er
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid manufacturer")
+				return wlog.Errorf("invalid manufacturer")
 			}
 			return nil
 		}
@@ -92,14 +92,14 @@ func WithManufacturerID(s *string, must bool) func(context.Context, *Handler) er
 			manufacturer1.WithEntID(s, true),
 		)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		exist, err := handler.ExistManufacturer(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if !exist {
-			return fmt.Errorf("invalid manufacturer")
+			return wlog.Errorf("invalid manufacturer")
 		}
 		h.ManufacturerID = handler.EntID
 		return nil
@@ -130,7 +130,7 @@ func (h *Handler) withDeviceConds(conds *npool.Conds) error {
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.DeviceConds.EntID = &cruder.Cond{
 			Op:  conds.GetEntID().GetOp(),
@@ -146,7 +146,7 @@ func (h *Handler) withDeviceConds(conds *npool.Conds) error {
 	if conds.ManufacturerID != nil {
 		id, err := uuid.Parse(conds.GetManufacturerID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.DeviceConds.ManufacturerID = &cruder.Cond{
 			Op:  conds.GetManufacturerID().GetOp(),

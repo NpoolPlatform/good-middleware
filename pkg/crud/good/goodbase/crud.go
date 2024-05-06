@@ -1,7 +1,7 @@
 package good
 
 import (
-	"fmt"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
@@ -115,7 +115,7 @@ func SetQueryConds(q *ent.GoodBaseQuery, conds *Conds) (*ent.GoodBaseQuery, erro
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
@@ -123,25 +123,25 @@ func SetQueryConds(q *ent.GoodBaseQuery, conds *Conds) (*ent.GoodBaseQuery, erro
 		case cruder.NEQ:
 			q.Where(entgoodbase.IDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid goodbase field")
+			return nil, wlog.Errorf("invalid goodbase field")
 		}
 	}
 	if conds.IDs != nil {
 		ids, ok := conds.IDs.Val.([]uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid ids")
+			return nil, wlog.Errorf("invalid ids")
 		}
 		switch conds.IDs.Op {
 		case cruder.IN:
 			q.Where(entgoodbase.IDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid goodbase field")
+			return nil, wlog.Errorf("invalid goodbase field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entid")
+			return nil, wlog.Errorf("invalid entid")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
@@ -149,37 +149,37 @@ func SetQueryConds(q *ent.GoodBaseQuery, conds *Conds) (*ent.GoodBaseQuery, erro
 		case cruder.NEQ:
 			q.Where(entgoodbase.EntIDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid goodbase field")
+			return nil, wlog.Errorf("invalid goodbase field")
 		}
 	}
 	if conds.EntIDs != nil {
 		ids, ok := conds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entids")
+			return nil, wlog.Errorf("invalid entids")
 		}
 		switch conds.EntIDs.Op {
 		case cruder.IN:
 			q.Where(entgoodbase.EntIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid goodbase field")
+			return nil, wlog.Errorf("invalid goodbase field")
 		}
 	}
 	if conds.GoodType != nil {
 		_type, ok := conds.GoodType.Val.(types.GoodType)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodtype")
+			return nil, wlog.Errorf("invalid goodtype")
 		}
 		switch conds.GoodType.Op {
 		case cruder.EQ:
 			q.Where(entgoodbase.GoodType(_type.String()))
 		default:
-			return nil, fmt.Errorf("invalid goodbase field")
+			return nil, wlog.Errorf("invalid goodbase field")
 		}
 	}
 	if conds.GoodTypes != nil {
 		_types, ok := conds.GoodTypes.Val.([]types.GoodType)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodtypes")
+			return nil, wlog.Errorf("invalid goodtypes")
 		}
 		es := []string{}
 		for _, _type := range _types {
@@ -189,13 +189,13 @@ func SetQueryConds(q *ent.GoodBaseQuery, conds *Conds) (*ent.GoodBaseQuery, erro
 		case cruder.IN:
 			q.Where(entgoodbase.GoodTypeIn(es...))
 		default:
-			return nil, fmt.Errorf("invalid goodbase field")
+			return nil, wlog.Errorf("invalid goodbase field")
 		}
 	}
 	if conds.BenefitType != nil {
 		_type, ok := conds.BenefitType.Val.(types.BenefitType)
 		if !ok {
-			return nil, fmt.Errorf("invalid benefittype")
+			return nil, wlog.Errorf("invalid benefittype")
 		}
 		switch conds.BenefitType.Op {
 		case cruder.EQ:
@@ -203,13 +203,13 @@ func SetQueryConds(q *ent.GoodBaseQuery, conds *Conds) (*ent.GoodBaseQuery, erro
 		case cruder.NEQ:
 			q.Where(entgoodbase.BenefitTypeNEQ(_type.String()))
 		default:
-			return nil, fmt.Errorf("invalid goodbase field")
+			return nil, wlog.Errorf("invalid goodbase field")
 		}
 	}
 	if conds.TestOnly != nil {
 		b, ok := conds.TestOnly.Val.(bool)
 		if !ok {
-			return nil, fmt.Errorf("invalid testonly")
+			return nil, wlog.Errorf("invalid testonly")
 		}
 		switch conds.TestOnly.Op {
 		case cruder.EQ:
@@ -221,7 +221,7 @@ func SetQueryConds(q *ent.GoodBaseQuery, conds *Conds) (*ent.GoodBaseQuery, erro
 	if conds.Purchasable != nil {
 		b, ok := conds.Purchasable.Val.(bool)
 		if !ok {
-			return nil, fmt.Errorf("invalid purchasable")
+			return nil, wlog.Errorf("invalid purchasable")
 		}
 		switch conds.Purchasable.Op {
 		case cruder.EQ:
@@ -233,7 +233,7 @@ func SetQueryConds(q *ent.GoodBaseQuery, conds *Conds) (*ent.GoodBaseQuery, erro
 	if conds.Online != nil {
 		b, ok := conds.Online.Val.(bool)
 		if !ok {
-			return nil, fmt.Errorf("invalid online")
+			return nil, wlog.Errorf("invalid online")
 		}
 		switch conds.Online.Op {
 		case cruder.EQ:

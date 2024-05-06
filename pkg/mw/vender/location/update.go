@@ -75,10 +75,10 @@ func (h *updateHandler) constructSQL() error {
 func (h *updateHandler) updateLocation(ctx context.Context, tx *ent.Tx) error {
 	rc, err := tx.ExecContext(ctx, h.sql)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if _, err := rc.RowsAffected(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -86,10 +86,10 @@ func (h *updateHandler) updateLocation(ctx context.Context, tx *ent.Tx) error {
 func (h *Handler) UpdateLocation(ctx context.Context) error {
 	info, err := h.GetLocation(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if info == nil {
-		return fmt.Errorf("invalid vendorlocation")
+		return wlog.Errorf("invalid vendorlocation")
 	}
 
 	handler := &updateHandler{
@@ -124,7 +124,7 @@ func (h *Handler) UpdateLocation(ctx context.Context) error {
 	}
 
 	if err := handler.constructSQL(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		return handler.updateLocation(_ctx, tx)

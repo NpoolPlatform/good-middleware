@@ -1,10 +1,9 @@
 package constraint
 
 import (
-	"fmt"
-
 	"entgo.io/ent/dialect/sql"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constraintcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good/constraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
@@ -24,7 +23,7 @@ func (h *baseQueryHandler) selectTopMostGoodConstraint(stm *ent.TopMostGoodConst
 
 func (h *baseQueryHandler) queryTopMostGoodConstraint(cli *ent.Client) error {
 	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
+		return wlog.Errorf("invalid id")
 	}
 	stm := cli.TopMostGoodConstraint.Query().Where(enttopmostgoodconstraint.DeletedAt(0))
 	if h.ID != nil {

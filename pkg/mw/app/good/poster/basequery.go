@@ -1,11 +1,10 @@
 package poster
 
 import (
-	"fmt"
-
 	"entgo.io/ent/dialect/sql"
 
 	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appgoodpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/poster"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
@@ -26,7 +25,7 @@ func (h *baseQueryHandler) selectPoster(stm *ent.AppGoodPosterQuery) *ent.AppGoo
 
 func (h *baseQueryHandler) queryPoster(cli *ent.Client) error {
 	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
+		return wlog.Errorf("invalid id")
 	}
 	stm := cli.AppGoodPoster.Query().Where(entappgoodposter.DeletedAt(0))
 	if h.ID != nil {
@@ -84,7 +83,7 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 	if h.GoodBaseConds.EntID != nil {
 		id, ok := h.GoodBaseConds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid goodid")
+			return wlog.Errorf("invalid goodid")
 		}
 		s.OnP(
 			sql.EQ(t2.C(entgoodbase.FieldEntID), id),
@@ -93,7 +92,7 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 	if h.GoodBaseConds.EntIDs != nil {
 		ids, ok := h.GoodBaseConds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid goodids")
+			return wlog.Errorf("invalid goodids")
 		}
 		s.OnP(
 			sql.In(t1.C(entgoodbase.FieldEntID), func() (_ids []interface{}) {
@@ -107,7 +106,7 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 	if h.AppGoodBaseConds.EntID != nil {
 		id, ok := h.AppGoodBaseConds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid appgoodid")
+			return wlog.Errorf("invalid appgoodid")
 		}
 		s.OnP(
 			sql.EQ(t1.C(entappgoodbase.FieldEntID), id),
@@ -116,7 +115,7 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 	if h.AppGoodBaseConds.EntIDs != nil {
 		ids, ok := h.AppGoodBaseConds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid appgoodids")
+			return wlog.Errorf("invalid appgoodids")
 		}
 		s.OnP(
 			sql.In(t1.C(entappgoodbase.FieldEntID), func() (_ids []interface{}) {
@@ -130,7 +129,7 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 	if h.AppGoodBaseConds.AppID != nil {
 		id, ok := h.AppGoodBaseConds.AppID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid appid")
+			return wlog.Errorf("invalid appid")
 		}
 		s.OnP(
 			sql.EQ(t1.C(entappgoodbase.FieldAppID), id),

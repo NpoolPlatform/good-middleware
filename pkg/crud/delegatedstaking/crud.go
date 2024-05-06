@@ -1,8 +1,7 @@
 package good
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entdelegatedstaking "github.com/NpoolPlatform/good-middleware/pkg/db/ent/delegatedstaking"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -79,7 +78,7 @@ func SetQueryConds(q *ent.DelegatedStakingQuery, conds *Conds) (*ent.DelegatedSt
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
@@ -87,25 +86,25 @@ func SetQueryConds(q *ent.DelegatedStakingQuery, conds *Conds) (*ent.DelegatedSt
 		case cruder.NEQ:
 			q.Where(entdelegatedstaking.IDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid delegatedstaking field")
+			return nil, wlog.Errorf("invalid delegatedstaking field")
 		}
 	}
 	if conds.IDs != nil {
 		ids, ok := conds.IDs.Val.([]uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid ids")
+			return nil, wlog.Errorf("invalid ids")
 		}
 		switch conds.IDs.Op {
 		case cruder.IN:
 			q.Where(entdelegatedstaking.IDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid delegatedstaking field")
+			return nil, wlog.Errorf("invalid delegatedstaking field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entid")
+			return nil, wlog.Errorf("invalid entid")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
@@ -113,25 +112,25 @@ func SetQueryConds(q *ent.DelegatedStakingQuery, conds *Conds) (*ent.DelegatedSt
 		case cruder.NEQ:
 			q.Where(entdelegatedstaking.EntIDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid delegatedstaking field")
+			return nil, wlog.Errorf("invalid delegatedstaking field")
 		}
 	}
 	if conds.EntIDs != nil {
 		ids, ok := conds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entids")
+			return nil, wlog.Errorf("invalid entids")
 		}
 		switch conds.EntIDs.Op {
 		case cruder.IN:
 			q.Where(entdelegatedstaking.EntIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid delegatedstaking field")
+			return nil, wlog.Errorf("invalid delegatedstaking field")
 		}
 	}
 	if conds.GoodID != nil {
 		id, ok := conds.GoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
+			return nil, wlog.Errorf("invalid goodid")
 		}
 		switch conds.GoodID.Op {
 		case cruder.EQ:
@@ -139,19 +138,19 @@ func SetQueryConds(q *ent.DelegatedStakingQuery, conds *Conds) (*ent.DelegatedSt
 		case cruder.NEQ:
 			q.Where(entdelegatedstaking.GoodIDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid delegatedstaking field")
+			return nil, wlog.Errorf("invalid delegatedstaking field")
 		}
 	}
 	if conds.GoodIDs != nil {
 		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
+			return nil, wlog.Errorf("invalid goodids")
 		}
 		switch conds.GoodIDs.Op {
 		case cruder.IN:
 			q.Where(entdelegatedstaking.GoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid delegatedstaking field")
+			return nil, wlog.Errorf("invalid delegatedstaking field")
 		}
 	}
 	return q, nil

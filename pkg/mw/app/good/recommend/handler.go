@@ -2,8 +2,8 @@ package recommend
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	recommendcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/recommend"
@@ -45,7 +45,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -58,13 +58,13 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &_id
 		return nil
@@ -75,13 +75,13 @@ func WithRecommenderID(id *string, must bool) func(context.Context, *Handler) er
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid recommenderid")
+				return wlog.Errorf("invalid recommenderid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.RecommenderID = &_id
 		return nil
@@ -92,7 +92,7 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid appgoodid")
+				return wlog.Errorf("invalid appgoodid")
 			}
 			return nil
 		}
@@ -101,14 +101,14 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 			appgoodbase1.WithEntID(id, true),
 		)
 		if err != nil {
-			return fmt.Errorf("invalid appgoodid")
+			return wlog.Errorf("invalid appgoodid")
 		}
 		exist, err := handler.ExistGoodBase(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if !exist {
-			return fmt.Errorf("invalid appgood")
+			return wlog.Errorf("invalid appgood")
 		}
 		h.AppGoodID = handler.EntID
 		return nil
@@ -120,12 +120,12 @@ func WithMessage(s *string, must bool) func(context.Context, *Handler) error {
 		const leastMessageLen = 10
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid message")
+				return wlog.Errorf("invalid message")
 			}
 			return nil
 		}
 		if len(*s) < leastMessageLen {
-			return fmt.Errorf("invalid message")
+			return wlog.Errorf("invalid message")
 		}
 		h.Message = s
 		return nil
@@ -136,13 +136,13 @@ func WithRecommendIndex(s *string, must bool) func(context.Context, *Handler) er
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid recommendindex")
+				return wlog.Errorf("invalid recommendindex")
 			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.RecommendIndex = &amount
 		return nil
@@ -160,7 +160,7 @@ func WithHideReason(e *types.GoodCommentHideReason, must bool) func(context.Cont
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid hidereason")
+				return wlog.Errorf("invalid hidereason")
 			}
 			return nil
 		}
@@ -169,7 +169,7 @@ func WithHideReason(e *types.GoodCommentHideReason, must bool) func(context.Cont
 		case types.GoodCommentHideReason_GoodCommentHideByNotThisGood:
 		case types.GoodCommentHideReason_GoodCommentHideByFalseDescription:
 		default:
-			return fmt.Errorf("invalid hidereason")
+			return wlog.Errorf("invalid hidereason")
 		}
 		h.HideReason = e
 		return nil
@@ -185,14 +185,14 @@ func (h *Handler) withRecommendConds(conds *npool.Conds) error {
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.RecommendConds.EntID = &cruder.Cond{Op: conds.GetEntID().GetOp(), Val: id}
 	}
 	if conds.RecommenderID != nil {
 		id, err := uuid.Parse(conds.GetRecommenderID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.RecommendConds.RecommenderID = &cruder.Cond{
 			Op:  conds.GetRecommenderID().GetOp(),
@@ -202,7 +202,7 @@ func (h *Handler) withRecommendConds(conds *npool.Conds) error {
 	if conds.AppGoodID != nil {
 		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.RecommendConds.AppGoodID = &cruder.Cond{
 			Op:  conds.GetAppGoodID().GetOp(),
@@ -214,7 +214,7 @@ func (h *Handler) withRecommendConds(conds *npool.Conds) error {
 		for _, id := range conds.GetAppGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -230,7 +230,7 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 	if conds.AppID != nil {
 		id, err := uuid.Parse(conds.GetAppID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppGoodBaseConds.AppID = &cruder.Cond{
 			Op: conds.GetAppID().GetOp(), Val: id,
@@ -239,7 +239,7 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 	if conds.AppGoodID != nil {
 		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppGoodBaseConds.EntID = &cruder.Cond{
 			Op: conds.GetAppGoodID().GetOp(), Val: id,
@@ -250,7 +250,7 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 		for _, id := range conds.GetAppGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -267,7 +267,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			return nil
 		}
 		if err := h.withRecommendConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return h.withAppGoodBaseConds(conds)
 	}

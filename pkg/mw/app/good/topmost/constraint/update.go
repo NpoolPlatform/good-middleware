@@ -2,8 +2,8 @@ package constraint
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constraintcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/constraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -21,7 +21,7 @@ func (h *updateHandler) updateConstraint(ctx context.Context, tx *ent.Tx) error 
 			Index:       h.Index,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -29,10 +29,10 @@ func (h *updateHandler) updateConstraint(ctx context.Context, tx *ent.Tx) error 
 func (h *Handler) UpdateConstraint(ctx context.Context) error {
 	info, err := h.GetConstraint(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if info == nil {
-		return fmt.Errorf("invalid constraint")
+		return wlog.Errorf("invalid constraint")
 	}
 
 	h.ID = &info.ID

@@ -2,8 +2,8 @@ package powerrental
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
@@ -37,7 +37,7 @@ func (h *powerRentalGoodQueryHandler) getPowerRental(ctx context.Context, cli *e
 		if ent.IsNotFound(err) && !must {
 			return nil
 		}
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -53,7 +53,7 @@ func (h *powerRentalGoodQueryHandler) getGoodBase(ctx context.Context, cli *ent.
 		if ent.IsNotFound(err) && !must {
 			return nil
 		}
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -69,7 +69,7 @@ func (h *powerRentalGoodQueryHandler) getGoodReward(ctx context.Context, cli *en
 		if ent.IsNotFound(err) && !must {
 			return nil
 		}
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -85,7 +85,7 @@ func (h *powerRentalGoodQueryHandler) getGoodStock(ctx context.Context, cli *ent
 		if ent.IsNotFound(err) && !must {
 			return nil
 		}
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -98,31 +98,31 @@ func (h *powerRentalGoodQueryHandler) getMiningGoodStock(ctx context.Context, cl
 			entmininggoodstock.GoodStockID(h.stock.EntID),
 			entmininggoodstock.DeletedAt(0),
 		).All(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
 
 func (h *powerRentalGoodQueryHandler) _getPowerRentalGood(ctx context.Context, must bool) (err error) {
 	if h.ID == nil && h.EntID == nil && h.GoodID == nil {
-		return fmt.Errorf("invalid id")
+		return wlog.Errorf("invalid id")
 	}
 
 	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := h.getPowerRental(_ctx, cli, must); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if h.powerRental == nil {
 			return nil
 		}
 		if err := h.getGoodBase(_ctx, cli, must); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := h.getGoodReward(_ctx, cli, must); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := h.getGoodStock(_ctx, cli, must); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if h.stock == nil {
 			return nil

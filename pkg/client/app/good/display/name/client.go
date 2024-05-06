@@ -2,8 +2,9 @@ package displayname
 
 import (
 	"context"
-	"fmt"
 	"time"
+
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
@@ -70,7 +71,7 @@ func GetDisplayNameOnly(ctx context.Context, conds *npool.Conds) (*npool.Display
 		return nil, nil
 	}
 	if len(infos.([]*npool.DisplayName)) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 	return infos.([]*npool.DisplayName)[0], nil
 }

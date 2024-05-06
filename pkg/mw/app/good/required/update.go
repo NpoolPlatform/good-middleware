@@ -2,8 +2,8 @@ package required
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	requiredcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/required"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -12,10 +12,10 @@ import (
 func (h *Handler) UpdateRequired(ctx context.Context) error {
 	info, err := h.GetRequired(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if info == nil {
-		return fmt.Errorf("invalid required")
+		return wlog.Errorf("invalid required")
 	}
 	h.ID = &info.ID
 	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -25,7 +25,7 @@ func (h *Handler) UpdateRequired(ctx context.Context) error {
 				Must: h.Must,
 			},
 		).Save(_ctx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return nil
 	})

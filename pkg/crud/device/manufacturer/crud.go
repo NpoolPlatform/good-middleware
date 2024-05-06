@@ -1,8 +1,7 @@
 package manufacturer
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entdevicemanufacturer "github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -58,7 +57,7 @@ func SetQueryConds(q *ent.DeviceManufacturerQuery, conds *Conds) (*ent.DeviceMan
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
@@ -66,13 +65,13 @@ func SetQueryConds(q *ent.DeviceManufacturerQuery, conds *Conds) (*ent.DeviceMan
 		case cruder.NEQ:
 			q.Where(entdevicemanufacturer.IDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid devicemanufacturer field")
+			return nil, wlog.Errorf("invalid devicemanufacturer field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
@@ -80,19 +79,19 @@ func SetQueryConds(q *ent.DeviceManufacturerQuery, conds *Conds) (*ent.DeviceMan
 		case cruder.NEQ:
 			q.Where(entdevicemanufacturer.EntIDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid devicemanufacturer field")
+			return nil, wlog.Errorf("invalid devicemanufacturer field")
 		}
 	}
 	if conds.Name != nil {
 		name, ok := conds.Name.Val.(string)
 		if !ok {
-			return nil, fmt.Errorf("invalid name")
+			return nil, wlog.Errorf("invalid name")
 		}
 		switch conds.Name.Op {
 		case cruder.EQ:
 			q.Where(entdevicemanufacturer.Name(name))
 		default:
-			return nil, fmt.Errorf("invalid devicemanufacturer field")
+			return nil, wlog.Errorf("invalid devicemanufacturer field")
 		}
 	}
 	return q, nil

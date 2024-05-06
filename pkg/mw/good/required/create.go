@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 
@@ -73,18 +74,18 @@ func (h *createHandler) constructSQL() {
 func (h *createHandler) createRequired(ctx context.Context, tx *ent.Tx) error {
 	rc, err := tx.ExecContext(ctx, h.sql)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
-		return fmt.Errorf("fail create requiredgood: %v", err)
+		return wlog.Errorf("fail create requiredgood: %v", err)
 	}
 	return nil
 }
 
 func (h *Handler) CreateRequired(ctx context.Context) error {
 	if *h.MainGoodID == *h.RequiredGoodID {
-		return fmt.Errorf("invalid goodid")
+		return wlog.Errorf("invalid goodid")
 	}
 
 	if h.EntID == nil {

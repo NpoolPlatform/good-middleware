@@ -2,10 +2,10 @@ package appstock
 
 import (
 	"context"
-	"fmt"
 
 	"entgo.io/ent/dialect/sql"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appmininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -38,7 +38,7 @@ func (h *queryHandler) selectStock(stm *ent.AppStockQuery) *ent.AppStockSelect {
 
 func (h *queryHandler) queryStock(cli *ent.Client) error {
 	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
+		return wlog.Errorf("invalid id")
 	}
 	stm := cli.AppStock.Query().Where(entappstock.DeletedAt(0))
 	if h.ID != nil {
@@ -52,7 +52,7 @@ func (h *queryHandler) queryStock(cli *ent.Client) error {
 }
 
 func (h *queryHandler) queryStocks(cli *ent.Client) (*ent.AppStockSelect, error) {
-	return nil, fmt.Errorf("NOT IMPLEMENTED")
+	return nil, wlog.Errorf("NOT IMPLEMENTED")
 }
 
 func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
@@ -140,7 +140,7 @@ func (h *queryHandler) getAppMiningGoodStocks(ctx context.Context, cli *ent.Clie
 		},
 	)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	return stm.Select(
@@ -188,14 +188,14 @@ func (h *Handler) GetStock(ctx context.Context) (*npool.Stock, error) {
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := handler.queryStock(cli); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.queryJoin()
 		handler.stmSelect.
 			Offset(0).
 			Limit(2)
 		if err := handler.scan(_ctx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return handler.getAppMiningGoodStocks(_ctx, cli)
 	})
@@ -206,7 +206,7 @@ func (h *Handler) GetStock(ctx context.Context) (*npool.Stock, error) {
 		return nil, nil
 	}
 	if len(handler.infos) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 
 	handler.formalize()
@@ -224,23 +224,23 @@ func (h *Handler) GetStocks(ctx context.Context) ([]*npool.Stock, uint32, error)
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		handler.stmSelect, err = handler.queryStocks(cli)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.stmCount, err = handler.queryStocks(cli)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 
 		handler.queryJoin()
 
 		total, err := handler.stmCount.Count(_ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.total = uint32(total)
 
 		if err := handler.scan(_ctx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return handler.getAppMiningGoodStocks(_ctx, cli)
 	})

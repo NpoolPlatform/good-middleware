@@ -1,8 +1,7 @@
 package good
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entpowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -114,7 +113,7 @@ func SetQueryConds(q *ent.PowerRentalQuery, conds *Conds) (*ent.PowerRentalQuery
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
@@ -122,25 +121,25 @@ func SetQueryConds(q *ent.PowerRentalQuery, conds *Conds) (*ent.PowerRentalQuery
 		case cruder.NEQ:
 			q.Where(entpowerrental.IDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid powerrental field")
+			return nil, wlog.Errorf("invalid powerrental field")
 		}
 	}
 	if conds.IDs != nil {
 		ids, ok := conds.IDs.Val.([]uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid ids")
+			return nil, wlog.Errorf("invalid ids")
 		}
 		switch conds.IDs.Op {
 		case cruder.IN:
 			q.Where(entpowerrental.IDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid powerrental field")
+			return nil, wlog.Errorf("invalid powerrental field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entid")
+			return nil, wlog.Errorf("invalid entid")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
@@ -148,25 +147,25 @@ func SetQueryConds(q *ent.PowerRentalQuery, conds *Conds) (*ent.PowerRentalQuery
 		case cruder.NEQ:
 			q.Where(entpowerrental.EntIDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid powerrental field")
+			return nil, wlog.Errorf("invalid powerrental field")
 		}
 	}
 	if conds.EntIDs != nil {
 		ids, ok := conds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entids")
+			return nil, wlog.Errorf("invalid entids")
 		}
 		switch conds.EntIDs.Op {
 		case cruder.IN:
 			q.Where(entpowerrental.EntIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid powerrental field")
+			return nil, wlog.Errorf("invalid powerrental field")
 		}
 	}
 	if conds.GoodID != nil {
 		id, ok := conds.GoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
+			return nil, wlog.Errorf("invalid goodid")
 		}
 		switch conds.GoodID.Op {
 		case cruder.EQ:
@@ -174,25 +173,25 @@ func SetQueryConds(q *ent.PowerRentalQuery, conds *Conds) (*ent.PowerRentalQuery
 		case cruder.NEQ:
 			q.Where(entpowerrental.GoodIDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid powerrental field")
+			return nil, wlog.Errorf("invalid powerrental field")
 		}
 	}
 	if conds.GoodIDs != nil {
 		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
+			return nil, wlog.Errorf("invalid goodids")
 		}
 		switch conds.GoodIDs.Op {
 		case cruder.IN:
 			q.Where(entpowerrental.GoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid powerrental field")
+			return nil, wlog.Errorf("invalid powerrental field")
 		}
 	}
 	if conds.DeviceTypeID != nil {
 		id, ok := conds.DeviceTypeID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid devicetypeid")
+			return nil, wlog.Errorf("invalid devicetypeid")
 		}
 		switch conds.DeviceTypeID.Op {
 		case cruder.EQ:
@@ -200,25 +199,25 @@ func SetQueryConds(q *ent.PowerRentalQuery, conds *Conds) (*ent.PowerRentalQuery
 		case cruder.NEQ:
 			q.Where(entpowerrental.DeviceTypeIDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid powerrental field")
+			return nil, wlog.Errorf("invalid powerrental field")
 		}
 	}
 	if conds.DeviceTypeIDs != nil {
 		ids, ok := conds.DeviceTypeIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid devicetypeids")
+			return nil, wlog.Errorf("invalid devicetypeids")
 		}
 		switch conds.DeviceTypeIDs.Op {
 		case cruder.IN:
 			q.Where(entpowerrental.DeviceTypeIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid powerrental field")
+			return nil, wlog.Errorf("invalid powerrental field")
 		}
 	}
 	if conds.VendorLocationID != nil {
 		id, ok := conds.VendorLocationID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid vendorlocationid")
+			return nil, wlog.Errorf("invalid vendorlocationid")
 		}
 		switch conds.VendorLocationID.Op {
 		case cruder.EQ:
@@ -226,19 +225,19 @@ func SetQueryConds(q *ent.PowerRentalQuery, conds *Conds) (*ent.PowerRentalQuery
 		case cruder.NEQ:
 			q.Where(entpowerrental.VendorLocationIDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid powerrental field")
+			return nil, wlog.Errorf("invalid powerrental field")
 		}
 	}
 	if conds.VendorLocationIDs != nil {
 		ids, ok := conds.VendorLocationIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid vendorlocationids")
+			return nil, wlog.Errorf("invalid vendorlocationids")
 		}
 		switch conds.VendorLocationIDs.Op {
 		case cruder.IN:
 			q.Where(entpowerrental.VendorLocationIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid powerrental field")
+			return nil, wlog.Errorf("invalid powerrental field")
 		}
 	}
 	return q, nil

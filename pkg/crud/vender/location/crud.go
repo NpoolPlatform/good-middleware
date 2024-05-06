@@ -1,8 +1,7 @@
 package location
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entvendorlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -86,7 +85,7 @@ func SetQueryConds(q *ent.VendorLocationQuery, conds *Conds) (*ent.VendorLocatio
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
@@ -94,13 +93,13 @@ func SetQueryConds(q *ent.VendorLocationQuery, conds *Conds) (*ent.VendorLocatio
 		case cruder.NEQ:
 			q.Where(entvendorlocation.IDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid vendorlocation field")
+			return nil, wlog.Errorf("invalid vendorlocation field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
@@ -108,67 +107,67 @@ func SetQueryConds(q *ent.VendorLocationQuery, conds *Conds) (*ent.VendorLocatio
 		case cruder.NEQ:
 			q.Where(entvendorlocation.EntIDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid vendorlocation field")
+			return nil, wlog.Errorf("invalid vendorlocation field")
 		}
 	}
 	if conds.Country != nil {
 		country, ok := conds.Country.Val.(string)
 		if !ok {
-			return nil, fmt.Errorf("invalid country")
+			return nil, wlog.Errorf("invalid country")
 		}
 		switch conds.Country.Op {
 		case cruder.EQ:
 			q.Where(entvendorlocation.Country(country))
 		default:
-			return nil, fmt.Errorf("invalid vendorlocation field")
+			return nil, wlog.Errorf("invalid vendorlocation field")
 		}
 	}
 	if conds.Province != nil {
 		province, ok := conds.Province.Val.(string)
 		if !ok {
-			return nil, fmt.Errorf("invalid province")
+			return nil, wlog.Errorf("invalid province")
 		}
 		switch conds.Province.Op {
 		case cruder.EQ:
 			q.Where(entvendorlocation.Province(province))
 		default:
-			return nil, fmt.Errorf("invalid vendorlocation field")
+			return nil, wlog.Errorf("invalid vendorlocation field")
 		}
 	}
 	if conds.City != nil {
 		country, ok := conds.City.Val.(string)
 		if !ok {
-			return nil, fmt.Errorf("invalid city")
+			return nil, wlog.Errorf("invalid city")
 		}
 		switch conds.City.Op {
 		case cruder.EQ:
 			q.Where(entvendorlocation.City(country))
 		default:
-			return nil, fmt.Errorf("invalid vendorlocation field")
+			return nil, wlog.Errorf("invalid vendorlocation field")
 		}
 	}
 	if conds.Address != nil {
 		country, ok := conds.Address.Val.(string)
 		if !ok {
-			return nil, fmt.Errorf("invalid address")
+			return nil, wlog.Errorf("invalid address")
 		}
 		switch conds.Address.Op {
 		case cruder.EQ:
 			q.Where(entvendorlocation.Address(country))
 		default:
-			return nil, fmt.Errorf("invalid vendorlocation field")
+			return nil, wlog.Errorf("invalid vendorlocation field")
 		}
 	}
 	if conds.BrandID != nil {
 		id, ok := conds.BrandID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid brandid")
+			return nil, wlog.Errorf("invalid brandid")
 		}
 		switch conds.BrandID.Op {
 		case cruder.EQ:
 			q.Where(entvendorlocation.BrandID(id))
 		default:
-			return nil, fmt.Errorf("invalid vendorlocation field")
+			return nil, wlog.Errorf("invalid vendorlocation field")
 		}
 	}
 	return q, nil

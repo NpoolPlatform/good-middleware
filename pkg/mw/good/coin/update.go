@@ -2,8 +2,8 @@ package coin
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -18,7 +18,7 @@ func (h *Handler) updateGoodCoin(ctx context.Context, cli *ent.Client) error {
 		cli.GoodCoin.UpdateOneID(*h.ID),
 		&h.Req,
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -26,10 +26,10 @@ func (h *Handler) updateGoodCoin(ctx context.Context, cli *ent.Client) error {
 func (h *Handler) UpdateGoodCoin(ctx context.Context) error {
 	info, err := h.GetGoodCoin(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if info == nil {
-		return fmt.Errorf("invalid goodcoin")
+		return wlog.Errorf("invalid goodcoin")
 	}
 
 	h.ID = &info.ID

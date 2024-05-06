@@ -1,9 +1,10 @@
+//nolint:dupl
 package required
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	requiredcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/required"
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
@@ -34,7 +35,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -47,13 +48,13 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &_id
 		return nil
@@ -67,14 +68,14 @@ func WithMainGoodID(id *string, must bool) func(context.Context, *Handler) error
 			goodbase1.WithEntID(id, true),
 		)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		exist, err := handler.ExistGoodBase(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if !exist {
-			return fmt.Errorf("invalid good")
+			return wlog.Errorf("invalid good")
 		}
 		h.MainGoodID = handler.EntID
 		return nil
@@ -88,14 +89,14 @@ func WithRequiredGoodID(id *string, must bool) func(context.Context, *Handler) e
 			goodbase1.WithEntID(id, true),
 		)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		exist, err := handler.ExistGoodBase(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if !exist {
-			return fmt.Errorf("invalid good")
+			return wlog.Errorf("invalid good")
 		}
 		h.RequiredGoodID = handler.EntID
 		return nil
@@ -118,7 +119,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if conds.EntID != nil {
 			id, err := uuid.Parse(conds.GetEntID().GetValue())
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			h.Conds.EntID = &cruder.Cond{Op: conds.GetEntID().GetOp(), Val: id}
 		}
@@ -128,7 +129,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if conds.MainGoodID != nil {
 			id, err := uuid.Parse(conds.GetMainGoodID().GetValue())
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			h.Conds.MainGoodID = &cruder.Cond{
 				Op:  conds.GetMainGoodID().GetOp(),
@@ -138,7 +139,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if conds.RequiredGoodID != nil {
 			id, err := uuid.Parse(conds.GetRequiredGoodID().GetValue())
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			h.Conds.RequiredGoodID = &cruder.Cond{
 				Op:  conds.GetRequiredGoodID().GetOp(),
@@ -148,7 +149,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if conds.GoodID != nil {
 			id, err := uuid.Parse(conds.GetGoodID().GetValue())
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			h.Conds.GoodID = &cruder.Cond{
 				Op:  conds.GetGoodID().GetOp(),
@@ -160,7 +161,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			for _, id := range conds.GetGoodIDs().GetValue() {
 				_id, err := uuid.Parse(id)
 				if err != nil {
-					return err
+					return wlog.WrapError(err)
 				}
 				ids = append(ids, _id)
 			}

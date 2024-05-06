@@ -2,8 +2,8 @@ package fee
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	appfeecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/fee"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
@@ -56,7 +56,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -69,13 +69,13 @@ func WithEntID(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		id, err := uuid.Parse(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &id
 		return nil
@@ -86,13 +86,13 @@ func WithAppID(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid appid")
+				return wlog.Errorf("invalid appid")
 			}
 			return nil
 		}
 		id, err := uuid.Parse(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppGoodBaseReq.AppID = &id
 		return nil
@@ -106,14 +106,14 @@ func WithGoodID(s *string, must bool) func(context.Context, *Handler) error {
 			goodbase1.WithEntID(s, true),
 		)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		exist, err := handler.ExistGoodBase(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if !exist {
-			return fmt.Errorf("invalid goodid")
+			return wlog.Errorf("invalid goodid")
 		}
 		h.AppGoodBaseReq.GoodID = handler.EntID
 		return nil
@@ -124,13 +124,13 @@ func WithAppGoodID(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid appgoodid")
+				return wlog.Errorf("invalid appgoodid")
 			}
 			return nil
 		}
 		id, err := uuid.Parse(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppGoodID = &id
 		h.AppGoodBaseReq.EntID = &id
@@ -149,13 +149,13 @@ func WithName(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid name")
+				return wlog.Errorf("invalid name")
 			}
 			return nil
 		}
 		const leastNameLen = 3
 		if len(*s) < leastNameLen {
-			return fmt.Errorf("invalid name")
+			return wlog.Errorf("invalid name")
 		}
 		h.AppGoodBaseReq.Name = s
 		return nil
@@ -173,16 +173,16 @@ func WithUnitValue(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid unitvalue")
+				return wlog.Errorf("invalid unitvalue")
 			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*s)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if amount.LessThanOrEqual(decimal.NewFromInt(0)) {
-			return fmt.Errorf("invalid unitvalue")
+			return wlog.Errorf("invalid unitvalue")
 		}
 		h.UnitValue = &amount
 		return nil
@@ -193,12 +193,12 @@ func WithMinOrderDurationSeconds(n *uint32, must bool) func(context.Context, *Ha
 	return func(ctx context.Context, h *Handler) error {
 		if n == nil {
 			if must {
-				return fmt.Errorf("invalid minorderduration")
+				return wlog.Errorf("invalid minorderduration")
 			}
 			return nil
 		}
 		if *n == 0 {
-			return fmt.Errorf("invalid minorderduration")
+			return wlog.Errorf("invalid minorderduration")
 		}
 		h.MinOrderDurationSeconds = n
 		return nil
@@ -209,7 +209,7 @@ func (h *Handler) withFeeConds(conds *npool.Conds) error {
 	if conds.GoodID != nil {
 		id, err := uuid.Parse(conds.GetGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.FeeConds.GoodID = &cruder.Cond{
 			Op:  conds.GetGoodID().GetOp(),
@@ -221,7 +221,7 @@ func (h *Handler) withFeeConds(conds *npool.Conds) error {
 		for _, id := range conds.GetGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -243,7 +243,7 @@ func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
 	if conds.GoodID != nil {
 		id, err := uuid.Parse(conds.GetGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.GoodBaseConds.EntID = &cruder.Cond{
 			Op:  conds.GetGoodID().GetOp(),
@@ -255,7 +255,7 @@ func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
 		for _, id := range conds.GetGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -283,7 +283,7 @@ func (h *Handler) withAppFeeConds(conds *npool.Conds) error {
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppFeeConds.EntID = &cruder.Cond{
 			Op:  conds.GetEntID().GetOp(),
@@ -295,7 +295,7 @@ func (h *Handler) withAppFeeConds(conds *npool.Conds) error {
 		for _, id := range conds.GetEntIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -307,7 +307,7 @@ func (h *Handler) withAppFeeConds(conds *npool.Conds) error {
 	if conds.AppGoodID != nil {
 		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppFeeConds.AppGoodID = &cruder.Cond{
 			Op:  conds.GetAppGoodID().GetOp(),
@@ -319,7 +319,7 @@ func (h *Handler) withAppFeeConds(conds *npool.Conds) error {
 		for _, id := range conds.GetAppGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -336,7 +336,7 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 	if conds.AppGoodID != nil {
 		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppGoodBaseConds.EntID = &cruder.Cond{
 			Op:  conds.GetAppGoodID().GetOp(),
@@ -348,7 +348,7 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 		for _, id := range conds.GetAppGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -360,7 +360,7 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 	if conds.AppID != nil {
 		id, err := uuid.Parse(conds.GetAppID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppGoodBaseConds.AppID = &cruder.Cond{
 			Op:  conds.GetAppID().GetOp(),
@@ -372,7 +372,7 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 		for _, id := range conds.GetAppIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -384,7 +384,7 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 	if conds.GoodID != nil {
 		id, err := uuid.Parse(conds.GetGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppGoodBaseConds.GoodID = &cruder.Cond{
 			Op:  conds.GetGoodID().GetOp(),
@@ -396,7 +396,7 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 		for _, id := range conds.GetGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -414,16 +414,16 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			return nil
 		}
 		if err := h.withFeeConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := h.withGoodBaseConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := h.withAppFeeConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := h.withAppGoodBaseConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return nil
 	}

@@ -1,8 +1,7 @@
 package score
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entscore "github.com/NpoolPlatform/good-middleware/pkg/db/ent/score"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -69,61 +68,61 @@ func SetQueryConds(q *ent.ScoreQuery, conds *Conds) (*ent.ScoreQuery, error) {
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entscore.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid score field")
+			return nil, wlog.Errorf("invalid score field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(entscore.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid score field")
+			return nil, wlog.Errorf("invalid score field")
 		}
 	}
 	if conds.UserID != nil {
 		id, ok := conds.UserID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid userid")
+			return nil, wlog.Errorf("invalid userid")
 		}
 		switch conds.UserID.Op {
 		case cruder.EQ:
 			q.Where(entscore.UserID(id))
 		default:
-			return nil, fmt.Errorf("invalid score field")
+			return nil, wlog.Errorf("invalid score field")
 		}
 	}
 	if conds.AppGoodID != nil {
 		id, ok := conds.AppGoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appgoodid")
+			return nil, wlog.Errorf("invalid appgoodid")
 		}
 		switch conds.AppGoodID.Op {
 		case cruder.EQ:
 			q.Where(entscore.AppGoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid appgoodid field")
+			return nil, wlog.Errorf("invalid appgoodid field")
 		}
 	}
 	if conds.AppGoodIDs != nil {
 		ids, ok := conds.AppGoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
+			return nil, wlog.Errorf("invalid goodids")
 		}
 		switch conds.AppGoodIDs.Op {
 		case cruder.IN:
 			q.Where(entscore.AppGoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid appgoodids field")
+			return nil, wlog.Errorf("invalid appgoodids field")
 		}
 	}
 	return q, nil

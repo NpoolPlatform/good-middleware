@@ -1,7 +1,7 @@
 package comment
 
 import (
-	"fmt"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entcomment "github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
@@ -95,85 +95,85 @@ func SetQueryConds(q *ent.CommentQuery, conds *Conds) (*ent.CommentQuery, error)
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entcomment.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid id field")
+			return nil, wlog.Errorf("invalid id field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(entcomment.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid id field")
+			return nil, wlog.Errorf("invalid id field")
 		}
 	}
 	if conds.UserID != nil {
 		id, ok := conds.UserID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid userid")
+			return nil, wlog.Errorf("invalid userid")
 		}
 		switch conds.UserID.Op {
 		case cruder.EQ:
 			q.Where(entcomment.UserID(id))
 		default:
-			return nil, fmt.Errorf("invalid comment field")
+			return nil, wlog.Errorf("invalid comment field")
 		}
 	}
 	if conds.AppGoodID != nil {
 		id, ok := conds.AppGoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appgoodid")
+			return nil, wlog.Errorf("invalid appgoodid")
 		}
 		switch conds.AppGoodID.Op {
 		case cruder.EQ:
 			q.Where(entcomment.AppGoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid appgoodid field")
+			return nil, wlog.Errorf("invalid appgoodid field")
 		}
 	}
 	if conds.OrderID != nil {
 		id, ok := conds.OrderID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid orderid")
+			return nil, wlog.Errorf("invalid orderid")
 		}
 		switch conds.OrderID.Op {
 		case cruder.EQ:
 			q.Where(entcomment.OrderID(id))
 		default:
-			return nil, fmt.Errorf("invalid orderid field")
+			return nil, wlog.Errorf("invalid orderid field")
 		}
 	}
 	if conds.OrderIDs != nil {
 		ids, ok := conds.OrderIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid orderids")
+			return nil, wlog.Errorf("invalid orderids")
 		}
 		switch conds.OrderIDs.Op {
 		case cruder.IN:
 			q.Where(entcomment.OrderIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid orderids field")
+			return nil, wlog.Errorf("invalid orderids field")
 		}
 	}
 	if conds.AppGoodIDs != nil {
 		ids, ok := conds.AppGoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appgoodids")
+			return nil, wlog.Errorf("invalid appgoodids")
 		}
 		switch conds.AppGoodIDs.Op {
 		case cruder.IN:
 			q.Where(entcomment.AppGoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid appgoodids field")
+			return nil, wlog.Errorf("invalid appgoodids field")
 		}
 	}
 	return q, nil

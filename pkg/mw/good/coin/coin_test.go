@@ -29,17 +29,15 @@ func init() {
 	}
 }
 
-var (
-	ret = npool.GoodCoin{
-		EntID:      uuid.NewString(),
-		GoodID:     uuid.NewString(),
-		GoodType:   types.GoodType_PowerRental,
-		GoodName:   uuid.NewString(),
-		CoinTypeID: uuid.NewString(),
-		Main:       true,
-		Index:      5,
-	}
-)
+var ret = npool.GoodCoin{
+	EntID:      uuid.NewString(),
+	GoodID:     uuid.NewString(),
+	GoodType:   types.GoodType_PowerRental,
+	GoodName:   uuid.NewString(),
+	CoinTypeID: uuid.NewString(),
+	Main:       true,
+	Index:      5,
+}
 
 func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()

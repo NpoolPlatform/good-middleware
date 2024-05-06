@@ -2,8 +2,8 @@ package good
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -35,13 +35,13 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &_id
 		return nil
@@ -58,7 +58,7 @@ func (h *Handler) withAppGoodConds(conds *npool.Conds) error {
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppGoodConds.EntID = &cruder.Cond{
 			Op:  conds.GetEntID().GetOp(),
@@ -68,7 +68,7 @@ func (h *Handler) withAppGoodConds(conds *npool.Conds) error {
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppGoodConds.EntID = &cruder.Cond{
 			Op:  conds.GetEntID().GetOp(),
@@ -80,7 +80,7 @@ func (h *Handler) withAppGoodConds(conds *npool.Conds) error {
 		for _, id := range conds.GetEntIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -92,7 +92,7 @@ func (h *Handler) withAppGoodConds(conds *npool.Conds) error {
 	if conds.AppID != nil {
 		id, err := uuid.Parse(conds.GetAppID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppGoodConds.AppID = &cruder.Cond{
 			Op:  conds.GetAppID().GetOp(),
@@ -104,7 +104,7 @@ func (h *Handler) withAppGoodConds(conds *npool.Conds) error {
 		for _, id := range conds.GetAppIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}

@@ -2,8 +2,9 @@ package good
 
 import (
 	"context"
-	"fmt"
 	"time"
+
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
@@ -74,10 +75,10 @@ func GetGoodOnly(ctx context.Context, conds *npool.Conds) (info *npool.Good, err
 		return nil, err
 	}
 	if len(_infos.([]*npool.Good)) == 0 {
-		return nil, fmt.Errorf("invalid goodgood")
+		return nil, wlog.Errorf("invalid goodgood")
 	}
 	if len(_infos.([]*npool.Good)) > 1 {
-		return nil, fmt.Errorf("too many goodgoods")
+		return nil, wlog.Errorf("too many goodgoods")
 	}
 	return _infos.([]*npool.Good)[0], nil
 }

@@ -2,8 +2,8 @@ package appstock
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
@@ -50,12 +50,12 @@ func (h *stockAppGoodQuery) _getAppGoodStocks(ctx context.Context, cli *ent.Clie
 		).
 		All(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	for _, stock := range appGoodStocks {
 		_stock, ok := h.stocks[stock.AppGoodID]
 		if !ok {
-			return fmt.Errorf("invalid stock")
+			return wlog.Errorf("invalid stock")
 		}
 		_stock.appGoodStock = stock
 	}
@@ -72,7 +72,7 @@ func (h *stockAppGoodQuery) getAppMiningGoodStocks(ctx context.Context, cli *ent
 		).
 		All(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	for _, stock := range h.appMiningGoodStocks {
 		h.appGoodStockEntIDs = append(h.appGoodStockEntIDs, stock.AppGoodStockID)
@@ -112,7 +112,7 @@ func (h *stockAppGoodQuery) getAppGoodBases(ctx context.Context, cli *ent.Client
 		).
 		All(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	for _, appGoodBase := range appGoodBases {
 		h.stocks[appGoodBase.EntID] = &stockAppGood{}
@@ -132,7 +132,7 @@ func (h *stockAppGoodQuery) getMiningGoodStocks(ctx context.Context, cli *ent.Cl
 		).
 		All(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -147,7 +147,7 @@ func (h *stockAppGoodQuery) getGoodStocks(ctx context.Context, cli *ent.Client) 
 		).
 		All(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	for _, stock := range stocks {
 		for _, _stock := range h.stocks {
@@ -164,7 +164,7 @@ func (h *stockAppGoodQuery) getGoodBases(ctx context.Context, cli *ent.Client) (
 	goodIDs := []uuid.UUID{}
 	for _, stock := range h.stocks {
 		if stock.appGoodBase == nil {
-			return fmt.Errorf("invalid appgoodbase")
+			return wlog.Errorf("invalid appgoodbase")
 		}
 		goodIDs = append(goodIDs, stock.appGoodBase.GoodID)
 	}
@@ -178,7 +178,7 @@ func (h *stockAppGoodQuery) getGoodBases(ctx context.Context, cli *ent.Client) (
 		).
 		All(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	for _, stock := range h.stocks {
 		for _, goodBase := range goodBases {
@@ -217,7 +217,7 @@ func (h *stockAppGoodQuery) getPowerRentals(ctx context.Context, cli *ent.Client
 		).
 		All(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	for _, stock := range h.stocks {
 		for _, powerRental := range powerRentals {
@@ -233,10 +233,10 @@ func (h *stockAppGoodQuery) getPowerRentals(ctx context.Context, cli *ent.Client
 func (h *stockAppGoodQuery) getAppGoods(ctx context.Context) error {
 	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := h.getAppGoodBases(_ctx, cli); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := h.getGoodBases(_ctx, cli); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return h.getPowerRentals(_ctx, cli)
 	})
@@ -250,7 +250,7 @@ func (h *stockAppGoodQuery) formalizeAppGoodIDs() error {
 		h.appGoodIDs = append(h.appGoodIDs, *stock.AppGoodID)
 	}
 	if len(h.appGoodIDs) == 0 {
-		return fmt.Errorf("invalid appgoodids")
+		return wlog.Errorf("invalid appgoodids")
 	}
 	return nil
 }
@@ -258,7 +258,7 @@ func (h *stockAppGoodQuery) formalizeAppGoodIDs() error {
 func (h *stockAppGoodQuery) formalizeStockEntID(appGoodID, entID uuid.UUID) error {
 	_stock, ok := h.stocks[appGoodID]
 	if !ok {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 	if _stock.powerRental == nil || _stock.powerRental.StockMode != types.GoodStockMode_GoodStockByMiningPool.String() {
 		h.appGoodStockEntIDs = append(h.appGoodStockEntIDs, entID)
@@ -271,16 +271,16 @@ func (h *stockAppGoodQuery) formalizeStockEntID(appGoodID, entID uuid.UUID) erro
 func (h *stockAppGoodQuery) formalizeStockEntIDs() error {
 	if h.AppGoodID != nil && h.EntID != nil {
 		if err := h.formalizeStockEntID(*h.AppGoodID, *h.EntID); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 	}
 	for _, stock := range h.Stocks {
 		if err := h.formalizeStockEntID(*stock.AppGoodID, *stock.EntID); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 	}
 	if len(h.appGoodStockEntIDs) == 0 && len(h.appMiningGoodStockEntIDs) == 0 {
-		return fmt.Errorf("invalid stock")
+		return wlog.Errorf("invalid stock")
 	}
 	return nil
 }
@@ -289,21 +289,21 @@ func (h *stockAppGoodQuery) getAppGoodStocks(ctx context.Context) error {
 	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if len(h.appMiningGoodStockEntIDs) > 0 {
 			if err := h.getAppMiningGoodStocks(_ctx, cli); err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 		}
 		if len(h.appGoodStockEntIDs) > 0 {
 			if err := h._getAppGoodStocks(_ctx, cli); err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 		}
 		if len(h.miningGoodStockEntIDs) > 0 {
 			if err := h.getMiningGoodStocks(_ctx, cli); err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 		}
 		if err := h.getGoodStocks(_ctx, cli); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.formalizeMiningGoodStocks()
 		h.formalizeAppMiningGoodStocks()
@@ -314,13 +314,13 @@ func (h *stockAppGoodQuery) getAppGoodStocks(ctx context.Context) error {
 func (h *stockAppGoodQuery) getStockAppGoods(ctx context.Context) error {
 	h.stocks = map[uuid.UUID]*stockAppGood{}
 	if err := h.formalizeAppGoodIDs(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if err := h.getAppGoods(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if err := h.formalizeStockEntIDs(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return h.getAppGoodStocks(ctx)
 }
@@ -328,7 +328,7 @@ func (h *stockAppGoodQuery) getStockAppGoods(ctx context.Context) error {
 func (h *stockAppGoodQuery) getStockGoods(ctx context.Context) error {
 	h.stocks = map[uuid.UUID]*stockAppGood{}
 	if err := h.formalizeAppGoodIDs(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return h.getAppGoods(ctx)
 }

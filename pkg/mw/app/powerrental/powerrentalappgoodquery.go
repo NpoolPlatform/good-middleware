@@ -3,8 +3,8 @@ package powerrental
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
@@ -31,7 +31,7 @@ func (h *powerRentalAppGoodQueryHandler) getPowerRental(ctx context.Context, cli
 		if ent.IsNotFound(err) && !must {
 			return nil
 		}
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -47,7 +47,7 @@ func (h *powerRentalAppGoodQueryHandler) getGoodBase(ctx context.Context, cli *e
 		if ent.IsNotFound(err) && !must {
 			return nil
 		}
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -63,7 +63,7 @@ func (h *powerRentalAppGoodQueryHandler) getGoodStock(ctx context.Context, cli *
 		if ent.IsNotFound(err) && !must {
 			return nil
 		}
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -76,28 +76,28 @@ func (h *powerRentalAppGoodQueryHandler) getMiningGoodStocks(ctx context.Context
 			entmininggoodstock.GoodStockID(h._ent.stock.EntID),
 			entmininggoodstock.DeletedAt(0),
 		).All(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
 
 func (h *powerRentalAppGoodQueryHandler) _getPowerRentalGood(ctx context.Context, must bool) (err error) {
 	if h.AppGoodBaseReq.GoodID == nil {
-		return fmt.Errorf("invalid goodid")
+		return wlog.Errorf("invalid goodid")
 	}
 
 	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := h.getPowerRental(_ctx, cli, must); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if h._ent.powerRental == nil {
 			return nil
 		}
 		if err := h.getGoodBase(_ctx, cli, must); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := h.getGoodStock(_ctx, cli, must); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if h._ent.stock == nil {
 			return nil
@@ -122,7 +122,7 @@ func (h *powerRentalAppGoodQueryHandler) getAppPowerRental(ctx context.Context, 
 		if ent.IsNotFound(err) && !must {
 			return nil
 		}
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -138,7 +138,7 @@ func (h *powerRentalAppGoodQueryHandler) getAppGoodBase(ctx context.Context, cli
 		if ent.IsNotFound(err) && !must {
 			return nil
 		}
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -154,7 +154,7 @@ func (h *powerRentalAppGoodQueryHandler) getAppGoodStock(ctx context.Context, cl
 		if ent.IsNotFound(err) && !must {
 			return nil
 		}
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -167,39 +167,39 @@ func (h *powerRentalAppGoodQueryHandler) getAppMiningGoodStocks(ctx context.Cont
 			entappmininggoodstock.AppGoodStockID(h._ent.appGoodStock.EntID),
 			entappmininggoodstock.DeletedAt(0),
 		).All(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
 
 func (h *powerRentalAppGoodQueryHandler) _getAppPowerRentalAppGood(ctx context.Context, must bool) (err error) {
 	if h.ID == nil && h.EntID == nil && h.AppGoodID == nil {
-		return fmt.Errorf("invalid appgoodid")
+		return wlog.Errorf("invalid appgoodid")
 	}
 
 	if err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := h.getAppPowerRental(_ctx, cli, must); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if h._ent.appPowerRental == nil {
 			return nil
 		}
 		if err := h.getAppGoodBase(_ctx, cli, must); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := h.getAppGoodStock(_ctx, cli, must); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if h._ent.appGoodStock == nil {
 			return nil
 		}
 		return h.getAppMiningGoodStocks(_ctx, cli)
 	}); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	if h._ent.appGoodBase == nil {
-		return fmt.Errorf("invalid appgoodbase")
+		return wlog.Errorf("invalid appgoodbase")
 	}
 
 	h.AppGoodBaseReq.GoodID = &h._ent.appGoodBase.GoodID

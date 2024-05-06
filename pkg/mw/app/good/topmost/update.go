@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -75,11 +76,11 @@ func (h *updateHandler) constructSQL() error {
 func (h *updateHandler) updateTopMost(ctx context.Context, tx *ent.Tx) error {
 	rc, err := tx.ExecContext(ctx, h.sql)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
-		return fmt.Errorf("fail create topmost: %v", err)
+		return wlog.Errorf("fail create topmost: %v", err)
 	}
 	return nil
 }
@@ -87,10 +88,10 @@ func (h *updateHandler) updateTopMost(ctx context.Context, tx *ent.Tx) error {
 func (h *Handler) UpdateTopMost(ctx context.Context) error {
 	info, err := h.GetTopMost(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if info == nil {
-		return fmt.Errorf("invalid topmost")
+		return wlog.Errorf("invalid topmost")
 	}
 
 	h.ID = &info.ID
@@ -109,7 +110,7 @@ func (h *Handler) UpdateTopMost(ctx context.Context) error {
 	}
 
 	if err := handler.constructSQL(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		return handler.updateTopMost(_ctx, tx)

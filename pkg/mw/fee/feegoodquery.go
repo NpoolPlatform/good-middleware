@@ -2,8 +2,8 @@ package fee
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entfee "github.com/NpoolPlatform/good-middleware/pkg/db/ent/fee"
@@ -18,7 +18,7 @@ type feeGoodQueryHandler struct {
 
 func (h *feeGoodQueryHandler) _getFeeGood(ctx context.Context, must bool) (err error) {
 	if h.ID == nil && h.EntID == nil && h.GoodID == nil {
-		return fmt.Errorf("invalid id")
+		return wlog.Errorf("invalid id")
 	}
 
 	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -36,7 +36,7 @@ func (h *feeGoodQueryHandler) _getFeeGood(ctx context.Context, must bool) (err e
 			if ent.IsNotFound(err) && !must {
 				return nil
 			}
-			return err
+			return wlog.WrapError(err)
 		}
 		if h.goodBase, err = cli.
 			GoodBase.
@@ -48,7 +48,7 @@ func (h *feeGoodQueryHandler) _getFeeGood(ctx context.Context, must bool) (err e
 			if ent.IsNotFound(err) && !must {
 				return nil
 			}
-			return err
+			return wlog.WrapError(err)
 		}
 		return nil
 	})

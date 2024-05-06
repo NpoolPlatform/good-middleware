@@ -1,7 +1,7 @@
 package appdefaultgood
 
 import (
-	"fmt"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappdefaultgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
@@ -58,61 +58,61 @@ func SetQueryConds(q *ent.AppDefaultGoodQuery, conds *Conds) (*ent.AppDefaultGoo
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entappdefaultgood.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid appdefaultgood field")
+			return nil, wlog.Errorf("invalid appdefaultgood field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(entappdefaultgood.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid appdefaultgood field")
+			return nil, wlog.Errorf("invalid appdefaultgood field")
 		}
 	}
 	if conds.AppGoodID != nil {
 		id, ok := conds.AppGoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appgoodid")
+			return nil, wlog.Errorf("invalid appgoodid")
 		}
 		switch conds.AppGoodID.Op {
 		case cruder.EQ:
 			q.Where(entappdefaultgood.AppGoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid appdefaultgood field")
+			return nil, wlog.Errorf("invalid appdefaultgood field")
 		}
 	}
 	if conds.CoinTypeID != nil {
 		id, ok := conds.CoinTypeID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid cointypeid")
+			return nil, wlog.Errorf("invalid cointypeid")
 		}
 		switch conds.CoinTypeID.Op {
 		case cruder.EQ:
 			q.Where(entappdefaultgood.CoinTypeID(id))
 		default:
-			return nil, fmt.Errorf("invalid appdefaultgood field")
+			return nil, wlog.Errorf("invalid appdefaultgood field")
 		}
 	}
 	if conds.CoinTypeIDs != nil {
 		ids, ok := conds.CoinTypeIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid cointypeids")
+			return nil, wlog.Errorf("invalid cointypeids")
 		}
 		switch conds.CoinTypeIDs.Op {
 		case cruder.IN:
 			q.Where(entappdefaultgood.CoinTypeIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid appdefaultgood field")
+			return nil, wlog.Errorf("invalid appdefaultgood field")
 		}
 	}
 	return q, nil

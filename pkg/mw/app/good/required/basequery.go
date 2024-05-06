@@ -1,11 +1,10 @@
 package required
 
 import (
-	"fmt"
-
 	"entgo.io/ent/dialect/sql"
 
 	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	requiredcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/required"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
@@ -26,7 +25,7 @@ func (h *baseQueryHandler) selectRequired(stm *ent.RequiredAppGoodQuery) *ent.Re
 
 func (h *baseQueryHandler) queryRequired(cli *ent.Client) error {
 	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
+		return wlog.Errorf("invalid id")
 	}
 	stm := cli.RequiredAppGood.Query().Where(entrequiredappgood.DeletedAt(0))
 	if h.ID != nil {
@@ -68,7 +67,7 @@ func (h *baseQueryHandler) queryWithAppGoodBaseConds(t1 *sql.SelectTable, s *sql
 	if h.AppGoodBaseConds.EntID != nil {
 		id, ok := h.AppGoodBaseConds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid appgoodid")
+			return wlog.Errorf("invalid appgoodid")
 		}
 		s.OnP(
 			sql.EQ(t1.C(entappgoodbase.FieldEntID), id),
@@ -77,7 +76,7 @@ func (h *baseQueryHandler) queryWithAppGoodBaseConds(t1 *sql.SelectTable, s *sql
 	if h.AppGoodBaseConds.EntIDs != nil {
 		ids, ok := h.AppGoodBaseConds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid appgoodids")
+			return wlog.Errorf("invalid appgoodids")
 		}
 		s.OnP(
 			sql.In(t1.C(entappgoodbase.FieldEntID), func() (_ids []interface{}) {
@@ -91,7 +90,7 @@ func (h *baseQueryHandler) queryWithAppGoodBaseConds(t1 *sql.SelectTable, s *sql
 	if h.AppGoodBaseConds.AppID != nil {
 		id, ok := h.AppGoodBaseConds.AppID.Val.(uuid.UUID)
 		if !ok {
-			return fmt.Errorf("invalid appid")
+			return wlog.Errorf("invalid appid")
 		}
 		s.OnP(
 			sql.EQ(t1.C(entappgoodbase.FieldAppID), id),
@@ -114,7 +113,7 @@ func (h *baseQueryHandler) queryJoinMainAppGood(s *sql.Selector) error {
 			t2.C(entgoodbase.FieldEntID),
 		)
 	if err := h.queryWithAppGoodBaseConds(t1, s); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	s.AppendSelect(
 		t1.C(entappgoodbase.FieldAppID),
@@ -139,7 +138,7 @@ func (h *baseQueryHandler) queryJoinRequiredAppGood(s *sql.Selector) error {
 			t2.C(entgoodbase.FieldEntID),
 		)
 	if err := h.queryWithAppGoodBaseConds(t1, s); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	s.AppendSelect(
 		sql.As(t1.C(entappgoodbase.FieldName), "required_app_good_name"),

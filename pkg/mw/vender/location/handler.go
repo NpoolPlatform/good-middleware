@@ -2,8 +2,8 @@ package location
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	locationcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/vender/location"
 	brand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
@@ -34,7 +34,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -47,13 +47,13 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &_id
 		return nil
@@ -64,13 +64,13 @@ func WithCountry(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid country")
+				return wlog.Errorf("invalid country")
 			}
 			return nil
 		}
 		const leastCountryLen = 3
 		if len(*s) <= leastCountryLen {
-			return fmt.Errorf("invalid country")
+			return wlog.Errorf("invalid country")
 		}
 		h.Country = s
 		return nil
@@ -81,13 +81,13 @@ func WithProvince(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid province")
+				return wlog.Errorf("invalid province")
 			}
 			return nil
 		}
 		const leastProvinceLen = 3
 		if len(*s) <= leastProvinceLen {
-			return fmt.Errorf("invalid province")
+			return wlog.Errorf("invalid province")
 		}
 		h.Province = s
 		return nil
@@ -98,13 +98,13 @@ func WithCity(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid city")
+				return wlog.Errorf("invalid city")
 			}
 			return nil
 		}
 		const leastCityLen = 3
 		if len(*s) <= leastCityLen {
-			return fmt.Errorf("invalid city")
+			return wlog.Errorf("invalid city")
 		}
 		h.City = s
 		return nil
@@ -115,13 +115,13 @@ func WithAddress(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid address")
+				return wlog.Errorf("invalid address")
 			}
 			return nil
 		}
 		const leastAddressLen = 3
 		if len(*s) <= leastAddressLen {
-			return fmt.Errorf("invalid address")
+			return wlog.Errorf("invalid address")
 		}
 		h.Address = s
 		return nil
@@ -132,7 +132,7 @@ func WithBrandID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid brandid")
+				return wlog.Errorf("invalid brandid")
 			}
 			return nil
 		}
@@ -141,14 +141,14 @@ func WithBrandID(id *string, must bool) func(context.Context, *Handler) error {
 			brand1.WithEntID(id, true),
 		)
 		if err != nil {
-			return fmt.Errorf("invalid brandid")
+			return wlog.Errorf("invalid brandid")
 		}
 		exist, err := handler.ExistBrand(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if !exist {
-			return fmt.Errorf("invalid brand")
+			return wlog.Errorf("invalid brand")
 		}
 		h.BrandID = handler.EntID
 		return nil
@@ -164,7 +164,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if conds.EntID != nil {
 			id, err := uuid.Parse(conds.GetEntID().GetValue())
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			h.Conds.EntID = &cruder.Cond{Op: conds.GetEntID().GetOp(), Val: id}
 		}
@@ -186,7 +186,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if conds.BrandID != nil {
 			id, err := uuid.Parse(conds.GetBrandID().GetValue())
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			h.Conds.BrandID = &cruder.Cond{
 				Op:  conds.GetBrandID().GetOp(),

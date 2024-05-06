@@ -2,8 +2,9 @@ package simulate
 
 import (
 	"context"
-	"fmt"
 	"time"
+
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
@@ -102,7 +103,7 @@ func GetSimulateOnly(ctx context.Context, conds *npool.Conds) (*npool.Simulate, 
 		return nil, nil
 	}
 	if len(infos.([]*npool.Simulate)) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 	return infos.([]*npool.Simulate)[0], nil
 }

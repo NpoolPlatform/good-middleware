@@ -1,8 +1,7 @@
 package recommend
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entrecommend "github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -78,61 +77,61 @@ func SetQueryConds(q *ent.RecommendQuery, conds *Conds) (*ent.RecommendQuery, er
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(entrecommend.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid recommend field")
+			return nil, wlog.Errorf("invalid recommend field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(entrecommend.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid recommend field")
+			return nil, wlog.Errorf("invalid recommend field")
 		}
 	}
 	if conds.RecommenderID != nil {
 		id, ok := conds.RecommenderID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid recommenderid")
+			return nil, wlog.Errorf("invalid recommenderid")
 		}
 		switch conds.RecommenderID.Op {
 		case cruder.EQ:
 			q.Where(entrecommend.RecommenderID(id))
 		default:
-			return nil, fmt.Errorf("invalid recommend field")
+			return nil, wlog.Errorf("invalid recommend field")
 		}
 	}
 	if conds.AppGoodID != nil {
 		id, ok := conds.AppGoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appgoodid")
+			return nil, wlog.Errorf("invalid appgoodid")
 		}
 		switch conds.AppGoodID.Op {
 		case cruder.EQ:
 			q.Where(entrecommend.AppGoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid recommend field")
+			return nil, wlog.Errorf("invalid recommend field")
 		}
 	}
 	if conds.AppGoodIDs != nil {
 		ids, ok := conds.AppGoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid appgoodids")
+			return nil, wlog.Errorf("invalid appgoodids")
 		}
 		switch conds.AppGoodIDs.Op {
 		case cruder.IN:
 			q.Where(entrecommend.AppGoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid recommend field")
+			return nil, wlog.Errorf("invalid recommend field")
 		}
 	}
 	return q, nil

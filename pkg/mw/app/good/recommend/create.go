@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -69,11 +70,11 @@ func (h *createHandler) constructSQL() {
 func (h *createHandler) createRecommend(ctx context.Context, tx *ent.Tx) error {
 	rc, err := tx.ExecContext(ctx, h.sql)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
-		return fmt.Errorf("fail create recommend: %v", err)
+		return wlog.Errorf("fail create recommend: %v", err)
 	}
 	return nil
 }
@@ -86,11 +87,11 @@ func (h *createHandler) updateGoodRecommend(ctx context.Context, tx *ent.Tx) err
 		},
 	)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	info, err := stm.ForUpdate().Only(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	recommendCount := info.RecommendCount + 1
 	if _, err := extrainfocrud.UpdateSet(
@@ -99,7 +100,7 @@ func (h *createHandler) updateGoodRecommend(ctx context.Context, tx *ent.Tx) err
 			RecommendCount: &recommendCount,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -114,7 +115,7 @@ func (h *Handler) CreateRecommend(ctx context.Context) error {
 	handler.constructSQL()
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createRecommend(ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return handler.updateGoodRecommend(ctx, tx)
 	})

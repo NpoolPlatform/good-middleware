@@ -1,8 +1,7 @@
 package goodreward
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entgoodreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -79,43 +78,43 @@ func SetQueryConds(q *ent.GoodRewardQuery, conds *Conds) (*ent.GoodRewardQuery, 
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(entgoodreward.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid goodreward field")
+			return nil, wlog.Errorf("invalid goodreward field")
 		}
 	}
 	if conds.GoodID != nil {
 		id, ok := conds.GoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
+			return nil, wlog.Errorf("invalid goodid")
 		}
 		switch conds.GoodID.Op {
 		case cruder.EQ:
 			q.Where(entgoodreward.GoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid goodreward field")
+			return nil, wlog.Errorf("invalid goodreward field")
 		}
 	}
 	if conds.RewardState != nil {
 		state, ok := conds.RewardState.Val.(types.BenefitState)
 		if !ok {
-			return nil, fmt.Errorf("invalid rewardstate")
+			return nil, wlog.Errorf("invalid rewardstate")
 		}
 		switch conds.RewardState.Op {
 		case cruder.EQ:
 			q.Where(entgoodreward.RewardState(state.String()))
 		default:
-			return nil, fmt.Errorf("invalid goodreward field")
+			return nil, wlog.Errorf("invalid goodreward field")
 		}
 	}
 	if conds.RewardAt != nil {
 		at, ok := conds.RewardAt.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid rewardat")
+			return nil, wlog.Errorf("invalid rewardat")
 		}
 		switch conds.RewardAt.Op {
 		case cruder.EQ:
@@ -127,7 +126,7 @@ func SetQueryConds(q *ent.GoodRewardQuery, conds *Conds) (*ent.GoodRewardQuery, 
 		case cruder.GT:
 			q.Where(entgoodreward.LastRewardAtGT(at))
 		default:
-			return nil, fmt.Errorf("invalid goodreward field")
+			return nil, wlog.Errorf("invalid goodreward field")
 		}
 	}
 	return q, nil

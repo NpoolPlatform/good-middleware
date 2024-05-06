@@ -2,8 +2,9 @@ package coin
 
 import (
 	"context"
-	"fmt"
 	"time"
+
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
@@ -92,10 +93,10 @@ func GetGoodCoinOnly(ctx context.Context, conds *npool.Conds) (info *npool.GoodC
 		return nil, err
 	}
 	if len(_infos.([]*npool.GoodCoin)) == 0 {
-		return nil, fmt.Errorf("invalid goodcoin")
+		return nil, wlog.Errorf("invalid goodcoin")
 	}
 	if len(_infos.([]*npool.GoodCoin)) > 1 {
-		return nil, fmt.Errorf("too many goodcoins")
+		return nil, wlog.Errorf("too many goodcoins")
 	}
 	return _infos.([]*npool.GoodCoin)[0], nil
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -67,11 +68,11 @@ func (h *createHandler) constructSQL() {
 func (h *createHandler) createLike(ctx context.Context, tx *ent.Tx) error {
 	rc, err := tx.ExecContext(ctx, h.sql)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
-		return fmt.Errorf("fail create like: %v", err)
+		return wlog.Errorf("fail create like: %v", err)
 	}
 	return nil
 }
@@ -84,11 +85,11 @@ func (h *createHandler) addGoodLike(ctx context.Context, tx *ent.Tx) error {
 		},
 	)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	info, err := stm.ForUpdate().Only(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if *h.Like {
 		info.Likes += 1
@@ -102,7 +103,7 @@ func (h *createHandler) addGoodLike(ctx context.Context, tx *ent.Tx) error {
 			Dislikes: &info.Dislikes,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -117,7 +118,7 @@ func (h *Handler) CreateLike(ctx context.Context) error {
 	handler.constructSQL()
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createLike(ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return handler.addGoodLike(ctx, tx)
 	})

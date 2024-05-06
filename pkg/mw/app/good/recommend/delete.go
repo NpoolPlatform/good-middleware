@@ -2,9 +2,9 @@ package recommend
 
 import (
 	"context"
-	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	recommendcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -26,7 +26,7 @@ func (h *deleteHandler) deleteRecommend(ctx context.Context, tx *ent.Tx) error {
 			DeletedAt: &now,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -39,15 +39,15 @@ func (h *deleteHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 		},
 	)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	info, err := stm.ForUpdate().Only(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	if info.RecommendCount == 0 {
-		return fmt.Errorf("invalid recommendcount")
+		return wlog.Errorf("invalid recommendcount")
 	}
 	info.RecommendCount--
 
@@ -57,7 +57,7 @@ func (h *deleteHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 			RecommendCount: &info.RecommendCount,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -65,7 +65,7 @@ func (h *deleteHandler) updateGoodScore(ctx context.Context, tx *ent.Tx) error {
 func (h *Handler) DeleteRecommend(ctx context.Context) error {
 	info, err := h.GetRecommend(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if info == nil {
 		return nil
@@ -79,7 +79,7 @@ func (h *Handler) DeleteRecommend(ctx context.Context) error {
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.deleteRecommend(ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return handler.updateGoodScore(ctx, tx)
 	})

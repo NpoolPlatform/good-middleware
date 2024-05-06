@@ -1,7 +1,7 @@
 package topmostgoodposter
 
 import (
-	"fmt"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	enttopmostgoodposter "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodposter"
@@ -65,73 +65,73 @@ func SetQueryConds(q *ent.TopMostGoodPosterQuery, conds *Conds) (*ent.TopMostGoo
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
 			q.Where(enttopmostgoodposter.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid topmostgoodposter field")
+			return nil, wlog.Errorf("invalid topmostgoodposter field")
 		}
 	}
 	if conds.IDs != nil {
 		ids, ok := conds.IDs.Val.([]uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid ids")
+			return nil, wlog.Errorf("invalid ids")
 		}
 		switch conds.IDs.Op {
 		case cruder.IN:
 			q.Where(enttopmostgoodposter.IDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid topmostgoodposter field")
+			return nil, wlog.Errorf("invalid topmostgoodposter field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entid")
+			return nil, wlog.Errorf("invalid entid")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(enttopmostgoodposter.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid topmostgoodposter field")
+			return nil, wlog.Errorf("invalid topmostgoodposter field")
 		}
 	}
 	if conds.EntIDs != nil {
 		ids, ok := conds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entids")
+			return nil, wlog.Errorf("invalid entids")
 		}
 		switch conds.EntIDs.Op {
 		case cruder.IN:
 			q.Where(enttopmostgoodposter.EntIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid topmostgoodposter field")
+			return nil, wlog.Errorf("invalid topmostgoodposter field")
 		}
 	}
 	if conds.TopMostGoodID != nil {
 		id, ok := conds.TopMostGoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid topmostid")
+			return nil, wlog.Errorf("invalid topmostid")
 		}
 		switch conds.TopMostGoodID.Op {
 		case cruder.EQ:
 			q.Where(enttopmostgoodposter.TopMostGoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid topmostgoodposter field")
+			return nil, wlog.Errorf("invalid topmostgoodposter field")
 		}
 	}
 	if conds.TopMostGoodIDs != nil {
 		ids, ok := conds.TopMostGoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid topmostids")
+			return nil, wlog.Errorf("invalid topmostids")
 		}
 		switch conds.TopMostGoodIDs.Op {
 		case cruder.IN:
 			q.Where(enttopmostgoodposter.TopMostGoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid topmostgoodposter field")
+			return nil, wlog.Errorf("invalid topmostgoodposter field")
 		}
 	}
 	return q, nil

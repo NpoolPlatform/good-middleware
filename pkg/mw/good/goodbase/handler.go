@@ -2,8 +2,8 @@ package goodbase
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
@@ -29,7 +29,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -42,13 +42,13 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &_id
 		return nil
@@ -59,7 +59,7 @@ func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) 
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid goodtype")
+				return wlog.Errorf("invalid goodtype")
 			}
 			return nil
 		}
@@ -71,7 +71,7 @@ func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) 
 		case types.GoodType_TechniqueServiceFee:
 		case types.GoodType_ElectricityFee:
 		default:
-			return fmt.Errorf("invalid goodtype")
+			return wlog.Errorf("invalid goodtype")
 		}
 		h.GoodType = e
 		return nil
@@ -82,7 +82,7 @@ func WithBenefitType(e *types.BenefitType, must bool) func(context.Context, *Han
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid benefittype")
+				return wlog.Errorf("invalid benefittype")
 			}
 			return nil
 		}
@@ -92,7 +92,7 @@ func WithBenefitType(e *types.BenefitType, must bool) func(context.Context, *Han
 		case types.BenefitType_BenefitTypeOffline:
 		case types.BenefitType_BenefitTypeNone:
 		default:
-			return fmt.Errorf("invalid benefittype")
+			return wlog.Errorf("invalid benefittype")
 		}
 		h.BenefitType = e
 		return nil
@@ -103,13 +103,13 @@ func WithName(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if s == nil {
 			if must {
-				return fmt.Errorf("invalid name")
+				return wlog.Errorf("invalid name")
 			}
 			return nil
 		}
 		const leastNameLen = 3
 		if len(*s) < leastNameLen {
-			return fmt.Errorf("invalid name")
+			return wlog.Errorf("invalid name")
 		}
 		h.Name = s
 		return nil
@@ -120,7 +120,7 @@ func WithServiceStartAt(n *uint32, must bool) func(context.Context, *Handler) er
 	return func(ctx context.Context, h *Handler) error {
 		if n == nil {
 			if must {
-				return fmt.Errorf("invalid servicestartat")
+				return wlog.Errorf("invalid servicestartat")
 			}
 			return nil
 		}
@@ -133,7 +133,7 @@ func WithStartMode(e *types.GoodStartMode, must bool) func(context.Context, *Han
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid goodstartmode")
+				return wlog.Errorf("invalid goodstartmode")
 			}
 			return nil
 		}
@@ -144,7 +144,7 @@ func WithStartMode(e *types.GoodStartMode, must bool) func(context.Context, *Han
 		case types.GoodStartMode_GoodStartModeInstantly:
 		case types.GoodStartMode_GoodStartModePreset:
 		default:
-			return fmt.Errorf("invalid goodstartmode")
+			return wlog.Errorf("invalid goodstartmode")
 		}
 		h.StartMode = e
 		return nil
@@ -162,12 +162,12 @@ func WithBenefitIntervalHours(n *uint32, must bool) func(context.Context, *Handl
 	return func(ctx context.Context, h *Handler) error {
 		if n == nil {
 			if must {
-				return fmt.Errorf("invalid benefitintervalhours")
+				return wlog.Errorf("invalid benefitintervalhours")
 			}
 			return nil
 		}
 		if *n == 0 {
-			return fmt.Errorf("invalid benefitintervalhours")
+			return wlog.Errorf("invalid benefitintervalhours")
 		}
 		h.BenefitIntervalHours = n
 		return nil

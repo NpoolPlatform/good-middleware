@@ -2,8 +2,8 @@ package poster
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	topmostcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost"
 	topmostgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good"
@@ -43,7 +43,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -56,13 +56,13 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &_id
 		return nil
@@ -76,14 +76,14 @@ func WithTopMostGoodID(id *string, must bool) func(context.Context, *Handler) er
 			topmostgood1.WithEntID(id, true),
 		)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		exist, err := handler.ExistTopMostGood(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if !exist {
-			return fmt.Errorf("invalid topmostgood")
+			return wlog.Errorf("invalid topmostgood")
 		}
 		h.TopMostGoodID = handler.EntID
 		return nil
@@ -114,7 +114,7 @@ func (h *Handler) withTopMostGoodPosterConds(conds *npool.Conds) error {
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.PosterConds.EntID = &cruder.Cond{
 			Op:  conds.GetEntID().GetOp(),
@@ -124,7 +124,7 @@ func (h *Handler) withTopMostGoodPosterConds(conds *npool.Conds) error {
 	if conds.TopMostGoodID != nil {
 		id, err := uuid.Parse(conds.GetTopMostGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.PosterConds.TopMostGoodID = &cruder.Cond{
 			Op:  conds.GetTopMostGoodID().GetOp(),
@@ -136,7 +136,7 @@ func (h *Handler) withTopMostGoodPosterConds(conds *npool.Conds) error {
 		for _, id := range conds.GetTopMostGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -152,7 +152,7 @@ func (h *Handler) withTopMostGoodConds(conds *npool.Conds) error {
 	if conds.TopMostGoodID != nil {
 		id, err := uuid.Parse(conds.GetTopMostGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.TopMostGoodConds.EntID = &cruder.Cond{
 			Op:  conds.GetTopMostGoodID().GetOp(),
@@ -166,7 +166,7 @@ func (h *Handler) withTopMostConds(conds *npool.Conds) error {
 	if conds.AppID != nil {
 		id, err := uuid.Parse(conds.GetAppID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.TopMostConds.AppID = &cruder.Cond{
 			Op:  conds.GetAppID().GetOp(),
@@ -182,10 +182,10 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			return nil
 		}
 		if err := h.withTopMostGoodPosterConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if err := h.withTopMostConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return h.withTopMostGoodConds(conds)
 	}

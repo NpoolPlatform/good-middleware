@@ -1,8 +1,7 @@
 package good
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entfbmcrowdfunding "github.com/NpoolPlatform/good-middleware/pkg/db/ent/fbmcrowdfunding"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -130,7 +129,7 @@ func SetQueryConds(q *ent.FbmCrowdFundingQuery, conds *Conds) (*ent.FbmCrowdFund
 	if conds.ID != nil {
 		id, ok := conds.ID.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.ID.Op {
 		case cruder.EQ:
@@ -138,25 +137,25 @@ func SetQueryConds(q *ent.FbmCrowdFundingQuery, conds *Conds) (*ent.FbmCrowdFund
 		case cruder.NEQ:
 			q.Where(entfbmcrowdfunding.IDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid fbmcrowdfunding field")
+			return nil, wlog.Errorf("invalid fbmcrowdfunding field")
 		}
 	}
 	if conds.IDs != nil {
 		ids, ok := conds.IDs.Val.([]uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid ids")
+			return nil, wlog.Errorf("invalid ids")
 		}
 		switch conds.IDs.Op {
 		case cruder.IN:
 			q.Where(entfbmcrowdfunding.IDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid fbmcrowdfunding field")
+			return nil, wlog.Errorf("invalid fbmcrowdfunding field")
 		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entid")
+			return nil, wlog.Errorf("invalid entid")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
@@ -164,25 +163,25 @@ func SetQueryConds(q *ent.FbmCrowdFundingQuery, conds *Conds) (*ent.FbmCrowdFund
 		case cruder.NEQ:
 			q.Where(entfbmcrowdfunding.EntIDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid fbmcrowdfunding field")
+			return nil, wlog.Errorf("invalid fbmcrowdfunding field")
 		}
 	}
 	if conds.EntIDs != nil {
 		ids, ok := conds.EntIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid entids")
+			return nil, wlog.Errorf("invalid entids")
 		}
 		switch conds.EntIDs.Op {
 		case cruder.IN:
 			q.Where(entfbmcrowdfunding.EntIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid fbmcrowdfunding field")
+			return nil, wlog.Errorf("invalid fbmcrowdfunding field")
 		}
 	}
 	if conds.GoodID != nil {
 		id, ok := conds.GoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
+			return nil, wlog.Errorf("invalid goodid")
 		}
 		switch conds.GoodID.Op {
 		case cruder.EQ:
@@ -190,19 +189,19 @@ func SetQueryConds(q *ent.FbmCrowdFundingQuery, conds *Conds) (*ent.FbmCrowdFund
 		case cruder.NEQ:
 			q.Where(entfbmcrowdfunding.GoodIDNEQ(id))
 		default:
-			return nil, fmt.Errorf("invalid fbmcrowdfunding field")
+			return nil, wlog.Errorf("invalid fbmcrowdfunding field")
 		}
 	}
 	if conds.GoodIDs != nil {
 		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
+			return nil, wlog.Errorf("invalid goodids")
 		}
 		switch conds.GoodIDs.Op {
 		case cruder.IN:
 			q.Where(entfbmcrowdfunding.GoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid fbmcrowdfunding field")
+			return nil, wlog.Errorf("invalid fbmcrowdfunding field")
 		}
 	}
 	return q, nil

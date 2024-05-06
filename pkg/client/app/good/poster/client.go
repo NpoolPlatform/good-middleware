@@ -2,10 +2,10 @@ package poster
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/poster"
 	"google.golang.org/grpc"
@@ -70,7 +70,7 @@ func GetPosterOnly(ctx context.Context, conds *npool.Conds) (*npool.Poster, erro
 		return nil, nil
 	}
 	if len(infos.([]*npool.Poster)) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 	return infos.([]*npool.Poster)[0], nil
 }

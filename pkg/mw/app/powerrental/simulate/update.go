@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -19,7 +20,7 @@ type updateHandler struct {
 
 func (h *updateHandler) constructSQL() error {
 	if h.ID == nil && h.EntID == nil && h.AppGoodID == nil {
-		return fmt.Errorf("invalid simulateid")
+		return wlog.Errorf("invalid simulateid")
 	}
 
 	set := "set "
@@ -35,7 +36,7 @@ func (h *updateHandler) constructSQL() error {
 		set = ""
 	}
 	if set != "" {
-		return cruder.ErrUpdateNothing
+		return wlog.WrapError(cruder.ErrUpdateNothing)
 	}
 	_sql += fmt.Sprintf("updated_at = %v ", now)
 	_sql += "where "
@@ -58,10 +59,10 @@ func (h *updateHandler) constructSQL() error {
 func (h *updateHandler) updateSimulate(ctx context.Context, tx *ent.Tx) error {
 	rc, err := tx.ExecContext(ctx, h.sql)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if _, err := rc.RowsAffected(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -72,7 +73,7 @@ func (h *updateHandler) validateOrderUnits() error {
 	}
 	if (h.appPowerRental.MinOrderAmount().Cmp(decimal.NewFromInt(0)) > 0 && h.OrderUnits.Cmp(h.appPowerRental.MinOrderAmount()) < 0) ||
 		(h.appPowerRental.MaxOrderAmount().Cmp(decimal.NewFromInt(0)) > 0 && h.OrderUnits.Cmp(h.appPowerRental.MaxOrderAmount()) > 0) {
-		return fmt.Errorf("invalid orderunits")
+		return wlog.Errorf("invalid orderunits")
 	}
 	return nil
 }
@@ -83,7 +84,7 @@ func (h *updateHandler) validateOrderDurationSeconds() error {
 	}
 	if (h.appPowerRental.MinOrderDurationSeconds() > 0 && *h.OrderDurationSeconds < h.appPowerRental.MinOrderDurationSeconds()) ||
 		(h.appPowerRental.MaxOrderDurationSeconds() > 0 && *h.OrderDurationSeconds > h.appPowerRental.MaxOrderDurationSeconds()) {
-		return fmt.Errorf("invalid orderduration")
+		return wlog.Errorf("invalid orderduration")
 	}
 	return nil
 }
@@ -96,17 +97,17 @@ func (h *Handler) UpdateSimulate(ctx context.Context) error {
 	}
 
 	if err := handler.queryAppPowerRental(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if err := handler.validateOrderUnits(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if err := handler.validateOrderDurationSeconds(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	if err := handler.constructSQL(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {

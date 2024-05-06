@@ -2,8 +2,9 @@ package required
 
 import (
 	"context"
-	"fmt"
 	"time"
+
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
@@ -86,7 +87,7 @@ func GetRequiredOnly(ctx context.Context, conds *npool.Conds) (*npool.Required, 
 		return nil, nil
 	}
 	if len(infos.([]*npool.Required)) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 	return infos.([]*npool.Required)[0], nil
 }

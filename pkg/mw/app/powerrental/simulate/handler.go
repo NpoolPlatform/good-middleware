@@ -2,8 +2,8 @@ package appsimulatepowerrental
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	appsimulatepowerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/powerrental/simulate"
@@ -43,7 +43,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -56,13 +56,13 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &_id
 		return nil
@@ -73,7 +73,7 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid appgoodid")
+				return wlog.Errorf("invalid appgoodid")
 			}
 			return nil
 		}
@@ -82,14 +82,14 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 			apppowerrental1.WithAppGoodID(id, true),
 		)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		exist, err := handler.ExistPowerRental(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if !exist {
-			return fmt.Errorf("invalid appgoodid")
+			return wlog.Errorf("invalid appgoodid")
 		}
 		h.AppGoodID = handler.AppGoodID
 		return nil
@@ -100,16 +100,16 @@ func WithOrderUnits(value *string, must bool) func(context.Context, *Handler) er
 	return func(ctx context.Context, h *Handler) error {
 		if value == nil {
 			if must {
-				return fmt.Errorf("invalid units")
+				return wlog.Errorf("invalid units")
 			}
 			return nil
 		}
 		amount, err := decimal.NewFromString(*value)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if amount.Cmp(decimal.NewFromInt(0)) <= 0 {
-			return fmt.Errorf("units is less than or equal to 0")
+			return wlog.Errorf("units is less than or equal to 0")
 		}
 		h.OrderUnits = &amount
 		return nil
@@ -120,12 +120,12 @@ func WithOrderDurationSeconds(duration *uint32, must bool) func(context.Context,
 	return func(ctx context.Context, h *Handler) error {
 		if duration == nil {
 			if must {
-				return fmt.Errorf("invalid duration")
+				return wlog.Errorf("invalid duration")
 			}
 			return nil
 		}
 		if *duration <= uint32(0) {
-			return fmt.Errorf("duration is less than or equal to 0")
+			return wlog.Errorf("duration is less than or equal to 0")
 		}
 		h.OrderDurationSeconds = duration
 		return nil
@@ -136,7 +136,7 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 	if conds.AppID != nil {
 		id, err := uuid.Parse(conds.GetAppID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppGoodBaseConds.AppID = &cruder.Cond{
 			Op:  conds.GetAppID().GetOp(),
@@ -156,7 +156,7 @@ func (h *Handler) withAppSimulatePowerRentalConds(conds *npool.Conds) error {
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppSimulatePowerRentalConds.EntID = &cruder.Cond{
 			Op:  conds.GetEntID().GetOp(),
@@ -166,7 +166,7 @@ func (h *Handler) withAppSimulatePowerRentalConds(conds *npool.Conds) error {
 	if conds.AppGoodID != nil {
 		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppSimulatePowerRentalConds.AppGoodID = &cruder.Cond{
 			Op:  conds.GetAppGoodID().GetOp(),
@@ -182,7 +182,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			return nil
 		}
 		if err := h.withAppGoodBaseConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return h.withAppSimulatePowerRentalConds(conds)
 	}

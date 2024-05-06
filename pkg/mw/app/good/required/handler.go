@@ -1,9 +1,10 @@
+//nolint:dupl
 package required
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	requiredcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/required"
@@ -39,7 +40,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -52,13 +53,13 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &_id
 		return nil
@@ -72,14 +73,14 @@ func WithMainAppGoodID(id *string, must bool) func(context.Context, *Handler) er
 			appgoodbase1.WithEntID(id, true),
 		)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		exist, err := handler.ExistGoodBase(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if !exist {
-			return fmt.Errorf("invalid appgood")
+			return wlog.Errorf("invalid appgood")
 		}
 		h.MainAppGoodID = handler.EntID
 		return nil
@@ -93,14 +94,14 @@ func WithRequiredAppGoodID(id *string, must bool) func(context.Context, *Handler
 			appgoodbase1.WithEntID(id, true),
 		)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		exist, err := handler.ExistGoodBase(ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		if !exist {
-			return fmt.Errorf("invalid appgood")
+			return wlog.Errorf("invalid appgood")
 		}
 		h.RequiredAppGoodID = handler.EntID
 		return nil
@@ -118,7 +119,7 @@ func (h *Handler) withRequiredConds(conds *npool.Conds) error {
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.RequiredConds.EntID = &cruder.Cond{Op: conds.GetEntID().GetOp(), Val: id}
 	}
@@ -130,7 +131,7 @@ func (h *Handler) withRequiredConds(conds *npool.Conds) error {
 	if conds.MainAppGoodID != nil {
 		id, err := uuid.Parse(conds.GetMainAppGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.RequiredConds.MainAppGoodID = &cruder.Cond{
 			Op:  conds.GetMainAppGoodID().GetOp(),
@@ -140,7 +141,7 @@ func (h *Handler) withRequiredConds(conds *npool.Conds) error {
 	if conds.RequiredAppGoodID != nil {
 		id, err := uuid.Parse(conds.GetRequiredAppGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.RequiredConds.RequiredAppGoodID = &cruder.Cond{
 			Op:  conds.GetRequiredAppGoodID().GetOp(),
@@ -150,7 +151,7 @@ func (h *Handler) withRequiredConds(conds *npool.Conds) error {
 	if conds.AppGoodID != nil {
 		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.RequiredConds.AppGoodID = &cruder.Cond{
 			Op:  conds.GetAppGoodID().GetOp(),
@@ -162,7 +163,7 @@ func (h *Handler) withRequiredConds(conds *npool.Conds) error {
 		for _, id := range conds.GetAppGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -184,7 +185,7 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 	if conds.AppGoodID != nil {
 		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppGoodBaseConds.EntID = &cruder.Cond{
 			Op:  conds.GetAppGoodID().GetOp(),
@@ -196,7 +197,7 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 		for _, id := range conds.GetAppGoodIDs().GetValue() {
 			_id, err := uuid.Parse(id)
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			ids = append(ids, _id)
 		}
@@ -214,7 +215,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			return nil
 		}
 		if err := h.withAppGoodBaseConds(conds); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return h.withRequiredConds(conds)
 	}

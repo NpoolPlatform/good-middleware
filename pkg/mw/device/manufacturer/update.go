@@ -8,6 +8,7 @@ import (
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 )
 
 type updateHandler struct {
@@ -29,7 +30,7 @@ func (h *updateHandler) constructSQL() error {
 		set = ""
 	}
 	if set != "" {
-		return fmt.Errorf("update nothing")
+		return wlog.WrapError(cruder.ErrUpdateNothing)
 	}
 
 	_sql += fmt.Sprintf("updated_at = %v ", now)
@@ -54,10 +55,10 @@ func (h *updateHandler) constructSQL() error {
 func (h *updateHandler) updateManufacturer(ctx context.Context, tx *ent.Tx) error {
 	rc, err := tx.ExecContext(ctx, h.sql)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if _, err := rc.RowsAffected(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -76,7 +77,7 @@ func (h *Handler) UpdateManufacturer(ctx context.Context) error {
 	}
 	h.ID = &info.ID
 	if err := handler.constructSQL(); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		return handler.updateManufacturer(_ctx, tx)
