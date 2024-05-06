@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 )
@@ -62,9 +63,18 @@ func (h *updateHandler) updateManufacturer(ctx context.Context, tx *ent.Tx) erro
 }
 
 func (h *Handler) UpdateManufacturer(ctx context.Context) error {
+	info, err := h.GetManufacturer(ctx)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	if info == nil {
+		return wlog.Errorf("invalid manufacturer")
+	}
+
 	handler := &updateHandler{
 		Handler: h,
 	}
+	h.ID = &info.ID
 	if err := handler.constructSQL(); err != nil {
 		return err
 	}
