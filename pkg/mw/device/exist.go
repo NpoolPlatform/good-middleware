@@ -3,47 +3,43 @@ package device
 import (
 	"context"
 
-	devicecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entdevice "github.com/NpoolPlatform/good-middleware/pkg/db/ent/deviceinfo"
 )
 
 func (h *Handler) ExistDeviceType(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		exist, err = cli.
-			DeviceInfo.
-			Query().
-			Where(
-				entdevice.EntID(*h.EntID),
-				entdevice.DeletedAt(0),
-			).
-			Exist(_ctx)
-		if err != nil {
+		if err := handler.queryDeviceType(cli); err != nil {
 			return err
 		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return err
 	})
 	if err != nil {
-		return false, err
+		return false, wlog.WrapError(err)
 	}
 	return exist, nil
 }
 
 func (h *Handler) ExistDeviceTypeConds(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := devicecrud.SetQueryConds(cli.DeviceInfo.Query(), h.DeviceConds)
-		if err != nil {
-			return err
+		if handler.stmSelect, err = handler.queryDeviceTypes(cli); err != nil {
+			return wlog.WrapError(err)
 		}
-		exist, err = stm.Exist(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return err
 	})
 	if err != nil {
-		return false, err
+		return false, wlog.WrapError(err)
 	}
 	return exist, nil
 }
