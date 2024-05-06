@@ -2,60 +2,18 @@ package manufacturer
 
 import (
 	"context"
-	"fmt"
 
-	manufacturercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device/manufacturer"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entmanufacturer "github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/device/manufacturer"
 )
 
 type queryHandler struct {
-	*Handler
-	stmSelect *ent.DeviceManufacturerSelect
-	infos     []*npool.Manufacturer
-	total     uint32
-}
-
-func (h *queryHandler) selectDeviceManufacturer(stm *ent.DeviceManufacturerQuery) {
-	h.stmSelect = stm.Select(
-		entmanufacturer.FieldID,
-		entmanufacturer.FieldEntID,
-		entmanufacturer.FieldName,
-		entmanufacturer.FieldLogo,
-		entmanufacturer.FieldCreatedAt,
-		entmanufacturer.FieldUpdatedAt,
-	)
-}
-
-func (h *queryHandler) queryDeviceManufacturer(cli *ent.Client) error {
-	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
-	}
-	stm := cli.DeviceManufacturer.Query().Where(entmanufacturer.DeletedAt(0))
-	if h.ID != nil {
-		stm.Where(entmanufacturer.ID(*h.ID))
-	}
-	if h.EntID != nil {
-		stm.Where(entmanufacturer.EntID(*h.EntID))
-	}
-	h.selectDeviceManufacturer(stm)
-	return nil
-}
-
-func (h *queryHandler) queryDeviceManufacturers(ctx context.Context, cli *ent.Client) error {
-	stm, err := manufacturercrud.SetQueryConds(cli.DeviceManufacturer.Query(), h.ManufacturerConds)
-	if err != nil {
-		return err
-	}
-	total, err := stm.Count(ctx)
-	if err != nil {
-		return err
-	}
-	h.total = uint32(total)
-	h.selectDeviceManufacturer(stm)
-	return nil
+	*baseQueryHandler
+	stmCount *ent.DeviceManufacturerSelect
+	infos    []*npool.Manufacturer
+	total    uint32
 }
 
 func (h *queryHandler) scan(ctx context.Context) error {
@@ -64,13 +22,15 @@ func (h *queryHandler) scan(ctx context.Context) error {
 
 func (h *Handler) GetManufacturer(ctx context.Context) (*npool.Manufacturer, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
-
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := handler.queryDeviceManufacturer(cli); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
+		handler.queryJoin()
 		return handler.scan(_ctx)
 	})
 	if err != nil {
@@ -80,19 +40,31 @@ func (h *Handler) GetManufacturer(ctx context.Context) (*npool.Manufacturer, err
 		return nil, nil
 	}
 	if len(handler.infos) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 	return handler.infos[0], nil
 }
 
 func (h *Handler) GetManufacturers(ctx context.Context) ([]*npool.Manufacturer, uint32, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if err := handler.queryDeviceManufacturers(_ctx, cli); err != nil {
-			return err
+	var err error
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		if handler.stmSelect, err = handler.queryDeviceManufacturers(cli); err != nil {
+			return wlog.WrapError(err)
 		}
+		if handler.stmCount, err = handler.queryDeviceManufacturers(cli); err != nil {
+			return wlog.WrapError(err)
+		}
+		handler.queryJoin()
+		_total, err := handler.stmCount.Count(_ctx)
+		if err != nil {
+			return wlog.WrapError(err)
+		}
+		handler.total = uint32(_total)
 		handler.stmSelect.
 			Offset(int(h.Offset)).
 			Limit(int(h.Limit))

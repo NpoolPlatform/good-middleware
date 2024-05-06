@@ -3,47 +3,43 @@ package manufacturer
 import (
 	"context"
 
-	manufacturercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/device/manufacturer"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entdevicemanufacturer "github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 )
 
 func (h *Handler) ExistManufacturer(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		exist, err = cli.
-			DeviceManufacturer.
-			Query().
-			Where(
-				entdevicemanufacturer.EntID(*h.EntID),
-				entdevicemanufacturer.DeletedAt(0),
-			).
-			Exist(_ctx)
-		if err != nil {
-			return err
+		if err := handler.queryDeviceManufacturer(cli); err != nil {
+			return wlog.WrapError(err)
 		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return wlog.WrapError(err)
 	})
 	if err != nil {
-		return false, err
+		return false, wlog.WrapError(err)
 	}
 	return exist, nil
 }
 
 func (h *Handler) ExistManufacturerConds(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
+	}
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := manufacturercrud.SetQueryConds(cli.DeviceManufacturer.Query(), h.ManufacturerConds)
-		if err != nil {
-			return err
+		if handler.stmSelect, err = handler.queryDeviceManufacturers(cli); err != nil {
+			return wlog.WrapError(err)
 		}
-		exist, err = stm.Exist(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return wlog.WrapError(err)
 	})
 	if err != nil {
-		return false, err
+		return false, wlog.WrapError(err)
 	}
 	return exist, nil
 }
