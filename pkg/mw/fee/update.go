@@ -71,7 +71,7 @@ func (h *Handler) UpdateFee(ctx context.Context) error {
 	if err := handler.requireFeeGood(ctx); err != nil {
 		return wlog.WrapError(err)
 	}
-
+	h.ID = &handler.fee.ID
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateGoodBase(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
