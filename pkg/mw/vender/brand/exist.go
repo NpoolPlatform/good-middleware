@@ -2,57 +2,44 @@ package brand
 
 import (
 	"context"
-	"fmt"
 
-	brandcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/vender/brand"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entvendorbrand "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 )
 
-func (h *Handler) ExistBrand(ctx context.Context) (bool, error) {
-	if h.EntID == nil {
-		return false, fmt.Errorf("invalid entid")
+func (h *Handler) ExistBrand(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
 	}
-
-	exist := false
-	var err error
-
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		exist, err = cli.
-			VendorBrand.
-			Query().
-			Where(
-				entvendorbrand.EntID(*h.EntID),
-				entvendorbrand.DeletedAt(0),
-			).
-			Exist(_ctx)
-		if err != nil {
-			return err
+		if err := handler.queryVendorBrand(cli); err != nil {
+			return wlog.WrapError(err)
 		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return wlog.WrapError(err)
 	})
 	if err != nil {
-		return false, err
+		return false, wlog.WrapError(err)
 	}
 	return exist, nil
 }
 
-func (h *Handler) ExistBrandConds(ctx context.Context) (bool, error) {
-	exist := false
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := brandcrud.SetQueryConds(cli.VendorBrand.Query(), h.Conds)
-		if err != nil {
-			return err
+func (h *Handler) ExistBrandConds(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
+	}
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		if handler.stmSelect, err = handler.queryVendorBrands(cli); err != nil {
+			return wlog.WrapError(err)
 		}
-		exist, err = stm.Exist(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return wlog.WrapError(err)
 	})
 	if err != nil {
-		return false, err
+		return false, wlog.WrapError(err)
 	}
 	return exist, nil
 }

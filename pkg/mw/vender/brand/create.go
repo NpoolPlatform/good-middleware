@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 
@@ -53,7 +54,7 @@ func (h *createHandler) constructSQL() {
 	_sql += ") as tmp "
 	_sql += "where not exists ("
 	_sql += "select 1 from vendor_brands as vb "
-	_sql += fmt.Sprintf("where vb.name = '%v'", *h.Name)
+	_sql += fmt.Sprintf("where vb.name = '%v' and deleted_at = 0", *h.Name)
 	_sql += " limit 1)"
 
 	h.sql = _sql
@@ -62,11 +63,11 @@ func (h *createHandler) constructSQL() {
 func (h *createHandler) createBrand(ctx context.Context, tx *ent.Tx) error {
 	rc, err := tx.ExecContext(ctx, h.sql)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
-		return fmt.Errorf("fail create brand: %v", err)
+		return wlog.Errorf("fail create brand: %v", err)
 	}
 	return nil
 }
