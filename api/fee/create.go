@@ -25,7 +25,7 @@ func (s *Server) CreateFee(ctx context.Context, in *npool.CreateFeeRequest) (*np
 		ctx,
 		fee1.WithEntID(req.EntID, false),
 		fee1.WithGoodID(req.GoodID, true),
-		fee1.WithGoodType(req.GoodType, false),
+		fee1.WithGoodType(req.GoodType, true),
 		fee1.WithName(req.Name, true),
 		fee1.WithSettlementType(req.SettlementType, true),
 		fee1.WithUnitValue(req.UnitValue, true),
