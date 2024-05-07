@@ -6,7 +6,7 @@ require (
 	bou.ke/monkey v1.0.2
 	entgo.io/ent v0.11.3
 	github.com/NpoolPlatform/basal-middleware v0.0.0-20231015112137-254853c60eec
-	github.com/NpoolPlatform/go-service-framework v0.0.0-20240506105743-2d908f31ffab
+	github.com/NpoolPlatform/go-service-framework v0.0.0-20240507063949-b79b74f49083
 	github.com/NpoolPlatform/libent-cruder v0.0.0-20240323085036-7679b4818ce7
 	github.com/NpoolPlatform/message v0.0.0-20240507031514-b2ef6f54175e
 	github.com/go-resty/resty/v2 v2.7.0
@@ -119,3 +119,5 @@ replace entgo.io/ent => entgo.io/ent v0.11.2
 replace ariga.io/atlas => ariga.io/atlas v0.5.1-0.20220717122844-8593d7eb1a8e
 
 replace github.com/ugorji/go => github.com/ugorji/go v0.0.0-20190204201341-e444a5086c43
+
+replace github.com/NpoolPlatform/go-service-framework v0.0.0-20240506105743-2d908f31ffab => ../go-service-framework
