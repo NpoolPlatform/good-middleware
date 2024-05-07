@@ -84,7 +84,7 @@ func (h *baseQueryHandler) queryWithAppGoodBaseConds(t1 *sql.SelectTable, s *sql
 					_ids = append(_ids, interface{}(id))
 				}
 				return
-			}),
+			}()...),
 		)
 	}
 	if h.AppGoodBaseConds.AppID != nil {

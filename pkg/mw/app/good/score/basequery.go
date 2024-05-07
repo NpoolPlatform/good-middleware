@@ -102,7 +102,7 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 					_ids = append(_ids, interface{}(id))
 				}
 				return
-			}),
+			}()...),
 		)
 	}
 	if h.AppGoodBaseConds.GoodID != nil {
@@ -125,7 +125,7 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 					_ids = append(_ids, interface{}(id))
 				}
 				return
-			}),
+			}()...),
 		)
 	}
 	s.AppendSelect(

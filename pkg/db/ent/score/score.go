@@ -30,7 +30,7 @@ const (
 	// FieldCommentID holds the string denoting the comment_id field in the database.
 	FieldCommentID = "comment_id"
 	// Table holds the table name of the score in the database.
-	Table = "scores"
+	Table = "app_good_scores"
 )
 
 // Columns holds all SQL columns for score fields.

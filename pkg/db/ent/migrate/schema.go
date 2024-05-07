@@ -1057,8 +1057,8 @@ var (
 			},
 		},
 	}
-	// ScoresColumns holds the columns for the "scores" table.
-	ScoresColumns = []*schema.Column{
+	// AppGoodScoresColumns holds the columns for the "app_good_scores" table.
+	AppGoodScoresColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
@@ -1069,16 +1069,16 @@ var (
 		{Name: "score", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "comment_id", Type: field.TypeUUID, Nullable: true},
 	}
-	// ScoresTable holds the schema information for the "scores" table.
-	ScoresTable = &schema.Table{
-		Name:       "scores",
-		Columns:    ScoresColumns,
-		PrimaryKey: []*schema.Column{ScoresColumns[0]},
+	// AppGoodScoresTable holds the schema information for the "app_good_scores" table.
+	AppGoodScoresTable = &schema.Table{
+		Name:       "app_good_scores",
+		Columns:    AppGoodScoresColumns,
+		PrimaryKey: []*schema.Column{AppGoodScoresColumns[0]},
 		Indexes: []*schema.Index{
 			{
 				Name:    "score_ent_id",
 				Unique:  true,
-				Columns: []*schema.Column{ScoresColumns[4]},
+				Columns: []*schema.Column{AppGoodScoresColumns[4]},
 			},
 		},
 	}
@@ -1372,7 +1372,7 @@ var (
 		AppGoodRecommendsTable,
 		RequiredAppGoodsTable,
 		RequiredGoodsTable,
-		ScoresTable,
+		AppGoodScoresTable,
 		StocksV1Table,
 		TopMostsTable,
 		TopMostConstraintsTable,
@@ -1394,6 +1394,9 @@ func init() {
 	}
 	AppGoodRecommendsTable.Annotation = &entsql.Annotation{
 		Table: "app_good_recommends",
+	}
+	AppGoodScoresTable.Annotation = &entsql.Annotation{
+		Table: "app_good_scores",
 	}
 	StocksV1Table.Annotation = &entsql.Annotation{
 		Table: "stocks_v1",

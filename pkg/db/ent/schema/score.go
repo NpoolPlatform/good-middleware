@@ -3,6 +3,8 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
@@ -60,4 +62,10 @@ func (Score) Edges() []ent.Edge {
 
 func (Score) Indexes() []ent.Index {
 	return nil
+}
+
+func (Score) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Annotation{Table: "app_good_scores"},
+	}
 }

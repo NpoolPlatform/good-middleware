@@ -35,7 +35,7 @@ func (h *createHandler) constructScoreSQL(ctx context.Context) {
 func (h *createHandler) constructSQL() {
 	comma := ""
 	now := uint32(time.Now().Unix())
-	_sql := "insert into comments "
+	_sql := "insert into app_good_comments "
 	_sql += "("
 	if h.EntID != nil {
 		_sql += "ent_id"
@@ -99,7 +99,7 @@ func (h *createHandler) constructSQL() {
 	_sql += " limit 1)"
 	if h.ReplyToID != nil {
 		_sql += " and exists ("
-		_sql += "select 1 from comments "
+		_sql += "select 1 from app_good_comments "
 		_sql += fmt.Sprintf("where ent_id = '%v' and deleted_at = 0", *h.ReplyToID)
 		_sql += " limit 1)"
 	}

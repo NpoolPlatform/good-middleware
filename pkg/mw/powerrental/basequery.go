@@ -118,7 +118,7 @@ func (h *baseQueryHandler) queryJoinPowerRental(s *sql.Selector) error {
 				_ids = append(_ids, interface{}(id))
 			}
 			return
-		}))
+		}()...))
 	}
 	if h.PowerRentalConds.EntID != nil {
 		uid, ok := h.PowerRentalConds.EntID.Val.(uuid.UUID)
@@ -137,7 +137,7 @@ func (h *baseQueryHandler) queryJoinPowerRental(s *sql.Selector) error {
 				_uids = append(_uids, interface{}(uid))
 			}
 			return
-		}))
+		}()...))
 	}
 	s.Join(t2).
 		On(
@@ -249,7 +249,7 @@ func (h *baseQueryHandler) queryJoinGoodCoin(s *sql.Selector) error {
 				_uids = append(_uids, interface{}(uid))
 			}
 			return
-		}))
+		}()...))
 	}
 	return nil
 }

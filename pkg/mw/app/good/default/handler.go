@@ -27,8 +27,9 @@ type Handler struct {
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
-		DefaultConds:  &appdefaultgoodcrud.Conds{},
-		GoodBaseConds: &goodbasecrud.Conds{},
+		DefaultConds:     &appdefaultgoodcrud.Conds{},
+		GoodBaseConds:    &goodbasecrud.Conds{},
+		AppGoodBaseConds: &appgoodbasecrud.Conds{},
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {

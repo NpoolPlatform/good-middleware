@@ -93,12 +93,12 @@ func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 			return wlog.Errorf("invalid entids")
 		}
 		s.OnP(
-			sql.EQ(t1.C(enttopmost.FieldEntID), func() (_ids []interface{}) {
+			sql.In(t1.C(enttopmost.FieldEntID), func() (_ids []interface{}) {
 				for _, id := range ids {
 					_ids = append(_ids, interface{}(id))
 				}
 				return
-			}),
+			}()...),
 		)
 	}
 	s.AppendSelect(
