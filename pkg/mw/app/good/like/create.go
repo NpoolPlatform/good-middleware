@@ -23,7 +23,7 @@ type createHandler struct {
 func (h *createHandler) constructSQL() {
 	comma := ""
 	now := uint32(time.Now().Unix())
-	_sql := "insert into likes "
+	_sql := "insert into app_good_likes "
 	_sql += "("
 	if h.EntID != nil {
 		_sql += "ent_id"
@@ -52,7 +52,7 @@ func (h *createHandler) constructSQL() {
 	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
 	_sql += " limit 1) as tmp "
 	_sql += "where not exists ("
-	_sql += "select 1 from likes "
+	_sql += "select 1 from app_good_likes "
 	_sql += fmt.Sprintf(
 		"where user_id = '%v' and app_good_id = '%v' and deleted_at = 0",
 		*h.UserID,

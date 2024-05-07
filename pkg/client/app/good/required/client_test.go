@@ -128,13 +128,17 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	err = apppowerrental1.CreatePowerRental(context.Background(), &apppowerrentalmwpb.PowerRentalReq{
-		AppID:          &ret.AppID,
-		GoodID:         &ret.MainGoodID,
-		AppGoodID:      &ret.MainAppGoodID,
-		Name:           &ret.MainAppGoodName,
-		ServiceStartAt: func() *uint32 { u := uint32(time.Now().Unix()); return &u }(),
-		UnitPrice:      func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
-		SaleMode:       func() *types.GoodSaleMode { e := types.GoodSaleMode_GoodSaleModeMainnetSpot; return &e }(),
+		AppID:                   &ret.AppID,
+		GoodID:                  &ret.MainGoodID,
+		AppGoodID:               &ret.MainAppGoodID,
+		Name:                    &ret.MainAppGoodName,
+		ServiceStartAt:          func() *uint32 { u := uint32(time.Now().Unix()); return &u }(),
+		UnitPrice:               func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
+		SaleMode:                func() *types.GoodSaleMode { e := types.GoodSaleMode_GoodSaleModeMainnetSpot; return &e }(),
+		MinOrderAmount:          func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
+		MaxOrderAmount:          func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
+		MinOrderDurationSeconds: func() *uint32 { u := uint32(24000); return &u }(),
+		MaxOrderDurationSeconds: func() *uint32 { u := uint32(24000); return &u }(),
 	})
 	assert.Nil(t, err)
 

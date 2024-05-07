@@ -119,11 +119,13 @@ func createLabel(t *testing.T) {
 }
 
 func updateLabel(t *testing.T) {
+	ret.Index = uint32(10)
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithEntID(&ret.EntID, true),
 		WithLabel(&ret.Label, true),
+		WithIndex(func() *uint8 { u := uint8(ret.Index); return &u }(), true),
 	)
 	assert.Nil(t, err)
 

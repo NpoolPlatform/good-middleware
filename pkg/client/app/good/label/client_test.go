@@ -124,13 +124,17 @@ func setup(t *testing.T) func(*testing.T) {
 	assert.Nil(t, err)
 
 	err = apppowerrental1.CreatePowerRental(context.Background(), &apppowerrentalmwpb.PowerRentalReq{
-		AppID:          &ret.AppID,
-		GoodID:         &ret.GoodID,
-		AppGoodID:      &ret.AppGoodID,
-		Name:           &ret.AppGoodName,
-		ServiceStartAt: func() *uint32 { u := uint32(time.Now().Unix()); return &u }(),
-		UnitPrice:      func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
-		SaleMode:       func() *types.GoodSaleMode { e := types.GoodSaleMode_GoodSaleModeMainnetSpot; return &e }(),
+		AppID:                   &ret.AppID,
+		GoodID:                  &ret.GoodID,
+		AppGoodID:               &ret.AppGoodID,
+		Name:                    &ret.AppGoodName,
+		ServiceStartAt:          func() *uint32 { u := uint32(time.Now().Unix()); return &u }(),
+		UnitPrice:               func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
+		SaleMode:                func() *types.GoodSaleMode { e := types.GoodSaleMode_GoodSaleModeMainnetSpot; return &e }(),
+		MinOrderAmount:          func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
+		MaxOrderAmount:          func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
+		MinOrderDurationSeconds: func() *uint32 { u := uint32(24000); return &u }(),
+		MaxOrderDurationSeconds: func() *uint32 { u := uint32(24000); return &u }(),
 	})
 	assert.Nil(t, err)
 
@@ -166,9 +170,11 @@ func createLabel(t *testing.T) {
 }
 
 func updateLabel(t *testing.T) {
+	ret.Index = 10
 	err := UpdateLabel(context.Background(), &npool.LabelReq{
 		ID:    &ret.ID,
 		Label: &ret.Label,
+		Index: &ret.Index,
 	})
 	if assert.Nil(t, err) {
 		info, err := GetLabel(context.Background(), ret.EntID)

@@ -29,6 +29,7 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 	handler := &Handler{
 		DisplayNameConds: &appgooddisplaynamecrud.Conds{},
 		GoodBaseConds:    &goodbasecrud.Conds{},
+		AppGoodBaseConds: &appgoodbasecrud.Conds{},
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {

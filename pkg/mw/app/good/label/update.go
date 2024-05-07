@@ -38,6 +38,10 @@ func (h *updateHandler) constructSQL() error {
 		_sql += fmt.Sprintf("%vlabel_bg_color = '%v', ", set, *h.LabelBgColor)
 		set = ""
 	}
+	if h.Index != nil {
+		_sql += fmt.Sprintf("%v`index` = %v, ", set, *h.Index)
+		set = ""
+	}
 	if set != "" {
 		return wlog.WrapError(cruder.ErrUpdateNothing)
 	}
@@ -47,7 +51,12 @@ func (h *updateHandler) constructSQL() error {
 	if h.Label != nil {
 		_sql += "and not exists ("
 		_sql += "select 1 from (select * from app_good_labels "
-		_sql += fmt.Sprintf("where app_good_id = '%v' and label = '%v' and id != %v", h.appGoodID, *h.Label, *h.ID)
+		_sql += fmt.Sprintf(
+			"where app_good_id = '%v' and label = '%v' and id != %v and deleted_at = 0",
+			h.appGoodID,
+			*h.Label,
+			*h.ID,
+		)
 		_sql += " limit 1) as agl)"
 	}
 

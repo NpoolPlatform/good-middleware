@@ -64,29 +64,6 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 }
 
 func (h *baseQueryHandler) queryWithAppGoodBaseConds(t1 *sql.SelectTable, s *sql.Selector) error {
-	if h.AppGoodBaseConds.EntID != nil {
-		id, ok := h.AppGoodBaseConds.EntID.Val.(uuid.UUID)
-		if !ok {
-			return wlog.Errorf("invalid appgoodid")
-		}
-		s.OnP(
-			sql.EQ(t1.C(entappgoodbase.FieldEntID), id),
-		)
-	}
-	if h.AppGoodBaseConds.EntIDs != nil {
-		ids, ok := h.AppGoodBaseConds.EntIDs.Val.([]uuid.UUID)
-		if !ok {
-			return wlog.Errorf("invalid appgoodids")
-		}
-		s.OnP(
-			sql.In(t1.C(entappgoodbase.FieldEntID), func() (_ids []interface{}) {
-				for _, id := range ids {
-					_ids = append(_ids, interface{}(id))
-				}
-				return
-			}()...),
-		)
-	}
 	if h.AppGoodBaseConds.AppID != nil {
 		id, ok := h.AppGoodBaseConds.AppID.Val.(uuid.UUID)
 		if !ok {
