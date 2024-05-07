@@ -69,7 +69,7 @@ func createTopMost(t *testing.T) {
 }
 
 func updateTopMost(t *testing.T) {
-	ret.EndAt = ret.EndAt + 10
+	ret.EndAt += 10
 	err := UpdateTopMost(context.Background(), &npool.TopMostReq{
 		ID:          &ret.ID,
 		EntID:       &ret.EntID,

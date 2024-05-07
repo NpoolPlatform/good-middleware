@@ -213,7 +213,6 @@ func TestComment(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("createComment", createComment)
-	return
 	t.Run("updateComment", updateComment)
 	t.Run("getComment", getComment)
 	t.Run("getComments", getComments)

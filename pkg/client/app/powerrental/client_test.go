@@ -322,7 +322,6 @@ func TestPowerRental(t *testing.T) {
 
 	t.Run("createPowerRental", createPowerRental)
 	t.Run("updatePowerRental", updatePowerRental)
-	return
 	t.Run("getPowerRental", getPowerRental)
 	t.Run("getPowerRentals", getPowerRentals)
 	t.Run("getPowerRentalOnly", getPowerRentalOnly)
