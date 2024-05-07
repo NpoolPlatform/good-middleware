@@ -32,7 +32,7 @@ func (h *updateHandler) constructSQL() error {
 		set = ""
 	}
 	if h.OrderDurationSeconds != nil {
-		_sql += fmt.Sprintf("%vorder_duration= %v, ", set, *h.OrderDurationSeconds)
+		_sql += fmt.Sprintf("%vorder_duration_seconds = %v, ", set, *h.OrderDurationSeconds)
 		set = ""
 	}
 	if set != "" {
