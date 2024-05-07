@@ -95,7 +95,7 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 			return wlog.Errorf("invalid goodids")
 		}
 		s.OnP(
-			sql.In(t1.C(entgoodbase.FieldEntID), func() (_ids []interface{}) {
+			sql.In(t2.C(entgoodbase.FieldEntID), func() (_ids []interface{}) {
 				for _, id := range ids {
 					_ids = append(_ids, interface{}(id))
 				}

@@ -230,7 +230,7 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 			}
 			ids = append(ids, _id)
 		}
-		h.AppGoodBaseConds.EntIDs = &cruder.Cond{
+		h.AppGoodBaseConds.GoodIDs = &cruder.Cond{
 			Op:  conds.GetGoodIDs().GetOp(),
 			Val: ids,
 		}
