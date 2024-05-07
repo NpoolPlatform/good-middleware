@@ -248,7 +248,11 @@ func createPowerRental(t *testing.T) {
 			err = h5.CreateGoodCoin(context.Background())
 			assert.Nil(t, err)
 		}
-		info, err := h1.GetPowerRental(context.Background())
+		handler, _ := NewHandler(
+			context.Background(),
+			WithGoodID(&ret.GoodID, true),
+		)
+		info, err := handler.GetPowerRental(context.Background())
 		if assert.Nil(t, err) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt

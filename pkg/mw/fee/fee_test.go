@@ -72,6 +72,7 @@ func createFee(t *testing.T) {
 }
 
 func updateFee(t *testing.T) {
+	ret.Name = uuid.NewString()
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),

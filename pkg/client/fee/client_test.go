@@ -75,6 +75,7 @@ func createFee(t *testing.T) {
 }
 
 func updateFee(t *testing.T) {
+	ret.Name = uuid.NewString()
 	err := UpdateFee(context.Background(), &npool.FeeReq{
 		ID:                  &ret.ID,
 		EntID:               &ret.EntID,

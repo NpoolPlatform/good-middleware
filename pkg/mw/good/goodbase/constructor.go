@@ -126,7 +126,7 @@ func (h *Handler) ConstructUpdateSQL() (string, error) {
 	_sql += fmt.Sprintf("updated_at = %v ", now)
 	whereAnd := "where"
 	if h.ID != nil {
-		_sql += fmt.Sprintf("%v id = %v", whereAnd, *h.ID)
+		_sql += fmt.Sprintf("%v id = %v ", whereAnd, *h.ID)
 		whereAnd = "and"
 	}
 	if h.EntID != nil {

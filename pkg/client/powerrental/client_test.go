@@ -170,6 +170,7 @@ func createPowerRental(t *testing.T) {
 	if assert.Nil(t, err) {
 		info, err := GetPowerRental(context.Background(), ret.GoodID)
 		if assert.Nil(t, err) {
+			fmt.Printf("GoodID %v | EntID %v\n", ret.GoodID, ret.EntID)
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			ret.ID = info.ID

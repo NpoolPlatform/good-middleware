@@ -66,7 +66,7 @@ func (h *baseQueryHandler) queryGoodBases(cli *ent.Client) (*ent.GoodBaseSelect,
 
 func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 	t1 := sql.Table(entgoodbase.Table)
-	s.Join(t1).
+	s.LeftJoin(t1).
 		On(
 			s.C(entgoodbase.FieldID),
 			t1.C(entgoodbase.FieldID),
@@ -93,7 +93,7 @@ func (h *baseQueryHandler) queryJoinPowerRental(s *sql.Selector) error {
 	t4 := sql.Table(entvendorlocation.Table)
 	t5 := sql.Table(entvendorbrand.Table)
 
-	s.Join(t1).
+	s.LeftJoin(t1).
 		On(
 			s.C(entgoodbase.FieldEntID),
 			t1.C(entpowerrental.FieldGoodID),
@@ -139,22 +139,22 @@ func (h *baseQueryHandler) queryJoinPowerRental(s *sql.Selector) error {
 			return
 		}()...))
 	}
-	s.Join(t2).
+	s.LeftJoin(t2).
 		On(
 			t1.C(entpowerrental.FieldDeviceTypeID),
 			t2.C(entdevicetype.FieldEntID),
 		).
-		Join(t3).
+		LeftJoin(t3).
 		On(
 			t2.C(entdevicetype.FieldManufacturerID),
 			t3.C(entmanufacturer.FieldEntID),
 		).
-		Join(t4).
+		LeftJoin(t4).
 		On(
 			t1.C(entpowerrental.FieldVendorLocationID),
 			t4.C(entvendorlocation.FieldEntID),
 		).
-		Join(t5).
+		LeftJoin(t5).
 		On(
 			t4.C(entvendorlocation.FieldBrandID),
 			t5.C(entvendorbrand.FieldEntID),
@@ -224,7 +224,7 @@ func (h *baseQueryHandler) queryJoinReward(s *sql.Selector) {
 
 func (h *baseQueryHandler) queryJoinGoodCoin(s *sql.Selector) error {
 	t := sql.Table(entgoodcoin.Table)
-	s.Join(t).
+	s.LeftJoin(t).
 		On(
 			s.C(entgoodbase.FieldEntID),
 			t.C(entgoodcoin.FieldGoodID),
@@ -256,7 +256,7 @@ func (h *baseQueryHandler) queryJoinGoodCoin(s *sql.Selector) error {
 
 func (h *baseQueryHandler) queryJoinStock(s *sql.Selector) {
 	t1 := sql.Table(entstock.Table)
-	s.Join(t1).
+	s.LeftJoin(t1).
 		On(
 			s.C(entgoodbase.FieldEntID),
 			t1.C(entstock.FieldGoodID),
