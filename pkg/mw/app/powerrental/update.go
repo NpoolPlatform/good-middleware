@@ -41,7 +41,8 @@ func (h *updateHandler) constructAppGoodBaseSQL(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 	h.sqlAppGoodBase, err = handler.ConstructUpdateSQL()
-	if err != cruder.ErrUpdateNothing {
+	if err != nil && !wlog.Equal(err, cruder.ErrUpdateNothing) {
+		fmt.Printf("Error %v | %v\n", err, cruder.ErrUpdateNothing)
 		return wlog.WrapError(err)
 	}
 	return nil
@@ -81,11 +82,11 @@ func (h *updateHandler) constructAppPowerRentalSQL() error {
 		set = ""
 	}
 	if h.MinOrderDurationSeconds != nil {
-		_sql += fmt.Sprintf("%vmin_order_duration = %v,", set, *h.MinOrderDurationSeconds)
+		_sql += fmt.Sprintf("%vmin_order_duration_seconds = %v,", set, *h.MinOrderDurationSeconds)
 		set = ""
 	}
 	if h.MaxOrderDurationSeconds != nil {
-		_sql += fmt.Sprintf("%vmax_order_duration = %v,", set, *h.MaxOrderDurationSeconds)
+		_sql += fmt.Sprintf("%vmax_order_duration_seconds = %v,", set, *h.MaxOrderDurationSeconds)
 		set = ""
 	}
 	if h.UnitPrice != nil {
@@ -113,7 +114,7 @@ func (h *updateHandler) constructAppPowerRentalSQL() error {
 		set = ""
 	}
 	if set != "" {
-		return cruder.ErrUpdateNothing
+		return wlog.WrapError(cruder.ErrUpdateNothing)
 	}
 	_sql += fmt.Sprintf("updated_at = %v", now)
 	_sql += fmt.Sprintf(" where id = %v ", *h.ID)

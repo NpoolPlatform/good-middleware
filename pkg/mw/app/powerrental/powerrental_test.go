@@ -357,6 +357,7 @@ func createPowerRental(t *testing.T) {
 }
 
 func updatePowerRental(t *testing.T) {
+	ret.SaleEndAt += 1000
 	h1, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),

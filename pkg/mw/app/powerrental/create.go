@@ -103,10 +103,10 @@ func (h *createHandler) constructAppPowerRentalSQL() {
 	_sql += comma + "max_order_amount"
 	_sql += comma + "max_user_amount"
 	if h.MinOrderDurationSeconds != nil {
-		_sql += comma + "min_order_duration"
+		_sql += comma + "min_order_duration_seconds"
 	}
 	if h.MaxOrderDurationSeconds != nil {
-		_sql += comma + "max_order_duration"
+		_sql += comma + "max_order_duration_seconds"
 	}
 	_sql += comma + "unit_price"
 	if h.SaleStartAt != nil {
@@ -162,10 +162,10 @@ func (h *createHandler) constructAppPowerRentalSQL() {
 		_sql += fmt.Sprintf("%v'0' as max_user_amount", comma)
 	}
 	if h.MinOrderDurationSeconds != nil {
-		_sql += fmt.Sprintf("%v%v as min_order_duration", comma, *h.MinOrderDurationSeconds)
+		_sql += fmt.Sprintf("%v%v as min_order_duration_seconds", comma, *h.MinOrderDurationSeconds)
 	}
 	if h.MaxOrderDurationSeconds != nil {
-		_sql += fmt.Sprintf("%v%v as max_order_duration", comma, *h.MaxOrderDurationSeconds)
+		_sql += fmt.Sprintf("%v%v as max_order_duration_seconds", comma, *h.MaxOrderDurationSeconds)
 	}
 	_sql += fmt.Sprintf("%v'%v' as unit_price", comma, *h.UnitPrice)
 	if h.SaleStartAt != nil {
