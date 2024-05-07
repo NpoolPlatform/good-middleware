@@ -80,7 +80,7 @@ func (h *updateHandler) updateTopMost(ctx context.Context, tx *ent.Tx) error {
 	}
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
-		return wlog.Errorf("fail create topmost: %v", err)
+		return wlog.Errorf("fail update topmost: %v", err)
 	}
 	return nil
 }
