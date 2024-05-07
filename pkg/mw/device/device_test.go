@@ -65,6 +65,7 @@ func createDeviceType(t *testing.T) {
 		WithShipmentAt(&ret.ShipmentAt, true),
 	)
 	assert.Nil(t, err)
+	assert.NotNil(t, handler)
 
 	err = handler.CreateDeviceType(context.Background())
 	if assert.Nil(t, err) {
