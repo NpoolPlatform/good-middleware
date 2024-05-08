@@ -45,10 +45,7 @@ func (h *updateHandler) constructGoodBaseSQL(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 	h.sqlGoodBase, err = handler.ConstructUpdateSQL()
-	if err != nil {
-		if err == cruder.ErrUpdateNothing {
-			return nil
-		}
+	if err != nil && !wlog.Equal(err, cruder.ErrUpdateNothing) {
 		return wlog.WrapError(err)
 	}
 	return nil
