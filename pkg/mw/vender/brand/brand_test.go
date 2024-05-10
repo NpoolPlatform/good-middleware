@@ -58,6 +58,7 @@ func createBrand(t *testing.T) {
 }
 
 func updateBrand(t *testing.T) {
+	ret.Name = uuid.NewString()
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
