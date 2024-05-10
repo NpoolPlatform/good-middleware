@@ -58,6 +58,7 @@ func createBrand(t *testing.T) {
 }
 
 func updateBrand(t *testing.T) {
+	ret.Name = uuid.NewString()
 	err := UpdateBrand(context.Background(), &npool.BrandReq{
 		ID:    &ret.ID,
 		EntID: &ret.EntID,
