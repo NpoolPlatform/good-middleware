@@ -57,8 +57,8 @@ func (h *updateHandler) updateBrand(ctx context.Context, tx *ent.Tx) error {
 	if err != nil {
 		return wlog.WrapError(err)
 	}
-	if _, err := rc.RowsAffected(); err != nil {
-		return wlog.WrapError(err)
+	if n, err := rc.RowsAffected(); err != nil || n != 1 {
+		return wlog.Errorf("fail update brand: %v", err)
 	}
 	return nil
 }
