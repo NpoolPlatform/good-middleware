@@ -15,6 +15,7 @@ type Req struct {
 	EntID                        *uuid.UUID
 	AppGoodID                    *uuid.UUID
 	ServiceStartAt               *uint32
+	StartMode                    *types.GoodStartMode
 	CancelMode                   *types.CancelMode
 	CancelableBeforeStartSeconds *uint32
 	EnableSetCommission          *bool
@@ -42,6 +43,9 @@ func CreateSet(c *ent.AppPowerRentalCreate, req *Req) *ent.AppPowerRentalCreate 
 	}
 	if req.ServiceStartAt != nil {
 		c.SetServiceStartAt(*req.ServiceStartAt)
+	}
+	if req.StartMode != nil {
+		c.SetStartMode(req.StartMode.String())
 	}
 	if req.CancelMode != nil {
 		c.SetCancelMode(req.CancelMode.String())
@@ -92,6 +96,9 @@ func CreateSet(c *ent.AppPowerRentalCreate, req *Req) *ent.AppPowerRentalCreate 
 func UpdateSet(u *ent.AppPowerRentalUpdateOne, req *Req) *ent.AppPowerRentalUpdateOne {
 	if req.ServiceStartAt != nil {
 		u.SetServiceStartAt(*req.ServiceStartAt)
+	}
+	if req.StartMode != nil {
+		u.SetStartMode(req.StartMode.String())
 	}
 	if req.CancelMode != nil {
 		u.SetCancelMode(req.CancelMode.String())

@@ -13,6 +13,7 @@ import (
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	appgoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/stock"
 	appmininggoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/stock/mining"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -90,6 +91,7 @@ func (h *createHandler) constructAppPowerRentalSQL() {
 	_sql += comma + "app_good_id"
 	comma = ", "
 	_sql += comma + "service_start_at"
+	_sql += comma + "start_mode"
 	if h.CancelMode != nil {
 		_sql += comma + "cancel_mode"
 	}
@@ -137,6 +139,7 @@ func (h *createHandler) constructAppPowerRentalSQL() {
 	_sql += fmt.Sprintf("%v'%v' as app_good_id", comma, *h.AppGoodID)
 	comma = ", "
 	_sql += fmt.Sprintf("%v%v as service_start_at", comma, *h.ServiceStartAt)
+	_sql += fmt.Sprintf("%v'%v' as start_mode", comma, h.StartMode.String())
 	if h.CancelMode != nil {
 		_sql += fmt.Sprintf("%v'%v' as cancel_mode", comma, h.CancelMode.String())
 	}
@@ -293,6 +296,12 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	}
 	if h.MaxOrderAmount.LessThan(*h.MinOrderAmount) {
 		return wlog.Errorf("invalid orderamount")
+	}
+	if h.ServiceStartAt == nil {
+		h.ServiceStartAt = func() *uint32 { u := handler._ent.GoodServiceStartAt(); return &u }()
+	}
+	if h.StartMode == nil {
+		h.StartMode = func() *types.GoodStartMode { u := handler._ent.GoodStartMode(); return &u }()
 	}
 
 	handler.constructAppPowerRentalSQL()

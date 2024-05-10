@@ -1,7 +1,11 @@
 package powerrental
 
 import (
+	"time"
+
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
+
 	"github.com/shopspring/decimal"
 )
 
@@ -10,6 +14,8 @@ type PowerRental interface {
 	MaxOrderAmount() decimal.Decimal
 	MinOrderDurationSeconds() uint32
 	MaxOrderDurationSeconds() uint32
+	GoodServiceStartAt() uint32
+	GoodStartMode() types.GoodStartMode
 }
 
 type powerRental struct {
@@ -37,4 +43,16 @@ func (pr *powerRental) MinOrderDurationSeconds() uint32 {
 
 func (pr *powerRental) MaxOrderDurationSeconds() uint32 {
 	return pr.appPowerRental.MaxOrderDurationSeconds
+}
+
+func (pr *powerRental) GoodServiceStartAt() uint32 {
+	now := uint32(time.Now().Unix())
+	if now < pr.goodBase.ServiceStartAt {
+		return pr.goodBase.ServiceStartAt
+	}
+	return now
+}
+
+func (pr *powerRental) GoodStartMode() types.GoodStartMode {
+	return types.GoodStartMode(types.GoodStartMode_value[pr.goodBase.StartMode])
 }

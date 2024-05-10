@@ -334,6 +334,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			apppowerrental.FieldEntID:                        {Type: field.TypeUUID, Column: apppowerrental.FieldEntID},
 			apppowerrental.FieldAppGoodID:                    {Type: field.TypeUUID, Column: apppowerrental.FieldAppGoodID},
 			apppowerrental.FieldServiceStartAt:               {Type: field.TypeUint32, Column: apppowerrental.FieldServiceStartAt},
+			apppowerrental.FieldStartMode:                    {Type: field.TypeString, Column: apppowerrental.FieldStartMode},
 			apppowerrental.FieldCancelMode:                   {Type: field.TypeString, Column: apppowerrental.FieldCancelMode},
 			apppowerrental.FieldCancelableBeforeStartSeconds: {Type: field.TypeUint32, Column: apppowerrental.FieldCancelableBeforeStartSeconds},
 			apppowerrental.FieldEnableSetCommission:          {Type: field.TypeBool, Column: apppowerrental.FieldEnableSetCommission},
@@ -2190,6 +2191,11 @@ func (f *AppPowerRentalFilter) WhereAppGoodID(p entql.ValueP) {
 // WhereServiceStartAt applies the entql uint32 predicate on the service_start_at field.
 func (f *AppPowerRentalFilter) WhereServiceStartAt(p entql.Uint32P) {
 	f.Where(p.Field(apppowerrental.FieldServiceStartAt))
+}
+
+// WhereStartMode applies the entql string predicate on the start_mode field.
+func (f *AppPowerRentalFilter) WhereStartMode(p entql.StringP) {
+	f.Where(p.Field(apppowerrental.FieldStartMode))
 }
 
 // WhereCancelMode applies the entql string predicate on the cancel_mode field.

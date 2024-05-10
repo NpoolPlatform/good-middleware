@@ -146,6 +146,26 @@ func (apru *AppPowerRentalUpdate) ClearServiceStartAt() *AppPowerRentalUpdate {
 	return apru
 }
 
+// SetStartMode sets the "start_mode" field.
+func (apru *AppPowerRentalUpdate) SetStartMode(s string) *AppPowerRentalUpdate {
+	apru.mutation.SetStartMode(s)
+	return apru
+}
+
+// SetNillableStartMode sets the "start_mode" field if the given value is not nil.
+func (apru *AppPowerRentalUpdate) SetNillableStartMode(s *string) *AppPowerRentalUpdate {
+	if s != nil {
+		apru.SetStartMode(*s)
+	}
+	return apru
+}
+
+// ClearStartMode clears the value of the "start_mode" field.
+func (apru *AppPowerRentalUpdate) ClearStartMode() *AppPowerRentalUpdate {
+	apru.mutation.ClearStartMode()
+	return apru
+}
+
 // SetCancelMode sets the "cancel_mode" field.
 func (apru *AppPowerRentalUpdate) SetCancelMode(s string) *AppPowerRentalUpdate {
 	apru.mutation.SetCancelMode(s)
@@ -641,6 +661,19 @@ func (apru *AppPowerRentalUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: apppowerrental.FieldServiceStartAt,
 		})
 	}
+	if value, ok := apru.mutation.StartMode(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: apppowerrental.FieldStartMode,
+		})
+	}
+	if apru.mutation.StartModeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: apppowerrental.FieldStartMode,
+		})
+	}
 	if value, ok := apru.mutation.CancelMode(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -992,6 +1025,26 @@ func (apruo *AppPowerRentalUpdateOne) AddServiceStartAt(u int32) *AppPowerRental
 // ClearServiceStartAt clears the value of the "service_start_at" field.
 func (apruo *AppPowerRentalUpdateOne) ClearServiceStartAt() *AppPowerRentalUpdateOne {
 	apruo.mutation.ClearServiceStartAt()
+	return apruo
+}
+
+// SetStartMode sets the "start_mode" field.
+func (apruo *AppPowerRentalUpdateOne) SetStartMode(s string) *AppPowerRentalUpdateOne {
+	apruo.mutation.SetStartMode(s)
+	return apruo
+}
+
+// SetNillableStartMode sets the "start_mode" field if the given value is not nil.
+func (apruo *AppPowerRentalUpdateOne) SetNillableStartMode(s *string) *AppPowerRentalUpdateOne {
+	if s != nil {
+		apruo.SetStartMode(*s)
+	}
+	return apruo
+}
+
+// ClearStartMode clears the value of the "start_mode" field.
+func (apruo *AppPowerRentalUpdateOne) ClearStartMode() *AppPowerRentalUpdateOne {
+	apruo.mutation.ClearStartMode()
 	return apruo
 }
 
@@ -1518,6 +1571,19 @@ func (apruo *AppPowerRentalUpdateOne) sqlSave(ctx context.Context) (_node *AppPo
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: apppowerrental.FieldServiceStartAt,
+		})
+	}
+	if value, ok := apruo.mutation.StartMode(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: apppowerrental.FieldStartMode,
+		})
+	}
+	if apruo.mutation.StartModeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: apppowerrental.FieldStartMode,
 		})
 	}
 	if value, ok := apruo.mutation.CancelMode(); ok {

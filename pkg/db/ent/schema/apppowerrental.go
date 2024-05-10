@@ -37,6 +37,10 @@ func (AppPowerRental) Fields() []ent.Field {
 			Optional().
 			Default(0),
 		field.
+			String("start_mode").
+			Optional().
+			Default(types.GoodStartMode_GoodStartModeNextDay.String()),
+		field.
 			String("cancel_mode").
 			Optional().
 			Default(types.CancelMode_Uncancellable.String()),

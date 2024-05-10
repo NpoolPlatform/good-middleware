@@ -12321,6 +12321,7 @@ type AppPowerRentalMutation struct {
 	app_good_id                        *uuid.UUID
 	service_start_at                   *uint32
 	addservice_start_at                *int32
+	start_mode                         *string
 	cancel_mode                        *string
 	cancelable_before_start_seconds    *uint32
 	addcancelable_before_start_seconds *int32
@@ -12771,6 +12772,55 @@ func (m *AppPowerRentalMutation) ResetServiceStartAt() {
 	m.service_start_at = nil
 	m.addservice_start_at = nil
 	delete(m.clearedFields, apppowerrental.FieldServiceStartAt)
+}
+
+// SetStartMode sets the "start_mode" field.
+func (m *AppPowerRentalMutation) SetStartMode(s string) {
+	m.start_mode = &s
+}
+
+// StartMode returns the value of the "start_mode" field in the mutation.
+func (m *AppPowerRentalMutation) StartMode() (r string, exists bool) {
+	v := m.start_mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStartMode returns the old "start_mode" field's value of the AppPowerRental entity.
+// If the AppPowerRental object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppPowerRentalMutation) OldStartMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStartMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStartMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStartMode: %w", err)
+	}
+	return oldValue.StartMode, nil
+}
+
+// ClearStartMode clears the value of the "start_mode" field.
+func (m *AppPowerRentalMutation) ClearStartMode() {
+	m.start_mode = nil
+	m.clearedFields[apppowerrental.FieldStartMode] = struct{}{}
+}
+
+// StartModeCleared returns if the "start_mode" field was cleared in this mutation.
+func (m *AppPowerRentalMutation) StartModeCleared() bool {
+	_, ok := m.clearedFields[apppowerrental.FieldStartMode]
+	return ok
+}
+
+// ResetStartMode resets all changes to the "start_mode" field.
+func (m *AppPowerRentalMutation) ResetStartMode() {
+	m.start_mode = nil
+	delete(m.clearedFields, apppowerrental.FieldStartMode)
 }
 
 // SetCancelMode sets the "cancel_mode" field.
@@ -13583,7 +13633,7 @@ func (m *AppPowerRentalMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppPowerRentalMutation) Fields() []string {
-	fields := make([]string, 0, 20)
+	fields := make([]string, 0, 21)
 	if m.created_at != nil {
 		fields = append(fields, apppowerrental.FieldCreatedAt)
 	}
@@ -13601,6 +13651,9 @@ func (m *AppPowerRentalMutation) Fields() []string {
 	}
 	if m.service_start_at != nil {
 		fields = append(fields, apppowerrental.FieldServiceStartAt)
+	}
+	if m.start_mode != nil {
+		fields = append(fields, apppowerrental.FieldStartMode)
 	}
 	if m.cancel_mode != nil {
 		fields = append(fields, apppowerrental.FieldCancelMode)
@@ -13664,6 +13717,8 @@ func (m *AppPowerRentalMutation) Field(name string) (ent.Value, bool) {
 		return m.AppGoodID()
 	case apppowerrental.FieldServiceStartAt:
 		return m.ServiceStartAt()
+	case apppowerrental.FieldStartMode:
+		return m.StartMode()
 	case apppowerrental.FieldCancelMode:
 		return m.CancelMode()
 	case apppowerrental.FieldCancelableBeforeStartSeconds:
@@ -13713,6 +13768,8 @@ func (m *AppPowerRentalMutation) OldField(ctx context.Context, name string) (ent
 		return m.OldAppGoodID(ctx)
 	case apppowerrental.FieldServiceStartAt:
 		return m.OldServiceStartAt(ctx)
+	case apppowerrental.FieldStartMode:
+		return m.OldStartMode(ctx)
 	case apppowerrental.FieldCancelMode:
 		return m.OldCancelMode(ctx)
 	case apppowerrental.FieldCancelableBeforeStartSeconds:
@@ -13791,6 +13848,13 @@ func (m *AppPowerRentalMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetServiceStartAt(v)
+		return nil
+	case apppowerrental.FieldStartMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStartMode(v)
 		return nil
 	case apppowerrental.FieldCancelMode:
 		v, ok := value.(string)
@@ -14037,6 +14101,9 @@ func (m *AppPowerRentalMutation) ClearedFields() []string {
 	if m.FieldCleared(apppowerrental.FieldServiceStartAt) {
 		fields = append(fields, apppowerrental.FieldServiceStartAt)
 	}
+	if m.FieldCleared(apppowerrental.FieldStartMode) {
+		fields = append(fields, apppowerrental.FieldStartMode)
+	}
 	if m.FieldCleared(apppowerrental.FieldCancelMode) {
 		fields = append(fields, apppowerrental.FieldCancelMode)
 	}
@@ -14098,6 +14165,9 @@ func (m *AppPowerRentalMutation) ClearField(name string) error {
 		return nil
 	case apppowerrental.FieldServiceStartAt:
 		m.ClearServiceStartAt()
+		return nil
+	case apppowerrental.FieldStartMode:
+		m.ClearStartMode()
 		return nil
 	case apppowerrental.FieldCancelMode:
 		m.ClearCancelMode()
@@ -14166,6 +14236,9 @@ func (m *AppPowerRentalMutation) ResetField(name string) error {
 		return nil
 	case apppowerrental.FieldServiceStartAt:
 		m.ResetServiceStartAt()
+		return nil
+	case apppowerrental.FieldStartMode:
+		m.ResetStartMode()
 		return nil
 	case apppowerrental.FieldCancelMode:
 		m.ResetCancelMode()

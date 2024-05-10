@@ -97,8 +97,8 @@ func (h *baseQueryHandler) queryJoinGoodBase(s *sql.Selector) {
 			t1.C(entgoodbase.FieldGoodType),
 			t1.C(entgoodbase.FieldBenefitType),
 			sql.As(t1.C(entgoodbase.FieldName), "good_name"),
-			t1.C(entgoodbase.FieldServiceStartAt),
-			t1.C(entgoodbase.FieldStartMode),
+			sql.As(t1.C(entgoodbase.FieldServiceStartAt), "good_service_start_at"),
+			sql.As(t1.C(entgoodbase.FieldStartMode), "good_start_mode"),
 			t1.C(entgoodbase.FieldTestOnly),
 			t1.C(entgoodbase.FieldBenefitIntervalHours),
 			sql.As(t1.C(entgoodbase.FieldPurchasable), "good_purchasable"),
@@ -210,6 +210,8 @@ func (h *baseQueryHandler) queryJoinAppPowerRental(s *sql.Selector) {
 		t1.C(entapppowerrental.FieldSaleMode),
 		t1.C(entapppowerrental.FieldFixedDuration),
 		t1.C(entapppowerrental.FieldPackageWithRequireds),
+		sql.As(t1.C(entapppowerrental.FieldServiceStartAt), "app_good_service_start_at"),
+		sql.As(t1.C(entapppowerrental.FieldStartMode), "app_good_start_mode"),
 	)
 }
 

@@ -753,60 +753,64 @@ func init() {
 	apppowerrentalDescServiceStartAt := apppowerrentalFields[1].Descriptor()
 	// apppowerrental.DefaultServiceStartAt holds the default value on creation for the service_start_at field.
 	apppowerrental.DefaultServiceStartAt = apppowerrentalDescServiceStartAt.Default.(uint32)
+	// apppowerrentalDescStartMode is the schema descriptor for start_mode field.
+	apppowerrentalDescStartMode := apppowerrentalFields[2].Descriptor()
+	// apppowerrental.DefaultStartMode holds the default value on creation for the start_mode field.
+	apppowerrental.DefaultStartMode = apppowerrentalDescStartMode.Default.(string)
 	// apppowerrentalDescCancelMode is the schema descriptor for cancel_mode field.
-	apppowerrentalDescCancelMode := apppowerrentalFields[2].Descriptor()
+	apppowerrentalDescCancelMode := apppowerrentalFields[3].Descriptor()
 	// apppowerrental.DefaultCancelMode holds the default value on creation for the cancel_mode field.
 	apppowerrental.DefaultCancelMode = apppowerrentalDescCancelMode.Default.(string)
 	// apppowerrentalDescCancelableBeforeStartSeconds is the schema descriptor for cancelable_before_start_seconds field.
-	apppowerrentalDescCancelableBeforeStartSeconds := apppowerrentalFields[3].Descriptor()
+	apppowerrentalDescCancelableBeforeStartSeconds := apppowerrentalFields[4].Descriptor()
 	// apppowerrental.DefaultCancelableBeforeStartSeconds holds the default value on creation for the cancelable_before_start_seconds field.
 	apppowerrental.DefaultCancelableBeforeStartSeconds = apppowerrentalDescCancelableBeforeStartSeconds.Default.(uint32)
 	// apppowerrentalDescEnableSetCommission is the schema descriptor for enable_set_commission field.
-	apppowerrentalDescEnableSetCommission := apppowerrentalFields[4].Descriptor()
+	apppowerrentalDescEnableSetCommission := apppowerrentalFields[5].Descriptor()
 	// apppowerrental.DefaultEnableSetCommission holds the default value on creation for the enable_set_commission field.
 	apppowerrental.DefaultEnableSetCommission = apppowerrentalDescEnableSetCommission.Default.(bool)
 	// apppowerrentalDescMinOrderAmount is the schema descriptor for min_order_amount field.
-	apppowerrentalDescMinOrderAmount := apppowerrentalFields[5].Descriptor()
+	apppowerrentalDescMinOrderAmount := apppowerrentalFields[6].Descriptor()
 	// apppowerrental.DefaultMinOrderAmount holds the default value on creation for the min_order_amount field.
 	apppowerrental.DefaultMinOrderAmount = apppowerrentalDescMinOrderAmount.Default.(decimal.Decimal)
 	// apppowerrentalDescMaxOrderAmount is the schema descriptor for max_order_amount field.
-	apppowerrentalDescMaxOrderAmount := apppowerrentalFields[6].Descriptor()
+	apppowerrentalDescMaxOrderAmount := apppowerrentalFields[7].Descriptor()
 	// apppowerrental.DefaultMaxOrderAmount holds the default value on creation for the max_order_amount field.
 	apppowerrental.DefaultMaxOrderAmount = apppowerrentalDescMaxOrderAmount.Default.(decimal.Decimal)
 	// apppowerrentalDescMaxUserAmount is the schema descriptor for max_user_amount field.
-	apppowerrentalDescMaxUserAmount := apppowerrentalFields[7].Descriptor()
+	apppowerrentalDescMaxUserAmount := apppowerrentalFields[8].Descriptor()
 	// apppowerrental.DefaultMaxUserAmount holds the default value on creation for the max_user_amount field.
 	apppowerrental.DefaultMaxUserAmount = apppowerrentalDescMaxUserAmount.Default.(decimal.Decimal)
 	// apppowerrentalDescMinOrderDurationSeconds is the schema descriptor for min_order_duration_seconds field.
-	apppowerrentalDescMinOrderDurationSeconds := apppowerrentalFields[8].Descriptor()
+	apppowerrentalDescMinOrderDurationSeconds := apppowerrentalFields[9].Descriptor()
 	// apppowerrental.DefaultMinOrderDurationSeconds holds the default value on creation for the min_order_duration_seconds field.
 	apppowerrental.DefaultMinOrderDurationSeconds = apppowerrentalDescMinOrderDurationSeconds.Default.(uint32)
 	// apppowerrentalDescMaxOrderDurationSeconds is the schema descriptor for max_order_duration_seconds field.
-	apppowerrentalDescMaxOrderDurationSeconds := apppowerrentalFields[9].Descriptor()
+	apppowerrentalDescMaxOrderDurationSeconds := apppowerrentalFields[10].Descriptor()
 	// apppowerrental.DefaultMaxOrderDurationSeconds holds the default value on creation for the max_order_duration_seconds field.
 	apppowerrental.DefaultMaxOrderDurationSeconds = apppowerrentalDescMaxOrderDurationSeconds.Default.(uint32)
 	// apppowerrentalDescUnitPrice is the schema descriptor for unit_price field.
-	apppowerrentalDescUnitPrice := apppowerrentalFields[10].Descriptor()
+	apppowerrentalDescUnitPrice := apppowerrentalFields[11].Descriptor()
 	// apppowerrental.DefaultUnitPrice holds the default value on creation for the unit_price field.
 	apppowerrental.DefaultUnitPrice = apppowerrentalDescUnitPrice.Default.(decimal.Decimal)
 	// apppowerrentalDescSaleStartAt is the schema descriptor for sale_start_at field.
-	apppowerrentalDescSaleStartAt := apppowerrentalFields[11].Descriptor()
+	apppowerrentalDescSaleStartAt := apppowerrentalFields[12].Descriptor()
 	// apppowerrental.DefaultSaleStartAt holds the default value on creation for the sale_start_at field.
 	apppowerrental.DefaultSaleStartAt = apppowerrentalDescSaleStartAt.Default.(uint32)
 	// apppowerrentalDescSaleEndAt is the schema descriptor for sale_end_at field.
-	apppowerrentalDescSaleEndAt := apppowerrentalFields[12].Descriptor()
+	apppowerrentalDescSaleEndAt := apppowerrentalFields[13].Descriptor()
 	// apppowerrental.DefaultSaleEndAt holds the default value on creation for the sale_end_at field.
 	apppowerrental.DefaultSaleEndAt = apppowerrentalDescSaleEndAt.Default.(uint32)
 	// apppowerrentalDescSaleMode is the schema descriptor for sale_mode field.
-	apppowerrentalDescSaleMode := apppowerrentalFields[13].Descriptor()
+	apppowerrentalDescSaleMode := apppowerrentalFields[14].Descriptor()
 	// apppowerrental.DefaultSaleMode holds the default value on creation for the sale_mode field.
 	apppowerrental.DefaultSaleMode = apppowerrentalDescSaleMode.Default.(string)
 	// apppowerrentalDescFixedDuration is the schema descriptor for fixed_duration field.
-	apppowerrentalDescFixedDuration := apppowerrentalFields[14].Descriptor()
+	apppowerrentalDescFixedDuration := apppowerrentalFields[15].Descriptor()
 	// apppowerrental.DefaultFixedDuration holds the default value on creation for the fixed_duration field.
 	apppowerrental.DefaultFixedDuration = apppowerrentalDescFixedDuration.Default.(bool)
 	// apppowerrentalDescPackageWithRequireds is the schema descriptor for package_with_requireds field.
-	apppowerrentalDescPackageWithRequireds := apppowerrentalFields[15].Descriptor()
+	apppowerrentalDescPackageWithRequireds := apppowerrentalFields[16].Descriptor()
 	// apppowerrental.DefaultPackageWithRequireds holds the default value on creation for the package_with_requireds field.
 	apppowerrental.DefaultPackageWithRequireds = apppowerrentalDescPackageWithRequireds.Default.(bool)
 	appsimulatepowerrentalMixin := schema.AppSimulatePowerRental{}.Mixin()

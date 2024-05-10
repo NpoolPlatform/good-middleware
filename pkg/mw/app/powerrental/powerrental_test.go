@@ -69,8 +69,8 @@ var ret = npool.PowerRental{
 	GoodType:                     types.GoodType_PowerRental,
 	BenefitType:                  types.BenefitType_BenefitTypePlatform,
 	GoodName:                     uuid.NewString(),
-	ServiceStartAt:               uint32(time.Now().Unix()),
-	StartMode:                    types.GoodStartMode_GoodStartModeInstantly,
+	GoodServiceStartAt:           uint32(time.Now().Unix()),
+	GoodStartMode:                types.GoodStartMode_GoodStartModeInstantly,
 	TestOnly:                     true,
 	BenefitIntervalHours:         20,
 	GoodPurchasable:              true,
@@ -94,6 +94,8 @@ var ret = npool.PowerRental{
 	SaleMode:                     types.GoodSaleMode_GoodSaleModeMainnetSpot,
 	FixedDuration:                false,
 	PackageWithRequireds:         false,
+	AppGoodServiceStartAt:        uint32(time.Now().Unix()),
+	AppGoodStartMode:             types.GoodStartMode_GoodStartModeInstantly,
 	TechniqueFeeRatio:            decimal.NewFromInt(0).String(),
 
 	GoodStockID:      uuid.NewString(),
@@ -169,7 +171,8 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.BenefitTypeStr = ret.BenefitType.String()
 	ret.DurationDisplayTypeStr = ret.DurationDisplayType.String()
-	ret.StartModeStr = ret.StartMode.String()
+	ret.GoodStartModeStr = ret.GoodStartMode.String()
+	ret.AppGoodStartModeStr = ret.AppGoodStartMode.String()
 	ret.CancelModeStr = ret.CancelMode.String()
 	ret.SaleModeStr = ret.SaleMode.String()
 	ret.StockModeStr = ret.StockMode.String()
@@ -260,8 +263,8 @@ func setup(t *testing.T) func(*testing.T) {
 		powerrental1.WithGoodType(&ret.GoodType, true),
 		powerrental1.WithBenefitType(&ret.BenefitType, true),
 		powerrental1.WithName(&ret.GoodName, true),
-		powerrental1.WithServiceStartAt(&ret.ServiceStartAt, true),
-		powerrental1.WithStartMode(&ret.StartMode, true),
+		powerrental1.WithServiceStartAt(&ret.GoodServiceStartAt, true),
+		powerrental1.WithStartMode(&ret.GoodStartMode, true),
 		powerrental1.WithTestOnly(&ret.TestOnly, true),
 		powerrental1.WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
 		powerrental1.WithPurchasable(&ret.GoodPurchasable, true),
@@ -321,7 +324,8 @@ func createPowerRental(t *testing.T) {
 		WithVisible(&ret.Visible, true),
 		WithDisplayIndex(&ret.DisplayIndex, true),
 		WithBanner(&ret.Banner, true),
-		WithServiceStartAt(&ret.ServiceStartAt, true),
+		WithServiceStartAt(&ret.AppGoodServiceStartAt, true),
+		WithStartMode(&ret.AppGoodStartMode, true),
 		WithCancelMode(&ret.CancelMode, true),
 		WithCancelableBeforeStartSeconds(&ret.CancelableBeforeStartSeconds, true),
 		WithEnableSetCommission(&ret.EnableSetCommission, true),
@@ -373,7 +377,8 @@ func updatePowerRental(t *testing.T) {
 		WithVisible(&ret.Visible, true),
 		WithDisplayIndex(&ret.DisplayIndex, true),
 		WithBanner(&ret.Banner, true),
-		WithServiceStartAt(&ret.ServiceStartAt, true),
+		WithServiceStartAt(&ret.AppGoodServiceStartAt, true),
+		WithStartMode(&ret.AppGoodStartMode, true),
 		WithCancelMode(&ret.CancelMode, true),
 		WithCancelableBeforeStartSeconds(&ret.CancelableBeforeStartSeconds, true),
 		WithEnableSetCommission(&ret.EnableSetCommission, true),

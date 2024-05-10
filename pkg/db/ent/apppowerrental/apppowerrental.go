@@ -25,6 +25,8 @@ const (
 	FieldAppGoodID = "app_good_id"
 	// FieldServiceStartAt holds the string denoting the service_start_at field in the database.
 	FieldServiceStartAt = "service_start_at"
+	// FieldStartMode holds the string denoting the start_mode field in the database.
+	FieldStartMode = "start_mode"
 	// FieldCancelMode holds the string denoting the cancel_mode field in the database.
 	FieldCancelMode = "cancel_mode"
 	// FieldCancelableBeforeStartSeconds holds the string denoting the cancelable_before_start_seconds field in the database.
@@ -66,6 +68,7 @@ var Columns = []string{
 	FieldEntID,
 	FieldAppGoodID,
 	FieldServiceStartAt,
+	FieldStartMode,
 	FieldCancelMode,
 	FieldCancelableBeforeStartSeconds,
 	FieldEnableSetCommission,
@@ -115,6 +118,8 @@ var (
 	DefaultAppGoodID func() uuid.UUID
 	// DefaultServiceStartAt holds the default value on creation for the "service_start_at" field.
 	DefaultServiceStartAt uint32
+	// DefaultStartMode holds the default value on creation for the "start_mode" field.
+	DefaultStartMode string
 	// DefaultCancelMode holds the default value on creation for the "cancel_mode" field.
 	DefaultCancelMode string
 	// DefaultCancelableBeforeStartSeconds holds the default value on creation for the "cancelable_before_start_seconds" field.

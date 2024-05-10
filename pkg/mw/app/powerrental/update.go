@@ -42,7 +42,6 @@ func (h *updateHandler) constructAppGoodBaseSQL(ctx context.Context) error {
 	}
 	h.sqlAppGoodBase, err = handler.ConstructUpdateSQL()
 	if err != nil && !wlog.Equal(err, cruder.ErrUpdateNothing) {
-		fmt.Printf("Error %v | %v\n", err, cruder.ErrUpdateNothing)
 		return wlog.WrapError(err)
 	}
 	return nil
@@ -55,6 +54,10 @@ func (h *updateHandler) constructAppPowerRentalSQL() error {
 	_sql := "update app_power_rentals "
 	if h.ServiceStartAt != nil {
 		_sql += fmt.Sprintf("%vservice_start_at = %v,", set, *h.ServiceStartAt)
+		set = ""
+	}
+	if h.StartMode != nil {
+		_sql += fmt.Sprintf("%vstart_mode = '%v',", set, h.StartMode.String())
 		set = ""
 	}
 	if h.CancelMode != nil {

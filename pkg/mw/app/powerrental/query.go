@@ -363,7 +363,8 @@ func (h *queryHandler) formalize() {
 		info.SaleMode = types.GoodSaleMode(types.GoodSaleMode_value[info.SaleModeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.DurationDisplayType = types.GoodDurationType(types.GoodDurationType_value[info.DurationDisplayTypeStr])
-		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
+		info.GoodStartMode = types.GoodStartMode(types.GoodStartMode_value[info.GoodStartModeStr])
+		info.AppGoodStartMode = types.GoodStartMode(types.GoodStartMode_value[info.AppGoodStartModeStr])
 		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
 		info.MiningGoodStocks = miningGoodStocks[info.GoodStockID]
 		info.AppMiningGoodStocks = appMiningGoodStocks[info.AppGoodStockID]

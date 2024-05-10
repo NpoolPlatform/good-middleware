@@ -362,6 +362,7 @@ var (
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
 		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "service_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "start_mode", Type: field.TypeString, Nullable: true, Default: "GoodStartModeNextDay"},
 		{Name: "cancel_mode", Type: field.TypeString, Nullable: true, Default: "Uncancellable"},
 		{Name: "cancelable_before_start_seconds", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "enable_set_commission", Type: field.TypeBool, Nullable: true, Default: false},

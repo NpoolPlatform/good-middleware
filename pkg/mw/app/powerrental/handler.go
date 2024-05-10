@@ -228,6 +228,28 @@ func WithServiceStartAt(u *uint32, must bool) func(context.Context, *Handler) er
 	}
 }
 
+func WithStartMode(e *types.GoodStartMode, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return wlog.Errorf("invalid startmode")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodStartMode_GoodStartModeTBD:
+		case types.GoodStartMode_GoodStartModeConfirmed:
+		case types.GoodStartMode_GoodStartModeNextDay:
+		case types.GoodStartMode_GoodStartModeInstantly:
+		case types.GoodStartMode_GoodStartModePreset:
+		default:
+			return wlog.Errorf("invalid startmode")
+		}
+		h.StartMode = e
+		return nil
+	}
+}
+
 func WithCancelMode(e *types.CancelMode, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {

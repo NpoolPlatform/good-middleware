@@ -29,6 +29,8 @@ type AppPowerRental struct {
 	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// ServiceStartAt holds the value of the "service_start_at" field.
 	ServiceStartAt uint32 `json:"service_start_at,omitempty"`
+	// StartMode holds the value of the "start_mode" field.
+	StartMode string `json:"start_mode,omitempty"`
 	// CancelMode holds the value of the "cancel_mode" field.
 	CancelMode string `json:"cancel_mode,omitempty"`
 	// CancelableBeforeStartSeconds holds the value of the "cancelable_before_start_seconds" field.
@@ -70,7 +72,7 @@ func (*AppPowerRental) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullBool)
 		case apppowerrental.FieldID, apppowerrental.FieldCreatedAt, apppowerrental.FieldUpdatedAt, apppowerrental.FieldDeletedAt, apppowerrental.FieldServiceStartAt, apppowerrental.FieldCancelableBeforeStartSeconds, apppowerrental.FieldMinOrderDurationSeconds, apppowerrental.FieldMaxOrderDurationSeconds, apppowerrental.FieldSaleStartAt, apppowerrental.FieldSaleEndAt:
 			values[i] = new(sql.NullInt64)
-		case apppowerrental.FieldCancelMode, apppowerrental.FieldSaleMode:
+		case apppowerrental.FieldStartMode, apppowerrental.FieldCancelMode, apppowerrental.FieldSaleMode:
 			values[i] = new(sql.NullString)
 		case apppowerrental.FieldEntID, apppowerrental.FieldAppGoodID:
 			values[i] = new(uuid.UUID)
@@ -130,6 +132,12 @@ func (apr *AppPowerRental) assignValues(columns []string, values []interface{}) 
 				return fmt.Errorf("unexpected type %T for field service_start_at", values[i])
 			} else if value.Valid {
 				apr.ServiceStartAt = uint32(value.Int64)
+			}
+		case apppowerrental.FieldStartMode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field start_mode", values[i])
+			} else if value.Valid {
+				apr.StartMode = value.String
 			}
 		case apppowerrental.FieldCancelMode:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -260,6 +268,9 @@ func (apr *AppPowerRental) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("service_start_at=")
 	builder.WriteString(fmt.Sprintf("%v", apr.ServiceStartAt))
+	builder.WriteString(", ")
+	builder.WriteString("start_mode=")
+	builder.WriteString(apr.StartMode)
 	builder.WriteString(", ")
 	builder.WriteString("cancel_mode=")
 	builder.WriteString(apr.CancelMode)

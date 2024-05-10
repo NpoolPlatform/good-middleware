@@ -107,6 +107,20 @@ func (aprc *AppPowerRentalCreate) SetNillableServiceStartAt(u *uint32) *AppPower
 	return aprc
 }
 
+// SetStartMode sets the "start_mode" field.
+func (aprc *AppPowerRentalCreate) SetStartMode(s string) *AppPowerRentalCreate {
+	aprc.mutation.SetStartMode(s)
+	return aprc
+}
+
+// SetNillableStartMode sets the "start_mode" field if the given value is not nil.
+func (aprc *AppPowerRentalCreate) SetNillableStartMode(s *string) *AppPowerRentalCreate {
+	if s != nil {
+		aprc.SetStartMode(*s)
+	}
+	return aprc
+}
+
 // SetCancelMode sets the "cancel_mode" field.
 func (aprc *AppPowerRentalCreate) SetCancelMode(s string) *AppPowerRentalCreate {
 	aprc.mutation.SetCancelMode(s)
@@ -427,6 +441,10 @@ func (aprc *AppPowerRentalCreate) defaults() error {
 		v := apppowerrental.DefaultServiceStartAt
 		aprc.mutation.SetServiceStartAt(v)
 	}
+	if _, ok := aprc.mutation.StartMode(); !ok {
+		v := apppowerrental.DefaultStartMode
+		aprc.mutation.SetStartMode(v)
+	}
 	if _, ok := aprc.mutation.CancelMode(); !ok {
 		v := apppowerrental.DefaultCancelMode
 		aprc.mutation.SetCancelMode(v)
@@ -581,6 +599,14 @@ func (aprc *AppPowerRentalCreate) createSpec() (*AppPowerRental, *sqlgraph.Creat
 			Column: apppowerrental.FieldServiceStartAt,
 		})
 		_node.ServiceStartAt = value
+	}
+	if value, ok := aprc.mutation.StartMode(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: apppowerrental.FieldStartMode,
+		})
+		_node.StartMode = value
 	}
 	if value, ok := aprc.mutation.CancelMode(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -853,6 +879,24 @@ func (u *AppPowerRentalUpsert) AddServiceStartAt(v uint32) *AppPowerRentalUpsert
 // ClearServiceStartAt clears the value of the "service_start_at" field.
 func (u *AppPowerRentalUpsert) ClearServiceStartAt() *AppPowerRentalUpsert {
 	u.SetNull(apppowerrental.FieldServiceStartAt)
+	return u
+}
+
+// SetStartMode sets the "start_mode" field.
+func (u *AppPowerRentalUpsert) SetStartMode(v string) *AppPowerRentalUpsert {
+	u.Set(apppowerrental.FieldStartMode, v)
+	return u
+}
+
+// UpdateStartMode sets the "start_mode" field to the value that was provided on create.
+func (u *AppPowerRentalUpsert) UpdateStartMode() *AppPowerRentalUpsert {
+	u.SetExcluded(apppowerrental.FieldStartMode)
+	return u
+}
+
+// ClearStartMode clears the value of the "start_mode" field.
+func (u *AppPowerRentalUpsert) ClearStartMode() *AppPowerRentalUpsert {
+	u.SetNull(apppowerrental.FieldStartMode)
 	return u
 }
 
@@ -1311,6 +1355,27 @@ func (u *AppPowerRentalUpsertOne) UpdateServiceStartAt() *AppPowerRentalUpsertOn
 func (u *AppPowerRentalUpsertOne) ClearServiceStartAt() *AppPowerRentalUpsertOne {
 	return u.Update(func(s *AppPowerRentalUpsert) {
 		s.ClearServiceStartAt()
+	})
+}
+
+// SetStartMode sets the "start_mode" field.
+func (u *AppPowerRentalUpsertOne) SetStartMode(v string) *AppPowerRentalUpsertOne {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.SetStartMode(v)
+	})
+}
+
+// UpdateStartMode sets the "start_mode" field to the value that was provided on create.
+func (u *AppPowerRentalUpsertOne) UpdateStartMode() *AppPowerRentalUpsertOne {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.UpdateStartMode()
+	})
+}
+
+// ClearStartMode clears the value of the "start_mode" field.
+func (u *AppPowerRentalUpsertOne) ClearStartMode() *AppPowerRentalUpsertOne {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.ClearStartMode()
 	})
 }
 
@@ -1981,6 +2046,27 @@ func (u *AppPowerRentalUpsertBulk) UpdateServiceStartAt() *AppPowerRentalUpsertB
 func (u *AppPowerRentalUpsertBulk) ClearServiceStartAt() *AppPowerRentalUpsertBulk {
 	return u.Update(func(s *AppPowerRentalUpsert) {
 		s.ClearServiceStartAt()
+	})
+}
+
+// SetStartMode sets the "start_mode" field.
+func (u *AppPowerRentalUpsertBulk) SetStartMode(v string) *AppPowerRentalUpsertBulk {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.SetStartMode(v)
+	})
+}
+
+// UpdateStartMode sets the "start_mode" field to the value that was provided on create.
+func (u *AppPowerRentalUpsertBulk) UpdateStartMode() *AppPowerRentalUpsertBulk {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.UpdateStartMode()
+	})
+}
+
+// ClearStartMode clears the value of the "start_mode" field.
+func (u *AppPowerRentalUpsertBulk) ClearStartMode() *AppPowerRentalUpsertBulk {
+	return u.Update(func(s *AppPowerRentalUpsert) {
+		s.ClearStartMode()
 	})
 }
 
