@@ -75,8 +75,8 @@ var ret = &npool.PowerRental{
 	GoodType:             types.GoodType_PowerRental,
 	BenefitType:          types.BenefitType_BenefitTypePlatform,
 	GoodName:             uuid.NewString(),
-	ServiceStartAt:       uint32(time.Now().Unix()),
-	StartMode:            types.GoodStartMode_GoodStartModeInstantly,
+	GoodServiceStartAt:   uint32(time.Now().Unix()),
+	GoodStartMode:        types.GoodStartMode_GoodStartModeInstantly,
 	TestOnly:             true,
 	BenefitIntervalHours: 24,
 	GoodPurchasable:      true,
@@ -103,6 +103,8 @@ var ret = &npool.PowerRental{
 	SaleEndAt:                    uint32(time.Now().Unix() + 10000),
 	SaleMode:                     types.GoodSaleMode_GoodSaleModeMainnetSpot,
 	FixedDuration:                true,
+	AppGoodServiceStartAt:        uint32(time.Now().Unix()),
+	AppGoodStartMode:             types.GoodStartMode_GoodStartModeInstantly,
 	PackageWithRequireds:         true,
 
 	TechniqueFeeRatio: decimal.NewFromInt(0).String(),
@@ -131,7 +133,8 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.BenefitTypeStr = ret.BenefitType.String()
 	ret.StockModeStr = ret.StockMode.String()
-	ret.StartModeStr = ret.StartMode.String()
+	ret.GoodStartModeStr = ret.GoodStartMode.String()
+	ret.AppGoodStartModeStr = ret.AppGoodStartMode.String()
 	ret.CancelModeStr = ret.CancelMode.String()
 	ret.SaleModeStr = ret.SaleMode.String()
 
@@ -181,8 +184,8 @@ func setup(t *testing.T) func(*testing.T) {
 		GoodType:             &ret.GoodType,
 		BenefitType:          &ret.BenefitType,
 		Name:                 &ret.GoodName,
-		ServiceStartAt:       &ret.ServiceStartAt,
-		StartMode:            &ret.StartMode,
+		ServiceStartAt:       &ret.GoodServiceStartAt,
+		StartMode:            &ret.GoodStartMode,
 		TestOnly:             &ret.TestOnly,
 		BenefitIntervalHours: &ret.BenefitIntervalHours,
 		StockMode:            &ret.StockMode,
@@ -212,7 +215,8 @@ func createPowerRental(t *testing.T) {
 		Name:                         &ret.AppGoodName,
 		UnitPrice:                    &ret.UnitPrice,
 		SaleMode:                     &ret.SaleMode,
-		ServiceStartAt:               &ret.ServiceStartAt,
+		ServiceStartAt:               &ret.AppGoodServiceStartAt,
+		StartMode:                    &ret.AppGoodStartMode,
 		AppGoodStockID:               &ret.AppGoodStockID,
 		MinOrderAmount:               &ret.MinOrderAmount,
 		MaxOrderAmount:               &ret.MaxOrderAmount,
