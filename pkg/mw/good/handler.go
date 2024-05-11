@@ -66,16 +66,6 @@ func (h *Handler) withGoodConds(conds *npool.Conds) error {
 			Val: id,
 		}
 	}
-	if conds.EntID != nil {
-		id, err := uuid.Parse(conds.GetEntID().GetValue())
-		if err != nil {
-			return wlog.WrapError(err)
-		}
-		h.GoodConds.EntID = &cruder.Cond{
-			Op:  conds.GetEntID().GetOp(),
-			Val: id,
-		}
-	}
 	if conds.EntIDs != nil {
 		ids := []uuid.UUID{}
 		for _, id := range conds.GetEntIDs().GetValue() {

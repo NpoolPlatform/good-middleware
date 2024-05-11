@@ -68,6 +68,7 @@ func UpdateSet(u *ent.GoodMalfunctionUpdateOne, req *Req) *ent.GoodMalfunctionUp
 }
 
 type Conds struct {
+	ID     *cruder.Cond
 	EntID  *cruder.Cond
 	EntIDs *cruder.Cond
 	GoodID *cruder.Cond
@@ -77,6 +78,18 @@ func SetQueryConds(q *ent.GoodMalfunctionQuery, conds *Conds) (*ent.GoodMalfunct
 	q.Where(entgoodmalfunction.DeletedAt(0))
 	if conds == nil {
 		return q, nil
+	}
+	if conds.ID != nil {
+		id, ok := conds.ID.Val.(uint32)
+		if !ok {
+			return nil, wlog.Errorf("invalid id")
+		}
+		switch conds.ID.Op {
+		case cruder.EQ:
+			q.Where(entgoodmalfunction.ID(id))
+		default:
+			return nil, wlog.Errorf("invalid goodmalfunction field")
+		}
 	}
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
