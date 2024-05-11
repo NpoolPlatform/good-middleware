@@ -774,6 +774,30 @@ func (f GoodCoinMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutati
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.GoodCoinMutation", m)
 }
 
+// The GoodMalfunctionQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type GoodMalfunctionQueryRuleFunc func(context.Context, *ent.GoodMalfunctionQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f GoodMalfunctionQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.GoodMalfunctionQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.GoodMalfunctionQuery", q)
+}
+
+// The GoodMalfunctionMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type GoodMalfunctionMutationRuleFunc func(context.Context, *ent.GoodMalfunctionMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f GoodMalfunctionMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.GoodMalfunctionMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.GoodMalfunctionMutation", m)
+}
+
 // The GoodRewardQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type GoodRewardQueryRuleFunc func(context.Context, *ent.GoodRewardQuery) error
@@ -1293,6 +1317,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.GoodCoinQuery:
 		return q.Filter(), nil
+	case *ent.GoodMalfunctionQuery:
+		return q.Filter(), nil
 	case *ent.GoodRewardQuery:
 		return q.Filter(), nil
 	case *ent.GoodRewardHistoryQuery:
@@ -1387,6 +1413,8 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	case *ent.GoodBaseMutation:
 		return m.Filter(), nil
 	case *ent.GoodCoinMutation:
+		return m.Filter(), nil
+	case *ent.GoodMalfunctionMutation:
 		return m.Filter(), nil
 	case *ent.GoodRewardMutation:
 		return m.Filter(), nil

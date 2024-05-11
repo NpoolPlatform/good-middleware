@@ -31,6 +31,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodmalfunction"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
@@ -1679,6 +1680,64 @@ func init() {
 	goodcoinDescIndex := goodcoinFields[3].Descriptor()
 	// goodcoin.DefaultIndex holds the default value on creation for the index field.
 	goodcoin.DefaultIndex = goodcoinDescIndex.Default.(int32)
+	goodmalfunctionMixin := schema.GoodMalfunction{}.Mixin()
+	goodmalfunction.Policy = privacy.NewPolicies(goodmalfunctionMixin[0], schema.GoodMalfunction{})
+	goodmalfunction.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := goodmalfunction.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	goodmalfunctionMixinFields0 := goodmalfunctionMixin[0].Fields()
+	_ = goodmalfunctionMixinFields0
+	goodmalfunctionMixinFields1 := goodmalfunctionMixin[1].Fields()
+	_ = goodmalfunctionMixinFields1
+	goodmalfunctionFields := schema.GoodMalfunction{}.Fields()
+	_ = goodmalfunctionFields
+	// goodmalfunctionDescCreatedAt is the schema descriptor for created_at field.
+	goodmalfunctionDescCreatedAt := goodmalfunctionMixinFields0[0].Descriptor()
+	// goodmalfunction.DefaultCreatedAt holds the default value on creation for the created_at field.
+	goodmalfunction.DefaultCreatedAt = goodmalfunctionDescCreatedAt.Default.(func() uint32)
+	// goodmalfunctionDescUpdatedAt is the schema descriptor for updated_at field.
+	goodmalfunctionDescUpdatedAt := goodmalfunctionMixinFields0[1].Descriptor()
+	// goodmalfunction.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	goodmalfunction.DefaultUpdatedAt = goodmalfunctionDescUpdatedAt.Default.(func() uint32)
+	// goodmalfunction.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	goodmalfunction.UpdateDefaultUpdatedAt = goodmalfunctionDescUpdatedAt.UpdateDefault.(func() uint32)
+	// goodmalfunctionDescDeletedAt is the schema descriptor for deleted_at field.
+	goodmalfunctionDescDeletedAt := goodmalfunctionMixinFields0[2].Descriptor()
+	// goodmalfunction.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	goodmalfunction.DefaultDeletedAt = goodmalfunctionDescDeletedAt.Default.(func() uint32)
+	// goodmalfunctionDescEntID is the schema descriptor for ent_id field.
+	goodmalfunctionDescEntID := goodmalfunctionMixinFields1[1].Descriptor()
+	// goodmalfunction.DefaultEntID holds the default value on creation for the ent_id field.
+	goodmalfunction.DefaultEntID = goodmalfunctionDescEntID.Default.(func() uuid.UUID)
+	// goodmalfunctionDescGoodID is the schema descriptor for good_id field.
+	goodmalfunctionDescGoodID := goodmalfunctionFields[0].Descriptor()
+	// goodmalfunction.DefaultGoodID holds the default value on creation for the good_id field.
+	goodmalfunction.DefaultGoodID = goodmalfunctionDescGoodID.Default.(func() uuid.UUID)
+	// goodmalfunctionDescTitle is the schema descriptor for title field.
+	goodmalfunctionDescTitle := goodmalfunctionFields[1].Descriptor()
+	// goodmalfunction.DefaultTitle holds the default value on creation for the title field.
+	goodmalfunction.DefaultTitle = goodmalfunctionDescTitle.Default.(string)
+	// goodmalfunctionDescMessage is the schema descriptor for message field.
+	goodmalfunctionDescMessage := goodmalfunctionFields[2].Descriptor()
+	// goodmalfunction.DefaultMessage holds the default value on creation for the message field.
+	goodmalfunction.DefaultMessage = goodmalfunctionDescMessage.Default.(string)
+	// goodmalfunctionDescStartAt is the schema descriptor for start_at field.
+	goodmalfunctionDescStartAt := goodmalfunctionFields[3].Descriptor()
+	// goodmalfunction.DefaultStartAt holds the default value on creation for the start_at field.
+	goodmalfunction.DefaultStartAt = goodmalfunctionDescStartAt.Default.(uint32)
+	// goodmalfunctionDescDurationSeconds is the schema descriptor for duration_seconds field.
+	goodmalfunctionDescDurationSeconds := goodmalfunctionFields[4].Descriptor()
+	// goodmalfunction.DefaultDurationSeconds holds the default value on creation for the duration_seconds field.
+	goodmalfunction.DefaultDurationSeconds = goodmalfunctionDescDurationSeconds.Default.(uint32)
+	// goodmalfunctionDescCompensateSeconds is the schema descriptor for compensate_seconds field.
+	goodmalfunctionDescCompensateSeconds := goodmalfunctionFields[5].Descriptor()
+	// goodmalfunction.DefaultCompensateSeconds holds the default value on creation for the compensate_seconds field.
+	goodmalfunction.DefaultCompensateSeconds = goodmalfunctionDescCompensateSeconds.Default.(uint32)
 	goodrewardMixin := schema.GoodReward{}.Mixin()
 	goodreward.Policy = privacy.NewPolicies(goodrewardMixin[0], schema.GoodReward{})
 	goodreward.Hooks[0] = func(next ent.Mutator) ent.Mutator {

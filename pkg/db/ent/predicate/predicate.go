@@ -84,6 +84,9 @@ type GoodBase func(*sql.Selector)
 // GoodCoin is the predicate function for goodcoin builders.
 type GoodCoin func(*sql.Selector)
 
+// GoodMalfunction is the predicate function for goodmalfunction builders.
+type GoodMalfunction func(*sql.Selector)
+
 // GoodReward is the predicate function for goodreward builders.
 type GoodReward func(*sql.Selector)
 

@@ -66,6 +66,8 @@ type Tx struct {
 	GoodBase *GoodBaseClient
 	// GoodCoin is the client for interacting with the GoodCoin builders.
 	GoodCoin *GoodCoinClient
+	// GoodMalfunction is the client for interacting with the GoodMalfunction builders.
+	GoodMalfunction *GoodMalfunctionClient
 	// GoodReward is the client for interacting with the GoodReward builders.
 	GoodReward *GoodRewardClient
 	// GoodRewardHistory is the client for interacting with the GoodRewardHistory builders.
@@ -263,6 +265,7 @@ func (tx *Tx) init() {
 	tx.Good = NewGoodClient(tx.config)
 	tx.GoodBase = NewGoodBaseClient(tx.config)
 	tx.GoodCoin = NewGoodCoinClient(tx.config)
+	tx.GoodMalfunction = NewGoodMalfunctionClient(tx.config)
 	tx.GoodReward = NewGoodRewardClient(tx.config)
 	tx.GoodRewardHistory = NewGoodRewardHistoryClient(tx.config)
 	tx.Like = NewLikeClient(tx.config)

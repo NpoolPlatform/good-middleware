@@ -811,6 +811,33 @@ var (
 			},
 		},
 	}
+	// GoodMalfunctionsColumns holds the columns for the "good_malfunctions" table.
+	GoodMalfunctionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "title", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "message", Type: field.TypeString, Nullable: true, Size: 2147483647, Default: ""},
+		{Name: "start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "duration_seconds", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "compensate_seconds", Type: field.TypeUint32, Nullable: true, Default: 0},
+	}
+	// GoodMalfunctionsTable holds the schema information for the "good_malfunctions" table.
+	GoodMalfunctionsTable = &schema.Table{
+		Name:       "good_malfunctions",
+		Columns:    GoodMalfunctionsColumns,
+		PrimaryKey: []*schema.Column{GoodMalfunctionsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "goodmalfunction_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{GoodMalfunctionsColumns[4]},
+			},
+		},
+	}
 	// GoodRewardsColumns holds the columns for the "good_rewards" table.
 	GoodRewardsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -1365,6 +1392,7 @@ var (
 		GoodsTable,
 		GoodBasesTable,
 		GoodCoinsTable,
+		GoodMalfunctionsTable,
 		GoodRewardsTable,
 		GoodRewardHistoriesTable,
 		AppGoodLikesTable,

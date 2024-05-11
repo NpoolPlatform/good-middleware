@@ -36,6 +36,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodmalfunction"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
@@ -116,6 +117,8 @@ type Client struct {
 	GoodBase *GoodBaseClient
 	// GoodCoin is the client for interacting with the GoodCoin builders.
 	GoodCoin *GoodCoinClient
+	// GoodMalfunction is the client for interacting with the GoodMalfunction builders.
+	GoodMalfunction *GoodMalfunctionClient
 	// GoodReward is the client for interacting with the GoodReward builders.
 	GoodReward *GoodRewardClient
 	// GoodRewardHistory is the client for interacting with the GoodRewardHistory builders.
@@ -191,6 +194,7 @@ func (c *Client) init() {
 	c.Good = NewGoodClient(c.config)
 	c.GoodBase = NewGoodBaseClient(c.config)
 	c.GoodCoin = NewGoodCoinClient(c.config)
+	c.GoodMalfunction = NewGoodMalfunctionClient(c.config)
 	c.GoodReward = NewGoodRewardClient(c.config)
 	c.GoodRewardHistory = NewGoodRewardHistoryClient(c.config)
 	c.Like = NewLikeClient(c.config)
@@ -268,6 +272,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Good:                   NewGoodClient(cfg),
 		GoodBase:               NewGoodBaseClient(cfg),
 		GoodCoin:               NewGoodCoinClient(cfg),
+		GoodMalfunction:        NewGoodMalfunctionClient(cfg),
 		GoodReward:             NewGoodRewardClient(cfg),
 		GoodRewardHistory:      NewGoodRewardHistoryClient(cfg),
 		Like:                   NewLikeClient(cfg),
@@ -331,6 +336,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Good:                   NewGoodClient(cfg),
 		GoodBase:               NewGoodBaseClient(cfg),
 		GoodCoin:               NewGoodCoinClient(cfg),
+		GoodMalfunction:        NewGoodMalfunctionClient(cfg),
 		GoodReward:             NewGoodRewardClient(cfg),
 		GoodRewardHistory:      NewGoodRewardHistoryClient(cfg),
 		Like:                   NewLikeClient(cfg),
@@ -404,6 +410,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Good.Use(hooks...)
 	c.GoodBase.Use(hooks...)
 	c.GoodCoin.Use(hooks...)
+	c.GoodMalfunction.Use(hooks...)
 	c.GoodReward.Use(hooks...)
 	c.GoodRewardHistory.Use(hooks...)
 	c.Like.Use(hooks...)
@@ -2788,6 +2795,97 @@ func (c *GoodCoinClient) GetX(ctx context.Context, id uint32) *GoodCoin {
 func (c *GoodCoinClient) Hooks() []Hook {
 	hooks := c.hooks.GoodCoin
 	return append(hooks[:len(hooks):len(hooks)], goodcoin.Hooks[:]...)
+}
+
+// GoodMalfunctionClient is a client for the GoodMalfunction schema.
+type GoodMalfunctionClient struct {
+	config
+}
+
+// NewGoodMalfunctionClient returns a client for the GoodMalfunction from the given config.
+func NewGoodMalfunctionClient(c config) *GoodMalfunctionClient {
+	return &GoodMalfunctionClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `goodmalfunction.Hooks(f(g(h())))`.
+func (c *GoodMalfunctionClient) Use(hooks ...Hook) {
+	c.hooks.GoodMalfunction = append(c.hooks.GoodMalfunction, hooks...)
+}
+
+// Create returns a builder for creating a GoodMalfunction entity.
+func (c *GoodMalfunctionClient) Create() *GoodMalfunctionCreate {
+	mutation := newGoodMalfunctionMutation(c.config, OpCreate)
+	return &GoodMalfunctionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of GoodMalfunction entities.
+func (c *GoodMalfunctionClient) CreateBulk(builders ...*GoodMalfunctionCreate) *GoodMalfunctionCreateBulk {
+	return &GoodMalfunctionCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for GoodMalfunction.
+func (c *GoodMalfunctionClient) Update() *GoodMalfunctionUpdate {
+	mutation := newGoodMalfunctionMutation(c.config, OpUpdate)
+	return &GoodMalfunctionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GoodMalfunctionClient) UpdateOne(gm *GoodMalfunction) *GoodMalfunctionUpdateOne {
+	mutation := newGoodMalfunctionMutation(c.config, OpUpdateOne, withGoodMalfunction(gm))
+	return &GoodMalfunctionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GoodMalfunctionClient) UpdateOneID(id uint32) *GoodMalfunctionUpdateOne {
+	mutation := newGoodMalfunctionMutation(c.config, OpUpdateOne, withGoodMalfunctionID(id))
+	return &GoodMalfunctionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for GoodMalfunction.
+func (c *GoodMalfunctionClient) Delete() *GoodMalfunctionDelete {
+	mutation := newGoodMalfunctionMutation(c.config, OpDelete)
+	return &GoodMalfunctionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *GoodMalfunctionClient) DeleteOne(gm *GoodMalfunction) *GoodMalfunctionDeleteOne {
+	return c.DeleteOneID(gm.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *GoodMalfunctionClient) DeleteOneID(id uint32) *GoodMalfunctionDeleteOne {
+	builder := c.Delete().Where(goodmalfunction.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GoodMalfunctionDeleteOne{builder}
+}
+
+// Query returns a query builder for GoodMalfunction.
+func (c *GoodMalfunctionClient) Query() *GoodMalfunctionQuery {
+	return &GoodMalfunctionQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a GoodMalfunction entity by its id.
+func (c *GoodMalfunctionClient) Get(ctx context.Context, id uint32) (*GoodMalfunction, error) {
+	return c.Query().Where(goodmalfunction.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GoodMalfunctionClient) GetX(ctx context.Context, id uint32) *GoodMalfunction {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *GoodMalfunctionClient) Hooks() []Hook {
+	hooks := c.hooks.GoodMalfunction
+	return append(hooks[:len(hooks):len(hooks)], goodmalfunction.Hooks[:]...)
 }
 
 // GoodRewardClient is a client for the GoodReward schema.
