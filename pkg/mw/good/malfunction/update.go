@@ -16,6 +16,7 @@ type updateHandler struct {
 	sql             string
 	startAt         uint32
 	durationSeconds uint32
+	goodID          string
 }
 
 func (h *updateHandler) constructSQL() error {
@@ -58,8 +59,12 @@ func (h *updateHandler) constructSQL() error {
 		_sql += fmt.Sprintf("%v ent_id = '%v'", whereAnd, *h.EntID)
 	}
 	if h.StartAt != nil || h.DurationSeconds != nil {
-		_sql += " and not exists ("
-		_sql += "select 1 from good_malfunctions as gm where ("
+		_sql += " and not exists (select * from ("
+		_sql += fmt.Sprintf(
+			"select 1 from good_malfunctions as gm where good_id = '%v' and gm.id != %v and (",
+			h.goodID,
+			*h.ID,
+		)
 		_sql += fmt.Sprintf(
 			"(gm.start_at < %v and %v < gm.start_at + gm.duration_seconds)",
 			h.startAt,
@@ -73,7 +78,7 @@ func (h *updateHandler) constructSQL() error {
 			)
 		}
 	}
-	_sql += ") limit 1)"
+	_sql += ") limit 1) as tmp limit 1)"
 	h.sql = _sql
 	return nil
 }
@@ -100,7 +105,9 @@ func (h *Handler) UpdateMalfunction(ctx context.Context) error {
 
 	handler := &updateHandler{
 		Handler: h,
+		goodID:  info.GoodID,
 	}
+	h.ID = &info.ID
 	if h.StartAt != nil {
 		handler.startAt = *h.StartAt
 	} else {
