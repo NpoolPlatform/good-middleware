@@ -31,6 +31,7 @@ import (
 	fee "github.com/NpoolPlatform/good-middleware/api/fee"
 	good "github.com/NpoolPlatform/good-middleware/api/good"
 	goodcoin "github.com/NpoolPlatform/good-middleware/api/good/coin"
+	goodmalfunction "github.com/NpoolPlatform/good-middleware/api/good/malfunction"
 	goodrequired "github.com/NpoolPlatform/good-middleware/api/good/required"
 	"github.com/NpoolPlatform/good-middleware/api/good/reward/history"
 	powerrental "github.com/NpoolPlatform/good-middleware/api/powerrental"
@@ -67,6 +68,7 @@ func Register(server grpc.ServiceRegistrar) {
 	like.Register(server)
 	recommend.Register(server)
 	goodrequired.Register(server)
+	goodmalfunction.Register(server)
 	goodcoin.Register(server)
 	appgoodrequired.Register(server)
 	history.Register(server)
