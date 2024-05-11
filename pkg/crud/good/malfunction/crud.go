@@ -5,17 +5,19 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entgoodmalfunction "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodmalfunction"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 type Req struct {
-	EntID  *uuid.UUID
-	GoodID *uuid.UUID
-
-	DeletedAt *uint32
+	EntID             *uuid.UUID
+	GoodID            *uuid.UUID
+	Title             *string
+	Message           *string
+	StartAt           *uint32
+	DurationSeconds   *uint32
+	CompensateSeconds *uint32
+	DeletedAt         *uint32
 }
 
 func CreateSet(c *ent.GoodMalfunctionCreate, req *Req) *ent.GoodMalfunctionCreate {
@@ -25,31 +27,39 @@ func CreateSet(c *ent.GoodMalfunctionCreate, req *Req) *ent.GoodMalfunctionCreat
 	if req.GoodID != nil {
 		c.SetGoodID(*req.GoodID)
 	}
-	c.SetMalfunctionState(types.BenefitState_BenefitWait.String())
+	if req.Title != nil {
+		c.SetTitle(*req.Title)
+	}
+	if req.Message != nil {
+		c.SetMessage(*req.Message)
+	}
+	if req.StartAt != nil {
+		c.SetStartAt(*req.StartAt)
+	}
+	if req.DurationSeconds != nil {
+		c.SetDurationSeconds(*req.DurationSeconds)
+	}
+	if req.CompensateSeconds != nil {
+		c.SetCompensateSeconds(*req.CompensateSeconds)
+	}
 	return c
 }
 
 func UpdateSet(u *ent.GoodMalfunctionUpdateOne, req *Req) *ent.GoodMalfunctionUpdateOne {
-	if req.MalfunctionState != nil {
-		u.SetMalfunctionState(req.MalfunctionState.String())
+	if req.Title != nil {
+		u.SetTitle(*req.Title)
 	}
-	if req.LastMalfunctionAt != nil {
-		u.SetLastMalfunctionAt(*req.LastMalfunctionAt)
+	if req.Message != nil {
+		u.SetMessage(*req.Message)
 	}
-	if req.MalfunctionTID != nil {
-		u.SetMalfunctionTid(*req.MalfunctionTID)
+	if req.StartAt != nil {
+		u.SetStartAt(*req.StartAt)
 	}
-	if req.NextMalfunctionStartAmount != nil {
-		u.SetNextMalfunctionStartAmount(*req.NextMalfunctionStartAmount)
+	if req.DurationSeconds != nil {
+		u.SetDurationSeconds(*req.DurationSeconds)
 	}
-	if req.LastMalfunctionAmount != nil {
-		u.SetLastMalfunctionAmount(*req.LastMalfunctionAmount)
-	}
-	if req.LastUnitMalfunctionAmount != nil {
-		u.SetLastUnitMalfunctionAmount(*req.LastUnitMalfunctionAmount)
-	}
-	if req.TotalMalfunctionAmount != nil {
-		u.SetTotalMalfunctionAmount(*req.TotalMalfunctionAmount)
+	if req.CompensateSeconds != nil {
+		u.SetCompensateSeconds(*req.CompensateSeconds)
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)
@@ -58,10 +68,9 @@ func UpdateSet(u *ent.GoodMalfunctionUpdateOne, req *Req) *ent.GoodMalfunctionUp
 }
 
 type Conds struct {
-	EntID            *cruder.Cond
-	GoodID           *cruder.Cond
-	MalfunctionState *cruder.Cond
-	MalfunctionAt    *cruder.Cond
+	EntID  *cruder.Cond
+	EntIDs *cruder.Cond
+	GoodID *cruder.Cond
 }
 
 func SetQueryConds(q *ent.GoodMalfunctionQuery, conds *Conds) (*ent.GoodMalfunctionQuery, error) { //nolint:gocyclo
@@ -81,6 +90,18 @@ func SetQueryConds(q *ent.GoodMalfunctionQuery, conds *Conds) (*ent.GoodMalfunct
 			return nil, wlog.Errorf("invalid goodmalfunction field")
 		}
 	}
+	if conds.EntIDs != nil {
+		ids, ok := conds.EntIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, wlog.Errorf("invalid ids")
+		}
+		switch conds.EntIDs.Op {
+		case cruder.IN:
+			q.Where(entgoodmalfunction.EntIDIn(ids...))
+		default:
+			return nil, wlog.Errorf("invalid goodmalfunction field")
+		}
+	}
 	if conds.GoodID != nil {
 		id, ok := conds.GoodID.Val.(uuid.UUID)
 		if !ok {
@@ -89,36 +110,6 @@ func SetQueryConds(q *ent.GoodMalfunctionQuery, conds *Conds) (*ent.GoodMalfunct
 		switch conds.GoodID.Op {
 		case cruder.EQ:
 			q.Where(entgoodmalfunction.GoodID(id))
-		default:
-			return nil, wlog.Errorf("invalid goodmalfunction field")
-		}
-	}
-	if conds.MalfunctionState != nil {
-		state, ok := conds.MalfunctionState.Val.(types.BenefitState)
-		if !ok {
-			return nil, wlog.Errorf("invalid malfunctionstate")
-		}
-		switch conds.MalfunctionState.Op {
-		case cruder.EQ:
-			q.Where(entgoodmalfunction.MalfunctionState(state.String()))
-		default:
-			return nil, wlog.Errorf("invalid goodmalfunction field")
-		}
-	}
-	if conds.MalfunctionAt != nil {
-		at, ok := conds.MalfunctionAt.Val.(uint32)
-		if !ok {
-			return nil, wlog.Errorf("invalid malfunctionat")
-		}
-		switch conds.MalfunctionAt.Op {
-		case cruder.EQ:
-			q.Where(entgoodmalfunction.LastMalfunctionAt(at))
-		case cruder.NEQ:
-			q.Where(entgoodmalfunction.LastMalfunctionAtNEQ(at))
-		case cruder.LT:
-			q.Where(entgoodmalfunction.LastMalfunctionAtLT(at))
-		case cruder.GT:
-			q.Where(entgoodmalfunction.LastMalfunctionAtGT(at))
 		default:
 			return nil, wlog.Errorf("invalid goodmalfunction field")
 		}
