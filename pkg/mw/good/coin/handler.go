@@ -183,6 +183,12 @@ func (h *Handler) withGoodCoinConds(conds *npool.Conds) error {
 			Val: ids,
 		}
 	}
+	if conds.Main != nil {
+		h.GoodCoinConds.Main = &cruder.Cond{
+			Op:  conds.GetMain().GetOp(),
+			Val: conds.GetMain().GetValue(),
+		}
+	}
 	return nil
 }
 

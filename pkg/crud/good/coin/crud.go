@@ -57,6 +57,7 @@ type Conds struct {
 	GoodIDs     *cruder.Cond
 	CoinTypeID  *cruder.Cond
 	CoinTypeIDs *cruder.Cond
+	Main        *cruder.Cond
 }
 
 //nolint:funlen,gocyclo
@@ -133,6 +134,18 @@ func SetQueryConds(q *ent.GoodCoinQuery, conds *Conds) (*ent.GoodCoinQuery, erro
 		switch conds.CoinTypeIDs.Op {
 		case cruder.IN:
 			q.Where(entgoodcoin.CoinTypeIDIn(ids...))
+		default:
+			return nil, wlog.Errorf("invalid cointypeids field")
+		}
+	}
+	if conds.Main != nil {
+		_main, ok := conds.Main.Val.(bool)
+		if !ok {
+			return nil, wlog.Errorf("invalid main")
+		}
+		switch conds.Main.Op {
+		case cruder.EQ:
+			q.Where(entgoodcoin.Main(_main))
 		default:
 			return nil, wlog.Errorf("invalid cointypeids field")
 		}
