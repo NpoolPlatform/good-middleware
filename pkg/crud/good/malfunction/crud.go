@@ -74,7 +74,7 @@ type Conds struct {
 	GoodID *cruder.Cond
 }
 
-func SetQueryConds(q *ent.GoodMalfunctionQuery, conds *Conds) (*ent.GoodMalfunctionQuery, error) { //nolint:gocyclo
+func SetQueryConds(q *ent.GoodMalfunctionQuery, conds *Conds) (*ent.GoodMalfunctionQuery, error) {
 	q.Where(entgoodmalfunction.DeletedAt(0))
 	if conds == nil {
 		return q, nil
