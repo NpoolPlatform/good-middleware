@@ -70,7 +70,7 @@ func (h *Handler) ConstructCreateSQL() string {
 	_sql += ") as tmp "
 	_sql += "where not exists ("
 	_sql += "select 1 from good_bases "
-	_sql += fmt.Sprintf("where name = '%v'", *h.Name)
+	_sql += fmt.Sprintf("where name = '%v' and deleted_at = 0", *h.Name)
 	_sql += " limit 1)"
 
 	return _sql
