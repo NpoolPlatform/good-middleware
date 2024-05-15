@@ -3,6 +3,7 @@ package fee
 import (
 	"context"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appfeecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/fee"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -18,7 +19,7 @@ func (h *updateHandler) updateAppGoodBase(ctx context.Context, tx *ent.Tx) error
 		tx.AppGoodBase.UpdateOneID(h.appGoodBase.ID),
 		h.AppGoodBaseReq,
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -28,7 +29,7 @@ func (h *updateHandler) updateAppFee(ctx context.Context, tx *ent.Tx) error {
 		tx.AppFee.UpdateOneID(h.appFee.ID),
 		&h.Req,
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -41,12 +42,15 @@ func (h *Handler) UpdateFee(ctx context.Context) error {
 	}
 
 	if err := handler.requireAppFeeGood(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
+	}
+	if h.UnitValue != nil && h.UnitValue.LessThan(handler.fee.UnitValue) {
+		return wlog.Errorf("invalid unitvalue")
 	}
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateAppGoodBase(_ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return handler.updateAppFee(_ctx, tx)
 	})

@@ -8,10 +8,14 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappfee "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appfee"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
+	entfee "github.com/NpoolPlatform/good-middleware/pkg/db/ent/fee"
+	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 )
 
 type appFeeGoodQueryHandler struct {
 	*Handler
+	fee         *ent.Fee
+	goodBase    *ent.GoodBase
 	appFee      *ent.AppFee
 	appGoodBase *ent.AppGoodBase
 }
@@ -55,9 +59,53 @@ func (h *appFeeGoodQueryHandler) _getAppFeeGood(ctx context.Context, must bool) 
 }
 
 func (h *appFeeGoodQueryHandler) getAppFeeGood(ctx context.Context) error {
-	return h._getAppFeeGood(ctx, false)
+	if err := h._getAppFeeGood(ctx, false); err != nil {
+		return wlog.WrapError(err)
+	}
+	h.AppGoodBaseReq.GoodID = &h.appGoodBase.GoodID
+	return h._getFeeGood(ctx, false)
 }
 
 func (h *appFeeGoodQueryHandler) requireAppFeeGood(ctx context.Context) error {
-	return h._getAppFeeGood(ctx, true)
+	if err := h._getAppFeeGood(ctx, true); err != nil {
+		return wlog.WrapError(err)
+	}
+	h.AppGoodBaseReq.GoodID = &h.appGoodBase.GoodID
+	return h._getFeeGood(ctx, true)
+}
+
+func (h *appFeeGoodQueryHandler) _getFeeGood(ctx context.Context, must bool) (err error) {
+	if h.AppGoodBaseReq.GoodID == nil {
+		return wlog.Errorf("invalid goodid")
+	}
+
+	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		if h.fee, err = cli.Fee.Query().Where(
+			entfee.GoodID(*h.AppGoodBaseReq.GoodID),
+			entfee.DeletedAt(0),
+		).Only(ctx); err != nil {
+			if ent.IsNotFound(err) && !must {
+				return nil
+			}
+			return wlog.WrapError(err)
+		}
+		if h.goodBase, err = cli.GoodBase.Query().Where(
+			entgoodbase.EntID(h.fee.GoodID),
+			entgoodbase.DeletedAt(0),
+		).Only(_ctx); err != nil {
+			if ent.IsNotFound(err) && !must {
+				return nil
+			}
+			return wlog.WrapError(err)
+		}
+		return nil
+	})
+}
+
+func (h *appFeeGoodQueryHandler) getFeeGood(ctx context.Context) error {
+	return h._getFeeGood(ctx, false)
+}
+
+func (h *appFeeGoodQueryHandler) requireFeeGood(ctx context.Context) error {
+	return h._getFeeGood(ctx, true)
 }
