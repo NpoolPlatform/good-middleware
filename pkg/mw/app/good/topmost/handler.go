@@ -134,6 +134,15 @@ func WithTargetURL(s *string, must bool) func(context.Context, *Handler) error {
 
 func WithStartAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if n != nil {
+			if must {
+				return wlog.Errorf("invalid startat")
+			}
+			return nil
+		}
+		if *n == 0 {
+			return wlog.Errorf("invalid startat")
+		}
 		h.StartAt = n
 		return nil
 	}
@@ -141,6 +150,15 @@ func WithStartAt(n *uint32, must bool) func(context.Context, *Handler) error {
 
 func WithEndAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if n != nil {
+			if must {
+				return wlog.Errorf("invalid endat")
+			}
+			return nil
+		}
+		if *n == 0 {
+			return wlog.Errorf("invalid endat")
+		}
 		h.EndAt = n
 		return nil
 	}

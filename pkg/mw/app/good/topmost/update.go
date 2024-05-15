@@ -108,6 +108,9 @@ func (h *Handler) UpdateTopMost(ctx context.Context) error {
 	if h.EndAt != nil {
 		handler.endAt = *h.EndAt
 	}
+	if handler.endAt <= handler.startAt {
+		return wlog.Errorf("invalid startend")
+	}
 
 	if err := handler.constructSQL(); err != nil {
 		return wlog.WrapError(err)
