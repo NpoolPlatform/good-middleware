@@ -48,7 +48,7 @@ func (h *updateHandler) constructAppGoodBaseSQL(ctx context.Context) error {
 }
 
 //nolint:funlen,gocyclo
-func (h *updateHandler) constructAppPowerRentalSQL() error {
+func (h *updateHandler) constructAppPowerRentalSQL() {
 	set := "set "
 	now := uint32(time.Now().Unix())
 	_sql := "update app_power_rentals "
@@ -117,7 +117,7 @@ func (h *updateHandler) constructAppPowerRentalSQL() error {
 		set = ""
 	}
 	if set != "" {
-		return wlog.WrapError(cruder.ErrUpdateNothing)
+		return
 	}
 	_sql += fmt.Sprintf("updated_at = %v", now)
 	_sql += fmt.Sprintf(" where id = %v ", *h.ID)
@@ -125,7 +125,6 @@ func (h *updateHandler) constructAppPowerRentalSQL() error {
 	_sql += fmt.Sprintf(" and app_good_id = '%v'", *h.AppGoodID)
 
 	h.sqlAppPowerRental = _sql
-	return nil
 }
 
 func (h *updateHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) error {
@@ -225,9 +224,7 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 
-	if err := handler.constructAppPowerRentalSQL(); err != nil {
-		return wlog.WrapError(err)
-	}
+	handler.constructAppPowerRentalSQL()
 	if err := handler.constructAppGoodBaseSQL(ctx); err != nil {
 		return wlog.WrapError(err)
 	}
