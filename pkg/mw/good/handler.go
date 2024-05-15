@@ -56,6 +56,12 @@ func (h *Handler) withGoodConds(conds *npool.Conds) error {
 			Val: conds.GetID().GetValue(),
 		}
 	}
+	if conds.IDs != nil {
+		h.GoodConds.IDs = &cruder.Cond{
+			Op:  conds.GetIDs().GetOp(),
+			Val: conds.GetIDs().GetValue(),
+		}
+	}
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())
 		if err != nil {
