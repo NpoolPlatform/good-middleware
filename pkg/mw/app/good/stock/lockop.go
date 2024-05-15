@@ -2,6 +2,8 @@ package appstock
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appstocklockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/lock"
@@ -104,40 +106,85 @@ func (h *lockopHandler) updateLocks(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
+func (h *lockopHandler) constructCreateSQL(req *appstocklockcrud.Req, checkExist bool) string {
+	now := uint32(time.Now().Unix())
+
+	_sql := "insert into app_stock_locks "
+	_sql += "("
+	_sql += "ent_id, "
+	_sql += "app_stock_id, "
+	_sql += "units, "
+	_sql += "app_spot_units, "
+	_sql += "ex_lock_id, "
+	_sql += "created_at, "
+	_sql += "updated_at, "
+	_sql += "deleted_at"
+	_sql += ")"
+	_sql += " select * from (select "
+	_sql += fmt.Sprintf("'%v' as ent_id, ", *req.EntID)
+	_sql += fmt.Sprintf("'%v' as app_stock_id, ", *req.AppStockID)
+	_sql += fmt.Sprintf("'%v' as units, ", *req.Units)
+	_sql += fmt.Sprintf("'%v' as app_spot_units, ", *req.AppSpotUnits)
+	_sql += fmt.Sprintf("'%v' as ex_lock_id, ", *req.ExLockID)
+	_sql += fmt.Sprintf("%v as created_at, ", now)
+	_sql += fmt.Sprintf("%v as updated_at, ", now)
+	_sql += fmt.Sprintf("0 as deleted_at")
+	_sql += ") as tmp "
+	_sql += "where "
+	if checkExist {
+		_sql += "not exists ("
+		_sql += "select 1 from app_stock_locks "
+		_sql += fmt.Sprintf("where ent_id = '%v' ", *req.EntID)
+		_sql += fmt.Sprintf("or ex_lock_id = '%v' ", *req.ExLockID)
+		_sql += " limit 1) and "
+	}
+	_sql += "exists ("
+	_sql += "select 1 from app_good_bases "
+	_sql += fmt.Sprintf("where ent_id = '%v' ", *req.AppGoodID)
+	_sql += "limit 1) and exists ("
+	_sql += "select 1 from app_stocks "
+	_sql += fmt.Sprintf("where ent_id = '%v' ", *req.AppStockID)
+	_sql += "limit 1)"
+
+	return _sql
+}
+
+func (h *lockopHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) error {
+	rc, err := tx.ExecContext(ctx, sql)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	n, err := rc.RowsAffected()
+	if err != nil || n != 1 {
+		return wlog.Errorf("fail lock: %v", err)
+	}
+	return nil
+}
+
 func (h *lockopHandler) createLocks(ctx context.Context, tx *ent.Tx) error {
-	if len(h.Stocks) == 0 {
-		if _, err := appstocklockcrud.CreateSet(
-			tx.AppStockLock.Create(),
-			&appstocklockcrud.Req{
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		if len(h.Stocks) == 0 {
+			return h.execSQL(_ctx, tx, h.constructCreateSQL(&appstocklockcrud.Req{
 				EntID:        h.LockID,
 				AppStockID:   h.EntID,
 				AppGoodID:    h.AppGoodID,
 				Units:        h.Locked,
 				AppSpotUnits: h.AppSpotLocked,
 				ExLockID:     h.LockID,
-			},
-		).Save(ctx); err != nil {
-			return wlog.WrapError(err)
+			}, true))
 		}
-		return nil
-	}
-
-	for _, stock := range h.Stocks {
-		if _, err := appstocklockcrud.CreateSet(
-			tx.AppStockLock.Create(),
-			&appstocklockcrud.Req{
+		for i, stock := range h.Stocks {
+			return h.execSQL(_ctx, tx, h.constructCreateSQL(&appstocklockcrud.Req{
+				EntID:        func() *uuid.UUID { uid := uuid.New(); return &uid }(),
 				AppStockID:   stock.EntID,
 				AppGoodID:    stock.AppGoodID,
 				Units:        stock.Locked,
 				AppSpotUnits: stock.AppSpotLocked,
 				ExLockID:     h.LockID,
-			},
-		).Save(ctx); err != nil {
-			return wlog.WrapError(err)
+			}, i == 0))
 		}
-	}
-
-	return nil
+		return nil
+	})
 }
 
 func (h *lockopHandler) lock2Stocks() (reqs []*LockStock) {
