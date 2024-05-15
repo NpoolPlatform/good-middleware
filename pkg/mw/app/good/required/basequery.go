@@ -48,7 +48,7 @@ func (h *baseQueryHandler) queryRequireds(cli *ent.Client) (*ent.RequiredAppGood
 
 func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 	t := sql.Table(entrequiredappgood.Table)
-	s.LeftJoin(t).
+	s.Join(t).
 		On(
 			s.C(entrequiredappgood.FieldID),
 			t.C(entrequiredappgood.FieldID),
@@ -79,15 +79,21 @@ func (h *baseQueryHandler) queryWithAppGoodBaseConds(t1 *sql.SelectTable, s *sql
 func (h *baseQueryHandler) queryJoinMainAppGood(s *sql.Selector) error {
 	t1 := sql.Table(entappgoodbase.Table)
 	t2 := sql.Table(entgoodbase.Table)
-	s.LeftJoin(t1).
+	s.Join(t1).
 		On(
 			s.C(entrequiredappgood.FieldMainAppGoodID),
 			t1.C(entappgoodbase.FieldEntID),
 		).
-		LeftJoin(t2).
+		OnP(
+			sql.EQ(t1.C(entappgoodbase.FieldDeletedAt), 0),
+		).
+		Join(t2).
 		On(
 			t1.C(entappgoodbase.FieldGoodID),
 			t2.C(entgoodbase.FieldEntID),
+		).
+		OnP(
+			sql.EQ(t1.C(entgoodbase.FieldDeletedAt), 0),
 		)
 	if err := h.queryWithAppGoodBaseConds(t1, s); err != nil {
 		return wlog.WrapError(err)
@@ -104,15 +110,21 @@ func (h *baseQueryHandler) queryJoinMainAppGood(s *sql.Selector) error {
 func (h *baseQueryHandler) queryJoinRequiredAppGood(s *sql.Selector) error {
 	t1 := sql.Table(entappgoodbase.Table)
 	t2 := sql.Table(entgoodbase.Table)
-	s.LeftJoin(t1).
+	s.Join(t1).
 		On(
 			s.C(entrequiredappgood.FieldRequiredAppGoodID),
 			t1.C(entappgoodbase.FieldEntID),
 		).
-		LeftJoin(t2).
+		OnP(
+			sql.EQ(t1.C(entappgoodbase.FieldDeletedAt), 0),
+		).
+		Join(t2).
 		On(
 			t1.C(entappgoodbase.FieldGoodID),
 			t2.C(entgoodbase.FieldEntID),
+		).
+		OnP(
+			sql.EQ(t1.C(entgoodbase.FieldDeletedAt), 0),
 		)
 	if err := h.queryWithAppGoodBaseConds(t1, s); err != nil {
 		return wlog.WrapError(err)
