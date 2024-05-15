@@ -21,6 +21,7 @@ type LockStock struct {
 	AppGoodID     *uuid.UUID
 	Locked        *decimal.Decimal
 	AppSpotLocked *decimal.Decimal
+	LockID        *uuid.UUID
 }
 
 type lockopHandler struct {
@@ -112,6 +113,7 @@ func (h *lockopHandler) constructCreateSQL(req *appstocklockcrud.Req, checkExist
 	_sql := "insert into app_stock_locks "
 	_sql += "("
 	_sql += "ent_id, "
+	_sql += "app_good_id, "
 	_sql += "app_stock_id, "
 	_sql += "units, "
 	_sql += "app_spot_units, "
@@ -122,9 +124,14 @@ func (h *lockopHandler) constructCreateSQL(req *appstocklockcrud.Req, checkExist
 	_sql += ")"
 	_sql += " select * from (select "
 	_sql += fmt.Sprintf("'%v' as ent_id, ", *req.EntID)
+	_sql += fmt.Sprintf("'%v' as app_good_id, ", *req.AppGoodID)
 	_sql += fmt.Sprintf("'%v' as app_stock_id, ", *req.AppStockID)
 	_sql += fmt.Sprintf("'%v' as units, ", *req.Units)
-	_sql += fmt.Sprintf("'%v' as app_spot_units, ", *req.AppSpotUnits)
+	if req.AppSpotUnits != nil {
+		_sql += fmt.Sprintf("'%v' as app_spot_units, ", *req.AppSpotUnits)
+	} else {
+		_sql += "'0' as app_spot_units, "
+	}
 	_sql += fmt.Sprintf("'%v' as ex_lock_id, ", *req.ExLockID)
 	_sql += fmt.Sprintf("%v as created_at, ", now)
 	_sql += fmt.Sprintf("%v as updated_at, ", now)
@@ -141,10 +148,16 @@ func (h *lockopHandler) constructCreateSQL(req *appstocklockcrud.Req, checkExist
 	_sql += "exists ("
 	_sql += "select 1 from app_good_bases "
 	_sql += fmt.Sprintf("where ent_id = '%v' ", *req.AppGoodID)
-	_sql += "limit 1) and exists ("
+	_sql += "limit 1) and ("
+	_sql += "exists ("
 	_sql += "select 1 from app_stocks "
 	_sql += fmt.Sprintf("where ent_id = '%v' ", *req.AppStockID)
+	_sql += "limit 1) or "
+	_sql += "exists ("
+	_sql += "select 1 from app_mining_good_stocks "
+	_sql += fmt.Sprintf("where ent_id = '%v' ", *req.AppStockID)
 	_sql += "limit 1)"
+	_sql += ")"
 
 	return _sql
 }
@@ -194,6 +207,7 @@ func (h *lockopHandler) lock2Stocks() (reqs []*LockStock) {
 			AppGoodID:     &lock.AppGoodID,
 			Locked:        &lock.Units,
 			AppSpotLocked: &lock.AppSpotUnits,
+			LockID:        &lock.ExLockID,
 		})
 	}
 	return

@@ -55,6 +55,42 @@ func (h *inServiceHandler) inServiceStock(ctx context.Context, lock *ent.AppStoc
 	return nil
 }
 
+func (h *inServiceHandler) inServiceMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok || stock.miningGoodStock == nil {
+		return wlog.Errorf("invalid stock")
+	}
+
+	inService := stock.miningGoodStock.InService
+	waitStart := stock.miningGoodStock.WaitStart
+
+	inService = lock.Units.Add(inService)
+	waitStart = waitStart.Sub(lock.Units)
+
+	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
+		return wlog.Errorf("invalid stock")
+	}
+
+	if waitStart.Add(inService).
+		Add(stock.miningGoodStock.Locked).
+		Add(stock.miningGoodStock.AppReserved).
+		Add(stock.miningGoodStock.SpotQuantity).
+		Cmp(stock.miningGoodStock.Total) > 0 {
+		return wlog.Errorf("stock exhausted")
+	}
+
+	if _, err := stockcrud.UpdateSet(
+		tx.Stock.UpdateOneID(stock.miningGoodStock.ID),
+		&stockcrud.Req{
+			InService: &inService,
+			WaitStart: &waitStart,
+		},
+	).Save(ctx); err != nil {
+		return wlog.WrapError(err)
+	}
+	return nil
+}
+
 func (h *inServiceHandler) inServiceAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
 	stock, ok := h.stocks[lock.AppGoodID]
 	if !ok || stock.appGoodStock == nil {
@@ -73,6 +109,35 @@ func (h *inServiceHandler) inServiceAppStock(ctx context.Context, lock *ent.AppS
 
 	if _, err := appstockcrud.UpdateSet(
 		tx.AppStock.UpdateOneID(stock.appGoodStock.ID),
+		&appstockcrud.Req{
+			InService: &inService,
+			WaitStart: &waitStart,
+		},
+	).Save(ctx); err != nil {
+		return wlog.WrapError(err)
+	}
+
+	return nil
+}
+
+func (h *inServiceHandler) inServiceAppMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok || stock.appMiningGoodStock == nil {
+		return wlog.Errorf("invalid stock")
+	}
+
+	inService := stock.appMiningGoodStock.InService
+	waitStart := stock.appMiningGoodStock.WaitStart
+
+	inService = lock.Units.Add(inService)
+	waitStart = waitStart.Sub(lock.Units)
+
+	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
+		return wlog.Errorf("invalid stock")
+	}
+
+	if _, err := appstockcrud.UpdateSet(
+		tx.AppStock.UpdateOneID(stock.appMiningGoodStock.ID),
 		&appstockcrud.Req{
 			InService: &inService,
 			WaitStart: &waitStart,
@@ -108,8 +173,18 @@ func (h *Handler) InServiceStock(ctx context.Context) error {
 			if err := handler.inServiceAppStock(ctx, lock, tx); err != nil {
 				return wlog.WrapError(err)
 			}
+			if handler.stockByMiningPool(lock.AppGoodID) {
+				if err := handler.inServiceAppMiningGoodStock(ctx, lock, tx); err != nil {
+					return wlog.WrapError(err)
+				}
+			}
 			if err := handler.inServiceStock(ctx, lock, tx); err != nil {
 				return wlog.WrapError(err)
+			}
+			if handler.stockByMiningPool(lock.AppGoodID) {
+				if err := handler.inServiceMiningGoodStock(ctx, lock, tx); err != nil {
+					return wlog.WrapError(err)
+				}
 			}
 		}
 		if err := handler.lockOp.updateLocks(ctx, tx); err != nil {

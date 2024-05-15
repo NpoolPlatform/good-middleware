@@ -237,7 +237,7 @@ func (h *Handler) ChargeBackStock(ctx context.Context) error {
 			if err := handler.chargeBackAppStock(ctx, lock, tx); err != nil {
 				return wlog.WrapError(err)
 			}
-			if !handler.stockByMiningPool(lock.AppGoodID) {
+			if handler.stockByMiningPool(lock.AppGoodID) {
 				if err := handler.chargeBackAppMiningGoodStock(ctx, lock, tx); err != nil {
 					return wlog.WrapError(err)
 				}
@@ -245,7 +245,7 @@ func (h *Handler) ChargeBackStock(ctx context.Context) error {
 			if err := handler.chargeBackStock(ctx, lock, tx); err != nil {
 				return wlog.WrapError(err)
 			}
-			if !handler.stockByMiningPool(lock.AppGoodID) {
+			if handler.stockByMiningPool(lock.AppGoodID) {
 				if err := handler.chargeBackMiningGoodStock(ctx, lock, tx); err != nil {
 					return wlog.WrapError(err)
 				}

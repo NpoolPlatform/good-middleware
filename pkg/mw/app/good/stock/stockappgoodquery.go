@@ -3,6 +3,7 @@ package appstock
 import (
 	"context"
 
+	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -276,7 +277,7 @@ func (h *stockAppGoodQuery) formalizeStockEntIDs() error {
 	}
 	for _, stock := range h.Stocks {
 		if err := h.formalizeStockEntID(*stock.AppGoodID, *stock.EntID); err != nil {
-			return wlog.WrapError(err)
+			logger.Sugar().Errorw("formalizeStockEntID", "Stock", *stock, "Error", err)
 		}
 	}
 	if len(h.appGoodStockEntIDs) == 0 && len(h.appMiningGoodStockEntIDs) == 0 {
