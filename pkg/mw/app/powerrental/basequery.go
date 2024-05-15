@@ -15,6 +15,7 @@ import (
 	entmanufacturer "github.com/NpoolPlatform/good-middleware/pkg/db/ent/devicemanufacturer"
 	entextrainfo "github.com/NpoolPlatform/good-middleware/pkg/db/ent/extrainfo"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	entgoodcoin "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
 	entgoodreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	entpowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
@@ -106,6 +107,38 @@ func (h *baseQueryHandler) queryJoinGoodBase(s *sql.Selector) {
 		)
 }
 
+func (h *baseQueryHandler) queryJoinGoodCoin(s *sql.Selector) error {
+	t := sql.Table(entgoodcoin.Table)
+	s.LeftJoin(t).
+		On(
+			s.C(entappgoodbase.FieldGoodID),
+			t.C(entgoodcoin.FieldGoodID),
+		).
+		Distinct()
+	if h.GoodCoinConds.CoinTypeID != nil {
+		id, ok := h.GoodCoinConds.CoinTypeID.Val.(uuid.UUID)
+		if !ok {
+			return wlog.Errorf("invalid cointypeid")
+		}
+		s.OnP(
+			sql.EQ(t.C(entgoodcoin.FieldCoinTypeID), id),
+		)
+	}
+	if h.GoodCoinConds.CoinTypeIDs != nil {
+		uids, ok := h.GoodCoinConds.CoinTypeIDs.Val.([]uuid.UUID)
+		if !ok {
+			return wlog.Errorf("invalid cointypeids")
+		}
+		s.OnP(sql.In(t.C(entgoodcoin.FieldCoinTypeID), func() (_uids []interface{}) {
+			for _, uid := range uids {
+				_uids = append(_uids, interface{}(uid))
+			}
+			return
+		}()...))
+	}
+	return nil
+}
+
 func (h *baseQueryHandler) queryJoinGoodReward(s *sql.Selector) {
 	t := sql.Table(entgoodreward.Table)
 	s.LeftJoin(t).
@@ -176,7 +209,7 @@ func (h *baseQueryHandler) queryJoinAppGoodStock(s *sql.Selector) {
 		)
 }
 
-func (h *baseQueryHandler) queryJoinAppPowerRental(s *sql.Selector) {
+func (h *baseQueryHandler) queryJoinAppPowerRental(s *sql.Selector) error {
 	t1 := sql.Table(entapppowerrental.Table)
 	s.Join(t1).
 		On(
@@ -188,9 +221,27 @@ func (h *baseQueryHandler) queryJoinAppPowerRental(s *sql.Selector) {
 			sql.EQ(t1.C(entapppowerrental.FieldID), *h.ID),
 		)
 	}
+	if h.AppPowerRentalConds.ID != nil {
+		id, ok := h.AppPowerRentalConds.ID.Val.(uint32)
+		if !ok {
+			return wlog.Errorf("invalid id")
+		}
+		s.OnP(
+			sql.EQ(t1.C(entapppowerrental.FieldID), id),
+		)
+	}
 	if h.EntID != nil {
 		s.OnP(
 			sql.EQ(t1.C(entapppowerrental.FieldEntID), *h.EntID),
+		)
+	}
+	if h.AppPowerRentalConds.EntID != nil {
+		uid, ok := h.AppPowerRentalConds.EntID.Val.(uuid.UUID)
+		if !ok {
+			return wlog.Errorf("invalid entid")
+		}
+		s.OnP(
+			sql.EQ(t1.C(entapppowerrental.FieldEntID), uid),
 		)
 	}
 	s.AppendSelect(
@@ -213,6 +264,7 @@ func (h *baseQueryHandler) queryJoinAppPowerRental(s *sql.Selector) {
 		sql.As(t1.C(entapppowerrental.FieldServiceStartAt), "app_good_service_start_at"),
 		sql.As(t1.C(entapppowerrental.FieldStartMode), "app_good_start_mode"),
 	)
+	return nil
 }
 
 func (h *baseQueryHandler) queryJoinAppLegacyPowerRental(s *sql.Selector) {
@@ -242,33 +294,24 @@ func (h *baseQueryHandler) queryJoinPowerRental(s *sql.Selector) error {
 		OnP(
 			sql.EQ(t1.C(entpowerrental.FieldDeletedAt), 0),
 		)
-	if h.PowerRentalConds != nil && h.PowerRentalConds.ID != nil {
-		u, ok := h.PowerRentalConds.ID.Val.(uint32)
+	if h.PowerRentalConds != nil && h.PowerRentalConds.GoodID != nil {
+		uid, ok := h.PowerRentalConds.GoodID.Val.(uuid.UUID)
 		if !ok {
-			return wlog.Errorf("invalid id")
+			return wlog.Errorf("invalid goodid")
 		}
-		s.OnP(sql.EQ(t1.C(entpowerrental.FieldID), u))
+		s.OnP(sql.EQ(t1.C(entpowerrental.FieldGoodID), uid))
 	}
-	if h.PowerRentalConds != nil && h.PowerRentalConds.IDs != nil {
-		ids, ok := h.PowerRentalConds.IDs.Val.([]uint32)
+	if h.PowerRentalConds != nil && h.PowerRentalConds.GoodIDs != nil {
+		uids, ok := h.PowerRentalConds.GoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return wlog.Errorf("invalid ids")
+			return wlog.Errorf("invalid goodids")
 		}
-		s.OnP(sql.In(t1.C(entpowerrental.FieldID), ids))
-	}
-	if h.PowerRentalConds != nil && h.PowerRentalConds.EntID != nil {
-		uid, ok := h.PowerRentalConds.EntID.Val.(uuid.UUID)
-		if !ok {
-			return wlog.Errorf("invalid entid")
-		}
-		s.OnP(sql.EQ(t1.C(entpowerrental.FieldEntID), uid))
-	}
-	if h.PowerRentalConds != nil && h.PowerRentalConds.EntIDs != nil {
-		uids, ok := h.PowerRentalConds.EntIDs.Val.([]uuid.UUID)
-		if !ok {
-			return wlog.Errorf("invalid entids")
-		}
-		s.OnP(sql.In(t1.C(entpowerrental.FieldEntID), uids))
+		s.OnP(sql.In(t1.C(entpowerrental.FieldGoodID), func() (_uids []interface{}) {
+			for _, uid := range uids {
+				_uids = append(_uids, interface{}(uid))
+			}
+			return
+		}))
 	}
 	s.Join(t2).
 		On(
@@ -325,10 +368,15 @@ func (h *baseQueryHandler) queryJoin() {
 		h.queryJoinAppGoodStock(s)
 		h.queryJoinGoodReward(s)
 		h.queryJoinExtraInfo(s)
-		h.queryJoinAppPowerRental(s)
+		if err := h.queryJoinAppPowerRental(s); err != nil {
+			logger.Sugar().Errorw("queryJoinAppPowerRental", "Error", err)
+		}
 		h.queryJoinAppLegacyPowerRental(s)
 		if err := h.queryJoinPowerRental(s); err != nil {
 			logger.Sugar().Errorw("queryJoinPowerRental", "Error", err)
+		}
+		if err := h.queryJoinGoodCoin(s); err != nil {
+			logger.Sugar().Errorw("queryJoinGoodCoin", "Error", err)
 		}
 	})
 }
