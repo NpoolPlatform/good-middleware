@@ -156,7 +156,7 @@ func (h *lockopHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) err
 	}
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
-		return wlog.Errorf("fail lock: %v", err)
+		return wlog.Errorf("fail lock stock: %v", err)
 	}
 	return nil
 }
