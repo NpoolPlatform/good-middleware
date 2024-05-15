@@ -77,13 +77,13 @@ func (h *createHandler) constructSQL() {
 	)
 	_sql += " and ("
 	_sql += fmt.Sprintf(
-		"(gm.start_at < %v and %v < gm.start_at + gm.duration_seconds)",
+		"(gm.start_at <= %v and %v < gm.start_at + gm.duration_seconds)",
 		*h.StartAt,
 		*h.StartAt,
 	)
 	if h.DurationSeconds != nil {
 		_sql += fmt.Sprintf(
-			" or (gm.start_at < %v and %v < gm.start_at + gm.duration_seconds)",
+			" or (gm.start_at < %v and %v <= gm.start_at + gm.duration_seconds)",
 			*h.StartAt+*h.DurationSeconds,
 			*h.StartAt+*h.DurationSeconds,
 		)
