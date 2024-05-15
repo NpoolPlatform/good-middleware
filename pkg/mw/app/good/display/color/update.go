@@ -29,7 +29,7 @@ func (h *Handler) UpdateDisplayColor(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 	if info == nil {
-		return wlog.Errorf("invalid displayname")
+		return wlog.Errorf("invalid displaycolor")
 	}
 
 	h.ID = &info.ID
