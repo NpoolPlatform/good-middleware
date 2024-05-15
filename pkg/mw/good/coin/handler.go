@@ -113,6 +113,15 @@ func WithMain(b *bool, must bool) func(context.Context, *Handler) error {
 
 func WithIndex(n *int32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if n == nil {
+			if must {
+				return wlog.Errorf("invalid index")
+			}
+			return nil
+		}
+		if *n < 0 {
+			return wlog.Errorf("invalid index")
+		}
 		h.Index = n
 		return nil
 	}
