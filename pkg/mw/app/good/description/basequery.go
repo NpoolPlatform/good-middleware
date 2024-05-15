@@ -48,7 +48,7 @@ func (h *baseQueryHandler) queryDescriptions(cli *ent.Client) (*ent.AppGoodDescr
 
 func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 	t := sql.Table(entappgooddescription.Table)
-	s.LeftJoin(t).
+	s.Join(t).
 		On(
 			s.C(entappgooddescription.FieldID),
 			t.C(entappgooddescription.FieldID),
@@ -66,15 +66,21 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 	t1 := sql.Table(entappgoodbase.Table)
 	t2 := sql.Table(entgoodbase.Table)
-	s.LeftJoin(t1).
+	s.Join(t1).
 		On(
 			s.C(entappgooddescription.FieldAppGoodID),
 			t1.C(entappgoodbase.FieldEntID),
 		).
-		LeftJoin(t2).
+		OnP(
+			sql.EQ(t1.C(entappgoodbase.FieldDeletedAt), 0),
+		).
+		Join(t2).
 		On(
 			t1.C(entappgoodbase.FieldGoodID),
 			t2.C(entgoodbase.FieldEntID),
+		).
+		OnP(
+			sql.EQ(t2.C(entgoodbase.FieldDeletedAt), 0),
 		)
 	if h.AppGoodBaseConds.EntID != nil {
 		id, ok := h.AppGoodBaseConds.EntID.Val.(uuid.UUID)
