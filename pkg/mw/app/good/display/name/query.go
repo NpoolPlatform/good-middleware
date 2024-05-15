@@ -60,7 +60,7 @@ func (h *Handler) GetDisplayName(ctx context.Context) (*npool.DisplayName, error
 		return nil, err
 	}
 	if len(handler.infos) == 0 {
-		return nil, wlog.Errorf("invalid appgooddisplayname")
+		return nil, nil
 	}
 	if len(handler.infos) > 1 {
 		return nil, wlog.Errorf("too many records")
