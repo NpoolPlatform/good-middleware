@@ -220,7 +220,7 @@ func (h *Handler) UnlockStock(ctx context.Context) error {
 			if err := handler.unlockAppStock(ctx, lock, tx); err != nil {
 				return wlog.WrapError(err)
 			}
-			if !handler.stockByMiningPool(lock.AppGoodID) {
+			if handler.stockByMiningPool(lock.AppGoodID) {
 				if err := handler.unlockAppMiningGoodStock(ctx, lock, tx); err != nil {
 					return wlog.WrapError(err)
 				}
@@ -228,7 +228,7 @@ func (h *Handler) UnlockStock(ctx context.Context) error {
 			if err := handler.unlockStock(ctx, lock, tx); err != nil {
 				return wlog.WrapError(err)
 			}
-			if !handler.stockByMiningPool(lock.AppGoodID) {
+			if handler.stockByMiningPool(lock.AppGoodID) {
 				if err := handler.unlockMiningGoodStock(ctx, lock, tx); err != nil {
 					return wlog.WrapError(err)
 				}
