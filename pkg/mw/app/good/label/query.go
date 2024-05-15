@@ -61,7 +61,7 @@ func (h *Handler) GetLabel(ctx context.Context) (*npool.Label, error) {
 		return nil, err
 	}
 	if len(handler.infos) == 0 {
-		return nil, wlog.Errorf("invalid appgoodlabel")
+		return nil, nil
 	}
 	if len(handler.infos) > 1 {
 		return nil, wlog.Errorf("too many records")
