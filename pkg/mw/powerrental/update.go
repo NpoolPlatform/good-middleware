@@ -272,7 +272,10 @@ func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
 	}
 	h.RewardReq.TotalRewardAmount = &totalReward
 
-	if _, err := rewardcrud.UpdateSet(h.goodReward.Update(), h.RewardReq).Save(ctx); err != nil {
+	if _, err := rewardcrud.UpdateSet(
+		tx.GoodReward.UpdateOneID(h.goodReward.ID),
+		h.RewardReq,
+	).Save(ctx); err != nil {
 		return wlog.WrapError(err)
 	}
 
