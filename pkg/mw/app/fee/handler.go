@@ -101,14 +101,25 @@ func WithAppID(s *string, must bool) func(context.Context, *Handler) error {
 
 func WithGoodID(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		handler, err := goodbase1.NewHandler(
-			ctx,
-			goodbase1.WithEntID(s, true),
-		)
+		if s == nil {
+			if must {
+				return wlog.Errorf("invalid goodid")
+			}
+			return nil
+		}
+		handler, _ := goodbase1.NewHandler(ctx)
+		id, err := uuid.Parse(*s)
 		if err != nil {
 			return wlog.WrapError(err)
 		}
-		exist, err := handler.ExistGoodBase(ctx)
+		handler.GoodBaseConds = &goodbasecrud.Conds{
+			EntID: &cruder.Cond{Op: cruder.EQ, Val: id},
+			GoodTypes: &cruder.Cond{Op: cruder.IN, Val: []types.GoodType{
+				types.GoodType_TechniqueServiceFee,
+				types.GoodType_ElectricityFee,
+			}},
+		}
+		exist, err := handler.ExistGoodBaseConds(ctx)
 		if err != nil {
 			return wlog.WrapError(err)
 		}

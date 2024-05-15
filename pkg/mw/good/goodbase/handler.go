@@ -13,10 +13,13 @@ import (
 type Handler struct {
 	ID *uint32
 	goodbasecrud.Req
+	GoodBaseConds *goodbasecrud.Conds
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
-	handler := &Handler{}
+	handler := &Handler{
+		GoodBaseConds: &goodbasecrud.Conds{},
+	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
 			return nil, err
