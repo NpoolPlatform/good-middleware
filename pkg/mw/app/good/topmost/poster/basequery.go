@@ -64,7 +64,7 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 
 func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 	t1 := sql.Table(enttopmost.Table)
-	s.LeftJoin(t1).
+	s.Join(t1).
 		On(
 			s.C(enttopmostposter.FieldTopMostID),
 			t1.C(enttopmost.FieldEntID),
