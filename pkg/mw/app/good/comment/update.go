@@ -37,6 +37,7 @@ func (h *Handler) UpdateComment(ctx context.Context) error {
 		return wlog.Errorf("invalid comment")
 	}
 
+	h.ID = &info.ID
 	handler := &updateHandler{
 		Handler: h,
 	}
