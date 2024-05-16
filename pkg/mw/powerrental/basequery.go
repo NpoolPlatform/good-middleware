@@ -190,7 +190,7 @@ func (h *baseQueryHandler) queryJoinPowerRental(s *sql.Selector) error {
 
 func (h *baseQueryHandler) queryJoinReward(s *sql.Selector) {
 	t := sql.Table(entgoodreward.Table)
-	s.LeftJoin(t).
+	s.Join(t).
 		On(
 			s.C(entgoodbase.FieldEntID),
 			t.C(entgoodreward.FieldGoodID),
