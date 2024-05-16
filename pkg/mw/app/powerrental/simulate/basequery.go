@@ -70,17 +70,17 @@ func (h *baseQueryHandler) queryJoinAppGoodBase(s *sql.Selector) error {
 	t2 := sql.Table(entgoodbase.Table)
 	t3 := sql.Table(entpowerrental.Table)
 
-	s.LeftJoin(t1).
+	s.Join(t1).
 		On(
 			s.C(entappsimulatepowerrental.FieldAppGoodID),
 			t1.C(entappgoodbase.FieldEntID),
 		).
-		LeftJoin(t2).
+		Join(t2).
 		On(
 			t1.C(entappgoodbase.FieldGoodID),
 			t2.C(entgoodbase.FieldEntID),
 		).
-		LeftJoin(t3).
+		Join(t3).
 		On(
 			t1.C(entappgoodbase.FieldGoodID),
 			t3.C(entgoodbase.FieldEntID),
