@@ -64,7 +64,7 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 
 func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 	t1 := sql.Table(entappgoodbase.Table)
-	s.LeftJoin(t1).
+	s.Join(t1).
 		On(
 			s.C(entlike.FieldAppGoodID),
 			t1.C(entappgoodbase.FieldEntID),
