@@ -92,6 +92,12 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 
 func WithName(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return wlog.Errorf("invalid name")
+			}
+			return nil
+		}
 		h.Name = s
 		return nil
 	}
