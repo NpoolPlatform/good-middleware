@@ -68,7 +68,9 @@ func (h *queryHandler) queryJoin() {
 		h.queryJoinAppGoodStock(s)
 		h.queryJoinGoodReward(s)
 		h.queryJoinExtraInfo(s)
-		h.queryJoinAppPowerRental(s)
+		if err := h.queryJoinAppPowerRental(s); err != nil {
+			logger.Sugar().Errorw("queryJoinAppPowerRental", "Error", err)
+		}
 		h.queryJoinAppLegacyPowerRental(s)
 		if err := h.queryJoinPowerRental(s); err != nil {
 			logger.Sugar().Errorw("queryJoinPowerRental", "Error", err)

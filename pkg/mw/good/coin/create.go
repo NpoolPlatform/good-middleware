@@ -67,7 +67,7 @@ func (h *createHandler) constructSQL() {
 		*h.CoinTypeID,
 	)
 	if h.Main != nil && *h.Main {
-		_sql += fmt.Sprintf(" and main=1")
+		_sql += " and main=1"
 	}
 	_sql += " limit 1)"
 	h.sql = _sql

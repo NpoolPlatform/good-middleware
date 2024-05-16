@@ -102,7 +102,7 @@ func (h *appFeeGoodQueryHandler) _getFeeGood(ctx context.Context, must bool) (er
 	})
 }
 
-func (h *appFeeGoodQueryHandler) getFeeGood(ctx context.Context) error {
+func (h *appFeeGoodQueryHandler) getFeeGood(ctx context.Context) error { //nolint
 	return h._getFeeGood(ctx, false)
 }
 

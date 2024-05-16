@@ -46,10 +46,8 @@ func (h *Handler) CreateFee(ctx context.Context) error {
 
 	if h.UnitValue == nil {
 		h.UnitValue = &handler.fee.UnitValue
-	} else {
-		if h.UnitValue.LessThan(handler.fee.UnitValue) {
-			return wlog.Errorf("invalid unitvalue")
-		}
+	} else if h.UnitValue.LessThan(handler.fee.UnitValue) {
+		return wlog.Errorf("invalid unitvalue")
 	}
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {

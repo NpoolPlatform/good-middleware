@@ -63,6 +63,7 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 		)
 }
 
+//nolint:funlen,gocyclo
 func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 	t1 := sql.Table(entappgoodbase.Table)
 	t2 := sql.Table(entgoodbase.Table)

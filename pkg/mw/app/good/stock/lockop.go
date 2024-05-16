@@ -107,6 +107,7 @@ func (h *lockopHandler) updateLocks(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
+//nolint:goconst
 func (h *lockopHandler) constructCreateSQL(req *appstocklockcrud.Req, checkExist bool) string {
 	now := uint32(time.Now().Unix())
 
@@ -135,7 +136,7 @@ func (h *lockopHandler) constructCreateSQL(req *appstocklockcrud.Req, checkExist
 	_sql += fmt.Sprintf("'%v' as ex_lock_id, ", *req.ExLockID)
 	_sql += fmt.Sprintf("%v as created_at, ", now)
 	_sql += fmt.Sprintf("%v as updated_at, ", now)
-	_sql += fmt.Sprintf("0 as deleted_at")
+	_sql += "0 as deleted_at"
 	_sql += ") as tmp "
 	_sql += "where "
 	if checkExist {
@@ -175,29 +176,29 @@ func (h *lockopHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) err
 }
 
 func (h *lockopHandler) createLocks(ctx context.Context, tx *ent.Tx) error {
-	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if len(h.Stocks) == 0 {
-			return h.execSQL(_ctx, tx, h.constructCreateSQL(&appstocklockcrud.Req{
-				EntID:        h.LockID,
-				AppStockID:   h.EntID,
-				AppGoodID:    h.AppGoodID,
-				Units:        h.Locked,
-				AppSpotUnits: h.AppSpotLocked,
-				ExLockID:     h.LockID,
-			}, true))
+	if len(h.Stocks) == 0 {
+		return h.execSQL(ctx, tx, h.constructCreateSQL(&appstocklockcrud.Req{
+			EntID:        h.LockID,
+			AppStockID:   h.EntID,
+			AppGoodID:    h.AppGoodID,
+			Units:        h.Locked,
+			AppSpotUnits: h.AppSpotLocked,
+			ExLockID:     h.LockID,
+		}, true))
+	}
+	for i, stock := range h.Stocks {
+		if err := h.execSQL(ctx, tx, h.constructCreateSQL(&appstocklockcrud.Req{
+			EntID:        func() *uuid.UUID { uid := uuid.New(); return &uid }(),
+			AppStockID:   stock.EntID,
+			AppGoodID:    stock.AppGoodID,
+			Units:        stock.Locked,
+			AppSpotUnits: stock.AppSpotLocked,
+			ExLockID:     h.LockID,
+		}, i == 0)); err != nil {
+			return wlog.WrapError(err)
 		}
-		for i, stock := range h.Stocks {
-			return h.execSQL(_ctx, tx, h.constructCreateSQL(&appstocklockcrud.Req{
-				EntID:        func() *uuid.UUID { uid := uuid.New(); return &uid }(),
-				AppStockID:   stock.EntID,
-				AppGoodID:    stock.AppGoodID,
-				Units:        stock.Locked,
-				AppSpotUnits: stock.AppSpotLocked,
-				ExLockID:     h.LockID,
-			}, i == 0))
-		}
-		return nil
-	})
+	}
+	return nil
 }
 
 func (h *lockopHandler) lock2Stocks() (reqs []*LockStock) {

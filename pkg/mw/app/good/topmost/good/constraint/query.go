@@ -5,6 +5,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
+	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -27,7 +28,9 @@ func (h *queryHandler) queryJoin() {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
-		h.queryJoinTopMostGood(s)
+		if err := h.queryJoinTopMostGood(s); err != nil {
+			logger.Sugar().Errorw("queryJoinTopMostGood", "Error", err)
+		}
 	})
 }
 
