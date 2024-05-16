@@ -790,7 +790,7 @@ var (
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
 		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "coin_type_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "main", Type: field.TypeBool, Nullable: true, Default: true},
+		{Name: "main", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "index", Type: field.TypeInt32, Nullable: true, Default: 0},
 	}
 	// GoodCoinsTable holds the schema information for the "good_coins" table.

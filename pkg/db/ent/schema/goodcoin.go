@@ -39,7 +39,7 @@ func (GoodCoin) Fields() []ent.Field {
 		field.
 			Bool("main").
 			Optional().
-			Default(true),
+			Default(false),
 		field.
 			Int32("index").
 			Optional().
