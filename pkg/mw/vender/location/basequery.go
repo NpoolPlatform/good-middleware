@@ -68,6 +68,9 @@ func (h *baseQueryHandler) queryJoinBrand(s *sql.Selector) {
 			s.C(entvendorlocation.FieldBrandID),
 			t1.C(entvendorbrand.FieldEntID),
 		).
+		OnP(
+			sql.EQ(t1.C(entvendorbrand.FieldDeletedAt), 0),
+		).
 		AppendSelect(
 			sql.As(t1.C(entvendorbrand.FieldName), "brand_name"),
 			sql.As(t1.C(entvendorbrand.FieldLogo), "brand_logo"),
