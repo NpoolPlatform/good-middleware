@@ -114,6 +114,29 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 			sql.EQ(t1.C(entappgoodbase.FieldAppID), id),
 		)
 	}
+	if h.AppGoodBaseConds.GoodID != nil {
+		id, ok := h.AppGoodBaseConds.GoodID.Val.(uuid.UUID)
+		if !ok {
+			return wlog.Errorf("invalid goodid")
+		}
+		s.OnP(
+			sql.EQ(t1.C(entappgoodbase.FieldGoodID), id),
+		)
+	}
+	if h.AppGoodBaseConds.GoodIDs != nil {
+		ids, ok := h.AppGoodBaseConds.GoodIDs.Val.([]uuid.UUID)
+		if !ok {
+			return wlog.Errorf("invalid goodids")
+		}
+		s.OnP(
+			sql.In(t1.C(entappgoodbase.FieldGoodID), func() (_ids []interface{}) {
+				for _, id := range ids {
+					_ids = append(_ids, interface{}(id))
+				}
+				return
+			}()...),
+		)
+	}
 	s.AppendSelect(
 		t1.C(entappgoodbase.FieldAppID),
 		sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
