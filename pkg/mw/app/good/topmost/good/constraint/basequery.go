@@ -3,6 +3,7 @@ package constraint
 import (
 	"entgo.io/ent/dialect/sql"
 
+	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constraintcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good/constraint"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -10,6 +11,9 @@ import (
 	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	enttopmostgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
 	enttopmostgoodconstraint "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgoodconstraint"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
+
+	"github.com/google/uuid"
 )
 
 type baseQueryHandler struct {
@@ -62,7 +66,7 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 		)
 }
 
-func (h *baseQueryHandler) queryJoinTopMostGood(s *sql.Selector) {
+func (h *baseQueryHandler) queryJoinTopMostGood(s *sql.Selector) error {
 	t1 := sql.Table(enttopmostgood.Table)
 	t2 := sql.Table(enttopmost.Table)
 	t3 := sql.Table(entappgoodbase.Table)
@@ -80,22 +84,73 @@ func (h *baseQueryHandler) queryJoinTopMostGood(s *sql.Selector) {
 		On(
 			t1.C(enttopmostgood.FieldAppGoodID),
 			t3.C(entappgoodbase.FieldEntID),
-		).
-		AppendSelect(
-			t1.C(enttopmostgood.FieldTopMostID),
-			t1.C(enttopmostgood.FieldAppGoodID),
-			sql.As(t3.C(entappgoodbase.FieldName), "app_good_name"),
-			t2.C(enttopmost.FieldAppID),
-			t2.C(enttopmost.FieldTopMostType),
-			sql.As(t2.C(enttopmost.FieldTitle), "top_most_title"),
-			sql.As(t2.C(enttopmost.FieldMessage), "top_most_message"),
-			sql.As(t2.C(enttopmost.FieldTargetURL), "top_most_target_url"),
 		)
+	if h.TopMostConds.EntID != nil {
+		id, ok := h.TopMostConds.EntID.Val.(uuid.UUID)
+		if !ok {
+			return wlog.Errorf("invalid topmostid")
+		}
+		s.OnP(
+			sql.EQ(t2.C(enttopmost.FieldEntID), id),
+		)
+		s.Where(
+			sql.EQ(t2.C(enttopmost.FieldEntID), id),
+		)
+	}
+	if h.TopMostConds.TopMostType != nil {
+		_type, ok := h.TopMostConds.TopMostType.Val.(types.GoodTopMostType)
+		if !ok {
+			return wlog.Errorf("invalid topmosttype")
+		}
+		s.OnP(
+			sql.EQ(t2.C(enttopmost.FieldTopMostType), _type.String()),
+		)
+		s.Where(
+			sql.EQ(t2.C(enttopmost.FieldTopMostType), _type.String()),
+		)
+	}
+	if h.TopMostConds.AppID != nil {
+		id, ok := h.TopMostConds.AppID.Val.(uuid.UUID)
+		if !ok {
+			return wlog.Errorf("invalid appid")
+		}
+		s.OnP(
+			sql.EQ(t2.C(enttopmost.FieldAppID), id),
+		)
+		s.Where(
+			sql.EQ(t2.C(enttopmost.FieldAppID), id),
+		)
+	}
+	if h.AppGoodBaseConds.EntID != nil {
+		id, ok := h.AppGoodBaseConds.EntID.Val.(uuid.UUID)
+		if !ok {
+			return wlog.Errorf("invalid appgoodid")
+		}
+		s.OnP(
+			sql.EQ(t2.C(entappgoodbase.FieldEntID), id),
+		)
+		s.Where(
+			sql.EQ(t2.C(entappgoodbase.FieldEntID), id),
+		)
+	}
+	s.AppendSelect(
+		t1.C(enttopmostgood.FieldTopMostID),
+		t1.C(enttopmostgood.FieldAppGoodID),
+		sql.As(t3.C(entappgoodbase.FieldName), "app_good_name"),
+		t2.C(enttopmost.FieldAppID),
+		t2.C(enttopmost.FieldTopMostType),
+		sql.As(t2.C(enttopmost.FieldTitle), "top_most_title"),
+		sql.As(t2.C(enttopmost.FieldMessage), "top_most_message"),
+		sql.As(t2.C(enttopmost.FieldTargetURL), "top_most_target_url"),
+	)
+	return nil
 }
 
 func (h *baseQueryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
-		h.queryJoinTopMostGood(s)
+		if err := h.queryJoinTopMostGood(s); err != nil {
+			logger.Sugar().Errorw("queryJoinTopMostGood", "Error", err)
+		}
 	})
 }

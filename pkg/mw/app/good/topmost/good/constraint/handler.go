@@ -5,6 +5,7 @@ import (
 
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
+	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	topmostcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost"
 	topmostgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good"
 	constraintcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good/constraint"
@@ -23,6 +24,7 @@ type Handler struct {
 	ConstraintConds  *constraintcrud.Conds
 	TopMostConds     *topmostcrud.Conds
 	TopMostGoodConds *topmostgoodcrud.Conds
+	AppGoodBaseConds *appgoodbasecrud.Conds
 	Offset           int32
 	Limit            int32
 }
@@ -32,6 +34,7 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 		ConstraintConds:  &constraintcrud.Conds{},
 		TopMostConds:     &topmostcrud.Conds{},
 		TopMostGoodConds: &topmostgoodcrud.Conds{},
+		AppGoodBaseConds: &appgoodbasecrud.Conds{},
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
@@ -221,6 +224,20 @@ func (h *Handler) withTopMostGoodConds(conds *npool.Conds) error {
 	return nil
 }
 
+func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
+	if conds.AppGoodID != nil {
+		id, err := uuid.Parse(conds.GetAppGoodID().GetValue())
+		if err != nil {
+			return wlog.WrapError(err)
+		}
+		h.AppGoodBaseConds.EntID = &cruder.Cond{
+			Op:  conds.GetAppGoodID().GetOp(),
+			Val: id,
+		}
+	}
+	return nil
+}
+
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if conds == nil {
@@ -230,6 +247,9 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 			return wlog.WrapError(err)
 		}
 		if err := h.withTopMostGoodConds(conds); err != nil {
+			return wlog.WrapError(err)
+		}
+		if err := h.withAppGoodBaseConds(conds); err != nil {
 			return wlog.WrapError(err)
 		}
 		return h.withConstraintConds(conds)
