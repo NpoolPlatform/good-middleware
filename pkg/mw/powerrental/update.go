@@ -199,9 +199,14 @@ func (h *updateHandler) _validateStock() error {
 			Total: &poolStock.Total,
 		})
 	}
-
 	if len(h.MiningGoodStockReqs) > 0 && *h.StockMode == types.GoodStockMode_GoodStockByUnique {
 		return wlog.Errorf("invalid stockmode")
+	}
+	switch *h.StockMode {
+	case types.GoodStockMode_GoodStockByUnique:
+		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }()
+	case types.GoodStockMode_GoodStockByMiningPool:
+		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePool; return &e }()
 	}
 
 	return h.stockValidator.validateStock()
