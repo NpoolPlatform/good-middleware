@@ -66,16 +66,12 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 	t1 := sql.Table(entappgoodbase.Table)
 	t2 := sql.Table(entgoodbase.Table)
-	s.LeftJoin(t1).
+	s.Join(t1).
 		On(
 			s.C(entappgoodposter.FieldAppGoodID),
 			t1.C(entappgoodbase.FieldEntID),
 		).
-		AppendSelect(
-			t1.C(entappgoodbase.FieldAppID),
-			sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
-		).
-		LeftJoin(t2).
+		Join(t2).
 		On(
 			t1.C(entappgoodbase.FieldGoodID),
 			t2.C(entgoodbase.FieldEntID),
@@ -135,12 +131,39 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 			sql.EQ(t1.C(entappgoodbase.FieldAppID), id),
 		)
 	}
+	if h.AppGoodBaseConds.GoodID != nil {
+		id, ok := h.AppGoodBaseConds.GoodID.Val.(uuid.UUID)
+		if !ok {
+			return wlog.Errorf("invalid goodid")
+		}
+		s.OnP(
+			sql.EQ(t1.C(entappgoodbase.FieldAppID), id),
+		)
+	}
+	if h.AppGoodBaseConds.GoodIDs != nil {
+		ids, ok := h.AppGoodBaseConds.GoodIDs.Val.([]uuid.UUID)
+		if !ok {
+			return wlog.Errorf("invalid goodids")
+		}
+		s.OnP(
+			sql.In(t1.C(entappgoodbase.FieldGoodID), func() (_ids []interface{}) {
+				for _, id := range ids {
+					_ids = append(_ids, interface{}(id))
+				}
+				return
+			}()...),
+		)
+	}
 	s.AppendSelect(
 		t1.C(entappgoodbase.FieldAppID),
 		sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
 		sql.As(t2.C(entgoodbase.FieldEntID), "good_id"),
 		sql.As(t2.C(entgoodbase.FieldName), "good_name"),
 		t2.C(entgoodbase.FieldGoodType),
+	)
+	s.AppendSelect(
+		t1.C(entappgoodbase.FieldAppID),
+		sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
 	)
 	return nil
 }
