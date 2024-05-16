@@ -126,7 +126,7 @@ func WithGoodID(s *string, must bool) func(context.Context, *Handler) error {
 		if !exist {
 			return wlog.Errorf("invalid goodid")
 		}
-		h.AppGoodBaseReq.GoodID = handler.EntID
+		h.AppGoodBaseReq.GoodID = &id
 		return nil
 	}
 }

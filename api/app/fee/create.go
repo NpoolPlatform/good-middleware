@@ -26,7 +26,7 @@ func (s *Server) CreateFee(ctx context.Context, in *npool.CreateFeeRequest) (*np
 		fee1.WithEntID(req.EntID, false),
 		fee1.WithAppID(req.AppID, true),
 		fee1.WithGoodID(req.GoodID, true),
-		fee1.WithAppGoodID(req.AppGoodID, true),
+		fee1.WithAppGoodID(req.AppGoodID, false),
 		fee1.WithProductPage(req.ProductPage, false),
 		fee1.WithName(req.Name, true),
 		fee1.WithBanner(req.Banner, false),
