@@ -252,6 +252,16 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 			Val: ids,
 		}
 	}
+	if conds.AppID != nil {
+		id, err := uuid.Parse(conds.GetAppID().GetValue())
+		if err != nil {
+			return wlog.WrapError(err)
+		}
+		h.AppGoodBaseConds.AppID = &cruder.Cond{
+			Op:  conds.GetAppID().GetOp(),
+			Val: id,
+		}
+	}
 	if conds.GoodID != nil {
 		id, err := uuid.Parse(conds.GetGoodID().GetValue())
 		if err != nil {

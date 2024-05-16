@@ -119,6 +119,9 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 		s.OnP(
 			sql.EQ(t1.C(entappgoodbase.FieldAppID), id),
 		)
+		s.Where(
+			sql.EQ(t1.C(entappgoodbase.FieldAppID), id),
+		)
 	}
 	s.AppendSelect(
 		t1.C(entappgoodbase.FieldAppID),
