@@ -92,6 +92,12 @@ func WithAppGoodID(id *string, must bool) func(context.Context, *Handler) error 
 
 func WithColor(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return wlog.Errorf("invalid color")
+			}
+			return nil
+		}
 		h.Color = s
 		return nil
 	}
