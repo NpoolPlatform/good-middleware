@@ -143,10 +143,6 @@ func (h *createHandler) constructPowerRentalSQL() {
 	_sql += fmt.Sprintf("where good_id = '%v'", *h.GoodID)
 	_sql += " limit 1) "
 	_sql += "and exists ("
-	_sql += "select 1 from good_bases "
-	_sql += fmt.Sprintf("where ent_id = '%v'", *h.GoodID)
-	_sql += " limit 1) "
-	_sql += "and exists ("
 	_sql += "select 1 from device_infos "
 	_sql += fmt.Sprintf("where ent_id = '%v'", *h.DeviceTypeID)
 	_sql += "limit 1) "
@@ -164,7 +160,7 @@ func (h *createHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) err
 	}
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
-		return wlog.Errorf("fail create powerrental: %v", err)
+		return wlog.Errorf("fail create powerrental %v: %v", sql, err)
 	}
 	return nil
 }
