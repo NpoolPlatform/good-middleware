@@ -134,7 +134,7 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 
 func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 	t := sql.Table(enttopmost.Table)
-	s.LeftJoin(t).
+	s.Join(t).
 		On(
 			s.C(enttopmostgood.FieldTopMostID),
 			t.C(enttopmost.FieldEntID),
@@ -147,6 +147,9 @@ func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 		s.OnP(
 			sql.EQ(t.C(enttopmost.FieldAppID), id),
 		)
+		s.Where(
+			sql.EQ(t.C(enttopmost.FieldAppID), id),
+		)
 	}
 	if h.TopMostConds.EntID != nil {
 		id, ok := h.TopMostConds.EntID.Val.(uuid.UUID)
@@ -156,6 +159,9 @@ func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 		s.OnP(
 			sql.EQ(t.C(enttopmost.FieldEntID), id),
 		)
+		s.Where(
+			sql.EQ(t.C(enttopmost.FieldEntID), id),
+		)
 	}
 	if h.TopMostConds.TopMostType != nil {
 		_type, ok := h.TopMostConds.TopMostType.Val.(types.GoodTopMostType)
@@ -163,6 +169,9 @@ func (h *baseQueryHandler) queryJoinTopMost(s *sql.Selector) error {
 			return wlog.Errorf("invalid topmosttype")
 		}
 		s.OnP(
+			sql.EQ(t.C(enttopmost.FieldTopMostType), _type.String()),
+		)
+		s.Where(
 			sql.EQ(t.C(enttopmost.FieldTopMostType), _type.String()),
 		)
 	}
