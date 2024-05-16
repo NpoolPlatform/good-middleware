@@ -93,7 +93,7 @@ func (h *baseQueryHandler) queryJoinPowerRental(s *sql.Selector) error {
 	t4 := sql.Table(entvendorlocation.Table)
 	t5 := sql.Table(entvendorbrand.Table)
 
-	s.LeftJoin(t1).
+	s.Join(t1).
 		On(
 			s.C(entgoodbase.FieldEntID),
 			t1.C(entpowerrental.FieldGoodID),
@@ -238,18 +238,27 @@ func (h *baseQueryHandler) queryJoinGoodCoin(s *sql.Selector) error {
 		s.OnP(
 			sql.EQ(t.C(entgoodcoin.FieldCoinTypeID), id),
 		)
+		s.Where(
+			sql.EQ(t.C(entgoodcoin.FieldCoinTypeID), id),
+		)
 	}
 	if h.GoodCoinConds.CoinTypeIDs != nil {
 		uids, ok := h.GoodCoinConds.CoinTypeIDs.Val.([]uuid.UUID)
 		if !ok {
 			return wlog.Errorf("invalid cointypeids")
 		}
-		s.OnP(sql.In(t.C(entgoodcoin.FieldCoinTypeID), func() (_uids []interface{}) {
+		_uids := func() (_uids []interface{}) {
 			for _, uid := range uids {
 				_uids = append(_uids, interface{}(uid))
 			}
 			return
-		}()...))
+		}()
+		s.OnP(
+			sql.In(t.C(entgoodcoin.FieldCoinTypeID), _uids...),
+		)
+		s.Where(
+			sql.In(t.C(entgoodcoin.FieldCoinTypeID), _uids...),
+		)
 	}
 	return nil
 }
