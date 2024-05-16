@@ -72,6 +72,9 @@ func (h *baseQueryHandler) queryWithAppGoodBaseConds(t1 *sql.SelectTable, s *sql
 		s.OnP(
 			sql.EQ(t1.C(entappgoodbase.FieldAppID), id),
 		)
+		s.Where(
+			sql.EQ(t1.C(entappgoodbase.FieldAppID), id),
+		)
 	}
 	return nil
 }
