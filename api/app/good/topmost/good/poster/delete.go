@@ -23,7 +23,8 @@ func (s *Server) DeletePoster(ctx context.Context, in *npool.DeletePosterRequest
 	}
 	handler, err := poster1.NewHandler(
 		ctx,
-		poster1.WithID(req.ID, true),
+		poster1.WithID(req.ID, false),
+		poster1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
