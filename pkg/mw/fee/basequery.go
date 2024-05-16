@@ -52,7 +52,7 @@ func (h *baseQueryHandler) queryGoodBases(cli *ent.Client) (*ent.GoodBaseSelect,
 
 func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 	t := sql.Table(entgoodbase.Table)
-	s.LeftJoin(t).
+	s.Join(t).
 		On(
 			s.C(entgoodbase.FieldID),
 			t.C(entgoodbase.FieldID),
@@ -67,7 +67,7 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 
 func (h *baseQueryHandler) queryJoinFee(s *sql.Selector) error {
 	t1 := sql.Table(entfee.Table)
-	s.LeftJoin(t1).
+	s.Join(t1).
 		On(
 			s.C(entgoodbase.FieldEntID),
 			t1.C(entfee.FieldGoodID),
@@ -95,7 +95,7 @@ func (h *baseQueryHandler) queryJoinFee(s *sql.Selector) error {
 				_ids = append(_ids, id)
 			}
 			return
-		}))
+		}()...))
 	}
 	if h.EntID != nil {
 		s.OnP(sql.EQ(t1.C(entfee.FieldEntID), *h.EntID))
@@ -117,7 +117,16 @@ func (h *baseQueryHandler) queryJoinFee(s *sql.Selector) error {
 				_uids = append(_uids, uid)
 			}
 			return
-		}))
+		}()...))
+	}
+	if h.FeeConds.SettlementType != nil {
+		_type, ok := h.FeeConds.SettlementType.Val.(types.GoodSettlementType)
+		if !ok {
+			return wlog.Errorf("invalid settlementtype")
+		}
+		s.OnP(
+			sql.EQ(t1.C(entfee.FieldSettlementType), _type.String()),
+		)
 	}
 	s.AppendSelect(
 		t1.C(entfee.FieldID),

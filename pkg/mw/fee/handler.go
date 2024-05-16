@@ -218,7 +218,7 @@ func (h *Handler) withFeeConds(conds *npool.Conds) error {
 			}
 			ids = append(ids, _id)
 		}
-		h.FeeConds.EntID = &cruder.Cond{
+		h.FeeConds.EntIDs = &cruder.Cond{
 			Op:  conds.GetEntIDs().GetOp(),
 			Val: ids,
 		}
