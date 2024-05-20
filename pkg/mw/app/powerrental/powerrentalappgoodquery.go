@@ -202,6 +202,9 @@ func (h *powerRentalAppGoodQueryHandler) _getAppPowerRentalAppGood(ctx context.C
 	}
 
 	if h._ent.appGoodBase == nil {
+		if !must {
+			return nil
+		}
 		return wlog.Errorf("invalid appgoodbase")
 	}
 
