@@ -76,7 +76,7 @@ func (h *createHandler) createLocation(ctx context.Context, tx *ent.Tx) error {
 	}
 	n, err := rc.RowsAffected()
 	if err != nil || n != 1 {
-		return wlog.Errorf("fail create manufacturer: %v", err)
+		return wlog.Errorf("fail create location: %v", err)
 	}
 	return nil
 }
