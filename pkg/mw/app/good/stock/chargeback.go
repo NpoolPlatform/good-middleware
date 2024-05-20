@@ -21,7 +21,7 @@ type chargeBackHandler struct {
 	lockOp *lockopHandler
 }
 
-func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
+func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
 	stock, ok := h.stocks[lock.AppGoodID]
 	if !ok || stock.stock == nil {
 		return wlog.Errorf("invalid stock")
@@ -59,7 +59,7 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppSt
 		return wlog.Errorf("stock exhausted")
 	}
 
-	if _, err := stockcrud.UpdateSet(
+	if stock.stock, err = stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(stock.stock.ID),
 		&stockcrud.Req{
 			SpotQuantity: &spotQuantity,
@@ -73,7 +73,7 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppSt
 	return nil
 }
 
-func (h *chargeBackHandler) chargeBackMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
+func (h *chargeBackHandler) chargeBackMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
 	stock, ok := h.stocks[lock.AppGoodID]
 	if !ok || stock.miningGoodStock == nil {
 		return wlog.Errorf("invalid stock")
@@ -111,7 +111,7 @@ func (h *chargeBackHandler) chargeBackMiningGoodStock(ctx context.Context, lock 
 		return wlog.Errorf("stock exhausted")
 	}
 
-	if _, err := mininggoodstockcrud.UpdateSet(
+	if stock.miningGoodStock, err = mininggoodstockcrud.UpdateSet(
 		tx.MiningGoodStock.UpdateOneID(stock.miningGoodStock.ID),
 		&mininggoodstockcrud.Req{
 			SpotQuantity: &spotQuantity,
@@ -125,7 +125,7 @@ func (h *chargeBackHandler) chargeBackMiningGoodStock(ctx context.Context, lock 
 	return nil
 }
 
-func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
+func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
 	stock, ok := h.stocks[lock.AppGoodID]
 	if !ok || stock.appGoodStock == nil {
 		return wlog.Errorf("invalid stock")
@@ -153,7 +153,7 @@ func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, lock *ent.Ap
 		return wlog.Errorf("invalid stock")
 	}
 
-	if _, err := appstockcrud.UpdateSet(
+	if stock.appGoodStock, err = appstockcrud.UpdateSet(
 		tx.AppStock.UpdateOneID(stock.appGoodStock.ID),
 		&appstockcrud.Req{
 			InService: &inService,
@@ -167,11 +167,7 @@ func (h *chargeBackHandler) chargeBackAppStock(ctx context.Context, lock *ent.Ap
 	return nil
 }
 
-func (h *chargeBackHandler) chargeBackAppMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	if !h.stockByMiningPool(lock.AppGoodID) {
-		return nil
-	}
-
+func (h *chargeBackHandler) chargeBackAppMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
 	stock, ok := h.stocks[lock.AppGoodID]
 	if !ok || stock.appMiningGoodStock == nil {
 		return wlog.Errorf("invalid stock")
@@ -199,7 +195,7 @@ func (h *chargeBackHandler) chargeBackAppMiningGoodStock(ctx context.Context, lo
 		return wlog.Errorf("invalid stock")
 	}
 
-	if _, err := appmininggoodstockcrud.UpdateSet(
+	if stock.appMiningGoodStock, err = appmininggoodstockcrud.UpdateSet(
 		tx.AppMiningGoodStock.UpdateOneID(stock.appMiningGoodStock.ID),
 		&appmininggoodstockcrud.Req{
 			InService: &inService,

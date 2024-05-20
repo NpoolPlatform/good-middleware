@@ -6,7 +6,9 @@ import (
 
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
+	appmininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
+	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -19,7 +21,7 @@ type expireHandler struct {
 	lockOp *lockopHandler
 }
 
-func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
+func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
 	stock, ok := h.stocks[lock.AppGoodID]
 	if !ok || stock.stock == nil {
 		return wlog.Errorf("invalid stock")
@@ -43,7 +45,7 @@ func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock,
 		return wlog.Errorf("stock exhausted")
 	}
 
-	if _, err := stockcrud.UpdateSet(
+	if stock.stock, err = stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(stock.stock.ID),
 		&stockcrud.Req{
 			InService:    &inService,
@@ -55,7 +57,7 @@ func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock,
 	return nil
 }
 
-func (h *expireHandler) expireMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
+func (h *expireHandler) expireMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
 	stock, ok := h.stocks[lock.AppGoodID]
 	if !ok || stock.miningGoodStock == nil {
 		return wlog.Errorf("invalid stock")
@@ -79,9 +81,9 @@ func (h *expireHandler) expireMiningGoodStock(ctx context.Context, lock *ent.App
 		return wlog.Errorf("stock exhausted")
 	}
 
-	if _, err := stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(stock.miningGoodStock.ID),
-		&stockcrud.Req{
+	if stock.miningGoodStock, err = mininggoodstockcrud.UpdateSet(
+		tx.MiningGoodStock.UpdateOneID(stock.miningGoodStock.ID),
+		&mininggoodstockcrud.Req{
 			InService:    &inService,
 			SpotQuantity: &spotQuantity,
 		},
@@ -91,7 +93,7 @@ func (h *expireHandler) expireMiningGoodStock(ctx context.Context, lock *ent.App
 	return nil
 }
 
-func (h *expireHandler) expireAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
+func (h *expireHandler) expireAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
 	stock, ok := h.stocks[lock.AppGoodID]
 	if !ok || stock.appGoodStock == nil {
 		return wlog.Errorf("invalid stock")
@@ -103,7 +105,7 @@ func (h *expireHandler) expireAppStock(ctx context.Context, lock *ent.AppStockLo
 		return wlog.Errorf("invalid stock")
 	}
 
-	if _, err := appstockcrud.UpdateSet(
+	if stock.appGoodStock, err = appstockcrud.UpdateSet(
 		tx.AppStock.UpdateOneID(stock.appGoodStock.ID),
 		&appstockcrud.Req{
 			InService: &inService,
@@ -115,7 +117,7 @@ func (h *expireHandler) expireAppStock(ctx context.Context, lock *ent.AppStockLo
 	return nil
 }
 
-func (h *expireHandler) expireAppMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
+func (h *expireHandler) expireAppMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
 	stock, ok := h.stocks[lock.AppGoodID]
 	if !ok || stock.appMiningGoodStock == nil {
 		return wlog.Errorf("invalid stock")
@@ -127,9 +129,9 @@ func (h *expireHandler) expireAppMiningGoodStock(ctx context.Context, lock *ent.
 		return wlog.Errorf("invalid stock")
 	}
 
-	if _, err := appstockcrud.UpdateSet(
-		tx.AppStock.UpdateOneID(stock.appMiningGoodStock.ID),
-		&appstockcrud.Req{
+	if stock.appMiningGoodStock, err = appmininggoodstockcrud.UpdateSet(
+		tx.AppMiningGoodStock.UpdateOneID(stock.appMiningGoodStock.ID),
+		&appmininggoodstockcrud.Req{
 			InService: &inService,
 		},
 	).Save(ctx); err != nil {
