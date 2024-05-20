@@ -26,7 +26,10 @@ func (h *powerRentalAppGoodQueryHandler) getPowerRental(ctx context.Context, cli
 	if h._ent.powerRental, err = cli.
 		PowerRental.
 		Query().
-		Where(entpowerrental.GoodID(*h.AppGoodBaseReq.GoodID)).
+		Where(
+			entpowerrental.GoodID(*h.AppGoodBaseReq.GoodID),
+			entpowerrental.DeletedAt(0),
+		).
 		Only(ctx); err != nil {
 		if ent.IsNotFound(err) && !must {
 			return nil
@@ -107,7 +110,7 @@ func (h *powerRentalAppGoodQueryHandler) _getPowerRentalGood(ctx context.Context
 }
 
 func (h *powerRentalAppGoodQueryHandler) getAppPowerRental(ctx context.Context, cli *ent.Client, must bool) (err error) {
-	stm := cli.AppPowerRental.Query()
+	stm := cli.AppPowerRental.Query().Where(entapppowerrental.DeletedAt(0))
 	if h.ID != nil {
 		stm.Where(entapppowerrental.ID(*h.ID))
 	}
