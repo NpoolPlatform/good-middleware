@@ -303,14 +303,14 @@ func (h *baseQueryHandler) queryJoinPowerRental(s *sql.Selector) error {
 		OnP(
 			sql.EQ(t1.C(entpowerrental.FieldDeletedAt), 0),
 		)
-	if h.PowerRentalConds != nil && h.PowerRentalConds.GoodID != nil {
+	if h.PowerRentalConds.GoodID != nil {
 		uid, ok := h.PowerRentalConds.GoodID.Val.(uuid.UUID)
 		if !ok {
 			return wlog.Errorf("invalid goodid")
 		}
 		s.OnP(sql.EQ(t1.C(entpowerrental.FieldGoodID), uid))
 	}
-	if h.PowerRentalConds != nil && h.PowerRentalConds.GoodIDs != nil {
+	if h.PowerRentalConds.GoodIDs != nil {
 		uids, ok := h.PowerRentalConds.GoodIDs.Val.([]uuid.UUID)
 		if !ok {
 			return wlog.Errorf("invalid goodids")
