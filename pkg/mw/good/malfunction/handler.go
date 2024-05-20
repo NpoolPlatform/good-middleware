@@ -218,6 +218,16 @@ func (h *Handler) withMalfunctionConds(conds *npool.Conds) error {
 			Val: ids,
 		}
 	}
+	if conds.GoodID != nil {
+		id, err := uuid.Parse(conds.GetGoodID().GetValue())
+		if err != nil {
+			return wlog.WrapError(err)
+		}
+		h.MalfunctionConds.GoodID = &cruder.Cond{
+			Op:  conds.GetGoodID().GetOp(),
+			Val: id,
+		}
+	}
 	return nil
 }
 
