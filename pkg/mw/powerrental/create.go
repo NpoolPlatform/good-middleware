@@ -220,11 +220,18 @@ func (h *createHandler) _validateStock() error {
 			poolStock.EntID = func() *uuid.UUID { s := uuid.New(); return &s }()
 		}
 	}
+	return h.validateStock()
+}
+
+func (h *createHandler) formalizeEntIDs() {
+	if h.EntID == nil {
+		h.EntID = func() *uuid.UUID { s := uuid.New(); return &s }()
+	}
 	if h.GoodBaseReq.EntID == nil {
 		h.GoodBaseReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 		h.StockReq.GoodID = h.GoodBaseReq.EntID
+		h.GoodID = h.GoodBaseReq.EntID
 	}
-	return h.validateStock()
 }
 
 func (h *createHandler) formalizePowerRentalParameters() {
@@ -245,13 +252,7 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 
-	if h.EntID == nil {
-		h.EntID = func() *uuid.UUID { s := uuid.New(); return &s }()
-	}
-	if h.GoodID == nil {
-		h.GoodID = func() *uuid.UUID { s := uuid.New(); return &s }()
-	}
-
+	handler.formalizeEntIDs()
 	handler.constructPowerRentalSQL()
 	if err := handler.constructGoodBaseSQL(ctx); err != nil {
 		return wlog.WrapError(err)
