@@ -88,6 +88,10 @@ func (h *updateHandler) constructPowerRentalSQL() {
 		_sql += fmt.Sprintf("%vstock_mode = '%v', ", set, h.StockMode.String())
 		set = ""
 	}
+	if h.UnitLockDeposit != nil {
+		_sql += fmt.Sprintf("%vunit_lock_deposit = '%v', ", set, *h.UnitLockDeposit)
+		set = ""
+	}
 	if set != "" {
 		return
 	}
