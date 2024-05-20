@@ -48,7 +48,7 @@ func (h *updateHandler) constructSQL() error {
 	}
 	if h.Main != nil && *h.Main {
 		_sql += fmt.Sprintf(
-			" and not exist (good_id = '%v' and deleted_at = 0 and main = 1)",
+			" and not exists (select * from (select 1 from good_coins as tmp where good_id = '%v' and deleted_at = 0 and main = 1 limit 1) as tmp)",
 			h.goodID,
 		)
 	}
