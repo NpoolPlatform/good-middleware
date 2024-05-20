@@ -150,8 +150,8 @@ func (h *stockAppGoodQuery) getGoodStocks(ctx context.Context, cli *ent.Client) 
 	if err != nil {
 		return wlog.WrapError(err)
 	}
-	for _, stock := range stocks {
-		for _, _stock := range h.stocks {
+	for _, _stock := range h.stocks {
+		for _, stock := range stocks {
 			if _stock.goodBase != nil && _stock.goodBase.EntID == stock.GoodID {
 				_stock.stock = stock
 				break
