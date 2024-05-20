@@ -93,7 +93,7 @@ func (h *updateHandler) constructPowerRentalSQL() {
 	}
 	_sql += fmt.Sprintf("updated_at = %v ", now)
 	_sql += fmt.Sprintf("where id = %v ", *h.ID)
-	_sql += "and not exists ("
+	_sql += "and exists ("
 	_sql += "select 1 from ("
 	_sql += "select * from power_rentals as pr "
 	_sql += fmt.Sprintf("where pr.good_id = '%v'", *h.GoodID)
@@ -118,8 +118,8 @@ func (h *updateHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) err
 	if err != nil {
 		return wlog.WrapError(err)
 	}
-	if _, err := rc.RowsAffected(); err != nil {
-		return wlog.WrapError(err)
+	if n, err := rc.RowsAffected(); err != nil || n != 1 {
+		return wlog.Errorf("fail update powerrenta: %v", err)
 	}
 	return nil
 }
