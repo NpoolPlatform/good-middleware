@@ -20,7 +20,7 @@ type lockHandler struct {
 	lockOp *lockopHandler
 }
 
-func (h *lockHandler) lockStock(ctx context.Context, stock *LockStock, tx *ent.Tx) error {
+func (h *lockHandler) lockStock(ctx context.Context, stock *LockStock, tx *ent.Tx) (err error) {
 	_stock, ok := h.stocks[*stock.AppGoodID]
 	if !ok || _stock.stock == nil {
 		return wlog.Errorf("invalid stock")
@@ -61,7 +61,8 @@ func (h *lockHandler) lockStock(ctx context.Context, stock *LockStock, tx *ent.T
 		return wlog.Errorf("stock exhausted")
 	}
 
-	if _, err := stockcrud.UpdateSet(
+	// Here we should update the lock result
+	if _stock.stock, err = stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(_stock.stock.ID),
 		&stockcrud.Req{
 			SpotQuantity: &spotQuantity,
@@ -74,7 +75,7 @@ func (h *lockHandler) lockStock(ctx context.Context, stock *LockStock, tx *ent.T
 	return nil
 }
 
-func (h *lockHandler) lockMiningGoodStock(ctx context.Context, stock *LockStock, tx *ent.Tx) error {
+func (h *lockHandler) lockMiningGoodStock(ctx context.Context, stock *LockStock, tx *ent.Tx) (err error) {
 	_stock, ok := h.stocks[*stock.AppGoodID]
 	if !ok || _stock.miningGoodStock == nil {
 		return wlog.Errorf("invalid mininggoodstock")
@@ -115,7 +116,7 @@ func (h *lockHandler) lockMiningGoodStock(ctx context.Context, stock *LockStock,
 		return wlog.Errorf("stock exhausted")
 	}
 
-	if _, err := mininggoodstockcrud.UpdateSet(
+	if _stock.miningGoodStock, err = mininggoodstockcrud.UpdateSet(
 		tx.MiningGoodStock.UpdateOneID(_stock.miningGoodStock.ID),
 		&mininggoodstockcrud.Req{
 			SpotQuantity: &spotQuantity,
@@ -128,7 +129,7 @@ func (h *lockHandler) lockMiningGoodStock(ctx context.Context, stock *LockStock,
 	return nil
 }
 
-func (h *lockHandler) lockAppStock(ctx context.Context, stock *LockStock, tx *ent.Tx) error {
+func (h *lockHandler) lockAppStock(ctx context.Context, stock *LockStock, tx *ent.Tx) (err error) {
 	_stock, ok := h.stocks[*stock.AppGoodID]
 	if !ok || _stock.appGoodStock == nil {
 		return wlog.Errorf("invalid appstock")
@@ -151,7 +152,7 @@ func (h *lockHandler) lockAppStock(ctx context.Context, stock *LockStock, tx *en
 		return wlog.Errorf("invalid stock")
 	}
 
-	if _, err := appstockcrud.UpdateSet(
+	if _stock.appGoodStock, err = appstockcrud.UpdateSet(
 		tx.AppStock.UpdateOneID(_stock.appGoodStock.ID),
 		&appstockcrud.Req{
 			SpotQuantity: &spotQuantity,
@@ -164,7 +165,7 @@ func (h *lockHandler) lockAppStock(ctx context.Context, stock *LockStock, tx *en
 	return nil
 }
 
-func (h *lockHandler) lockAppMiningGoodStock(ctx context.Context, stock *LockStock, tx *ent.Tx) error {
+func (h *lockHandler) lockAppMiningGoodStock(ctx context.Context, stock *LockStock, tx *ent.Tx) (err error) {
 	_stock, ok := h.stocks[*stock.AppGoodID]
 	if !ok || _stock.appMiningGoodStock == nil {
 		return wlog.Errorf("invalid appmininggoodstock")
@@ -187,7 +188,7 @@ func (h *lockHandler) lockAppMiningGoodStock(ctx context.Context, stock *LockSto
 		return wlog.Errorf("invalid stock")
 	}
 
-	if _, err := appmininggoodstockcrud.UpdateSet(
+	if _stock.appMiningGoodStock, err = appmininggoodstockcrud.UpdateSet(
 		tx.AppMiningGoodStock.UpdateOneID(_stock.appMiningGoodStock.ID),
 		&appmininggoodstockcrud.Req{
 			SpotQuantity: &spotQuantity,
