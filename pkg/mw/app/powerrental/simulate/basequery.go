@@ -83,7 +83,7 @@ func (h *baseQueryHandler) queryJoinAppGoodBase(s *sql.Selector) error {
 		Join(t3).
 		On(
 			t1.C(entappgoodbase.FieldGoodID),
-			t3.C(entgoodbase.FieldEntID),
+			t3.C(entpowerrental.FieldGoodID),
 		)
 	if h.AppGoodBaseConds.AppID != nil {
 		id, ok := h.AppGoodBaseConds.AppID.Val.(uuid.UUID)
