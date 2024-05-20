@@ -320,7 +320,7 @@ func (h *baseQueryHandler) queryJoinPowerRental(s *sql.Selector) error {
 				_uids = append(_uids, interface{}(uid))
 			}
 			return
-		}))
+		}()...))
 	}
 	s.Join(t2).
 		On(
