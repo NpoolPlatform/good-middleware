@@ -56,6 +56,9 @@ func (h *queryHandler) scan(ctx context.Context) error {
 func (h *queryHandler) getMiningGoodStocks(ctx context.Context, cli *ent.Client) error {
 	goodStockIDs := func() (uids []uuid.UUID) {
 		for _, info := range h.infos {
+			if _, err := uuid.Parse(info.GoodStockID); err != nil {
+				continue
+			}
 			uids = append(uids, uuid.MustParse(info.GoodStockID))
 		}
 		return
@@ -88,6 +91,9 @@ func (h *queryHandler) getMiningGoodStocks(ctx context.Context, cli *ent.Client)
 func (h *queryHandler) getGoodCoins(ctx context.Context, cli *ent.Client) error {
 	goodIDs := func() (uids []uuid.UUID) {
 		for _, info := range h.infos {
+			if _, err := uuid.Parse(info.GoodID); err != nil {
+				continue
+			}
 			uids = append(uids, uuid.MustParse(info.GoodID))
 		}
 		return
