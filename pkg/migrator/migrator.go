@@ -11,6 +11,7 @@ import (
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	constant "github.com/NpoolPlatform/go-service-framework/pkg/mysql/const"
 	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
+	"github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
@@ -220,6 +221,9 @@ func migrateGood(ctx context.Context, conn *sql.DB) error {
 				SetCreatedAt(good.CreatedAt).
 				SetUpdatedAt(good.UpdatedAt).
 				Save(_ctx); err != nil {
+				if ent.IsConstraintError(err) {
+					return nil
+				}
 				return err
 			}
 			switch good.GoodType {
@@ -444,6 +448,9 @@ func migrateAppGood(ctx context.Context, conn *sql.DB) error {
 				SetDisplayIndex(appGood.DisplayIndex).
 				SetBanner(appGood.GoodBanner).
 				Save(_ctx); err != nil {
+				if ent.IsConstraintError(err) {
+					return nil
+				}
 				return err
 			}
 			switch appGood.GoodType {
@@ -576,11 +583,11 @@ func Migrate(ctx context.Context) error {
 		}
 	}()
 
-	if err := migrateGood(ctx, conn); err != nil {
-		return err
+	if err = migrateGood(ctx, conn); err != nil {
+		return wlog.WrapError(err)
 	}
-	if err := migrateAppGood(ctx, conn); err != nil {
-		return err
+	if err = migrateAppGood(ctx, conn); err != nil {
+		return wlog.WrapError(err)
 	}
 
 	return nil

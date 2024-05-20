@@ -250,7 +250,7 @@ func (h *createHandler) validateUnitPrice() error {
 	return nil
 }
 
-func (h *createHandler) formalizeEntID() {
+func (h *createHandler) formalizeEntIDs() {
 	if h.AppGoodStockReq.EntID == nil {
 		h.AppGoodStockReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 	}
@@ -288,7 +288,7 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	if err := handler.requirePowerRentalGood(ctx); err != nil {
 		return wlog.WrapError(err)
 	}
-	handler.formalizeEntID()
+	handler.formalizeEntIDs()
 	if err := handler.validateUnitPrice(); err != nil {
 		return wlog.WrapError(err)
 	}
