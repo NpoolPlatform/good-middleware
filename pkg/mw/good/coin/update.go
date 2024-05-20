@@ -18,10 +18,6 @@ type updateHandler struct {
 }
 
 func (h *updateHandler) constructSQL() error {
-	if h.ID == nil && h.EntID == nil {
-		return wlog.Errorf("invalid id")
-	}
-
 	set := "set "
 	now := uint32(time.Now().Unix())
 
@@ -38,18 +34,12 @@ func (h *updateHandler) constructSQL() error {
 		return wlog.WrapError(cruder.ErrUpdateNothing)
 	}
 	_sql += fmt.Sprintf("updated_at = %v ", now)
-	whereAnd := "where "
-	if h.ID != nil {
-		_sql += fmt.Sprintf("where id = %v ", *h.ID)
-		whereAnd = "and"
-	}
-	if h.EntID != nil {
-		_sql += fmt.Sprintf("%v ent_id = '%v'", whereAnd, *h.EntID)
-	}
+	_sql += fmt.Sprintf("where id = %v ", *h.ID)
 	if h.Main != nil && *h.Main {
 		_sql += fmt.Sprintf(
-			" and not exists (select * from (select 1 from good_coins as tmp where good_id = '%v' and deleted_at = 0 and main = 1 limit 1) as tmp)",
+			" and not exists (select * from (select 1 from good_coins as tmp where good_id = '%v' and deleted_at = 0 and main = 1 and id != %v limit 1) as tmp)",
 			h.goodID,
+			*h.ID,
 		)
 	}
 	h.sql = _sql
