@@ -88,6 +88,9 @@ func (h *createHandler) createTopMost(ctx context.Context, tx *ent.Tx) error {
 }
 
 func (h *Handler) CreateTopMost(ctx context.Context) error {
+	if *h.EndAt <= *h.StartAt {
+		return wlog.Errorf("invalid startend")
+	}
 	handler := &createHandler{
 		Handler: h,
 	}
