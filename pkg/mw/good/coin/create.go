@@ -62,12 +62,15 @@ func (h *createHandler) constructSQL() {
 	_sql += "where not exists ("
 	_sql += "select 1 from good_coins "
 	_sql += fmt.Sprintf(
-		"where good_id='%v' and coin_type_id='%v' and deleted_at = 0",
+		"where (good_id = '%v' and coin_type_id = '%v' and deleted_at = 0)",
 		*h.GoodID,
 		*h.CoinTypeID,
 	)
 	if h.Main != nil && *h.Main {
-		_sql += " and main=1"
+		_sql += fmt.Sprintf(
+			" or (good_id = '%v' and main = 1 and deleted_at = 0)",
+			*h.GoodID,
+		)
 	}
 	_sql += " limit 1)"
 	h.sql = _sql
