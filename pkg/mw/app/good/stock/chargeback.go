@@ -21,15 +21,20 @@ type chargeBackHandler struct {
 	lockOp *lockopHandler
 }
 
-func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
+func (h *chargeBackHandler) constructSQL(table string, lock *ent.AppStockLock, returnSpotQuantity bool) (string, error) {
 	sql := fmt.Sprintf(
-		`update stocks_v1
+		`update %v
 		set
-		  spot_quantity = spot_quantity + %v,
 		  sold = sold - %v`,
-		lock.Units,
+		table,
 		lock.Units,
 	)
+	if returnSpotQuantity {
+		sql += fmt.Sprintf(
+			`, spot_quantity = spot_quantity + %v`,
+			lock.Units,
+		)
+	}
 	switch lock.LockState {
 	case types.AppStockLockState_AppStockInService.String():
 		sql += fmt.Sprintf(
@@ -48,7 +53,7 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppSt
 			lock.Units,
 		)
 	default:
-		return wlog.Errorf("invalid lockstate")
+		return "", wlog.Errorf("invalid lockstate")
 	}
 	sql += fmt.Sprintf(
 		`and
@@ -57,6 +62,14 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppSt
 		  in_service + wait_start + locked + app_reserved + spot_quantity = total`,
 		lock.Units,
 	)
+	return sql, nil
+}
+
+func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
+	sql, err := h.constructSQL("stocks_v1", lock, true)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
 	return h.execSQL(ctx, tx, sql)
 }
 
