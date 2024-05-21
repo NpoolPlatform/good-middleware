@@ -3,17 +3,12 @@ package appstock
 
 import (
 	"context"
+	"fmt"
 
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
-	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
-	appmininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
-	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
-	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
-
-	"github.com/shopspring/decimal"
 )
 
 type waitStartHandler struct {
@@ -21,48 +16,45 @@ type waitStartHandler struct {
 	lockOp *lockopHandler
 }
 
+func (h *waitStartHandler) constructSQL(table string, lock *ent.AppStockLock, checkTotal bool, id uint32) (string, error) {
+	sql := fmt.Sprintf(
+		`update %v
+		set
+		  wait_start = wait_start + %v,
+		  locked = locked - %v,
+		  sold = sold + %v`,
+		table,
+		lock.Units,
+		lock.Units,
+		lock.Units,
+	)
+	sql += fmt.Sprintf(
+		`and
+		  id = %v
+		and
+		  deleted_at = 0
+		and
+		  locked >= %v`,
+		id,
+		lock.Units,
+	)
+	if checkTotal {
+		sql += ` and
+		  in_service + wait_start + locked + app_reserved + spot_quantity = total`
+	}
+	return sql, nil
+}
+
 func (h *waitStartHandler) waitStartStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
 	stock, ok := h.stocks[lock.AppGoodID]
 	if !ok || stock.stock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-
-	locked := stock.stock.Locked
-	sold := stock.stock.Sold
-	waitStart := stock.stock.WaitStart
-
-	waitStart = lock.Units.Add(waitStart)
-	locked = locked.Sub(lock.Units)
-	sold = lock.Units.Add(sold)
-
-	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid stock")
-	}
-	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid stock")
-	}
-
-	if locked.Add(stock.stock.InService).
-		Add(stock.stock.WaitStart).
-		Add(stock.stock.AppReserved).
-		Add(stock.stock.SpotQuantity).
-		Cmp(stock.stock.Total) > 0 {
-		return wlog.Errorf("stock exhausted")
-	}
-
-	updatedStock := stock.stock
-	if updatedStock, err = stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(stock.stock.ID),
-		&stockcrud.Req{
-			Locked:    &locked,
-			WaitStart: &waitStart,
-			Sold:      &sold,
-		},
-	).Save(ctx); err != nil {
+	sql, err := h.constructSQL("stocks_v1", lock, true, stock.stock.ID)
+	if err != nil {
 		return wlog.WrapError(err)
 	}
-	*stock.stock = *updatedStock
-	return nil
+	return h.execSQL(ctx, tx, sql)
 }
 
 func (h *waitStartHandler) waitStartMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
@@ -70,43 +62,11 @@ func (h *waitStartHandler) waitStartMiningGoodStock(ctx context.Context, lock *e
 	if !ok || stock.miningGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-
-	locked := stock.miningGoodStock.Locked
-	sold := stock.miningGoodStock.Sold
-	waitStart := stock.miningGoodStock.WaitStart
-
-	waitStart = lock.Units.Add(waitStart)
-	locked = locked.Sub(lock.Units)
-	sold = lock.Units.Add(sold)
-
-	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid stock")
-	}
-	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid stock")
-	}
-
-	if locked.Add(stock.miningGoodStock.InService).
-		Add(stock.miningGoodStock.WaitStart).
-		Add(stock.miningGoodStock.AppReserved).
-		Add(stock.miningGoodStock.SpotQuantity).
-		Cmp(stock.miningGoodStock.Total) > 0 {
-		return wlog.Errorf("stock exhausted")
-	}
-
-	updatedStock := stock.miningGoodStock
-	if updatedStock, err = mininggoodstockcrud.UpdateSet(
-		tx.MiningGoodStock.UpdateOneID(stock.miningGoodStock.ID),
-		&mininggoodstockcrud.Req{
-			Locked:    &locked,
-			WaitStart: &waitStart,
-			Sold:      &sold,
-		},
-	).Save(ctx); err != nil {
+	sql, err := h.constructSQL("mining_good_stocks", lock, true, stock.miningGoodStock.ID)
+	if err != nil {
 		return wlog.WrapError(err)
 	}
-	*stock.miningGoodStock = *updatedStock
-	return nil
+	return h.execSQL(ctx, tx, sql)
 }
 
 func (h *waitStartHandler) waitStartAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
@@ -114,35 +74,11 @@ func (h *waitStartHandler) waitStartAppStock(ctx context.Context, lock *ent.AppS
 	if !ok || stock.appGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-
-	h.ID = &stock.appGoodStock.ID
-	locked := stock.appGoodStock.Locked
-	sold := stock.appGoodStock.Sold
-	waitStart := stock.appGoodStock.WaitStart
-
-	waitStart = lock.Units.Add(waitStart)
-	locked = locked.Sub(lock.Units)
-	sold = lock.Units.Add(sold)
-
-	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid stock")
-	}
-	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid stock")
-	}
-
-	if stock.appGoodStock, err = appstockcrud.UpdateSet(
-		tx.AppStock.UpdateOneID(stock.appGoodStock.ID),
-		&appstockcrud.Req{
-			Locked:    &locked,
-			WaitStart: &waitStart,
-			Sold:      &sold,
-		},
-	).Save(ctx); err != nil {
+	sql, err := h.constructSQL("app_stocks", lock, false, stock.appGoodStock.ID)
+	if err != nil {
 		return wlog.WrapError(err)
 	}
-
-	return nil
+	return h.execSQL(ctx, tx, sql)
 }
 
 func (h *waitStartHandler) waitStartAppMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
@@ -150,35 +86,11 @@ func (h *waitStartHandler) waitStartAppMiningGoodStock(ctx context.Context, lock
 	if !ok || stock.appMiningGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-
-	h.ID = &stock.appMiningGoodStock.ID
-	locked := stock.appMiningGoodStock.Locked
-	sold := stock.appMiningGoodStock.Sold
-	waitStart := stock.appMiningGoodStock.WaitStart
-
-	waitStart = lock.Units.Add(waitStart)
-	locked = locked.Sub(lock.Units)
-	sold = lock.Units.Add(sold)
-
-	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid stock")
-	}
-	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid stock")
-	}
-
-	if stock.appMiningGoodStock, err = appmininggoodstockcrud.UpdateSet(
-		tx.AppMiningGoodStock.UpdateOneID(stock.appMiningGoodStock.ID),
-		&appmininggoodstockcrud.Req{
-			Locked:    &locked,
-			WaitStart: &waitStart,
-			Sold:      &sold,
-		},
-	).Save(ctx); err != nil {
+	sql, err := h.constructSQL("app_mining_good_stocks", lock, false, stock.appMiningGoodStock.ID)
+	if err != nil {
 		return wlog.WrapError(err)
 	}
-
-	return nil
+	return h.execSQL(ctx, tx, sql)
 }
 
 func (h *Handler) WaitStartStock(ctx context.Context) error {
