@@ -1,4 +1,3 @@
-
 package appstock
 
 import (
@@ -14,7 +13,7 @@ type reserveHandler struct {
 	*stockAppGoodQuery
 }
 
-func (h *reserveHandler) constructGoodStockSQL(table string, id uint32) (string, error) {
+func (h *reserveHandler) constructGoodStockSQL(table string, id uint32) string {
 	sql := fmt.Sprintf(
 		`update %v
 		set
@@ -36,10 +35,10 @@ func (h *reserveHandler) constructGoodStockSQL(table string, id uint32) (string,
 	)
 	sql += ` and
 		in_service + wait_start + locked + app_reserved + spot_quantity = total`
-	return sql, nil
+	return sql
 }
 
-func (h *reserveHandler) constructAppGoodStockSQL(table string, id uint32) (string, error) {
+func (h *reserveHandler) constructAppGoodStockSQL(table string, id uint32) string {
 	sql := fmt.Sprintf(
 		`update %v
 		set
@@ -58,7 +57,7 @@ func (h *reserveHandler) constructAppGoodStockSQL(table string, id uint32) (stri
 		  spot_quantity <= reserved`,
 		id,
 	)
-	return sql, nil
+	return sql
 }
 
 func (h *reserveHandler) reserveStock(ctx context.Context, tx *ent.Tx) error {
@@ -66,10 +65,7 @@ func (h *reserveHandler) reserveStock(ctx context.Context, tx *ent.Tx) error {
 	if !ok || stock.stock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-	sql, err := h.constructGoodStockSQL("stocks_v1", stock.stock.ID)
-	if err != nil {
-		return wlog.WrapError(err)
-	}
+	sql := h.constructGoodStockSQL("stocks_v1", stock.stock.ID)
 	return h.execSQL(ctx, tx, sql)
 }
 
@@ -78,10 +74,7 @@ func (h *reserveHandler) reserveMiningGoodStock(ctx context.Context, tx *ent.Tx)
 	if !ok || stock.miningGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-	sql, err := h.constructGoodStockSQL("mining_good_stocks", stock.miningGoodStock.ID)
-	if err != nil {
-		return wlog.WrapError(err)
-	}
+	sql := h.constructGoodStockSQL("mining_good_stocks", stock.miningGoodStock.ID)
 	return h.execSQL(ctx, tx, sql)
 }
 
@@ -90,10 +83,7 @@ func (h *reserveHandler) reserveAppStock(ctx context.Context, tx *ent.Tx) error 
 	if !ok || stock.appGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-	sql, err := h.constructAppGoodStockSQL("app_stocks", stock.appGoodStock.ID)
-	if err != nil {
-		return wlog.WrapError(err)
-	}
+	sql := h.constructAppGoodStockSQL("app_stocks", stock.appGoodStock.ID)
 	return h.execSQL(ctx, tx, sql)
 }
 
@@ -102,10 +92,7 @@ func (h *reserveHandler) reserveAppMiningGoodStock(ctx context.Context, tx *ent.
 	if !ok || stock.appMiningGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-	sql, err := h.constructAppGoodStockSQL("app_mining_good_stocks", stock.appMiningGoodStock.ID)
-	if err != nil {
-		return wlog.WrapError(err)
-	}
+	sql := h.constructAppGoodStockSQL("app_mining_good_stocks", stock.appMiningGoodStock.ID)
 	return h.execSQL(ctx, tx, sql)
 }
 

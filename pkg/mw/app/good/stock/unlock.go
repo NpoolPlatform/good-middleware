@@ -49,7 +49,7 @@ func (h *unlockHandler) constructGoodStockSQL(table string, lock *ent.AppStockLo
 	return sql, nil
 }
 
-func (h *unlockHandler) constructAppGoodStockSQL(table string, lock *ent.AppStockLock, id uint32) (string, error) {
+func (h *unlockHandler) constructAppGoodStockSQL(table string, lock *ent.AppStockLock, id uint32) string {
 	sql := fmt.Sprintf(
 		`update %v
 		set
@@ -71,7 +71,7 @@ func (h *unlockHandler) constructAppGoodStockSQL(table string, lock *ent.AppStoc
 		id,
 		lock.Units,
 	)
-	return sql, nil
+	return sql
 }
 
 func (h *unlockHandler) unlockStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
@@ -103,10 +103,7 @@ func (h *unlockHandler) unlockAppStock(ctx context.Context, lock *ent.AppStockLo
 	if !ok || stock.appGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-	sql, err := h.constructAppGoodStockSQL("app_stocks", lock, stock.appGoodStock.ID)
-	if err != nil {
-		return wlog.WrapError(err)
-	}
+	sql := h.constructAppGoodStockSQL("app_stocks", lock, stock.appGoodStock.ID)
 	return h.execSQL(ctx, tx, sql)
 }
 
@@ -115,10 +112,7 @@ func (h *unlockHandler) unlockAppMiningGoodStock(ctx context.Context, lock *ent.
 	if !ok || stock.appMiningGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-	sql, err := h.constructAppGoodStockSQL("app_mining_good_stocks", lock, stock.appMiningGoodStock.ID)
-	if err != nil {
-		return wlog.WrapError(err)
-	}
+	sql := h.constructAppGoodStockSQL("app_mining_good_stocks", lock, stock.appMiningGoodStock.ID)
 	return h.execSQL(ctx, tx, sql)
 }
 

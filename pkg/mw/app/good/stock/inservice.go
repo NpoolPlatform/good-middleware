@@ -16,7 +16,7 @@ type inServiceHandler struct {
 	lockOp *lockopHandler
 }
 
-func (h *inServiceHandler) constructSQL(table string, lock *ent.AppStockLock, checkTotal bool, id uint32) (string, error) {
+func (h *inServiceHandler) constructSQL(table string, lock *ent.AppStockLock, checkTotal bool, id uint32) string {
 	sql := fmt.Sprintf(
 		`update %v
 		set
@@ -40,7 +40,7 @@ func (h *inServiceHandler) constructSQL(table string, lock *ent.AppStockLock, ch
 		sql += ` and
 		  in_service + wait_start + locked + app_reserved + spot_quantity = total`
 	}
-	return sql, nil
+	return sql
 }
 
 func (h *inServiceHandler) inServiceStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
@@ -48,10 +48,7 @@ func (h *inServiceHandler) inServiceStock(ctx context.Context, lock *ent.AppStoc
 	if !ok || stock.stock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-	sql, err := h.constructSQL("stocks_v1", lock, true, stock.stock.ID)
-	if err != nil {
-		return wlog.WrapError(err)
-	}
+	sql := h.constructSQL("stocks_v1", lock, true, stock.stock.ID)
 	return h.execSQL(ctx, tx, sql)
 }
 
@@ -60,10 +57,7 @@ func (h *inServiceHandler) inServiceMiningGoodStock(ctx context.Context, lock *e
 	if !ok || stock.miningGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-	sql, err := h.constructSQL("mining_good_stocks", lock, true, stock.miningGoodStock.ID)
-	if err != nil {
-		return wlog.WrapError(err)
-	}
+	sql := h.constructSQL("mining_good_stocks", lock, true, stock.miningGoodStock.ID)
 	return h.execSQL(ctx, tx, sql)
 }
 
@@ -72,10 +66,7 @@ func (h *inServiceHandler) inServiceAppStock(ctx context.Context, lock *ent.AppS
 	if !ok || stock.appGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-	sql, err := h.constructSQL("app_stocks", lock, false, stock.appGoodStock.ID)
-	if err != nil {
-		return wlog.WrapError(err)
-	}
+	sql := h.constructSQL("app_stocks", lock, false, stock.appGoodStock.ID)
 	return h.execSQL(ctx, tx, sql)
 }
 
@@ -84,10 +75,7 @@ func (h *inServiceHandler) inServiceAppMiningGoodStock(ctx context.Context, lock
 	if !ok || stock.appMiningGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-	sql, err := h.constructSQL("app_mining_good_stocks", lock, false, stock.appMiningGoodStock.ID)
-	if err != nil {
-		return wlog.WrapError(err)
-	}
+	sql := h.constructSQL("app_mining_good_stocks", lock, false, stock.appMiningGoodStock.ID)
 	return h.execSQL(ctx, tx, sql)
 }
 

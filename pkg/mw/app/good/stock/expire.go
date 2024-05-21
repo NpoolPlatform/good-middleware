@@ -16,7 +16,7 @@ type expireHandler struct {
 	lockOp *lockopHandler
 }
 
-func (h *expireHandler) constructSQL(table string, lock *ent.AppStockLock, returnSpotQuantity bool, checkTotal bool, id uint32) (string, error) {
+func (h *expireHandler) constructSQL(table string, lock *ent.AppStockLock, returnSpotQuantity, checkTotal bool, id uint32) string {
 	sql := fmt.Sprintf(
 		`update %v
 		set
@@ -44,7 +44,7 @@ func (h *expireHandler) constructSQL(table string, lock *ent.AppStockLock, retur
 		sql += ` and
 		  in_service + wait_start + locked + app_reserved + spot_quantity = total`
 	}
-	return sql, nil
+	return sql
 }
 
 func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
@@ -52,10 +52,7 @@ func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock,
 	if !ok || stock.stock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-	sql, err := h.constructSQL("stocks_v1", lock, true, true, stock.stock.ID)
-	if err != nil {
-		return wlog.WrapError(err)
-	}
+	sql := h.constructSQL("stocks_v1", lock, true, true, stock.stock.ID)
 	return h.execSQL(ctx, tx, sql)
 }
 
@@ -64,10 +61,7 @@ func (h *expireHandler) expireMiningGoodStock(ctx context.Context, lock *ent.App
 	if !ok || stock.miningGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-	sql, err := h.constructSQL("mining_good_stocks", lock, true, true, stock.miningGoodStock.ID)
-	if err != nil {
-		return wlog.WrapError(err)
-	}
+	sql := h.constructSQL("mining_good_stocks", lock, true, true, stock.miningGoodStock.ID)
 	return h.execSQL(ctx, tx, sql)
 }
 
@@ -76,10 +70,7 @@ func (h *expireHandler) expireAppStock(ctx context.Context, lock *ent.AppStockLo
 	if !ok || stock.appGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-	sql, err := h.constructSQL("app_stocks", lock, false, false, stock.appGoodStock.ID)
-	if err != nil {
-		return wlog.WrapError(err)
-	}
+	sql := h.constructSQL("app_stocks", lock, false, false, stock.appGoodStock.ID)
 	return h.execSQL(ctx, tx, sql)
 }
 
@@ -88,10 +79,7 @@ func (h *expireHandler) expireAppMiningGoodStock(ctx context.Context, lock *ent.
 	if !ok || stock.appMiningGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-	sql, err := h.constructSQL("app_mining_good_stocks", lock, false, false, stock.appMiningGoodStock.ID)
-	if err != nil {
-		return wlog.WrapError(err)
-	}
+	sql := h.constructSQL("app_mining_good_stocks", lock, false, false, stock.appMiningGoodStock.ID)
 	return h.execSQL(ctx, tx, sql)
 }
 
