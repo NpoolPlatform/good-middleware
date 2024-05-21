@@ -61,8 +61,8 @@ func (h *lockHandler) lockStock(ctx context.Context, stock *LockStock, tx *ent.T
 		return wlog.Errorf("stock exhausted")
 	}
 
-	// Here we should update the lock result
-	if _stock.stock, err = stockcrud.UpdateSet(
+	updatedStock := _stock.stock
+	if updatedStock, err = stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(_stock.stock.ID),
 		&stockcrud.Req{
 			SpotQuantity: &spotQuantity,
@@ -72,6 +72,7 @@ func (h *lockHandler) lockStock(ctx context.Context, stock *LockStock, tx *ent.T
 	).Save(ctx); err != nil {
 		return wlog.WrapError(err)
 	}
+	*_stock.stock = *updatedStock
 	return nil
 }
 
