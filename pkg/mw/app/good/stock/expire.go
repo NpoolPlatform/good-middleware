@@ -45,7 +45,8 @@ func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock,
 		return wlog.Errorf("stock exhausted")
 	}
 
-	if stock.stock, err = stockcrud.UpdateSet(
+	updatedStock := stock.stock
+	if updatedStock, err = stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(stock.stock.ID),
 		&stockcrud.Req{
 			InService:    &inService,
@@ -54,6 +55,7 @@ func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock,
 	).Save(ctx); err != nil {
 		return wlog.WrapError(err)
 	}
+	*stock.stock = *updatedStock
 	return nil
 }
 
@@ -81,7 +83,8 @@ func (h *expireHandler) expireMiningGoodStock(ctx context.Context, lock *ent.App
 		return wlog.Errorf("stock exhausted")
 	}
 
-	if stock.miningGoodStock, err = mininggoodstockcrud.UpdateSet(
+	updatedStock := stock.miningGoodStock
+	if updatedStock, err = mininggoodstockcrud.UpdateSet(
 		tx.MiningGoodStock.UpdateOneID(stock.miningGoodStock.ID),
 		&mininggoodstockcrud.Req{
 			InService:    &inService,
@@ -90,6 +93,7 @@ func (h *expireHandler) expireMiningGoodStock(ctx context.Context, lock *ent.App
 	).Save(ctx); err != nil {
 		return wlog.WrapError(err)
 	}
+	*stock.miningGoodStock = *updatedStock
 	return nil
 }
 
