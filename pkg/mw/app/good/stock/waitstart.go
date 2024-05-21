@@ -22,19 +22,17 @@ func (h *waitStartHandler) constructSQL(table string, lock *ent.AppStockLock, ch
 		set
 		  wait_start = wait_start + %v,
 		  locked = locked - %v,
-		  sold = sold + %v`,
-		table,
-		lock.Units,
-		lock.Units,
-		lock.Units,
-	)
-	sql += fmt.Sprintf(
-		`and
+		  sold = sold + %v
+		where
 		  id = %v
 		and
 		  deleted_at = 0
 		and
 		  locked >= %v`,
+		table,
+		lock.Units,
+		lock.Units,
+		lock.Units,
 		id,
 		lock.Units,
 	)
