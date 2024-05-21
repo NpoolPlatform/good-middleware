@@ -59,7 +59,8 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppSt
 		return wlog.Errorf("stock exhausted")
 	}
 
-	if stock.stock, err = stockcrud.UpdateSet(
+	updatedStock := stock.stock
+	if updatedStock, err = stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(stock.stock.ID),
 		&stockcrud.Req{
 			SpotQuantity: &spotQuantity,
@@ -70,6 +71,7 @@ func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppSt
 	).Save(ctx); err != nil {
 		return wlog.WrapError(err)
 	}
+	*stock.stock = *updatedStock
 	return nil
 }
 
@@ -111,7 +113,8 @@ func (h *chargeBackHandler) chargeBackMiningGoodStock(ctx context.Context, lock 
 		return wlog.Errorf("stock exhausted")
 	}
 
-	if stock.miningGoodStock, err = mininggoodstockcrud.UpdateSet(
+	updatedStock := stock.miningGoodStock
+	if updatedStock, err = mininggoodstockcrud.UpdateSet(
 		tx.MiningGoodStock.UpdateOneID(stock.miningGoodStock.ID),
 		&mininggoodstockcrud.Req{
 			SpotQuantity: &spotQuantity,
@@ -122,6 +125,7 @@ func (h *chargeBackHandler) chargeBackMiningGoodStock(ctx context.Context, lock 
 	).Save(ctx); err != nil {
 		return wlog.WrapError(err)
 	}
+	*stock.miningGoodStock = *updatedStock
 	return nil
 }
 
