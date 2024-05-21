@@ -3,12 +3,9 @@ package appstock
 
 import (
 	"context"
+	"fmt"
 
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
-	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
-	appmininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
-	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
-	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -21,57 +18,72 @@ type unlockHandler struct {
 	lockOp *lockopHandler
 }
 
+func (h *unlockHandler) constructGoodStockSQL(table string, lock *ent.AppStockLock, id uint32) (string, error) {
+	platformLocked := lock.Units.Sub(lock.AppSpotUnits)
+	if platformLocked.Cmp(decimal.NewFromInt(0)) < 0 {
+		return "", wlog.Errorf("invalid appspotunits")
+	}
+	sql := fmt.Sprintf(
+		`update %v
+		set
+		  spot_quantity = spot_quantity + %v,
+		  locked = locked - %v,
+		  app_reserved = app_reserved + %v`,
+		table,
+		platformLocked,
+		lock.Units,
+		lock.AppSpotUnits,
+	)
+	sql += fmt.Sprintf(
+		` where
+		  id = %v
+		and
+		  deleted_at = 0
+		and
+		  locked >= %v`,
+		id,
+		lock.Units,
+	)
+	sql += ` and
+		in_service + wait_start + locked + app_reserved + spot_quantity = total`
+	return sql, nil
+}
+
+func (h *unlockHandler) constructAppGoodStockSQL(table string, lock *ent.AppStockLock, id uint32) (string, error) {
+	sql := fmt.Sprintf(
+		`update %v
+		set
+		  spot_quantity = spot_quantity + %v,
+		  locked = locked - %v`,
+		table,
+		lock.AppSpotUnits,
+		lock.Units,
+	)
+	sql += fmt.Sprintf(
+		` where
+		  id = %v
+		and
+		  deleted_at = 0
+		and
+		  locked >= %v
+		and
+		  spot_quantity <= reserved`,
+		id,
+		lock.Units,
+	)
+	return sql, nil
+}
+
 func (h *unlockHandler) unlockStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
 	stock, ok := h.stocks[lock.AppGoodID]
 	if !ok || stock.stock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-
-	spotQuantity := stock.stock.SpotQuantity
-	locked := stock.stock.Locked
-	appReserved := stock.stock.AppReserved
-
-	locked = locked.Sub(lock.Units)
-	platformLocked := lock.Units.Sub(lock.AppSpotUnits)
-	appReserved = lock.AppSpotUnits.Add(appReserved)
-	if platformLocked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid appspotlocked")
-	}
-	spotQuantity = platformLocked.Add(spotQuantity)
-	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid locked")
-	}
-	if appReserved.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid appreserved")
-	}
-	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid stock")
-	}
-	if spotQuantity.Cmp(stock.stock.Total) > 0 {
-		return wlog.Errorf("invalid stock")
-	}
-
-	if locked.Add(stock.stock.InService).
-		Add(stock.stock.WaitStart).
-		Add(appReserved).
-		Add(spotQuantity).
-		Cmp(stock.stock.Total) > 0 {
-		return wlog.Errorf("invalid stock")
-	}
-
-	updatedStock := stock.stock
-	if updatedStock, err = stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(stock.stock.ID),
-		&stockcrud.Req{
-			SpotQuantity: &spotQuantity,
-			Locked:       &locked,
-			AppReserved:  &appReserved,
-		},
-	).Save(ctx); err != nil {
+	sql, err := h.constructGoodStockSQL("stocks_v1", lock, stock.stock.ID)
+	if err != nil {
 		return wlog.WrapError(err)
 	}
-	*stock.stock = *updatedStock
-	return nil
+	return h.execSQL(ctx, tx, sql)
 }
 
 func (h *unlockHandler) unlockMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
@@ -79,52 +91,11 @@ func (h *unlockHandler) unlockMiningGoodStock(ctx context.Context, lock *ent.App
 	if !ok || stock.miningGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-
-	spotQuantity := stock.miningGoodStock.SpotQuantity
-	locked := stock.miningGoodStock.Locked
-	appReserved := stock.miningGoodStock.AppReserved
-
-	locked = locked.Sub(lock.Units)
-	platformLocked := lock.Units.Sub(lock.AppSpotUnits)
-	appReserved = lock.AppSpotUnits.Add(appReserved)
-	if platformLocked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid appspotlocked")
-	}
-	spotQuantity = platformLocked.Add(spotQuantity)
-	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid locked")
-	}
-	if appReserved.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid appreserved")
-	}
-	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid stock")
-	}
-	if spotQuantity.Cmp(stock.miningGoodStock.Total) > 0 {
-		return wlog.Errorf("invalid stock")
-	}
-
-	if locked.Add(stock.miningGoodStock.InService).
-		Add(stock.miningGoodStock.WaitStart).
-		Add(appReserved).
-		Add(spotQuantity).
-		Cmp(stock.miningGoodStock.Total) > 0 {
-		return wlog.Errorf("invalid stock")
-	}
-
-	updatedStock := stock.miningGoodStock
-	if updatedStock, err = mininggoodstockcrud.UpdateSet(
-		tx.MiningGoodStock.UpdateOneID(stock.miningGoodStock.ID),
-		&mininggoodstockcrud.Req{
-			SpotQuantity: &spotQuantity,
-			Locked:       &locked,
-			AppReserved:  &appReserved,
-		},
-	).Save(ctx); err != nil {
+	sql, err := h.constructGoodStockSQL("mining_good_stocks", lock, stock.miningGoodStock.ID)
+	if err != nil {
 		return wlog.WrapError(err)
 	}
-	*stock.miningGoodStock = *updatedStock
-	return nil
+	return h.execSQL(ctx, tx, sql)
 }
 
 func (h *unlockHandler) unlockAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
@@ -132,32 +103,11 @@ func (h *unlockHandler) unlockAppStock(ctx context.Context, lock *ent.AppStockLo
 	if !ok || stock.appGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-
-	locked := stock.appGoodStock.Locked
-	spotQuantity := stock.appGoodStock.SpotQuantity
-
-	locked = locked.Sub(lock.Units)
-	spotQuantity = lock.AppSpotUnits.Add(spotQuantity)
-	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid locked")
-	}
-	if spotQuantity.Cmp(stock.appGoodStock.Reserved) > 0 {
-		return wlog.Errorf("invalid spotquantity")
-	}
-	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		spotQuantity = decimal.NewFromInt(0)
-	}
-
-	if stock.appGoodStock, err = appstockcrud.UpdateSet(
-		tx.AppStock.UpdateOneID(stock.appGoodStock.ID),
-		&appstockcrud.Req{
-			SpotQuantity: &spotQuantity,
-			Locked:       &locked,
-		},
-	).Save(ctx); err != nil {
+	sql, err := h.constructAppGoodStockSQL("app_stocks", lock, stock.appGoodStock.ID)
+	if err != nil {
 		return wlog.WrapError(err)
 	}
-	return nil
+	return h.execSQL(ctx, tx, sql)
 }
 
 func (h *unlockHandler) unlockAppMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
@@ -165,32 +115,11 @@ func (h *unlockHandler) unlockAppMiningGoodStock(ctx context.Context, lock *ent.
 	if !ok || stock.appMiningGoodStock == nil {
 		return wlog.Errorf("invalid stock")
 	}
-
-	locked := stock.appMiningGoodStock.Locked
-	spotQuantity := stock.appMiningGoodStock.SpotQuantity
-
-	locked = locked.Sub(lock.Units)
-	spotQuantity = lock.AppSpotUnits.Add(spotQuantity)
-	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid locked")
-	}
-	if spotQuantity.Cmp(stock.appMiningGoodStock.Reserved) > 0 {
-		return wlog.Errorf("invalid spotquantity")
-	}
-	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		spotQuantity = decimal.NewFromInt(0)
-	}
-
-	if stock.appMiningGoodStock, err = appmininggoodstockcrud.UpdateSet(
-		tx.AppMiningGoodStock.UpdateOneID(stock.appMiningGoodStock.ID),
-		&appmininggoodstockcrud.Req{
-			SpotQuantity: &spotQuantity,
-			Locked:       &locked,
-		},
-	).Save(ctx); err != nil {
+	sql, err := h.constructAppGoodStockSQL("app_mining_good_stocks", lock, stock.appMiningGoodStock.ID)
+	if err != nil {
 		return wlog.WrapError(err)
 	}
-	return nil
+	return h.execSQL(ctx, tx, sql)
 }
 
 //nolint:gocyclo
