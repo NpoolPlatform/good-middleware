@@ -17,7 +17,7 @@ func (h *Handler) execSQL(ctx context.Context, tx *ent.Tx, sql string) error {
 	if err != nil {
 		return wlog.WrapError(err)
 	}
-	if n == 1 {
+	if n != 1 {
 		return wlog.WrapError(cruder.ErrUpdateNothing)
 	}
 	return nil
