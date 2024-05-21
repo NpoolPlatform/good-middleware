@@ -20,13 +20,13 @@ import (
 )
 
 type stockAppGood struct {
-	goodBase           *ent.GoodBase
-	powerRental        *ent.PowerRental
-	appGoodBase        *ent.AppGoodBase
-	appGoodStock       *ent.AppStock
-	appMiningGoodStock *ent.AppMiningGoodStock
-	stock              *ent.Stock
-	miningGoodStock    *ent.MiningGoodStock
+	goodBase            *ent.GoodBase
+	powerRental         *ent.PowerRental
+	appGoodBase         *ent.AppGoodBase
+	appGoodStock        *ent.AppStock
+	appMiningGoodStocks map[uuid.UUID]*ent.AppMiningGoodStock
+	stock               *ent.Stock
+	miningGoodStocks    map[uuid.UUID]*ent.MiningGoodStock
 }
 
 type stockAppGoodQuery struct {
@@ -84,9 +84,10 @@ func (h *stockAppGoodQuery) getAppMiningGoodStocks(ctx context.Context, cli *ent
 
 func (h *stockAppGoodQuery) formalizeMiningGoodStocks() {
 	for _, stock := range h.stocks {
+		stock.miningGoodStocks = map[uuid.UUID]*ent.MiningGoodStock{}
 		for _, miningGoodStock := range h.miningGoodStocks {
 			if miningGoodStock.GoodStockID == stock.stock.EntID {
-				stock.miningGoodStock = miningGoodStock
+				stock.miningGoodStocks[miningGoodStock.EntID] = miningGoodStock
 			}
 		}
 	}
@@ -94,10 +95,10 @@ func (h *stockAppGoodQuery) formalizeMiningGoodStocks() {
 
 func (h *stockAppGoodQuery) formalizeAppMiningGoodStocks() {
 	for _, stock := range h.stocks {
+		stock.appMiningGoodStocks = map[uuid.UUID]*ent.AppMiningGoodStock{}
 		for _, appMiningGoodStock := range h.appMiningGoodStocks {
-			if appMiningGoodStock.AppGoodStockID == stock.appGoodStock.EntID &&
-				appMiningGoodStock.MiningGoodStockID == stock.miningGoodStock.EntID {
-				stock.appMiningGoodStock = appMiningGoodStock
+			if appMiningGoodStock.AppGoodStockID == stock.appGoodStock.EntID {
+				stock.appMiningGoodStocks[appMiningGoodStock.EntID] = appMiningGoodStock
 			}
 		}
 	}
