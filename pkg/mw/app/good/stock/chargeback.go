@@ -3,11 +3,11 @@ package appstock
 
 import (
 	"context"
+	"fmt"
 
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
 	appmininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
-	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -21,58 +21,43 @@ type chargeBackHandler struct {
 	lockOp *lockopHandler
 }
 
-func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
-	stock, ok := h.stocks[lock.AppGoodID]
-	if !ok || stock.stock == nil {
-		return wlog.Errorf("invalid stock")
-	}
-
-	spotQuantity := stock.stock.SpotQuantity
-	inService := stock.stock.InService
-	waitStart := stock.stock.WaitStart
-	sold := stock.stock.Sold
-
+func (h *chargeBackHandler) chargeBackStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
+	sql := fmt.Sprintf(
+		`update stocks_v1
+		set
+		  spot_quantity = spot_quantity + %v,
+		  sold = sold - %v`,
+		lock.Units,
+		lock.Units,
+	)
 	switch lock.LockState {
 	case types.AppStockLockState_AppStockInService.String():
-		inService = inService.Sub(lock.Units)
+		sql += fmt.Sprintf(
+			`, in_service = in_service - %v
+			where
+			  in_service >= %v `,
+			lock.Units,
+			lock.Units,
+		)
 	case types.AppStockLockState_AppStockWaitStart.String():
-		waitStart = waitStart.Sub(lock.Units)
+		sql += fmt.Sprintf(
+			`, wait_start = wait_start - %v
+			where
+			  wait_start >= %v `,
+			lock.Units,
+			lock.Units,
+		)
+	default:
+		return wlog.Errorf("invalid lockstate")
 	}
-	sold = sold.Sub(lock.Units)
-	spotQuantity = spotQuantity.Add(lock.Units)
-
-	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid stock")
-	}
-	if waitStart.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid stock")
-	}
-	if sold.Cmp(decimal.NewFromInt(0)) < 0 {
-		return wlog.Errorf("invalid stock")
-	}
-
-	if inService.Add(waitStart).
-		Add(stock.stock.Locked).
-		Add(stock.stock.AppReserved).
-		Add(spotQuantity).
-		Cmp(stock.stock.Total) > 0 {
-		return wlog.Errorf("stock exhausted")
-	}
-
-	updatedStock := stock.stock
-	if updatedStock, err = stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(stock.stock.ID),
-		&stockcrud.Req{
-			SpotQuantity: &spotQuantity,
-			InService:    &inService,
-			WaitStart:    &waitStart,
-			Sold:         &sold,
-		},
-	).Save(ctx); err != nil {
-		return wlog.WrapError(err)
-	}
-	*stock.stock = *updatedStock
-	return nil
+	sql += fmt.Sprintf(
+		`and
+		  sold >= %v
+		and
+		  in_service + wait_start + locked + app_reserved + spot_quantity = total`,
+		lock.Units,
+	)
+	return h.execSQL(ctx, tx, sql)
 }
 
 func (h *chargeBackHandler) chargeBackMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
