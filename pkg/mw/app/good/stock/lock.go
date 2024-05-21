@@ -147,7 +147,7 @@ func (h *lockHandler) lockAppStock(ctx context.Context, stock *LockStock, tx *en
 		return wlog.Errorf("invalid stock")
 	}
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		spotQuantity = decimal.NewFromInt(0)
+		return wlog.Errorf("invalid stock")
 	}
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
 		return wlog.Errorf("invalid stock")
@@ -183,7 +183,7 @@ func (h *lockHandler) lockAppMiningGoodStock(ctx context.Context, stock *LockSto
 		return wlog.Errorf("invalid stock")
 	}
 	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		spotQuantity = decimal.NewFromInt(0)
+		return wlog.Errorf("invalid stock")
 	}
 	if locked.Cmp(decimal.NewFromInt(0)) < 0 {
 		return wlog.Errorf("invalid stock")
