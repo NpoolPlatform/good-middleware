@@ -50,7 +50,8 @@ func (h *waitStartHandler) waitStartStock(ctx context.Context, lock *ent.AppStoc
 		return wlog.Errorf("stock exhausted")
 	}
 
-	if stock.stock, err = stockcrud.UpdateSet(
+	updatedStock := stock.stock
+	if updatedStock, err = stockcrud.UpdateSet(
 		tx.Stock.UpdateOneID(stock.stock.ID),
 		&stockcrud.Req{
 			Locked:    &locked,
@@ -60,6 +61,7 @@ func (h *waitStartHandler) waitStartStock(ctx context.Context, lock *ent.AppStoc
 	).Save(ctx); err != nil {
 		return wlog.WrapError(err)
 	}
+	*stock.stock = *updatedStock
 	return nil
 }
 
@@ -92,7 +94,8 @@ func (h *waitStartHandler) waitStartMiningGoodStock(ctx context.Context, lock *e
 		return wlog.Errorf("stock exhausted")
 	}
 
-	if stock.miningGoodStock, err = mininggoodstockcrud.UpdateSet(
+	updatedStock := stock.miningGoodStock
+	if updatedStock, err = mininggoodstockcrud.UpdateSet(
 		tx.MiningGoodStock.UpdateOneID(stock.miningGoodStock.ID),
 		&mininggoodstockcrud.Req{
 			Locked:    &locked,
@@ -102,6 +105,7 @@ func (h *waitStartHandler) waitStartMiningGoodStock(ctx context.Context, lock *e
 	).Save(ctx); err != nil {
 		return wlog.WrapError(err)
 	}
+	*stock.miningGoodStock = *updatedStock
 	return nil
 }
 
