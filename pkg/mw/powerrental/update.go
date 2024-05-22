@@ -25,6 +25,7 @@ type updateHandler struct {
 	stockValidator *validateStockHandler
 	sqlPowerRental string
 	sqlGoodBase    string
+	stockMode      types.GoodStockMode
 }
 
 func (h *updateHandler) constructGoodBaseSQL(ctx context.Context) error {
@@ -169,10 +170,9 @@ func (h *updateHandler) _validateStock() error {
 		h.StockReq.Total = &h.stock.Total
 	}
 	if h.StockMode == nil {
-		h.StockMode = func() *types.GoodStockMode {
-			e := types.GoodStockMode(types.GoodStockMode_value[h.powerRental.StockMode])
-			return &e
-		}()
+		h.stockMode = types.GoodStockMode(types.GoodStockMode_value[h.powerRental.StockMode])
+	} else {
+		h.stockMode = *h.StockMode
 	}
 	h.StockReq.SpotQuantity = func() *decimal.Decimal {
 		d := h.stock.SpotQuantity.Add(h.StockReq.Total.Sub(h.stock.Total))
@@ -203,16 +203,16 @@ func (h *updateHandler) _validateStock() error {
 			Total: &poolStock.Total,
 		})
 	}
-	if len(h.MiningGoodStockReqs) > 0 && *h.StockMode == types.GoodStockMode_GoodStockByUnique {
+	if len(h.MiningGoodStockReqs) > 0 && h.stockMode == types.GoodStockMode_GoodStockByUnique {
 		return wlog.Errorf("invalid stockmode")
 	}
-	switch *h.StockMode {
+	switch h.stockMode {
 	case types.GoodStockMode_GoodStockByUnique:
 		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }()
+		return nil
 	case types.GoodStockMode_GoodStockByMiningPool:
 		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePool; return &e }()
 	}
-
 	return h.stockValidator.validateStock()
 }
 
@@ -356,7 +356,7 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 
-	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithDebugTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateGoodBase(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
 		}
