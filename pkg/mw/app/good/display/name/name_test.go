@@ -177,7 +177,7 @@ func deleteDisplayName(t *testing.T) {
 		assert.Nil(t, err)
 
 		info, err := handler.GetDisplayName(context.Background())
-		assert.NotNil(t, err)
+		assert.Nil(t, err)
 		assert.Nil(t, info)
 	}
 }

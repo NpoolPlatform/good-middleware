@@ -60,6 +60,7 @@ func createManufacturer(t *testing.T) {
 }
 
 func updateManufacturer(t *testing.T) {
+	ret.Name = uuid.NewString()
 	err := UpdateManufacturer(context.Background(), &npool.ManufacturerReq{
 		ID:    &ret.ID,
 		EntID: &ret.EntID,

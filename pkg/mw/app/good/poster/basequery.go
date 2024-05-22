@@ -138,7 +138,7 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 			return wlog.Errorf("invalid goodid")
 		}
 		s.OnP(
-			sql.EQ(t1.C(entappgoodbase.FieldAppID), id),
+			sql.EQ(t1.C(entappgoodbase.FieldGoodID), id),
 		)
 	}
 	if h.AppGoodBaseConds.GoodIDs != nil {
@@ -161,8 +161,6 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 		sql.As(t2.C(entgoodbase.FieldEntID), "good_id"),
 		sql.As(t2.C(entgoodbase.FieldName), "good_name"),
 		t2.C(entgoodbase.FieldGoodType),
-	)
-	s.AppendSelect(
 		t1.C(entappgoodbase.FieldAppID),
 		sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
 	)

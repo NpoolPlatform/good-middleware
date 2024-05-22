@@ -67,7 +67,7 @@ var ret = npool.PowerRental{
 	StockMode:           types.GoodStockMode_GoodStockByMiningPool,
 
 	GoodType:                     types.GoodType_PowerRental,
-	BenefitType:                  types.BenefitType_BenefitTypePlatform,
+	BenefitType:                  types.BenefitType_BenefitTypePool,
 	GoodName:                     uuid.NewString(),
 	GoodServiceStartAt:           uint32(time.Now().Unix()),
 	GoodStartMode:                types.GoodStartMode_GoodStartModeInstantly,
@@ -117,11 +117,11 @@ var ret = npool.PowerRental{
 		},
 		{
 			CoinTypeID: uuid.NewString(),
-			Main:       true,
+			Main:       false,
 		},
 		{
 			CoinTypeID: uuid.NewString(),
-			Main:       true,
+			Main:       false,
 		},
 	},
 

@@ -58,6 +58,7 @@ func createManufacturer(t *testing.T) {
 }
 
 func updateManufacturer(t *testing.T) {
+	ret.Logo = uuid.NewString()
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),

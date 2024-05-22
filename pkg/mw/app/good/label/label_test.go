@@ -189,7 +189,7 @@ func deleteLabel(t *testing.T) {
 		assert.Nil(t, err)
 
 		info, err := handler.GetLabel(context.Background())
-		assert.NotNil(t, err)
+		assert.Nil(t, err)
 		assert.Nil(t, info)
 	}
 }

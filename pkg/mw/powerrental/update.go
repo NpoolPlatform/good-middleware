@@ -377,7 +377,7 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		if err := handler.updatePowerRental(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
 		}
-		if !handler.updated {
+		if !handler.updated && handler.sqlGoodBase != "" && handler.sqlPowerRental != "" {
 			return wlog.WrapError(cruder.ErrUpdateNothing)
 		}
 		return nil

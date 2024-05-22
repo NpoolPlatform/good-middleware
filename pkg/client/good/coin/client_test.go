@@ -51,7 +51,7 @@ var ret = &npool.GoodCoin{
 	GoodName:   uuid.NewString(),
 	GoodType:   types.GoodType_PowerRental,
 	CoinTypeID: uuid.NewString(),
-	Main:       true,
+	Main:       false,
 	Index:      5,
 }
 
@@ -143,6 +143,7 @@ func createGoodCoin(t *testing.T) {
 }
 
 func updateGoodCoin(t *testing.T) {
+	ret.Main = true
 	err := UpdateGoodCoin(context.Background(), &npool.GoodCoinReq{
 		ID:    &ret.ID,
 		EntID: &ret.EntID,

@@ -96,6 +96,7 @@ func createGoodCoin(t *testing.T) {
 }
 
 func updateGoodCoin(t *testing.T) {
+	ret.Main = false
 	h1, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),

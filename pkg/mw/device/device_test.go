@@ -80,6 +80,7 @@ func createDeviceType(t *testing.T) {
 }
 
 func updateDeviceType(t *testing.T) {
+	ret.PowerConsumption = 1000
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),

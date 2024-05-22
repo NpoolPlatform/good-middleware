@@ -81,6 +81,7 @@ func createLocation(t *testing.T) {
 }
 
 func updateLocation(t *testing.T) {
+	ret.Address = uuid.NewString()
 	err := UpdateLocation(context.Background(), &npool.LocationReq{
 		ID:       &ret.ID,
 		Country:  &ret.Country,

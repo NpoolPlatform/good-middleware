@@ -80,6 +80,7 @@ func createLocation(t *testing.T) {
 }
 
 func updateLocation(t *testing.T) {
+	ret.Address = uuid.NewString()
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
