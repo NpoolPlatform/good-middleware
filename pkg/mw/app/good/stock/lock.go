@@ -164,7 +164,7 @@ func (h *Handler) LockStock(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 
-	return db.WithDebugTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		stock := &LockStock{
 			EntID:         h.EntID,
 			AppGoodID:     h.AppGoodID,
@@ -208,7 +208,7 @@ func (h *Handler) LockStocks(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 
-	return db.WithDebugTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		for _, stock := range h.Stocks {
 			if err := handler.lockAppStock(ctx, stock, tx); err != nil {
 				return wlog.WrapError(err)
