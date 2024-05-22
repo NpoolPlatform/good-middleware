@@ -26,6 +26,7 @@ type updateHandler struct {
 	sqlPowerRental string
 	sqlGoodBase    string
 	stockMode      types.GoodStockMode
+	updated        bool
 }
 
 func (h *updateHandler) constructGoodBaseSQL(ctx context.Context) error {
@@ -123,8 +124,12 @@ func (h *updateHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) err
 	if err != nil {
 		return wlog.WrapError(err)
 	}
-	if n, err := rc.RowsAffected(); err != nil || n != 1 {
-		return wlog.Errorf("fail update powerrenta: %v", err)
+	n, err := rc.RowsAffected()
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	if n == 1 {
+		h.updated = true
 	}
 	return nil
 }
@@ -369,6 +374,12 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		if err := handler.updateReward(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
 		}
-		return handler.updatePowerRental(_ctx, tx)
+		if err := handler.updatePowerRental(_ctx, tx); err != nil {
+			return wlog.WrapError(err)
+		}
+		if !handler.updated {
+			return wlog.WrapError(cruder.ErrUpdateNothing)
+		}
+		return nil
 	})
 }

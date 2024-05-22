@@ -79,6 +79,7 @@ func createDeviceType(t *testing.T) {
 }
 
 func updateDeviceType(t *testing.T) {
+	ret.Type = uuid.NewString()
 	err := UpdateDeviceType(context.Background(), &npool.DeviceTypeReq{
 		ID:               &ret.ID,
 		EntID:            &ret.EntID,
