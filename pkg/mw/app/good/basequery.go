@@ -3,11 +3,13 @@ package good
 import (
 	"entgo.io/ent/dialect/sql"
 
+	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 )
 
 type baseQueryHandler struct {
@@ -31,7 +33,7 @@ func (h *baseQueryHandler) queryGood(cli *ent.Client) {
 }
 
 func (h *baseQueryHandler) queryGoods(cli *ent.Client) (*ent.AppGoodBaseSelect, error) {
-	stm, err := goodbasecrud.SetQueryConds(cli.AppGoodBase.Query(), h.AppGoodConds)
+	stm, err := goodbasecrud.SetQueryConds(cli.AppGoodBase.Query(), h.AppGoodBaseConds)
 	if err != nil {
 		return nil, wlog.WrapError(err)
 	}
@@ -59,13 +61,36 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 		)
 }
 
-func (h *baseQueryHandler) queryJoinGoodBase(s *sql.Selector) {
+func (h *baseQueryHandler) queryJoinGoodBase(s *sql.Selector) error {
 	t1 := sql.Table(entgoodbase.Table)
 	s.Join(t1).
 		On(
 			s.C(entappgoodbase.FieldGoodID),
 			t1.C(entgoodbase.FieldEntID),
 		)
+	if h.GoodBaseConds.GoodType != nil {
+		_type, ok := h.GoodBaseConds.GoodType.Val.(types.GoodType)
+		if !ok {
+			return wlog.Errorf("invalid goodtype")
+		}
+		s.OnP(
+			sql.EQ(t1.C(entgoodbase.FieldGoodType), _type.String()),
+		)
+	}
+	if h.GoodBaseConds.GoodTypes != nil {
+		_types, ok := h.GoodBaseConds.GoodTypes.Val.([]types.GoodType)
+		if !ok {
+			return wlog.Errorf("invalid goodtypes")
+		}
+		s.OnP(
+			sql.In(t1.C(entgoodbase.FieldGoodType), func() (__types []interface{}) {
+				for _, _type := range _types {
+					__types = append(__types, interface{}(_type.String()))
+				}
+				return
+			}()...),
+		)
+	}
 	s.AppendSelect(
 		t1.C(entgoodbase.FieldGoodType),
 		t1.C(entgoodbase.FieldBenefitType),
@@ -77,11 +102,14 @@ func (h *baseQueryHandler) queryJoinGoodBase(s *sql.Selector) {
 		sql.As(t1.C(entgoodbase.FieldPurchasable), "good_purchasable"),
 		sql.As(t1.C(entgoodbase.FieldOnline), "good_online"),
 	)
+	return nil
 }
 
 func (h *baseQueryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
-		h.queryJoinGoodBase(s)
+		if err := h.queryJoinGoodBase(s); err != nil {
+			logger.Sugar().Errorw("queryJoinGoodBase", "Error", err)
+		}
 	})
 }

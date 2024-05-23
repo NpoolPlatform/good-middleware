@@ -6,22 +6,26 @@ import (
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
+	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 
 	"github.com/google/uuid"
 )
 
 type Handler struct {
-	EntID        *uuid.UUID
-	AppGoodConds *appgoodbasecrud.Conds
-	Offset       int32
-	Limit        int32
+	EntID            *uuid.UUID
+	AppGoodBaseConds *appgoodbasecrud.Conds
+	GoodBaseConds    *goodbasecrud.Conds
+	Offset           int32
+	Limit            int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
-		AppGoodConds: &appgoodbasecrud.Conds{},
+		AppGoodBaseConds: &appgoodbasecrud.Conds{},
+		GoodBaseConds:    &goodbasecrud.Conds{},
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
@@ -48,9 +52,9 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func (h *Handler) withAppGoodConds(conds *npool.Conds) error {
+func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 	if conds.ID != nil {
-		h.AppGoodConds.ID = &cruder.Cond{
+		h.AppGoodBaseConds.ID = &cruder.Cond{
 			Op:  conds.GetID().GetOp(),
 			Val: conds.GetID().GetValue(),
 		}
@@ -60,7 +64,7 @@ func (h *Handler) withAppGoodConds(conds *npool.Conds) error {
 		if err != nil {
 			return wlog.WrapError(err)
 		}
-		h.AppGoodConds.EntID = &cruder.Cond{
+		h.AppGoodBaseConds.EntID = &cruder.Cond{
 			Op:  conds.GetEntID().GetOp(),
 			Val: id,
 		}
@@ -70,7 +74,7 @@ func (h *Handler) withAppGoodConds(conds *npool.Conds) error {
 		if err != nil {
 			return wlog.WrapError(err)
 		}
-		h.AppGoodConds.EntID = &cruder.Cond{
+		h.AppGoodBaseConds.EntID = &cruder.Cond{
 			Op:  conds.GetEntID().GetOp(),
 			Val: id,
 		}
@@ -84,7 +88,7 @@ func (h *Handler) withAppGoodConds(conds *npool.Conds) error {
 			}
 			ids = append(ids, _id)
 		}
-		h.AppGoodConds.EntIDs = &cruder.Cond{
+		h.AppGoodBaseConds.EntIDs = &cruder.Cond{
 			Op:  conds.GetEntIDs().GetOp(),
 			Val: ids,
 		}
@@ -94,7 +98,7 @@ func (h *Handler) withAppGoodConds(conds *npool.Conds) error {
 		if err != nil {
 			return wlog.WrapError(err)
 		}
-		h.AppGoodConds.AppID = &cruder.Cond{
+		h.AppGoodBaseConds.AppID = &cruder.Cond{
 			Op:  conds.GetAppID().GetOp(),
 			Val: id,
 		}
@@ -108,7 +112,7 @@ func (h *Handler) withAppGoodConds(conds *npool.Conds) error {
 			}
 			ids = append(ids, _id)
 		}
-		h.AppGoodConds.AppIDs = &cruder.Cond{
+		h.AppGoodBaseConds.AppIDs = &cruder.Cond{
 			Op:  conds.GetAppIDs().GetOp(),
 			Val: ids,
 		}
@@ -116,12 +120,32 @@ func (h *Handler) withAppGoodConds(conds *npool.Conds) error {
 	return nil
 }
 
+func (h *Handler) withGoodBaseConds(conds *npool.Conds) {
+	if conds.GoodType != nil {
+		h.GoodBaseConds.GoodType = &cruder.Cond{
+			Op:  conds.GetGoodType().GetOp(),
+			Val: types.GoodType(conds.GetGoodType().GetValue()),
+		}
+	}
+	if conds.GoodTypes != nil {
+		_types := []types.GoodType{}
+		for _, _type := range conds.GetGoodTypes().GetValue() {
+			_types = append(_types, types.GoodType(_type))
+		}
+		h.GoodBaseConds.GoodTypes = &cruder.Cond{
+			Op:  conds.GetGoodTypes().GetOp(),
+			Val: _types,
+		}
+	}
+}
+
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if conds == nil {
 			return nil
 		}
-		return h.withAppGoodConds(conds)
+		h.withGoodBaseConds(conds)
+		return h.withAppGoodBaseConds(conds)
 	}
 }
 

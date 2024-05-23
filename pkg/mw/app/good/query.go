@@ -5,6 +5,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
+	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -25,7 +26,9 @@ func (h *queryHandler) queryJoin() {
 		return
 	}
 	h.stmSelect.Modify(func(s *sql.Selector) {
-		h.queryJoinGoodBase(s)
+		if err := h.queryJoinGoodBase(s); err != nil {
+			logger.Sugar().Errorw("queryJoinGoodBase", "Error", err)
+		}
 	})
 }
 
