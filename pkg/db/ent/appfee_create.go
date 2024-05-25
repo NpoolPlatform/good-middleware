@@ -107,6 +107,20 @@ func (afc *AppFeeCreate) SetNillableUnitValue(d *decimal.Decimal) *AppFeeCreate 
 	return afc
 }
 
+// SetCancelMode sets the "cancel_mode" field.
+func (afc *AppFeeCreate) SetCancelMode(s string) *AppFeeCreate {
+	afc.mutation.SetCancelMode(s)
+	return afc
+}
+
+// SetNillableCancelMode sets the "cancel_mode" field if the given value is not nil.
+func (afc *AppFeeCreate) SetNillableCancelMode(s *string) *AppFeeCreate {
+	if s != nil {
+		afc.SetCancelMode(*s)
+	}
+	return afc
+}
+
 // SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
 func (afc *AppFeeCreate) SetMinOrderDurationSeconds(u uint32) *AppFeeCreate {
 	afc.mutation.SetMinOrderDurationSeconds(u)
@@ -245,6 +259,10 @@ func (afc *AppFeeCreate) defaults() error {
 		v := appfee.DefaultUnitValue
 		afc.mutation.SetUnitValue(v)
 	}
+	if _, ok := afc.mutation.CancelMode(); !ok {
+		v := appfee.DefaultCancelMode
+		afc.mutation.SetCancelMode(v)
+	}
 	if _, ok := afc.mutation.MinOrderDurationSeconds(); !ok {
 		v := appfee.DefaultMinOrderDurationSeconds
 		afc.mutation.SetMinOrderDurationSeconds(v)
@@ -347,6 +365,14 @@ func (afc *AppFeeCreate) createSpec() (*AppFee, *sqlgraph.CreateSpec) {
 			Column: appfee.FieldUnitValue,
 		})
 		_node.UnitValue = value
+	}
+	if value, ok := afc.mutation.CancelMode(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appfee.FieldCancelMode,
+		})
+		_node.CancelMode = value
 	}
 	if value, ok := afc.mutation.MinOrderDurationSeconds(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -509,6 +535,24 @@ func (u *AppFeeUpsert) UpdateUnitValue() *AppFeeUpsert {
 // ClearUnitValue clears the value of the "unit_value" field.
 func (u *AppFeeUpsert) ClearUnitValue() *AppFeeUpsert {
 	u.SetNull(appfee.FieldUnitValue)
+	return u
+}
+
+// SetCancelMode sets the "cancel_mode" field.
+func (u *AppFeeUpsert) SetCancelMode(v string) *AppFeeUpsert {
+	u.Set(appfee.FieldCancelMode, v)
+	return u
+}
+
+// UpdateCancelMode sets the "cancel_mode" field to the value that was provided on create.
+func (u *AppFeeUpsert) UpdateCancelMode() *AppFeeUpsert {
+	u.SetExcluded(appfee.FieldCancelMode)
+	return u
+}
+
+// ClearCancelMode clears the value of the "cancel_mode" field.
+func (u *AppFeeUpsert) ClearCancelMode() *AppFeeUpsert {
+	u.SetNull(appfee.FieldCancelMode)
 	return u
 }
 
@@ -702,6 +746,27 @@ func (u *AppFeeUpsertOne) UpdateUnitValue() *AppFeeUpsertOne {
 func (u *AppFeeUpsertOne) ClearUnitValue() *AppFeeUpsertOne {
 	return u.Update(func(s *AppFeeUpsert) {
 		s.ClearUnitValue()
+	})
+}
+
+// SetCancelMode sets the "cancel_mode" field.
+func (u *AppFeeUpsertOne) SetCancelMode(v string) *AppFeeUpsertOne {
+	return u.Update(func(s *AppFeeUpsert) {
+		s.SetCancelMode(v)
+	})
+}
+
+// UpdateCancelMode sets the "cancel_mode" field to the value that was provided on create.
+func (u *AppFeeUpsertOne) UpdateCancelMode() *AppFeeUpsertOne {
+	return u.Update(func(s *AppFeeUpsert) {
+		s.UpdateCancelMode()
+	})
+}
+
+// ClearCancelMode clears the value of the "cancel_mode" field.
+func (u *AppFeeUpsertOne) ClearCancelMode() *AppFeeUpsertOne {
+	return u.Update(func(s *AppFeeUpsert) {
+		s.ClearCancelMode()
 	})
 }
 
@@ -1064,6 +1129,27 @@ func (u *AppFeeUpsertBulk) UpdateUnitValue() *AppFeeUpsertBulk {
 func (u *AppFeeUpsertBulk) ClearUnitValue() *AppFeeUpsertBulk {
 	return u.Update(func(s *AppFeeUpsert) {
 		s.ClearUnitValue()
+	})
+}
+
+// SetCancelMode sets the "cancel_mode" field.
+func (u *AppFeeUpsertBulk) SetCancelMode(v string) *AppFeeUpsertBulk {
+	return u.Update(func(s *AppFeeUpsert) {
+		s.SetCancelMode(v)
+	})
+}
+
+// UpdateCancelMode sets the "cancel_mode" field to the value that was provided on create.
+func (u *AppFeeUpsertBulk) UpdateCancelMode() *AppFeeUpsertBulk {
+	return u.Update(func(s *AppFeeUpsert) {
+		s.UpdateCancelMode()
+	})
+}
+
+// ClearCancelMode clears the value of the "cancel_mode" field.
+func (u *AppFeeUpsertBulk) ClearCancelMode() *AppFeeUpsertBulk {
+	return u.Update(func(s *AppFeeUpsert) {
+		s.ClearCancelMode()
 	})
 }
 

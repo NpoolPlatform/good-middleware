@@ -38,6 +38,7 @@ var ret = npool.Fee{
 	Name:                    uuid.NewString(),
 	SettlementType:          types.GoodSettlementType_GoodSettledByProfitPercent,
 	UnitValue:               decimal.NewFromInt(20).String(),
+	CancelMode:              types.CancelMode_Uncancellable,
 	DurationDisplayType:     types.GoodDurationType_GoodDurationByDay,
 	MinOrderDurationSeconds: 20,
 }
@@ -46,6 +47,7 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.GoodTypeStr = ret.GoodType.String()
 	ret.SettlementTypeStr = ret.SettlementType.String()
 	ret.DurationDisplayTypeStr = ret.DurationDisplayType.String()
+	ret.CancelModeStr = ret.CancelMode.String()
 
 	feeEntID := uuid.NewString()
 	h1, err := fee1.NewHandler(
@@ -77,6 +79,7 @@ func createFee(t *testing.T) {
 		WithAppGoodID(&ret.AppGoodID, true),
 		WithName(&ret.Name, true),
 		WithUnitValue(&ret.UnitValue, true),
+		WithCancelMode(&ret.CancelMode, true),
 		WithMinOrderDurationSeconds(&ret.MinOrderDurationSeconds, true),
 	)
 	assert.Nil(t, err)

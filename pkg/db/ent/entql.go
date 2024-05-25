@@ -94,6 +94,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appfee.FieldEntID:                   {Type: field.TypeUUID, Column: appfee.FieldEntID},
 			appfee.FieldAppGoodID:               {Type: field.TypeUUID, Column: appfee.FieldAppGoodID},
 			appfee.FieldUnitValue:               {Type: field.TypeOther, Column: appfee.FieldUnitValue},
+			appfee.FieldCancelMode:              {Type: field.TypeString, Column: appfee.FieldCancelMode},
 			appfee.FieldMinOrderDurationSeconds: {Type: field.TypeUint32, Column: appfee.FieldMinOrderDurationSeconds},
 		},
 	}
@@ -1260,6 +1261,11 @@ func (f *AppFeeFilter) WhereAppGoodID(p entql.ValueP) {
 // WhereUnitValue applies the entql other predicate on the unit_value field.
 func (f *AppFeeFilter) WhereUnitValue(p entql.OtherP) {
 	f.Where(p.Field(appfee.FieldUnitValue))
+}
+
+// WhereCancelMode applies the entql string predicate on the cancel_mode field.
+func (f *AppFeeFilter) WhereCancelMode(p entql.StringP) {
+	f.Where(p.Field(appfee.FieldCancelMode))
 }
 
 // WhereMinOrderDurationSeconds applies the entql uint32 predicate on the min_order_duration_seconds field.

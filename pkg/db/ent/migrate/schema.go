@@ -41,6 +41,7 @@ var (
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
 		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "unit_value", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "cancel_mode", Type: field.TypeString, Nullable: true, Default: "Uncancellable"},
 		{Name: "min_order_duration_seconds", Type: field.TypeUint32, Nullable: true, Default: 3},
 	}
 	// AppFeesTable holds the schema information for the "app_fees" table.

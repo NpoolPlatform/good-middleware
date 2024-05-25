@@ -31,6 +31,7 @@ func (s *Server) CreateFee(ctx context.Context, in *npool.CreateFeeRequest) (*np
 		fee1.WithName(req.Name, true),
 		fee1.WithBanner(req.Banner, false),
 		fee1.WithUnitValue(req.UnitValue, false),
+		fee1.WithCancelMode(req.CancelMode, false),
 		fee1.WithMinOrderDurationSeconds(req.MinOrderDurationSeconds, false),
 	)
 	if err != nil {

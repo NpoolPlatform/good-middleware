@@ -29,6 +29,8 @@ type AppFee struct {
 	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// UnitValue holds the value of the "unit_value" field.
 	UnitValue decimal.Decimal `json:"unit_value,omitempty"`
+	// CancelMode holds the value of the "cancel_mode" field.
+	CancelMode string `json:"cancel_mode,omitempty"`
 	// MinOrderDurationSeconds holds the value of the "min_order_duration_seconds" field.
 	MinOrderDurationSeconds uint32 `json:"min_order_duration_seconds,omitempty"`
 }
@@ -42,6 +44,8 @@ func (*AppFee) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case appfee.FieldID, appfee.FieldCreatedAt, appfee.FieldUpdatedAt, appfee.FieldDeletedAt, appfee.FieldMinOrderDurationSeconds:
 			values[i] = new(sql.NullInt64)
+		case appfee.FieldCancelMode:
+			values[i] = new(sql.NullString)
 		case appfee.FieldEntID, appfee.FieldAppGoodID:
 			values[i] = new(uuid.UUID)
 		default:
@@ -101,6 +105,12 @@ func (af *AppFee) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				af.UnitValue = *value
 			}
+		case appfee.FieldCancelMode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field cancel_mode", values[i])
+			} else if value.Valid {
+				af.CancelMode = value.String
+			}
 		case appfee.FieldMinOrderDurationSeconds:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field min_order_duration_seconds", values[i])
@@ -152,6 +162,9 @@ func (af *AppFee) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("unit_value=")
 	builder.WriteString(fmt.Sprintf("%v", af.UnitValue))
+	builder.WriteString(", ")
+	builder.WriteString("cancel_mode=")
+	builder.WriteString(af.CancelMode)
 	builder.WriteString(", ")
 	builder.WriteString("min_order_duration_seconds=")
 	builder.WriteString(fmt.Sprintf("%v", af.MinOrderDurationSeconds))

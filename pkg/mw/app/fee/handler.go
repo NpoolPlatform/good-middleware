@@ -200,6 +200,25 @@ func WithUnitValue(s *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
+func WithCancelMode(e *types.CancelMode, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return wlog.Errorf("invalid cancelmode")
+			}
+			return nil
+		}
+		switch *e {
+		case types.CancelMode_Uncancellable:
+		case types.CancelMode_CancellableBeforeUsed:
+		default:
+			return wlog.Errorf("invalid cancelmode")
+		}
+		h.CancelMode = e
+		return nil
+	}
+}
+
 func WithMinOrderDurationSeconds(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if n == nil {

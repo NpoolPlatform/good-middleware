@@ -25,6 +25,8 @@ const (
 	FieldAppGoodID = "app_good_id"
 	// FieldUnitValue holds the string denoting the unit_value field in the database.
 	FieldUnitValue = "unit_value"
+	// FieldCancelMode holds the string denoting the cancel_mode field in the database.
+	FieldCancelMode = "cancel_mode"
 	// FieldMinOrderDurationSeconds holds the string denoting the min_order_duration_seconds field in the database.
 	FieldMinOrderDurationSeconds = "min_order_duration_seconds"
 	// Table holds the table name of the appfee in the database.
@@ -40,6 +42,7 @@ var Columns = []string{
 	FieldEntID,
 	FieldAppGoodID,
 	FieldUnitValue,
+	FieldCancelMode,
 	FieldMinOrderDurationSeconds,
 }
 
@@ -76,6 +79,8 @@ var (
 	DefaultAppGoodID func() uuid.UUID
 	// DefaultUnitValue holds the default value on creation for the "unit_value" field.
 	DefaultUnitValue decimal.Decimal
+	// DefaultCancelMode holds the default value on creation for the "cancel_mode" field.
+	DefaultCancelMode string
 	// DefaultMinOrderDurationSeconds holds the default value on creation for the "min_order_duration_seconds" field.
 	DefaultMinOrderDurationSeconds uint32
 )

@@ -52,6 +52,7 @@ func (h *queryHandler) formalize() {
 		amount, _ := decimal.NewFromString(info.UnitValue)
 		info.UnitValue = amount.String()
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
+		info.CancelMode = types.CancelMode(types.CancelMode_value[info.CancelModeStr])
 		info.SettlementType = types.GoodSettlementType(types.GoodSettlementType_value[info.SettlementTypeStr])
 		info.DurationDisplayType = types.GoodDurationType(types.GoodDurationType_value[info.DurationDisplayTypeStr])
 	}

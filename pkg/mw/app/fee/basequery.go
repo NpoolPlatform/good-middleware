@@ -258,6 +258,7 @@ func (h *baseQueryHandler) queryJoinAppFee(s *sql.Selector) error {
 		t1.C(entappfee.FieldID),
 		t1.C(entappfee.FieldEntID),
 		t1.C(entappfee.FieldUnitValue),
+		t1.C(entappfee.FieldCancelMode),
 		t1.C(entappfee.FieldMinOrderDurationSeconds),
 	)
 	return nil

@@ -5,6 +5,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entappfee "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appfee"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -14,6 +15,7 @@ type Req struct {
 	EntID                   *uuid.UUID
 	AppGoodID               *uuid.UUID
 	UnitValue               *decimal.Decimal // Per unit per duration, cash or from profit
+	CancelMode              *types.CancelMode
 	MinOrderDurationSeconds *uint32
 	DeletedAt               *uint32
 }
@@ -28,6 +30,9 @@ func CreateSet(c *ent.AppFeeCreate, req *Req) *ent.AppFeeCreate {
 	if req.UnitValue != nil {
 		c.SetUnitValue(*req.UnitValue)
 	}
+	if req.CancelMode != nil {
+		c.SetCancelMode(req.CancelMode.String())
+	}
 	if req.MinOrderDurationSeconds != nil {
 		c.SetMinOrderDurationSeconds(*req.MinOrderDurationSeconds)
 	}
@@ -37,6 +42,9 @@ func CreateSet(c *ent.AppFeeCreate, req *Req) *ent.AppFeeCreate {
 func UpdateSet(u *ent.AppFeeUpdateOne, req *Req) *ent.AppFeeUpdateOne {
 	if req.UnitValue != nil {
 		u.SetUnitValue(*req.UnitValue)
+	}
+	if req.CancelMode != nil {
+		u.SetCancelMode(req.CancelMode.String())
 	}
 	if req.MinOrderDurationSeconds != nil {
 		u.SetMinOrderDurationSeconds(*req.MinOrderDurationSeconds)

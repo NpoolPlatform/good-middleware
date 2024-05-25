@@ -139,6 +139,26 @@ func (afu *AppFeeUpdate) ClearUnitValue() *AppFeeUpdate {
 	return afu
 }
 
+// SetCancelMode sets the "cancel_mode" field.
+func (afu *AppFeeUpdate) SetCancelMode(s string) *AppFeeUpdate {
+	afu.mutation.SetCancelMode(s)
+	return afu
+}
+
+// SetNillableCancelMode sets the "cancel_mode" field if the given value is not nil.
+func (afu *AppFeeUpdate) SetNillableCancelMode(s *string) *AppFeeUpdate {
+	if s != nil {
+		afu.SetCancelMode(*s)
+	}
+	return afu
+}
+
+// ClearCancelMode clears the value of the "cancel_mode" field.
+func (afu *AppFeeUpdate) ClearCancelMode() *AppFeeUpdate {
+	afu.mutation.ClearCancelMode()
+	return afu
+}
+
 // SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
 func (afu *AppFeeUpdate) SetMinOrderDurationSeconds(u uint32) *AppFeeUpdate {
 	afu.mutation.ResetMinOrderDurationSeconds()
@@ -339,6 +359,19 @@ func (afu *AppFeeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appfee.FieldUnitValue,
 		})
 	}
+	if value, ok := afu.mutation.CancelMode(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appfee.FieldCancelMode,
+		})
+	}
+	if afu.mutation.CancelModeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appfee.FieldCancelMode,
+		})
+	}
 	if value, ok := afu.mutation.MinOrderDurationSeconds(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -486,6 +519,26 @@ func (afuo *AppFeeUpdateOne) SetNillableUnitValue(d *decimal.Decimal) *AppFeeUpd
 // ClearUnitValue clears the value of the "unit_value" field.
 func (afuo *AppFeeUpdateOne) ClearUnitValue() *AppFeeUpdateOne {
 	afuo.mutation.ClearUnitValue()
+	return afuo
+}
+
+// SetCancelMode sets the "cancel_mode" field.
+func (afuo *AppFeeUpdateOne) SetCancelMode(s string) *AppFeeUpdateOne {
+	afuo.mutation.SetCancelMode(s)
+	return afuo
+}
+
+// SetNillableCancelMode sets the "cancel_mode" field if the given value is not nil.
+func (afuo *AppFeeUpdateOne) SetNillableCancelMode(s *string) *AppFeeUpdateOne {
+	if s != nil {
+		afuo.SetCancelMode(*s)
+	}
+	return afuo
+}
+
+// ClearCancelMode clears the value of the "cancel_mode" field.
+func (afuo *AppFeeUpdateOne) ClearCancelMode() *AppFeeUpdateOne {
+	afuo.mutation.ClearCancelMode()
 	return afuo
 }
 
@@ -717,6 +770,19 @@ func (afuo *AppFeeUpdateOne) sqlSave(ctx context.Context) (_node *AppFee, err er
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: appfee.FieldUnitValue,
+		})
+	}
+	if value, ok := afuo.mutation.CancelMode(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appfee.FieldCancelMode,
+		})
+	}
+	if afuo.mutation.CancelModeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appfee.FieldCancelMode,
 		})
 	}
 	if value, ok := afuo.mutation.MinOrderDurationSeconds(); ok {

@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
@@ -38,6 +39,10 @@ func (AppFee) Fields() []ent.Field {
 			}).
 			Optional().
 			Default(decimal.Decimal{}),
+		field.
+			String("cancel_mode").
+			Optional().
+			Default(types.CancelMode_Uncancellable.String()),
 		// Here we do not need duration calculate type
 		// If you need the child order duration same as parent
 		// just set min_order_duration_seconds the the same as the parent duration

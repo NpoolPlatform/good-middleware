@@ -122,6 +122,13 @@ func UnitValue(v decimal.Decimal) predicate.AppFee {
 	})
 }
 
+// CancelMode applies equality check predicate on the "cancel_mode" field. It's identical to CancelModeEQ.
+func CancelMode(v string) predicate.AppFee {
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCancelMode), v))
+	})
+}
+
 // MinOrderDurationSeconds applies equality check predicate on the "min_order_duration_seconds" field. It's identical to MinOrderDurationSecondsEQ.
 func MinOrderDurationSeconds(v uint32) predicate.AppFee {
 	return predicate.AppFee(func(s *sql.Selector) {
@@ -538,6 +545,119 @@ func UnitValueIsNil() predicate.AppFee {
 func UnitValueNotNil() predicate.AppFee {
 	return predicate.AppFee(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldUnitValue)))
+	})
+}
+
+// CancelModeEQ applies the EQ predicate on the "cancel_mode" field.
+func CancelModeEQ(v string) predicate.AppFee {
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCancelMode), v))
+	})
+}
+
+// CancelModeNEQ applies the NEQ predicate on the "cancel_mode" field.
+func CancelModeNEQ(v string) predicate.AppFee {
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCancelMode), v))
+	})
+}
+
+// CancelModeIn applies the In predicate on the "cancel_mode" field.
+func CancelModeIn(vs ...string) predicate.AppFee {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCancelMode), v...))
+	})
+}
+
+// CancelModeNotIn applies the NotIn predicate on the "cancel_mode" field.
+func CancelModeNotIn(vs ...string) predicate.AppFee {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCancelMode), v...))
+	})
+}
+
+// CancelModeGT applies the GT predicate on the "cancel_mode" field.
+func CancelModeGT(v string) predicate.AppFee {
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCancelMode), v))
+	})
+}
+
+// CancelModeGTE applies the GTE predicate on the "cancel_mode" field.
+func CancelModeGTE(v string) predicate.AppFee {
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCancelMode), v))
+	})
+}
+
+// CancelModeLT applies the LT predicate on the "cancel_mode" field.
+func CancelModeLT(v string) predicate.AppFee {
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCancelMode), v))
+	})
+}
+
+// CancelModeLTE applies the LTE predicate on the "cancel_mode" field.
+func CancelModeLTE(v string) predicate.AppFee {
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCancelMode), v))
+	})
+}
+
+// CancelModeContains applies the Contains predicate on the "cancel_mode" field.
+func CancelModeContains(v string) predicate.AppFee {
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldCancelMode), v))
+	})
+}
+
+// CancelModeHasPrefix applies the HasPrefix predicate on the "cancel_mode" field.
+func CancelModeHasPrefix(v string) predicate.AppFee {
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldCancelMode), v))
+	})
+}
+
+// CancelModeHasSuffix applies the HasSuffix predicate on the "cancel_mode" field.
+func CancelModeHasSuffix(v string) predicate.AppFee {
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldCancelMode), v))
+	})
+}
+
+// CancelModeIsNil applies the IsNil predicate on the "cancel_mode" field.
+func CancelModeIsNil() predicate.AppFee {
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCancelMode)))
+	})
+}
+
+// CancelModeNotNil applies the NotNil predicate on the "cancel_mode" field.
+func CancelModeNotNil() predicate.AppFee {
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCancelMode)))
+	})
+}
+
+// CancelModeEqualFold applies the EqualFold predicate on the "cancel_mode" field.
+func CancelModeEqualFold(v string) predicate.AppFee {
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldCancelMode), v))
+	})
+}
+
+// CancelModeContainsFold applies the ContainsFold predicate on the "cancel_mode" field.
+func CancelModeContainsFold(v string) predicate.AppFee {
+	return predicate.AppFee(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldCancelMode), v))
 	})
 }
 

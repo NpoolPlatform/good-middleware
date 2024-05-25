@@ -861,6 +861,7 @@ type AppFeeMutation struct {
 	ent_id                        *uuid.UUID
 	app_good_id                   *uuid.UUID
 	unit_value                    *decimal.Decimal
+	cancel_mode                   *string
 	min_order_duration_seconds    *uint32
 	addmin_order_duration_seconds *int32
 	clearedFields                 map[string]struct{}
@@ -1275,6 +1276,55 @@ func (m *AppFeeMutation) ResetUnitValue() {
 	delete(m.clearedFields, appfee.FieldUnitValue)
 }
 
+// SetCancelMode sets the "cancel_mode" field.
+func (m *AppFeeMutation) SetCancelMode(s string) {
+	m.cancel_mode = &s
+}
+
+// CancelMode returns the value of the "cancel_mode" field in the mutation.
+func (m *AppFeeMutation) CancelMode() (r string, exists bool) {
+	v := m.cancel_mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCancelMode returns the old "cancel_mode" field's value of the AppFee entity.
+// If the AppFee object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppFeeMutation) OldCancelMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCancelMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCancelMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCancelMode: %w", err)
+	}
+	return oldValue.CancelMode, nil
+}
+
+// ClearCancelMode clears the value of the "cancel_mode" field.
+func (m *AppFeeMutation) ClearCancelMode() {
+	m.cancel_mode = nil
+	m.clearedFields[appfee.FieldCancelMode] = struct{}{}
+}
+
+// CancelModeCleared returns if the "cancel_mode" field was cleared in this mutation.
+func (m *AppFeeMutation) CancelModeCleared() bool {
+	_, ok := m.clearedFields[appfee.FieldCancelMode]
+	return ok
+}
+
+// ResetCancelMode resets all changes to the "cancel_mode" field.
+func (m *AppFeeMutation) ResetCancelMode() {
+	m.cancel_mode = nil
+	delete(m.clearedFields, appfee.FieldCancelMode)
+}
+
 // SetMinOrderDurationSeconds sets the "min_order_duration_seconds" field.
 func (m *AppFeeMutation) SetMinOrderDurationSeconds(u uint32) {
 	m.min_order_duration_seconds = &u
@@ -1364,7 +1414,7 @@ func (m *AppFeeMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppFeeMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 8)
 	if m.created_at != nil {
 		fields = append(fields, appfee.FieldCreatedAt)
 	}
@@ -1382,6 +1432,9 @@ func (m *AppFeeMutation) Fields() []string {
 	}
 	if m.unit_value != nil {
 		fields = append(fields, appfee.FieldUnitValue)
+	}
+	if m.cancel_mode != nil {
+		fields = append(fields, appfee.FieldCancelMode)
 	}
 	if m.min_order_duration_seconds != nil {
 		fields = append(fields, appfee.FieldMinOrderDurationSeconds)
@@ -1406,6 +1459,8 @@ func (m *AppFeeMutation) Field(name string) (ent.Value, bool) {
 		return m.AppGoodID()
 	case appfee.FieldUnitValue:
 		return m.UnitValue()
+	case appfee.FieldCancelMode:
+		return m.CancelMode()
 	case appfee.FieldMinOrderDurationSeconds:
 		return m.MinOrderDurationSeconds()
 	}
@@ -1429,6 +1484,8 @@ func (m *AppFeeMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldAppGoodID(ctx)
 	case appfee.FieldUnitValue:
 		return m.OldUnitValue(ctx)
+	case appfee.FieldCancelMode:
+		return m.OldCancelMode(ctx)
 	case appfee.FieldMinOrderDurationSeconds:
 		return m.OldMinOrderDurationSeconds(ctx)
 	}
@@ -1481,6 +1538,13 @@ func (m *AppFeeMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUnitValue(v)
+		return nil
+	case appfee.FieldCancelMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCancelMode(v)
 		return nil
 	case appfee.FieldMinOrderDurationSeconds:
 		v, ok := value.(uint32)
@@ -1576,6 +1640,9 @@ func (m *AppFeeMutation) ClearedFields() []string {
 	if m.FieldCleared(appfee.FieldUnitValue) {
 		fields = append(fields, appfee.FieldUnitValue)
 	}
+	if m.FieldCleared(appfee.FieldCancelMode) {
+		fields = append(fields, appfee.FieldCancelMode)
+	}
 	if m.FieldCleared(appfee.FieldMinOrderDurationSeconds) {
 		fields = append(fields, appfee.FieldMinOrderDurationSeconds)
 	}
@@ -1598,6 +1665,9 @@ func (m *AppFeeMutation) ClearField(name string) error {
 		return nil
 	case appfee.FieldUnitValue:
 		m.ClearUnitValue()
+		return nil
+	case appfee.FieldCancelMode:
+		m.ClearCancelMode()
 		return nil
 	case appfee.FieldMinOrderDurationSeconds:
 		m.ClearMinOrderDurationSeconds()
@@ -1627,6 +1697,9 @@ func (m *AppFeeMutation) ResetField(name string) error {
 		return nil
 	case appfee.FieldUnitValue:
 		m.ResetUnitValue()
+		return nil
+	case appfee.FieldCancelMode:
+		m.ResetCancelMode()
 		return nil
 	case appfee.FieldMinOrderDurationSeconds:
 		m.ResetMinOrderDurationSeconds()

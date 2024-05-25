@@ -26,6 +26,7 @@ func (s *Server) UpdateFee(ctx context.Context, in *npool.UpdateFeeRequest) (*np
 		fee1.WithID(req.ID, false),
 		fee1.WithEntID(req.EntID, false),
 		fee1.WithAppGoodID(req.AppGoodID, false),
+		fee1.WithCancelMode(req.CancelMode, false),
 		fee1.WithMinOrderDurationSeconds(req.MinOrderDurationSeconds, false),
 		fee1.WithUnitValue(req.UnitValue, false),
 	)

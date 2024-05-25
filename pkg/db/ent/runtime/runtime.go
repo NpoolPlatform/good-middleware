@@ -138,8 +138,12 @@ func init() {
 	appfeeDescUnitValue := appfeeFields[1].Descriptor()
 	// appfee.DefaultUnitValue holds the default value on creation for the unit_value field.
 	appfee.DefaultUnitValue = appfeeDescUnitValue.Default.(decimal.Decimal)
+	// appfeeDescCancelMode is the schema descriptor for cancel_mode field.
+	appfeeDescCancelMode := appfeeFields[2].Descriptor()
+	// appfee.DefaultCancelMode holds the default value on creation for the cancel_mode field.
+	appfee.DefaultCancelMode = appfeeDescCancelMode.Default.(string)
 	// appfeeDescMinOrderDurationSeconds is the schema descriptor for min_order_duration_seconds field.
-	appfeeDescMinOrderDurationSeconds := appfeeFields[2].Descriptor()
+	appfeeDescMinOrderDurationSeconds := appfeeFields[3].Descriptor()
 	// appfee.DefaultMinOrderDurationSeconds holds the default value on creation for the min_order_duration_seconds field.
 	appfee.DefaultMinOrderDurationSeconds = appfeeDescMinOrderDurationSeconds.Default.(uint32)
 	appgoodMixin := schema.AppGood{}.Mixin()
