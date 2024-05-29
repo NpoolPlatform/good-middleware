@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"time"
-
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
@@ -13,20 +11,20 @@ import (
 	"github.com/shopspring/decimal"
 )
 
-// GoodRewardHistory holds the schema definition for the GoodRewardHistory entity.
-type GoodRewardHistory struct {
+// GoodCoinReward holds the schema definition for the GoodCoinReward entity.
+type GoodCoinReward struct {
 	ent.Schema
 }
 
-func (GoodRewardHistory) Mixin() []ent.Mixin {
+func (GoodCoinReward) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.TimeMixin{},
 		crudermixin.AutoIDMixin{},
 	}
 }
 
-// Fields of the GoodRewardHistory.
-func (GoodRewardHistory) Fields() []ent.Field {
+// Fields of the GoodCoinReward.
+func (GoodCoinReward) Fields() []ent.Field {
 	return []ent.Field{
 		field.
 			UUID("good_id", uuid.UUID{}).
@@ -41,33 +39,34 @@ func (GoodRewardHistory) Fields() []ent.Field {
 				return uuid.Nil
 			}),
 		field.
-			Uint32("reward_date").
-			Optional().
-			DefaultFunc(func() uint32 {
-				return uint32(time.Now().Unix())
-			}),
-		field.
-			UUID("tid", uuid.UUID{}).
+			UUID("reward_tid", uuid.UUID{}).
 			Optional().
 			Default(func() uuid.UUID {
 				return uuid.Nil
 			}),
 		field.
-			Other("amount", decimal.Decimal{}).
+			Other("next_reward_start_amount", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).
 			Optional().
 			Default(decimal.Decimal{}),
 		field.
-			Other("unit_amount", decimal.Decimal{}).
+			Other("last_reward_amount", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).
 			Optional().
 			Default(decimal.Decimal{}),
 		field.
-			Other("unit_net_amount", decimal.Decimal{}).
+			Other("last_unit_reward_amount", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.Decimal{}),
+		field.
+			Other("total_reward_amount", decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37,18)",
 			}).
@@ -76,12 +75,12 @@ func (GoodRewardHistory) Fields() []ent.Field {
 	}
 }
 
-// Edges of the GoodRewardHistory.
-func (GoodRewardHistory) Edges() []ent.Edge {
+// Edges of the GoodCoinReward.
+func (GoodCoinReward) Edges() []ent.Edge {
 	return nil
 }
 
-func (GoodRewardHistory) Indexes() []ent.Index {
+func (GoodCoinReward) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("good_id"),
 		index.Fields("coin_type_id"),

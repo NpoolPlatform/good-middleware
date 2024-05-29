@@ -107,12 +107,7 @@ var ret = npool.PowerRental{
 		},
 	},
 
-	RewardState:           types.BenefitState_BenefitWait,
-	RewardTID:             uuid.Nil.String(),
-	NextRewardStartAmount: decimal.NewFromInt(0).String(),
-	LastRewardAmount:      decimal.NewFromInt(0).String(),
-	LastUnitRewardAmount:  decimal.NewFromInt(0).String(),
-	TotalRewardAmount:     decimal.NewFromInt(0).String(),
+	RewardState: types.BenefitState_BenefitWait,
 }
 
 func setup(t *testing.T) func(*testing.T) {

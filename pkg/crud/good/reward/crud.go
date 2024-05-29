@@ -8,20 +8,14 @@ import (
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 type Req struct {
-	EntID                 *uuid.UUID
-	GoodID                *uuid.UUID
-	RewardState           *types.BenefitState
-	LastRewardAt          *uint32
-	RewardTID             *uuid.UUID
-	NextRewardStartAmount *decimal.Decimal
-	LastRewardAmount      *decimal.Decimal
-	LastUnitRewardAmount  *decimal.Decimal
-	TotalRewardAmount     *decimal.Decimal
-	DeletedAt             *uint32
+	EntID        *uuid.UUID
+	GoodID       *uuid.UUID
+	RewardState  *types.BenefitState
+	LastRewardAt *uint32
+	DeletedAt    *uint32
 }
 
 func CreateSet(c *ent.GoodRewardCreate, req *Req) *ent.GoodRewardCreate {
@@ -41,21 +35,6 @@ func UpdateSet(u *ent.GoodRewardUpdateOne, req *Req) *ent.GoodRewardUpdateOne {
 	}
 	if req.LastRewardAt != nil {
 		u.SetLastRewardAt(*req.LastRewardAt)
-	}
-	if req.RewardTID != nil {
-		u.SetRewardTid(*req.RewardTID)
-	}
-	if req.NextRewardStartAmount != nil {
-		u.SetNextRewardStartAmount(*req.NextRewardStartAmount)
-	}
-	if req.LastRewardAmount != nil {
-		u.SetLastRewardAmount(*req.LastRewardAmount)
-	}
-	if req.LastUnitRewardAmount != nil {
-		u.SetLastUnitRewardAmount(*req.LastUnitRewardAmount)
-	}
-	if req.TotalRewardAmount != nil {
-		u.SetTotalRewardAmount(*req.TotalRewardAmount)
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)

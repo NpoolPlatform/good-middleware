@@ -11,12 +11,14 @@ import (
 )
 
 type Req struct {
-	EntID      *uuid.UUID
-	GoodID     *uuid.UUID
-	RewardDate *uint32
-	TID        *uuid.UUID
-	Amount     *decimal.Decimal
-	UnitAmount *decimal.Decimal
+	EntID         *uuid.UUID
+	GoodID        *uuid.UUID
+	CoinTypeID    *uuid.UUID
+	RewardDate    *uint32
+	TID           *uuid.UUID
+	Amount        *decimal.Decimal
+	UnitAmount    *decimal.Decimal
+	UnitNetAmount *decimal.Decimal
 }
 
 func CreateSet(c *ent.GoodRewardHistoryCreate, req *Req) *ent.GoodRewardHistoryCreate {
@@ -25,6 +27,9 @@ func CreateSet(c *ent.GoodRewardHistoryCreate, req *Req) *ent.GoodRewardHistoryC
 	}
 	if req.GoodID != nil {
 		c.SetGoodID(*req.GoodID)
+	}
+	if req.CoinTypeID != nil {
+		c.SetCoinTypeID(*req.CoinTypeID)
 	}
 	if req.RewardDate != nil {
 		c.SetRewardDate(*req.RewardDate)
@@ -38,6 +43,9 @@ func CreateSet(c *ent.GoodRewardHistoryCreate, req *Req) *ent.GoodRewardHistoryC
 	if req.UnitAmount != nil {
 		c.SetUnitAmount(*req.UnitAmount)
 	}
+	if req.UnitNetAmount != nil {
+		c.SetUnitNetAmount(*req.UnitNetAmount)
+	}
 	return c
 }
 
@@ -46,13 +54,15 @@ func UpdateSet(u *ent.GoodRewardHistoryUpdateOne, req *Req) *ent.GoodRewardHisto
 }
 
 type Conds struct {
-	ID         *cruder.Cond
-	EntID      *cruder.Cond
-	GoodID     *cruder.Cond
-	GoodIDs    *cruder.Cond
-	RewardDate *cruder.Cond
-	StartAt    *cruder.Cond
-	EndAt      *cruder.Cond
+	ID          *cruder.Cond
+	EntID       *cruder.Cond
+	GoodID      *cruder.Cond
+	GoodIDs     *cruder.Cond
+	CoinTypeID  *cruder.Cond
+	CoinTypeIDs *cruder.Cond
+	RewardDate  *cruder.Cond
+	StartAt     *cruder.Cond
+	EndAt       *cruder.Cond
 }
 
 //nolint:gocyclo,funlen
@@ -105,6 +115,30 @@ func SetQueryConds(q *ent.GoodRewardHistoryQuery, conds *Conds) (*ent.GoodReward
 		switch conds.GoodIDs.Op {
 		case cruder.IN:
 			q.Where(entgoodrewardhistory.GoodIDIn(ids...))
+		default:
+			return nil, wlog.Errorf("invalid goodrewardhistory field")
+		}
+	}
+	if conds.CoinTypeID != nil {
+		id, ok := conds.CoinTypeID.Val.(uuid.UUID)
+		if !ok {
+			return nil, wlog.Errorf("invalid cointypeid")
+		}
+		switch conds.CoinTypeID.Op {
+		case cruder.EQ:
+			q.Where(entgoodrewardhistory.CoinTypeID(id))
+		default:
+			return nil, wlog.Errorf("invalid goodrewardhistory field")
+		}
+	}
+	if conds.CoinTypeIDs != nil {
+		ids, ok := conds.CoinTypeIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, wlog.Errorf("invalid cointypeids")
+		}
+		switch conds.CoinTypeIDs.Op {
+		case cruder.IN:
+			q.Where(entgoodrewardhistory.CoinTypeIDIn(ids...))
 		default:
 			return nil, wlog.Errorf("invalid goodrewardhistory field")
 		}

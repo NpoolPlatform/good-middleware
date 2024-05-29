@@ -5,7 +5,6 @@ package goodreward
 import (
 	"entgo.io/ent"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 const (
@@ -27,16 +26,6 @@ const (
 	FieldRewardState = "reward_state"
 	// FieldLastRewardAt holds the string denoting the last_reward_at field in the database.
 	FieldLastRewardAt = "last_reward_at"
-	// FieldRewardTid holds the string denoting the reward_tid field in the database.
-	FieldRewardTid = "reward_tid"
-	// FieldNextRewardStartAmount holds the string denoting the next_reward_start_amount field in the database.
-	FieldNextRewardStartAmount = "next_reward_start_amount"
-	// FieldLastRewardAmount holds the string denoting the last_reward_amount field in the database.
-	FieldLastRewardAmount = "last_reward_amount"
-	// FieldLastUnitRewardAmount holds the string denoting the last_unit_reward_amount field in the database.
-	FieldLastUnitRewardAmount = "last_unit_reward_amount"
-	// FieldTotalRewardAmount holds the string denoting the total_reward_amount field in the database.
-	FieldTotalRewardAmount = "total_reward_amount"
 	// Table holds the table name of the goodreward in the database.
 	Table = "good_rewards"
 )
@@ -51,11 +40,6 @@ var Columns = []string{
 	FieldGoodID,
 	FieldRewardState,
 	FieldLastRewardAt,
-	FieldRewardTid,
-	FieldNextRewardStartAmount,
-	FieldLastRewardAmount,
-	FieldLastUnitRewardAmount,
-	FieldTotalRewardAmount,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -93,14 +77,4 @@ var (
 	DefaultRewardState string
 	// DefaultLastRewardAt holds the default value on creation for the "last_reward_at" field.
 	DefaultLastRewardAt uint32
-	// DefaultRewardTid holds the default value on creation for the "reward_tid" field.
-	DefaultRewardTid func() uuid.UUID
-	// DefaultNextRewardStartAmount holds the default value on creation for the "next_reward_start_amount" field.
-	DefaultNextRewardStartAmount decimal.Decimal
-	// DefaultLastRewardAmount holds the default value on creation for the "last_reward_amount" field.
-	DefaultLastRewardAmount decimal.Decimal
-	// DefaultLastUnitRewardAmount holds the default value on creation for the "last_unit_reward_amount" field.
-	DefaultLastUnitRewardAmount decimal.Decimal
-	// DefaultTotalRewardAmount holds the default value on creation for the "total_reward_amount" field.
-	DefaultTotalRewardAmount decimal.Decimal
 )

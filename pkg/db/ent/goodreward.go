@@ -9,7 +9,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // GoodReward is the model entity for the GoodReward schema.
@@ -31,16 +30,6 @@ type GoodReward struct {
 	RewardState string `json:"reward_state,omitempty"`
 	// LastRewardAt holds the value of the "last_reward_at" field.
 	LastRewardAt uint32 `json:"last_reward_at,omitempty"`
-	// RewardTid holds the value of the "reward_tid" field.
-	RewardTid uuid.UUID `json:"reward_tid,omitempty"`
-	// NextRewardStartAmount holds the value of the "next_reward_start_amount" field.
-	NextRewardStartAmount decimal.Decimal `json:"next_reward_start_amount,omitempty"`
-	// LastRewardAmount holds the value of the "last_reward_amount" field.
-	LastRewardAmount decimal.Decimal `json:"last_reward_amount,omitempty"`
-	// LastUnitRewardAmount holds the value of the "last_unit_reward_amount" field.
-	LastUnitRewardAmount decimal.Decimal `json:"last_unit_reward_amount,omitempty"`
-	// TotalRewardAmount holds the value of the "total_reward_amount" field.
-	TotalRewardAmount decimal.Decimal `json:"total_reward_amount,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -48,13 +37,11 @@ func (*GoodReward) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case goodreward.FieldNextRewardStartAmount, goodreward.FieldLastRewardAmount, goodreward.FieldLastUnitRewardAmount, goodreward.FieldTotalRewardAmount:
-			values[i] = new(decimal.Decimal)
 		case goodreward.FieldID, goodreward.FieldCreatedAt, goodreward.FieldUpdatedAt, goodreward.FieldDeletedAt, goodreward.FieldLastRewardAt:
 			values[i] = new(sql.NullInt64)
 		case goodreward.FieldRewardState:
 			values[i] = new(sql.NullString)
-		case goodreward.FieldEntID, goodreward.FieldGoodID, goodreward.FieldRewardTid:
+		case goodreward.FieldEntID, goodreward.FieldGoodID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type GoodReward", columns[i])
@@ -119,36 +106,6 @@ func (gr *GoodReward) assignValues(columns []string, values []interface{}) error
 			} else if value.Valid {
 				gr.LastRewardAt = uint32(value.Int64)
 			}
-		case goodreward.FieldRewardTid:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field reward_tid", values[i])
-			} else if value != nil {
-				gr.RewardTid = *value
-			}
-		case goodreward.FieldNextRewardStartAmount:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field next_reward_start_amount", values[i])
-			} else if value != nil {
-				gr.NextRewardStartAmount = *value
-			}
-		case goodreward.FieldLastRewardAmount:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field last_reward_amount", values[i])
-			} else if value != nil {
-				gr.LastRewardAmount = *value
-			}
-		case goodreward.FieldLastUnitRewardAmount:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field last_unit_reward_amount", values[i])
-			} else if value != nil {
-				gr.LastUnitRewardAmount = *value
-			}
-		case goodreward.FieldTotalRewardAmount:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field total_reward_amount", values[i])
-			} else if value != nil {
-				gr.TotalRewardAmount = *value
-			}
 		}
 	}
 	return nil
@@ -197,21 +154,6 @@ func (gr *GoodReward) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("last_reward_at=")
 	builder.WriteString(fmt.Sprintf("%v", gr.LastRewardAt))
-	builder.WriteString(", ")
-	builder.WriteString("reward_tid=")
-	builder.WriteString(fmt.Sprintf("%v", gr.RewardTid))
-	builder.WriteString(", ")
-	builder.WriteString("next_reward_start_amount=")
-	builder.WriteString(fmt.Sprintf("%v", gr.NextRewardStartAmount))
-	builder.WriteString(", ")
-	builder.WriteString("last_reward_amount=")
-	builder.WriteString(fmt.Sprintf("%v", gr.LastRewardAmount))
-	builder.WriteString(", ")
-	builder.WriteString("last_unit_reward_amount=")
-	builder.WriteString(fmt.Sprintf("%v", gr.LastUnitRewardAmount))
-	builder.WriteString(", ")
-	builder.WriteString("total_reward_amount=")
-	builder.WriteString(fmt.Sprintf("%v", gr.TotalRewardAmount))
 	builder.WriteByte(')')
 	return builder.String()
 }

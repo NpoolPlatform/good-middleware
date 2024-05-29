@@ -7,8 +7,9 @@ import (
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
+	goodcoinrewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin/reward"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
-	rewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward"
+	goodrewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	powerrentalcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/powerrental"
@@ -16,6 +17,7 @@ import (
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
+	goodcoinrewardmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin/reward"
 	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/powerrental"
 
@@ -28,12 +30,13 @@ type Handler struct {
 	powerrentalcrud.Req
 	GoodBaseReq         *goodbasecrud.Req
 	StockReq            *stockcrud.Req
-	RewardReq           *rewardcrud.Req
+	RewardReq           *goodrewardcrud.Req
 	MiningGoodStockReqs []*mininggoodstockcrud.Req
 	PowerRentalConds    *powerrentalcrud.Conds
 	GoodBaseConds       *goodbasecrud.Conds
 	GoodCoinConds       *goodcoincrud.Conds
-	RewardConds         *rewardcrud.Conds
+	RewardConds         *goodrewardcrud.Conds
+	CoinRewardReqs      []*goodcoinrewardcrud.Req
 	Offset              int32
 	Limit               int32
 }
@@ -43,11 +46,11 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 		Req:              powerrentalcrud.Req{},
 		GoodBaseReq:      &goodbasecrud.Req{},
 		StockReq:         &stockcrud.Req{},
-		RewardReq:        &rewardcrud.Req{},
+		RewardReq:        &goodrewardcrud.Req{},
 		PowerRentalConds: &powerrentalcrud.Conds{},
 		GoodBaseConds:    &goodbasecrud.Conds{},
 		GoodCoinConds:    &goodcoincrud.Conds{},
-		RewardConds:      &rewardcrud.Conds{},
+		RewardConds:      &goodrewardcrud.Conds{},
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
@@ -498,23 +501,6 @@ func WithRewardState(e *types.BenefitState, must bool) func(context.Context, *Ha
 	}
 }
 
-func WithRewardTID(id *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if id == nil {
-			if must {
-				return wlog.Errorf("invalid rewardtid")
-			}
-			return nil
-		}
-		_id, err := uuid.Parse(*id)
-		if err != nil {
-			return wlog.WrapError(err)
-		}
-		h.RewardReq.RewardTID = &_id
-		return nil
-	}
-}
-
 func WithRewardAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if n == nil {
@@ -528,53 +514,53 @@ func WithRewardAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-func WithNextRewardStartAmount(s *string, must bool) func(context.Context, *Handler) error {
+func WithRewards(rewards []*goodcoinrewardmwpb.RewardReq, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return wlog.Errorf("invalid nextrewardstartamount")
-			}
-			return nil
-		}
-		amount, err := decimal.NewFromString(*s)
-		if err != nil {
-			return wlog.WrapError(err)
-		}
-		h.RewardReq.NextRewardStartAmount = &amount
-		return nil
-	}
-}
+		for _, reward := range rewards {
+			_reward := &goodcoinrewardcrud.Req{}
 
-func WithRewardAmount(s *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return wlog.Errorf("invalid rewardamount")
+			if reward.EntID != nil {
+				_entID, err := uuid.Parse(*reward.EntID)
+				if err != nil {
+					return wlog.WrapError(err)
+				}
+				_reward.EntID = &_entID
 			}
-			return nil
-		}
-		amount, err := decimal.NewFromString(*s)
-		if err != nil {
-			return wlog.WrapError(err)
-		}
-		h.RewardReq.LastRewardAmount = &amount
-		return nil
-	}
-}
 
-func WithUnitRewardAmount(s *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return wlog.Errorf("invalid unitrewardamount")
+			if reward.CoinTypeID != nil {
+				_coinTypeID, err := uuid.Parse(*reward.CoinTypeID)
+				if err != nil {
+					return wlog.WrapError(err)
+				}
+				_reward.CoinTypeID = &_coinTypeID
 			}
-			return nil
+
+			if reward.RewardTID != nil {
+				_tid, err := uuid.Parse(*reward.RewardTID)
+				if err != nil {
+					return wlog.WrapError(err)
+				}
+				_reward.RewardTID = &_tid
+			}
+
+			if reward.RewardAmount != nil {
+				_rewardAmount, err := decimal.NewFromString(*reward.RewardAmount)
+				if err != nil {
+					return wlog.WrapError(err)
+				}
+				_reward.LastRewardAmount = &_rewardAmount
+			}
+
+			if reward.NextRewardStartAmount != nil {
+				_startAmount, err := decimal.NewFromString(*reward.NextRewardStartAmount)
+				if err != nil {
+					return wlog.WrapError(err)
+				}
+				_reward.NextRewardStartAmount = &_startAmount
+			}
+
+			h.CoinRewardReqs = append(h.CoinRewardReqs, _reward)
 		}
-		amount, err := decimal.NewFromString(*s)
-		if err != nil {
-			return wlog.WrapError(err)
-		}
-		h.RewardReq.LastUnitRewardAmount = &amount
 		return nil
 	}
 }

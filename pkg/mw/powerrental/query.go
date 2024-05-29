@@ -8,14 +8,17 @@ import (
 	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
+	goodcoinrewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin/reward"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entgoodcoin "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
+	entgoodcoinreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoinreward"
 	entmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	goodcoinmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin"
+	goodcoinrewardmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin/reward"
 	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/powerrental"
 
@@ -29,6 +32,7 @@ type queryHandler struct {
 	infos            []*npool.PowerRental
 	miningGoodStocks []*stockmwpb.MiningGoodStock
 	goodCoins        []*goodcoinmwpb.GoodCoinInfo
+	coinRewards      []*goodcoinrewardmwpb.RewardInfo
 	total            uint32
 }
 
@@ -117,9 +121,42 @@ func (h *queryHandler) getGoodCoins(ctx context.Context, cli *ent.Client) error 
 	).Scan(ctx, &h.goodCoins)
 }
 
+func (h *queryHandler) getCoinRewards(ctx context.Context, cli *ent.Client) error {
+	goodIDs := func() (uids []uuid.UUID) {
+		for _, info := range h.infos {
+			if _, err := uuid.Parse(info.GoodID); err != nil {
+				continue
+			}
+			uids = append(uids, uuid.MustParse(info.GoodID))
+		}
+		return
+	}()
+
+	stm, err := goodcoinrewardcrud.SetQueryConds(
+		cli.GoodCoinReward.Query(),
+		&goodcoinrewardcrud.Conds{
+			GoodIDs: &cruder.Cond{Op: cruder.IN, Val: goodIDs},
+		},
+	)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+
+	return stm.Select(
+		entgoodcoinreward.FieldGoodID,
+		entgoodcoinreward.FieldCoinTypeID,
+		entgoodcoinreward.FieldRewardTid,
+		entgoodcoinreward.FieldNextRewardStartAmount,
+		entgoodcoinreward.FieldLastRewardAmount,
+		entgoodcoinreward.FieldLastUnitRewardAmount,
+		entgoodcoinreward.FieldTotalRewardAmount,
+	).Scan(ctx, &h.coinRewards)
+}
+
 func (h *queryHandler) formalize() {
 	goodMiningStocks := map[string][]*stockmwpb.MiningGoodStock{}
 	goodCoins := map[string][]*goodcoinmwpb.GoodCoinInfo{}
+	coinRewards := map[string][]*goodcoinrewardmwpb.RewardInfo{}
 
 	for _, stock := range h.miningGoodStocks {
 		stock.Total = func() string { amount, _ := decimal.NewFromString(stock.Total); return amount.String() }()
@@ -133,6 +170,25 @@ func (h *queryHandler) formalize() {
 	for _, goodCoin := range h.goodCoins {
 		goodCoins[goodCoin.GoodID] = append(goodCoins[goodCoin.GoodID], goodCoin)
 	}
+	for _, coinReward := range h.coinRewards {
+		coinReward.NextRewardStartAmount = func() string {
+			amount, _ := decimal.NewFromString(coinReward.NextRewardStartAmount)
+			return amount.String()
+		}()
+		coinReward.LastRewardAmount = func() string {
+			amount, _ := decimal.NewFromString(coinReward.LastRewardAmount)
+			return amount.String()
+		}()
+		coinReward.LastUnitRewardAmount = func() string {
+			amount, _ := decimal.NewFromString(coinReward.LastUnitRewardAmount)
+			return amount.String()
+		}()
+		coinReward.TotalRewardAmount = func() string {
+			amount, _ := decimal.NewFromString(coinReward.TotalRewardAmount)
+			return amount.String()
+		}()
+		coinRewards[coinReward.GoodID] = append(coinRewards[coinReward.GoodID], coinReward)
+	}
 	for _, info := range h.infos {
 		info.UnitPrice = func() string { amount, _ := decimal.NewFromString(info.UnitPrice); return amount.String() }()
 		info.QuantityUnitAmount = func() string { amount, _ := decimal.NewFromString(info.QuantityUnitAmount); return amount.String() }()
@@ -144,10 +200,6 @@ func (h *queryHandler) formalize() {
 		info.GoodWaitStart = func() string { amount, _ := decimal.NewFromString(info.GoodWaitStart); return amount.String() }()
 		info.GoodSold = func() string { amount, _ := decimal.NewFromString(info.GoodSold); return amount.String() }()
 		info.GoodAppReserved = func() string { amount, _ := decimal.NewFromString(info.GoodAppReserved); return amount.String() }()
-		info.LastRewardAmount = func() string { amount, _ := decimal.NewFromString(info.LastRewardAmount); return amount.String() }()
-		info.NextRewardStartAmount = func() string { amount, _ := decimal.NewFromString(info.NextRewardStartAmount); return amount.String() }()
-		info.LastUnitRewardAmount = func() string { amount, _ := decimal.NewFromString(info.LastUnitRewardAmount); return amount.String() }()
-		info.TotalRewardAmount = func() string { amount, _ := decimal.NewFromString(info.TotalRewardAmount); return amount.String() }()
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.DurationDisplayType = types.GoodDurationType(types.GoodDurationType_value[info.DurationDisplayTypeStr])
@@ -156,6 +208,7 @@ func (h *queryHandler) formalize() {
 		info.RewardState = types.BenefitState(types.BenefitState_value[info.RewardStateStr])
 		info.MiningGoodStocks = goodMiningStocks[info.GoodStockID]
 		info.GoodCoins = goodCoins[info.GoodID]
+		info.Rewards = coinRewards[info.GoodID]
 	}
 }
 

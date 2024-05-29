@@ -347,6 +347,19 @@ func (f GoodCoinFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	return f(ctx, mv)
 }
 
+// The GoodCoinRewardFunc type is an adapter to allow the use of ordinary
+// function as GoodCoinReward mutator.
+type GoodCoinRewardFunc func(context.Context, *ent.GoodCoinRewardMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f GoodCoinRewardFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.GoodCoinRewardMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GoodCoinRewardMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The GoodMalfunctionFunc type is an adapter to allow the use of ordinary
 // function as GoodMalfunction mutator.
 type GoodMalfunctionFunc func(context.Context, *ent.GoodMalfunctionMutation) (ent.Value, error)

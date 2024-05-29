@@ -6,7 +6,7 @@ import (
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/reward/history"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin/reward/history"
 	"google.golang.org/grpc"
 )
 

@@ -1,7 +1,7 @@
 package history
 
 import (
-	"github.com/NpoolPlatform/message/npool/good/mw/v1/good/reward/history"
+	"github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin/reward/history"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"

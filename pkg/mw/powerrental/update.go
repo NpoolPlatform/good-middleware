@@ -8,11 +8,12 @@ import (
 
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	rewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward"
-	rewardhistorycrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward/history"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	goodcoinreward1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/coin/reward"
+	rewardhistory1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/coin/reward/history"
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -22,17 +23,19 @@ import (
 
 type updateHandler struct {
 	*powerRentalGoodQueryHandler
-	stockValidator *validateStockHandler
-	sqlPowerRental string
-	sqlGoodBase    string
-	stockMode      types.GoodStockMode
-	updated        bool
+	stockValidator         *validateStockHandler
+	sqlPowerRental         string
+	sqlGoodBase            string
+	sqlCoinRewards         []string
+	sqlCoinRewardHistories []string
+	stockMode              types.GoodStockMode
+	updated                bool
 }
 
 func (h *updateHandler) constructGoodBaseSQL(ctx context.Context) error {
 	handler, err := goodbase1.NewHandler(
 		ctx,
-		goodbase1.WithEntID(func() *string { s := h.GoodBaseReq.EntID.String(); return &s }(), false),
+		goodbase1.WithEntID(func() *string { s := h.GoodBaseReq.EntID.String(); return &s }(), true),
 		goodbase1.WithGoodType(h.GoodBaseReq.GoodType, false),
 		goodbase1.WithBenefitType(h.GoodBaseReq.BenefitType, false),
 		goodbase1.WithName(h.GoodBaseReq.Name, false),
@@ -49,6 +52,92 @@ func (h *updateHandler) constructGoodBaseSQL(ctx context.Context) error {
 	h.sqlGoodBase, err = handler.ConstructUpdateSQL()
 	if err != nil && !wlog.Equal(err, cruder.ErrUpdateNothing) {
 		return wlog.WrapError(err)
+	}
+	return nil
+}
+
+func (h *updateHandler) constructCoinRewardSQLs(ctx context.Context) error {
+	for _, reward := range h.CoinRewardReqs {
+		handler, err := goodcoinreward1.NewHandler(
+			ctx,
+			goodcoinreward1.WithGoodID(func() *string { s := h.GoodBaseReq.EntID.String(); return &s }(), true),
+			goodcoinreward1.WithCoinTypeID(func() *string { s := reward.CoinTypeID.String(); return &s }(), true),
+			goodcoinreward1.WithRewardTID(func() *string {
+				if reward.RewardTID == nil {
+					return nil
+				}
+				s := reward.RewardTID.String()
+				return &s
+			}(), false),
+			goodcoinreward1.WithNextRewardStartAmount(func() *string {
+				if reward.NextRewardStartAmount == nil {
+					return nil
+				}
+				s := reward.NextRewardStartAmount.String()
+				return &s
+			}(), false),
+			goodcoinreward1.WithRewardAmount(func() *string {
+				if reward.LastRewardAmount == nil {
+					return nil
+				}
+				s := reward.LastRewardAmount.String()
+				return &s
+			}(), false),
+			goodcoinreward1.WithUnitRewardAmount(func() *string {
+				if reward.LastRewardAmount == nil {
+					return nil
+				}
+				unitReward := reward.LastRewardAmount.Div(h.stock.Total)
+				s := unitReward.String()
+				return &s
+			}(), false),
+		)
+		if err != nil {
+			return wlog.WrapError(err)
+		}
+		sql, err := handler.ConstructUpdateSQL()
+		if err != nil && !wlog.Equal(err, cruder.ErrUpdateNothing) {
+			return wlog.WrapError(err)
+		}
+		h.sqlCoinRewards = append(h.sqlCoinRewards, sql)
+	}
+	return nil
+}
+
+func (h *updateHandler) constructCoinRewardHistorySQLs(ctx context.Context) error {
+	for _, reward := range h.CoinRewardReqs {
+		handler, err := rewardhistory1.NewHandler(
+			ctx,
+			rewardhistory1.WithGoodID(func() *string { s := h.GoodBaseReq.EntID.String(); return &s }(), true),
+			rewardhistory1.WithCoinTypeID(func() *string { s := reward.CoinTypeID.String(); return &s }(), true),
+			rewardhistory1.WithTID(func() *string {
+				if reward.RewardTID == nil {
+					return nil
+				}
+				s := reward.RewardTID.String()
+				return &s
+			}(), true),
+			rewardhistory1.WithRewardDate(h.RewardReq.LastRewardAt, true),
+			rewardhistory1.WithAmount(func() *string {
+				if reward.LastRewardAmount == nil {
+					return nil
+				}
+				s := reward.LastRewardAmount.String()
+				return &s
+			}(), false),
+			rewardhistory1.WithUnitAmount(func() *string {
+				if reward.LastRewardAmount == nil {
+					return nil
+				}
+				unitReward := reward.LastRewardAmount.Div(h.stock.Total)
+				s := unitReward.String()
+				return &s
+			}(), false),
+		)
+		if err != nil {
+			return wlog.WrapError(err)
+		}
+		h.sqlCoinRewardHistories = append(h.sqlCoinRewardHistories, handler.ConstructCreateSQL())
 	}
 	return nil
 }
@@ -273,61 +362,44 @@ func (h *updateHandler) validateRewardState() error {
 	return nil
 }
 
-func (h *updateHandler) updateReward(ctx context.Context, tx *ent.Tx) error {
+func (h *updateHandler) updateGoodReward(ctx context.Context, tx *ent.Tx) error {
 	if h.RewardReq.RewardState == nil {
 		return nil
 	}
-
-	totalReward := h.goodReward.TotalRewardAmount
-	if *h.RewardReq.RewardState == types.BenefitState_BenefitSimulateBookKeeping {
-		if h.RewardReq.LastRewardAmount != nil {
-			totalReward = h.RewardReq.LastRewardAmount.Add(totalReward)
-		}
-	}
-	h.RewardReq.TotalRewardAmount = &totalReward
-
-	if _, err := rewardcrud.UpdateSet(
+	_, err := rewardcrud.UpdateSet(
 		tx.GoodReward.UpdateOneID(h.goodReward.ID),
 		h.RewardReq,
-	).Save(ctx); err != nil {
-		return wlog.WrapError(err)
-	}
+	).Save(ctx)
+	return wlog.WrapError(err)
+}
 
+func (h *updateHandler) updateGoodCoinRewards(ctx context.Context, tx *ent.Tx) error {
+	if h.RewardReq.RewardState == nil {
+		return nil
+	}
+	for _, sql := range h.sqlCoinRewards {
+		if err := h.execSQL(ctx, tx, sql); err != nil {
+			return wlog.WrapError(err)
+		}
+	}
+	return nil
+}
+
+func (h *updateHandler) createCoinRewardHistories(ctx context.Context, tx *ent.Tx) error {
+	if h.RewardReq.RewardState == nil {
+		return nil
+	}
 	if *h.RewardReq.RewardState != types.BenefitState_BenefitSimulateBookKeeping {
 		return nil
 	}
 	if h.RewardReq.LastRewardAt == nil {
 		return wlog.Errorf("invalid rewardat")
 	}
-
-	stm, err := rewardhistorycrud.SetQueryConds(tx.GoodRewardHistory.Query(), &rewardhistorycrud.Conds{
-		GoodID:     &cruder.Cond{Op: cruder.EQ, Val: *h.GoodID},
-		RewardDate: &cruder.Cond{Op: cruder.EQ, Val: *h.RewardReq.LastRewardAt},
-	})
-	if err != nil {
-		return wlog.WrapError(err)
+	for _, sql := range h.sqlCoinRewardHistories {
+		if err := h.execSQL(ctx, tx, sql); err != nil {
+			return wlog.WrapError(err)
+		}
 	}
-	exist, err := stm.Exist(ctx)
-	if err != nil {
-		return wlog.WrapError(err)
-	}
-	if exist {
-		return wlog.Errorf("already exists")
-	}
-
-	if _, err := rewardhistorycrud.CreateSet(
-		tx.GoodRewardHistory.Create(),
-		&rewardhistorycrud.Req{
-			GoodID:     h.GoodID,
-			RewardDate: h.RewardReq.LastRewardAt,
-			TID:        h.RewardReq.RewardTID,
-			Amount:     h.RewardReq.LastRewardAmount,
-			UnitAmount: h.RewardReq.LastUnitRewardAmount,
-		},
-	).Save(ctx); err != nil {
-		return wlog.WrapError(err)
-	}
-
 	return nil
 }
 
@@ -360,6 +432,12 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 	if err := handler.constructGoodBaseSQL(ctx); err != nil {
 		return wlog.WrapError(err)
 	}
+	if err := handler.constructCoinRewardSQLs(ctx); err != nil {
+		return wlog.WrapError(err)
+	}
+	if err := handler.constructCoinRewardHistorySQLs(ctx); err != nil {
+		return wlog.WrapError(err)
+	}
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateGoodBase(_ctx, tx); err != nil {
@@ -371,7 +449,13 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		if err := handler.updateMiningGoodStocks(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
 		}
-		if err := handler.updateReward(_ctx, tx); err != nil {
+		if err := handler.updateGoodReward(_ctx, tx); err != nil {
+			return wlog.WrapError(err)
+		}
+		if err := handler.updateGoodCoinRewards(_ctx, tx); err != nil {
+			return wlog.WrapError(err)
+		}
+		if err := handler.createCoinRewardHistories(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
 		}
 		if err := handler.updatePowerRental(_ctx, tx); err != nil {

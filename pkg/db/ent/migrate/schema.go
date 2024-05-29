@@ -812,6 +812,49 @@ var (
 			},
 		},
 	}
+	// GoodCoinRewardsColumns holds the columns for the "good_coin_rewards" table.
+	GoodCoinRewardsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "coin_type_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "reward_tid", Type: field.TypeUUID, Nullable: true},
+		{Name: "next_reward_start_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "last_reward_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "last_unit_reward_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "total_reward_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+	}
+	// GoodCoinRewardsTable holds the schema information for the "good_coin_rewards" table.
+	GoodCoinRewardsTable = &schema.Table{
+		Name:       "good_coin_rewards",
+		Columns:    GoodCoinRewardsColumns,
+		PrimaryKey: []*schema.Column{GoodCoinRewardsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "goodcoinreward_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{GoodCoinRewardsColumns[4]},
+			},
+			{
+				Name:    "goodcoinreward_good_id",
+				Unique:  false,
+				Columns: []*schema.Column{GoodCoinRewardsColumns[5]},
+			},
+			{
+				Name:    "goodcoinreward_coin_type_id",
+				Unique:  false,
+				Columns: []*schema.Column{GoodCoinRewardsColumns[6]},
+			},
+			{
+				Name:    "goodcoinreward_good_id_coin_type_id",
+				Unique:  false,
+				Columns: []*schema.Column{GoodCoinRewardsColumns[5], GoodCoinRewardsColumns[6]},
+			},
+		},
+	}
 	// GoodMalfunctionsColumns holds the columns for the "good_malfunctions" table.
 	GoodMalfunctionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -849,11 +892,6 @@ var (
 		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "reward_state", Type: field.TypeString, Nullable: true, Default: "BenefitWait"},
 		{Name: "last_reward_at", Type: field.TypeUint32, Nullable: true, Default: 0},
-		{Name: "reward_tid", Type: field.TypeUUID, Nullable: true},
-		{Name: "next_reward_start_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
-		{Name: "last_reward_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
-		{Name: "last_unit_reward_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
-		{Name: "total_reward_amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}
 	// GoodRewardsTable holds the schema information for the "good_rewards" table.
 	GoodRewardsTable = &schema.Table{
@@ -881,6 +919,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
 		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "coin_type_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "reward_date", Type: field.TypeUint32, Nullable: true},
 		{Name: "tid", Type: field.TypeUUID, Nullable: true},
 		{Name: "amount", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
@@ -897,6 +936,21 @@ var (
 				Name:    "goodrewardhistory_ent_id",
 				Unique:  true,
 				Columns: []*schema.Column{GoodRewardHistoriesColumns[4]},
+			},
+			{
+				Name:    "goodrewardhistory_good_id",
+				Unique:  false,
+				Columns: []*schema.Column{GoodRewardHistoriesColumns[5]},
+			},
+			{
+				Name:    "goodrewardhistory_coin_type_id",
+				Unique:  false,
+				Columns: []*schema.Column{GoodRewardHistoriesColumns[6]},
+			},
+			{
+				Name:    "goodrewardhistory_good_id_coin_type_id",
+				Unique:  false,
+				Columns: []*schema.Column{GoodRewardHistoriesColumns[5], GoodRewardHistoriesColumns[6]},
 			},
 		},
 	}
@@ -1393,6 +1447,7 @@ var (
 		GoodsTable,
 		GoodBasesTable,
 		GoodCoinsTable,
+		GoodCoinRewardsTable,
 		GoodMalfunctionsTable,
 		GoodRewardsTable,
 		GoodRewardHistoriesTable,

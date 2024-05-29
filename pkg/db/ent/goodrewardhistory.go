@@ -27,6 +27,8 @@ type GoodRewardHistory struct {
 	EntID uuid.UUID `json:"ent_id,omitempty"`
 	// GoodID holds the value of the "good_id" field.
 	GoodID uuid.UUID `json:"good_id,omitempty"`
+	// CoinTypeID holds the value of the "coin_type_id" field.
+	CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
 	// RewardDate holds the value of the "reward_date" field.
 	RewardDate uint32 `json:"reward_date,omitempty"`
 	// Tid holds the value of the "tid" field.
@@ -48,7 +50,7 @@ func (*GoodRewardHistory) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case goodrewardhistory.FieldID, goodrewardhistory.FieldCreatedAt, goodrewardhistory.FieldUpdatedAt, goodrewardhistory.FieldDeletedAt, goodrewardhistory.FieldRewardDate:
 			values[i] = new(sql.NullInt64)
-		case goodrewardhistory.FieldEntID, goodrewardhistory.FieldGoodID, goodrewardhistory.FieldTid:
+		case goodrewardhistory.FieldEntID, goodrewardhistory.FieldGoodID, goodrewardhistory.FieldCoinTypeID, goodrewardhistory.FieldTid:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type GoodRewardHistory", columns[i])
@@ -100,6 +102,12 @@ func (grh *GoodRewardHistory) assignValues(columns []string, values []interface{
 				return fmt.Errorf("unexpected type %T for field good_id", values[i])
 			} else if value != nil {
 				grh.GoodID = *value
+			}
+		case goodrewardhistory.FieldCoinTypeID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field coin_type_id", values[i])
+			} else if value != nil {
+				grh.CoinTypeID = *value
 			}
 		case goodrewardhistory.FieldRewardDate:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -173,6 +181,9 @@ func (grh *GoodRewardHistory) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("good_id=")
 	builder.WriteString(fmt.Sprintf("%v", grh.GoodID))
+	builder.WriteString(", ")
+	builder.WriteString("coin_type_id=")
+	builder.WriteString(fmt.Sprintf("%v", grh.CoinTypeID))
 	builder.WriteString(", ")
 	builder.WriteString("reward_date=")
 	builder.WriteString(fmt.Sprintf("%v", grh.RewardDate))

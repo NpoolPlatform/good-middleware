@@ -214,11 +214,6 @@ func (h *baseQueryHandler) queryJoinReward(s *sql.Selector) {
 	s.AppendSelect(
 		t.C(entgoodreward.FieldRewardState),
 		t.C(entgoodreward.FieldLastRewardAt),
-		t.C(entgoodreward.FieldRewardTid),
-		t.C(entgoodreward.FieldNextRewardStartAmount),
-		t.C(entgoodreward.FieldLastRewardAmount),
-		t.C(entgoodreward.FieldLastUnitRewardAmount),
-		t.C(entgoodreward.FieldTotalRewardAmount),
 	)
 }
 

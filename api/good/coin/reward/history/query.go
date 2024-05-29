@@ -8,8 +8,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	history1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/reward/history"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/reward/history"
+	history1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/coin/reward/history"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin/reward/history"
 )
 
 func (s *Server) GetHistories(ctx context.Context, in *npool.GetHistoriesRequest) (*npool.GetHistoriesResponse, error) {

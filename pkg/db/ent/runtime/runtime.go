@@ -31,6 +31,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoinreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodmalfunction"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
@@ -1684,6 +1685,68 @@ func init() {
 	goodcoinDescIndex := goodcoinFields[3].Descriptor()
 	// goodcoin.DefaultIndex holds the default value on creation for the index field.
 	goodcoin.DefaultIndex = goodcoinDescIndex.Default.(int32)
+	goodcoinrewardMixin := schema.GoodCoinReward{}.Mixin()
+	goodcoinreward.Policy = privacy.NewPolicies(goodcoinrewardMixin[0], schema.GoodCoinReward{})
+	goodcoinreward.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := goodcoinreward.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	goodcoinrewardMixinFields0 := goodcoinrewardMixin[0].Fields()
+	_ = goodcoinrewardMixinFields0
+	goodcoinrewardMixinFields1 := goodcoinrewardMixin[1].Fields()
+	_ = goodcoinrewardMixinFields1
+	goodcoinrewardFields := schema.GoodCoinReward{}.Fields()
+	_ = goodcoinrewardFields
+	// goodcoinrewardDescCreatedAt is the schema descriptor for created_at field.
+	goodcoinrewardDescCreatedAt := goodcoinrewardMixinFields0[0].Descriptor()
+	// goodcoinreward.DefaultCreatedAt holds the default value on creation for the created_at field.
+	goodcoinreward.DefaultCreatedAt = goodcoinrewardDescCreatedAt.Default.(func() uint32)
+	// goodcoinrewardDescUpdatedAt is the schema descriptor for updated_at field.
+	goodcoinrewardDescUpdatedAt := goodcoinrewardMixinFields0[1].Descriptor()
+	// goodcoinreward.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	goodcoinreward.DefaultUpdatedAt = goodcoinrewardDescUpdatedAt.Default.(func() uint32)
+	// goodcoinreward.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	goodcoinreward.UpdateDefaultUpdatedAt = goodcoinrewardDescUpdatedAt.UpdateDefault.(func() uint32)
+	// goodcoinrewardDescDeletedAt is the schema descriptor for deleted_at field.
+	goodcoinrewardDescDeletedAt := goodcoinrewardMixinFields0[2].Descriptor()
+	// goodcoinreward.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	goodcoinreward.DefaultDeletedAt = goodcoinrewardDescDeletedAt.Default.(func() uint32)
+	// goodcoinrewardDescEntID is the schema descriptor for ent_id field.
+	goodcoinrewardDescEntID := goodcoinrewardMixinFields1[1].Descriptor()
+	// goodcoinreward.DefaultEntID holds the default value on creation for the ent_id field.
+	goodcoinreward.DefaultEntID = goodcoinrewardDescEntID.Default.(func() uuid.UUID)
+	// goodcoinrewardDescGoodID is the schema descriptor for good_id field.
+	goodcoinrewardDescGoodID := goodcoinrewardFields[0].Descriptor()
+	// goodcoinreward.DefaultGoodID holds the default value on creation for the good_id field.
+	goodcoinreward.DefaultGoodID = goodcoinrewardDescGoodID.Default.(func() uuid.UUID)
+	// goodcoinrewardDescCoinTypeID is the schema descriptor for coin_type_id field.
+	goodcoinrewardDescCoinTypeID := goodcoinrewardFields[1].Descriptor()
+	// goodcoinreward.DefaultCoinTypeID holds the default value on creation for the coin_type_id field.
+	goodcoinreward.DefaultCoinTypeID = goodcoinrewardDescCoinTypeID.Default.(func() uuid.UUID)
+	// goodcoinrewardDescRewardTid is the schema descriptor for reward_tid field.
+	goodcoinrewardDescRewardTid := goodcoinrewardFields[2].Descriptor()
+	// goodcoinreward.DefaultRewardTid holds the default value on creation for the reward_tid field.
+	goodcoinreward.DefaultRewardTid = goodcoinrewardDescRewardTid.Default.(func() uuid.UUID)
+	// goodcoinrewardDescNextRewardStartAmount is the schema descriptor for next_reward_start_amount field.
+	goodcoinrewardDescNextRewardStartAmount := goodcoinrewardFields[3].Descriptor()
+	// goodcoinreward.DefaultNextRewardStartAmount holds the default value on creation for the next_reward_start_amount field.
+	goodcoinreward.DefaultNextRewardStartAmount = goodcoinrewardDescNextRewardStartAmount.Default.(decimal.Decimal)
+	// goodcoinrewardDescLastRewardAmount is the schema descriptor for last_reward_amount field.
+	goodcoinrewardDescLastRewardAmount := goodcoinrewardFields[4].Descriptor()
+	// goodcoinreward.DefaultLastRewardAmount holds the default value on creation for the last_reward_amount field.
+	goodcoinreward.DefaultLastRewardAmount = goodcoinrewardDescLastRewardAmount.Default.(decimal.Decimal)
+	// goodcoinrewardDescLastUnitRewardAmount is the schema descriptor for last_unit_reward_amount field.
+	goodcoinrewardDescLastUnitRewardAmount := goodcoinrewardFields[5].Descriptor()
+	// goodcoinreward.DefaultLastUnitRewardAmount holds the default value on creation for the last_unit_reward_amount field.
+	goodcoinreward.DefaultLastUnitRewardAmount = goodcoinrewardDescLastUnitRewardAmount.Default.(decimal.Decimal)
+	// goodcoinrewardDescTotalRewardAmount is the schema descriptor for total_reward_amount field.
+	goodcoinrewardDescTotalRewardAmount := goodcoinrewardFields[6].Descriptor()
+	// goodcoinreward.DefaultTotalRewardAmount holds the default value on creation for the total_reward_amount field.
+	goodcoinreward.DefaultTotalRewardAmount = goodcoinrewardDescTotalRewardAmount.Default.(decimal.Decimal)
 	goodmalfunctionMixin := schema.GoodMalfunction{}.Mixin()
 	goodmalfunction.Policy = privacy.NewPolicies(goodmalfunctionMixin[0], schema.GoodMalfunction{})
 	goodmalfunction.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -1788,26 +1851,6 @@ func init() {
 	goodrewardDescLastRewardAt := goodrewardFields[2].Descriptor()
 	// goodreward.DefaultLastRewardAt holds the default value on creation for the last_reward_at field.
 	goodreward.DefaultLastRewardAt = goodrewardDescLastRewardAt.Default.(uint32)
-	// goodrewardDescRewardTid is the schema descriptor for reward_tid field.
-	goodrewardDescRewardTid := goodrewardFields[3].Descriptor()
-	// goodreward.DefaultRewardTid holds the default value on creation for the reward_tid field.
-	goodreward.DefaultRewardTid = goodrewardDescRewardTid.Default.(func() uuid.UUID)
-	// goodrewardDescNextRewardStartAmount is the schema descriptor for next_reward_start_amount field.
-	goodrewardDescNextRewardStartAmount := goodrewardFields[4].Descriptor()
-	// goodreward.DefaultNextRewardStartAmount holds the default value on creation for the next_reward_start_amount field.
-	goodreward.DefaultNextRewardStartAmount = goodrewardDescNextRewardStartAmount.Default.(decimal.Decimal)
-	// goodrewardDescLastRewardAmount is the schema descriptor for last_reward_amount field.
-	goodrewardDescLastRewardAmount := goodrewardFields[5].Descriptor()
-	// goodreward.DefaultLastRewardAmount holds the default value on creation for the last_reward_amount field.
-	goodreward.DefaultLastRewardAmount = goodrewardDescLastRewardAmount.Default.(decimal.Decimal)
-	// goodrewardDescLastUnitRewardAmount is the schema descriptor for last_unit_reward_amount field.
-	goodrewardDescLastUnitRewardAmount := goodrewardFields[6].Descriptor()
-	// goodreward.DefaultLastUnitRewardAmount holds the default value on creation for the last_unit_reward_amount field.
-	goodreward.DefaultLastUnitRewardAmount = goodrewardDescLastUnitRewardAmount.Default.(decimal.Decimal)
-	// goodrewardDescTotalRewardAmount is the schema descriptor for total_reward_amount field.
-	goodrewardDescTotalRewardAmount := goodrewardFields[7].Descriptor()
-	// goodreward.DefaultTotalRewardAmount holds the default value on creation for the total_reward_amount field.
-	goodreward.DefaultTotalRewardAmount = goodrewardDescTotalRewardAmount.Default.(decimal.Decimal)
 	goodrewardhistoryMixin := schema.GoodRewardHistory{}.Mixin()
 	goodrewardhistory.Policy = privacy.NewPolicies(goodrewardhistoryMixin[0], schema.GoodRewardHistory{})
 	goodrewardhistory.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -1846,24 +1889,28 @@ func init() {
 	goodrewardhistoryDescGoodID := goodrewardhistoryFields[0].Descriptor()
 	// goodrewardhistory.DefaultGoodID holds the default value on creation for the good_id field.
 	goodrewardhistory.DefaultGoodID = goodrewardhistoryDescGoodID.Default.(func() uuid.UUID)
+	// goodrewardhistoryDescCoinTypeID is the schema descriptor for coin_type_id field.
+	goodrewardhistoryDescCoinTypeID := goodrewardhistoryFields[1].Descriptor()
+	// goodrewardhistory.DefaultCoinTypeID holds the default value on creation for the coin_type_id field.
+	goodrewardhistory.DefaultCoinTypeID = goodrewardhistoryDescCoinTypeID.Default.(func() uuid.UUID)
 	// goodrewardhistoryDescRewardDate is the schema descriptor for reward_date field.
-	goodrewardhistoryDescRewardDate := goodrewardhistoryFields[1].Descriptor()
+	goodrewardhistoryDescRewardDate := goodrewardhistoryFields[2].Descriptor()
 	// goodrewardhistory.DefaultRewardDate holds the default value on creation for the reward_date field.
 	goodrewardhistory.DefaultRewardDate = goodrewardhistoryDescRewardDate.Default.(func() uint32)
 	// goodrewardhistoryDescTid is the schema descriptor for tid field.
-	goodrewardhistoryDescTid := goodrewardhistoryFields[2].Descriptor()
+	goodrewardhistoryDescTid := goodrewardhistoryFields[3].Descriptor()
 	// goodrewardhistory.DefaultTid holds the default value on creation for the tid field.
 	goodrewardhistory.DefaultTid = goodrewardhistoryDescTid.Default.(func() uuid.UUID)
 	// goodrewardhistoryDescAmount is the schema descriptor for amount field.
-	goodrewardhistoryDescAmount := goodrewardhistoryFields[3].Descriptor()
+	goodrewardhistoryDescAmount := goodrewardhistoryFields[4].Descriptor()
 	// goodrewardhistory.DefaultAmount holds the default value on creation for the amount field.
 	goodrewardhistory.DefaultAmount = goodrewardhistoryDescAmount.Default.(decimal.Decimal)
 	// goodrewardhistoryDescUnitAmount is the schema descriptor for unit_amount field.
-	goodrewardhistoryDescUnitAmount := goodrewardhistoryFields[4].Descriptor()
+	goodrewardhistoryDescUnitAmount := goodrewardhistoryFields[5].Descriptor()
 	// goodrewardhistory.DefaultUnitAmount holds the default value on creation for the unit_amount field.
 	goodrewardhistory.DefaultUnitAmount = goodrewardhistoryDescUnitAmount.Default.(decimal.Decimal)
 	// goodrewardhistoryDescUnitNetAmount is the schema descriptor for unit_net_amount field.
-	goodrewardhistoryDescUnitNetAmount := goodrewardhistoryFields[5].Descriptor()
+	goodrewardhistoryDescUnitNetAmount := goodrewardhistoryFields[6].Descriptor()
 	// goodrewardhistory.DefaultUnitNetAmount holds the default value on creation for the unit_net_amount field.
 	goodrewardhistory.DefaultUnitNetAmount = goodrewardhistoryDescUnitNetAmount.Default.(decimal.Decimal)
 	likeMixin := schema.Like{}.Mixin()

@@ -34,6 +34,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoinreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodmalfunction"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
@@ -95,6 +96,7 @@ const (
 	TypeGood                   = "Good"
 	TypeGoodBase               = "GoodBase"
 	TypeGoodCoin               = "GoodCoin"
+	TypeGoodCoinReward         = "GoodCoinReward"
 	TypeGoodMalfunction        = "GoodMalfunction"
 	TypeGoodReward             = "GoodReward"
 	TypeGoodRewardHistory      = "GoodRewardHistory"
@@ -30717,6 +30719,1101 @@ func (m *GoodCoinMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown GoodCoin edge %s", name)
 }
 
+// GoodCoinRewardMutation represents an operation that mutates the GoodCoinReward nodes in the graph.
+type GoodCoinRewardMutation struct {
+	config
+	op                       Op
+	typ                      string
+	id                       *uint32
+	created_at               *uint32
+	addcreated_at            *int32
+	updated_at               *uint32
+	addupdated_at            *int32
+	deleted_at               *uint32
+	adddeleted_at            *int32
+	ent_id                   *uuid.UUID
+	good_id                  *uuid.UUID
+	coin_type_id             *uuid.UUID
+	reward_tid               *uuid.UUID
+	next_reward_start_amount *decimal.Decimal
+	last_reward_amount       *decimal.Decimal
+	last_unit_reward_amount  *decimal.Decimal
+	total_reward_amount      *decimal.Decimal
+	clearedFields            map[string]struct{}
+	done                     bool
+	oldValue                 func(context.Context) (*GoodCoinReward, error)
+	predicates               []predicate.GoodCoinReward
+}
+
+var _ ent.Mutation = (*GoodCoinRewardMutation)(nil)
+
+// goodcoinrewardOption allows management of the mutation configuration using functional options.
+type goodcoinrewardOption func(*GoodCoinRewardMutation)
+
+// newGoodCoinRewardMutation creates new mutation for the GoodCoinReward entity.
+func newGoodCoinRewardMutation(c config, op Op, opts ...goodcoinrewardOption) *GoodCoinRewardMutation {
+	m := &GoodCoinRewardMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeGoodCoinReward,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withGoodCoinRewardID sets the ID field of the mutation.
+func withGoodCoinRewardID(id uint32) goodcoinrewardOption {
+	return func(m *GoodCoinRewardMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *GoodCoinReward
+		)
+		m.oldValue = func(ctx context.Context) (*GoodCoinReward, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().GoodCoinReward.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withGoodCoinReward sets the old GoodCoinReward of the mutation.
+func withGoodCoinReward(node *GoodCoinReward) goodcoinrewardOption {
+	return func(m *GoodCoinRewardMutation) {
+		m.oldValue = func(context.Context) (*GoodCoinReward, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m GoodCoinRewardMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m GoodCoinRewardMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of GoodCoinReward entities.
+func (m *GoodCoinRewardMutation) SetID(id uint32) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *GoodCoinRewardMutation) ID() (id uint32, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *GoodCoinRewardMutation) IDs(ctx context.Context) ([]uint32, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uint32{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().GoodCoinReward.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *GoodCoinRewardMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *GoodCoinRewardMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the GoodCoinReward entity.
+// If the GoodCoinReward object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodCoinRewardMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *GoodCoinRewardMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *GoodCoinRewardMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *GoodCoinRewardMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *GoodCoinRewardMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *GoodCoinRewardMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the GoodCoinReward entity.
+// If the GoodCoinReward object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodCoinRewardMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *GoodCoinRewardMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *GoodCoinRewardMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *GoodCoinRewardMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *GoodCoinRewardMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *GoodCoinRewardMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the GoodCoinReward entity.
+// If the GoodCoinReward object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodCoinRewardMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *GoodCoinRewardMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *GoodCoinRewardMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *GoodCoinRewardMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetEntID sets the "ent_id" field.
+func (m *GoodCoinRewardMutation) SetEntID(u uuid.UUID) {
+	m.ent_id = &u
+}
+
+// EntID returns the value of the "ent_id" field in the mutation.
+func (m *GoodCoinRewardMutation) EntID() (r uuid.UUID, exists bool) {
+	v := m.ent_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEntID returns the old "ent_id" field's value of the GoodCoinReward entity.
+// If the GoodCoinReward object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodCoinRewardMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEntID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEntID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEntID: %w", err)
+	}
+	return oldValue.EntID, nil
+}
+
+// ResetEntID resets all changes to the "ent_id" field.
+func (m *GoodCoinRewardMutation) ResetEntID() {
+	m.ent_id = nil
+}
+
+// SetGoodID sets the "good_id" field.
+func (m *GoodCoinRewardMutation) SetGoodID(u uuid.UUID) {
+	m.good_id = &u
+}
+
+// GoodID returns the value of the "good_id" field in the mutation.
+func (m *GoodCoinRewardMutation) GoodID() (r uuid.UUID, exists bool) {
+	v := m.good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGoodID returns the old "good_id" field's value of the GoodCoinReward entity.
+// If the GoodCoinReward object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodCoinRewardMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGoodID: %w", err)
+	}
+	return oldValue.GoodID, nil
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (m *GoodCoinRewardMutation) ClearGoodID() {
+	m.good_id = nil
+	m.clearedFields[goodcoinreward.FieldGoodID] = struct{}{}
+}
+
+// GoodIDCleared returns if the "good_id" field was cleared in this mutation.
+func (m *GoodCoinRewardMutation) GoodIDCleared() bool {
+	_, ok := m.clearedFields[goodcoinreward.FieldGoodID]
+	return ok
+}
+
+// ResetGoodID resets all changes to the "good_id" field.
+func (m *GoodCoinRewardMutation) ResetGoodID() {
+	m.good_id = nil
+	delete(m.clearedFields, goodcoinreward.FieldGoodID)
+}
+
+// SetCoinTypeID sets the "coin_type_id" field.
+func (m *GoodCoinRewardMutation) SetCoinTypeID(u uuid.UUID) {
+	m.coin_type_id = &u
+}
+
+// CoinTypeID returns the value of the "coin_type_id" field in the mutation.
+func (m *GoodCoinRewardMutation) CoinTypeID() (r uuid.UUID, exists bool) {
+	v := m.coin_type_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCoinTypeID returns the old "coin_type_id" field's value of the GoodCoinReward entity.
+// If the GoodCoinReward object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodCoinRewardMutation) OldCoinTypeID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCoinTypeID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCoinTypeID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCoinTypeID: %w", err)
+	}
+	return oldValue.CoinTypeID, nil
+}
+
+// ClearCoinTypeID clears the value of the "coin_type_id" field.
+func (m *GoodCoinRewardMutation) ClearCoinTypeID() {
+	m.coin_type_id = nil
+	m.clearedFields[goodcoinreward.FieldCoinTypeID] = struct{}{}
+}
+
+// CoinTypeIDCleared returns if the "coin_type_id" field was cleared in this mutation.
+func (m *GoodCoinRewardMutation) CoinTypeIDCleared() bool {
+	_, ok := m.clearedFields[goodcoinreward.FieldCoinTypeID]
+	return ok
+}
+
+// ResetCoinTypeID resets all changes to the "coin_type_id" field.
+func (m *GoodCoinRewardMutation) ResetCoinTypeID() {
+	m.coin_type_id = nil
+	delete(m.clearedFields, goodcoinreward.FieldCoinTypeID)
+}
+
+// SetRewardTid sets the "reward_tid" field.
+func (m *GoodCoinRewardMutation) SetRewardTid(u uuid.UUID) {
+	m.reward_tid = &u
+}
+
+// RewardTid returns the value of the "reward_tid" field in the mutation.
+func (m *GoodCoinRewardMutation) RewardTid() (r uuid.UUID, exists bool) {
+	v := m.reward_tid
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRewardTid returns the old "reward_tid" field's value of the GoodCoinReward entity.
+// If the GoodCoinReward object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodCoinRewardMutation) OldRewardTid(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRewardTid is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRewardTid requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRewardTid: %w", err)
+	}
+	return oldValue.RewardTid, nil
+}
+
+// ClearRewardTid clears the value of the "reward_tid" field.
+func (m *GoodCoinRewardMutation) ClearRewardTid() {
+	m.reward_tid = nil
+	m.clearedFields[goodcoinreward.FieldRewardTid] = struct{}{}
+}
+
+// RewardTidCleared returns if the "reward_tid" field was cleared in this mutation.
+func (m *GoodCoinRewardMutation) RewardTidCleared() bool {
+	_, ok := m.clearedFields[goodcoinreward.FieldRewardTid]
+	return ok
+}
+
+// ResetRewardTid resets all changes to the "reward_tid" field.
+func (m *GoodCoinRewardMutation) ResetRewardTid() {
+	m.reward_tid = nil
+	delete(m.clearedFields, goodcoinreward.FieldRewardTid)
+}
+
+// SetNextRewardStartAmount sets the "next_reward_start_amount" field.
+func (m *GoodCoinRewardMutation) SetNextRewardStartAmount(d decimal.Decimal) {
+	m.next_reward_start_amount = &d
+}
+
+// NextRewardStartAmount returns the value of the "next_reward_start_amount" field in the mutation.
+func (m *GoodCoinRewardMutation) NextRewardStartAmount() (r decimal.Decimal, exists bool) {
+	v := m.next_reward_start_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNextRewardStartAmount returns the old "next_reward_start_amount" field's value of the GoodCoinReward entity.
+// If the GoodCoinReward object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodCoinRewardMutation) OldNextRewardStartAmount(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldNextRewardStartAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldNextRewardStartAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNextRewardStartAmount: %w", err)
+	}
+	return oldValue.NextRewardStartAmount, nil
+}
+
+// ClearNextRewardStartAmount clears the value of the "next_reward_start_amount" field.
+func (m *GoodCoinRewardMutation) ClearNextRewardStartAmount() {
+	m.next_reward_start_amount = nil
+	m.clearedFields[goodcoinreward.FieldNextRewardStartAmount] = struct{}{}
+}
+
+// NextRewardStartAmountCleared returns if the "next_reward_start_amount" field was cleared in this mutation.
+func (m *GoodCoinRewardMutation) NextRewardStartAmountCleared() bool {
+	_, ok := m.clearedFields[goodcoinreward.FieldNextRewardStartAmount]
+	return ok
+}
+
+// ResetNextRewardStartAmount resets all changes to the "next_reward_start_amount" field.
+func (m *GoodCoinRewardMutation) ResetNextRewardStartAmount() {
+	m.next_reward_start_amount = nil
+	delete(m.clearedFields, goodcoinreward.FieldNextRewardStartAmount)
+}
+
+// SetLastRewardAmount sets the "last_reward_amount" field.
+func (m *GoodCoinRewardMutation) SetLastRewardAmount(d decimal.Decimal) {
+	m.last_reward_amount = &d
+}
+
+// LastRewardAmount returns the value of the "last_reward_amount" field in the mutation.
+func (m *GoodCoinRewardMutation) LastRewardAmount() (r decimal.Decimal, exists bool) {
+	v := m.last_reward_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLastRewardAmount returns the old "last_reward_amount" field's value of the GoodCoinReward entity.
+// If the GoodCoinReward object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodCoinRewardMutation) OldLastRewardAmount(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLastRewardAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLastRewardAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLastRewardAmount: %w", err)
+	}
+	return oldValue.LastRewardAmount, nil
+}
+
+// ClearLastRewardAmount clears the value of the "last_reward_amount" field.
+func (m *GoodCoinRewardMutation) ClearLastRewardAmount() {
+	m.last_reward_amount = nil
+	m.clearedFields[goodcoinreward.FieldLastRewardAmount] = struct{}{}
+}
+
+// LastRewardAmountCleared returns if the "last_reward_amount" field was cleared in this mutation.
+func (m *GoodCoinRewardMutation) LastRewardAmountCleared() bool {
+	_, ok := m.clearedFields[goodcoinreward.FieldLastRewardAmount]
+	return ok
+}
+
+// ResetLastRewardAmount resets all changes to the "last_reward_amount" field.
+func (m *GoodCoinRewardMutation) ResetLastRewardAmount() {
+	m.last_reward_amount = nil
+	delete(m.clearedFields, goodcoinreward.FieldLastRewardAmount)
+}
+
+// SetLastUnitRewardAmount sets the "last_unit_reward_amount" field.
+func (m *GoodCoinRewardMutation) SetLastUnitRewardAmount(d decimal.Decimal) {
+	m.last_unit_reward_amount = &d
+}
+
+// LastUnitRewardAmount returns the value of the "last_unit_reward_amount" field in the mutation.
+func (m *GoodCoinRewardMutation) LastUnitRewardAmount() (r decimal.Decimal, exists bool) {
+	v := m.last_unit_reward_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLastUnitRewardAmount returns the old "last_unit_reward_amount" field's value of the GoodCoinReward entity.
+// If the GoodCoinReward object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodCoinRewardMutation) OldLastUnitRewardAmount(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLastUnitRewardAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLastUnitRewardAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLastUnitRewardAmount: %w", err)
+	}
+	return oldValue.LastUnitRewardAmount, nil
+}
+
+// ClearLastUnitRewardAmount clears the value of the "last_unit_reward_amount" field.
+func (m *GoodCoinRewardMutation) ClearLastUnitRewardAmount() {
+	m.last_unit_reward_amount = nil
+	m.clearedFields[goodcoinreward.FieldLastUnitRewardAmount] = struct{}{}
+}
+
+// LastUnitRewardAmountCleared returns if the "last_unit_reward_amount" field was cleared in this mutation.
+func (m *GoodCoinRewardMutation) LastUnitRewardAmountCleared() bool {
+	_, ok := m.clearedFields[goodcoinreward.FieldLastUnitRewardAmount]
+	return ok
+}
+
+// ResetLastUnitRewardAmount resets all changes to the "last_unit_reward_amount" field.
+func (m *GoodCoinRewardMutation) ResetLastUnitRewardAmount() {
+	m.last_unit_reward_amount = nil
+	delete(m.clearedFields, goodcoinreward.FieldLastUnitRewardAmount)
+}
+
+// SetTotalRewardAmount sets the "total_reward_amount" field.
+func (m *GoodCoinRewardMutation) SetTotalRewardAmount(d decimal.Decimal) {
+	m.total_reward_amount = &d
+}
+
+// TotalRewardAmount returns the value of the "total_reward_amount" field in the mutation.
+func (m *GoodCoinRewardMutation) TotalRewardAmount() (r decimal.Decimal, exists bool) {
+	v := m.total_reward_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTotalRewardAmount returns the old "total_reward_amount" field's value of the GoodCoinReward entity.
+// If the GoodCoinReward object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodCoinRewardMutation) OldTotalRewardAmount(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTotalRewardAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTotalRewardAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTotalRewardAmount: %w", err)
+	}
+	return oldValue.TotalRewardAmount, nil
+}
+
+// ClearTotalRewardAmount clears the value of the "total_reward_amount" field.
+func (m *GoodCoinRewardMutation) ClearTotalRewardAmount() {
+	m.total_reward_amount = nil
+	m.clearedFields[goodcoinreward.FieldTotalRewardAmount] = struct{}{}
+}
+
+// TotalRewardAmountCleared returns if the "total_reward_amount" field was cleared in this mutation.
+func (m *GoodCoinRewardMutation) TotalRewardAmountCleared() bool {
+	_, ok := m.clearedFields[goodcoinreward.FieldTotalRewardAmount]
+	return ok
+}
+
+// ResetTotalRewardAmount resets all changes to the "total_reward_amount" field.
+func (m *GoodCoinRewardMutation) ResetTotalRewardAmount() {
+	m.total_reward_amount = nil
+	delete(m.clearedFields, goodcoinreward.FieldTotalRewardAmount)
+}
+
+// Where appends a list predicates to the GoodCoinRewardMutation builder.
+func (m *GoodCoinRewardMutation) Where(ps ...predicate.GoodCoinReward) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *GoodCoinRewardMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (GoodCoinReward).
+func (m *GoodCoinRewardMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *GoodCoinRewardMutation) Fields() []string {
+	fields := make([]string, 0, 11)
+	if m.created_at != nil {
+		fields = append(fields, goodcoinreward.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, goodcoinreward.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, goodcoinreward.FieldDeletedAt)
+	}
+	if m.ent_id != nil {
+		fields = append(fields, goodcoinreward.FieldEntID)
+	}
+	if m.good_id != nil {
+		fields = append(fields, goodcoinreward.FieldGoodID)
+	}
+	if m.coin_type_id != nil {
+		fields = append(fields, goodcoinreward.FieldCoinTypeID)
+	}
+	if m.reward_tid != nil {
+		fields = append(fields, goodcoinreward.FieldRewardTid)
+	}
+	if m.next_reward_start_amount != nil {
+		fields = append(fields, goodcoinreward.FieldNextRewardStartAmount)
+	}
+	if m.last_reward_amount != nil {
+		fields = append(fields, goodcoinreward.FieldLastRewardAmount)
+	}
+	if m.last_unit_reward_amount != nil {
+		fields = append(fields, goodcoinreward.FieldLastUnitRewardAmount)
+	}
+	if m.total_reward_amount != nil {
+		fields = append(fields, goodcoinreward.FieldTotalRewardAmount)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *GoodCoinRewardMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case goodcoinreward.FieldCreatedAt:
+		return m.CreatedAt()
+	case goodcoinreward.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case goodcoinreward.FieldDeletedAt:
+		return m.DeletedAt()
+	case goodcoinreward.FieldEntID:
+		return m.EntID()
+	case goodcoinreward.FieldGoodID:
+		return m.GoodID()
+	case goodcoinreward.FieldCoinTypeID:
+		return m.CoinTypeID()
+	case goodcoinreward.FieldRewardTid:
+		return m.RewardTid()
+	case goodcoinreward.FieldNextRewardStartAmount:
+		return m.NextRewardStartAmount()
+	case goodcoinreward.FieldLastRewardAmount:
+		return m.LastRewardAmount()
+	case goodcoinreward.FieldLastUnitRewardAmount:
+		return m.LastUnitRewardAmount()
+	case goodcoinreward.FieldTotalRewardAmount:
+		return m.TotalRewardAmount()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *GoodCoinRewardMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case goodcoinreward.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case goodcoinreward.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case goodcoinreward.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case goodcoinreward.FieldEntID:
+		return m.OldEntID(ctx)
+	case goodcoinreward.FieldGoodID:
+		return m.OldGoodID(ctx)
+	case goodcoinreward.FieldCoinTypeID:
+		return m.OldCoinTypeID(ctx)
+	case goodcoinreward.FieldRewardTid:
+		return m.OldRewardTid(ctx)
+	case goodcoinreward.FieldNextRewardStartAmount:
+		return m.OldNextRewardStartAmount(ctx)
+	case goodcoinreward.FieldLastRewardAmount:
+		return m.OldLastRewardAmount(ctx)
+	case goodcoinreward.FieldLastUnitRewardAmount:
+		return m.OldLastUnitRewardAmount(ctx)
+	case goodcoinreward.FieldTotalRewardAmount:
+		return m.OldTotalRewardAmount(ctx)
+	}
+	return nil, fmt.Errorf("unknown GoodCoinReward field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *GoodCoinRewardMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case goodcoinreward.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case goodcoinreward.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case goodcoinreward.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case goodcoinreward.FieldEntID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEntID(v)
+		return nil
+	case goodcoinreward.FieldGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGoodID(v)
+		return nil
+	case goodcoinreward.FieldCoinTypeID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCoinTypeID(v)
+		return nil
+	case goodcoinreward.FieldRewardTid:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRewardTid(v)
+		return nil
+	case goodcoinreward.FieldNextRewardStartAmount:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNextRewardStartAmount(v)
+		return nil
+	case goodcoinreward.FieldLastRewardAmount:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLastRewardAmount(v)
+		return nil
+	case goodcoinreward.FieldLastUnitRewardAmount:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLastUnitRewardAmount(v)
+		return nil
+	case goodcoinreward.FieldTotalRewardAmount:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTotalRewardAmount(v)
+		return nil
+	}
+	return fmt.Errorf("unknown GoodCoinReward field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *GoodCoinRewardMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, goodcoinreward.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, goodcoinreward.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, goodcoinreward.FieldDeletedAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *GoodCoinRewardMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case goodcoinreward.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case goodcoinreward.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case goodcoinreward.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *GoodCoinRewardMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case goodcoinreward.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case goodcoinreward.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case goodcoinreward.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown GoodCoinReward numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *GoodCoinRewardMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(goodcoinreward.FieldGoodID) {
+		fields = append(fields, goodcoinreward.FieldGoodID)
+	}
+	if m.FieldCleared(goodcoinreward.FieldCoinTypeID) {
+		fields = append(fields, goodcoinreward.FieldCoinTypeID)
+	}
+	if m.FieldCleared(goodcoinreward.FieldRewardTid) {
+		fields = append(fields, goodcoinreward.FieldRewardTid)
+	}
+	if m.FieldCleared(goodcoinreward.FieldNextRewardStartAmount) {
+		fields = append(fields, goodcoinreward.FieldNextRewardStartAmount)
+	}
+	if m.FieldCleared(goodcoinreward.FieldLastRewardAmount) {
+		fields = append(fields, goodcoinreward.FieldLastRewardAmount)
+	}
+	if m.FieldCleared(goodcoinreward.FieldLastUnitRewardAmount) {
+		fields = append(fields, goodcoinreward.FieldLastUnitRewardAmount)
+	}
+	if m.FieldCleared(goodcoinreward.FieldTotalRewardAmount) {
+		fields = append(fields, goodcoinreward.FieldTotalRewardAmount)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *GoodCoinRewardMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *GoodCoinRewardMutation) ClearField(name string) error {
+	switch name {
+	case goodcoinreward.FieldGoodID:
+		m.ClearGoodID()
+		return nil
+	case goodcoinreward.FieldCoinTypeID:
+		m.ClearCoinTypeID()
+		return nil
+	case goodcoinreward.FieldRewardTid:
+		m.ClearRewardTid()
+		return nil
+	case goodcoinreward.FieldNextRewardStartAmount:
+		m.ClearNextRewardStartAmount()
+		return nil
+	case goodcoinreward.FieldLastRewardAmount:
+		m.ClearLastRewardAmount()
+		return nil
+	case goodcoinreward.FieldLastUnitRewardAmount:
+		m.ClearLastUnitRewardAmount()
+		return nil
+	case goodcoinreward.FieldTotalRewardAmount:
+		m.ClearTotalRewardAmount()
+		return nil
+	}
+	return fmt.Errorf("unknown GoodCoinReward nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *GoodCoinRewardMutation) ResetField(name string) error {
+	switch name {
+	case goodcoinreward.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case goodcoinreward.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case goodcoinreward.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case goodcoinreward.FieldEntID:
+		m.ResetEntID()
+		return nil
+	case goodcoinreward.FieldGoodID:
+		m.ResetGoodID()
+		return nil
+	case goodcoinreward.FieldCoinTypeID:
+		m.ResetCoinTypeID()
+		return nil
+	case goodcoinreward.FieldRewardTid:
+		m.ResetRewardTid()
+		return nil
+	case goodcoinreward.FieldNextRewardStartAmount:
+		m.ResetNextRewardStartAmount()
+		return nil
+	case goodcoinreward.FieldLastRewardAmount:
+		m.ResetLastRewardAmount()
+		return nil
+	case goodcoinreward.FieldLastUnitRewardAmount:
+		m.ResetLastUnitRewardAmount()
+		return nil
+	case goodcoinreward.FieldTotalRewardAmount:
+		m.ResetTotalRewardAmount()
+		return nil
+	}
+	return fmt.Errorf("unknown GoodCoinReward field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *GoodCoinRewardMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *GoodCoinRewardMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *GoodCoinRewardMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *GoodCoinRewardMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *GoodCoinRewardMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *GoodCoinRewardMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *GoodCoinRewardMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown GoodCoinReward unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *GoodCoinRewardMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown GoodCoinReward edge %s", name)
+}
+
 // GoodMalfunctionMutation represents an operation that mutates the GoodMalfunction nodes in the graph.
 type GoodMalfunctionMutation struct {
 	config
@@ -31844,29 +32941,24 @@ func (m *GoodMalfunctionMutation) ResetEdge(name string) error {
 // GoodRewardMutation represents an operation that mutates the GoodReward nodes in the graph.
 type GoodRewardMutation struct {
 	config
-	op                       Op
-	typ                      string
-	id                       *uint32
-	created_at               *uint32
-	addcreated_at            *int32
-	updated_at               *uint32
-	addupdated_at            *int32
-	deleted_at               *uint32
-	adddeleted_at            *int32
-	ent_id                   *uuid.UUID
-	good_id                  *uuid.UUID
-	reward_state             *string
-	last_reward_at           *uint32
-	addlast_reward_at        *int32
-	reward_tid               *uuid.UUID
-	next_reward_start_amount *decimal.Decimal
-	last_reward_amount       *decimal.Decimal
-	last_unit_reward_amount  *decimal.Decimal
-	total_reward_amount      *decimal.Decimal
-	clearedFields            map[string]struct{}
-	done                     bool
-	oldValue                 func(context.Context) (*GoodReward, error)
-	predicates               []predicate.GoodReward
+	op                Op
+	typ               string
+	id                *uint32
+	created_at        *uint32
+	addcreated_at     *int32
+	updated_at        *uint32
+	addupdated_at     *int32
+	deleted_at        *uint32
+	adddeleted_at     *int32
+	ent_id            *uuid.UUID
+	good_id           *uuid.UUID
+	reward_state      *string
+	last_reward_at    *uint32
+	addlast_reward_at *int32
+	clearedFields     map[string]struct{}
+	done              bool
+	oldValue          func(context.Context) (*GoodReward, error)
+	predicates        []predicate.GoodReward
 }
 
 var _ ent.Mutation = (*GoodRewardMutation)(nil)
@@ -32345,251 +33437,6 @@ func (m *GoodRewardMutation) ResetLastRewardAt() {
 	delete(m.clearedFields, goodreward.FieldLastRewardAt)
 }
 
-// SetRewardTid sets the "reward_tid" field.
-func (m *GoodRewardMutation) SetRewardTid(u uuid.UUID) {
-	m.reward_tid = &u
-}
-
-// RewardTid returns the value of the "reward_tid" field in the mutation.
-func (m *GoodRewardMutation) RewardTid() (r uuid.UUID, exists bool) {
-	v := m.reward_tid
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldRewardTid returns the old "reward_tid" field's value of the GoodReward entity.
-// If the GoodReward object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodRewardMutation) OldRewardTid(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldRewardTid is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldRewardTid requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldRewardTid: %w", err)
-	}
-	return oldValue.RewardTid, nil
-}
-
-// ClearRewardTid clears the value of the "reward_tid" field.
-func (m *GoodRewardMutation) ClearRewardTid() {
-	m.reward_tid = nil
-	m.clearedFields[goodreward.FieldRewardTid] = struct{}{}
-}
-
-// RewardTidCleared returns if the "reward_tid" field was cleared in this mutation.
-func (m *GoodRewardMutation) RewardTidCleared() bool {
-	_, ok := m.clearedFields[goodreward.FieldRewardTid]
-	return ok
-}
-
-// ResetRewardTid resets all changes to the "reward_tid" field.
-func (m *GoodRewardMutation) ResetRewardTid() {
-	m.reward_tid = nil
-	delete(m.clearedFields, goodreward.FieldRewardTid)
-}
-
-// SetNextRewardStartAmount sets the "next_reward_start_amount" field.
-func (m *GoodRewardMutation) SetNextRewardStartAmount(d decimal.Decimal) {
-	m.next_reward_start_amount = &d
-}
-
-// NextRewardStartAmount returns the value of the "next_reward_start_amount" field in the mutation.
-func (m *GoodRewardMutation) NextRewardStartAmount() (r decimal.Decimal, exists bool) {
-	v := m.next_reward_start_amount
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldNextRewardStartAmount returns the old "next_reward_start_amount" field's value of the GoodReward entity.
-// If the GoodReward object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodRewardMutation) OldNextRewardStartAmount(ctx context.Context) (v decimal.Decimal, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldNextRewardStartAmount is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldNextRewardStartAmount requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldNextRewardStartAmount: %w", err)
-	}
-	return oldValue.NextRewardStartAmount, nil
-}
-
-// ClearNextRewardStartAmount clears the value of the "next_reward_start_amount" field.
-func (m *GoodRewardMutation) ClearNextRewardStartAmount() {
-	m.next_reward_start_amount = nil
-	m.clearedFields[goodreward.FieldNextRewardStartAmount] = struct{}{}
-}
-
-// NextRewardStartAmountCleared returns if the "next_reward_start_amount" field was cleared in this mutation.
-func (m *GoodRewardMutation) NextRewardStartAmountCleared() bool {
-	_, ok := m.clearedFields[goodreward.FieldNextRewardStartAmount]
-	return ok
-}
-
-// ResetNextRewardStartAmount resets all changes to the "next_reward_start_amount" field.
-func (m *GoodRewardMutation) ResetNextRewardStartAmount() {
-	m.next_reward_start_amount = nil
-	delete(m.clearedFields, goodreward.FieldNextRewardStartAmount)
-}
-
-// SetLastRewardAmount sets the "last_reward_amount" field.
-func (m *GoodRewardMutation) SetLastRewardAmount(d decimal.Decimal) {
-	m.last_reward_amount = &d
-}
-
-// LastRewardAmount returns the value of the "last_reward_amount" field in the mutation.
-func (m *GoodRewardMutation) LastRewardAmount() (r decimal.Decimal, exists bool) {
-	v := m.last_reward_amount
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldLastRewardAmount returns the old "last_reward_amount" field's value of the GoodReward entity.
-// If the GoodReward object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodRewardMutation) OldLastRewardAmount(ctx context.Context) (v decimal.Decimal, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldLastRewardAmount is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldLastRewardAmount requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLastRewardAmount: %w", err)
-	}
-	return oldValue.LastRewardAmount, nil
-}
-
-// ClearLastRewardAmount clears the value of the "last_reward_amount" field.
-func (m *GoodRewardMutation) ClearLastRewardAmount() {
-	m.last_reward_amount = nil
-	m.clearedFields[goodreward.FieldLastRewardAmount] = struct{}{}
-}
-
-// LastRewardAmountCleared returns if the "last_reward_amount" field was cleared in this mutation.
-func (m *GoodRewardMutation) LastRewardAmountCleared() bool {
-	_, ok := m.clearedFields[goodreward.FieldLastRewardAmount]
-	return ok
-}
-
-// ResetLastRewardAmount resets all changes to the "last_reward_amount" field.
-func (m *GoodRewardMutation) ResetLastRewardAmount() {
-	m.last_reward_amount = nil
-	delete(m.clearedFields, goodreward.FieldLastRewardAmount)
-}
-
-// SetLastUnitRewardAmount sets the "last_unit_reward_amount" field.
-func (m *GoodRewardMutation) SetLastUnitRewardAmount(d decimal.Decimal) {
-	m.last_unit_reward_amount = &d
-}
-
-// LastUnitRewardAmount returns the value of the "last_unit_reward_amount" field in the mutation.
-func (m *GoodRewardMutation) LastUnitRewardAmount() (r decimal.Decimal, exists bool) {
-	v := m.last_unit_reward_amount
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldLastUnitRewardAmount returns the old "last_unit_reward_amount" field's value of the GoodReward entity.
-// If the GoodReward object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodRewardMutation) OldLastUnitRewardAmount(ctx context.Context) (v decimal.Decimal, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldLastUnitRewardAmount is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldLastUnitRewardAmount requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLastUnitRewardAmount: %w", err)
-	}
-	return oldValue.LastUnitRewardAmount, nil
-}
-
-// ClearLastUnitRewardAmount clears the value of the "last_unit_reward_amount" field.
-func (m *GoodRewardMutation) ClearLastUnitRewardAmount() {
-	m.last_unit_reward_amount = nil
-	m.clearedFields[goodreward.FieldLastUnitRewardAmount] = struct{}{}
-}
-
-// LastUnitRewardAmountCleared returns if the "last_unit_reward_amount" field was cleared in this mutation.
-func (m *GoodRewardMutation) LastUnitRewardAmountCleared() bool {
-	_, ok := m.clearedFields[goodreward.FieldLastUnitRewardAmount]
-	return ok
-}
-
-// ResetLastUnitRewardAmount resets all changes to the "last_unit_reward_amount" field.
-func (m *GoodRewardMutation) ResetLastUnitRewardAmount() {
-	m.last_unit_reward_amount = nil
-	delete(m.clearedFields, goodreward.FieldLastUnitRewardAmount)
-}
-
-// SetTotalRewardAmount sets the "total_reward_amount" field.
-func (m *GoodRewardMutation) SetTotalRewardAmount(d decimal.Decimal) {
-	m.total_reward_amount = &d
-}
-
-// TotalRewardAmount returns the value of the "total_reward_amount" field in the mutation.
-func (m *GoodRewardMutation) TotalRewardAmount() (r decimal.Decimal, exists bool) {
-	v := m.total_reward_amount
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldTotalRewardAmount returns the old "total_reward_amount" field's value of the GoodReward entity.
-// If the GoodReward object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *GoodRewardMutation) OldTotalRewardAmount(ctx context.Context) (v decimal.Decimal, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldTotalRewardAmount is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldTotalRewardAmount requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldTotalRewardAmount: %w", err)
-	}
-	return oldValue.TotalRewardAmount, nil
-}
-
-// ClearTotalRewardAmount clears the value of the "total_reward_amount" field.
-func (m *GoodRewardMutation) ClearTotalRewardAmount() {
-	m.total_reward_amount = nil
-	m.clearedFields[goodreward.FieldTotalRewardAmount] = struct{}{}
-}
-
-// TotalRewardAmountCleared returns if the "total_reward_amount" field was cleared in this mutation.
-func (m *GoodRewardMutation) TotalRewardAmountCleared() bool {
-	_, ok := m.clearedFields[goodreward.FieldTotalRewardAmount]
-	return ok
-}
-
-// ResetTotalRewardAmount resets all changes to the "total_reward_amount" field.
-func (m *GoodRewardMutation) ResetTotalRewardAmount() {
-	m.total_reward_amount = nil
-	delete(m.clearedFields, goodreward.FieldTotalRewardAmount)
-}
-
 // Where appends a list predicates to the GoodRewardMutation builder.
 func (m *GoodRewardMutation) Where(ps ...predicate.GoodReward) {
 	m.predicates = append(m.predicates, ps...)
@@ -32609,7 +33456,7 @@ func (m *GoodRewardMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *GoodRewardMutation) Fields() []string {
-	fields := make([]string, 0, 12)
+	fields := make([]string, 0, 7)
 	if m.created_at != nil {
 		fields = append(fields, goodreward.FieldCreatedAt)
 	}
@@ -32630,21 +33477,6 @@ func (m *GoodRewardMutation) Fields() []string {
 	}
 	if m.last_reward_at != nil {
 		fields = append(fields, goodreward.FieldLastRewardAt)
-	}
-	if m.reward_tid != nil {
-		fields = append(fields, goodreward.FieldRewardTid)
-	}
-	if m.next_reward_start_amount != nil {
-		fields = append(fields, goodreward.FieldNextRewardStartAmount)
-	}
-	if m.last_reward_amount != nil {
-		fields = append(fields, goodreward.FieldLastRewardAmount)
-	}
-	if m.last_unit_reward_amount != nil {
-		fields = append(fields, goodreward.FieldLastUnitRewardAmount)
-	}
-	if m.total_reward_amount != nil {
-		fields = append(fields, goodreward.FieldTotalRewardAmount)
 	}
 	return fields
 }
@@ -32668,16 +33500,6 @@ func (m *GoodRewardMutation) Field(name string) (ent.Value, bool) {
 		return m.RewardState()
 	case goodreward.FieldLastRewardAt:
 		return m.LastRewardAt()
-	case goodreward.FieldRewardTid:
-		return m.RewardTid()
-	case goodreward.FieldNextRewardStartAmount:
-		return m.NextRewardStartAmount()
-	case goodreward.FieldLastRewardAmount:
-		return m.LastRewardAmount()
-	case goodreward.FieldLastUnitRewardAmount:
-		return m.LastUnitRewardAmount()
-	case goodreward.FieldTotalRewardAmount:
-		return m.TotalRewardAmount()
 	}
 	return nil, false
 }
@@ -32701,16 +33523,6 @@ func (m *GoodRewardMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldRewardState(ctx)
 	case goodreward.FieldLastRewardAt:
 		return m.OldLastRewardAt(ctx)
-	case goodreward.FieldRewardTid:
-		return m.OldRewardTid(ctx)
-	case goodreward.FieldNextRewardStartAmount:
-		return m.OldNextRewardStartAmount(ctx)
-	case goodreward.FieldLastRewardAmount:
-		return m.OldLastRewardAmount(ctx)
-	case goodreward.FieldLastUnitRewardAmount:
-		return m.OldLastUnitRewardAmount(ctx)
-	case goodreward.FieldTotalRewardAmount:
-		return m.OldTotalRewardAmount(ctx)
 	}
 	return nil, fmt.Errorf("unknown GoodReward field %s", name)
 }
@@ -32768,41 +33580,6 @@ func (m *GoodRewardMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetLastRewardAt(v)
-		return nil
-	case goodreward.FieldRewardTid:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetRewardTid(v)
-		return nil
-	case goodreward.FieldNextRewardStartAmount:
-		v, ok := value.(decimal.Decimal)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetNextRewardStartAmount(v)
-		return nil
-	case goodreward.FieldLastRewardAmount:
-		v, ok := value.(decimal.Decimal)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetLastRewardAmount(v)
-		return nil
-	case goodreward.FieldLastUnitRewardAmount:
-		v, ok := value.(decimal.Decimal)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetLastUnitRewardAmount(v)
-		return nil
-	case goodreward.FieldTotalRewardAmount:
-		v, ok := value.(decimal.Decimal)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetTotalRewardAmount(v)
 		return nil
 	}
 	return fmt.Errorf("unknown GoodReward field %s", name)
@@ -32894,21 +33671,6 @@ func (m *GoodRewardMutation) ClearedFields() []string {
 	if m.FieldCleared(goodreward.FieldLastRewardAt) {
 		fields = append(fields, goodreward.FieldLastRewardAt)
 	}
-	if m.FieldCleared(goodreward.FieldRewardTid) {
-		fields = append(fields, goodreward.FieldRewardTid)
-	}
-	if m.FieldCleared(goodreward.FieldNextRewardStartAmount) {
-		fields = append(fields, goodreward.FieldNextRewardStartAmount)
-	}
-	if m.FieldCleared(goodreward.FieldLastRewardAmount) {
-		fields = append(fields, goodreward.FieldLastRewardAmount)
-	}
-	if m.FieldCleared(goodreward.FieldLastUnitRewardAmount) {
-		fields = append(fields, goodreward.FieldLastUnitRewardAmount)
-	}
-	if m.FieldCleared(goodreward.FieldTotalRewardAmount) {
-		fields = append(fields, goodreward.FieldTotalRewardAmount)
-	}
 	return fields
 }
 
@@ -32931,21 +33693,6 @@ func (m *GoodRewardMutation) ClearField(name string) error {
 		return nil
 	case goodreward.FieldLastRewardAt:
 		m.ClearLastRewardAt()
-		return nil
-	case goodreward.FieldRewardTid:
-		m.ClearRewardTid()
-		return nil
-	case goodreward.FieldNextRewardStartAmount:
-		m.ClearNextRewardStartAmount()
-		return nil
-	case goodreward.FieldLastRewardAmount:
-		m.ClearLastRewardAmount()
-		return nil
-	case goodreward.FieldLastUnitRewardAmount:
-		m.ClearLastUnitRewardAmount()
-		return nil
-	case goodreward.FieldTotalRewardAmount:
-		m.ClearTotalRewardAmount()
 		return nil
 	}
 	return fmt.Errorf("unknown GoodReward nullable field %s", name)
@@ -32975,21 +33722,6 @@ func (m *GoodRewardMutation) ResetField(name string) error {
 		return nil
 	case goodreward.FieldLastRewardAt:
 		m.ResetLastRewardAt()
-		return nil
-	case goodreward.FieldRewardTid:
-		m.ResetRewardTid()
-		return nil
-	case goodreward.FieldNextRewardStartAmount:
-		m.ResetNextRewardStartAmount()
-		return nil
-	case goodreward.FieldLastRewardAmount:
-		m.ResetLastRewardAmount()
-		return nil
-	case goodreward.FieldLastUnitRewardAmount:
-		m.ResetLastUnitRewardAmount()
-		return nil
-	case goodreward.FieldTotalRewardAmount:
-		m.ResetTotalRewardAmount()
 		return nil
 	}
 	return fmt.Errorf("unknown GoodReward field %s", name)
@@ -33057,6 +33789,7 @@ type GoodRewardHistoryMutation struct {
 	adddeleted_at   *int32
 	ent_id          *uuid.UUID
 	good_id         *uuid.UUID
+	coin_type_id    *uuid.UUID
 	reward_date     *uint32
 	addreward_date  *int32
 	tid             *uuid.UUID
@@ -33426,6 +34159,55 @@ func (m *GoodRewardHistoryMutation) ResetGoodID() {
 	delete(m.clearedFields, goodrewardhistory.FieldGoodID)
 }
 
+// SetCoinTypeID sets the "coin_type_id" field.
+func (m *GoodRewardHistoryMutation) SetCoinTypeID(u uuid.UUID) {
+	m.coin_type_id = &u
+}
+
+// CoinTypeID returns the value of the "coin_type_id" field in the mutation.
+func (m *GoodRewardHistoryMutation) CoinTypeID() (r uuid.UUID, exists bool) {
+	v := m.coin_type_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCoinTypeID returns the old "coin_type_id" field's value of the GoodRewardHistory entity.
+// If the GoodRewardHistory object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodRewardHistoryMutation) OldCoinTypeID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCoinTypeID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCoinTypeID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCoinTypeID: %w", err)
+	}
+	return oldValue.CoinTypeID, nil
+}
+
+// ClearCoinTypeID clears the value of the "coin_type_id" field.
+func (m *GoodRewardHistoryMutation) ClearCoinTypeID() {
+	m.coin_type_id = nil
+	m.clearedFields[goodrewardhistory.FieldCoinTypeID] = struct{}{}
+}
+
+// CoinTypeIDCleared returns if the "coin_type_id" field was cleared in this mutation.
+func (m *GoodRewardHistoryMutation) CoinTypeIDCleared() bool {
+	_, ok := m.clearedFields[goodrewardhistory.FieldCoinTypeID]
+	return ok
+}
+
+// ResetCoinTypeID resets all changes to the "coin_type_id" field.
+func (m *GoodRewardHistoryMutation) ResetCoinTypeID() {
+	m.coin_type_id = nil
+	delete(m.clearedFields, goodrewardhistory.FieldCoinTypeID)
+}
+
 // SetRewardDate sets the "reward_date" field.
 func (m *GoodRewardHistoryMutation) SetRewardDate(u uint32) {
 	m.reward_date = &u
@@ -33711,7 +34493,7 @@ func (m *GoodRewardHistoryMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *GoodRewardHistoryMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, goodrewardhistory.FieldCreatedAt)
 	}
@@ -33726,6 +34508,9 @@ func (m *GoodRewardHistoryMutation) Fields() []string {
 	}
 	if m.good_id != nil {
 		fields = append(fields, goodrewardhistory.FieldGoodID)
+	}
+	if m.coin_type_id != nil {
+		fields = append(fields, goodrewardhistory.FieldCoinTypeID)
 	}
 	if m.reward_date != nil {
 		fields = append(fields, goodrewardhistory.FieldRewardDate)
@@ -33760,6 +34545,8 @@ func (m *GoodRewardHistoryMutation) Field(name string) (ent.Value, bool) {
 		return m.EntID()
 	case goodrewardhistory.FieldGoodID:
 		return m.GoodID()
+	case goodrewardhistory.FieldCoinTypeID:
+		return m.CoinTypeID()
 	case goodrewardhistory.FieldRewardDate:
 		return m.RewardDate()
 	case goodrewardhistory.FieldTid:
@@ -33789,6 +34576,8 @@ func (m *GoodRewardHistoryMutation) OldField(ctx context.Context, name string) (
 		return m.OldEntID(ctx)
 	case goodrewardhistory.FieldGoodID:
 		return m.OldGoodID(ctx)
+	case goodrewardhistory.FieldCoinTypeID:
+		return m.OldCoinTypeID(ctx)
 	case goodrewardhistory.FieldRewardDate:
 		return m.OldRewardDate(ctx)
 	case goodrewardhistory.FieldTid:
@@ -33842,6 +34631,13 @@ func (m *GoodRewardHistoryMutation) SetField(name string, value ent.Value) error
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetGoodID(v)
+		return nil
+	case goodrewardhistory.FieldCoinTypeID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCoinTypeID(v)
 		return nil
 	case goodrewardhistory.FieldRewardDate:
 		v, ok := value.(uint32)
@@ -33962,6 +34758,9 @@ func (m *GoodRewardHistoryMutation) ClearedFields() []string {
 	if m.FieldCleared(goodrewardhistory.FieldGoodID) {
 		fields = append(fields, goodrewardhistory.FieldGoodID)
 	}
+	if m.FieldCleared(goodrewardhistory.FieldCoinTypeID) {
+		fields = append(fields, goodrewardhistory.FieldCoinTypeID)
+	}
 	if m.FieldCleared(goodrewardhistory.FieldRewardDate) {
 		fields = append(fields, goodrewardhistory.FieldRewardDate)
 	}
@@ -33993,6 +34792,9 @@ func (m *GoodRewardHistoryMutation) ClearField(name string) error {
 	switch name {
 	case goodrewardhistory.FieldGoodID:
 		m.ClearGoodID()
+		return nil
+	case goodrewardhistory.FieldCoinTypeID:
+		m.ClearCoinTypeID()
 		return nil
 	case goodrewardhistory.FieldRewardDate:
 		m.ClearRewardDate()
@@ -34031,6 +34833,9 @@ func (m *GoodRewardHistoryMutation) ResetField(name string) error {
 		return nil
 	case goodrewardhistory.FieldGoodID:
 		m.ResetGoodID()
+		return nil
+	case goodrewardhistory.FieldCoinTypeID:
+		m.ResetCoinTypeID()
 		return nil
 	case goodrewardhistory.FieldRewardDate:
 		m.ResetRewardDate()

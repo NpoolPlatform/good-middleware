@@ -36,6 +36,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoinreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodmalfunction"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
@@ -117,6 +118,8 @@ type Client struct {
 	GoodBase *GoodBaseClient
 	// GoodCoin is the client for interacting with the GoodCoin builders.
 	GoodCoin *GoodCoinClient
+	// GoodCoinReward is the client for interacting with the GoodCoinReward builders.
+	GoodCoinReward *GoodCoinRewardClient
 	// GoodMalfunction is the client for interacting with the GoodMalfunction builders.
 	GoodMalfunction *GoodMalfunctionClient
 	// GoodReward is the client for interacting with the GoodReward builders.
@@ -194,6 +197,7 @@ func (c *Client) init() {
 	c.Good = NewGoodClient(c.config)
 	c.GoodBase = NewGoodBaseClient(c.config)
 	c.GoodCoin = NewGoodCoinClient(c.config)
+	c.GoodCoinReward = NewGoodCoinRewardClient(c.config)
 	c.GoodMalfunction = NewGoodMalfunctionClient(c.config)
 	c.GoodReward = NewGoodRewardClient(c.config)
 	c.GoodRewardHistory = NewGoodRewardHistoryClient(c.config)
@@ -272,6 +276,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Good:                   NewGoodClient(cfg),
 		GoodBase:               NewGoodBaseClient(cfg),
 		GoodCoin:               NewGoodCoinClient(cfg),
+		GoodCoinReward:         NewGoodCoinRewardClient(cfg),
 		GoodMalfunction:        NewGoodMalfunctionClient(cfg),
 		GoodReward:             NewGoodRewardClient(cfg),
 		GoodRewardHistory:      NewGoodRewardHistoryClient(cfg),
@@ -336,6 +341,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Good:                   NewGoodClient(cfg),
 		GoodBase:               NewGoodBaseClient(cfg),
 		GoodCoin:               NewGoodCoinClient(cfg),
+		GoodCoinReward:         NewGoodCoinRewardClient(cfg),
 		GoodMalfunction:        NewGoodMalfunctionClient(cfg),
 		GoodReward:             NewGoodRewardClient(cfg),
 		GoodRewardHistory:      NewGoodRewardHistoryClient(cfg),
@@ -410,6 +416,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Good.Use(hooks...)
 	c.GoodBase.Use(hooks...)
 	c.GoodCoin.Use(hooks...)
+	c.GoodCoinReward.Use(hooks...)
 	c.GoodMalfunction.Use(hooks...)
 	c.GoodReward.Use(hooks...)
 	c.GoodRewardHistory.Use(hooks...)
@@ -2795,6 +2802,97 @@ func (c *GoodCoinClient) GetX(ctx context.Context, id uint32) *GoodCoin {
 func (c *GoodCoinClient) Hooks() []Hook {
 	hooks := c.hooks.GoodCoin
 	return append(hooks[:len(hooks):len(hooks)], goodcoin.Hooks[:]...)
+}
+
+// GoodCoinRewardClient is a client for the GoodCoinReward schema.
+type GoodCoinRewardClient struct {
+	config
+}
+
+// NewGoodCoinRewardClient returns a client for the GoodCoinReward from the given config.
+func NewGoodCoinRewardClient(c config) *GoodCoinRewardClient {
+	return &GoodCoinRewardClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `goodcoinreward.Hooks(f(g(h())))`.
+func (c *GoodCoinRewardClient) Use(hooks ...Hook) {
+	c.hooks.GoodCoinReward = append(c.hooks.GoodCoinReward, hooks...)
+}
+
+// Create returns a builder for creating a GoodCoinReward entity.
+func (c *GoodCoinRewardClient) Create() *GoodCoinRewardCreate {
+	mutation := newGoodCoinRewardMutation(c.config, OpCreate)
+	return &GoodCoinRewardCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of GoodCoinReward entities.
+func (c *GoodCoinRewardClient) CreateBulk(builders ...*GoodCoinRewardCreate) *GoodCoinRewardCreateBulk {
+	return &GoodCoinRewardCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for GoodCoinReward.
+func (c *GoodCoinRewardClient) Update() *GoodCoinRewardUpdate {
+	mutation := newGoodCoinRewardMutation(c.config, OpUpdate)
+	return &GoodCoinRewardUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GoodCoinRewardClient) UpdateOne(gcr *GoodCoinReward) *GoodCoinRewardUpdateOne {
+	mutation := newGoodCoinRewardMutation(c.config, OpUpdateOne, withGoodCoinReward(gcr))
+	return &GoodCoinRewardUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GoodCoinRewardClient) UpdateOneID(id uint32) *GoodCoinRewardUpdateOne {
+	mutation := newGoodCoinRewardMutation(c.config, OpUpdateOne, withGoodCoinRewardID(id))
+	return &GoodCoinRewardUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for GoodCoinReward.
+func (c *GoodCoinRewardClient) Delete() *GoodCoinRewardDelete {
+	mutation := newGoodCoinRewardMutation(c.config, OpDelete)
+	return &GoodCoinRewardDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *GoodCoinRewardClient) DeleteOne(gcr *GoodCoinReward) *GoodCoinRewardDeleteOne {
+	return c.DeleteOneID(gcr.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *GoodCoinRewardClient) DeleteOneID(id uint32) *GoodCoinRewardDeleteOne {
+	builder := c.Delete().Where(goodcoinreward.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GoodCoinRewardDeleteOne{builder}
+}
+
+// Query returns a query builder for GoodCoinReward.
+func (c *GoodCoinRewardClient) Query() *GoodCoinRewardQuery {
+	return &GoodCoinRewardQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a GoodCoinReward entity by its id.
+func (c *GoodCoinRewardClient) Get(ctx context.Context, id uint32) (*GoodCoinReward, error) {
+	return c.Query().Where(goodcoinreward.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GoodCoinRewardClient) GetX(ctx context.Context, id uint32) *GoodCoinReward {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *GoodCoinRewardClient) Hooks() []Hook {
+	hooks := c.hooks.GoodCoinReward
+	return append(hooks[:len(hooks):len(hooks)], goodcoinreward.Hooks[:]...)
 }
 
 // GoodMalfunctionClient is a client for the GoodMalfunction schema.

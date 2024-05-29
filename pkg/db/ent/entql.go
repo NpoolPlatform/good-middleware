@@ -29,6 +29,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoinreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodmalfunction"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
@@ -57,7 +58,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 45)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 46)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   appdefaultgood.Table,
@@ -694,6 +695,30 @@ var schemaGraph = func() *sqlgraph.Schema {
 	}
 	graph.Nodes[26] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
+			Table:   goodcoinreward.Table,
+			Columns: goodcoinreward.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint32,
+				Column: goodcoinreward.FieldID,
+			},
+		},
+		Type: "GoodCoinReward",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			goodcoinreward.FieldCreatedAt:             {Type: field.TypeUint32, Column: goodcoinreward.FieldCreatedAt},
+			goodcoinreward.FieldUpdatedAt:             {Type: field.TypeUint32, Column: goodcoinreward.FieldUpdatedAt},
+			goodcoinreward.FieldDeletedAt:             {Type: field.TypeUint32, Column: goodcoinreward.FieldDeletedAt},
+			goodcoinreward.FieldEntID:                 {Type: field.TypeUUID, Column: goodcoinreward.FieldEntID},
+			goodcoinreward.FieldGoodID:                {Type: field.TypeUUID, Column: goodcoinreward.FieldGoodID},
+			goodcoinreward.FieldCoinTypeID:            {Type: field.TypeUUID, Column: goodcoinreward.FieldCoinTypeID},
+			goodcoinreward.FieldRewardTid:             {Type: field.TypeUUID, Column: goodcoinreward.FieldRewardTid},
+			goodcoinreward.FieldNextRewardStartAmount: {Type: field.TypeOther, Column: goodcoinreward.FieldNextRewardStartAmount},
+			goodcoinreward.FieldLastRewardAmount:      {Type: field.TypeOther, Column: goodcoinreward.FieldLastRewardAmount},
+			goodcoinreward.FieldLastUnitRewardAmount:  {Type: field.TypeOther, Column: goodcoinreward.FieldLastUnitRewardAmount},
+			goodcoinreward.FieldTotalRewardAmount:     {Type: field.TypeOther, Column: goodcoinreward.FieldTotalRewardAmount},
+		},
+	}
+	graph.Nodes[27] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
 			Table:   goodmalfunction.Table,
 			Columns: goodmalfunction.Columns,
 			ID: &sqlgraph.FieldSpec{
@@ -715,7 +740,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			goodmalfunction.FieldCompensateSeconds: {Type: field.TypeUint32, Column: goodmalfunction.FieldCompensateSeconds},
 		},
 	}
-	graph.Nodes[27] = &sqlgraph.Node{
+	graph.Nodes[28] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   goodreward.Table,
 			Columns: goodreward.Columns,
@@ -726,21 +751,16 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "GoodReward",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			goodreward.FieldCreatedAt:             {Type: field.TypeUint32, Column: goodreward.FieldCreatedAt},
-			goodreward.FieldUpdatedAt:             {Type: field.TypeUint32, Column: goodreward.FieldUpdatedAt},
-			goodreward.FieldDeletedAt:             {Type: field.TypeUint32, Column: goodreward.FieldDeletedAt},
-			goodreward.FieldEntID:                 {Type: field.TypeUUID, Column: goodreward.FieldEntID},
-			goodreward.FieldGoodID:                {Type: field.TypeUUID, Column: goodreward.FieldGoodID},
-			goodreward.FieldRewardState:           {Type: field.TypeString, Column: goodreward.FieldRewardState},
-			goodreward.FieldLastRewardAt:          {Type: field.TypeUint32, Column: goodreward.FieldLastRewardAt},
-			goodreward.FieldRewardTid:             {Type: field.TypeUUID, Column: goodreward.FieldRewardTid},
-			goodreward.FieldNextRewardStartAmount: {Type: field.TypeOther, Column: goodreward.FieldNextRewardStartAmount},
-			goodreward.FieldLastRewardAmount:      {Type: field.TypeOther, Column: goodreward.FieldLastRewardAmount},
-			goodreward.FieldLastUnitRewardAmount:  {Type: field.TypeOther, Column: goodreward.FieldLastUnitRewardAmount},
-			goodreward.FieldTotalRewardAmount:     {Type: field.TypeOther, Column: goodreward.FieldTotalRewardAmount},
+			goodreward.FieldCreatedAt:    {Type: field.TypeUint32, Column: goodreward.FieldCreatedAt},
+			goodreward.FieldUpdatedAt:    {Type: field.TypeUint32, Column: goodreward.FieldUpdatedAt},
+			goodreward.FieldDeletedAt:    {Type: field.TypeUint32, Column: goodreward.FieldDeletedAt},
+			goodreward.FieldEntID:        {Type: field.TypeUUID, Column: goodreward.FieldEntID},
+			goodreward.FieldGoodID:       {Type: field.TypeUUID, Column: goodreward.FieldGoodID},
+			goodreward.FieldRewardState:  {Type: field.TypeString, Column: goodreward.FieldRewardState},
+			goodreward.FieldLastRewardAt: {Type: field.TypeUint32, Column: goodreward.FieldLastRewardAt},
 		},
 	}
-	graph.Nodes[28] = &sqlgraph.Node{
+	graph.Nodes[29] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   goodrewardhistory.Table,
 			Columns: goodrewardhistory.Columns,
@@ -756,6 +776,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			goodrewardhistory.FieldDeletedAt:     {Type: field.TypeUint32, Column: goodrewardhistory.FieldDeletedAt},
 			goodrewardhistory.FieldEntID:         {Type: field.TypeUUID, Column: goodrewardhistory.FieldEntID},
 			goodrewardhistory.FieldGoodID:        {Type: field.TypeUUID, Column: goodrewardhistory.FieldGoodID},
+			goodrewardhistory.FieldCoinTypeID:    {Type: field.TypeUUID, Column: goodrewardhistory.FieldCoinTypeID},
 			goodrewardhistory.FieldRewardDate:    {Type: field.TypeUint32, Column: goodrewardhistory.FieldRewardDate},
 			goodrewardhistory.FieldTid:           {Type: field.TypeUUID, Column: goodrewardhistory.FieldTid},
 			goodrewardhistory.FieldAmount:        {Type: field.TypeOther, Column: goodrewardhistory.FieldAmount},
@@ -763,7 +784,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			goodrewardhistory.FieldUnitNetAmount: {Type: field.TypeOther, Column: goodrewardhistory.FieldUnitNetAmount},
 		},
 	}
-	graph.Nodes[29] = &sqlgraph.Node{
+	graph.Nodes[30] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   like.Table,
 			Columns: like.Columns,
@@ -783,7 +804,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			like.FieldLike:      {Type: field.TypeBool, Column: like.FieldLike},
 		},
 	}
-	graph.Nodes[30] = &sqlgraph.Node{
+	graph.Nodes[31] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   mininggoodstock.Table,
 			Columns: mininggoodstock.Columns,
@@ -810,7 +831,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			mininggoodstock.FieldAppReserved:    {Type: field.TypeOther, Column: mininggoodstock.FieldAppReserved},
 		},
 	}
-	graph.Nodes[31] = &sqlgraph.Node{
+	graph.Nodes[32] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   powerrental.Table,
 			Columns: powerrental.Columns,
@@ -837,7 +858,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			powerrental.FieldStockMode:           {Type: field.TypeString, Column: powerrental.FieldStockMode},
 		},
 	}
-	graph.Nodes[32] = &sqlgraph.Node{
+	graph.Nodes[33] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   recommend.Table,
 			Columns: recommend.Columns,
@@ -860,7 +881,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			recommend.FieldHideReason:     {Type: field.TypeString, Column: recommend.FieldHideReason},
 		},
 	}
-	graph.Nodes[33] = &sqlgraph.Node{
+	graph.Nodes[34] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   requiredappgood.Table,
 			Columns: requiredappgood.Columns,
@@ -880,7 +901,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			requiredappgood.FieldMust:              {Type: field.TypeBool, Column: requiredappgood.FieldMust},
 		},
 	}
-	graph.Nodes[34] = &sqlgraph.Node{
+	graph.Nodes[35] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   requiredgood.Table,
 			Columns: requiredgood.Columns,
@@ -900,7 +921,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			requiredgood.FieldMust:           {Type: field.TypeBool, Column: requiredgood.FieldMust},
 		},
 	}
-	graph.Nodes[35] = &sqlgraph.Node{
+	graph.Nodes[36] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   score.Table,
 			Columns: score.Columns,
@@ -921,7 +942,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			score.FieldCommentID: {Type: field.TypeUUID, Column: score.FieldCommentID},
 		},
 	}
-	graph.Nodes[36] = &sqlgraph.Node{
+	graph.Nodes[37] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   stock.Table,
 			Columns: stock.Columns,
@@ -946,7 +967,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			stock.FieldAppReserved:  {Type: field.TypeOther, Column: stock.FieldAppReserved},
 		},
 	}
-	graph.Nodes[37] = &sqlgraph.Node{
+	graph.Nodes[38] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   topmost.Table,
 			Columns: topmost.Columns,
@@ -970,7 +991,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmost.FieldEndAt:       {Type: field.TypeUint32, Column: topmost.FieldEndAt},
 		},
 	}
-	graph.Nodes[38] = &sqlgraph.Node{
+	graph.Nodes[39] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   topmostconstraint.Table,
 			Columns: topmostconstraint.Columns,
@@ -991,7 +1012,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostconstraint.FieldIndex:       {Type: field.TypeUint8, Column: topmostconstraint.FieldIndex},
 		},
 	}
-	graph.Nodes[39] = &sqlgraph.Node{
+	graph.Nodes[40] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   topmostgood.Table,
 			Columns: topmostgood.Columns,
@@ -1012,7 +1033,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostgood.FieldUnitPrice:    {Type: field.TypeOther, Column: topmostgood.FieldUnitPrice},
 		},
 	}
-	graph.Nodes[40] = &sqlgraph.Node{
+	graph.Nodes[41] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   topmostgoodconstraint.Table,
 			Columns: topmostgoodconstraint.Columns,
@@ -1033,7 +1054,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostgoodconstraint.FieldIndex:         {Type: field.TypeUint8, Column: topmostgoodconstraint.FieldIndex},
 		},
 	}
-	graph.Nodes[41] = &sqlgraph.Node{
+	graph.Nodes[42] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   topmostgoodposter.Table,
 			Columns: topmostgoodposter.Columns,
@@ -1053,7 +1074,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostgoodposter.FieldIndex:         {Type: field.TypeUint8, Column: topmostgoodposter.FieldIndex},
 		},
 	}
-	graph.Nodes[42] = &sqlgraph.Node{
+	graph.Nodes[43] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   topmostposter.Table,
 			Columns: topmostposter.Columns,
@@ -1073,7 +1094,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			topmostposter.FieldIndex:     {Type: field.TypeUint8, Column: topmostposter.FieldIndex},
 		},
 	}
-	graph.Nodes[43] = &sqlgraph.Node{
+	graph.Nodes[44] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   vendorbrand.Table,
 			Columns: vendorbrand.Columns,
@@ -1092,7 +1113,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			vendorbrand.FieldLogo:      {Type: field.TypeString, Column: vendorbrand.FieldLogo},
 		},
 	}
-	graph.Nodes[44] = &sqlgraph.Node{
+	graph.Nodes[45] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   vendorlocation.Table,
 			Columns: vendorlocation.Columns,
@@ -3644,6 +3665,101 @@ func (f *GoodCoinFilter) WhereIndex(p entql.Int32P) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (gcrq *GoodCoinRewardQuery) addPredicate(pred func(s *sql.Selector)) {
+	gcrq.predicates = append(gcrq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the GoodCoinRewardQuery builder.
+func (gcrq *GoodCoinRewardQuery) Filter() *GoodCoinRewardFilter {
+	return &GoodCoinRewardFilter{config: gcrq.config, predicateAdder: gcrq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *GoodCoinRewardMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the GoodCoinRewardMutation builder.
+func (m *GoodCoinRewardMutation) Filter() *GoodCoinRewardFilter {
+	return &GoodCoinRewardFilter{config: m.config, predicateAdder: m}
+}
+
+// GoodCoinRewardFilter provides a generic filtering capability at runtime for GoodCoinRewardQuery.
+type GoodCoinRewardFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *GoodCoinRewardFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[26].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *GoodCoinRewardFilter) WhereID(p entql.Uint32P) {
+	f.Where(p.Field(goodcoinreward.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *GoodCoinRewardFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(goodcoinreward.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *GoodCoinRewardFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(goodcoinreward.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *GoodCoinRewardFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(goodcoinreward.FieldDeletedAt))
+}
+
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *GoodCoinRewardFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(goodcoinreward.FieldEntID))
+}
+
+// WhereGoodID applies the entql [16]byte predicate on the good_id field.
+func (f *GoodCoinRewardFilter) WhereGoodID(p entql.ValueP) {
+	f.Where(p.Field(goodcoinreward.FieldGoodID))
+}
+
+// WhereCoinTypeID applies the entql [16]byte predicate on the coin_type_id field.
+func (f *GoodCoinRewardFilter) WhereCoinTypeID(p entql.ValueP) {
+	f.Where(p.Field(goodcoinreward.FieldCoinTypeID))
+}
+
+// WhereRewardTid applies the entql [16]byte predicate on the reward_tid field.
+func (f *GoodCoinRewardFilter) WhereRewardTid(p entql.ValueP) {
+	f.Where(p.Field(goodcoinreward.FieldRewardTid))
+}
+
+// WhereNextRewardStartAmount applies the entql other predicate on the next_reward_start_amount field.
+func (f *GoodCoinRewardFilter) WhereNextRewardStartAmount(p entql.OtherP) {
+	f.Where(p.Field(goodcoinreward.FieldNextRewardStartAmount))
+}
+
+// WhereLastRewardAmount applies the entql other predicate on the last_reward_amount field.
+func (f *GoodCoinRewardFilter) WhereLastRewardAmount(p entql.OtherP) {
+	f.Where(p.Field(goodcoinreward.FieldLastRewardAmount))
+}
+
+// WhereLastUnitRewardAmount applies the entql other predicate on the last_unit_reward_amount field.
+func (f *GoodCoinRewardFilter) WhereLastUnitRewardAmount(p entql.OtherP) {
+	f.Where(p.Field(goodcoinreward.FieldLastUnitRewardAmount))
+}
+
+// WhereTotalRewardAmount applies the entql other predicate on the total_reward_amount field.
+func (f *GoodCoinRewardFilter) WhereTotalRewardAmount(p entql.OtherP) {
+	f.Where(p.Field(goodcoinreward.FieldTotalRewardAmount))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (gmq *GoodMalfunctionQuery) addPredicate(pred func(s *sql.Selector)) {
 	gmq.predicates = append(gmq.predicates, pred)
 }
@@ -3672,7 +3788,7 @@ type GoodMalfunctionFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *GoodMalfunctionFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[26].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[27].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -3762,7 +3878,7 @@ type GoodRewardFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *GoodRewardFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[27].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[28].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -3808,31 +3924,6 @@ func (f *GoodRewardFilter) WhereLastRewardAt(p entql.Uint32P) {
 	f.Where(p.Field(goodreward.FieldLastRewardAt))
 }
 
-// WhereRewardTid applies the entql [16]byte predicate on the reward_tid field.
-func (f *GoodRewardFilter) WhereRewardTid(p entql.ValueP) {
-	f.Where(p.Field(goodreward.FieldRewardTid))
-}
-
-// WhereNextRewardStartAmount applies the entql other predicate on the next_reward_start_amount field.
-func (f *GoodRewardFilter) WhereNextRewardStartAmount(p entql.OtherP) {
-	f.Where(p.Field(goodreward.FieldNextRewardStartAmount))
-}
-
-// WhereLastRewardAmount applies the entql other predicate on the last_reward_amount field.
-func (f *GoodRewardFilter) WhereLastRewardAmount(p entql.OtherP) {
-	f.Where(p.Field(goodreward.FieldLastRewardAmount))
-}
-
-// WhereLastUnitRewardAmount applies the entql other predicate on the last_unit_reward_amount field.
-func (f *GoodRewardFilter) WhereLastUnitRewardAmount(p entql.OtherP) {
-	f.Where(p.Field(goodreward.FieldLastUnitRewardAmount))
-}
-
-// WhereTotalRewardAmount applies the entql other predicate on the total_reward_amount field.
-func (f *GoodRewardFilter) WhereTotalRewardAmount(p entql.OtherP) {
-	f.Where(p.Field(goodreward.FieldTotalRewardAmount))
-}
-
 // addPredicate implements the predicateAdder interface.
 func (grhq *GoodRewardHistoryQuery) addPredicate(pred func(s *sql.Selector)) {
 	grhq.predicates = append(grhq.predicates, pred)
@@ -3862,7 +3953,7 @@ type GoodRewardHistoryFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *GoodRewardHistoryFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[28].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[29].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -3896,6 +3987,11 @@ func (f *GoodRewardHistoryFilter) WhereEntID(p entql.ValueP) {
 // WhereGoodID applies the entql [16]byte predicate on the good_id field.
 func (f *GoodRewardHistoryFilter) WhereGoodID(p entql.ValueP) {
 	f.Where(p.Field(goodrewardhistory.FieldGoodID))
+}
+
+// WhereCoinTypeID applies the entql [16]byte predicate on the coin_type_id field.
+func (f *GoodRewardHistoryFilter) WhereCoinTypeID(p entql.ValueP) {
+	f.Where(p.Field(goodrewardhistory.FieldCoinTypeID))
 }
 
 // WhereRewardDate applies the entql uint32 predicate on the reward_date field.
@@ -3952,7 +4048,7 @@ type LikeFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *LikeFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[29].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[30].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4027,7 +4123,7 @@ type MiningGoodStockFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *MiningGoodStockFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[30].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[31].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4137,7 +4233,7 @@ type PowerRentalFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *PowerRentalFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[31].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[32].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4247,7 +4343,7 @@ type RecommendFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *RecommendFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[32].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[33].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4337,7 +4433,7 @@ type RequiredAppGoodFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *RequiredAppGoodFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[33].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[34].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4412,7 +4508,7 @@ type RequiredGoodFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *RequiredGoodFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[34].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[35].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4487,7 +4583,7 @@ type ScoreFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *ScoreFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[35].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[36].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4567,7 +4663,7 @@ type StockFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *StockFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[36].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[37].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4667,7 +4763,7 @@ type TopMostFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *TopMostFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[37].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[38].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4762,7 +4858,7 @@ type TopMostConstraintFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *TopMostConstraintFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[38].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[39].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4842,7 +4938,7 @@ type TopMostGoodFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *TopMostGoodFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[39].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[40].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -4922,7 +5018,7 @@ type TopMostGoodConstraintFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *TopMostGoodConstraintFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[40].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[41].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -5002,7 +5098,7 @@ type TopMostGoodPosterFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *TopMostGoodPosterFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[41].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[42].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -5077,7 +5173,7 @@ type TopMostPosterFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *TopMostPosterFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[42].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[43].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -5152,7 +5248,7 @@ type VendorBrandFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *VendorBrandFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[43].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[44].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -5222,7 +5318,7 @@ type VendorLocationFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *VendorLocationFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[44].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[45].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})

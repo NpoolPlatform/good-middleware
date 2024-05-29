@@ -54,6 +54,7 @@ type hooks struct {
 	Good                   []ent.Hook
 	GoodBase               []ent.Hook
 	GoodCoin               []ent.Hook
+	GoodCoinReward         []ent.Hook
 	GoodMalfunction        []ent.Hook
 	GoodReward             []ent.Hook
 	GoodRewardHistory      []ent.Hook

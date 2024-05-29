@@ -5,12 +5,12 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
-	historycrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward/history"
+	historycrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin/reward/history"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 	enthistory "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/reward/history"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin/reward/history"
 
 	"github.com/shopspring/decimal"
 )
@@ -28,7 +28,7 @@ func (h *queryHandler) selectHistory(stm *ent.GoodRewardHistoryQuery) *ent.GoodR
 }
 
 func (h *queryHandler) queryHistories(cli *ent.Client) (*ent.GoodRewardHistorySelect, error) {
-	stm, err := historycrud.SetQueryConds(cli.GoodRewardHistory.Query(), h.Conds)
+	stm, err := historycrud.SetQueryConds(cli.GoodRewardHistory.Query(), h.HistoryConds)
 	if err != nil {
 		return nil, err
 	}
@@ -45,6 +45,7 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 		AppendSelect(
 			t.C(enthistory.FieldEntID),
 			t.C(enthistory.FieldGoodID),
+			t.C(enthistory.FieldCoinTypeID),
 			t.C(enthistory.FieldRewardDate),
 			t.C(enthistory.FieldTid),
 			t.C(enthistory.FieldAmount),
