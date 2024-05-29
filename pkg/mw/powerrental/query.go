@@ -230,6 +230,9 @@ func (h *Handler) GetPowerRental(ctx context.Context) (*npool.PowerRental, error
 		if err := handler.getGoodCoins(_ctx, cli); err != nil {
 			return wlog.WrapError(err)
 		}
+		if err := handler.getCoinRewards(_ctx, cli); err != nil {
+			return wlog.WrapError(err)
+		}
 		return handler.getMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
@@ -280,6 +283,9 @@ func (h *Handler) GetPowerRentals(ctx context.Context) ([]*npool.PowerRental, ui
 			return wlog.WrapError(err)
 		}
 		if err := handler.getGoodCoins(_ctx, cli); err != nil {
+			return wlog.WrapError(err)
+		}
+		if err := handler.getCoinRewards(_ctx, cli); err != nil {
 			return wlog.WrapError(err)
 		}
 		return handler.getMiningGoodStocks(_ctx, cli)

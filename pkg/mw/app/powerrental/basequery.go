@@ -160,9 +160,6 @@ func (h *baseQueryHandler) queryJoinGoodReward(s *sql.Selector) {
 		).
 		AppendSelect(
 			t.C(entgoodreward.FieldLastRewardAt),
-			t.C(entgoodreward.FieldLastRewardAmount),
-			t.C(entgoodreward.FieldTotalRewardAmount),
-			t.C(entgoodreward.FieldLastUnitRewardAmount),
 		)
 }
 

@@ -147,6 +147,7 @@ func WithUnitNetAmount(s *string, must bool) func(context.Context, *Handler) err
 	}
 }
 
+//nolint:gocyclo
 func (h *Handler) withHistoryConds(conds *npool.Conds) error {
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())

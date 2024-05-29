@@ -403,6 +403,7 @@ func (h *updateHandler) createCoinRewardHistories(ctx context.Context, tx *ent.T
 	return nil
 }
 
+//nolint:gocyclo
 func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 	handler := &updateHandler{
 		powerRentalGoodQueryHandler: &powerRentalGoodQueryHandler{

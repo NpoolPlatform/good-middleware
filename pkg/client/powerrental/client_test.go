@@ -84,11 +84,6 @@ var ret = &npool.PowerRental{
 	GoodSold:               decimal.NewFromInt(0).String(),
 	GoodAppReserved:        decimal.NewFromInt(0).String(),
 	RewardState:            types.BenefitState_BenefitWait,
-	RewardTID:              uuid.Nil.String(),
-	NextRewardStartAmount:  decimal.NewFromInt(0).String(),
-	LastRewardAmount:       decimal.NewFromInt(0).String(),
-	LastUnitRewardAmount:   decimal.NewFromInt(0).String(),
-	TotalRewardAmount:      decimal.NewFromInt(0).String(),
 }
 
 func setup(t *testing.T) func(*testing.T) {

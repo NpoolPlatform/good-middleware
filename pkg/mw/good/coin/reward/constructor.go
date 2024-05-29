@@ -48,7 +48,12 @@ func (h *Handler) ConstructUpdateSQL() (string, error) {
 		whereAnd = "and"
 	}
 	if h.GoodID != nil && h.CoinTypeID != nil {
-		_sql += fmt.Sprintf("%v good_id = '%v' and coin_type_id = '%v'", *h.GoodID, *h.CoinTypeID)
+		_sql += fmt.Sprintf(
+			"%v good_id = '%v' and coin_type_id = '%v'",
+			whereAnd,
+			*h.GoodID,
+			*h.CoinTypeID,
+		)
 	}
 	return _sql, nil
 }
