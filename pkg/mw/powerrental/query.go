@@ -150,7 +150,21 @@ func (h *queryHandler) getCoinRewards(ctx context.Context, cli *ent.Client) erro
 		entgoodcoinreward.FieldLastRewardAmount,
 		entgoodcoinreward.FieldLastUnitRewardAmount,
 		entgoodcoinreward.FieldTotalRewardAmount,
-	).Scan(ctx, &h.coinRewards)
+	).Modify(func(s *sql.Selector) {
+		t1 := sql.Table(entgoodcoin.Table)
+		s.Join(t1).
+			On(
+				s.C(entgoodcoinreward.FieldGoodID),
+				t1.C(entgoodcoin.FieldGoodID),
+			).
+			On(
+				s.C(entgoodcoinreward.FieldCoinTypeID),
+				t1.C(entgoodcoin.FieldCoinTypeID),
+			).
+			AppendSelect(
+				sql.As(t1.C(entgoodcoin.FieldMain), "main_coin"),
+			)
+	}).Scan(ctx, &h.coinRewards)
 }
 
 func (h *queryHandler) formalize() {
