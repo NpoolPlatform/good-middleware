@@ -119,6 +119,7 @@ func WithMust(b *bool, must bool) func(context.Context, *Handler) error {
 	}
 }
 
+//nolint:gocyclo
 func (h *Handler) withRequiredConds(conds *npool.Conds) error {
 	if conds.EntID != nil {
 		id, err := uuid.Parse(conds.GetEntID().GetValue())
@@ -140,6 +141,20 @@ func (h *Handler) withRequiredConds(conds *npool.Conds) error {
 		h.RequiredConds.MainAppGoodID = &cruder.Cond{
 			Op:  conds.GetMainAppGoodID().GetOp(),
 			Val: id,
+		}
+	}
+	if conds.MainAppGoodIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range conds.GetMainAppGoodIDs().GetValue() {
+			_id, err := uuid.Parse(id)
+			if err != nil {
+				return wlog.WrapError(err)
+			}
+			ids = append(ids, _id)
+		}
+		h.RequiredConds.MainAppGoodIDs = &cruder.Cond{
+			Op:  conds.GetMainAppGoodIDs().GetOp(),
+			Val: ids,
 		}
 	}
 	if conds.RequiredAppGoodID != nil {

@@ -49,6 +49,7 @@ type Conds struct {
 	ID                *cruder.Cond
 	EntID             *cruder.Cond
 	MainAppGoodID     *cruder.Cond
+	MainAppGoodIDs    *cruder.Cond
 	RequiredAppGoodID *cruder.Cond
 	AppGoodID         *cruder.Cond
 	AppGoodIDs        *cruder.Cond
@@ -93,6 +94,18 @@ func SetQueryConds(q *ent.RequiredAppGoodQuery, conds *Conds) (*ent.RequiredAppG
 		switch conds.MainAppGoodID.Op {
 		case cruder.EQ:
 			q.Where(entrequiredappgood.MainAppGoodID(id))
+		default:
+			return nil, wlog.Errorf("invalid requiredappgood field")
+		}
+	}
+	if conds.MainAppGoodIDs != nil {
+		ids, ok := conds.MainAppGoodIDs.Val.([]uuid.UUID)
+		if !ok {
+			return nil, wlog.Errorf("invalid maingoodids")
+		}
+		switch conds.MainAppGoodIDs.Op {
+		case cruder.IN:
+			q.Where(entrequiredappgood.MainAppGoodIDIn(ids...))
 		default:
 			return nil, wlog.Errorf("invalid requiredappgood field")
 		}
