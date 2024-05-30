@@ -10,6 +10,7 @@ import (
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 	entrequiredappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredappgood"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 )
@@ -129,6 +130,29 @@ func (h *baseQueryHandler) queryJoinRequiredAppGood(s *sql.Selector) error {
 		OnP(
 			sql.EQ(t1.C(entgoodbase.FieldDeletedAt), 0),
 		)
+	if h.RequiredGoodBaseConds.GoodType != nil {
+		_type, ok := h.RequiredGoodBaseConds.GoodType.Val.(types.GoodType)
+		if !ok {
+			return wlog.Errorf("invalid goodtype")
+		}
+		s.OnP(
+			sql.EQ(t2.C(entgoodbase.FieldGoodType), _type.String()),
+		)
+	}
+	if h.RequiredGoodBaseConds.GoodType != nil {
+		_types, ok := h.RequiredGoodBaseConds.GoodTypes.Val.([]types.GoodType)
+		if !ok {
+			return wlog.Errorf("invalid goodtypes")
+		}
+		s.OnP(
+			sql.In(t2.C(entgoodbase.FieldGoodType), func() (__types []interface{}) {
+				for _, _type := range _types {
+					__types = append(__types, interface{}(_type.String()))
+				}
+				return
+			}()...),
+		)
+	}
 	if err := h.queryWithAppGoodBaseConds(t1, s); err != nil {
 		return wlog.WrapError(err)
 	}

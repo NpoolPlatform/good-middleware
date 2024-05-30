@@ -8,8 +8,10 @@ import (
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	requiredcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/required"
+	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/required"
 
 	"github.com/google/uuid"
@@ -17,16 +19,18 @@ import (
 
 type Handler struct {
 	requiredcrud.Req
-	RequiredConds    *requiredcrud.Conds
-	AppGoodBaseConds *appgoodbasecrud.Conds
-	Offset           int32
-	Limit            int32
+	RequiredConds         *requiredcrud.Conds
+	AppGoodBaseConds      *appgoodbasecrud.Conds
+	RequiredGoodBaseConds *goodbasecrud.Conds
+	Offset                int32
+	Limit                 int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
-		RequiredConds:    &requiredcrud.Conds{},
-		AppGoodBaseConds: &appgoodbasecrud.Conds{},
+		RequiredConds:         &requiredcrud.Conds{},
+		AppGoodBaseConds:      &appgoodbasecrud.Conds{},
+		RequiredGoodBaseConds: &goodbasecrud.Conds{},
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
@@ -219,6 +223,25 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 	return nil
 }
 
+func (h *Handler) withRequiredGoodBaseConds(conds *npool.Conds) {
+	if conds.RequiredGoodType != nil {
+		h.RequiredGoodBaseConds.GoodType = &cruder.Cond{
+			Op:  conds.GetRequiredGoodType().GetOp(),
+			Val: types.GoodType(conds.GetRequiredGoodType().GetValue()),
+		}
+	}
+	if conds.RequiredGoodTypes != nil {
+		_types := []types.GoodType{}
+		for _, _type := range conds.GetRequiredGoodTypes().GetValue() {
+			_types = append(_types, types.GoodType(_type))
+		}
+		h.RequiredGoodBaseConds.GoodTypes = &cruder.Cond{
+			Op:  conds.GetRequiredGoodTypes().GetOp(),
+			Val: _types,
+		}
+	}
+}
+
 func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if conds == nil {
@@ -227,6 +250,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if err := h.withAppGoodBaseConds(conds); err != nil {
 			return wlog.WrapError(err)
 		}
+		h.withRequiredGoodBaseConds(conds)
 		return h.withRequiredConds(conds)
 	}
 }
