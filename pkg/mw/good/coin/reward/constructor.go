@@ -46,7 +46,7 @@ func (h *Handler) ConstructUpdateSQL(addTotal bool, rewardDate uint32) (string, 
 		*h.GoodID,
 		*h.CoinTypeID,
 	)
-	_sql += "and not exists ("
+	_sql += " and not exists ("
 	_sql += "select 1 from good_reward_histories "
 	_sql += fmt.Sprintf(
 		"where good_id = '%v' and coin_type_id = '%v' and deleted_at = 0 and reward_date = %v",
@@ -54,6 +54,6 @@ func (h *Handler) ConstructUpdateSQL(addTotal bool, rewardDate uint32) (string, 
 		*h.CoinTypeID,
 		rewardDate,
 	)
-	_sql += ")"
+	_sql += " limit 1)"
 	return _sql, nil
 }
