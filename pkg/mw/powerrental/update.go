@@ -380,6 +380,11 @@ func (h *updateHandler) validateRewardState() error {
 	}
 	if *h.RewardReq.RewardState != types.BenefitState_BenefitTransferring {
 		h.RewardReq.LastRewardAt = &h.goodReward.LastRewardAt
+		for _, req := range h.CoinRewardReqs {
+			if req.RewardTID != nil || req.LastRewardAmount != nil {
+				return wlog.Errorf("invalid reward")
+			}
+		}
 	} else if h.RewardReq.LastRewardAt == nil {
 		return wlog.Errorf("invalid lastrewardat")
 	}
