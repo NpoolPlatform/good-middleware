@@ -8,7 +8,7 @@ import (
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 )
 
-func (h *Handler) ConstructUpdateSQL() (string, error) {
+func (h *Handler) ConstructUpdateSQL(addTotal bool) (string, error) {
 	if h.ID == nil && h.EntID == nil && (h.GoodID == nil || h.CoinTypeID == nil) {
 		return "", wlog.Errorf("invalid id")
 	}
@@ -27,7 +27,9 @@ func (h *Handler) ConstructUpdateSQL() (string, error) {
 	}
 	if h.LastRewardAmount != nil {
 		_sql += fmt.Sprintf("%vlast_reward_amount = '%v', ", set, *h.LastRewardAmount)
-		_sql += fmt.Sprintf("%vtotal_reward_amount = total_reward_amount + %v, ", set, *h.LastRewardAmount)
+		if addTotal {
+			_sql += fmt.Sprintf("%vtotal_reward_amount = total_reward_amount + %v, ", set, *h.LastRewardAmount)
+		}
 		set = ""
 	}
 	if h.LastUnitRewardAmount != nil {

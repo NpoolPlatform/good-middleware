@@ -57,7 +57,11 @@ func (h *updateHandler) constructGoodBaseSQL(ctx context.Context) error {
 }
 
 func (h *updateHandler) constructCoinRewardSQLs(ctx context.Context) error {
+	updateTotal := h.RewardReq.RewardState != nil && *h.RewardReq.RewardState == types.BenefitState_BenefitSimulateBookKeeping
 	for _, reward := range h.CoinRewardReqs {
+		if updateTotal && reward.LastRewardAmount == nil {
+			return wlog.Errorf("invalid lastrewardamount")
+		}
 		handler, err := goodcoinreward1.NewHandler(
 			ctx,
 			goodcoinreward1.WithGoodID(func() *string { s := h.GoodBaseReq.EntID.String(); return &s }(), true),
@@ -95,7 +99,7 @@ func (h *updateHandler) constructCoinRewardSQLs(ctx context.Context) error {
 		if err != nil {
 			return wlog.WrapError(err)
 		}
-		sql, err := handler.ConstructUpdateSQL()
+		sql, err := handler.ConstructUpdateSQL(updateTotal)
 		if err != nil && !wlog.Equal(err, cruder.ErrUpdateNothing) {
 			return wlog.WrapError(err)
 		}
