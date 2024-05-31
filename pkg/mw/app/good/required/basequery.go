@@ -139,7 +139,7 @@ func (h *baseQueryHandler) queryJoinRequiredAppGood(s *sql.Selector) error {
 			sql.EQ(t2.C(entgoodbase.FieldGoodType), _type.String()),
 		)
 	}
-	if h.RequiredGoodBaseConds.GoodType != nil {
+	if h.RequiredGoodBaseConds.GoodTypes != nil {
 		_types, ok := h.RequiredGoodBaseConds.GoodTypes.Val.([]types.GoodType)
 		if !ok {
 			return wlog.Errorf("invalid goodtypes")
