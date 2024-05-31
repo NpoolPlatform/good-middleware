@@ -3,18 +3,22 @@ package history
 import (
 	"fmt"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 //nolint:goconst
 func (h *Handler) ConstructCreateSQL() string {
+	if h.EntID == nil {
+		h.EntID = func() *uuid.UUID { s := uuid.New(); return &s }()
+	}
+
 	comma := ""
 	now := uint32(time.Now().Unix())
 	_sql := "insert into good_reward_histories "
 	_sql += "("
-	if h.EntID != nil {
-		_sql += "ent_id"
-		comma = ", "
-	}
+	_sql += "ent_id"
+	comma = ", "
 	_sql += comma + "good_id"
 	comma = ", "
 	_sql += comma + "coin_type_id"
