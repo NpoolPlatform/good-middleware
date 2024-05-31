@@ -69,6 +69,13 @@ func (h *Handler) ConstructCreateSQL() string {
 		*h.CoinTypeID,
 		*h.RewardDate,
 	)
+	_sql += " limit 1) and exists ("
+	_sql += "select 1 from good_coins "
+	_sql += fmt.Sprintf(
+		"where good_id = '%v' and coin_type_id = '%v' and deleted_at = 0",
+		*h.GoodID,
+		*h.CoinTypeID,
+	)
 	_sql += " limit 1)"
 	return _sql
 }
