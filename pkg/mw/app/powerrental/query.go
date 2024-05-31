@@ -15,6 +15,7 @@ import (
 	appgoodpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/poster"
 	appmininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
+	goodcoinrewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin/reward"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -25,6 +26,7 @@ import (
 	entappgoodposter "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	entappmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
 	entgoodcoin "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
+	entgoodcoinreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoinreward"
 	entmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
@@ -36,6 +38,7 @@ import (
 	appmininggoodstockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock/mining"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental"
 	goodcoinmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin"
+	goodcoinrewardmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin/reward"
 	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
 
 	"github.com/google/uuid"
@@ -54,6 +57,7 @@ type queryHandler struct {
 	labels              []*appgoodlabelmwpb.LabelInfo
 	displayNames        []*appgooddisplaynamemwpb.DisplayNameInfo
 	displayColors       []*appgooddisplaycolormwpb.DisplayColorInfo
+	coinRewards         []*goodcoinrewardmwpb.RewardInfo
 	total               uint32
 }
 
@@ -296,6 +300,52 @@ func (h *queryHandler) getDisplayColors(ctx context.Context, cli *ent.Client) er
 	).Scan(ctx, &h.displayColors)
 }
 
+func (h *queryHandler) getCoinRewards(ctx context.Context, cli *ent.Client) error {
+	goodIDs := func() (uids []uuid.UUID) {
+		for _, info := range h.infos {
+			if _, err := uuid.Parse(info.GoodID); err != nil {
+				continue
+			}
+			uids = append(uids, uuid.MustParse(info.GoodID))
+		}
+		return
+	}()
+
+	stm, err := goodcoinrewardcrud.SetQueryConds(
+		cli.GoodCoinReward.Query(),
+		&goodcoinrewardcrud.Conds{
+			GoodIDs: &cruder.Cond{Op: cruder.IN, Val: goodIDs},
+		},
+	)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+
+	return stm.Select(
+		entgoodcoinreward.FieldGoodID,
+		entgoodcoinreward.FieldCoinTypeID,
+		entgoodcoinreward.FieldRewardTid,
+		entgoodcoinreward.FieldNextRewardStartAmount,
+		entgoodcoinreward.FieldLastRewardAmount,
+		entgoodcoinreward.FieldLastUnitRewardAmount,
+		entgoodcoinreward.FieldTotalRewardAmount,
+	).Modify(func(s *sql.Selector) {
+		t1 := sql.Table(entgoodcoin.Table)
+		s.Join(t1).
+			On(
+				s.C(entgoodcoinreward.FieldGoodID),
+				t1.C(entgoodcoin.FieldGoodID),
+			).
+			On(
+				s.C(entgoodcoinreward.FieldCoinTypeID),
+				t1.C(entgoodcoin.FieldCoinTypeID),
+			).
+			AppendSelect(
+				sql.As(t1.C(entgoodcoin.FieldMain), "main_coin"),
+			)
+	}).Scan(ctx, &h.coinRewards)
+}
+
 //nolint:funlen
 func (h *queryHandler) formalize() {
 	miningGoodStocks := map[string][]*stockmwpb.MiningGoodStockInfo{}
@@ -306,6 +356,7 @@ func (h *queryHandler) formalize() {
 	labels := map[string][]*appgoodlabelmwpb.LabelInfo{}
 	displayNames := map[string][]*appgooddisplaynamemwpb.DisplayNameInfo{}
 	displayColors := map[string][]*appgooddisplaycolormwpb.DisplayColorInfo{}
+	coinRewards := map[string][]*goodcoinrewardmwpb.RewardInfo{}
 
 	for _, stock := range h.miningGoodStocks {
 		stock.Total = func() string { amount, _ := decimal.NewFromString(stock.Total); return amount.String() }()
@@ -340,6 +391,25 @@ func (h *queryHandler) formalize() {
 	for _, displayColor := range h.displayColors {
 		displayColors[displayColor.AppGoodID] = append(displayColors[displayColor.AppGoodID], displayColor)
 	}
+	for _, coinReward := range h.coinRewards {
+		coinReward.NextRewardStartAmount = func() string {
+			amount, _ := decimal.NewFromString(coinReward.NextRewardStartAmount)
+			return amount.String()
+		}()
+		coinReward.LastRewardAmount = func() string {
+			amount, _ := decimal.NewFromString(coinReward.LastRewardAmount)
+			return amount.String()
+		}()
+		coinReward.LastUnitRewardAmount = func() string {
+			amount, _ := decimal.NewFromString(coinReward.LastUnitRewardAmount)
+			return amount.String()
+		}()
+		coinReward.TotalRewardAmount = func() string {
+			amount, _ := decimal.NewFromString(coinReward.TotalRewardAmount)
+			return amount.String()
+		}()
+		coinRewards[coinReward.GoodID] = append(coinRewards[coinReward.GoodID], coinReward)
+	}
 	for _, info := range h.infos {
 		info.UnitPrice = func() string { amount, _ := decimal.NewFromString(info.UnitPrice); return amount.String() }()
 		info.QuantityUnitAmount = func() string { amount, _ := decimal.NewFromString(info.QuantityUnitAmount); return amount.String() }()
@@ -356,9 +426,6 @@ func (h *queryHandler) formalize() {
 		info.AppGoodWaitStart = func() string { amount, _ := decimal.NewFromString(info.AppGoodWaitStart); return amount.String() }()
 		info.AppGoodInService = func() string { amount, _ := decimal.NewFromString(info.AppGoodInService); return amount.String() }()
 		info.AppGoodSold = func() string { amount, _ := decimal.NewFromString(info.AppGoodSold); return amount.String() }()
-		info.LastRewardAmount = func() string { amount, _ := decimal.NewFromString(info.LastRewardAmount); return amount.String() }()
-		info.LastUnitRewardAmount = func() string { amount, _ := decimal.NewFromString(info.LastUnitRewardAmount); return amount.String() }()
-		info.TotalRewardAmount = func() string { amount, _ := decimal.NewFromString(info.TotalRewardAmount); return amount.String() }()
 		info.Score = func() string { amount, _ := decimal.NewFromString(info.Score); return amount.String() }()
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.CancelMode = types.CancelMode(types.CancelMode_value[info.CancelModeStr])
@@ -376,6 +443,7 @@ func (h *queryHandler) formalize() {
 		info.Labels = labels[info.AppGoodID]
 		info.DisplayNames = displayNames[info.AppGoodID]
 		info.DisplayColors = displayColors[info.AppGoodID]
+		info.Rewards = coinRewards[info.GoodID]
 	}
 }
 
@@ -416,6 +484,9 @@ func (h *Handler) GetPowerRental(ctx context.Context) (*npool.PowerRental, error
 			return wlog.WrapError(err)
 		}
 		if err := handler.getAppMiningGoodStocks(_ctx, cli); err != nil {
+			return wlog.WrapError(err)
+		}
+		if err := handler.getCoinRewards(_ctx, cli); err != nil {
 			return wlog.WrapError(err)
 		}
 		return handler.getMiningGoodStocks(_ctx, cli)
@@ -485,6 +556,9 @@ func (h *Handler) GetPowerRentals(ctx context.Context) ([]*npool.PowerRental, ui
 			return wlog.WrapError(err)
 		}
 		if err := handler.getAppMiningGoodStocks(_ctx, cli); err != nil {
+			return wlog.WrapError(err)
+		}
+		if err := handler.getCoinRewards(_ctx, cli); err != nil {
 			return wlog.WrapError(err)
 		}
 		return handler.getMiningGoodStocks(_ctx, cli)

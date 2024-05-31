@@ -122,10 +122,6 @@ var ret = &npool.PowerRental{
 	AppGoodSold:         decimal.NewFromInt(0).String(),
 
 	Score: decimal.NewFromInt(0).String(),
-
-	LastRewardAmount:     decimal.NewFromInt(0).String(),
-	TotalRewardAmount:    decimal.NewFromInt(0).String(),
-	LastUnitRewardAmount: decimal.NewFromInt(0).String(),
 }
 
 func setup(t *testing.T) func(*testing.T) {
