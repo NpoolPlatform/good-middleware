@@ -7,6 +7,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	entgoodcoinreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoinreward"
 	entgoodreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	entmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
 	entpowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
@@ -18,6 +19,7 @@ type powerRentalGoodQueryHandler struct {
 	powerRental      *ent.PowerRental
 	goodBase         *ent.GoodBase
 	goodReward       *ent.GoodReward
+	coinRewards      []*ent.GoodCoinReward
 	stock            *ent.Stock
 	miningGoodStocks []*ent.MiningGoodStock
 }
@@ -74,6 +76,18 @@ func (h *powerRentalGoodQueryHandler) getGoodReward(ctx context.Context, cli *en
 	return nil
 }
 
+func (h *powerRentalGoodQueryHandler) getGoodCoinRewards(ctx context.Context, cli *ent.Client) (err error) {
+	h.coinRewards, err = cli.
+		GoodCoinReward.
+		Query().
+		Where(
+			entgoodcoinreward.GoodID(h.powerRental.GoodID),
+			entgoodcoinreward.DeletedAt(0),
+		).
+		All(ctx)
+	return wlog.WrapError(err)
+}
+
 func (h *powerRentalGoodQueryHandler) getGoodStock(ctx context.Context, cli *ent.Client, must bool) (err error) {
 	if h.stock, err = cli.
 		Stock.
@@ -119,6 +133,9 @@ func (h *powerRentalGoodQueryHandler) _getPowerRentalGood(ctx context.Context, m
 			return wlog.WrapError(err)
 		}
 		if err := h.getGoodReward(_ctx, cli, must); err != nil {
+			return wlog.WrapError(err)
+		}
+		if err := h.getGoodCoinRewards(_ctx, cli); err != nil {
 			return wlog.WrapError(err)
 		}
 		if err := h.getGoodStock(_ctx, cli, must); err != nil {

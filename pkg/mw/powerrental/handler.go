@@ -530,17 +530,15 @@ func WithRewards(rewards []*goodcoinrewardmwpb.RewardReq, must bool) func(contex
 				_reward.EntID = &_entID
 			}
 
-			if reward.CoinTypeID != nil {
-				_coinTypeID, err := uuid.Parse(*reward.CoinTypeID)
-				if err != nil {
-					return wlog.WrapError(err)
-				}
-				if _, ok := coinTypeIDs[_coinTypeID]; ok {
-					return wlog.Errorf("invalid cointypeid")
-				}
-				coinTypeIDs[_coinTypeID] = struct{}{}
-				_reward.CoinTypeID = &_coinTypeID
+			_coinTypeID, err := uuid.Parse(reward.GetCoinTypeID())
+			if err != nil {
+				return wlog.WrapError(err)
 			}
+			if _, ok := coinTypeIDs[_coinTypeID]; ok {
+				return wlog.Errorf("invalid cointypeid")
+			}
+			coinTypeIDs[_coinTypeID] = struct{}{}
+			_reward.CoinTypeID = &_coinTypeID
 
 			if reward.RewardTID != nil {
 				_tid, err := uuid.Parse(*reward.RewardTID)

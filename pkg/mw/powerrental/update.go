@@ -384,6 +384,13 @@ func (h *updateHandler) validateRewardState() error {
 			if req.RewardTID != nil || req.LastRewardAmount != nil {
 				return wlog.Errorf("invalid reward")
 			}
+			for _, coinReward := range h.coinRewards {
+				if *req.CoinTypeID != coinReward.CoinTypeID {
+					continue
+				}
+				req.LastRewardAmount = &coinReward.LastRewardAmount
+				break
+			}
 		}
 	} else if h.RewardReq.LastRewardAt == nil {
 		return wlog.Errorf("invalid lastrewardat")
