@@ -8,7 +8,7 @@ import (
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 )
 
-func (h *Handler) ConstructUpdateSQL(addTotal bool, rewardDate uint32) (string, error) {
+func (h *Handler) ConstructUpdateSQL(addTotal bool, rewardDate uint32, checkExist bool) (string, error) {
 	if h.GoodID == nil || h.CoinTypeID == nil {
 		return "", wlog.Errorf("invalid id")
 	}
@@ -46,14 +46,16 @@ func (h *Handler) ConstructUpdateSQL(addTotal bool, rewardDate uint32) (string, 
 		*h.GoodID,
 		*h.CoinTypeID,
 	)
-	_sql += " and not exists ("
-	_sql += "select 1 from good_reward_histories "
-	_sql += fmt.Sprintf(
-		"where good_id = '%v' and coin_type_id = '%v' and deleted_at = 0 and reward_date = %v",
-		*h.GoodID,
-		*h.CoinTypeID,
-		rewardDate,
-	)
-	_sql += " limit 1)"
+	if checkExist {
+		_sql += " and not exists ("
+		_sql += "select 1 from good_reward_histories "
+		_sql += fmt.Sprintf(
+			"where good_id = '%v' and coin_type_id = '%v' and deleted_at = 0 and reward_date = %v",
+			*h.GoodID,
+			*h.CoinTypeID,
+			rewardDate,
+		)
+		_sql += " limit 1)"
+	}
 	return _sql, nil
 }
