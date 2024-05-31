@@ -40,19 +40,16 @@ func (h *Handler) ConstructUpdateSQL(addTotal bool) (string, error) {
 		return "", wlog.WrapError(cruder.ErrUpdateNothing)
 	}
 	_sql += fmt.Sprintf("updated_at = %v ", now)
-	whereAnd := "where"
+	_sql += "where deleted_at = 0 "
 	if h.ID != nil {
-		_sql += fmt.Sprintf("where id = %v ", *h.ID)
-		whereAnd = "and"
+		_sql += fmt.Sprintf("and id = %v ", *h.ID)
 	}
 	if h.EntID != nil {
-		_sql += fmt.Sprintf("%v ent_id = '%v' ", whereAnd, *h.EntID)
-		whereAnd = "and"
+		_sql += fmt.Sprintf("and ent_id = '%v' ", *h.EntID)
 	}
 	if h.GoodID != nil && h.CoinTypeID != nil {
 		_sql += fmt.Sprintf(
-			"%v good_id = '%v' and coin_type_id = '%v'",
-			whereAnd,
+			"and good_id = '%v' and coin_type_id = '%v'",
 			*h.GoodID,
 			*h.CoinTypeID,
 		)
