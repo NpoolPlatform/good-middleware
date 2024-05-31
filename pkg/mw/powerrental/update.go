@@ -323,6 +323,19 @@ func (h *updateHandler) _validateStock() error {
 	miningGoodStockReqs := h.MiningGoodStockReqs
 	defer func() { h.MiningGoodStockReqs = miningGoodStockReqs }()
 
+	if len(h.MiningGoodStockReqs) > 0 && h.stockMode == types.GoodStockMode_GoodStockByUnique {
+		return wlog.Errorf("invalid stockmode")
+	}
+	if h.StockMode != nil {
+		switch h.stockMode {
+		case types.GoodStockMode_GoodStockByUnique:
+			h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }()
+			return nil
+		case types.GoodStockMode_GoodStockByMiningPool:
+			h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePool; return &e }()
+		}
+	}
+
 	for _, poolStock := range h.miningGoodStocks {
 		if func() bool {
 			for _, _poolStock := range miningGoodStockReqs {
@@ -343,18 +356,6 @@ func (h *updateHandler) _validateStock() error {
 			EntID: &poolStock.EntID,
 			Total: &poolStock.Total,
 		})
-	}
-	if len(h.MiningGoodStockReqs) > 0 && h.stockMode == types.GoodStockMode_GoodStockByUnique {
-		return wlog.Errorf("invalid stockmode")
-	}
-	if h.StockMode != nil {
-		switch h.stockMode {
-		case types.GoodStockMode_GoodStockByUnique:
-			h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }()
-			return nil
-		case types.GoodStockMode_GoodStockByMiningPool:
-			h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePool; return &e }()
-		}
 	}
 	return h.stockValidator.validateStock()
 }
