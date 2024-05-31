@@ -31,7 +31,6 @@ type updateHandler struct {
 	stockMode              types.GoodStockMode
 	changeStockMode        bool
 	lastRewardAt           uint32
-	updated                bool
 }
 
 func (h *updateHandler) constructGoodBaseSQL(ctx context.Context) error {
@@ -219,33 +218,34 @@ func (h *updateHandler) constructPowerRentalSQL() {
 	h.sqlPowerRental = _sql
 }
 
-func (h *updateHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) error {
+func (h *updateHandler) execSQL(ctx context.Context, tx *ent.Tx, sql string) (int64, error) {
 	rc, err := tx.ExecContext(ctx, sql)
 	if err != nil {
-		return wlog.WrapError(err)
+		return 0, wlog.WrapError(err)
 	}
-	n, err := rc.RowsAffected()
-	if err != nil {
-		return wlog.WrapError(err)
-	}
-	if n == 1 {
-		h.updated = true
-	}
-	return nil
+	return rc.RowsAffected()
 }
 
 func (h *updateHandler) updatePowerRental(ctx context.Context, tx *ent.Tx) error {
 	if h.sqlPowerRental == "" {
 		return nil
 	}
-	return h.execSQL(ctx, tx, h.sqlPowerRental)
+	n, err := h.execSQL(ctx, tx, h.sqlPowerRental)
+	if err != nil || n != 1 {
+		return wlog.Errorf("fail update powerrental: %v", err)
+	}
+	return nil
 }
 
 func (h *updateHandler) updateGoodBase(ctx context.Context, tx *ent.Tx) error {
 	if h.sqlGoodBase == "" {
 		return nil
 	}
-	return h.execSQL(ctx, tx, h.sqlGoodBase)
+	n, err := h.execSQL(ctx, tx, h.sqlGoodBase)
+	if err != nil || n != 1 {
+		return wlog.Errorf("fail update goodbase: %v", err)
+	}
+	return nil
 }
 
 func (h *updateHandler) updateStock(ctx context.Context, tx *ent.Tx) error {
@@ -452,8 +452,8 @@ func (h *updateHandler) updateGoodCoinRewards(ctx context.Context, tx *ent.Tx) e
 		return nil
 	}
 	for _, sql := range h.sqlCoinRewards {
-		if err := h.execSQL(ctx, tx, sql); err != nil {
-			return wlog.WrapError(err)
+		if n, err := h.execSQL(ctx, tx, sql); err != nil || n != 1 {
+			return wlog.Errorf("fail update coinreward: %v", err)
 		}
 	}
 	return nil
@@ -468,8 +468,8 @@ func (h *updateHandler) createCoinRewardHistories(ctx context.Context, tx *ent.T
 	}
 	// Here reward at should be got from exist record
 	for _, sql := range h.sqlCoinRewardHistories {
-		if err := h.execSQL(ctx, tx, sql); err != nil {
-			return wlog.WrapError(err)
+		if n, err := h.execSQL(ctx, tx, sql); err != nil || n != 1 {
+			return wlog.Errorf("fail create coinrewardhistory: %v", err)
 		}
 	}
 	return nil
@@ -513,7 +513,7 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 
-	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithDebugTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateGoodBase(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
 		}
@@ -543,9 +543,6 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		}
 		if err := handler.updatePowerRental(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
-		}
-		if !handler.updated && (handler.sqlGoodBase != "" || handler.sqlPowerRental != "") {
-			return wlog.WrapError(cruder.ErrUpdateNothing)
 		}
 		return nil
 	})
