@@ -6,6 +6,7 @@ import (
 	"time"
 
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
+	goodcoinrewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin/reward"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 
@@ -88,6 +89,14 @@ func (h *createHandler) createGoodCoin(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
+func (h *createHandler) createGoodCoinReward(ctx context.Context, tx *ent.Tx) error {
+	_, err := goodcoinrewardcrud.CreateSet(
+		tx.GoodCoinReward.Create(),
+		h.GoodCoinRewardReq,
+	).Save(ctx)
+	return wlog.WrapError(err)
+}
+
 func (h *Handler) CreateGoodCoin(ctx context.Context) error {
 	handler := &createHandler{
 		Handler: h,
@@ -97,6 +106,9 @@ func (h *Handler) CreateGoodCoin(ctx context.Context) error {
 	}
 	handler.constructSQL()
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		if err := handler.createGoodCoinReward(_ctx, tx); err != nil {
+			return wlog.WrapError(err)
+		}
 		return handler.createGoodCoin(_ctx, tx)
 	})
 }

@@ -4,26 +4,43 @@ import (
 	"context"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entgoodcoinreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoinreward"
+
+	"github.com/google/uuid"
 )
 
 type deleteHandler struct {
 	*Handler
-	now uint32
+	goodID     uuid.UUID
+	coinTypeID uuid.UUID
+	now        uint32
 }
 
-func (h *deleteHandler) deleteGoodCoin(ctx context.Context, cli *ent.Client) error {
-	if _, err := goodcoincrud.UpdateSet(
-		cli.GoodCoin.UpdateOneID(*h.ID),
+func (h *deleteHandler) deleteGoodCoin(ctx context.Context, tx *ent.Tx) error {
+	_, err := goodcoincrud.UpdateSet(
+		tx.GoodCoin.UpdateOneID(*h.ID),
 		&goodcoincrud.Req{
 			DeletedAt: &h.now,
 		},
-	).Save(ctx); err != nil {
-		return err
-	}
-	return nil
+	).Save(ctx)
+	return wlog.WrapError(err)
+}
+
+func (h *deleteHandler) deleteGoodCoinReward(ctx context.Context, tx *ent.Tx) error {
+	_, err := tx.GoodCoinReward.
+		Update().
+		Where(
+			entgoodcoinreward.GoodID(h.goodID),
+			entgoodcoinreward.CoinTypeID(h.coinTypeID),
+			entgoodcoinreward.DeletedAt(0),
+		).
+		SetDeletedAt(h.now).
+		Save(ctx)
+	return wlog.WrapError(err)
 }
 
 func (h *Handler) DeleteGoodCoin(ctx context.Context) error {
@@ -36,10 +53,15 @@ func (h *Handler) DeleteGoodCoin(ctx context.Context) error {
 	}
 	h.ID = &info.ID
 	handler := &deleteHandler{
-		Handler: h,
-		now:     uint32(time.Now().Unix()),
+		Handler:    h,
+		goodID:     uuid.MustParse(info.GoodID),
+		coinTypeID: uuid.MustParse(info.CoinTypeID),
+		now:        uint32(time.Now().Unix()),
 	}
-	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		return handler.deleteGoodCoin(_ctx, cli)
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		if err := handler.deleteGoodCoinReward(_ctx, tx); err != nil {
+			return wlog.WrapError(err)
+		}
+		return handler.deleteGoodCoin(_ctx, tx)
 	})
 }

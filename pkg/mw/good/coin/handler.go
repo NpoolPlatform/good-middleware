@@ -6,6 +6,7 @@ import (
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
+	goodcoinrewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin/reward"
 	goodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/goodbase"
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -17,16 +18,18 @@ import (
 type Handler struct {
 	ID *uint32
 	goodcoincrud.Req
-	GoodCoinConds *goodcoincrud.Conds
-	GoodBaseConds *goodbasecrud.Conds
-	Offset        int32
-	Limit         int32
+	GoodCoinRewardReq *goodcoinrewardcrud.Req
+	GoodCoinConds     *goodcoincrud.Conds
+	GoodBaseConds     *goodbasecrud.Conds
+	Offset            int32
+	Limit             int32
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
 	handler := &Handler{
-		GoodCoinConds: &goodcoincrud.Conds{},
-		GoodBaseConds: &goodbasecrud.Conds{},
+		GoodCoinRewardReq: &goodcoinrewardcrud.Req{},
+		GoodCoinConds:     &goodcoincrud.Conds{},
+		GoodBaseConds:     &goodbasecrud.Conds{},
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
@@ -83,6 +86,7 @@ func WithGoodID(s *string, must bool) func(context.Context, *Handler) error {
 			return wlog.Errorf("invalid goodid")
 		}
 		h.GoodID = handler.EntID
+		h.GoodCoinRewardReq.GoodID = handler.EntID
 		return nil
 	}
 }
@@ -100,6 +104,7 @@ func WithCoinTypeID(s *string, must bool) func(context.Context, *Handler) error 
 			return wlog.WrapError(err)
 		}
 		h.CoinTypeID = &id
+		h.GoodCoinRewardReq.CoinTypeID = &id
 		return nil
 	}
 }
