@@ -8,8 +8,8 @@ import (
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 )
 
-func (h *Handler) ConstructUpdateSQL(addTotal bool) (string, error) {
-	if h.ID == nil && h.EntID == nil && (h.GoodID == nil || h.CoinTypeID == nil) {
+func (h *Handler) ConstructUpdateSQL(addTotal bool, rewardDate uint32) (string, error) {
+	if h.GoodID == nil || h.CoinTypeID == nil {
 		return "", wlog.Errorf("invalid id")
 	}
 
@@ -41,18 +41,19 @@ func (h *Handler) ConstructUpdateSQL(addTotal bool) (string, error) {
 	}
 	_sql += fmt.Sprintf("updated_at = %v ", now)
 	_sql += "where deleted_at = 0 "
-	if h.ID != nil {
-		_sql += fmt.Sprintf("and id = %v ", *h.ID)
-	}
-	if h.EntID != nil {
-		_sql += fmt.Sprintf("and ent_id = '%v' ", *h.EntID)
-	}
-	if h.GoodID != nil && h.CoinTypeID != nil {
-		_sql += fmt.Sprintf(
-			"and good_id = '%v' and coin_type_id = '%v'",
-			*h.GoodID,
-			*h.CoinTypeID,
-		)
-	}
+	_sql += fmt.Sprintf(
+		"and good_id = '%v' and coin_type_id = '%v'",
+		*h.GoodID,
+		*h.CoinTypeID,
+	)
+	_sql += "and not exists ("
+	_sql += "select 1 from good_reward_histories "
+	_sql += fmt.Sprintf(
+		"where good_id = '%v' and coin_type_id = '%v' and deleted_at = 0 and reward_date = %v",
+		*h.GoodID,
+		*h.CoinTypeID,
+		rewardDate,
+	)
+	_sql += ")"
 	return _sql, nil
 }
