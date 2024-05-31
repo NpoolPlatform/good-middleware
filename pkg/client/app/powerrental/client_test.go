@@ -21,6 +21,7 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental"
 	devicetypemwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/device"
 	manufacturermwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/device/manufacturer"
+	goodcoinrewardmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin/reward"
 	powerrentalmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/powerrental"
 	brandmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/brand"
 	locationmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"
@@ -133,6 +134,18 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.AppGoodStartModeStr = ret.AppGoodStartMode.String()
 	ret.CancelModeStr = ret.CancelMode.String()
 	ret.SaleModeStr = ret.SaleMode.String()
+	for _, goodCoin := range ret.GoodCoins {
+		ret.Rewards = append(ret.Rewards, &goodcoinrewardmwpb.RewardInfo{
+			GoodID:                ret.GoodID,
+			CoinTypeID:            goodCoin.CoinTypeID,
+			RewardTID:             uuid.Nil.String(),
+			LastRewardAmount:      decimal.NewFromInt(0).String(),
+			NextRewardStartAmount: decimal.NewFromInt(0).String(),
+			LastUnitRewardAmount:  decimal.NewFromInt(0).String(),
+			TotalRewardAmount:     decimal.NewFromInt(0).String(),
+			MainCoin:              goodCoin.Main,
+		})
+	}
 
 	manufacturerID := uuid.NewString()
 	err := manufacturer1.CreateManufacturer(context.Background(), &manufacturermwpb.ManufacturerReq{
