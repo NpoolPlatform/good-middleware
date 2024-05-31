@@ -341,14 +341,12 @@ func (h *updateHandler) _validateStock() error {
 	if len(h.MiningGoodStockReqs) > 0 && h.stockMode == types.GoodStockMode_GoodStockByUnique {
 		return wlog.Errorf("invalid stockmode")
 	}
-	if h.StockMode != nil {
-		switch h.stockMode {
-		case types.GoodStockMode_GoodStockByUnique:
-			h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }()
-			return nil
-		case types.GoodStockMode_GoodStockByMiningPool:
-			h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePool; return &e }()
-		}
+	switch h.stockMode {
+	case types.GoodStockMode_GoodStockByUnique:
+		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }()
+		return nil
+	case types.GoodStockMode_GoodStockByMiningPool:
+		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePool; return &e }()
 	}
 
 	for _, poolStock := range h.miningGoodStocks {
@@ -382,7 +380,7 @@ func (h *updateHandler) validateRewardState() error {
 	}
 	if *h.RewardReq.RewardState != types.BenefitState_BenefitTransferring {
 		h.RewardReq.LastRewardAt = &h.goodReward.LastRewardAt
-	} else if h.RewardReq.LastRewardAt != nil {
+	} else if h.RewardReq.LastRewardAt == nil {
 		return wlog.Errorf("invalid lastrewardat")
 	}
 
