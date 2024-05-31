@@ -63,8 +63,7 @@ func (h *updateHandler) constructCoinRewardSQLs(ctx context.Context) error {
 		return nil
 	}
 
-	updateTotal := h.RewardReq.RewardState != nil &&
-		*h.RewardReq.RewardState == types.BenefitState_BenefitSimulateBookKeeping
+	updateTotal := *h.RewardReq.RewardState == types.BenefitState_BenefitDone
 
 	for _, reward := range h.CoinRewardReqs {
 		if updateTotal && reward.LastRewardAmount == nil {
@@ -107,7 +106,7 @@ func (h *updateHandler) constructCoinRewardSQLs(ctx context.Context) error {
 		if err != nil {
 			return wlog.WrapError(err)
 		}
-		sql, err := handler.ConstructUpdateSQL(updateTotal, h.lastRewardAt)
+		sql, err := handler.ConstructUpdateSQL(updateTotal, *h.RewardReq.LastRewardAt)
 		if err != nil && !wlog.Equal(err, cruder.ErrUpdateNothing) {
 			return wlog.WrapError(err)
 		}
@@ -348,12 +347,14 @@ func (h *updateHandler) _validateStock() error {
 	if len(h.MiningGoodStockReqs) > 0 && h.stockMode == types.GoodStockMode_GoodStockByUnique {
 		return wlog.Errorf("invalid stockmode")
 	}
-	switch h.stockMode {
-	case types.GoodStockMode_GoodStockByUnique:
-		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }()
-		return nil
-	case types.GoodStockMode_GoodStockByMiningPool:
-		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePool; return &e }()
+	if h.StockMode != nil {
+		switch h.stockMode {
+		case types.GoodStockMode_GoodStockByUnique:
+			h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }()
+			return nil
+		case types.GoodStockMode_GoodStockByMiningPool:
+			h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePool; return &e }()
+		}
 	}
 	return h.stockValidator.validateStock()
 }
@@ -363,11 +364,10 @@ func (h *updateHandler) validateRewardState() error {
 	if h.RewardReq.RewardState == nil {
 		return nil
 	}
-
-	if h.RewardReq.LastRewardAt != nil {
-		h.lastRewardAt = *h.RewardReq.LastRewardAt
-	} else {
-		h.lastRewardAt = h.goodReward.LastRewardAt
+	if *h.RewardReq.RewardState != types.BenefitState_BenefitTransferring {
+		h.RewardReq.LastRewardAt = &h.goodReward.LastRewardAt
+	} else if h.RewardReq.LastRewardAt != nil {
+		return wlog.Errorf("invalid lastrewardat")
 	}
 
 	switch h.goodReward.RewardState {
@@ -449,12 +449,10 @@ func (h *updateHandler) createCoinRewardHistories(ctx context.Context, tx *ent.T
 	if h.RewardReq.RewardState == nil {
 		return nil
 	}
-	if *h.RewardReq.RewardState != types.BenefitState_BenefitSimulateBookKeeping {
+	if *h.RewardReq.RewardState != types.BenefitState_BenefitDone {
 		return nil
 	}
-	if h.RewardReq.LastRewardAt == nil {
-		return wlog.Errorf("invalid rewardat")
-	}
+	// Here reward at should be got from exist record
 	for _, sql := range h.sqlCoinRewardHistories {
 		if err := h.execSQL(ctx, tx, sql); err != nil {
 			return wlog.WrapError(err)
@@ -529,7 +527,7 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		if err := handler.updatePowerRental(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
 		}
-		if !handler.updated && handler.sqlGoodBase != "" && handler.sqlPowerRental != "" {
+		if !handler.updated && (handler.sqlGoodBase != "" || handler.sqlPowerRental != "") {
 			return wlog.WrapError(cruder.ErrUpdateNothing)
 		}
 		return nil
