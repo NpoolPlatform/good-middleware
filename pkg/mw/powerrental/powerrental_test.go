@@ -16,6 +16,7 @@ import (
 	vendorbrand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
 	vendorlocation1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/location"
 	goodcoinmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin"
+	goodcoinrewardmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin/reward"
 	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/powerrental"
 	"github.com/google/uuid"
@@ -126,6 +127,18 @@ func setup(t *testing.T) func(*testing.T) {
 		stock.Sold = decimal.NewFromInt(0).String()
 	}
 	ret.RewardStateStr = ret.RewardState.String()
+	for _, goodCoin := range ret.GoodCoins {
+		ret.Rewards = append(ret.Rewards, &goodcoinrewardmwpb.RewardInfo{
+			GoodID:                ret.GoodID,
+			CoinTypeID:            goodCoin.CoinTypeID,
+			RewardTID:             uuid.Nil.String(),
+			LastRewardAmount:      decimal.NewFromInt(0).String(),
+			NextRewardStartAmount: decimal.NewFromInt(0).String(),
+			LastUnitRewardAmount:  decimal.NewFromInt(0).String(),
+			TotalRewardAmount:     decimal.NewFromInt(0).String(),
+			MainCoin:              goodCoin.Main,
+		})
+	}
 
 	manufacturerID := uuid.NewString()
 	h1, err := manufacturer1.NewHandler(

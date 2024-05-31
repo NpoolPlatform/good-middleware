@@ -20,6 +20,7 @@ import (
 	appmininggoodstockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock/mining"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental"
 	goodcoinmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin"
+	goodcoinrewardmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin/reward"
 	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -179,6 +180,18 @@ func setup(t *testing.T) func(*testing.T) {
 	for i, stock := range ret.AppMiningGoodStocks {
 		stock.AppGoodStockID = ret.AppGoodStockID
 		stock.MiningGoodStockID = ret.MiningGoodStocks[i].EntID
+	}
+	for _, goodCoin := range ret.GoodCoins {
+		ret.Rewards = append(ret.Rewards, &goodcoinrewardmwpb.RewardInfo{
+			GoodID:                ret.GoodID,
+			CoinTypeID:            goodCoin.CoinTypeID,
+			RewardTID:             uuid.Nil.String(),
+			LastRewardAmount:      decimal.NewFromInt(0).String(),
+			NextRewardStartAmount: decimal.NewFromInt(0).String(),
+			LastUnitRewardAmount:  decimal.NewFromInt(0).String(),
+			TotalRewardAmount:     decimal.NewFromInt(0).String(),
+			MainCoin:              goodCoin.Main,
+		})
 	}
 
 	manufacturerID := uuid.NewString()
