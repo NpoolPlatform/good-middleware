@@ -7,10 +7,12 @@ import (
 	"time"
 
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
+	goodcommon "github.com/NpoolPlatform/good-middleware/pkg/common"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	appgoodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/app/good/goodbase"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/shopspring/decimal"
 )
@@ -155,10 +157,17 @@ func (h *updateHandler) updateAppGoodBase(ctx context.Context, tx *ent.Tx) error
 }
 
 func (h *updateHandler) validateFixedDurationUnitPrice() error {
-	if h.MinOrderDurationSeconds != h.MaxOrderDurationSeconds {
+	if *h.MinOrderDurationSeconds != *h.MaxOrderDurationSeconds {
 		return wlog.Errorf("invalid order duration")
 	}
-	unitPrice := h._ent.powerRental.UnitPrice.Mul(decimal.NewFromInt(int64(*h.MaxOrderDurationSeconds)))
+	unitPrice := h._ent.powerRental.UnitPrice.Mul(
+		decimal.NewFromInt(
+			int64(goodcommon.Seconds2Durations(
+				*h.MaxOrderDurationSeconds,
+				types.GoodDurationType(types.GoodDurationType_value[h._ent.powerRental.DurationDisplayType]),
+			)),
+		),
+	)
 	if h.UnitPrice.Cmp(unitPrice) < 0 {
 		return wlog.Errorf("invalid unitprice")
 	}
