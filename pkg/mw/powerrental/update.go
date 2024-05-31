@@ -29,6 +29,7 @@ type updateHandler struct {
 	sqlCoinRewards         []string
 	sqlCoinRewardHistories []string
 	stockMode              types.GoodStockMode
+	changeStockMode        bool
 	updated                bool
 }
 
@@ -251,6 +252,18 @@ func (h *updateHandler) updateStock(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
+func (h *updateHandler) createMiningGoodStocks(ctx context.Context, tx *ent.Tx) error {
+	for _, poolStock := range h.MiningGoodStockReqs {
+		if _, err := mininggoodstockcrud.CreateSet(
+			tx.MiningGoodStock.Create(),
+			poolStock,
+		).Save(ctx); err != nil {
+			return wlog.WrapError(err)
+		}
+	}
+	return nil
+}
+
 func (h *updateHandler) updateMiningGoodStocks(ctx context.Context, tx *ent.Tx) error {
 	for _, poolStock := range h.MiningGoodStockReqs {
 		if _, err := mininggoodstockcrud.UpdateSet(
@@ -268,9 +281,10 @@ func (h *updateHandler) _validateStock() error {
 		h.StockReq.Total = &h.stock.Total
 	}
 	if h.StockMode != nil && h.StockMode.String() != h.powerRental.StockMode {
-		if h.stock.Total != h.stock.SpotQuantity {
-			return wlog.Errorf("permission denied")
+		if !h.stock.Total.Equal(h.stock.SpotQuantity) {
+			return wlog.Errorf("permission denied %v %v", h.stock.Total, h.stock.SpotQuantity)
 		}
+		h.changeStockMode = true
 	}
 	if h.StockMode == nil {
 		h.stockMode = types.GoodStockMode(types.GoodStockMode_value[h.powerRental.StockMode])
@@ -281,6 +295,24 @@ func (h *updateHandler) _validateStock() error {
 		d := h.stock.SpotQuantity.Add(h.StockReq.Total.Sub(h.stock.Total))
 		return &d
 	}()
+
+	if !h.changeStockMode {
+		for _, req := range h.MiningGoodStockReqs {
+			if req.EntID == nil {
+				return wlog.Errorf("invalid stockid")
+			}
+			if !func() bool {
+				for _, poolStock := range h.miningGoodStocks {
+					if poolStock.EntID == *req.EntID {
+						return true
+					}
+				}
+				return false
+			}() {
+				return wlog.Errorf("invalid stockid")
+			}
+		}
+	}
 
 	miningGoodStockReqs := h.MiningGoodStockReqs
 	defer func() { h.MiningGoodStockReqs = miningGoodStockReqs }()
@@ -371,6 +403,12 @@ func (h *updateHandler) validateRewardState() error {
 	return nil
 }
 
+func (h *updateHandler) formalizeStock() {
+	for _, req := range h.MiningGoodStockReqs {
+		req.GoodStockID = &h.stock.EntID
+	}
+}
+
 func (h *updateHandler) updateGoodReward(ctx context.Context, tx *ent.Tx) error {
 	if h.RewardReq.RewardState == nil {
 		return nil
@@ -437,6 +475,7 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 	if err := handler.validateRewardState(); err != nil {
 		return wlog.WrapError(err)
 	}
+	handler.formalizeStock()
 
 	handler.constructPowerRentalSQL()
 	if err := handler.constructGoodBaseSQL(ctx); err != nil {
@@ -456,8 +495,14 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		if err := handler.updateStock(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
 		}
-		if err := handler.updateMiningGoodStocks(_ctx, tx); err != nil {
-			return wlog.WrapError(err)
+		if handler.changeStockMode {
+			if err := handler.createMiningGoodStocks(_ctx, tx); err != nil {
+				return wlog.WrapError(err)
+			}
+		} else {
+			if err := handler.updateMiningGoodStocks(_ctx, tx); err != nil {
+				return wlog.WrapError(err)
+			}
 		}
 		if err := handler.updateGoodReward(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
