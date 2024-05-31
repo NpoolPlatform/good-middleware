@@ -516,6 +516,9 @@ func WithRewardAt(n *uint32, must bool) func(context.Context, *Handler) error {
 
 func WithRewards(rewards []*goodcoinrewardmwpb.RewardReq, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		coinTypeIDs := map[uuid.UUID]struct{}{}
+		rewardTIDs := map[uuid.UUID]struct{}{}
+
 		for _, reward := range rewards {
 			_reward := &goodcoinrewardcrud.Req{}
 
@@ -532,6 +535,10 @@ func WithRewards(rewards []*goodcoinrewardmwpb.RewardReq, must bool) func(contex
 				if err != nil {
 					return wlog.WrapError(err)
 				}
+				if _, ok := coinTypeIDs[_coinTypeID]; ok {
+					return wlog.Errorf("invalid cointypeid")
+				}
+				coinTypeIDs[_coinTypeID] = struct{}{}
 				_reward.CoinTypeID = &_coinTypeID
 			}
 
@@ -540,6 +547,10 @@ func WithRewards(rewards []*goodcoinrewardmwpb.RewardReq, must bool) func(contex
 				if err != nil {
 					return wlog.WrapError(err)
 				}
+				if _, ok := rewardTIDs[_tid]; ok {
+					return wlog.Errorf("invalid rewardid")
+				}
+				rewardTIDs[_tid] = struct{}{}
 				_reward.RewardTID = &_tid
 			}
 
