@@ -513,7 +513,7 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 
-	return db.WithDebugTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateGoodBase(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
 		}
