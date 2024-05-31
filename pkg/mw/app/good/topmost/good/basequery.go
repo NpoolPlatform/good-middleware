@@ -126,8 +126,9 @@ func (h *baseQueryHandler) queryJoinAppGood(s *sql.Selector) error {
 	s.AppendSelect(
 		t1.C(entappgoodbase.FieldAppID),
 		sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
-		sql.As(t2.C(entappgoodbase.FieldEntID), "good_id"),
-		sql.As(t2.C(entappgoodbase.FieldName), "good_name"),
+		sql.As(t2.C(entgoodbase.FieldEntID), "good_id"),
+		sql.As(t2.C(entgoodbase.FieldName), "good_name"),
+		t2.C(entgoodbase.FieldGoodType),
 	)
 	return nil
 }

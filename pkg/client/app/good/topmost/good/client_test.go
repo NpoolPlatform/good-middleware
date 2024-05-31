@@ -53,6 +53,7 @@ var ret = npool.TopMostGood{
 	EntID:            uuid.NewString(),
 	AppID:            uuid.NewString(),
 	GoodID:           uuid.NewString(),
+	GoodType:         types.GoodType_PowerRental,
 	GoodName:         uuid.NewString(),
 	TopMostID:        uuid.NewString(),
 	TopMostType:      types.GoodTopMostType_TopMostPromotion,
@@ -67,6 +68,7 @@ var ret = npool.TopMostGood{
 
 func setup(t *testing.T) func(*testing.T) {
 	ret.TopMostTypeStr = ret.TopMostType.String()
+	ret.GoodTypeStr = ret.GoodType.String()
 
 	manufacturerID := uuid.NewString()
 	err := manufacturer1.CreateManufacturer(context.Background(), &manufacturermwpb.ManufacturerReq{
@@ -113,7 +115,7 @@ func setup(t *testing.T) func(*testing.T) {
 		QuantityUnit:         func() *string { s := "TiB"; return &s }(),
 		QuantityUnitAmount:   func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
 		DeliveryAt:           func() *uint32 { u := uint32(time.Now().Unix()); return &u }(),
-		GoodType:             func() *types.GoodType { e := types.GoodType_PowerRental; return &e }(),
+		GoodType:             &ret.GoodType,
 		BenefitType:          func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }(),
 		Name:                 &ret.GoodName,
 		ServiceStartAt:       func() *uint32 { u := uint32(time.Now().Unix()); return &u }(),

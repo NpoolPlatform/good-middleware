@@ -45,6 +45,7 @@ func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
 		info.UnitPrice = func() string { amount, _ := decimal.NewFromString(info.UnitPrice); return amount.String() }()
 		info.TopMostType = types.GoodTopMostType(types.GoodTopMostType_value[info.TopMostTypeStr])
+		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 	}
 }
 
