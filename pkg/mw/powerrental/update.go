@@ -259,6 +259,21 @@ func (h *updateHandler) updateStock(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
+func (h *updateHandler) deleteMiningGoodStocks(ctx context.Context, tx *ent.Tx) error {
+	now := uint32(time.Now().Unix())
+	for _, poolStock := range h.miningGoodStocks {
+		if _, err := mininggoodstockcrud.UpdateSet(
+			tx.MiningGoodStock.UpdateOneID(poolStock.ID),
+			&mininggoodstockcrud.Req{
+				DeletedAt: &now,
+			},
+		).Save(ctx); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (h *updateHandler) createMiningGoodStocks(ctx context.Context, tx *ent.Tx) error {
 	for _, poolStock := range h.MiningGoodStockReqs {
 		if _, err := mininggoodstockcrud.CreateSet(
@@ -510,6 +525,9 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 			return wlog.WrapError(err)
 		}
 		if handler.changeStockMode {
+			if err := handler.deleteMiningGoodStocks(_ctx, tx); err != nil {
+				return wlog.WrapError(err)
+			}
 			if err := handler.createMiningGoodStocks(_ctx, tx); err != nil {
 				return wlog.WrapError(err)
 			}

@@ -79,7 +79,7 @@ func (h *deleteHandler) deleteReward(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
-func (h *deleteHandler) deleteMiningGoodStock(ctx context.Context, tx *ent.Tx) error {
+func (h *deleteHandler) deleteMiningGoodStocks(ctx context.Context, tx *ent.Tx) error {
 	for _, poolStock := range h.miningGoodStocks {
 		if _, err := mininggoodstockcrud.UpdateSet(
 			tx.MiningGoodStock.UpdateOneID(poolStock.ID),
@@ -119,7 +119,7 @@ func (h *Handler) DeletePowerRental(ctx context.Context) error {
 		if err := handler.deleteReward(_ctx, tx); err != nil {
 			return err
 		}
-		if err := handler.deleteMiningGoodStock(_ctx, tx); err != nil {
+		if err := handler.deleteMiningGoodStocks(_ctx, tx); err != nil {
 			return err
 		}
 		return handler.deletePowerRental(_ctx, tx)
