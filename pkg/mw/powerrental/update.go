@@ -263,6 +263,11 @@ func (h *updateHandler) _validateStock() error {
 	if h.StockReq.Total == nil {
 		h.StockReq.Total = &h.stock.Total
 	}
+	if h.StockMode != nil && h.StockMode.String() != h.powerRental.StockMode {
+		if h.stock.Total != h.stock.SpotQuantity {
+			return wlog.Errorf("permission denied")
+		}
+	}
 	if h.StockMode == nil {
 		h.stockMode = types.GoodStockMode(types.GoodStockMode_value[h.powerRental.StockMode])
 	} else {
@@ -278,7 +283,7 @@ func (h *updateHandler) _validateStock() error {
 
 	for _, poolStock := range h.miningGoodStocks {
 		if func() bool {
-			for _, _poolStock := range h.MiningGoodStockReqs {
+			for _, _poolStock := range miningGoodStockReqs {
 				if *_poolStock.EntID == poolStock.EntID {
 					_poolStock.ID = &poolStock.ID
 					_poolStock.SpotQuantity = func() *decimal.Decimal {
