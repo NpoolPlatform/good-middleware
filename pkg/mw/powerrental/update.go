@@ -7,6 +7,7 @@ import (
 	"time"
 
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
+	goodcoinrewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin/reward"
 	rewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
@@ -62,6 +63,7 @@ func (h *updateHandler) constructCoinRewardSQLs(ctx context.Context) error {
 	}
 
 	updateTotal := *h.RewardReq.RewardState == types.BenefitState_BenefitDone
+	checkExist := *h.RewardReq.RewardState != types.BenefitState_BenefitWait
 
 	for _, reward := range h.CoinRewardReqs {
 		if updateTotal && reward.LastRewardAmount == nil {
@@ -104,7 +106,7 @@ func (h *updateHandler) constructCoinRewardSQLs(ctx context.Context) error {
 		if err != nil {
 			return wlog.WrapError(err)
 		}
-		sql, err := handler.ConstructUpdateSQL(updateTotal, *h.RewardReq.LastRewardAt)
+		sql, err := handler.ConstructUpdateSQL(updateTotal, *h.RewardReq.LastRewardAt, checkExist)
 		if err != nil && !wlog.Equal(err, cruder.ErrUpdateNothing) {
 			return wlog.WrapError(err)
 		}
@@ -125,7 +127,7 @@ func (h *updateHandler) constructCoinRewardHistorySQLs(ctx context.Context) erro
 				}
 				s := reward.RewardTID.String()
 				return &s
-			}(), true),
+			}(), false),
 			rewardhistory1.WithRewardDate(h.RewardReq.LastRewardAt, true),
 			rewardhistory1.WithAmount(func() *string {
 				if reward.LastRewardAmount == nil {
@@ -384,16 +386,20 @@ func (h *updateHandler) validateRewardState() error {
 			if req.RewardTID != nil || req.LastRewardAmount != nil {
 				return wlog.Errorf("invalid reward")
 			}
-			for _, coinReward := range h.coinRewards {
-				if *req.CoinTypeID != coinReward.CoinTypeID {
-					continue
-				}
-				req.LastRewardAmount = &coinReward.LastRewardAmount
-				break
-			}
 		}
 	} else if h.RewardReq.LastRewardAt == nil {
 		return wlog.Errorf("invalid lastrewardat")
+	}
+
+	if *h.RewardReq.RewardState == types.BenefitState_BenefitDone {
+		for _, coinReward := range h.coinRewards {
+			h.CoinRewardReqs = append(h.CoinRewardReqs, &goodcoinrewardcrud.Req{
+				GoodID:           &coinReward.GoodID,
+				CoinTypeID:       &coinReward.CoinTypeID,
+				RewardTID:        &coinReward.RewardTid,
+				LastRewardAmount: &coinReward.LastRewardAmount,
+			})
+		}
 	}
 
 	switch h.goodReward.RewardState {
@@ -525,7 +531,7 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 
-	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithDebugTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateGoodBase(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
 		}
