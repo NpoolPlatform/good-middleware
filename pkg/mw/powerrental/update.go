@@ -30,7 +30,6 @@ type updateHandler struct {
 	sqlCoinRewardHistories []string
 	stockMode              types.GoodStockMode
 	changeStockMode        bool
-	lastRewardAt           uint32
 }
 
 func (h *updateHandler) constructGoodBaseSQL(ctx context.Context) error {
@@ -297,6 +296,7 @@ func (h *updateHandler) updateMiningGoodStocks(ctx context.Context, tx *ent.Tx) 
 	return nil
 }
 
+//nolint:gocyclo
 func (h *updateHandler) _validateStock() error {
 	if h.StockReq.Total == nil {
 		h.StockReq.Total = &h.stock.Total

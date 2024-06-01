@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-//nolint:goconst
+//nolint:goconst,funlen
 func (h *Handler) ConstructCreateSQL() string {
 	if h.EntID == nil {
 		h.EntID = func() *uuid.UUID { s := uuid.New(); return &s }()
