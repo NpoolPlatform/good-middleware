@@ -302,6 +302,7 @@ func updatePowerRental(t *testing.T) {
 	ret.GoodTotal = decimal.NewFromInt(10000).String()
 	ret.GoodSpotQuantity = ret.GoodTotal
 	ret.Name = uuid.NewString()
+	ret.DeliveryAt = uint32(time.Now().Unix() + 10)
 	miningGoodStocks := func() (reqs []*stockmwpb.MiningGoodStockReq) {
 		remain := decimal.NewFromInt(0)
 		for i, stock := range ret.MiningGoodStocks {

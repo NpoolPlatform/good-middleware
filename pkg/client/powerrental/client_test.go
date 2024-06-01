@@ -188,6 +188,7 @@ func createPowerRental(t *testing.T) {
 
 func updatePowerRental(t *testing.T) {
 	ret.Name = uuid.NewString()
+	ret.DeliveryAt = uint32(time.Now().Unix() + 10)
 	err := UpdatePowerRental(context.Background(), &npool.PowerRentalReq{
 		ID:                   &ret.ID,
 		EntID:                &ret.EntID,
