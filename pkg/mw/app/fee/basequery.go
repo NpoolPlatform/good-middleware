@@ -63,6 +63,7 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 			t1.C(entappgoodbase.FieldAppID),
 			t1.C(entappgoodbase.FieldGoodID),
 			t1.C(entappgoodbase.FieldName),
+			t1.C(entappgoodbase.FieldProductPage),
 			t1.C(entappgoodbase.FieldBanner),
 			t1.C(entappgoodbase.FieldCreatedAt),
 			t1.C(entappgoodbase.FieldUpdatedAt),
