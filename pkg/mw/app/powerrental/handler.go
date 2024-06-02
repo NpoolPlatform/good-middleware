@@ -531,7 +531,7 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 		if err != nil {
 			return wlog.WrapError(err)
 		}
-		h.AppGoodBaseConds.EntID = &cruder.Cond{
+		h.AppGoodBaseConds.AppID = &cruder.Cond{
 			Op:  conds.GetAppID().GetOp(),
 			Val: id,
 		}
