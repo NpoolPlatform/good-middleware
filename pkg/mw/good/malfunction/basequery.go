@@ -89,6 +89,7 @@ func (h *baseQueryHandler) queryJoinGoodBase(s *sql.Selector) error {
 	}
 	s.AppendSelect(
 		sql.As(t1.C(entgoodbase.FieldName), "good_name"),
+		t1.C(entgoodbase.FieldGoodType),
 	)
 	return nil
 }

@@ -9,6 +9,7 @@ import (
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/malfunction"
 )
 
@@ -35,6 +36,12 @@ func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
 }
 
+func (h *queryHandler) formalize() {
+	for _, info := range h.infos {
+		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
+	}
+}
+
 func (h *Handler) GetMalfunction(ctx context.Context) (*npool.Malfunction, error) {
 	handler := &queryHandler{
 		baseQueryHandler: &baseQueryHandler{
@@ -58,6 +65,8 @@ func (h *Handler) GetMalfunction(ctx context.Context) (*npool.Malfunction, error
 	if len(handler.infos) > 1 {
 		return nil, wlog.Errorf("too many records")
 	}
+
+	handler.formalize()
 
 	return handler.infos[0], nil
 }
@@ -97,6 +106,8 @@ func (h *Handler) GetMalfunctions(ctx context.Context) ([]*npool.Malfunction, ui
 	if err != nil {
 		return nil, 0, err
 	}
+
+	handler.formalize()
 
 	return handler.infos, handler.total, nil
 }

@@ -48,6 +48,7 @@ func init() {
 var ret = npool.Malfunction{
 	EntID:             uuid.NewString(),
 	GoodID:            uuid.NewString(),
+	GoodType:          types.GoodType_PowerRental,
 	GoodName:          uuid.NewString(),
 	Title:             uuid.NewString(),
 	Message:           uuid.NewString(),
@@ -57,6 +58,7 @@ var ret = npool.Malfunction{
 }
 
 func setup(t *testing.T) func(*testing.T) {
+	ret.GoodTypeStr = ret.GoodType.String()
 	manufacturerID := uuid.NewString()
 	err := manufacturer1.CreateManufacturer(context.Background(), &manufacturermwpb.ManufacturerReq{
 		EntID: &manufacturerID,
@@ -102,7 +104,7 @@ func setup(t *testing.T) func(*testing.T) {
 		QuantityUnit:         func() *string { s := "TiB"; return &s }(),
 		QuantityUnitAmount:   func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
 		DeliveryAt:           func() *uint32 { u := uint32(time.Now().Unix()); return &u }(),
-		GoodType:             func() *types.GoodType { e := types.GoodType_PowerRental; return &e }(),
+		GoodType:             &ret.GoodType,
 		BenefitType:          func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }(),
 		Name:                 &ret.GoodName,
 		ServiceStartAt:       func() *uint32 { u := uint32(time.Now().Unix()); return &u }(),
