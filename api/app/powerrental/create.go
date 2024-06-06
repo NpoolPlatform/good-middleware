@@ -37,7 +37,7 @@ func (s *Server) CreatePowerRental(ctx context.Context, in *npool.CreatePowerRen
 		powerrental1.WithBanner(req.Banner, false),
 
 		powerrental1.WithServiceStartAt(req.ServiceStartAt, true),
-		powerrental1.WithStartMode(req.StartMode, true),
+		powerrental1.WithStartMode(req.StartMode, false),
 		powerrental1.WithCancelMode(req.CancelMode, false),
 		powerrental1.WithCancelableBeforeStartSeconds(req.CancelableBeforeStartSeconds, false),
 		powerrental1.WithEnableSetCommission(req.EnableSetCommission, false),
