@@ -50,6 +50,10 @@ func (h *Handler) CreateFee(ctx context.Context) error {
 		return wlog.Errorf("invalid unitvalue")
 	}
 
+	if err := handler.checkMinOrderDurationSeconds(); err != nil {
+		return wlog.WrapError(err)
+	}
+
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createAppGoodBase(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
