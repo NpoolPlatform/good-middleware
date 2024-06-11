@@ -8,10 +8,22 @@ import (
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 )
 
+func getMidnightTimestamp(date uint32) int64 {
+	t := time.Unix(int64(date), 0)
+
+	midnight := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+
+	midnightTimestamp := midnight.Unix()
+
+	return midnightTimestamp
+}
+
 func (h *Handler) ConstructUpdateSQL(addTotal bool, rewardDate uint32, checkExist bool) (string, error) {
 	if h.GoodID == nil || h.CoinTypeID == nil {
 		return "", wlog.Errorf("invalid id")
 	}
+
+	midnightTimestamp := getMidnightTimestamp(rewardDate)
 
 	set := "set "
 	now := uint32(time.Now().Unix())
@@ -50,10 +62,10 @@ func (h *Handler) ConstructUpdateSQL(addTotal bool, rewardDate uint32, checkExis
 		_sql += " and not exists ("
 		_sql += "select 1 from good_reward_histories "
 		_sql += fmt.Sprintf(
-			"where good_id = '%v' and coin_type_id = '%v' and deleted_at = 0 and reward_date = %v",
+			"where good_id = '%v' and coin_type_id = '%v' and deleted_at = 0 and reward_date >= %v",
 			*h.GoodID,
 			*h.CoinTypeID,
-			rewardDate,
+			midnightTimestamp,
 		)
 		_sql += " limit 1)"
 	}
