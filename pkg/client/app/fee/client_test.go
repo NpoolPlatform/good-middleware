@@ -47,7 +47,7 @@ var ret = &npool.Fee{
 	UnitValue:               decimal.NewFromInt(20).String(),
 	DurationDisplayType:     types.GoodDurationType_GoodDurationByDay,
 	CancelMode:              types.CancelMode_Uncancellable,
-	MinOrderDurationSeconds: 20,
+	MinOrderDurationSeconds: 86400,
 }
 
 func setup(t *testing.T) func(*testing.T) {

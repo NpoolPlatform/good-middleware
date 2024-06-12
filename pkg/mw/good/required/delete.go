@@ -18,13 +18,12 @@ type deleteHandler struct {
 	sql  string
 }
 
-
 func (h *deleteHandler) constructSQL() {
-	_sql := "select 1"
-	_sql += "from required_goods rg"
-	_sql += "join app_good_bases agb on rg.main_good_id = agb.good_id or rg.required_good_id = agb.good_id"
-	_sql += "join required_app_goods rag on agb.ent_id = rag.main_app_good_id or agb.ent_id = rag.required_app_good_id"
-	_sql += fmt.Sprintf("where rg.main_good_id = '%v' and rg.required_good_id = '%v' ", h.info.MainGoodID, h.info.RequiredGoodID)
+	_sql := "select 1 "
+	_sql += "from required_goods rg "
+	_sql += "join app_good_bases agb on rg.main_good_id = agb.good_id or rg.required_good_id = agb.good_id "
+	_sql += "join required_app_goods rag on agb.ent_id = rag.main_app_good_id or agb.ent_id = rag.required_app_good_id "
+	_sql += fmt.Sprintf(" where rg.main_good_id = '%v' and rg.required_good_id = '%v' ", h.info.MainGoodID, h.info.RequiredGoodID)
 	_sql += "and rg.deleted_at=0 and agb.deleted_at=0 and rag.deleted_at=0 limit 1"
 
 	h.sql = _sql

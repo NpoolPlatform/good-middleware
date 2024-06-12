@@ -161,7 +161,7 @@ func setup(t *testing.T) func(*testing.T) {
 		Name:                    &ret.RequiredAppGoodName,
 		Banner:                  func() *string { s := uuid.NewString(); return &s }(),
 		UnitValue:               func() *string { s := decimal.NewFromInt(20).String(); return &s }(),
-		MinOrderDurationSeconds: func() *uint32 { u := uint32(12); return &u }(),
+		MinOrderDurationSeconds: func() *uint32 { u := uint32(86400); return &u }(),
 	})
 	assert.Nil(t, err)
 
