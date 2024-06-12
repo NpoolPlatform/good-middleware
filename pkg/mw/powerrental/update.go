@@ -375,7 +375,7 @@ func (h *updateHandler) _validateStock() error {
 	return h.stockValidator.validateStock()
 }
 
-//nolint:gocyclo
+//nolint:gocyclo,funlen
 func (h *updateHandler) validateRewardState() error {
 	if h.RewardReq.RewardState == nil {
 		return nil
@@ -392,14 +392,22 @@ func (h *updateHandler) validateRewardState() error {
 	}
 
 	if *h.RewardReq.RewardState == types.BenefitState_BenefitDone {
+		coinRewardReqs := []*goodcoinrewardcrud.Req{}
 		for _, coinReward := range h.coinRewards {
-			h.CoinRewardReqs = append(h.CoinRewardReqs, &goodcoinrewardcrud.Req{
+			coinRewardReq := &goodcoinrewardcrud.Req{
 				GoodID:           &coinReward.GoodID,
 				CoinTypeID:       &coinReward.CoinTypeID,
 				RewardTID:        &coinReward.RewardTid,
 				LastRewardAmount: &coinReward.LastRewardAmount,
-			})
+			}
+			for _, reward := range h.CoinRewardReqs {
+				if coinReward.CoinTypeID == *reward.CoinTypeID {
+					coinRewardReq.NextRewardStartAmount = reward.NextRewardStartAmount
+				}
+			}
+			coinRewardReqs = append(coinRewardReqs, coinRewardReq)
 		}
+		h.CoinRewardReqs = coinRewardReqs
 	}
 
 	switch h.goodReward.RewardState {
