@@ -30,12 +30,17 @@ func (h *deleteHandler) constructSQL() {
 }
 
 func (h *deleteHandler) checkAppGoodRequired(ctx context.Context, tx *ent.Tx) error {
-	rc, err := tx.ExecContext(ctx, h.sql)
+	rows, err := tx.QueryContext(ctx, h.sql)
 	if err != nil {
 		return wlog.WrapError(err)
 	}
-	n, err := rc.RowsAffected()
-	if err != nil || n == 1 {
+	defer rows.Close()
+
+	count := 0
+	for rows.Next() {
+		count++
+	}
+	if err != nil || count != 0 {
 		return wlog.Errorf("fail delete requiredgood: %v", err)
 	}
 	return nil
