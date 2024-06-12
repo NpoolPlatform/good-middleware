@@ -250,6 +250,15 @@ func (h *createHandler) validateUnitPrice() error {
 	return nil
 }
 
+func (h *createHandler) validateOrderDurationSeconds() error {
+	if h.FixedDuration == nil || *h.FixedDuration {
+		if *h.MinOrderDurationSeconds != *h.MaxOrderDurationSeconds {
+			return wlog.Errorf("invalid maxorderdurationseconds")
+		}
+	}
+	return nil
+}
+
 func (h *createHandler) formalizeEntIDs() {
 	if h.AppGoodStockReq.EntID == nil {
 		h.AppGoodStockReq.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
@@ -289,6 +298,9 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 	handler.formalizeEntIDs()
+	if err := handler.validateOrderDurationSeconds(); err != nil {
+		return wlog.WrapError(err)
+	}
 	if err := handler.validateUnitPrice(); err != nil {
 		return wlog.WrapError(err)
 	}
