@@ -287,6 +287,7 @@ func (h *createHandler) createAppMiningGoodStocks(ctx context.Context, tx *ent.T
 	return nil
 }
 
+//nolint:gocyclo
 func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	handler := &createHandler{
 		powerRentalAppGoodQueryHandler: &powerRentalAppGoodQueryHandler{
@@ -298,6 +299,9 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 	handler.formalizeEntIDs()
+	if err := handler.checkMinOrderDurationSeconds(); err != nil {
+		return wlog.WrapError(err)
+	}
 	if err := handler.validateOrderDurationSeconds(); err != nil {
 		return wlog.WrapError(err)
 	}

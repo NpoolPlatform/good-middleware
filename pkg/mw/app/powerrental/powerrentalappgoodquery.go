@@ -15,6 +15,7 @@ import (
 	entmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
 	entpowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 )
 
 type powerRentalAppGoodQueryHandler struct {
@@ -237,4 +238,29 @@ func (h *Handler) QueryPowerRentalEnt(ctx context.Context) (PowerRental, error) 
 		return nil, err
 	}
 	return &handler._ent, nil
+}
+
+func (h *powerRentalAppGoodQueryHandler) checkMinOrderDurationSeconds() error {
+	if h.MinOrderDurationSeconds == nil {
+		return nil
+	}
+	unitSeconds := uint32(1) * 60 * 60
+
+	switch h._ent.powerRental.DurationDisplayType {
+	case types.GoodDurationType_GoodDurationByHour.String():
+	case types.GoodDurationType_GoodDurationByDay.String():
+		unitSeconds = uint32(1) * 60 * 60 * 24
+	case types.GoodDurationType_GoodDurationByMonth.String():
+		unitSeconds = uint32(1) * 60 * 60 * 24 * 30
+	case types.GoodDurationType_GoodDurationByYear.String():
+		unitSeconds = uint32(1) * 60 * 60 * 24 * 365
+	default:
+		return wlog.Errorf("invalid gooddurationtype")
+	}
+
+	if *h.MinOrderDurationSeconds < unitSeconds {
+		return wlog.Errorf("invalid minorderdurationseconds < %v", unitSeconds)
+	}
+
+	return nil
 }

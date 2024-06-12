@@ -229,6 +229,9 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		h.AppGoodBaseReq.AppID = &handler._ent.appGoodBase.AppID
 	}
 
+	if err := handler.checkMinOrderDurationSeconds(); err != nil {
+		return wlog.WrapError(err)
+	}
 	if err := handler.validateUnitPrice(); err != nil {
 		return wlog.WrapError(err)
 	}
