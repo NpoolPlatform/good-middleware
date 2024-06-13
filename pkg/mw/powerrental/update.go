@@ -403,9 +403,9 @@ func (h *updateHandler) validateRewardState() error {
 			for _, reward := range h.CoinRewardReqs {
 				if coinReward.CoinTypeID == *reward.CoinTypeID {
 					coinRewardReq.NextRewardStartAmount = reward.NextRewardStartAmount
+					coinRewardReqs = append(coinRewardReqs, coinRewardReq)
 				}
 			}
-			coinRewardReqs = append(coinRewardReqs, coinRewardReq)
 		}
 		h.CoinRewardReqs = coinRewardReqs
 	}
