@@ -25,6 +25,7 @@ func (s *Server) DeleteSimulate(ctx context.Context, in *npool.DeleteSimulateReq
 		ctx,
 		appsimulategood1.WithID(req.ID, false),
 		appsimulategood1.WithEntID(req.EntID, false),
+		appsimulategood1.WithAppGoodID(req.AppGoodID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

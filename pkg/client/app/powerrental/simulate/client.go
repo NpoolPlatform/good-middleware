@@ -33,10 +33,10 @@ func CreateSimulate(ctx context.Context, req *npool.SimulateReq) error {
 	return err
 }
 
-func GetSimulate(ctx context.Context, id string) (*npool.Simulate, error) {
+func GetSimulate(ctx context.Context, appGoodID string) (*npool.Simulate, error) {
 	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetSimulate(ctx, &npool.GetSimulateRequest{
-			EntID: id,
+			AppGoodID: appGoodID,
 		})
 		if err != nil {
 			return nil, err
@@ -108,12 +108,13 @@ func GetSimulateOnly(ctx context.Context, conds *npool.Conds) (*npool.Simulate, 
 	return infos.([]*npool.Simulate)[0], nil
 }
 
-func DeleteSimulate(ctx context.Context, id *uint32, entID *string) error {
+func DeleteSimulate(ctx context.Context, id *uint32, entID, appGoodID *string) error {
 	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		return cli.DeleteSimulate(_ctx, &npool.DeleteSimulateRequest{
 			Info: &npool.SimulateReq{
-				ID:    id,
-				EntID: entID,
+				ID:        id,
+				EntID:     entID,
+				AppGoodID: appGoodID,
 			},
 		})
 	})

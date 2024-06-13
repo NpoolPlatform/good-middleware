@@ -1,4 +1,4 @@
-//nolint:dupl
+
 package appsimulategood
 
 import (
@@ -26,6 +26,7 @@ func (s *Server) UpdateSimulate(ctx context.Context, in *npool.UpdateSimulateReq
 		ctx,
 		appsimulategood1.WithID(req.ID, false),
 		appsimulategood1.WithEntID(req.EntID, false),
+		appsimulategood1.WithAppGoodID(req.AppGoodID, false),
 		appsimulategood1.WithOrderUnits(req.OrderUnits, false),
 		appsimulategood1.WithOrderDurationSeconds(req.OrderDurationSeconds, false),
 	)

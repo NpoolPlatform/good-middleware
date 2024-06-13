@@ -15,7 +15,7 @@ import (
 func (s *Server) GetSimulate(ctx context.Context, in *npool.GetSimulateRequest) (*npool.GetSimulateResponse, error) {
 	handler, err := appsimulategood1.NewHandler(
 		ctx,
-		appsimulategood1.WithEntID(&in.EntID, true),
+		appsimulategood1.WithAppGoodID(&in.AppGoodID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

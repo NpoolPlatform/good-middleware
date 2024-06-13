@@ -25,7 +25,7 @@ func (h *baseQueryHandler) selectSimulate(stm *ent.AppSimulatePowerRentalQuery) 
 }
 
 func (h *baseQueryHandler) querySimulate(cli *ent.Client) error {
-	if h.ID == nil && h.EntID == nil {
+	if h.ID == nil && h.EntID == nil && h.AppGoodID == nil {
 		return wlog.Errorf("invalid id")
 	}
 	stm := cli.AppSimulatePowerRental.Query().Where(entappsimulatepowerrental.DeletedAt(0))
@@ -34,6 +34,9 @@ func (h *baseQueryHandler) querySimulate(cli *ent.Client) error {
 	}
 	if h.EntID != nil {
 		stm.Where(entappsimulatepowerrental.EntID(*h.EntID))
+	}
+	if h.AppGoodID != nil {
+		stm.Where(entappsimulatepowerrental.AppGoodID(*h.AppGoodID))
 	}
 	h.stmSelect = h.selectSimulate(stm)
 	return nil

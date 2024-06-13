@@ -208,7 +208,7 @@ func getSimulateOnly(t *testing.T) {
 }
 
 func deleteSimulate(t *testing.T) {
-	err := DeleteSimulate(context.Background(), &ret.ID, &ret.EntID)
+	err := DeleteSimulate(context.Background(), &ret.ID, &ret.EntID, &ret.AppGoodID)
 	assert.Nil(t, err)
 
 	info, err := GetSimulate(context.Background(), ret.EntID)
