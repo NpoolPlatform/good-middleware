@@ -43,7 +43,7 @@ var ret = npool.Simulate{
 	AppGoodID:            uuid.NewString(),
 	AppGoodName:          uuid.NewString(),
 	OrderUnits:           "10",
-	OrderDurationSeconds: 11,
+	OrderDurationSeconds: 86400,
 }
 
 //nolint:funlen
@@ -153,7 +153,7 @@ func setup(t *testing.T) func(*testing.T) {
 		apppowerrental1.WithMaxOrderAmount(func() *string { s := decimal.NewFromInt(90).String(); return &s }(), true),
 		apppowerrental1.WithMaxUserAmount(func() *string { s := decimal.NewFromInt(90).String(); return &s }(), true),
 		apppowerrental1.WithMinOrderDurationSeconds(func() *uint32 { n := uint32(86400); return &n }(), true),
-		apppowerrental1.WithMaxOrderDurationSeconds(func() *uint32 { n := uint32(86420); return &n }(), true),
+		apppowerrental1.WithMaxOrderDurationSeconds(func() *uint32 { n := uint32(86400); return &n }(), true),
 		apppowerrental1.WithUnitPrice(func() *string { s := decimal.NewFromInt(100).String(); return &s }(), true),
 		apppowerrental1.WithSaleStartAt(func() *uint32 { n := uint32(24); return &n }(), true),
 		apppowerrental1.WithSaleEndAt(func() *uint32 { n := uint32(24); return &n }(), true),
@@ -200,7 +200,7 @@ func createSimulate(t *testing.T) {
 
 func updateSimulate(t *testing.T) {
 	ret.OrderUnits = "20"
-	ret.OrderDurationSeconds = 12
+	ret.OrderDurationSeconds = 86400
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),

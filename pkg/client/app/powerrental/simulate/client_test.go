@@ -55,7 +55,7 @@ var ret = npool.Simulate{
 	AppGoodID:            uuid.NewString(),
 	AppGoodName:          uuid.NewString(),
 	OrderUnits:           decimal.NewFromInt(120).String(),
-	OrderDurationSeconds: 24000,
+	OrderDurationSeconds: 86400,
 }
 
 func setup(t *testing.T) func(*testing.T) {
