@@ -99,7 +99,7 @@ var ret = &npool.PowerRental{
 	MaxOrderAmount:               decimal.NewFromInt(100).String(),
 	MaxUserAmount:                decimal.NewFromInt(200).String(),
 	MinOrderDurationSeconds:      uint32(86400),
-	MaxOrderDurationSeconds:      uint32(86420),
+	MaxOrderDurationSeconds:      uint32(86400),
 	SaleStartAt:                  uint32(time.Now().Unix()),
 	SaleEndAt:                    uint32(time.Now().Unix() + 10000),
 	SaleMode:                     types.GoodSaleMode_GoodSaleModeMainnetSpot,
