@@ -241,7 +241,7 @@ func (h *createHandler) validateFixedDurationUnitPrice() error {
 }
 
 func (h *createHandler) validateUnitPrice() error {
-	if h.FixedDuration != nil && *h.FixedDuration {
+	if h.FixedDuration == nil && *h.FixedDuration {
 		return h.validateFixedDurationUnitPrice()
 	}
 	if h.UnitPrice.Cmp(h._ent.powerRental.UnitPrice) < 0 {
