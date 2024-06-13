@@ -52,7 +52,7 @@ func (h *Handler) DeleteRequired(ctx context.Context) error {
 		return err
 	}
 	if info == nil {
-		return nil
+		return wlog.Errorf("invalid requiredgood")
 	}
 
 	h.ID = &info.ID
