@@ -150,7 +150,7 @@ func createSimulate(t *testing.T) {
 		OrderDurationSeconds: &ret.OrderDurationSeconds,
 	})
 	if assert.Nil(t, err) {
-		info, err := GetSimulate(context.Background(), ret.EntID)
+		info, err := GetSimulate(context.Background(), ret.AppGoodID)
 		if assert.Nil(t, err) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
@@ -168,7 +168,7 @@ func updateSimulate(t *testing.T) {
 		OrderUnits: &ret.OrderUnits,
 	})
 	if assert.Nil(t, err) {
-		info, err := GetSimulate(context.Background(), ret.EntID)
+		info, err := GetSimulate(context.Background(), ret.AppGoodID)
 		if assert.Nil(t, err) {
 			ret.UpdatedAt = info.UpdatedAt
 			assert.Equal(t, &ret, info)
@@ -177,7 +177,7 @@ func updateSimulate(t *testing.T) {
 }
 
 func getSimulate(t *testing.T) {
-	info, err := GetSimulate(context.Background(), ret.EntID)
+	info, err := GetSimulate(context.Background(), ret.AppGoodID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, &ret, info)
 	}
@@ -211,7 +211,7 @@ func deleteSimulate(t *testing.T) {
 	err := DeleteSimulate(context.Background(), &ret.ID, &ret.EntID, &ret.AppGoodID)
 	assert.Nil(t, err)
 
-	info, err := GetSimulate(context.Background(), ret.EntID)
+	info, err := GetSimulate(context.Background(), ret.AppGoodID)
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }
