@@ -7,6 +7,7 @@ import (
 	"time"
 
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
+	goodcommon "github.com/NpoolPlatform/good-middleware/pkg/common"
 	extrainfocrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/extrainfo"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -233,9 +234,16 @@ func (h *createHandler) validateFixedDurationUnitPrice() error {
 	if *h.MinOrderDurationSeconds != *h.MaxOrderDurationSeconds {
 		return wlog.Errorf("invalid order duration")
 	}
-	unitPrice := h._ent.powerRental.UnitPrice.Mul(decimal.NewFromInt(int64(*h.MaxOrderDurationSeconds)))
+	unitPrice := h._ent.powerRental.UnitPrice.Mul(
+		decimal.NewFromInt(
+			int64(goodcommon.Seconds2Durations(
+				*h.MaxOrderDurationSeconds,
+				types.GoodDurationType(types.GoodDurationType_value[h._ent.powerRental.DurationDisplayType]),
+			)),
+		),
+	)
 	if h.UnitPrice.Cmp(unitPrice) < 0 {
-		return wlog.Errorf("invalid unitprice")
+		return wlog.Errorf("invalid unitprice1")
 	}
 	return nil
 }
@@ -245,7 +253,7 @@ func (h *createHandler) validateUnitPrice() error {
 		return h.validateFixedDurationUnitPrice()
 	}
 	if h.UnitPrice.Cmp(h._ent.powerRental.UnitPrice) < 0 {
-		return wlog.Errorf("invalid unitprice")
+		return wlog.Errorf("invalid unitprice2")
 	}
 	return nil
 }
