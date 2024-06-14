@@ -123,7 +123,7 @@ func setup(t *testing.T) func(*testing.T) {
 		Name:                    &ret.AppGoodName,
 		ServiceStartAt:          func() *uint32 { u := uint32(time.Now().Unix()); return &u }(),
 		StartMode:               func() *types.GoodStartMode { e := types.GoodStartMode_GoodStartModeInstantly; return &e }(),
-		UnitPrice:               func() *string { s := decimal.NewFromInt(10368000).String(); return &s }(),
+		UnitPrice:               func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
 		SaleMode:                func() *types.GoodSaleMode { e := types.GoodSaleMode_GoodSaleModeMainnetSpot; return &e }(),
 		MinOrderAmount:          func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
 		MaxOrderAmount:          func() *string { s := decimal.NewFromInt(120).String(); return &s }(),

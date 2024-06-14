@@ -216,7 +216,6 @@ func setup(t *testing.T) func(*testing.T) {
 }
 
 func createPowerRental(t *testing.T) {
-	ret.UnitPrice = decimal.NewFromInt(10368000).String()
 	err := CreatePowerRental(context.Background(), &npool.PowerRentalReq{
 		EntID:                        &ret.EntID,
 		AppID:                        &ret.AppID,
