@@ -267,6 +267,7 @@ func (h *baseQueryHandler) queryJoinAppPowerRental(s *sql.Selector) error {
 		t1.C(entapppowerrental.FieldSaleMode),
 		t1.C(entapppowerrental.FieldFixedDuration),
 		t1.C(entapppowerrental.FieldPackageWithRequireds),
+		t1.C(entapppowerrental.FieldUnitPrice),
 		sql.As(t1.C(entapppowerrental.FieldServiceStartAt), "app_good_service_start_at"),
 		sql.As(t1.C(entapppowerrental.FieldStartMode), "app_good_start_mode"),
 	)
@@ -343,7 +344,6 @@ func (h *baseQueryHandler) queryJoinPowerRental(s *sql.Selector) error {
 		t1.C(entpowerrental.FieldGoodID),
 		t1.C(entpowerrental.FieldDeviceTypeID),
 		t1.C(entpowerrental.FieldVendorLocationID),
-		t1.C(entpowerrental.FieldUnitPrice),
 		t1.C(entpowerrental.FieldQuantityUnit),
 		t1.C(entpowerrental.FieldQuantityUnitAmount),
 		t1.C(entpowerrental.FieldDeliveryAt),
