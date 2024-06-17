@@ -243,7 +243,7 @@ func (h *createHandler) validateFixedDurationUnitPrice() error {
 		),
 	)
 	if h.UnitPrice.Cmp(unitPrice) < 0 {
-		return wlog.Errorf("invalid unitprice1")
+		return wlog.Errorf("invalid unitprice")
 	}
 	return nil
 }
@@ -253,7 +253,7 @@ func (h *createHandler) validateUnitPrice() error {
 		return h.validateFixedDurationUnitPrice()
 	}
 	if h.UnitPrice.Cmp(h._ent.powerRental.UnitPrice) < 0 {
-		return wlog.Errorf("invalid unitprice2")
+		return wlog.Errorf("invalid unitprice")
 	}
 	return nil
 }
