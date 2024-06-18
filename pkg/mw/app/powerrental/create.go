@@ -316,6 +316,9 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	if err := handler.validateUnitPrice(); err != nil {
 		return wlog.WrapError(err)
 	}
+	if h.AppGoodBaseReq.Purchasable != nil && (!handler._ent.goodBase.Purchasable && *h.AppGoodBaseReq.Purchasable) {
+		return wlog.Errorf("invalid purchasable")
+	}
 	if *h.MaxOrderDurationSeconds < *h.MinOrderDurationSeconds {
 		return wlog.Errorf("invalid orderdurationseconds")
 	}

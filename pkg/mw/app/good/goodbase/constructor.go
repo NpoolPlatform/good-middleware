@@ -12,6 +12,7 @@ import (
 func (h *Handler) ConstructCreateSQL() string {
 	comma := ""
 	now := uint32(time.Now().Unix())
+	online := true
 	_sql := "insert into app_good_bases "
 	_sql += "("
 	if h.EntID != nil {
@@ -84,7 +85,7 @@ func (h *Handler) ConstructCreateSQL() string {
 	_sql += ") as tmp "
 	_sql += "where exists ("
 	_sql += "select 1 from good_bases "
-	_sql += fmt.Sprintf("where ent_id = '%v'", *h.GoodID)
+	_sql += fmt.Sprintf("where ent_id = '%v' and online = %v", *h.GoodID, online)
 	_sql += " limit 1)"
 
 	return _sql
