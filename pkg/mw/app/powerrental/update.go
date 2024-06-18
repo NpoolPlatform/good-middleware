@@ -201,6 +201,7 @@ func (h *updateHandler) validateUnitPrice() error {
 	return nil
 }
 
+//nolint:gocyclo
 func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 	handler := &updateHandler{
 		powerRentalAppGoodQueryHandler: &powerRentalAppGoodQueryHandler{
