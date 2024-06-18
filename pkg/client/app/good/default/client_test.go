@@ -117,6 +117,7 @@ func setup(t *testing.T) func(*testing.T) {
 		BenefitIntervalHours: func() *uint32 { u := uint32(24); return &u }(),
 		StockMode:            func() *types.GoodStockMode { e := types.GoodStockMode_GoodStockByUnique; return &e }(),
 		Total:                func() *string { s := decimal.NewFromInt(120).String(); return &s }(),
+		Online:               func() *bool { b := true; return &b }(),
 	})
 	assert.Nil(t, err)
 
