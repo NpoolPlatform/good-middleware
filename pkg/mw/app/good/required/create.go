@@ -77,6 +77,9 @@ func (h *createHandler) constructSQL() {
 	_sql += "join good_bases as gb1 on gb1.ent_id = tmp.main_good_id "
 	_sql += "join good_bases as gb2 on gb2.ent_id = tmp.required_good_id "
 	_sql += "join required_goods as rg on rg.main_good_id = tmp.main_good_id and rg.required_good_id = tmp.required_good_id"
+	if h.Must != nil {
+		_sql += fmt.Sprintf(" where rg.must=%v", *h.Must)
+	}
 	_sql += ")"
 	h.sql = _sql
 }
