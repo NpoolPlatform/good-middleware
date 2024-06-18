@@ -65,7 +65,7 @@ var ret = npool.Required{
 	RequiredGoodName:    uuid.NewString(),
 	RequiredAppGoodID:   uuid.NewString(),
 	RequiredAppGoodName: uuid.NewString(),
-	Must:                true,
+	Must:                false,
 }
 
 //nolint:funlen
@@ -206,7 +206,7 @@ func createRequired(t *testing.T) {
 }
 
 func updateRequired(t *testing.T) {
-	ret.Must = false
+	ret.Must = true
 	err := UpdateRequired(context.Background(), &npool.RequiredReq{
 		ID:   &ret.ID,
 		Must: &ret.Must,
