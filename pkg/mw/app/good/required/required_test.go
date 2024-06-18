@@ -43,7 +43,7 @@ var ret = npool.Required{
 	RequiredGoodName:    uuid.NewString(),
 	RequiredAppGoodID:   uuid.NewString(),
 	RequiredAppGoodName: uuid.NewString(),
-	Must:                true,
+	Must:                false,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -144,7 +144,7 @@ func createRequired(t *testing.T) {
 }
 
 func updateRequired(t *testing.T) {
-	ret.Must = false
+	ret.Must = true
 
 	handler, err := NewHandler(
 		context.Background(),
