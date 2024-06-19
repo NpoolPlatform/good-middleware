@@ -25,12 +25,10 @@ func (h *updateHandler) constructCheckMustSQL() {
 	_sql += fmt.Sprintf("select rag1.main_app_good_id as ent_id from required_app_goods as rag1 where id='%v' ", *h.ID)
 	_sql += ") and agb2.ent_id = ( "
 	_sql += fmt.Sprintf("select rag2.required_app_good_id as ent_id from required_app_goods as rag2 where id='%v' ", *h.ID)
-	_sql += ") "
-	_sql += ") as tmp "
+	_sql += ")) as tmp "
 	_sql += "join good_bases as gb1 on gb1.ent_id = tmp.main_good_id "
 	_sql += "join good_bases as gb2 on gb2.ent_id = tmp.required_good_id "
-	_sql += ") "
-	_sql += "and required_good_id=( "
+	_sql += ") and required_good_id=( "
 	_sql += "select tmp.required_good_id from ( "
 	_sql += "select agb1.good_id as main_good_id, agb2.good_id as required_good_id "
 	_sql += "from app_good_bases as agb1, app_good_bases as agb2 "
@@ -38,8 +36,7 @@ func (h *updateHandler) constructCheckMustSQL() {
 	_sql += fmt.Sprintf("select rag1.main_app_good_id as ent_id from required_app_goods as rag1 where id='%v' ", *h.ID)
 	_sql += ") and agb2.ent_id = ( "
 	_sql += fmt.Sprintf("select rag2.required_app_good_id as ent_id from required_app_goods as rag2 where id='%v' ", *h.ID)
-	_sql += ") "
-	_sql += ") as tmp "
+	_sql += ")) as tmp "
 	_sql += "join good_bases as gb1 on gb1.ent_id = tmp.main_good_id "
 	_sql += "join good_bases as gb2 on gb2.ent_id = tmp.required_good_id "
 	_sql += fmt.Sprintf(") and must=%v", must)

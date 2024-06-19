@@ -70,16 +70,20 @@ func (h *queryHandler) scan(ctx context.Context) error {
 
 func (h *queryHandler) formalize() {
 	displayNames := map[string][]string{}
-	displayNameInfos := map[string][]*appgooddisplaynamemwpb.DisplayNameInfo{}
+	displayNameMaps := map[string][]*appgooddisplaynamemwpb.DisplayNameInfo{}
 	for _, displayName := range h.displayNames {
-		displayNames[displayName.AppGoodID] = append(displayNames[displayName.AppGoodID], displayName.Name)
-		displayNameInfos[displayName.AppGoodID] = append(displayNameInfos[displayName.AppGoodID], displayName)
+		displayNameMaps[displayName.AppGoodID] = append(displayNameMaps[displayName.AppGoodID], displayName)
 	}
-	for appGoodID, displayName := range displayNames {
-		displayNameInfo := displayNameInfos[appGoodID]
-		sort.Slice(displayName, func(i, j int) bool {
-			return displayNameInfo[i].Index < displayNameInfo[j].Index
+	for appGoodID, nameInfos := range displayNameMaps {
+		sort.Slice(nameInfos, func(i, j int) bool {
+			return nameInfos[i].Index < nameInfos[j].Index
 		})
+
+		names := []string{}
+		for _, displayName := range nameInfos {
+			names = append(names, displayName.Name)
+		}
+		displayNames[appGoodID] = names
 	}
 
 	for _, info := range h.infos {
