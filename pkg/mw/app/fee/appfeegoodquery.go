@@ -60,8 +60,11 @@ func (h *appFeeGoodQueryHandler) _getAppFeeGood(ctx context.Context, must bool) 
 }
 
 func (h *appFeeGoodQueryHandler) getAppFeeGood(ctx context.Context) error {
-	if err := h._getAppFeeGood(ctx, true); err != nil {
+	if err := h._getAppFeeGood(ctx, false); err != nil {
 		return wlog.WrapError(err)
+	}
+	if h.appGoodBase == nil {
+		return nil
 	}
 	h.AppGoodBaseReq.GoodID = &h.appGoodBase.GoodID
 	return h._getFeeGood(ctx, false)
