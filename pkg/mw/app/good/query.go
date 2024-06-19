@@ -2,22 +2,29 @@ package good
 
 import (
 	"context"
+	"sort"
 
 	"entgo.io/ent/dialect/sql"
 
 	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
+	appgooddisplaynamecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/display/name"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entappgooddisplayname "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplayname"
+	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
+	appgooddisplaynamemwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/display/name"
+	"github.com/google/uuid"
 )
 
 type queryHandler struct {
 	*baseQueryHandler
-	stmCount *ent.AppGoodBaseSelect
-	infos    []*npool.Good
-	total    uint32
+	stmCount     *ent.AppGoodBaseSelect
+	infos        []*npool.Good
+	total        uint32
+	displayNames []*appgooddisplaynamemwpb.DisplayNameInfo
 }
 
 func (h *queryHandler) queryJoin() {
@@ -32,15 +39,54 @@ func (h *queryHandler) queryJoin() {
 	})
 }
 
+func (h *queryHandler) getDisplayNames(ctx context.Context, cli *ent.Client) error {
+	appGoodIDs := func() (uids []uuid.UUID) {
+		for _, info := range h.infos {
+			uids = append(uids, uuid.MustParse(info.EntID))
+		}
+		return
+	}()
+
+	stm, err := appgooddisplaynamecrud.SetQueryConds(
+		cli.AppGoodDisplayName.Query(),
+		&appgooddisplaynamecrud.Conds{
+			AppGoodIDs: &cruder.Cond{Op: cruder.IN, Val: appGoodIDs},
+		},
+	)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+
+	return stm.Select(
+		entappgooddisplayname.FieldAppGoodID,
+		entappgooddisplayname.FieldName,
+		entappgooddisplayname.FieldIndex,
+	).Scan(ctx, &h.displayNames)
+}
+
 func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
 }
 
 func (h *queryHandler) formalize() {
+	displayNames := map[string][]string{}
+	displayNameInfos := map[string][]*appgooddisplaynamemwpb.DisplayNameInfo{}
+	for _, displayName := range h.displayNames {
+		displayNames[displayName.AppGoodID] = append(displayNames[displayName.AppGoodID], displayName.Name)
+		displayNameInfos[displayName.AppGoodID] = append(displayNameInfos[displayName.AppGoodID], displayName)
+	}
+	for appGoodID, displayName := range displayNames {
+		displayNameInfo := displayNameInfos[appGoodID]
+		sort.Slice(displayName, func(i, j int) bool {
+			return displayNameInfo[i].Index < displayNameInfo[j].Index
+		})
+	}
+
 	for _, info := range h.infos {
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
+		info.DisplayNames = displayNames[info.EntID]
 	}
 }
 
@@ -56,7 +102,10 @@ func (h *Handler) GetGood(ctx context.Context) (*npool.Good, error) {
 		handler.stmSelect.
 			Offset(0).
 			Limit(2)
-		return handler.scan(_ctx)
+		if err := handler.scan(_ctx); err != nil {
+			return wlog.WrapError(err)
+		}
+		return handler.getDisplayNames(_ctx, cli)
 	}); err != nil {
 		return nil, err
 	}
@@ -94,7 +143,10 @@ func (h *Handler) GetGoods(ctx context.Context) (infos []*npool.Good, total uint
 		handler.stmSelect.
 			Offset(int(h.Offset)).
 			Limit(int(h.Limit))
-		return handler.scan(_ctx)
+		if err := handler.scan(_ctx); err != nil {
+			return wlog.WrapError(err)
+		}
+		return handler.getDisplayNames(_ctx, cli)
 	}); err != nil {
 		return nil, 0, err
 	}
