@@ -39,7 +39,7 @@ func (h *updateHandler) constructCheckMustSQL() {
 	_sql += ")) as tmp "
 	_sql += "join good_bases as gb1 on gb1.ent_id = tmp.main_good_id "
 	_sql += "join good_bases as gb2 on gb2.ent_id = tmp.required_good_id "
-	_sql += fmt.Sprintf(") and must=%v", must)
+	_sql += fmt.Sprintf(") and must=%v and deleted_at=0", must)
 
 	h.sql = _sql
 }
