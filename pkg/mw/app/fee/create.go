@@ -8,6 +8,7 @@ import (
 	appgoodbasecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/goodbase"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	"github.com/google/uuid"
 )
 
 type createHandler struct {
@@ -48,6 +49,11 @@ func (h *Handler) CreateFee(ctx context.Context) error {
 		h.UnitValue = &handler.fee.UnitValue
 	} else if h.UnitValue.LessThan(handler.fee.UnitValue) {
 		return wlog.Errorf("invalid unitvalue")
+	}
+	if h.AppGoodID == nil {
+		id := uuid.New()
+		h.AppGoodID = &id
+		h.AppGoodBaseReq.EntID = &id
 	}
 
 	if err := handler.checkMinOrderDurationSeconds(); err != nil {
