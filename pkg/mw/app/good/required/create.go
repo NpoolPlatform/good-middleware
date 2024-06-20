@@ -14,7 +14,8 @@ import (
 
 type createHandler struct {
 	*Handler
-	sql string
+	sql  string
+	must bool
 }
 
 //nolint:goconst
@@ -77,9 +78,7 @@ func (h *createHandler) constructSQL() {
 	_sql += "join good_bases as gb1 on gb1.ent_id = tmp.main_good_id "
 	_sql += "join good_bases as gb2 on gb2.ent_id = tmp.required_good_id "
 	_sql += "join required_goods as rg on rg.main_good_id = tmp.main_good_id and rg.required_good_id = tmp.required_good_id"
-	if h.Must != nil {
-		_sql += fmt.Sprintf(" where rg.must=%v", *h.Must)
-	}
+	_sql += fmt.Sprintf(" where rg.must=%v and rg.deleted_at=0", h.must)
 	_sql += ")"
 	h.sql = _sql
 }
@@ -107,6 +106,10 @@ func (h *Handler) CreateRequired(ctx context.Context) error {
 
 	handler := &createHandler{
 		Handler: h,
+		must:    false,
+	}
+	if h.Must != nil {
+		handler.must = *h.Must
 	}
 	handler.constructSQL()
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
