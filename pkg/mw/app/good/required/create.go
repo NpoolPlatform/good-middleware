@@ -61,6 +61,12 @@ func (h *createHandler) constructSQL() {
 		*h.MainAppGoodID,
 		*h.RequiredAppGoodID,
 	)
+	_sql += " limit 1) and not exists ("
+	_sql += "select 1 from required_app_goods as rg "
+	_sql += fmt.Sprintf(
+		"where rg.required_app_good_id='%v' and deleted_at = 0",
+		*h.MainAppGoodID,
+	)
 	_sql += " limit 1) and exists ("
 	/**
 	 * select good_id_1, good_id_2 from (
