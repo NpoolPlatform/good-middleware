@@ -62,7 +62,7 @@ func (h *updateHandler) constructCoinRewardSQLs(ctx context.Context) error {
 		return nil
 	}
 
-	updateTotal := *h.RewardReq.RewardState == types.BenefitState_BenefitDone
+	updateTotal := h.goodReward.RewardState == types.BenefitState_BenefitDone.String()
 	checkExist := *h.RewardReq.RewardState != types.BenefitState_BenefitWait
 
 	for _, reward := range h.CoinRewardReqs {
