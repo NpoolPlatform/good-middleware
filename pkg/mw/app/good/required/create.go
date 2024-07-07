@@ -19,7 +19,7 @@ type createHandler struct {
 }
 
 //nolint:goconst
-func (h *createHandler) constructSQL() {
+func (h *createHandler) constructSQL() { //nolint:funlen
 	now := uint32(time.Now().Unix())
 	comma := ""
 	_sql := "insert into required_app_goods ("
