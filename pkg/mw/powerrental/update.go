@@ -391,7 +391,10 @@ func (h *updateHandler) validateRewardState() error {
 		return wlog.Errorf("invalid lastrewardat")
 	}
 
-	if *h.RewardReq.RewardState == types.BenefitState_BenefitDone {
+	switch *h.RewardReq.RewardState {
+	case types.BenefitState_BenefitDone:
+		fallthrough // nolint
+	case types.BenefitState_BenefitWait:
 		coinRewardReqs := []*goodcoinrewardcrud.Req{}
 		for _, coinReward := range h.coinRewards {
 			coinRewardReq := &goodcoinrewardcrud.Req{
@@ -403,12 +406,15 @@ func (h *updateHandler) validateRewardState() error {
 			for _, reward := range h.CoinRewardReqs {
 				if coinReward.CoinTypeID == *reward.CoinTypeID {
 					coinRewardReq.NextRewardStartAmount = reward.NextRewardStartAmount
-					coinRewardReqs = append(coinRewardReqs, coinRewardReq)
+					break
 				}
 			}
+			coinRewardReqs = append(coinRewardReqs, coinRewardReq)
 		}
 		h.CoinRewardReqs = coinRewardReqs
 	}
+
+	fmt.Printf("CoinRewards %v, coinRewards %v\n", len(h.CoinRewardReqs), len(h.coinRewards))
 
 	switch h.goodReward.RewardState {
 	case types.BenefitState_BenefitWait.String():
@@ -539,7 +545,7 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 
-	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithDebugTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.updateGoodBase(_ctx, tx); err != nil {
 			return wlog.WrapError(err)
 		}
