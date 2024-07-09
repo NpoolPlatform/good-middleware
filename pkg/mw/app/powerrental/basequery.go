@@ -281,6 +281,9 @@ func (h *baseQueryHandler) queryJoinAppLegacyPowerRental(s *sql.Selector) {
 			s.C(entappgoodbase.FieldEntID),
 			t1.C(entapplegacypowerrental.FieldAppGoodID),
 		).
+		OnP(
+			sql.EQ(t1.C(entapplegacypowerrental.FieldDeletedAt), 0),
+		).
 		AppendSelect(
 			t1.C(entapplegacypowerrental.FieldTechniqueFeeRatio),
 		)
