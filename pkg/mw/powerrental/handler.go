@@ -545,10 +545,12 @@ func WithRewards(rewards []*goodcoinrewardmwpb.RewardReq, must bool) func(contex
 				if err != nil {
 					return wlog.WrapError(err)
 				}
-				if _, ok := rewardTIDs[_tid]; ok {
-					return wlog.Errorf("invalid rewardid")
+				if _tid != uuid.Nil {
+					if _, ok := rewardTIDs[_tid]; ok {
+						return wlog.Errorf("invalid rewardid")
+					}
+					rewardTIDs[_tid] = struct{}{}
 				}
-				rewardTIDs[_tid] = struct{}{}
 				_reward.RewardTID = &_tid
 			}
 

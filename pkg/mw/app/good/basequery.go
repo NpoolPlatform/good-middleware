@@ -48,6 +48,7 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 			t1.C(entappgoodbase.FieldID),
 		).
 		AppendSelect(
+			t1.C(entappgoodbase.FieldAppID),
 			t1.C(entappgoodbase.FieldEntID),
 			t1.C(entappgoodbase.FieldGoodID),
 			sql.As(t1.C(entappgoodbase.FieldPurchasable), "app_good_purchasable"),
