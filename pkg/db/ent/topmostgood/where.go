@@ -108,31 +108,10 @@ func EntID(v uuid.UUID) predicate.TopMostGood {
 	})
 }
 
-// AppID applies equality check predicate on the "app_id" field. It's identical to AppIDEQ.
-func AppID(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppID), v))
-	})
-}
-
-// GoodID applies equality check predicate on the "good_id" field. It's identical to GoodIDEQ.
-func GoodID(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodID), v))
-	})
-}
-
 // AppGoodID applies equality check predicate on the "app_good_id" field. It's identical to AppGoodIDEQ.
 func AppGoodID(v uuid.UUID) predicate.TopMostGood {
 	return predicate.TopMostGood(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldAppGoodID), v))
-	})
-}
-
-// CoinTypeID applies equality check predicate on the "coin_type_id" field. It's identical to CoinTypeIDEQ.
-func CoinTypeID(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCoinTypeID), v))
 	})
 }
 
@@ -154,13 +133,6 @@ func DisplayIndex(v uint32) predicate.TopMostGood {
 func UnitPrice(v decimal.Decimal) predicate.TopMostGood {
 	return predicate.TopMostGood(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUnitPrice), v))
-	})
-}
-
-// PackagePrice applies equality check predicate on the "package_price" field. It's identical to PackagePriceEQ.
-func PackagePrice(v decimal.Decimal) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPackagePrice), v))
 	})
 }
 
@@ -420,134 +392,6 @@ func EntIDLTE(v uuid.UUID) predicate.TopMostGood {
 	})
 }
 
-// AppIDEQ applies the EQ predicate on the "app_id" field.
-func AppIDEQ(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDNEQ applies the NEQ predicate on the "app_id" field.
-func AppIDNEQ(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDIn applies the In predicate on the "app_id" field.
-func AppIDIn(vs ...uuid.UUID) predicate.TopMostGood {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldAppID), v...))
-	})
-}
-
-// AppIDNotIn applies the NotIn predicate on the "app_id" field.
-func AppIDNotIn(vs ...uuid.UUID) predicate.TopMostGood {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldAppID), v...))
-	})
-}
-
-// AppIDGT applies the GT predicate on the "app_id" field.
-func AppIDGT(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDGTE applies the GTE predicate on the "app_id" field.
-func AppIDGTE(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDLT applies the LT predicate on the "app_id" field.
-func AppIDLT(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDLTE applies the LTE predicate on the "app_id" field.
-func AppIDLTE(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAppID), v))
-	})
-}
-
-// GoodIDEQ applies the EQ predicate on the "good_id" field.
-func GoodIDEQ(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDNEQ applies the NEQ predicate on the "good_id" field.
-func GoodIDNEQ(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDIn applies the In predicate on the "good_id" field.
-func GoodIDIn(vs ...uuid.UUID) predicate.TopMostGood {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldGoodID), v...))
-	})
-}
-
-// GoodIDNotIn applies the NotIn predicate on the "good_id" field.
-func GoodIDNotIn(vs ...uuid.UUID) predicate.TopMostGood {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldGoodID), v...))
-	})
-}
-
-// GoodIDGT applies the GT predicate on the "good_id" field.
-func GoodIDGT(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDGTE applies the GTE predicate on the "good_id" field.
-func GoodIDGTE(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDLT applies the LT predicate on the "good_id" field.
-func GoodIDLT(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDLTE applies the LTE predicate on the "good_id" field.
-func GoodIDLTE(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldGoodID), v))
-	})
-}
-
 // AppGoodIDEQ applies the EQ predicate on the "app_good_id" field.
 func AppGoodIDEQ(v uuid.UUID) predicate.TopMostGood {
 	return predicate.TopMostGood(func(s *sql.Selector) {
@@ -612,67 +456,17 @@ func AppGoodIDLTE(v uuid.UUID) predicate.TopMostGood {
 	})
 }
 
-// CoinTypeIDEQ applies the EQ predicate on the "coin_type_id" field.
-func CoinTypeIDEQ(v uuid.UUID) predicate.TopMostGood {
+// AppGoodIDIsNil applies the IsNil predicate on the "app_good_id" field.
+func AppGoodIDIsNil() predicate.TopMostGood {
 	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCoinTypeID), v))
+		s.Where(sql.IsNull(s.C(FieldAppGoodID)))
 	})
 }
 
-// CoinTypeIDNEQ applies the NEQ predicate on the "coin_type_id" field.
-func CoinTypeIDNEQ(v uuid.UUID) predicate.TopMostGood {
+// AppGoodIDNotNil applies the NotNil predicate on the "app_good_id" field.
+func AppGoodIDNotNil() predicate.TopMostGood {
 	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldCoinTypeID), v))
-	})
-}
-
-// CoinTypeIDIn applies the In predicate on the "coin_type_id" field.
-func CoinTypeIDIn(vs ...uuid.UUID) predicate.TopMostGood {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldCoinTypeID), v...))
-	})
-}
-
-// CoinTypeIDNotIn applies the NotIn predicate on the "coin_type_id" field.
-func CoinTypeIDNotIn(vs ...uuid.UUID) predicate.TopMostGood {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldCoinTypeID), v...))
-	})
-}
-
-// CoinTypeIDGT applies the GT predicate on the "coin_type_id" field.
-func CoinTypeIDGT(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldCoinTypeID), v))
-	})
-}
-
-// CoinTypeIDGTE applies the GTE predicate on the "coin_type_id" field.
-func CoinTypeIDGTE(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldCoinTypeID), v))
-	})
-}
-
-// CoinTypeIDLT applies the LT predicate on the "coin_type_id" field.
-func CoinTypeIDLT(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldCoinTypeID), v))
-	})
-}
-
-// CoinTypeIDLTE applies the LTE predicate on the "coin_type_id" field.
-func CoinTypeIDLTE(v uuid.UUID) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldCoinTypeID), v))
+		s.Where(sql.NotNull(s.C(FieldAppGoodID)))
 	})
 }
 
@@ -737,6 +531,20 @@ func TopMostIDLT(v uuid.UUID) predicate.TopMostGood {
 func TopMostIDLTE(v uuid.UUID) predicate.TopMostGood {
 	return predicate.TopMostGood(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldTopMostID), v))
+	})
+}
+
+// TopMostIDIsNil applies the IsNil predicate on the "top_most_id" field.
+func TopMostIDIsNil() predicate.TopMostGood {
+	return predicate.TopMostGood(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldTopMostID)))
+	})
+}
+
+// TopMostIDNotNil applies the NotNil predicate on the "top_most_id" field.
+func TopMostIDNotNil() predicate.TopMostGood {
+	return predicate.TopMostGood(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldTopMostID)))
 	})
 }
 
@@ -818,20 +626,6 @@ func DisplayIndexNotNil() predicate.TopMostGood {
 	})
 }
 
-// PostersIsNil applies the IsNil predicate on the "posters" field.
-func PostersIsNil() predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldPosters)))
-	})
-}
-
-// PostersNotNil applies the NotNil predicate on the "posters" field.
-func PostersNotNil() predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldPosters)))
-	})
-}
-
 // UnitPriceEQ applies the EQ predicate on the "unit_price" field.
 func UnitPriceEQ(v decimal.Decimal) predicate.TopMostGood {
 	return predicate.TopMostGood(func(s *sql.Selector) {
@@ -907,84 +701,6 @@ func UnitPriceIsNil() predicate.TopMostGood {
 func UnitPriceNotNil() predicate.TopMostGood {
 	return predicate.TopMostGood(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldUnitPrice)))
-	})
-}
-
-// PackagePriceEQ applies the EQ predicate on the "package_price" field.
-func PackagePriceEQ(v decimal.Decimal) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPackagePrice), v))
-	})
-}
-
-// PackagePriceNEQ applies the NEQ predicate on the "package_price" field.
-func PackagePriceNEQ(v decimal.Decimal) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldPackagePrice), v))
-	})
-}
-
-// PackagePriceIn applies the In predicate on the "package_price" field.
-func PackagePriceIn(vs ...decimal.Decimal) predicate.TopMostGood {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldPackagePrice), v...))
-	})
-}
-
-// PackagePriceNotIn applies the NotIn predicate on the "package_price" field.
-func PackagePriceNotIn(vs ...decimal.Decimal) predicate.TopMostGood {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldPackagePrice), v...))
-	})
-}
-
-// PackagePriceGT applies the GT predicate on the "package_price" field.
-func PackagePriceGT(v decimal.Decimal) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldPackagePrice), v))
-	})
-}
-
-// PackagePriceGTE applies the GTE predicate on the "package_price" field.
-func PackagePriceGTE(v decimal.Decimal) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldPackagePrice), v))
-	})
-}
-
-// PackagePriceLT applies the LT predicate on the "package_price" field.
-func PackagePriceLT(v decimal.Decimal) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldPackagePrice), v))
-	})
-}
-
-// PackagePriceLTE applies the LTE predicate on the "package_price" field.
-func PackagePriceLTE(v decimal.Decimal) predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldPackagePrice), v))
-	})
-}
-
-// PackagePriceIsNil applies the IsNil predicate on the "package_price" field.
-func PackagePriceIsNil() predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldPackagePrice)))
-	})
-}
-
-// PackagePriceNotNil applies the NotNil predicate on the "package_price" field.
-func PackagePriceNotNil() predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldPackagePrice)))
 	})
 }
 

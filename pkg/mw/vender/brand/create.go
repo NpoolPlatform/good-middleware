@@ -3,62 +3,84 @@ package brand
 import (
 	"context"
 	"fmt"
+	"time"
 
-	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
-	brandcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/vender/brand"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/brand"
 
 	"github.com/google/uuid"
 )
 
-func (h *Handler) CreateBrand(ctx context.Context) (*npool.Brand, error) {
-	if h.Name == nil {
-		return nil, fmt.Errorf("invalid name")
-	}
+type createHandler struct {
+	*Handler
+	sql string
+}
 
-	key := h.lockKey()
-	if err := redis2.TryLock(key, 0); err != nil {
-		return nil, err
-	}
-	defer func() {
-		_ = redis2.Unlock(key)
-	}()
+//nolint:goconst
+func (h *createHandler) constructSQL() {
+	now := uint32(time.Now().Unix())
+	comma := ""
 
-	h.Conds = &brandcrud.Conds{
-		Name: &cruder.Cond{Op: cruder.EQ, Val: *h.Name},
+	_sql := "insert into vendor_brands ("
+	if h.EntID != nil {
+		_sql += "ent_id"
+		comma = ", "
 	}
-	exist, err := h.ExistBrandConds(ctx)
+	_sql += comma + "name"
+	comma = ", "
+	if h.Logo != nil {
+		_sql += comma + "logo"
+	}
+	_sql += comma + "created_at"
+	_sql += comma + "updated_at"
+	_sql += comma + "deleted_at"
+	_sql += ")"
+
+	comma = ""
+	_sql += " select * from ( select "
+	if h.EntID != nil {
+		_sql += fmt.Sprintf("'%v' as ent_id", *h.EntID)
+		comma = ", "
+	}
+	_sql += fmt.Sprintf("%v'%v' as name", comma, *h.Name)
+	comma = ", "
+	if h.Logo != nil {
+		_sql += fmt.Sprintf("%v'%v' as logo", comma, *h.Logo)
+	}
+	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
+	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
+	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
+	_sql += ") as tmp "
+	_sql += "where not exists ("
+	_sql += "select 1 from vendor_brands as vb "
+	_sql += fmt.Sprintf("where vb.name = '%v' and deleted_at = 0", *h.Name)
+	_sql += " limit 1)"
+
+	h.sql = _sql
+}
+
+func (h *createHandler) createBrand(ctx context.Context, tx *ent.Tx) error {
+	rc, err := tx.ExecContext(ctx, h.sql)
 	if err != nil {
-		return nil, err
+		return wlog.WrapError(err)
 	}
-	if exist {
-		return nil, fmt.Errorf("arleady exists")
+	n, err := rc.RowsAffected()
+	if err != nil || n != 1 {
+		return wlog.Errorf("fail create brand: %v", err)
 	}
+	return nil
+}
 
-	id := uuid.New()
+func (h *Handler) CreateBrand(ctx context.Context) error {
+	handler := &createHandler{
+		Handler: h,
+	}
 	if h.EntID == nil {
-		h.EntID = &id
+		h.EntID = func() *uuid.UUID { s := uuid.New(); return &s }()
 	}
-
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if _, err := brandcrud.CreateSet(
-			cli.VendorBrand.Create(),
-			&brandcrud.Req{
-				EntID: h.EntID,
-				Name:  h.Name,
-				Logo:  h.Logo,
-			},
-		).Save(_ctx); err != nil {
-			return err
-		}
-		return nil
+	handler.constructSQL()
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		return handler.createBrand(_ctx, tx)
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetBrand(ctx)
 }

@@ -93,6 +93,20 @@ func (grhc *GoodRewardHistoryCreate) SetNillableGoodID(u *uuid.UUID) *GoodReward
 	return grhc
 }
 
+// SetCoinTypeID sets the "coin_type_id" field.
+func (grhc *GoodRewardHistoryCreate) SetCoinTypeID(u uuid.UUID) *GoodRewardHistoryCreate {
+	grhc.mutation.SetCoinTypeID(u)
+	return grhc
+}
+
+// SetNillableCoinTypeID sets the "coin_type_id" field if the given value is not nil.
+func (grhc *GoodRewardHistoryCreate) SetNillableCoinTypeID(u *uuid.UUID) *GoodRewardHistoryCreate {
+	if u != nil {
+		grhc.SetCoinTypeID(*u)
+	}
+	return grhc
+}
+
 // SetRewardDate sets the "reward_date" field.
 func (grhc *GoodRewardHistoryCreate) SetRewardDate(u uint32) *GoodRewardHistoryCreate {
 	grhc.mutation.SetRewardDate(u)
@@ -276,6 +290,20 @@ func (grhc *GoodRewardHistoryCreate) defaults() error {
 		v := goodrewardhistory.DefaultEntID()
 		grhc.mutation.SetEntID(v)
 	}
+	if _, ok := grhc.mutation.GoodID(); !ok {
+		if goodrewardhistory.DefaultGoodID == nil {
+			return fmt.Errorf("ent: uninitialized goodrewardhistory.DefaultGoodID (forgotten import ent/runtime?)")
+		}
+		v := goodrewardhistory.DefaultGoodID()
+		grhc.mutation.SetGoodID(v)
+	}
+	if _, ok := grhc.mutation.CoinTypeID(); !ok {
+		if goodrewardhistory.DefaultCoinTypeID == nil {
+			return fmt.Errorf("ent: uninitialized goodrewardhistory.DefaultCoinTypeID (forgotten import ent/runtime?)")
+		}
+		v := goodrewardhistory.DefaultCoinTypeID()
+		grhc.mutation.SetCoinTypeID(v)
+	}
 	if _, ok := grhc.mutation.RewardDate(); !ok {
 		if goodrewardhistory.DefaultRewardDate == nil {
 			return fmt.Errorf("ent: uninitialized goodrewardhistory.DefaultRewardDate (forgotten import ent/runtime?)")
@@ -392,6 +420,14 @@ func (grhc *GoodRewardHistoryCreate) createSpec() (*GoodRewardHistory, *sqlgraph
 			Column: goodrewardhistory.FieldGoodID,
 		})
 		_node.GoodID = value
+	}
+	if value, ok := grhc.mutation.CoinTypeID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: goodrewardhistory.FieldCoinTypeID,
+		})
+		_node.CoinTypeID = value
 	}
 	if value, ok := grhc.mutation.RewardDate(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -568,6 +604,24 @@ func (u *GoodRewardHistoryUpsert) UpdateGoodID() *GoodRewardHistoryUpsert {
 // ClearGoodID clears the value of the "good_id" field.
 func (u *GoodRewardHistoryUpsert) ClearGoodID() *GoodRewardHistoryUpsert {
 	u.SetNull(goodrewardhistory.FieldGoodID)
+	return u
+}
+
+// SetCoinTypeID sets the "coin_type_id" field.
+func (u *GoodRewardHistoryUpsert) SetCoinTypeID(v uuid.UUID) *GoodRewardHistoryUpsert {
+	u.Set(goodrewardhistory.FieldCoinTypeID, v)
+	return u
+}
+
+// UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
+func (u *GoodRewardHistoryUpsert) UpdateCoinTypeID() *GoodRewardHistoryUpsert {
+	u.SetExcluded(goodrewardhistory.FieldCoinTypeID)
+	return u
+}
+
+// ClearCoinTypeID clears the value of the "coin_type_id" field.
+func (u *GoodRewardHistoryUpsert) ClearCoinTypeID() *GoodRewardHistoryUpsert {
+	u.SetNull(goodrewardhistory.FieldCoinTypeID)
 	return u
 }
 
@@ -812,6 +866,27 @@ func (u *GoodRewardHistoryUpsertOne) UpdateGoodID() *GoodRewardHistoryUpsertOne 
 func (u *GoodRewardHistoryUpsertOne) ClearGoodID() *GoodRewardHistoryUpsertOne {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
 		s.ClearGoodID()
+	})
+}
+
+// SetCoinTypeID sets the "coin_type_id" field.
+func (u *GoodRewardHistoryUpsertOne) SetCoinTypeID(v uuid.UUID) *GoodRewardHistoryUpsertOne {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.SetCoinTypeID(v)
+	})
+}
+
+// UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
+func (u *GoodRewardHistoryUpsertOne) UpdateCoinTypeID() *GoodRewardHistoryUpsertOne {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.UpdateCoinTypeID()
+	})
+}
+
+// ClearCoinTypeID clears the value of the "coin_type_id" field.
+func (u *GoodRewardHistoryUpsertOne) ClearCoinTypeID() *GoodRewardHistoryUpsertOne {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.ClearCoinTypeID()
 	})
 }
 
@@ -1237,6 +1312,27 @@ func (u *GoodRewardHistoryUpsertBulk) UpdateGoodID() *GoodRewardHistoryUpsertBul
 func (u *GoodRewardHistoryUpsertBulk) ClearGoodID() *GoodRewardHistoryUpsertBulk {
 	return u.Update(func(s *GoodRewardHistoryUpsert) {
 		s.ClearGoodID()
+	})
+}
+
+// SetCoinTypeID sets the "coin_type_id" field.
+func (u *GoodRewardHistoryUpsertBulk) SetCoinTypeID(v uuid.UUID) *GoodRewardHistoryUpsertBulk {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.SetCoinTypeID(v)
+	})
+}
+
+// UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
+func (u *GoodRewardHistoryUpsertBulk) UpdateCoinTypeID() *GoodRewardHistoryUpsertBulk {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.UpdateCoinTypeID()
+	})
+}
+
+// ClearCoinTypeID clears the value of the "coin_type_id" field.
+func (u *GoodRewardHistoryUpsertBulk) ClearCoinTypeID() *GoodRewardHistoryUpsertBulk {
+	return u.Update(func(s *GoodRewardHistoryUpsert) {
+		s.ClearCoinTypeID()
 	})
 }
 

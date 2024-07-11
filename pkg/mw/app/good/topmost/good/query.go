@@ -2,18 +2,13 @@ package topmostgood
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 
 	"entgo.io/ent/dialect/sql"
 
-	topmostgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good"
+	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
-	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
-	enttopmost "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
-	enttopmostgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmostgood"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/good"
 
@@ -21,125 +16,24 @@ import (
 )
 
 type queryHandler struct {
-	*Handler
-	stmSelect *ent.TopMostGoodSelect
-	stmCount  *ent.TopMostGoodSelect
-	infos     []*npool.TopMostGood
-	total     uint32
-}
-
-func (h *queryHandler) selectTopMostGood(stm *ent.TopMostGoodQuery) *ent.TopMostGoodSelect {
-	return stm.Select(enttopmostgood.FieldID)
-}
-
-func (h *queryHandler) queryTopMostGood(cli *ent.Client) error {
-	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
-	}
-	stm := cli.TopMostGood.Query().Where(enttopmostgood.DeletedAt(0))
-	if h.ID != nil {
-		stm.Where(enttopmostgood.ID(*h.ID))
-	}
-	if h.EntID != nil {
-		stm.Where(enttopmostgood.EntID(*h.EntID))
-	}
-	h.stmSelect = h.selectTopMostGood(stm)
-	return nil
-}
-
-func (h *queryHandler) queryTopMostGoods(cli *ent.Client) (*ent.TopMostGoodSelect, error) {
-	stm, err := topmostgoodcrud.SetQueryConds(cli.TopMostGood.Query(), h.Conds)
-	if err != nil {
-		return nil, err
-	}
-	return h.selectTopMostGood(stm), nil
-}
-
-func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
-	t := sql.Table(enttopmostgood.Table)
-	s.LeftJoin(t).
-		On(
-			s.C(enttopmostgood.FieldID),
-			t.C(enttopmostgood.FieldID),
-		).
-		AppendSelect(
-			sql.As(t.C(enttopmostgood.FieldEntID), "ent_id"),
-			sql.As(t.C(enttopmostgood.FieldAppID), "app_id"),
-			sql.As(t.C(enttopmostgood.FieldGoodID), "good_id"),
-			sql.As(t.C(enttopmostgood.FieldAppGoodID), "app_good_id"),
-			sql.As(t.C(enttopmostgood.FieldCoinTypeID), "coin_type_id"),
-			sql.As(t.C(enttopmostgood.FieldTopMostID), "top_most_id"),
-			sql.As(t.C(enttopmostgood.FieldDisplayIndex), "display_index"),
-			sql.As(t.C(enttopmostgood.FieldPosters), "posters"),
-			sql.As(t.C(enttopmostgood.FieldUnitPrice), "unit_price"),
-			sql.As(t.C(enttopmostgood.FieldPackagePrice), "package_price"),
-			sql.As(t.C(enttopmostgood.FieldCreatedAt), "created_at"),
-			sql.As(t.C(enttopmostgood.FieldUpdatedAt), "updated_at"),
-		)
-}
-
-func (h *queryHandler) queryJoinGood(s *sql.Selector) {
-	t := sql.Table(entgood.Table)
-	s.LeftJoin(t).
-		On(
-			s.C(enttopmostgood.FieldGoodID),
-			t.C(entgood.FieldEntID),
-		).
-		AppendSelect(
-			sql.As(t.C(entgood.FieldTitle), "good_name"),
-		)
-}
-
-func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
-	t := sql.Table(entappgood.Table)
-	s.LeftJoin(t).
-		On(
-			s.C(enttopmostgood.FieldAppGoodID),
-			t.C(entappgood.FieldEntID),
-		).
-		AppendSelect(
-			sql.As(t.C(entappgood.FieldGoodName), "app_good_name"),
-		)
-}
-
-func (h *queryHandler) queryJoinTopMost(s *sql.Selector) {
-	t := sql.Table(enttopmost.Table)
-	s.LeftJoin(t).
-		On(
-			s.C(enttopmostgood.FieldTopMostID),
-			t.C(enttopmost.FieldEntID),
-		).
-		AppendSelect(
-			sql.As(t.C(enttopmost.FieldTopMostType), "top_most_type"),
-			sql.As(t.C(enttopmost.FieldTitle), "top_most_title"),
-			sql.As(t.C(enttopmost.FieldMessage), "top_most_message"),
-		)
-
-	if h.Conds != nil && h.Conds.TopMostType != nil {
-		_type, ok := h.Conds.TopMostType.Val.(types.GoodTopMostType)
-		if !ok {
-			return
-		}
-		s.Where(
-			sql.EQ(t.C(enttopmost.FieldTopMostType), _type.String()),
-		)
-	}
+	*baseQueryHandler
+	stmCount *ent.TopMostGoodSelect
+	infos    []*npool.TopMostGood
+	total    uint32
 }
 
 func (h *queryHandler) queryJoin() {
-	h.stmSelect.Modify(func(s *sql.Selector) {
-		h.queryJoinMyself(s)
-		h.queryJoinGood(s)
-		h.queryJoinTopMost(s)
-		h.queryJoinAppGood(s)
-	})
+	h.baseQueryHandler.queryJoin()
 	if h.stmCount == nil {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
-		h.queryJoinGood(s)
-		h.queryJoinTopMost(s)
-		h.queryJoinAppGood(s)
+		if err := h.queryJoinTopMost(s); err != nil {
+			logger.Sugar().Errorw("queryJoinTopMost", "Error", err)
+		}
+		if err := h.queryJoinAppGood(s); err != nil {
+			logger.Sugar().Errorw("queryJoinAppGood", "Error", err)
+		}
 	})
 }
 
@@ -149,31 +43,22 @@ func (h *queryHandler) scan(ctx context.Context) error {
 
 func (h *queryHandler) formalize() {
 	for _, info := range h.infos {
-		amount, err := decimal.NewFromString(info.UnitPrice)
-		if err != nil {
-			info.UnitPrice = decimal.NewFromInt(0).String()
-		} else {
-			info.UnitPrice = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.PackagePrice)
-		if err != nil {
-			info.PackagePrice = decimal.NewFromInt(0).String()
-		} else {
-			info.PackagePrice = amount.String()
-		}
-		_ = json.Unmarshal([]byte(info.PostersStr), &info.Posters)
+		info.UnitPrice = func() string { amount, _ := decimal.NewFromString(info.UnitPrice); return amount.String() }()
 		info.TopMostType = types.GoodTopMostType(types.GoodTopMostType_value[info.TopMostTypeStr])
+		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 	}
 }
 
 func (h *Handler) GetTopMostGood(ctx context.Context) (*npool.TopMostGood, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := handler.queryTopMostGood(cli); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.queryJoin()
 		return handler.scan(ctx)
@@ -185,7 +70,7 @@ func (h *Handler) GetTopMostGood(ctx context.Context) (*npool.TopMostGood, error
 		return nil, nil
 	}
 	if len(handler.infos) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 
 	handler.formalize()
@@ -195,7 +80,9 @@ func (h *Handler) GetTopMostGood(ctx context.Context) (*npool.TopMostGood, error
 
 func (h *Handler) GetTopMostGoods(ctx context.Context) ([]*npool.TopMostGood, uint32, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
 
 	var err error
@@ -203,18 +90,18 @@ func (h *Handler) GetTopMostGoods(ctx context.Context) ([]*npool.TopMostGood, ui
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		handler.stmSelect, err = handler.queryTopMostGoods(cli)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.stmCount, err = handler.queryTopMostGoods(cli)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 
 		handler.queryJoin()
 
 		total, err := handler.stmCount.Count(_ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.total = uint32(total)
 

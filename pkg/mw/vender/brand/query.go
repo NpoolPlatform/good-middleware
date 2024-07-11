@@ -2,60 +2,18 @@ package brand
 
 import (
 	"context"
-	"fmt"
 
-	brandcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/vender/brand"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entbrand "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorbrand"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/brand"
 )
 
 type queryHandler struct {
-	*Handler
-	stmSelect *ent.VendorBrandSelect
-	infos     []*npool.Brand
-	total     uint32
-}
-
-func (h *queryHandler) selectVendorBrand(stm *ent.VendorBrandQuery) {
-	h.stmSelect = stm.Select(
-		entbrand.FieldID,
-		entbrand.FieldEntID,
-		entbrand.FieldName,
-		entbrand.FieldLogo,
-		entbrand.FieldCreatedAt,
-		entbrand.FieldUpdatedAt,
-	)
-}
-
-func (h *queryHandler) queryVendorBrand(cli *ent.Client) error {
-	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
-	}
-	stm := cli.VendorBrand.Query().Where(entbrand.DeletedAt(0))
-	if h.ID != nil {
-		stm.Where(entbrand.ID(*h.ID))
-	}
-	if h.EntID != nil {
-		stm.Where(entbrand.EntID(*h.EntID))
-	}
-	h.selectVendorBrand(stm)
-	return nil
-}
-
-func (h *queryHandler) queryVendorBrands(ctx context.Context, cli *ent.Client) error {
-	stm, err := brandcrud.SetQueryConds(cli.VendorBrand.Query(), h.Conds)
-	if err != nil {
-		return err
-	}
-	total, err := stm.Count(ctx)
-	if err != nil {
-		return err
-	}
-	h.total = uint32(total)
-	h.selectVendorBrand(stm)
-	return nil
+	*baseQueryHandler
+	stmCount *ent.VendorBrandSelect
+	infos    []*npool.Brand
+	total    uint32
 }
 
 func (h *queryHandler) scan(ctx context.Context) error {
@@ -64,13 +22,15 @@ func (h *queryHandler) scan(ctx context.Context) error {
 
 func (h *Handler) GetBrand(ctx context.Context) (*npool.Brand, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
-
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := handler.queryVendorBrand(cli); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
+		handler.queryJoin()
 		return handler.scan(_ctx)
 	})
 	if err != nil {
@@ -80,19 +40,31 @@ func (h *Handler) GetBrand(ctx context.Context) (*npool.Brand, error) {
 		return nil, nil
 	}
 	if len(handler.infos) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 	return handler.infos[0], nil
 }
 
 func (h *Handler) GetBrands(ctx context.Context) ([]*npool.Brand, uint32, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if err := handler.queryVendorBrands(_ctx, cli); err != nil {
-			return err
+	var err error
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		if handler.stmSelect, err = handler.queryVendorBrands(cli); err != nil {
+			return wlog.WrapError(err)
 		}
+		if handler.stmCount, err = handler.queryVendorBrands(cli); err != nil {
+			return wlog.WrapError(err)
+		}
+		handler.queryJoin()
+		_total, err := handler.stmCount.Count(_ctx)
+		if err != nil {
+			return wlog.WrapError(err)
+		}
+		handler.total = uint32(_total)
 		handler.stmSelect.
 			Offset(int(h.Offset)).
 			Limit(int(h.Limit))

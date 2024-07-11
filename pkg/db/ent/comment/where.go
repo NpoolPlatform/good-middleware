@@ -6,7 +6,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // ID filters vertices based on their ID field.
@@ -108,24 +107,10 @@ func EntID(v uuid.UUID) predicate.Comment {
 	})
 }
 
-// AppID applies equality check predicate on the "app_id" field. It's identical to AppIDEQ.
-func AppID(v uuid.UUID) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppID), v))
-	})
-}
-
 // UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
 func UserID(v uuid.UUID) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUserID), v))
-	})
-}
-
-// GoodID applies equality check predicate on the "good_id" field. It's identical to GoodIDEQ.
-func GoodID(v uuid.UUID) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodID), v))
 	})
 }
 
@@ -178,17 +163,17 @@ func PurchasedUser(v bool) predicate.Comment {
 	})
 }
 
-// OrderFirstComment applies equality check predicate on the "order_first_comment" field. It's identical to OrderFirstCommentEQ.
-func OrderFirstComment(v bool) predicate.Comment {
+// Hide applies equality check predicate on the "hide" field. It's identical to HideEQ.
+func Hide(v bool) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldOrderFirstComment), v))
+		s.Where(sql.EQ(s.C(FieldHide), v))
 	})
 }
 
-// Score applies equality check predicate on the "score" field. It's identical to ScoreEQ.
-func Score(v decimal.Decimal) predicate.Comment {
+// HideReason applies equality check predicate on the "hide_reason" field. It's identical to HideReasonEQ.
+func HideReason(v string) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldScore), v))
+		s.Where(sql.EQ(s.C(FieldHideReason), v))
 	})
 }
 
@@ -448,84 +433,6 @@ func EntIDLTE(v uuid.UUID) predicate.Comment {
 	})
 }
 
-// AppIDEQ applies the EQ predicate on the "app_id" field.
-func AppIDEQ(v uuid.UUID) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDNEQ applies the NEQ predicate on the "app_id" field.
-func AppIDNEQ(v uuid.UUID) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDIn applies the In predicate on the "app_id" field.
-func AppIDIn(vs ...uuid.UUID) predicate.Comment {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldAppID), v...))
-	})
-}
-
-// AppIDNotIn applies the NotIn predicate on the "app_id" field.
-func AppIDNotIn(vs ...uuid.UUID) predicate.Comment {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldAppID), v...))
-	})
-}
-
-// AppIDGT applies the GT predicate on the "app_id" field.
-func AppIDGT(v uuid.UUID) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDGTE applies the GTE predicate on the "app_id" field.
-func AppIDGTE(v uuid.UUID) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDLT applies the LT predicate on the "app_id" field.
-func AppIDLT(v uuid.UUID) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDLTE applies the LTE predicate on the "app_id" field.
-func AppIDLTE(v uuid.UUID) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDIsNil applies the IsNil predicate on the "app_id" field.
-func AppIDIsNil() predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldAppID)))
-	})
-}
-
-// AppIDNotNil applies the NotNil predicate on the "app_id" field.
-func AppIDNotNil() predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldAppID)))
-	})
-}
-
 // UserIDEQ applies the EQ predicate on the "user_id" field.
 func UserIDEQ(v uuid.UUID) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
@@ -601,84 +508,6 @@ func UserIDIsNil() predicate.Comment {
 func UserIDNotNil() predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldUserID)))
-	})
-}
-
-// GoodIDEQ applies the EQ predicate on the "good_id" field.
-func GoodIDEQ(v uuid.UUID) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDNEQ applies the NEQ predicate on the "good_id" field.
-func GoodIDNEQ(v uuid.UUID) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDIn applies the In predicate on the "good_id" field.
-func GoodIDIn(vs ...uuid.UUID) predicate.Comment {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldGoodID), v...))
-	})
-}
-
-// GoodIDNotIn applies the NotIn predicate on the "good_id" field.
-func GoodIDNotIn(vs ...uuid.UUID) predicate.Comment {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldGoodID), v...))
-	})
-}
-
-// GoodIDGT applies the GT predicate on the "good_id" field.
-func GoodIDGT(v uuid.UUID) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDGTE applies the GTE predicate on the "good_id" field.
-func GoodIDGTE(v uuid.UUID) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDLT applies the LT predicate on the "good_id" field.
-func GoodIDLT(v uuid.UUID) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDLTE applies the LTE predicate on the "good_id" field.
-func GoodIDLTE(v uuid.UUID) predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDIsNil applies the IsNil predicate on the "good_id" field.
-func GoodIDIsNil() predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldGoodID)))
-	})
-}
-
-// GoodIDNotNil applies the NotNil predicate on the "good_id" field.
-func GoodIDNotNil() predicate.Comment {
-	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldGoodID)))
 	})
 }
 
@@ -1113,109 +942,144 @@ func PurchasedUserNotNil() predicate.Comment {
 	})
 }
 
-// OrderFirstCommentEQ applies the EQ predicate on the "order_first_comment" field.
-func OrderFirstCommentEQ(v bool) predicate.Comment {
+// HideEQ applies the EQ predicate on the "hide" field.
+func HideEQ(v bool) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldOrderFirstComment), v))
+		s.Where(sql.EQ(s.C(FieldHide), v))
 	})
 }
 
-// OrderFirstCommentNEQ applies the NEQ predicate on the "order_first_comment" field.
-func OrderFirstCommentNEQ(v bool) predicate.Comment {
+// HideNEQ applies the NEQ predicate on the "hide" field.
+func HideNEQ(v bool) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldOrderFirstComment), v))
+		s.Where(sql.NEQ(s.C(FieldHide), v))
 	})
 }
 
-// OrderFirstCommentIsNil applies the IsNil predicate on the "order_first_comment" field.
-func OrderFirstCommentIsNil() predicate.Comment {
+// HideIsNil applies the IsNil predicate on the "hide" field.
+func HideIsNil() predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldOrderFirstComment)))
+		s.Where(sql.IsNull(s.C(FieldHide)))
 	})
 }
 
-// OrderFirstCommentNotNil applies the NotNil predicate on the "order_first_comment" field.
-func OrderFirstCommentNotNil() predicate.Comment {
+// HideNotNil applies the NotNil predicate on the "hide" field.
+func HideNotNil() predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldOrderFirstComment)))
+		s.Where(sql.NotNull(s.C(FieldHide)))
 	})
 }
 
-// ScoreEQ applies the EQ predicate on the "score" field.
-func ScoreEQ(v decimal.Decimal) predicate.Comment {
+// HideReasonEQ applies the EQ predicate on the "hide_reason" field.
+func HideReasonEQ(v string) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldScore), v))
+		s.Where(sql.EQ(s.C(FieldHideReason), v))
 	})
 }
 
-// ScoreNEQ applies the NEQ predicate on the "score" field.
-func ScoreNEQ(v decimal.Decimal) predicate.Comment {
+// HideReasonNEQ applies the NEQ predicate on the "hide_reason" field.
+func HideReasonNEQ(v string) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldScore), v))
+		s.Where(sql.NEQ(s.C(FieldHideReason), v))
 	})
 }
 
-// ScoreIn applies the In predicate on the "score" field.
-func ScoreIn(vs ...decimal.Decimal) predicate.Comment {
+// HideReasonIn applies the In predicate on the "hide_reason" field.
+func HideReasonIn(vs ...string) predicate.Comment {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldScore), v...))
+		s.Where(sql.In(s.C(FieldHideReason), v...))
 	})
 }
 
-// ScoreNotIn applies the NotIn predicate on the "score" field.
-func ScoreNotIn(vs ...decimal.Decimal) predicate.Comment {
+// HideReasonNotIn applies the NotIn predicate on the "hide_reason" field.
+func HideReasonNotIn(vs ...string) predicate.Comment {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldScore), v...))
+		s.Where(sql.NotIn(s.C(FieldHideReason), v...))
 	})
 }
 
-// ScoreGT applies the GT predicate on the "score" field.
-func ScoreGT(v decimal.Decimal) predicate.Comment {
+// HideReasonGT applies the GT predicate on the "hide_reason" field.
+func HideReasonGT(v string) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldScore), v))
+		s.Where(sql.GT(s.C(FieldHideReason), v))
 	})
 }
 
-// ScoreGTE applies the GTE predicate on the "score" field.
-func ScoreGTE(v decimal.Decimal) predicate.Comment {
+// HideReasonGTE applies the GTE predicate on the "hide_reason" field.
+func HideReasonGTE(v string) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldScore), v))
+		s.Where(sql.GTE(s.C(FieldHideReason), v))
 	})
 }
 
-// ScoreLT applies the LT predicate on the "score" field.
-func ScoreLT(v decimal.Decimal) predicate.Comment {
+// HideReasonLT applies the LT predicate on the "hide_reason" field.
+func HideReasonLT(v string) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldScore), v))
+		s.Where(sql.LT(s.C(FieldHideReason), v))
 	})
 }
 
-// ScoreLTE applies the LTE predicate on the "score" field.
-func ScoreLTE(v decimal.Decimal) predicate.Comment {
+// HideReasonLTE applies the LTE predicate on the "hide_reason" field.
+func HideReasonLTE(v string) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldScore), v))
+		s.Where(sql.LTE(s.C(FieldHideReason), v))
 	})
 }
 
-// ScoreIsNil applies the IsNil predicate on the "score" field.
-func ScoreIsNil() predicate.Comment {
+// HideReasonContains applies the Contains predicate on the "hide_reason" field.
+func HideReasonContains(v string) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldScore)))
+		s.Where(sql.Contains(s.C(FieldHideReason), v))
 	})
 }
 
-// ScoreNotNil applies the NotNil predicate on the "score" field.
-func ScoreNotNil() predicate.Comment {
+// HideReasonHasPrefix applies the HasPrefix predicate on the "hide_reason" field.
+func HideReasonHasPrefix(v string) predicate.Comment {
 	return predicate.Comment(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldScore)))
+		s.Where(sql.HasPrefix(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonHasSuffix applies the HasSuffix predicate on the "hide_reason" field.
+func HideReasonHasSuffix(v string) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonIsNil applies the IsNil predicate on the "hide_reason" field.
+func HideReasonIsNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldHideReason)))
+	})
+}
+
+// HideReasonNotNil applies the NotNil predicate on the "hide_reason" field.
+func HideReasonNotNil() predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldHideReason)))
+	})
+}
+
+// HideReasonEqualFold applies the EqualFold predicate on the "hide_reason" field.
+func HideReasonEqualFold(v string) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonContainsFold applies the ContainsFold predicate on the "hide_reason" field.
+func HideReasonContainsFold(v string) predicate.Comment {
+	return predicate.Comment(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldHideReason), v))
 	})
 }
 

@@ -79,21 +79,17 @@ func (eic *ExtraInfoCreate) SetNillableEntID(u *uuid.UUID) *ExtraInfoCreate {
 	return eic
 }
 
-// SetGoodID sets the "good_id" field.
-func (eic *ExtraInfoCreate) SetGoodID(u uuid.UUID) *ExtraInfoCreate {
-	eic.mutation.SetGoodID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (eic *ExtraInfoCreate) SetAppGoodID(u uuid.UUID) *ExtraInfoCreate {
+	eic.mutation.SetAppGoodID(u)
 	return eic
 }
 
-// SetPosters sets the "posters" field.
-func (eic *ExtraInfoCreate) SetPosters(s []string) *ExtraInfoCreate {
-	eic.mutation.SetPosters(s)
-	return eic
-}
-
-// SetLabels sets the "labels" field.
-func (eic *ExtraInfoCreate) SetLabels(s []string) *ExtraInfoCreate {
-	eic.mutation.SetLabels(s)
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (eic *ExtraInfoCreate) SetNillableAppGoodID(u *uuid.UUID) *ExtraInfoCreate {
+	if u != nil {
+		eic.SetAppGoodID(*u)
+	}
 	return eic
 }
 
@@ -294,13 +290,12 @@ func (eic *ExtraInfoCreate) defaults() error {
 		v := extrainfo.DefaultEntID()
 		eic.mutation.SetEntID(v)
 	}
-	if _, ok := eic.mutation.Posters(); !ok {
-		v := extrainfo.DefaultPosters
-		eic.mutation.SetPosters(v)
-	}
-	if _, ok := eic.mutation.Labels(); !ok {
-		v := extrainfo.DefaultLabels
-		eic.mutation.SetLabels(v)
+	if _, ok := eic.mutation.AppGoodID(); !ok {
+		if extrainfo.DefaultAppGoodID == nil {
+			return fmt.Errorf("ent: uninitialized extrainfo.DefaultAppGoodID (forgotten import ent/runtime?)")
+		}
+		v := extrainfo.DefaultAppGoodID()
+		eic.mutation.SetAppGoodID(v)
 	}
 	if _, ok := eic.mutation.Likes(); !ok {
 		v := extrainfo.DefaultLikes
@@ -342,9 +337,6 @@ func (eic *ExtraInfoCreate) check() error {
 	}
 	if _, ok := eic.mutation.EntID(); !ok {
 		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "ExtraInfo.ent_id"`)}
-	}
-	if _, ok := eic.mutation.GoodID(); !ok {
-		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "ExtraInfo.good_id"`)}
 	}
 	return nil
 }
@@ -412,29 +404,13 @@ func (eic *ExtraInfoCreate) createSpec() (*ExtraInfo, *sqlgraph.CreateSpec) {
 		})
 		_node.EntID = value
 	}
-	if value, ok := eic.mutation.GoodID(); ok {
+	if value, ok := eic.mutation.AppGoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: extrainfo.FieldGoodID,
+			Column: extrainfo.FieldAppGoodID,
 		})
-		_node.GoodID = value
-	}
-	if value, ok := eic.mutation.Posters(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: extrainfo.FieldPosters,
-		})
-		_node.Posters = value
-	}
-	if value, ok := eic.mutation.Labels(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: extrainfo.FieldLabels,
-		})
-		_node.Labels = value
+		_node.AppGoodID = value
 	}
 	if value, ok := eic.mutation.Likes(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -604,51 +580,21 @@ func (u *ExtraInfoUpsert) UpdateEntID() *ExtraInfoUpsert {
 	return u
 }
 
-// SetGoodID sets the "good_id" field.
-func (u *ExtraInfoUpsert) SetGoodID(v uuid.UUID) *ExtraInfoUpsert {
-	u.Set(extrainfo.FieldGoodID, v)
+// SetAppGoodID sets the "app_good_id" field.
+func (u *ExtraInfoUpsert) SetAppGoodID(v uuid.UUID) *ExtraInfoUpsert {
+	u.Set(extrainfo.FieldAppGoodID, v)
 	return u
 }
 
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *ExtraInfoUpsert) UpdateGoodID() *ExtraInfoUpsert {
-	u.SetExcluded(extrainfo.FieldGoodID)
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *ExtraInfoUpsert) UpdateAppGoodID() *ExtraInfoUpsert {
+	u.SetExcluded(extrainfo.FieldAppGoodID)
 	return u
 }
 
-// SetPosters sets the "posters" field.
-func (u *ExtraInfoUpsert) SetPosters(v []string) *ExtraInfoUpsert {
-	u.Set(extrainfo.FieldPosters, v)
-	return u
-}
-
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *ExtraInfoUpsert) UpdatePosters() *ExtraInfoUpsert {
-	u.SetExcluded(extrainfo.FieldPosters)
-	return u
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (u *ExtraInfoUpsert) ClearPosters() *ExtraInfoUpsert {
-	u.SetNull(extrainfo.FieldPosters)
-	return u
-}
-
-// SetLabels sets the "labels" field.
-func (u *ExtraInfoUpsert) SetLabels(v []string) *ExtraInfoUpsert {
-	u.Set(extrainfo.FieldLabels, v)
-	return u
-}
-
-// UpdateLabels sets the "labels" field to the value that was provided on create.
-func (u *ExtraInfoUpsert) UpdateLabels() *ExtraInfoUpsert {
-	u.SetExcluded(extrainfo.FieldLabels)
-	return u
-}
-
-// ClearLabels clears the value of the "labels" field.
-func (u *ExtraInfoUpsert) ClearLabels() *ExtraInfoUpsert {
-	u.SetNull(extrainfo.FieldLabels)
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *ExtraInfoUpsert) ClearAppGoodID() *ExtraInfoUpsert {
+	u.SetNull(extrainfo.FieldAppGoodID)
 	return u
 }
 
@@ -917,59 +863,24 @@ func (u *ExtraInfoUpsertOne) UpdateEntID() *ExtraInfoUpsertOne {
 	})
 }
 
-// SetGoodID sets the "good_id" field.
-func (u *ExtraInfoUpsertOne) SetGoodID(v uuid.UUID) *ExtraInfoUpsertOne {
+// SetAppGoodID sets the "app_good_id" field.
+func (u *ExtraInfoUpsertOne) SetAppGoodID(v uuid.UUID) *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetGoodID(v)
+		s.SetAppGoodID(v)
 	})
 }
 
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *ExtraInfoUpsertOne) UpdateGoodID() *ExtraInfoUpsertOne {
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *ExtraInfoUpsertOne) UpdateAppGoodID() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateGoodID()
+		s.UpdateAppGoodID()
 	})
 }
 
-// SetPosters sets the "posters" field.
-func (u *ExtraInfoUpsertOne) SetPosters(v []string) *ExtraInfoUpsertOne {
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *ExtraInfoUpsertOne) ClearAppGoodID() *ExtraInfoUpsertOne {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetPosters(v)
-	})
-}
-
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *ExtraInfoUpsertOne) UpdatePosters() *ExtraInfoUpsertOne {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdatePosters()
-	})
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (u *ExtraInfoUpsertOne) ClearPosters() *ExtraInfoUpsertOne {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearPosters()
-	})
-}
-
-// SetLabels sets the "labels" field.
-func (u *ExtraInfoUpsertOne) SetLabels(v []string) *ExtraInfoUpsertOne {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetLabels(v)
-	})
-}
-
-// UpdateLabels sets the "labels" field to the value that was provided on create.
-func (u *ExtraInfoUpsertOne) UpdateLabels() *ExtraInfoUpsertOne {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateLabels()
-	})
-}
-
-// ClearLabels clears the value of the "labels" field.
-func (u *ExtraInfoUpsertOne) ClearLabels() *ExtraInfoUpsertOne {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearLabels()
+		s.ClearAppGoodID()
 	})
 }
 
@@ -1426,59 +1337,24 @@ func (u *ExtraInfoUpsertBulk) UpdateEntID() *ExtraInfoUpsertBulk {
 	})
 }
 
-// SetGoodID sets the "good_id" field.
-func (u *ExtraInfoUpsertBulk) SetGoodID(v uuid.UUID) *ExtraInfoUpsertBulk {
+// SetAppGoodID sets the "app_good_id" field.
+func (u *ExtraInfoUpsertBulk) SetAppGoodID(v uuid.UUID) *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetGoodID(v)
+		s.SetAppGoodID(v)
 	})
 }
 
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *ExtraInfoUpsertBulk) UpdateGoodID() *ExtraInfoUpsertBulk {
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *ExtraInfoUpsertBulk) UpdateAppGoodID() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateGoodID()
+		s.UpdateAppGoodID()
 	})
 }
 
-// SetPosters sets the "posters" field.
-func (u *ExtraInfoUpsertBulk) SetPosters(v []string) *ExtraInfoUpsertBulk {
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *ExtraInfoUpsertBulk) ClearAppGoodID() *ExtraInfoUpsertBulk {
 	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetPosters(v)
-	})
-}
-
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *ExtraInfoUpsertBulk) UpdatePosters() *ExtraInfoUpsertBulk {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdatePosters()
-	})
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (u *ExtraInfoUpsertBulk) ClearPosters() *ExtraInfoUpsertBulk {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearPosters()
-	})
-}
-
-// SetLabels sets the "labels" field.
-func (u *ExtraInfoUpsertBulk) SetLabels(v []string) *ExtraInfoUpsertBulk {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.SetLabels(v)
-	})
-}
-
-// UpdateLabels sets the "labels" field to the value that was provided on create.
-func (u *ExtraInfoUpsertBulk) UpdateLabels() *ExtraInfoUpsertBulk {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.UpdateLabels()
-	})
-}
-
-// ClearLabels clears the value of the "labels" field.
-func (u *ExtraInfoUpsertBulk) ClearLabels() *ExtraInfoUpsertBulk {
-	return u.Update(func(s *ExtraInfoUpsert) {
-		s.ClearLabels()
+		s.ClearAppGoodID()
 	})
 }
 

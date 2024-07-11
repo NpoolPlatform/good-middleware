@@ -40,28 +40,37 @@ var ret = &npool.Brand{
 	Logo:  uuid.NewString(),
 }
 
-var req = &npool.BrandReq{
-	EntID: &ret.EntID,
-	Name:  &ret.Name,
-	Logo:  &ret.Logo,
-}
-
 func createBrand(t *testing.T) {
-	info, err := CreateBrand(context.Background(), req)
+	err := CreateBrand(context.Background(), &npool.BrandReq{
+		EntID: &ret.EntID,
+		Name:  &ret.Name,
+		Logo:  &ret.Logo,
+	})
 	if assert.Nil(t, err) {
-		ret.CreatedAt = info.CreatedAt
-		ret.UpdatedAt = info.UpdatedAt
-		ret.ID = info.ID
-		assert.Equal(t, ret, info)
+		info, err := GetBrand(context.Background(), ret.EntID)
+		if assert.Nil(t, err) {
+			ret.CreatedAt = info.CreatedAt
+			ret.UpdatedAt = info.UpdatedAt
+			ret.ID = info.ID
+			assert.Equal(t, ret, info)
+		}
 	}
 }
 
 func updateBrand(t *testing.T) {
-	req.ID = &ret.ID
-	info, err := UpdateBrand(context.Background(), req)
+	ret.Name = uuid.NewString()
+	err := UpdateBrand(context.Background(), &npool.BrandReq{
+		ID:    &ret.ID,
+		EntID: &ret.EntID,
+		Name:  &ret.Name,
+		Logo:  &ret.Logo,
+	})
 	if assert.Nil(t, err) {
-		ret.UpdatedAt = info.UpdatedAt
-		assert.Equal(t, ret, info)
+		info, err := GetBrand(context.Background(), ret.EntID)
+		if assert.Nil(t, err) {
+			ret.UpdatedAt = info.UpdatedAt
+			assert.Equal(t, ret, info)
+		}
 	}
 }
 
@@ -97,12 +106,10 @@ func getBrandOnly(t *testing.T) {
 }
 
 func deleteBrand(t *testing.T) {
-	info, err := DeleteBrand(context.Background(), ret.ID)
-	if assert.Nil(t, err) {
-		assert.Equal(t, ret, info)
-	}
+	err := DeleteBrand(context.Background(), &ret.ID, &ret.EntID)
+	assert.Nil(t, err)
 
-	info, err = GetBrand(context.Background(), ret.EntID)
+	info, err := GetBrand(context.Background(), ret.EntID)
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }

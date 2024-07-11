@@ -108,24 +108,10 @@ func EntID(v uuid.UUID) predicate.Score {
 	})
 }
 
-// AppID applies equality check predicate on the "app_id" field. It's identical to AppIDEQ.
-func AppID(v uuid.UUID) predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppID), v))
-	})
-}
-
 // UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
 func UserID(v uuid.UUID) predicate.Score {
 	return predicate.Score(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUserID), v))
-	})
-}
-
-// GoodID applies equality check predicate on the "good_id" field. It's identical to GoodIDEQ.
-func GoodID(v uuid.UUID) predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodID), v))
 	})
 }
 
@@ -140,6 +126,13 @@ func AppGoodID(v uuid.UUID) predicate.Score {
 func Score(v decimal.Decimal) predicate.Score {
 	return predicate.Score(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldScore), v))
+	})
+}
+
+// CommentID applies equality check predicate on the "comment_id" field. It's identical to CommentIDEQ.
+func CommentID(v uuid.UUID) predicate.Score {
+	return predicate.Score(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCommentID), v))
 	})
 }
 
@@ -399,84 +392,6 @@ func EntIDLTE(v uuid.UUID) predicate.Score {
 	})
 }
 
-// AppIDEQ applies the EQ predicate on the "app_id" field.
-func AppIDEQ(v uuid.UUID) predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDNEQ applies the NEQ predicate on the "app_id" field.
-func AppIDNEQ(v uuid.UUID) predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDIn applies the In predicate on the "app_id" field.
-func AppIDIn(vs ...uuid.UUID) predicate.Score {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldAppID), v...))
-	})
-}
-
-// AppIDNotIn applies the NotIn predicate on the "app_id" field.
-func AppIDNotIn(vs ...uuid.UUID) predicate.Score {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldAppID), v...))
-	})
-}
-
-// AppIDGT applies the GT predicate on the "app_id" field.
-func AppIDGT(v uuid.UUID) predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDGTE applies the GTE predicate on the "app_id" field.
-func AppIDGTE(v uuid.UUID) predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDLT applies the LT predicate on the "app_id" field.
-func AppIDLT(v uuid.UUID) predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDLTE applies the LTE predicate on the "app_id" field.
-func AppIDLTE(v uuid.UUID) predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDIsNil applies the IsNil predicate on the "app_id" field.
-func AppIDIsNil() predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldAppID)))
-	})
-}
-
-// AppIDNotNil applies the NotNil predicate on the "app_id" field.
-func AppIDNotNil() predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldAppID)))
-	})
-}
-
 // UserIDEQ applies the EQ predicate on the "user_id" field.
 func UserIDEQ(v uuid.UUID) predicate.Score {
 	return predicate.Score(func(s *sql.Selector) {
@@ -552,84 +467,6 @@ func UserIDIsNil() predicate.Score {
 func UserIDNotNil() predicate.Score {
 	return predicate.Score(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldUserID)))
-	})
-}
-
-// GoodIDEQ applies the EQ predicate on the "good_id" field.
-func GoodIDEQ(v uuid.UUID) predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDNEQ applies the NEQ predicate on the "good_id" field.
-func GoodIDNEQ(v uuid.UUID) predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDIn applies the In predicate on the "good_id" field.
-func GoodIDIn(vs ...uuid.UUID) predicate.Score {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldGoodID), v...))
-	})
-}
-
-// GoodIDNotIn applies the NotIn predicate on the "good_id" field.
-func GoodIDNotIn(vs ...uuid.UUID) predicate.Score {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldGoodID), v...))
-	})
-}
-
-// GoodIDGT applies the GT predicate on the "good_id" field.
-func GoodIDGT(v uuid.UUID) predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDGTE applies the GTE predicate on the "good_id" field.
-func GoodIDGTE(v uuid.UUID) predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDLT applies the LT predicate on the "good_id" field.
-func GoodIDLT(v uuid.UUID) predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDLTE applies the LTE predicate on the "good_id" field.
-func GoodIDLTE(v uuid.UUID) predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDIsNil applies the IsNil predicate on the "good_id" field.
-func GoodIDIsNil() predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldGoodID)))
-	})
-}
-
-// GoodIDNotNil applies the NotNil predicate on the "good_id" field.
-func GoodIDNotNil() predicate.Score {
-	return predicate.Score(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldGoodID)))
 	})
 }
 
@@ -786,6 +623,84 @@ func ScoreIsNil() predicate.Score {
 func ScoreNotNil() predicate.Score {
 	return predicate.Score(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldScore)))
+	})
+}
+
+// CommentIDEQ applies the EQ predicate on the "comment_id" field.
+func CommentIDEQ(v uuid.UUID) predicate.Score {
+	return predicate.Score(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCommentID), v))
+	})
+}
+
+// CommentIDNEQ applies the NEQ predicate on the "comment_id" field.
+func CommentIDNEQ(v uuid.UUID) predicate.Score {
+	return predicate.Score(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCommentID), v))
+	})
+}
+
+// CommentIDIn applies the In predicate on the "comment_id" field.
+func CommentIDIn(vs ...uuid.UUID) predicate.Score {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Score(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCommentID), v...))
+	})
+}
+
+// CommentIDNotIn applies the NotIn predicate on the "comment_id" field.
+func CommentIDNotIn(vs ...uuid.UUID) predicate.Score {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Score(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCommentID), v...))
+	})
+}
+
+// CommentIDGT applies the GT predicate on the "comment_id" field.
+func CommentIDGT(v uuid.UUID) predicate.Score {
+	return predicate.Score(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCommentID), v))
+	})
+}
+
+// CommentIDGTE applies the GTE predicate on the "comment_id" field.
+func CommentIDGTE(v uuid.UUID) predicate.Score {
+	return predicate.Score(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCommentID), v))
+	})
+}
+
+// CommentIDLT applies the LT predicate on the "comment_id" field.
+func CommentIDLT(v uuid.UUID) predicate.Score {
+	return predicate.Score(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCommentID), v))
+	})
+}
+
+// CommentIDLTE applies the LTE predicate on the "comment_id" field.
+func CommentIDLTE(v uuid.UUID) predicate.Score {
+	return predicate.Score(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCommentID), v))
+	})
+}
+
+// CommentIDIsNil applies the IsNil predicate on the "comment_id" field.
+func CommentIDIsNil() predicate.Score {
+	return predicate.Score(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCommentID)))
+	})
+}
+
+// CommentIDNotNil applies the NotNil predicate on the "comment_id" field.
+func CommentIDNotNil() predicate.Score {
+	return predicate.Score(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCommentID)))
 	})
 }
 

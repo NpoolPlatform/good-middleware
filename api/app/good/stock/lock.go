@@ -16,8 +16,6 @@ func (s *Server) Lock(ctx context.Context, in *npool.LockRequest) (*npool.LockRe
 	handler, err := appstock1.NewHandler(
 		ctx,
 		appstock1.WithEntID(&in.EntID, true),
-		appstock1.WithAppID(&in.AppID, true),
-		appstock1.WithGoodID(&in.GoodID, true),
 		appstock1.WithAppGoodID(&in.AppGoodID, true),
 		appstock1.WithLocked(&in.Units, true),
 		appstock1.WithAppSpotLocked(&in.AppSpotUnits, false),
@@ -32,8 +30,7 @@ func (s *Server) Lock(ctx context.Context, in *npool.LockRequest) (*npool.LockRe
 		return &npool.LockResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.LockStock(ctx)
-	if err != nil {
+	if err := handler.LockStock(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"Lock",
 			"In", in,
@@ -42,15 +39,12 @@ func (s *Server) Lock(ctx context.Context, in *npool.LockRequest) (*npool.LockRe
 		return &npool.LockResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.LockResponse{
-		Info: info,
-	}, nil
+	return &npool.LockResponse{}, nil
 }
 
 func (s *Server) Locks(ctx context.Context, in *npool.LocksRequest) (*npool.LocksResponse, error) {
 	handler, err := appstock1.NewHandler(
 		ctx,
-		appstock1.WithAppID(&in.AppID, true),
 		appstock1.WithStocks(in.Stocks, true),
 		appstock1.WithLockID(&in.LockID, true),
 	)
@@ -63,8 +57,7 @@ func (s *Server) Locks(ctx context.Context, in *npool.LocksRequest) (*npool.Lock
 		return &npool.LocksResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	infos, err := handler.LockStocks(ctx)
-	if err != nil {
+	if err := handler.LockStocks(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"Locks",
 			"In", in,
@@ -73,7 +66,5 @@ func (s *Server) Locks(ctx context.Context, in *npool.LocksRequest) (*npool.Lock
 		return &npool.LocksResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.LocksResponse{
-		Infos: infos,
-	}, nil
+	return &npool.LocksResponse{}, nil
 }

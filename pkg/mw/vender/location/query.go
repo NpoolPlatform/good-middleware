@@ -2,63 +2,30 @@ package location
 
 import (
 	"context"
-	"fmt"
 
-	locationcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/vender/location"
+	"entgo.io/ent/dialect/sql"
+
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entlocation "github.com/NpoolPlatform/good-middleware/pkg/db/ent/vendorlocation"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"
 )
 
 type queryHandler struct {
-	*Handler
-	stmSelect *ent.VendorLocationSelect
-	infos     []*npool.Location
-	total     uint32
+	*baseQueryHandler
+	stmCount *ent.VendorLocationSelect
+	infos    []*npool.Location
+	total    uint32
 }
 
-func (h *queryHandler) selectVendorLocation(stm *ent.VendorLocationQuery) {
-	h.stmSelect = stm.Select(
-		entlocation.FieldID,
-		entlocation.FieldEntID,
-		entlocation.FieldCountry,
-		entlocation.FieldProvince,
-		entlocation.FieldCity,
-		entlocation.FieldAddress,
-		entlocation.FieldBrandID,
-		entlocation.FieldCreatedAt,
-		entlocation.FieldUpdatedAt,
-	)
-}
-
-func (h *queryHandler) queryVendorLocation(cli *ent.Client) error {
-	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
+func (h *queryHandler) queryJoin() {
+	h.baseQueryHandler.queryJoin()
+	if h.stmCount == nil {
+		return
 	}
-	stm := cli.VendorLocation.Query().Where(entlocation.DeletedAt(0))
-	if h.ID != nil {
-		stm.Where(entlocation.ID(*h.ID))
-	}
-	if h.EntID != nil {
-		stm.Where(entlocation.EntID(*h.EntID))
-	}
-	h.selectVendorLocation(stm)
-	return nil
-}
-
-func (h *queryHandler) queryVendorLocations(ctx context.Context, cli *ent.Client) error {
-	stm, err := locationcrud.SetQueryConds(cli.VendorLocation.Query(), h.Conds)
-	if err != nil {
-		return err
-	}
-	total, err := stm.Count(ctx)
-	if err != nil {
-		return err
-	}
-	h.total = uint32(total)
-	h.selectVendorLocation(stm)
-	return nil
+	h.stmCount.Modify(func(s *sql.Selector) {
+		h.queryJoinBrand(s)
+	})
 }
 
 func (h *queryHandler) scan(ctx context.Context) error {
@@ -67,13 +34,19 @@ func (h *queryHandler) scan(ctx context.Context) error {
 
 func (h *Handler) GetLocation(ctx context.Context) (*npool.Location, error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := handler.queryVendorLocation(cli); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
+		handler.queryJoin()
+		handler.stmSelect.
+			Offset(0).
+			Limit(2)
 		return handler.scan(_ctx)
 	})
 	if err != nil {
@@ -83,19 +56,33 @@ func (h *Handler) GetLocation(ctx context.Context) (*npool.Location, error) {
 		return nil, nil
 	}
 	if len(handler.infos) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 	return handler.infos[0], nil
 }
 
-func (h *Handler) GetLocations(ctx context.Context) ([]*npool.Location, uint32, error) {
+func (h *Handler) GetLocations(ctx context.Context) (infos []*npool.Location, total uint32, err error) {
 	handler := &queryHandler{
-		Handler: h,
+		baseQueryHandler: &baseQueryHandler{
+			Handler: h,
+		},
 	}
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if err := handler.queryVendorLocations(_ctx, cli); err != nil {
-			return err
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		if handler.stmSelect, err = handler.queryVendorLocations(cli); err != nil {
+			return wlog.WrapError(err)
 		}
+		if handler.stmCount, err = handler.queryVendorLocations(cli); err != nil {
+			return wlog.WrapError(err)
+		}
+
+		handler.queryJoin()
+
+		_total, err := handler.stmCount.Count(_ctx)
+		if err != nil {
+			return wlog.WrapError(err)
+		}
+		handler.total = uint32(_total)
+
 		handler.stmSelect.
 			Offset(int(h.Offset)).
 			Limit(int(h.Limit))

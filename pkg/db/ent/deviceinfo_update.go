@@ -118,23 +118,23 @@ func (diu *DeviceInfoUpdate) ClearType() *DeviceInfoUpdate {
 	return diu
 }
 
-// SetManufacturer sets the "manufacturer" field.
-func (diu *DeviceInfoUpdate) SetManufacturer(s string) *DeviceInfoUpdate {
-	diu.mutation.SetManufacturer(s)
+// SetManufacturerID sets the "manufacturer_id" field.
+func (diu *DeviceInfoUpdate) SetManufacturerID(u uuid.UUID) *DeviceInfoUpdate {
+	diu.mutation.SetManufacturerID(u)
 	return diu
 }
 
-// SetNillableManufacturer sets the "manufacturer" field if the given value is not nil.
-func (diu *DeviceInfoUpdate) SetNillableManufacturer(s *string) *DeviceInfoUpdate {
-	if s != nil {
-		diu.SetManufacturer(*s)
+// SetNillableManufacturerID sets the "manufacturer_id" field if the given value is not nil.
+func (diu *DeviceInfoUpdate) SetNillableManufacturerID(u *uuid.UUID) *DeviceInfoUpdate {
+	if u != nil {
+		diu.SetManufacturerID(*u)
 	}
 	return diu
 }
 
-// ClearManufacturer clears the value of the "manufacturer" field.
-func (diu *DeviceInfoUpdate) ClearManufacturer() *DeviceInfoUpdate {
-	diu.mutation.ClearManufacturer()
+// ClearManufacturerID clears the value of the "manufacturer_id" field.
+func (diu *DeviceInfoUpdate) ClearManufacturerID() *DeviceInfoUpdate {
+	diu.mutation.ClearManufacturerID()
 	return diu
 }
 
@@ -189,18 +189,6 @@ func (diu *DeviceInfoUpdate) AddShipmentAt(u int32) *DeviceInfoUpdate {
 // ClearShipmentAt clears the value of the "shipment_at" field.
 func (diu *DeviceInfoUpdate) ClearShipmentAt() *DeviceInfoUpdate {
 	diu.mutation.ClearShipmentAt()
-	return diu
-}
-
-// SetPosters sets the "posters" field.
-func (diu *DeviceInfoUpdate) SetPosters(s []string) *DeviceInfoUpdate {
-	diu.mutation.SetPosters(s)
-	return diu
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (diu *DeviceInfoUpdate) ClearPosters() *DeviceInfoUpdate {
-	diu.mutation.ClearPosters()
 	return diu
 }
 
@@ -289,11 +277,6 @@ func (diu *DeviceInfoUpdate) check() error {
 	if v, ok := diu.mutation.GetType(); ok {
 		if err := deviceinfo.TypeValidator(v); err != nil {
 			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "DeviceInfo.type": %w`, err)}
-		}
-	}
-	if v, ok := diu.mutation.Manufacturer(); ok {
-		if err := deviceinfo.ManufacturerValidator(v); err != nil {
-			return &ValidationError{Name: "manufacturer", err: fmt.Errorf(`ent: validator failed for field "DeviceInfo.manufacturer": %w`, err)}
 		}
 	}
 	return nil
@@ -385,17 +368,17 @@ func (diu *DeviceInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: deviceinfo.FieldType,
 		})
 	}
-	if value, ok := diu.mutation.Manufacturer(); ok {
+	if value, ok := diu.mutation.ManufacturerID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: deviceinfo.FieldManufacturer,
+			Column: deviceinfo.FieldManufacturerID,
 		})
 	}
-	if diu.mutation.ManufacturerCleared() {
+	if diu.mutation.ManufacturerIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: deviceinfo.FieldManufacturer,
+			Type:   field.TypeUUID,
+			Column: deviceinfo.FieldManufacturerID,
 		})
 	}
 	if value, ok := diu.mutation.PowerConsumption(); ok {
@@ -436,19 +419,6 @@ func (diu *DeviceInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: deviceinfo.FieldShipmentAt,
-		})
-	}
-	if value, ok := diu.mutation.Posters(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: deviceinfo.FieldPosters,
-		})
-	}
-	if diu.mutation.PostersCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: deviceinfo.FieldPosters,
 		})
 	}
 	_spec.Modifiers = diu.modifiers
@@ -561,23 +531,23 @@ func (diuo *DeviceInfoUpdateOne) ClearType() *DeviceInfoUpdateOne {
 	return diuo
 }
 
-// SetManufacturer sets the "manufacturer" field.
-func (diuo *DeviceInfoUpdateOne) SetManufacturer(s string) *DeviceInfoUpdateOne {
-	diuo.mutation.SetManufacturer(s)
+// SetManufacturerID sets the "manufacturer_id" field.
+func (diuo *DeviceInfoUpdateOne) SetManufacturerID(u uuid.UUID) *DeviceInfoUpdateOne {
+	diuo.mutation.SetManufacturerID(u)
 	return diuo
 }
 
-// SetNillableManufacturer sets the "manufacturer" field if the given value is not nil.
-func (diuo *DeviceInfoUpdateOne) SetNillableManufacturer(s *string) *DeviceInfoUpdateOne {
-	if s != nil {
-		diuo.SetManufacturer(*s)
+// SetNillableManufacturerID sets the "manufacturer_id" field if the given value is not nil.
+func (diuo *DeviceInfoUpdateOne) SetNillableManufacturerID(u *uuid.UUID) *DeviceInfoUpdateOne {
+	if u != nil {
+		diuo.SetManufacturerID(*u)
 	}
 	return diuo
 }
 
-// ClearManufacturer clears the value of the "manufacturer" field.
-func (diuo *DeviceInfoUpdateOne) ClearManufacturer() *DeviceInfoUpdateOne {
-	diuo.mutation.ClearManufacturer()
+// ClearManufacturerID clears the value of the "manufacturer_id" field.
+func (diuo *DeviceInfoUpdateOne) ClearManufacturerID() *DeviceInfoUpdateOne {
+	diuo.mutation.ClearManufacturerID()
 	return diuo
 }
 
@@ -632,18 +602,6 @@ func (diuo *DeviceInfoUpdateOne) AddShipmentAt(u int32) *DeviceInfoUpdateOne {
 // ClearShipmentAt clears the value of the "shipment_at" field.
 func (diuo *DeviceInfoUpdateOne) ClearShipmentAt() *DeviceInfoUpdateOne {
 	diuo.mutation.ClearShipmentAt()
-	return diuo
-}
-
-// SetPosters sets the "posters" field.
-func (diuo *DeviceInfoUpdateOne) SetPosters(s []string) *DeviceInfoUpdateOne {
-	diuo.mutation.SetPosters(s)
-	return diuo
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (diuo *DeviceInfoUpdateOne) ClearPosters() *DeviceInfoUpdateOne {
-	diuo.mutation.ClearPosters()
 	return diuo
 }
 
@@ -745,11 +703,6 @@ func (diuo *DeviceInfoUpdateOne) check() error {
 	if v, ok := diuo.mutation.GetType(); ok {
 		if err := deviceinfo.TypeValidator(v); err != nil {
 			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "DeviceInfo.type": %w`, err)}
-		}
-	}
-	if v, ok := diuo.mutation.Manufacturer(); ok {
-		if err := deviceinfo.ManufacturerValidator(v); err != nil {
-			return &ValidationError{Name: "manufacturer", err: fmt.Errorf(`ent: validator failed for field "DeviceInfo.manufacturer": %w`, err)}
 		}
 	}
 	return nil
@@ -858,17 +811,17 @@ func (diuo *DeviceInfoUpdateOne) sqlSave(ctx context.Context) (_node *DeviceInfo
 			Column: deviceinfo.FieldType,
 		})
 	}
-	if value, ok := diuo.mutation.Manufacturer(); ok {
+	if value, ok := diuo.mutation.ManufacturerID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: deviceinfo.FieldManufacturer,
+			Column: deviceinfo.FieldManufacturerID,
 		})
 	}
-	if diuo.mutation.ManufacturerCleared() {
+	if diuo.mutation.ManufacturerIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: deviceinfo.FieldManufacturer,
+			Type:   field.TypeUUID,
+			Column: deviceinfo.FieldManufacturerID,
 		})
 	}
 	if value, ok := diuo.mutation.PowerConsumption(); ok {
@@ -909,19 +862,6 @@ func (diuo *DeviceInfoUpdateOne) sqlSave(ctx context.Context) (_node *DeviceInfo
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: deviceinfo.FieldShipmentAt,
-		})
-	}
-	if value, ok := diuo.mutation.Posters(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: deviceinfo.FieldPosters,
-		})
-	}
-	if diuo.mutation.PostersCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: deviceinfo.FieldPosters,
 		})
 	}
 	_spec.Modifiers = diuo.modifiers

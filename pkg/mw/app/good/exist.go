@@ -1,51 +1,24 @@
-package appgood
+package good
 
 import (
 	"context"
 
-	appgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
 )
 
-func (h *Handler) ExistGood(ctx context.Context) (bool, error) {
-	exist := false
-	var err error
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		exist, err = cli.
-			AppGood.
-			Query().
-			Where(
-				entappgood.EntID(*h.EntID),
-				entappgood.DeletedAt(0),
-			).
-			Exist(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-	if err != nil {
-		return false, err
+func (h *Handler) ExistGoodConds(ctx context.Context) (exist bool, err error) {
+	handler := &baseQueryHandler{
+		Handler: h,
 	}
-	return exist, nil
-}
-
-func (h *Handler) ExistGoodConds(ctx context.Context) (bool, error) {
-	exist := false
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := appgoodcrud.SetQueryConds(cli.AppGood.Query(), h.Conds)
-		if err != nil {
+	if err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		if handler.stmSelect, err = handler.queryGoods(cli); err != nil {
 			return err
 		}
-		exist, err = stm.Exist(_ctx)
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-	if err != nil {
+		handler.queryJoin()
+		exist, err = handler.stmSelect.Exist(_ctx)
+		return err
+	}); err != nil {
 		return false, err
 	}
 	return exist, nil

@@ -9,7 +9,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // Comment is the model entity for the Comment schema.
@@ -25,12 +24,8 @@ type Comment struct {
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// EntID holds the value of the "ent_id" field.
 	EntID uuid.UUID `json:"ent_id,omitempty"`
-	// AppID holds the value of the "app_id" field.
-	AppID uuid.UUID `json:"app_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID uuid.UUID `json:"user_id,omitempty"`
-	// GoodID holds the value of the "good_id" field.
-	GoodID uuid.UUID `json:"good_id,omitempty"`
 	// AppGoodID holds the value of the "app_good_id" field.
 	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// OrderID holds the value of the "order_id" field.
@@ -45,10 +40,10 @@ type Comment struct {
 	TrialUser bool `json:"trial_user,omitempty"`
 	// PurchasedUser holds the value of the "purchased_user" field.
 	PurchasedUser bool `json:"purchased_user,omitempty"`
-	// OrderFirstComment holds the value of the "order_first_comment" field.
-	OrderFirstComment bool `json:"order_first_comment,omitempty"`
-	// Score holds the value of the "score" field.
-	Score decimal.Decimal `json:"score,omitempty"`
+	// Hide holds the value of the "hide" field.
+	Hide bool `json:"hide,omitempty"`
+	// HideReason holds the value of the "hide_reason" field.
+	HideReason string `json:"hide_reason,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -56,15 +51,13 @@ func (*Comment) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case comment.FieldScore:
-			values[i] = new(decimal.Decimal)
-		case comment.FieldAnonymous, comment.FieldTrialUser, comment.FieldPurchasedUser, comment.FieldOrderFirstComment:
+		case comment.FieldAnonymous, comment.FieldTrialUser, comment.FieldPurchasedUser, comment.FieldHide:
 			values[i] = new(sql.NullBool)
 		case comment.FieldID, comment.FieldCreatedAt, comment.FieldUpdatedAt, comment.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case comment.FieldContent:
+		case comment.FieldContent, comment.FieldHideReason:
 			values[i] = new(sql.NullString)
-		case comment.FieldEntID, comment.FieldAppID, comment.FieldUserID, comment.FieldGoodID, comment.FieldAppGoodID, comment.FieldOrderID, comment.FieldReplyToID:
+		case comment.FieldEntID, comment.FieldUserID, comment.FieldAppGoodID, comment.FieldOrderID, comment.FieldReplyToID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Comment", columns[i])
@@ -111,23 +104,11 @@ func (c *Comment) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				c.EntID = *value
 			}
-		case comment.FieldAppID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field app_id", values[i])
-			} else if value != nil {
-				c.AppID = *value
-			}
 		case comment.FieldUserID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value != nil {
 				c.UserID = *value
-			}
-		case comment.FieldGoodID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field good_id", values[i])
-			} else if value != nil {
-				c.GoodID = *value
 			}
 		case comment.FieldAppGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -171,17 +152,17 @@ func (c *Comment) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				c.PurchasedUser = value.Bool
 			}
-		case comment.FieldOrderFirstComment:
+		case comment.FieldHide:
 			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field order_first_comment", values[i])
+				return fmt.Errorf("unexpected type %T for field hide", values[i])
 			} else if value.Valid {
-				c.OrderFirstComment = value.Bool
+				c.Hide = value.Bool
 			}
-		case comment.FieldScore:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field score", values[i])
-			} else if value != nil {
-				c.Score = *value
+		case comment.FieldHideReason:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field hide_reason", values[i])
+			} else if value.Valid {
+				c.HideReason = value.String
 			}
 		}
 	}
@@ -223,14 +204,8 @@ func (c *Comment) String() string {
 	builder.WriteString("ent_id=")
 	builder.WriteString(fmt.Sprintf("%v", c.EntID))
 	builder.WriteString(", ")
-	builder.WriteString("app_id=")
-	builder.WriteString(fmt.Sprintf("%v", c.AppID))
-	builder.WriteString(", ")
 	builder.WriteString("user_id=")
 	builder.WriteString(fmt.Sprintf("%v", c.UserID))
-	builder.WriteString(", ")
-	builder.WriteString("good_id=")
-	builder.WriteString(fmt.Sprintf("%v", c.GoodID))
 	builder.WriteString(", ")
 	builder.WriteString("app_good_id=")
 	builder.WriteString(fmt.Sprintf("%v", c.AppGoodID))
@@ -253,11 +228,11 @@ func (c *Comment) String() string {
 	builder.WriteString("purchased_user=")
 	builder.WriteString(fmt.Sprintf("%v", c.PurchasedUser))
 	builder.WriteString(", ")
-	builder.WriteString("order_first_comment=")
-	builder.WriteString(fmt.Sprintf("%v", c.OrderFirstComment))
+	builder.WriteString("hide=")
+	builder.WriteString(fmt.Sprintf("%v", c.Hide))
 	builder.WriteString(", ")
-	builder.WriteString("score=")
-	builder.WriteString(fmt.Sprintf("%v", c.Score))
+	builder.WriteString("hide_reason=")
+	builder.WriteString(c.HideReason)
 	builder.WriteByte(')')
 	return builder.String()
 }

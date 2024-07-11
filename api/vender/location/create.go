@@ -1,4 +1,3 @@
-//nolint:dupl
 package location
 
 import (
@@ -40,8 +39,7 @@ func (s *Server) CreateLocation(ctx context.Context, in *npool.CreateLocationReq
 		return &npool.CreateLocationResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.CreateLocation(ctx)
-	if err != nil {
+	if err := handler.CreateLocation(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"CreateLocation",
 			"In", in,
@@ -50,7 +48,5 @@ func (s *Server) CreateLocation(ctx context.Context, in *npool.CreateLocationReq
 		return &npool.CreateLocationResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.CreateLocationResponse{
-		Info: info,
-	}, nil
+	return &npool.CreateLocationResponse{}, nil
 }

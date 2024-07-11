@@ -99,15 +99,23 @@ func (ru *RecommendUpdate) SetNillableEntID(u *uuid.UUID) *RecommendUpdate {
 	return ru
 }
 
-// SetAppID sets the "app_id" field.
-func (ru *RecommendUpdate) SetAppID(u uuid.UUID) *RecommendUpdate {
-	ru.mutation.SetAppID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (ru *RecommendUpdate) SetAppGoodID(u uuid.UUID) *RecommendUpdate {
+	ru.mutation.SetAppGoodID(u)
 	return ru
 }
 
-// SetGoodID sets the "good_id" field.
-func (ru *RecommendUpdate) SetGoodID(u uuid.UUID) *RecommendUpdate {
-	ru.mutation.SetGoodID(u)
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (ru *RecommendUpdate) SetNillableAppGoodID(u *uuid.UUID) *RecommendUpdate {
+	if u != nil {
+		ru.SetAppGoodID(*u)
+	}
+	return ru
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (ru *RecommendUpdate) ClearAppGoodID() *RecommendUpdate {
+	ru.mutation.ClearAppGoodID()
 	return ru
 }
 
@@ -168,6 +176,46 @@ func (ru *RecommendUpdate) SetNillableRecommendIndex(d *decimal.Decimal) *Recomm
 // ClearRecommendIndex clears the value of the "recommend_index" field.
 func (ru *RecommendUpdate) ClearRecommendIndex() *RecommendUpdate {
 	ru.mutation.ClearRecommendIndex()
+	return ru
+}
+
+// SetHide sets the "hide" field.
+func (ru *RecommendUpdate) SetHide(b bool) *RecommendUpdate {
+	ru.mutation.SetHide(b)
+	return ru
+}
+
+// SetNillableHide sets the "hide" field if the given value is not nil.
+func (ru *RecommendUpdate) SetNillableHide(b *bool) *RecommendUpdate {
+	if b != nil {
+		ru.SetHide(*b)
+	}
+	return ru
+}
+
+// ClearHide clears the value of the "hide" field.
+func (ru *RecommendUpdate) ClearHide() *RecommendUpdate {
+	ru.mutation.ClearHide()
+	return ru
+}
+
+// SetHideReason sets the "hide_reason" field.
+func (ru *RecommendUpdate) SetHideReason(s string) *RecommendUpdate {
+	ru.mutation.SetHideReason(s)
+	return ru
+}
+
+// SetNillableHideReason sets the "hide_reason" field if the given value is not nil.
+func (ru *RecommendUpdate) SetNillableHideReason(s *string) *RecommendUpdate {
+	if s != nil {
+		ru.SetHideReason(*s)
+	}
+	return ru
+}
+
+// ClearHideReason clears the value of the "hide_reason" field.
+func (ru *RecommendUpdate) ClearHideReason() *RecommendUpdate {
+	ru.mutation.ClearHideReason()
 	return ru
 }
 
@@ -318,18 +366,17 @@ func (ru *RecommendUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: recommend.FieldEntID,
 		})
 	}
-	if value, ok := ru.mutation.AppID(); ok {
+	if value, ok := ru.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: recommend.FieldAppID,
+			Column: recommend.FieldAppGoodID,
 		})
 	}
-	if value, ok := ru.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+	if ru.mutation.AppGoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Value:  value,
-			Column: recommend.FieldGoodID,
+			Column: recommend.FieldAppGoodID,
 		})
 	}
 	if value, ok := ru.mutation.RecommenderID(); ok {
@@ -369,6 +416,32 @@ func (ru *RecommendUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: recommend.FieldRecommendIndex,
+		})
+	}
+	if value, ok := ru.mutation.Hide(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: recommend.FieldHide,
+		})
+	}
+	if ru.mutation.HideCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: recommend.FieldHide,
+		})
+	}
+	if value, ok := ru.mutation.HideReason(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: recommend.FieldHideReason,
+		})
+	}
+	if ru.mutation.HideReasonCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: recommend.FieldHideReason,
 		})
 	}
 	_spec.Modifiers = ru.modifiers
@@ -461,15 +534,23 @@ func (ruo *RecommendUpdateOne) SetNillableEntID(u *uuid.UUID) *RecommendUpdateOn
 	return ruo
 }
 
-// SetAppID sets the "app_id" field.
-func (ruo *RecommendUpdateOne) SetAppID(u uuid.UUID) *RecommendUpdateOne {
-	ruo.mutation.SetAppID(u)
+// SetAppGoodID sets the "app_good_id" field.
+func (ruo *RecommendUpdateOne) SetAppGoodID(u uuid.UUID) *RecommendUpdateOne {
+	ruo.mutation.SetAppGoodID(u)
 	return ruo
 }
 
-// SetGoodID sets the "good_id" field.
-func (ruo *RecommendUpdateOne) SetGoodID(u uuid.UUID) *RecommendUpdateOne {
-	ruo.mutation.SetGoodID(u)
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (ruo *RecommendUpdateOne) SetNillableAppGoodID(u *uuid.UUID) *RecommendUpdateOne {
+	if u != nil {
+		ruo.SetAppGoodID(*u)
+	}
+	return ruo
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (ruo *RecommendUpdateOne) ClearAppGoodID() *RecommendUpdateOne {
+	ruo.mutation.ClearAppGoodID()
 	return ruo
 }
 
@@ -530,6 +611,46 @@ func (ruo *RecommendUpdateOne) SetNillableRecommendIndex(d *decimal.Decimal) *Re
 // ClearRecommendIndex clears the value of the "recommend_index" field.
 func (ruo *RecommendUpdateOne) ClearRecommendIndex() *RecommendUpdateOne {
 	ruo.mutation.ClearRecommendIndex()
+	return ruo
+}
+
+// SetHide sets the "hide" field.
+func (ruo *RecommendUpdateOne) SetHide(b bool) *RecommendUpdateOne {
+	ruo.mutation.SetHide(b)
+	return ruo
+}
+
+// SetNillableHide sets the "hide" field if the given value is not nil.
+func (ruo *RecommendUpdateOne) SetNillableHide(b *bool) *RecommendUpdateOne {
+	if b != nil {
+		ruo.SetHide(*b)
+	}
+	return ruo
+}
+
+// ClearHide clears the value of the "hide" field.
+func (ruo *RecommendUpdateOne) ClearHide() *RecommendUpdateOne {
+	ruo.mutation.ClearHide()
+	return ruo
+}
+
+// SetHideReason sets the "hide_reason" field.
+func (ruo *RecommendUpdateOne) SetHideReason(s string) *RecommendUpdateOne {
+	ruo.mutation.SetHideReason(s)
+	return ruo
+}
+
+// SetNillableHideReason sets the "hide_reason" field if the given value is not nil.
+func (ruo *RecommendUpdateOne) SetNillableHideReason(s *string) *RecommendUpdateOne {
+	if s != nil {
+		ruo.SetHideReason(*s)
+	}
+	return ruo
+}
+
+// ClearHideReason clears the value of the "hide_reason" field.
+func (ruo *RecommendUpdateOne) ClearHideReason() *RecommendUpdateOne {
+	ruo.mutation.ClearHideReason()
 	return ruo
 }
 
@@ -710,18 +831,17 @@ func (ruo *RecommendUpdateOne) sqlSave(ctx context.Context) (_node *Recommend, e
 			Column: recommend.FieldEntID,
 		})
 	}
-	if value, ok := ruo.mutation.AppID(); ok {
+	if value, ok := ruo.mutation.AppGoodID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: recommend.FieldAppID,
+			Column: recommend.FieldAppGoodID,
 		})
 	}
-	if value, ok := ruo.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+	if ruo.mutation.AppGoodIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Value:  value,
-			Column: recommend.FieldGoodID,
+			Column: recommend.FieldAppGoodID,
 		})
 	}
 	if value, ok := ruo.mutation.RecommenderID(); ok {
@@ -761,6 +881,32 @@ func (ruo *RecommendUpdateOne) sqlSave(ctx context.Context) (_node *Recommend, e
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: recommend.FieldRecommendIndex,
+		})
+	}
+	if value, ok := ruo.mutation.Hide(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: recommend.FieldHide,
+		})
+	}
+	if ruo.mutation.HideCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: recommend.FieldHide,
+		})
+	}
+	if value, ok := ruo.mutation.HideReason(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: recommend.FieldHideReason,
+		})
+	}
+	if ruo.mutation.HideReasonCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: recommend.FieldHideReason,
 		})
 	}
 	_spec.Modifiers = ruo.modifiers

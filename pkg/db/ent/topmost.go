@@ -3,14 +3,12 @@
 package ent
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // TopMost is the model entity for the TopMost schema.
@@ -34,22 +32,12 @@ type TopMost struct {
 	Title string `json:"title,omitempty"`
 	// Message holds the value of the "message" field.
 	Message string `json:"message,omitempty"`
-	// Posters holds the value of the "posters" field.
-	Posters []string `json:"posters,omitempty"`
+	// TargetURL holds the value of the "target_url" field.
+	TargetURL string `json:"target_url,omitempty"`
 	// StartAt holds the value of the "start_at" field.
 	StartAt uint32 `json:"start_at,omitempty"`
 	// EndAt holds the value of the "end_at" field.
 	EndAt uint32 `json:"end_at,omitempty"`
-	// ThresholdCredits holds the value of the "threshold_credits" field.
-	ThresholdCredits decimal.Decimal `json:"threshold_credits,omitempty"`
-	// RegisterElapsedSeconds holds the value of the "register_elapsed_seconds" field.
-	RegisterElapsedSeconds uint32 `json:"register_elapsed_seconds,omitempty"`
-	// ThresholdPurchases holds the value of the "threshold_purchases" field.
-	ThresholdPurchases uint32 `json:"threshold_purchases,omitempty"`
-	// ThresholdPaymentAmount holds the value of the "threshold_payment_amount" field.
-	ThresholdPaymentAmount decimal.Decimal `json:"threshold_payment_amount,omitempty"`
-	// KycMust holds the value of the "kyc_must" field.
-	KycMust bool `json:"kyc_must,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -57,15 +45,9 @@ func (*TopMost) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case topmost.FieldPosters:
-			values[i] = new([]byte)
-		case topmost.FieldThresholdCredits, topmost.FieldThresholdPaymentAmount:
-			values[i] = new(decimal.Decimal)
-		case topmost.FieldKycMust:
-			values[i] = new(sql.NullBool)
-		case topmost.FieldID, topmost.FieldCreatedAt, topmost.FieldUpdatedAt, topmost.FieldDeletedAt, topmost.FieldStartAt, topmost.FieldEndAt, topmost.FieldRegisterElapsedSeconds, topmost.FieldThresholdPurchases:
+		case topmost.FieldID, topmost.FieldCreatedAt, topmost.FieldUpdatedAt, topmost.FieldDeletedAt, topmost.FieldStartAt, topmost.FieldEndAt:
 			values[i] = new(sql.NullInt64)
-		case topmost.FieldTopMostType, topmost.FieldTitle, topmost.FieldMessage:
+		case topmost.FieldTopMostType, topmost.FieldTitle, topmost.FieldMessage, topmost.FieldTargetURL:
 			values[i] = new(sql.NullString)
 		case topmost.FieldEntID, topmost.FieldAppID:
 			values[i] = new(uuid.UUID)
@@ -138,13 +120,11 @@ func (tm *TopMost) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				tm.Message = value.String
 			}
-		case topmost.FieldPosters:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field posters", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &tm.Posters); err != nil {
-					return fmt.Errorf("unmarshal field posters: %w", err)
-				}
+		case topmost.FieldTargetURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field target_url", values[i])
+			} else if value.Valid {
+				tm.TargetURL = value.String
 			}
 		case topmost.FieldStartAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -157,36 +137,6 @@ func (tm *TopMost) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field end_at", values[i])
 			} else if value.Valid {
 				tm.EndAt = uint32(value.Int64)
-			}
-		case topmost.FieldThresholdCredits:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field threshold_credits", values[i])
-			} else if value != nil {
-				tm.ThresholdCredits = *value
-			}
-		case topmost.FieldRegisterElapsedSeconds:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field register_elapsed_seconds", values[i])
-			} else if value.Valid {
-				tm.RegisterElapsedSeconds = uint32(value.Int64)
-			}
-		case topmost.FieldThresholdPurchases:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field threshold_purchases", values[i])
-			} else if value.Valid {
-				tm.ThresholdPurchases = uint32(value.Int64)
-			}
-		case topmost.FieldThresholdPaymentAmount:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field threshold_payment_amount", values[i])
-			} else if value != nil {
-				tm.ThresholdPaymentAmount = *value
-			}
-		case topmost.FieldKycMust:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field kyc_must", values[i])
-			} else if value.Valid {
-				tm.KycMust = value.Bool
 			}
 		}
 	}
@@ -240,29 +190,14 @@ func (tm *TopMost) String() string {
 	builder.WriteString("message=")
 	builder.WriteString(tm.Message)
 	builder.WriteString(", ")
-	builder.WriteString("posters=")
-	builder.WriteString(fmt.Sprintf("%v", tm.Posters))
+	builder.WriteString("target_url=")
+	builder.WriteString(tm.TargetURL)
 	builder.WriteString(", ")
 	builder.WriteString("start_at=")
 	builder.WriteString(fmt.Sprintf("%v", tm.StartAt))
 	builder.WriteString(", ")
 	builder.WriteString("end_at=")
 	builder.WriteString(fmt.Sprintf("%v", tm.EndAt))
-	builder.WriteString(", ")
-	builder.WriteString("threshold_credits=")
-	builder.WriteString(fmt.Sprintf("%v", tm.ThresholdCredits))
-	builder.WriteString(", ")
-	builder.WriteString("register_elapsed_seconds=")
-	builder.WriteString(fmt.Sprintf("%v", tm.RegisterElapsedSeconds))
-	builder.WriteString(", ")
-	builder.WriteString("threshold_purchases=")
-	builder.WriteString(fmt.Sprintf("%v", tm.ThresholdPurchases))
-	builder.WriteString(", ")
-	builder.WriteString("threshold_payment_amount=")
-	builder.WriteString(fmt.Sprintf("%v", tm.ThresholdPaymentAmount))
-	builder.WriteString(", ")
-	builder.WriteString("kyc_must=")
-	builder.WriteString(fmt.Sprintf("%v", tm.KycMust))
 	builder.WriteByte(')')
 	return builder.String()
 }

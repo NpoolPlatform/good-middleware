@@ -4,135 +4,138 @@ import (
 	"context"
 	"fmt"
 
-	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
-	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
-	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
-
-	"github.com/shopspring/decimal"
 )
 
 type reserveHandler struct {
-	*Handler
+	*stockAppGoodQuery
+}
+
+func (h *reserveHandler) constructGoodStockSQL(table string, id uint32) string {
+	sql := fmt.Sprintf(
+		`update %v
+		set
+		  spot_quantity = spot_quantity - %v,
+		  app_reserved = app_reserved + %v`,
+		table,
+		*h.Reserved,
+		*h.Reserved,
+	)
+	sql += fmt.Sprintf(
+		` where
+		  id = %v
+		and
+		  deleted_at = 0
+		and
+		  spot_quantity >= %v`,
+		id,
+		*h.Reserved,
+	)
+	sql += ` and
+		in_service + wait_start + locked + app_reserved + spot_quantity = total`
+	return sql
+}
+
+func (h *reserveHandler) constructAppGoodStockSQL(table string, id uint32) string {
+	sql := fmt.Sprintf(
+		`update %v
+		set
+		  spot_quantity = spot_quantity + %v,
+		  reserved = reserved + %v`,
+		table,
+		*h.Reserved,
+		*h.Reserved,
+	)
+	sql += fmt.Sprintf(
+		` where
+		  id = %v
+		and
+		  deleted_at = 0
+		and
+		  spot_quantity <= reserved`,
+		id,
+	)
+	return sql
 }
 
 func (h *reserveHandler) reserveStock(ctx context.Context, tx *ent.Tx) error {
-	info, err := tx.
-		Stock.
-		Query().
-		Where(
-			entstock.GoodID(*h.GoodID),
-			entstock.DeletedAt(0),
-		).
-		ForUpdate().
-		Only(ctx)
-	if err != nil {
-		return err
+	stock, ok := h.stocks[*h.AppGoodID]
+	if !ok || stock.stock == nil {
+		return wlog.Errorf("invalid stock")
 	}
-	if info == nil {
-		return fmt.Errorf("invalid stock")
-	}
+	sql := h.constructGoodStockSQL("stocks_v1", stock.stock.ID)
+	return h.execSQL(ctx, tx, sql)
+}
 
-	spotQuantity := info.SpotQuantity
-	appReserved := info.AppReserved
-
-	appReserved = h.Reserved.Add(appReserved)
-	spotQuantity = spotQuantity.Sub(*h.Reserved)
-
-	if spotQuantity.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
+func (h *reserveHandler) reserveMiningGoodStock(ctx context.Context, tx *ent.Tx) error {
+	stock, ok := h.stocks[*h.AppGoodID]
+	if !ok || stock.miningGoodStocks == nil {
+		return wlog.Errorf("invalid stock")
 	}
-	if spotQuantity.Cmp(info.Total) > 0 {
-		return fmt.Errorf("invalid stock")
+	appMiningGoodStock, ok := stock.appMiningGoodStocks[*h.EntID]
+	if !ok {
+		return wlog.Errorf("invalid appmininggoodstock")
 	}
-
-	if appReserved.Add(info.Locked).
-		Add(info.WaitStart).
-		Add(info.InService).
-		Add(spotQuantity).
-		Cmp(info.Total) > 0 {
-		return fmt.Errorf("stock exhausted")
+	miningGoodStock, ok := stock.miningGoodStocks[appMiningGoodStock.MiningGoodStockID]
+	if !ok {
+		return wlog.Errorf("invalid mininggoodstock")
 	}
-
-	if _, err := stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(info.ID),
-		&stockcrud.Req{
-			SpotQuantity: &spotQuantity,
-			AppReserved:  &appReserved,
-		},
-	).Save(ctx); err != nil {
-		return err
-	}
-	return nil
+	sql := h.constructGoodStockSQL("mining_good_stocks", miningGoodStock.ID)
+	return h.execSQL(ctx, tx, sql)
 }
 
 func (h *reserveHandler) reserveAppStock(ctx context.Context, tx *ent.Tx) error {
-	info, err := tx.
-		AppStock.
-		Query().
-		Where(
-			entappstock.ID(*h.ID),
-			entappstock.DeletedAt(0),
-		).
-		ForUpdate().
-		Only(ctx)
-	if err != nil {
-		return err
+	stock, ok := h.stocks[*h.AppGoodID]
+	if !ok || stock.appGoodStock == nil {
+		return wlog.Errorf("invalid stock")
 	}
-	if info == nil {
-		return fmt.Errorf("invalid appstock")
-	}
-
-	h.GoodID = &info.GoodID
-	spotQuantity := info.SpotQuantity
-	reserved := info.Reserved
-	spotQuantity = h.Reserved.Add(spotQuantity)
-	reserved = h.Reserved.Add(reserved)
-	if spotQuantity.Cmp(reserved) > 0 {
-		return fmt.Errorf("invalid stock")
-	}
-
-	if _, err := appstockcrud.UpdateSet(
-		tx.AppStock.UpdateOneID(info.ID),
-		&appstockcrud.Req{
-			SpotQuantity: &spotQuantity,
-			Reserved:     &reserved,
-		},
-	).Save(ctx); err != nil {
-		return err
-	}
-
-	return nil
+	sql := h.constructAppGoodStockSQL("app_stocks", stock.appGoodStock.ID)
+	return h.execSQL(ctx, tx, sql)
 }
 
-func (h *Handler) ReserveStock(ctx context.Context) (*npool.Stock, error) {
-	handler := &reserveHandler{
-		Handler: h,
+func (h *reserveHandler) reserveAppMiningGoodStock(ctx context.Context, tx *ent.Tx) error {
+	stock, ok := h.stocks[*h.AppGoodID]
+	if !ok || stock.appMiningGoodStocks == nil {
+		return wlog.Errorf("invalid stock")
 	}
-	info, err := h.GetStock(ctx)
-	if err != nil {
-		return nil, err
+	appMiningGoodStock, ok := stock.appMiningGoodStocks[*h.EntID]
+	if !ok {
+		return wlog.Errorf("invalid stock")
 	}
-	if info == nil {
-		return nil, fmt.Errorf("invalid appstock")
-	}
-	h.ID = &info.ID
+	sql := h.constructAppGoodStockSQL("app_mining_good_stocks", appMiningGoodStock.ID)
+	return h.execSQL(ctx, tx, sql)
+}
 
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+func (h *Handler) ReserveStock(ctx context.Context) error {
+	handler := &reserveHandler{
+		stockAppGoodQuery: &stockAppGoodQuery{
+			Handler: h,
+		},
+	}
+
+	if err := handler.getStockAppGoods(ctx); err != nil {
+		return wlog.WrapError(err)
+	}
+
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.reserveAppStock(ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
+		}
+		if handler.stockByMiningPool(*h.AppGoodID) {
+			if err := handler.reserveAppMiningGoodStock(ctx, tx); err != nil {
+				return wlog.WrapError(err)
+			}
 		}
 		if err := handler.reserveStock(ctx, tx); err != nil {
-			return err
+			return wlog.WrapError(err)
+		}
+		if handler.stockByMiningPool(*h.AppGoodID) {
+			if err := handler.reserveMiningGoodStock(ctx, tx); err != nil {
+				return wlog.WrapError(err)
+			}
 		}
 		return nil
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetStock(ctx)
 }

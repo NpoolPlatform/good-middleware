@@ -23,7 +23,8 @@ func (s *Server) UpdateRequired(ctx context.Context, in *npool.UpdateRequiredReq
 	}
 	handler, err := required1.NewHandler(
 		ctx,
-		required1.WithID(req.ID, true),
+		required1.WithID(req.ID, false),
+		required1.WithEntID(req.EntID, false),
 		required1.WithMust(req.Must, false),
 	)
 	if err != nil {
@@ -35,8 +36,7 @@ func (s *Server) UpdateRequired(ctx context.Context, in *npool.UpdateRequiredReq
 		return &npool.UpdateRequiredResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.UpdateRequired(ctx)
-	if err != nil {
+	if err := handler.UpdateRequired(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"UpdateRequired",
 			"In", in,
@@ -45,7 +45,5 @@ func (s *Server) UpdateRequired(ctx context.Context, in *npool.UpdateRequiredReq
 		return &npool.UpdateRequiredResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.UpdateRequiredResponse{
-		Info: info,
-	}, nil
+	return &npool.UpdateRequiredResponse{}, nil
 }

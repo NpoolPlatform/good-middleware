@@ -85,6 +85,14 @@ func (sc *StockCreate) SetGoodID(u uuid.UUID) *StockCreate {
 	return sc
 }
 
+// SetNillableGoodID sets the "good_id" field if the given value is not nil.
+func (sc *StockCreate) SetNillableGoodID(u *uuid.UUID) *StockCreate {
+	if u != nil {
+		sc.SetGoodID(*u)
+	}
+	return sc
+}
+
 // SetTotal sets the "total" field.
 func (sc *StockCreate) SetTotal(d decimal.Decimal) *StockCreate {
 	sc.mutation.SetTotal(d)
@@ -296,6 +304,13 @@ func (sc *StockCreate) defaults() error {
 		v := stock.DefaultEntID()
 		sc.mutation.SetEntID(v)
 	}
+	if _, ok := sc.mutation.GoodID(); !ok {
+		if stock.DefaultGoodID == nil {
+			return fmt.Errorf("ent: uninitialized stock.DefaultGoodID (forgotten import ent/runtime?)")
+		}
+		v := stock.DefaultGoodID()
+		sc.mutation.SetGoodID(v)
+	}
 	if _, ok := sc.mutation.Total(); !ok {
 		v := stock.DefaultTotal
 		sc.mutation.SetTotal(v)
@@ -340,9 +355,6 @@ func (sc *StockCreate) check() error {
 	}
 	if _, ok := sc.mutation.EntID(); !ok {
 		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "Stock.ent_id"`)}
-	}
-	if _, ok := sc.mutation.GoodID(); !ok {
-		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "Stock.good_id"`)}
 	}
 	return nil
 }
@@ -603,6 +615,12 @@ func (u *StockUpsert) SetGoodID(v uuid.UUID) *StockUpsert {
 // UpdateGoodID sets the "good_id" field to the value that was provided on create.
 func (u *StockUpsert) UpdateGoodID() *StockUpsert {
 	u.SetExcluded(stock.FieldGoodID)
+	return u
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (u *StockUpsert) ClearGoodID() *StockUpsert {
+	u.SetNull(stock.FieldGoodID)
 	return u
 }
 
@@ -870,6 +888,13 @@ func (u *StockUpsertOne) SetGoodID(v uuid.UUID) *StockUpsertOne {
 func (u *StockUpsertOne) UpdateGoodID() *StockUpsertOne {
 	return u.Update(func(s *StockUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (u *StockUpsertOne) ClearGoodID() *StockUpsertOne {
+	return u.Update(func(s *StockUpsert) {
+		s.ClearGoodID()
 	})
 }
 
@@ -1323,6 +1348,13 @@ func (u *StockUpsertBulk) SetGoodID(v uuid.UUID) *StockUpsertBulk {
 func (u *StockUpsertBulk) UpdateGoodID() *StockUpsertBulk {
 	return u.Update(func(s *StockUpsert) {
 		s.UpdateGoodID()
+	})
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (u *StockUpsertBulk) ClearGoodID() *StockUpsertBulk {
+	return u.Update(func(s *StockUpsert) {
+		s.ClearGoodID()
 	})
 }
 

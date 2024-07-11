@@ -93,6 +93,20 @@ func (aslc *AppStockLockCreate) SetNillableAppStockID(u *uuid.UUID) *AppStockLoc
 	return aslc
 }
 
+// SetAppGoodID sets the "app_good_id" field.
+func (aslc *AppStockLockCreate) SetAppGoodID(u uuid.UUID) *AppStockLockCreate {
+	aslc.mutation.SetAppGoodID(u)
+	return aslc
+}
+
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (aslc *AppStockLockCreate) SetNillableAppGoodID(u *uuid.UUID) *AppStockLockCreate {
+	if u != nil {
+		aslc.SetAppGoodID(*u)
+	}
+	return aslc
+}
+
 // SetUnits sets the "units" field.
 func (aslc *AppStockLockCreate) SetUnits(d decimal.Decimal) *AppStockLockCreate {
 	aslc.mutation.SetUnits(d)
@@ -283,6 +297,13 @@ func (aslc *AppStockLockCreate) defaults() error {
 		v := appstocklock.DefaultAppStockID()
 		aslc.mutation.SetAppStockID(v)
 	}
+	if _, ok := aslc.mutation.AppGoodID(); !ok {
+		if appstocklock.DefaultAppGoodID == nil {
+			return fmt.Errorf("ent: uninitialized appstocklock.DefaultAppGoodID (forgotten import ent/runtime?)")
+		}
+		v := appstocklock.DefaultAppGoodID()
+		aslc.mutation.SetAppGoodID(v)
+	}
 	if _, ok := aslc.mutation.Units(); !ok {
 		v := appstocklock.DefaultUnits
 		aslc.mutation.SetUnits(v)
@@ -396,6 +417,14 @@ func (aslc *AppStockLockCreate) createSpec() (*AppStockLock, *sqlgraph.CreateSpe
 			Column: appstocklock.FieldAppStockID,
 		})
 		_node.AppStockID = value
+	}
+	if value, ok := aslc.mutation.AppGoodID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appstocklock.FieldAppGoodID,
+		})
+		_node.AppGoodID = value
 	}
 	if value, ok := aslc.mutation.Units(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -572,6 +601,24 @@ func (u *AppStockLockUpsert) UpdateAppStockID() *AppStockLockUpsert {
 // ClearAppStockID clears the value of the "app_stock_id" field.
 func (u *AppStockLockUpsert) ClearAppStockID() *AppStockLockUpsert {
 	u.SetNull(appstocklock.FieldAppStockID)
+	return u
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (u *AppStockLockUpsert) SetAppGoodID(v uuid.UUID) *AppStockLockUpsert {
+	u.Set(appstocklock.FieldAppGoodID, v)
+	return u
+}
+
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *AppStockLockUpsert) UpdateAppGoodID() *AppStockLockUpsert {
+	u.SetExcluded(appstocklock.FieldAppGoodID)
+	return u
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *AppStockLockUpsert) ClearAppGoodID() *AppStockLockUpsert {
+	u.SetNull(appstocklock.FieldAppGoodID)
 	return u
 }
 
@@ -810,6 +857,27 @@ func (u *AppStockLockUpsertOne) UpdateAppStockID() *AppStockLockUpsertOne {
 func (u *AppStockLockUpsertOne) ClearAppStockID() *AppStockLockUpsertOne {
 	return u.Update(func(s *AppStockLockUpsert) {
 		s.ClearAppStockID()
+	})
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (u *AppStockLockUpsertOne) SetAppGoodID(v uuid.UUID) *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetAppGoodID(v)
+	})
+}
+
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *AppStockLockUpsertOne) UpdateAppGoodID() *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateAppGoodID()
+	})
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *AppStockLockUpsertOne) ClearAppGoodID() *AppStockLockUpsertOne {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.ClearAppGoodID()
 	})
 }
 
@@ -1228,6 +1296,27 @@ func (u *AppStockLockUpsertBulk) UpdateAppStockID() *AppStockLockUpsertBulk {
 func (u *AppStockLockUpsertBulk) ClearAppStockID() *AppStockLockUpsertBulk {
 	return u.Update(func(s *AppStockLockUpsert) {
 		s.ClearAppStockID()
+	})
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (u *AppStockLockUpsertBulk) SetAppGoodID(v uuid.UUID) *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.SetAppGoodID(v)
+	})
+}
+
+// UpdateAppGoodID sets the "app_good_id" field to the value that was provided on create.
+func (u *AppStockLockUpsertBulk) UpdateAppGoodID() *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.UpdateAppGoodID()
+	})
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *AppStockLockUpsertBulk) ClearAppGoodID() *AppStockLockUpsertBulk {
+	return u.Update(func(s *AppStockLockUpsert) {
+		s.ClearAppGoodID()
 	})
 }
 

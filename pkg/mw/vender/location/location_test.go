@@ -10,7 +10,6 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	brand1 "github.com/NpoolPlatform/good-middleware/pkg/mw/vender/brand"
-	brandmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/brand"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -28,37 +27,31 @@ func init() {
 	}
 }
 
-var (
-	brand = brandmwpb.Brand{
-		EntID: uuid.NewString(),
-		Name:  uuid.NewString(),
-		Logo:  uuid.NewString(),
-	}
-
-	ret = npool.Location{
-		EntID:    uuid.NewString(),
-		Country:  uuid.NewString(),
-		Province: uuid.NewString(),
-		City:     uuid.NewString(),
-		Address:  uuid.NewString(),
-		BrandID:  brand.EntID,
-	}
-)
+var ret = npool.Location{
+	EntID:     uuid.NewString(),
+	Country:   uuid.NewString(),
+	Province:  uuid.NewString(),
+	City:      uuid.NewString(),
+	Address:   uuid.NewString(),
+	BrandID:   uuid.NewString(),
+	BrandName: uuid.NewString(),
+	BrandLogo: uuid.NewString(),
+}
 
 func setup(t *testing.T) func(*testing.T) {
 	h1, err := brand1.NewHandler(
 		context.Background(),
-		brand1.WithEntID(&brand.EntID, true),
-		brand1.WithName(&brand.Name, true),
-		brand1.WithLogo(&brand.Logo, true),
+		brand1.WithEntID(&ret.BrandID, true),
+		brand1.WithName(&ret.BrandName, true),
+		brand1.WithLogo(&ret.BrandLogo, true),
 	)
 	assert.Nil(t, err)
 
-	_, err = h1.CreateBrand(context.Background())
+	err = h1.CreateBrand(context.Background())
 	assert.Nil(t, err)
 
 	return func(*testing.T) {
-		_, _ = h1.DeleteBrand(context.Background())
+		_ = h1.DeleteBrand(context.Background())
 	}
 }
 
@@ -74,16 +67,20 @@ func createLocation(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	info, err := handler.CreateLocation(context.Background())
+	err = handler.CreateLocation(context.Background())
 	if assert.Nil(t, err) {
-		ret.CreatedAt = info.CreatedAt
-		ret.UpdatedAt = info.UpdatedAt
-		ret.ID = info.ID
-		assert.Equal(t, info, &ret)
+		info, err := handler.GetLocation(context.Background())
+		if assert.Nil(t, err) {
+			ret.CreatedAt = info.CreatedAt
+			ret.UpdatedAt = info.UpdatedAt
+			ret.ID = info.ID
+			assert.Equal(t, info, &ret)
+		}
 	}
 }
 
 func updateLocation(t *testing.T) {
+	ret.Address = uuid.NewString()
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
@@ -95,10 +92,13 @@ func updateLocation(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	info, err := handler.UpdateLocation(context.Background())
+	err = handler.UpdateLocation(context.Background())
 	if assert.Nil(t, err) {
-		ret.UpdatedAt = info.UpdatedAt
-		assert.Equal(t, info, &ret)
+		info, err := handler.GetLocation(context.Background())
+		if assert.Nil(t, err) {
+			ret.UpdatedAt = info.UpdatedAt
+			assert.Equal(t, info, &ret)
+		}
 	}
 }
 
@@ -133,7 +133,7 @@ func getLocations(t *testing.T) {
 	assert.Nil(t, err)
 
 	infos, _, err := handler.GetLocations(context.Background())
-	if !assert.Nil(t, err) {
+	if assert.Nil(t, err) {
 		assert.Equal(t, len(infos), 1)
 		assert.Equal(t, infos[0], &ret)
 	}
@@ -146,12 +146,10 @@ func deleteLocation(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	info, err := handler.DeleteLocation(context.Background())
-	if assert.Nil(t, err) {
-		assert.Equal(t, info, &ret)
-	}
+	err = handler.DeleteLocation(context.Background())
+	assert.Nil(t, err)
 
-	info, err = handler.GetLocation(context.Background())
+	info, err := handler.GetLocation(context.Background())
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }

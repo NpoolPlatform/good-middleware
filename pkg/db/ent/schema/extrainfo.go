@@ -27,15 +27,11 @@ func (ExtraInfo) Mixin() []ent.Mixin {
 func (ExtraInfo) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("good_id", uuid.UUID{}),
-		field.
-			JSON("posters", []string{}).
+			UUID("app_good_id", uuid.UUID{}).
 			Optional().
-			Default([]string{}),
-		field.
-			JSON("labels", []string{}).
-			Optional().
-			Default([]string{}),
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
 			Uint32("likes").
 			Optional().
@@ -73,6 +69,6 @@ func (ExtraInfo) Edges() []ent.Edge {
 
 func (ExtraInfo) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("good_id"),
+		index.Fields("app_good_id"),
 	}
 }

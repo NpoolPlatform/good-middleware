@@ -28,26 +28,52 @@ type config struct {
 
 // hooks per client, for fast access.
 type hooks struct {
-	AppDefaultGood    []ent.Hook
-	AppGood           []ent.Hook
-	AppSimulateGood   []ent.Hook
-	AppStock          []ent.Hook
-	AppStockLock      []ent.Hook
-	Comment           []ent.Hook
-	DeviceInfo        []ent.Hook
-	ExtraInfo         []ent.Hook
-	Good              []ent.Hook
-	GoodReward        []ent.Hook
-	GoodRewardHistory []ent.Hook
-	Like              []ent.Hook
-	Recommend         []ent.Hook
-	RequiredGood      []ent.Hook
-	Score             []ent.Hook
-	Stock             []ent.Hook
-	TopMost           []ent.Hook
-	TopMostGood       []ent.Hook
-	VendorBrand       []ent.Hook
-	VendorLocation    []ent.Hook
+	AppDefaultGood         []ent.Hook
+	AppFee                 []ent.Hook
+	AppGood                []ent.Hook
+	AppGoodBase            []ent.Hook
+	AppGoodDescription     []ent.Hook
+	AppGoodDisplayColor    []ent.Hook
+	AppGoodDisplayName     []ent.Hook
+	AppGoodLabel           []ent.Hook
+	AppGoodPoster          []ent.Hook
+	AppLegacyPowerRental   []ent.Hook
+	AppMiningGoodStock     []ent.Hook
+	AppPowerRental         []ent.Hook
+	AppSimulatePowerRental []ent.Hook
+	AppStock               []ent.Hook
+	AppStockLock           []ent.Hook
+	Comment                []ent.Hook
+	DelegatedStaking       []ent.Hook
+	DeviceInfo             []ent.Hook
+	DeviceManufacturer     []ent.Hook
+	DevicePoster           []ent.Hook
+	ExtraInfo              []ent.Hook
+	FbmCrowdFunding        []ent.Hook
+	Fee                    []ent.Hook
+	Good                   []ent.Hook
+	GoodBase               []ent.Hook
+	GoodCoin               []ent.Hook
+	GoodCoinReward         []ent.Hook
+	GoodMalfunction        []ent.Hook
+	GoodReward             []ent.Hook
+	GoodRewardHistory      []ent.Hook
+	Like                   []ent.Hook
+	MiningGoodStock        []ent.Hook
+	PowerRental            []ent.Hook
+	Recommend              []ent.Hook
+	RequiredAppGood        []ent.Hook
+	RequiredGood           []ent.Hook
+	Score                  []ent.Hook
+	Stock                  []ent.Hook
+	TopMost                []ent.Hook
+	TopMostConstraint      []ent.Hook
+	TopMostGood            []ent.Hook
+	TopMostGoodConstraint  []ent.Hook
+	TopMostGoodPoster      []ent.Hook
+	TopMostPoster          []ent.Hook
+	VendorBrand            []ent.Hook
+	VendorLocation         []ent.Hook
 }
 
 // Options applies the options on the config object.

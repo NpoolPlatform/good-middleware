@@ -5,7 +5,6 @@ package comment
 import (
 	"entgo.io/ent"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 const (
@@ -21,12 +20,8 @@ const (
 	FieldDeletedAt = "deleted_at"
 	// FieldEntID holds the string denoting the ent_id field in the database.
 	FieldEntID = "ent_id"
-	// FieldAppID holds the string denoting the app_id field in the database.
-	FieldAppID = "app_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
-	// FieldGoodID holds the string denoting the good_id field in the database.
-	FieldGoodID = "good_id"
 	// FieldAppGoodID holds the string denoting the app_good_id field in the database.
 	FieldAppGoodID = "app_good_id"
 	// FieldOrderID holds the string denoting the order_id field in the database.
@@ -41,12 +36,12 @@ const (
 	FieldTrialUser = "trial_user"
 	// FieldPurchasedUser holds the string denoting the purchased_user field in the database.
 	FieldPurchasedUser = "purchased_user"
-	// FieldOrderFirstComment holds the string denoting the order_first_comment field in the database.
-	FieldOrderFirstComment = "order_first_comment"
-	// FieldScore holds the string denoting the score field in the database.
-	FieldScore = "score"
+	// FieldHide holds the string denoting the hide field in the database.
+	FieldHide = "hide"
+	// FieldHideReason holds the string denoting the hide_reason field in the database.
+	FieldHideReason = "hide_reason"
 	// Table holds the table name of the comment in the database.
-	Table = "comments"
+	Table = "app_good_comments"
 )
 
 // Columns holds all SQL columns for comment fields.
@@ -56,9 +51,7 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldDeletedAt,
 	FieldEntID,
-	FieldAppID,
 	FieldUserID,
-	FieldGoodID,
 	FieldAppGoodID,
 	FieldOrderID,
 	FieldContent,
@@ -66,8 +59,8 @@ var Columns = []string{
 	FieldAnonymous,
 	FieldTrialUser,
 	FieldPurchasedUser,
-	FieldOrderFirstComment,
-	FieldScore,
+	FieldHide,
+	FieldHideReason,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -99,12 +92,8 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultEntID holds the default value on creation for the "ent_id" field.
 	DefaultEntID func() uuid.UUID
-	// DefaultAppID holds the default value on creation for the "app_id" field.
-	DefaultAppID func() uuid.UUID
 	// DefaultUserID holds the default value on creation for the "user_id" field.
 	DefaultUserID func() uuid.UUID
-	// DefaultGoodID holds the default value on creation for the "good_id" field.
-	DefaultGoodID func() uuid.UUID
 	// DefaultAppGoodID holds the default value on creation for the "app_good_id" field.
 	DefaultAppGoodID func() uuid.UUID
 	// DefaultOrderID holds the default value on creation for the "order_id" field.
@@ -119,8 +108,8 @@ var (
 	DefaultTrialUser bool
 	// DefaultPurchasedUser holds the default value on creation for the "purchased_user" field.
 	DefaultPurchasedUser bool
-	// DefaultOrderFirstComment holds the default value on creation for the "order_first_comment" field.
-	DefaultOrderFirstComment bool
-	// DefaultScore holds the default value on creation for the "score" field.
-	DefaultScore decimal.Decimal
+	// DefaultHide holds the default value on creation for the "hide" field.
+	DefaultHide bool
+	// DefaultHideReason holds the default value on creation for the "hide_reason" field.
+	DefaultHideReason string
 )

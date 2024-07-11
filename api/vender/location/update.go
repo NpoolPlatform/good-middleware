@@ -1,4 +1,3 @@
-//nolint:dupl
 package location
 
 import (
@@ -24,7 +23,8 @@ func (s *Server) UpdateLocation(ctx context.Context, in *npool.UpdateLocationReq
 	}
 	handler, err := location1.NewHandler(
 		ctx,
-		location1.WithID(req.ID, true),
+		location1.WithID(req.ID, false),
+		location1.WithEntID(req.EntID, false),
 		location1.WithCountry(req.Country, false),
 		location1.WithProvince(req.Province, false),
 		location1.WithCity(req.City, false),
@@ -40,8 +40,7 @@ func (s *Server) UpdateLocation(ctx context.Context, in *npool.UpdateLocationReq
 		return &npool.UpdateLocationResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.UpdateLocation(ctx)
-	if err != nil {
+	if err := handler.UpdateLocation(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"UpdateLocation",
 			"In", in,
@@ -50,7 +49,5 @@ func (s *Server) UpdateLocation(ctx context.Context, in *npool.UpdateLocationReq
 		return &npool.UpdateLocationResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.UpdateLocationResponse{
-		Info: info,
-	}, nil
+	return &npool.UpdateLocationResponse{}, nil
 }

@@ -27,8 +27,7 @@ func (s *Server) Unlock(ctx context.Context, in *npool.UnlockRequest) (*npool.Un
 		return &npool.UnlockResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.UnlockStock(ctx)
-	if err != nil {
+	if err := handler.UnlockStock(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"Unlock",
 			"In", in,
@@ -37,7 +36,5 @@ func (s *Server) Unlock(ctx context.Context, in *npool.UnlockRequest) (*npool.Un
 		return &npool.UnlockResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.UnlockResponse{
-		Info: info,
-	}, nil
+	return &npool.UnlockResponse{}, nil
 }

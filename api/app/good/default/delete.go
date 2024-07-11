@@ -23,7 +23,8 @@ func (s *Server) DeleteDefault(ctx context.Context, in *npool.DeleteDefaultReque
 	}
 	handler, err := appdefaultgood1.NewHandler(
 		ctx,
-		appdefaultgood1.WithID(req.ID, true),
+		appdefaultgood1.WithID(req.ID, false),
+		appdefaultgood1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
@@ -34,8 +35,7 @@ func (s *Server) DeleteDefault(ctx context.Context, in *npool.DeleteDefaultReque
 		return &npool.DeleteDefaultResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.DeleteDefault(ctx)
-	if err != nil {
+	if err := handler.DeleteDefault(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"DeleteDefault",
 			"In", in,
@@ -44,7 +44,5 @@ func (s *Server) DeleteDefault(ctx context.Context, in *npool.DeleteDefaultReque
 		return &npool.DeleteDefaultResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.DeleteDefaultResponse{
-		Info: info,
-	}, nil
+	return &npool.DeleteDefaultResponse{}, nil
 }

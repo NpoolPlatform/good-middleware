@@ -23,7 +23,8 @@ func (s *Server) DeleteBrand(ctx context.Context, in *npool.DeleteBrandRequest) 
 	}
 	handler, err := brand1.NewHandler(
 		ctx,
-		brand1.WithID(req.ID, true),
+		brand1.WithID(req.ID, false),
+		brand1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
@@ -34,8 +35,7 @@ func (s *Server) DeleteBrand(ctx context.Context, in *npool.DeleteBrandRequest) 
 		return &npool.DeleteBrandResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.DeleteBrand(ctx)
-	if err != nil {
+	if err := handler.DeleteBrand(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"DeleteBrand",
 			"In", in,
@@ -44,7 +44,5 @@ func (s *Server) DeleteBrand(ctx context.Context, in *npool.DeleteBrandRequest) 
 		return &npool.DeleteBrandResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.DeleteBrandResponse{
-		Info: info,
-	}, nil
+	return &npool.DeleteBrandResponse{}, nil
 }

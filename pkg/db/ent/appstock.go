@@ -25,10 +25,6 @@ type AppStock struct {
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// EntID holds the value of the "ent_id" field.
 	EntID uuid.UUID `json:"ent_id,omitempty"`
-	// AppID holds the value of the "app_id" field.
-	AppID uuid.UUID `json:"app_id,omitempty"`
-	// GoodID holds the value of the "good_id" field.
-	GoodID uuid.UUID `json:"good_id,omitempty"`
 	// AppGoodID holds the value of the "app_good_id" field.
 	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// Reserved holds the value of the "reserved" field.
@@ -54,7 +50,7 @@ func (*AppStock) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case appstock.FieldID, appstock.FieldCreatedAt, appstock.FieldUpdatedAt, appstock.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case appstock.FieldEntID, appstock.FieldAppID, appstock.FieldGoodID, appstock.FieldAppGoodID:
+		case appstock.FieldEntID, appstock.FieldAppGoodID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type AppStock", columns[i])
@@ -100,18 +96,6 @@ func (as *AppStock) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field ent_id", values[i])
 			} else if value != nil {
 				as.EntID = *value
-			}
-		case appstock.FieldAppID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field app_id", values[i])
-			} else if value != nil {
-				as.AppID = *value
-			}
-		case appstock.FieldGoodID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field good_id", values[i])
-			} else if value != nil {
-				as.GoodID = *value
 			}
 		case appstock.FieldAppGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -194,12 +178,6 @@ func (as *AppStock) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("ent_id=")
 	builder.WriteString(fmt.Sprintf("%v", as.EntID))
-	builder.WriteString(", ")
-	builder.WriteString("app_id=")
-	builder.WriteString(fmt.Sprintf("%v", as.AppID))
-	builder.WriteString(", ")
-	builder.WriteString("good_id=")
-	builder.WriteString(fmt.Sprintf("%v", as.GoodID))
 	builder.WriteString(", ")
 	builder.WriteString("app_good_id=")
 	builder.WriteString(fmt.Sprintf("%v", as.AppGoodID))

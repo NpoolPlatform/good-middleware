@@ -1,4 +1,3 @@
-//nolint:dupl
 package topmost
 
 import (
@@ -29,14 +28,9 @@ func (s *Server) CreateTopMost(ctx context.Context, in *npool.CreateTopMostReque
 		topmost1.WithTopMostType(req.TopMostType, true),
 		topmost1.WithTitle(req.Title, true),
 		topmost1.WithMessage(req.Message, true),
-		topmost1.WithPosters(req.Posters, true),
+		topmost1.WithTargetURL(req.TargetUrl, false),
 		topmost1.WithStartAt(req.StartAt, true),
 		topmost1.WithEndAt(req.EndAt, true),
-		topmost1.WithThresholdCredits(req.ThresholdCredits, false),
-		topmost1.WithRegisterElapsedSeconds(req.RegisterElapsedSeconds, false),
-		topmost1.WithThresholdPurchases(req.ThresholdPurchases, false),
-		topmost1.WithThresholdPaymentAmount(req.ThresholdPaymentAmount, false),
-		topmost1.WithKycMust(req.KycMust, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
@@ -47,8 +41,7 @@ func (s *Server) CreateTopMost(ctx context.Context, in *npool.CreateTopMostReque
 		return &npool.CreateTopMostResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.CreateTopMost(ctx)
-	if err != nil {
+	if err := handler.CreateTopMost(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"CreateTopMost",
 			"In", in,
@@ -57,7 +50,5 @@ func (s *Server) CreateTopMost(ctx context.Context, in *npool.CreateTopMostReque
 		return &npool.CreateTopMostResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.CreateTopMostResponse{
-		Info: info,
-	}, nil
+	return &npool.CreateTopMostResponse{}, nil
 }

@@ -23,7 +23,8 @@ func (s *Server) DeleteLocation(ctx context.Context, in *npool.DeleteLocationReq
 	}
 	handler, err := location1.NewHandler(
 		ctx,
-		location1.WithID(req.ID, true),
+		location1.WithID(req.ID, false),
+		location1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
@@ -34,8 +35,7 @@ func (s *Server) DeleteLocation(ctx context.Context, in *npool.DeleteLocationReq
 		return &npool.DeleteLocationResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.DeleteLocation(ctx)
-	if err != nil {
+	if err := handler.DeleteLocation(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"DeleteLocation",
 			"In", in,
@@ -44,7 +44,5 @@ func (s *Server) DeleteLocation(ctx context.Context, in *npool.DeleteLocationReq
 		return &npool.DeleteLocationResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.DeleteLocationResponse{
-		Info: info,
-	}, nil
+	return &npool.DeleteLocationResponse{}, nil
 }

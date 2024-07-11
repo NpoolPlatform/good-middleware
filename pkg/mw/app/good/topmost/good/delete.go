@@ -7,19 +7,18 @@ import (
 	topmostgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/good"
 )
 
 type deleteHandler struct {
 	*Handler
+	now uint32
 }
 
 func (h *deleteHandler) deleteTopMostGood(ctx context.Context, tx *ent.Tx) error {
-	now := uint32(time.Now().Unix())
 	if _, err := topmostgoodcrud.UpdateSet(
 		tx.TopMostGood.UpdateOneID(*h.ID),
 		&topmostgoodcrud.Req{
-			DeletedAt: &now,
+			DeletedAt: &h.now,
 		},
 	).Save(ctx); err != nil {
 		return err
@@ -27,28 +26,22 @@ func (h *deleteHandler) deleteTopMostGood(ctx context.Context, tx *ent.Tx) error
 	return nil
 }
 
-func (h *Handler) DeleteTopMostGood(ctx context.Context) (*npool.TopMostGood, error) {
+func (h *Handler) DeleteTopMostGood(ctx context.Context) error {
 	info, err := h.GetTopMostGood(ctx)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	if info == nil {
-		return nil, nil
+		return nil
 	}
 
+	h.ID = &info.ID
 	handler := &deleteHandler{
 		Handler: h,
+		now:     uint32(time.Now().Unix()),
 	}
 
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.deleteTopMostGood(_ctx, tx); err != nil {
-			return err
-		}
-		return nil
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		return handler.deleteTopMostGood(_ctx, tx)
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return info, nil
 }

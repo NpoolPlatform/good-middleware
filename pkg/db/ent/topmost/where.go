@@ -6,7 +6,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // ID filters vertices based on their ID field.
@@ -136,6 +135,13 @@ func Message(v string) predicate.TopMost {
 	})
 }
 
+// TargetURL applies equality check predicate on the "target_url" field. It's identical to TargetURLEQ.
+func TargetURL(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTargetURL), v))
+	})
+}
+
 // StartAt applies equality check predicate on the "start_at" field. It's identical to StartAtEQ.
 func StartAt(v uint32) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
@@ -147,41 +153,6 @@ func StartAt(v uint32) predicate.TopMost {
 func EndAt(v uint32) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldEndAt), v))
-	})
-}
-
-// ThresholdCredits applies equality check predicate on the "threshold_credits" field. It's identical to ThresholdCreditsEQ.
-func ThresholdCredits(v decimal.Decimal) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldThresholdCredits), v))
-	})
-}
-
-// RegisterElapsedSeconds applies equality check predicate on the "register_elapsed_seconds" field. It's identical to RegisterElapsedSecondsEQ.
-func RegisterElapsedSeconds(v uint32) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldRegisterElapsedSeconds), v))
-	})
-}
-
-// ThresholdPurchases applies equality check predicate on the "threshold_purchases" field. It's identical to ThresholdPurchasesEQ.
-func ThresholdPurchases(v uint32) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldThresholdPurchases), v))
-	})
-}
-
-// ThresholdPaymentAmount applies equality check predicate on the "threshold_payment_amount" field. It's identical to ThresholdPaymentAmountEQ.
-func ThresholdPaymentAmount(v decimal.Decimal) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldThresholdPaymentAmount), v))
-	})
-}
-
-// KycMust applies equality check predicate on the "kyc_must" field. It's identical to KycMustEQ.
-func KycMust(v bool) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldKycMust), v))
 	})
 }
 
@@ -502,6 +473,20 @@ func AppIDLT(v uuid.UUID) predicate.TopMost {
 func AppIDLTE(v uuid.UUID) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDIsNil applies the IsNil predicate on the "app_id" field.
+func AppIDIsNil() predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAppID)))
+	})
+}
+
+// AppIDNotNil applies the NotNil predicate on the "app_id" field.
+func AppIDNotNil() predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAppID)))
 	})
 }
 
@@ -844,17 +829,116 @@ func MessageContainsFold(v string) predicate.TopMost {
 	})
 }
 
-// PostersIsNil applies the IsNil predicate on the "posters" field.
-func PostersIsNil() predicate.TopMost {
+// TargetURLEQ applies the EQ predicate on the "target_url" field.
+func TargetURLEQ(v string) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldPosters)))
+		s.Where(sql.EQ(s.C(FieldTargetURL), v))
 	})
 }
 
-// PostersNotNil applies the NotNil predicate on the "posters" field.
-func PostersNotNil() predicate.TopMost {
+// TargetURLNEQ applies the NEQ predicate on the "target_url" field.
+func TargetURLNEQ(v string) predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldPosters)))
+		s.Where(sql.NEQ(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLIn applies the In predicate on the "target_url" field.
+func TargetURLIn(vs ...string) predicate.TopMost {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldTargetURL), v...))
+	})
+}
+
+// TargetURLNotIn applies the NotIn predicate on the "target_url" field.
+func TargetURLNotIn(vs ...string) predicate.TopMost {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldTargetURL), v...))
+	})
+}
+
+// TargetURLGT applies the GT predicate on the "target_url" field.
+func TargetURLGT(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLGTE applies the GTE predicate on the "target_url" field.
+func TargetURLGTE(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLLT applies the LT predicate on the "target_url" field.
+func TargetURLLT(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLLTE applies the LTE predicate on the "target_url" field.
+func TargetURLLTE(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLContains applies the Contains predicate on the "target_url" field.
+func TargetURLContains(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLHasPrefix applies the HasPrefix predicate on the "target_url" field.
+func TargetURLHasPrefix(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLHasSuffix applies the HasSuffix predicate on the "target_url" field.
+func TargetURLHasSuffix(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLIsNil applies the IsNil predicate on the "target_url" field.
+func TargetURLIsNil() predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldTargetURL)))
+	})
+}
+
+// TargetURLNotNil applies the NotNil predicate on the "target_url" field.
+func TargetURLNotNil() predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldTargetURL)))
+	})
+}
+
+// TargetURLEqualFold applies the EqualFold predicate on the "target_url" field.
+func TargetURLEqualFold(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldTargetURL), v))
+	})
+}
+
+// TargetURLContainsFold applies the ContainsFold predicate on the "target_url" field.
+func TargetURLContainsFold(v string) predicate.TopMost {
+	return predicate.TopMost(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldTargetURL), v))
 	})
 }
 
@@ -1011,346 +1095,6 @@ func EndAtIsNil() predicate.TopMost {
 func EndAtNotNil() predicate.TopMost {
 	return predicate.TopMost(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldEndAt)))
-	})
-}
-
-// ThresholdCreditsEQ applies the EQ predicate on the "threshold_credits" field.
-func ThresholdCreditsEQ(v decimal.Decimal) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldThresholdCredits), v))
-	})
-}
-
-// ThresholdCreditsNEQ applies the NEQ predicate on the "threshold_credits" field.
-func ThresholdCreditsNEQ(v decimal.Decimal) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldThresholdCredits), v))
-	})
-}
-
-// ThresholdCreditsIn applies the In predicate on the "threshold_credits" field.
-func ThresholdCreditsIn(vs ...decimal.Decimal) predicate.TopMost {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldThresholdCredits), v...))
-	})
-}
-
-// ThresholdCreditsNotIn applies the NotIn predicate on the "threshold_credits" field.
-func ThresholdCreditsNotIn(vs ...decimal.Decimal) predicate.TopMost {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldThresholdCredits), v...))
-	})
-}
-
-// ThresholdCreditsGT applies the GT predicate on the "threshold_credits" field.
-func ThresholdCreditsGT(v decimal.Decimal) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldThresholdCredits), v))
-	})
-}
-
-// ThresholdCreditsGTE applies the GTE predicate on the "threshold_credits" field.
-func ThresholdCreditsGTE(v decimal.Decimal) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldThresholdCredits), v))
-	})
-}
-
-// ThresholdCreditsLT applies the LT predicate on the "threshold_credits" field.
-func ThresholdCreditsLT(v decimal.Decimal) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldThresholdCredits), v))
-	})
-}
-
-// ThresholdCreditsLTE applies the LTE predicate on the "threshold_credits" field.
-func ThresholdCreditsLTE(v decimal.Decimal) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldThresholdCredits), v))
-	})
-}
-
-// ThresholdCreditsIsNil applies the IsNil predicate on the "threshold_credits" field.
-func ThresholdCreditsIsNil() predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldThresholdCredits)))
-	})
-}
-
-// ThresholdCreditsNotNil applies the NotNil predicate on the "threshold_credits" field.
-func ThresholdCreditsNotNil() predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldThresholdCredits)))
-	})
-}
-
-// RegisterElapsedSecondsEQ applies the EQ predicate on the "register_elapsed_seconds" field.
-func RegisterElapsedSecondsEQ(v uint32) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldRegisterElapsedSeconds), v))
-	})
-}
-
-// RegisterElapsedSecondsNEQ applies the NEQ predicate on the "register_elapsed_seconds" field.
-func RegisterElapsedSecondsNEQ(v uint32) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldRegisterElapsedSeconds), v))
-	})
-}
-
-// RegisterElapsedSecondsIn applies the In predicate on the "register_elapsed_seconds" field.
-func RegisterElapsedSecondsIn(vs ...uint32) predicate.TopMost {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldRegisterElapsedSeconds), v...))
-	})
-}
-
-// RegisterElapsedSecondsNotIn applies the NotIn predicate on the "register_elapsed_seconds" field.
-func RegisterElapsedSecondsNotIn(vs ...uint32) predicate.TopMost {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldRegisterElapsedSeconds), v...))
-	})
-}
-
-// RegisterElapsedSecondsGT applies the GT predicate on the "register_elapsed_seconds" field.
-func RegisterElapsedSecondsGT(v uint32) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldRegisterElapsedSeconds), v))
-	})
-}
-
-// RegisterElapsedSecondsGTE applies the GTE predicate on the "register_elapsed_seconds" field.
-func RegisterElapsedSecondsGTE(v uint32) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldRegisterElapsedSeconds), v))
-	})
-}
-
-// RegisterElapsedSecondsLT applies the LT predicate on the "register_elapsed_seconds" field.
-func RegisterElapsedSecondsLT(v uint32) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldRegisterElapsedSeconds), v))
-	})
-}
-
-// RegisterElapsedSecondsLTE applies the LTE predicate on the "register_elapsed_seconds" field.
-func RegisterElapsedSecondsLTE(v uint32) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldRegisterElapsedSeconds), v))
-	})
-}
-
-// RegisterElapsedSecondsIsNil applies the IsNil predicate on the "register_elapsed_seconds" field.
-func RegisterElapsedSecondsIsNil() predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldRegisterElapsedSeconds)))
-	})
-}
-
-// RegisterElapsedSecondsNotNil applies the NotNil predicate on the "register_elapsed_seconds" field.
-func RegisterElapsedSecondsNotNil() predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldRegisterElapsedSeconds)))
-	})
-}
-
-// ThresholdPurchasesEQ applies the EQ predicate on the "threshold_purchases" field.
-func ThresholdPurchasesEQ(v uint32) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldThresholdPurchases), v))
-	})
-}
-
-// ThresholdPurchasesNEQ applies the NEQ predicate on the "threshold_purchases" field.
-func ThresholdPurchasesNEQ(v uint32) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldThresholdPurchases), v))
-	})
-}
-
-// ThresholdPurchasesIn applies the In predicate on the "threshold_purchases" field.
-func ThresholdPurchasesIn(vs ...uint32) predicate.TopMost {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldThresholdPurchases), v...))
-	})
-}
-
-// ThresholdPurchasesNotIn applies the NotIn predicate on the "threshold_purchases" field.
-func ThresholdPurchasesNotIn(vs ...uint32) predicate.TopMost {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldThresholdPurchases), v...))
-	})
-}
-
-// ThresholdPurchasesGT applies the GT predicate on the "threshold_purchases" field.
-func ThresholdPurchasesGT(v uint32) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldThresholdPurchases), v))
-	})
-}
-
-// ThresholdPurchasesGTE applies the GTE predicate on the "threshold_purchases" field.
-func ThresholdPurchasesGTE(v uint32) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldThresholdPurchases), v))
-	})
-}
-
-// ThresholdPurchasesLT applies the LT predicate on the "threshold_purchases" field.
-func ThresholdPurchasesLT(v uint32) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldThresholdPurchases), v))
-	})
-}
-
-// ThresholdPurchasesLTE applies the LTE predicate on the "threshold_purchases" field.
-func ThresholdPurchasesLTE(v uint32) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldThresholdPurchases), v))
-	})
-}
-
-// ThresholdPurchasesIsNil applies the IsNil predicate on the "threshold_purchases" field.
-func ThresholdPurchasesIsNil() predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldThresholdPurchases)))
-	})
-}
-
-// ThresholdPurchasesNotNil applies the NotNil predicate on the "threshold_purchases" field.
-func ThresholdPurchasesNotNil() predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldThresholdPurchases)))
-	})
-}
-
-// ThresholdPaymentAmountEQ applies the EQ predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountEQ(v decimal.Decimal) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldThresholdPaymentAmount), v))
-	})
-}
-
-// ThresholdPaymentAmountNEQ applies the NEQ predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountNEQ(v decimal.Decimal) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldThresholdPaymentAmount), v))
-	})
-}
-
-// ThresholdPaymentAmountIn applies the In predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountIn(vs ...decimal.Decimal) predicate.TopMost {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldThresholdPaymentAmount), v...))
-	})
-}
-
-// ThresholdPaymentAmountNotIn applies the NotIn predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountNotIn(vs ...decimal.Decimal) predicate.TopMost {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldThresholdPaymentAmount), v...))
-	})
-}
-
-// ThresholdPaymentAmountGT applies the GT predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountGT(v decimal.Decimal) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldThresholdPaymentAmount), v))
-	})
-}
-
-// ThresholdPaymentAmountGTE applies the GTE predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountGTE(v decimal.Decimal) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldThresholdPaymentAmount), v))
-	})
-}
-
-// ThresholdPaymentAmountLT applies the LT predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountLT(v decimal.Decimal) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldThresholdPaymentAmount), v))
-	})
-}
-
-// ThresholdPaymentAmountLTE applies the LTE predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountLTE(v decimal.Decimal) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldThresholdPaymentAmount), v))
-	})
-}
-
-// ThresholdPaymentAmountIsNil applies the IsNil predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountIsNil() predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldThresholdPaymentAmount)))
-	})
-}
-
-// ThresholdPaymentAmountNotNil applies the NotNil predicate on the "threshold_payment_amount" field.
-func ThresholdPaymentAmountNotNil() predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldThresholdPaymentAmount)))
-	})
-}
-
-// KycMustEQ applies the EQ predicate on the "kyc_must" field.
-func KycMustEQ(v bool) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldKycMust), v))
-	})
-}
-
-// KycMustNEQ applies the NEQ predicate on the "kyc_must" field.
-func KycMustNEQ(v bool) predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldKycMust), v))
-	})
-}
-
-// KycMustIsNil applies the IsNil predicate on the "kyc_must" field.
-func KycMustIsNil() predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldKycMust)))
-	})
-}
-
-// KycMustNotNil applies the NotNil predicate on the "kyc_must" field.
-func KycMustNotNil() predicate.TopMost {
-	return predicate.TopMost(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldKycMust)))
 	})
 }
 

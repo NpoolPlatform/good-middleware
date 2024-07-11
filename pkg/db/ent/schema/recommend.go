@@ -3,10 +3,13 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
@@ -27,14 +30,16 @@ func (Recommend) Mixin() []ent.Mixin {
 func (Recommend) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("app_id", uuid.UUID{}),
-		field.
-			UUID("good_id", uuid.UUID{}),
+			UUID("app_good_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
 			UUID("recommender_id", uuid.UUID{}).
 			Optional().
 			Default(func() uuid.UUID {
-				return uuid.UUID{}
+				return uuid.Nil
 			}),
 		field.
 			String("message").
@@ -47,12 +52,26 @@ func (Recommend) Fields() []ent.Field {
 			}).
 			Optional().
 			Default(decimal.Decimal{}),
+		field.
+			Bool("hide").
+			Optional().
+			Default(false),
+		field.
+			String("hide_reason").
+			Optional().
+			Default(types.GoodCommentHideReason_DefaultGoodCommentHideReason.String()),
 	}
 }
 
 // Indexes of the Recommend.
 func (Recommend) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("app_id", "good_id"),
+		index.Fields("app_good_id"),
+	}
+}
+
+func (Recommend) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Annotation{Table: "app_good_recommends"},
 	}
 }

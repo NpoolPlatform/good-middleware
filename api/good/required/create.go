@@ -37,8 +37,7 @@ func (s *Server) CreateRequired(ctx context.Context, in *npool.CreateRequiredReq
 		return &npool.CreateRequiredResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.CreateRequired(ctx)
-	if err != nil {
+	if err := handler.CreateRequired(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"CreateRequired",
 			"In", in,
@@ -47,7 +46,5 @@ func (s *Server) CreateRequired(ctx context.Context, in *npool.CreateRequiredReq
 		return &npool.CreateRequiredResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.CreateRequiredResponse{
-		Info: info,
-	}, nil
+	return &npool.CreateRequiredResponse{}, nil
 }

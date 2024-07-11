@@ -108,10 +108,10 @@ func EntID(v uuid.UUID) predicate.ExtraInfo {
 	})
 }
 
-// GoodID applies equality check predicate on the "good_id" field. It's identical to GoodIDEQ.
-func GoodID(v uuid.UUID) predicate.ExtraInfo {
+// AppGoodID applies equality check predicate on the "app_good_id" field. It's identical to AppGoodIDEQ.
+func AppGoodID(v uuid.UUID) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodID), v))
+		s.Where(sql.EQ(s.C(FieldAppGoodID), v))
 	})
 }
 
@@ -413,95 +413,81 @@ func EntIDLTE(v uuid.UUID) predicate.ExtraInfo {
 	})
 }
 
-// GoodIDEQ applies the EQ predicate on the "good_id" field.
-func GoodIDEQ(v uuid.UUID) predicate.ExtraInfo {
+// AppGoodIDEQ applies the EQ predicate on the "app_good_id" field.
+func AppGoodIDEQ(v uuid.UUID) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodID), v))
+		s.Where(sql.EQ(s.C(FieldAppGoodID), v))
 	})
 }
 
-// GoodIDNEQ applies the NEQ predicate on the "good_id" field.
-func GoodIDNEQ(v uuid.UUID) predicate.ExtraInfo {
+// AppGoodIDNEQ applies the NEQ predicate on the "app_good_id" field.
+func AppGoodIDNEQ(v uuid.UUID) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldGoodID), v))
+		s.Where(sql.NEQ(s.C(FieldAppGoodID), v))
 	})
 }
 
-// GoodIDIn applies the In predicate on the "good_id" field.
-func GoodIDIn(vs ...uuid.UUID) predicate.ExtraInfo {
+// AppGoodIDIn applies the In predicate on the "app_good_id" field.
+func AppGoodIDIn(vs ...uuid.UUID) predicate.ExtraInfo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldGoodID), v...))
+		s.Where(sql.In(s.C(FieldAppGoodID), v...))
 	})
 }
 
-// GoodIDNotIn applies the NotIn predicate on the "good_id" field.
-func GoodIDNotIn(vs ...uuid.UUID) predicate.ExtraInfo {
+// AppGoodIDNotIn applies the NotIn predicate on the "app_good_id" field.
+func AppGoodIDNotIn(vs ...uuid.UUID) predicate.ExtraInfo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldGoodID), v...))
+		s.Where(sql.NotIn(s.C(FieldAppGoodID), v...))
 	})
 }
 
-// GoodIDGT applies the GT predicate on the "good_id" field.
-func GoodIDGT(v uuid.UUID) predicate.ExtraInfo {
+// AppGoodIDGT applies the GT predicate on the "app_good_id" field.
+func AppGoodIDGT(v uuid.UUID) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldGoodID), v))
+		s.Where(sql.GT(s.C(FieldAppGoodID), v))
 	})
 }
 
-// GoodIDGTE applies the GTE predicate on the "good_id" field.
-func GoodIDGTE(v uuid.UUID) predicate.ExtraInfo {
+// AppGoodIDGTE applies the GTE predicate on the "app_good_id" field.
+func AppGoodIDGTE(v uuid.UUID) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldGoodID), v))
+		s.Where(sql.GTE(s.C(FieldAppGoodID), v))
 	})
 }
 
-// GoodIDLT applies the LT predicate on the "good_id" field.
-func GoodIDLT(v uuid.UUID) predicate.ExtraInfo {
+// AppGoodIDLT applies the LT predicate on the "app_good_id" field.
+func AppGoodIDLT(v uuid.UUID) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldGoodID), v))
+		s.Where(sql.LT(s.C(FieldAppGoodID), v))
 	})
 }
 
-// GoodIDLTE applies the LTE predicate on the "good_id" field.
-func GoodIDLTE(v uuid.UUID) predicate.ExtraInfo {
+// AppGoodIDLTE applies the LTE predicate on the "app_good_id" field.
+func AppGoodIDLTE(v uuid.UUID) predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldGoodID), v))
+		s.Where(sql.LTE(s.C(FieldAppGoodID), v))
 	})
 }
 
-// PostersIsNil applies the IsNil predicate on the "posters" field.
-func PostersIsNil() predicate.ExtraInfo {
+// AppGoodIDIsNil applies the IsNil predicate on the "app_good_id" field.
+func AppGoodIDIsNil() predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldPosters)))
+		s.Where(sql.IsNull(s.C(FieldAppGoodID)))
 	})
 }
 
-// PostersNotNil applies the NotNil predicate on the "posters" field.
-func PostersNotNil() predicate.ExtraInfo {
+// AppGoodIDNotNil applies the NotNil predicate on the "app_good_id" field.
+func AppGoodIDNotNil() predicate.ExtraInfo {
 	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldPosters)))
-	})
-}
-
-// LabelsIsNil applies the IsNil predicate on the "labels" field.
-func LabelsIsNil() predicate.ExtraInfo {
-	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldLabels)))
-	})
-}
-
-// LabelsNotNil applies the NotNil predicate on the "labels" field.
-func LabelsNotNil() predicate.ExtraInfo {
-	return predicate.ExtraInfo(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldLabels)))
+		s.Where(sql.NotNull(s.C(FieldAppGoodID)))
 	})
 }
 

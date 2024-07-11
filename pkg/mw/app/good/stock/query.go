@@ -2,28 +2,34 @@ package appstock
 
 import (
 	"context"
-	"fmt"
 
 	"entgo.io/ent/dialect/sql"
 
-	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
+	appmininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
+	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
+	entappmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
 	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
-	entgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/good"
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	entpowerrental "github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
+	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
+	appmininggoodstockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock/mining"
 
+	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
 
 type queryHandler struct {
 	*Handler
-	stmSelect *ent.AppStockSelect
-	stmCount  *ent.AppStockSelect
-	infos     []*npool.Stock
-	total     uint32
+	stmSelect           *ent.AppStockSelect
+	stmCount            *ent.AppStockSelect
+	infos               []*npool.Stock
+	appMiningGoodStocks []*appmininggoodstockmwpb.StockInfo
+	total               uint32
 }
 
 func (h *queryHandler) selectStock(stm *ent.AppStockQuery) *ent.AppStockSelect {
@@ -32,7 +38,7 @@ func (h *queryHandler) selectStock(stm *ent.AppStockQuery) *ent.AppStockSelect {
 
 func (h *queryHandler) queryStock(cli *ent.Client) error {
 	if h.ID == nil && h.EntID == nil {
-		return fmt.Errorf("invalid id")
+		return wlog.Errorf("invalid id")
 	}
 	stm := cli.AppStock.Query().Where(entappstock.DeletedAt(0))
 	if h.ID != nil {
@@ -46,26 +52,18 @@ func (h *queryHandler) queryStock(cli *ent.Client) error {
 }
 
 func (h *queryHandler) queryStocks(cli *ent.Client) (*ent.AppStockSelect, error) {
-	stm, err := appstockcrud.SetQueryConds(cli.AppStock.Query(), &appstockcrud.Conds{
-		EntIDs: &cruder.Cond{Op: cruder.IN, Val: h.EntIDs},
-	})
-	if err != nil {
-		return nil, err
-	}
-	return h.selectStock(stm), nil
+	return nil, wlog.Errorf("NOT IMPLEMENTED")
 }
 
 func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 	t := sql.Table(entappstock.Table)
-	s.LeftJoin(t).
+	s.Join(t).
 		On(
 			s.C(entappstock.FieldID),
 			t.C(entappstock.FieldID),
 		).
 		AppendSelect(
 			sql.As(t.C(entappstock.FieldEntID), "ent_id"),
-			sql.As(t.C(entappstock.FieldAppID), "app_id"),
-			sql.As(t.C(entappstock.FieldGoodID), "good_id"),
 			sql.As(t.C(entappstock.FieldAppGoodID), "app_good_id"),
 			sql.As(t.C(entappstock.FieldReserved), "reserved"),
 			sql.As(t.C(entappstock.FieldSpotQuantity), "spot_quantity"),
@@ -78,41 +76,44 @@ func (h *queryHandler) queryJoinMyself(s *sql.Selector) {
 		)
 }
 
-func (h *queryHandler) queryJoinGood(s *sql.Selector) {
-	t := sql.Table(entgood.Table)
-	s.LeftJoin(t).
-		On(
-			s.C(entappstock.FieldGoodID),
-			t.C(entgood.FieldEntID),
-		).
-		AppendSelect(
-			sql.As(t.C(entgood.FieldTitle), "good_name"),
-		)
-}
-
 func (h *queryHandler) queryJoinAppGood(s *sql.Selector) {
-	t := sql.Table(entappgood.Table)
-	s.LeftJoin(t).
+	t1 := sql.Table(entappgoodbase.Table)
+	t2 := sql.Table(entgoodbase.Table)
+	t3 := sql.Table(entpowerrental.Table)
+
+	s.Join(t1).
 		On(
 			s.C(entappstock.FieldAppGoodID),
-			t.C(entappgood.FieldEntID),
+			t1.C(entappgoodbase.FieldEntID),
+		).
+		Join(t2).
+		On(
+			t1.C(entappgoodbase.FieldGoodID),
+			t2.C(entgoodbase.FieldEntID),
+		).
+		LeftJoin(t3).
+		On(
+			t1.C(entappgoodbase.FieldGoodID),
+			t3.C(entpowerrental.FieldGoodID),
 		).
 		AppendSelect(
-			sql.As(t.C(entappgood.FieldGoodName), "app_good_name"),
+			t1.C(entappgoodbase.FieldAppID),
+			t1.C(entappgoodbase.FieldGoodID),
+			sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
+			sql.As(t2.C(entgoodbase.FieldName), "good_name"),
+			t3.C(entpowerrental.FieldStockMode),
 		)
 }
 
 func (h *queryHandler) queryJoin() {
 	h.stmSelect.Modify(func(s *sql.Selector) {
 		h.queryJoinMyself(s)
-		h.queryJoinGood(s)
 		h.queryJoinAppGood(s)
 	})
 	if h.stmCount == nil {
 		return
 	}
 	h.stmCount.Modify(func(s *sql.Selector) {
-		h.queryJoinGood(s)
 		h.queryJoinAppGood(s)
 	})
 }
@@ -121,44 +122,62 @@ func (h *queryHandler) scan(ctx context.Context) error {
 	return h.stmSelect.Scan(ctx, &h.infos)
 }
 
+func (h *queryHandler) getAppMiningGoodStocks(ctx context.Context, cli *ent.Client) error {
+	appGoodStockIDs := func() (uids []uuid.UUID) {
+		for _, info := range h.infos {
+			if info.StockModeStr != types.GoodStockMode_GoodStockByMiningPool.String() {
+				continue
+			}
+			uids = append(uids, uuid.MustParse(info.EntID))
+		}
+		return
+	}()
+
+	stm, err := appmininggoodstockcrud.SetQueryConds(
+		cli.AppMiningGoodStock.Query(),
+		&appmininggoodstockcrud.Conds{
+			AppGoodStockIDs: &cruder.Cond{Op: cruder.IN, Val: appGoodStockIDs},
+		},
+	)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+
+	return stm.Select(
+		entappmininggoodstock.FieldID,
+		entappmininggoodstock.FieldEntID,
+		entappmininggoodstock.FieldAppGoodStockID,
+		entappmininggoodstock.FieldMiningGoodStockID,
+		entappmininggoodstock.FieldReserved,
+		entappmininggoodstock.FieldSpotQuantity,
+		entappmininggoodstock.FieldLocked,
+		entappmininggoodstock.FieldWaitStart,
+		entappmininggoodstock.FieldInService,
+		entappmininggoodstock.FieldSold,
+	).Scan(ctx, &h.appMiningGoodStocks)
+}
+
 func (h *queryHandler) formalize() {
+	appMiningGoodStocks := map[string][]*appmininggoodstockmwpb.StockInfo{}
+
+	for _, stock := range h.appMiningGoodStocks {
+		stock.Reserved = func() string { amount, _ := decimal.NewFromString(stock.Reserved); return amount.String() }()
+		stock.SpotQuantity = func() string { amount, _ := decimal.NewFromString(stock.SpotQuantity); return amount.String() }()
+		stock.Locked = func() string { amount, _ := decimal.NewFromString(stock.Locked); return amount.String() }()
+		stock.WaitStart = func() string { amount, _ := decimal.NewFromString(stock.WaitStart); return amount.String() }()
+		stock.InService = func() string { amount, _ := decimal.NewFromString(stock.InService); return amount.String() }()
+		stock.Sold = func() string { amount, _ := decimal.NewFromString(stock.Sold); return amount.String() }()
+		appMiningGoodStocks[stock.AppGoodStockID] = append(appMiningGoodStocks[stock.AppGoodStockID], stock)
+	}
 	for _, info := range h.infos {
-		amount, err := decimal.NewFromString(info.Reserved)
-		if err != nil {
-			info.Reserved = decimal.NewFromInt(0).String()
-		} else {
-			info.Reserved = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.Locked)
-		if err != nil {
-			info.Locked = decimal.NewFromInt(0).String()
-		} else {
-			info.Locked = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.InService)
-		if err != nil {
-			info.InService = decimal.NewFromInt(0).String()
-		} else {
-			info.InService = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.WaitStart)
-		if err != nil {
-			info.WaitStart = decimal.NewFromInt(0).String()
-		} else {
-			info.WaitStart = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.Sold)
-		if err != nil {
-			info.Sold = decimal.NewFromInt(0).String()
-		} else {
-			info.Sold = amount.String()
-		}
-		amount, err = decimal.NewFromString(info.SpotQuantity)
-		if err != nil {
-			info.SpotQuantity = decimal.NewFromInt(0).String()
-		} else {
-			info.SpotQuantity = amount.String()
-		}
+		info.Reserved = func() string { amount, _ := decimal.NewFromString(info.Reserved); return amount.String() }()
+		info.SpotQuantity = func() string { amount, _ := decimal.NewFromString(info.SpotQuantity); return amount.String() }()
+		info.Locked = func() string { amount, _ := decimal.NewFromString(info.Locked); return amount.String() }()
+		info.InService = func() string { amount, _ := decimal.NewFromString(info.InService); return amount.String() }()
+		info.WaitStart = func() string { amount, _ := decimal.NewFromString(info.WaitStart); return amount.String() }()
+		info.Sold = func() string { amount, _ := decimal.NewFromString(info.Sold); return amount.String() }()
+		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
+		info.AppMiningGoodStocks = appMiningGoodStocks[info.EntID]
 	}
 }
 
@@ -169,10 +188,16 @@ func (h *Handler) GetStock(ctx context.Context) (*npool.Stock, error) {
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if err := handler.queryStock(cli); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.queryJoin()
-		return handler.scan(ctx)
+		handler.stmSelect.
+			Offset(0).
+			Limit(2)
+		if err := handler.scan(_ctx); err != nil {
+			return wlog.WrapError(err)
+		}
+		return handler.getAppMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
 		return nil, err
@@ -181,7 +206,7 @@ func (h *Handler) GetStock(ctx context.Context) (*npool.Stock, error) {
 		return nil, nil
 	}
 	if len(handler.infos) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 
 	handler.formalize()
@@ -199,24 +224,25 @@ func (h *Handler) GetStocks(ctx context.Context) ([]*npool.Stock, uint32, error)
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		handler.stmSelect, err = handler.queryStocks(cli)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.stmCount, err = handler.queryStocks(cli)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 
 		handler.queryJoin()
 
 		total, err := handler.stmCount.Count(_ctx)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		handler.total = uint32(total)
 
-		handler.stmSelect.
-			Limit(len(h.EntIDs))
-		return handler.scan(_ctx)
+		if err := handler.scan(_ctx); err != nil {
+			return wlog.WrapError(err)
+		}
+		return handler.getAppMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
 		return nil, 0, err

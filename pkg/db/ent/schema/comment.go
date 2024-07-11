@@ -2,13 +2,14 @@ package schema
 
 import (
 	"entgo.io/ent"
-	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // Comment holds the schema definition for the Comment entity.
@@ -27,19 +28,7 @@ func (Comment) Mixin() []ent.Mixin {
 func (Comment) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("app_id", uuid.UUID{}).
-			Optional().
-			Default(func() uuid.UUID {
-				return uuid.Nil
-			}),
-		field.
 			UUID("user_id", uuid.UUID{}).
-			Optional().
-			Default(func() uuid.UUID {
-				return uuid.Nil
-			}),
-		field.
-			UUID("good_id", uuid.UUID{}).
 			Optional().
 			Default(func() uuid.UUID {
 				return uuid.Nil
@@ -79,16 +68,13 @@ func (Comment) Fields() []ent.Field {
 			Optional().
 			Default(false),
 		field.
-			Bool("order_first_comment").
+			Bool("hide").
 			Optional().
 			Default(false),
 		field.
-			Other("score", decimal.Decimal{}).
-			SchemaType(map[string]string{
-				dialect.MySQL: "decimal(37,18)",
-			}).
+			String("hide_reason").
 			Optional().
-			Default(decimal.Decimal{}),
+			Default(types.GoodCommentHideReason_DefaultGoodCommentHideReason.String()),
 	}
 }
 
@@ -99,6 +85,12 @@ func (Comment) Edges() []ent.Edge {
 
 func (Comment) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("app_id", "user_id", "good_id", "order_id"),
+		index.Fields("user_id", "app_good_id"),
+	}
+}
+
+func (Comment) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Annotation{Table: "app_good_comments"},
 	}
 }

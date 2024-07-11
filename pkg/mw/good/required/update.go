@@ -3,26 +3,31 @@ package required
 import (
 	"context"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	requiredcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/required"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good/required"
 )
 
-func (h *Handler) UpdateRequired(ctx context.Context) (*npool.Required, error) {
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+func (h *Handler) UpdateRequired(ctx context.Context) error {
+	info, err := h.GetRequired(ctx)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	if info == nil {
+		return wlog.Errorf("invalid required")
+	}
+
+	h.ID = &info.ID
+	return db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		if _, err := requiredcrud.UpdateSet(
 			cli.RequiredGood.UpdateOneID(*h.ID),
 			&requiredcrud.Req{
 				Must: h.Must,
 			},
 		).Save(_ctx); err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		return nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return h.GetRequired(ctx)
 }

@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
 	"github.com/google/uuid"
@@ -29,7 +30,16 @@ func (GoodRewardHistory) Fields() []ent.Field {
 	return []ent.Field{
 		field.
 			UUID("good_id", uuid.UUID{}).
-			Optional(),
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
+		field.
+			UUID("coin_type_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
 			Uint32("reward_date").
 			Optional().
@@ -72,5 +82,9 @@ func (GoodRewardHistory) Edges() []ent.Edge {
 }
 
 func (GoodRewardHistory) Indexes() []ent.Index {
-	return nil
+	return []ent.Index{
+		index.Fields("good_id"),
+		index.Fields("coin_type_id"),
+		index.Fields("good_id", "coin_type_id"),
+	}
 }

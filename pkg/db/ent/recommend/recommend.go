@@ -21,18 +21,20 @@ const (
 	FieldDeletedAt = "deleted_at"
 	// FieldEntID holds the string denoting the ent_id field in the database.
 	FieldEntID = "ent_id"
-	// FieldAppID holds the string denoting the app_id field in the database.
-	FieldAppID = "app_id"
-	// FieldGoodID holds the string denoting the good_id field in the database.
-	FieldGoodID = "good_id"
+	// FieldAppGoodID holds the string denoting the app_good_id field in the database.
+	FieldAppGoodID = "app_good_id"
 	// FieldRecommenderID holds the string denoting the recommender_id field in the database.
 	FieldRecommenderID = "recommender_id"
 	// FieldMessage holds the string denoting the message field in the database.
 	FieldMessage = "message"
 	// FieldRecommendIndex holds the string denoting the recommend_index field in the database.
 	FieldRecommendIndex = "recommend_index"
+	// FieldHide holds the string denoting the hide field in the database.
+	FieldHide = "hide"
+	// FieldHideReason holds the string denoting the hide_reason field in the database.
+	FieldHideReason = "hide_reason"
 	// Table holds the table name of the recommend in the database.
-	Table = "recommends"
+	Table = "app_good_recommends"
 )
 
 // Columns holds all SQL columns for recommend fields.
@@ -42,11 +44,12 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldDeletedAt,
 	FieldEntID,
-	FieldAppID,
-	FieldGoodID,
+	FieldAppGoodID,
 	FieldRecommenderID,
 	FieldMessage,
 	FieldRecommendIndex,
+	FieldHide,
+	FieldHideReason,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -78,10 +81,16 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultEntID holds the default value on creation for the "ent_id" field.
 	DefaultEntID func() uuid.UUID
+	// DefaultAppGoodID holds the default value on creation for the "app_good_id" field.
+	DefaultAppGoodID func() uuid.UUID
 	// DefaultRecommenderID holds the default value on creation for the "recommender_id" field.
 	DefaultRecommenderID func() uuid.UUID
 	// DefaultMessage holds the default value on creation for the "message" field.
 	DefaultMessage string
 	// DefaultRecommendIndex holds the default value on creation for the "recommend_index" field.
 	DefaultRecommendIndex decimal.Decimal
+	// DefaultHide holds the default value on creation for the "hide" field.
+	DefaultHide bool
+	// DefaultHideReason holds the default value on creation for the "hide_reason" field.
+	DefaultHideReason string
 )

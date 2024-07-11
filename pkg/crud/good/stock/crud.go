@@ -1,8 +1,7 @@
 package stock
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -87,37 +86,37 @@ func SetQueryConds(q *ent.StockQuery, conds *Conds) (*ent.StockQuery, error) {
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(entstock.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid stock field")
+			return nil, wlog.Errorf("invalid stock field")
 		}
 	}
 	if conds.GoodID != nil {
 		id, ok := conds.GoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
+			return nil, wlog.Errorf("invalid goodid")
 		}
 		switch conds.GoodID.Op {
 		case cruder.EQ:
 			q.Where(entstock.GoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid stock field")
+			return nil, wlog.Errorf("invalid stock field")
 		}
 	}
 	if conds.GoodIDs != nil {
 		ids, ok := conds.GoodIDs.Val.([]uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodids")
+			return nil, wlog.Errorf("invalid goodids")
 		}
 		switch conds.GoodIDs.Op {
 		case cruder.EQ:
 			q.Where(entstock.GoodIDIn(ids...))
 		default:
-			return nil, fmt.Errorf("invalid stock field")
+			return nil, wlog.Errorf("invalid stock field")
 		}
 	}
 	return q, nil

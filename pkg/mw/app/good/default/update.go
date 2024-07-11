@@ -2,58 +2,80 @@ package appdefaultgood
 
 import (
 	"context"
+	"fmt"
+	"time"
 
-	appdefaultgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/default"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/default"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 )
 
 type updateHandler struct {
 	*Handler
+	sql        string
+	coinTypeID string
+}
+
+func (h *updateHandler) constructSQL() {
+	now := uint32(time.Now().Unix())
+
+	_sql := "update app_default_goods "
+	_sql += fmt.Sprintf("set app_good_id = '%v', ", *h.AppGoodID)
+	_sql += fmt.Sprintf("updated_at = %v ", now)
+	_sql += "where "
+	_sql += fmt.Sprintf("id = %v ", *h.ID)
+	_sql += "and not exists ("
+	_sql += "select 1 from (select * from app_default_goods) as adg "
+	_sql += fmt.Sprintf(
+		"where adg.app_good_id = '%v' and adg.coin_type_id = '%v' and adg.id != %v",
+		*h.AppGoodID,
+		h.coinTypeID,
+		*h.ID,
+	)
+	_sql += " limit 1) and exists ("
+	_sql += "select 1 from app_good_bases as agb "
+	_sql += "left join good_bases as gb on agb.good_id = gb.ent_id "
+	_sql += "left join good_coins as gc on agb.good_id = gc.good_id "
+	_sql += fmt.Sprintf("where gc.coin_type_id = '%v'", h.coinTypeID)
+	_sql += " limit 1)"
+
+	h.sql = _sql
 }
 
 func (h *updateHandler) updateDefault(ctx context.Context, tx *ent.Tx) error {
-	if _, err := appdefaultgoodcrud.UpdateSet(
-		tx.AppDefaultGood.UpdateOneID(*h.ID),
-		&appdefaultgoodcrud.Req{
-			AppID:      h.AppID,
-			GoodID:     h.GoodID,
-			AppGoodID:  h.AppGoodID,
-			CoinTypeID: h.CoinTypeID,
-		},
-	).Save(ctx); err != nil {
-		return err
+	rc, err := tx.ExecContext(ctx, h.sql)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	if _, err := rc.RowsAffected(); err != nil {
+		return wlog.WrapError(err)
 	}
 	return nil
 }
 
-func (h *Handler) UpdateDefault(ctx context.Context) (*npool.Default, error) {
-	info, err := h.GetDefault(ctx)
-	if err != nil {
-		return nil, err
-	}
+func (h *Handler) UpdateDefault(ctx context.Context) error {
 	if h.AppGoodID == nil {
-		return info, nil
-	}
-
-	if err := h.GetAppGood(ctx); err != nil {
-		return nil, err
+		return wlog.WrapError(cruder.ErrUpdateNothing)
 	}
 
 	handler := &updateHandler{
 		Handler: h,
 	}
 
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.updateDefault(_ctx, tx); err != nil {
-			return err
-		}
-		return nil
-	})
+	info, err := h.GetDefault(ctx)
 	if err != nil {
-		return nil, err
+		return wlog.WrapError(err)
+	}
+	if info == nil {
+		return wlog.Errorf("invalid appdefaultgood")
 	}
 
-	return h.GetDefault(ctx)
+	h.ID = &info.ID
+	handler.coinTypeID = info.CoinTypeID
+	handler.constructSQL()
+
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		return handler.updateDefault(_ctx, tx)
+	})
 }

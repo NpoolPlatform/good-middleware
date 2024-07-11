@@ -13,7 +13,6 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // TopMostUpdate is the builder for updating TopMost entities.
@@ -105,6 +104,20 @@ func (tmu *TopMostUpdate) SetAppID(u uuid.UUID) *TopMostUpdate {
 	return tmu
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (tmu *TopMostUpdate) SetNillableAppID(u *uuid.UUID) *TopMostUpdate {
+	if u != nil {
+		tmu.SetAppID(*u)
+	}
+	return tmu
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (tmu *TopMostUpdate) ClearAppID() *TopMostUpdate {
+	tmu.mutation.ClearAppID()
+	return tmu
+}
+
 // SetTopMostType sets the "top_most_type" field.
 func (tmu *TopMostUpdate) SetTopMostType(s string) *TopMostUpdate {
 	tmu.mutation.SetTopMostType(s)
@@ -165,15 +178,23 @@ func (tmu *TopMostUpdate) ClearMessage() *TopMostUpdate {
 	return tmu
 }
 
-// SetPosters sets the "posters" field.
-func (tmu *TopMostUpdate) SetPosters(s []string) *TopMostUpdate {
-	tmu.mutation.SetPosters(s)
+// SetTargetURL sets the "target_url" field.
+func (tmu *TopMostUpdate) SetTargetURL(s string) *TopMostUpdate {
+	tmu.mutation.SetTargetURL(s)
 	return tmu
 }
 
-// ClearPosters clears the value of the "posters" field.
-func (tmu *TopMostUpdate) ClearPosters() *TopMostUpdate {
-	tmu.mutation.ClearPosters()
+// SetNillableTargetURL sets the "target_url" field if the given value is not nil.
+func (tmu *TopMostUpdate) SetNillableTargetURL(s *string) *TopMostUpdate {
+	if s != nil {
+		tmu.SetTargetURL(*s)
+	}
+	return tmu
+}
+
+// ClearTargetURL clears the value of the "target_url" field.
+func (tmu *TopMostUpdate) ClearTargetURL() *TopMostUpdate {
+	tmu.mutation.ClearTargetURL()
 	return tmu
 }
 
@@ -228,120 +249,6 @@ func (tmu *TopMostUpdate) AddEndAt(u int32) *TopMostUpdate {
 // ClearEndAt clears the value of the "end_at" field.
 func (tmu *TopMostUpdate) ClearEndAt() *TopMostUpdate {
 	tmu.mutation.ClearEndAt()
-	return tmu
-}
-
-// SetThresholdCredits sets the "threshold_credits" field.
-func (tmu *TopMostUpdate) SetThresholdCredits(d decimal.Decimal) *TopMostUpdate {
-	tmu.mutation.SetThresholdCredits(d)
-	return tmu
-}
-
-// SetNillableThresholdCredits sets the "threshold_credits" field if the given value is not nil.
-func (tmu *TopMostUpdate) SetNillableThresholdCredits(d *decimal.Decimal) *TopMostUpdate {
-	if d != nil {
-		tmu.SetThresholdCredits(*d)
-	}
-	return tmu
-}
-
-// ClearThresholdCredits clears the value of the "threshold_credits" field.
-func (tmu *TopMostUpdate) ClearThresholdCredits() *TopMostUpdate {
-	tmu.mutation.ClearThresholdCredits()
-	return tmu
-}
-
-// SetRegisterElapsedSeconds sets the "register_elapsed_seconds" field.
-func (tmu *TopMostUpdate) SetRegisterElapsedSeconds(u uint32) *TopMostUpdate {
-	tmu.mutation.ResetRegisterElapsedSeconds()
-	tmu.mutation.SetRegisterElapsedSeconds(u)
-	return tmu
-}
-
-// SetNillableRegisterElapsedSeconds sets the "register_elapsed_seconds" field if the given value is not nil.
-func (tmu *TopMostUpdate) SetNillableRegisterElapsedSeconds(u *uint32) *TopMostUpdate {
-	if u != nil {
-		tmu.SetRegisterElapsedSeconds(*u)
-	}
-	return tmu
-}
-
-// AddRegisterElapsedSeconds adds u to the "register_elapsed_seconds" field.
-func (tmu *TopMostUpdate) AddRegisterElapsedSeconds(u int32) *TopMostUpdate {
-	tmu.mutation.AddRegisterElapsedSeconds(u)
-	return tmu
-}
-
-// ClearRegisterElapsedSeconds clears the value of the "register_elapsed_seconds" field.
-func (tmu *TopMostUpdate) ClearRegisterElapsedSeconds() *TopMostUpdate {
-	tmu.mutation.ClearRegisterElapsedSeconds()
-	return tmu
-}
-
-// SetThresholdPurchases sets the "threshold_purchases" field.
-func (tmu *TopMostUpdate) SetThresholdPurchases(u uint32) *TopMostUpdate {
-	tmu.mutation.ResetThresholdPurchases()
-	tmu.mutation.SetThresholdPurchases(u)
-	return tmu
-}
-
-// SetNillableThresholdPurchases sets the "threshold_purchases" field if the given value is not nil.
-func (tmu *TopMostUpdate) SetNillableThresholdPurchases(u *uint32) *TopMostUpdate {
-	if u != nil {
-		tmu.SetThresholdPurchases(*u)
-	}
-	return tmu
-}
-
-// AddThresholdPurchases adds u to the "threshold_purchases" field.
-func (tmu *TopMostUpdate) AddThresholdPurchases(u int32) *TopMostUpdate {
-	tmu.mutation.AddThresholdPurchases(u)
-	return tmu
-}
-
-// ClearThresholdPurchases clears the value of the "threshold_purchases" field.
-func (tmu *TopMostUpdate) ClearThresholdPurchases() *TopMostUpdate {
-	tmu.mutation.ClearThresholdPurchases()
-	return tmu
-}
-
-// SetThresholdPaymentAmount sets the "threshold_payment_amount" field.
-func (tmu *TopMostUpdate) SetThresholdPaymentAmount(d decimal.Decimal) *TopMostUpdate {
-	tmu.mutation.SetThresholdPaymentAmount(d)
-	return tmu
-}
-
-// SetNillableThresholdPaymentAmount sets the "threshold_payment_amount" field if the given value is not nil.
-func (tmu *TopMostUpdate) SetNillableThresholdPaymentAmount(d *decimal.Decimal) *TopMostUpdate {
-	if d != nil {
-		tmu.SetThresholdPaymentAmount(*d)
-	}
-	return tmu
-}
-
-// ClearThresholdPaymentAmount clears the value of the "threshold_payment_amount" field.
-func (tmu *TopMostUpdate) ClearThresholdPaymentAmount() *TopMostUpdate {
-	tmu.mutation.ClearThresholdPaymentAmount()
-	return tmu
-}
-
-// SetKycMust sets the "kyc_must" field.
-func (tmu *TopMostUpdate) SetKycMust(b bool) *TopMostUpdate {
-	tmu.mutation.SetKycMust(b)
-	return tmu
-}
-
-// SetNillableKycMust sets the "kyc_must" field if the given value is not nil.
-func (tmu *TopMostUpdate) SetNillableKycMust(b *bool) *TopMostUpdate {
-	if b != nil {
-		tmu.SetKycMust(*b)
-	}
-	return tmu
-}
-
-// ClearKycMust clears the value of the "kyc_must" field.
-func (tmu *TopMostUpdate) ClearKycMust() *TopMostUpdate {
-	tmu.mutation.ClearKycMust()
 	return tmu
 }
 
@@ -499,6 +406,12 @@ func (tmu *TopMostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: topmost.FieldAppID,
 		})
 	}
+	if tmu.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: topmost.FieldAppID,
+		})
+	}
 	if value, ok := tmu.mutation.TopMostType(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -538,17 +451,17 @@ func (tmu *TopMostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: topmost.FieldMessage,
 		})
 	}
-	if value, ok := tmu.mutation.Posters(); ok {
+	if value, ok := tmu.mutation.TargetURL(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: topmost.FieldPosters,
+			Column: topmost.FieldTargetURL,
 		})
 	}
-	if tmu.mutation.PostersCleared() {
+	if tmu.mutation.TargetURLCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: topmost.FieldPosters,
+			Type:   field.TypeString,
+			Column: topmost.FieldTargetURL,
 		})
 	}
 	if value, ok := tmu.mutation.StartAt(); ok {
@@ -589,85 +502,6 @@ func (tmu *TopMostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: topmost.FieldEndAt,
-		})
-	}
-	if value, ok := tmu.mutation.ThresholdCredits(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: topmost.FieldThresholdCredits,
-		})
-	}
-	if tmu.mutation.ThresholdCreditsCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: topmost.FieldThresholdCredits,
-		})
-	}
-	if value, ok := tmu.mutation.RegisterElapsedSeconds(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: topmost.FieldRegisterElapsedSeconds,
-		})
-	}
-	if value, ok := tmu.mutation.AddedRegisterElapsedSeconds(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: topmost.FieldRegisterElapsedSeconds,
-		})
-	}
-	if tmu.mutation.RegisterElapsedSecondsCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: topmost.FieldRegisterElapsedSeconds,
-		})
-	}
-	if value, ok := tmu.mutation.ThresholdPurchases(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: topmost.FieldThresholdPurchases,
-		})
-	}
-	if value, ok := tmu.mutation.AddedThresholdPurchases(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: topmost.FieldThresholdPurchases,
-		})
-	}
-	if tmu.mutation.ThresholdPurchasesCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: topmost.FieldThresholdPurchases,
-		})
-	}
-	if value, ok := tmu.mutation.ThresholdPaymentAmount(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: topmost.FieldThresholdPaymentAmount,
-		})
-	}
-	if tmu.mutation.ThresholdPaymentAmountCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: topmost.FieldThresholdPaymentAmount,
-		})
-	}
-	if value, ok := tmu.mutation.KycMust(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: topmost.FieldKycMust,
-		})
-	}
-	if tmu.mutation.KycMustCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Column: topmost.FieldKycMust,
 		})
 	}
 	_spec.Modifiers = tmu.modifiers
@@ -766,6 +600,20 @@ func (tmuo *TopMostUpdateOne) SetAppID(u uuid.UUID) *TopMostUpdateOne {
 	return tmuo
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (tmuo *TopMostUpdateOne) SetNillableAppID(u *uuid.UUID) *TopMostUpdateOne {
+	if u != nil {
+		tmuo.SetAppID(*u)
+	}
+	return tmuo
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (tmuo *TopMostUpdateOne) ClearAppID() *TopMostUpdateOne {
+	tmuo.mutation.ClearAppID()
+	return tmuo
+}
+
 // SetTopMostType sets the "top_most_type" field.
 func (tmuo *TopMostUpdateOne) SetTopMostType(s string) *TopMostUpdateOne {
 	tmuo.mutation.SetTopMostType(s)
@@ -826,15 +674,23 @@ func (tmuo *TopMostUpdateOne) ClearMessage() *TopMostUpdateOne {
 	return tmuo
 }
 
-// SetPosters sets the "posters" field.
-func (tmuo *TopMostUpdateOne) SetPosters(s []string) *TopMostUpdateOne {
-	tmuo.mutation.SetPosters(s)
+// SetTargetURL sets the "target_url" field.
+func (tmuo *TopMostUpdateOne) SetTargetURL(s string) *TopMostUpdateOne {
+	tmuo.mutation.SetTargetURL(s)
 	return tmuo
 }
 
-// ClearPosters clears the value of the "posters" field.
-func (tmuo *TopMostUpdateOne) ClearPosters() *TopMostUpdateOne {
-	tmuo.mutation.ClearPosters()
+// SetNillableTargetURL sets the "target_url" field if the given value is not nil.
+func (tmuo *TopMostUpdateOne) SetNillableTargetURL(s *string) *TopMostUpdateOne {
+	if s != nil {
+		tmuo.SetTargetURL(*s)
+	}
+	return tmuo
+}
+
+// ClearTargetURL clears the value of the "target_url" field.
+func (tmuo *TopMostUpdateOne) ClearTargetURL() *TopMostUpdateOne {
+	tmuo.mutation.ClearTargetURL()
 	return tmuo
 }
 
@@ -889,120 +745,6 @@ func (tmuo *TopMostUpdateOne) AddEndAt(u int32) *TopMostUpdateOne {
 // ClearEndAt clears the value of the "end_at" field.
 func (tmuo *TopMostUpdateOne) ClearEndAt() *TopMostUpdateOne {
 	tmuo.mutation.ClearEndAt()
-	return tmuo
-}
-
-// SetThresholdCredits sets the "threshold_credits" field.
-func (tmuo *TopMostUpdateOne) SetThresholdCredits(d decimal.Decimal) *TopMostUpdateOne {
-	tmuo.mutation.SetThresholdCredits(d)
-	return tmuo
-}
-
-// SetNillableThresholdCredits sets the "threshold_credits" field if the given value is not nil.
-func (tmuo *TopMostUpdateOne) SetNillableThresholdCredits(d *decimal.Decimal) *TopMostUpdateOne {
-	if d != nil {
-		tmuo.SetThresholdCredits(*d)
-	}
-	return tmuo
-}
-
-// ClearThresholdCredits clears the value of the "threshold_credits" field.
-func (tmuo *TopMostUpdateOne) ClearThresholdCredits() *TopMostUpdateOne {
-	tmuo.mutation.ClearThresholdCredits()
-	return tmuo
-}
-
-// SetRegisterElapsedSeconds sets the "register_elapsed_seconds" field.
-func (tmuo *TopMostUpdateOne) SetRegisterElapsedSeconds(u uint32) *TopMostUpdateOne {
-	tmuo.mutation.ResetRegisterElapsedSeconds()
-	tmuo.mutation.SetRegisterElapsedSeconds(u)
-	return tmuo
-}
-
-// SetNillableRegisterElapsedSeconds sets the "register_elapsed_seconds" field if the given value is not nil.
-func (tmuo *TopMostUpdateOne) SetNillableRegisterElapsedSeconds(u *uint32) *TopMostUpdateOne {
-	if u != nil {
-		tmuo.SetRegisterElapsedSeconds(*u)
-	}
-	return tmuo
-}
-
-// AddRegisterElapsedSeconds adds u to the "register_elapsed_seconds" field.
-func (tmuo *TopMostUpdateOne) AddRegisterElapsedSeconds(u int32) *TopMostUpdateOne {
-	tmuo.mutation.AddRegisterElapsedSeconds(u)
-	return tmuo
-}
-
-// ClearRegisterElapsedSeconds clears the value of the "register_elapsed_seconds" field.
-func (tmuo *TopMostUpdateOne) ClearRegisterElapsedSeconds() *TopMostUpdateOne {
-	tmuo.mutation.ClearRegisterElapsedSeconds()
-	return tmuo
-}
-
-// SetThresholdPurchases sets the "threshold_purchases" field.
-func (tmuo *TopMostUpdateOne) SetThresholdPurchases(u uint32) *TopMostUpdateOne {
-	tmuo.mutation.ResetThresholdPurchases()
-	tmuo.mutation.SetThresholdPurchases(u)
-	return tmuo
-}
-
-// SetNillableThresholdPurchases sets the "threshold_purchases" field if the given value is not nil.
-func (tmuo *TopMostUpdateOne) SetNillableThresholdPurchases(u *uint32) *TopMostUpdateOne {
-	if u != nil {
-		tmuo.SetThresholdPurchases(*u)
-	}
-	return tmuo
-}
-
-// AddThresholdPurchases adds u to the "threshold_purchases" field.
-func (tmuo *TopMostUpdateOne) AddThresholdPurchases(u int32) *TopMostUpdateOne {
-	tmuo.mutation.AddThresholdPurchases(u)
-	return tmuo
-}
-
-// ClearThresholdPurchases clears the value of the "threshold_purchases" field.
-func (tmuo *TopMostUpdateOne) ClearThresholdPurchases() *TopMostUpdateOne {
-	tmuo.mutation.ClearThresholdPurchases()
-	return tmuo
-}
-
-// SetThresholdPaymentAmount sets the "threshold_payment_amount" field.
-func (tmuo *TopMostUpdateOne) SetThresholdPaymentAmount(d decimal.Decimal) *TopMostUpdateOne {
-	tmuo.mutation.SetThresholdPaymentAmount(d)
-	return tmuo
-}
-
-// SetNillableThresholdPaymentAmount sets the "threshold_payment_amount" field if the given value is not nil.
-func (tmuo *TopMostUpdateOne) SetNillableThresholdPaymentAmount(d *decimal.Decimal) *TopMostUpdateOne {
-	if d != nil {
-		tmuo.SetThresholdPaymentAmount(*d)
-	}
-	return tmuo
-}
-
-// ClearThresholdPaymentAmount clears the value of the "threshold_payment_amount" field.
-func (tmuo *TopMostUpdateOne) ClearThresholdPaymentAmount() *TopMostUpdateOne {
-	tmuo.mutation.ClearThresholdPaymentAmount()
-	return tmuo
-}
-
-// SetKycMust sets the "kyc_must" field.
-func (tmuo *TopMostUpdateOne) SetKycMust(b bool) *TopMostUpdateOne {
-	tmuo.mutation.SetKycMust(b)
-	return tmuo
-}
-
-// SetNillableKycMust sets the "kyc_must" field if the given value is not nil.
-func (tmuo *TopMostUpdateOne) SetNillableKycMust(b *bool) *TopMostUpdateOne {
-	if b != nil {
-		tmuo.SetKycMust(*b)
-	}
-	return tmuo
-}
-
-// ClearKycMust clears the value of the "kyc_must" field.
-func (tmuo *TopMostUpdateOne) ClearKycMust() *TopMostUpdateOne {
-	tmuo.mutation.ClearKycMust()
 	return tmuo
 }
 
@@ -1190,6 +932,12 @@ func (tmuo *TopMostUpdateOne) sqlSave(ctx context.Context) (_node *TopMost, err 
 			Column: topmost.FieldAppID,
 		})
 	}
+	if tmuo.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: topmost.FieldAppID,
+		})
+	}
 	if value, ok := tmuo.mutation.TopMostType(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -1229,17 +977,17 @@ func (tmuo *TopMostUpdateOne) sqlSave(ctx context.Context) (_node *TopMost, err 
 			Column: topmost.FieldMessage,
 		})
 	}
-	if value, ok := tmuo.mutation.Posters(); ok {
+	if value, ok := tmuo.mutation.TargetURL(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: topmost.FieldPosters,
+			Column: topmost.FieldTargetURL,
 		})
 	}
-	if tmuo.mutation.PostersCleared() {
+	if tmuo.mutation.TargetURLCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Column: topmost.FieldPosters,
+			Type:   field.TypeString,
+			Column: topmost.FieldTargetURL,
 		})
 	}
 	if value, ok := tmuo.mutation.StartAt(); ok {
@@ -1280,85 +1028,6 @@ func (tmuo *TopMostUpdateOne) sqlSave(ctx context.Context) (_node *TopMost, err 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: topmost.FieldEndAt,
-		})
-	}
-	if value, ok := tmuo.mutation.ThresholdCredits(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: topmost.FieldThresholdCredits,
-		})
-	}
-	if tmuo.mutation.ThresholdCreditsCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: topmost.FieldThresholdCredits,
-		})
-	}
-	if value, ok := tmuo.mutation.RegisterElapsedSeconds(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: topmost.FieldRegisterElapsedSeconds,
-		})
-	}
-	if value, ok := tmuo.mutation.AddedRegisterElapsedSeconds(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: topmost.FieldRegisterElapsedSeconds,
-		})
-	}
-	if tmuo.mutation.RegisterElapsedSecondsCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: topmost.FieldRegisterElapsedSeconds,
-		})
-	}
-	if value, ok := tmuo.mutation.ThresholdPurchases(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: topmost.FieldThresholdPurchases,
-		})
-	}
-	if value, ok := tmuo.mutation.AddedThresholdPurchases(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: topmost.FieldThresholdPurchases,
-		})
-	}
-	if tmuo.mutation.ThresholdPurchasesCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: topmost.FieldThresholdPurchases,
-		})
-	}
-	if value, ok := tmuo.mutation.ThresholdPaymentAmount(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: topmost.FieldThresholdPaymentAmount,
-		})
-	}
-	if tmuo.mutation.ThresholdPaymentAmountCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: topmost.FieldThresholdPaymentAmount,
-		})
-	}
-	if value, ok := tmuo.mutation.KycMust(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: topmost.FieldKycMust,
-		})
-	}
-	if tmuo.mutation.KycMustCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Column: topmost.FieldKycMust,
 		})
 	}
 	_spec.Modifiers = tmuo.modifiers

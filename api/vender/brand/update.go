@@ -1,4 +1,3 @@
-//nolint:dupl
 package brand
 
 import (
@@ -24,7 +23,8 @@ func (s *Server) UpdateBrand(ctx context.Context, in *npool.UpdateBrandRequest) 
 	}
 	handler, err := brand1.NewHandler(
 		ctx,
-		brand1.WithID(req.ID, true),
+		brand1.WithID(req.ID, false),
+		brand1.WithEntID(req.EntID, false),
 		brand1.WithName(req.Name, false),
 		brand1.WithLogo(req.Logo, false),
 	)
@@ -37,8 +37,7 @@ func (s *Server) UpdateBrand(ctx context.Context, in *npool.UpdateBrandRequest) 
 		return &npool.UpdateBrandResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.UpdateBrand(ctx)
-	if err != nil {
+	if err := handler.UpdateBrand(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"UpdateBrand",
 			"In", in,
@@ -47,7 +46,5 @@ func (s *Server) UpdateBrand(ctx context.Context, in *npool.UpdateBrandRequest) 
 		return &npool.UpdateBrandResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.UpdateBrandResponse{
-		Info: info,
-	}, nil
+	return &npool.UpdateBrandResponse{}, nil
 }

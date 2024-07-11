@@ -12,7 +12,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // CommentCreate is the builder for creating a Comment entity.
@@ -79,20 +78,6 @@ func (cc *CommentCreate) SetNillableEntID(u *uuid.UUID) *CommentCreate {
 	return cc
 }
 
-// SetAppID sets the "app_id" field.
-func (cc *CommentCreate) SetAppID(u uuid.UUID) *CommentCreate {
-	cc.mutation.SetAppID(u)
-	return cc
-}
-
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (cc *CommentCreate) SetNillableAppID(u *uuid.UUID) *CommentCreate {
-	if u != nil {
-		cc.SetAppID(*u)
-	}
-	return cc
-}
-
 // SetUserID sets the "user_id" field.
 func (cc *CommentCreate) SetUserID(u uuid.UUID) *CommentCreate {
 	cc.mutation.SetUserID(u)
@@ -103,20 +88,6 @@ func (cc *CommentCreate) SetUserID(u uuid.UUID) *CommentCreate {
 func (cc *CommentCreate) SetNillableUserID(u *uuid.UUID) *CommentCreate {
 	if u != nil {
 		cc.SetUserID(*u)
-	}
-	return cc
-}
-
-// SetGoodID sets the "good_id" field.
-func (cc *CommentCreate) SetGoodID(u uuid.UUID) *CommentCreate {
-	cc.mutation.SetGoodID(u)
-	return cc
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (cc *CommentCreate) SetNillableGoodID(u *uuid.UUID) *CommentCreate {
-	if u != nil {
-		cc.SetGoodID(*u)
 	}
 	return cc
 }
@@ -219,30 +190,30 @@ func (cc *CommentCreate) SetNillablePurchasedUser(b *bool) *CommentCreate {
 	return cc
 }
 
-// SetOrderFirstComment sets the "order_first_comment" field.
-func (cc *CommentCreate) SetOrderFirstComment(b bool) *CommentCreate {
-	cc.mutation.SetOrderFirstComment(b)
+// SetHide sets the "hide" field.
+func (cc *CommentCreate) SetHide(b bool) *CommentCreate {
+	cc.mutation.SetHide(b)
 	return cc
 }
 
-// SetNillableOrderFirstComment sets the "order_first_comment" field if the given value is not nil.
-func (cc *CommentCreate) SetNillableOrderFirstComment(b *bool) *CommentCreate {
+// SetNillableHide sets the "hide" field if the given value is not nil.
+func (cc *CommentCreate) SetNillableHide(b *bool) *CommentCreate {
 	if b != nil {
-		cc.SetOrderFirstComment(*b)
+		cc.SetHide(*b)
 	}
 	return cc
 }
 
-// SetScore sets the "score" field.
-func (cc *CommentCreate) SetScore(d decimal.Decimal) *CommentCreate {
-	cc.mutation.SetScore(d)
+// SetHideReason sets the "hide_reason" field.
+func (cc *CommentCreate) SetHideReason(s string) *CommentCreate {
+	cc.mutation.SetHideReason(s)
 	return cc
 }
 
-// SetNillableScore sets the "score" field if the given value is not nil.
-func (cc *CommentCreate) SetNillableScore(d *decimal.Decimal) *CommentCreate {
-	if d != nil {
-		cc.SetScore(*d)
+// SetNillableHideReason sets the "hide_reason" field if the given value is not nil.
+func (cc *CommentCreate) SetNillableHideReason(s *string) *CommentCreate {
+	if s != nil {
+		cc.SetHideReason(*s)
 	}
 	return cc
 }
@@ -360,26 +331,12 @@ func (cc *CommentCreate) defaults() error {
 		v := comment.DefaultEntID()
 		cc.mutation.SetEntID(v)
 	}
-	if _, ok := cc.mutation.AppID(); !ok {
-		if comment.DefaultAppID == nil {
-			return fmt.Errorf("ent: uninitialized comment.DefaultAppID (forgotten import ent/runtime?)")
-		}
-		v := comment.DefaultAppID()
-		cc.mutation.SetAppID(v)
-	}
 	if _, ok := cc.mutation.UserID(); !ok {
 		if comment.DefaultUserID == nil {
 			return fmt.Errorf("ent: uninitialized comment.DefaultUserID (forgotten import ent/runtime?)")
 		}
 		v := comment.DefaultUserID()
 		cc.mutation.SetUserID(v)
-	}
-	if _, ok := cc.mutation.GoodID(); !ok {
-		if comment.DefaultGoodID == nil {
-			return fmt.Errorf("ent: uninitialized comment.DefaultGoodID (forgotten import ent/runtime?)")
-		}
-		v := comment.DefaultGoodID()
-		cc.mutation.SetGoodID(v)
 	}
 	if _, ok := cc.mutation.AppGoodID(); !ok {
 		if comment.DefaultAppGoodID == nil {
@@ -418,13 +375,13 @@ func (cc *CommentCreate) defaults() error {
 		v := comment.DefaultPurchasedUser
 		cc.mutation.SetPurchasedUser(v)
 	}
-	if _, ok := cc.mutation.OrderFirstComment(); !ok {
-		v := comment.DefaultOrderFirstComment
-		cc.mutation.SetOrderFirstComment(v)
+	if _, ok := cc.mutation.Hide(); !ok {
+		v := comment.DefaultHide
+		cc.mutation.SetHide(v)
 	}
-	if _, ok := cc.mutation.Score(); !ok {
-		v := comment.DefaultScore
-		cc.mutation.SetScore(v)
+	if _, ok := cc.mutation.HideReason(); !ok {
+		v := comment.DefaultHideReason
+		cc.mutation.SetHideReason(v)
 	}
 	return nil
 }
@@ -509,14 +466,6 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 		})
 		_node.EntID = value
 	}
-	if value, ok := cc.mutation.AppID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: comment.FieldAppID,
-		})
-		_node.AppID = value
-	}
 	if value, ok := cc.mutation.UserID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -524,14 +473,6 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 			Column: comment.FieldUserID,
 		})
 		_node.UserID = value
-	}
-	if value, ok := cc.mutation.GoodID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: comment.FieldGoodID,
-		})
-		_node.GoodID = value
 	}
 	if value, ok := cc.mutation.AppGoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -589,21 +530,21 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 		})
 		_node.PurchasedUser = value
 	}
-	if value, ok := cc.mutation.OrderFirstComment(); ok {
+	if value, ok := cc.mutation.Hide(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: comment.FieldOrderFirstComment,
+			Column: comment.FieldHide,
 		})
-		_node.OrderFirstComment = value
+		_node.Hide = value
 	}
-	if value, ok := cc.mutation.Score(); ok {
+	if value, ok := cc.mutation.HideReason(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: comment.FieldScore,
+			Column: comment.FieldHideReason,
 		})
-		_node.Score = value
+		_node.HideReason = value
 	}
 	return _node, _spec
 }
@@ -725,24 +666,6 @@ func (u *CommentUpsert) UpdateEntID() *CommentUpsert {
 	return u
 }
 
-// SetAppID sets the "app_id" field.
-func (u *CommentUpsert) SetAppID(v uuid.UUID) *CommentUpsert {
-	u.Set(comment.FieldAppID, v)
-	return u
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *CommentUpsert) UpdateAppID() *CommentUpsert {
-	u.SetExcluded(comment.FieldAppID)
-	return u
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (u *CommentUpsert) ClearAppID() *CommentUpsert {
-	u.SetNull(comment.FieldAppID)
-	return u
-}
-
 // SetUserID sets the "user_id" field.
 func (u *CommentUpsert) SetUserID(v uuid.UUID) *CommentUpsert {
 	u.Set(comment.FieldUserID, v)
@@ -758,24 +681,6 @@ func (u *CommentUpsert) UpdateUserID() *CommentUpsert {
 // ClearUserID clears the value of the "user_id" field.
 func (u *CommentUpsert) ClearUserID() *CommentUpsert {
 	u.SetNull(comment.FieldUserID)
-	return u
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *CommentUpsert) SetGoodID(v uuid.UUID) *CommentUpsert {
-	u.Set(comment.FieldGoodID, v)
-	return u
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *CommentUpsert) UpdateGoodID() *CommentUpsert {
-	u.SetExcluded(comment.FieldGoodID)
-	return u
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *CommentUpsert) ClearGoodID() *CommentUpsert {
-	u.SetNull(comment.FieldGoodID)
 	return u
 }
 
@@ -905,39 +810,39 @@ func (u *CommentUpsert) ClearPurchasedUser() *CommentUpsert {
 	return u
 }
 
-// SetOrderFirstComment sets the "order_first_comment" field.
-func (u *CommentUpsert) SetOrderFirstComment(v bool) *CommentUpsert {
-	u.Set(comment.FieldOrderFirstComment, v)
+// SetHide sets the "hide" field.
+func (u *CommentUpsert) SetHide(v bool) *CommentUpsert {
+	u.Set(comment.FieldHide, v)
 	return u
 }
 
-// UpdateOrderFirstComment sets the "order_first_comment" field to the value that was provided on create.
-func (u *CommentUpsert) UpdateOrderFirstComment() *CommentUpsert {
-	u.SetExcluded(comment.FieldOrderFirstComment)
+// UpdateHide sets the "hide" field to the value that was provided on create.
+func (u *CommentUpsert) UpdateHide() *CommentUpsert {
+	u.SetExcluded(comment.FieldHide)
 	return u
 }
 
-// ClearOrderFirstComment clears the value of the "order_first_comment" field.
-func (u *CommentUpsert) ClearOrderFirstComment() *CommentUpsert {
-	u.SetNull(comment.FieldOrderFirstComment)
+// ClearHide clears the value of the "hide" field.
+func (u *CommentUpsert) ClearHide() *CommentUpsert {
+	u.SetNull(comment.FieldHide)
 	return u
 }
 
-// SetScore sets the "score" field.
-func (u *CommentUpsert) SetScore(v decimal.Decimal) *CommentUpsert {
-	u.Set(comment.FieldScore, v)
+// SetHideReason sets the "hide_reason" field.
+func (u *CommentUpsert) SetHideReason(v string) *CommentUpsert {
+	u.Set(comment.FieldHideReason, v)
 	return u
 }
 
-// UpdateScore sets the "score" field to the value that was provided on create.
-func (u *CommentUpsert) UpdateScore() *CommentUpsert {
-	u.SetExcluded(comment.FieldScore)
+// UpdateHideReason sets the "hide_reason" field to the value that was provided on create.
+func (u *CommentUpsert) UpdateHideReason() *CommentUpsert {
+	u.SetExcluded(comment.FieldHideReason)
 	return u
 }
 
-// ClearScore clears the value of the "score" field.
-func (u *CommentUpsert) ClearScore() *CommentUpsert {
-	u.SetNull(comment.FieldScore)
+// ClearHideReason clears the value of the "hide_reason" field.
+func (u *CommentUpsert) ClearHideReason() *CommentUpsert {
+	u.SetNull(comment.FieldHideReason)
 	return u
 }
 
@@ -1068,27 +973,6 @@ func (u *CommentUpsertOne) UpdateEntID() *CommentUpsertOne {
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *CommentUpsertOne) SetAppID(v uuid.UUID) *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *CommentUpsertOne) UpdateAppID() *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.UpdateAppID()
-	})
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (u *CommentUpsertOne) ClearAppID() *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.ClearAppID()
-	})
-}
-
 // SetUserID sets the "user_id" field.
 func (u *CommentUpsertOne) SetUserID(v uuid.UUID) *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
@@ -1107,27 +991,6 @@ func (u *CommentUpsertOne) UpdateUserID() *CommentUpsertOne {
 func (u *CommentUpsertOne) ClearUserID() *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.ClearUserID()
-	})
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *CommentUpsertOne) SetGoodID(v uuid.UUID) *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *CommentUpsertOne) UpdateGoodID() *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.UpdateGoodID()
-	})
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *CommentUpsertOne) ClearGoodID() *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.ClearGoodID()
 	})
 }
 
@@ -1278,45 +1141,45 @@ func (u *CommentUpsertOne) ClearPurchasedUser() *CommentUpsertOne {
 	})
 }
 
-// SetOrderFirstComment sets the "order_first_comment" field.
-func (u *CommentUpsertOne) SetOrderFirstComment(v bool) *CommentUpsertOne {
+// SetHide sets the "hide" field.
+func (u *CommentUpsertOne) SetHide(v bool) *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
-		s.SetOrderFirstComment(v)
+		s.SetHide(v)
 	})
 }
 
-// UpdateOrderFirstComment sets the "order_first_comment" field to the value that was provided on create.
-func (u *CommentUpsertOne) UpdateOrderFirstComment() *CommentUpsertOne {
+// UpdateHide sets the "hide" field to the value that was provided on create.
+func (u *CommentUpsertOne) UpdateHide() *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
-		s.UpdateOrderFirstComment()
+		s.UpdateHide()
 	})
 }
 
-// ClearOrderFirstComment clears the value of the "order_first_comment" field.
-func (u *CommentUpsertOne) ClearOrderFirstComment() *CommentUpsertOne {
+// ClearHide clears the value of the "hide" field.
+func (u *CommentUpsertOne) ClearHide() *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
-		s.ClearOrderFirstComment()
+		s.ClearHide()
 	})
 }
 
-// SetScore sets the "score" field.
-func (u *CommentUpsertOne) SetScore(v decimal.Decimal) *CommentUpsertOne {
+// SetHideReason sets the "hide_reason" field.
+func (u *CommentUpsertOne) SetHideReason(v string) *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
-		s.SetScore(v)
+		s.SetHideReason(v)
 	})
 }
 
-// UpdateScore sets the "score" field to the value that was provided on create.
-func (u *CommentUpsertOne) UpdateScore() *CommentUpsertOne {
+// UpdateHideReason sets the "hide_reason" field to the value that was provided on create.
+func (u *CommentUpsertOne) UpdateHideReason() *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
-		s.UpdateScore()
+		s.UpdateHideReason()
 	})
 }
 
-// ClearScore clears the value of the "score" field.
-func (u *CommentUpsertOne) ClearScore() *CommentUpsertOne {
+// ClearHideReason clears the value of the "hide_reason" field.
+func (u *CommentUpsertOne) ClearHideReason() *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
-		s.ClearScore()
+		s.ClearHideReason()
 	})
 }
 
@@ -1612,27 +1475,6 @@ func (u *CommentUpsertBulk) UpdateEntID() *CommentUpsertBulk {
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *CommentUpsertBulk) SetAppID(v uuid.UUID) *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *CommentUpsertBulk) UpdateAppID() *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.UpdateAppID()
-	})
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (u *CommentUpsertBulk) ClearAppID() *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.ClearAppID()
-	})
-}
-
 // SetUserID sets the "user_id" field.
 func (u *CommentUpsertBulk) SetUserID(v uuid.UUID) *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
@@ -1651,27 +1493,6 @@ func (u *CommentUpsertBulk) UpdateUserID() *CommentUpsertBulk {
 func (u *CommentUpsertBulk) ClearUserID() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.ClearUserID()
-	})
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *CommentUpsertBulk) SetGoodID(v uuid.UUID) *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *CommentUpsertBulk) UpdateGoodID() *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.UpdateGoodID()
-	})
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *CommentUpsertBulk) ClearGoodID() *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.ClearGoodID()
 	})
 }
 
@@ -1822,45 +1643,45 @@ func (u *CommentUpsertBulk) ClearPurchasedUser() *CommentUpsertBulk {
 	})
 }
 
-// SetOrderFirstComment sets the "order_first_comment" field.
-func (u *CommentUpsertBulk) SetOrderFirstComment(v bool) *CommentUpsertBulk {
+// SetHide sets the "hide" field.
+func (u *CommentUpsertBulk) SetHide(v bool) *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
-		s.SetOrderFirstComment(v)
+		s.SetHide(v)
 	})
 }
 
-// UpdateOrderFirstComment sets the "order_first_comment" field to the value that was provided on create.
-func (u *CommentUpsertBulk) UpdateOrderFirstComment() *CommentUpsertBulk {
+// UpdateHide sets the "hide" field to the value that was provided on create.
+func (u *CommentUpsertBulk) UpdateHide() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
-		s.UpdateOrderFirstComment()
+		s.UpdateHide()
 	})
 }
 
-// ClearOrderFirstComment clears the value of the "order_first_comment" field.
-func (u *CommentUpsertBulk) ClearOrderFirstComment() *CommentUpsertBulk {
+// ClearHide clears the value of the "hide" field.
+func (u *CommentUpsertBulk) ClearHide() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
-		s.ClearOrderFirstComment()
+		s.ClearHide()
 	})
 }
 
-// SetScore sets the "score" field.
-func (u *CommentUpsertBulk) SetScore(v decimal.Decimal) *CommentUpsertBulk {
+// SetHideReason sets the "hide_reason" field.
+func (u *CommentUpsertBulk) SetHideReason(v string) *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
-		s.SetScore(v)
+		s.SetHideReason(v)
 	})
 }
 
-// UpdateScore sets the "score" field to the value that was provided on create.
-func (u *CommentUpsertBulk) UpdateScore() *CommentUpsertBulk {
+// UpdateHideReason sets the "hide_reason" field to the value that was provided on create.
+func (u *CommentUpsertBulk) UpdateHideReason() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
-		s.UpdateScore()
+		s.UpdateHideReason()
 	})
 }
 
-// ClearScore clears the value of the "score" field.
-func (u *CommentUpsertBulk) ClearScore() *CommentUpsertBulk {
+// ClearHideReason clears the value of the "hide_reason" field.
+func (u *CommentUpsertBulk) ClearHideReason() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
-		s.ClearScore()
+		s.ClearHideReason()
 	})
 }
 

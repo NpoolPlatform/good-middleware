@@ -2,55 +2,39 @@ package brand
 
 import (
 	"context"
-	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
+
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
-
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/brand"
-
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/brand"
+	"google.golang.org/grpc"
 )
 
-var timeout = 10 * time.Second
-
-type handler func(context.Context, npool.MiddlewareClient) (cruder.Any, error)
-
-func do(ctx context.Context, handler handler) (cruder.Any, error) {
-	_ctx, cancel := context.WithTimeout(ctx, timeout)
-	defer cancel()
-
-	conn, err := grpc2.GetGRPCConn(servicename.ServiceDomain, grpc2.GRPCTAG)
-	if err != nil {
-		return nil, err
-	}
-
-	defer conn.Close()
-
-	cli := npool.NewMiddlewareClient(conn)
-
-	return handler(_ctx, cli)
+func withClient(ctx context.Context, handler func(context.Context, npool.MiddlewareClient) (interface{}, error)) (interface{}, error) {
+	return grpc2.WithGRPCConn(
+		ctx,
+		servicename.ServiceDomain,
+		10*time.Second, //nolint
+		func(_ctx context.Context, conn *grpc.ClientConn) (interface{}, error) {
+			return handler(_ctx, npool.NewMiddlewareClient(conn))
+		},
+		grpc2.GRPCTAG,
+	)
 }
 
-func CreateBrand(ctx context.Context, in *npool.BrandReq) (*npool.Brand, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.CreateBrand(ctx, &npool.CreateBrandRequest{
-			Info: in,
+func CreateBrand(ctx context.Context, req *npool.BrandReq) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.CreateBrand(_ctx, &npool.CreateBrandRequest{
+			Info: req,
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Brand), nil
+	return err
 }
 
 func GetBrand(ctx context.Context, id string) (*npool.Brand, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetBrand(ctx, &npool.GetBrandRequest{
 			EntID: id,
 		})
@@ -65,10 +49,8 @@ func GetBrand(ctx context.Context, id string) (*npool.Brand, error) {
 	return info.(*npool.Brand), nil
 }
 
-func GetBrands(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.Brand, uint32, error) {
-	total := uint32(0)
-
-	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+func GetBrands(ctx context.Context, conds *npool.Conds, offset, limit int32) (infos []*npool.Brand, total uint32, err error) {
+	_infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetBrands(ctx, &npool.GetBrandsRequest{
 			Conds:  conds,
 			Offset: offset,
@@ -77,24 +59,37 @@ func GetBrands(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]
 		if err != nil {
 			return nil, err
 		}
-
 		total = resp.Total
-
 		return resp.Infos, nil
 	})
 	if err != nil {
 		return nil, 0, err
 	}
-	return infos.([]*npool.Brand), total, nil
+	return _infos.([]*npool.Brand), total, nil
+}
+
+func ExistBrandConds(ctx context.Context, conds *npool.Conds) (exist bool, err error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistBrandConds(ctx, &npool.ExistBrandCondsRequest{
+			Conds: conds,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return info.(bool), nil
 }
 
 func GetBrandOnly(ctx context.Context, conds *npool.Conds) (*npool.Brand, error) {
-	const limit = 2
-	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+	infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
 		resp, err := cli.GetBrands(ctx, &npool.GetBrandsRequest{
 			Conds:  conds,
 			Offset: 0,
-			Limit:  limit,
+			Limit:  2,
 		})
 		if err != nil {
 			return nil, err
@@ -108,41 +103,28 @@ func GetBrandOnly(ctx context.Context, conds *npool.Conds) (*npool.Brand, error)
 		return nil, nil
 	}
 	if len(infos.([]*npool.Brand)) > 1 {
-		return nil, fmt.Errorf("too many records")
+		return nil, wlog.Errorf("too many records")
 	}
 	return infos.([]*npool.Brand)[0], nil
 }
 
-func UpdateBrand(ctx context.Context, in *npool.BrandReq) (*npool.Brand, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.UpdateBrand(ctx, &npool.UpdateBrandRequest{
-			Info: in,
+func UpdateBrand(ctx context.Context, req *npool.BrandReq) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.UpdateBrand(_ctx, &npool.UpdateBrandRequest{
+			Info: req,
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Brand), nil
+	return err
 }
 
-func DeleteBrand(ctx context.Context, id uint32) (*npool.Brand, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.DeleteBrand(ctx, &npool.DeleteBrandRequest{
+func DeleteBrand(ctx context.Context, id *uint32, entID *string) error {
+	_, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		return cli.DeleteBrand(_ctx, &npool.DeleteBrandRequest{
 			Info: &npool.BrandReq{
-				ID: &id,
+				ID:    id,
+				EntID: entID,
 			},
 		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Brand), nil
+	return err
 }

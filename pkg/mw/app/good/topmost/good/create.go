@@ -3,91 +3,97 @@ package topmostgood
 import (
 	"context"
 	"fmt"
+	"time"
 
-	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
-	topmostgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/good"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost/good"
 
 	"github.com/google/uuid"
 )
 
 type createHandler struct {
 	*Handler
+	sql string
+}
+
+//nolint:goconst
+func (h *createHandler) constructSQL() {
+	now := uint32(time.Now().Unix())
+	comma := ""
+	_sql := "insert into top_most_goods ("
+	if h.EntID != nil {
+		_sql += "ent_id"
+		comma = ", "
+	}
+	_sql += comma + "app_good_id"
+	comma = ", "
+	_sql += comma + "top_most_id"
+	if h.DisplayIndex != nil {
+		_sql += comma + "display_index"
+	}
+	_sql += comma + "unit_price"
+	_sql += comma + "created_at"
+	_sql += comma + "updated_at"
+	_sql += comma + "deleted_at"
+	_sql += ")"
+
+	comma = ""
+	_sql += " select * from ( select "
+	if h.EntID != nil {
+		_sql += fmt.Sprintf("'%v' as ent_id", *h.EntID)
+		comma = ", "
+	}
+	_sql += fmt.Sprintf("%v'%v' as app_good_id", comma, *h.AppGoodID)
+	comma = ", "
+	_sql += fmt.Sprintf("%v'%v' as top_most_id", comma, *h.TopMostID)
+	if h.DisplayIndex != nil {
+		_sql += fmt.Sprintf("%v%v as display_index", comma, *h.DisplayIndex)
+	}
+	_sql += fmt.Sprintf("%v'%v' as unit_price", comma, *h.UnitPrice)
+	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
+	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
+	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
+	_sql += ") as tmp "
+	_sql += "where not exists ("
+	_sql += "select 1 from top_most_goods as tmg "
+	_sql += fmt.Sprintf(
+		"where tmg.app_good_id = '%v' and tmg.top_most_id='%v' and deleted_at = 0",
+		*h.AppGoodID,
+		*h.TopMostID,
+	)
+	_sql += " limit 1) and exists ("
+	_sql += "select 1 from app_good_bases as agb "
+	_sql += fmt.Sprintf("where agb.ent_id = '%v'", *h.AppGoodID)
+	_sql += " limit 1) and exists ("
+	_sql += "select 1 from top_mosts as tm "
+	_sql += fmt.Sprintf("where tm.ent_id = '%v'", *h.TopMostID)
+	_sql += " limit 1)"
+
+	h.sql = _sql
 }
 
 func (h *createHandler) createTopMostGood(ctx context.Context, tx *ent.Tx) error {
-	if _, err := topmostgoodcrud.CreateSet(
-		tx.TopMostGood.Create(),
-		&topmostgoodcrud.Req{
-			EntID:        h.EntID,
-			AppID:        h.AppID,
-			GoodID:       h.GoodID,
-			TopMostID:    h.TopMostID,
-			AppGoodID:    h.AppGoodID,
-			CoinTypeID:   h.CoinTypeID,
-			DisplayIndex: h.DisplayIndex,
-			Posters:      h.Posters,
-			UnitPrice:    h.UnitPrice,
-			PackagePrice: h.PackagePrice,
-		},
-	).Save(ctx); err != nil {
-		return err
+	rc, err := tx.ExecContext(ctx, h.sql)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	n, err := rc.RowsAffected()
+	if err != nil || n != 1 {
+		return wlog.Errorf("fail create topmostgood: %v", err)
 	}
 	return nil
 }
 
-func (h *Handler) CreateTopMostGood(ctx context.Context) (*npool.TopMostGood, error) {
-	if h.UnitPrice == nil && h.PackagePrice == nil {
-		return nil, fmt.Errorf("invalid topmostgood price")
-	}
-
-	if err := h.GetAppGood(ctx); err != nil {
-		return nil, err
-	}
-
-	key := fmt.Sprintf("%v:%v:%v:%v", basetypes.Prefix_PrefixCreateTopMostGood, *h.AppID, *h.TopMostID, *h.AppGoodID)
-	if err := redis2.TryLock(key, 0); err != nil {
-		return nil, err
-	}
-	defer func() {
-		_ = redis2.Unlock(key)
-	}()
-
-	h.Conds = &topmostgoodcrud.Conds{
-		AppID:     &cruder.Cond{Op: cruder.EQ, Val: *h.AppID},
-		TopMostID: &cruder.Cond{Op: cruder.EQ, Val: *h.TopMostID},
-		AppGoodID: &cruder.Cond{Op: cruder.EQ, Val: *h.AppGoodID},
-	}
-	exist, err := h.ExistDefaultConds(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if exist {
-		return nil, fmt.Errorf("already exists")
-	}
-
-	id := uuid.New()
-	if h.EntID == nil {
-		h.EntID = &id
-	}
-
+func (h *Handler) CreateTopMostGood(ctx context.Context) error {
 	handler := &createHandler{
 		Handler: h,
 	}
-
-	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.createTopMostGood(_ctx, tx); err != nil {
-			return err
-		}
-		return nil
-	})
-	if err != nil {
-		return nil, err
+	if h.EntID == nil {
+		h.EntID = func() *uuid.UUID { s := uuid.New(); return &s }()
 	}
-
-	return h.GetTopMostGood(ctx)
+	handler.constructSQL()
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		return handler.createTopMostGood(_ctx, tx)
+	})
 }

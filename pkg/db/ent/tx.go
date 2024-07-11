@@ -16,30 +16,74 @@ type Tx struct {
 	config
 	// AppDefaultGood is the client for interacting with the AppDefaultGood builders.
 	AppDefaultGood *AppDefaultGoodClient
+	// AppFee is the client for interacting with the AppFee builders.
+	AppFee *AppFeeClient
 	// AppGood is the client for interacting with the AppGood builders.
 	AppGood *AppGoodClient
-	// AppSimulateGood is the client for interacting with the AppSimulateGood builders.
-	AppSimulateGood *AppSimulateGoodClient
+	// AppGoodBase is the client for interacting with the AppGoodBase builders.
+	AppGoodBase *AppGoodBaseClient
+	// AppGoodDescription is the client for interacting with the AppGoodDescription builders.
+	AppGoodDescription *AppGoodDescriptionClient
+	// AppGoodDisplayColor is the client for interacting with the AppGoodDisplayColor builders.
+	AppGoodDisplayColor *AppGoodDisplayColorClient
+	// AppGoodDisplayName is the client for interacting with the AppGoodDisplayName builders.
+	AppGoodDisplayName *AppGoodDisplayNameClient
+	// AppGoodLabel is the client for interacting with the AppGoodLabel builders.
+	AppGoodLabel *AppGoodLabelClient
+	// AppGoodPoster is the client for interacting with the AppGoodPoster builders.
+	AppGoodPoster *AppGoodPosterClient
+	// AppLegacyPowerRental is the client for interacting with the AppLegacyPowerRental builders.
+	AppLegacyPowerRental *AppLegacyPowerRentalClient
+	// AppMiningGoodStock is the client for interacting with the AppMiningGoodStock builders.
+	AppMiningGoodStock *AppMiningGoodStockClient
+	// AppPowerRental is the client for interacting with the AppPowerRental builders.
+	AppPowerRental *AppPowerRentalClient
+	// AppSimulatePowerRental is the client for interacting with the AppSimulatePowerRental builders.
+	AppSimulatePowerRental *AppSimulatePowerRentalClient
 	// AppStock is the client for interacting with the AppStock builders.
 	AppStock *AppStockClient
 	// AppStockLock is the client for interacting with the AppStockLock builders.
 	AppStockLock *AppStockLockClient
 	// Comment is the client for interacting with the Comment builders.
 	Comment *CommentClient
+	// DelegatedStaking is the client for interacting with the DelegatedStaking builders.
+	DelegatedStaking *DelegatedStakingClient
 	// DeviceInfo is the client for interacting with the DeviceInfo builders.
 	DeviceInfo *DeviceInfoClient
+	// DeviceManufacturer is the client for interacting with the DeviceManufacturer builders.
+	DeviceManufacturer *DeviceManufacturerClient
+	// DevicePoster is the client for interacting with the DevicePoster builders.
+	DevicePoster *DevicePosterClient
 	// ExtraInfo is the client for interacting with the ExtraInfo builders.
 	ExtraInfo *ExtraInfoClient
+	// FbmCrowdFunding is the client for interacting with the FbmCrowdFunding builders.
+	FbmCrowdFunding *FbmCrowdFundingClient
+	// Fee is the client for interacting with the Fee builders.
+	Fee *FeeClient
 	// Good is the client for interacting with the Good builders.
 	Good *GoodClient
+	// GoodBase is the client for interacting with the GoodBase builders.
+	GoodBase *GoodBaseClient
+	// GoodCoin is the client for interacting with the GoodCoin builders.
+	GoodCoin *GoodCoinClient
+	// GoodCoinReward is the client for interacting with the GoodCoinReward builders.
+	GoodCoinReward *GoodCoinRewardClient
+	// GoodMalfunction is the client for interacting with the GoodMalfunction builders.
+	GoodMalfunction *GoodMalfunctionClient
 	// GoodReward is the client for interacting with the GoodReward builders.
 	GoodReward *GoodRewardClient
 	// GoodRewardHistory is the client for interacting with the GoodRewardHistory builders.
 	GoodRewardHistory *GoodRewardHistoryClient
 	// Like is the client for interacting with the Like builders.
 	Like *LikeClient
+	// MiningGoodStock is the client for interacting with the MiningGoodStock builders.
+	MiningGoodStock *MiningGoodStockClient
+	// PowerRental is the client for interacting with the PowerRental builders.
+	PowerRental *PowerRentalClient
 	// Recommend is the client for interacting with the Recommend builders.
 	Recommend *RecommendClient
+	// RequiredAppGood is the client for interacting with the RequiredAppGood builders.
+	RequiredAppGood *RequiredAppGoodClient
 	// RequiredGood is the client for interacting with the RequiredGood builders.
 	RequiredGood *RequiredGoodClient
 	// Score is the client for interacting with the Score builders.
@@ -48,8 +92,16 @@ type Tx struct {
 	Stock *StockClient
 	// TopMost is the client for interacting with the TopMost builders.
 	TopMost *TopMostClient
+	// TopMostConstraint is the client for interacting with the TopMostConstraint builders.
+	TopMostConstraint *TopMostConstraintClient
 	// TopMostGood is the client for interacting with the TopMostGood builders.
 	TopMostGood *TopMostGoodClient
+	// TopMostGoodConstraint is the client for interacting with the TopMostGoodConstraint builders.
+	TopMostGoodConstraint *TopMostGoodConstraintClient
+	// TopMostGoodPoster is the client for interacting with the TopMostGoodPoster builders.
+	TopMostGoodPoster *TopMostGoodPosterClient
+	// TopMostPoster is the client for interacting with the TopMostPoster builders.
+	TopMostPoster *TopMostPosterClient
 	// VendorBrand is the client for interacting with the VendorBrand builders.
 	VendorBrand *VendorBrandClient
 	// VendorLocation is the client for interacting with the VendorLocation builders.
@@ -190,23 +242,49 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.AppDefaultGood = NewAppDefaultGoodClient(tx.config)
+	tx.AppFee = NewAppFeeClient(tx.config)
 	tx.AppGood = NewAppGoodClient(tx.config)
-	tx.AppSimulateGood = NewAppSimulateGoodClient(tx.config)
+	tx.AppGoodBase = NewAppGoodBaseClient(tx.config)
+	tx.AppGoodDescription = NewAppGoodDescriptionClient(tx.config)
+	tx.AppGoodDisplayColor = NewAppGoodDisplayColorClient(tx.config)
+	tx.AppGoodDisplayName = NewAppGoodDisplayNameClient(tx.config)
+	tx.AppGoodLabel = NewAppGoodLabelClient(tx.config)
+	tx.AppGoodPoster = NewAppGoodPosterClient(tx.config)
+	tx.AppLegacyPowerRental = NewAppLegacyPowerRentalClient(tx.config)
+	tx.AppMiningGoodStock = NewAppMiningGoodStockClient(tx.config)
+	tx.AppPowerRental = NewAppPowerRentalClient(tx.config)
+	tx.AppSimulatePowerRental = NewAppSimulatePowerRentalClient(tx.config)
 	tx.AppStock = NewAppStockClient(tx.config)
 	tx.AppStockLock = NewAppStockLockClient(tx.config)
 	tx.Comment = NewCommentClient(tx.config)
+	tx.DelegatedStaking = NewDelegatedStakingClient(tx.config)
 	tx.DeviceInfo = NewDeviceInfoClient(tx.config)
+	tx.DeviceManufacturer = NewDeviceManufacturerClient(tx.config)
+	tx.DevicePoster = NewDevicePosterClient(tx.config)
 	tx.ExtraInfo = NewExtraInfoClient(tx.config)
+	tx.FbmCrowdFunding = NewFbmCrowdFundingClient(tx.config)
+	tx.Fee = NewFeeClient(tx.config)
 	tx.Good = NewGoodClient(tx.config)
+	tx.GoodBase = NewGoodBaseClient(tx.config)
+	tx.GoodCoin = NewGoodCoinClient(tx.config)
+	tx.GoodCoinReward = NewGoodCoinRewardClient(tx.config)
+	tx.GoodMalfunction = NewGoodMalfunctionClient(tx.config)
 	tx.GoodReward = NewGoodRewardClient(tx.config)
 	tx.GoodRewardHistory = NewGoodRewardHistoryClient(tx.config)
 	tx.Like = NewLikeClient(tx.config)
+	tx.MiningGoodStock = NewMiningGoodStockClient(tx.config)
+	tx.PowerRental = NewPowerRentalClient(tx.config)
 	tx.Recommend = NewRecommendClient(tx.config)
+	tx.RequiredAppGood = NewRequiredAppGoodClient(tx.config)
 	tx.RequiredGood = NewRequiredGoodClient(tx.config)
 	tx.Score = NewScoreClient(tx.config)
 	tx.Stock = NewStockClient(tx.config)
 	tx.TopMost = NewTopMostClient(tx.config)
+	tx.TopMostConstraint = NewTopMostConstraintClient(tx.config)
 	tx.TopMostGood = NewTopMostGoodClient(tx.config)
+	tx.TopMostGoodConstraint = NewTopMostGoodConstraintClient(tx.config)
+	tx.TopMostGoodPoster = NewTopMostGoodPosterClient(tx.config)
+	tx.TopMostPoster = NewTopMostPosterClient(tx.config)
 	tx.VendorBrand = NewVendorBrandClient(tx.config)
 	tx.VendorLocation = NewVendorLocationClient(tx.config)
 }

@@ -25,16 +25,18 @@ type Recommend struct {
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// EntID holds the value of the "ent_id" field.
 	EntID uuid.UUID `json:"ent_id,omitempty"`
-	// AppID holds the value of the "app_id" field.
-	AppID uuid.UUID `json:"app_id,omitempty"`
-	// GoodID holds the value of the "good_id" field.
-	GoodID uuid.UUID `json:"good_id,omitempty"`
+	// AppGoodID holds the value of the "app_good_id" field.
+	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
 	// RecommenderID holds the value of the "recommender_id" field.
 	RecommenderID uuid.UUID `json:"recommender_id,omitempty"`
 	// Message holds the value of the "message" field.
 	Message string `json:"message,omitempty"`
 	// RecommendIndex holds the value of the "recommend_index" field.
 	RecommendIndex decimal.Decimal `json:"recommend_index,omitempty"`
+	// Hide holds the value of the "hide" field.
+	Hide bool `json:"hide,omitempty"`
+	// HideReason holds the value of the "hide_reason" field.
+	HideReason string `json:"hide_reason,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -44,11 +46,13 @@ func (*Recommend) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case recommend.FieldRecommendIndex:
 			values[i] = new(decimal.Decimal)
+		case recommend.FieldHide:
+			values[i] = new(sql.NullBool)
 		case recommend.FieldID, recommend.FieldCreatedAt, recommend.FieldUpdatedAt, recommend.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case recommend.FieldMessage:
+		case recommend.FieldMessage, recommend.FieldHideReason:
 			values[i] = new(sql.NullString)
-		case recommend.FieldEntID, recommend.FieldAppID, recommend.FieldGoodID, recommend.FieldRecommenderID:
+		case recommend.FieldEntID, recommend.FieldAppGoodID, recommend.FieldRecommenderID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Recommend", columns[i])
@@ -95,17 +99,11 @@ func (r *Recommend) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				r.EntID = *value
 			}
-		case recommend.FieldAppID:
+		case recommend.FieldAppGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field app_id", values[i])
+				return fmt.Errorf("unexpected type %T for field app_good_id", values[i])
 			} else if value != nil {
-				r.AppID = *value
-			}
-		case recommend.FieldGoodID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field good_id", values[i])
-			} else if value != nil {
-				r.GoodID = *value
+				r.AppGoodID = *value
 			}
 		case recommend.FieldRecommenderID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -124,6 +122,18 @@ func (r *Recommend) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field recommend_index", values[i])
 			} else if value != nil {
 				r.RecommendIndex = *value
+			}
+		case recommend.FieldHide:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field hide", values[i])
+			} else if value.Valid {
+				r.Hide = value.Bool
+			}
+		case recommend.FieldHideReason:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field hide_reason", values[i])
+			} else if value.Valid {
+				r.HideReason = value.String
 			}
 		}
 	}
@@ -165,11 +175,8 @@ func (r *Recommend) String() string {
 	builder.WriteString("ent_id=")
 	builder.WriteString(fmt.Sprintf("%v", r.EntID))
 	builder.WriteString(", ")
-	builder.WriteString("app_id=")
-	builder.WriteString(fmt.Sprintf("%v", r.AppID))
-	builder.WriteString(", ")
-	builder.WriteString("good_id=")
-	builder.WriteString(fmt.Sprintf("%v", r.GoodID))
+	builder.WriteString("app_good_id=")
+	builder.WriteString(fmt.Sprintf("%v", r.AppGoodID))
 	builder.WriteString(", ")
 	builder.WriteString("recommender_id=")
 	builder.WriteString(fmt.Sprintf("%v", r.RecommenderID))
@@ -179,6 +186,12 @@ func (r *Recommend) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("recommend_index=")
 	builder.WriteString(fmt.Sprintf("%v", r.RecommendIndex))
+	builder.WriteString(", ")
+	builder.WriteString("hide=")
+	builder.WriteString(fmt.Sprintf("%v", r.Hide))
+	builder.WriteString(", ")
+	builder.WriteString("hide_reason=")
+	builder.WriteString(r.HideReason)
 	builder.WriteByte(')')
 	return builder.String()
 }

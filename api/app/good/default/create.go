@@ -26,6 +26,7 @@ func (s *Server) CreateDefault(ctx context.Context, in *npool.CreateDefaultReque
 		ctx,
 		appdefaultgood1.WithEntID(req.EntID, false),
 		appdefaultgood1.WithAppGoodID(req.AppGoodID, true),
+		appdefaultgood1.WithCoinTypeID(req.CoinTypeID, true),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
@@ -36,8 +37,7 @@ func (s *Server) CreateDefault(ctx context.Context, in *npool.CreateDefaultReque
 		return &npool.CreateDefaultResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.CreateDefault(ctx)
-	if err != nil {
+	if err := handler.CreateDefault(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"CreateDefault",
 			"In", in,
@@ -46,7 +46,5 @@ func (s *Server) CreateDefault(ctx context.Context, in *npool.CreateDefaultReque
 		return &npool.CreateDefaultResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.CreateDefaultResponse{
-		Info: info,
-	}, nil
+	return &npool.CreateDefaultResponse{}, nil
 }

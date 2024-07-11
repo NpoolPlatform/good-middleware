@@ -23,7 +23,8 @@ func (s *Server) DeleteRequired(ctx context.Context, in *npool.DeleteRequiredReq
 	}
 	handler, err := required1.NewHandler(
 		ctx,
-		required1.WithID(req.ID, true),
+		required1.WithID(req.ID, false),
+		required1.WithEntID(req.EntID, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(
@@ -34,8 +35,7 @@ func (s *Server) DeleteRequired(ctx context.Context, in *npool.DeleteRequiredReq
 		return &npool.DeleteRequiredResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.DeleteRequired(ctx)
-	if err != nil {
+	if err := handler.DeleteRequired(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"DeleteRequired",
 			"In", in,
@@ -44,7 +44,5 @@ func (s *Server) DeleteRequired(ctx context.Context, in *npool.DeleteRequiredReq
 		return &npool.DeleteRequiredResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.DeleteRequiredResponse{
-		Info: info,
-	}, nil
+	return &npool.DeleteRequiredResponse{}, nil
 }

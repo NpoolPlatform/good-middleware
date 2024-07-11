@@ -13,7 +13,6 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/comment"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // CommentUpdate is the builder for updating Comment entities.
@@ -99,26 +98,6 @@ func (cu *CommentUpdate) SetNillableEntID(u *uuid.UUID) *CommentUpdate {
 	return cu
 }
 
-// SetAppID sets the "app_id" field.
-func (cu *CommentUpdate) SetAppID(u uuid.UUID) *CommentUpdate {
-	cu.mutation.SetAppID(u)
-	return cu
-}
-
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (cu *CommentUpdate) SetNillableAppID(u *uuid.UUID) *CommentUpdate {
-	if u != nil {
-		cu.SetAppID(*u)
-	}
-	return cu
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (cu *CommentUpdate) ClearAppID() *CommentUpdate {
-	cu.mutation.ClearAppID()
-	return cu
-}
-
 // SetUserID sets the "user_id" field.
 func (cu *CommentUpdate) SetUserID(u uuid.UUID) *CommentUpdate {
 	cu.mutation.SetUserID(u)
@@ -136,26 +115,6 @@ func (cu *CommentUpdate) SetNillableUserID(u *uuid.UUID) *CommentUpdate {
 // ClearUserID clears the value of the "user_id" field.
 func (cu *CommentUpdate) ClearUserID() *CommentUpdate {
 	cu.mutation.ClearUserID()
-	return cu
-}
-
-// SetGoodID sets the "good_id" field.
-func (cu *CommentUpdate) SetGoodID(u uuid.UUID) *CommentUpdate {
-	cu.mutation.SetGoodID(u)
-	return cu
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (cu *CommentUpdate) SetNillableGoodID(u *uuid.UUID) *CommentUpdate {
-	if u != nil {
-		cu.SetGoodID(*u)
-	}
-	return cu
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (cu *CommentUpdate) ClearGoodID() *CommentUpdate {
-	cu.mutation.ClearGoodID()
 	return cu
 }
 
@@ -299,43 +258,43 @@ func (cu *CommentUpdate) ClearPurchasedUser() *CommentUpdate {
 	return cu
 }
 
-// SetOrderFirstComment sets the "order_first_comment" field.
-func (cu *CommentUpdate) SetOrderFirstComment(b bool) *CommentUpdate {
-	cu.mutation.SetOrderFirstComment(b)
+// SetHide sets the "hide" field.
+func (cu *CommentUpdate) SetHide(b bool) *CommentUpdate {
+	cu.mutation.SetHide(b)
 	return cu
 }
 
-// SetNillableOrderFirstComment sets the "order_first_comment" field if the given value is not nil.
-func (cu *CommentUpdate) SetNillableOrderFirstComment(b *bool) *CommentUpdate {
+// SetNillableHide sets the "hide" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableHide(b *bool) *CommentUpdate {
 	if b != nil {
-		cu.SetOrderFirstComment(*b)
+		cu.SetHide(*b)
 	}
 	return cu
 }
 
-// ClearOrderFirstComment clears the value of the "order_first_comment" field.
-func (cu *CommentUpdate) ClearOrderFirstComment() *CommentUpdate {
-	cu.mutation.ClearOrderFirstComment()
+// ClearHide clears the value of the "hide" field.
+func (cu *CommentUpdate) ClearHide() *CommentUpdate {
+	cu.mutation.ClearHide()
 	return cu
 }
 
-// SetScore sets the "score" field.
-func (cu *CommentUpdate) SetScore(d decimal.Decimal) *CommentUpdate {
-	cu.mutation.SetScore(d)
+// SetHideReason sets the "hide_reason" field.
+func (cu *CommentUpdate) SetHideReason(s string) *CommentUpdate {
+	cu.mutation.SetHideReason(s)
 	return cu
 }
 
-// SetNillableScore sets the "score" field if the given value is not nil.
-func (cu *CommentUpdate) SetNillableScore(d *decimal.Decimal) *CommentUpdate {
-	if d != nil {
-		cu.SetScore(*d)
+// SetNillableHideReason sets the "hide_reason" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableHideReason(s *string) *CommentUpdate {
+	if s != nil {
+		cu.SetHideReason(*s)
 	}
 	return cu
 }
 
-// ClearScore clears the value of the "score" field.
-func (cu *CommentUpdate) ClearScore() *CommentUpdate {
-	cu.mutation.ClearScore()
+// ClearHideReason clears the value of the "hide_reason" field.
+func (cu *CommentUpdate) ClearHideReason() *CommentUpdate {
+	cu.mutation.ClearHideReason()
 	return cu
 }
 
@@ -486,19 +445,6 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: comment.FieldEntID,
 		})
 	}
-	if value, ok := cu.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: comment.FieldAppID,
-		})
-	}
-	if cu.mutation.AppIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: comment.FieldAppID,
-		})
-	}
 	if value, ok := cu.mutation.UserID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -510,19 +456,6 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Column: comment.FieldUserID,
-		})
-	}
-	if value, ok := cu.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: comment.FieldGoodID,
-		})
-	}
-	if cu.mutation.GoodIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: comment.FieldGoodID,
 		})
 	}
 	if value, ok := cu.mutation.AppGoodID(); ok {
@@ -616,30 +549,30 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: comment.FieldPurchasedUser,
 		})
 	}
-	if value, ok := cu.mutation.OrderFirstComment(); ok {
+	if value, ok := cu.mutation.Hide(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: comment.FieldOrderFirstComment,
+			Column: comment.FieldHide,
 		})
 	}
-	if cu.mutation.OrderFirstCommentCleared() {
+	if cu.mutation.HideCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
-			Column: comment.FieldOrderFirstComment,
+			Column: comment.FieldHide,
 		})
 	}
-	if value, ok := cu.mutation.Score(); ok {
+	if value, ok := cu.mutation.HideReason(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: comment.FieldScore,
+			Column: comment.FieldHideReason,
 		})
 	}
-	if cu.mutation.ScoreCleared() {
+	if cu.mutation.HideReasonCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: comment.FieldScore,
+			Type:   field.TypeString,
+			Column: comment.FieldHideReason,
 		})
 	}
 	_spec.Modifiers = cu.modifiers
@@ -732,26 +665,6 @@ func (cuo *CommentUpdateOne) SetNillableEntID(u *uuid.UUID) *CommentUpdateOne {
 	return cuo
 }
 
-// SetAppID sets the "app_id" field.
-func (cuo *CommentUpdateOne) SetAppID(u uuid.UUID) *CommentUpdateOne {
-	cuo.mutation.SetAppID(u)
-	return cuo
-}
-
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (cuo *CommentUpdateOne) SetNillableAppID(u *uuid.UUID) *CommentUpdateOne {
-	if u != nil {
-		cuo.SetAppID(*u)
-	}
-	return cuo
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (cuo *CommentUpdateOne) ClearAppID() *CommentUpdateOne {
-	cuo.mutation.ClearAppID()
-	return cuo
-}
-
 // SetUserID sets the "user_id" field.
 func (cuo *CommentUpdateOne) SetUserID(u uuid.UUID) *CommentUpdateOne {
 	cuo.mutation.SetUserID(u)
@@ -769,26 +682,6 @@ func (cuo *CommentUpdateOne) SetNillableUserID(u *uuid.UUID) *CommentUpdateOne {
 // ClearUserID clears the value of the "user_id" field.
 func (cuo *CommentUpdateOne) ClearUserID() *CommentUpdateOne {
 	cuo.mutation.ClearUserID()
-	return cuo
-}
-
-// SetGoodID sets the "good_id" field.
-func (cuo *CommentUpdateOne) SetGoodID(u uuid.UUID) *CommentUpdateOne {
-	cuo.mutation.SetGoodID(u)
-	return cuo
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (cuo *CommentUpdateOne) SetNillableGoodID(u *uuid.UUID) *CommentUpdateOne {
-	if u != nil {
-		cuo.SetGoodID(*u)
-	}
-	return cuo
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (cuo *CommentUpdateOne) ClearGoodID() *CommentUpdateOne {
-	cuo.mutation.ClearGoodID()
 	return cuo
 }
 
@@ -932,43 +825,43 @@ func (cuo *CommentUpdateOne) ClearPurchasedUser() *CommentUpdateOne {
 	return cuo
 }
 
-// SetOrderFirstComment sets the "order_first_comment" field.
-func (cuo *CommentUpdateOne) SetOrderFirstComment(b bool) *CommentUpdateOne {
-	cuo.mutation.SetOrderFirstComment(b)
+// SetHide sets the "hide" field.
+func (cuo *CommentUpdateOne) SetHide(b bool) *CommentUpdateOne {
+	cuo.mutation.SetHide(b)
 	return cuo
 }
 
-// SetNillableOrderFirstComment sets the "order_first_comment" field if the given value is not nil.
-func (cuo *CommentUpdateOne) SetNillableOrderFirstComment(b *bool) *CommentUpdateOne {
+// SetNillableHide sets the "hide" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableHide(b *bool) *CommentUpdateOne {
 	if b != nil {
-		cuo.SetOrderFirstComment(*b)
+		cuo.SetHide(*b)
 	}
 	return cuo
 }
 
-// ClearOrderFirstComment clears the value of the "order_first_comment" field.
-func (cuo *CommentUpdateOne) ClearOrderFirstComment() *CommentUpdateOne {
-	cuo.mutation.ClearOrderFirstComment()
+// ClearHide clears the value of the "hide" field.
+func (cuo *CommentUpdateOne) ClearHide() *CommentUpdateOne {
+	cuo.mutation.ClearHide()
 	return cuo
 }
 
-// SetScore sets the "score" field.
-func (cuo *CommentUpdateOne) SetScore(d decimal.Decimal) *CommentUpdateOne {
-	cuo.mutation.SetScore(d)
+// SetHideReason sets the "hide_reason" field.
+func (cuo *CommentUpdateOne) SetHideReason(s string) *CommentUpdateOne {
+	cuo.mutation.SetHideReason(s)
 	return cuo
 }
 
-// SetNillableScore sets the "score" field if the given value is not nil.
-func (cuo *CommentUpdateOne) SetNillableScore(d *decimal.Decimal) *CommentUpdateOne {
-	if d != nil {
-		cuo.SetScore(*d)
+// SetNillableHideReason sets the "hide_reason" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableHideReason(s *string) *CommentUpdateOne {
+	if s != nil {
+		cuo.SetHideReason(*s)
 	}
 	return cuo
 }
 
-// ClearScore clears the value of the "score" field.
-func (cuo *CommentUpdateOne) ClearScore() *CommentUpdateOne {
-	cuo.mutation.ClearScore()
+// ClearHideReason clears the value of the "hide_reason" field.
+func (cuo *CommentUpdateOne) ClearHideReason() *CommentUpdateOne {
+	cuo.mutation.ClearHideReason()
 	return cuo
 }
 
@@ -1149,19 +1042,6 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 			Column: comment.FieldEntID,
 		})
 	}
-	if value, ok := cuo.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: comment.FieldAppID,
-		})
-	}
-	if cuo.mutation.AppIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: comment.FieldAppID,
-		})
-	}
 	if value, ok := cuo.mutation.UserID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -1173,19 +1053,6 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Column: comment.FieldUserID,
-		})
-	}
-	if value, ok := cuo.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: comment.FieldGoodID,
-		})
-	}
-	if cuo.mutation.GoodIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: comment.FieldGoodID,
 		})
 	}
 	if value, ok := cuo.mutation.AppGoodID(); ok {
@@ -1279,30 +1146,30 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 			Column: comment.FieldPurchasedUser,
 		})
 	}
-	if value, ok := cuo.mutation.OrderFirstComment(); ok {
+	if value, ok := cuo.mutation.Hide(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: comment.FieldOrderFirstComment,
+			Column: comment.FieldHide,
 		})
 	}
-	if cuo.mutation.OrderFirstCommentCleared() {
+	if cuo.mutation.HideCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
-			Column: comment.FieldOrderFirstComment,
+			Column: comment.FieldHide,
 		})
 	}
-	if value, ok := cuo.mutation.Score(); ok {
+	if value, ok := cuo.mutation.HideReason(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: comment.FieldScore,
+			Column: comment.FieldHideReason,
 		})
 	}
-	if cuo.mutation.ScoreCleared() {
+	if cuo.mutation.HideReasonCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: comment.FieldScore,
+			Type:   field.TypeString,
+			Column: comment.FieldHideReason,
 		})
 	}
 	_spec.Modifiers = cuo.modifiers

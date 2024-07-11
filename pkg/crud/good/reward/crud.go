@@ -1,28 +1,21 @@
 package goodreward
 
 import (
-	"fmt"
-
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entgoodreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 type Req struct {
-	EntID                 *uuid.UUID
-	GoodID                *uuid.UUID
-	RewardState           *types.BenefitState
-	LastRewardAt          *uint32
-	RewardTID             *uuid.UUID
-	NextRewardStartAmount *decimal.Decimal
-	LastRewardAmount      *decimal.Decimal
-	LastUnitRewardAmount  *decimal.Decimal
-	TotalRewardAmount     *decimal.Decimal
-	DeletedAt             *uint32
+	EntID        *uuid.UUID
+	GoodID       *uuid.UUID
+	RewardState  *types.BenefitState
+	LastRewardAt *uint32
+	DeletedAt    *uint32
 }
 
 func CreateSet(c *ent.GoodRewardCreate, req *Req) *ent.GoodRewardCreate {
@@ -42,21 +35,6 @@ func UpdateSet(u *ent.GoodRewardUpdateOne, req *Req) *ent.GoodRewardUpdateOne {
 	}
 	if req.LastRewardAt != nil {
 		u.SetLastRewardAt(*req.LastRewardAt)
-	}
-	if req.RewardTID != nil {
-		u.SetRewardTid(*req.RewardTID)
-	}
-	if req.NextRewardStartAmount != nil {
-		u.SetNextRewardStartAmount(*req.NextRewardStartAmount)
-	}
-	if req.LastRewardAmount != nil {
-		u.SetLastRewardAmount(*req.LastRewardAmount)
-	}
-	if req.LastUnitRewardAmount != nil {
-		u.SetLastUnitRewardAmount(*req.LastUnitRewardAmount)
-	}
-	if req.TotalRewardAmount != nil {
-		u.SetTotalRewardAmount(*req.TotalRewardAmount)
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)
@@ -79,43 +57,43 @@ func SetQueryConds(q *ent.GoodRewardQuery, conds *Conds) (*ent.GoodRewardQuery, 
 	if conds.EntID != nil {
 		id, ok := conds.EntID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid id")
+			return nil, wlog.Errorf("invalid id")
 		}
 		switch conds.EntID.Op {
 		case cruder.EQ:
 			q.Where(entgoodreward.EntID(id))
 		default:
-			return nil, fmt.Errorf("invalid goodreward field")
+			return nil, wlog.Errorf("invalid goodreward field")
 		}
 	}
 	if conds.GoodID != nil {
 		id, ok := conds.GoodID.Val.(uuid.UUID)
 		if !ok {
-			return nil, fmt.Errorf("invalid goodid")
+			return nil, wlog.Errorf("invalid goodid")
 		}
 		switch conds.GoodID.Op {
 		case cruder.EQ:
 			q.Where(entgoodreward.GoodID(id))
 		default:
-			return nil, fmt.Errorf("invalid goodreward field")
+			return nil, wlog.Errorf("invalid goodreward field")
 		}
 	}
 	if conds.RewardState != nil {
 		state, ok := conds.RewardState.Val.(types.BenefitState)
 		if !ok {
-			return nil, fmt.Errorf("invalid rewardstate")
+			return nil, wlog.Errorf("invalid rewardstate")
 		}
 		switch conds.RewardState.Op {
 		case cruder.EQ:
 			q.Where(entgoodreward.RewardState(state.String()))
 		default:
-			return nil, fmt.Errorf("invalid goodreward field")
+			return nil, wlog.Errorf("invalid goodreward field")
 		}
 	}
 	if conds.RewardAt != nil {
 		at, ok := conds.RewardAt.Val.(uint32)
 		if !ok {
-			return nil, fmt.Errorf("invalid rewardat")
+			return nil, wlog.Errorf("invalid rewardat")
 		}
 		switch conds.RewardAt.Op {
 		case cruder.EQ:
@@ -127,7 +105,7 @@ func SetQueryConds(q *ent.GoodRewardQuery, conds *Conds) (*ent.GoodRewardQuery, 
 		case cruder.GT:
 			q.Where(entgoodreward.LastRewardAtGT(at))
 		default:
-			return nil, fmt.Errorf("invalid goodreward field")
+			return nil, wlog.Errorf("invalid goodreward field")
 		}
 	}
 	return q, nil

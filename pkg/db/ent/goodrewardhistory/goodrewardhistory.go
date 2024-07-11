@@ -23,6 +23,8 @@ const (
 	FieldEntID = "ent_id"
 	// FieldGoodID holds the string denoting the good_id field in the database.
 	FieldGoodID = "good_id"
+	// FieldCoinTypeID holds the string denoting the coin_type_id field in the database.
+	FieldCoinTypeID = "coin_type_id"
 	// FieldRewardDate holds the string denoting the reward_date field in the database.
 	FieldRewardDate = "reward_date"
 	// FieldTid holds the string denoting the tid field in the database.
@@ -45,6 +47,7 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldEntID,
 	FieldGoodID,
+	FieldCoinTypeID,
 	FieldRewardDate,
 	FieldTid,
 	FieldAmount,
@@ -81,6 +84,10 @@ var (
 	DefaultDeletedAt func() uint32
 	// DefaultEntID holds the default value on creation for the "ent_id" field.
 	DefaultEntID func() uuid.UUID
+	// DefaultGoodID holds the default value on creation for the "good_id" field.
+	DefaultGoodID func() uuid.UUID
+	// DefaultCoinTypeID holds the default value on creation for the "coin_type_id" field.
+	DefaultCoinTypeID func() uuid.UUID
 	// DefaultRewardDate holds the default value on creation for the "reward_date" field.
 	DefaultRewardDate func() uint32
 	// DefaultTid holds the default value on creation for the "tid" field.

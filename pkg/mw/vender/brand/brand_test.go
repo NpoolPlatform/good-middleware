@@ -26,13 +26,11 @@ func init() {
 	}
 }
 
-var (
-	ret = npool.Brand{
-		EntID: uuid.NewString(),
-		Name:  uuid.NewString(),
-		Logo:  uuid.NewString(),
-	}
-)
+var ret = npool.Brand{
+	EntID: uuid.NewString(),
+	Name:  uuid.NewString(),
+	Logo:  uuid.NewString(),
+}
 
 func setup(t *testing.T) func(*testing.T) {
 	return func(*testing.T) {}
@@ -47,16 +45,20 @@ func createBrand(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	info, err := handler.CreateBrand(context.Background())
+	err = handler.CreateBrand(context.Background())
 	if assert.Nil(t, err) {
-		ret.CreatedAt = info.CreatedAt
-		ret.UpdatedAt = info.UpdatedAt
-		ret.ID = info.ID
-		assert.Equal(t, info, &ret)
+		info, err := handler.GetBrand(context.Background())
+		if assert.Nil(t, err) {
+			ret.CreatedAt = info.CreatedAt
+			ret.UpdatedAt = info.UpdatedAt
+			ret.ID = info.ID
+			assert.Equal(t, info, &ret)
+		}
 	}
 }
 
 func updateBrand(t *testing.T) {
+	ret.Name = uuid.NewString()
 	handler, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
@@ -65,10 +67,13 @@ func updateBrand(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	info, err := handler.UpdateBrand(context.Background())
+	err = handler.UpdateBrand(context.Background())
 	if assert.Nil(t, err) {
-		ret.UpdatedAt = info.UpdatedAt
-		assert.Equal(t, info, &ret)
+		info, err := handler.GetBrand(context.Background())
+		if assert.Nil(t, err) {
+			ret.UpdatedAt = info.UpdatedAt
+			assert.Equal(t, info, &ret)
+		}
 	}
 }
 
@@ -101,7 +106,7 @@ func getBrands(t *testing.T) {
 	assert.Nil(t, err)
 
 	infos, _, err := handler.GetBrands(context.Background())
-	if !assert.Nil(t, err) {
+	if assert.Nil(t, err) {
 		assert.Equal(t, len(infos), 1)
 		assert.Equal(t, infos[0], &ret)
 	}
@@ -114,12 +119,10 @@ func deleteBrand(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	info, err := handler.DeleteBrand(context.Background())
-	if assert.Nil(t, err) {
-		assert.Equal(t, info, &ret)
-	}
+	err = handler.DeleteBrand(context.Background())
+	assert.Nil(t, err)
 
-	info, err = handler.GetBrand(context.Background())
+	info, err := handler.GetBrand(context.Background())
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }

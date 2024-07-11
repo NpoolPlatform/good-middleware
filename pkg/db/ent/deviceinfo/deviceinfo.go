@@ -22,14 +22,12 @@ const (
 	FieldEntID = "ent_id"
 	// FieldType holds the string denoting the type field in the database.
 	FieldType = "type"
-	// FieldManufacturer holds the string denoting the manufacturer field in the database.
-	FieldManufacturer = "manufacturer"
+	// FieldManufacturerID holds the string denoting the manufacturer_id field in the database.
+	FieldManufacturerID = "manufacturer_id"
 	// FieldPowerConsumption holds the string denoting the power_consumption field in the database.
 	FieldPowerConsumption = "power_consumption"
 	// FieldShipmentAt holds the string denoting the shipment_at field in the database.
 	FieldShipmentAt = "shipment_at"
-	// FieldPosters holds the string denoting the posters field in the database.
-	FieldPosters = "posters"
 	// Table holds the table name of the deviceinfo in the database.
 	Table = "device_infos"
 )
@@ -42,10 +40,9 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldEntID,
 	FieldType,
-	FieldManufacturer,
+	FieldManufacturerID,
 	FieldPowerConsumption,
 	FieldShipmentAt,
-	FieldPosters,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -81,14 +78,10 @@ var (
 	DefaultType string
 	// TypeValidator is a validator for the "type" field. It is called by the builders before save.
 	TypeValidator func(string) error
-	// DefaultManufacturer holds the default value on creation for the "manufacturer" field.
-	DefaultManufacturer string
-	// ManufacturerValidator is a validator for the "manufacturer" field. It is called by the builders before save.
-	ManufacturerValidator func(string) error
+	// DefaultManufacturerID holds the default value on creation for the "manufacturer_id" field.
+	DefaultManufacturerID func() uuid.UUID
 	// DefaultPowerConsumption holds the default value on creation for the "power_consumption" field.
 	DefaultPowerConsumption uint32
 	// DefaultShipmentAt holds the default value on creation for the "shipment_at" field.
 	DefaultShipmentAt uint32
-	// DefaultPosters holds the default value on creation for the "posters" field.
-	DefaultPosters []string
 )

@@ -5,6 +5,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
+	"github.com/google/uuid"
 )
 
 // DeviceInfo holds the schema definition for the DeviceInfo entity.
@@ -21,7 +22,7 @@ func (DeviceInfo) Mixin() []ent.Mixin {
 
 // Fields of the DeviceInfo.
 func (DeviceInfo) Fields() []ent.Field {
-	maxLen := 64
+	const maxLen = 64
 	return []ent.Field{
 		field.
 			String("type").
@@ -29,10 +30,11 @@ func (DeviceInfo) Fields() []ent.Field {
 			Default("").
 			MaxLen(maxLen),
 		field.
-			String("manufacturer").
+			UUID("manufacturer_id", uuid.UUID{}).
 			Optional().
-			Default("").
-			MaxLen(maxLen),
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
 			Uint32("power_consumption").
 			Optional().
@@ -41,10 +43,6 @@ func (DeviceInfo) Fields() []ent.Field {
 			Uint32("shipment_at").
 			Optional().
 			Default(0),
-		field.
-			JSON("posters", []string{}).
-			Optional().
-			Default([]string{}),
 	}
 }
 

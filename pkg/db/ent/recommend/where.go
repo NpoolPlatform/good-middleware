@@ -108,17 +108,10 @@ func EntID(v uuid.UUID) predicate.Recommend {
 	})
 }
 
-// AppID applies equality check predicate on the "app_id" field. It's identical to AppIDEQ.
-func AppID(v uuid.UUID) predicate.Recommend {
+// AppGoodID applies equality check predicate on the "app_good_id" field. It's identical to AppGoodIDEQ.
+func AppGoodID(v uuid.UUID) predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppID), v))
-	})
-}
-
-// GoodID applies equality check predicate on the "good_id" field. It's identical to GoodIDEQ.
-func GoodID(v uuid.UUID) predicate.Recommend {
-	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodID), v))
+		s.Where(sql.EQ(s.C(FieldAppGoodID), v))
 	})
 }
 
@@ -140,6 +133,20 @@ func Message(v string) predicate.Recommend {
 func RecommendIndex(v decimal.Decimal) predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldRecommendIndex), v))
+	})
+}
+
+// Hide applies equality check predicate on the "hide" field. It's identical to HideEQ.
+func Hide(v bool) predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldHide), v))
+	})
+}
+
+// HideReason applies equality check predicate on the "hide_reason" field. It's identical to HideReasonEQ.
+func HideReason(v string) predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldHideReason), v))
 	})
 }
 
@@ -399,131 +406,81 @@ func EntIDLTE(v uuid.UUID) predicate.Recommend {
 	})
 }
 
-// AppIDEQ applies the EQ predicate on the "app_id" field.
-func AppIDEQ(v uuid.UUID) predicate.Recommend {
+// AppGoodIDEQ applies the EQ predicate on the "app_good_id" field.
+func AppGoodIDEQ(v uuid.UUID) predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppID), v))
+		s.Where(sql.EQ(s.C(FieldAppGoodID), v))
 	})
 }
 
-// AppIDNEQ applies the NEQ predicate on the "app_id" field.
-func AppIDNEQ(v uuid.UUID) predicate.Recommend {
+// AppGoodIDNEQ applies the NEQ predicate on the "app_good_id" field.
+func AppGoodIDNEQ(v uuid.UUID) predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAppID), v))
+		s.Where(sql.NEQ(s.C(FieldAppGoodID), v))
 	})
 }
 
-// AppIDIn applies the In predicate on the "app_id" field.
-func AppIDIn(vs ...uuid.UUID) predicate.Recommend {
+// AppGoodIDIn applies the In predicate on the "app_good_id" field.
+func AppGoodIDIn(vs ...uuid.UUID) predicate.Recommend {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldAppID), v...))
+		s.Where(sql.In(s.C(FieldAppGoodID), v...))
 	})
 }
 
-// AppIDNotIn applies the NotIn predicate on the "app_id" field.
-func AppIDNotIn(vs ...uuid.UUID) predicate.Recommend {
+// AppGoodIDNotIn applies the NotIn predicate on the "app_good_id" field.
+func AppGoodIDNotIn(vs ...uuid.UUID) predicate.Recommend {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldAppID), v...))
+		s.Where(sql.NotIn(s.C(FieldAppGoodID), v...))
 	})
 }
 
-// AppIDGT applies the GT predicate on the "app_id" field.
-func AppIDGT(v uuid.UUID) predicate.Recommend {
+// AppGoodIDGT applies the GT predicate on the "app_good_id" field.
+func AppGoodIDGT(v uuid.UUID) predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAppID), v))
+		s.Where(sql.GT(s.C(FieldAppGoodID), v))
 	})
 }
 
-// AppIDGTE applies the GTE predicate on the "app_id" field.
-func AppIDGTE(v uuid.UUID) predicate.Recommend {
+// AppGoodIDGTE applies the GTE predicate on the "app_good_id" field.
+func AppGoodIDGTE(v uuid.UUID) predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAppID), v))
+		s.Where(sql.GTE(s.C(FieldAppGoodID), v))
 	})
 }
 
-// AppIDLT applies the LT predicate on the "app_id" field.
-func AppIDLT(v uuid.UUID) predicate.Recommend {
+// AppGoodIDLT applies the LT predicate on the "app_good_id" field.
+func AppGoodIDLT(v uuid.UUID) predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAppID), v))
+		s.Where(sql.LT(s.C(FieldAppGoodID), v))
 	})
 }
 
-// AppIDLTE applies the LTE predicate on the "app_id" field.
-func AppIDLTE(v uuid.UUID) predicate.Recommend {
+// AppGoodIDLTE applies the LTE predicate on the "app_good_id" field.
+func AppGoodIDLTE(v uuid.UUID) predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAppID), v))
+		s.Where(sql.LTE(s.C(FieldAppGoodID), v))
 	})
 }
 
-// GoodIDEQ applies the EQ predicate on the "good_id" field.
-func GoodIDEQ(v uuid.UUID) predicate.Recommend {
+// AppGoodIDIsNil applies the IsNil predicate on the "app_good_id" field.
+func AppGoodIDIsNil() predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodID), v))
+		s.Where(sql.IsNull(s.C(FieldAppGoodID)))
 	})
 }
 
-// GoodIDNEQ applies the NEQ predicate on the "good_id" field.
-func GoodIDNEQ(v uuid.UUID) predicate.Recommend {
+// AppGoodIDNotNil applies the NotNil predicate on the "app_good_id" field.
+func AppGoodIDNotNil() predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDIn applies the In predicate on the "good_id" field.
-func GoodIDIn(vs ...uuid.UUID) predicate.Recommend {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldGoodID), v...))
-	})
-}
-
-// GoodIDNotIn applies the NotIn predicate on the "good_id" field.
-func GoodIDNotIn(vs ...uuid.UUID) predicate.Recommend {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldGoodID), v...))
-	})
-}
-
-// GoodIDGT applies the GT predicate on the "good_id" field.
-func GoodIDGT(v uuid.UUID) predicate.Recommend {
-	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDGTE applies the GTE predicate on the "good_id" field.
-func GoodIDGTE(v uuid.UUID) predicate.Recommend {
-	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDLT applies the LT predicate on the "good_id" field.
-func GoodIDLT(v uuid.UUID) predicate.Recommend {
-	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldGoodID), v))
-	})
-}
-
-// GoodIDLTE applies the LTE predicate on the "good_id" field.
-func GoodIDLTE(v uuid.UUID) predicate.Recommend {
-	return predicate.Recommend(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldGoodID), v))
+		s.Where(sql.NotNull(s.C(FieldAppGoodID)))
 	})
 }
 
@@ -793,6 +750,147 @@ func RecommendIndexIsNil() predicate.Recommend {
 func RecommendIndexNotNil() predicate.Recommend {
 	return predicate.Recommend(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldRecommendIndex)))
+	})
+}
+
+// HideEQ applies the EQ predicate on the "hide" field.
+func HideEQ(v bool) predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldHide), v))
+	})
+}
+
+// HideNEQ applies the NEQ predicate on the "hide" field.
+func HideNEQ(v bool) predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldHide), v))
+	})
+}
+
+// HideIsNil applies the IsNil predicate on the "hide" field.
+func HideIsNil() predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldHide)))
+	})
+}
+
+// HideNotNil applies the NotNil predicate on the "hide" field.
+func HideNotNil() predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldHide)))
+	})
+}
+
+// HideReasonEQ applies the EQ predicate on the "hide_reason" field.
+func HideReasonEQ(v string) predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonNEQ applies the NEQ predicate on the "hide_reason" field.
+func HideReasonNEQ(v string) predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonIn applies the In predicate on the "hide_reason" field.
+func HideReasonIn(vs ...string) predicate.Recommend {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldHideReason), v...))
+	})
+}
+
+// HideReasonNotIn applies the NotIn predicate on the "hide_reason" field.
+func HideReasonNotIn(vs ...string) predicate.Recommend {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldHideReason), v...))
+	})
+}
+
+// HideReasonGT applies the GT predicate on the "hide_reason" field.
+func HideReasonGT(v string) predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonGTE applies the GTE predicate on the "hide_reason" field.
+func HideReasonGTE(v string) predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonLT applies the LT predicate on the "hide_reason" field.
+func HideReasonLT(v string) predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonLTE applies the LTE predicate on the "hide_reason" field.
+func HideReasonLTE(v string) predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonContains applies the Contains predicate on the "hide_reason" field.
+func HideReasonContains(v string) predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonHasPrefix applies the HasPrefix predicate on the "hide_reason" field.
+func HideReasonHasPrefix(v string) predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonHasSuffix applies the HasSuffix predicate on the "hide_reason" field.
+func HideReasonHasSuffix(v string) predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonIsNil applies the IsNil predicate on the "hide_reason" field.
+func HideReasonIsNil() predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldHideReason)))
+	})
+}
+
+// HideReasonNotNil applies the NotNil predicate on the "hide_reason" field.
+func HideReasonNotNil() predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldHideReason)))
+	})
+}
+
+// HideReasonEqualFold applies the EqualFold predicate on the "hide_reason" field.
+func HideReasonEqualFold(v string) predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldHideReason), v))
+	})
+}
+
+// HideReasonContainsFold applies the ContainsFold predicate on the "hide_reason" field.
+func HideReasonContainsFold(v string) predicate.Recommend {
+	return predicate.Recommend(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldHideReason), v))
 	})
 }
 

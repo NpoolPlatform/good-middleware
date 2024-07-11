@@ -79,33 +79,31 @@ func (tmgc *TopMostGoodCreate) SetNillableEntID(u *uuid.UUID) *TopMostGoodCreate
 	return tmgc
 }
 
-// SetAppID sets the "app_id" field.
-func (tmgc *TopMostGoodCreate) SetAppID(u uuid.UUID) *TopMostGoodCreate {
-	tmgc.mutation.SetAppID(u)
-	return tmgc
-}
-
-// SetGoodID sets the "good_id" field.
-func (tmgc *TopMostGoodCreate) SetGoodID(u uuid.UUID) *TopMostGoodCreate {
-	tmgc.mutation.SetGoodID(u)
-	return tmgc
-}
-
 // SetAppGoodID sets the "app_good_id" field.
 func (tmgc *TopMostGoodCreate) SetAppGoodID(u uuid.UUID) *TopMostGoodCreate {
 	tmgc.mutation.SetAppGoodID(u)
 	return tmgc
 }
 
-// SetCoinTypeID sets the "coin_type_id" field.
-func (tmgc *TopMostGoodCreate) SetCoinTypeID(u uuid.UUID) *TopMostGoodCreate {
-	tmgc.mutation.SetCoinTypeID(u)
+// SetNillableAppGoodID sets the "app_good_id" field if the given value is not nil.
+func (tmgc *TopMostGoodCreate) SetNillableAppGoodID(u *uuid.UUID) *TopMostGoodCreate {
+	if u != nil {
+		tmgc.SetAppGoodID(*u)
+	}
 	return tmgc
 }
 
 // SetTopMostID sets the "top_most_id" field.
 func (tmgc *TopMostGoodCreate) SetTopMostID(u uuid.UUID) *TopMostGoodCreate {
 	tmgc.mutation.SetTopMostID(u)
+	return tmgc
+}
+
+// SetNillableTopMostID sets the "top_most_id" field if the given value is not nil.
+func (tmgc *TopMostGoodCreate) SetNillableTopMostID(u *uuid.UUID) *TopMostGoodCreate {
+	if u != nil {
+		tmgc.SetTopMostID(*u)
+	}
 	return tmgc
 }
 
@@ -123,12 +121,6 @@ func (tmgc *TopMostGoodCreate) SetNillableDisplayIndex(u *uint32) *TopMostGoodCr
 	return tmgc
 }
 
-// SetPosters sets the "posters" field.
-func (tmgc *TopMostGoodCreate) SetPosters(s []string) *TopMostGoodCreate {
-	tmgc.mutation.SetPosters(s)
-	return tmgc
-}
-
 // SetUnitPrice sets the "unit_price" field.
 func (tmgc *TopMostGoodCreate) SetUnitPrice(d decimal.Decimal) *TopMostGoodCreate {
 	tmgc.mutation.SetUnitPrice(d)
@@ -139,20 +131,6 @@ func (tmgc *TopMostGoodCreate) SetUnitPrice(d decimal.Decimal) *TopMostGoodCreat
 func (tmgc *TopMostGoodCreate) SetNillableUnitPrice(d *decimal.Decimal) *TopMostGoodCreate {
 	if d != nil {
 		tmgc.SetUnitPrice(*d)
-	}
-	return tmgc
-}
-
-// SetPackagePrice sets the "package_price" field.
-func (tmgc *TopMostGoodCreate) SetPackagePrice(d decimal.Decimal) *TopMostGoodCreate {
-	tmgc.mutation.SetPackagePrice(d)
-	return tmgc
-}
-
-// SetNillablePackagePrice sets the "package_price" field if the given value is not nil.
-func (tmgc *TopMostGoodCreate) SetNillablePackagePrice(d *decimal.Decimal) *TopMostGoodCreate {
-	if d != nil {
-		tmgc.SetPackagePrice(*d)
 	}
 	return tmgc
 }
@@ -270,21 +248,27 @@ func (tmgc *TopMostGoodCreate) defaults() error {
 		v := topmostgood.DefaultEntID()
 		tmgc.mutation.SetEntID(v)
 	}
+	if _, ok := tmgc.mutation.AppGoodID(); !ok {
+		if topmostgood.DefaultAppGoodID == nil {
+			return fmt.Errorf("ent: uninitialized topmostgood.DefaultAppGoodID (forgotten import ent/runtime?)")
+		}
+		v := topmostgood.DefaultAppGoodID()
+		tmgc.mutation.SetAppGoodID(v)
+	}
+	if _, ok := tmgc.mutation.TopMostID(); !ok {
+		if topmostgood.DefaultTopMostID == nil {
+			return fmt.Errorf("ent: uninitialized topmostgood.DefaultTopMostID (forgotten import ent/runtime?)")
+		}
+		v := topmostgood.DefaultTopMostID()
+		tmgc.mutation.SetTopMostID(v)
+	}
 	if _, ok := tmgc.mutation.DisplayIndex(); !ok {
 		v := topmostgood.DefaultDisplayIndex
 		tmgc.mutation.SetDisplayIndex(v)
 	}
-	if _, ok := tmgc.mutation.Posters(); !ok {
-		v := topmostgood.DefaultPosters
-		tmgc.mutation.SetPosters(v)
-	}
 	if _, ok := tmgc.mutation.UnitPrice(); !ok {
 		v := topmostgood.DefaultUnitPrice
 		tmgc.mutation.SetUnitPrice(v)
-	}
-	if _, ok := tmgc.mutation.PackagePrice(); !ok {
-		v := topmostgood.DefaultPackagePrice
-		tmgc.mutation.SetPackagePrice(v)
 	}
 	return nil
 }
@@ -302,21 +286,6 @@ func (tmgc *TopMostGoodCreate) check() error {
 	}
 	if _, ok := tmgc.mutation.EntID(); !ok {
 		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "TopMostGood.ent_id"`)}
-	}
-	if _, ok := tmgc.mutation.AppID(); !ok {
-		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "TopMostGood.app_id"`)}
-	}
-	if _, ok := tmgc.mutation.GoodID(); !ok {
-		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "TopMostGood.good_id"`)}
-	}
-	if _, ok := tmgc.mutation.AppGoodID(); !ok {
-		return &ValidationError{Name: "app_good_id", err: errors.New(`ent: missing required field "TopMostGood.app_good_id"`)}
-	}
-	if _, ok := tmgc.mutation.CoinTypeID(); !ok {
-		return &ValidationError{Name: "coin_type_id", err: errors.New(`ent: missing required field "TopMostGood.coin_type_id"`)}
-	}
-	if _, ok := tmgc.mutation.TopMostID(); !ok {
-		return &ValidationError{Name: "top_most_id", err: errors.New(`ent: missing required field "TopMostGood.top_most_id"`)}
 	}
 	return nil
 }
@@ -384,22 +353,6 @@ func (tmgc *TopMostGoodCreate) createSpec() (*TopMostGood, *sqlgraph.CreateSpec)
 		})
 		_node.EntID = value
 	}
-	if value, ok := tmgc.mutation.AppID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: topmostgood.FieldAppID,
-		})
-		_node.AppID = value
-	}
-	if value, ok := tmgc.mutation.GoodID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: topmostgood.FieldGoodID,
-		})
-		_node.GoodID = value
-	}
 	if value, ok := tmgc.mutation.AppGoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -407,14 +360,6 @@ func (tmgc *TopMostGoodCreate) createSpec() (*TopMostGood, *sqlgraph.CreateSpec)
 			Column: topmostgood.FieldAppGoodID,
 		})
 		_node.AppGoodID = value
-	}
-	if value, ok := tmgc.mutation.CoinTypeID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: topmostgood.FieldCoinTypeID,
-		})
-		_node.CoinTypeID = value
 	}
 	if value, ok := tmgc.mutation.TopMostID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -432,14 +377,6 @@ func (tmgc *TopMostGoodCreate) createSpec() (*TopMostGood, *sqlgraph.CreateSpec)
 		})
 		_node.DisplayIndex = value
 	}
-	if value, ok := tmgc.mutation.Posters(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: topmostgood.FieldPosters,
-		})
-		_node.Posters = value
-	}
 	if value, ok := tmgc.mutation.UnitPrice(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
@@ -447,14 +384,6 @@ func (tmgc *TopMostGoodCreate) createSpec() (*TopMostGood, *sqlgraph.CreateSpec)
 			Column: topmostgood.FieldUnitPrice,
 		})
 		_node.UnitPrice = value
-	}
-	if value, ok := tmgc.mutation.PackagePrice(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: topmostgood.FieldPackagePrice,
-		})
-		_node.PackagePrice = value
 	}
 	return _node, _spec
 }
@@ -576,30 +505,6 @@ func (u *TopMostGoodUpsert) UpdateEntID() *TopMostGoodUpsert {
 	return u
 }
 
-// SetAppID sets the "app_id" field.
-func (u *TopMostGoodUpsert) SetAppID(v uuid.UUID) *TopMostGoodUpsert {
-	u.Set(topmostgood.FieldAppID, v)
-	return u
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *TopMostGoodUpsert) UpdateAppID() *TopMostGoodUpsert {
-	u.SetExcluded(topmostgood.FieldAppID)
-	return u
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *TopMostGoodUpsert) SetGoodID(v uuid.UUID) *TopMostGoodUpsert {
-	u.Set(topmostgood.FieldGoodID, v)
-	return u
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *TopMostGoodUpsert) UpdateGoodID() *TopMostGoodUpsert {
-	u.SetExcluded(topmostgood.FieldGoodID)
-	return u
-}
-
 // SetAppGoodID sets the "app_good_id" field.
 func (u *TopMostGoodUpsert) SetAppGoodID(v uuid.UUID) *TopMostGoodUpsert {
 	u.Set(topmostgood.FieldAppGoodID, v)
@@ -612,15 +517,9 @@ func (u *TopMostGoodUpsert) UpdateAppGoodID() *TopMostGoodUpsert {
 	return u
 }
 
-// SetCoinTypeID sets the "coin_type_id" field.
-func (u *TopMostGoodUpsert) SetCoinTypeID(v uuid.UUID) *TopMostGoodUpsert {
-	u.Set(topmostgood.FieldCoinTypeID, v)
-	return u
-}
-
-// UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
-func (u *TopMostGoodUpsert) UpdateCoinTypeID() *TopMostGoodUpsert {
-	u.SetExcluded(topmostgood.FieldCoinTypeID)
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *TopMostGoodUpsert) ClearAppGoodID() *TopMostGoodUpsert {
+	u.SetNull(topmostgood.FieldAppGoodID)
 	return u
 }
 
@@ -633,6 +532,12 @@ func (u *TopMostGoodUpsert) SetTopMostID(v uuid.UUID) *TopMostGoodUpsert {
 // UpdateTopMostID sets the "top_most_id" field to the value that was provided on create.
 func (u *TopMostGoodUpsert) UpdateTopMostID() *TopMostGoodUpsert {
 	u.SetExcluded(topmostgood.FieldTopMostID)
+	return u
+}
+
+// ClearTopMostID clears the value of the "top_most_id" field.
+func (u *TopMostGoodUpsert) ClearTopMostID() *TopMostGoodUpsert {
+	u.SetNull(topmostgood.FieldTopMostID)
 	return u
 }
 
@@ -660,24 +565,6 @@ func (u *TopMostGoodUpsert) ClearDisplayIndex() *TopMostGoodUpsert {
 	return u
 }
 
-// SetPosters sets the "posters" field.
-func (u *TopMostGoodUpsert) SetPosters(v []string) *TopMostGoodUpsert {
-	u.Set(topmostgood.FieldPosters, v)
-	return u
-}
-
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *TopMostGoodUpsert) UpdatePosters() *TopMostGoodUpsert {
-	u.SetExcluded(topmostgood.FieldPosters)
-	return u
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (u *TopMostGoodUpsert) ClearPosters() *TopMostGoodUpsert {
-	u.SetNull(topmostgood.FieldPosters)
-	return u
-}
-
 // SetUnitPrice sets the "unit_price" field.
 func (u *TopMostGoodUpsert) SetUnitPrice(v decimal.Decimal) *TopMostGoodUpsert {
 	u.Set(topmostgood.FieldUnitPrice, v)
@@ -693,24 +580,6 @@ func (u *TopMostGoodUpsert) UpdateUnitPrice() *TopMostGoodUpsert {
 // ClearUnitPrice clears the value of the "unit_price" field.
 func (u *TopMostGoodUpsert) ClearUnitPrice() *TopMostGoodUpsert {
 	u.SetNull(topmostgood.FieldUnitPrice)
-	return u
-}
-
-// SetPackagePrice sets the "package_price" field.
-func (u *TopMostGoodUpsert) SetPackagePrice(v decimal.Decimal) *TopMostGoodUpsert {
-	u.Set(topmostgood.FieldPackagePrice, v)
-	return u
-}
-
-// UpdatePackagePrice sets the "package_price" field to the value that was provided on create.
-func (u *TopMostGoodUpsert) UpdatePackagePrice() *TopMostGoodUpsert {
-	u.SetExcluded(topmostgood.FieldPackagePrice)
-	return u
-}
-
-// ClearPackagePrice clears the value of the "package_price" field.
-func (u *TopMostGoodUpsert) ClearPackagePrice() *TopMostGoodUpsert {
-	u.SetNull(topmostgood.FieldPackagePrice)
 	return u
 }
 
@@ -841,34 +710,6 @@ func (u *TopMostGoodUpsertOne) UpdateEntID() *TopMostGoodUpsertOne {
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *TopMostGoodUpsertOne) SetAppID(v uuid.UUID) *TopMostGoodUpsertOne {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *TopMostGoodUpsertOne) UpdateAppID() *TopMostGoodUpsertOne {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.UpdateAppID()
-	})
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *TopMostGoodUpsertOne) SetGoodID(v uuid.UUID) *TopMostGoodUpsertOne {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *TopMostGoodUpsertOne) UpdateGoodID() *TopMostGoodUpsertOne {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.UpdateGoodID()
-	})
-}
-
 // SetAppGoodID sets the "app_good_id" field.
 func (u *TopMostGoodUpsertOne) SetAppGoodID(v uuid.UUID) *TopMostGoodUpsertOne {
 	return u.Update(func(s *TopMostGoodUpsert) {
@@ -883,17 +724,10 @@ func (u *TopMostGoodUpsertOne) UpdateAppGoodID() *TopMostGoodUpsertOne {
 	})
 }
 
-// SetCoinTypeID sets the "coin_type_id" field.
-func (u *TopMostGoodUpsertOne) SetCoinTypeID(v uuid.UUID) *TopMostGoodUpsertOne {
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *TopMostGoodUpsertOne) ClearAppGoodID() *TopMostGoodUpsertOne {
 	return u.Update(func(s *TopMostGoodUpsert) {
-		s.SetCoinTypeID(v)
-	})
-}
-
-// UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
-func (u *TopMostGoodUpsertOne) UpdateCoinTypeID() *TopMostGoodUpsertOne {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.UpdateCoinTypeID()
+		s.ClearAppGoodID()
 	})
 }
 
@@ -908,6 +742,13 @@ func (u *TopMostGoodUpsertOne) SetTopMostID(v uuid.UUID) *TopMostGoodUpsertOne {
 func (u *TopMostGoodUpsertOne) UpdateTopMostID() *TopMostGoodUpsertOne {
 	return u.Update(func(s *TopMostGoodUpsert) {
 		s.UpdateTopMostID()
+	})
+}
+
+// ClearTopMostID clears the value of the "top_most_id" field.
+func (u *TopMostGoodUpsertOne) ClearTopMostID() *TopMostGoodUpsertOne {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.ClearTopMostID()
 	})
 }
 
@@ -939,27 +780,6 @@ func (u *TopMostGoodUpsertOne) ClearDisplayIndex() *TopMostGoodUpsertOne {
 	})
 }
 
-// SetPosters sets the "posters" field.
-func (u *TopMostGoodUpsertOne) SetPosters(v []string) *TopMostGoodUpsertOne {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.SetPosters(v)
-	})
-}
-
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *TopMostGoodUpsertOne) UpdatePosters() *TopMostGoodUpsertOne {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.UpdatePosters()
-	})
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (u *TopMostGoodUpsertOne) ClearPosters() *TopMostGoodUpsertOne {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.ClearPosters()
-	})
-}
-
 // SetUnitPrice sets the "unit_price" field.
 func (u *TopMostGoodUpsertOne) SetUnitPrice(v decimal.Decimal) *TopMostGoodUpsertOne {
 	return u.Update(func(s *TopMostGoodUpsert) {
@@ -978,27 +798,6 @@ func (u *TopMostGoodUpsertOne) UpdateUnitPrice() *TopMostGoodUpsertOne {
 func (u *TopMostGoodUpsertOne) ClearUnitPrice() *TopMostGoodUpsertOne {
 	return u.Update(func(s *TopMostGoodUpsert) {
 		s.ClearUnitPrice()
-	})
-}
-
-// SetPackagePrice sets the "package_price" field.
-func (u *TopMostGoodUpsertOne) SetPackagePrice(v decimal.Decimal) *TopMostGoodUpsertOne {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.SetPackagePrice(v)
-	})
-}
-
-// UpdatePackagePrice sets the "package_price" field to the value that was provided on create.
-func (u *TopMostGoodUpsertOne) UpdatePackagePrice() *TopMostGoodUpsertOne {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.UpdatePackagePrice()
-	})
-}
-
-// ClearPackagePrice clears the value of the "package_price" field.
-func (u *TopMostGoodUpsertOne) ClearPackagePrice() *TopMostGoodUpsertOne {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.ClearPackagePrice()
 	})
 }
 
@@ -1294,34 +1093,6 @@ func (u *TopMostGoodUpsertBulk) UpdateEntID() *TopMostGoodUpsertBulk {
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *TopMostGoodUpsertBulk) SetAppID(v uuid.UUID) *TopMostGoodUpsertBulk {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *TopMostGoodUpsertBulk) UpdateAppID() *TopMostGoodUpsertBulk {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.UpdateAppID()
-	})
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *TopMostGoodUpsertBulk) SetGoodID(v uuid.UUID) *TopMostGoodUpsertBulk {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *TopMostGoodUpsertBulk) UpdateGoodID() *TopMostGoodUpsertBulk {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.UpdateGoodID()
-	})
-}
-
 // SetAppGoodID sets the "app_good_id" field.
 func (u *TopMostGoodUpsertBulk) SetAppGoodID(v uuid.UUID) *TopMostGoodUpsertBulk {
 	return u.Update(func(s *TopMostGoodUpsert) {
@@ -1336,17 +1107,10 @@ func (u *TopMostGoodUpsertBulk) UpdateAppGoodID() *TopMostGoodUpsertBulk {
 	})
 }
 
-// SetCoinTypeID sets the "coin_type_id" field.
-func (u *TopMostGoodUpsertBulk) SetCoinTypeID(v uuid.UUID) *TopMostGoodUpsertBulk {
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (u *TopMostGoodUpsertBulk) ClearAppGoodID() *TopMostGoodUpsertBulk {
 	return u.Update(func(s *TopMostGoodUpsert) {
-		s.SetCoinTypeID(v)
-	})
-}
-
-// UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
-func (u *TopMostGoodUpsertBulk) UpdateCoinTypeID() *TopMostGoodUpsertBulk {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.UpdateCoinTypeID()
+		s.ClearAppGoodID()
 	})
 }
 
@@ -1361,6 +1125,13 @@ func (u *TopMostGoodUpsertBulk) SetTopMostID(v uuid.UUID) *TopMostGoodUpsertBulk
 func (u *TopMostGoodUpsertBulk) UpdateTopMostID() *TopMostGoodUpsertBulk {
 	return u.Update(func(s *TopMostGoodUpsert) {
 		s.UpdateTopMostID()
+	})
+}
+
+// ClearTopMostID clears the value of the "top_most_id" field.
+func (u *TopMostGoodUpsertBulk) ClearTopMostID() *TopMostGoodUpsertBulk {
+	return u.Update(func(s *TopMostGoodUpsert) {
+		s.ClearTopMostID()
 	})
 }
 
@@ -1392,27 +1163,6 @@ func (u *TopMostGoodUpsertBulk) ClearDisplayIndex() *TopMostGoodUpsertBulk {
 	})
 }
 
-// SetPosters sets the "posters" field.
-func (u *TopMostGoodUpsertBulk) SetPosters(v []string) *TopMostGoodUpsertBulk {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.SetPosters(v)
-	})
-}
-
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *TopMostGoodUpsertBulk) UpdatePosters() *TopMostGoodUpsertBulk {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.UpdatePosters()
-	})
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (u *TopMostGoodUpsertBulk) ClearPosters() *TopMostGoodUpsertBulk {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.ClearPosters()
-	})
-}
-
 // SetUnitPrice sets the "unit_price" field.
 func (u *TopMostGoodUpsertBulk) SetUnitPrice(v decimal.Decimal) *TopMostGoodUpsertBulk {
 	return u.Update(func(s *TopMostGoodUpsert) {
@@ -1431,27 +1181,6 @@ func (u *TopMostGoodUpsertBulk) UpdateUnitPrice() *TopMostGoodUpsertBulk {
 func (u *TopMostGoodUpsertBulk) ClearUnitPrice() *TopMostGoodUpsertBulk {
 	return u.Update(func(s *TopMostGoodUpsert) {
 		s.ClearUnitPrice()
-	})
-}
-
-// SetPackagePrice sets the "package_price" field.
-func (u *TopMostGoodUpsertBulk) SetPackagePrice(v decimal.Decimal) *TopMostGoodUpsertBulk {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.SetPackagePrice(v)
-	})
-}
-
-// UpdatePackagePrice sets the "package_price" field to the value that was provided on create.
-func (u *TopMostGoodUpsertBulk) UpdatePackagePrice() *TopMostGoodUpsertBulk {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.UpdatePackagePrice()
-	})
-}
-
-// ClearPackagePrice clears the value of the "package_price" field.
-func (u *TopMostGoodUpsertBulk) ClearPackagePrice() *TopMostGoodUpsertBulk {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.ClearPackagePrice()
 	})
 }
 

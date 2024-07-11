@@ -99,26 +99,6 @@ func (su *ScoreUpdate) SetNillableEntID(u *uuid.UUID) *ScoreUpdate {
 	return su
 }
 
-// SetAppID sets the "app_id" field.
-func (su *ScoreUpdate) SetAppID(u uuid.UUID) *ScoreUpdate {
-	su.mutation.SetAppID(u)
-	return su
-}
-
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (su *ScoreUpdate) SetNillableAppID(u *uuid.UUID) *ScoreUpdate {
-	if u != nil {
-		su.SetAppID(*u)
-	}
-	return su
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (su *ScoreUpdate) ClearAppID() *ScoreUpdate {
-	su.mutation.ClearAppID()
-	return su
-}
-
 // SetUserID sets the "user_id" field.
 func (su *ScoreUpdate) SetUserID(u uuid.UUID) *ScoreUpdate {
 	su.mutation.SetUserID(u)
@@ -136,26 +116,6 @@ func (su *ScoreUpdate) SetNillableUserID(u *uuid.UUID) *ScoreUpdate {
 // ClearUserID clears the value of the "user_id" field.
 func (su *ScoreUpdate) ClearUserID() *ScoreUpdate {
 	su.mutation.ClearUserID()
-	return su
-}
-
-// SetGoodID sets the "good_id" field.
-func (su *ScoreUpdate) SetGoodID(u uuid.UUID) *ScoreUpdate {
-	su.mutation.SetGoodID(u)
-	return su
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (su *ScoreUpdate) SetNillableGoodID(u *uuid.UUID) *ScoreUpdate {
-	if u != nil {
-		su.SetGoodID(*u)
-	}
-	return su
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (su *ScoreUpdate) ClearGoodID() *ScoreUpdate {
-	su.mutation.ClearGoodID()
 	return su
 }
 
@@ -196,6 +156,26 @@ func (su *ScoreUpdate) SetNillableScore(d *decimal.Decimal) *ScoreUpdate {
 // ClearScore clears the value of the "score" field.
 func (su *ScoreUpdate) ClearScore() *ScoreUpdate {
 	su.mutation.ClearScore()
+	return su
+}
+
+// SetCommentID sets the "comment_id" field.
+func (su *ScoreUpdate) SetCommentID(u uuid.UUID) *ScoreUpdate {
+	su.mutation.SetCommentID(u)
+	return su
+}
+
+// SetNillableCommentID sets the "comment_id" field if the given value is not nil.
+func (su *ScoreUpdate) SetNillableCommentID(u *uuid.UUID) *ScoreUpdate {
+	if u != nil {
+		su.SetCommentID(*u)
+	}
+	return su
+}
+
+// ClearCommentID clears the value of the "comment_id" field.
+func (su *ScoreUpdate) ClearCommentID() *ScoreUpdate {
+	su.mutation.ClearCommentID()
 	return su
 }
 
@@ -346,19 +326,6 @@ func (su *ScoreUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: score.FieldEntID,
 		})
 	}
-	if value, ok := su.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: score.FieldAppID,
-		})
-	}
-	if su.mutation.AppIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: score.FieldAppID,
-		})
-	}
 	if value, ok := su.mutation.UserID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -370,19 +337,6 @@ func (su *ScoreUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Column: score.FieldUserID,
-		})
-	}
-	if value, ok := su.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: score.FieldGoodID,
-		})
-	}
-	if su.mutation.GoodIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: score.FieldGoodID,
 		})
 	}
 	if value, ok := su.mutation.AppGoodID(); ok {
@@ -409,6 +363,19 @@ func (su *ScoreUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: score.FieldScore,
+		})
+	}
+	if value, ok := su.mutation.CommentID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: score.FieldCommentID,
+		})
+	}
+	if su.mutation.CommentIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: score.FieldCommentID,
 		})
 	}
 	_spec.Modifiers = su.modifiers
@@ -501,26 +468,6 @@ func (suo *ScoreUpdateOne) SetNillableEntID(u *uuid.UUID) *ScoreUpdateOne {
 	return suo
 }
 
-// SetAppID sets the "app_id" field.
-func (suo *ScoreUpdateOne) SetAppID(u uuid.UUID) *ScoreUpdateOne {
-	suo.mutation.SetAppID(u)
-	return suo
-}
-
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (suo *ScoreUpdateOne) SetNillableAppID(u *uuid.UUID) *ScoreUpdateOne {
-	if u != nil {
-		suo.SetAppID(*u)
-	}
-	return suo
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (suo *ScoreUpdateOne) ClearAppID() *ScoreUpdateOne {
-	suo.mutation.ClearAppID()
-	return suo
-}
-
 // SetUserID sets the "user_id" field.
 func (suo *ScoreUpdateOne) SetUserID(u uuid.UUID) *ScoreUpdateOne {
 	suo.mutation.SetUserID(u)
@@ -538,26 +485,6 @@ func (suo *ScoreUpdateOne) SetNillableUserID(u *uuid.UUID) *ScoreUpdateOne {
 // ClearUserID clears the value of the "user_id" field.
 func (suo *ScoreUpdateOne) ClearUserID() *ScoreUpdateOne {
 	suo.mutation.ClearUserID()
-	return suo
-}
-
-// SetGoodID sets the "good_id" field.
-func (suo *ScoreUpdateOne) SetGoodID(u uuid.UUID) *ScoreUpdateOne {
-	suo.mutation.SetGoodID(u)
-	return suo
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (suo *ScoreUpdateOne) SetNillableGoodID(u *uuid.UUID) *ScoreUpdateOne {
-	if u != nil {
-		suo.SetGoodID(*u)
-	}
-	return suo
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (suo *ScoreUpdateOne) ClearGoodID() *ScoreUpdateOne {
-	suo.mutation.ClearGoodID()
 	return suo
 }
 
@@ -598,6 +525,26 @@ func (suo *ScoreUpdateOne) SetNillableScore(d *decimal.Decimal) *ScoreUpdateOne 
 // ClearScore clears the value of the "score" field.
 func (suo *ScoreUpdateOne) ClearScore() *ScoreUpdateOne {
 	suo.mutation.ClearScore()
+	return suo
+}
+
+// SetCommentID sets the "comment_id" field.
+func (suo *ScoreUpdateOne) SetCommentID(u uuid.UUID) *ScoreUpdateOne {
+	suo.mutation.SetCommentID(u)
+	return suo
+}
+
+// SetNillableCommentID sets the "comment_id" field if the given value is not nil.
+func (suo *ScoreUpdateOne) SetNillableCommentID(u *uuid.UUID) *ScoreUpdateOne {
+	if u != nil {
+		suo.SetCommentID(*u)
+	}
+	return suo
+}
+
+// ClearCommentID clears the value of the "comment_id" field.
+func (suo *ScoreUpdateOne) ClearCommentID() *ScoreUpdateOne {
+	suo.mutation.ClearCommentID()
 	return suo
 }
 
@@ -778,19 +725,6 @@ func (suo *ScoreUpdateOne) sqlSave(ctx context.Context) (_node *Score, err error
 			Column: score.FieldEntID,
 		})
 	}
-	if value, ok := suo.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: score.FieldAppID,
-		})
-	}
-	if suo.mutation.AppIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: score.FieldAppID,
-		})
-	}
 	if value, ok := suo.mutation.UserID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -802,19 +736,6 @@ func (suo *ScoreUpdateOne) sqlSave(ctx context.Context) (_node *Score, err error
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Column: score.FieldUserID,
-		})
-	}
-	if value, ok := suo.mutation.GoodID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: score.FieldGoodID,
-		})
-	}
-	if suo.mutation.GoodIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: score.FieldGoodID,
 		})
 	}
 	if value, ok := suo.mutation.AppGoodID(); ok {
@@ -841,6 +762,19 @@ func (suo *ScoreUpdateOne) sqlSave(ctx context.Context) (_node *Score, err error
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: score.FieldScore,
+		})
+	}
+	if value, ok := suo.mutation.CommentID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: score.FieldCommentID,
+		})
+	}
+	if suo.mutation.CommentIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: score.FieldCommentID,
 		})
 	}
 	_spec.Modifiers = suo.modifiers

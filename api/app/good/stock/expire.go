@@ -27,8 +27,7 @@ func (s *Server) Expire(ctx context.Context, in *npool.ExpireRequest) (*npool.Ex
 		return &npool.ExpireResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	info, err := handler.ExpireStock(ctx)
-	if err != nil {
+	if err := handler.ExpireStock(ctx); err != nil {
 		logger.Sugar().Errorw(
 			"Expire",
 			"In", in,
@@ -37,7 +36,5 @@ func (s *Server) Expire(ctx context.Context, in *npool.ExpireRequest) (*npool.Ex
 		return &npool.ExpireResponse{}, status.Error(codes.Aborted, err.Error())
 	}
 
-	return &npool.ExpireResponse{
-		Info: info,
-	}, nil
+	return &npool.ExpireResponse{}, nil
 }

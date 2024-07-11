@@ -5,134 +5,137 @@ import (
 	"context"
 	"fmt"
 
-	appstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock"
-	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	entappstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
-	entstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/stock"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock"
-
-	"github.com/shopspring/decimal"
 )
 
 type expireHandler struct {
-	*lockopHandler
+	*stockAppGoodQuery
+	lockOp *lockopHandler
 }
 
-func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	info, err := tx.
-		Stock.
-		Query().
-		Where(
-			entstock.GoodID(*h.GoodID),
-			entstock.DeletedAt(0),
-		).
-		ForUpdate().
-		Only(ctx)
-	if err != nil {
-		return err
+func (h *expireHandler) constructSQL(table string, lock *ent.AppStockLock, returnSpotQuantity, checkTotal bool, id uint32) string {
+	sql := fmt.Sprintf(
+		`update %v
+		set
+		  in_service = in_service - %v`,
+		table,
+		lock.Units,
+	)
+	if returnSpotQuantity {
+		sql += fmt.Sprintf(
+			`, spot_quantity = spot_quantity + %v`,
+			lock.Units,
+		)
 	}
-	if info == nil {
-		return fmt.Errorf("invalid stock")
+	sql += fmt.Sprintf(
+		` where
+		  id = %v
+		and
+		  deleted_at = 0
+		and
+		  in_service >= %v`,
+		id,
+		lock.Units,
+	)
+	if checkTotal {
+		sql += ` and
+		  in_service + wait_start + locked + app_reserved + spot_quantity = total`
 	}
-
-	inService := info.InService
-	spotQuantity := info.SpotQuantity
-
-	inService = inService.Sub(lock.Units)
-	spotQuantity = spotQuantity.Add(lock.Units)
-
-	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
-	}
-
-	if inService.Add(info.WaitStart).
-		Add(info.Locked).
-		Add(info.AppReserved).
-		Add(info.SpotQuantity).
-		Cmp(info.Total) > 0 {
-		return fmt.Errorf("stock exhausted")
-	}
-
-	if _, err := stockcrud.UpdateSet(
-		tx.Stock.UpdateOneID(info.ID),
-		&stockcrud.Req{
-			InService:    &inService,
-			SpotQuantity: &spotQuantity,
-		},
-	).Save(ctx); err != nil {
-		return err
-	}
-	return nil
+	return sql
 }
 
-func (h *expireHandler) expireAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) error {
-	info, err := tx.
-		AppStock.
-		Query().
-		Where(
-			entappstock.EntID(*h.EntID),
-			entappstock.DeletedAt(0),
-		).
-		ForUpdate().
-		Only(ctx)
-	if err != nil {
-		return err
+func (h *expireHandler) expireStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok || stock.stock == nil {
+		return wlog.Errorf("invalid stock")
 	}
-	if info == nil {
-		return fmt.Errorf("invalid appstock")
-	}
-
-	h.GoodID = &info.GoodID
-	inService := info.InService
-	inService = inService.Sub(lock.Units)
-	if inService.Cmp(decimal.NewFromInt(0)) < 0 {
-		return fmt.Errorf("invalid stock")
-	}
-
-	if _, err := appstockcrud.UpdateSet(
-		tx.AppStock.UpdateOneID(info.ID),
-		&appstockcrud.Req{
-			InService: &inService,
-		},
-	).Save(ctx); err != nil {
-		return err
-	}
-
-	return nil
+	sql := h.constructSQL("stocks_v1", lock, true, true, stock.stock.ID)
+	return h.execSQL(ctx, tx, sql)
 }
 
-func (h *Handler) ExpireStock(ctx context.Context) (*npool.Stock, error) {
+func (h *expireHandler) expireMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok || stock.miningGoodStocks == nil {
+		return wlog.Errorf("invalid stock")
+	}
+	appMiningGoodStock, ok := stock.appMiningGoodStocks[lock.AppStockID]
+	if !ok {
+		return wlog.Errorf("invalid appmininggoodstock")
+	}
+	miningGoodStock, ok := stock.miningGoodStocks[appMiningGoodStock.MiningGoodStockID]
+	if !ok {
+		return wlog.Errorf("invalid mininggoodstock")
+	}
+	sql := h.constructSQL("mining_good_stocks", lock, true, true, miningGoodStock.ID)
+	return h.execSQL(ctx, tx, sql)
+}
+
+func (h *expireHandler) expireAppStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok || stock.appGoodStock == nil {
+		return wlog.Errorf("invalid stock")
+	}
+	sql := h.constructSQL("app_stocks", lock, false, false, stock.appGoodStock.ID)
+	return h.execSQL(ctx, tx, sql)
+}
+
+func (h *expireHandler) expireAppMiningGoodStock(ctx context.Context, lock *ent.AppStockLock, tx *ent.Tx) (err error) {
+	stock, ok := h.stocks[lock.AppGoodID]
+	if !ok || stock.appMiningGoodStocks == nil {
+		return wlog.Errorf("invalid stock")
+	}
+	appMiningGoodStock, ok := stock.appMiningGoodStocks[lock.AppStockID]
+	if !ok {
+		return wlog.Errorf("invalid stock")
+	}
+	sql := h.constructSQL("app_mining_good_stocks", lock, false, false, appMiningGoodStock.ID)
+	return h.execSQL(ctx, tx, sql)
+}
+
+func (h *Handler) ExpireStock(ctx context.Context) error {
 	handler := &expireHandler{
-		lockopHandler: &lockopHandler{
+		stockAppGoodQuery: &stockAppGoodQuery{
+			Handler: h,
+		},
+		lockOp: &lockopHandler{
 			Handler: h,
 			state:   types.AppStockLockState_AppStockExpired.Enum(),
 		},
 	}
 
-	if err := handler.getLocks(ctx); err != nil {
-		return nil, err
+	if err := handler.lockOp.getLocks(ctx); err != nil {
+		return wlog.WrapError(err)
+	}
+	h.Stocks = handler.lockOp.lock2Stocks()
+	if err := handler.getStockAppGoods(ctx); err != nil {
+		return wlog.WrapError(err)
 	}
 
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		for _, lock := range handler.lockopHandler.locks {
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		for _, lock := range handler.lockOp.locks {
 			if err := handler.expireAppStock(ctx, lock, tx); err != nil {
-				return err
+				return wlog.WrapError(err)
+			}
+			if handler.stockByMiningPool(lock.AppGoodID) {
+				if err := handler.expireAppMiningGoodStock(ctx, lock, tx); err != nil {
+					return wlog.WrapError(err)
+				}
 			}
 			if err := handler.expireStock(ctx, lock, tx); err != nil {
-				return err
+				return wlog.WrapError(err)
+			}
+			if handler.stockByMiningPool(lock.AppGoodID) {
+				if err := handler.expireMiningGoodStock(ctx, lock, tx); err != nil {
+					return wlog.WrapError(err)
+				}
 			}
 		}
-		if err := handler.updateLocks(ctx, tx); err != nil {
-			return err
+		if err := handler.lockOp.updateLocks(ctx, tx); err != nil {
+			return wlog.WrapError(err)
 		}
 		return nil
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetStock(ctx)
 }

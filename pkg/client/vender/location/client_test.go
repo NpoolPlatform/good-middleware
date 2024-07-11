@@ -36,60 +36,66 @@ func init() {
 	}
 }
 
-var brand = &brandmwpb.Brand{
-	EntID: uuid.NewString(),
-	Name:  uuid.NewString(),
-	Logo:  uuid.NewString(),
-}
-
 var ret = &npool.Location{
-	EntID:    uuid.NewString(),
-	Country:  uuid.NewString(),
-	Province: uuid.NewString(),
-	City:     uuid.NewString(),
-	Address:  uuid.NewString(),
-	BrandID:  brand.EntID,
-}
-
-var req = &npool.LocationReq{
-	EntID:    &ret.EntID,
-	Country:  &ret.Country,
-	Province: &ret.Province,
-	City:     &ret.City,
-	Address:  &ret.Address,
-	BrandID:  &ret.BrandID,
+	EntID:     uuid.NewString(),
+	Country:   uuid.NewString(),
+	Province:  uuid.NewString(),
+	City:      uuid.NewString(),
+	Address:   uuid.NewString(),
+	BrandID:   uuid.NewString(),
+	BrandName: uuid.NewString(),
+	BrandLogo: uuid.NewString(),
 }
 
 func setup(t *testing.T) func(*testing.T) {
-	info, err := brand1.CreateBrand(context.Background(), &brandmwpb.BrandReq{
-		EntID: &brand.EntID,
-		Name:  &brand.Name,
-		Logo:  &brand.Logo,
+	err := brand1.CreateBrand(context.Background(), &brandmwpb.BrandReq{
+		EntID: &ret.BrandID,
+		Name:  &ret.BrandName,
+		Logo:  &ret.BrandLogo,
 	})
 	assert.Nil(t, err)
-	brand.ID = info.ID
 
 	return func(*testing.T) {
-		_, _ = brand1.DeleteBrand(context.Background(), brand.ID)
+		_ = brand1.DeleteBrand(context.Background(), nil, &ret.BrandID)
 	}
 }
 
 func createLocation(t *testing.T) {
-	info, err := CreateLocation(context.Background(), req)
+	err := CreateLocation(context.Background(), &npool.LocationReq{
+		EntID:    &ret.EntID,
+		Country:  &ret.Country,
+		Province: &ret.Province,
+		City:     &ret.City,
+		Address:  &ret.Address,
+		BrandID:  &ret.BrandID,
+	})
 	if assert.Nil(t, err) {
-		ret.CreatedAt = info.CreatedAt
-		ret.UpdatedAt = info.UpdatedAt
-		ret.ID = info.ID
-		assert.Equal(t, ret, info)
+		info, err := GetLocation(context.Background(), ret.EntID)
+		if assert.Nil(t, err) {
+			ret.CreatedAt = info.CreatedAt
+			ret.UpdatedAt = info.UpdatedAt
+			ret.ID = info.ID
+			assert.Equal(t, ret, info)
+		}
 	}
 }
 
 func updateLocation(t *testing.T) {
-	req.ID = &ret.ID
-	info, err := UpdateLocation(context.Background(), req)
+	ret.Address = uuid.NewString()
+	err := UpdateLocation(context.Background(), &npool.LocationReq{
+		ID:       &ret.ID,
+		Country:  &ret.Country,
+		Province: &ret.Province,
+		City:     &ret.City,
+		Address:  &ret.Address,
+		BrandID:  &ret.BrandID,
+	})
 	if assert.Nil(t, err) {
-		ret.UpdatedAt = info.UpdatedAt
-		assert.Equal(t, ret, info)
+		info, err := GetLocation(context.Background(), ret.EntID)
+		if assert.Nil(t, err) {
+			ret.UpdatedAt = info.UpdatedAt
+			assert.Equal(t, ret, info)
+		}
 	}
 }
 
@@ -129,12 +135,10 @@ func getLocationOnly(t *testing.T) {
 }
 
 func deleteLocation(t *testing.T) {
-	info, err := DeleteLocation(context.Background(), ret.ID)
-	if assert.Nil(t, err) {
-		assert.Equal(t, ret, info)
-	}
+	err := DeleteLocation(context.Background(), &ret.ID, &ret.EntID)
+	assert.Nil(t, err)
 
-	info, err = GetLocation(context.Background(), ret.EntID)
+	info, err := GetLocation(context.Background(), ret.EntID)
 	assert.Nil(t, err)
 	assert.Nil(t, info)
 }

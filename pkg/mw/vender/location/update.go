@@ -3,92 +3,130 @@ package location
 import (
 	"context"
 	"fmt"
+	"time"
 
-	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
-	locationcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/vender/location"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/vender/location"
-
-	"github.com/google/uuid"
 )
 
-func (h *Handler) UpdateLocation(ctx context.Context) (*npool.Location, error) {
-	if h.ID == nil {
-		return nil, fmt.Errorf("invalid id")
+type updateHandler struct {
+	*Handler
+	sql      string
+	country  string
+	province string
+	city     string
+	address  string
+	brandID  string
+}
+
+func (h *updateHandler) constructSQL() error {
+	set := "set "
+	now := uint32(time.Now().Unix())
+
+	_sql := "update vendor_locations "
+	if h.Country != nil {
+		_sql += fmt.Sprintf("%vcountry = '%v', ", set, h.country)
+		set = ""
+	}
+	if h.Province != nil {
+		_sql += fmt.Sprintf("%vprovince = '%v', ", set, h.province)
+		set = ""
+	}
+	if h.City != nil {
+		_sql += fmt.Sprintf("%vcity = '%v', ", set, h.city)
+		set = ""
+	}
+	if h.Address != nil {
+		_sql += fmt.Sprintf("%vaddress = '%v', ", set, h.address)
+		set = ""
+	}
+	if h.BrandID != nil {
+		_sql += fmt.Sprintf("%vbrand_id = '%v', ", set, h.brandID)
+		set = ""
+	}
+	if set != "" {
+		return wlog.WrapError(cruder.ErrUpdateNothing)
 	}
 
+	_sql += fmt.Sprintf("updated_at = %v ", now)
+	_sql += "where "
+	_sql += fmt.Sprintf("id = %v ", *h.ID)
+
+	_sql += "and not exists ("
+	_sql += "select 1 from (select * from vendor_locations as vl "
+	_sql += fmt.Sprintf("where vl.country = '%v' ", h.country)
+	_sql += fmt.Sprintf("and vl.province = '%v' ", h.province)
+	_sql += fmt.Sprintf("and vl.city = '%v' ", h.city)
+	_sql += fmt.Sprintf("and vl.address = '%v' ", h.address)
+	_sql += fmt.Sprintf("and vl.brand_id = '%v' ", h.brandID)
+	_sql += fmt.Sprintf("and vl.id != %v ", *h.ID)
+	_sql += "and deleted_at = 0 limit 1) as vl) "
+	_sql += "and exists ("
+	_sql += "select 1 from vendor_brands "
+	_sql += fmt.Sprintf("where ent_id = '%v' and deleted_at = 0", h.brandID)
+	_sql += " limit 1)"
+
+	h.sql = _sql
+	return nil
+}
+
+func (h *updateHandler) updateLocation(ctx context.Context, tx *ent.Tx) error {
+	rc, err := tx.ExecContext(ctx, h.sql)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	if n, err := rc.RowsAffected(); err != nil || n != 1 {
+		return wlog.Errorf("fail update location: %v", err)
+	}
+	return nil
+}
+
+func (h *Handler) UpdateLocation(ctx context.Context) error {
 	info, err := h.GetLocation(ctx)
 	if err != nil {
-		return nil, err
+		return wlog.WrapError(err)
 	}
 	if info == nil {
-		return nil, fmt.Errorf("invalid location")
+		return wlog.Errorf("invalid vendorlocation")
 	}
+
+	handler := &updateHandler{
+		Handler: h,
+	}
+	h.ID = &info.ID
 
 	if h.Country == nil {
-		h.Country = &info.Country
+		handler.country = info.Country
+	} else {
+		handler.country = *h.Country
 	}
 	if h.Province == nil {
-		h.Province = &info.Province
+		handler.province = info.Province
+	} else {
+		handler.province = *h.Province
 	}
 	if h.City == nil {
-		h.City = &info.City
+		handler.city = info.City
+	} else {
+		handler.city = *h.City
 	}
 	if h.Address == nil {
-		h.Address = &info.Address
+		handler.address = info.Address
+	} else {
+		handler.address = *h.Address
 	}
 	if h.BrandID == nil {
-		id, err := uuid.Parse(info.BrandID)
-		if err != nil {
-			return nil, err
-		}
-		h.BrandID = &id
+		handler.brandID = info.BrandID
+	} else {
+		handler.brandID = h.BrandID.String()
 	}
 
-	key := h.lockKey()
-	if err := redis2.TryLock(key, 0); err != nil {
-		return nil, err
+	if err := handler.constructSQL(); err != nil {
+		return wlog.WrapError(err)
 	}
-	defer func() {
-		_ = redis2.Unlock(key)
-	}()
-
-	h.Conds = &locationcrud.Conds{
-		ID:       &cruder.Cond{Op: cruder.NEQ, Val: *h.ID},
-		Country:  &cruder.Cond{Op: cruder.EQ, Val: *h.Country},
-		Province: &cruder.Cond{Op: cruder.EQ, Val: *h.Province},
-		City:     &cruder.Cond{Op: cruder.EQ, Val: *h.City},
-		Address:  &cruder.Cond{Op: cruder.EQ, Val: *h.Address},
-		BrandID:  &cruder.Cond{Op: cruder.EQ, Val: *h.BrandID},
-	}
-	exist, err := h.ExistLocationConds(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if exist {
-		return nil, fmt.Errorf("arleady exists")
-	}
-
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		if _, err := locationcrud.UpdateSet(
-			cli.VendorLocation.UpdateOneID(*h.ID),
-			&locationcrud.Req{
-				Country:  h.Country,
-				Province: h.Province,
-				City:     h.City,
-				Address:  h.Address,
-				BrandID:  h.BrandID,
-			},
-		).Save(_ctx); err != nil {
-			return err
-		}
-		return nil
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		return handler.updateLocation(_ctx, tx)
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return h.GetLocation(ctx)
 }

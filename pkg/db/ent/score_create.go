@@ -79,20 +79,6 @@ func (sc *ScoreCreate) SetNillableEntID(u *uuid.UUID) *ScoreCreate {
 	return sc
 }
 
-// SetAppID sets the "app_id" field.
-func (sc *ScoreCreate) SetAppID(u uuid.UUID) *ScoreCreate {
-	sc.mutation.SetAppID(u)
-	return sc
-}
-
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (sc *ScoreCreate) SetNillableAppID(u *uuid.UUID) *ScoreCreate {
-	if u != nil {
-		sc.SetAppID(*u)
-	}
-	return sc
-}
-
 // SetUserID sets the "user_id" field.
 func (sc *ScoreCreate) SetUserID(u uuid.UUID) *ScoreCreate {
 	sc.mutation.SetUserID(u)
@@ -103,20 +89,6 @@ func (sc *ScoreCreate) SetUserID(u uuid.UUID) *ScoreCreate {
 func (sc *ScoreCreate) SetNillableUserID(u *uuid.UUID) *ScoreCreate {
 	if u != nil {
 		sc.SetUserID(*u)
-	}
-	return sc
-}
-
-// SetGoodID sets the "good_id" field.
-func (sc *ScoreCreate) SetGoodID(u uuid.UUID) *ScoreCreate {
-	sc.mutation.SetGoodID(u)
-	return sc
-}
-
-// SetNillableGoodID sets the "good_id" field if the given value is not nil.
-func (sc *ScoreCreate) SetNillableGoodID(u *uuid.UUID) *ScoreCreate {
-	if u != nil {
-		sc.SetGoodID(*u)
 	}
 	return sc
 }
@@ -145,6 +117,20 @@ func (sc *ScoreCreate) SetScore(d decimal.Decimal) *ScoreCreate {
 func (sc *ScoreCreate) SetNillableScore(d *decimal.Decimal) *ScoreCreate {
 	if d != nil {
 		sc.SetScore(*d)
+	}
+	return sc
+}
+
+// SetCommentID sets the "comment_id" field.
+func (sc *ScoreCreate) SetCommentID(u uuid.UUID) *ScoreCreate {
+	sc.mutation.SetCommentID(u)
+	return sc
+}
+
+// SetNillableCommentID sets the "comment_id" field if the given value is not nil.
+func (sc *ScoreCreate) SetNillableCommentID(u *uuid.UUID) *ScoreCreate {
+	if u != nil {
+		sc.SetCommentID(*u)
 	}
 	return sc
 }
@@ -262,26 +248,12 @@ func (sc *ScoreCreate) defaults() error {
 		v := score.DefaultEntID()
 		sc.mutation.SetEntID(v)
 	}
-	if _, ok := sc.mutation.AppID(); !ok {
-		if score.DefaultAppID == nil {
-			return fmt.Errorf("ent: uninitialized score.DefaultAppID (forgotten import ent/runtime?)")
-		}
-		v := score.DefaultAppID()
-		sc.mutation.SetAppID(v)
-	}
 	if _, ok := sc.mutation.UserID(); !ok {
 		if score.DefaultUserID == nil {
 			return fmt.Errorf("ent: uninitialized score.DefaultUserID (forgotten import ent/runtime?)")
 		}
 		v := score.DefaultUserID()
 		sc.mutation.SetUserID(v)
-	}
-	if _, ok := sc.mutation.GoodID(); !ok {
-		if score.DefaultGoodID == nil {
-			return fmt.Errorf("ent: uninitialized score.DefaultGoodID (forgotten import ent/runtime?)")
-		}
-		v := score.DefaultGoodID()
-		sc.mutation.SetGoodID(v)
 	}
 	if _, ok := sc.mutation.AppGoodID(); !ok {
 		if score.DefaultAppGoodID == nil {
@@ -293,6 +265,13 @@ func (sc *ScoreCreate) defaults() error {
 	if _, ok := sc.mutation.Score(); !ok {
 		v := score.DefaultScore
 		sc.mutation.SetScore(v)
+	}
+	if _, ok := sc.mutation.CommentID(); !ok {
+		if score.DefaultCommentID == nil {
+			return fmt.Errorf("ent: uninitialized score.DefaultCommentID (forgotten import ent/runtime?)")
+		}
+		v := score.DefaultCommentID()
+		sc.mutation.SetCommentID(v)
 	}
 	return nil
 }
@@ -377,14 +356,6 @@ func (sc *ScoreCreate) createSpec() (*Score, *sqlgraph.CreateSpec) {
 		})
 		_node.EntID = value
 	}
-	if value, ok := sc.mutation.AppID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: score.FieldAppID,
-		})
-		_node.AppID = value
-	}
 	if value, ok := sc.mutation.UserID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -392,14 +363,6 @@ func (sc *ScoreCreate) createSpec() (*Score, *sqlgraph.CreateSpec) {
 			Column: score.FieldUserID,
 		})
 		_node.UserID = value
-	}
-	if value, ok := sc.mutation.GoodID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: score.FieldGoodID,
-		})
-		_node.GoodID = value
 	}
 	if value, ok := sc.mutation.AppGoodID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -416,6 +379,14 @@ func (sc *ScoreCreate) createSpec() (*Score, *sqlgraph.CreateSpec) {
 			Column: score.FieldScore,
 		})
 		_node.Score = value
+	}
+	if value, ok := sc.mutation.CommentID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: score.FieldCommentID,
+		})
+		_node.CommentID = value
 	}
 	return _node, _spec
 }
@@ -537,24 +508,6 @@ func (u *ScoreUpsert) UpdateEntID() *ScoreUpsert {
 	return u
 }
 
-// SetAppID sets the "app_id" field.
-func (u *ScoreUpsert) SetAppID(v uuid.UUID) *ScoreUpsert {
-	u.Set(score.FieldAppID, v)
-	return u
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *ScoreUpsert) UpdateAppID() *ScoreUpsert {
-	u.SetExcluded(score.FieldAppID)
-	return u
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (u *ScoreUpsert) ClearAppID() *ScoreUpsert {
-	u.SetNull(score.FieldAppID)
-	return u
-}
-
 // SetUserID sets the "user_id" field.
 func (u *ScoreUpsert) SetUserID(v uuid.UUID) *ScoreUpsert {
 	u.Set(score.FieldUserID, v)
@@ -570,24 +523,6 @@ func (u *ScoreUpsert) UpdateUserID() *ScoreUpsert {
 // ClearUserID clears the value of the "user_id" field.
 func (u *ScoreUpsert) ClearUserID() *ScoreUpsert {
 	u.SetNull(score.FieldUserID)
-	return u
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *ScoreUpsert) SetGoodID(v uuid.UUID) *ScoreUpsert {
-	u.Set(score.FieldGoodID, v)
-	return u
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *ScoreUpsert) UpdateGoodID() *ScoreUpsert {
-	u.SetExcluded(score.FieldGoodID)
-	return u
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *ScoreUpsert) ClearGoodID() *ScoreUpsert {
-	u.SetNull(score.FieldGoodID)
 	return u
 }
 
@@ -624,6 +559,24 @@ func (u *ScoreUpsert) UpdateScore() *ScoreUpsert {
 // ClearScore clears the value of the "score" field.
 func (u *ScoreUpsert) ClearScore() *ScoreUpsert {
 	u.SetNull(score.FieldScore)
+	return u
+}
+
+// SetCommentID sets the "comment_id" field.
+func (u *ScoreUpsert) SetCommentID(v uuid.UUID) *ScoreUpsert {
+	u.Set(score.FieldCommentID, v)
+	return u
+}
+
+// UpdateCommentID sets the "comment_id" field to the value that was provided on create.
+func (u *ScoreUpsert) UpdateCommentID() *ScoreUpsert {
+	u.SetExcluded(score.FieldCommentID)
+	return u
+}
+
+// ClearCommentID clears the value of the "comment_id" field.
+func (u *ScoreUpsert) ClearCommentID() *ScoreUpsert {
+	u.SetNull(score.FieldCommentID)
 	return u
 }
 
@@ -754,27 +707,6 @@ func (u *ScoreUpsertOne) UpdateEntID() *ScoreUpsertOne {
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *ScoreUpsertOne) SetAppID(v uuid.UUID) *ScoreUpsertOne {
-	return u.Update(func(s *ScoreUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *ScoreUpsertOne) UpdateAppID() *ScoreUpsertOne {
-	return u.Update(func(s *ScoreUpsert) {
-		s.UpdateAppID()
-	})
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (u *ScoreUpsertOne) ClearAppID() *ScoreUpsertOne {
-	return u.Update(func(s *ScoreUpsert) {
-		s.ClearAppID()
-	})
-}
-
 // SetUserID sets the "user_id" field.
 func (u *ScoreUpsertOne) SetUserID(v uuid.UUID) *ScoreUpsertOne {
 	return u.Update(func(s *ScoreUpsert) {
@@ -793,27 +725,6 @@ func (u *ScoreUpsertOne) UpdateUserID() *ScoreUpsertOne {
 func (u *ScoreUpsertOne) ClearUserID() *ScoreUpsertOne {
 	return u.Update(func(s *ScoreUpsert) {
 		s.ClearUserID()
-	})
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *ScoreUpsertOne) SetGoodID(v uuid.UUID) *ScoreUpsertOne {
-	return u.Update(func(s *ScoreUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *ScoreUpsertOne) UpdateGoodID() *ScoreUpsertOne {
-	return u.Update(func(s *ScoreUpsert) {
-		s.UpdateGoodID()
-	})
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *ScoreUpsertOne) ClearGoodID() *ScoreUpsertOne {
-	return u.Update(func(s *ScoreUpsert) {
-		s.ClearGoodID()
 	})
 }
 
@@ -856,6 +767,27 @@ func (u *ScoreUpsertOne) UpdateScore() *ScoreUpsertOne {
 func (u *ScoreUpsertOne) ClearScore() *ScoreUpsertOne {
 	return u.Update(func(s *ScoreUpsert) {
 		s.ClearScore()
+	})
+}
+
+// SetCommentID sets the "comment_id" field.
+func (u *ScoreUpsertOne) SetCommentID(v uuid.UUID) *ScoreUpsertOne {
+	return u.Update(func(s *ScoreUpsert) {
+		s.SetCommentID(v)
+	})
+}
+
+// UpdateCommentID sets the "comment_id" field to the value that was provided on create.
+func (u *ScoreUpsertOne) UpdateCommentID() *ScoreUpsertOne {
+	return u.Update(func(s *ScoreUpsert) {
+		s.UpdateCommentID()
+	})
+}
+
+// ClearCommentID clears the value of the "comment_id" field.
+func (u *ScoreUpsertOne) ClearCommentID() *ScoreUpsertOne {
+	return u.Update(func(s *ScoreUpsert) {
+		s.ClearCommentID()
 	})
 }
 
@@ -1151,27 +1083,6 @@ func (u *ScoreUpsertBulk) UpdateEntID() *ScoreUpsertBulk {
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *ScoreUpsertBulk) SetAppID(v uuid.UUID) *ScoreUpsertBulk {
-	return u.Update(func(s *ScoreUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *ScoreUpsertBulk) UpdateAppID() *ScoreUpsertBulk {
-	return u.Update(func(s *ScoreUpsert) {
-		s.UpdateAppID()
-	})
-}
-
-// ClearAppID clears the value of the "app_id" field.
-func (u *ScoreUpsertBulk) ClearAppID() *ScoreUpsertBulk {
-	return u.Update(func(s *ScoreUpsert) {
-		s.ClearAppID()
-	})
-}
-
 // SetUserID sets the "user_id" field.
 func (u *ScoreUpsertBulk) SetUserID(v uuid.UUID) *ScoreUpsertBulk {
 	return u.Update(func(s *ScoreUpsert) {
@@ -1190,27 +1101,6 @@ func (u *ScoreUpsertBulk) UpdateUserID() *ScoreUpsertBulk {
 func (u *ScoreUpsertBulk) ClearUserID() *ScoreUpsertBulk {
 	return u.Update(func(s *ScoreUpsert) {
 		s.ClearUserID()
-	})
-}
-
-// SetGoodID sets the "good_id" field.
-func (u *ScoreUpsertBulk) SetGoodID(v uuid.UUID) *ScoreUpsertBulk {
-	return u.Update(func(s *ScoreUpsert) {
-		s.SetGoodID(v)
-	})
-}
-
-// UpdateGoodID sets the "good_id" field to the value that was provided on create.
-func (u *ScoreUpsertBulk) UpdateGoodID() *ScoreUpsertBulk {
-	return u.Update(func(s *ScoreUpsert) {
-		s.UpdateGoodID()
-	})
-}
-
-// ClearGoodID clears the value of the "good_id" field.
-func (u *ScoreUpsertBulk) ClearGoodID() *ScoreUpsertBulk {
-	return u.Update(func(s *ScoreUpsert) {
-		s.ClearGoodID()
 	})
 }
 
@@ -1253,6 +1143,27 @@ func (u *ScoreUpsertBulk) UpdateScore() *ScoreUpsertBulk {
 func (u *ScoreUpsertBulk) ClearScore() *ScoreUpsertBulk {
 	return u.Update(func(s *ScoreUpsert) {
 		s.ClearScore()
+	})
+}
+
+// SetCommentID sets the "comment_id" field.
+func (u *ScoreUpsertBulk) SetCommentID(v uuid.UUID) *ScoreUpsertBulk {
+	return u.Update(func(s *ScoreUpsert) {
+		s.SetCommentID(v)
+	})
+}
+
+// UpdateCommentID sets the "comment_id" field to the value that was provided on create.
+func (u *ScoreUpsertBulk) UpdateCommentID() *ScoreUpsertBulk {
+	return u.Update(func(s *ScoreUpsert) {
+		s.UpdateCommentID()
+	})
+}
+
+// ClearCommentID clears the value of the "comment_id" field.
+func (u *ScoreUpsertBulk) ClearCommentID() *ScoreUpsertBulk {
+	return u.Update(func(s *ScoreUpsert) {
+		s.ClearCommentID()
 	})
 }
 

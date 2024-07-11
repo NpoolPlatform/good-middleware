@@ -119,6 +119,26 @@ func (grhu *GoodRewardHistoryUpdate) ClearGoodID() *GoodRewardHistoryUpdate {
 	return grhu
 }
 
+// SetCoinTypeID sets the "coin_type_id" field.
+func (grhu *GoodRewardHistoryUpdate) SetCoinTypeID(u uuid.UUID) *GoodRewardHistoryUpdate {
+	grhu.mutation.SetCoinTypeID(u)
+	return grhu
+}
+
+// SetNillableCoinTypeID sets the "coin_type_id" field if the given value is not nil.
+func (grhu *GoodRewardHistoryUpdate) SetNillableCoinTypeID(u *uuid.UUID) *GoodRewardHistoryUpdate {
+	if u != nil {
+		grhu.SetCoinTypeID(*u)
+	}
+	return grhu
+}
+
+// ClearCoinTypeID clears the value of the "coin_type_id" field.
+func (grhu *GoodRewardHistoryUpdate) ClearCoinTypeID() *GoodRewardHistoryUpdate {
+	grhu.mutation.ClearCoinTypeID()
+	return grhu
+}
+
 // SetRewardDate sets the "reward_date" field.
 func (grhu *GoodRewardHistoryUpdate) SetRewardDate(u uint32) *GoodRewardHistoryUpdate {
 	grhu.mutation.ResetRewardDate()
@@ -386,6 +406,19 @@ func (grhu *GoodRewardHistoryUpdate) sqlSave(ctx context.Context) (n int, err er
 			Column: goodrewardhistory.FieldGoodID,
 		})
 	}
+	if value, ok := grhu.mutation.CoinTypeID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: goodrewardhistory.FieldCoinTypeID,
+		})
+	}
+	if grhu.mutation.CoinTypeIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: goodrewardhistory.FieldCoinTypeID,
+		})
+	}
 	if value, ok := grhu.mutation.RewardDate(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -565,6 +598,26 @@ func (grhuo *GoodRewardHistoryUpdateOne) SetNillableGoodID(u *uuid.UUID) *GoodRe
 // ClearGoodID clears the value of the "good_id" field.
 func (grhuo *GoodRewardHistoryUpdateOne) ClearGoodID() *GoodRewardHistoryUpdateOne {
 	grhuo.mutation.ClearGoodID()
+	return grhuo
+}
+
+// SetCoinTypeID sets the "coin_type_id" field.
+func (grhuo *GoodRewardHistoryUpdateOne) SetCoinTypeID(u uuid.UUID) *GoodRewardHistoryUpdateOne {
+	grhuo.mutation.SetCoinTypeID(u)
+	return grhuo
+}
+
+// SetNillableCoinTypeID sets the "coin_type_id" field if the given value is not nil.
+func (grhuo *GoodRewardHistoryUpdateOne) SetNillableCoinTypeID(u *uuid.UUID) *GoodRewardHistoryUpdateOne {
+	if u != nil {
+		grhuo.SetCoinTypeID(*u)
+	}
+	return grhuo
+}
+
+// ClearCoinTypeID clears the value of the "coin_type_id" field.
+func (grhuo *GoodRewardHistoryUpdateOne) ClearCoinTypeID() *GoodRewardHistoryUpdateOne {
+	grhuo.mutation.ClearCoinTypeID()
 	return grhuo
 }
 
@@ -863,6 +916,19 @@ func (grhuo *GoodRewardHistoryUpdateOne) sqlSave(ctx context.Context) (_node *Go
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Column: goodrewardhistory.FieldGoodID,
+		})
+	}
+	if value, ok := grhuo.mutation.CoinTypeID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: goodrewardhistory.FieldCoinTypeID,
+		})
+	}
+	if grhuo.mutation.CoinTypeIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: goodrewardhistory.FieldCoinTypeID,
 		})
 	}
 	if value, ok := grhuo.mutation.RewardDate(); ok {

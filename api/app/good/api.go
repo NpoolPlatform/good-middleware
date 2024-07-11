@@ -1,18 +1,18 @@
 package appgood
 
 import (
-	appgood "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
+	"github.com/NpoolPlatform/message/npool/good/mw/v1/app/good"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 )
 
 type Server struct {
-	appgood.UnimplementedMiddlewareServer
+	good.UnimplementedMiddlewareServer
 }
 
 func Register(server grpc.ServiceRegistrar) {
-	appgood.RegisterMiddlewareServer(server, &Server{})
+	good.RegisterMiddlewareServer(server, &Server{})
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {

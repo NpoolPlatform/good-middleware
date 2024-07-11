@@ -2,41 +2,32 @@ package good
 
 import (
 	"context"
-	"fmt"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
+
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
-
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
-
 	servicename "github.com/NpoolPlatform/good-middleware/pkg/servicename"
+	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/good"
+	"google.golang.org/grpc"
 )
 
-var timeout = 10 * time.Second
-
-type handler func(context.Context, npool.MiddlewareClient) (cruder.Any, error)
-
-func do(ctx context.Context, handler handler) (cruder.Any, error) {
-	_ctx, cancel := context.WithTimeout(ctx, timeout)
-	defer cancel()
-
-	conn, err := grpc2.GetGRPCConn(servicename.ServiceDomain, grpc2.GRPCTAG)
-	if err != nil {
-		return nil, err
-	}
-
-	defer conn.Close()
-
-	cli := npool.NewMiddlewareClient(conn)
-
-	return handler(_ctx, cli)
+func withClient(ctx context.Context, handler func(context.Context, npool.MiddlewareClient) (interface{}, error)) (interface{}, error) {
+	return grpc2.WithGRPCConn(
+		ctx,
+		servicename.ServiceDomain,
+		10*time.Second, //nolint
+		func(_ctx context.Context, conn *grpc.ClientConn) (interface{}, error) {
+			return handler(_ctx, npool.NewMiddlewareClient(conn))
+		},
+		grpc2.GRPCTAG,
+	)
 }
 
-func CreateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.CreateGood(ctx, &npool.CreateGoodRequest{
-			Info: in,
+func GetGood(ctx context.Context, entID string) (*npool.Good, error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.GetGood(_ctx, &npool.GetGoodRequest{
+			EntID: entID,
 		})
 		if err != nil {
 			return nil, err
@@ -49,27 +40,9 @@ func CreateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 	return info.(*npool.Good), nil
 }
 
-func GetGood(ctx context.Context, id string) (*npool.Good, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.GetGood(ctx, &npool.GetGoodRequest{
-			EntID: id,
-		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
-	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Good), nil
-}
-
-func GetGoods(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.Good, uint32, error) {
-	total := uint32(0)
-
-	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.GetGoods(ctx, &npool.GetGoodsRequest{
+func GetGoods(ctx context.Context, conds *npool.Conds, offset, limit int32) (infos []*npool.Good, total uint32, err error) {
+	_infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.GetGoods(_ctx, &npool.GetGoodsRequest{
 			Conds:  conds,
 			Offset: offset,
 			Limit:  limit,
@@ -77,24 +50,21 @@ func GetGoods(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*
 		if err != nil {
 			return nil, err
 		}
-
 		total = resp.Total
-
 		return resp.Infos, nil
 	})
 	if err != nil {
 		return nil, 0, err
 	}
-	return infos.([]*npool.Good), total, nil
+	return _infos.([]*npool.Good), total, nil
 }
 
-func GetGoodOnly(ctx context.Context, conds *npool.Conds) (*npool.Good, error) {
-	const limit = 2
-	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.GetGoods(ctx, &npool.GetGoodsRequest{
+func GetGoodOnly(ctx context.Context, conds *npool.Conds) (info *npool.Good, err error) {
+	_infos, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.GetGoods(_ctx, &npool.GetGoodsRequest{
 			Conds:  conds,
 			Offset: 0,
-			Limit:  limit,
+			Limit:  2,
 		})
 		if err != nil {
 			return nil, err
@@ -104,19 +74,19 @@ func GetGoodOnly(ctx context.Context, conds *npool.Conds) (*npool.Good, error) {
 	if err != nil {
 		return nil, err
 	}
-	if len(infos.([]*npool.Good)) == 0 {
-		return nil, nil
+	if len(_infos.([]*npool.Good)) == 0 {
+		return nil, wlog.Errorf("invalid goodgood")
 	}
-	if len(infos.([]*npool.Good)) > 1 {
-		return nil, fmt.Errorf("too many records")
+	if len(_infos.([]*npool.Good)) > 1 {
+		return nil, wlog.Errorf("too many goodgoods")
 	}
-	return infos.([]*npool.Good)[0], nil
+	return _infos.([]*npool.Good)[0], nil
 }
 
-func UpdateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.UpdateGood(ctx, &npool.UpdateGoodRequest{
-			Info: in,
+func ExistGoodConds(ctx context.Context, conds *npool.Conds) (exist bool, err error) {
+	info, err := withClient(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (interface{}, error) {
+		resp, err := cli.ExistGoodConds(_ctx, &npool.ExistGoodCondsRequest{
+			Conds: conds,
 		})
 		if err != nil {
 			return nil, err
@@ -124,25 +94,7 @@ func UpdateGood(ctx context.Context, in *npool.GoodReq) (*npool.Good, error) {
 		return resp.Info, nil
 	})
 	if err != nil {
-		return nil, err
+		return false, err
 	}
-	return info.(*npool.Good), nil
-}
-
-func DeleteGood(ctx context.Context, id uint32) (*npool.Good, error) {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.DeleteGood(ctx, &npool.DeleteGoodRequest{
-			Info: &npool.GoodReq{
-				ID: &id,
-			},
-		})
-		if err != nil {
-			return nil, err
-		}
-		return resp.Info, nil
-	})
-	if err != nil {
-		return nil, err
-	}
-	return info.(*npool.Good), nil
+	return info.(bool), nil
 }

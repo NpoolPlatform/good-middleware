@@ -12,7 +12,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/topmost"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // TopMostCreate is the builder for creating a TopMost entity.
@@ -85,6 +84,14 @@ func (tmc *TopMostCreate) SetAppID(u uuid.UUID) *TopMostCreate {
 	return tmc
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (tmc *TopMostCreate) SetNillableAppID(u *uuid.UUID) *TopMostCreate {
+	if u != nil {
+		tmc.SetAppID(*u)
+	}
+	return tmc
+}
+
 // SetTopMostType sets the "top_most_type" field.
 func (tmc *TopMostCreate) SetTopMostType(s string) *TopMostCreate {
 	tmc.mutation.SetTopMostType(s)
@@ -127,9 +134,17 @@ func (tmc *TopMostCreate) SetNillableMessage(s *string) *TopMostCreate {
 	return tmc
 }
 
-// SetPosters sets the "posters" field.
-func (tmc *TopMostCreate) SetPosters(s []string) *TopMostCreate {
-	tmc.mutation.SetPosters(s)
+// SetTargetURL sets the "target_url" field.
+func (tmc *TopMostCreate) SetTargetURL(s string) *TopMostCreate {
+	tmc.mutation.SetTargetURL(s)
+	return tmc
+}
+
+// SetNillableTargetURL sets the "target_url" field if the given value is not nil.
+func (tmc *TopMostCreate) SetNillableTargetURL(s *string) *TopMostCreate {
+	if s != nil {
+		tmc.SetTargetURL(*s)
+	}
 	return tmc
 }
 
@@ -157,76 +172,6 @@ func (tmc *TopMostCreate) SetEndAt(u uint32) *TopMostCreate {
 func (tmc *TopMostCreate) SetNillableEndAt(u *uint32) *TopMostCreate {
 	if u != nil {
 		tmc.SetEndAt(*u)
-	}
-	return tmc
-}
-
-// SetThresholdCredits sets the "threshold_credits" field.
-func (tmc *TopMostCreate) SetThresholdCredits(d decimal.Decimal) *TopMostCreate {
-	tmc.mutation.SetThresholdCredits(d)
-	return tmc
-}
-
-// SetNillableThresholdCredits sets the "threshold_credits" field if the given value is not nil.
-func (tmc *TopMostCreate) SetNillableThresholdCredits(d *decimal.Decimal) *TopMostCreate {
-	if d != nil {
-		tmc.SetThresholdCredits(*d)
-	}
-	return tmc
-}
-
-// SetRegisterElapsedSeconds sets the "register_elapsed_seconds" field.
-func (tmc *TopMostCreate) SetRegisterElapsedSeconds(u uint32) *TopMostCreate {
-	tmc.mutation.SetRegisterElapsedSeconds(u)
-	return tmc
-}
-
-// SetNillableRegisterElapsedSeconds sets the "register_elapsed_seconds" field if the given value is not nil.
-func (tmc *TopMostCreate) SetNillableRegisterElapsedSeconds(u *uint32) *TopMostCreate {
-	if u != nil {
-		tmc.SetRegisterElapsedSeconds(*u)
-	}
-	return tmc
-}
-
-// SetThresholdPurchases sets the "threshold_purchases" field.
-func (tmc *TopMostCreate) SetThresholdPurchases(u uint32) *TopMostCreate {
-	tmc.mutation.SetThresholdPurchases(u)
-	return tmc
-}
-
-// SetNillableThresholdPurchases sets the "threshold_purchases" field if the given value is not nil.
-func (tmc *TopMostCreate) SetNillableThresholdPurchases(u *uint32) *TopMostCreate {
-	if u != nil {
-		tmc.SetThresholdPurchases(*u)
-	}
-	return tmc
-}
-
-// SetThresholdPaymentAmount sets the "threshold_payment_amount" field.
-func (tmc *TopMostCreate) SetThresholdPaymentAmount(d decimal.Decimal) *TopMostCreate {
-	tmc.mutation.SetThresholdPaymentAmount(d)
-	return tmc
-}
-
-// SetNillableThresholdPaymentAmount sets the "threshold_payment_amount" field if the given value is not nil.
-func (tmc *TopMostCreate) SetNillableThresholdPaymentAmount(d *decimal.Decimal) *TopMostCreate {
-	if d != nil {
-		tmc.SetThresholdPaymentAmount(*d)
-	}
-	return tmc
-}
-
-// SetKycMust sets the "kyc_must" field.
-func (tmc *TopMostCreate) SetKycMust(b bool) *TopMostCreate {
-	tmc.mutation.SetKycMust(b)
-	return tmc
-}
-
-// SetNillableKycMust sets the "kyc_must" field if the given value is not nil.
-func (tmc *TopMostCreate) SetNillableKycMust(b *bool) *TopMostCreate {
-	if b != nil {
-		tmc.SetKycMust(*b)
 	}
 	return tmc
 }
@@ -344,6 +289,13 @@ func (tmc *TopMostCreate) defaults() error {
 		v := topmost.DefaultEntID()
 		tmc.mutation.SetEntID(v)
 	}
+	if _, ok := tmc.mutation.AppID(); !ok {
+		if topmost.DefaultAppID == nil {
+			return fmt.Errorf("ent: uninitialized topmost.DefaultAppID (forgotten import ent/runtime?)")
+		}
+		v := topmost.DefaultAppID()
+		tmc.mutation.SetAppID(v)
+	}
 	if _, ok := tmc.mutation.TopMostType(); !ok {
 		v := topmost.DefaultTopMostType
 		tmc.mutation.SetTopMostType(v)
@@ -356,9 +308,9 @@ func (tmc *TopMostCreate) defaults() error {
 		v := topmost.DefaultMessage
 		tmc.mutation.SetMessage(v)
 	}
-	if _, ok := tmc.mutation.Posters(); !ok {
-		v := topmost.DefaultPosters
-		tmc.mutation.SetPosters(v)
+	if _, ok := tmc.mutation.TargetURL(); !ok {
+		v := topmost.DefaultTargetURL
+		tmc.mutation.SetTargetURL(v)
 	}
 	if _, ok := tmc.mutation.StartAt(); !ok {
 		v := topmost.DefaultStartAt
@@ -367,26 +319,6 @@ func (tmc *TopMostCreate) defaults() error {
 	if _, ok := tmc.mutation.EndAt(); !ok {
 		v := topmost.DefaultEndAt
 		tmc.mutation.SetEndAt(v)
-	}
-	if _, ok := tmc.mutation.ThresholdCredits(); !ok {
-		v := topmost.DefaultThresholdCredits
-		tmc.mutation.SetThresholdCredits(v)
-	}
-	if _, ok := tmc.mutation.RegisterElapsedSeconds(); !ok {
-		v := topmost.DefaultRegisterElapsedSeconds
-		tmc.mutation.SetRegisterElapsedSeconds(v)
-	}
-	if _, ok := tmc.mutation.ThresholdPurchases(); !ok {
-		v := topmost.DefaultThresholdPurchases
-		tmc.mutation.SetThresholdPurchases(v)
-	}
-	if _, ok := tmc.mutation.ThresholdPaymentAmount(); !ok {
-		v := topmost.DefaultThresholdPaymentAmount
-		tmc.mutation.SetThresholdPaymentAmount(v)
-	}
-	if _, ok := tmc.mutation.KycMust(); !ok {
-		v := topmost.DefaultKycMust
-		tmc.mutation.SetKycMust(v)
 	}
 	return nil
 }
@@ -404,9 +336,6 @@ func (tmc *TopMostCreate) check() error {
 	}
 	if _, ok := tmc.mutation.EntID(); !ok {
 		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "TopMost.ent_id"`)}
-	}
-	if _, ok := tmc.mutation.AppID(); !ok {
-		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "TopMost.app_id"`)}
 	}
 	return nil
 }
@@ -506,13 +435,13 @@ func (tmc *TopMostCreate) createSpec() (*TopMost, *sqlgraph.CreateSpec) {
 		})
 		_node.Message = value
 	}
-	if value, ok := tmc.mutation.Posters(); ok {
+	if value, ok := tmc.mutation.TargetURL(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: topmost.FieldPosters,
+			Column: topmost.FieldTargetURL,
 		})
-		_node.Posters = value
+		_node.TargetURL = value
 	}
 	if value, ok := tmc.mutation.StartAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -529,46 +458,6 @@ func (tmc *TopMostCreate) createSpec() (*TopMost, *sqlgraph.CreateSpec) {
 			Column: topmost.FieldEndAt,
 		})
 		_node.EndAt = value
-	}
-	if value, ok := tmc.mutation.ThresholdCredits(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: topmost.FieldThresholdCredits,
-		})
-		_node.ThresholdCredits = value
-	}
-	if value, ok := tmc.mutation.RegisterElapsedSeconds(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: topmost.FieldRegisterElapsedSeconds,
-		})
-		_node.RegisterElapsedSeconds = value
-	}
-	if value, ok := tmc.mutation.ThresholdPurchases(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: topmost.FieldThresholdPurchases,
-		})
-		_node.ThresholdPurchases = value
-	}
-	if value, ok := tmc.mutation.ThresholdPaymentAmount(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: topmost.FieldThresholdPaymentAmount,
-		})
-		_node.ThresholdPaymentAmount = value
-	}
-	if value, ok := tmc.mutation.KycMust(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: topmost.FieldKycMust,
-		})
-		_node.KycMust = value
 	}
 	return _node, _spec
 }
@@ -702,6 +591,12 @@ func (u *TopMostUpsert) UpdateAppID() *TopMostUpsert {
 	return u
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *TopMostUpsert) ClearAppID() *TopMostUpsert {
+	u.SetNull(topmost.FieldAppID)
+	return u
+}
+
 // SetTopMostType sets the "top_most_type" field.
 func (u *TopMostUpsert) SetTopMostType(v string) *TopMostUpsert {
 	u.Set(topmost.FieldTopMostType, v)
@@ -756,21 +651,21 @@ func (u *TopMostUpsert) ClearMessage() *TopMostUpsert {
 	return u
 }
 
-// SetPosters sets the "posters" field.
-func (u *TopMostUpsert) SetPosters(v []string) *TopMostUpsert {
-	u.Set(topmost.FieldPosters, v)
+// SetTargetURL sets the "target_url" field.
+func (u *TopMostUpsert) SetTargetURL(v string) *TopMostUpsert {
+	u.Set(topmost.FieldTargetURL, v)
 	return u
 }
 
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *TopMostUpsert) UpdatePosters() *TopMostUpsert {
-	u.SetExcluded(topmost.FieldPosters)
+// UpdateTargetURL sets the "target_url" field to the value that was provided on create.
+func (u *TopMostUpsert) UpdateTargetURL() *TopMostUpsert {
+	u.SetExcluded(topmost.FieldTargetURL)
 	return u
 }
 
-// ClearPosters clears the value of the "posters" field.
-func (u *TopMostUpsert) ClearPosters() *TopMostUpsert {
-	u.SetNull(topmost.FieldPosters)
+// ClearTargetURL clears the value of the "target_url" field.
+func (u *TopMostUpsert) ClearTargetURL() *TopMostUpsert {
+	u.SetNull(topmost.FieldTargetURL)
 	return u
 }
 
@@ -819,108 +714,6 @@ func (u *TopMostUpsert) AddEndAt(v uint32) *TopMostUpsert {
 // ClearEndAt clears the value of the "end_at" field.
 func (u *TopMostUpsert) ClearEndAt() *TopMostUpsert {
 	u.SetNull(topmost.FieldEndAt)
-	return u
-}
-
-// SetThresholdCredits sets the "threshold_credits" field.
-func (u *TopMostUpsert) SetThresholdCredits(v decimal.Decimal) *TopMostUpsert {
-	u.Set(topmost.FieldThresholdCredits, v)
-	return u
-}
-
-// UpdateThresholdCredits sets the "threshold_credits" field to the value that was provided on create.
-func (u *TopMostUpsert) UpdateThresholdCredits() *TopMostUpsert {
-	u.SetExcluded(topmost.FieldThresholdCredits)
-	return u
-}
-
-// ClearThresholdCredits clears the value of the "threshold_credits" field.
-func (u *TopMostUpsert) ClearThresholdCredits() *TopMostUpsert {
-	u.SetNull(topmost.FieldThresholdCredits)
-	return u
-}
-
-// SetRegisterElapsedSeconds sets the "register_elapsed_seconds" field.
-func (u *TopMostUpsert) SetRegisterElapsedSeconds(v uint32) *TopMostUpsert {
-	u.Set(topmost.FieldRegisterElapsedSeconds, v)
-	return u
-}
-
-// UpdateRegisterElapsedSeconds sets the "register_elapsed_seconds" field to the value that was provided on create.
-func (u *TopMostUpsert) UpdateRegisterElapsedSeconds() *TopMostUpsert {
-	u.SetExcluded(topmost.FieldRegisterElapsedSeconds)
-	return u
-}
-
-// AddRegisterElapsedSeconds adds v to the "register_elapsed_seconds" field.
-func (u *TopMostUpsert) AddRegisterElapsedSeconds(v uint32) *TopMostUpsert {
-	u.Add(topmost.FieldRegisterElapsedSeconds, v)
-	return u
-}
-
-// ClearRegisterElapsedSeconds clears the value of the "register_elapsed_seconds" field.
-func (u *TopMostUpsert) ClearRegisterElapsedSeconds() *TopMostUpsert {
-	u.SetNull(topmost.FieldRegisterElapsedSeconds)
-	return u
-}
-
-// SetThresholdPurchases sets the "threshold_purchases" field.
-func (u *TopMostUpsert) SetThresholdPurchases(v uint32) *TopMostUpsert {
-	u.Set(topmost.FieldThresholdPurchases, v)
-	return u
-}
-
-// UpdateThresholdPurchases sets the "threshold_purchases" field to the value that was provided on create.
-func (u *TopMostUpsert) UpdateThresholdPurchases() *TopMostUpsert {
-	u.SetExcluded(topmost.FieldThresholdPurchases)
-	return u
-}
-
-// AddThresholdPurchases adds v to the "threshold_purchases" field.
-func (u *TopMostUpsert) AddThresholdPurchases(v uint32) *TopMostUpsert {
-	u.Add(topmost.FieldThresholdPurchases, v)
-	return u
-}
-
-// ClearThresholdPurchases clears the value of the "threshold_purchases" field.
-func (u *TopMostUpsert) ClearThresholdPurchases() *TopMostUpsert {
-	u.SetNull(topmost.FieldThresholdPurchases)
-	return u
-}
-
-// SetThresholdPaymentAmount sets the "threshold_payment_amount" field.
-func (u *TopMostUpsert) SetThresholdPaymentAmount(v decimal.Decimal) *TopMostUpsert {
-	u.Set(topmost.FieldThresholdPaymentAmount, v)
-	return u
-}
-
-// UpdateThresholdPaymentAmount sets the "threshold_payment_amount" field to the value that was provided on create.
-func (u *TopMostUpsert) UpdateThresholdPaymentAmount() *TopMostUpsert {
-	u.SetExcluded(topmost.FieldThresholdPaymentAmount)
-	return u
-}
-
-// ClearThresholdPaymentAmount clears the value of the "threshold_payment_amount" field.
-func (u *TopMostUpsert) ClearThresholdPaymentAmount() *TopMostUpsert {
-	u.SetNull(topmost.FieldThresholdPaymentAmount)
-	return u
-}
-
-// SetKycMust sets the "kyc_must" field.
-func (u *TopMostUpsert) SetKycMust(v bool) *TopMostUpsert {
-	u.Set(topmost.FieldKycMust, v)
-	return u
-}
-
-// UpdateKycMust sets the "kyc_must" field to the value that was provided on create.
-func (u *TopMostUpsert) UpdateKycMust() *TopMostUpsert {
-	u.SetExcluded(topmost.FieldKycMust)
-	return u
-}
-
-// ClearKycMust clears the value of the "kyc_must" field.
-func (u *TopMostUpsert) ClearKycMust() *TopMostUpsert {
-	u.SetNull(topmost.FieldKycMust)
 	return u
 }
 
@@ -1065,6 +858,13 @@ func (u *TopMostUpsertOne) UpdateAppID() *TopMostUpsertOne {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *TopMostUpsertOne) ClearAppID() *TopMostUpsertOne {
+	return u.Update(func(s *TopMostUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetTopMostType sets the "top_most_type" field.
 func (u *TopMostUpsertOne) SetTopMostType(v string) *TopMostUpsertOne {
 	return u.Update(func(s *TopMostUpsert) {
@@ -1128,24 +928,24 @@ func (u *TopMostUpsertOne) ClearMessage() *TopMostUpsertOne {
 	})
 }
 
-// SetPosters sets the "posters" field.
-func (u *TopMostUpsertOne) SetPosters(v []string) *TopMostUpsertOne {
+// SetTargetURL sets the "target_url" field.
+func (u *TopMostUpsertOne) SetTargetURL(v string) *TopMostUpsertOne {
 	return u.Update(func(s *TopMostUpsert) {
-		s.SetPosters(v)
+		s.SetTargetURL(v)
 	})
 }
 
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *TopMostUpsertOne) UpdatePosters() *TopMostUpsertOne {
+// UpdateTargetURL sets the "target_url" field to the value that was provided on create.
+func (u *TopMostUpsertOne) UpdateTargetURL() *TopMostUpsertOne {
 	return u.Update(func(s *TopMostUpsert) {
-		s.UpdatePosters()
+		s.UpdateTargetURL()
 	})
 }
 
-// ClearPosters clears the value of the "posters" field.
-func (u *TopMostUpsertOne) ClearPosters() *TopMostUpsertOne {
+// ClearTargetURL clears the value of the "target_url" field.
+func (u *TopMostUpsertOne) ClearTargetURL() *TopMostUpsertOne {
 	return u.Update(func(s *TopMostUpsert) {
-		s.ClearPosters()
+		s.ClearTargetURL()
 	})
 }
 
@@ -1202,125 +1002,6 @@ func (u *TopMostUpsertOne) UpdateEndAt() *TopMostUpsertOne {
 func (u *TopMostUpsertOne) ClearEndAt() *TopMostUpsertOne {
 	return u.Update(func(s *TopMostUpsert) {
 		s.ClearEndAt()
-	})
-}
-
-// SetThresholdCredits sets the "threshold_credits" field.
-func (u *TopMostUpsertOne) SetThresholdCredits(v decimal.Decimal) *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.SetThresholdCredits(v)
-	})
-}
-
-// UpdateThresholdCredits sets the "threshold_credits" field to the value that was provided on create.
-func (u *TopMostUpsertOne) UpdateThresholdCredits() *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.UpdateThresholdCredits()
-	})
-}
-
-// ClearThresholdCredits clears the value of the "threshold_credits" field.
-func (u *TopMostUpsertOne) ClearThresholdCredits() *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.ClearThresholdCredits()
-	})
-}
-
-// SetRegisterElapsedSeconds sets the "register_elapsed_seconds" field.
-func (u *TopMostUpsertOne) SetRegisterElapsedSeconds(v uint32) *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.SetRegisterElapsedSeconds(v)
-	})
-}
-
-// AddRegisterElapsedSeconds adds v to the "register_elapsed_seconds" field.
-func (u *TopMostUpsertOne) AddRegisterElapsedSeconds(v uint32) *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.AddRegisterElapsedSeconds(v)
-	})
-}
-
-// UpdateRegisterElapsedSeconds sets the "register_elapsed_seconds" field to the value that was provided on create.
-func (u *TopMostUpsertOne) UpdateRegisterElapsedSeconds() *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.UpdateRegisterElapsedSeconds()
-	})
-}
-
-// ClearRegisterElapsedSeconds clears the value of the "register_elapsed_seconds" field.
-func (u *TopMostUpsertOne) ClearRegisterElapsedSeconds() *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.ClearRegisterElapsedSeconds()
-	})
-}
-
-// SetThresholdPurchases sets the "threshold_purchases" field.
-func (u *TopMostUpsertOne) SetThresholdPurchases(v uint32) *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.SetThresholdPurchases(v)
-	})
-}
-
-// AddThresholdPurchases adds v to the "threshold_purchases" field.
-func (u *TopMostUpsertOne) AddThresholdPurchases(v uint32) *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.AddThresholdPurchases(v)
-	})
-}
-
-// UpdateThresholdPurchases sets the "threshold_purchases" field to the value that was provided on create.
-func (u *TopMostUpsertOne) UpdateThresholdPurchases() *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.UpdateThresholdPurchases()
-	})
-}
-
-// ClearThresholdPurchases clears the value of the "threshold_purchases" field.
-func (u *TopMostUpsertOne) ClearThresholdPurchases() *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.ClearThresholdPurchases()
-	})
-}
-
-// SetThresholdPaymentAmount sets the "threshold_payment_amount" field.
-func (u *TopMostUpsertOne) SetThresholdPaymentAmount(v decimal.Decimal) *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.SetThresholdPaymentAmount(v)
-	})
-}
-
-// UpdateThresholdPaymentAmount sets the "threshold_payment_amount" field to the value that was provided on create.
-func (u *TopMostUpsertOne) UpdateThresholdPaymentAmount() *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.UpdateThresholdPaymentAmount()
-	})
-}
-
-// ClearThresholdPaymentAmount clears the value of the "threshold_payment_amount" field.
-func (u *TopMostUpsertOne) ClearThresholdPaymentAmount() *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.ClearThresholdPaymentAmount()
-	})
-}
-
-// SetKycMust sets the "kyc_must" field.
-func (u *TopMostUpsertOne) SetKycMust(v bool) *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.SetKycMust(v)
-	})
-}
-
-// UpdateKycMust sets the "kyc_must" field to the value that was provided on create.
-func (u *TopMostUpsertOne) UpdateKycMust() *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.UpdateKycMust()
-	})
-}
-
-// ClearKycMust clears the value of the "kyc_must" field.
-func (u *TopMostUpsertOne) ClearKycMust() *TopMostUpsertOne {
-	return u.Update(func(s *TopMostUpsert) {
-		s.ClearKycMust()
 	})
 }
 
@@ -1630,6 +1311,13 @@ func (u *TopMostUpsertBulk) UpdateAppID() *TopMostUpsertBulk {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *TopMostUpsertBulk) ClearAppID() *TopMostUpsertBulk {
+	return u.Update(func(s *TopMostUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetTopMostType sets the "top_most_type" field.
 func (u *TopMostUpsertBulk) SetTopMostType(v string) *TopMostUpsertBulk {
 	return u.Update(func(s *TopMostUpsert) {
@@ -1693,24 +1381,24 @@ func (u *TopMostUpsertBulk) ClearMessage() *TopMostUpsertBulk {
 	})
 }
 
-// SetPosters sets the "posters" field.
-func (u *TopMostUpsertBulk) SetPosters(v []string) *TopMostUpsertBulk {
+// SetTargetURL sets the "target_url" field.
+func (u *TopMostUpsertBulk) SetTargetURL(v string) *TopMostUpsertBulk {
 	return u.Update(func(s *TopMostUpsert) {
-		s.SetPosters(v)
+		s.SetTargetURL(v)
 	})
 }
 
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *TopMostUpsertBulk) UpdatePosters() *TopMostUpsertBulk {
+// UpdateTargetURL sets the "target_url" field to the value that was provided on create.
+func (u *TopMostUpsertBulk) UpdateTargetURL() *TopMostUpsertBulk {
 	return u.Update(func(s *TopMostUpsert) {
-		s.UpdatePosters()
+		s.UpdateTargetURL()
 	})
 }
 
-// ClearPosters clears the value of the "posters" field.
-func (u *TopMostUpsertBulk) ClearPosters() *TopMostUpsertBulk {
+// ClearTargetURL clears the value of the "target_url" field.
+func (u *TopMostUpsertBulk) ClearTargetURL() *TopMostUpsertBulk {
 	return u.Update(func(s *TopMostUpsert) {
-		s.ClearPosters()
+		s.ClearTargetURL()
 	})
 }
 
@@ -1767,125 +1455,6 @@ func (u *TopMostUpsertBulk) UpdateEndAt() *TopMostUpsertBulk {
 func (u *TopMostUpsertBulk) ClearEndAt() *TopMostUpsertBulk {
 	return u.Update(func(s *TopMostUpsert) {
 		s.ClearEndAt()
-	})
-}
-
-// SetThresholdCredits sets the "threshold_credits" field.
-func (u *TopMostUpsertBulk) SetThresholdCredits(v decimal.Decimal) *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.SetThresholdCredits(v)
-	})
-}
-
-// UpdateThresholdCredits sets the "threshold_credits" field to the value that was provided on create.
-func (u *TopMostUpsertBulk) UpdateThresholdCredits() *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.UpdateThresholdCredits()
-	})
-}
-
-// ClearThresholdCredits clears the value of the "threshold_credits" field.
-func (u *TopMostUpsertBulk) ClearThresholdCredits() *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.ClearThresholdCredits()
-	})
-}
-
-// SetRegisterElapsedSeconds sets the "register_elapsed_seconds" field.
-func (u *TopMostUpsertBulk) SetRegisterElapsedSeconds(v uint32) *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.SetRegisterElapsedSeconds(v)
-	})
-}
-
-// AddRegisterElapsedSeconds adds v to the "register_elapsed_seconds" field.
-func (u *TopMostUpsertBulk) AddRegisterElapsedSeconds(v uint32) *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.AddRegisterElapsedSeconds(v)
-	})
-}
-
-// UpdateRegisterElapsedSeconds sets the "register_elapsed_seconds" field to the value that was provided on create.
-func (u *TopMostUpsertBulk) UpdateRegisterElapsedSeconds() *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.UpdateRegisterElapsedSeconds()
-	})
-}
-
-// ClearRegisterElapsedSeconds clears the value of the "register_elapsed_seconds" field.
-func (u *TopMostUpsertBulk) ClearRegisterElapsedSeconds() *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.ClearRegisterElapsedSeconds()
-	})
-}
-
-// SetThresholdPurchases sets the "threshold_purchases" field.
-func (u *TopMostUpsertBulk) SetThresholdPurchases(v uint32) *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.SetThresholdPurchases(v)
-	})
-}
-
-// AddThresholdPurchases adds v to the "threshold_purchases" field.
-func (u *TopMostUpsertBulk) AddThresholdPurchases(v uint32) *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.AddThresholdPurchases(v)
-	})
-}
-
-// UpdateThresholdPurchases sets the "threshold_purchases" field to the value that was provided on create.
-func (u *TopMostUpsertBulk) UpdateThresholdPurchases() *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.UpdateThresholdPurchases()
-	})
-}
-
-// ClearThresholdPurchases clears the value of the "threshold_purchases" field.
-func (u *TopMostUpsertBulk) ClearThresholdPurchases() *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.ClearThresholdPurchases()
-	})
-}
-
-// SetThresholdPaymentAmount sets the "threshold_payment_amount" field.
-func (u *TopMostUpsertBulk) SetThresholdPaymentAmount(v decimal.Decimal) *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.SetThresholdPaymentAmount(v)
-	})
-}
-
-// UpdateThresholdPaymentAmount sets the "threshold_payment_amount" field to the value that was provided on create.
-func (u *TopMostUpsertBulk) UpdateThresholdPaymentAmount() *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.UpdateThresholdPaymentAmount()
-	})
-}
-
-// ClearThresholdPaymentAmount clears the value of the "threshold_payment_amount" field.
-func (u *TopMostUpsertBulk) ClearThresholdPaymentAmount() *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.ClearThresholdPaymentAmount()
-	})
-}
-
-// SetKycMust sets the "kyc_must" field.
-func (u *TopMostUpsertBulk) SetKycMust(v bool) *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.SetKycMust(v)
-	})
-}
-
-// UpdateKycMust sets the "kyc_must" field to the value that was provided on create.
-func (u *TopMostUpsertBulk) UpdateKycMust() *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.UpdateKycMust()
-	})
-}
-
-// ClearKycMust clears the value of the "kyc_must" field.
-func (u *TopMostUpsertBulk) ClearKycMust() *TopMostUpsertBulk {
-	return u.Update(func(s *TopMostUpsert) {
-		s.ClearKycMust()
 	})
 }
 

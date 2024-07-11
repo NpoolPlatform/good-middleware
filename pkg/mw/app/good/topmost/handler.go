@@ -2,8 +2,8 @@ package topmost
 
 import (
 	"context"
-	"fmt"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	constant "github.com/NpoolPlatform/good-middleware/pkg/const"
 	topmostcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -11,7 +11,6 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost"
 
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 type Handler struct {
@@ -35,7 +34,7 @@ func WithID(id *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid id")
+				return wlog.Errorf("invalid id")
 			}
 			return nil
 		}
@@ -48,13 +47,13 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid entid")
+				return wlog.Errorf("invalid entid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.EntID = &_id
 		return nil
@@ -65,13 +64,13 @@ func WithAppID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return fmt.Errorf("invalid appid")
+				return wlog.Errorf("invalid appid")
 			}
 			return nil
 		}
 		_id, err := uuid.Parse(*id)
 		if err != nil {
-			return err
+			return wlog.WrapError(err)
 		}
 		h.AppID = &_id
 		return nil
@@ -82,7 +81,7 @@ func WithTopMostType(e *types.GoodTopMostType, must bool) func(context.Context, 
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
 			if must {
-				return fmt.Errorf("invalid topmosttype")
+				return wlog.Errorf("invalid topmosttype")
 			}
 			return nil
 		}
@@ -93,7 +92,7 @@ func WithTopMostType(e *types.GoodTopMostType, must bool) func(context.Context, 
 		case types.GoodTopMostType_TopMostInnovationStarter:
 		case types.GoodTopMostType_TopMostLoyaltyExclusive:
 		default:
-			return fmt.Errorf("invalid topmosttype")
+			return wlog.Errorf("invalid topmosttype")
 		}
 		h.TopMostType = e
 		return nil
@@ -102,6 +101,12 @@ func WithTopMostType(e *types.GoodTopMostType, must bool) func(context.Context, 
 
 func WithTitle(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return wlog.Errorf("invalid title")
+			}
+			return nil
+		}
 		h.Title = s
 		return nil
 	}
@@ -109,20 +114,35 @@ func WithTitle(s *string, must bool) func(context.Context, *Handler) error {
 
 func WithMessage(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if s == nil {
+			if must {
+				return wlog.Errorf("invalid message")
+			}
+			return nil
+		}
 		h.Message = s
 		return nil
 	}
 }
 
-func WithPosters(ss []string, must bool) func(context.Context, *Handler) error {
+func WithTargetURL(s *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		h.Posters = ss
+		h.TargetURL = s
 		return nil
 	}
 }
 
 func WithStartAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if n == nil {
+			if must {
+				return wlog.Errorf("invalid startat")
+			}
+			return nil
+		}
+		if *n == 0 {
+			return wlog.Errorf("invalid startat")
+		}
 		h.StartAt = n
 		return nil
 	}
@@ -130,62 +150,16 @@ func WithStartAt(n *uint32, must bool) func(context.Context, *Handler) error {
 
 func WithEndAt(n *uint32, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
+		if n == nil {
+			if must {
+				return wlog.Errorf("invalid endat")
+			}
+			return nil
+		}
+		if *n == 0 {
+			return wlog.Errorf("invalid endat")
+		}
 		h.EndAt = n
-		return nil
-	}
-}
-
-func WithThresholdCredits(s *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return fmt.Errorf("invalid thresholdcredits")
-			}
-			return nil
-		}
-		amount, err := decimal.NewFromString(*s)
-		if err != nil {
-			return err
-		}
-		h.ThresholdCredits = &amount
-		return nil
-	}
-}
-
-func WithRegisterElapsedSeconds(n *uint32, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		h.RegisterElapsedSeconds = n
-		return nil
-	}
-}
-
-func WithThresholdPurchases(n *uint32, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		h.ThresholdPurchases = n
-		return nil
-	}
-}
-
-func WithThresholdPaymentAmount(s *string, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		if s == nil {
-			if must {
-				return fmt.Errorf("invalid thresholdpaymentamount")
-			}
-			return nil
-		}
-		amount, err := decimal.NewFromString(*s)
-		if err != nil {
-			return err
-		}
-		h.ThresholdPaymentAmount = &amount
-		return nil
-	}
-}
-
-func WithKycMust(b *bool, must bool) func(context.Context, *Handler) error {
-	return func(ctx context.Context, h *Handler) error {
-		h.KycMust = b
 		return nil
 	}
 }
@@ -199,9 +173,23 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if conds.EntID != nil {
 			id, err := uuid.Parse(conds.GetEntID().GetValue())
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			h.Conds.EntID = &cruder.Cond{Op: conds.GetEntID().GetOp(), Val: id}
+		}
+		if conds.EntIDs != nil {
+			ids := []uuid.UUID{}
+			for _, id := range conds.GetEntIDs().GetValue() {
+				_id, err := uuid.Parse(id)
+				if err != nil {
+					return wlog.WrapError(err)
+				}
+				ids = append(ids, _id)
+			}
+			h.Conds.EntIDs = &cruder.Cond{
+				Op:  conds.GetEntIDs().GetOp(),
+				Val: ids,
+			}
 		}
 		if conds.ID != nil {
 			h.Conds.ID = &cruder.Cond{Op: conds.GetID().GetOp(), Val: conds.GetID().GetValue()}
@@ -209,7 +197,7 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 		if conds.AppID != nil {
 			id, err := uuid.Parse(conds.GetAppID().GetValue())
 			if err != nil {
-				return err
+				return wlog.WrapError(err)
 			}
 			h.Conds.AppID = &cruder.Cond{
 				Op:  conds.GetAppID().GetOp(),

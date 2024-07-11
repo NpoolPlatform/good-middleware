@@ -6,6 +6,7 @@ import (
 	apicli "github.com/NpoolPlatform/basal-middleware/pkg/client/api"
 	"github.com/NpoolPlatform/go-service-framework/pkg/action"
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	"github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/api"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/migrator"
@@ -30,11 +31,11 @@ var runCmd = &cli.Command{
 }
 
 func run(ctx context.Context) error {
-	if err := migrator.Migrate(ctx); err != nil {
-		return err
-	}
 	if err := db.Init(); err != nil {
-		return err
+		return wlog.WrapError(err)
+	}
+	if err := migrator.Migrate(ctx); err != nil {
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -64,7 +65,7 @@ func rpcRegister(server grpc.ServiceRegistrar) error {
 func rpcGatewayRegister(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
 	err := api.RegisterGateway(mux, endpoint, opts)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 
 	_ = apicli.Register(mux)

@@ -92,16 +92,16 @@ func (dic *DeviceInfoCreate) SetNillableType(s *string) *DeviceInfoCreate {
 	return dic
 }
 
-// SetManufacturer sets the "manufacturer" field.
-func (dic *DeviceInfoCreate) SetManufacturer(s string) *DeviceInfoCreate {
-	dic.mutation.SetManufacturer(s)
+// SetManufacturerID sets the "manufacturer_id" field.
+func (dic *DeviceInfoCreate) SetManufacturerID(u uuid.UUID) *DeviceInfoCreate {
+	dic.mutation.SetManufacturerID(u)
 	return dic
 }
 
-// SetNillableManufacturer sets the "manufacturer" field if the given value is not nil.
-func (dic *DeviceInfoCreate) SetNillableManufacturer(s *string) *DeviceInfoCreate {
-	if s != nil {
-		dic.SetManufacturer(*s)
+// SetNillableManufacturerID sets the "manufacturer_id" field if the given value is not nil.
+func (dic *DeviceInfoCreate) SetNillableManufacturerID(u *uuid.UUID) *DeviceInfoCreate {
+	if u != nil {
+		dic.SetManufacturerID(*u)
 	}
 	return dic
 }
@@ -131,12 +131,6 @@ func (dic *DeviceInfoCreate) SetNillableShipmentAt(u *uint32) *DeviceInfoCreate 
 	if u != nil {
 		dic.SetShipmentAt(*u)
 	}
-	return dic
-}
-
-// SetPosters sets the "posters" field.
-func (dic *DeviceInfoCreate) SetPosters(s []string) *DeviceInfoCreate {
-	dic.mutation.SetPosters(s)
 	return dic
 }
 
@@ -257,9 +251,12 @@ func (dic *DeviceInfoCreate) defaults() error {
 		v := deviceinfo.DefaultType
 		dic.mutation.SetType(v)
 	}
-	if _, ok := dic.mutation.Manufacturer(); !ok {
-		v := deviceinfo.DefaultManufacturer
-		dic.mutation.SetManufacturer(v)
+	if _, ok := dic.mutation.ManufacturerID(); !ok {
+		if deviceinfo.DefaultManufacturerID == nil {
+			return fmt.Errorf("ent: uninitialized deviceinfo.DefaultManufacturerID (forgotten import ent/runtime?)")
+		}
+		v := deviceinfo.DefaultManufacturerID()
+		dic.mutation.SetManufacturerID(v)
 	}
 	if _, ok := dic.mutation.PowerConsumption(); !ok {
 		v := deviceinfo.DefaultPowerConsumption
@@ -268,10 +265,6 @@ func (dic *DeviceInfoCreate) defaults() error {
 	if _, ok := dic.mutation.ShipmentAt(); !ok {
 		v := deviceinfo.DefaultShipmentAt
 		dic.mutation.SetShipmentAt(v)
-	}
-	if _, ok := dic.mutation.Posters(); !ok {
-		v := deviceinfo.DefaultPosters
-		dic.mutation.SetPosters(v)
 	}
 	return nil
 }
@@ -293,11 +286,6 @@ func (dic *DeviceInfoCreate) check() error {
 	if v, ok := dic.mutation.GetType(); ok {
 		if err := deviceinfo.TypeValidator(v); err != nil {
 			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "DeviceInfo.type": %w`, err)}
-		}
-	}
-	if v, ok := dic.mutation.Manufacturer(); ok {
-		if err := deviceinfo.ManufacturerValidator(v); err != nil {
-			return &ValidationError{Name: "manufacturer", err: fmt.Errorf(`ent: validator failed for field "DeviceInfo.manufacturer": %w`, err)}
 		}
 	}
 	return nil
@@ -374,13 +362,13 @@ func (dic *DeviceInfoCreate) createSpec() (*DeviceInfo, *sqlgraph.CreateSpec) {
 		})
 		_node.Type = value
 	}
-	if value, ok := dic.mutation.Manufacturer(); ok {
+	if value, ok := dic.mutation.ManufacturerID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: deviceinfo.FieldManufacturer,
+			Column: deviceinfo.FieldManufacturerID,
 		})
-		_node.Manufacturer = value
+		_node.ManufacturerID = value
 	}
 	if value, ok := dic.mutation.PowerConsumption(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -397,14 +385,6 @@ func (dic *DeviceInfoCreate) createSpec() (*DeviceInfo, *sqlgraph.CreateSpec) {
 			Column: deviceinfo.FieldShipmentAt,
 		})
 		_node.ShipmentAt = value
-	}
-	if value, ok := dic.mutation.Posters(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: deviceinfo.FieldPosters,
-		})
-		_node.Posters = value
 	}
 	return _node, _spec
 }
@@ -544,21 +524,21 @@ func (u *DeviceInfoUpsert) ClearType() *DeviceInfoUpsert {
 	return u
 }
 
-// SetManufacturer sets the "manufacturer" field.
-func (u *DeviceInfoUpsert) SetManufacturer(v string) *DeviceInfoUpsert {
-	u.Set(deviceinfo.FieldManufacturer, v)
+// SetManufacturerID sets the "manufacturer_id" field.
+func (u *DeviceInfoUpsert) SetManufacturerID(v uuid.UUID) *DeviceInfoUpsert {
+	u.Set(deviceinfo.FieldManufacturerID, v)
 	return u
 }
 
-// UpdateManufacturer sets the "manufacturer" field to the value that was provided on create.
-func (u *DeviceInfoUpsert) UpdateManufacturer() *DeviceInfoUpsert {
-	u.SetExcluded(deviceinfo.FieldManufacturer)
+// UpdateManufacturerID sets the "manufacturer_id" field to the value that was provided on create.
+func (u *DeviceInfoUpsert) UpdateManufacturerID() *DeviceInfoUpsert {
+	u.SetExcluded(deviceinfo.FieldManufacturerID)
 	return u
 }
 
-// ClearManufacturer clears the value of the "manufacturer" field.
-func (u *DeviceInfoUpsert) ClearManufacturer() *DeviceInfoUpsert {
-	u.SetNull(deviceinfo.FieldManufacturer)
+// ClearManufacturerID clears the value of the "manufacturer_id" field.
+func (u *DeviceInfoUpsert) ClearManufacturerID() *DeviceInfoUpsert {
+	u.SetNull(deviceinfo.FieldManufacturerID)
 	return u
 }
 
@@ -607,24 +587,6 @@ func (u *DeviceInfoUpsert) AddShipmentAt(v uint32) *DeviceInfoUpsert {
 // ClearShipmentAt clears the value of the "shipment_at" field.
 func (u *DeviceInfoUpsert) ClearShipmentAt() *DeviceInfoUpsert {
 	u.SetNull(deviceinfo.FieldShipmentAt)
-	return u
-}
-
-// SetPosters sets the "posters" field.
-func (u *DeviceInfoUpsert) SetPosters(v []string) *DeviceInfoUpsert {
-	u.Set(deviceinfo.FieldPosters, v)
-	return u
-}
-
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *DeviceInfoUpsert) UpdatePosters() *DeviceInfoUpsert {
-	u.SetExcluded(deviceinfo.FieldPosters)
-	return u
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (u *DeviceInfoUpsert) ClearPosters() *DeviceInfoUpsert {
-	u.SetNull(deviceinfo.FieldPosters)
 	return u
 }
 
@@ -776,24 +738,24 @@ func (u *DeviceInfoUpsertOne) ClearType() *DeviceInfoUpsertOne {
 	})
 }
 
-// SetManufacturer sets the "manufacturer" field.
-func (u *DeviceInfoUpsertOne) SetManufacturer(v string) *DeviceInfoUpsertOne {
+// SetManufacturerID sets the "manufacturer_id" field.
+func (u *DeviceInfoUpsertOne) SetManufacturerID(v uuid.UUID) *DeviceInfoUpsertOne {
 	return u.Update(func(s *DeviceInfoUpsert) {
-		s.SetManufacturer(v)
+		s.SetManufacturerID(v)
 	})
 }
 
-// UpdateManufacturer sets the "manufacturer" field to the value that was provided on create.
-func (u *DeviceInfoUpsertOne) UpdateManufacturer() *DeviceInfoUpsertOne {
+// UpdateManufacturerID sets the "manufacturer_id" field to the value that was provided on create.
+func (u *DeviceInfoUpsertOne) UpdateManufacturerID() *DeviceInfoUpsertOne {
 	return u.Update(func(s *DeviceInfoUpsert) {
-		s.UpdateManufacturer()
+		s.UpdateManufacturerID()
 	})
 }
 
-// ClearManufacturer clears the value of the "manufacturer" field.
-func (u *DeviceInfoUpsertOne) ClearManufacturer() *DeviceInfoUpsertOne {
+// ClearManufacturerID clears the value of the "manufacturer_id" field.
+func (u *DeviceInfoUpsertOne) ClearManufacturerID() *DeviceInfoUpsertOne {
 	return u.Update(func(s *DeviceInfoUpsert) {
-		s.ClearManufacturer()
+		s.ClearManufacturerID()
 	})
 }
 
@@ -850,27 +812,6 @@ func (u *DeviceInfoUpsertOne) UpdateShipmentAt() *DeviceInfoUpsertOne {
 func (u *DeviceInfoUpsertOne) ClearShipmentAt() *DeviceInfoUpsertOne {
 	return u.Update(func(s *DeviceInfoUpsert) {
 		s.ClearShipmentAt()
-	})
-}
-
-// SetPosters sets the "posters" field.
-func (u *DeviceInfoUpsertOne) SetPosters(v []string) *DeviceInfoUpsertOne {
-	return u.Update(func(s *DeviceInfoUpsert) {
-		s.SetPosters(v)
-	})
-}
-
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *DeviceInfoUpsertOne) UpdatePosters() *DeviceInfoUpsertOne {
-	return u.Update(func(s *DeviceInfoUpsert) {
-		s.UpdatePosters()
-	})
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (u *DeviceInfoUpsertOne) ClearPosters() *DeviceInfoUpsertOne {
-	return u.Update(func(s *DeviceInfoUpsert) {
-		s.ClearPosters()
 	})
 }
 
@@ -1187,24 +1128,24 @@ func (u *DeviceInfoUpsertBulk) ClearType() *DeviceInfoUpsertBulk {
 	})
 }
 
-// SetManufacturer sets the "manufacturer" field.
-func (u *DeviceInfoUpsertBulk) SetManufacturer(v string) *DeviceInfoUpsertBulk {
+// SetManufacturerID sets the "manufacturer_id" field.
+func (u *DeviceInfoUpsertBulk) SetManufacturerID(v uuid.UUID) *DeviceInfoUpsertBulk {
 	return u.Update(func(s *DeviceInfoUpsert) {
-		s.SetManufacturer(v)
+		s.SetManufacturerID(v)
 	})
 }
 
-// UpdateManufacturer sets the "manufacturer" field to the value that was provided on create.
-func (u *DeviceInfoUpsertBulk) UpdateManufacturer() *DeviceInfoUpsertBulk {
+// UpdateManufacturerID sets the "manufacturer_id" field to the value that was provided on create.
+func (u *DeviceInfoUpsertBulk) UpdateManufacturerID() *DeviceInfoUpsertBulk {
 	return u.Update(func(s *DeviceInfoUpsert) {
-		s.UpdateManufacturer()
+		s.UpdateManufacturerID()
 	})
 }
 
-// ClearManufacturer clears the value of the "manufacturer" field.
-func (u *DeviceInfoUpsertBulk) ClearManufacturer() *DeviceInfoUpsertBulk {
+// ClearManufacturerID clears the value of the "manufacturer_id" field.
+func (u *DeviceInfoUpsertBulk) ClearManufacturerID() *DeviceInfoUpsertBulk {
 	return u.Update(func(s *DeviceInfoUpsert) {
-		s.ClearManufacturer()
+		s.ClearManufacturerID()
 	})
 }
 
@@ -1261,27 +1202,6 @@ func (u *DeviceInfoUpsertBulk) UpdateShipmentAt() *DeviceInfoUpsertBulk {
 func (u *DeviceInfoUpsertBulk) ClearShipmentAt() *DeviceInfoUpsertBulk {
 	return u.Update(func(s *DeviceInfoUpsert) {
 		s.ClearShipmentAt()
-	})
-}
-
-// SetPosters sets the "posters" field.
-func (u *DeviceInfoUpsertBulk) SetPosters(v []string) *DeviceInfoUpsertBulk {
-	return u.Update(func(s *DeviceInfoUpsert) {
-		s.SetPosters(v)
-	})
-}
-
-// UpdatePosters sets the "posters" field to the value that was provided on create.
-func (u *DeviceInfoUpsertBulk) UpdatePosters() *DeviceInfoUpsertBulk {
-	return u.Update(func(s *DeviceInfoUpsert) {
-		s.UpdatePosters()
-	})
-}
-
-// ClearPosters clears the value of the "posters" field.
-func (u *DeviceInfoUpsertBulk) ClearPosters() *DeviceInfoUpsertBulk {
-	return u.Update(func(s *DeviceInfoUpsert) {
-		s.ClearPosters()
 	})
 }
 

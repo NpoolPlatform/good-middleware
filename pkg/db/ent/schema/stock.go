@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
 	"github.com/google/uuid"
@@ -28,7 +29,11 @@ func (Stock) Mixin() []ent.Mixin {
 func (Stock) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("good_id", uuid.UUID{}),
+			UUID("good_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.Nil
+			}),
 		field.
 			Other("total", decimal.Decimal{}).
 			SchemaType(map[string]string{
@@ -88,5 +93,7 @@ func (Stock) Annotations() []schema.Annotation {
 }
 
 func (Stock) Indexes() []ent.Index {
-	return nil
+	return []ent.Index{
+		index.Fields("good_id"),
+	}
 }

@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -26,24 +25,14 @@ type TopMostGood struct {
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// EntID holds the value of the "ent_id" field.
 	EntID uuid.UUID `json:"ent_id,omitempty"`
-	// AppID holds the value of the "app_id" field.
-	AppID uuid.UUID `json:"app_id,omitempty"`
-	// GoodID holds the value of the "good_id" field.
-	GoodID uuid.UUID `json:"good_id,omitempty"`
 	// AppGoodID holds the value of the "app_good_id" field.
 	AppGoodID uuid.UUID `json:"app_good_id,omitempty"`
-	// CoinTypeID holds the value of the "coin_type_id" field.
-	CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
 	// TopMostID holds the value of the "top_most_id" field.
 	TopMostID uuid.UUID `json:"top_most_id,omitempty"`
 	// DisplayIndex holds the value of the "display_index" field.
 	DisplayIndex uint32 `json:"display_index,omitempty"`
-	// Posters holds the value of the "posters" field.
-	Posters []string `json:"posters,omitempty"`
 	// UnitPrice holds the value of the "unit_price" field.
 	UnitPrice decimal.Decimal `json:"unit_price,omitempty"`
-	// PackagePrice holds the value of the "package_price" field.
-	PackagePrice decimal.Decimal `json:"package_price,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -51,13 +40,11 @@ func (*TopMostGood) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case topmostgood.FieldPosters:
-			values[i] = new([]byte)
-		case topmostgood.FieldUnitPrice, topmostgood.FieldPackagePrice:
+		case topmostgood.FieldUnitPrice:
 			values[i] = new(decimal.Decimal)
 		case topmostgood.FieldID, topmostgood.FieldCreatedAt, topmostgood.FieldUpdatedAt, topmostgood.FieldDeletedAt, topmostgood.FieldDisplayIndex:
 			values[i] = new(sql.NullInt64)
-		case topmostgood.FieldEntID, topmostgood.FieldAppID, topmostgood.FieldGoodID, topmostgood.FieldAppGoodID, topmostgood.FieldCoinTypeID, topmostgood.FieldTopMostID:
+		case topmostgood.FieldEntID, topmostgood.FieldAppGoodID, topmostgood.FieldTopMostID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type TopMostGood", columns[i])
@@ -104,29 +91,11 @@ func (tmg *TopMostGood) assignValues(columns []string, values []interface{}) err
 			} else if value != nil {
 				tmg.EntID = *value
 			}
-		case topmostgood.FieldAppID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field app_id", values[i])
-			} else if value != nil {
-				tmg.AppID = *value
-			}
-		case topmostgood.FieldGoodID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field good_id", values[i])
-			} else if value != nil {
-				tmg.GoodID = *value
-			}
 		case topmostgood.FieldAppGoodID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field app_good_id", values[i])
 			} else if value != nil {
 				tmg.AppGoodID = *value
-			}
-		case topmostgood.FieldCoinTypeID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field coin_type_id", values[i])
-			} else if value != nil {
-				tmg.CoinTypeID = *value
 			}
 		case topmostgood.FieldTopMostID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -140,25 +109,11 @@ func (tmg *TopMostGood) assignValues(columns []string, values []interface{}) err
 			} else if value.Valid {
 				tmg.DisplayIndex = uint32(value.Int64)
 			}
-		case topmostgood.FieldPosters:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field posters", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &tmg.Posters); err != nil {
-					return fmt.Errorf("unmarshal field posters: %w", err)
-				}
-			}
 		case topmostgood.FieldUnitPrice:
 			if value, ok := values[i].(*decimal.Decimal); !ok {
 				return fmt.Errorf("unexpected type %T for field unit_price", values[i])
 			} else if value != nil {
 				tmg.UnitPrice = *value
-			}
-		case topmostgood.FieldPackagePrice:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field package_price", values[i])
-			} else if value != nil {
-				tmg.PackagePrice = *value
 			}
 		}
 	}
@@ -200,17 +155,8 @@ func (tmg *TopMostGood) String() string {
 	builder.WriteString("ent_id=")
 	builder.WriteString(fmt.Sprintf("%v", tmg.EntID))
 	builder.WriteString(", ")
-	builder.WriteString("app_id=")
-	builder.WriteString(fmt.Sprintf("%v", tmg.AppID))
-	builder.WriteString(", ")
-	builder.WriteString("good_id=")
-	builder.WriteString(fmt.Sprintf("%v", tmg.GoodID))
-	builder.WriteString(", ")
 	builder.WriteString("app_good_id=")
 	builder.WriteString(fmt.Sprintf("%v", tmg.AppGoodID))
-	builder.WriteString(", ")
-	builder.WriteString("coin_type_id=")
-	builder.WriteString(fmt.Sprintf("%v", tmg.CoinTypeID))
 	builder.WriteString(", ")
 	builder.WriteString("top_most_id=")
 	builder.WriteString(fmt.Sprintf("%v", tmg.TopMostID))
@@ -218,14 +164,8 @@ func (tmg *TopMostGood) String() string {
 	builder.WriteString("display_index=")
 	builder.WriteString(fmt.Sprintf("%v", tmg.DisplayIndex))
 	builder.WriteString(", ")
-	builder.WriteString("posters=")
-	builder.WriteString(fmt.Sprintf("%v", tmg.Posters))
-	builder.WriteString(", ")
 	builder.WriteString("unit_price=")
 	builder.WriteString(fmt.Sprintf("%v", tmg.UnitPrice))
-	builder.WriteString(", ")
-	builder.WriteString("package_price=")
-	builder.WriteString(fmt.Sprintf("%v", tmg.PackagePrice))
 	builder.WriteByte(')')
 	return builder.String()
 }

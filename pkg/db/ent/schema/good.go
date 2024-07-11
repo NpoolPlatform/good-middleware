@@ -123,7 +123,7 @@ func (Good) Fields() []ent.Field {
 		field.
 			String("settlement_type").
 			Optional().
-			Default(types.GoodSettlementType_GoodSettledByCash.String()),
+			Default(types.GoodSettlementType_GoodSettledByPaymentAmount.String()),
 	}
 }
 

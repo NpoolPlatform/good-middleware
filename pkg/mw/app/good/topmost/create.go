@@ -3,95 +3,102 @@ package topmost
 import (
 	"context"
 	"fmt"
+	"time"
 
-	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
-	topmostcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost"
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
-	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
-	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/topmost"
 
 	"github.com/google/uuid"
 )
 
 type createHandler struct {
 	*Handler
+	sql string
+}
+
+//nolint:goconst
+func (h *createHandler) constructSQL() {
+	now := uint32(time.Now().Unix())
+	comma := ""
+	_sql := "insert into top_mosts ("
+	if h.EntID != nil {
+		_sql += "ent_id"
+		comma = ", "
+	}
+	_sql += comma + "app_id"
+	comma = ", "
+	_sql += comma + "top_most_type"
+	_sql += comma + "title"
+	_sql += comma + "message"
+	if h.TargetURL != nil {
+		_sql += comma + "target_url"
+	}
+	_sql += comma + "start_at"
+	_sql += comma + "end_at"
+	_sql += comma + "created_at"
+	_sql += comma + "updated_at"
+	_sql += comma + "deleted_at"
+	_sql += ")"
+
+	comma = ""
+	_sql += " select * from ( select "
+	if h.EntID != nil {
+		_sql += fmt.Sprintf("'%v' as ent_id", *h.EntID)
+		comma = ", "
+	}
+	_sql += fmt.Sprintf("%v'%v' as app_id", comma, *h.AppID)
+	comma = ", "
+	_sql += fmt.Sprintf("%v'%v' as top_most_type", comma, h.TopMostType.String())
+	_sql += fmt.Sprintf("%v'%v' as title", comma, *h.Title)
+	_sql += fmt.Sprintf("%v'%v' as message", comma, *h.Message)
+	if h.TargetURL != nil {
+		_sql += fmt.Sprintf("%v'%v' as target_url", comma, *h.TargetURL)
+	}
+	_sql += fmt.Sprintf("%v'%v' as start_at", comma, *h.StartAt)
+	_sql += fmt.Sprintf("%v'%v' as end_at", comma, *h.EndAt)
+	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
+	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
+	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
+	_sql += ") as tmp "
+	_sql += "where not exists ("
+	_sql += "select 1 from top_mosts as tm "
+	_sql += fmt.Sprintf(
+		"where tm.app_id = '%v' and tm.top_most_type ='%v' and deleted_at = 0 and (",
+		*h.AppID,
+		h.TopMostType.String(),
+	)
+	_sql += fmt.Sprintf("(start_at <= %v and %v < end_at) or ", *h.StartAt, *h.StartAt)
+	_sql += fmt.Sprintf("(start_at < %v and %v <= end_at) ", *h.EndAt, *h.EndAt)
+	_sql += ") limit 1)"
+
+	h.sql = _sql
 }
 
 func (h *createHandler) createTopMost(ctx context.Context, tx *ent.Tx) error {
-	if _, err := topmostcrud.CreateSet(
-		tx.TopMost.Create(),
-		&topmostcrud.Req{
-			EntID:                  h.EntID,
-			AppID:                  h.AppID,
-			TopMostType:            h.TopMostType,
-			Title:                  h.Title,
-			Message:                h.Message,
-			Posters:                h.Posters,
-			StartAt:                h.StartAt,
-			EndAt:                  h.EndAt,
-			ThresholdCredits:       h.ThresholdCredits,
-			RegisterElapsedSeconds: h.RegisterElapsedSeconds,
-			ThresholdPurchases:     h.ThresholdPurchases,
-			ThresholdPaymentAmount: h.ThresholdPaymentAmount,
-			KycMust:                h.KycMust,
-		},
-	).Save(ctx); err != nil {
-		return err
+	rc, err := tx.ExecContext(ctx, h.sql)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	n, err := rc.RowsAffected()
+	if err != nil || n != 1 {
+		return wlog.Errorf("fail create topmost: %v", err)
 	}
 	return nil
 }
 
-func (h *Handler) CreateTopMost(ctx context.Context) (*npool.TopMost, error) {
-	if err := h.formalizeStartEnd(ctx); err != nil {
-		return nil, err
+func (h *Handler) CreateTopMost(ctx context.Context) error {
+	if *h.EndAt <= *h.StartAt {
+		return wlog.Errorf("invalid startend")
 	}
-	if err := h.checkPromotion(ctx); err != nil {
-		return nil, err
-	}
-
-	key := fmt.Sprintf("%v:%v:%v", basetypes.Prefix_PrefixCreateTopMost, *h.AppID, h.TopMostType)
-	if err := redis2.TryLock(key, 0); err != nil {
-		return nil, err
-	}
-	defer func() {
-		_ = redis2.Unlock(key)
-	}()
-
-	if *h.TopMostType != types.GoodTopMostType_TopMostPromotion {
-		h.Conds = &topmostcrud.Conds{
-			AppID:       &cruder.Cond{Op: cruder.EQ, Val: *h.AppID},
-			TopMostType: &cruder.Cond{Op: cruder.EQ, Val: *h.TopMostType},
-		}
-		exist, err := h.ExistTopMostConds(ctx)
-		if err != nil {
-			return nil, err
-		}
-		if exist {
-			return nil, fmt.Errorf("already exists")
-		}
-	}
-
-	id := uuid.New()
-	if h.EntID == nil {
-		h.EntID = &id
-	}
-
 	handler := &createHandler{
 		Handler: h,
 	}
-
-	err := db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		if err := handler.createTopMost(_ctx, tx); err != nil {
-			return err
-		}
-		return nil
-	})
-	if err != nil {
-		return nil, err
+	if h.EntID == nil {
+		h.EntID = func() *uuid.UUID { s := uuid.New(); return &s }()
 	}
-
-	return h.GetTopMost(ctx)
+	handler.constructSQL()
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		return handler.createTopMost(_ctx, tx)
+	})
 }

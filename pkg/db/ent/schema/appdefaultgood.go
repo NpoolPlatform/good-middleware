@@ -23,12 +23,6 @@ func (AppDefaultGood) Mixin() []ent.Mixin {
 func (AppDefaultGood) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("app_id", uuid.UUID{}).
-			Optional(),
-		field.
-			UUID("good_id", uuid.UUID{}).
-			Optional(),
-		field.
 			UUID("app_good_id", uuid.UUID{}).
 			Optional(),
 		field.
