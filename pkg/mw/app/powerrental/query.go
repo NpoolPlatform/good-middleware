@@ -13,12 +13,14 @@ import (
 	appgooddisplaynamecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/display/name"
 	appgoodlabelcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/label"
 	appgoodpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/poster"
+	requiredappgoodcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/required"
 	appmininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/stock/mining"
 	goodcoincrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin"
 	goodcoinrewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin/reward"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entappgooddescription "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddescription"
 	entappgooddisplaycolor "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplaycolor"
 	entappgooddisplayname "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplayname"
@@ -28,6 +30,7 @@ import (
 	entgoodcoin "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
 	entgoodcoinreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoinreward"
 	entmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
+	entrequiredappgood "github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredappgood"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	appgooddescriptionmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/description"
@@ -35,6 +38,7 @@ import (
 	appgooddisplaynamemwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/display/name"
 	appgoodlabelmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/label"
 	appgoodpostermwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/poster"
+	requiredappgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/required"
 	appmininggoodstockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock/mining"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/powerrental"
 	goodcoinmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin"
@@ -58,6 +62,7 @@ type queryHandler struct {
 	displayNames        []*appgooddisplaynamemwpb.DisplayNameInfo
 	displayColors       []*appgooddisplaycolormwpb.DisplayColorInfo
 	coinRewards         []*goodcoinrewardmwpb.RewardInfo
+	requiredAppGoods    []*requiredappgoodmwpb.RequiredInfo
 	total               uint32
 }
 
@@ -346,6 +351,40 @@ func (h *queryHandler) getCoinRewards(ctx context.Context, cli *ent.Client) erro
 	}).Scan(ctx, &h.coinRewards)
 }
 
+func (h *queryHandler) getRequiredAppGoods(ctx context.Context, cli *ent.Client) error {
+	appGoodIDs := func() (uids []uuid.UUID) {
+		for _, info := range h.infos {
+			uids = append(uids, uuid.MustParse(info.AppGoodID))
+		}
+		return
+	}()
+
+	stm, err := requiredappgoodcrud.SetQueryConds(
+		cli.RequiredAppGood.Query(),
+		&requiredappgoodcrud.Conds{
+			MainAppGoodIDs: &cruder.Cond{Op: cruder.IN, Val: appGoodIDs},
+		},
+	)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	return stm.Select(
+		entrequiredappgood.FieldMainAppGoodID,
+		entrequiredappgood.FieldRequiredAppGoodID,
+		entrequiredappgood.FieldMust,
+	).Modify(func(s *sql.Selector) {
+		t1 := sql.Table(entappgoodbase.Table)
+		s.Join(t1).
+			On(
+				s.C(entrequiredappgood.FieldRequiredAppGoodID),
+				t1.C(entappgoodbase.FieldEntID),
+			).
+			AppendSelect(
+				sql.As(t1.C(entappgoodbase.FieldName), "required_app_good_name"),
+			)
+	}).Scan(ctx, &h.requiredAppGoods)
+}
+
 //nolint:funlen
 func (h *queryHandler) formalize() {
 	miningGoodStocks := map[string][]*stockmwpb.MiningGoodStockInfo{}
@@ -357,6 +396,7 @@ func (h *queryHandler) formalize() {
 	displayNames := map[string][]*appgooddisplaynamemwpb.DisplayNameInfo{}
 	displayColors := map[string][]*appgooddisplaycolormwpb.DisplayColorInfo{}
 	coinRewards := map[string][]*goodcoinrewardmwpb.RewardInfo{}
+	requireds := map[string][]*requiredappgoodmwpb.RequiredInfo{}
 
 	for _, stock := range h.miningGoodStocks {
 		stock.Total = func() string { amount, _ := decimal.NewFromString(stock.Total); return amount.String() }()
@@ -410,6 +450,9 @@ func (h *queryHandler) formalize() {
 		}()
 		coinRewards[coinReward.GoodID] = append(coinRewards[coinReward.GoodID], coinReward)
 	}
+	for _, required := range h.requiredAppGoods {
+		requireds[required.MainAppGoodID] = append(requireds[required.MainAppGoodID], required)
+	}
 	for _, info := range h.infos {
 		info.UnitPrice = func() string { amount, _ := decimal.NewFromString(info.UnitPrice); return amount.String() }()
 		info.QuantityUnitAmount = func() string { amount, _ := decimal.NewFromString(info.QuantityUnitAmount); return amount.String() }()
@@ -444,6 +487,7 @@ func (h *queryHandler) formalize() {
 		info.DisplayNames = displayNames[info.AppGoodID]
 		info.DisplayColors = displayColors[info.AppGoodID]
 		info.Rewards = coinRewards[info.GoodID]
+		info.Requireds = requireds[info.AppGoodID]
 	}
 }
 
@@ -466,6 +510,9 @@ func (h *Handler) GetPowerRental(ctx context.Context) (*npool.PowerRental, error
 			return wlog.WrapError(err)
 		}
 		if err := handler.getGoodCoins(_ctx, cli); err != nil {
+			return wlog.WrapError(err)
+		}
+		if err := handler.getRequiredAppGoods(_ctx, cli); err != nil {
 			return wlog.WrapError(err)
 		}
 		if err := handler.getDescriptions(_ctx, cli); err != nil {
@@ -538,6 +585,9 @@ func (h *Handler) GetPowerRentals(ctx context.Context) ([]*npool.PowerRental, ui
 			return wlog.WrapError(err)
 		}
 		if err := handler.getGoodCoins(_ctx, cli); err != nil {
+			return wlog.WrapError(err)
+		}
+		if err := handler.getRequiredAppGoods(_ctx, cli); err != nil {
 			return wlog.WrapError(err)
 		}
 		if err := handler.getDescriptions(_ctx, cli); err != nil {
