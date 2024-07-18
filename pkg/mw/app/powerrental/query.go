@@ -485,6 +485,8 @@ func (h *queryHandler) formalize() {
 		coinRewards[coinReward.GoodID] = append(coinRewards[coinReward.GoodID], coinReward)
 	}
 	for _, required := range h.requiredAppGoods {
+		required.RequiredAppGoodSettlementType = types.GoodSettlementType(types.GoodSettlementType_value[required.RequiredAppGoodSettlementTypeStr])
+		required.RequiredAppGoodType = types.GoodType(types.GoodType_value[required.RequiredAppGoodTypeStr])
 		requireds[required.MainAppGoodID] = append(requireds[required.MainAppGoodID], required)
 	}
 	for _, info := range h.infos {
