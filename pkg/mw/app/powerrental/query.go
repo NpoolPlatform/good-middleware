@@ -20,6 +20,7 @@ import (
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entappfee "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appfee"
 	entappgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
 	entappgooddescription "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddescription"
 	entappgooddisplaycolor "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgooddisplaycolor"
@@ -27,6 +28,8 @@ import (
 	entappgoodlabel "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodlabel"
 	entappgoodposter "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	entappmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
+	entfee "github.com/NpoolPlatform/good-middleware/pkg/db/ent/fee"
+	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
 	entgoodcoin "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
 	entgoodcoinreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoinreward"
 	entmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
@@ -374,6 +377,7 @@ func (h *queryHandler) getRequiredAppGoods(ctx context.Context, cli *ent.Client)
 		entrequiredappgood.FieldMust,
 	).Modify(func(s *sql.Selector) {
 		t1 := sql.Table(entappgoodbase.Table)
+
 		s.Join(t1).
 			On(
 				s.C(entrequiredappgood.FieldRequiredAppGoodID),
@@ -381,6 +385,36 @@ func (h *queryHandler) getRequiredAppGoods(ctx context.Context, cli *ent.Client)
 			).
 			AppendSelect(
 				sql.As(t1.C(entappgoodbase.FieldName), "required_app_good_name"),
+			)
+
+		t2 := sql.Table(entgoodbase.Table)
+		s.Join(t2).
+			On(
+				t1.C(entappgoodbase.FieldGoodID),
+				t2.C(entgoodbase.FieldEntID),
+			).
+			AppendSelect(
+				sql.As(t2.C(entgoodbase.FieldGoodType), "required_app_good_type"),
+			)
+
+		t3 := sql.Table(entappfee.Table)
+		s.Join(t3).
+			On(
+				s.C(entrequiredappgood.FieldRequiredAppGoodID),
+				t3.C(entappfee.FieldAppGoodID),
+			).
+			AppendSelect(
+				sql.As(t3.C(entappfee.FieldUnitValue), "required_app_good_unit_value"),
+			)
+
+		t4 := sql.Table(entfee.Table)
+		s.Join(t4).
+			On(
+				t1.C(entappgoodbase.FieldGoodID),
+				t4.C(entfee.FieldGoodID),
+			).
+			AppendSelect(
+				sql.As(t4.C(entfee.FieldSettlementType), "required_app_good_settlement_type"),
 			)
 	}).Scan(ctx, &h.requiredAppGoods)
 }
@@ -451,6 +485,8 @@ func (h *queryHandler) formalize() {
 		coinRewards[coinReward.GoodID] = append(coinRewards[coinReward.GoodID], coinReward)
 	}
 	for _, required := range h.requiredAppGoods {
+		required.RequiredAppGoodSettlementType = types.GoodSettlementType(types.GoodSettlementType_value[required.RequiredAppGoodSettlementTypeStr])
+		required.RequiredAppGoodType = types.GoodType(types.GoodType_value[required.RequiredAppGoodTypeStr])
 		requireds[required.MainAppGoodID] = append(requireds[required.MainAppGoodID], required)
 	}
 	for _, info := range h.infos {
