@@ -134,7 +134,6 @@ func (h *lockHandler) lockAppStock(ctx context.Context, stock *LockStock, tx *en
 		return wlog.Errorf("invalid appstock")
 	}
 	sql := h.constructAppGoodStockSQL("app_stocks", stock, _stock.appGoodStock.ID)
-	fmt.Println("sql: ", sql)
 	return h.execSQL(ctx, tx, sql)
 }
 
