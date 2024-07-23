@@ -229,10 +229,10 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 	if h.AppGoodBaseReq.AppID == nil {
 		h.AppGoodBaseReq.AppID = &handler._ent.appGoodBase.AppID
 	}
-	if h.AppGoodBaseReq.Online != nil && (!handler._ent.appGoodBase.Online && *h.AppGoodBaseReq.Online) {
+	if h.AppGoodBaseReq.Online != nil && (!handler._ent.goodBase.Online && *h.AppGoodBaseReq.Online) {
 		return wlog.Errorf("invalid online")
 	}
-	if h.AppGoodBaseReq.Purchasable != nil && (!handler._ent.appGoodBase.Purchasable && *h.AppGoodBaseReq.Purchasable) {
+	if h.AppGoodBaseReq.Purchasable != nil && (!handler._ent.goodBase.Purchasable && *h.AppGoodBaseReq.Purchasable) {
 		return wlog.Errorf("invalid purchasable")
 	}
 
