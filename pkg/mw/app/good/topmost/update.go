@@ -59,7 +59,7 @@ func (h *updateHandler) constructSQL() error {
 		_sql += "select * from ("
 		_sql += "select 1 from top_mosts where "
 		_sql += fmt.Sprintf(
-			"id != %v and top_most_type = '%v' and app_id = '%v' and (",
+			"id != %v and top_most_type = '%v' and app_id = '%v' and deleted_at = 0 (",
 			*h.ID,
 			h.topMostType.String(),
 			h.appID,
@@ -115,7 +115,7 @@ func (h *Handler) UpdateTopMost(ctx context.Context) error {
 	if err := handler.constructSQL(); err != nil {
 		return wlog.WrapError(err)
 	}
-	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithDebugTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		return handler.updateTopMost(_ctx, tx)
 	})
 }
