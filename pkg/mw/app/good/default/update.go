@@ -37,7 +37,7 @@ func (h *updateHandler) constructSQL() {
 	_sql += "select 1 from app_good_bases as agb "
 	_sql += "join good_bases as gb on agb.good_id = gb.ent_id and gb.deleted_at = 0 "
 	_sql += "join good_coins as gc on agb.good_id = gc.good_id and gc.deleted_at = 0 "
-	_sql += fmt.Sprintf("where gc.coin_type_id = '%v'", h.coinTypeID)
+	_sql += fmt.Sprintf("where gc.coin_type_id = '%v' and agb.ent_id = '%v'", h.coinTypeID, *h.AppGoodID)
 	_sql += " limit 1)"
 
 	h.sql = _sql
