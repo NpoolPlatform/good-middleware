@@ -84,6 +84,10 @@ func (h *Handler) UpdateScore(ctx context.Context) error {
 		return wlog.WrapError(cruder.ErrUpdateNothing)
 	}
 
+	if h.Score.LessThan(decimal.NewFromInt(0)) {
+		return wlog.Errorf("invalid score")
+	}
+
 	info, err := h.GetScore(ctx)
 	if err != nil {
 		return wlog.WrapError(err)
