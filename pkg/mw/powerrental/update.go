@@ -305,7 +305,7 @@ func (h *updateHandler) _validateStock() error {
 	}
 	if h.StockMode != nil && h.StockMode.String() != h.powerRental.StockMode {
 		if !h.stock.Total.Equal(h.stock.SpotQuantity) {
-			return wlog.Errorf("permission denied %v %v", h.stock.Total, h.stock.SpotQuantity)
+			return wlog.Errorf("permission denied")
 		}
 		h.changeStockMode = true
 	}
