@@ -59,14 +59,10 @@ func (h *Handler) withAppGoodBaseConds(conds *npool.Conds) error {
 			Val: conds.GetID().GetValue(),
 		}
 	}
-	if conds.EntID != nil {
-		id, err := uuid.Parse(conds.GetEntID().GetValue())
-		if err != nil {
-			return wlog.WrapError(err)
-		}
-		h.AppGoodBaseConds.EntID = &cruder.Cond{
-			Op:  conds.GetEntID().GetOp(),
-			Val: id,
+	if conds.IDs != nil {
+		h.AppGoodBaseConds.IDs = &cruder.Cond{
+			Op:  conds.GetIDs().GetOp(),
+			Val: conds.GetIDs().GetValue(),
 		}
 	}
 	if conds.EntID != nil {
