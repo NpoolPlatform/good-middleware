@@ -97,7 +97,7 @@ func (h *stockAppGoodQuery) formalizeAppMiningGoodStocks() {
 	for _, stock := range h.stocks {
 		stock.appMiningGoodStocks = map[uuid.UUID]*ent.AppMiningGoodStock{}
 		for _, appMiningGoodStock := range h.appMiningGoodStocks {
-			if appMiningGoodStock.AppGoodStockID == stock.appGoodStock.EntID {
+			if stock.appGoodStock != nil && appMiningGoodStock.AppGoodStockID == stock.appGoodStock.EntID {
 				stock.appMiningGoodStocks[appMiningGoodStock.EntID] = appMiningGoodStock
 			}
 		}
