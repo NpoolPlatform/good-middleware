@@ -127,10 +127,10 @@ func (h *baseQueryHandler) queryJoinTopMostGood(s *sql.Selector) error {
 			return wlog.Errorf("invalid appgoodid")
 		}
 		s.OnP(
-			sql.EQ(t2.C(entappgoodbase.FieldEntID), id),
+			sql.EQ(t3.C(entappgoodbase.FieldEntID), id),
 		)
 		s.Where(
-			sql.EQ(t2.C(entappgoodbase.FieldEntID), id),
+			sql.EQ(t3.C(entappgoodbase.FieldEntID), id),
 		)
 	}
 	s.AppendSelect(
