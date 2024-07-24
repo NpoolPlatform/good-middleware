@@ -59,7 +59,7 @@ func (h *updateHandler) constructSQL() error {
 		_sql += "select * from ("
 		_sql += "select 1 from top_mosts where "
 		_sql += fmt.Sprintf(
-			"id != %v and top_most_type = '%v' and app_id = '%v' and (",
+			"id != %v and top_most_type = '%v' and app_id = '%v' and deleted_at = 0 (",
 			*h.ID,
 			h.topMostType.String(),
 			h.appID,
