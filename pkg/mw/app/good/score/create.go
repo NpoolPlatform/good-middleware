@@ -121,6 +121,9 @@ func (h *Handler) CreateScore(ctx context.Context) error {
 	if h.EntID == nil {
 		h.EntID = func() *uuid.UUID { uid := uuid.New(); return &uid }()
 	}
+	if h.Score.LessThan(decimal.NewFromInt(0)) {
+		return wlog.Errorf("invalid score")
+	}
 	handler.sql = handler.ConstructCreateSQL()
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		if err := handler.createScore(ctx, tx); err != nil {
