@@ -56,14 +56,16 @@ func (h *createHandler) constructSQL() {
 	)
 	_sql += " limit 1) and exists ("
 	_sql += "select 1 from app_good_bases as agb "
-	_sql += "join good_bases as gb on agb.good_id = gb.ent_id "
-	_sql += "join good_coins as gc on agb.good_id = gc.good_id "
+	_sql += "join good_bases as gb on agb.good_id = gb.ent_id and gb.deleted_at = 0 "
+	_sql += "join good_coins as gc on agb.good_id = gc.good_id and gc.deleted_at = 0 "
 	_sql += fmt.Sprintf("where gc.coin_type_id = '%v' and agb.ent_id = '%v'", *h.CoinTypeID, *h.AppGoodID)
 	_sql += " limit 1) and not exists ("
 	_sql += "select 1 from app_default_goods adg "
 	_sql += "join app_good_bases ag on adg.app_good_id = ag.ent_id "
 	_sql += fmt.Sprintf(
-		"where ag.app_id = (select app_id from app_good_bases where ent_id = '%v' and deleted_at=0) and adg.coin_type_id = '%v' and adg.deleted_at=0",
+		"where ag.app_id = ("+
+			"select app_id from app_good_bases where ent_id = '%v' and deleted_at=0"+
+			") and adg.coin_type_id = '%v' and adg.deleted_at=0",
 		*h.AppGoodID,
 		*h.CoinTypeID,
 	)
