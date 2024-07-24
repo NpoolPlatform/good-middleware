@@ -114,10 +114,7 @@ func (h *appFeeGoodQueryHandler) requireFeeGood(ctx context.Context) error {
 	return h._getFeeGood(ctx, true)
 }
 
-func (h *appFeeGoodQueryHandler) checkMinOrderDurationSeconds() error {
-	if h.MinOrderDurationSeconds == nil {
-		return nil
-	}
+func (h *appFeeGoodQueryHandler) formalizeMinOrderDurationSeconds() error {
 	unitSeconds := uint32(1) * 60 * 60
 
 	switch h.fee.DurationDisplayType {
@@ -132,6 +129,9 @@ func (h *appFeeGoodQueryHandler) checkMinOrderDurationSeconds() error {
 		return wlog.Errorf("invalid gooddurationtype")
 	}
 
+	if h.MinOrderDurationSeconds == nil {
+		h.MinOrderDurationSeconds = &unitSeconds
+	}
 	if *h.MinOrderDurationSeconds < unitSeconds {
 		return wlog.Errorf("invalid minorderdurationseconds < %v", unitSeconds)
 	}

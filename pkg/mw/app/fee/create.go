@@ -56,7 +56,7 @@ func (h *Handler) CreateFee(ctx context.Context) error {
 		h.AppGoodBaseReq.EntID = &id
 	}
 
-	if err := handler.checkMinOrderDurationSeconds(); err != nil {
+	if err := handler.formalizeMinOrderDurationSeconds(); err != nil {
 		return wlog.WrapError(err)
 	}
 

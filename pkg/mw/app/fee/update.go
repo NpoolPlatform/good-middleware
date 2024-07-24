@@ -48,7 +48,7 @@ func (h *Handler) UpdateFee(ctx context.Context) error {
 		return wlog.Errorf("invalid unitvalue")
 	}
 
-	if err := handler.checkMinOrderDurationSeconds(); err != nil {
+	if err := handler.formalizeMinOrderDurationSeconds(); err != nil {
 		return wlog.WrapError(err)
 	}
 
