@@ -115,7 +115,7 @@ func (h *Handler) UpdateTopMost(ctx context.Context) error {
 	if err := handler.constructSQL(); err != nil {
 		return wlog.WrapError(err)
 	}
-	return db.WithDebugTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		return handler.updateTopMost(_ctx, tx)
 	})
 }
