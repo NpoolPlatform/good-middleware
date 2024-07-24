@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	topmostpostercrud "github.com/NpoolPlatform/good-middleware/pkg/crud/app/good/topmost/poster"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -21,7 +22,7 @@ func (h *deleteHandler) deletePoster(ctx context.Context, cli *ent.Client) error
 			DeletedAt: &h.now,
 		},
 	).Save(ctx); err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	return nil
 }
@@ -29,7 +30,7 @@ func (h *deleteHandler) deletePoster(ctx context.Context, cli *ent.Client) error
 func (h *Handler) DeletePoster(ctx context.Context) error {
 	info, err := h.GetPoster(ctx)
 	if err != nil {
-		return err
+		return wlog.WrapError(err)
 	}
 	if info == nil {
 		return nil
