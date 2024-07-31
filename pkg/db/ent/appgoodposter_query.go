@@ -264,7 +264,6 @@ func (agpq *AppGoodPosterQuery) Clone() *AppGoodPosterQuery {
 //		GroupBy(appgoodposter.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (agpq *AppGoodPosterQuery) GroupBy(field string, fields ...string) *AppGoodPosterGroupBy {
 	grbuild := &AppGoodPosterGroupBy{config: agpq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (agpq *AppGoodPosterQuery) GroupBy(field string, fields ...string) *AppGood
 //	client.AppGoodPoster.Query().
 //		Select(appgoodposter.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (agpq *AppGoodPosterQuery) Select(fields ...string) *AppGoodPosterSelect {
 	agpq.fields = append(agpq.fields, fields...)
 	selbuild := &AppGoodPosterSelect{AppGoodPosterQuery: agpq}

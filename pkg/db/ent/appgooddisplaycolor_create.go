@@ -374,7 +374,6 @@ func (agdcc *AppGoodDisplayColorCreate) createSpec() (*AppGoodDisplayColor, *sql
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (agdcc *AppGoodDisplayColorCreate) OnConflict(opts ...sql.ConflictOption) *AppGoodDisplayColorUpsertOne {
 	agdcc.conflict = opts
 	return &AppGoodDisplayColorUpsertOne{
@@ -388,7 +387,6 @@ func (agdcc *AppGoodDisplayColorCreate) OnConflict(opts ...sql.ConflictOption) *
 //	client.AppGoodDisplayColor.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (agdcc *AppGoodDisplayColorCreate) OnConflictColumns(columns ...string) *AppGoodDisplayColorUpsertOne {
 	agdcc.conflict = append(agdcc.conflict, sql.ConflictColumns(columns...))
 	return &AppGoodDisplayColorUpsertOne{
@@ -546,7 +544,6 @@ func (u *AppGoodDisplayColorUpsert) ClearIndex() *AppGoodDisplayColorUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *AppGoodDisplayColorUpsertOne) UpdateNewValues() *AppGoodDisplayColorUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -560,10 +557,9 @@ func (u *AppGoodDisplayColorUpsertOne) UpdateNewValues() *AppGoodDisplayColorUps
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.AppGoodDisplayColor.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.AppGoodDisplayColor.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *AppGoodDisplayColorUpsertOne) Ignore() *AppGoodDisplayColorUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -866,7 +862,6 @@ func (agdccb *AppGoodDisplayColorCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (agdccb *AppGoodDisplayColorCreateBulk) OnConflict(opts ...sql.ConflictOption) *AppGoodDisplayColorUpsertBulk {
 	agdccb.conflict = opts
 	return &AppGoodDisplayColorUpsertBulk{
@@ -880,7 +875,6 @@ func (agdccb *AppGoodDisplayColorCreateBulk) OnConflict(opts ...sql.ConflictOpti
 //	client.AppGoodDisplayColor.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (agdccb *AppGoodDisplayColorCreateBulk) OnConflictColumns(columns ...string) *AppGoodDisplayColorUpsertBulk {
 	agdccb.conflict = append(agdccb.conflict, sql.ConflictColumns(columns...))
 	return &AppGoodDisplayColorUpsertBulk{
@@ -905,7 +899,6 @@ type AppGoodDisplayColorUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *AppGoodDisplayColorUpsertBulk) UpdateNewValues() *AppGoodDisplayColorUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -925,7 +918,6 @@ func (u *AppGoodDisplayColorUpsertBulk) UpdateNewValues() *AppGoodDisplayColorUp
 //	client.AppGoodDisplayColor.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *AppGoodDisplayColorUpsertBulk) Ignore() *AppGoodDisplayColorUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

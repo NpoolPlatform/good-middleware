@@ -264,7 +264,6 @@ func (diq *DeviceInfoQuery) Clone() *DeviceInfoQuery {
 //		GroupBy(deviceinfo.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (diq *DeviceInfoQuery) GroupBy(field string, fields ...string) *DeviceInfoGroupBy {
 	grbuild := &DeviceInfoGroupBy{config: diq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (diq *DeviceInfoQuery) GroupBy(field string, fields ...string) *DeviceInfoG
 //	client.DeviceInfo.Query().
 //		Select(deviceinfo.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (diq *DeviceInfoQuery) Select(fields ...string) *DeviceInfoSelect {
 	diq.fields = append(diq.fields, fields...)
 	selbuild := &DeviceInfoSelect{DeviceInfoQuery: diq}

@@ -264,7 +264,6 @@ func (sq *ScoreQuery) Clone() *ScoreQuery {
 //		GroupBy(score.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (sq *ScoreQuery) GroupBy(field string, fields ...string) *ScoreGroupBy {
 	grbuild := &ScoreGroupBy{config: sq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (sq *ScoreQuery) GroupBy(field string, fields ...string) *ScoreGroupBy {
 //	client.Score.Query().
 //		Select(score.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (sq *ScoreQuery) Select(fields ...string) *ScoreSelect {
 	sq.fields = append(sq.fields, fields...)
 	selbuild := &ScoreSelect{ScoreQuery: sq}

@@ -738,6 +738,7 @@ var (
 		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
 		{Name: "duration_calculate_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitCalculateBySelf"},
 		{Name: "settlement_type", Type: field.TypeString, Nullable: true, Default: "GoodSettledByPaymentAmount"},
+		{Name: "good_state", Type: field.TypeString, Nullable: true, Default: "GoodStateWait"},
 	}
 	// GoodsTable holds the schema information for the "goods" table.
 	GoodsTable = &schema.Table{
@@ -986,7 +987,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
 		{Name: "good_stock_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "mining_pool_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "pool_root_user_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "pool_good_user_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "total", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "spot_quantity", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
@@ -995,6 +996,7 @@ var (
 		{Name: "wait_start", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "sold", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "app_reserved", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
+		{Name: "mining_good_stock_state", Type: field.TypeString, Nullable: true, Default: "MiningGoodStockStateWait"},
 	}
 	// MiningGoodStocksTable holds the schema information for the "mining_good_stocks" table.
 	MiningGoodStocksTable = &schema.Table{

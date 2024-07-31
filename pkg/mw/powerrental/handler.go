@@ -284,7 +284,7 @@ func WithStockMode(e *types.GoodStockMode, must bool) func(context.Context, *Han
 			return nil
 		}
 		switch *e {
-		case types.GoodStockMode_GoodStockByMiningPool:
+		case types.GoodStockMode_GoodStockByMiningpool:
 		case types.GoodStockMode_GoodStockByUnique:
 		default:
 			return wlog.Errorf("invalid stockmode")
@@ -454,11 +454,11 @@ func WithStocks(stocks []*stockmwpb.MiningGoodStockReq, must bool) func(context.
 				}
 				return &uid
 			}()
-			poolID, err := uuid.Parse(_stock.GetMiningPoolID())
+			poolRootUserID, err := uuid.Parse(_stock.GetPoolRootUserID())
 			if err != nil {
 				return wlog.WrapError(err)
 			}
-			poolUserID, err := uuid.Parse(_stock.GetPoolGoodUserID())
+			poolGoodUserID, err := uuid.Parse(_stock.GetPoolGoodUserID())
 			if err != nil {
 				return wlog.WrapError(err)
 			}
@@ -468,8 +468,8 @@ func WithStocks(stocks []*stockmwpb.MiningGoodStockReq, must bool) func(context.
 			}
 			h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, &mininggoodstockcrud.Req{
 				EntID:          entID,
-				MiningPoolID:   &poolID,
-				PoolGoodUserID: &poolUserID,
+				PoolRootUserID: &poolRootUserID,
+				PoolGoodUserID: &poolGoodUserID,
 				Total:          &amount,
 			})
 		}

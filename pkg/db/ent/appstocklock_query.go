@@ -264,7 +264,6 @@ func (aslq *AppStockLockQuery) Clone() *AppStockLockQuery {
 //		GroupBy(appstocklock.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (aslq *AppStockLockQuery) GroupBy(field string, fields ...string) *AppStockLockGroupBy {
 	grbuild := &AppStockLockGroupBy{config: aslq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (aslq *AppStockLockQuery) GroupBy(field string, fields ...string) *AppStock
 //	client.AppStockLock.Query().
 //		Select(appstocklock.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (aslq *AppStockLockQuery) Select(fields ...string) *AppStockLockSelect {
 	aslq.fields = append(aslq.fields, fields...)
 	selbuild := &AppStockLockSelect{AppStockLockQuery: aslq}

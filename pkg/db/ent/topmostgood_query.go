@@ -264,7 +264,6 @@ func (tmgq *TopMostGoodQuery) Clone() *TopMostGoodQuery {
 //		GroupBy(topmostgood.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (tmgq *TopMostGoodQuery) GroupBy(field string, fields ...string) *TopMostGoodGroupBy {
 	grbuild := &TopMostGoodGroupBy{config: tmgq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (tmgq *TopMostGoodQuery) GroupBy(field string, fields ...string) *TopMostGo
 //	client.TopMostGood.Query().
 //		Select(topmostgood.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (tmgq *TopMostGoodQuery) Select(fields ...string) *TopMostGoodSelect {
 	tmgq.fields = append(tmgq.fields, fields...)
 	selbuild := &TopMostGoodSelect{TopMostGoodQuery: tmgq}

@@ -264,7 +264,6 @@ func (eiq *ExtraInfoQuery) Clone() *ExtraInfoQuery {
 //		GroupBy(extrainfo.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (eiq *ExtraInfoQuery) GroupBy(field string, fields ...string) *ExtraInfoGroupBy {
 	grbuild := &ExtraInfoGroupBy{config: eiq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (eiq *ExtraInfoQuery) GroupBy(field string, fields ...string) *ExtraInfoGro
 //	client.ExtraInfo.Query().
 //		Select(extrainfo.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (eiq *ExtraInfoQuery) Select(fields ...string) *ExtraInfoSelect {
 	eiq.fields = append(eiq.fields, fields...)
 	selbuild := &ExtraInfoSelect{ExtraInfoQuery: eiq}

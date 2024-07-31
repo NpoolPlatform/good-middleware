@@ -54,7 +54,7 @@ func (h *createHandler) constructMiningGoodStockSQL(ctx context.Context) error {
 			ctx,
 			mininggoodstock1.WithEntID(func() *string { s := poolStock.EntID.String(); return &s }(), false),
 			mininggoodstock1.WithGoodStockID(func() *string { s := poolStock.GoodStockID.String(); return &s }(), false),
-			mininggoodstock1.WithMiningPoolID(func() *string { s := poolStock.MiningPoolID.String(); return &s }(), false),
+			mininggoodstock1.WithPoolRootUserID(func() *string { s := poolStock.PoolRootUserID.String(); return &s }(), false),
 			mininggoodstock1.WithPoolGoodUserID(func() *string { s := poolStock.PoolGoodUserID.String(); return &s }(), false),
 			mininggoodstock1.WithTotal(func() *string { s := poolStock.Total.String(); return &s }(), true),
 		)
@@ -212,7 +212,7 @@ func (h *createHandler) _validateStock() error {
 	case types.GoodStockMode_GoodStockByUnique:
 		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }()
 		return nil
-	case types.GoodStockMode_GoodStockByMiningPool:
+	case types.GoodStockMode_GoodStockByMiningpool:
 		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePool; return &e }()
 	}
 	for _, poolStock := range h.MiningGoodStockReqs {

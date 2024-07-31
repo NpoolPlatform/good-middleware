@@ -264,7 +264,6 @@ func (lq *LikeQuery) Clone() *LikeQuery {
 //		GroupBy(like.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (lq *LikeQuery) GroupBy(field string, fields ...string) *LikeGroupBy {
 	grbuild := &LikeGroupBy{config: lq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (lq *LikeQuery) GroupBy(field string, fields ...string) *LikeGroupBy {
 //	client.Like.Query().
 //		Select(like.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (lq *LikeQuery) Select(fields ...string) *LikeSelect {
 	lq.fields = append(lq.fields, fields...)
 	selbuild := &LikeSelect{LikeQuery: lq}

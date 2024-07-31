@@ -452,7 +452,6 @@ func (gmc *GoodMalfunctionCreate) createSpec() (*GoodMalfunction, *sqlgraph.Crea
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (gmc *GoodMalfunctionCreate) OnConflict(opts ...sql.ConflictOption) *GoodMalfunctionUpsertOne {
 	gmc.conflict = opts
 	return &GoodMalfunctionUpsertOne{
@@ -466,7 +465,6 @@ func (gmc *GoodMalfunctionCreate) OnConflict(opts ...sql.ConflictOption) *GoodMa
 //	client.GoodMalfunction.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (gmc *GoodMalfunctionCreate) OnConflictColumns(columns ...string) *GoodMalfunctionUpsertOne {
 	gmc.conflict = append(gmc.conflict, sql.ConflictColumns(columns...))
 	return &GoodMalfunctionUpsertOne{
@@ -690,7 +688,6 @@ func (u *GoodMalfunctionUpsert) ClearCompensateSeconds() *GoodMalfunctionUpsert 
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *GoodMalfunctionUpsertOne) UpdateNewValues() *GoodMalfunctionUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -704,10 +701,9 @@ func (u *GoodMalfunctionUpsertOne) UpdateNewValues() *GoodMalfunctionUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.GoodMalfunction.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.GoodMalfunction.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *GoodMalfunctionUpsertOne) Ignore() *GoodMalfunctionUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1087,7 +1083,6 @@ func (gmcb *GoodMalfunctionCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (gmcb *GoodMalfunctionCreateBulk) OnConflict(opts ...sql.ConflictOption) *GoodMalfunctionUpsertBulk {
 	gmcb.conflict = opts
 	return &GoodMalfunctionUpsertBulk{
@@ -1101,7 +1096,6 @@ func (gmcb *GoodMalfunctionCreateBulk) OnConflict(opts ...sql.ConflictOption) *G
 //	client.GoodMalfunction.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (gmcb *GoodMalfunctionCreateBulk) OnConflictColumns(columns ...string) *GoodMalfunctionUpsertBulk {
 	gmcb.conflict = append(gmcb.conflict, sql.ConflictColumns(columns...))
 	return &GoodMalfunctionUpsertBulk{
@@ -1126,7 +1120,6 @@ type GoodMalfunctionUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *GoodMalfunctionUpsertBulk) UpdateNewValues() *GoodMalfunctionUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1146,7 +1139,6 @@ func (u *GoodMalfunctionUpsertBulk) UpdateNewValues() *GoodMalfunctionUpsertBulk
 //	client.GoodMalfunction.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *GoodMalfunctionUpsertBulk) Ignore() *GoodMalfunctionUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

@@ -38,7 +38,7 @@ func (h *Handler) ConstructCreateSQL() string {
 	}
 	_sql += fmt.Sprintf("%v'%v' as good_stock_id", comma, *h.GoodStockID)
 	comma = ", "
-	_sql += fmt.Sprintf("%v'%v' as mining_pool_id", comma, *h.MiningPoolID)
+	_sql += fmt.Sprintf("%v'%v' as pool_root_user_id", comma, *h.PoolRootUserID)
 	_sql += fmt.Sprintf("%v'%v' as pool_good_user_id", comma, *h.PoolGoodUserID)
 	_sql += fmt.Sprintf("%v'%v' as total", comma, *h.Total)
 	_sql += fmt.Sprintf("%v'%v' as spot_quantity", comma, *h.Total)
@@ -58,8 +58,8 @@ func (h *Handler) ConstructCreateSQL() string {
 	_sql += "and not exists ("
 	_sql += "select 1 from mining_good_stocks "
 	_sql += fmt.Sprintf(
-		"where mining_pool_id = '%v' and pool_good_user_id = '%v' and deleted_at = 0",
-		*h.MiningPoolID,
+		"where pool_root_user_id = '%v' and pool_good_user_id = '%v' and deleted_at = 0",
+		*h.PoolRootUserID,
 		*h.PoolGoodUserID,
 	)
 	_sql += " limit 1)"

@@ -264,7 +264,6 @@ func (dpq *DevicePosterQuery) Clone() *DevicePosterQuery {
 //		GroupBy(deviceposter.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (dpq *DevicePosterQuery) GroupBy(field string, fields ...string) *DevicePosterGroupBy {
 	grbuild := &DevicePosterGroupBy{config: dpq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (dpq *DevicePosterQuery) GroupBy(field string, fields ...string) *DevicePos
 //	client.DevicePoster.Query().
 //		Select(deviceposter.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (dpq *DevicePosterQuery) Select(fields ...string) *DevicePosterSelect {
 	dpq.fields = append(dpq.fields, fields...)
 	selbuild := &DevicePosterSelect{DevicePosterQuery: dpq}

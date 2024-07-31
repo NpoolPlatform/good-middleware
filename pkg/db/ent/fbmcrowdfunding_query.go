@@ -264,7 +264,6 @@ func (fcfq *FbmCrowdFundingQuery) Clone() *FbmCrowdFundingQuery {
 //		GroupBy(fbmcrowdfunding.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (fcfq *FbmCrowdFundingQuery) GroupBy(field string, fields ...string) *FbmCrowdFundingGroupBy {
 	grbuild := &FbmCrowdFundingGroupBy{config: fcfq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (fcfq *FbmCrowdFundingQuery) GroupBy(field string, fields ...string) *FbmCr
 //	client.FbmCrowdFunding.Query().
 //		Select(fbmcrowdfunding.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (fcfq *FbmCrowdFundingQuery) Select(fields ...string) *FbmCrowdFundingSelect {
 	fcfq.fields = append(fcfq.fields, fields...)
 	selbuild := &FbmCrowdFundingSelect{FbmCrowdFundingQuery: fcfq}

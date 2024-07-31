@@ -8,6 +8,7 @@ import (
 	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
@@ -34,7 +35,7 @@ func (MiningGoodStock) Fields() []ent.Field {
 				return uuid.Nil
 			}),
 		field.
-			UUID("mining_pool_id", uuid.UUID{}).
+			UUID("pool_root_user_id", uuid.UUID{}).
 			Optional().
 			Default(func() uuid.UUID {
 				return uuid.Nil
@@ -94,6 +95,10 @@ func (MiningGoodStock) Fields() []ent.Field {
 			}).
 			Optional().
 			Default(decimal.Decimal{}),
+		field.
+			String("mining_good_stock_state").
+			Optional().
+			Default(types.MiningGoodStockState_MiningGoodStockStateWait.String()),
 	}
 }
 

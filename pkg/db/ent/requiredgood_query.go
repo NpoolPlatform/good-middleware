@@ -264,7 +264,6 @@ func (rgq *RequiredGoodQuery) Clone() *RequiredGoodQuery {
 //		GroupBy(requiredgood.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (rgq *RequiredGoodQuery) GroupBy(field string, fields ...string) *RequiredGoodGroupBy {
 	grbuild := &RequiredGoodGroupBy{config: rgq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (rgq *RequiredGoodQuery) GroupBy(field string, fields ...string) *RequiredG
 //	client.RequiredGood.Query().
 //		Select(requiredgood.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (rgq *RequiredGoodQuery) Select(fields ...string) *RequiredGoodSelect {
 	rgq.fields = append(rgq.fields, fields...)
 	selbuild := &RequiredGoodSelect{RequiredGoodQuery: rgq}

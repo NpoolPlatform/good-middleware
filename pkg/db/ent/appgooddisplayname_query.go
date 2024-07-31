@@ -264,7 +264,6 @@ func (agdnq *AppGoodDisplayNameQuery) Clone() *AppGoodDisplayNameQuery {
 //		GroupBy(appgooddisplayname.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (agdnq *AppGoodDisplayNameQuery) GroupBy(field string, fields ...string) *AppGoodDisplayNameGroupBy {
 	grbuild := &AppGoodDisplayNameGroupBy{config: agdnq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (agdnq *AppGoodDisplayNameQuery) GroupBy(field string, fields ...string) *A
 //	client.AppGoodDisplayName.Query().
 //		Select(appgooddisplayname.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (agdnq *AppGoodDisplayNameQuery) Select(fields ...string) *AppGoodDisplayNameSelect {
 	agdnq.fields = append(agdnq.fields, fields...)
 	selbuild := &AppGoodDisplayNameSelect{AppGoodDisplayNameQuery: agdnq}

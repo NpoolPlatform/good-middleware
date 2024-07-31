@@ -47,7 +47,7 @@ var ret = npool.Stock{
 	InService:   decimal.NewFromInt(0).String(),
 	WaitStart:   decimal.NewFromInt(0).String(),
 	Sold:        decimal.NewFromInt(0).String(),
-	StockMode:   types.GoodStockMode_GoodStockByMiningPool,
+	StockMode:   types.GoodStockMode_GoodStockByMiningpool,
 	AppMiningGoodStocks: []*appmininggoodstockmwpb.StockInfo{
 		{
 			EntID:             uuid.NewString(),
@@ -138,7 +138,7 @@ func setup(t *testing.T) func(*testing.T) {
 		for _, stock := range ret.AppMiningGoodStocks {
 			reqs = append(reqs, &stockmwpb.MiningGoodStockReq{
 				EntID:          &stock.MiningGoodStockID,
-				MiningPoolID:   func() *string { s := uuid.NewString(); return &s }(),
+				PoolRootUserID: func() *string { s := uuid.NewString(); return &s }(),
 				PoolGoodUserID: func() *string { s := uuid.NewString(); return &s }(),
 				Total:          func() *string { s := decimal.NewFromInt(3333).String(); return &s }(),
 			})

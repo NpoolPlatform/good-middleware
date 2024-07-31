@@ -264,7 +264,6 @@ func (alprq *AppLegacyPowerRentalQuery) Clone() *AppLegacyPowerRentalQuery {
 //		GroupBy(applegacypowerrental.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (alprq *AppLegacyPowerRentalQuery) GroupBy(field string, fields ...string) *AppLegacyPowerRentalGroupBy {
 	grbuild := &AppLegacyPowerRentalGroupBy{config: alprq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (alprq *AppLegacyPowerRentalQuery) GroupBy(field string, fields ...string) 
 //	client.AppLegacyPowerRental.Query().
 //		Select(applegacypowerrental.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (alprq *AppLegacyPowerRentalQuery) Select(fields ...string) *AppLegacyPowerRentalSelect {
 	alprq.fields = append(alprq.fields, fields...)
 	selbuild := &AppLegacyPowerRentalSelect{AppLegacyPowerRentalQuery: alprq}

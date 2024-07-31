@@ -508,7 +508,6 @@ func (amgsc *AppMiningGoodStockCreate) createSpec() (*AppMiningGoodStock, *sqlgr
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (amgsc *AppMiningGoodStockCreate) OnConflict(opts ...sql.ConflictOption) *AppMiningGoodStockUpsertOne {
 	amgsc.conflict = opts
 	return &AppMiningGoodStockUpsertOne{
@@ -522,7 +521,6 @@ func (amgsc *AppMiningGoodStockCreate) OnConflict(opts ...sql.ConflictOption) *A
 //	client.AppMiningGoodStock.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (amgsc *AppMiningGoodStockCreate) OnConflictColumns(columns ...string) *AppMiningGoodStockUpsertOne {
 	amgsc.conflict = append(amgsc.conflict, sql.ConflictColumns(columns...))
 	return &AppMiningGoodStockUpsertOne{
@@ -764,7 +762,6 @@ func (u *AppMiningGoodStockUpsert) ClearSold() *AppMiningGoodStockUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *AppMiningGoodStockUpsertOne) UpdateNewValues() *AppMiningGoodStockUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -778,10 +775,9 @@ func (u *AppMiningGoodStockUpsertOne) UpdateNewValues() *AppMiningGoodStockUpser
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.AppMiningGoodStock.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.AppMiningGoodStock.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *AppMiningGoodStockUpsertOne) Ignore() *AppMiningGoodStockUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1182,7 +1178,6 @@ func (amgscb *AppMiningGoodStockCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (amgscb *AppMiningGoodStockCreateBulk) OnConflict(opts ...sql.ConflictOption) *AppMiningGoodStockUpsertBulk {
 	amgscb.conflict = opts
 	return &AppMiningGoodStockUpsertBulk{
@@ -1196,7 +1191,6 @@ func (amgscb *AppMiningGoodStockCreateBulk) OnConflict(opts ...sql.ConflictOptio
 //	client.AppMiningGoodStock.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (amgscb *AppMiningGoodStockCreateBulk) OnConflictColumns(columns ...string) *AppMiningGoodStockUpsertBulk {
 	amgscb.conflict = append(amgscb.conflict, sql.ConflictColumns(columns...))
 	return &AppMiningGoodStockUpsertBulk{
@@ -1221,7 +1215,6 @@ type AppMiningGoodStockUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *AppMiningGoodStockUpsertBulk) UpdateNewValues() *AppMiningGoodStockUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1241,7 +1234,6 @@ func (u *AppMiningGoodStockUpsertBulk) UpdateNewValues() *AppMiningGoodStockUpse
 //	client.AppMiningGoodStock.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *AppMiningGoodStockUpsertBulk) Ignore() *AppMiningGoodStockUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

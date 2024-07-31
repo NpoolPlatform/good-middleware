@@ -347,7 +347,7 @@ func (h *updateHandler) _validateStock() error {
 	case types.GoodStockMode_GoodStockByUnique:
 		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }()
 		return nil
-	case types.GoodStockMode_GoodStockByMiningPool:
+	case types.GoodStockMode_GoodStockByMiningpool:
 		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePool; return &e }()
 	}
 

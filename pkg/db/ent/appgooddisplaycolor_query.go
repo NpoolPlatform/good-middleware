@@ -264,7 +264,6 @@ func (agdcq *AppGoodDisplayColorQuery) Clone() *AppGoodDisplayColorQuery {
 //		GroupBy(appgooddisplaycolor.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (agdcq *AppGoodDisplayColorQuery) GroupBy(field string, fields ...string) *AppGoodDisplayColorGroupBy {
 	grbuild := &AppGoodDisplayColorGroupBy{config: agdcq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (agdcq *AppGoodDisplayColorQuery) GroupBy(field string, fields ...string) *
 //	client.AppGoodDisplayColor.Query().
 //		Select(appgooddisplaycolor.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (agdcq *AppGoodDisplayColorQuery) Select(fields ...string) *AppGoodDisplayColorSelect {
 	agdcq.fields = append(agdcq.fields, fields...)
 	selbuild := &AppGoodDisplayColorSelect{AppGoodDisplayColorQuery: agdcq}

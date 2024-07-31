@@ -264,7 +264,6 @@ func (tmq *TopMostQuery) Clone() *TopMostQuery {
 //		GroupBy(topmost.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (tmq *TopMostQuery) GroupBy(field string, fields ...string) *TopMostGroupBy {
 	grbuild := &TopMostGroupBy{config: tmq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (tmq *TopMostQuery) GroupBy(field string, fields ...string) *TopMostGroupBy
 //	client.TopMost.Query().
 //		Select(topmost.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (tmq *TopMostQuery) Select(fields ...string) *TopMostSelect {
 	tmq.fields = append(tmq.fields, fields...)
 	selbuild := &TopMostSelect{TopMostQuery: tmq}

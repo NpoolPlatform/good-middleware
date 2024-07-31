@@ -264,7 +264,6 @@ func (mgsq *MiningGoodStockQuery) Clone() *MiningGoodStockQuery {
 //		GroupBy(mininggoodstock.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (mgsq *MiningGoodStockQuery) GroupBy(field string, fields ...string) *MiningGoodStockGroupBy {
 	grbuild := &MiningGoodStockGroupBy{config: mgsq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (mgsq *MiningGoodStockQuery) GroupBy(field string, fields ...string) *Minin
 //	client.MiningGoodStock.Query().
 //		Select(mininggoodstock.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (mgsq *MiningGoodStockQuery) Select(fields ...string) *MiningGoodStockSelect {
 	mgsq.fields = append(mgsq.fields, fields...)
 	selbuild := &MiningGoodStockSelect{MiningGoodStockQuery: mgsq}

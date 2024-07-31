@@ -119,23 +119,23 @@ func (mgsu *MiningGoodStockUpdate) ClearGoodStockID() *MiningGoodStockUpdate {
 	return mgsu
 }
 
-// SetMiningPoolID sets the "mining_pool_id" field.
-func (mgsu *MiningGoodStockUpdate) SetMiningPoolID(u uuid.UUID) *MiningGoodStockUpdate {
-	mgsu.mutation.SetMiningPoolID(u)
+// SetPoolRootUserID sets the "pool_root_user_id" field.
+func (mgsu *MiningGoodStockUpdate) SetPoolRootUserID(u uuid.UUID) *MiningGoodStockUpdate {
+	mgsu.mutation.SetPoolRootUserID(u)
 	return mgsu
 }
 
-// SetNillableMiningPoolID sets the "mining_pool_id" field if the given value is not nil.
-func (mgsu *MiningGoodStockUpdate) SetNillableMiningPoolID(u *uuid.UUID) *MiningGoodStockUpdate {
+// SetNillablePoolRootUserID sets the "pool_root_user_id" field if the given value is not nil.
+func (mgsu *MiningGoodStockUpdate) SetNillablePoolRootUserID(u *uuid.UUID) *MiningGoodStockUpdate {
 	if u != nil {
-		mgsu.SetMiningPoolID(*u)
+		mgsu.SetPoolRootUserID(*u)
 	}
 	return mgsu
 }
 
-// ClearMiningPoolID clears the value of the "mining_pool_id" field.
-func (mgsu *MiningGoodStockUpdate) ClearMiningPoolID() *MiningGoodStockUpdate {
-	mgsu.mutation.ClearMiningPoolID()
+// ClearPoolRootUserID clears the value of the "pool_root_user_id" field.
+func (mgsu *MiningGoodStockUpdate) ClearPoolRootUserID() *MiningGoodStockUpdate {
+	mgsu.mutation.ClearPoolRootUserID()
 	return mgsu
 }
 
@@ -299,6 +299,26 @@ func (mgsu *MiningGoodStockUpdate) ClearAppReserved() *MiningGoodStockUpdate {
 	return mgsu
 }
 
+// SetMiningGoodStockState sets the "mining_good_stock_state" field.
+func (mgsu *MiningGoodStockUpdate) SetMiningGoodStockState(s string) *MiningGoodStockUpdate {
+	mgsu.mutation.SetMiningGoodStockState(s)
+	return mgsu
+}
+
+// SetNillableMiningGoodStockState sets the "mining_good_stock_state" field if the given value is not nil.
+func (mgsu *MiningGoodStockUpdate) SetNillableMiningGoodStockState(s *string) *MiningGoodStockUpdate {
+	if s != nil {
+		mgsu.SetMiningGoodStockState(*s)
+	}
+	return mgsu
+}
+
+// ClearMiningGoodStockState clears the value of the "mining_good_stock_state" field.
+func (mgsu *MiningGoodStockUpdate) ClearMiningGoodStockState() *MiningGoodStockUpdate {
+	mgsu.mutation.ClearMiningGoodStockState()
+	return mgsu
+}
+
 // Mutation returns the MiningGoodStockMutation object of the builder.
 func (mgsu *MiningGoodStockUpdate) Mutation() *MiningGoodStockMutation {
 	return mgsu.mutation
@@ -459,17 +479,17 @@ func (mgsu *MiningGoodStockUpdate) sqlSave(ctx context.Context) (n int, err erro
 			Column: mininggoodstock.FieldGoodStockID,
 		})
 	}
-	if value, ok := mgsu.mutation.MiningPoolID(); ok {
+	if value, ok := mgsu.mutation.PoolRootUserID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: mininggoodstock.FieldMiningPoolID,
+			Column: mininggoodstock.FieldPoolRootUserID,
 		})
 	}
-	if mgsu.mutation.MiningPoolIDCleared() {
+	if mgsu.mutation.PoolRootUserIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Column: mininggoodstock.FieldMiningPoolID,
+			Column: mininggoodstock.FieldPoolRootUserID,
 		})
 	}
 	if value, ok := mgsu.mutation.PoolGoodUserID(); ok {
@@ -574,6 +594,19 @@ func (mgsu *MiningGoodStockUpdate) sqlSave(ctx context.Context) (n int, err erro
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: mininggoodstock.FieldAppReserved,
+		})
+	}
+	if value, ok := mgsu.mutation.MiningGoodStockState(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: mininggoodstock.FieldMiningGoodStockState,
+		})
+	}
+	if mgsu.mutation.MiningGoodStockStateCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: mininggoodstock.FieldMiningGoodStockState,
 		})
 	}
 	_spec.Modifiers = mgsu.modifiers
@@ -686,23 +719,23 @@ func (mgsuo *MiningGoodStockUpdateOne) ClearGoodStockID() *MiningGoodStockUpdate
 	return mgsuo
 }
 
-// SetMiningPoolID sets the "mining_pool_id" field.
-func (mgsuo *MiningGoodStockUpdateOne) SetMiningPoolID(u uuid.UUID) *MiningGoodStockUpdateOne {
-	mgsuo.mutation.SetMiningPoolID(u)
+// SetPoolRootUserID sets the "pool_root_user_id" field.
+func (mgsuo *MiningGoodStockUpdateOne) SetPoolRootUserID(u uuid.UUID) *MiningGoodStockUpdateOne {
+	mgsuo.mutation.SetPoolRootUserID(u)
 	return mgsuo
 }
 
-// SetNillableMiningPoolID sets the "mining_pool_id" field if the given value is not nil.
-func (mgsuo *MiningGoodStockUpdateOne) SetNillableMiningPoolID(u *uuid.UUID) *MiningGoodStockUpdateOne {
+// SetNillablePoolRootUserID sets the "pool_root_user_id" field if the given value is not nil.
+func (mgsuo *MiningGoodStockUpdateOne) SetNillablePoolRootUserID(u *uuid.UUID) *MiningGoodStockUpdateOne {
 	if u != nil {
-		mgsuo.SetMiningPoolID(*u)
+		mgsuo.SetPoolRootUserID(*u)
 	}
 	return mgsuo
 }
 
-// ClearMiningPoolID clears the value of the "mining_pool_id" field.
-func (mgsuo *MiningGoodStockUpdateOne) ClearMiningPoolID() *MiningGoodStockUpdateOne {
-	mgsuo.mutation.ClearMiningPoolID()
+// ClearPoolRootUserID clears the value of the "pool_root_user_id" field.
+func (mgsuo *MiningGoodStockUpdateOne) ClearPoolRootUserID() *MiningGoodStockUpdateOne {
+	mgsuo.mutation.ClearPoolRootUserID()
 	return mgsuo
 }
 
@@ -863,6 +896,26 @@ func (mgsuo *MiningGoodStockUpdateOne) SetNillableAppReserved(d *decimal.Decimal
 // ClearAppReserved clears the value of the "app_reserved" field.
 func (mgsuo *MiningGoodStockUpdateOne) ClearAppReserved() *MiningGoodStockUpdateOne {
 	mgsuo.mutation.ClearAppReserved()
+	return mgsuo
+}
+
+// SetMiningGoodStockState sets the "mining_good_stock_state" field.
+func (mgsuo *MiningGoodStockUpdateOne) SetMiningGoodStockState(s string) *MiningGoodStockUpdateOne {
+	mgsuo.mutation.SetMiningGoodStockState(s)
+	return mgsuo
+}
+
+// SetNillableMiningGoodStockState sets the "mining_good_stock_state" field if the given value is not nil.
+func (mgsuo *MiningGoodStockUpdateOne) SetNillableMiningGoodStockState(s *string) *MiningGoodStockUpdateOne {
+	if s != nil {
+		mgsuo.SetMiningGoodStockState(*s)
+	}
+	return mgsuo
+}
+
+// ClearMiningGoodStockState clears the value of the "mining_good_stock_state" field.
+func (mgsuo *MiningGoodStockUpdateOne) ClearMiningGoodStockState() *MiningGoodStockUpdateOne {
+	mgsuo.mutation.ClearMiningGoodStockState()
 	return mgsuo
 }
 
@@ -1056,17 +1109,17 @@ func (mgsuo *MiningGoodStockUpdateOne) sqlSave(ctx context.Context) (_node *Mini
 			Column: mininggoodstock.FieldGoodStockID,
 		})
 	}
-	if value, ok := mgsuo.mutation.MiningPoolID(); ok {
+	if value, ok := mgsuo.mutation.PoolRootUserID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: mininggoodstock.FieldMiningPoolID,
+			Column: mininggoodstock.FieldPoolRootUserID,
 		})
 	}
-	if mgsuo.mutation.MiningPoolIDCleared() {
+	if mgsuo.mutation.PoolRootUserIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Column: mininggoodstock.FieldMiningPoolID,
+			Column: mininggoodstock.FieldPoolRootUserID,
 		})
 	}
 	if value, ok := mgsuo.mutation.PoolGoodUserID(); ok {
@@ -1171,6 +1224,19 @@ func (mgsuo *MiningGoodStockUpdateOne) sqlSave(ctx context.Context) (_node *Mini
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeOther,
 			Column: mininggoodstock.FieldAppReserved,
+		})
+	}
+	if value, ok := mgsuo.mutation.MiningGoodStockState(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: mininggoodstock.FieldMiningGoodStockState,
+		})
+	}
+	if mgsuo.mutation.MiningGoodStockStateCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: mininggoodstock.FieldMiningGoodStockState,
 		})
 	}
 	_spec.Modifiers = mgsuo.modifiers

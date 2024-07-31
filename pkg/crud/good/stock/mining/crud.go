@@ -14,7 +14,7 @@ type Req struct {
 	ID             *uint32
 	EntID          *uuid.UUID
 	GoodStockID    *uuid.UUID
-	MiningPoolID   *uuid.UUID
+	PoolRootUserID *uuid.UUID
 	PoolGoodUserID *uuid.UUID
 	Total          *decimal.Decimal
 	SpotQuantity   *decimal.Decimal
@@ -33,8 +33,8 @@ func CreateSet(c *ent.MiningGoodStockCreate, req *Req) *ent.MiningGoodStockCreat
 	if req.GoodStockID != nil {
 		c.SetGoodStockID(*req.GoodStockID)
 	}
-	if req.MiningPoolID != nil {
-		c.SetMiningPoolID(*req.MiningPoolID)
+	if req.PoolRootUserID != nil {
+		c.SetPoolRootUserID(*req.PoolRootUserID)
 	}
 	if req.PoolGoodUserID != nil {
 		c.SetPoolGoodUserID(*req.PoolGoodUserID)

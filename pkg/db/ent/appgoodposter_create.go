@@ -374,7 +374,6 @@ func (agpc *AppGoodPosterCreate) createSpec() (*AppGoodPoster, *sqlgraph.CreateS
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (agpc *AppGoodPosterCreate) OnConflict(opts ...sql.ConflictOption) *AppGoodPosterUpsertOne {
 	agpc.conflict = opts
 	return &AppGoodPosterUpsertOne{
@@ -388,7 +387,6 @@ func (agpc *AppGoodPosterCreate) OnConflict(opts ...sql.ConflictOption) *AppGood
 //	client.AppGoodPoster.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (agpc *AppGoodPosterCreate) OnConflictColumns(columns ...string) *AppGoodPosterUpsertOne {
 	agpc.conflict = append(agpc.conflict, sql.ConflictColumns(columns...))
 	return &AppGoodPosterUpsertOne{
@@ -546,7 +544,6 @@ func (u *AppGoodPosterUpsert) ClearIndex() *AppGoodPosterUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *AppGoodPosterUpsertOne) UpdateNewValues() *AppGoodPosterUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -560,10 +557,9 @@ func (u *AppGoodPosterUpsertOne) UpdateNewValues() *AppGoodPosterUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.AppGoodPoster.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.AppGoodPoster.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *AppGoodPosterUpsertOne) Ignore() *AppGoodPosterUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -866,7 +862,6 @@ func (agpcb *AppGoodPosterCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (agpcb *AppGoodPosterCreateBulk) OnConflict(opts ...sql.ConflictOption) *AppGoodPosterUpsertBulk {
 	agpcb.conflict = opts
 	return &AppGoodPosterUpsertBulk{
@@ -880,7 +875,6 @@ func (agpcb *AppGoodPosterCreateBulk) OnConflict(opts ...sql.ConflictOption) *Ap
 //	client.AppGoodPoster.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (agpcb *AppGoodPosterCreateBulk) OnConflictColumns(columns ...string) *AppGoodPosterUpsertBulk {
 	agpcb.conflict = append(agpcb.conflict, sql.ConflictColumns(columns...))
 	return &AppGoodPosterUpsertBulk{
@@ -905,7 +899,6 @@ type AppGoodPosterUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *AppGoodPosterUpsertBulk) UpdateNewValues() *AppGoodPosterUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -925,7 +918,6 @@ func (u *AppGoodPosterUpsertBulk) UpdateNewValues() *AppGoodPosterUpsertBulk {
 //	client.AppGoodPoster.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *AppGoodPosterUpsertBulk) Ignore() *AppGoodPosterUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

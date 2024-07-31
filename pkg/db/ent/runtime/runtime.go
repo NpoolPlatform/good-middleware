@@ -1565,6 +1565,10 @@ func init() {
 	goodDescSettlementType := goodFields[22].Descriptor()
 	// good.DefaultSettlementType holds the default value on creation for the settlement_type field.
 	good.DefaultSettlementType = goodDescSettlementType.Default.(string)
+	// goodDescGoodState is the schema descriptor for good_state field.
+	goodDescGoodState := goodFields[23].Descriptor()
+	// good.DefaultGoodState holds the default value on creation for the good_state field.
+	good.DefaultGoodState = goodDescGoodState.Default.(string)
 	goodbaseMixin := schema.GoodBase{}.Mixin()
 	goodbase.Policy = privacy.NewPolicies(goodbaseMixin[0], schema.GoodBase{})
 	goodbase.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -1993,10 +1997,10 @@ func init() {
 	mininggoodstockDescGoodStockID := mininggoodstockFields[0].Descriptor()
 	// mininggoodstock.DefaultGoodStockID holds the default value on creation for the good_stock_id field.
 	mininggoodstock.DefaultGoodStockID = mininggoodstockDescGoodStockID.Default.(func() uuid.UUID)
-	// mininggoodstockDescMiningPoolID is the schema descriptor for mining_pool_id field.
-	mininggoodstockDescMiningPoolID := mininggoodstockFields[1].Descriptor()
-	// mininggoodstock.DefaultMiningPoolID holds the default value on creation for the mining_pool_id field.
-	mininggoodstock.DefaultMiningPoolID = mininggoodstockDescMiningPoolID.Default.(func() uuid.UUID)
+	// mininggoodstockDescPoolRootUserID is the schema descriptor for pool_root_user_id field.
+	mininggoodstockDescPoolRootUserID := mininggoodstockFields[1].Descriptor()
+	// mininggoodstock.DefaultPoolRootUserID holds the default value on creation for the pool_root_user_id field.
+	mininggoodstock.DefaultPoolRootUserID = mininggoodstockDescPoolRootUserID.Default.(func() uuid.UUID)
 	// mininggoodstockDescPoolGoodUserID is the schema descriptor for pool_good_user_id field.
 	mininggoodstockDescPoolGoodUserID := mininggoodstockFields[2].Descriptor()
 	// mininggoodstock.DefaultPoolGoodUserID holds the default value on creation for the pool_good_user_id field.
@@ -2029,6 +2033,10 @@ func init() {
 	mininggoodstockDescAppReserved := mininggoodstockFields[9].Descriptor()
 	// mininggoodstock.DefaultAppReserved holds the default value on creation for the app_reserved field.
 	mininggoodstock.DefaultAppReserved = mininggoodstockDescAppReserved.Default.(decimal.Decimal)
+	// mininggoodstockDescMiningGoodStockState is the schema descriptor for mining_good_stock_state field.
+	mininggoodstockDescMiningGoodStockState := mininggoodstockFields[10].Descriptor()
+	// mininggoodstock.DefaultMiningGoodStockState holds the default value on creation for the mining_good_stock_state field.
+	mininggoodstock.DefaultMiningGoodStockState = mininggoodstockDescMiningGoodStockState.Default.(string)
 	powerrentalMixin := schema.PowerRental{}.Mixin()
 	powerrental.Policy = privacy.NewPolicies(powerrentalMixin[0], schema.PowerRental{})
 	powerrental.Hooks[0] = func(next ent.Mutator) ent.Mutator {

@@ -374,7 +374,6 @@ func (tmpc *TopMostPosterCreate) createSpec() (*TopMostPoster, *sqlgraph.CreateS
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (tmpc *TopMostPosterCreate) OnConflict(opts ...sql.ConflictOption) *TopMostPosterUpsertOne {
 	tmpc.conflict = opts
 	return &TopMostPosterUpsertOne{
@@ -388,7 +387,6 @@ func (tmpc *TopMostPosterCreate) OnConflict(opts ...sql.ConflictOption) *TopMost
 //	client.TopMostPoster.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (tmpc *TopMostPosterCreate) OnConflictColumns(columns ...string) *TopMostPosterUpsertOne {
 	tmpc.conflict = append(tmpc.conflict, sql.ConflictColumns(columns...))
 	return &TopMostPosterUpsertOne{
@@ -546,7 +544,6 @@ func (u *TopMostPosterUpsert) ClearIndex() *TopMostPosterUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *TopMostPosterUpsertOne) UpdateNewValues() *TopMostPosterUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -560,10 +557,9 @@ func (u *TopMostPosterUpsertOne) UpdateNewValues() *TopMostPosterUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.TopMostPoster.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.TopMostPoster.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *TopMostPosterUpsertOne) Ignore() *TopMostPosterUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -866,7 +862,6 @@ func (tmpcb *TopMostPosterCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (tmpcb *TopMostPosterCreateBulk) OnConflict(opts ...sql.ConflictOption) *TopMostPosterUpsertBulk {
 	tmpcb.conflict = opts
 	return &TopMostPosterUpsertBulk{
@@ -880,7 +875,6 @@ func (tmpcb *TopMostPosterCreateBulk) OnConflict(opts ...sql.ConflictOption) *To
 //	client.TopMostPoster.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (tmpcb *TopMostPosterCreateBulk) OnConflictColumns(columns ...string) *TopMostPosterUpsertBulk {
 	tmpcb.conflict = append(tmpcb.conflict, sql.ConflictColumns(columns...))
 	return &TopMostPosterUpsertBulk{
@@ -905,7 +899,6 @@ type TopMostPosterUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *TopMostPosterUpsertBulk) UpdateNewValues() *TopMostPosterUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -925,7 +918,6 @@ func (u *TopMostPosterUpsertBulk) UpdateNewValues() *TopMostPosterUpsertBulk {
 //	client.TopMostPoster.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *TopMostPosterUpsertBulk) Ignore() *TopMostPosterUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

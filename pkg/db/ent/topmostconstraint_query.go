@@ -264,7 +264,6 @@ func (tmcq *TopMostConstraintQuery) Clone() *TopMostConstraintQuery {
 //		GroupBy(topmostconstraint.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (tmcq *TopMostConstraintQuery) GroupBy(field string, fields ...string) *TopMostConstraintGroupBy {
 	grbuild := &TopMostConstraintGroupBy{config: tmcq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (tmcq *TopMostConstraintQuery) GroupBy(field string, fields ...string) *Top
 //	client.TopMostConstraint.Query().
 //		Select(topmostconstraint.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (tmcq *TopMostConstraintQuery) Select(fields ...string) *TopMostConstraintSelect {
 	tmcq.fields = append(tmcq.fields, fields...)
 	selbuild := &TopMostConstraintSelect{TopMostConstraintQuery: tmcq}

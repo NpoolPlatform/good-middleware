@@ -401,7 +401,6 @@ func (tmcc *TopMostConstraintCreate) createSpec() (*TopMostConstraint, *sqlgraph
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (tmcc *TopMostConstraintCreate) OnConflict(opts ...sql.ConflictOption) *TopMostConstraintUpsertOne {
 	tmcc.conflict = opts
 	return &TopMostConstraintUpsertOne{
@@ -415,7 +414,6 @@ func (tmcc *TopMostConstraintCreate) OnConflict(opts ...sql.ConflictOption) *Top
 //	client.TopMostConstraint.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (tmcc *TopMostConstraintCreate) OnConflictColumns(columns ...string) *TopMostConstraintUpsertOne {
 	tmcc.conflict = append(tmcc.conflict, sql.ConflictColumns(columns...))
 	return &TopMostConstraintUpsertOne{
@@ -591,7 +589,6 @@ func (u *TopMostConstraintUpsert) ClearIndex() *TopMostConstraintUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *TopMostConstraintUpsertOne) UpdateNewValues() *TopMostConstraintUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -605,10 +602,9 @@ func (u *TopMostConstraintUpsertOne) UpdateNewValues() *TopMostConstraintUpsertO
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.TopMostConstraint.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.TopMostConstraint.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *TopMostConstraintUpsertOne) Ignore() *TopMostConstraintUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -932,7 +928,6 @@ func (tmccb *TopMostConstraintCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (tmccb *TopMostConstraintCreateBulk) OnConflict(opts ...sql.ConflictOption) *TopMostConstraintUpsertBulk {
 	tmccb.conflict = opts
 	return &TopMostConstraintUpsertBulk{
@@ -946,7 +941,6 @@ func (tmccb *TopMostConstraintCreateBulk) OnConflict(opts ...sql.ConflictOption)
 //	client.TopMostConstraint.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (tmccb *TopMostConstraintCreateBulk) OnConflictColumns(columns ...string) *TopMostConstraintUpsertBulk {
 	tmccb.conflict = append(tmccb.conflict, sql.ConflictColumns(columns...))
 	return &TopMostConstraintUpsertBulk{
@@ -971,7 +965,6 @@ type TopMostConstraintUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *TopMostConstraintUpsertBulk) UpdateNewValues() *TopMostConstraintUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -991,7 +984,6 @@ func (u *TopMostConstraintUpsertBulk) UpdateNewValues() *TopMostConstraintUpsert
 //	client.TopMostConstraint.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *TopMostConstraintUpsertBulk) Ignore() *TopMostConstraintUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

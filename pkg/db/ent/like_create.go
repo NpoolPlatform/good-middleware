@@ -368,7 +368,6 @@ func (lc *LikeCreate) createSpec() (*Like, *sqlgraph.CreateSpec) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (lc *LikeCreate) OnConflict(opts ...sql.ConflictOption) *LikeUpsertOne {
 	lc.conflict = opts
 	return &LikeUpsertOne{
@@ -382,7 +381,6 @@ func (lc *LikeCreate) OnConflict(opts ...sql.ConflictOption) *LikeUpsertOne {
 //	client.Like.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (lc *LikeCreate) OnConflictColumns(columns ...string) *LikeUpsertOne {
 	lc.conflict = append(lc.conflict, sql.ConflictColumns(columns...))
 	return &LikeUpsertOne{
@@ -528,7 +526,6 @@ func (u *LikeUpsert) UpdateLike() *LikeUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *LikeUpsertOne) UpdateNewValues() *LikeUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -542,10 +539,9 @@ func (u *LikeUpsertOne) UpdateNewValues() *LikeUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.Like.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.Like.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *LikeUpsertOne) Ignore() *LikeUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -834,7 +830,6 @@ func (lcb *LikeCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (lcb *LikeCreateBulk) OnConflict(opts ...sql.ConflictOption) *LikeUpsertBulk {
 	lcb.conflict = opts
 	return &LikeUpsertBulk{
@@ -848,7 +843,6 @@ func (lcb *LikeCreateBulk) OnConflict(opts ...sql.ConflictOption) *LikeUpsertBul
 //	client.Like.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (lcb *LikeCreateBulk) OnConflictColumns(columns ...string) *LikeUpsertBulk {
 	lcb.conflict = append(lcb.conflict, sql.ConflictColumns(columns...))
 	return &LikeUpsertBulk{
@@ -873,7 +867,6 @@ type LikeUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *LikeUpsertBulk) UpdateNewValues() *LikeUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -893,7 +886,6 @@ func (u *LikeUpsertBulk) UpdateNewValues() *LikeUpsertBulk {
 //	client.Like.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *LikeUpsertBulk) Ignore() *LikeUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

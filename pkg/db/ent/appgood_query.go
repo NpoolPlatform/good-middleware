@@ -264,7 +264,6 @@ func (agq *AppGoodQuery) Clone() *AppGoodQuery {
 //		GroupBy(appgood.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (agq *AppGoodQuery) GroupBy(field string, fields ...string) *AppGoodGroupBy {
 	grbuild := &AppGoodGroupBy{config: agq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (agq *AppGoodQuery) GroupBy(field string, fields ...string) *AppGoodGroupBy
 //	client.AppGood.Query().
 //		Select(appgood.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (agq *AppGoodQuery) Select(fields ...string) *AppGoodSelect {
 	agq.fields = append(agq.fields, fields...)
 	selbuild := &AppGoodSelect{AppGoodQuery: agq}

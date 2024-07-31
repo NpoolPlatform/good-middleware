@@ -452,7 +452,6 @@ func (aglc *AppGoodLabelCreate) createSpec() (*AppGoodLabel, *sqlgraph.CreateSpe
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (aglc *AppGoodLabelCreate) OnConflict(opts ...sql.ConflictOption) *AppGoodLabelUpsertOne {
 	aglc.conflict = opts
 	return &AppGoodLabelUpsertOne{
@@ -466,7 +465,6 @@ func (aglc *AppGoodLabelCreate) OnConflict(opts ...sql.ConflictOption) *AppGoodL
 //	client.AppGoodLabel.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (aglc *AppGoodLabelCreate) OnConflictColumns(columns ...string) *AppGoodLabelUpsertOne {
 	aglc.conflict = append(aglc.conflict, sql.ConflictColumns(columns...))
 	return &AppGoodLabelUpsertOne{
@@ -678,7 +676,6 @@ func (u *AppGoodLabelUpsert) ClearIndex() *AppGoodLabelUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *AppGoodLabelUpsertOne) UpdateNewValues() *AppGoodLabelUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -692,10 +689,9 @@ func (u *AppGoodLabelUpsertOne) UpdateNewValues() *AppGoodLabelUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.AppGoodLabel.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.AppGoodLabel.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *AppGoodLabelUpsertOne) Ignore() *AppGoodLabelUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1061,7 +1057,6 @@ func (aglcb *AppGoodLabelCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (aglcb *AppGoodLabelCreateBulk) OnConflict(opts ...sql.ConflictOption) *AppGoodLabelUpsertBulk {
 	aglcb.conflict = opts
 	return &AppGoodLabelUpsertBulk{
@@ -1075,7 +1070,6 @@ func (aglcb *AppGoodLabelCreateBulk) OnConflict(opts ...sql.ConflictOption) *App
 //	client.AppGoodLabel.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (aglcb *AppGoodLabelCreateBulk) OnConflictColumns(columns ...string) *AppGoodLabelUpsertBulk {
 	aglcb.conflict = append(aglcb.conflict, sql.ConflictColumns(columns...))
 	return &AppGoodLabelUpsertBulk{
@@ -1100,7 +1094,6 @@ type AppGoodLabelUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *AppGoodLabelUpsertBulk) UpdateNewValues() *AppGoodLabelUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1120,7 +1113,6 @@ func (u *AppGoodLabelUpsertBulk) UpdateNewValues() *AppGoodLabelUpsertBulk {
 //	client.AppGoodLabel.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *AppGoodLabelUpsertBulk) Ignore() *AppGoodLabelUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

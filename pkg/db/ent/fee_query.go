@@ -264,7 +264,6 @@ func (fq *FeeQuery) Clone() *FeeQuery {
 //		GroupBy(fee.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (fq *FeeQuery) GroupBy(field string, fields ...string) *FeeGroupBy {
 	grbuild := &FeeGroupBy{config: fq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (fq *FeeQuery) GroupBy(field string, fields ...string) *FeeGroupBy {
 //	client.Fee.Query().
 //		Select(fee.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (fq *FeeQuery) Select(fields ...string) *FeeSelect {
 	fq.fields = append(fq.fields, fields...)
 	selbuild := &FeeSelect{FeeQuery: fq}

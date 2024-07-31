@@ -405,7 +405,6 @@ func (dic *DeviceInfoCreate) createSpec() (*DeviceInfo, *sqlgraph.CreateSpec) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (dic *DeviceInfoCreate) OnConflict(opts ...sql.ConflictOption) *DeviceInfoUpsertOne {
 	dic.conflict = opts
 	return &DeviceInfoUpsertOne{
@@ -419,7 +418,6 @@ func (dic *DeviceInfoCreate) OnConflict(opts ...sql.ConflictOption) *DeviceInfoU
 //	client.DeviceInfo.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (dic *DeviceInfoCreate) OnConflictColumns(columns ...string) *DeviceInfoUpsertOne {
 	dic.conflict = append(dic.conflict, sql.ConflictColumns(columns...))
 	return &DeviceInfoUpsertOne{
@@ -601,7 +599,6 @@ func (u *DeviceInfoUpsert) ClearShipmentAt() *DeviceInfoUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *DeviceInfoUpsertOne) UpdateNewValues() *DeviceInfoUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -615,10 +612,9 @@ func (u *DeviceInfoUpsertOne) UpdateNewValues() *DeviceInfoUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.DeviceInfo.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.DeviceInfo.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *DeviceInfoUpsertOne) Ignore() *DeviceInfoUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -949,7 +945,6 @@ func (dicb *DeviceInfoCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (dicb *DeviceInfoCreateBulk) OnConflict(opts ...sql.ConflictOption) *DeviceInfoUpsertBulk {
 	dicb.conflict = opts
 	return &DeviceInfoUpsertBulk{
@@ -963,7 +958,6 @@ func (dicb *DeviceInfoCreateBulk) OnConflict(opts ...sql.ConflictOption) *Device
 //	client.DeviceInfo.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (dicb *DeviceInfoCreateBulk) OnConflictColumns(columns ...string) *DeviceInfoUpsertBulk {
 	dicb.conflict = append(dicb.conflict, sql.ConflictColumns(columns...))
 	return &DeviceInfoUpsertBulk{
@@ -988,7 +982,6 @@ type DeviceInfoUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *DeviceInfoUpsertBulk) UpdateNewValues() *DeviceInfoUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1008,7 +1001,6 @@ func (u *DeviceInfoUpsertBulk) UpdateNewValues() *DeviceInfoUpsertBulk {
 //	client.DeviceInfo.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *DeviceInfoUpsertBulk) Ignore() *DeviceInfoUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

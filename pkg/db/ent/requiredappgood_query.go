@@ -264,7 +264,6 @@ func (ragq *RequiredAppGoodQuery) Clone() *RequiredAppGoodQuery {
 //		GroupBy(requiredappgood.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (ragq *RequiredAppGoodQuery) GroupBy(field string, fields ...string) *RequiredAppGoodGroupBy {
 	grbuild := &RequiredAppGoodGroupBy{config: ragq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (ragq *RequiredAppGoodQuery) GroupBy(field string, fields ...string) *Requi
 //	client.RequiredAppGood.Query().
 //		Select(requiredappgood.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (ragq *RequiredAppGoodQuery) Select(fields ...string) *RequiredAppGoodSelect {
 	ragq.fields = append(ragq.fields, fields...)
 	selbuild := &RequiredAppGoodSelect{RequiredAppGoodQuery: ragq}

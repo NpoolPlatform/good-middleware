@@ -65,7 +65,7 @@ var ret = npool.PowerRental{
 	DeliveryAt:          uint32(time.Now().Unix()),
 	UnitLockDeposit:     decimal.NewFromInt(1).String(),
 	DurationDisplayType: types.GoodDurationType_GoodDurationByDay,
-	StockMode:           types.GoodStockMode_GoodStockByMiningPool,
+	StockMode:           types.GoodStockMode_GoodStockByMiningpool,
 
 	GoodType:                     types.GoodType_PowerRental,
 	BenefitType:                  types.BenefitType_BenefitTypePool,
@@ -129,13 +129,13 @@ var ret = npool.PowerRental{
 	MiningGoodStocks: []*stockmwpb.MiningGoodStockInfo{
 		{
 			EntID:          uuid.NewString(),
-			MiningPoolID:   uuid.NewString(),
+			PoolRootUserID: uuid.NewString(),
 			PoolGoodUserID: uuid.NewString(),
 			Total:          decimal.NewFromInt(70).String(),
 		},
 		{
 			EntID:          uuid.NewString(),
-			MiningPoolID:   uuid.NewString(),
+			PoolRootUserID: uuid.NewString(),
 			PoolGoodUserID: uuid.NewString(),
 			Total:          decimal.NewFromInt(50).String(),
 		},
@@ -250,7 +250,7 @@ func setup(t *testing.T) func(*testing.T) {
 		for _, stock := range ret.MiningGoodStocks {
 			reqs = append(reqs, &stockmwpb.MiningGoodStockReq{
 				EntID:          &stock.EntID,
-				MiningPoolID:   &stock.MiningPoolID,
+				PoolRootUserID: &stock.PoolRootUserID,
 				PoolGoodUserID: &stock.PoolGoodUserID,
 				Total:          &stock.Total,
 			})

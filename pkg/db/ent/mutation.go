@@ -26198,6 +26198,7 @@ type GoodMutation struct {
 	duration_type             *string
 	duration_calculate_type   *string
 	settlement_type           *string
+	good_state                *string
 	clearedFields             map[string]struct{}
 	done                      bool
 	oldValue                  func(context.Context) (*Good, error)
@@ -27684,6 +27685,55 @@ func (m *GoodMutation) ResetSettlementType() {
 	delete(m.clearedFields, good.FieldSettlementType)
 }
 
+// SetGoodState sets the "good_state" field.
+func (m *GoodMutation) SetGoodState(s string) {
+	m.good_state = &s
+}
+
+// GoodState returns the value of the "good_state" field in the mutation.
+func (m *GoodMutation) GoodState() (r string, exists bool) {
+	v := m.good_state
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGoodState returns the old "good_state" field's value of the Good entity.
+// If the Good object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodMutation) OldGoodState(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGoodState is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGoodState requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGoodState: %w", err)
+	}
+	return oldValue.GoodState, nil
+}
+
+// ClearGoodState clears the value of the "good_state" field.
+func (m *GoodMutation) ClearGoodState() {
+	m.good_state = nil
+	m.clearedFields[good.FieldGoodState] = struct{}{}
+}
+
+// GoodStateCleared returns if the "good_state" field was cleared in this mutation.
+func (m *GoodMutation) GoodStateCleared() bool {
+	_, ok := m.clearedFields[good.FieldGoodState]
+	return ok
+}
+
+// ResetGoodState resets all changes to the "good_state" field.
+func (m *GoodMutation) ResetGoodState() {
+	m.good_state = nil
+	delete(m.clearedFields, good.FieldGoodState)
+}
+
 // Where appends a list predicates to the GoodMutation builder.
 func (m *GoodMutation) Where(ps ...predicate.Good) {
 	m.predicates = append(m.predicates, ps...)
@@ -27703,7 +27753,7 @@ func (m *GoodMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *GoodMutation) Fields() []string {
-	fields := make([]string, 0, 27)
+	fields := make([]string, 0, 28)
 	if m.created_at != nil {
 		fields = append(fields, good.FieldCreatedAt)
 	}
@@ -27785,6 +27835,9 @@ func (m *GoodMutation) Fields() []string {
 	if m.settlement_type != nil {
 		fields = append(fields, good.FieldSettlementType)
 	}
+	if m.good_state != nil {
+		fields = append(fields, good.FieldGoodState)
+	}
 	return fields
 }
 
@@ -27847,6 +27900,8 @@ func (m *GoodMutation) Field(name string) (ent.Value, bool) {
 		return m.DurationCalculateType()
 	case good.FieldSettlementType:
 		return m.SettlementType()
+	case good.FieldGoodState:
+		return m.GoodState()
 	}
 	return nil, false
 }
@@ -27910,6 +27965,8 @@ func (m *GoodMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldDurationCalculateType(ctx)
 	case good.FieldSettlementType:
 		return m.OldSettlementType(ctx)
+	case good.FieldGoodState:
+		return m.OldGoodState(ctx)
 	}
 	return nil, fmt.Errorf("unknown Good field %s", name)
 }
@@ -28108,6 +28165,13 @@ func (m *GoodMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetSettlementType(v)
 		return nil
+	case good.FieldGoodState:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGoodState(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Good field %s", name)
 }
@@ -28285,6 +28349,9 @@ func (m *GoodMutation) ClearedFields() []string {
 	if m.FieldCleared(good.FieldSettlementType) {
 		fields = append(fields, good.FieldSettlementType)
 	}
+	if m.FieldCleared(good.FieldGoodState) {
+		fields = append(fields, good.FieldGoodState)
+	}
 	return fields
 }
 
@@ -28358,6 +28425,9 @@ func (m *GoodMutation) ClearField(name string) error {
 		return nil
 	case good.FieldSettlementType:
 		m.ClearSettlementType()
+		return nil
+	case good.FieldGoodState:
+		m.ClearGoodState()
 		return nil
 	}
 	return fmt.Errorf("unknown Good nullable field %s", name)
@@ -28447,6 +28517,9 @@ func (m *GoodMutation) ResetField(name string) error {
 		return nil
 	case good.FieldSettlementType:
 		m.ResetSettlementType()
+		return nil
+	case good.FieldGoodState:
+		m.ResetGoodState()
 		return nil
 	}
 	return fmt.Errorf("unknown Good field %s", name)
@@ -35691,30 +35764,31 @@ func (m *LikeMutation) ResetEdge(name string) error {
 // MiningGoodStockMutation represents an operation that mutates the MiningGoodStock nodes in the graph.
 type MiningGoodStockMutation struct {
 	config
-	op                Op
-	typ               string
-	id                *uint32
-	created_at        *uint32
-	addcreated_at     *int32
-	updated_at        *uint32
-	addupdated_at     *int32
-	deleted_at        *uint32
-	adddeleted_at     *int32
-	ent_id            *uuid.UUID
-	good_stock_id     *uuid.UUID
-	mining_pool_id    *uuid.UUID
-	pool_good_user_id *uuid.UUID
-	total             *decimal.Decimal
-	spot_quantity     *decimal.Decimal
-	locked            *decimal.Decimal
-	in_service        *decimal.Decimal
-	wait_start        *decimal.Decimal
-	sold              *decimal.Decimal
-	app_reserved      *decimal.Decimal
-	clearedFields     map[string]struct{}
-	done              bool
-	oldValue          func(context.Context) (*MiningGoodStock, error)
-	predicates        []predicate.MiningGoodStock
+	op                      Op
+	typ                     string
+	id                      *uint32
+	created_at              *uint32
+	addcreated_at           *int32
+	updated_at              *uint32
+	addupdated_at           *int32
+	deleted_at              *uint32
+	adddeleted_at           *int32
+	ent_id                  *uuid.UUID
+	good_stock_id           *uuid.UUID
+	pool_root_user_id       *uuid.UUID
+	pool_good_user_id       *uuid.UUID
+	total                   *decimal.Decimal
+	spot_quantity           *decimal.Decimal
+	locked                  *decimal.Decimal
+	in_service              *decimal.Decimal
+	wait_start              *decimal.Decimal
+	sold                    *decimal.Decimal
+	app_reserved            *decimal.Decimal
+	mining_good_stock_state *string
+	clearedFields           map[string]struct{}
+	done                    bool
+	oldValue                func(context.Context) (*MiningGoodStock, error)
+	predicates              []predicate.MiningGoodStock
 }
 
 var _ ent.Mutation = (*MiningGoodStockMutation)(nil)
@@ -36074,53 +36148,53 @@ func (m *MiningGoodStockMutation) ResetGoodStockID() {
 	delete(m.clearedFields, mininggoodstock.FieldGoodStockID)
 }
 
-// SetMiningPoolID sets the "mining_pool_id" field.
-func (m *MiningGoodStockMutation) SetMiningPoolID(u uuid.UUID) {
-	m.mining_pool_id = &u
+// SetPoolRootUserID sets the "pool_root_user_id" field.
+func (m *MiningGoodStockMutation) SetPoolRootUserID(u uuid.UUID) {
+	m.pool_root_user_id = &u
 }
 
-// MiningPoolID returns the value of the "mining_pool_id" field in the mutation.
-func (m *MiningGoodStockMutation) MiningPoolID() (r uuid.UUID, exists bool) {
-	v := m.mining_pool_id
+// PoolRootUserID returns the value of the "pool_root_user_id" field in the mutation.
+func (m *MiningGoodStockMutation) PoolRootUserID() (r uuid.UUID, exists bool) {
+	v := m.pool_root_user_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldMiningPoolID returns the old "mining_pool_id" field's value of the MiningGoodStock entity.
+// OldPoolRootUserID returns the old "pool_root_user_id" field's value of the MiningGoodStock entity.
 // If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MiningGoodStockMutation) OldMiningPoolID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *MiningGoodStockMutation) OldPoolRootUserID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldMiningPoolID is only allowed on UpdateOne operations")
+		return v, errors.New("OldPoolRootUserID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldMiningPoolID requires an ID field in the mutation")
+		return v, errors.New("OldPoolRootUserID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldMiningPoolID: %w", err)
+		return v, fmt.Errorf("querying old value for OldPoolRootUserID: %w", err)
 	}
-	return oldValue.MiningPoolID, nil
+	return oldValue.PoolRootUserID, nil
 }
 
-// ClearMiningPoolID clears the value of the "mining_pool_id" field.
-func (m *MiningGoodStockMutation) ClearMiningPoolID() {
-	m.mining_pool_id = nil
-	m.clearedFields[mininggoodstock.FieldMiningPoolID] = struct{}{}
+// ClearPoolRootUserID clears the value of the "pool_root_user_id" field.
+func (m *MiningGoodStockMutation) ClearPoolRootUserID() {
+	m.pool_root_user_id = nil
+	m.clearedFields[mininggoodstock.FieldPoolRootUserID] = struct{}{}
 }
 
-// MiningPoolIDCleared returns if the "mining_pool_id" field was cleared in this mutation.
-func (m *MiningGoodStockMutation) MiningPoolIDCleared() bool {
-	_, ok := m.clearedFields[mininggoodstock.FieldMiningPoolID]
+// PoolRootUserIDCleared returns if the "pool_root_user_id" field was cleared in this mutation.
+func (m *MiningGoodStockMutation) PoolRootUserIDCleared() bool {
+	_, ok := m.clearedFields[mininggoodstock.FieldPoolRootUserID]
 	return ok
 }
 
-// ResetMiningPoolID resets all changes to the "mining_pool_id" field.
-func (m *MiningGoodStockMutation) ResetMiningPoolID() {
-	m.mining_pool_id = nil
-	delete(m.clearedFields, mininggoodstock.FieldMiningPoolID)
+// ResetPoolRootUserID resets all changes to the "pool_root_user_id" field.
+func (m *MiningGoodStockMutation) ResetPoolRootUserID() {
+	m.pool_root_user_id = nil
+	delete(m.clearedFields, mininggoodstock.FieldPoolRootUserID)
 }
 
 // SetPoolGoodUserID sets the "pool_good_user_id" field.
@@ -36515,6 +36589,55 @@ func (m *MiningGoodStockMutation) ResetAppReserved() {
 	delete(m.clearedFields, mininggoodstock.FieldAppReserved)
 }
 
+// SetMiningGoodStockState sets the "mining_good_stock_state" field.
+func (m *MiningGoodStockMutation) SetMiningGoodStockState(s string) {
+	m.mining_good_stock_state = &s
+}
+
+// MiningGoodStockState returns the value of the "mining_good_stock_state" field in the mutation.
+func (m *MiningGoodStockMutation) MiningGoodStockState() (r string, exists bool) {
+	v := m.mining_good_stock_state
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMiningGoodStockState returns the old "mining_good_stock_state" field's value of the MiningGoodStock entity.
+// If the MiningGoodStock object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MiningGoodStockMutation) OldMiningGoodStockState(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMiningGoodStockState is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMiningGoodStockState requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMiningGoodStockState: %w", err)
+	}
+	return oldValue.MiningGoodStockState, nil
+}
+
+// ClearMiningGoodStockState clears the value of the "mining_good_stock_state" field.
+func (m *MiningGoodStockMutation) ClearMiningGoodStockState() {
+	m.mining_good_stock_state = nil
+	m.clearedFields[mininggoodstock.FieldMiningGoodStockState] = struct{}{}
+}
+
+// MiningGoodStockStateCleared returns if the "mining_good_stock_state" field was cleared in this mutation.
+func (m *MiningGoodStockMutation) MiningGoodStockStateCleared() bool {
+	_, ok := m.clearedFields[mininggoodstock.FieldMiningGoodStockState]
+	return ok
+}
+
+// ResetMiningGoodStockState resets all changes to the "mining_good_stock_state" field.
+func (m *MiningGoodStockMutation) ResetMiningGoodStockState() {
+	m.mining_good_stock_state = nil
+	delete(m.clearedFields, mininggoodstock.FieldMiningGoodStockState)
+}
+
 // Where appends a list predicates to the MiningGoodStockMutation builder.
 func (m *MiningGoodStockMutation) Where(ps ...predicate.MiningGoodStock) {
 	m.predicates = append(m.predicates, ps...)
@@ -36534,7 +36657,7 @@ func (m *MiningGoodStockMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *MiningGoodStockMutation) Fields() []string {
-	fields := make([]string, 0, 14)
+	fields := make([]string, 0, 15)
 	if m.created_at != nil {
 		fields = append(fields, mininggoodstock.FieldCreatedAt)
 	}
@@ -36550,8 +36673,8 @@ func (m *MiningGoodStockMutation) Fields() []string {
 	if m.good_stock_id != nil {
 		fields = append(fields, mininggoodstock.FieldGoodStockID)
 	}
-	if m.mining_pool_id != nil {
-		fields = append(fields, mininggoodstock.FieldMiningPoolID)
+	if m.pool_root_user_id != nil {
+		fields = append(fields, mininggoodstock.FieldPoolRootUserID)
 	}
 	if m.pool_good_user_id != nil {
 		fields = append(fields, mininggoodstock.FieldPoolGoodUserID)
@@ -36577,6 +36700,9 @@ func (m *MiningGoodStockMutation) Fields() []string {
 	if m.app_reserved != nil {
 		fields = append(fields, mininggoodstock.FieldAppReserved)
 	}
+	if m.mining_good_stock_state != nil {
+		fields = append(fields, mininggoodstock.FieldMiningGoodStockState)
+	}
 	return fields
 }
 
@@ -36595,8 +36721,8 @@ func (m *MiningGoodStockMutation) Field(name string) (ent.Value, bool) {
 		return m.EntID()
 	case mininggoodstock.FieldGoodStockID:
 		return m.GoodStockID()
-	case mininggoodstock.FieldMiningPoolID:
-		return m.MiningPoolID()
+	case mininggoodstock.FieldPoolRootUserID:
+		return m.PoolRootUserID()
 	case mininggoodstock.FieldPoolGoodUserID:
 		return m.PoolGoodUserID()
 	case mininggoodstock.FieldTotal:
@@ -36613,6 +36739,8 @@ func (m *MiningGoodStockMutation) Field(name string) (ent.Value, bool) {
 		return m.Sold()
 	case mininggoodstock.FieldAppReserved:
 		return m.AppReserved()
+	case mininggoodstock.FieldMiningGoodStockState:
+		return m.MiningGoodStockState()
 	}
 	return nil, false
 }
@@ -36632,8 +36760,8 @@ func (m *MiningGoodStockMutation) OldField(ctx context.Context, name string) (en
 		return m.OldEntID(ctx)
 	case mininggoodstock.FieldGoodStockID:
 		return m.OldGoodStockID(ctx)
-	case mininggoodstock.FieldMiningPoolID:
-		return m.OldMiningPoolID(ctx)
+	case mininggoodstock.FieldPoolRootUserID:
+		return m.OldPoolRootUserID(ctx)
 	case mininggoodstock.FieldPoolGoodUserID:
 		return m.OldPoolGoodUserID(ctx)
 	case mininggoodstock.FieldTotal:
@@ -36650,6 +36778,8 @@ func (m *MiningGoodStockMutation) OldField(ctx context.Context, name string) (en
 		return m.OldSold(ctx)
 	case mininggoodstock.FieldAppReserved:
 		return m.OldAppReserved(ctx)
+	case mininggoodstock.FieldMiningGoodStockState:
+		return m.OldMiningGoodStockState(ctx)
 	}
 	return nil, fmt.Errorf("unknown MiningGoodStock field %s", name)
 }
@@ -36694,12 +36824,12 @@ func (m *MiningGoodStockMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetGoodStockID(v)
 		return nil
-	case mininggoodstock.FieldMiningPoolID:
+	case mininggoodstock.FieldPoolRootUserID:
 		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetMiningPoolID(v)
+		m.SetPoolRootUserID(v)
 		return nil
 	case mininggoodstock.FieldPoolGoodUserID:
 		v, ok := value.(uuid.UUID)
@@ -36756,6 +36886,13 @@ func (m *MiningGoodStockMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAppReserved(v)
+		return nil
+	case mininggoodstock.FieldMiningGoodStockState:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMiningGoodStockState(v)
 		return nil
 	}
 	return fmt.Errorf("unknown MiningGoodStock field %s", name)
@@ -36829,8 +36966,8 @@ func (m *MiningGoodStockMutation) ClearedFields() []string {
 	if m.FieldCleared(mininggoodstock.FieldGoodStockID) {
 		fields = append(fields, mininggoodstock.FieldGoodStockID)
 	}
-	if m.FieldCleared(mininggoodstock.FieldMiningPoolID) {
-		fields = append(fields, mininggoodstock.FieldMiningPoolID)
+	if m.FieldCleared(mininggoodstock.FieldPoolRootUserID) {
+		fields = append(fields, mininggoodstock.FieldPoolRootUserID)
 	}
 	if m.FieldCleared(mininggoodstock.FieldPoolGoodUserID) {
 		fields = append(fields, mininggoodstock.FieldPoolGoodUserID)
@@ -36856,6 +36993,9 @@ func (m *MiningGoodStockMutation) ClearedFields() []string {
 	if m.FieldCleared(mininggoodstock.FieldAppReserved) {
 		fields = append(fields, mininggoodstock.FieldAppReserved)
 	}
+	if m.FieldCleared(mininggoodstock.FieldMiningGoodStockState) {
+		fields = append(fields, mininggoodstock.FieldMiningGoodStockState)
+	}
 	return fields
 }
 
@@ -36873,8 +37013,8 @@ func (m *MiningGoodStockMutation) ClearField(name string) error {
 	case mininggoodstock.FieldGoodStockID:
 		m.ClearGoodStockID()
 		return nil
-	case mininggoodstock.FieldMiningPoolID:
-		m.ClearMiningPoolID()
+	case mininggoodstock.FieldPoolRootUserID:
+		m.ClearPoolRootUserID()
 		return nil
 	case mininggoodstock.FieldPoolGoodUserID:
 		m.ClearPoolGoodUserID()
@@ -36900,6 +37040,9 @@ func (m *MiningGoodStockMutation) ClearField(name string) error {
 	case mininggoodstock.FieldAppReserved:
 		m.ClearAppReserved()
 		return nil
+	case mininggoodstock.FieldMiningGoodStockState:
+		m.ClearMiningGoodStockState()
+		return nil
 	}
 	return fmt.Errorf("unknown MiningGoodStock nullable field %s", name)
 }
@@ -36923,8 +37066,8 @@ func (m *MiningGoodStockMutation) ResetField(name string) error {
 	case mininggoodstock.FieldGoodStockID:
 		m.ResetGoodStockID()
 		return nil
-	case mininggoodstock.FieldMiningPoolID:
-		m.ResetMiningPoolID()
+	case mininggoodstock.FieldPoolRootUserID:
+		m.ResetPoolRootUserID()
 		return nil
 	case mininggoodstock.FieldPoolGoodUserID:
 		m.ResetPoolGoodUserID()
@@ -36949,6 +37092,9 @@ func (m *MiningGoodStockMutation) ResetField(name string) error {
 		return nil
 	case mininggoodstock.FieldAppReserved:
 		m.ResetAppReserved()
+		return nil
+	case mininggoodstock.FieldMiningGoodStockState:
+		m.ResetMiningGoodStockState()
 		return nil
 	}
 	return fmt.Errorf("unknown MiningGoodStock field %s", name)

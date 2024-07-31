@@ -401,7 +401,6 @@ func (afc *AppFeeCreate) createSpec() (*AppFee, *sqlgraph.CreateSpec) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (afc *AppFeeCreate) OnConflict(opts ...sql.ConflictOption) *AppFeeUpsertOne {
 	afc.conflict = opts
 	return &AppFeeUpsertOne{
@@ -415,7 +414,6 @@ func (afc *AppFeeCreate) OnConflict(opts ...sql.ConflictOption) *AppFeeUpsertOne
 //	client.AppFee.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (afc *AppFeeCreate) OnConflictColumns(columns ...string) *AppFeeUpsertOne {
 	afc.conflict = append(afc.conflict, sql.ConflictColumns(columns...))
 	return &AppFeeUpsertOne{
@@ -591,7 +589,6 @@ func (u *AppFeeUpsert) ClearMinOrderDurationSeconds() *AppFeeUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *AppFeeUpsertOne) UpdateNewValues() *AppFeeUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -605,10 +602,9 @@ func (u *AppFeeUpsertOne) UpdateNewValues() *AppFeeUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.AppFee.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.AppFee.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *AppFeeUpsertOne) Ignore() *AppFeeUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -932,7 +928,6 @@ func (afcb *AppFeeCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (afcb *AppFeeCreateBulk) OnConflict(opts ...sql.ConflictOption) *AppFeeUpsertBulk {
 	afcb.conflict = opts
 	return &AppFeeUpsertBulk{
@@ -946,7 +941,6 @@ func (afcb *AppFeeCreateBulk) OnConflict(opts ...sql.ConflictOption) *AppFeeUpse
 //	client.AppFee.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (afcb *AppFeeCreateBulk) OnConflictColumns(columns ...string) *AppFeeUpsertBulk {
 	afcb.conflict = append(afcb.conflict, sql.ConflictColumns(columns...))
 	return &AppFeeUpsertBulk{
@@ -971,7 +965,6 @@ type AppFeeUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *AppFeeUpsertBulk) UpdateNewValues() *AppFeeUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -991,7 +984,6 @@ func (u *AppFeeUpsertBulk) UpdateNewValues() *AppFeeUpsertBulk {
 //	client.AppFee.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *AppFeeUpsertBulk) Ignore() *AppFeeUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

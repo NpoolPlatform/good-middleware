@@ -75,11 +75,11 @@ func WithGoodStockID(id *string, must bool) func(context.Context, *Handler) erro
 	}
 }
 
-func WithMiningPoolID(id *string, must bool) func(context.Context, *Handler) error {
+func WithPoolRootUserID(id *string, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			if must {
-				return wlog.Errorf("invalid miningpoolid")
+				return wlog.Errorf("invalid poolrootuserid")
 			}
 			return nil
 		}
@@ -87,7 +87,7 @@ func WithMiningPoolID(id *string, must bool) func(context.Context, *Handler) err
 		if err != nil {
 			return wlog.WrapError(err)
 		}
-		h.MiningPoolID = &_id
+		h.PoolRootUserID = &_id
 		return nil
 	}
 }

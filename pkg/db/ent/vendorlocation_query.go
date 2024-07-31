@@ -264,7 +264,6 @@ func (vlq *VendorLocationQuery) Clone() *VendorLocationQuery {
 //		GroupBy(vendorlocation.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (vlq *VendorLocationQuery) GroupBy(field string, fields ...string) *VendorLocationGroupBy {
 	grbuild := &VendorLocationGroupBy{config: vlq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (vlq *VendorLocationQuery) GroupBy(field string, fields ...string) *VendorL
 //	client.VendorLocation.Query().
 //		Select(vendorlocation.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (vlq *VendorLocationQuery) Select(fields ...string) *VendorLocationSelect {
 	vlq.fields = append(vlq.fields, fields...)
 	selbuild := &VendorLocationSelect{VendorLocationQuery: vlq}

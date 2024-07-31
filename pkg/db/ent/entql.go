@@ -644,6 +644,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			good.FieldDurationType:          {Type: field.TypeString, Column: good.FieldDurationType},
 			good.FieldDurationCalculateType: {Type: field.TypeString, Column: good.FieldDurationCalculateType},
 			good.FieldSettlementType:        {Type: field.TypeString, Column: good.FieldSettlementType},
+			good.FieldGoodState:             {Type: field.TypeString, Column: good.FieldGoodState},
 		},
 	}
 	graph.Nodes[24] = &sqlgraph.Node{
@@ -815,20 +816,21 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "MiningGoodStock",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			mininggoodstock.FieldCreatedAt:      {Type: field.TypeUint32, Column: mininggoodstock.FieldCreatedAt},
-			mininggoodstock.FieldUpdatedAt:      {Type: field.TypeUint32, Column: mininggoodstock.FieldUpdatedAt},
-			mininggoodstock.FieldDeletedAt:      {Type: field.TypeUint32, Column: mininggoodstock.FieldDeletedAt},
-			mininggoodstock.FieldEntID:          {Type: field.TypeUUID, Column: mininggoodstock.FieldEntID},
-			mininggoodstock.FieldGoodStockID:    {Type: field.TypeUUID, Column: mininggoodstock.FieldGoodStockID},
-			mininggoodstock.FieldMiningPoolID:   {Type: field.TypeUUID, Column: mininggoodstock.FieldMiningPoolID},
-			mininggoodstock.FieldPoolGoodUserID: {Type: field.TypeUUID, Column: mininggoodstock.FieldPoolGoodUserID},
-			mininggoodstock.FieldTotal:          {Type: field.TypeOther, Column: mininggoodstock.FieldTotal},
-			mininggoodstock.FieldSpotQuantity:   {Type: field.TypeOther, Column: mininggoodstock.FieldSpotQuantity},
-			mininggoodstock.FieldLocked:         {Type: field.TypeOther, Column: mininggoodstock.FieldLocked},
-			mininggoodstock.FieldInService:      {Type: field.TypeOther, Column: mininggoodstock.FieldInService},
-			mininggoodstock.FieldWaitStart:      {Type: field.TypeOther, Column: mininggoodstock.FieldWaitStart},
-			mininggoodstock.FieldSold:           {Type: field.TypeOther, Column: mininggoodstock.FieldSold},
-			mininggoodstock.FieldAppReserved:    {Type: field.TypeOther, Column: mininggoodstock.FieldAppReserved},
+			mininggoodstock.FieldCreatedAt:            {Type: field.TypeUint32, Column: mininggoodstock.FieldCreatedAt},
+			mininggoodstock.FieldUpdatedAt:            {Type: field.TypeUint32, Column: mininggoodstock.FieldUpdatedAt},
+			mininggoodstock.FieldDeletedAt:            {Type: field.TypeUint32, Column: mininggoodstock.FieldDeletedAt},
+			mininggoodstock.FieldEntID:                {Type: field.TypeUUID, Column: mininggoodstock.FieldEntID},
+			mininggoodstock.FieldGoodStockID:          {Type: field.TypeUUID, Column: mininggoodstock.FieldGoodStockID},
+			mininggoodstock.FieldPoolRootUserID:       {Type: field.TypeUUID, Column: mininggoodstock.FieldPoolRootUserID},
+			mininggoodstock.FieldPoolGoodUserID:       {Type: field.TypeUUID, Column: mininggoodstock.FieldPoolGoodUserID},
+			mininggoodstock.FieldTotal:                {Type: field.TypeOther, Column: mininggoodstock.FieldTotal},
+			mininggoodstock.FieldSpotQuantity:         {Type: field.TypeOther, Column: mininggoodstock.FieldSpotQuantity},
+			mininggoodstock.FieldLocked:               {Type: field.TypeOther, Column: mininggoodstock.FieldLocked},
+			mininggoodstock.FieldInService:            {Type: field.TypeOther, Column: mininggoodstock.FieldInService},
+			mininggoodstock.FieldWaitStart:            {Type: field.TypeOther, Column: mininggoodstock.FieldWaitStart},
+			mininggoodstock.FieldSold:                 {Type: field.TypeOther, Column: mininggoodstock.FieldSold},
+			mininggoodstock.FieldAppReserved:          {Type: field.TypeOther, Column: mininggoodstock.FieldAppReserved},
+			mininggoodstock.FieldMiningGoodStockState: {Type: field.TypeString, Column: mininggoodstock.FieldMiningGoodStockState},
 		},
 	}
 	graph.Nodes[32] = &sqlgraph.Node{
@@ -3479,6 +3481,11 @@ func (f *GoodFilter) WhereSettlementType(p entql.StringP) {
 	f.Where(p.Field(good.FieldSettlementType))
 }
 
+// WhereGoodState applies the entql string predicate on the good_state field.
+func (f *GoodFilter) WhereGoodState(p entql.StringP) {
+	f.Where(p.Field(good.FieldGoodState))
+}
+
 // addPredicate implements the predicateAdder interface.
 func (gbq *GoodBaseQuery) addPredicate(pred func(s *sql.Selector)) {
 	gbq.predicates = append(gbq.predicates, pred)
@@ -4159,9 +4166,9 @@ func (f *MiningGoodStockFilter) WhereGoodStockID(p entql.ValueP) {
 	f.Where(p.Field(mininggoodstock.FieldGoodStockID))
 }
 
-// WhereMiningPoolID applies the entql [16]byte predicate on the mining_pool_id field.
-func (f *MiningGoodStockFilter) WhereMiningPoolID(p entql.ValueP) {
-	f.Where(p.Field(mininggoodstock.FieldMiningPoolID))
+// WherePoolRootUserID applies the entql [16]byte predicate on the pool_root_user_id field.
+func (f *MiningGoodStockFilter) WherePoolRootUserID(p entql.ValueP) {
+	f.Where(p.Field(mininggoodstock.FieldPoolRootUserID))
 }
 
 // WherePoolGoodUserID applies the entql [16]byte predicate on the pool_good_user_id field.
@@ -4202,6 +4209,11 @@ func (f *MiningGoodStockFilter) WhereSold(p entql.OtherP) {
 // WhereAppReserved applies the entql other predicate on the app_reserved field.
 func (f *MiningGoodStockFilter) WhereAppReserved(p entql.OtherP) {
 	f.Where(p.Field(mininggoodstock.FieldAppReserved))
+}
+
+// WhereMiningGoodStockState applies the entql string predicate on the mining_good_stock_state field.
+func (f *MiningGoodStockFilter) WhereMiningGoodStockState(p entql.StringP) {
+	f.Where(p.Field(mininggoodstock.FieldMiningGoodStockState))
 }
 
 // addPredicate implements the predicateAdder interface.

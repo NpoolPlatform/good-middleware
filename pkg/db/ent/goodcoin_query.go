@@ -264,7 +264,6 @@ func (gcq *GoodCoinQuery) Clone() *GoodCoinQuery {
 //		GroupBy(goodcoin.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (gcq *GoodCoinQuery) GroupBy(field string, fields ...string) *GoodCoinGroupBy {
 	grbuild := &GoodCoinGroupBy{config: gcq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (gcq *GoodCoinQuery) GroupBy(field string, fields ...string) *GoodCoinGroup
 //	client.GoodCoin.Query().
 //		Select(goodcoin.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (gcq *GoodCoinQuery) Select(fields ...string) *GoodCoinSelect {
 	gcq.fields = append(gcq.fields, fields...)
 	selbuild := &GoodCoinSelect{GoodCoinQuery: gcq}

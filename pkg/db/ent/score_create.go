@@ -407,7 +407,6 @@ func (sc *ScoreCreate) createSpec() (*Score, *sqlgraph.CreateSpec) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (sc *ScoreCreate) OnConflict(opts ...sql.ConflictOption) *ScoreUpsertOne {
 	sc.conflict = opts
 	return &ScoreUpsertOne{
@@ -421,7 +420,6 @@ func (sc *ScoreCreate) OnConflict(opts ...sql.ConflictOption) *ScoreUpsertOne {
 //	client.Score.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (sc *ScoreCreate) OnConflictColumns(columns ...string) *ScoreUpsertOne {
 	sc.conflict = append(sc.conflict, sql.ConflictColumns(columns...))
 	return &ScoreUpsertOne{
@@ -591,7 +589,6 @@ func (u *ScoreUpsert) ClearCommentID() *ScoreUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *ScoreUpsertOne) UpdateNewValues() *ScoreUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -605,10 +602,9 @@ func (u *ScoreUpsertOne) UpdateNewValues() *ScoreUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.Score.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.Score.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *ScoreUpsertOne) Ignore() *ScoreUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -925,7 +921,6 @@ func (scb *ScoreCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (scb *ScoreCreateBulk) OnConflict(opts ...sql.ConflictOption) *ScoreUpsertBulk {
 	scb.conflict = opts
 	return &ScoreUpsertBulk{
@@ -939,7 +934,6 @@ func (scb *ScoreCreateBulk) OnConflict(opts ...sql.ConflictOption) *ScoreUpsertB
 //	client.Score.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (scb *ScoreCreateBulk) OnConflictColumns(columns ...string) *ScoreUpsertBulk {
 	scb.conflict = append(scb.conflict, sql.ConflictColumns(columns...))
 	return &ScoreUpsertBulk{
@@ -964,7 +958,6 @@ type ScoreUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *ScoreUpsertBulk) UpdateNewValues() *ScoreUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -984,7 +977,6 @@ func (u *ScoreUpsertBulk) UpdateNewValues() *ScoreUpsertBulk {
 //	client.Score.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *ScoreUpsertBulk) Ignore() *ScoreUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

@@ -67,6 +67,8 @@ const (
 	FieldDurationCalculateType = "duration_calculate_type"
 	// FieldSettlementType holds the string denoting the settlement_type field in the database.
 	FieldSettlementType = "settlement_type"
+	// FieldGoodState holds the string denoting the good_state field in the database.
+	FieldGoodState = "good_state"
 	// Table holds the table name of the good in the database.
 	Table = "goods"
 )
@@ -101,6 +103,7 @@ var Columns = []string{
 	FieldDurationType,
 	FieldDurationCalculateType,
 	FieldSettlementType,
+	FieldGoodState,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -118,7 +121,6 @@ func ValidColumn(column string) bool {
 // it should be imported in the main as follows:
 //
 //	import _ "github.com/NpoolPlatform/good-middleware/pkg/db/ent/runtime"
-//
 var (
 	Hooks  [1]ent.Hook
 	Policy ent.Policy
@@ -172,4 +174,6 @@ var (
 	DefaultDurationCalculateType string
 	// DefaultSettlementType holds the default value on creation for the "settlement_type" field.
 	DefaultSettlementType string
+	// DefaultGoodState holds the default value on creation for the "good_state" field.
+	DefaultGoodState string
 )

@@ -264,7 +264,6 @@ func (vbq *VendorBrandQuery) Clone() *VendorBrandQuery {
 //		GroupBy(vendorbrand.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (vbq *VendorBrandQuery) GroupBy(field string, fields ...string) *VendorBrandGroupBy {
 	grbuild := &VendorBrandGroupBy{config: vbq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (vbq *VendorBrandQuery) GroupBy(field string, fields ...string) *VendorBran
 //	client.VendorBrand.Query().
 //		Select(vendorbrand.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (vbq *VendorBrandQuery) Select(fields ...string) *VendorBrandSelect {
 	vbq.fields = append(vbq.fields, fields...)
 	selbuild := &VendorBrandSelect{VendorBrandQuery: vbq}

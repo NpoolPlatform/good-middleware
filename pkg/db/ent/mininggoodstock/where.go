@@ -115,10 +115,10 @@ func GoodStockID(v uuid.UUID) predicate.MiningGoodStock {
 	})
 }
 
-// MiningPoolID applies equality check predicate on the "mining_pool_id" field. It's identical to MiningPoolIDEQ.
-func MiningPoolID(v uuid.UUID) predicate.MiningGoodStock {
+// PoolRootUserID applies equality check predicate on the "pool_root_user_id" field. It's identical to PoolRootUserIDEQ.
+func PoolRootUserID(v uuid.UUID) predicate.MiningGoodStock {
 	return predicate.MiningGoodStock(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMiningPoolID), v))
+		s.Where(sql.EQ(s.C(FieldPoolRootUserID), v))
 	})
 }
 
@@ -175,6 +175,13 @@ func Sold(v decimal.Decimal) predicate.MiningGoodStock {
 func AppReserved(v decimal.Decimal) predicate.MiningGoodStock {
 	return predicate.MiningGoodStock(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldAppReserved), v))
+	})
+}
+
+// MiningGoodStockState applies equality check predicate on the "mining_good_stock_state" field. It's identical to MiningGoodStockStateEQ.
+func MiningGoodStockState(v string) predicate.MiningGoodStock {
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldMiningGoodStockState), v))
 	})
 }
 
@@ -512,81 +519,81 @@ func GoodStockIDNotNil() predicate.MiningGoodStock {
 	})
 }
 
-// MiningPoolIDEQ applies the EQ predicate on the "mining_pool_id" field.
-func MiningPoolIDEQ(v uuid.UUID) predicate.MiningGoodStock {
+// PoolRootUserIDEQ applies the EQ predicate on the "pool_root_user_id" field.
+func PoolRootUserIDEQ(v uuid.UUID) predicate.MiningGoodStock {
 	return predicate.MiningGoodStock(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMiningPoolID), v))
+		s.Where(sql.EQ(s.C(FieldPoolRootUserID), v))
 	})
 }
 
-// MiningPoolIDNEQ applies the NEQ predicate on the "mining_pool_id" field.
-func MiningPoolIDNEQ(v uuid.UUID) predicate.MiningGoodStock {
+// PoolRootUserIDNEQ applies the NEQ predicate on the "pool_root_user_id" field.
+func PoolRootUserIDNEQ(v uuid.UUID) predicate.MiningGoodStock {
 	return predicate.MiningGoodStock(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldMiningPoolID), v))
+		s.Where(sql.NEQ(s.C(FieldPoolRootUserID), v))
 	})
 }
 
-// MiningPoolIDIn applies the In predicate on the "mining_pool_id" field.
-func MiningPoolIDIn(vs ...uuid.UUID) predicate.MiningGoodStock {
+// PoolRootUserIDIn applies the In predicate on the "pool_root_user_id" field.
+func PoolRootUserIDIn(vs ...uuid.UUID) predicate.MiningGoodStock {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.MiningGoodStock(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldMiningPoolID), v...))
+		s.Where(sql.In(s.C(FieldPoolRootUserID), v...))
 	})
 }
 
-// MiningPoolIDNotIn applies the NotIn predicate on the "mining_pool_id" field.
-func MiningPoolIDNotIn(vs ...uuid.UUID) predicate.MiningGoodStock {
+// PoolRootUserIDNotIn applies the NotIn predicate on the "pool_root_user_id" field.
+func PoolRootUserIDNotIn(vs ...uuid.UUID) predicate.MiningGoodStock {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.MiningGoodStock(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldMiningPoolID), v...))
+		s.Where(sql.NotIn(s.C(FieldPoolRootUserID), v...))
 	})
 }
 
-// MiningPoolIDGT applies the GT predicate on the "mining_pool_id" field.
-func MiningPoolIDGT(v uuid.UUID) predicate.MiningGoodStock {
+// PoolRootUserIDGT applies the GT predicate on the "pool_root_user_id" field.
+func PoolRootUserIDGT(v uuid.UUID) predicate.MiningGoodStock {
 	return predicate.MiningGoodStock(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldMiningPoolID), v))
+		s.Where(sql.GT(s.C(FieldPoolRootUserID), v))
 	})
 }
 
-// MiningPoolIDGTE applies the GTE predicate on the "mining_pool_id" field.
-func MiningPoolIDGTE(v uuid.UUID) predicate.MiningGoodStock {
+// PoolRootUserIDGTE applies the GTE predicate on the "pool_root_user_id" field.
+func PoolRootUserIDGTE(v uuid.UUID) predicate.MiningGoodStock {
 	return predicate.MiningGoodStock(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldMiningPoolID), v))
+		s.Where(sql.GTE(s.C(FieldPoolRootUserID), v))
 	})
 }
 
-// MiningPoolIDLT applies the LT predicate on the "mining_pool_id" field.
-func MiningPoolIDLT(v uuid.UUID) predicate.MiningGoodStock {
+// PoolRootUserIDLT applies the LT predicate on the "pool_root_user_id" field.
+func PoolRootUserIDLT(v uuid.UUID) predicate.MiningGoodStock {
 	return predicate.MiningGoodStock(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldMiningPoolID), v))
+		s.Where(sql.LT(s.C(FieldPoolRootUserID), v))
 	})
 }
 
-// MiningPoolIDLTE applies the LTE predicate on the "mining_pool_id" field.
-func MiningPoolIDLTE(v uuid.UUID) predicate.MiningGoodStock {
+// PoolRootUserIDLTE applies the LTE predicate on the "pool_root_user_id" field.
+func PoolRootUserIDLTE(v uuid.UUID) predicate.MiningGoodStock {
 	return predicate.MiningGoodStock(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldMiningPoolID), v))
+		s.Where(sql.LTE(s.C(FieldPoolRootUserID), v))
 	})
 }
 
-// MiningPoolIDIsNil applies the IsNil predicate on the "mining_pool_id" field.
-func MiningPoolIDIsNil() predicate.MiningGoodStock {
+// PoolRootUserIDIsNil applies the IsNil predicate on the "pool_root_user_id" field.
+func PoolRootUserIDIsNil() predicate.MiningGoodStock {
 	return predicate.MiningGoodStock(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldMiningPoolID)))
+		s.Where(sql.IsNull(s.C(FieldPoolRootUserID)))
 	})
 }
 
-// MiningPoolIDNotNil applies the NotNil predicate on the "mining_pool_id" field.
-func MiningPoolIDNotNil() predicate.MiningGoodStock {
+// PoolRootUserIDNotNil applies the NotNil predicate on the "pool_root_user_id" field.
+func PoolRootUserIDNotNil() predicate.MiningGoodStock {
 	return predicate.MiningGoodStock(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldMiningPoolID)))
+		s.Where(sql.NotNull(s.C(FieldPoolRootUserID)))
 	})
 }
 
@@ -1211,6 +1218,119 @@ func AppReservedIsNil() predicate.MiningGoodStock {
 func AppReservedNotNil() predicate.MiningGoodStock {
 	return predicate.MiningGoodStock(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldAppReserved)))
+	})
+}
+
+// MiningGoodStockStateEQ applies the EQ predicate on the "mining_good_stock_state" field.
+func MiningGoodStockStateEQ(v string) predicate.MiningGoodStock {
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldMiningGoodStockState), v))
+	})
+}
+
+// MiningGoodStockStateNEQ applies the NEQ predicate on the "mining_good_stock_state" field.
+func MiningGoodStockStateNEQ(v string) predicate.MiningGoodStock {
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldMiningGoodStockState), v))
+	})
+}
+
+// MiningGoodStockStateIn applies the In predicate on the "mining_good_stock_state" field.
+func MiningGoodStockStateIn(vs ...string) predicate.MiningGoodStock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldMiningGoodStockState), v...))
+	})
+}
+
+// MiningGoodStockStateNotIn applies the NotIn predicate on the "mining_good_stock_state" field.
+func MiningGoodStockStateNotIn(vs ...string) predicate.MiningGoodStock {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldMiningGoodStockState), v...))
+	})
+}
+
+// MiningGoodStockStateGT applies the GT predicate on the "mining_good_stock_state" field.
+func MiningGoodStockStateGT(v string) predicate.MiningGoodStock {
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldMiningGoodStockState), v))
+	})
+}
+
+// MiningGoodStockStateGTE applies the GTE predicate on the "mining_good_stock_state" field.
+func MiningGoodStockStateGTE(v string) predicate.MiningGoodStock {
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldMiningGoodStockState), v))
+	})
+}
+
+// MiningGoodStockStateLT applies the LT predicate on the "mining_good_stock_state" field.
+func MiningGoodStockStateLT(v string) predicate.MiningGoodStock {
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldMiningGoodStockState), v))
+	})
+}
+
+// MiningGoodStockStateLTE applies the LTE predicate on the "mining_good_stock_state" field.
+func MiningGoodStockStateLTE(v string) predicate.MiningGoodStock {
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldMiningGoodStockState), v))
+	})
+}
+
+// MiningGoodStockStateContains applies the Contains predicate on the "mining_good_stock_state" field.
+func MiningGoodStockStateContains(v string) predicate.MiningGoodStock {
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldMiningGoodStockState), v))
+	})
+}
+
+// MiningGoodStockStateHasPrefix applies the HasPrefix predicate on the "mining_good_stock_state" field.
+func MiningGoodStockStateHasPrefix(v string) predicate.MiningGoodStock {
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldMiningGoodStockState), v))
+	})
+}
+
+// MiningGoodStockStateHasSuffix applies the HasSuffix predicate on the "mining_good_stock_state" field.
+func MiningGoodStockStateHasSuffix(v string) predicate.MiningGoodStock {
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldMiningGoodStockState), v))
+	})
+}
+
+// MiningGoodStockStateIsNil applies the IsNil predicate on the "mining_good_stock_state" field.
+func MiningGoodStockStateIsNil() predicate.MiningGoodStock {
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldMiningGoodStockState)))
+	})
+}
+
+// MiningGoodStockStateNotNil applies the NotNil predicate on the "mining_good_stock_state" field.
+func MiningGoodStockStateNotNil() predicate.MiningGoodStock {
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldMiningGoodStockState)))
+	})
+}
+
+// MiningGoodStockStateEqualFold applies the EqualFold predicate on the "mining_good_stock_state" field.
+func MiningGoodStockStateEqualFold(v string) predicate.MiningGoodStock {
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldMiningGoodStockState), v))
+	})
+}
+
+// MiningGoodStockStateContainsFold applies the ContainsFold predicate on the "mining_good_stock_state" field.
+func MiningGoodStockStateContainsFold(v string) predicate.MiningGoodStock {
+	return predicate.MiningGoodStock(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldMiningGoodStockState), v))
 	})
 }
 

@@ -264,7 +264,6 @@ func (grq *GoodRewardQuery) Clone() *GoodRewardQuery {
 //		GroupBy(goodreward.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (grq *GoodRewardQuery) GroupBy(field string, fields ...string) *GoodRewardGroupBy {
 	grbuild := &GoodRewardGroupBy{config: grq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -291,7 +290,6 @@ func (grq *GoodRewardQuery) GroupBy(field string, fields ...string) *GoodRewardG
 //	client.GoodReward.Query().
 //		Select(goodreward.FieldCreatedAt).
 //		Scan(ctx, &v)
-//
 func (grq *GoodRewardQuery) Select(fields ...string) *GoodRewardSelect {
 	grq.fields = append(grq.fields, fields...)
 	selbuild := &GoodRewardSelect{GoodRewardQuery: grq}

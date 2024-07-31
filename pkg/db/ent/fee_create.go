@@ -401,7 +401,6 @@ func (fc *FeeCreate) createSpec() (*Fee, *sqlgraph.CreateSpec) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (fc *FeeCreate) OnConflict(opts ...sql.ConflictOption) *FeeUpsertOne {
 	fc.conflict = opts
 	return &FeeUpsertOne{
@@ -415,7 +414,6 @@ func (fc *FeeCreate) OnConflict(opts ...sql.ConflictOption) *FeeUpsertOne {
 //	client.Fee.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (fc *FeeCreate) OnConflictColumns(columns ...string) *FeeUpsertOne {
 	fc.conflict = append(fc.conflict, sql.ConflictColumns(columns...))
 	return &FeeUpsertOne{
@@ -585,7 +583,6 @@ func (u *FeeUpsert) ClearDurationDisplayType() *FeeUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *FeeUpsertOne) UpdateNewValues() *FeeUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -599,10 +596,9 @@ func (u *FeeUpsertOne) UpdateNewValues() *FeeUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.Fee.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.Fee.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *FeeUpsertOne) Ignore() *FeeUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -919,7 +915,6 @@ func (fcb *FeeCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (fcb *FeeCreateBulk) OnConflict(opts ...sql.ConflictOption) *FeeUpsertBulk {
 	fcb.conflict = opts
 	return &FeeUpsertBulk{
@@ -933,7 +928,6 @@ func (fcb *FeeCreateBulk) OnConflict(opts ...sql.ConflictOption) *FeeUpsertBulk 
 //	client.Fee.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (fcb *FeeCreateBulk) OnConflictColumns(columns ...string) *FeeUpsertBulk {
 	fcb.conflict = append(fcb.conflict, sql.ConflictColumns(columns...))
 	return &FeeUpsertBulk{
@@ -958,7 +952,6 @@ type FeeUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *FeeUpsertBulk) UpdateNewValues() *FeeUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -978,7 +971,6 @@ func (u *FeeUpsertBulk) UpdateNewValues() *FeeUpsertBulk {
 //	client.Fee.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *FeeUpsertBulk) Ignore() *FeeUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

@@ -262,7 +262,7 @@ func (h *stockAppGoodQuery) formalizeStockEntID(appGoodID, entID uuid.UUID) erro
 	if !ok {
 		return wlog.Errorf("invalid stock")
 	}
-	if _stock.powerRental == nil || _stock.powerRental.StockMode != types.GoodStockMode_GoodStockByMiningPool.String() {
+	if _stock.powerRental == nil || _stock.powerRental.StockMode != types.GoodStockMode_GoodStockByMiningpool.String() {
 		h.appGoodStockEntIDs = append(h.appGoodStockEntIDs, entID)
 		return nil
 	}
@@ -340,5 +340,5 @@ func (h *stockAppGoodQuery) stockByMiningPool(appGoodID uuid.UUID) bool {
 	if !ok {
 		return false
 	}
-	return stock.powerRental != nil && stock.powerRental.StockMode == types.GoodStockMode_GoodStockByMiningPool.String()
+	return stock.powerRental != nil && stock.powerRental.StockMode == types.GoodStockMode_GoodStockByMiningpool.String()
 }

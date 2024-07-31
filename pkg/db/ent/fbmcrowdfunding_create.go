@@ -612,7 +612,6 @@ func (fcfc *FbmCrowdFundingCreate) createSpec() (*FbmCrowdFunding, *sqlgraph.Cre
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (fcfc *FbmCrowdFundingCreate) OnConflict(opts ...sql.ConflictOption) *FbmCrowdFundingUpsertOne {
 	fcfc.conflict = opts
 	return &FbmCrowdFundingUpsertOne{
@@ -626,7 +625,6 @@ func (fcfc *FbmCrowdFundingCreate) OnConflict(opts ...sql.ConflictOption) *FbmCr
 //	client.FbmCrowdFunding.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (fcfc *FbmCrowdFundingCreate) OnConflictColumns(columns ...string) *FbmCrowdFundingUpsertOne {
 	fcfc.conflict = append(fcfc.conflict, sql.ConflictColumns(columns...))
 	return &FbmCrowdFundingUpsertOne{
@@ -970,7 +968,6 @@ func (u *FbmCrowdFundingUpsert) ClearDurationSeconds() *FbmCrowdFundingUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *FbmCrowdFundingUpsertOne) UpdateNewValues() *FbmCrowdFundingUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -984,10 +981,9 @@ func (u *FbmCrowdFundingUpsertOne) UpdateNewValues() *FbmCrowdFundingUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.FbmCrowdFunding.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.FbmCrowdFunding.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *FbmCrowdFundingUpsertOne) Ignore() *FbmCrowdFundingUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1507,7 +1503,6 @@ func (fcfcb *FbmCrowdFundingCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (fcfcb *FbmCrowdFundingCreateBulk) OnConflict(opts ...sql.ConflictOption) *FbmCrowdFundingUpsertBulk {
 	fcfcb.conflict = opts
 	return &FbmCrowdFundingUpsertBulk{
@@ -1521,7 +1516,6 @@ func (fcfcb *FbmCrowdFundingCreateBulk) OnConflict(opts ...sql.ConflictOption) *
 //	client.FbmCrowdFunding.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (fcfcb *FbmCrowdFundingCreateBulk) OnConflictColumns(columns ...string) *FbmCrowdFundingUpsertBulk {
 	fcfcb.conflict = append(fcfcb.conflict, sql.ConflictColumns(columns...))
 	return &FbmCrowdFundingUpsertBulk{
@@ -1546,7 +1540,6 @@ type FbmCrowdFundingUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *FbmCrowdFundingUpsertBulk) UpdateNewValues() *FbmCrowdFundingUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1566,7 +1559,6 @@ func (u *FbmCrowdFundingUpsertBulk) UpdateNewValues() *FbmCrowdFundingUpsertBulk
 //	client.FbmCrowdFunding.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *FbmCrowdFundingUpsertBulk) Ignore() *FbmCrowdFundingUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

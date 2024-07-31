@@ -355,7 +355,6 @@ func (vbc *VendorBrandCreate) createSpec() (*VendorBrand, *sqlgraph.CreateSpec) 
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (vbc *VendorBrandCreate) OnConflict(opts ...sql.ConflictOption) *VendorBrandUpsertOne {
 	vbc.conflict = opts
 	return &VendorBrandUpsertOne{
@@ -369,7 +368,6 @@ func (vbc *VendorBrandCreate) OnConflict(opts ...sql.ConflictOption) *VendorBran
 //	client.VendorBrand.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (vbc *VendorBrandCreate) OnConflictColumns(columns ...string) *VendorBrandUpsertOne {
 	vbc.conflict = append(vbc.conflict, sql.ConflictColumns(columns...))
 	return &VendorBrandUpsertOne{
@@ -503,7 +501,6 @@ func (u *VendorBrandUpsert) ClearLogo() *VendorBrandUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *VendorBrandUpsertOne) UpdateNewValues() *VendorBrandUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -517,10 +514,9 @@ func (u *VendorBrandUpsertOne) UpdateNewValues() *VendorBrandUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.VendorBrand.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.VendorBrand.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *VendorBrandUpsertOne) Ignore() *VendorBrandUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -795,7 +791,6 @@ func (vbcb *VendorBrandCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (vbcb *VendorBrandCreateBulk) OnConflict(opts ...sql.ConflictOption) *VendorBrandUpsertBulk {
 	vbcb.conflict = opts
 	return &VendorBrandUpsertBulk{
@@ -809,7 +804,6 @@ func (vbcb *VendorBrandCreateBulk) OnConflict(opts ...sql.ConflictOption) *Vendo
 //	client.VendorBrand.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (vbcb *VendorBrandCreateBulk) OnConflictColumns(columns ...string) *VendorBrandUpsertBulk {
 	vbcb.conflict = append(vbcb.conflict, sql.ConflictColumns(columns...))
 	return &VendorBrandUpsertBulk{
@@ -834,7 +828,6 @@ type VendorBrandUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *VendorBrandUpsertBulk) UpdateNewValues() *VendorBrandUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -854,7 +847,6 @@ func (u *VendorBrandUpsertBulk) UpdateNewValues() *VendorBrandUpsertBulk {
 //	client.VendorBrand.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *VendorBrandUpsertBulk) Ignore() *VendorBrandUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
