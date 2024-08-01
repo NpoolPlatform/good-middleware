@@ -81,6 +81,7 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 			t1.C(entgoodbase.FieldBenefitIntervalHours),
 			t1.C(entgoodbase.FieldPurchasable),
 			t1.C(entgoodbase.FieldOnline),
+			t1.C(entgoodbase.FieldState),
 			t1.C(entgoodbase.FieldCreatedAt),
 			t1.C(entgoodbase.FieldUpdatedAt),
 		)

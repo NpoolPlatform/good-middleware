@@ -576,6 +576,28 @@ func WithRewards(rewards []*goodcoinrewardmwpb.RewardReq, must bool) func(contex
 	}
 }
 
+func WithState(e *types.GoodState, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return wlog.Errorf("invalid state")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodState_GoodStateWait:
+		case types.GoodState_GoodStateCreateGoodUser:
+		case types.GoodState_GoodStateCheckHashRate:
+		case types.GoodState_GoodStateReady:
+		case types.GoodState_GoodStateFail:
+		default:
+			return wlog.Errorf("invalid state")
+		}
+		h.GoodBaseReq.State = e
+		return nil
+	}
+}
+
 func (h *Handler) withPowerRentalConds(conds *npool.Conds) error {
 	if conds.ID != nil {
 		h.PowerRentalConds.ID = &cruder.Cond{
@@ -659,6 +681,12 @@ func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
 		h.GoodBaseConds.GoodTypes = &cruder.Cond{
 			Op:  conds.GetGoodTypes().GetOp(),
 			Val: es,
+		}
+	}
+	if conds.State != nil {
+		h.GoodBaseConds.State = &cruder.Cond{
+			Op:  conds.GetState().GetOp(),
+			Val: types.GoodState(conds.GetState().GetValue()),
 		}
 	}
 	return nil

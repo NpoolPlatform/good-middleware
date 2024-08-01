@@ -14,6 +14,7 @@ type GoodBase interface {
 	Name() string
 	ServiceStartAt() uint32
 	StartMode() types.GoodStartMode
+	State() types.GoodState
 	TestOnly() bool
 	BenefitIntervalHours() uint32
 	Purchasable() bool
@@ -66,6 +67,10 @@ func (gb *goodBase) Purchasable() bool {
 
 func (gb *goodBase) Online() bool {
 	return gb._ent.Online
+}
+
+func (gb *goodBase) State() types.GoodState {
+	return types.GoodState(types.GoodState_value[gb._ent.State])
 }
 
 func (gb *goodBase) CreatedAt() uint32 {

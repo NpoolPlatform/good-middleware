@@ -46,6 +46,7 @@ func (h *updateHandler) constructGoodBaseSQL(ctx context.Context) error {
 		goodbase1.WithBenefitIntervalHours(h.GoodBaseReq.BenefitIntervalHours, false),
 		goodbase1.WithPurchasable(h.GoodBaseReq.Purchasable, false),
 		goodbase1.WithOnline(h.GoodBaseReq.Online, false),
+		goodbase1.WithState(h.GoodBaseReq.State, false),
 	)
 	if err != nil {
 		return wlog.WrapError(err)
@@ -462,6 +463,40 @@ func (h *updateHandler) validateRewardState() error {
 	return nil
 }
 
+func (h *updateHandler) validateGoodState() error {
+	if h.powerRental.StockMode != types.GoodStockMode_GoodStockByMiningpool.String() {
+		return nil
+	}
+	if h.GoodBaseReq.State == nil {
+		return nil
+	}
+	switch h.goodBase.State {
+	case types.GoodState_GoodStateWait.String():
+		switch h.GoodBaseReq.State {
+		case
+			types.GoodState_GoodStateCreateGoodUser.Enum(),
+			types.GoodState_GoodStateFail.Enum():
+			return nil
+		}
+	case types.GoodState_GoodStateCreateGoodUser.String():
+		switch h.GoodBaseReq.State {
+		case
+			types.GoodState_GoodStateCheckHashRate.Enum(),
+			types.GoodState_GoodStateFail.Enum():
+			return nil
+		}
+	case types.GoodState_GoodStateCheckHashRate.String():
+		switch h.GoodBaseReq.State {
+		case
+			types.GoodState_GoodStateReady.Enum(),
+			types.GoodState_GoodStateFail.Enum():
+			return nil
+		}
+	}
+
+	return wlog.Errorf("broken goodstate %v -> %v", h.goodBase.State, h.GoodBaseReq.State.String())
+}
+
 func (h *updateHandler) formalizeStock() {
 	for _, req := range h.MiningGoodStockReqs {
 		req.GoodStockID = &h.stock.EntID
@@ -530,6 +565,9 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 	if err := handler.validateRewardState(); err != nil {
+		return wlog.WrapError(err)
+	}
+	if err := handler.validateGoodState(); err != nil {
 		return wlog.WrapError(err)
 	}
 	handler.formalizeStock()

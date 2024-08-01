@@ -671,6 +671,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			goodbase.FieldBenefitIntervalHours: {Type: field.TypeUint32, Column: goodbase.FieldBenefitIntervalHours},
 			goodbase.FieldPurchasable:          {Type: field.TypeBool, Column: goodbase.FieldPurchasable},
 			goodbase.FieldOnline:               {Type: field.TypeBool, Column: goodbase.FieldOnline},
+			goodbase.FieldState:                {Type: field.TypeString, Column: goodbase.FieldState},
 		},
 	}
 	graph.Nodes[25] = &sqlgraph.Node{
@@ -3589,6 +3590,11 @@ func (f *GoodBaseFilter) WherePurchasable(p entql.BoolP) {
 // WhereOnline applies the entql bool predicate on the online field.
 func (f *GoodBaseFilter) WhereOnline(p entql.BoolP) {
 	f.Where(p.Field(goodbase.FieldOnline))
+}
+
+// WhereState applies the entql string predicate on the state field.
+func (f *GoodBaseFilter) WhereState(p entql.StringP) {
+	f.Where(p.Field(goodbase.FieldState))
 }
 
 // addPredicate implements the predicateAdder interface.

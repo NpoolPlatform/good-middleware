@@ -769,6 +769,7 @@ var (
 		{Name: "benefit_interval_hours", Type: field.TypeUint32, Nullable: true, Default: 24},
 		{Name: "purchasable", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "online", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "state", Type: field.TypeString, Nullable: true, Default: "GoodStateWait"},
 	}
 	// GoodBasesTable holds the schema information for the "good_bases" table.
 	GoodBasesTable = &schema.Table{

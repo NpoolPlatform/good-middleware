@@ -38,6 +38,8 @@ const (
 	FieldPurchasable = "purchasable"
 	// FieldOnline holds the string denoting the online field in the database.
 	FieldOnline = "online"
+	// FieldState holds the string denoting the state field in the database.
+	FieldState = "state"
 	// Table holds the table name of the goodbase in the database.
 	Table = "good_bases"
 )
@@ -58,6 +60,7 @@ var Columns = []string{
 	FieldBenefitIntervalHours,
 	FieldPurchasable,
 	FieldOnline,
+	FieldState,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -106,4 +109,6 @@ var (
 	DefaultPurchasable bool
 	// DefaultOnline holds the default value on creation for the "online" field.
 	DefaultOnline bool
+	// DefaultState holds the default value on creation for the "state" field.
+	DefaultState string
 )

@@ -109,6 +109,7 @@ var ret = npool.PowerRental{
 	},
 
 	RewardState: types.BenefitState_BenefitWait,
+	State:       types.GoodState_GoodStateWait,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -233,6 +234,7 @@ func createPowerRental(t *testing.T) {
 		WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
 		WithPurchasable(&ret.Purchasable, true),
 		WithOnline(&ret.Online, true),
+		WithState(&ret.State, true),
 		WithStockID(&ret.GoodStockID, true),
 		WithTotal(&ret.GoodTotal, true),
 		WithStockMode(&ret.StockMode, true),
@@ -289,6 +291,7 @@ func createPowerRental(t *testing.T) {
 		WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
 		WithPurchasable(&ret.Purchasable, true),
 		WithOnline(&ret.Online, true),
+		WithState(&ret.State, true),
 		WithStockID(&ret.GoodStockID, true),
 		WithTotal(&ret.GoodTotal, true),
 	)
@@ -345,6 +348,7 @@ func updatePowerRental(t *testing.T) {
 		WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
 		WithPurchasable(&ret.Purchasable, true),
 		WithOnline(&ret.Online, true),
+		WithState(&ret.State, true),
 		WithTotal(&ret.GoodTotal, true),
 		WithStocks(miningGoodStocks, true),
 	)

@@ -1639,6 +1639,10 @@ func init() {
 	goodbaseDescOnline := goodbaseFields[8].Descriptor()
 	// goodbase.DefaultOnline holds the default value on creation for the online field.
 	goodbase.DefaultOnline = goodbaseDescOnline.Default.(bool)
+	// goodbaseDescState is the schema descriptor for state field.
+	goodbaseDescState := goodbaseFields[9].Descriptor()
+	// goodbase.DefaultState holds the default value on creation for the state field.
+	goodbase.DefaultState = goodbaseDescState.Default.(string)
 	goodcoinMixin := schema.GoodCoin{}.Mixin()
 	goodcoin.Policy = privacy.NewPolicies(goodcoinMixin[0], schema.GoodCoin{})
 	goodcoin.Hooks[0] = func(next ent.Mutator) ent.Mutator {

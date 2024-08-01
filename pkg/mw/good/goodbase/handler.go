@@ -190,3 +190,25 @@ func WithOnline(b *bool, must bool) func(context.Context, *Handler) error {
 		return nil
 	}
 }
+
+func WithState(e *types.GoodState, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return wlog.Errorf("invalid goodstate")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodState_GoodStateWait:
+		case types.GoodState_GoodStateCreateGoodUser:
+		case types.GoodState_GoodStateCheckHashRate:
+		case types.GoodState_GoodStateReady:
+		case types.GoodState_GoodStateFail:
+		default:
+			return wlog.Errorf("invalid goodstate")
+		}
+		h.State = e
+		return nil
+	}
+}

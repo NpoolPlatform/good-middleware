@@ -30,6 +30,7 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 		GoodBaseReq: &goodbasecrud.Req{
 			BenefitType: types.BenefitType_BenefitTypeNone.Enum(),
 			StartMode:   types.GoodStartMode_GoodStartModeWithParent.Enum(),
+			State:       types.GoodState_GoodStateReady.Enum(),
 		},
 		FeeConds:      &feecrud.Conds{},
 		GoodBaseConds: &goodbasecrud.Conds{},

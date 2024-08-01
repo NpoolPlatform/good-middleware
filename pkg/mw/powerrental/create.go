@@ -40,6 +40,7 @@ func (h *createHandler) constructGoodBaseSQL(ctx context.Context) error {
 		goodbase1.WithBenefitIntervalHours(h.GoodBaseReq.BenefitIntervalHours, true),
 		goodbase1.WithPurchasable(h.GoodBaseReq.Purchasable, false),
 		goodbase1.WithOnline(h.GoodBaseReq.Online, false),
+		goodbase1.WithState(h.GoodBaseReq.State, true),
 	)
 	if err != nil {
 		return wlog.WrapError(err)
@@ -211,9 +212,11 @@ func (h *createHandler) _validateStock() error {
 	switch *h.StockMode {
 	case types.GoodStockMode_GoodStockByUnique:
 		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }()
+		h.GoodBaseReq.State = types.GoodState_GoodStateReady.Enum()
 		return nil
 	case types.GoodStockMode_GoodStockByMiningpool:
 		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePool; return &e }()
+		h.GoodBaseReq.State = types.GoodState_GoodStateWait.Enum()
 	}
 	for _, poolStock := range h.MiningGoodStockReqs {
 		poolStock.GoodStockID = h.StockReq.EntID

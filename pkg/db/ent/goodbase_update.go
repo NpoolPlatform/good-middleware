@@ -292,6 +292,26 @@ func (gbu *GoodBaseUpdate) ClearOnline() *GoodBaseUpdate {
 	return gbu
 }
 
+// SetState sets the "state" field.
+func (gbu *GoodBaseUpdate) SetState(s string) *GoodBaseUpdate {
+	gbu.mutation.SetState(s)
+	return gbu
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (gbu *GoodBaseUpdate) SetNillableState(s *string) *GoodBaseUpdate {
+	if s != nil {
+		gbu.SetState(*s)
+	}
+	return gbu
+}
+
+// ClearState clears the value of the "state" field.
+func (gbu *GoodBaseUpdate) ClearState() *GoodBaseUpdate {
+	gbu.mutation.ClearState()
+	return gbu
+}
+
 // Mutation returns the GoodBaseMutation object of the builder.
 func (gbu *GoodBaseUpdate) Mutation() *GoodBaseMutation {
 	return gbu.mutation
@@ -568,6 +588,19 @@ func (gbu *GoodBaseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Column: goodbase.FieldOnline,
+		})
+	}
+	if value, ok := gbu.mutation.State(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: goodbase.FieldState,
+		})
+	}
+	if gbu.mutation.StateCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: goodbase.FieldState,
 		})
 	}
 	_spec.Modifiers = gbu.modifiers
@@ -851,6 +884,26 @@ func (gbuo *GoodBaseUpdateOne) SetNillableOnline(b *bool) *GoodBaseUpdateOne {
 // ClearOnline clears the value of the "online" field.
 func (gbuo *GoodBaseUpdateOne) ClearOnline() *GoodBaseUpdateOne {
 	gbuo.mutation.ClearOnline()
+	return gbuo
+}
+
+// SetState sets the "state" field.
+func (gbuo *GoodBaseUpdateOne) SetState(s string) *GoodBaseUpdateOne {
+	gbuo.mutation.SetState(s)
+	return gbuo
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (gbuo *GoodBaseUpdateOne) SetNillableState(s *string) *GoodBaseUpdateOne {
+	if s != nil {
+		gbuo.SetState(*s)
+	}
+	return gbuo
+}
+
+// ClearState clears the value of the "state" field.
+func (gbuo *GoodBaseUpdateOne) ClearState() *GoodBaseUpdateOne {
+	gbuo.mutation.ClearState()
 	return gbuo
 }
 
@@ -1160,6 +1213,19 @@ func (gbuo *GoodBaseUpdateOne) sqlSave(ctx context.Context) (_node *GoodBase, er
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Column: goodbase.FieldOnline,
+		})
+	}
+	if value, ok := gbuo.mutation.State(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: goodbase.FieldState,
+		})
+	}
+	if gbuo.mutation.StateCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: goodbase.FieldState,
 		})
 	}
 	_spec.Modifiers = gbuo.modifiers

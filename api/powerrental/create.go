@@ -47,6 +47,7 @@ func (s *Server) CreatePowerRental(ctx context.Context, in *npool.CreatePowerRen
 		powerrental1.WithTotal(req.Total, true),
 		powerrental1.WithStockMode(req.StockMode, true),
 		powerrental1.WithStocks(req.MiningGoodStocks, false),
+		powerrental1.WithState(req.State, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

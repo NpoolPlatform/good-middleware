@@ -28597,6 +28597,7 @@ type GoodBaseMutation struct {
 	addbenefit_interval_hours *int32
 	purchasable               *bool
 	online                    *bool
+	state                     *string
 	clearedFields             map[string]struct{}
 	done                      bool
 	oldValue                  func(context.Context) (*GoodBase, error)
@@ -29394,6 +29395,55 @@ func (m *GoodBaseMutation) ResetOnline() {
 	delete(m.clearedFields, goodbase.FieldOnline)
 }
 
+// SetState sets the "state" field.
+func (m *GoodBaseMutation) SetState(s string) {
+	m.state = &s
+}
+
+// State returns the value of the "state" field in the mutation.
+func (m *GoodBaseMutation) State() (r string, exists bool) {
+	v := m.state
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldState returns the old "state" field's value of the GoodBase entity.
+// If the GoodBase object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GoodBaseMutation) OldState(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldState is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldState requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldState: %w", err)
+	}
+	return oldValue.State, nil
+}
+
+// ClearState clears the value of the "state" field.
+func (m *GoodBaseMutation) ClearState() {
+	m.state = nil
+	m.clearedFields[goodbase.FieldState] = struct{}{}
+}
+
+// StateCleared returns if the "state" field was cleared in this mutation.
+func (m *GoodBaseMutation) StateCleared() bool {
+	_, ok := m.clearedFields[goodbase.FieldState]
+	return ok
+}
+
+// ResetState resets all changes to the "state" field.
+func (m *GoodBaseMutation) ResetState() {
+	m.state = nil
+	delete(m.clearedFields, goodbase.FieldState)
+}
+
 // Where appends a list predicates to the GoodBaseMutation builder.
 func (m *GoodBaseMutation) Where(ps ...predicate.GoodBase) {
 	m.predicates = append(m.predicates, ps...)
@@ -29413,7 +29463,7 @@ func (m *GoodBaseMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *GoodBaseMutation) Fields() []string {
-	fields := make([]string, 0, 13)
+	fields := make([]string, 0, 14)
 	if m.created_at != nil {
 		fields = append(fields, goodbase.FieldCreatedAt)
 	}
@@ -29453,6 +29503,9 @@ func (m *GoodBaseMutation) Fields() []string {
 	if m.online != nil {
 		fields = append(fields, goodbase.FieldOnline)
 	}
+	if m.state != nil {
+		fields = append(fields, goodbase.FieldState)
+	}
 	return fields
 }
 
@@ -29487,6 +29540,8 @@ func (m *GoodBaseMutation) Field(name string) (ent.Value, bool) {
 		return m.Purchasable()
 	case goodbase.FieldOnline:
 		return m.Online()
+	case goodbase.FieldState:
+		return m.State()
 	}
 	return nil, false
 }
@@ -29522,6 +29577,8 @@ func (m *GoodBaseMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldPurchasable(ctx)
 	case goodbase.FieldOnline:
 		return m.OldOnline(ctx)
+	case goodbase.FieldState:
+		return m.OldState(ctx)
 	}
 	return nil, fmt.Errorf("unknown GoodBase field %s", name)
 }
@@ -29621,6 +29678,13 @@ func (m *GoodBaseMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetOnline(v)
+		return nil
+	case goodbase.FieldState:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetState(v)
 		return nil
 	}
 	return fmt.Errorf("unknown GoodBase field %s", name)
@@ -29742,6 +29806,9 @@ func (m *GoodBaseMutation) ClearedFields() []string {
 	if m.FieldCleared(goodbase.FieldOnline) {
 		fields = append(fields, goodbase.FieldOnline)
 	}
+	if m.FieldCleared(goodbase.FieldState) {
+		fields = append(fields, goodbase.FieldState)
+	}
 	return fields
 }
 
@@ -29782,6 +29849,9 @@ func (m *GoodBaseMutation) ClearField(name string) error {
 		return nil
 	case goodbase.FieldOnline:
 		m.ClearOnline()
+		return nil
+	case goodbase.FieldState:
+		m.ClearState()
 		return nil
 	}
 	return fmt.Errorf("unknown GoodBase nullable field %s", name)
@@ -29829,6 +29899,9 @@ func (m *GoodBaseMutation) ResetField(name string) error {
 		return nil
 	case goodbase.FieldOnline:
 		m.ResetOnline()
+		return nil
+	case goodbase.FieldState:
+		m.ResetState()
 		return nil
 	}
 	return fmt.Errorf("unknown GoodBase field %s", name)
