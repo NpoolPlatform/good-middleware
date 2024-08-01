@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
+
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 )
@@ -68,7 +70,7 @@ func (h *Handler) ConstructCreateSQL() string {
 		_sql += fmt.Sprintf("%v%v as online", comma, *h.Online)
 	}
 	if h.State != nil {
-		_sql += fmt.Sprintf("%v%v as state", comma, h.State.String())
+		_sql += fmt.Sprintf("%v%v as state", comma, types.GoodState_GoodStateWait.String())
 	}
 	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
 	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)

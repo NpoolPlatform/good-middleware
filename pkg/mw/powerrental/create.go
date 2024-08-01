@@ -40,7 +40,6 @@ func (h *createHandler) constructGoodBaseSQL(ctx context.Context) error {
 		goodbase1.WithBenefitIntervalHours(h.GoodBaseReq.BenefitIntervalHours, true),
 		goodbase1.WithPurchasable(h.GoodBaseReq.Purchasable, false),
 		goodbase1.WithOnline(h.GoodBaseReq.Online, false),
-		goodbase1.WithState(h.GoodBaseReq.State, true),
 	)
 	if err != nil {
 		return wlog.WrapError(err)
