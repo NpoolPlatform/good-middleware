@@ -90,6 +90,7 @@ func (h *queryHandler) formalize() {
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
+		info.State = types.GoodState(types.GoodState_value[info.StateStr])
 		info.DisplayNames = displayNames[info.EntID]
 	}
 }

@@ -104,6 +104,7 @@ func (h *baseQueryHandler) queryJoinGoodBase(s *sql.Selector) {
 			t1.C(entgoodbase.FieldBenefitIntervalHours),
 			sql.As(t1.C(entgoodbase.FieldPurchasable), "good_purchasable"),
 			sql.As(t1.C(entgoodbase.FieldOnline), "good_online"),
+			t1.C(entgoodbase.FieldState),
 		)
 }
 

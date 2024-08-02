@@ -514,6 +514,7 @@ func (h *queryHandler) formalize() {
 		info.GoodStartMode = types.GoodStartMode(types.GoodStartMode_value[info.GoodStartModeStr])
 		info.AppGoodStartMode = types.GoodStartMode(types.GoodStartMode_value[info.AppGoodStartModeStr])
 		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
+		info.State = types.GoodState(types.GoodState_value[info.StateStr])
 		info.MiningGoodStocks = miningGoodStocks[info.GoodStockID]
 		info.AppMiningGoodStocks = appMiningGoodStocks[info.AppGoodStockID]
 		info.GoodCoins = goodCoins[info.GoodID]
