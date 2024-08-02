@@ -368,22 +368,23 @@ func (h *updateHandler) _validateStock() error {
 	for _, poolStock := range h.miningGoodStocks {
 		existReq := false
 		for _, _poolStock := range miningGoodStockReqs {
-			if *_poolStock.EntID == poolStock.EntID {
-				if _poolStock.State != nil {
-					if err := h._validateMiningGoodStocksState(*_poolStock.State, types.MiningGoodStockState(types.MiningGoodStockState_value[poolStock.State])); err != nil {
-						return wlog.WrapError(err)
-					}
-				}
-
-				_poolStock.ID = &poolStock.ID
-				_poolStock.SpotQuantity = func() *decimal.Decimal {
-					d := poolStock.SpotQuantity.Add(_poolStock.Total.Sub(poolStock.Total))
-					return &d
-				}()
-
-				existReq = true
-				break
+			if *_poolStock.EntID != poolStock.EntID {
+				continue
 			}
+			if _poolStock.State != nil {
+				if err := h._validateMiningGoodStocksState(*_poolStock.State, types.MiningGoodStockState(types.MiningGoodStockState_value[poolStock.State])); err != nil {
+					return wlog.WrapError(err)
+				}
+			}
+
+			_poolStock.ID = &poolStock.ID
+			_poolStock.SpotQuantity = func() *decimal.Decimal {
+				d := poolStock.SpotQuantity.Add(_poolStock.Total.Sub(poolStock.Total))
+				return &d
+			}()
+
+			existReq = true
+			break
 		}
 		if !existReq {
 			h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, &mininggoodstockcrud.Req{
@@ -395,7 +396,8 @@ func (h *updateHandler) _validateStock() error {
 	return h.stockValidator.validateStock()
 }
 
-func (h *updateHandler) _validateMiningGoodStocksState(currentState types.MiningGoodStockState, nextState types.MiningGoodStockState) error {
+//nolint:gocritic
+func (h *updateHandler) _validateMiningGoodStocksState(currentState, nextState types.MiningGoodStockState) error {
 	switch currentState {
 	case types.MiningGoodStockState_MiningGoodStockStateWait:
 		switch nextState {
@@ -509,6 +511,7 @@ func (h *updateHandler) validateRewardState() error {
 	return nil
 }
 
+//nolint:gocritic
 func (h *updateHandler) validateGoodState() error {
 	if h.powerRental.StockMode != types.GoodStockMode_GoodStockByMiningpool.String() {
 		return nil
