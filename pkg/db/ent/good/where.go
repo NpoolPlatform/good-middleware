@@ -269,13 +269,6 @@ func SettlementType(v string) predicate.Good {
 	})
 }
 
-// GoodState applies equality check predicate on the "good_state" field. It's identical to GoodStateEQ.
-func GoodState(v string) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodState), v))
-	})
-}
-
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
@@ -2616,119 +2609,6 @@ func SettlementTypeEqualFold(v string) predicate.Good {
 func SettlementTypeContainsFold(v string) predicate.Good {
 	return predicate.Good(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldSettlementType), v))
-	})
-}
-
-// GoodStateEQ applies the EQ predicate on the "good_state" field.
-func GoodStateEQ(v string) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldGoodState), v))
-	})
-}
-
-// GoodStateNEQ applies the NEQ predicate on the "good_state" field.
-func GoodStateNEQ(v string) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldGoodState), v))
-	})
-}
-
-// GoodStateIn applies the In predicate on the "good_state" field.
-func GoodStateIn(vs ...string) predicate.Good {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldGoodState), v...))
-	})
-}
-
-// GoodStateNotIn applies the NotIn predicate on the "good_state" field.
-func GoodStateNotIn(vs ...string) predicate.Good {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldGoodState), v...))
-	})
-}
-
-// GoodStateGT applies the GT predicate on the "good_state" field.
-func GoodStateGT(v string) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldGoodState), v))
-	})
-}
-
-// GoodStateGTE applies the GTE predicate on the "good_state" field.
-func GoodStateGTE(v string) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldGoodState), v))
-	})
-}
-
-// GoodStateLT applies the LT predicate on the "good_state" field.
-func GoodStateLT(v string) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldGoodState), v))
-	})
-}
-
-// GoodStateLTE applies the LTE predicate on the "good_state" field.
-func GoodStateLTE(v string) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldGoodState), v))
-	})
-}
-
-// GoodStateContains applies the Contains predicate on the "good_state" field.
-func GoodStateContains(v string) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldGoodState), v))
-	})
-}
-
-// GoodStateHasPrefix applies the HasPrefix predicate on the "good_state" field.
-func GoodStateHasPrefix(v string) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldGoodState), v))
-	})
-}
-
-// GoodStateHasSuffix applies the HasSuffix predicate on the "good_state" field.
-func GoodStateHasSuffix(v string) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldGoodState), v))
-	})
-}
-
-// GoodStateIsNil applies the IsNil predicate on the "good_state" field.
-func GoodStateIsNil() predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldGoodState)))
-	})
-}
-
-// GoodStateNotNil applies the NotNil predicate on the "good_state" field.
-func GoodStateNotNil() predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldGoodState)))
-	})
-}
-
-// GoodStateEqualFold applies the EqualFold predicate on the "good_state" field.
-func GoodStateEqualFold(v string) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldGoodState), v))
-	})
-}
-
-// GoodStateContainsFold applies the ContainsFold predicate on the "good_state" field.
-func GoodStateContainsFold(v string) predicate.Good {
-	return predicate.Good(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldGoodState), v))
 	})
 }
 

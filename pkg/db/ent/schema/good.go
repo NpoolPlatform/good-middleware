@@ -124,10 +124,6 @@ func (Good) Fields() []ent.Field {
 			String("settlement_type").
 			Optional().
 			Default(types.GoodSettlementType_GoodSettledByPaymentAmount.String()),
-		field.
-			String("good_state").
-			Optional().
-			Default(types.GoodState_GoodStateWait.String()),
 	}
 }
 

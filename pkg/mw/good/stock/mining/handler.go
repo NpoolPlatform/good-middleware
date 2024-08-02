@@ -6,6 +6,7 @@ import (
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -125,6 +126,28 @@ func WithTotal(s *string, must bool) func(context.Context, *Handler) error {
 			return wlog.Errorf("invalid total")
 		}
 		h.Total = &amount
+		return nil
+	}
+}
+
+func WithState(e *types.MiningGoodStockState, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return wlog.Errorf("invalid mininggoodstockstate")
+			}
+			return nil
+		}
+		switch *e {
+		case types.MiningGoodStockState_MiningGoodStockStateWait:
+		case types.MiningGoodStockState_MiningGoodStockStateCreateGoodUser:
+		case types.MiningGoodStockState_MiningGoodStockStateCheckHashRate:
+		case types.MiningGoodStockState_MiningGoodStockStateReady:
+		case types.MiningGoodStockState_MiningGoodStockStateFail:
+		default:
+			return wlog.Errorf("invalid mininggoodstockstate")
+		}
+		h.State = e
 		return nil
 	}
 }

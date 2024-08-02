@@ -119,6 +119,7 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.DurationDisplayTypeStr = ret.DurationDisplayType.String()
 	ret.StartModeStr = ret.StartMode.String()
 	ret.StockModeStr = ret.StockMode.String()
+	ret.StateStr = ret.State.String()
 	for _, stock := range ret.MiningGoodStocks {
 		stock.GoodStockID = ret.GoodStockID
 		stock.SpotQuantity = stock.Total
@@ -264,6 +265,8 @@ func createPowerRental(t *testing.T) {
 		)
 		info, err := handler.GetPowerRental(context.Background())
 		if assert.Nil(t, err) {
+			ret.State = info.State
+			ret.StateStr = info.StateStr
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			ret.ID = info.ID

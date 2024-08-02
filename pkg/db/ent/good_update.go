@@ -545,26 +545,6 @@ func (gu *GoodUpdate) ClearSettlementType() *GoodUpdate {
 	return gu
 }
 
-// SetGoodState sets the "good_state" field.
-func (gu *GoodUpdate) SetGoodState(s string) *GoodUpdate {
-	gu.mutation.SetGoodState(s)
-	return gu
-}
-
-// SetNillableGoodState sets the "good_state" field if the given value is not nil.
-func (gu *GoodUpdate) SetNillableGoodState(s *string) *GoodUpdate {
-	if s != nil {
-		gu.SetGoodState(*s)
-	}
-	return gu
-}
-
-// ClearGoodState clears the value of the "good_state" field.
-func (gu *GoodUpdate) ClearGoodState() *GoodUpdate {
-	gu.mutation.ClearGoodState()
-	return gu
-}
-
 // Mutation returns the GoodMutation object of the builder.
 func (gu *GoodUpdate) Mutation() *GoodMutation {
 	return gu.mutation
@@ -1019,19 +999,6 @@ func (gu *GoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: good.FieldSettlementType,
-		})
-	}
-	if value, ok := gu.mutation.GoodState(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: good.FieldGoodState,
-		})
-	}
-	if gu.mutation.GoodStateCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: good.FieldGoodState,
 		})
 	}
 	_spec.Modifiers = gu.modifiers
@@ -1570,26 +1537,6 @@ func (guo *GoodUpdateOne) ClearSettlementType() *GoodUpdateOne {
 	return guo
 }
 
-// SetGoodState sets the "good_state" field.
-func (guo *GoodUpdateOne) SetGoodState(s string) *GoodUpdateOne {
-	guo.mutation.SetGoodState(s)
-	return guo
-}
-
-// SetNillableGoodState sets the "good_state" field if the given value is not nil.
-func (guo *GoodUpdateOne) SetNillableGoodState(s *string) *GoodUpdateOne {
-	if s != nil {
-		guo.SetGoodState(*s)
-	}
-	return guo
-}
-
-// ClearGoodState clears the value of the "good_state" field.
-func (guo *GoodUpdateOne) ClearGoodState() *GoodUpdateOne {
-	guo.mutation.ClearGoodState()
-	return guo
-}
-
 // Mutation returns the GoodMutation object of the builder.
 func (guo *GoodUpdateOne) Mutation() *GoodMutation {
 	return guo.mutation
@@ -2074,19 +2021,6 @@ func (guo *GoodUpdateOne) sqlSave(ctx context.Context) (_node *Good, err error) 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: good.FieldSettlementType,
-		})
-	}
-	if value, ok := guo.mutation.GoodState(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: good.FieldGoodState,
-		})
-	}
-	if guo.mutation.GoodStateCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: good.FieldGoodState,
 		})
 	}
 	_spec.Modifiers = guo.modifiers

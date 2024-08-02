@@ -738,7 +738,6 @@ var (
 		{Name: "duration_type", Type: field.TypeString, Nullable: true, Default: "GoodDurationByDay"},
 		{Name: "duration_calculate_type", Type: field.TypeString, Nullable: true, Default: "GoodUnitCalculateBySelf"},
 		{Name: "settlement_type", Type: field.TypeString, Nullable: true, Default: "GoodSettledByPaymentAmount"},
-		{Name: "good_state", Type: field.TypeString, Nullable: true, Default: "GoodStateWait"},
 	}
 	// GoodsTable holds the schema information for the "goods" table.
 	GoodsTable = &schema.Table{
@@ -997,7 +996,7 @@ var (
 		{Name: "wait_start", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "sold", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 		{Name: "app_reserved", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
-		{Name: "mining_good_stock_state", Type: field.TypeString, Nullable: true, Default: "MiningGoodStockStateWait"},
+		{Name: "state", Type: field.TypeString, Nullable: true, Default: "MiningGoodStockStateWait"},
 	}
 	// MiningGoodStocksTable holds the schema information for the "mining_good_stocks" table.
 	MiningGoodStocksTable = &schema.Table{

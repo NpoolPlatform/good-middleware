@@ -96,7 +96,7 @@ func (MiningGoodStock) Fields() []ent.Field {
 			Optional().
 			Default(decimal.Decimal{}),
 		field.
-			String("mining_good_stock_state").
+			String("state").
 			Optional().
 			Default(types.MiningGoodStockState_MiningGoodStockStateWait.String()),
 	}

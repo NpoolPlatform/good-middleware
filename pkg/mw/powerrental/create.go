@@ -40,6 +40,7 @@ func (h *createHandler) constructGoodBaseSQL(ctx context.Context) error {
 		goodbase1.WithBenefitIntervalHours(h.GoodBaseReq.BenefitIntervalHours, true),
 		goodbase1.WithPurchasable(h.GoodBaseReq.Purchasable, false),
 		goodbase1.WithOnline(h.GoodBaseReq.Online, false),
+		goodbase1.WithState(types.GoodState_GoodStateWait.Enum(), false),
 	)
 	if err != nil {
 		return wlog.WrapError(err)
@@ -54,9 +55,9 @@ func (h *createHandler) constructMiningGoodStockSQL(ctx context.Context) error {
 			ctx,
 			mininggoodstock1.WithEntID(func() *string { s := poolStock.EntID.String(); return &s }(), false),
 			mininggoodstock1.WithGoodStockID(func() *string { s := poolStock.GoodStockID.String(); return &s }(), false),
-			mininggoodstock1.WithPoolRootUserID(func() *string { s := poolStock.PoolRootUserID.String(); return &s }(), false),
-			mininggoodstock1.WithPoolGoodUserID(func() *string { s := poolStock.PoolGoodUserID.String(); return &s }(), false),
+			mininggoodstock1.WithPoolRootUserID(func() *string { s := poolStock.PoolRootUserID.String(); return &s }(), true),
 			mininggoodstock1.WithTotal(func() *string { s := poolStock.Total.String(); return &s }(), true),
+			mininggoodstock1.WithState(types.MiningGoodStockState_MiningGoodStockStateWait.Enum(), true),
 		)
 		if err != nil {
 			return wlog.WrapError(err)

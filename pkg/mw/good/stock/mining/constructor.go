@@ -17,8 +17,7 @@ func (h *Handler) ConstructCreateSQL() string {
 	}
 	_sql += comma + "good_stock_id"
 	comma = ", "
-	_sql += comma + "mining_pool_id"
-	_sql += comma + "pool_good_user_id"
+	_sql += comma + "pool_root_user_id"
 	_sql += comma + "total"
 	_sql += comma + "spot_quantity"
 	_sql += comma + "locked"
@@ -26,6 +25,7 @@ func (h *Handler) ConstructCreateSQL() string {
 	_sql += comma + "in_service"
 	_sql += comma + "sold"
 	_sql += comma + "app_reserved"
+	_sql += comma + "state"
 	_sql += comma + "created_at"
 	_sql += comma + "updated_at"
 	_sql += comma + "deleted_at"
@@ -39,7 +39,6 @@ func (h *Handler) ConstructCreateSQL() string {
 	_sql += fmt.Sprintf("%v'%v' as good_stock_id", comma, *h.GoodStockID)
 	comma = ", "
 	_sql += fmt.Sprintf("%v'%v' as pool_root_user_id", comma, *h.PoolRootUserID)
-	_sql += fmt.Sprintf("%v'%v' as pool_good_user_id", comma, *h.PoolGoodUserID)
 	_sql += fmt.Sprintf("%v'%v' as total", comma, *h.Total)
 	_sql += fmt.Sprintf("%v'%v' as spot_quantity", comma, *h.Total)
 	_sql += fmt.Sprintf("%v'0' as locked", comma)
@@ -47,6 +46,7 @@ func (h *Handler) ConstructCreateSQL() string {
 	_sql += fmt.Sprintf("%v'0' as in_service", comma)
 	_sql += fmt.Sprintf("%v'0' as sold", comma)
 	_sql += fmt.Sprintf("%v'0' as app_reserved", comma)
+	_sql += fmt.Sprintf("%v'%v' as state", comma, h.State.String())
 	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
 	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
 	_sql += fmt.Sprintf("%v0 as deleted_at", comma)

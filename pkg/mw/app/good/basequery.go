@@ -98,6 +98,7 @@ func (h *baseQueryHandler) queryJoinGoodBase(s *sql.Selector) error {
 		sql.As(t1.C(entgoodbase.FieldName), "good_name"),
 		t1.C(entgoodbase.FieldServiceStartAt),
 		t1.C(entgoodbase.FieldStartMode),
+		t1.C(entgoodbase.FieldState),
 		t1.C(entgoodbase.FieldTestOnly),
 		t1.C(entgoodbase.FieldBenefitIntervalHours),
 		sql.As(t1.C(entgoodbase.FieldPurchasable), "good_purchasable"),

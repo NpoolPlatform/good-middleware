@@ -377,20 +377,6 @@ func (gc *GoodCreate) SetNillableSettlementType(s *string) *GoodCreate {
 	return gc
 }
 
-// SetGoodState sets the "good_state" field.
-func (gc *GoodCreate) SetGoodState(s string) *GoodCreate {
-	gc.mutation.SetGoodState(s)
-	return gc
-}
-
-// SetNillableGoodState sets the "good_state" field if the given value is not nil.
-func (gc *GoodCreate) SetNillableGoodState(s *string) *GoodCreate {
-	if s != nil {
-		gc.SetGoodState(*s)
-	}
-	return gc
-}
-
 // SetID sets the "id" field.
 func (gc *GoodCreate) SetID(u uint32) *GoodCreate {
 	gc.mutation.SetID(u)
@@ -586,10 +572,6 @@ func (gc *GoodCreate) defaults() error {
 	if _, ok := gc.mutation.SettlementType(); !ok {
 		v := good.DefaultSettlementType
 		gc.mutation.SetSettlementType(v)
-	}
-	if _, ok := gc.mutation.GoodState(); !ok {
-		v := good.DefaultGoodState
-		gc.mutation.SetGoodState(v)
 	}
 	return nil
 }
@@ -866,14 +848,6 @@ func (gc *GoodCreate) createSpec() (*Good, *sqlgraph.CreateSpec) {
 			Column: good.FieldSettlementType,
 		})
 		_node.SettlementType = value
-	}
-	if value, ok := gc.mutation.GoodState(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: good.FieldGoodState,
-		})
-		_node.GoodState = value
 	}
 	return _node, _spec
 }
@@ -1410,24 +1384,6 @@ func (u *GoodUpsert) UpdateSettlementType() *GoodUpsert {
 // ClearSettlementType clears the value of the "settlement_type" field.
 func (u *GoodUpsert) ClearSettlementType() *GoodUpsert {
 	u.SetNull(good.FieldSettlementType)
-	return u
-}
-
-// SetGoodState sets the "good_state" field.
-func (u *GoodUpsert) SetGoodState(v string) *GoodUpsert {
-	u.Set(good.FieldGoodState, v)
-	return u
-}
-
-// UpdateGoodState sets the "good_state" field to the value that was provided on create.
-func (u *GoodUpsert) UpdateGoodState() *GoodUpsert {
-	u.SetExcluded(good.FieldGoodState)
-	return u
-}
-
-// ClearGoodState clears the value of the "good_state" field.
-func (u *GoodUpsert) ClearGoodState() *GoodUpsert {
-	u.SetNull(good.FieldGoodState)
 	return u
 }
 
@@ -2043,27 +1999,6 @@ func (u *GoodUpsertOne) UpdateSettlementType() *GoodUpsertOne {
 func (u *GoodUpsertOne) ClearSettlementType() *GoodUpsertOne {
 	return u.Update(func(s *GoodUpsert) {
 		s.ClearSettlementType()
-	})
-}
-
-// SetGoodState sets the "good_state" field.
-func (u *GoodUpsertOne) SetGoodState(v string) *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.SetGoodState(v)
-	})
-}
-
-// UpdateGoodState sets the "good_state" field to the value that was provided on create.
-func (u *GoodUpsertOne) UpdateGoodState() *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.UpdateGoodState()
-	})
-}
-
-// ClearGoodState clears the value of the "good_state" field.
-func (u *GoodUpsertOne) ClearGoodState() *GoodUpsertOne {
-	return u.Update(func(s *GoodUpsert) {
-		s.ClearGoodState()
 	})
 }
 
@@ -2842,27 +2777,6 @@ func (u *GoodUpsertBulk) UpdateSettlementType() *GoodUpsertBulk {
 func (u *GoodUpsertBulk) ClearSettlementType() *GoodUpsertBulk {
 	return u.Update(func(s *GoodUpsert) {
 		s.ClearSettlementType()
-	})
-}
-
-// SetGoodState sets the "good_state" field.
-func (u *GoodUpsertBulk) SetGoodState(v string) *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.SetGoodState(v)
-	})
-}
-
-// UpdateGoodState sets the "good_state" field to the value that was provided on create.
-func (u *GoodUpsertBulk) UpdateGoodState() *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.UpdateGoodState()
-	})
-}
-
-// ClearGoodState clears the value of the "good_state" field.
-func (u *GoodUpsertBulk) ClearGoodState() *GoodUpsertBulk {
-	return u.Update(func(s *GoodUpsert) {
-		s.ClearGoodState()
 	})
 }
 

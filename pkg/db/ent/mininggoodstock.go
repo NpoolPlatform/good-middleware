@@ -45,8 +45,8 @@ type MiningGoodStock struct {
 	Sold decimal.Decimal `json:"sold,omitempty"`
 	// AppReserved holds the value of the "app_reserved" field.
 	AppReserved decimal.Decimal `json:"app_reserved,omitempty"`
-	// MiningGoodStockState holds the value of the "mining_good_stock_state" field.
-	MiningGoodStockState string `json:"mining_good_stock_state,omitempty"`
+	// State holds the value of the "state" field.
+	State string `json:"state,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -58,7 +58,7 @@ func (*MiningGoodStock) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case mininggoodstock.FieldID, mininggoodstock.FieldCreatedAt, mininggoodstock.FieldUpdatedAt, mininggoodstock.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case mininggoodstock.FieldMiningGoodStockState:
+		case mininggoodstock.FieldState:
 			values[i] = new(sql.NullString)
 		case mininggoodstock.FieldEntID, mininggoodstock.FieldGoodStockID, mininggoodstock.FieldPoolRootUserID, mininggoodstock.FieldPoolGoodUserID:
 			values[i] = new(uuid.UUID)
@@ -167,11 +167,11 @@ func (mgs *MiningGoodStock) assignValues(columns []string, values []interface{})
 			} else if value != nil {
 				mgs.AppReserved = *value
 			}
-		case mininggoodstock.FieldMiningGoodStockState:
+		case mininggoodstock.FieldState:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field mining_good_stock_state", values[i])
+				return fmt.Errorf("unexpected type %T for field state", values[i])
 			} else if value.Valid {
-				mgs.MiningGoodStockState = value.String
+				mgs.State = value.String
 			}
 		}
 	}
@@ -243,8 +243,8 @@ func (mgs *MiningGoodStock) String() string {
 	builder.WriteString("app_reserved=")
 	builder.WriteString(fmt.Sprintf("%v", mgs.AppReserved))
 	builder.WriteString(", ")
-	builder.WriteString("mining_good_stock_state=")
-	builder.WriteString(mgs.MiningGoodStockState)
+	builder.WriteString("state=")
+	builder.WriteString(mgs.State)
 	builder.WriteByte(')')
 	return builder.String()
 }

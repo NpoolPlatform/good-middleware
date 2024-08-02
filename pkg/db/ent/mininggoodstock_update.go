@@ -299,23 +299,23 @@ func (mgsu *MiningGoodStockUpdate) ClearAppReserved() *MiningGoodStockUpdate {
 	return mgsu
 }
 
-// SetMiningGoodStockState sets the "mining_good_stock_state" field.
-func (mgsu *MiningGoodStockUpdate) SetMiningGoodStockState(s string) *MiningGoodStockUpdate {
-	mgsu.mutation.SetMiningGoodStockState(s)
+// SetState sets the "state" field.
+func (mgsu *MiningGoodStockUpdate) SetState(s string) *MiningGoodStockUpdate {
+	mgsu.mutation.SetState(s)
 	return mgsu
 }
 
-// SetNillableMiningGoodStockState sets the "mining_good_stock_state" field if the given value is not nil.
-func (mgsu *MiningGoodStockUpdate) SetNillableMiningGoodStockState(s *string) *MiningGoodStockUpdate {
+// SetNillableState sets the "state" field if the given value is not nil.
+func (mgsu *MiningGoodStockUpdate) SetNillableState(s *string) *MiningGoodStockUpdate {
 	if s != nil {
-		mgsu.SetMiningGoodStockState(*s)
+		mgsu.SetState(*s)
 	}
 	return mgsu
 }
 
-// ClearMiningGoodStockState clears the value of the "mining_good_stock_state" field.
-func (mgsu *MiningGoodStockUpdate) ClearMiningGoodStockState() *MiningGoodStockUpdate {
-	mgsu.mutation.ClearMiningGoodStockState()
+// ClearState clears the value of the "state" field.
+func (mgsu *MiningGoodStockUpdate) ClearState() *MiningGoodStockUpdate {
+	mgsu.mutation.ClearState()
 	return mgsu
 }
 
@@ -596,17 +596,17 @@ func (mgsu *MiningGoodStockUpdate) sqlSave(ctx context.Context) (n int, err erro
 			Column: mininggoodstock.FieldAppReserved,
 		})
 	}
-	if value, ok := mgsu.mutation.MiningGoodStockState(); ok {
+	if value, ok := mgsu.mutation.State(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: mininggoodstock.FieldMiningGoodStockState,
+			Column: mininggoodstock.FieldState,
 		})
 	}
-	if mgsu.mutation.MiningGoodStockStateCleared() {
+	if mgsu.mutation.StateCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: mininggoodstock.FieldMiningGoodStockState,
+			Column: mininggoodstock.FieldState,
 		})
 	}
 	_spec.Modifiers = mgsu.modifiers
@@ -899,23 +899,23 @@ func (mgsuo *MiningGoodStockUpdateOne) ClearAppReserved() *MiningGoodStockUpdate
 	return mgsuo
 }
 
-// SetMiningGoodStockState sets the "mining_good_stock_state" field.
-func (mgsuo *MiningGoodStockUpdateOne) SetMiningGoodStockState(s string) *MiningGoodStockUpdateOne {
-	mgsuo.mutation.SetMiningGoodStockState(s)
+// SetState sets the "state" field.
+func (mgsuo *MiningGoodStockUpdateOne) SetState(s string) *MiningGoodStockUpdateOne {
+	mgsuo.mutation.SetState(s)
 	return mgsuo
 }
 
-// SetNillableMiningGoodStockState sets the "mining_good_stock_state" field if the given value is not nil.
-func (mgsuo *MiningGoodStockUpdateOne) SetNillableMiningGoodStockState(s *string) *MiningGoodStockUpdateOne {
+// SetNillableState sets the "state" field if the given value is not nil.
+func (mgsuo *MiningGoodStockUpdateOne) SetNillableState(s *string) *MiningGoodStockUpdateOne {
 	if s != nil {
-		mgsuo.SetMiningGoodStockState(*s)
+		mgsuo.SetState(*s)
 	}
 	return mgsuo
 }
 
-// ClearMiningGoodStockState clears the value of the "mining_good_stock_state" field.
-func (mgsuo *MiningGoodStockUpdateOne) ClearMiningGoodStockState() *MiningGoodStockUpdateOne {
-	mgsuo.mutation.ClearMiningGoodStockState()
+// ClearState clears the value of the "state" field.
+func (mgsuo *MiningGoodStockUpdateOne) ClearState() *MiningGoodStockUpdateOne {
+	mgsuo.mutation.ClearState()
 	return mgsuo
 }
 
@@ -1226,17 +1226,17 @@ func (mgsuo *MiningGoodStockUpdateOne) sqlSave(ctx context.Context) (_node *Mini
 			Column: mininggoodstock.FieldAppReserved,
 		})
 	}
-	if value, ok := mgsuo.mutation.MiningGoodStockState(); ok {
+	if value, ok := mgsuo.mutation.State(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: mininggoodstock.FieldMiningGoodStockState,
+			Column: mininggoodstock.FieldState,
 		})
 	}
-	if mgsuo.mutation.MiningGoodStockStateCleared() {
+	if mgsuo.mutation.StateCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: mininggoodstock.FieldMiningGoodStockState,
+			Column: mininggoodstock.FieldState,
 		})
 	}
 	_spec.Modifiers = mgsuo.modifiers

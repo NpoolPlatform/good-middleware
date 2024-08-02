@@ -20,6 +20,7 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 	handler := &Handler{
 		GoodBaseConds: &goodbasecrud.Conds{},
 	}
+	handler.State = types.GoodState_GoodStateReady.Enum()
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
 			return nil, err

@@ -41,8 +41,8 @@ const (
 	FieldSold = "sold"
 	// FieldAppReserved holds the string denoting the app_reserved field in the database.
 	FieldAppReserved = "app_reserved"
-	// FieldMiningGoodStockState holds the string denoting the mining_good_stock_state field in the database.
-	FieldMiningGoodStockState = "mining_good_stock_state"
+	// FieldState holds the string denoting the state field in the database.
+	FieldState = "state"
 	// Table holds the table name of the mininggoodstock in the database.
 	Table = "mining_good_stocks"
 )
@@ -64,7 +64,7 @@ var Columns = []string{
 	FieldWaitStart,
 	FieldSold,
 	FieldAppReserved,
-	FieldMiningGoodStockState,
+	FieldState,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -115,6 +115,6 @@ var (
 	DefaultSold decimal.Decimal
 	// DefaultAppReserved holds the default value on creation for the "app_reserved" field.
 	DefaultAppReserved decimal.Decimal
-	// DefaultMiningGoodStockState holds the default value on creation for the "mining_good_stock_state" field.
-	DefaultMiningGoodStockState string
+	// DefaultState holds the default value on creation for the "state" field.
+	DefaultState string
 )

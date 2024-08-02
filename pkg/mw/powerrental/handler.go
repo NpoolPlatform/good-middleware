@@ -454,24 +454,34 @@ func WithStocks(stocks []*stockmwpb.MiningGoodStockReq, must bool) func(context.
 				}
 				return &uid
 			}()
-			poolRootUserID, err := uuid.Parse(_stock.GetPoolRootUserID())
-			if err != nil {
-				return wlog.WrapError(err)
+			req := &mininggoodstockcrud.Req{
+				EntID: entID,
+				State: _stock.State,
 			}
-			poolGoodUserID, err := uuid.Parse(_stock.GetPoolGoodUserID())
-			if err != nil {
-				return wlog.WrapError(err)
+
+			if _stock.PoolRootUserID != nil {
+				id, err := uuid.Parse(_stock.GetPoolRootUserID())
+				if err != nil {
+					return wlog.WrapError(err)
+				}
+				req.PoolRootUserID = &id
 			}
+
+			if _stock.PoolGoodUserID != nil {
+				id, err := uuid.Parse(_stock.GetPoolGoodUserID())
+				if err != nil {
+					return wlog.WrapError(err)
+				}
+				req.PoolGoodUserID = &id
+			}
+
 			amount, err := decimal.NewFromString(_stock.GetTotal())
 			if err != nil {
 				return wlog.WrapError(err)
 			}
-			h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, &mininggoodstockcrud.Req{
-				EntID:          entID,
-				PoolRootUserID: &poolRootUserID,
-				PoolGoodUserID: &poolGoodUserID,
-				Total:          &amount,
-			})
+			req.Total = &amount
+
+			h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, req)
 		}
 		return nil
 	}

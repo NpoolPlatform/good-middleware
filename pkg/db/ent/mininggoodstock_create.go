@@ -219,16 +219,16 @@ func (mgsc *MiningGoodStockCreate) SetNillableAppReserved(d *decimal.Decimal) *M
 	return mgsc
 }
 
-// SetMiningGoodStockState sets the "mining_good_stock_state" field.
-func (mgsc *MiningGoodStockCreate) SetMiningGoodStockState(s string) *MiningGoodStockCreate {
-	mgsc.mutation.SetMiningGoodStockState(s)
+// SetState sets the "state" field.
+func (mgsc *MiningGoodStockCreate) SetState(s string) *MiningGoodStockCreate {
+	mgsc.mutation.SetState(s)
 	return mgsc
 }
 
-// SetNillableMiningGoodStockState sets the "mining_good_stock_state" field if the given value is not nil.
-func (mgsc *MiningGoodStockCreate) SetNillableMiningGoodStockState(s *string) *MiningGoodStockCreate {
+// SetNillableState sets the "state" field if the given value is not nil.
+func (mgsc *MiningGoodStockCreate) SetNillableState(s *string) *MiningGoodStockCreate {
 	if s != nil {
-		mgsc.SetMiningGoodStockState(*s)
+		mgsc.SetState(*s)
 	}
 	return mgsc
 }
@@ -395,9 +395,9 @@ func (mgsc *MiningGoodStockCreate) defaults() error {
 		v := mininggoodstock.DefaultAppReserved
 		mgsc.mutation.SetAppReserved(v)
 	}
-	if _, ok := mgsc.mutation.MiningGoodStockState(); !ok {
-		v := mininggoodstock.DefaultMiningGoodStockState
-		mgsc.mutation.SetMiningGoodStockState(v)
+	if _, ok := mgsc.mutation.State(); !ok {
+		v := mininggoodstock.DefaultState
+		mgsc.mutation.SetState(v)
 	}
 	return nil
 }
@@ -562,13 +562,13 @@ func (mgsc *MiningGoodStockCreate) createSpec() (*MiningGoodStock, *sqlgraph.Cre
 		})
 		_node.AppReserved = value
 	}
-	if value, ok := mgsc.mutation.MiningGoodStockState(); ok {
+	if value, ok := mgsc.mutation.State(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: mininggoodstock.FieldMiningGoodStockState,
+			Column: mininggoodstock.FieldState,
 		})
-		_node.MiningGoodStockState = value
+		_node.State = value
 	}
 	return _node, _spec
 }
@@ -868,21 +868,21 @@ func (u *MiningGoodStockUpsert) ClearAppReserved() *MiningGoodStockUpsert {
 	return u
 }
 
-// SetMiningGoodStockState sets the "mining_good_stock_state" field.
-func (u *MiningGoodStockUpsert) SetMiningGoodStockState(v string) *MiningGoodStockUpsert {
-	u.Set(mininggoodstock.FieldMiningGoodStockState, v)
+// SetState sets the "state" field.
+func (u *MiningGoodStockUpsert) SetState(v string) *MiningGoodStockUpsert {
+	u.Set(mininggoodstock.FieldState, v)
 	return u
 }
 
-// UpdateMiningGoodStockState sets the "mining_good_stock_state" field to the value that was provided on create.
-func (u *MiningGoodStockUpsert) UpdateMiningGoodStockState() *MiningGoodStockUpsert {
-	u.SetExcluded(mininggoodstock.FieldMiningGoodStockState)
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *MiningGoodStockUpsert) UpdateState() *MiningGoodStockUpsert {
+	u.SetExcluded(mininggoodstock.FieldState)
 	return u
 }
 
-// ClearMiningGoodStockState clears the value of the "mining_good_stock_state" field.
-func (u *MiningGoodStockUpsert) ClearMiningGoodStockState() *MiningGoodStockUpsert {
-	u.SetNull(mininggoodstock.FieldMiningGoodStockState)
+// ClearState clears the value of the "state" field.
+func (u *MiningGoodStockUpsert) ClearState() *MiningGoodStockUpsert {
+	u.SetNull(mininggoodstock.FieldState)
 	return u
 }
 
@@ -1221,24 +1221,24 @@ func (u *MiningGoodStockUpsertOne) ClearAppReserved() *MiningGoodStockUpsertOne 
 	})
 }
 
-// SetMiningGoodStockState sets the "mining_good_stock_state" field.
-func (u *MiningGoodStockUpsertOne) SetMiningGoodStockState(v string) *MiningGoodStockUpsertOne {
+// SetState sets the "state" field.
+func (u *MiningGoodStockUpsertOne) SetState(v string) *MiningGoodStockUpsertOne {
 	return u.Update(func(s *MiningGoodStockUpsert) {
-		s.SetMiningGoodStockState(v)
+		s.SetState(v)
 	})
 }
 
-// UpdateMiningGoodStockState sets the "mining_good_stock_state" field to the value that was provided on create.
-func (u *MiningGoodStockUpsertOne) UpdateMiningGoodStockState() *MiningGoodStockUpsertOne {
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *MiningGoodStockUpsertOne) UpdateState() *MiningGoodStockUpsertOne {
 	return u.Update(func(s *MiningGoodStockUpsert) {
-		s.UpdateMiningGoodStockState()
+		s.UpdateState()
 	})
 }
 
-// ClearMiningGoodStockState clears the value of the "mining_good_stock_state" field.
-func (u *MiningGoodStockUpsertOne) ClearMiningGoodStockState() *MiningGoodStockUpsertOne {
+// ClearState clears the value of the "state" field.
+func (u *MiningGoodStockUpsertOne) ClearState() *MiningGoodStockUpsertOne {
 	return u.Update(func(s *MiningGoodStockUpsert) {
-		s.ClearMiningGoodStockState()
+		s.ClearState()
 	})
 }
 
@@ -1740,24 +1740,24 @@ func (u *MiningGoodStockUpsertBulk) ClearAppReserved() *MiningGoodStockUpsertBul
 	})
 }
 
-// SetMiningGoodStockState sets the "mining_good_stock_state" field.
-func (u *MiningGoodStockUpsertBulk) SetMiningGoodStockState(v string) *MiningGoodStockUpsertBulk {
+// SetState sets the "state" field.
+func (u *MiningGoodStockUpsertBulk) SetState(v string) *MiningGoodStockUpsertBulk {
 	return u.Update(func(s *MiningGoodStockUpsert) {
-		s.SetMiningGoodStockState(v)
+		s.SetState(v)
 	})
 }
 
-// UpdateMiningGoodStockState sets the "mining_good_stock_state" field to the value that was provided on create.
-func (u *MiningGoodStockUpsertBulk) UpdateMiningGoodStockState() *MiningGoodStockUpsertBulk {
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *MiningGoodStockUpsertBulk) UpdateState() *MiningGoodStockUpsertBulk {
 	return u.Update(func(s *MiningGoodStockUpsert) {
-		s.UpdateMiningGoodStockState()
+		s.UpdateState()
 	})
 }
 
-// ClearMiningGoodStockState clears the value of the "mining_good_stock_state" field.
-func (u *MiningGoodStockUpsertBulk) ClearMiningGoodStockState() *MiningGoodStockUpsertBulk {
+// ClearState clears the value of the "state" field.
+func (u *MiningGoodStockUpsertBulk) ClearState() *MiningGoodStockUpsertBulk {
 	return u.Update(func(s *MiningGoodStockUpsert) {
-		s.ClearMiningGoodStockState()
+		s.ClearState()
 	})
 }
 

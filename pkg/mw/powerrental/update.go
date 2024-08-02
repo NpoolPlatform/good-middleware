@@ -16,6 +16,7 @@ import (
 	goodcoinreward1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/coin/reward"
 	rewardhistory1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/coin/reward/history"
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
+	mininggoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/stock/mining"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
@@ -277,11 +278,23 @@ func (h *updateHandler) deleteMiningGoodStocks(ctx context.Context, tx *ent.Tx) 
 
 func (h *updateHandler) createMiningGoodStocks(ctx context.Context, tx *ent.Tx) error {
 	for _, poolStock := range h.MiningGoodStockReqs {
-		if _, err := mininggoodstockcrud.CreateSet(
-			tx.MiningGoodStock.Create(),
-			poolStock,
-		).Save(ctx); err != nil {
+		handler, err := mininggoodstock1.NewHandler(
+			ctx,
+			mininggoodstock1.WithEntID(func() *string { s := poolStock.EntID.String(); return &s }(), false),
+			mininggoodstock1.WithGoodStockID(func() *string { s := poolStock.GoodStockID.String(); return &s }(), false),
+			mininggoodstock1.WithPoolRootUserID(func() *string { s := poolStock.PoolRootUserID.String(); return &s }(), true),
+			mininggoodstock1.WithTotal(func() *string { s := poolStock.Total.String(); return &s }(), true),
+			mininggoodstock1.WithState(types.MiningGoodStockState_MiningGoodStockStateWait.Enum(), true),
+		)
+		if err != nil {
 			return wlog.WrapError(err)
+		}
+		n, err := h.execSQL(ctx, tx, handler.ConstructCreateSQL())
+		if err != nil {
+			return wlog.WrapError(err)
+		}
+		if n != 1 {
+			return wlog.Errorf("fail create mininggoodstock: %v", err)
 		}
 	}
 	return nil
@@ -353,27 +366,60 @@ func (h *updateHandler) _validateStock() error {
 	}
 
 	for _, poolStock := range h.miningGoodStocks {
-		if func() bool {
-			for _, _poolStock := range miningGoodStockReqs {
-				if *_poolStock.EntID == poolStock.EntID {
-					_poolStock.ID = &poolStock.ID
-					_poolStock.SpotQuantity = func() *decimal.Decimal {
-						d := poolStock.SpotQuantity.Add(_poolStock.Total.Sub(poolStock.Total))
-						return &d
-					}()
-					return true
+		existReq := false
+		for _, _poolStock := range miningGoodStockReqs {
+			if *_poolStock.EntID == poolStock.EntID {
+				if _poolStock.State != nil {
+					if err := h._validateMiningGoodStocksState(*_poolStock.State, types.MiningGoodStockState(types.MiningGoodStockState_value[poolStock.State])); err != nil {
+						return wlog.WrapError(err)
+					}
 				}
+
+				_poolStock.ID = &poolStock.ID
+				_poolStock.SpotQuantity = func() *decimal.Decimal {
+					d := poolStock.SpotQuantity.Add(_poolStock.Total.Sub(poolStock.Total))
+					return &d
+				}()
+
+				existReq = true
+				break
 			}
-			return false
-		}() {
-			continue
 		}
-		h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, &mininggoodstockcrud.Req{
-			EntID: &poolStock.EntID,
-			Total: &poolStock.Total,
-		})
+		if !existReq {
+			h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, &mininggoodstockcrud.Req{
+				EntID: &poolStock.EntID,
+				Total: &poolStock.Total,
+			})
+		}
 	}
 	return h.stockValidator.validateStock()
+}
+
+func (h *updateHandler) _validateMiningGoodStocksState(currentState types.MiningGoodStockState, nextState types.MiningGoodStockState) error {
+	switch currentState {
+	case types.MiningGoodStockState_MiningGoodStockStateWait:
+		switch nextState {
+		case
+			types.MiningGoodStockState_MiningGoodStockStateCreateGoodUser:
+			return nil
+		}
+	case types.MiningGoodStockState_MiningGoodStockStateCreateGoodUser:
+		switch nextState {
+		case
+			types.MiningGoodStockState_MiningGoodStockStateCheckHashRate,
+			types.MiningGoodStockState_MiningGoodStockStateFail:
+			return nil
+		}
+	case types.MiningGoodStockState_MiningGoodStockStateCheckHashRate:
+		switch nextState {
+		case
+			types.MiningGoodStockState_MiningGoodStockStateReady,
+			types.MiningGoodStockState_MiningGoodStockStateFail:
+			return nil
+		}
+	}
+
+	return wlog.Errorf("broken mininggoodstockstate %v -> %v", currentState, nextState)
 }
 
 //nolint:gocyclo,funlen
@@ -472,24 +518,23 @@ func (h *updateHandler) validateGoodState() error {
 	}
 	switch h.goodBase.State {
 	case types.GoodState_GoodStateWait.String():
-		switch h.GoodBaseReq.State {
+		switch h.GoodBaseReq.State.String() {
 		case
-			types.GoodState_GoodStateCreateGoodUser.Enum(),
-			types.GoodState_GoodStateFail.Enum():
+			types.GoodState_GoodStateCreateGoodUser.String():
 			return nil
 		}
 	case types.GoodState_GoodStateCreateGoodUser.String():
-		switch h.GoodBaseReq.State {
+		switch h.GoodBaseReq.State.String() {
 		case
-			types.GoodState_GoodStateCheckHashRate.Enum(),
-			types.GoodState_GoodStateFail.Enum():
+			types.GoodState_GoodStateCheckHashRate.String(),
+			types.GoodState_GoodStateFail.String():
 			return nil
 		}
 	case types.GoodState_GoodStateCheckHashRate.String():
-		switch h.GoodBaseReq.State {
+		switch h.GoodBaseReq.State.String() {
 		case
-			types.GoodState_GoodStateReady.Enum(),
-			types.GoodState_GoodStateFail.Enum():
+			types.GoodState_GoodStateReady.String(),
+			types.GoodState_GoodStateFail.String():
 			return nil
 		}
 	}
