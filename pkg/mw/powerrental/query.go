@@ -89,6 +89,7 @@ func (h *queryHandler) getMiningGoodStocks(ctx context.Context, cli *ent.Client)
 		entmininggoodstock.FieldWaitStart,
 		entmininggoodstock.FieldInService,
 		entmininggoodstock.FieldSold,
+		entmininggoodstock.FieldState,
 	).Scan(ctx, &h.miningGoodStocks)
 }
 
@@ -179,6 +180,7 @@ func (h *queryHandler) formalize() {
 		stock.WaitStart = func() string { amount, _ := decimal.NewFromString(stock.WaitStart); return amount.String() }()
 		stock.InService = func() string { amount, _ := decimal.NewFromString(stock.InService); return amount.String() }()
 		stock.Sold = func() string { amount, _ := decimal.NewFromString(stock.Sold); return amount.String() }()
+		stock.State = types.MiningGoodStockState(types.MiningGoodStockState_value[stock.StateStr])
 		goodMiningStocks[stock.GoodStockID] = append(goodMiningStocks[stock.GoodStockID], stock)
 	}
 	for _, goodCoin := range h.goodCoins {

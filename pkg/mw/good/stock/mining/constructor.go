@@ -55,14 +55,6 @@ func (h *Handler) ConstructCreateSQL() string {
 	_sql += "select 1 from stocks_v1 "
 	_sql += fmt.Sprintf("where ent_id = '%v'", *h.GoodStockID)
 	_sql += " limit 1) "
-	_sql += "and not exists ("
-	_sql += "select 1 from mining_good_stocks "
-	_sql += fmt.Sprintf(
-		"where pool_root_user_id = '%v' and pool_good_user_id = '%v' and deleted_at = 0",
-		*h.PoolRootUserID,
-		*h.PoolGoodUserID,
-	)
-	_sql += " limit 1)"
 
 	return _sql
 }

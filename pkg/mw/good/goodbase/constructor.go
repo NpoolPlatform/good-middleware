@@ -68,7 +68,7 @@ func (h *Handler) ConstructCreateSQL() string {
 		_sql += fmt.Sprintf("%v%v as online", comma, *h.Online)
 	}
 	if h.State != nil {
-		_sql += fmt.Sprintf("%v%v as state", comma, h.State.String())
+		_sql += fmt.Sprintf("%v'%v' as state", comma, h.State.String())
 	}
 	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
 	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
@@ -78,7 +78,6 @@ func (h *Handler) ConstructCreateSQL() string {
 	_sql += "select 1 from good_bases "
 	_sql += fmt.Sprintf("where name = '%v' and deleted_at = 0", *h.Name)
 	_sql += " limit 1)"
-
 	return _sql
 }
 
