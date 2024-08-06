@@ -649,6 +649,12 @@ func (h *Handler) withPowerRentalConds(conds *npool.Conds) error {
 			Val: ids,
 		}
 	}
+	if conds.StockMode != nil {
+		h.PowerRentalConds.StockMode = &cruder.Cond{
+			Op:  conds.GetStockMode().GetOp(),
+			Val: types.GoodStockMode(conds.GetStockMode().GetValue()),
+		}
+	}
 	return nil
 }
 

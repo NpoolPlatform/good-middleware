@@ -102,6 +102,7 @@ type Conds struct {
 	DeviceTypeIDs     *cruder.Cond
 	VendorLocationID  *cruder.Cond
 	VendorLocationIDs *cruder.Cond
+	StockMode         *cruder.Cond
 }
 
 // nolint
@@ -238,6 +239,20 @@ func SetQueryConds(q *ent.PowerRentalQuery, conds *Conds) (*ent.PowerRentalQuery
 			q.Where(entpowerrental.VendorLocationIDIn(ids...))
 		default:
 			return nil, wlog.Errorf("invalid powerrental field")
+		}
+	}
+	if conds.StockMode != nil {
+		_mode, ok := conds.StockMode.Val.(types.GoodStockMode)
+		if !ok {
+			return nil, wlog.Errorf("invalid stockmode")
+		}
+		switch conds.StockMode.Op {
+		case cruder.EQ:
+			q.Where(entpowerrental.StockMode(_mode.String()))
+		case cruder.NEQ:
+			q.Where(entpowerrental.StockModeNEQ(_mode.String()))
+		default:
+			return nil, wlog.Errorf("invalid stockmode field")
 		}
 	}
 	return q, nil
