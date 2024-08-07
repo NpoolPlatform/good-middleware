@@ -126,7 +126,7 @@ func (h *Handler) ConstructUpdateSQL() (string, error) {
 		set = ""
 	}
 	if h.State != nil {
-		_sql += fmt.Sprintf("%vstate = %v, ", set, h.State.String())
+		_sql += fmt.Sprintf("%vstate = '%v', ", set, h.State.String())
 		set = ""
 	}
 	if set != "" {

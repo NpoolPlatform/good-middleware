@@ -475,11 +475,13 @@ func WithStocks(stocks []*stockmwpb.MiningGoodStockReq, must bool) func(context.
 				req.PoolGoodUserID = &id
 			}
 
-			amount, err := decimal.NewFromString(_stock.GetTotal())
-			if err != nil {
-				return wlog.WrapError(err)
+			if _stock.Total != nil {
+				amount, err := decimal.NewFromString(_stock.GetTotal())
+				if err != nil {
+					return wlog.WrapError(err)
+				}
+				req.Total = &amount
 			}
-			req.Total = &amount
 
 			h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, req)
 		}

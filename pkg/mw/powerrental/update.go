@@ -366,27 +366,30 @@ func (h *updateHandler) _validateStock() error {
 	}
 
 	for _, poolStock := range h.miningGoodStocks {
-		existReq := false
+		existInReq := false
 		for _, _poolStock := range miningGoodStockReqs {
 			if *_poolStock.EntID != poolStock.EntID {
 				continue
 			}
 			if _poolStock.State != nil {
-				if err := h._validateMiningGoodStocksState(*_poolStock.State, types.MiningGoodStockState(types.MiningGoodStockState_value[poolStock.State])); err != nil {
+				if err := h._validateMiningGoodStocksState(types.MiningGoodStockState(types.MiningGoodStockState_value[poolStock.State]), *_poolStock.State); err != nil {
 					return wlog.WrapError(err)
 				}
 			}
 
 			_poolStock.ID = &poolStock.ID
+
+			if _poolStock.Total == nil {
+				_poolStock.Total = &poolStock.Total
+			}
 			_poolStock.SpotQuantity = func() *decimal.Decimal {
 				d := poolStock.SpotQuantity.Add(_poolStock.Total.Sub(poolStock.Total))
 				return &d
 			}()
-
-			existReq = true
+			existInReq = true
 			break
 		}
-		if !existReq {
+		if !existInReq {
 			h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, &mininggoodstockcrud.Req{
 				EntID: &poolStock.EntID,
 				Total: &poolStock.Total,
