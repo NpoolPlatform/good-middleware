@@ -53,6 +53,7 @@ func (s *Server) UpdatePowerRental(ctx context.Context, in *npool.UpdatePowerRen
 		powerrental1.WithRewardState(req.RewardState, false),
 		powerrental1.WithRewardAt(req.RewardAt, false),
 		powerrental1.WithRewards(req.Rewards, false),
+		powerrental1.WithRollback(req.Rollback, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

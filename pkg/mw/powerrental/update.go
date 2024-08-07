@@ -17,6 +17,7 @@ import (
 	rewardhistory1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/coin/reward/history"
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 	mininggoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/stock/mining"
+	goodstm "github.com/NpoolPlatform/good-middleware/pkg/mw/stm"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
@@ -371,12 +372,6 @@ func (h *updateHandler) _validateStock() error {
 			if *_poolStock.EntID != poolStock.EntID {
 				continue
 			}
-			if _poolStock.State != nil {
-				if err := h._validateMiningGoodStocksState(types.MiningGoodStockState(types.MiningGoodStockState_value[poolStock.State]), *_poolStock.State); err != nil {
-					return wlog.WrapError(err)
-				}
-			}
-
 			_poolStock.ID = &poolStock.ID
 
 			if _poolStock.Total == nil {
@@ -397,34 +392,6 @@ func (h *updateHandler) _validateStock() error {
 		}
 	}
 	return h.stockValidator.validateStock()
-}
-
-//nolint:gocritic
-func (h *updateHandler) _validateMiningGoodStocksState(currentState, nextState types.MiningGoodStockState) error {
-	switch currentState {
-	case types.MiningGoodStockState_MiningGoodStockStateWait:
-		switch nextState {
-		case
-			types.MiningGoodStockState_MiningGoodStockStateCreateGoodUser:
-			return nil
-		}
-	case types.MiningGoodStockState_MiningGoodStockStateCreateGoodUser:
-		switch nextState {
-		case
-			types.MiningGoodStockState_MiningGoodStockStateCheckHashRate,
-			types.MiningGoodStockState_MiningGoodStockStateFail:
-			return nil
-		}
-	case types.MiningGoodStockState_MiningGoodStockStateCheckHashRate:
-		switch nextState {
-		case
-			types.MiningGoodStockState_MiningGoodStockStateReady,
-			types.MiningGoodStockState_MiningGoodStockStateFail:
-			return nil
-		}
-	}
-
-	return wlog.Errorf("broken mininggoodstockstate %v -> %v", currentState, nextState)
 }
 
 //nolint:gocyclo,funlen
@@ -515,37 +482,48 @@ func (h *updateHandler) validateRewardState() error {
 }
 
 //nolint:gocritic
-func (h *updateHandler) validateGoodState() error {
+func (h *updateHandler) validateGoodState(ctx context.Context) error {
 	if h.powerRental.StockMode != types.GoodStockMode_GoodStockByMiningpool.String() {
 		return nil
 	}
 	if h.GoodBaseReq.State == nil {
 		return nil
 	}
-	switch h.goodBase.State {
-	case types.GoodState_GoodStateWait.String():
-		switch h.GoodBaseReq.State.String() {
-		case
-			types.GoodState_GoodStateCreateGoodUser.String():
-			return nil
-		}
-	case types.GoodState_GoodStateCreateGoodUser.String():
-		switch h.GoodBaseReq.State.String() {
-		case
-			types.GoodState_GoodStateCheckHashRate.String(),
-			types.GoodState_GoodStateFail.String():
-			return nil
-		}
-	case types.GoodState_GoodStateCheckHashRate.String():
-		switch h.GoodBaseReq.State.String() {
-		case
-			types.GoodState_GoodStateReady.String(),
-			types.GoodState_GoodStateFail.String():
-			return nil
+
+	if len(h.MiningGoodStockReqs) != len(h.miningGoodStocks) {
+		return wlog.Errorf("invalid mininggoodstockstate")
+	}
+
+	currentState := types.GoodState(types.GoodState_value[h.goodBase.State]).Enum()
+	nextState := h.GoodBaseReq.State
+
+	nextMiningGoodStockState := goodstm.StateMap[*nextState]
+	for _, miningStockReq := range h.MiningGoodStockReqs {
+		if miningStockReq.State == nil || *miningStockReq.State != nextMiningGoodStockState {
+			return wlog.Errorf("invalid mininggoodstockstate")
 		}
 	}
 
-	return wlog.Errorf("broken goodstate %v -> %v", h.goodBase.State, h.GoodBaseReq.State.String())
+	handler, err := goodstm.NewHandler(ctx,
+		goodstm.WithCurrentGoodState(currentState, true),
+		goodstm.WithNextGoodState(nextState, true),
+		goodstm.WithRollback(h.Rollback, true),
+	)
+	if err != nil {
+		wlog.WrapError(err)
+	}
+
+	if _state, err := handler.ValidateUpdateForNewState(); err != nil {
+		wlog.WrapError(err)
+	} else if _state != nil {
+		h.GoodBaseReq.State = _state
+		_miningGoodStockState := goodstm.StateMap[*_state]
+		for _, miningStockReq := range h.MiningGoodStockReqs {
+			miningStockReq.State = &_miningGoodStockState
+		}
+	}
+
+	return nil
 }
 
 func (h *updateHandler) formalizeStock() {
@@ -618,7 +596,7 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 	if err := handler.validateRewardState(); err != nil {
 		return wlog.WrapError(err)
 	}
-	if err := handler.validateGoodState(); err != nil {
+	if err := handler.validateGoodState(ctx); err != nil {
 		return wlog.WrapError(err)
 	}
 	handler.formalizeStock()

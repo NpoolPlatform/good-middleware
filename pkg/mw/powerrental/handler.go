@@ -30,6 +30,7 @@ type Handler struct {
 	powerrentalcrud.Req
 	GoodBaseReq         *goodbasecrud.Req
 	StockReq            *stockcrud.Req
+	Rollback            *bool
 	RewardReq           *goodrewardcrud.Req
 	MiningGoodStockReqs []*mininggoodstockcrud.Req
 	PowerRentalConds    *powerrentalcrud.Conds
@@ -606,6 +607,20 @@ func WithState(e *types.GoodState, must bool) func(context.Context, *Handler) er
 			return wlog.Errorf("invalid state")
 		}
 		h.GoodBaseReq.State = e
+		return nil
+	}
+}
+
+func WithRollback(e *bool, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return wlog.Errorf("invalid rollback")
+			}
+			return nil
+		}
+
+		h.Rollback = e
 		return nil
 	}
 }
