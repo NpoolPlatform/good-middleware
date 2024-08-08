@@ -510,11 +510,11 @@ func (h *updateHandler) validateGoodState(ctx context.Context) error {
 		goodstm.WithRollback(h.Rollback, true),
 	)
 	if err != nil {
-		wlog.WrapError(err)
+		return wlog.WrapError(err)
 	}
 
 	if _state, err := handler.ValidateUpdateForNewState(); err != nil {
-		wlog.WrapError(err)
+		return wlog.WrapError(err)
 	} else if _state != nil {
 		h.GoodBaseReq.State = _state
 		_miningGoodStockState := goodstm.StateMap[*_state]
