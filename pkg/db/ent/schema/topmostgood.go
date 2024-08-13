@@ -27,13 +27,11 @@ func (TopMostGood) Fields() []ent.Field {
 	return []ent.Field{
 		field.
 			UUID("app_good_id", uuid.UUID{}).
-			Optional().
 			Default(func() uuid.UUID {
 				return uuid.Nil
 			}),
 		field.
 			UUID("top_most_id", uuid.UUID{}).
-			Optional().
 			Default(func() uuid.UUID {
 				return uuid.Nil
 			}),

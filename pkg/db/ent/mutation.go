@@ -45382,22 +45382,9 @@ func (m *TopMostGoodMutation) OldAppGoodID(ctx context.Context) (v uuid.UUID, er
 	return oldValue.AppGoodID, nil
 }
 
-// ClearAppGoodID clears the value of the "app_good_id" field.
-func (m *TopMostGoodMutation) ClearAppGoodID() {
-	m.app_good_id = nil
-	m.clearedFields[topmostgood.FieldAppGoodID] = struct{}{}
-}
-
-// AppGoodIDCleared returns if the "app_good_id" field was cleared in this mutation.
-func (m *TopMostGoodMutation) AppGoodIDCleared() bool {
-	_, ok := m.clearedFields[topmostgood.FieldAppGoodID]
-	return ok
-}
-
 // ResetAppGoodID resets all changes to the "app_good_id" field.
 func (m *TopMostGoodMutation) ResetAppGoodID() {
 	m.app_good_id = nil
-	delete(m.clearedFields, topmostgood.FieldAppGoodID)
 }
 
 // SetTopMostID sets the "top_most_id" field.
@@ -45431,22 +45418,9 @@ func (m *TopMostGoodMutation) OldTopMostID(ctx context.Context) (v uuid.UUID, er
 	return oldValue.TopMostID, nil
 }
 
-// ClearTopMostID clears the value of the "top_most_id" field.
-func (m *TopMostGoodMutation) ClearTopMostID() {
-	m.top_most_id = nil
-	m.clearedFields[topmostgood.FieldTopMostID] = struct{}{}
-}
-
-// TopMostIDCleared returns if the "top_most_id" field was cleared in this mutation.
-func (m *TopMostGoodMutation) TopMostIDCleared() bool {
-	_, ok := m.clearedFields[topmostgood.FieldTopMostID]
-	return ok
-}
-
 // ResetTopMostID resets all changes to the "top_most_id" field.
 func (m *TopMostGoodMutation) ResetTopMostID() {
 	m.top_most_id = nil
-	delete(m.clearedFields, topmostgood.FieldTopMostID)
 }
 
 // SetDisplayIndex sets the "display_index" field.
@@ -45807,12 +45781,6 @@ func (m *TopMostGoodMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *TopMostGoodMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(topmostgood.FieldAppGoodID) {
-		fields = append(fields, topmostgood.FieldAppGoodID)
-	}
-	if m.FieldCleared(topmostgood.FieldTopMostID) {
-		fields = append(fields, topmostgood.FieldTopMostID)
-	}
 	if m.FieldCleared(topmostgood.FieldDisplayIndex) {
 		fields = append(fields, topmostgood.FieldDisplayIndex)
 	}
@@ -45833,12 +45801,6 @@ func (m *TopMostGoodMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *TopMostGoodMutation) ClearField(name string) error {
 	switch name {
-	case topmostgood.FieldAppGoodID:
-		m.ClearAppGoodID()
-		return nil
-	case topmostgood.FieldTopMostID:
-		m.ClearTopMostID()
-		return nil
 	case topmostgood.FieldDisplayIndex:
 		m.ClearDisplayIndex()
 		return nil

@@ -456,20 +456,6 @@ func AppGoodIDLTE(v uuid.UUID) predicate.TopMostGood {
 	})
 }
 
-// AppGoodIDIsNil applies the IsNil predicate on the "app_good_id" field.
-func AppGoodIDIsNil() predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldAppGoodID)))
-	})
-}
-
-// AppGoodIDNotNil applies the NotNil predicate on the "app_good_id" field.
-func AppGoodIDNotNil() predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldAppGoodID)))
-	})
-}
-
 // TopMostIDEQ applies the EQ predicate on the "top_most_id" field.
 func TopMostIDEQ(v uuid.UUID) predicate.TopMostGood {
 	return predicate.TopMostGood(func(s *sql.Selector) {
@@ -531,20 +517,6 @@ func TopMostIDLT(v uuid.UUID) predicate.TopMostGood {
 func TopMostIDLTE(v uuid.UUID) predicate.TopMostGood {
 	return predicate.TopMostGood(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldTopMostID), v))
-	})
-}
-
-// TopMostIDIsNil applies the IsNil predicate on the "top_most_id" field.
-func TopMostIDIsNil() predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldTopMostID)))
-	})
-}
-
-// TopMostIDNotNil applies the NotNil predicate on the "top_most_id" field.
-func TopMostIDNotNil() predicate.TopMostGood {
-	return predicate.TopMostGood(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldTopMostID)))
 	})
 }
 

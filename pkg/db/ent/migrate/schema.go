@@ -1264,8 +1264,8 @@ var (
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
-		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "top_most_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "app_good_id", Type: field.TypeUUID},
+		{Name: "top_most_id", Type: field.TypeUUID},
 		{Name: "display_index", Type: field.TypeUint32, Nullable: true, Default: 0},
 		{Name: "unit_price", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}

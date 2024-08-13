@@ -113,12 +113,6 @@ func (tmgu *TopMostGoodUpdate) SetNillableAppGoodID(u *uuid.UUID) *TopMostGoodUp
 	return tmgu
 }
 
-// ClearAppGoodID clears the value of the "app_good_id" field.
-func (tmgu *TopMostGoodUpdate) ClearAppGoodID() *TopMostGoodUpdate {
-	tmgu.mutation.ClearAppGoodID()
-	return tmgu
-}
-
 // SetTopMostID sets the "top_most_id" field.
 func (tmgu *TopMostGoodUpdate) SetTopMostID(u uuid.UUID) *TopMostGoodUpdate {
 	tmgu.mutation.SetTopMostID(u)
@@ -130,12 +124,6 @@ func (tmgu *TopMostGoodUpdate) SetNillableTopMostID(u *uuid.UUID) *TopMostGoodUp
 	if u != nil {
 		tmgu.SetTopMostID(*u)
 	}
-	return tmgu
-}
-
-// ClearTopMostID clears the value of the "top_most_id" field.
-func (tmgu *TopMostGoodUpdate) ClearTopMostID() *TopMostGoodUpdate {
-	tmgu.mutation.ClearTopMostID()
 	return tmgu
 }
 
@@ -340,22 +328,10 @@ func (tmgu *TopMostGoodUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: topmostgood.FieldAppGoodID,
 		})
 	}
-	if tmgu.mutation.AppGoodIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: topmostgood.FieldAppGoodID,
-		})
-	}
 	if value, ok := tmgu.mutation.TopMostID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: topmostgood.FieldTopMostID,
-		})
-	}
-	if tmgu.mutation.TopMostIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
 			Column: topmostgood.FieldTopMostID,
 		})
 	}
@@ -496,12 +472,6 @@ func (tmguo *TopMostGoodUpdateOne) SetNillableAppGoodID(u *uuid.UUID) *TopMostGo
 	return tmguo
 }
 
-// ClearAppGoodID clears the value of the "app_good_id" field.
-func (tmguo *TopMostGoodUpdateOne) ClearAppGoodID() *TopMostGoodUpdateOne {
-	tmguo.mutation.ClearAppGoodID()
-	return tmguo
-}
-
 // SetTopMostID sets the "top_most_id" field.
 func (tmguo *TopMostGoodUpdateOne) SetTopMostID(u uuid.UUID) *TopMostGoodUpdateOne {
 	tmguo.mutation.SetTopMostID(u)
@@ -513,12 +483,6 @@ func (tmguo *TopMostGoodUpdateOne) SetNillableTopMostID(u *uuid.UUID) *TopMostGo
 	if u != nil {
 		tmguo.SetTopMostID(*u)
 	}
-	return tmguo
-}
-
-// ClearTopMostID clears the value of the "top_most_id" field.
-func (tmguo *TopMostGoodUpdateOne) ClearTopMostID() *TopMostGoodUpdateOne {
-	tmguo.mutation.ClearTopMostID()
 	return tmguo
 }
 
@@ -753,22 +717,10 @@ func (tmguo *TopMostGoodUpdateOne) sqlSave(ctx context.Context) (_node *TopMostG
 			Column: topmostgood.FieldAppGoodID,
 		})
 	}
-	if tmguo.mutation.AppGoodIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: topmostgood.FieldAppGoodID,
-		})
-	}
 	if value, ok := tmguo.mutation.TopMostID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: topmostgood.FieldTopMostID,
-		})
-	}
-	if tmguo.mutation.TopMostIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
 			Column: topmostgood.FieldTopMostID,
 		})
 	}

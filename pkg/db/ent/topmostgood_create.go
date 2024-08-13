@@ -287,6 +287,12 @@ func (tmgc *TopMostGoodCreate) check() error {
 	if _, ok := tmgc.mutation.EntID(); !ok {
 		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "TopMostGood.ent_id"`)}
 	}
+	if _, ok := tmgc.mutation.AppGoodID(); !ok {
+		return &ValidationError{Name: "app_good_id", err: errors.New(`ent: missing required field "TopMostGood.app_good_id"`)}
+	}
+	if _, ok := tmgc.mutation.TopMostID(); !ok {
+		return &ValidationError{Name: "top_most_id", err: errors.New(`ent: missing required field "TopMostGood.top_most_id"`)}
+	}
 	return nil
 }
 
@@ -517,12 +523,6 @@ func (u *TopMostGoodUpsert) UpdateAppGoodID() *TopMostGoodUpsert {
 	return u
 }
 
-// ClearAppGoodID clears the value of the "app_good_id" field.
-func (u *TopMostGoodUpsert) ClearAppGoodID() *TopMostGoodUpsert {
-	u.SetNull(topmostgood.FieldAppGoodID)
-	return u
-}
-
 // SetTopMostID sets the "top_most_id" field.
 func (u *TopMostGoodUpsert) SetTopMostID(v uuid.UUID) *TopMostGoodUpsert {
 	u.Set(topmostgood.FieldTopMostID, v)
@@ -532,12 +532,6 @@ func (u *TopMostGoodUpsert) SetTopMostID(v uuid.UUID) *TopMostGoodUpsert {
 // UpdateTopMostID sets the "top_most_id" field to the value that was provided on create.
 func (u *TopMostGoodUpsert) UpdateTopMostID() *TopMostGoodUpsert {
 	u.SetExcluded(topmostgood.FieldTopMostID)
-	return u
-}
-
-// ClearTopMostID clears the value of the "top_most_id" field.
-func (u *TopMostGoodUpsert) ClearTopMostID() *TopMostGoodUpsert {
-	u.SetNull(topmostgood.FieldTopMostID)
 	return u
 }
 
@@ -724,13 +718,6 @@ func (u *TopMostGoodUpsertOne) UpdateAppGoodID() *TopMostGoodUpsertOne {
 	})
 }
 
-// ClearAppGoodID clears the value of the "app_good_id" field.
-func (u *TopMostGoodUpsertOne) ClearAppGoodID() *TopMostGoodUpsertOne {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.ClearAppGoodID()
-	})
-}
-
 // SetTopMostID sets the "top_most_id" field.
 func (u *TopMostGoodUpsertOne) SetTopMostID(v uuid.UUID) *TopMostGoodUpsertOne {
 	return u.Update(func(s *TopMostGoodUpsert) {
@@ -742,13 +729,6 @@ func (u *TopMostGoodUpsertOne) SetTopMostID(v uuid.UUID) *TopMostGoodUpsertOne {
 func (u *TopMostGoodUpsertOne) UpdateTopMostID() *TopMostGoodUpsertOne {
 	return u.Update(func(s *TopMostGoodUpsert) {
 		s.UpdateTopMostID()
-	})
-}
-
-// ClearTopMostID clears the value of the "top_most_id" field.
-func (u *TopMostGoodUpsertOne) ClearTopMostID() *TopMostGoodUpsertOne {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.ClearTopMostID()
 	})
 }
 
@@ -1107,13 +1087,6 @@ func (u *TopMostGoodUpsertBulk) UpdateAppGoodID() *TopMostGoodUpsertBulk {
 	})
 }
 
-// ClearAppGoodID clears the value of the "app_good_id" field.
-func (u *TopMostGoodUpsertBulk) ClearAppGoodID() *TopMostGoodUpsertBulk {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.ClearAppGoodID()
-	})
-}
-
 // SetTopMostID sets the "top_most_id" field.
 func (u *TopMostGoodUpsertBulk) SetTopMostID(v uuid.UUID) *TopMostGoodUpsertBulk {
 	return u.Update(func(s *TopMostGoodUpsert) {
@@ -1125,13 +1098,6 @@ func (u *TopMostGoodUpsertBulk) SetTopMostID(v uuid.UUID) *TopMostGoodUpsertBulk
 func (u *TopMostGoodUpsertBulk) UpdateTopMostID() *TopMostGoodUpsertBulk {
 	return u.Update(func(s *TopMostGoodUpsert) {
 		s.UpdateTopMostID()
-	})
-}
-
-// ClearTopMostID clears the value of the "top_most_id" field.
-func (u *TopMostGoodUpsertBulk) ClearTopMostID() *TopMostGoodUpsertBulk {
-	return u.Update(func(s *TopMostGoodUpsert) {
-		s.ClearTopMostID()
 	})
 }
 
