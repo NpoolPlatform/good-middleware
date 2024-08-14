@@ -41,7 +41,7 @@ func (h *baseQueryHandler) queryLabel(cli *ent.Client) error {
 func (h *baseQueryHandler) queryLabels(cli *ent.Client) (*ent.AppGoodLabelSelect, error) {
 	stm, err := appgoodlabelcrud.SetQueryConds(cli.AppGoodLabel.Query(), h.LabelConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectLabel(stm), nil
 }

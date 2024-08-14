@@ -45,7 +45,7 @@ func (h *baseQueryHandler) querySimulate(cli *ent.Client) error {
 func (h *baseQueryHandler) querySimulates(cli *ent.Client) (*ent.AppSimulatePowerRentalSelect, error) {
 	stm, err := appsimulatepowerrentalcrud.SetQueryConds(cli.AppSimulatePowerRental.Query(), h.AppSimulatePowerRentalConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectSimulate(stm), nil
 }

@@ -40,7 +40,7 @@ func (h *baseQueryHandler) queryLike(cli *ent.Client) error {
 func (h *baseQueryHandler) queryLikes(cli *ent.Client) (*ent.LikeSelect, error) {
 	stm, err := likecrud.SetQueryConds(cli.Like.Query(), h.LikeConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectLike(stm), nil
 }

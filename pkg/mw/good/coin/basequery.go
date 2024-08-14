@@ -44,7 +44,7 @@ func (h *baseQueryHandler) queryGoodCoin(cli *ent.Client) error {
 func (h *baseQueryHandler) queryGoodCoins(cli *ent.Client) (*ent.GoodCoinSelect, error) {
 	stm, err := goodcoincrud.SetQueryConds(cli.GoodCoin.Query(), h.GoodCoinConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectGoodCoin(stm), nil
 }

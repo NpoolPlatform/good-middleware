@@ -37,7 +37,7 @@ func (h *baseQueryHandler) queryVendorLocation(cli *ent.Client) error {
 func (h *baseQueryHandler) queryVendorLocations(cli *ent.Client) (*ent.VendorLocationSelect, error) {
 	stm, err := locationcrud.SetQueryConds(cli.VendorLocation.Query(), h.Conds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectVendorLocation(stm), nil
 }

@@ -3,6 +3,7 @@ package topmost
 import (
 	"context"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 )
@@ -26,7 +27,7 @@ func (h *Handler) ExistTopMost(ctx context.Context) (exist bool, err error) {
 		return err
 	})
 	if err != nil {
-		return false, err
+		return false, wlog.WrapError(err)
 	}
 	return exist, nil
 }
@@ -46,7 +47,7 @@ func (h *Handler) ExistTopMostConds(ctx context.Context) (exist bool, err error)
 		return err
 	})
 	if err != nil {
-		return false, err
+		return false, wlog.WrapError(err)
 	}
 	return exist, nil
 }

@@ -57,7 +57,7 @@ func (h *Handler) GetDisplayColor(ctx context.Context) (*npool.DisplayColor, err
 		return handler.scan(ctx)
 	})
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	if len(handler.infos) == 0 {
 		return nil, nil
@@ -104,7 +104,7 @@ func (h *Handler) GetDisplayColors(ctx context.Context) ([]*npool.DisplayColor, 
 		return handler.scan(_ctx)
 	})
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 
 	handler.formalize()

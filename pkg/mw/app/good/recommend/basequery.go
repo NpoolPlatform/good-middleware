@@ -40,7 +40,7 @@ func (h *baseQueryHandler) queryRecommend(cli *ent.Client) error {
 func (h *baseQueryHandler) queryRecommends(cli *ent.Client) (*ent.RecommendSelect, error) {
 	stm, err := recommendcrud.SetQueryConds(cli.Recommend.Query(), h.RecommendConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectRecommend(stm), nil
 }

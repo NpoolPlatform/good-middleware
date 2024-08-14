@@ -41,7 +41,7 @@ func (h *baseQueryHandler) queryDescription(cli *ent.Client) error {
 func (h *baseQueryHandler) queryDescriptions(cli *ent.Client) (*ent.AppGoodDescriptionSelect, error) {
 	stm, err := appgooddescriptioncrud.SetQueryConds(cli.AppGoodDescription.Query(), h.DescriptionConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectDescription(stm), nil
 }

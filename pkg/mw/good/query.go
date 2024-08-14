@@ -44,7 +44,7 @@ func (h *Handler) GetGood(ctx context.Context) (*npool.Good, error) {
 			Limit(2)
 		return handler.scan(_ctx)
 	}); err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	if len(handler.infos) == 0 {
 		return nil, nil
@@ -82,7 +82,7 @@ func (h *Handler) GetGoods(ctx context.Context) (infos []*npool.Good, total uint
 			Limit(int(h.Limit))
 		return handler.scan(_ctx)
 	}); err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 
 	handler.formalize()

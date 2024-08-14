@@ -24,7 +24,7 @@ func (h *Handler) ExistPowerRental(ctx context.Context) (exist bool, err error) 
 		return wlog.WrapError(err)
 	})
 	if err != nil {
-		return false, err
+		return false, wlog.WrapError(err)
 	}
 	return exist, nil
 }
@@ -41,7 +41,7 @@ func (h *Handler) ExistPowerRentalConds(ctx context.Context) (exist bool, err er
 		exist, err = handler.stmSelect.Exist(_ctx)
 		return wlog.WrapError(err)
 	}); err != nil {
-		return false, err
+		return false, wlog.WrapError(err)
 	}
 	return exist, nil
 }

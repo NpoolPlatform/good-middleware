@@ -5,6 +5,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	historycrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin/reward/history"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
@@ -30,7 +31,7 @@ func (h *queryHandler) selectHistory(stm *ent.GoodRewardHistoryQuery) *ent.GoodR
 func (h *queryHandler) queryHistories(cli *ent.Client) (*ent.GoodRewardHistorySelect, error) {
 	stm, err := historycrud.SetQueryConds(cli.GoodRewardHistory.Query(), h.HistoryConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectHistory(stm), nil
 }
@@ -132,7 +133,7 @@ func (h *Handler) GetHistories(ctx context.Context) ([]*npool.History, uint32, e
 		return handler.scan(ctx)
 	})
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 
 	handler.formalize()

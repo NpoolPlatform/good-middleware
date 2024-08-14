@@ -53,7 +53,7 @@ func (h *Handler) GetRequired(ctx context.Context) (*npool.Required, error) {
 		return handler.scan(ctx)
 	})
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	if len(handler.infos) == 0 {
 		return nil, nil
@@ -98,7 +98,7 @@ func (h *Handler) GetRequireds(ctx context.Context) ([]*npool.Required, uint32, 
 		return handler.scan(ctx)
 	})
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 
 	return handler.infos, handler.total, nil

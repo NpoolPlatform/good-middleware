@@ -42,7 +42,7 @@ func (h *baseQueryHandler) queryRequired(cli *ent.Client) error {
 func (h *baseQueryHandler) queryRequireds(cli *ent.Client) (*ent.RequiredAppGoodSelect, error) {
 	stm, err := requiredcrud.SetQueryConds(cli.RequiredAppGood.Query(), h.RequiredConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectRequired(stm), nil
 }

@@ -200,7 +200,7 @@ func (h *Handler) GetStock(ctx context.Context) (*npool.Stock, error) {
 		return handler.getAppMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	if len(handler.infos) == 0 {
 		return nil, nil
@@ -245,7 +245,7 @@ func (h *Handler) GetStocks(ctx context.Context) ([]*npool.Stock, uint32, error)
 		return handler.getAppMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 
 	handler.formalize()

@@ -41,7 +41,7 @@ func (h *baseQueryHandler) queryComment(cli *ent.Client) error {
 func (h *baseQueryHandler) queryComments(cli *ent.Client) (*ent.CommentSelect, error) {
 	stm, err := commentcrud.SetQueryConds(cli.Comment.Query(), h.CommentConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectComment(stm), nil
 }

@@ -61,7 +61,7 @@ func (h *Handler) GetComment(ctx context.Context) (*npool.Comment, error) {
 		return handler.scan(ctx)
 	})
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	if len(handler.infos) == 0 {
 		return nil, nil
@@ -108,7 +108,7 @@ func (h *Handler) GetComments(ctx context.Context) ([]*npool.Comment, uint32, er
 		return handler.scan(ctx)
 	})
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 
 	handler.formalize()

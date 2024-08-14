@@ -42,7 +42,7 @@ func (h *baseQueryHandler) queryDefault(cli *ent.Client) error {
 func (h *baseQueryHandler) queryDefaults(cli *ent.Client) (*ent.AppDefaultGoodSelect, error) {
 	stm, err := appdefaultgoodcrud.SetQueryConds(cli.AppDefaultGood.Query(), h.DefaultConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectDefault(stm), nil
 }
