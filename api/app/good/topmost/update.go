@@ -28,6 +28,7 @@ func (s *Server) UpdateTopMost(ctx context.Context, in *npool.UpdateTopMostReque
 		topmost1.WithTopMostType(req.TopMostType, false),
 		topmost1.WithTitle(req.Title, false),
 		topmost1.WithMessage(req.Message, false),
+		topmost1.WithTargetURL(req.TargetUrl, false),
 		topmost1.WithStartAt(req.StartAt, false),
 		topmost1.WithEndAt(req.EndAt, false),
 	)
