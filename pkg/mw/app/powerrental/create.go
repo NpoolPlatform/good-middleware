@@ -330,6 +330,28 @@ func (h *Handler) CreatePowerRental(ctx context.Context) error {
 	}
 	if h.StartMode == nil {
 		h.StartMode = func() *types.GoodStartMode { u := handler._ent.GoodStartMode(); return &u }()
+	} else {
+		switch handler._ent.GoodStartMode() {
+		case types.GoodStartMode_GoodStartModeTBD:
+			switch *h.StartMode {
+			case types.GoodStartMode_GoodStartModeTBD:
+			case types.GoodStartMode_GoodStartModePreset:
+			default:
+				return wlog.Errorf("invalid startmode")
+			}
+		case types.GoodStartMode_GoodStartModeInstantly:
+			fallthrough //nolint
+		case types.GoodStartMode_GoodStartModeNextDay:
+			fallthrough //nolint
+		case types.GoodStartMode_GoodStartModePreset:
+			fallthrough //nolint
+		case types.GoodStartMode_GoodStartModeWithParent:
+			if *h.StartMode != handler._ent.GoodStartMode() {
+				return wlog.Errorf("invalid startmode")
+			}
+		default:
+			return wlog.Errorf("invalid startmode")
+		}
 	}
 
 	handler.constructAppPowerRentalSQL()
