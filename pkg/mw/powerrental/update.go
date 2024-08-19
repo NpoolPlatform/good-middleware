@@ -8,7 +8,6 @@ import (
 
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	goodcoinrewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/coin/reward"
-	rewardcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/reward"
 	stockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock"
 	mininggoodstockcrud "github.com/NpoolPlatform/good-middleware/pkg/crud/good/stock/mining"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
@@ -16,6 +15,7 @@ import (
 	goodcoinreward1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/coin/reward"
 	rewardhistory1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/coin/reward/history"
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
+	goodreward1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/reward"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
@@ -26,11 +26,29 @@ type updateHandler struct {
 	*powerRentalGoodQueryHandler
 	stockValidator         *validateStockHandler
 	sqlPowerRental         string
+	sqlGoodReward          string
 	sqlGoodBase            string
 	sqlCoinRewards         []string
 	sqlCoinRewardHistories []string
 	stockMode              types.GoodStockMode
 	changeStockMode        bool
+}
+
+func (h *updateHandler) constructGoodRewardSQL(ctx context.Context) error {
+	handler, err := goodreward1.NewHandler(
+		ctx,
+		goodreward1.WithGoodID(func() *string { s := h.GoodBaseReq.EntID.String(); return &s }(), true),
+		goodreward1.WithRewardState(h.RewardReq.RewardState, false),
+		goodreward1.WithLastRewardAt(h.RewardReq.LastRewardAt, false),
+	)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+	h.sqlGoodReward, err = handler.ConstructUpdateSQL()
+	if err != nil && !wlog.Equal(err, cruder.ErrUpdateNothing) {
+		return wlog.WrapError(err)
+	}
+	return nil
 }
 
 func (h *updateHandler) constructGoodBaseSQL(ctx context.Context) error {
@@ -414,8 +432,6 @@ func (h *updateHandler) validateRewardState() error {
 		h.CoinRewardReqs = coinRewardReqs
 	}
 
-	fmt.Printf("CoinRewards %v, coinRewards %v\n", len(h.CoinRewardReqs), len(h.coinRewards))
-
 	switch h.goodReward.RewardState {
 	case types.BenefitState_BenefitWait.String():
 		switch *h.RewardReq.RewardState {
@@ -472,11 +488,10 @@ func (h *updateHandler) updateGoodReward(ctx context.Context, tx *ent.Tx) error 
 	if h.RewardReq.RewardState == nil {
 		return nil
 	}
-	_, err := rewardcrud.UpdateSet(
-		tx.GoodReward.UpdateOneID(h.goodReward.ID),
-		h.RewardReq,
-	).Save(ctx)
-	return wlog.WrapError(err)
+	if n, err := h.execSQL(ctx, tx, h.sqlGoodReward); err != nil || n != 1 {
+		return wlog.Errorf("fail update goodreward: %v", err)
+	}
+	return nil
 }
 
 func (h *updateHandler) updateGoodCoinRewards(ctx context.Context, tx *ent.Tx) error {
@@ -535,6 +550,9 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 	handler.formalizeStock()
 
 	handler.constructPowerRentalSQL()
+	if err := handler.constructGoodRewardSQL(ctx); err != nil {
+		return wlog.WrapError(err)
+	}
 	if err := handler.constructGoodBaseSQL(ctx); err != nil {
 		return wlog.WrapError(err)
 	}
