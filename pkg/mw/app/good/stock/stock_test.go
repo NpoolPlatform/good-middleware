@@ -165,6 +165,7 @@ func setup(t *testing.T) func(*testing.T) {
 		powerrental1.WithStockMode(&ret.StockMode, true),
 		powerrental1.WithTotal(func() *string { s := decimal.NewFromInt(9999).String(); return &s }(), true),
 		powerrental1.WithStocks(miningGoodStocks, true),
+		powerrental1.WithUnitLockDeposit(func() *string { s := decimal.NewFromInt(9).String(); return &s }(), true),
 	)
 	assert.Nil(t, err)
 
