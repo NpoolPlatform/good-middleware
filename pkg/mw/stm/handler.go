@@ -23,7 +23,6 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 	return handler, nil
 }
 
-//nolint:gocyclo
 func WithCurrentGoodState(state *types.GoodState, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if state == nil {
@@ -46,7 +45,6 @@ func WithCurrentGoodState(state *types.GoodState, must bool) func(context.Contex
 	}
 }
 
-//nolint:gocyclo
 func WithNextGoodState(state *types.GoodState, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if state == nil {
