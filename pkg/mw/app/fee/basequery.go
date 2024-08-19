@@ -62,7 +62,7 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 			sql.As(t1.C(entappgoodbase.FieldEntID), "app_good_id"),
 			t1.C(entappgoodbase.FieldAppID),
 			t1.C(entappgoodbase.FieldGoodID),
-			t1.C(entappgoodbase.FieldName),
+			sql.As(t1.C(entappgoodbase.FieldName), "app_good_name"),
 			t1.C(entappgoodbase.FieldProductPage),
 			t1.C(entappgoodbase.FieldBanner),
 			t1.C(entappgoodbase.FieldCreatedAt),
@@ -112,6 +112,7 @@ func (h *baseQueryHandler) queryJoinGood(s *sql.Selector) error {
 	}
 	s.AppendSelect(
 		t1.C(entgoodbase.FieldGoodType),
+		sql.As(t1.C(entgoodbase.FieldName), "good_name"),
 	)
 	return nil
 }
