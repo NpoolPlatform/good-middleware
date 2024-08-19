@@ -7,6 +7,8 @@ import (
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+
+	"github.com/shopspring/decimal"
 )
 
 type reserveHandler struct {
@@ -117,6 +119,13 @@ func (h *Handler) ReserveStock(ctx context.Context) error {
 
 	if err := handler.getStockAppGoods(ctx); err != nil {
 		return wlog.WrapError(err)
+	}
+	stock, ok := handler.stocks[*h.AppGoodID]
+	if !ok || stock.powerRental == nil {
+		return wlog.Errorf("invalid appgoodid")
+	}
+	if stock.powerRental.UnitLockDeposit.Equal(decimal.NewFromInt(0)) {
+		return wlog.Errorf("permission denied")
 	}
 
 	return db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
