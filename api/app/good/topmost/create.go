@@ -1,3 +1,4 @@
+//nolint:dupl
 package topmost
 
 import (
