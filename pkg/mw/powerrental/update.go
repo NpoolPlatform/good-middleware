@@ -496,9 +496,13 @@ func (h *updateHandler) validateGoodState(ctx context.Context) error {
 	currentState := types.GoodState(types.GoodState_value[h.goodBase.State]).Enum()
 	nextState := h.GoodBaseReq.State
 
-	nextMiningGoodStockState := goodstm.StateMap[*nextState]
+	nextMiningGoodStockState, err := goodstm.GoodState2MiningGoodStockState(nextState)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+
 	for _, miningStockReq := range h.MiningGoodStockReqs {
-		if miningStockReq.State == nil || *miningStockReq.State != nextMiningGoodStockState {
+		if miningStockReq.State == nil || *miningStockReq.State != *nextMiningGoodStockState {
 			return wlog.Errorf("invalid mininggoodstockstate")
 		}
 	}
@@ -516,9 +520,14 @@ func (h *updateHandler) validateGoodState(ctx context.Context) error {
 		return wlog.WrapError(err)
 	} else if _state != nil {
 		h.GoodBaseReq.State = _state
-		_miningGoodStockState := goodstm.StateMap[*_state]
+
+		_miningGoodStockState, err := goodstm.GoodState2MiningGoodStockState(_state)
+		if err != nil {
+			return wlog.WrapError(err)
+		}
+
 		for _, miningStockReq := range h.MiningGoodStockReqs {
-			miningStockReq.State = &_miningGoodStockState
+			miningStockReq.State = _miningGoodStockState
 		}
 	}
 
