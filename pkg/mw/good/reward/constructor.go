@@ -6,6 +6,7 @@ import (
 
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 )
 
 func (h *Handler) ConstructUpdateSQL() (string, error) {
@@ -39,7 +40,7 @@ func (h *Handler) ConstructUpdateSQL() (string, error) {
 	if h.EntID != nil {
 		_sql += fmt.Sprintf("and ent_id = '%v' ", *h.EntID)
 	}
-	if h.LastRewardAt != nil {
+	if h.RewardState != nil && *h.RewardState == types.BenefitState_BenefitDone {
 		_sql += "and not exists ("
 		_sql += "select 1 from good_reward_histories "
 		_sql += fmt.Sprintf(
