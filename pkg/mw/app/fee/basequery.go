@@ -110,6 +110,13 @@ func (h *baseQueryHandler) queryJoinGood(s *sql.Selector) error {
 			),
 		)
 	}
+	if h.GoodBaseConds.GoodType != nil {
+		_type, ok := h.GoodBaseConds.GoodType.Val.(types.GoodType)
+		if !ok {
+			return wlog.Errorf("invalid goodtype")
+		}
+		s.OnP(sql.EQ(t1.C(entgoodbase.FieldGoodType), _type.String()))
+	}
 	s.AppendSelect(
 		t1.C(entgoodbase.FieldGoodType),
 		sql.As(t1.C(entgoodbase.FieldName), "good_name"),
