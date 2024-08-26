@@ -9,7 +9,7 @@ import (
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 )
 
-func (h *Handler) ConstructUpdateSQL() (string, error) {
+func (h *Handler) ConstructUpdateSQL() (string, error) { //nolint:gocyclo
 	if h.GoodID == nil && h.ID == nil && h.EntID == nil {
 		return "", wlog.Errorf("invalid id")
 	}
