@@ -40,15 +40,30 @@ func (h *Handler) ConstructUpdateSQL() (string, error) {
 	if h.EntID != nil {
 		_sql += fmt.Sprintf("and ent_id = '%v' ", *h.EntID)
 	}
-	if h.RewardState != nil && *h.RewardState == types.BenefitState_BenefitDone {
+	if h.RewardState != nil && *h.RewardState == types.BenefitState_BenefitTransferring && h.LastRewardAt != nil {
 		_sql += "and not exists ("
-		_sql += "select 1 from good_reward_histories "
+		_sql += "select 1 from ("
+		_sql += "select t1.id from good_reward_histories as t1 "
+		_sql += "join good_rewards as t2 "
+		_sql += "on t1.good_id=t2.good_id "
+		_sql += "where "
+		whereAnd := ""
+		if h.ID != nil {
+			_sql += fmt.Sprintf("t2.id = %v ", *h.ID)
+			whereAnd = "and"
+		}
+		if h.EntID != nil {
+			_sql += fmt.Sprintf("%v t2.ent_id='%v' ", whereAnd, *h.EntID)
+			whereAnd = "and"
+		}
+		if h.GoodID != nil {
+			_sql += fmt.Sprintf("%v t1.good_id='%v' ", whereAnd, *h.GoodID)
+		}
 		_sql += fmt.Sprintf(
-			"where good_id = '%v' and deleted_at = 0 and reward_date = %v",
-			*h.GoodID,
+			"and t1.deleted_at = 0 and t1.reward_date = %v",
 			*h.LastRewardAt,
 		)
-		_sql += " limit 1)"
+		_sql += " limit 1) as tmp)"
 	}
 	return _sql, nil
 }
