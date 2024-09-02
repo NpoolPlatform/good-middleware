@@ -227,9 +227,6 @@ func (h *baseQueryHandler) queryJoinGoodCoin(s *sql.Selector) error {
 		OnP(
 			sql.EQ(t.C(entgoodcoin.FieldDeletedAt), 0),
 		).
-		Where(
-			sql.EQ(t.C(entgoodcoin.FieldDeletedAt), 0),
-		).
 		Distinct()
 	if h.GoodCoinConds.CoinTypeID != nil {
 		id, ok := h.GoodCoinConds.CoinTypeID.Val.(uuid.UUID)

@@ -161,6 +161,9 @@ func (h *queryHandler) getCoinRewards(ctx context.Context, cli *ent.Client) erro
 				s.C(entgoodcoinreward.FieldCoinTypeID),
 				t1.C(entgoodcoin.FieldCoinTypeID),
 			).
+			OnP(
+				sql.EQ(t1.C(entgoodcoin.FieldDeletedAt), 0),
+			).
 			AppendSelect(
 				sql.As(t1.C(entgoodcoin.FieldMain), "main_coin"),
 			)
