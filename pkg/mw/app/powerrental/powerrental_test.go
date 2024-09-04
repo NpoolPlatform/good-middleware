@@ -65,7 +65,7 @@ var ret = npool.PowerRental{
 	DeliveryAt:          uint32(time.Now().Unix()),
 	UnitLockDeposit:     decimal.NewFromInt(1).String(),
 	DurationDisplayType: types.GoodDurationType_GoodDurationByDay,
-	StockMode:           types.GoodStockMode_GoodStockByMiningpool,
+	StockMode:           types.GoodStockMode_GoodStockByMiningPool,
 
 	GoodType:                     types.GoodType_PowerRental,
 	BenefitType:                  types.BenefitType_BenefitTypePool,

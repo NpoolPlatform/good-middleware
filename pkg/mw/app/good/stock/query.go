@@ -125,7 +125,7 @@ func (h *queryHandler) scan(ctx context.Context) error {
 func (h *queryHandler) getAppMiningGoodStocks(ctx context.Context, cli *ent.Client) error {
 	appGoodStockIDs := func() (uids []uuid.UUID) {
 		for _, info := range h.infos {
-			if info.StockModeStr != types.GoodStockMode_GoodStockByMiningpool.String() {
+			if info.StockModeStr != types.GoodStockMode_GoodStockByMiningPool.String() {
 				continue
 			}
 			uids = append(uids, uuid.MustParse(info.EntID))

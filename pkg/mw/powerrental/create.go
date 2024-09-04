@@ -214,7 +214,7 @@ func (h *createHandler) _validateStock() error {
 		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }()
 		h.GoodBaseReq.State = types.GoodState_GoodStateReady.Enum()
 		return nil
-	case types.GoodStockMode_GoodStockByMiningpool:
+	case types.GoodStockMode_GoodStockByMiningPool:
 		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePool; return &e }()
 		h.GoodBaseReq.State = types.GoodState_GoodStateWait.Enum()
 	}

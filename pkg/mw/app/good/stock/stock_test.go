@@ -47,7 +47,7 @@ var ret = npool.Stock{
 	InService:   decimal.NewFromInt(0).String(),
 	WaitStart:   decimal.NewFromInt(0).String(),
 	Sold:        decimal.NewFromInt(0).String(),
-	StockMode:   types.GoodStockMode_GoodStockByMiningpool,
+	StockMode:   types.GoodStockMode_GoodStockByMiningPool,
 	AppMiningGoodStocks: []*appmininggoodstockmwpb.StockInfo{
 		{
 			EntID:             uuid.NewString(),

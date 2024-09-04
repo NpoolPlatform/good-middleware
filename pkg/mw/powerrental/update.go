@@ -362,7 +362,7 @@ func (h *updateHandler) _validateStock() error {
 	case types.GoodStockMode_GoodStockByUnique:
 		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }()
 		return nil
-	case types.GoodStockMode_GoodStockByMiningpool:
+	case types.GoodStockMode_GoodStockByMiningPool:
 		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePool; return &e }()
 	}
 
@@ -482,7 +482,7 @@ func (h *updateHandler) validateRewardState() error {
 }
 
 func (h *updateHandler) validateGoodState(ctx context.Context) error {
-	if h.powerRental.StockMode != types.GoodStockMode_GoodStockByMiningpool.String() {
+	if h.powerRental.StockMode != types.GoodStockMode_GoodStockByMiningPool.String() {
 		return nil
 	}
 	if h.GoodBaseReq.State == nil {
