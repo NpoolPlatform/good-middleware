@@ -270,6 +270,9 @@ func createPowerRental(t *testing.T) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			ret.ID = info.ID
+			ret.State = info.State
+			ret.StateStr = info.StateStr
+			ret.MiningGoodStocks = info.MiningGoodStocks
 			assert.Equal(t, &ret, info)
 		}
 	}

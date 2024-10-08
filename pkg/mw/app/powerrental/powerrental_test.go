@@ -366,6 +366,8 @@ func createPowerRental(t *testing.T) {
 			ret.ID = info.ID
 			ret.State = info.State
 			ret.StateStr = info.StateStr
+			ret.MiningGoodStocks = info.MiningGoodStocks
+			ret.AppMiningGoodStocks = info.AppMiningGoodStocks
 			assert.Equal(t, &ret, info)
 		}
 	}
