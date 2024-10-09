@@ -336,7 +336,6 @@ func updatePowerRental(t *testing.T) {
 				Total:          &stock.Total,
 				State:          &stock.State,
 			})
-			return
 		}
 		return
 	}()
