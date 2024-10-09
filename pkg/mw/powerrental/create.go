@@ -209,12 +209,11 @@ func (h *createHandler) _validateStock() error {
 	if len(h.MiningGoodStockReqs) > 0 && *h.StockMode == types.GoodStockMode_GoodStockByUnique {
 		return wlog.Errorf("invalid stockmode")
 	}
-	poolStockState := types.MiningGoodStockState_DefaultMiningGoodStockState.Enum()
+	poolStockState := types.MiningGoodStockState_MiningGoodStockStateReady.Enum()
+	h.GoodBaseReq.State = types.GoodState_GoodStateReady.Enum()
 	switch *h.StockMode {
 	case types.GoodStockMode_GoodStockByUnique:
 		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePlatform; return &e }()
-		h.GoodBaseReq.State = types.GoodState_GoodStateReady.Enum()
-		poolStockState = types.MiningGoodStockState_MiningGoodStockStateReady.Enum()
 	case types.GoodStockMode_GoodStockByMiningPool:
 		h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypePool; return &e }()
 		h.GoodBaseReq.State = types.GoodState_GoodStateWait.Enum()
