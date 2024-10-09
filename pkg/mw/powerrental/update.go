@@ -481,6 +481,7 @@ func (h *updateHandler) validateRewardState() error {
 	return nil
 }
 
+//nolint:gocyclo
 func (h *updateHandler) validateGoodState(ctx context.Context) error {
 	if h.powerRental.StockMode != types.GoodStockMode_GoodStockByMiningPool.String() {
 		return nil
