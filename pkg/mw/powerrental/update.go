@@ -485,8 +485,20 @@ func (h *updateHandler) validateGoodState(ctx context.Context) error {
 	if h.powerRental.StockMode != types.GoodStockMode_GoodStockByMiningPool.String() {
 		return nil
 	}
-	if h.GoodBaseReq.State == nil {
+
+	updateState := h.MiningGoodStockReqs[0].State == nil
+	for _, miningStockReq := range h.MiningGoodStockReqs[1:] {
+		if updateState != (miningStockReq.State == nil) {
+			return wlog.Errorf("invalid mininggoodstockstate, if update state, all sub stock state must be updated")
+		}
+	}
+
+	if !updateState {
 		return nil
+	}
+
+	if h.GoodBaseReq.State == nil {
+		return wlog.Errorf("invalid good state")
 	}
 
 	if len(h.MiningGoodStockReqs) != len(h.miningGoodStocks) {
