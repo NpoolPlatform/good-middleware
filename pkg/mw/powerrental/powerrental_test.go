@@ -323,6 +323,7 @@ func updatePowerRental(t *testing.T) {
 				EntID:          &stock.EntID,
 				PoolRootUserID: &stock.PoolRootUserID,
 				Total:          &stock.Total,
+				State:          &stock.State,
 			})
 			return
 		}
