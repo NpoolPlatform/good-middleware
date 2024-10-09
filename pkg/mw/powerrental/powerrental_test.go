@@ -310,9 +310,22 @@ func updatePowerRental(t *testing.T) {
 	ret.GoodSpotQuantity = ret.GoodTotal
 	ret.Name = uuid.NewString()
 	ret.DeliveryAt = uint32(time.Now().Unix() + 10)
+
+	h1, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
+	)
+	assert.Nil(t, err)
+	info, err := h1.GetPowerRental(context.Background())
+	if assert.Nil(t, err) {
+		ret.UpdatedAt = info.UpdatedAt
+		assert.Equal(t, info, &ret)
+	}
+
 	miningGoodStocks := func() (reqs []*stockmwpb.MiningGoodStockReq) {
 		remain := decimal.NewFromInt(0)
-		for i, stock := range ret.MiningGoodStocks {
+		for i, stock := range info.MiningGoodStocks {
 			if i == 0 {
 				remain = decimal.RequireFromString(ret.GoodTotal).Sub(decimal.RequireFromString(stock.Total))
 				continue
@@ -330,7 +343,7 @@ func updatePowerRental(t *testing.T) {
 		return
 	}()
 
-	h1, err := NewHandler(
+	h2, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithEntID(&ret.EntID, true),
@@ -358,10 +371,10 @@ func updatePowerRental(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	err = h1.UpdatePowerRental(context.Background())
+	err = h2.UpdatePowerRental(context.Background())
 	assert.Nil(t, err)
 
-	info, err := h1.GetPowerRental(context.Background())
+	info, err = h2.GetPowerRental(context.Background())
 	if assert.Nil(t, err) {
 		ret.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, info, &ret)
