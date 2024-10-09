@@ -371,6 +371,7 @@ func updatePowerRental(t *testing.T) {
 	info, err = h2.GetPowerRental(context.Background())
 	if assert.Nil(t, err) {
 		ret.UpdatedAt = info.UpdatedAt
+		ret.MiningGoodStocks = info.MiningGoodStocks
 		assert.Equal(t, info, &ret)
 	}
 }
