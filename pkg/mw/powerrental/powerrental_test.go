@@ -362,7 +362,6 @@ func updatePowerRental(t *testing.T) {
 		WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
 		WithPurchasable(&ret.Purchasable, true),
 		WithOnline(&ret.Online, true),
-		WithState(&ret.State, true),
 		WithTotal(&ret.GoodTotal, true),
 		WithStocks(miningGoodStocks, true),
 	)
