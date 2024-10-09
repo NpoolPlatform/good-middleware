@@ -263,8 +263,6 @@ func createPowerRental(t *testing.T) {
 		)
 		info, err := handler.GetPowerRental(context.Background())
 		if assert.Nil(t, err) {
-			ret.State = info.State
-			ret.StateStr = info.StateStr
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			ret.ID = info.ID
@@ -320,6 +318,7 @@ func updatePowerRental(t *testing.T) {
 	assert.Nil(t, err)
 	info, err := h1.GetPowerRental(context.Background())
 	assert.Nil(t, err)
+	assert.Equal(t, info, &ret)
 
 	miningGoodStocks := func() (reqs []*stockmwpb.MiningGoodStockReq) {
 		remain := decimal.NewFromInt(0)
