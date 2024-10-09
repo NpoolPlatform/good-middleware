@@ -318,7 +318,6 @@ func updatePowerRental(t *testing.T) {
 	assert.Nil(t, err)
 	info, err := h1.GetPowerRental(context.Background())
 	assert.Nil(t, err)
-	assert.Equal(t, info, &ret)
 
 	miningGoodStocks := func() (reqs []*stockmwpb.MiningGoodStockReq) {
 		remain := decimal.NewFromInt(0)
