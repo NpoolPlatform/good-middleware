@@ -98,13 +98,11 @@ var ret = npool.PowerRental{
 		{
 			EntID:          uuid.NewString(),
 			PoolRootUserID: uuid.NewString(),
-			PoolGoodUserID: uuid.NewString(),
 			Total:          decimal.NewFromInt(70).String(),
 		},
 		{
 			EntID:          uuid.NewString(),
 			PoolRootUserID: uuid.NewString(),
-			PoolGoodUserID: uuid.NewString(),
 			Total:          decimal.NewFromInt(50).String(),
 		},
 	},
@@ -208,7 +206,6 @@ func createPowerRental(t *testing.T) {
 			reqs = append(reqs, &stockmwpb.MiningGoodStockReq{
 				EntID:          &stock.EntID,
 				PoolRootUserID: &stock.PoolRootUserID,
-				PoolGoodUserID: &stock.PoolGoodUserID,
 				Total:          &stock.Total,
 			})
 		}
@@ -325,7 +322,6 @@ func updatePowerRental(t *testing.T) {
 			reqs = append(reqs, &stockmwpb.MiningGoodStockReq{
 				EntID:          &stock.EntID,
 				PoolRootUserID: &stock.PoolRootUserID,
-				PoolGoodUserID: &stock.PoolGoodUserID,
 				Total:          &stock.Total,
 			})
 			return
