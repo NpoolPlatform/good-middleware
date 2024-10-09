@@ -315,6 +315,7 @@ func updatePowerRental(t *testing.T) {
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithEntID(&ret.EntID, true),
+		WithGoodID(&ret.GoodID, true),
 	)
 	assert.Nil(t, err)
 	info, err := h1.GetPowerRental(context.Background())
