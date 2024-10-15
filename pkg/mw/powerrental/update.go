@@ -487,6 +487,14 @@ func (h *updateHandler) validateGoodState(ctx context.Context) error {
 		return nil
 	}
 
+	if h.GoodBaseReq.State == nil && len(h.MiningGoodStockReqs) == 0 {
+		return nil
+	}
+
+	if h.GoodBaseReq.State != nil && len(h.MiningGoodStockReqs) == 0 {
+		return wlog.Errorf("invalid good state or mininggoodstockstate")
+	}
+
 	updateState := h.MiningGoodStockReqs[0].State == nil
 	for _, miningStockReq := range h.MiningGoodStockReqs[1:] {
 		if updateState != (miningStockReq.State == nil) {
