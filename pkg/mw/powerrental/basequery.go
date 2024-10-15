@@ -87,6 +87,7 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 		)
 }
 
+//nolint:funlen
 func (h *baseQueryHandler) queryJoinPowerRental(s *sql.Selector) error {
 	t1 := sql.Table(entpowerrental.Table)
 	t2 := sql.Table(entdevicetype.Table)
