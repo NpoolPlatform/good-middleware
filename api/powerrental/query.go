@@ -25,7 +25,6 @@ func (s *Server) GetPowerRental(ctx context.Context, in *npool.GetPowerRentalReq
 		)
 		return &npool.GetPowerRentalResponse{}, status.Error(codes.Aborted, err.Error())
 	}
-
 	info, err := handler.GetPowerRental(ctx)
 	if err != nil {
 		logger.Sugar().Errorw(
@@ -56,7 +55,6 @@ func (s *Server) GetPowerRentals(ctx context.Context, in *npool.GetPowerRentalsR
 		)
 		return &npool.GetPowerRentalsResponse{}, status.Error(codes.Aborted, err.Error())
 	}
-
 	infos, total, err := handler.GetPowerRentals(ctx)
 	if err != nil {
 		logger.Sugar().Errorw(

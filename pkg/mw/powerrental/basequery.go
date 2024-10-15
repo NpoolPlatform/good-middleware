@@ -140,6 +140,13 @@ func (h *baseQueryHandler) queryJoinPowerRental(s *sql.Selector) error {
 			return
 		}()...))
 	}
+	if h.PowerRentalConds.StockMode != nil {
+		stockmode, ok := h.PowerRentalConds.StockMode.Val.(types.GoodStockMode)
+		if !ok {
+			return wlog.Errorf("invalid stockmode")
+		}
+		s.OnP(sql.EQ(t1.C(entpowerrental.FieldStockMode), stockmode.String()))
+	}
 	s.LeftJoin(t2).
 		On(
 			t1.C(entpowerrental.FieldDeviceTypeID),
