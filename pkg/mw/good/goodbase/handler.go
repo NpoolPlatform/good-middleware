@@ -58,6 +58,7 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
+//nolint:dupl
 func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
@@ -191,6 +192,7 @@ func WithOnline(b *bool, must bool) func(context.Context, *Handler) error {
 	}
 }
 
+//nolint:dupl
 func WithState(e *types.GoodState, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
