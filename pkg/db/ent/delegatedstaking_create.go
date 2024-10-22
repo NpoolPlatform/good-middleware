@@ -426,6 +426,7 @@ func (dsc *DelegatedStakingCreate) createSpec() (*DelegatedStaking, *sqlgraph.Cr
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (dsc *DelegatedStakingCreate) OnConflict(opts ...sql.ConflictOption) *DelegatedStakingUpsertOne {
 	dsc.conflict = opts
 	return &DelegatedStakingUpsertOne{
@@ -439,6 +440,7 @@ func (dsc *DelegatedStakingCreate) OnConflict(opts ...sql.ConflictOption) *Deleg
 //	client.DelegatedStaking.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (dsc *DelegatedStakingCreate) OnConflictColumns(columns ...string) *DelegatedStakingUpsertOne {
 	dsc.conflict = append(dsc.conflict, sql.ConflictColumns(columns...))
 	return &DelegatedStakingUpsertOne{
@@ -644,6 +646,7 @@ func (u *DelegatedStakingUpsert) ClearNoStakeBenefitDelayHours() *DelegatedStaki
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *DelegatedStakingUpsertOne) UpdateNewValues() *DelegatedStakingUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -657,9 +660,10 @@ func (u *DelegatedStakingUpsertOne) UpdateNewValues() *DelegatedStakingUpsertOne
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.DelegatedStaking.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.DelegatedStaking.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *DelegatedStakingUpsertOne) Ignore() *DelegatedStakingUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1018,6 +1022,7 @@ func (dscb *DelegatedStakingCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (dscb *DelegatedStakingCreateBulk) OnConflict(opts ...sql.ConflictOption) *DelegatedStakingUpsertBulk {
 	dscb.conflict = opts
 	return &DelegatedStakingUpsertBulk{
@@ -1031,6 +1036,7 @@ func (dscb *DelegatedStakingCreateBulk) OnConflict(opts ...sql.ConflictOption) *
 //	client.DelegatedStaking.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (dscb *DelegatedStakingCreateBulk) OnConflictColumns(columns ...string) *DelegatedStakingUpsertBulk {
 	dscb.conflict = append(dscb.conflict, sql.ConflictColumns(columns...))
 	return &DelegatedStakingUpsertBulk{
@@ -1055,6 +1061,7 @@ type DelegatedStakingUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *DelegatedStakingUpsertBulk) UpdateNewValues() *DelegatedStakingUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1074,6 +1081,7 @@ func (u *DelegatedStakingUpsertBulk) UpdateNewValues() *DelegatedStakingUpsertBu
 //	client.DelegatedStaking.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *DelegatedStakingUpsertBulk) Ignore() *DelegatedStakingUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

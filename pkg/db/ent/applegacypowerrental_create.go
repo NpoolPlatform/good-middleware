@@ -349,6 +349,7 @@ func (alprc *AppLegacyPowerRentalCreate) createSpec() (*AppLegacyPowerRental, *s
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (alprc *AppLegacyPowerRentalCreate) OnConflict(opts ...sql.ConflictOption) *AppLegacyPowerRentalUpsertOne {
 	alprc.conflict = opts
 	return &AppLegacyPowerRentalUpsertOne{
@@ -362,6 +363,7 @@ func (alprc *AppLegacyPowerRentalCreate) OnConflict(opts ...sql.ConflictOption) 
 //	client.AppLegacyPowerRental.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (alprc *AppLegacyPowerRentalCreate) OnConflictColumns(columns ...string) *AppLegacyPowerRentalUpsertOne {
 	alprc.conflict = append(alprc.conflict, sql.ConflictColumns(columns...))
 	return &AppLegacyPowerRentalUpsertOne{
@@ -495,6 +497,7 @@ func (u *AppLegacyPowerRentalUpsert) ClearTechniqueFeeRatio() *AppLegacyPowerRen
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *AppLegacyPowerRentalUpsertOne) UpdateNewValues() *AppLegacyPowerRentalUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -508,9 +511,10 @@ func (u *AppLegacyPowerRentalUpsertOne) UpdateNewValues() *AppLegacyPowerRentalU
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.AppLegacyPowerRental.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.AppLegacyPowerRental.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *AppLegacyPowerRentalUpsertOne) Ignore() *AppLegacyPowerRentalUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -785,6 +789,7 @@ func (alprcb *AppLegacyPowerRentalCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (alprcb *AppLegacyPowerRentalCreateBulk) OnConflict(opts ...sql.ConflictOption) *AppLegacyPowerRentalUpsertBulk {
 	alprcb.conflict = opts
 	return &AppLegacyPowerRentalUpsertBulk{
@@ -798,6 +803,7 @@ func (alprcb *AppLegacyPowerRentalCreateBulk) OnConflict(opts ...sql.ConflictOpt
 //	client.AppLegacyPowerRental.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (alprcb *AppLegacyPowerRentalCreateBulk) OnConflictColumns(columns ...string) *AppLegacyPowerRentalUpsertBulk {
 	alprcb.conflict = append(alprcb.conflict, sql.ConflictColumns(columns...))
 	return &AppLegacyPowerRentalUpsertBulk{
@@ -822,6 +828,7 @@ type AppLegacyPowerRentalUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *AppLegacyPowerRentalUpsertBulk) UpdateNewValues() *AppLegacyPowerRentalUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -841,6 +848,7 @@ func (u *AppLegacyPowerRentalUpsertBulk) UpdateNewValues() *AppLegacyPowerRental
 //	client.AppLegacyPowerRental.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *AppLegacyPowerRentalUpsertBulk) Ignore() *AppLegacyPowerRentalUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

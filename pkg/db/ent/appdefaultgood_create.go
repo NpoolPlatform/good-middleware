@@ -337,6 +337,7 @@ func (adgc *AppDefaultGoodCreate) createSpec() (*AppDefaultGood, *sqlgraph.Creat
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (adgc *AppDefaultGoodCreate) OnConflict(opts ...sql.ConflictOption) *AppDefaultGoodUpsertOne {
 	adgc.conflict = opts
 	return &AppDefaultGoodUpsertOne{
@@ -350,6 +351,7 @@ func (adgc *AppDefaultGoodCreate) OnConflict(opts ...sql.ConflictOption) *AppDef
 //	client.AppDefaultGood.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (adgc *AppDefaultGoodCreate) OnConflictColumns(columns ...string) *AppDefaultGoodUpsertOne {
 	adgc.conflict = append(adgc.conflict, sql.ConflictColumns(columns...))
 	return &AppDefaultGoodUpsertOne{
@@ -483,6 +485,7 @@ func (u *AppDefaultGoodUpsert) ClearCoinTypeID() *AppDefaultGoodUpsert {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *AppDefaultGoodUpsertOne) UpdateNewValues() *AppDefaultGoodUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -496,9 +499,10 @@ func (u *AppDefaultGoodUpsertOne) UpdateNewValues() *AppDefaultGoodUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.AppDefaultGood.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.AppDefaultGood.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *AppDefaultGoodUpsertOne) Ignore() *AppDefaultGoodUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -773,6 +777,7 @@ func (adgcb *AppDefaultGoodCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (adgcb *AppDefaultGoodCreateBulk) OnConflict(opts ...sql.ConflictOption) *AppDefaultGoodUpsertBulk {
 	adgcb.conflict = opts
 	return &AppDefaultGoodUpsertBulk{
@@ -786,6 +791,7 @@ func (adgcb *AppDefaultGoodCreateBulk) OnConflict(opts ...sql.ConflictOption) *A
 //	client.AppDefaultGood.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (adgcb *AppDefaultGoodCreateBulk) OnConflictColumns(columns ...string) *AppDefaultGoodUpsertBulk {
 	adgcb.conflict = append(adgcb.conflict, sql.ConflictColumns(columns...))
 	return &AppDefaultGoodUpsertBulk{
@@ -810,6 +816,7 @@ type AppDefaultGoodUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *AppDefaultGoodUpsertBulk) UpdateNewValues() *AppDefaultGoodUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -829,6 +836,7 @@ func (u *AppDefaultGoodUpsertBulk) UpdateNewValues() *AppDefaultGoodUpsertBulk {
 //	client.AppDefaultGood.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *AppDefaultGoodUpsertBulk) Ignore() *AppDefaultGoodUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

@@ -32,6 +32,7 @@ func WithCurrentGoodState(state *types.GoodState, must bool) func(context.Contex
 			return nil
 		}
 		switch *state {
+		case types.GoodState_GoodStatePreWait:
 		case types.GoodState_GoodStateWait:
 		case types.GoodState_GoodStateCreateGoodUser:
 		case types.GoodState_GoodStateCheckHashRate:
@@ -54,6 +55,7 @@ func WithNextGoodState(state *types.GoodState, must bool) func(context.Context, 
 			return nil
 		}
 		switch *state {
+		case types.GoodState_GoodStatePreWait:
 		case types.GoodState_GoodStateWait:
 		case types.GoodState_GoodStateCreateGoodUser:
 		case types.GoodState_GoodStateCheckHashRate:

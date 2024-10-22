@@ -404,6 +404,7 @@ func (tmgc *TopMostGoodCreate) createSpec() (*TopMostGood, *sqlgraph.CreateSpec)
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (tmgc *TopMostGoodCreate) OnConflict(opts ...sql.ConflictOption) *TopMostGoodUpsertOne {
 	tmgc.conflict = opts
 	return &TopMostGoodUpsertOne{
@@ -417,6 +418,7 @@ func (tmgc *TopMostGoodCreate) OnConflict(opts ...sql.ConflictOption) *TopMostGo
 //	client.TopMostGood.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (tmgc *TopMostGoodCreate) OnConflictColumns(columns ...string) *TopMostGoodUpsertOne {
 	tmgc.conflict = append(tmgc.conflict, sql.ConflictColumns(columns...))
 	return &TopMostGoodUpsertOne{
@@ -592,6 +594,7 @@ func (u *TopMostGoodUpsert) ClearUnitPrice() *TopMostGoodUpsert {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *TopMostGoodUpsertOne) UpdateNewValues() *TopMostGoodUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -605,9 +608,10 @@ func (u *TopMostGoodUpsertOne) UpdateNewValues() *TopMostGoodUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.TopMostGood.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.TopMostGood.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *TopMostGoodUpsertOne) Ignore() *TopMostGoodUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -931,6 +935,7 @@ func (tmgcb *TopMostGoodCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (tmgcb *TopMostGoodCreateBulk) OnConflict(opts ...sql.ConflictOption) *TopMostGoodUpsertBulk {
 	tmgcb.conflict = opts
 	return &TopMostGoodUpsertBulk{
@@ -944,6 +949,7 @@ func (tmgcb *TopMostGoodCreateBulk) OnConflict(opts ...sql.ConflictOption) *TopM
 //	client.TopMostGood.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (tmgcb *TopMostGoodCreateBulk) OnConflictColumns(columns ...string) *TopMostGoodUpsertBulk {
 	tmgcb.conflict = append(tmgcb.conflict, sql.ConflictColumns(columns...))
 	return &TopMostGoodUpsertBulk{
@@ -968,6 +974,7 @@ type TopMostGoodUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *TopMostGoodUpsertBulk) UpdateNewValues() *TopMostGoodUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -987,6 +994,7 @@ func (u *TopMostGoodUpsertBulk) UpdateNewValues() *TopMostGoodUpsertBulk {
 //	client.TopMostGood.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *TopMostGoodUpsertBulk) Ignore() *TopMostGoodUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

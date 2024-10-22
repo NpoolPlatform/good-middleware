@@ -589,6 +589,7 @@ func (mgsc *MiningGoodStockCreate) createSpec() (*MiningGoodStock, *sqlgraph.Cre
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (mgsc *MiningGoodStockCreate) OnConflict(opts ...sql.ConflictOption) *MiningGoodStockUpsertOne {
 	mgsc.conflict = opts
 	return &MiningGoodStockUpsertOne{
@@ -602,6 +603,7 @@ func (mgsc *MiningGoodStockCreate) OnConflict(opts ...sql.ConflictOption) *Minin
 //	client.MiningGoodStock.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (mgsc *MiningGoodStockCreate) OnConflictColumns(columns ...string) *MiningGoodStockUpsertOne {
 	mgsc.conflict = append(mgsc.conflict, sql.ConflictColumns(columns...))
 	return &MiningGoodStockUpsertOne{
@@ -897,6 +899,7 @@ func (u *MiningGoodStockUpsert) ClearState() *MiningGoodStockUpsert {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *MiningGoodStockUpsertOne) UpdateNewValues() *MiningGoodStockUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -910,9 +913,10 @@ func (u *MiningGoodStockUpsertOne) UpdateNewValues() *MiningGoodStockUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.MiningGoodStock.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.MiningGoodStock.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *MiningGoodStockUpsertOne) Ignore() *MiningGoodStockUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1376,6 +1380,7 @@ func (mgscb *MiningGoodStockCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (mgscb *MiningGoodStockCreateBulk) OnConflict(opts ...sql.ConflictOption) *MiningGoodStockUpsertBulk {
 	mgscb.conflict = opts
 	return &MiningGoodStockUpsertBulk{
@@ -1389,6 +1394,7 @@ func (mgscb *MiningGoodStockCreateBulk) OnConflict(opts ...sql.ConflictOption) *
 //	client.MiningGoodStock.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (mgscb *MiningGoodStockCreateBulk) OnConflictColumns(columns ...string) *MiningGoodStockUpsertBulk {
 	mgscb.conflict = append(mgscb.conflict, sql.ConflictColumns(columns...))
 	return &MiningGoodStockUpsertBulk{
@@ -1413,6 +1419,7 @@ type MiningGoodStockUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *MiningGoodStockUpsertBulk) UpdateNewValues() *MiningGoodStockUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1432,6 +1439,7 @@ func (u *MiningGoodStockUpsertBulk) UpdateNewValues() *MiningGoodStockUpsertBulk
 //	client.MiningGoodStock.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *MiningGoodStockUpsertBulk) Ignore() *MiningGoodStockUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

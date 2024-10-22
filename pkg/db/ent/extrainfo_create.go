@@ -479,6 +479,7 @@ func (eic *ExtraInfoCreate) createSpec() (*ExtraInfo, *sqlgraph.CreateSpec) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (eic *ExtraInfoCreate) OnConflict(opts ...sql.ConflictOption) *ExtraInfoUpsertOne {
 	eic.conflict = opts
 	return &ExtraInfoUpsertOne{
@@ -492,6 +493,7 @@ func (eic *ExtraInfoCreate) OnConflict(opts ...sql.ConflictOption) *ExtraInfoUps
 //	client.ExtraInfo.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (eic *ExtraInfoCreate) OnConflictColumns(columns ...string) *ExtraInfoUpsertOne {
 	eic.conflict = append(eic.conflict, sql.ConflictColumns(columns...))
 	return &ExtraInfoUpsertOne{
@@ -745,6 +747,7 @@ func (u *ExtraInfoUpsert) ClearScore() *ExtraInfoUpsert {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *ExtraInfoUpsertOne) UpdateNewValues() *ExtraInfoUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -758,9 +761,10 @@ func (u *ExtraInfoUpsertOne) UpdateNewValues() *ExtraInfoUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.ExtraInfo.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.ExtraInfo.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *ExtraInfoUpsertOne) Ignore() *ExtraInfoUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1175,6 +1179,7 @@ func (eicb *ExtraInfoCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (eicb *ExtraInfoCreateBulk) OnConflict(opts ...sql.ConflictOption) *ExtraInfoUpsertBulk {
 	eicb.conflict = opts
 	return &ExtraInfoUpsertBulk{
@@ -1188,6 +1193,7 @@ func (eicb *ExtraInfoCreateBulk) OnConflict(opts ...sql.ConflictOption) *ExtraIn
 //	client.ExtraInfo.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (eicb *ExtraInfoCreateBulk) OnConflictColumns(columns ...string) *ExtraInfoUpsertBulk {
 	eicb.conflict = append(eicb.conflict, sql.ConflictColumns(columns...))
 	return &ExtraInfoUpsertBulk{
@@ -1212,6 +1218,7 @@ type ExtraInfoUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *ExtraInfoUpsertBulk) UpdateNewValues() *ExtraInfoUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1231,6 +1238,7 @@ func (u *ExtraInfoUpsertBulk) UpdateNewValues() *ExtraInfoUpsertBulk {
 //	client.ExtraInfo.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *ExtraInfoUpsertBulk) Ignore() *ExtraInfoUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

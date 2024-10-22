@@ -264,6 +264,7 @@ func (tmgpq *TopMostGoodPosterQuery) Clone() *TopMostGoodPosterQuery {
 //		GroupBy(topmostgoodposter.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
+//
 func (tmgpq *TopMostGoodPosterQuery) GroupBy(field string, fields ...string) *TopMostGoodPosterGroupBy {
 	grbuild := &TopMostGoodPosterGroupBy{config: tmgpq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -290,6 +291,7 @@ func (tmgpq *TopMostGoodPosterQuery) GroupBy(field string, fields ...string) *To
 //	client.TopMostGoodPoster.Query().
 //		Select(topmostgoodposter.FieldCreatedAt).
 //		Scan(ctx, &v)
+//
 func (tmgpq *TopMostGoodPosterQuery) Select(fields ...string) *TopMostGoodPosterSelect {
 	tmgpq.fields = append(tmgpq.fields, fields...)
 	selbuild := &TopMostGoodPosterSelect{TopMostGoodPosterQuery: tmgpq}

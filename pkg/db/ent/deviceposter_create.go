@@ -374,6 +374,7 @@ func (dpc *DevicePosterCreate) createSpec() (*DevicePoster, *sqlgraph.CreateSpec
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (dpc *DevicePosterCreate) OnConflict(opts ...sql.ConflictOption) *DevicePosterUpsertOne {
 	dpc.conflict = opts
 	return &DevicePosterUpsertOne{
@@ -387,6 +388,7 @@ func (dpc *DevicePosterCreate) OnConflict(opts ...sql.ConflictOption) *DevicePos
 //	client.DevicePoster.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (dpc *DevicePosterCreate) OnConflictColumns(columns ...string) *DevicePosterUpsertOne {
 	dpc.conflict = append(dpc.conflict, sql.ConflictColumns(columns...))
 	return &DevicePosterUpsertOne{
@@ -544,6 +546,7 @@ func (u *DevicePosterUpsert) ClearIndex() *DevicePosterUpsert {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *DevicePosterUpsertOne) UpdateNewValues() *DevicePosterUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -557,9 +560,10 @@ func (u *DevicePosterUpsertOne) UpdateNewValues() *DevicePosterUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.DevicePoster.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.DevicePoster.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *DevicePosterUpsertOne) Ignore() *DevicePosterUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -862,6 +866,7 @@ func (dpcb *DevicePosterCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (dpcb *DevicePosterCreateBulk) OnConflict(opts ...sql.ConflictOption) *DevicePosterUpsertBulk {
 	dpcb.conflict = opts
 	return &DevicePosterUpsertBulk{
@@ -875,6 +880,7 @@ func (dpcb *DevicePosterCreateBulk) OnConflict(opts ...sql.ConflictOption) *Devi
 //	client.DevicePoster.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (dpcb *DevicePosterCreateBulk) OnConflictColumns(columns ...string) *DevicePosterUpsertBulk {
 	dpcb.conflict = append(dpcb.conflict, sql.ConflictColumns(columns...))
 	return &DevicePosterUpsertBulk{
@@ -899,6 +905,7 @@ type DevicePosterUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *DevicePosterUpsertBulk) UpdateNewValues() *DevicePosterUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -918,6 +925,7 @@ func (u *DevicePosterUpsertBulk) UpdateNewValues() *DevicePosterUpsertBulk {
 //	client.DevicePoster.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *DevicePosterUpsertBulk) Ignore() *DevicePosterUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

@@ -107,7 +107,7 @@ var ret = npool.PowerRental{
 	},
 
 	RewardState: types.BenefitState_BenefitWait,
-	State:       types.GoodState_GoodStateWait,
+	State:       types.GoodState_GoodStatePreWait,
 }
 
 func setup(t *testing.T) func(*testing.T) {

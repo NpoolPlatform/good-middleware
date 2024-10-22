@@ -739,6 +739,7 @@ func (aprc *AppPowerRentalCreate) createSpec() (*AppPowerRental, *sqlgraph.Creat
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (aprc *AppPowerRentalCreate) OnConflict(opts ...sql.ConflictOption) *AppPowerRentalUpsertOne {
 	aprc.conflict = opts
 	return &AppPowerRentalUpsertOne{
@@ -752,6 +753,7 @@ func (aprc *AppPowerRentalCreate) OnConflict(opts ...sql.ConflictOption) *AppPow
 //	client.AppPowerRental.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (aprc *AppPowerRentalCreate) OnConflictColumns(columns ...string) *AppPowerRentalUpsertOne {
 	aprc.conflict = append(aprc.conflict, sql.ConflictColumns(columns...))
 	return &AppPowerRentalUpsertOne{
@@ -1191,6 +1193,7 @@ func (u *AppPowerRentalUpsert) ClearPackageWithRequireds() *AppPowerRentalUpsert
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *AppPowerRentalUpsertOne) UpdateNewValues() *AppPowerRentalUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1204,9 +1207,10 @@ func (u *AppPowerRentalUpsertOne) UpdateNewValues() *AppPowerRentalUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.AppPowerRental.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.AppPowerRental.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *AppPowerRentalUpsertOne) Ignore() *AppPowerRentalUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1838,6 +1842,7 @@ func (aprcb *AppPowerRentalCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (aprcb *AppPowerRentalCreateBulk) OnConflict(opts ...sql.ConflictOption) *AppPowerRentalUpsertBulk {
 	aprcb.conflict = opts
 	return &AppPowerRentalUpsertBulk{
@@ -1851,6 +1856,7 @@ func (aprcb *AppPowerRentalCreateBulk) OnConflict(opts ...sql.ConflictOption) *A
 //	client.AppPowerRental.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (aprcb *AppPowerRentalCreateBulk) OnConflictColumns(columns ...string) *AppPowerRentalUpsertBulk {
 	aprcb.conflict = append(aprcb.conflict, sql.ConflictColumns(columns...))
 	return &AppPowerRentalUpsertBulk{
@@ -1875,6 +1881,7 @@ type AppPowerRentalUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *AppPowerRentalUpsertBulk) UpdateNewValues() *AppPowerRentalUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1894,6 +1901,7 @@ func (u *AppPowerRentalUpsertBulk) UpdateNewValues() *AppPowerRentalUpsertBulk {
 //	client.AppPowerRental.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *AppPowerRentalUpsertBulk) Ignore() *AppPowerRentalUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

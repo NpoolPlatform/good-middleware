@@ -285,7 +285,7 @@ func (h *updateHandler) createMiningGoodStocks(ctx context.Context, tx *ent.Tx) 
 			mininggoodstock1.WithGoodStockID(func() *string { s := poolStock.GoodStockID.String(); return &s }(), false),
 			mininggoodstock1.WithPoolRootUserID(func() *string { s := poolStock.PoolRootUserID.String(); return &s }(), true),
 			mininggoodstock1.WithTotal(func() *string { s := poolStock.Total.String(); return &s }(), true),
-			mininggoodstock1.WithState(types.MiningGoodStockState_MiningGoodStockStateWait.Enum(), true),
+			mininggoodstock1.WithState(types.MiningGoodStockState_MiningGoodStockStatePreWait.Enum(), true),
 		)
 		if err != nil {
 			return wlog.WrapError(err)

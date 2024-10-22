@@ -390,6 +390,7 @@ func (asprc *AppSimulatePowerRentalCreate) createSpec() (*AppSimulatePowerRental
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (asprc *AppSimulatePowerRentalCreate) OnConflict(opts ...sql.ConflictOption) *AppSimulatePowerRentalUpsertOne {
 	asprc.conflict = opts
 	return &AppSimulatePowerRentalUpsertOne{
@@ -403,6 +404,7 @@ func (asprc *AppSimulatePowerRentalCreate) OnConflict(opts ...sql.ConflictOption
 //	client.AppSimulatePowerRental.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (asprc *AppSimulatePowerRentalCreate) OnConflictColumns(columns ...string) *AppSimulatePowerRentalUpsertOne {
 	asprc.conflict = append(asprc.conflict, sql.ConflictColumns(columns...))
 	return &AppSimulatePowerRentalUpsertOne{
@@ -578,6 +580,7 @@ func (u *AppSimulatePowerRentalUpsert) ClearOrderDurationSeconds() *AppSimulateP
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *AppSimulatePowerRentalUpsertOne) UpdateNewValues() *AppSimulatePowerRentalUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -591,9 +594,10 @@ func (u *AppSimulatePowerRentalUpsertOne) UpdateNewValues() *AppSimulatePowerRen
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.AppSimulatePowerRental.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.AppSimulatePowerRental.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *AppSimulatePowerRentalUpsertOne) Ignore() *AppSimulatePowerRentalUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -917,6 +921,7 @@ func (asprcb *AppSimulatePowerRentalCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (asprcb *AppSimulatePowerRentalCreateBulk) OnConflict(opts ...sql.ConflictOption) *AppSimulatePowerRentalUpsertBulk {
 	asprcb.conflict = opts
 	return &AppSimulatePowerRentalUpsertBulk{
@@ -930,6 +935,7 @@ func (asprcb *AppSimulatePowerRentalCreateBulk) OnConflict(opts ...sql.ConflictO
 //	client.AppSimulatePowerRental.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (asprcb *AppSimulatePowerRentalCreateBulk) OnConflictColumns(columns ...string) *AppSimulatePowerRentalUpsertBulk {
 	asprcb.conflict = append(asprcb.conflict, sql.ConflictColumns(columns...))
 	return &AppSimulatePowerRentalUpsertBulk{
@@ -954,6 +960,7 @@ type AppSimulatePowerRentalUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *AppSimulatePowerRentalUpsertBulk) UpdateNewValues() *AppSimulatePowerRentalUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -973,6 +980,7 @@ func (u *AppSimulatePowerRentalUpsertBulk) UpdateNewValues() *AppSimulatePowerRe
 //	client.AppSimulatePowerRental.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *AppSimulatePowerRentalUpsertBulk) Ignore() *AppSimulatePowerRentalUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

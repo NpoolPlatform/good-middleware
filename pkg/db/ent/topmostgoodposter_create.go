@@ -374,6 +374,7 @@ func (tmgpc *TopMostGoodPosterCreate) createSpec() (*TopMostGoodPoster, *sqlgrap
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (tmgpc *TopMostGoodPosterCreate) OnConflict(opts ...sql.ConflictOption) *TopMostGoodPosterUpsertOne {
 	tmgpc.conflict = opts
 	return &TopMostGoodPosterUpsertOne{
@@ -387,6 +388,7 @@ func (tmgpc *TopMostGoodPosterCreate) OnConflict(opts ...sql.ConflictOption) *To
 //	client.TopMostGoodPoster.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (tmgpc *TopMostGoodPosterCreate) OnConflictColumns(columns ...string) *TopMostGoodPosterUpsertOne {
 	tmgpc.conflict = append(tmgpc.conflict, sql.ConflictColumns(columns...))
 	return &TopMostGoodPosterUpsertOne{
@@ -544,6 +546,7 @@ func (u *TopMostGoodPosterUpsert) ClearIndex() *TopMostGoodPosterUpsert {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *TopMostGoodPosterUpsertOne) UpdateNewValues() *TopMostGoodPosterUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -557,9 +560,10 @@ func (u *TopMostGoodPosterUpsertOne) UpdateNewValues() *TopMostGoodPosterUpsertO
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.TopMostGoodPoster.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.TopMostGoodPoster.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *TopMostGoodPosterUpsertOne) Ignore() *TopMostGoodPosterUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -862,6 +866,7 @@ func (tmgpcb *TopMostGoodPosterCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (tmgpcb *TopMostGoodPosterCreateBulk) OnConflict(opts ...sql.ConflictOption) *TopMostGoodPosterUpsertBulk {
 	tmgpcb.conflict = opts
 	return &TopMostGoodPosterUpsertBulk{
@@ -875,6 +880,7 @@ func (tmgpcb *TopMostGoodPosterCreateBulk) OnConflict(opts ...sql.ConflictOption
 //	client.TopMostGoodPoster.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (tmgpcb *TopMostGoodPosterCreateBulk) OnConflictColumns(columns ...string) *TopMostGoodPosterUpsertBulk {
 	tmgpcb.conflict = append(tmgpcb.conflict, sql.ConflictColumns(columns...))
 	return &TopMostGoodPosterUpsertBulk{
@@ -899,6 +905,7 @@ type TopMostGoodPosterUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *TopMostGoodPosterUpsertBulk) UpdateNewValues() *TopMostGoodPosterUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -918,6 +925,7 @@ func (u *TopMostGoodPosterUpsertBulk) UpdateNewValues() *TopMostGoodPosterUpsert
 //	client.TopMostGoodPoster.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *TopMostGoodPosterUpsertBulk) Ignore() *TopMostGoodPosterUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

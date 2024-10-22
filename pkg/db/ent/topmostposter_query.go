@@ -264,6 +264,7 @@ func (tmpq *TopMostPosterQuery) Clone() *TopMostPosterQuery {
 //		GroupBy(topmostposter.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
+//
 func (tmpq *TopMostPosterQuery) GroupBy(field string, fields ...string) *TopMostPosterGroupBy {
 	grbuild := &TopMostPosterGroupBy{config: tmpq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -290,6 +291,7 @@ func (tmpq *TopMostPosterQuery) GroupBy(field string, fields ...string) *TopMost
 //	client.TopMostPoster.Query().
 //		Select(topmostposter.FieldCreatedAt).
 //		Scan(ctx, &v)
+//
 func (tmpq *TopMostPosterQuery) Select(fields ...string) *TopMostPosterSelect {
 	tmpq.fields = append(tmpq.fields, fields...)
 	selbuild := &TopMostPosterSelect{TopMostPosterQuery: tmpq}

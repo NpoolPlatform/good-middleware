@@ -98,7 +98,7 @@ func (MiningGoodStock) Fields() []ent.Field {
 		field.
 			String("state").
 			Optional().
-			Default(types.MiningGoodStockState_MiningGoodStockStateWait.String()),
+			Default(types.MiningGoodStockState_MiningGoodStockStatePreWait.String()),
 	}
 }
 

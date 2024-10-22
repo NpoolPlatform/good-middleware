@@ -7,6 +7,7 @@ import (
 
 var stateMap = map[types.GoodState]types.MiningGoodStockState{
 	types.GoodState_DefaultGoodState:        types.MiningGoodStockState_DefaultMiningGoodStockState,
+	types.GoodState_GoodStatePreWait:        types.MiningGoodStockState_MiningGoodStockStatePreWait,
 	types.GoodState_GoodStateWait:           types.MiningGoodStockState_MiningGoodStockStateWait,
 	types.GoodState_GoodStateFail:           types.MiningGoodStockState_MiningGoodStockStateFail,
 	types.GoodState_GoodStateReady:          types.MiningGoodStockState_MiningGoodStockStateReady,

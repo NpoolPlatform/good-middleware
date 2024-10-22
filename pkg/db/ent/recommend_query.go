@@ -264,6 +264,7 @@ func (rq *RecommendQuery) Clone() *RecommendQuery {
 //		GroupBy(recommend.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
+//
 func (rq *RecommendQuery) GroupBy(field string, fields ...string) *RecommendGroupBy {
 	grbuild := &RecommendGroupBy{config: rq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -290,6 +291,7 @@ func (rq *RecommendQuery) GroupBy(field string, fields ...string) *RecommendGrou
 //	client.Recommend.Query().
 //		Select(recommend.FieldCreatedAt).
 //		Scan(ctx, &v)
+//
 func (rq *RecommendQuery) Select(fields ...string) *RecommendSelect {
 	rq.fields = append(rq.fields, fields...)
 	selbuild := &RecommendSelect{RecommendQuery: rq}

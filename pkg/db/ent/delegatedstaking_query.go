@@ -264,6 +264,7 @@ func (dsq *DelegatedStakingQuery) Clone() *DelegatedStakingQuery {
 //		GroupBy(delegatedstaking.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
+//
 func (dsq *DelegatedStakingQuery) GroupBy(field string, fields ...string) *DelegatedStakingGroupBy {
 	grbuild := &DelegatedStakingGroupBy{config: dsq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -290,6 +291,7 @@ func (dsq *DelegatedStakingQuery) GroupBy(field string, fields ...string) *Deleg
 //	client.DelegatedStaking.Query().
 //		Select(delegatedstaking.FieldCreatedAt).
 //		Scan(ctx, &v)
+//
 func (dsq *DelegatedStakingQuery) Select(fields ...string) *DelegatedStakingSelect {
 	dsq.fields = append(dsq.fields, fields...)
 	selbuild := &DelegatedStakingSelect{DelegatedStakingQuery: dsq}

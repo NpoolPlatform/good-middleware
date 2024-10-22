@@ -264,6 +264,7 @@ func (gmq *GoodMalfunctionQuery) Clone() *GoodMalfunctionQuery {
 //		GroupBy(goodmalfunction.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
+//
 func (gmq *GoodMalfunctionQuery) GroupBy(field string, fields ...string) *GoodMalfunctionGroupBy {
 	grbuild := &GoodMalfunctionGroupBy{config: gmq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -290,6 +291,7 @@ func (gmq *GoodMalfunctionQuery) GroupBy(field string, fields ...string) *GoodMa
 //	client.GoodMalfunction.Query().
 //		Select(goodmalfunction.FieldCreatedAt).
 //		Scan(ctx, &v)
+//
 func (gmq *GoodMalfunctionQuery) Select(fields ...string) *GoodMalfunctionSelect {
 	gmq.fields = append(gmq.fields, fields...)
 	selbuild := &GoodMalfunctionSelect{GoodMalfunctionQuery: gmq}

@@ -264,6 +264,7 @@ func (sq *StockQuery) Clone() *StockQuery {
 //		GroupBy(stock.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
+//
 func (sq *StockQuery) GroupBy(field string, fields ...string) *StockGroupBy {
 	grbuild := &StockGroupBy{config: sq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -290,6 +291,7 @@ func (sq *StockQuery) GroupBy(field string, fields ...string) *StockGroupBy {
 //	client.Stock.Query().
 //		Select(stock.FieldCreatedAt).
 //		Scan(ctx, &v)
+//
 func (sq *StockQuery) Select(fields ...string) *StockSelect {
 	sq.fields = append(sq.fields, fields...)
 	selbuild := &StockSelect{StockQuery: sq}

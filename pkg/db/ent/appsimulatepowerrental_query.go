@@ -264,6 +264,7 @@ func (asprq *AppSimulatePowerRentalQuery) Clone() *AppSimulatePowerRentalQuery {
 //		GroupBy(appsimulatepowerrental.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
+//
 func (asprq *AppSimulatePowerRentalQuery) GroupBy(field string, fields ...string) *AppSimulatePowerRentalGroupBy {
 	grbuild := &AppSimulatePowerRentalGroupBy{config: asprq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -290,6 +291,7 @@ func (asprq *AppSimulatePowerRentalQuery) GroupBy(field string, fields ...string
 //	client.AppSimulatePowerRental.Query().
 //		Select(appsimulatepowerrental.FieldCreatedAt).
 //		Scan(ctx, &v)
+//
 func (asprq *AppSimulatePowerRentalQuery) Select(fields ...string) *AppSimulatePowerRentalSelect {
 	asprq.fields = append(asprq.fields, fields...)
 	selbuild := &AppSimulatePowerRentalSelect{AppSimulatePowerRentalQuery: asprq}

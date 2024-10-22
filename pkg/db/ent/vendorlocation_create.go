@@ -446,6 +446,7 @@ func (vlc *VendorLocationCreate) createSpec() (*VendorLocation, *sqlgraph.Create
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (vlc *VendorLocationCreate) OnConflict(opts ...sql.ConflictOption) *VendorLocationUpsertOne {
 	vlc.conflict = opts
 	return &VendorLocationUpsertOne{
@@ -459,6 +460,7 @@ func (vlc *VendorLocationCreate) OnConflict(opts ...sql.ConflictOption) *VendorL
 //	client.VendorLocation.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (vlc *VendorLocationCreate) OnConflictColumns(columns ...string) *VendorLocationUpsertOne {
 	vlc.conflict = append(vlc.conflict, sql.ConflictColumns(columns...))
 	return &VendorLocationUpsertOne{
@@ -646,6 +648,7 @@ func (u *VendorLocationUpsert) ClearBrandID() *VendorLocationUpsert {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *VendorLocationUpsertOne) UpdateNewValues() *VendorLocationUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -659,9 +662,10 @@ func (u *VendorLocationUpsertOne) UpdateNewValues() *VendorLocationUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.VendorLocation.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.VendorLocation.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *VendorLocationUpsertOne) Ignore() *VendorLocationUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -999,6 +1003,7 @@ func (vlcb *VendorLocationCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (vlcb *VendorLocationCreateBulk) OnConflict(opts ...sql.ConflictOption) *VendorLocationUpsertBulk {
 	vlcb.conflict = opts
 	return &VendorLocationUpsertBulk{
@@ -1012,6 +1017,7 @@ func (vlcb *VendorLocationCreateBulk) OnConflict(opts ...sql.ConflictOption) *Ve
 //	client.VendorLocation.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (vlcb *VendorLocationCreateBulk) OnConflictColumns(columns ...string) *VendorLocationUpsertBulk {
 	vlcb.conflict = append(vlcb.conflict, sql.ConflictColumns(columns...))
 	return &VendorLocationUpsertBulk{
@@ -1036,6 +1042,7 @@ type VendorLocationUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *VendorLocationUpsertBulk) UpdateNewValues() *VendorLocationUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1055,6 +1062,7 @@ func (u *VendorLocationUpsertBulk) UpdateNewValues() *VendorLocationUpsertBulk {
 //	client.VendorLocation.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *VendorLocationUpsertBulk) Ignore() *VendorLocationUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

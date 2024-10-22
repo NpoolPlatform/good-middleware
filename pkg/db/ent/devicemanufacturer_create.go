@@ -355,6 +355,7 @@ func (dmc *DeviceManufacturerCreate) createSpec() (*DeviceManufacturer, *sqlgrap
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (dmc *DeviceManufacturerCreate) OnConflict(opts ...sql.ConflictOption) *DeviceManufacturerUpsertOne {
 	dmc.conflict = opts
 	return &DeviceManufacturerUpsertOne{
@@ -368,6 +369,7 @@ func (dmc *DeviceManufacturerCreate) OnConflict(opts ...sql.ConflictOption) *Dev
 //	client.DeviceManufacturer.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (dmc *DeviceManufacturerCreate) OnConflictColumns(columns ...string) *DeviceManufacturerUpsertOne {
 	dmc.conflict = append(dmc.conflict, sql.ConflictColumns(columns...))
 	return &DeviceManufacturerUpsertOne{
@@ -501,6 +503,7 @@ func (u *DeviceManufacturerUpsert) ClearLogo() *DeviceManufacturerUpsert {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *DeviceManufacturerUpsertOne) UpdateNewValues() *DeviceManufacturerUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -514,9 +517,10 @@ func (u *DeviceManufacturerUpsertOne) UpdateNewValues() *DeviceManufacturerUpser
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.DeviceManufacturer.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.DeviceManufacturer.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *DeviceManufacturerUpsertOne) Ignore() *DeviceManufacturerUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -791,6 +795,7 @@ func (dmcb *DeviceManufacturerCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (dmcb *DeviceManufacturerCreateBulk) OnConflict(opts ...sql.ConflictOption) *DeviceManufacturerUpsertBulk {
 	dmcb.conflict = opts
 	return &DeviceManufacturerUpsertBulk{
@@ -804,6 +809,7 @@ func (dmcb *DeviceManufacturerCreateBulk) OnConflict(opts ...sql.ConflictOption)
 //	client.DeviceManufacturer.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (dmcb *DeviceManufacturerCreateBulk) OnConflictColumns(columns ...string) *DeviceManufacturerUpsertBulk {
 	dmcb.conflict = append(dmcb.conflict, sql.ConflictColumns(columns...))
 	return &DeviceManufacturerUpsertBulk{
@@ -828,6 +834,7 @@ type DeviceManufacturerUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *DeviceManufacturerUpsertBulk) UpdateNewValues() *DeviceManufacturerUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -847,6 +854,7 @@ func (u *DeviceManufacturerUpsertBulk) UpdateNewValues() *DeviceManufacturerUpse
 //	client.DeviceManufacturer.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *DeviceManufacturerUpsertBulk) Ignore() *DeviceManufacturerUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

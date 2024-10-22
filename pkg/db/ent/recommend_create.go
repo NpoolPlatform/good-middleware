@@ -456,6 +456,7 @@ func (rc *RecommendCreate) createSpec() (*Recommend, *sqlgraph.CreateSpec) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (rc *RecommendCreate) OnConflict(opts ...sql.ConflictOption) *RecommendUpsertOne {
 	rc.conflict = opts
 	return &RecommendUpsertOne{
@@ -469,6 +470,7 @@ func (rc *RecommendCreate) OnConflict(opts ...sql.ConflictOption) *RecommendUpse
 //	client.Recommend.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (rc *RecommendCreate) OnConflictColumns(columns ...string) *RecommendUpsertOne {
 	rc.conflict = append(rc.conflict, sql.ConflictColumns(columns...))
 	return &RecommendUpsertOne{
@@ -674,6 +676,7 @@ func (u *RecommendUpsert) ClearHideReason() *RecommendUpsert {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *RecommendUpsertOne) UpdateNewValues() *RecommendUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -687,9 +690,10 @@ func (u *RecommendUpsertOne) UpdateNewValues() *RecommendUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.Recommend.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.Recommend.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *RecommendUpsertOne) Ignore() *RecommendUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1048,6 +1052,7 @@ func (rcb *RecommendCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (rcb *RecommendCreateBulk) OnConflict(opts ...sql.ConflictOption) *RecommendUpsertBulk {
 	rcb.conflict = opts
 	return &RecommendUpsertBulk{
@@ -1061,6 +1066,7 @@ func (rcb *RecommendCreateBulk) OnConflict(opts ...sql.ConflictOption) *Recommen
 //	client.Recommend.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (rcb *RecommendCreateBulk) OnConflictColumns(columns ...string) *RecommendUpsertBulk {
 	rcb.conflict = append(rcb.conflict, sql.ConflictColumns(columns...))
 	return &RecommendUpsertBulk{
@@ -1085,6 +1091,7 @@ type RecommendUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *RecommendUpsertBulk) UpdateNewValues() *RecommendUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1104,6 +1111,7 @@ func (u *RecommendUpsertBulk) UpdateNewValues() *RecommendUpsertBulk {
 //	client.Recommend.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *RecommendUpsertBulk) Ignore() *RecommendUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

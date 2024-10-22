@@ -485,6 +485,7 @@ func (aslc *AppStockLockCreate) createSpec() (*AppStockLock, *sqlgraph.CreateSpe
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (aslc *AppStockLockCreate) OnConflict(opts ...sql.ConflictOption) *AppStockLockUpsertOne {
 	aslc.conflict = opts
 	return &AppStockLockUpsertOne{
@@ -498,6 +499,7 @@ func (aslc *AppStockLockCreate) OnConflict(opts ...sql.ConflictOption) *AppStock
 //	client.AppStockLock.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (aslc *AppStockLockCreate) OnConflictColumns(columns ...string) *AppStockLockUpsertOne {
 	aslc.conflict = append(aslc.conflict, sql.ConflictColumns(columns...))
 	return &AppStockLockUpsertOne{
@@ -721,6 +723,7 @@ func (u *AppStockLockUpsert) ClearExLockID() *AppStockLockUpsert {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *AppStockLockUpsertOne) UpdateNewValues() *AppStockLockUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -734,9 +737,10 @@ func (u *AppStockLockUpsertOne) UpdateNewValues() *AppStockLockUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.AppStockLock.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.AppStockLock.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *AppStockLockUpsertOne) Ignore() *AppStockLockUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1116,6 +1120,7 @@ func (aslcb *AppStockLockCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (aslcb *AppStockLockCreateBulk) OnConflict(opts ...sql.ConflictOption) *AppStockLockUpsertBulk {
 	aslcb.conflict = opts
 	return &AppStockLockUpsertBulk{
@@ -1129,6 +1134,7 @@ func (aslcb *AppStockLockCreateBulk) OnConflict(opts ...sql.ConflictOption) *App
 //	client.AppStockLock.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (aslcb *AppStockLockCreateBulk) OnConflictColumns(columns ...string) *AppStockLockUpsertBulk {
 	aslcb.conflict = append(aslcb.conflict, sql.ConflictColumns(columns...))
 	return &AppStockLockUpsertBulk{
@@ -1153,6 +1159,7 @@ type AppStockLockUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *AppStockLockUpsertBulk) UpdateNewValues() *AppStockLockUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1172,6 +1179,7 @@ func (u *AppStockLockUpsertBulk) UpdateNewValues() *AppStockLockUpsertBulk {
 //	client.AppStockLock.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *AppStockLockUpsertBulk) Ignore() *AppStockLockUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

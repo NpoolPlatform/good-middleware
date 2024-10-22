@@ -63,7 +63,7 @@ func (GoodBase) Fields() []ent.Field {
 		field.
 			String("state").
 			Optional().
-			Default(types.GoodState_GoodStateWait.String()),
+			Default(types.GoodState_GoodStatePreWait.String()),
 	}
 }
 

@@ -264,6 +264,7 @@ func (aglq *AppGoodLabelQuery) Clone() *AppGoodLabelQuery {
 //		GroupBy(appgoodlabel.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
+//
 func (aglq *AppGoodLabelQuery) GroupBy(field string, fields ...string) *AppGoodLabelGroupBy {
 	grbuild := &AppGoodLabelGroupBy{config: aglq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -290,6 +291,7 @@ func (aglq *AppGoodLabelQuery) GroupBy(field string, fields ...string) *AppGoodL
 //	client.AppGoodLabel.Query().
 //		Select(appgoodlabel.FieldCreatedAt).
 //		Scan(ctx, &v)
+//
 func (aglq *AppGoodLabelQuery) Select(fields ...string) *AppGoodLabelSelect {
 	aglq.fields = append(aglq.fields, fields...)
 	selbuild := &AppGoodLabelSelect{AppGoodLabelQuery: aglq}

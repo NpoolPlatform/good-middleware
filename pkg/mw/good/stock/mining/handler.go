@@ -139,6 +139,7 @@ func WithState(e *types.MiningGoodStockState, must bool) func(context.Context, *
 			return nil
 		}
 		switch *e {
+		case types.MiningGoodStockState_MiningGoodStockStatePreWait:
 		case types.MiningGoodStockState_MiningGoodStockStateWait:
 		case types.MiningGoodStockState_MiningGoodStockStateCreateGoodUser:
 		case types.MiningGoodStockState_MiningGoodStockStateCheckHashRate:

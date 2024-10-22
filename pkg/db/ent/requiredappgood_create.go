@@ -353,6 +353,7 @@ func (ragc *RequiredAppGoodCreate) createSpec() (*RequiredAppGood, *sqlgraph.Cre
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (ragc *RequiredAppGoodCreate) OnConflict(opts ...sql.ConflictOption) *RequiredAppGoodUpsertOne {
 	ragc.conflict = opts
 	return &RequiredAppGoodUpsertOne{
@@ -366,6 +367,7 @@ func (ragc *RequiredAppGoodCreate) OnConflict(opts ...sql.ConflictOption) *Requi
 //	client.RequiredAppGood.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (ragc *RequiredAppGoodCreate) OnConflictColumns(columns ...string) *RequiredAppGoodUpsertOne {
 	ragc.conflict = append(ragc.conflict, sql.ConflictColumns(columns...))
 	return &RequiredAppGoodUpsertOne{
@@ -505,6 +507,7 @@ func (u *RequiredAppGoodUpsert) ClearMust() *RequiredAppGoodUpsert {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *RequiredAppGoodUpsertOne) UpdateNewValues() *RequiredAppGoodUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -518,9 +521,10 @@ func (u *RequiredAppGoodUpsertOne) UpdateNewValues() *RequiredAppGoodUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.RequiredAppGood.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.RequiredAppGood.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *RequiredAppGoodUpsertOne) Ignore() *RequiredAppGoodUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -802,6 +806,7 @@ func (ragcb *RequiredAppGoodCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (ragcb *RequiredAppGoodCreateBulk) OnConflict(opts ...sql.ConflictOption) *RequiredAppGoodUpsertBulk {
 	ragcb.conflict = opts
 	return &RequiredAppGoodUpsertBulk{
@@ -815,6 +820,7 @@ func (ragcb *RequiredAppGoodCreateBulk) OnConflict(opts ...sql.ConflictOption) *
 //	client.RequiredAppGood.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (ragcb *RequiredAppGoodCreateBulk) OnConflictColumns(columns ...string) *RequiredAppGoodUpsertBulk {
 	ragcb.conflict = append(ragcb.conflict, sql.ConflictColumns(columns...))
 	return &RequiredAppGoodUpsertBulk{
@@ -839,6 +845,7 @@ type RequiredAppGoodUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *RequiredAppGoodUpsertBulk) UpdateNewValues() *RequiredAppGoodUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -858,6 +865,7 @@ func (u *RequiredAppGoodUpsertBulk) UpdateNewValues() *RequiredAppGoodUpsertBulk
 //	client.RequiredAppGood.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *RequiredAppGoodUpsertBulk) Ignore() *RequiredAppGoodUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

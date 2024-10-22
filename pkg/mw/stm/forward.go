@@ -6,6 +6,7 @@ import (
 )
 
 var forwards = map[types.GoodState][]types.GoodState{
+	types.GoodState_GoodStatePreWait:        {types.GoodState_GoodStateWait},
 	types.GoodState_GoodStateWait:           {types.GoodState_GoodStateCreateGoodUser},
 	types.GoodState_GoodStateCreateGoodUser: {types.GoodState_GoodStateCheckHashRate, types.GoodState_GoodStateFail},
 	types.GoodState_GoodStateCheckHashRate:  {types.GoodState_GoodStateReady, types.GoodState_GoodStateFail},

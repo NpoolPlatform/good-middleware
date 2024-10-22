@@ -264,6 +264,7 @@ func (dmq *DeviceManufacturerQuery) Clone() *DeviceManufacturerQuery {
 //		GroupBy(devicemanufacturer.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
+//
 func (dmq *DeviceManufacturerQuery) GroupBy(field string, fields ...string) *DeviceManufacturerGroupBy {
 	grbuild := &DeviceManufacturerGroupBy{config: dmq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -290,6 +291,7 @@ func (dmq *DeviceManufacturerQuery) GroupBy(field string, fields ...string) *Dev
 //	client.DeviceManufacturer.Query().
 //		Select(devicemanufacturer.FieldCreatedAt).
 //		Scan(ctx, &v)
+//
 func (dmq *DeviceManufacturerQuery) Select(fields ...string) *DeviceManufacturerSelect {
 	dmq.fields = append(dmq.fields, fields...)
 	selbuild := &DeviceManufacturerSelect{DeviceManufacturerQuery: dmq}

@@ -488,6 +488,7 @@ func (grhc *GoodRewardHistoryCreate) createSpec() (*GoodRewardHistory, *sqlgraph
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (grhc *GoodRewardHistoryCreate) OnConflict(opts ...sql.ConflictOption) *GoodRewardHistoryUpsertOne {
 	grhc.conflict = opts
 	return &GoodRewardHistoryUpsertOne{
@@ -501,6 +502,7 @@ func (grhc *GoodRewardHistoryCreate) OnConflict(opts ...sql.ConflictOption) *Goo
 //	client.GoodRewardHistory.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (grhc *GoodRewardHistoryCreate) OnConflictColumns(columns ...string) *GoodRewardHistoryUpsertOne {
 	grhc.conflict = append(grhc.conflict, sql.ConflictColumns(columns...))
 	return &GoodRewardHistoryUpsertOne{
@@ -730,6 +732,7 @@ func (u *GoodRewardHistoryUpsert) ClearUnitNetAmount() *GoodRewardHistoryUpsert 
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *GoodRewardHistoryUpsertOne) UpdateNewValues() *GoodRewardHistoryUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -743,9 +746,10 @@ func (u *GoodRewardHistoryUpsertOne) UpdateNewValues() *GoodRewardHistoryUpsertO
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.GoodRewardHistory.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
+//  client.GoodRewardHistory.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
 func (u *GoodRewardHistoryUpsertOne) Ignore() *GoodRewardHistoryUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1132,6 +1136,7 @@ func (grhcb *GoodRewardHistoryCreateBulk) ExecX(ctx context.Context) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
+//
 func (grhcb *GoodRewardHistoryCreateBulk) OnConflict(opts ...sql.ConflictOption) *GoodRewardHistoryUpsertBulk {
 	grhcb.conflict = opts
 	return &GoodRewardHistoryUpsertBulk{
@@ -1145,6 +1150,7 @@ func (grhcb *GoodRewardHistoryCreateBulk) OnConflict(opts ...sql.ConflictOption)
 //	client.GoodRewardHistory.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
+//
 func (grhcb *GoodRewardHistoryCreateBulk) OnConflictColumns(columns ...string) *GoodRewardHistoryUpsertBulk {
 	grhcb.conflict = append(grhcb.conflict, sql.ConflictColumns(columns...))
 	return &GoodRewardHistoryUpsertBulk{
@@ -1169,6 +1175,7 @@ type GoodRewardHistoryUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
+//
 func (u *GoodRewardHistoryUpsertBulk) UpdateNewValues() *GoodRewardHistoryUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1188,6 +1195,7 @@ func (u *GoodRewardHistoryUpsertBulk) UpdateNewValues() *GoodRewardHistoryUpsert
 //	client.GoodRewardHistory.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
+//
 func (u *GoodRewardHistoryUpsertBulk) Ignore() *GoodRewardHistoryUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
