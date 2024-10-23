@@ -146,7 +146,14 @@ func (h *baseQueryHandler) queryJoinPowerRental(s *sql.Selector) error {
 		if !ok {
 			return wlog.Errorf("invalid stockmode")
 		}
-		s.OnP(sql.EQ(t1.C(entpowerrental.FieldStockMode), stockmode.String()))
+		switch h.PowerRentalConds.StockMode.Op {
+		case cruder.EQ:
+			s.OnP(sql.EQ(t1.C(entpowerrental.FieldStockMode), stockmode.String()))
+		case cruder.NEQ:
+			s.OnP(sql.NEQ(t1.C(entpowerrental.FieldStockMode), stockmode.String()))
+		default:
+			return wlog.Errorf("invalid stockmode field")
+		}
 	}
 	s.LeftJoin(t2).
 		On(
