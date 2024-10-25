@@ -294,6 +294,12 @@ func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
 			Val: ids,
 		}
 	}
+	if conds.GoodType != nil {
+		h.GoodBaseConds.GoodType = &cruder.Cond{
+			Op:  conds.GetGoodType().GetOp(),
+			Val: types.GoodType(conds.GetGoodType().GetValue()),
+		}
+	}
 	return nil
 }
 

@@ -348,6 +348,9 @@ func (h *queryHandler) getCoinRewards(ctx context.Context, cli *ent.Client) erro
 				s.C(entgoodcoinreward.FieldCoinTypeID),
 				t1.C(entgoodcoin.FieldCoinTypeID),
 			).
+			OnP(
+				sql.EQ(t1.C(entgoodcoin.FieldDeletedAt), 0),
+			).
 			AppendSelect(
 				sql.As(t1.C(entgoodcoin.FieldMain), "main_coin"),
 			)
@@ -394,7 +397,7 @@ func (h *queryHandler) getRequiredAppGoods(ctx context.Context, cli *ent.Client)
 				t2.C(entgoodbase.FieldEntID),
 			).
 			AppendSelect(
-				sql.As(t2.C(entgoodbase.FieldGoodType), "required_app_good_type"),
+				sql.As(t2.C(entgoodbase.FieldGoodType), "required_good_type"),
 			)
 
 		t3 := sql.Table(entappfee.Table)
@@ -414,7 +417,7 @@ func (h *queryHandler) getRequiredAppGoods(ctx context.Context, cli *ent.Client)
 				t4.C(entfee.FieldGoodID),
 			).
 			AppendSelect(
-				sql.As(t4.C(entfee.FieldSettlementType), "required_app_good_settlement_type"),
+				sql.As(t4.C(entfee.FieldSettlementType), "required_good_settlement_type"),
 			)
 	}).Scan(ctx, &h.requiredAppGoods)
 }
@@ -485,8 +488,8 @@ func (h *queryHandler) formalize() {
 		coinRewards[coinReward.GoodID] = append(coinRewards[coinReward.GoodID], coinReward)
 	}
 	for _, required := range h.requiredAppGoods {
-		required.RequiredAppGoodSettlementType = types.GoodSettlementType(types.GoodSettlementType_value[required.RequiredAppGoodSettlementTypeStr])
-		required.RequiredAppGoodType = types.GoodType(types.GoodType_value[required.RequiredAppGoodTypeStr])
+		required.RequiredGoodSettlementType = types.GoodSettlementType(types.GoodSettlementType_value[required.RequiredGoodSettlementTypeStr])
+		required.RequiredGoodType = types.GoodType(types.GoodType_value[required.RequiredGoodTypeStr])
 		requireds[required.MainAppGoodID] = append(requireds[required.MainAppGoodID], required)
 	}
 	for _, info := range h.infos {
