@@ -15,12 +15,9 @@ import (
 	goodcoinreward1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/coin/reward"
 	rewardhistory1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/coin/reward/history"
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
-<<<<<<< HEAD
+	goodreward1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/reward"
 	mininggoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/stock/mining"
 	goodstm "github.com/NpoolPlatform/good-middleware/pkg/mw/stm"
-=======
-	goodreward1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/reward"
->>>>>>> master
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
