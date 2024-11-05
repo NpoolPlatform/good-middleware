@@ -22,7 +22,7 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
-			return nil, err
+			return nil, wlog.WrapError(err)
 		}
 	}
 	return handler, nil
@@ -58,6 +58,7 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
+//nolint:dupl
 func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
@@ -187,6 +188,30 @@ func WithPurchasable(b *bool, must bool) func(context.Context, *Handler) error {
 func WithOnline(b *bool, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Online = b
+		return nil
+	}
+}
+
+//nolint:dupl
+func WithState(e *types.GoodState, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return wlog.Errorf("invalid goodstate")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodState_GoodStatePreWait:
+		case types.GoodState_GoodStateWait:
+		case types.GoodState_GoodStateCreateGoodUser:
+		case types.GoodState_GoodStateCheckHashRate:
+		case types.GoodState_GoodStateReady:
+		case types.GoodState_GoodStateFail:
+		default:
+			return wlog.Errorf("invalid goodstate")
+		}
+		h.State = e
 		return nil
 	}
 }

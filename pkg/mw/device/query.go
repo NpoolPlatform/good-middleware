@@ -54,7 +54,7 @@ func (h *Handler) GetDeviceType(ctx context.Context) (*npool.DeviceType, error) 
 		return handler.scan(_ctx)
 	})
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	if len(handler.infos) == 0 {
 		return nil, nil
@@ -93,7 +93,7 @@ func (h *Handler) GetDeviceTypes(ctx context.Context) (infos []*npool.DeviceType
 		return handler.scan(_ctx)
 	})
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 	handler.formalize()
 	return handler.infos, handler.total, nil

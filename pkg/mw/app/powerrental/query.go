@@ -115,7 +115,7 @@ func (h *queryHandler) getMiningGoodStocks(ctx context.Context, cli *ent.Client)
 	return stm.Select(
 		entmininggoodstock.FieldEntID,
 		entmininggoodstock.FieldGoodStockID,
-		entmininggoodstock.FieldMiningPoolID,
+		entmininggoodstock.FieldPoolRootUserID,
 		entmininggoodstock.FieldPoolGoodUserID,
 		entmininggoodstock.FieldTotal,
 		entmininggoodstock.FieldSpotQuantity,
@@ -517,6 +517,7 @@ func (h *queryHandler) formalize() {
 		info.GoodStartMode = types.GoodStartMode(types.GoodStartMode_value[info.GoodStartModeStr])
 		info.AppGoodStartMode = types.GoodStartMode(types.GoodStartMode_value[info.AppGoodStartModeStr])
 		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
+		info.State = types.GoodState(types.GoodState_value[info.StateStr])
 		info.MiningGoodStocks = miningGoodStocks[info.GoodStockID]
 		info.AppMiningGoodStocks = appMiningGoodStocks[info.AppGoodStockID]
 		info.GoodCoins = goodCoins[info.GoodID]
@@ -578,7 +579,7 @@ func (h *Handler) GetPowerRental(ctx context.Context) (*npool.PowerRental, error
 		return handler.getMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	if len(handler.infos) == 0 {
 		return nil, nil
@@ -653,7 +654,7 @@ func (h *Handler) GetPowerRentals(ctx context.Context) ([]*npool.PowerRental, ui
 		return handler.getMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 
 	handler.formalize()

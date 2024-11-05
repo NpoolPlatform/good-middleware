@@ -23,8 +23,8 @@ const (
 	FieldEntID = "ent_id"
 	// FieldGoodStockID holds the string denoting the good_stock_id field in the database.
 	FieldGoodStockID = "good_stock_id"
-	// FieldMiningPoolID holds the string denoting the mining_pool_id field in the database.
-	FieldMiningPoolID = "mining_pool_id"
+	// FieldPoolRootUserID holds the string denoting the pool_root_user_id field in the database.
+	FieldPoolRootUserID = "pool_root_user_id"
 	// FieldPoolGoodUserID holds the string denoting the pool_good_user_id field in the database.
 	FieldPoolGoodUserID = "pool_good_user_id"
 	// FieldTotal holds the string denoting the total field in the database.
@@ -41,6 +41,8 @@ const (
 	FieldSold = "sold"
 	// FieldAppReserved holds the string denoting the app_reserved field in the database.
 	FieldAppReserved = "app_reserved"
+	// FieldState holds the string denoting the state field in the database.
+	FieldState = "state"
 	// Table holds the table name of the mininggoodstock in the database.
 	Table = "mining_good_stocks"
 )
@@ -53,7 +55,7 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldEntID,
 	FieldGoodStockID,
-	FieldMiningPoolID,
+	FieldPoolRootUserID,
 	FieldPoolGoodUserID,
 	FieldTotal,
 	FieldSpotQuantity,
@@ -62,6 +64,7 @@ var Columns = []string{
 	FieldWaitStart,
 	FieldSold,
 	FieldAppReserved,
+	FieldState,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -95,8 +98,8 @@ var (
 	DefaultEntID func() uuid.UUID
 	// DefaultGoodStockID holds the default value on creation for the "good_stock_id" field.
 	DefaultGoodStockID func() uuid.UUID
-	// DefaultMiningPoolID holds the default value on creation for the "mining_pool_id" field.
-	DefaultMiningPoolID func() uuid.UUID
+	// DefaultPoolRootUserID holds the default value on creation for the "pool_root_user_id" field.
+	DefaultPoolRootUserID func() uuid.UUID
 	// DefaultPoolGoodUserID holds the default value on creation for the "pool_good_user_id" field.
 	DefaultPoolGoodUserID func() uuid.UUID
 	// DefaultTotal holds the default value on creation for the "total" field.
@@ -113,4 +116,6 @@ var (
 	DefaultSold decimal.Decimal
 	// DefaultAppReserved holds the default value on creation for the "app_reserved" field.
 	DefaultAppReserved decimal.Decimal
+	// DefaultState holds the default value on creation for the "state" field.
+	DefaultState string
 )

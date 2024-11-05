@@ -64,7 +64,7 @@ func (h *Handler) GetTopMostGood(ctx context.Context) (*npool.TopMostGood, error
 		return handler.scan(ctx)
 	})
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	if len(handler.infos) == 0 {
 		return nil, nil
@@ -111,7 +111,7 @@ func (h *Handler) GetTopMostGoods(ctx context.Context) ([]*npool.TopMostGood, ui
 		return handler.scan(_ctx)
 	})
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 
 	handler.formalize()

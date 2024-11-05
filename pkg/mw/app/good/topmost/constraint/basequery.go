@@ -41,7 +41,7 @@ func (h *baseQueryHandler) queryTopMostConstraint(cli *ent.Client) error {
 func (h *baseQueryHandler) queryTopMostConstraints(cli *ent.Client) (*ent.TopMostConstraintSelect, error) {
 	stm, err := constraintcrud.SetQueryConds(cli.TopMostConstraint.Query(), h.ConstraintConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectTopMostConstraint(stm), nil
 }

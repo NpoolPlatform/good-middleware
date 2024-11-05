@@ -16,6 +16,8 @@ import (
 	rewardhistory1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/coin/reward/history"
 	goodbase1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/goodbase"
 	goodreward1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/reward"
+	mininggoodstock1 "github.com/NpoolPlatform/good-middleware/pkg/mw/good/stock/mining"
+	goodstm "github.com/NpoolPlatform/good-middleware/pkg/mw/stm"
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
@@ -64,6 +66,7 @@ func (h *updateHandler) constructGoodBaseSQL(ctx context.Context) error {
 		goodbase1.WithBenefitIntervalHours(h.GoodBaseReq.BenefitIntervalHours, false),
 		goodbase1.WithPurchasable(h.GoodBaseReq.Purchasable, false),
 		goodbase1.WithOnline(h.GoodBaseReq.Online, false),
+		goodbase1.WithState(h.GoodBaseReq.State, false),
 	)
 	if err != nil {
 		return wlog.WrapError(err)
@@ -294,11 +297,23 @@ func (h *updateHandler) deleteMiningGoodStocks(ctx context.Context, tx *ent.Tx) 
 
 func (h *updateHandler) createMiningGoodStocks(ctx context.Context, tx *ent.Tx) error {
 	for _, poolStock := range h.MiningGoodStockReqs {
-		if _, err := mininggoodstockcrud.CreateSet(
-			tx.MiningGoodStock.Create(),
-			poolStock,
-		).Save(ctx); err != nil {
+		handler, err := mininggoodstock1.NewHandler(
+			ctx,
+			mininggoodstock1.WithEntID(func() *string { s := poolStock.EntID.String(); return &s }(), false),
+			mininggoodstock1.WithGoodStockID(func() *string { s := poolStock.GoodStockID.String(); return &s }(), false),
+			mininggoodstock1.WithPoolRootUserID(func() *string { s := poolStock.PoolRootUserID.String(); return &s }(), true),
+			mininggoodstock1.WithTotal(func() *string { s := poolStock.Total.String(); return &s }(), true),
+			mininggoodstock1.WithState(types.MiningGoodStockState_MiningGoodStockStatePreWait.Enum(), true),
+		)
+		if err != nil {
 			return wlog.WrapError(err)
+		}
+		n, err := h.execSQL(ctx, tx, handler.ConstructCreateSQL())
+		if err != nil {
+			return wlog.WrapError(err)
+		}
+		if n != 1 {
+			return wlog.Errorf("fail create mininggoodstock: %v", err)
 		}
 	}
 	return nil
@@ -370,25 +385,29 @@ func (h *updateHandler) _validateStock() error {
 	}
 
 	for _, poolStock := range h.miningGoodStocks {
-		if func() bool {
-			for _, _poolStock := range miningGoodStockReqs {
-				if *_poolStock.EntID == poolStock.EntID {
-					_poolStock.ID = &poolStock.ID
-					_poolStock.SpotQuantity = func() *decimal.Decimal {
-						d := poolStock.SpotQuantity.Add(_poolStock.Total.Sub(poolStock.Total))
-						return &d
-					}()
-					return true
-				}
+		existInReq := false
+		for _, _poolStock := range miningGoodStockReqs {
+			if *_poolStock.EntID != poolStock.EntID {
+				continue
 			}
-			return false
-		}() {
-			continue
+			_poolStock.ID = &poolStock.ID
+
+			if _poolStock.Total == nil {
+				_poolStock.Total = &poolStock.Total
+			}
+			_poolStock.SpotQuantity = func() *decimal.Decimal {
+				d := poolStock.SpotQuantity.Add(_poolStock.Total.Sub(poolStock.Total))
+				return &d
+			}()
+			existInReq = true
+			break
 		}
-		h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, &mininggoodstockcrud.Req{
-			EntID: &poolStock.EntID,
-			Total: &poolStock.Total,
-		})
+		if !existInReq {
+			h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, &mininggoodstockcrud.Req{
+				EntID: &poolStock.EntID,
+				Total: &poolStock.Total,
+			})
+		}
 	}
 	return h.stockValidator.validateStock()
 }
@@ -478,6 +497,80 @@ func (h *updateHandler) validateRewardState() error {
 	return nil
 }
 
+//nolint:gocyclo
+func (h *updateHandler) validateGoodState(ctx context.Context) error {
+	if h.powerRental.StockMode != types.GoodStockMode_GoodStockByMiningPool.String() {
+		return nil
+	}
+
+	if h.GoodBaseReq.State == nil && len(h.MiningGoodStockReqs) == 0 {
+		return nil
+	}
+
+	if h.GoodBaseReq.State != nil && len(h.MiningGoodStockReqs) == 0 {
+		return wlog.Errorf("invalid good state or mininggoodstockstate")
+	}
+
+	updateState := h.MiningGoodStockReqs[0].State == nil
+	for _, miningStockReq := range h.MiningGoodStockReqs[1:] {
+		if updateState != (miningStockReq.State == nil) {
+			return wlog.Errorf("invalid mininggoodstockstate, if update state, all sub stock state must be updated")
+		}
+	}
+
+	if updateState && h.GoodBaseReq.State == nil {
+		return nil
+	}
+
+	if updateState || h.GoodBaseReq.State == nil {
+		return wlog.Errorf("invalid good state or mininggoodstockstate")
+	}
+
+	if len(h.MiningGoodStockReqs) != len(h.miningGoodStocks) {
+		return wlog.Errorf("invalid mininggoodstockstate")
+	}
+
+	currentState := types.GoodState(types.GoodState_value[h.goodBase.State]).Enum()
+	nextState := h.GoodBaseReq.State
+
+	nextMiningGoodStockState, err := goodstm.GoodState2MiningGoodStockState(nextState)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+
+	for _, miningStockReq := range h.MiningGoodStockReqs {
+		if miningStockReq.State == nil || *miningStockReq.State != *nextMiningGoodStockState {
+			return wlog.Errorf("invalid mininggoodstockstate")
+		}
+	}
+
+	handler, err := goodstm.NewHandler(ctx,
+		goodstm.WithCurrentGoodState(currentState, true),
+		goodstm.WithNextGoodState(nextState, true),
+		goodstm.WithRollback(h.Rollback, true),
+	)
+	if err != nil {
+		return wlog.WrapError(err)
+	}
+
+	if _state, err := handler.ValidateUpdateForNewState(); err != nil {
+		return wlog.WrapError(err)
+	} else if _state != nil {
+		h.GoodBaseReq.State = _state
+
+		_miningGoodStockState, err := goodstm.GoodState2MiningGoodStockState(_state)
+		if err != nil {
+			return wlog.WrapError(err)
+		}
+
+		for _, miningStockReq := range h.MiningGoodStockReqs {
+			miningStockReq.State = _miningGoodStockState
+		}
+	}
+
+	return nil
+}
+
 func (h *updateHandler) formalizeStock() {
 	for _, req := range h.MiningGoodStockReqs {
 		req.GoodStockID = &h.stock.EntID
@@ -545,6 +638,9 @@ func (h *Handler) UpdatePowerRental(ctx context.Context) error {
 		return wlog.WrapError(err)
 	}
 	if err := handler.validateRewardState(); err != nil {
+		return wlog.WrapError(err)
+	}
+	if err := handler.validateGoodState(ctx); err != nil {
 		return wlog.WrapError(err)
 	}
 	handler.formalizeStock()

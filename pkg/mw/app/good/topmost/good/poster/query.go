@@ -54,7 +54,7 @@ func (h *Handler) GetPoster(ctx context.Context) (*npool.Poster, error) {
 		return handler.scan(ctx)
 	})
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	if len(handler.infos) == 0 {
 		return nil, nil
@@ -101,7 +101,7 @@ func (h *Handler) GetPosters(ctx context.Context) ([]*npool.Poster, uint32, erro
 		return handler.scan(_ctx)
 	})
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 
 	handler.formalize()

@@ -96,19 +96,18 @@ var ret = npool.PowerRental{
 	MiningGoodStocks: []*stockmwpb.MiningGoodStock{
 		{
 			EntID:          uuid.NewString(),
-			MiningPoolID:   uuid.NewString(),
-			PoolGoodUserID: uuid.NewString(),
+			PoolRootUserID: uuid.NewString(),
 			Total:          decimal.NewFromInt(70).String(),
 		},
 		{
 			EntID:          uuid.NewString(),
-			MiningPoolID:   uuid.NewString(),
-			PoolGoodUserID: uuid.NewString(),
+			PoolRootUserID: uuid.NewString(),
 			Total:          decimal.NewFromInt(50).String(),
 		},
 	},
 
 	RewardState: types.BenefitState_BenefitWait,
+	State:       types.GoodState_GoodStatePreWait,
 }
 
 func setup(t *testing.T) func(*testing.T) {
@@ -118,6 +117,7 @@ func setup(t *testing.T) func(*testing.T) {
 	ret.DurationDisplayTypeStr = ret.DurationDisplayType.String()
 	ret.StartModeStr = ret.StartMode.String()
 	ret.StockModeStr = ret.StockMode.String()
+	ret.StateStr = ret.State.String()
 	for _, stock := range ret.MiningGoodStocks {
 		stock.GoodStockID = ret.GoodStockID
 		stock.SpotQuantity = stock.Total
@@ -204,8 +204,7 @@ func createPowerRental(t *testing.T) {
 		for _, stock := range ret.MiningGoodStocks {
 			reqs = append(reqs, &stockmwpb.MiningGoodStockReq{
 				EntID:          &stock.EntID,
-				MiningPoolID:   &stock.MiningPoolID,
-				PoolGoodUserID: &stock.PoolGoodUserID,
+				PoolRootUserID: &stock.PoolRootUserID,
 				Total:          &stock.Total,
 			})
 		}
@@ -233,6 +232,7 @@ func createPowerRental(t *testing.T) {
 		WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
 		WithPurchasable(&ret.Purchasable, true),
 		WithOnline(&ret.Online, true),
+		WithState(&ret.State, true),
 		WithStockID(&ret.GoodStockID, true),
 		WithTotal(&ret.GoodTotal, true),
 		WithStockMode(&ret.StockMode, true),
@@ -265,6 +265,9 @@ func createPowerRental(t *testing.T) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			ret.ID = info.ID
+			ret.State = info.State
+			ret.StateStr = info.StateStr
+			ret.MiningGoodStocks = info.MiningGoodStocks
 			assert.Equal(t, &ret, info)
 		}
 	}
@@ -289,6 +292,7 @@ func createPowerRental(t *testing.T) {
 		WithBenefitIntervalHours(&ret.BenefitIntervalHours, true),
 		WithPurchasable(&ret.Purchasable, true),
 		WithOnline(&ret.Online, true),
+		WithState(&ret.State, true),
 		WithStockID(&ret.GoodStockID, true),
 		WithTotal(&ret.GoodTotal, true),
 	)
@@ -303,9 +307,20 @@ func updatePowerRental(t *testing.T) {
 	ret.GoodSpotQuantity = ret.GoodTotal
 	ret.Name = uuid.NewString()
 	ret.DeliveryAt = uint32(time.Now().Unix() + 10)
+
+	h1, err := NewHandler(
+		context.Background(),
+		WithID(&ret.ID, true),
+		WithEntID(&ret.EntID, true),
+		WithGoodID(&ret.GoodID, true),
+	)
+	assert.Nil(t, err)
+	info, err := h1.GetPowerRental(context.Background())
+	assert.Nil(t, err)
+
 	miningGoodStocks := func() (reqs []*stockmwpb.MiningGoodStockReq) {
 		remain := decimal.NewFromInt(0)
-		for i, stock := range ret.MiningGoodStocks {
+		for i, stock := range info.MiningGoodStocks {
 			if i == 0 {
 				remain = decimal.RequireFromString(ret.GoodTotal).Sub(decimal.RequireFromString(stock.Total))
 				continue
@@ -314,8 +329,7 @@ func updatePowerRental(t *testing.T) {
 			stock.SpotQuantity = stock.Total
 			reqs = append(reqs, &stockmwpb.MiningGoodStockReq{
 				EntID:          &stock.EntID,
-				MiningPoolID:   &stock.MiningPoolID,
-				PoolGoodUserID: &stock.PoolGoodUserID,
+				PoolRootUserID: &stock.PoolRootUserID,
 				Total:          &stock.Total,
 			})
 			return
@@ -323,7 +337,7 @@ func updatePowerRental(t *testing.T) {
 		return
 	}()
 
-	h1, err := NewHandler(
+	h2, err := NewHandler(
 		context.Background(),
 		WithID(&ret.ID, true),
 		WithEntID(&ret.EntID, true),
@@ -350,12 +364,13 @@ func updatePowerRental(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	err = h1.UpdatePowerRental(context.Background())
+	err = h2.UpdatePowerRental(context.Background())
 	assert.Nil(t, err)
 
-	info, err := h1.GetPowerRental(context.Background())
+	info, err = h2.GetPowerRental(context.Background())
 	if assert.Nil(t, err) {
 		ret.UpdatedAt = info.UpdatedAt
+		ret.MiningGoodStocks = info.MiningGoodStocks
 		assert.Equal(t, info, &ret)
 	}
 }

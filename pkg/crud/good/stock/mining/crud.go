@@ -5,6 +5,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entmininggoodstock "github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -14,7 +15,7 @@ type Req struct {
 	ID             *uint32
 	EntID          *uuid.UUID
 	GoodStockID    *uuid.UUID
-	MiningPoolID   *uuid.UUID
+	PoolRootUserID *uuid.UUID
 	PoolGoodUserID *uuid.UUID
 	Total          *decimal.Decimal
 	SpotQuantity   *decimal.Decimal
@@ -23,6 +24,7 @@ type Req struct {
 	WaitStart      *decimal.Decimal
 	Sold           *decimal.Decimal
 	AppReserved    *decimal.Decimal
+	State          *types.MiningGoodStockState
 	DeletedAt      *uint32
 }
 
@@ -33,8 +35,8 @@ func CreateSet(c *ent.MiningGoodStockCreate, req *Req) *ent.MiningGoodStockCreat
 	if req.GoodStockID != nil {
 		c.SetGoodStockID(*req.GoodStockID)
 	}
-	if req.MiningPoolID != nil {
-		c.SetMiningPoolID(*req.MiningPoolID)
+	if req.PoolRootUserID != nil {
+		c.SetPoolRootUserID(*req.PoolRootUserID)
 	}
 	if req.PoolGoodUserID != nil {
 		c.SetPoolGoodUserID(*req.PoolGoodUserID)
@@ -50,6 +52,9 @@ func CreateSet(c *ent.MiningGoodStockCreate, req *Req) *ent.MiningGoodStockCreat
 	c.SetWaitStart(decimal.NewFromInt(0))
 	c.SetSold(decimal.NewFromInt(0))
 	c.SetAppReserved(decimal.NewFromInt(0))
+	if req.State != nil {
+		c.SetState(req.State.String())
+	}
 	return c
 }
 
@@ -74,6 +79,12 @@ func UpdateSet(u *ent.MiningGoodStockUpdateOne, req *Req) *ent.MiningGoodStockUp
 	}
 	if req.AppReserved != nil {
 		u.SetAppReserved(*req.AppReserved)
+	}
+	if req.PoolGoodUserID != nil {
+		u.SetPoolGoodUserID(*req.PoolGoodUserID)
+	}
+	if req.State != nil {
+		u.SetState(req.State.String())
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)

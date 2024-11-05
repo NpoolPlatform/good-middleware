@@ -129,13 +129,13 @@ var ret = npool.PowerRental{
 	MiningGoodStocks: []*stockmwpb.MiningGoodStockInfo{
 		{
 			EntID:          uuid.NewString(),
-			MiningPoolID:   uuid.NewString(),
+			PoolRootUserID: uuid.NewString(),
 			PoolGoodUserID: uuid.NewString(),
 			Total:          decimal.NewFromInt(70).String(),
 		},
 		{
 			EntID:          uuid.NewString(),
-			MiningPoolID:   uuid.NewString(),
+			PoolRootUserID: uuid.NewString(),
 			PoolGoodUserID: uuid.NewString(),
 			Total:          decimal.NewFromInt(50).String(),
 		},
@@ -250,7 +250,7 @@ func setup(t *testing.T) func(*testing.T) {
 		for _, stock := range ret.MiningGoodStocks {
 			reqs = append(reqs, &stockmwpb.MiningGoodStockReq{
 				EntID:          &stock.EntID,
-				MiningPoolID:   &stock.MiningPoolID,
+				PoolRootUserID: &stock.PoolRootUserID,
 				PoolGoodUserID: &stock.PoolGoodUserID,
 				Total:          &stock.Total,
 			})
@@ -364,6 +364,10 @@ func createPowerRental(t *testing.T) {
 			ret.CreatedAt = info.CreatedAt
 			ret.UpdatedAt = info.UpdatedAt
 			ret.ID = info.ID
+			ret.State = info.State
+			ret.StateStr = info.StateStr
+			ret.MiningGoodStocks = info.MiningGoodStocks
+			ret.AppMiningGoodStocks = info.AppMiningGoodStocks
 			assert.Equal(t, &ret, info)
 		}
 	}

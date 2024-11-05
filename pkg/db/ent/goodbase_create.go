@@ -204,6 +204,20 @@ func (gbc *GoodBaseCreate) SetNillableOnline(b *bool) *GoodBaseCreate {
 	return gbc
 }
 
+// SetState sets the "state" field.
+func (gbc *GoodBaseCreate) SetState(s string) *GoodBaseCreate {
+	gbc.mutation.SetState(s)
+	return gbc
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (gbc *GoodBaseCreate) SetNillableState(s *string) *GoodBaseCreate {
+	if s != nil {
+		gbc.SetState(*s)
+	}
+	return gbc
+}
+
 // SetID sets the "id" field.
 func (gbc *GoodBaseCreate) SetID(u uint32) *GoodBaseCreate {
 	gbc.mutation.SetID(u)
@@ -352,6 +366,10 @@ func (gbc *GoodBaseCreate) defaults() error {
 	if _, ok := gbc.mutation.Online(); !ok {
 		v := goodbase.DefaultOnline
 		gbc.mutation.SetOnline(v)
+	}
+	if _, ok := gbc.mutation.State(); !ok {
+		v := goodbase.DefaultState
+		gbc.mutation.SetState(v)
 	}
 	return nil
 }
@@ -507,6 +525,14 @@ func (gbc *GoodBaseCreate) createSpec() (*GoodBase, *sqlgraph.CreateSpec) {
 			Column: goodbase.FieldOnline,
 		})
 		_node.Online = value
+	}
+	if value, ok := gbc.mutation.State(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: goodbase.FieldState,
+		})
+		_node.State = value
 	}
 	return _node, _spec
 }
@@ -799,6 +825,24 @@ func (u *GoodBaseUpsert) UpdateOnline() *GoodBaseUpsert {
 // ClearOnline clears the value of the "online" field.
 func (u *GoodBaseUpsert) ClearOnline() *GoodBaseUpsert {
 	u.SetNull(goodbase.FieldOnline)
+	return u
+}
+
+// SetState sets the "state" field.
+func (u *GoodBaseUpsert) SetState(v string) *GoodBaseUpsert {
+	u.Set(goodbase.FieldState, v)
+	return u
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *GoodBaseUpsert) UpdateState() *GoodBaseUpsert {
+	u.SetExcluded(goodbase.FieldState)
+	return u
+}
+
+// ClearState clears the value of the "state" field.
+func (u *GoodBaseUpsert) ClearState() *GoodBaseUpsert {
+	u.SetNull(goodbase.FieldState)
 	return u
 }
 
@@ -1129,6 +1173,27 @@ func (u *GoodBaseUpsertOne) UpdateOnline() *GoodBaseUpsertOne {
 func (u *GoodBaseUpsertOne) ClearOnline() *GoodBaseUpsertOne {
 	return u.Update(func(s *GoodBaseUpsert) {
 		s.ClearOnline()
+	})
+}
+
+// SetState sets the "state" field.
+func (u *GoodBaseUpsertOne) SetState(v string) *GoodBaseUpsertOne {
+	return u.Update(func(s *GoodBaseUpsert) {
+		s.SetState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *GoodBaseUpsertOne) UpdateState() *GoodBaseUpsertOne {
+	return u.Update(func(s *GoodBaseUpsert) {
+		s.UpdateState()
+	})
+}
+
+// ClearState clears the value of the "state" field.
+func (u *GoodBaseUpsertOne) ClearState() *GoodBaseUpsertOne {
+	return u.Update(func(s *GoodBaseUpsert) {
+		s.ClearState()
 	})
 }
 
@@ -1624,6 +1689,27 @@ func (u *GoodBaseUpsertBulk) UpdateOnline() *GoodBaseUpsertBulk {
 func (u *GoodBaseUpsertBulk) ClearOnline() *GoodBaseUpsertBulk {
 	return u.Update(func(s *GoodBaseUpsert) {
 		s.ClearOnline()
+	})
+}
+
+// SetState sets the "state" field.
+func (u *GoodBaseUpsertBulk) SetState(v string) *GoodBaseUpsertBulk {
+	return u.Update(func(s *GoodBaseUpsert) {
+		s.SetState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *GoodBaseUpsertBulk) UpdateState() *GoodBaseUpsertBulk {
+	return u.Update(func(s *GoodBaseUpsert) {
+		s.UpdateState()
+	})
+}
+
+// ClearState clears the value of the "state" field.
+func (u *GoodBaseUpsertBulk) ClearState() *GoodBaseUpsertBulk {
+	return u.Update(func(s *GoodBaseUpsert) {
+		s.ClearState()
 	})
 }
 

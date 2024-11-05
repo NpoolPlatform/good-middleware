@@ -43,7 +43,7 @@ func (h *baseQueryHandler) queryScore(cli *ent.Client) error {
 func (h *baseQueryHandler) queryScores(cli *ent.Client) (*ent.ScoreSelect, error) {
 	stm, err := scorecrud.SetQueryConds(cli.Score.Query(), h.ScoreConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectScore(stm), nil
 }

@@ -34,7 +34,7 @@ func (h *Handler) GetBrand(ctx context.Context) (*npool.Brand, error) {
 		return handler.scan(_ctx)
 	})
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	if len(handler.infos) == 0 {
 		return nil, nil
@@ -71,7 +71,7 @@ func (h *Handler) GetBrands(ctx context.Context) ([]*npool.Brand, uint32, error)
 		return handler.scan(_ctx)
 	})
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 	return handler.infos, handler.total, nil
 }

@@ -59,7 +59,7 @@ func (h *Handler) GetGoodCoin(ctx context.Context) (info *npool.GoodCoin, err er
 		return handler.scan(ctx)
 	})
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	if len(handler.infos) > 1 {
 		return nil, wlog.Errorf("too many records")
@@ -103,7 +103,7 @@ func (h *Handler) GetGoodCoins(ctx context.Context) ([]*npool.GoodCoin, uint32, 
 		return handler.scan(ctx)
 	})
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 
 	handler.formalize()

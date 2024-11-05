@@ -58,7 +58,7 @@ func (h *Handler) GetScore(ctx context.Context) (*npool.Score, error) {
 		return handler.scan(ctx)
 	})
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	if len(handler.infos) == 0 {
 		return nil, nil
@@ -105,7 +105,7 @@ func (h *Handler) GetScores(ctx context.Context) ([]*npool.Score, uint32, error)
 		return handler.scan(ctx)
 	})
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 
 	handler.formalize()

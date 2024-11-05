@@ -27,8 +27,8 @@ type MiningGoodStock struct {
 	EntID uuid.UUID `json:"ent_id,omitempty"`
 	// GoodStockID holds the value of the "good_stock_id" field.
 	GoodStockID uuid.UUID `json:"good_stock_id,omitempty"`
-	// MiningPoolID holds the value of the "mining_pool_id" field.
-	MiningPoolID uuid.UUID `json:"mining_pool_id,omitempty"`
+	// PoolRootUserID holds the value of the "pool_root_user_id" field.
+	PoolRootUserID uuid.UUID `json:"pool_root_user_id,omitempty"`
 	// PoolGoodUserID holds the value of the "pool_good_user_id" field.
 	PoolGoodUserID uuid.UUID `json:"pool_good_user_id,omitempty"`
 	// Total holds the value of the "total" field.
@@ -45,6 +45,8 @@ type MiningGoodStock struct {
 	Sold decimal.Decimal `json:"sold,omitempty"`
 	// AppReserved holds the value of the "app_reserved" field.
 	AppReserved decimal.Decimal `json:"app_reserved,omitempty"`
+	// State holds the value of the "state" field.
+	State string `json:"state,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -56,7 +58,9 @@ func (*MiningGoodStock) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(decimal.Decimal)
 		case mininggoodstock.FieldID, mininggoodstock.FieldCreatedAt, mininggoodstock.FieldUpdatedAt, mininggoodstock.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case mininggoodstock.FieldEntID, mininggoodstock.FieldGoodStockID, mininggoodstock.FieldMiningPoolID, mininggoodstock.FieldPoolGoodUserID:
+		case mininggoodstock.FieldState:
+			values[i] = new(sql.NullString)
+		case mininggoodstock.FieldEntID, mininggoodstock.FieldGoodStockID, mininggoodstock.FieldPoolRootUserID, mininggoodstock.FieldPoolGoodUserID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type MiningGoodStock", columns[i])
@@ -109,11 +113,11 @@ func (mgs *MiningGoodStock) assignValues(columns []string, values []interface{})
 			} else if value != nil {
 				mgs.GoodStockID = *value
 			}
-		case mininggoodstock.FieldMiningPoolID:
+		case mininggoodstock.FieldPoolRootUserID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field mining_pool_id", values[i])
+				return fmt.Errorf("unexpected type %T for field pool_root_user_id", values[i])
 			} else if value != nil {
-				mgs.MiningPoolID = *value
+				mgs.PoolRootUserID = *value
 			}
 		case mininggoodstock.FieldPoolGoodUserID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -163,6 +167,12 @@ func (mgs *MiningGoodStock) assignValues(columns []string, values []interface{})
 			} else if value != nil {
 				mgs.AppReserved = *value
 			}
+		case mininggoodstock.FieldState:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field state", values[i])
+			} else if value.Valid {
+				mgs.State = value.String
+			}
 		}
 	}
 	return nil
@@ -206,8 +216,8 @@ func (mgs *MiningGoodStock) String() string {
 	builder.WriteString("good_stock_id=")
 	builder.WriteString(fmt.Sprintf("%v", mgs.GoodStockID))
 	builder.WriteString(", ")
-	builder.WriteString("mining_pool_id=")
-	builder.WriteString(fmt.Sprintf("%v", mgs.MiningPoolID))
+	builder.WriteString("pool_root_user_id=")
+	builder.WriteString(fmt.Sprintf("%v", mgs.PoolRootUserID))
 	builder.WriteString(", ")
 	builder.WriteString("pool_good_user_id=")
 	builder.WriteString(fmt.Sprintf("%v", mgs.PoolGoodUserID))
@@ -232,6 +242,9 @@ func (mgs *MiningGoodStock) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("app_reserved=")
 	builder.WriteString(fmt.Sprintf("%v", mgs.AppReserved))
+	builder.WriteString(", ")
+	builder.WriteString("state=")
+	builder.WriteString(mgs.State)
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -3,6 +3,7 @@ package goodbase
 import (
 	"context"
 
+	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
@@ -27,7 +28,7 @@ func (h *Handler) GetGoodBase(ctx context.Context) (GoodBase, error) {
 		return nil
 	})
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return &goodBase{
 		_ent: _goodBase,

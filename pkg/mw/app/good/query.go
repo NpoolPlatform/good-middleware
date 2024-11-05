@@ -90,6 +90,7 @@ func (h *queryHandler) formalize() {
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
+		info.State = types.GoodState(types.GoodState_value[info.StateStr])
 		info.DisplayNames = displayNames[info.EntID]
 	}
 }
@@ -111,7 +112,7 @@ func (h *Handler) GetGood(ctx context.Context) (*npool.Good, error) {
 		}
 		return handler.getDisplayNames(_ctx, cli)
 	}); err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	if len(handler.infos) == 0 {
 		return nil, nil
@@ -152,7 +153,7 @@ func (h *Handler) GetGoods(ctx context.Context) (infos []*npool.Good, total uint
 		}
 		return handler.getDisplayNames(_ctx, cli)
 	}); err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 
 	handler.formalize()

@@ -53,7 +53,7 @@ func (h *baseQueryHandler) queryAppGoodBase(cli *ent.Client) error {
 func (h *baseQueryHandler) queryAppGoodBases(cli *ent.Client) (*ent.AppGoodBaseSelect, error) {
 	stm, err := appgoodbasecrud.SetQueryConds(cli.AppGoodBase.Query(), h.AppGoodBaseConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectAppGoodBase(stm), nil
 }
@@ -104,6 +104,7 @@ func (h *baseQueryHandler) queryJoinGoodBase(s *sql.Selector) {
 			t1.C(entgoodbase.FieldBenefitIntervalHours),
 			sql.As(t1.C(entgoodbase.FieldPurchasable), "good_purchasable"),
 			sql.As(t1.C(entgoodbase.FieldOnline), "good_online"),
+			t1.C(entgoodbase.FieldState),
 		)
 }
 

@@ -44,6 +44,7 @@ func (s *Server) UpdatePowerRental(ctx context.Context, in *npool.UpdatePowerRen
 		powerrental1.WithBenefitIntervalHours(req.BenefitIntervalHours, false),
 		powerrental1.WithPurchasable(req.Purchasable, false),
 		powerrental1.WithOnline(req.Online, false),
+		powerrental1.WithState(req.State, false),
 
 		powerrental1.WithTotal(req.Total, false),
 		powerrental1.WithStockMode(req.StockMode, false),
@@ -52,6 +53,7 @@ func (s *Server) UpdatePowerRental(ctx context.Context, in *npool.UpdatePowerRen
 		powerrental1.WithRewardState(req.RewardState, false),
 		powerrental1.WithRewardAt(req.RewardAt, false),
 		powerrental1.WithRewards(req.Rewards, false),
+		powerrental1.WithRollback(req.Rollback, false),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

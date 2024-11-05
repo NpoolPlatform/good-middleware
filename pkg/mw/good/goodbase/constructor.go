@@ -36,6 +36,9 @@ func (h *Handler) ConstructCreateSQL() string {
 	if h.Online != nil {
 		_sql += comma + "online"
 	}
+	if h.State != nil {
+		_sql += comma + "state"
+	}
 	_sql += comma + "created_at"
 	_sql += comma + "updated_at"
 	_sql += comma + "deleted_at"
@@ -64,6 +67,9 @@ func (h *Handler) ConstructCreateSQL() string {
 	if h.Online != nil {
 		_sql += fmt.Sprintf("%v%v as online", comma, *h.Online)
 	}
+	if h.State != nil {
+		_sql += fmt.Sprintf("%v'%v' as state", comma, h.State.String())
+	}
 	_sql += fmt.Sprintf("%v%v as created_at", comma, now)
 	_sql += fmt.Sprintf("%v%v as updated_at", comma, now)
 	_sql += fmt.Sprintf("%v0 as deleted_at", comma)
@@ -72,11 +78,10 @@ func (h *Handler) ConstructCreateSQL() string {
 	_sql += "select 1 from good_bases "
 	_sql += fmt.Sprintf("where name = '%v' and deleted_at = 0", *h.Name)
 	_sql += " limit 1)"
-
 	return _sql
 }
 
-//nolint:gocyclo
+//nolint:gocyclo,funlen
 func (h *Handler) ConstructUpdateSQL() (string, error) {
 	if h.ID == nil && h.EntID == nil {
 		return "", wlog.Errorf("invalid goodid")
@@ -118,6 +123,10 @@ func (h *Handler) ConstructUpdateSQL() (string, error) {
 	}
 	if h.Online != nil {
 		_sql += fmt.Sprintf("%vonline = %v, ", set, *h.Online)
+		set = ""
+	}
+	if h.State != nil {
+		_sql += fmt.Sprintf("%vstate = '%v', ", set, h.State.String())
 		set = ""
 	}
 	if set != "" {

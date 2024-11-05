@@ -42,6 +42,8 @@ type GoodBase struct {
 	Purchasable bool `json:"purchasable,omitempty"`
 	// Online holds the value of the "online" field.
 	Online bool `json:"online,omitempty"`
+	// State holds the value of the "state" field.
+	State string `json:"state,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -53,7 +55,7 @@ func (*GoodBase) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullBool)
 		case goodbase.FieldID, goodbase.FieldCreatedAt, goodbase.FieldUpdatedAt, goodbase.FieldDeletedAt, goodbase.FieldServiceStartAt, goodbase.FieldBenefitIntervalHours:
 			values[i] = new(sql.NullInt64)
-		case goodbase.FieldGoodType, goodbase.FieldBenefitType, goodbase.FieldName, goodbase.FieldStartMode:
+		case goodbase.FieldGoodType, goodbase.FieldBenefitType, goodbase.FieldName, goodbase.FieldStartMode, goodbase.FieldState:
 			values[i] = new(sql.NullString)
 		case goodbase.FieldEntID:
 			values[i] = new(uuid.UUID)
@@ -156,6 +158,12 @@ func (gb *GoodBase) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				gb.Online = value.Bool
 			}
+		case goodbase.FieldState:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field state", values[i])
+			} else if value.Valid {
+				gb.State = value.String
+			}
 		}
 	}
 	return nil
@@ -222,6 +230,9 @@ func (gb *GoodBase) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("online=")
 	builder.WriteString(fmt.Sprintf("%v", gb.Online))
+	builder.WriteString(", ")
+	builder.WriteString("state=")
+	builder.WriteString(gb.State)
 	builder.WriteByte(')')
 	return builder.String()
 }

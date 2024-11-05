@@ -30,13 +30,14 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 		GoodBaseReq: &goodbasecrud.Req{
 			BenefitType: types.BenefitType_BenefitTypeNone.Enum(),
 			StartMode:   types.GoodStartMode_GoodStartModeWithParent.Enum(),
+			State:       types.GoodState_GoodStateReady.Enum(),
 		},
 		FeeConds:      &feecrud.Conds{},
 		GoodBaseConds: &goodbasecrud.Conds{},
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
-			return nil, err
+			return nil, wlog.WrapError(err)
 		}
 	}
 	return handler, nil

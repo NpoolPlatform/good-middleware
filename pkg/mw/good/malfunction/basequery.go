@@ -41,7 +41,7 @@ func (h *baseQueryHandler) queryMalfunction(cli *ent.Client) error {
 func (h *baseQueryHandler) queryMalfunctions(cli *ent.Client) (*ent.GoodMalfunctionSelect, error) {
 	stm, err := malfunctioncrud.SetQueryConds(cli.GoodMalfunction.Query(), h.MalfunctionConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectMalfunction(stm), nil
 }

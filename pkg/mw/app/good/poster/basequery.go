@@ -41,7 +41,7 @@ func (h *baseQueryHandler) queryPoster(cli *ent.Client) error {
 func (h *baseQueryHandler) queryPosters(cli *ent.Client) (*ent.AppGoodPosterSelect, error) {
 	stm, err := appgoodpostercrud.SetQueryConds(cli.AppGoodPoster.Query(), h.PosterConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectPoster(stm), nil
 }

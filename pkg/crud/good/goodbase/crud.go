@@ -22,6 +22,7 @@ type Req struct {
 	BenefitIntervalHours *uint32
 	Purchasable          *bool
 	Online               *bool
+	State                *types.GoodState
 	DeletedAt            *uint32
 }
 
@@ -56,6 +57,9 @@ func CreateSet(c *ent.GoodBaseCreate, req *Req) *ent.GoodBaseCreate {
 	if req.Online != nil {
 		c.SetOnline(*req.Online)
 	}
+	if req.State != nil {
+		c.SetState(req.State.String())
+	}
 	return c
 }
 
@@ -87,6 +91,9 @@ func UpdateSet(u *ent.GoodBaseUpdateOne, req *Req) *ent.GoodBaseUpdateOne {
 	if req.Online != nil {
 		u.SetOnline(*req.Online)
 	}
+	if req.State != nil {
+		u.SetState(req.State.String())
+	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)
 	}
@@ -104,9 +111,10 @@ type Conds struct {
 	TestOnly    *cruder.Cond
 	Purchasable *cruder.Cond
 	Online      *cruder.Cond
+	State       *cruder.Cond
 }
 
-//nolint
+// nolint
 func SetQueryConds(q *ent.GoodBaseQuery, conds *Conds) (*ent.GoodBaseQuery, error) {
 	q.Where(entgoodbase.DeletedAt(0))
 	if conds == nil {
@@ -240,6 +248,20 @@ func SetQueryConds(q *ent.GoodBaseQuery, conds *Conds) (*ent.GoodBaseQuery, erro
 			q.Where(entgoodbase.Online(b))
 		case cruder.NEQ:
 			q.Where(entgoodbase.OnlineNEQ(b))
+		}
+	}
+	if conds.State != nil {
+		_state, ok := conds.State.Val.(types.GoodState)
+		if !ok {
+			return nil, wlog.Errorf("invalid goodstate")
+		}
+		switch conds.State.Op {
+		case cruder.EQ:
+			q.Where(entgoodbase.State(_state.String()))
+		case cruder.NEQ:
+			q.Where(entgoodbase.StateNEQ(_state.String()))
+		default:
+			return nil, wlog.Errorf("invalid goodbase field")
 		}
 	}
 	return q, nil

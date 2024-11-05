@@ -45,7 +45,7 @@ func (h *baseQueryHandler) queryGoodBase(cli *ent.Client) error {
 func (h *baseQueryHandler) queryGoodBases(cli *ent.Client) (*ent.GoodBaseSelect, error) {
 	stm, err := goodbasecrud.SetQueryConds(cli.GoodBase.Query(), h.GoodBaseConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectGoodBase(stm), nil
 }

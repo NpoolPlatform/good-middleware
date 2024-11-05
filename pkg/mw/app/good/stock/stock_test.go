@@ -138,7 +138,7 @@ func setup(t *testing.T) func(*testing.T) {
 		for _, stock := range ret.AppMiningGoodStocks {
 			reqs = append(reqs, &stockmwpb.MiningGoodStockReq{
 				EntID:          &stock.MiningGoodStockID,
-				MiningPoolID:   func() *string { s := uuid.NewString(); return &s }(),
+				PoolRootUserID: func() *string { s := uuid.NewString(); return &s }(),
 				PoolGoodUserID: func() *string { s := uuid.NewString(); return &s }(),
 				Total:          func() *string { s := decimal.NewFromInt(3333).String(); return &s }(),
 			})

@@ -30,6 +30,7 @@ type Handler struct {
 	powerrentalcrud.Req
 	GoodBaseReq         *goodbasecrud.Req
 	StockReq            *stockcrud.Req
+	Rollback            *bool
 	RewardReq           *goodrewardcrud.Req
 	MiningGoodStockReqs []*mininggoodstockcrud.Req
 	PowerRentalConds    *powerrentalcrud.Conds
@@ -54,7 +55,7 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 	}
 	for _, opt := range options {
 		if err := opt(ctx, handler); err != nil {
-			return nil, err
+			return nil, wlog.WrapError(err)
 		}
 	}
 	return handler, nil
@@ -454,24 +455,36 @@ func WithStocks(stocks []*stockmwpb.MiningGoodStockReq, must bool) func(context.
 				}
 				return &uid
 			}()
-			poolID, err := uuid.Parse(_stock.GetMiningPoolID())
-			if err != nil {
-				return wlog.WrapError(err)
+			req := &mininggoodstockcrud.Req{
+				EntID: entID,
+				State: _stock.State,
 			}
-			poolUserID, err := uuid.Parse(_stock.GetPoolGoodUserID())
-			if err != nil {
-				return wlog.WrapError(err)
+
+			if _stock.PoolRootUserID != nil {
+				id, err := uuid.Parse(_stock.GetPoolRootUserID())
+				if err != nil {
+					return wlog.WrapError(err)
+				}
+				req.PoolRootUserID = &id
 			}
-			amount, err := decimal.NewFromString(_stock.GetTotal())
-			if err != nil {
-				return wlog.WrapError(err)
+
+			if _stock.PoolGoodUserID != nil {
+				id, err := uuid.Parse(_stock.GetPoolGoodUserID())
+				if err != nil {
+					return wlog.WrapError(err)
+				}
+				req.PoolGoodUserID = &id
 			}
-			h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, &mininggoodstockcrud.Req{
-				EntID:          entID,
-				MiningPoolID:   &poolID,
-				PoolGoodUserID: &poolUserID,
-				Total:          &amount,
-			})
+
+			if _stock.Total != nil {
+				amount, err := decimal.NewFromString(_stock.GetTotal())
+				if err != nil {
+					return wlog.WrapError(err)
+				}
+				req.Total = &amount
+			}
+
+			h.MiningGoodStockReqs = append(h.MiningGoodStockReqs, req)
 		}
 		return nil
 	}
@@ -576,6 +589,43 @@ func WithRewards(rewards []*goodcoinrewardmwpb.RewardReq, must bool) func(contex
 	}
 }
 
+func WithState(e *types.GoodState, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return wlog.Errorf("invalid state")
+			}
+			return nil
+		}
+		switch *e {
+		case types.GoodState_GoodStatePreWait:
+		case types.GoodState_GoodStateWait:
+		case types.GoodState_GoodStateCreateGoodUser:
+		case types.GoodState_GoodStateCheckHashRate:
+		case types.GoodState_GoodStateReady:
+		case types.GoodState_GoodStateFail:
+		default:
+			return wlog.Errorf("invalid state")
+		}
+		h.GoodBaseReq.State = e
+		return nil
+	}
+}
+
+func WithRollback(e *bool, must bool) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		if e == nil {
+			if must {
+				return wlog.Errorf("invalid rollback")
+			}
+			return nil
+		}
+
+		h.Rollback = e
+		return nil
+	}
+}
+
 func (h *Handler) withPowerRentalConds(conds *npool.Conds) error {
 	if conds.ID != nil {
 		h.PowerRentalConds.ID = &cruder.Cond{
@@ -615,6 +665,12 @@ func (h *Handler) withPowerRentalConds(conds *npool.Conds) error {
 		h.PowerRentalConds.GoodIDs = &cruder.Cond{
 			Op:  conds.GetGoodIDs().GetOp(),
 			Val: ids,
+		}
+	}
+	if conds.StockMode != nil {
+		h.PowerRentalConds.StockMode = &cruder.Cond{
+			Op:  conds.GetStockMode().GetOp(),
+			Val: types.GoodStockMode(conds.GetStockMode().GetValue()),
 		}
 	}
 	return nil
@@ -659,6 +715,12 @@ func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
 		h.GoodBaseConds.GoodTypes = &cruder.Cond{
 			Op:  conds.GetGoodTypes().GetOp(),
 			Val: es,
+		}
+	}
+	if conds.State != nil {
+		h.GoodBaseConds.State = &cruder.Cond{
+			Op:  conds.GetState().GetOp(),
+			Val: types.GoodState(conds.GetState().GetValue()),
 		}
 	}
 	return nil

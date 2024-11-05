@@ -235,7 +235,7 @@ func (h *Handler) QueryPowerRentalEnt(ctx context.Context) (PowerRental, error) 
 		Handler: h,
 	}
 	if err := handler.requireAppPowerRentalAppGood(ctx); err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return &handler._ent, nil
 }

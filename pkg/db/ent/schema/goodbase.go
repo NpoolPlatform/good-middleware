@@ -60,6 +60,10 @@ func (GoodBase) Fields() []ent.Field {
 			Bool("online").
 			Optional().
 			Default(false),
+		field.
+			String("state").
+			Optional().
+			Default(types.GoodState_GoodStatePreWait.String()),
 	}
 }
 

@@ -36,7 +36,7 @@ func (h *baseQueryHandler) queryTopMost(cli *ent.Client) error {
 func (h *baseQueryHandler) queryTopMosts(cli *ent.Client) (*ent.TopMostSelect, error) {
 	stm, err := topmostcrud.SetQueryConds(cli.TopMost.Query(), h.Conds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectTopMost(stm), nil
 }

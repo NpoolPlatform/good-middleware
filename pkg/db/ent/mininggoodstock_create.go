@@ -93,16 +93,16 @@ func (mgsc *MiningGoodStockCreate) SetNillableGoodStockID(u *uuid.UUID) *MiningG
 	return mgsc
 }
 
-// SetMiningPoolID sets the "mining_pool_id" field.
-func (mgsc *MiningGoodStockCreate) SetMiningPoolID(u uuid.UUID) *MiningGoodStockCreate {
-	mgsc.mutation.SetMiningPoolID(u)
+// SetPoolRootUserID sets the "pool_root_user_id" field.
+func (mgsc *MiningGoodStockCreate) SetPoolRootUserID(u uuid.UUID) *MiningGoodStockCreate {
+	mgsc.mutation.SetPoolRootUserID(u)
 	return mgsc
 }
 
-// SetNillableMiningPoolID sets the "mining_pool_id" field if the given value is not nil.
-func (mgsc *MiningGoodStockCreate) SetNillableMiningPoolID(u *uuid.UUID) *MiningGoodStockCreate {
+// SetNillablePoolRootUserID sets the "pool_root_user_id" field if the given value is not nil.
+func (mgsc *MiningGoodStockCreate) SetNillablePoolRootUserID(u *uuid.UUID) *MiningGoodStockCreate {
 	if u != nil {
-		mgsc.SetMiningPoolID(*u)
+		mgsc.SetPoolRootUserID(*u)
 	}
 	return mgsc
 }
@@ -215,6 +215,20 @@ func (mgsc *MiningGoodStockCreate) SetAppReserved(d decimal.Decimal) *MiningGood
 func (mgsc *MiningGoodStockCreate) SetNillableAppReserved(d *decimal.Decimal) *MiningGoodStockCreate {
 	if d != nil {
 		mgsc.SetAppReserved(*d)
+	}
+	return mgsc
+}
+
+// SetState sets the "state" field.
+func (mgsc *MiningGoodStockCreate) SetState(s string) *MiningGoodStockCreate {
+	mgsc.mutation.SetState(s)
+	return mgsc
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (mgsc *MiningGoodStockCreate) SetNillableState(s *string) *MiningGoodStockCreate {
+	if s != nil {
+		mgsc.SetState(*s)
 	}
 	return mgsc
 }
@@ -339,12 +353,12 @@ func (mgsc *MiningGoodStockCreate) defaults() error {
 		v := mininggoodstock.DefaultGoodStockID()
 		mgsc.mutation.SetGoodStockID(v)
 	}
-	if _, ok := mgsc.mutation.MiningPoolID(); !ok {
-		if mininggoodstock.DefaultMiningPoolID == nil {
-			return fmt.Errorf("ent: uninitialized mininggoodstock.DefaultMiningPoolID (forgotten import ent/runtime?)")
+	if _, ok := mgsc.mutation.PoolRootUserID(); !ok {
+		if mininggoodstock.DefaultPoolRootUserID == nil {
+			return fmt.Errorf("ent: uninitialized mininggoodstock.DefaultPoolRootUserID (forgotten import ent/runtime?)")
 		}
-		v := mininggoodstock.DefaultMiningPoolID()
-		mgsc.mutation.SetMiningPoolID(v)
+		v := mininggoodstock.DefaultPoolRootUserID()
+		mgsc.mutation.SetPoolRootUserID(v)
 	}
 	if _, ok := mgsc.mutation.PoolGoodUserID(); !ok {
 		if mininggoodstock.DefaultPoolGoodUserID == nil {
@@ -380,6 +394,10 @@ func (mgsc *MiningGoodStockCreate) defaults() error {
 	if _, ok := mgsc.mutation.AppReserved(); !ok {
 		v := mininggoodstock.DefaultAppReserved
 		mgsc.mutation.SetAppReserved(v)
+	}
+	if _, ok := mgsc.mutation.State(); !ok {
+		v := mininggoodstock.DefaultState
+		mgsc.mutation.SetState(v)
 	}
 	return nil
 }
@@ -472,13 +490,13 @@ func (mgsc *MiningGoodStockCreate) createSpec() (*MiningGoodStock, *sqlgraph.Cre
 		})
 		_node.GoodStockID = value
 	}
-	if value, ok := mgsc.mutation.MiningPoolID(); ok {
+	if value, ok := mgsc.mutation.PoolRootUserID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: mininggoodstock.FieldMiningPoolID,
+			Column: mininggoodstock.FieldPoolRootUserID,
 		})
-		_node.MiningPoolID = value
+		_node.PoolRootUserID = value
 	}
 	if value, ok := mgsc.mutation.PoolGoodUserID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -543,6 +561,14 @@ func (mgsc *MiningGoodStockCreate) createSpec() (*MiningGoodStock, *sqlgraph.Cre
 			Column: mininggoodstock.FieldAppReserved,
 		})
 		_node.AppReserved = value
+	}
+	if value, ok := mgsc.mutation.State(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: mininggoodstock.FieldState,
+		})
+		_node.State = value
 	}
 	return _node, _spec
 }
@@ -682,21 +708,21 @@ func (u *MiningGoodStockUpsert) ClearGoodStockID() *MiningGoodStockUpsert {
 	return u
 }
 
-// SetMiningPoolID sets the "mining_pool_id" field.
-func (u *MiningGoodStockUpsert) SetMiningPoolID(v uuid.UUID) *MiningGoodStockUpsert {
-	u.Set(mininggoodstock.FieldMiningPoolID, v)
+// SetPoolRootUserID sets the "pool_root_user_id" field.
+func (u *MiningGoodStockUpsert) SetPoolRootUserID(v uuid.UUID) *MiningGoodStockUpsert {
+	u.Set(mininggoodstock.FieldPoolRootUserID, v)
 	return u
 }
 
-// UpdateMiningPoolID sets the "mining_pool_id" field to the value that was provided on create.
-func (u *MiningGoodStockUpsert) UpdateMiningPoolID() *MiningGoodStockUpsert {
-	u.SetExcluded(mininggoodstock.FieldMiningPoolID)
+// UpdatePoolRootUserID sets the "pool_root_user_id" field to the value that was provided on create.
+func (u *MiningGoodStockUpsert) UpdatePoolRootUserID() *MiningGoodStockUpsert {
+	u.SetExcluded(mininggoodstock.FieldPoolRootUserID)
 	return u
 }
 
-// ClearMiningPoolID clears the value of the "mining_pool_id" field.
-func (u *MiningGoodStockUpsert) ClearMiningPoolID() *MiningGoodStockUpsert {
-	u.SetNull(mininggoodstock.FieldMiningPoolID)
+// ClearPoolRootUserID clears the value of the "pool_root_user_id" field.
+func (u *MiningGoodStockUpsert) ClearPoolRootUserID() *MiningGoodStockUpsert {
+	u.SetNull(mininggoodstock.FieldPoolRootUserID)
 	return u
 }
 
@@ -841,6 +867,24 @@ func (u *MiningGoodStockUpsert) UpdateAppReserved() *MiningGoodStockUpsert {
 // ClearAppReserved clears the value of the "app_reserved" field.
 func (u *MiningGoodStockUpsert) ClearAppReserved() *MiningGoodStockUpsert {
 	u.SetNull(mininggoodstock.FieldAppReserved)
+	return u
+}
+
+// SetState sets the "state" field.
+func (u *MiningGoodStockUpsert) SetState(v string) *MiningGoodStockUpsert {
+	u.Set(mininggoodstock.FieldState, v)
+	return u
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *MiningGoodStockUpsert) UpdateState() *MiningGoodStockUpsert {
+	u.SetExcluded(mininggoodstock.FieldState)
+	return u
+}
+
+// ClearState clears the value of the "state" field.
+func (u *MiningGoodStockUpsert) ClearState() *MiningGoodStockUpsert {
+	u.SetNull(mininggoodstock.FieldState)
 	return u
 }
 
@@ -992,24 +1036,24 @@ func (u *MiningGoodStockUpsertOne) ClearGoodStockID() *MiningGoodStockUpsertOne 
 	})
 }
 
-// SetMiningPoolID sets the "mining_pool_id" field.
-func (u *MiningGoodStockUpsertOne) SetMiningPoolID(v uuid.UUID) *MiningGoodStockUpsertOne {
+// SetPoolRootUserID sets the "pool_root_user_id" field.
+func (u *MiningGoodStockUpsertOne) SetPoolRootUserID(v uuid.UUID) *MiningGoodStockUpsertOne {
 	return u.Update(func(s *MiningGoodStockUpsert) {
-		s.SetMiningPoolID(v)
+		s.SetPoolRootUserID(v)
 	})
 }
 
-// UpdateMiningPoolID sets the "mining_pool_id" field to the value that was provided on create.
-func (u *MiningGoodStockUpsertOne) UpdateMiningPoolID() *MiningGoodStockUpsertOne {
+// UpdatePoolRootUserID sets the "pool_root_user_id" field to the value that was provided on create.
+func (u *MiningGoodStockUpsertOne) UpdatePoolRootUserID() *MiningGoodStockUpsertOne {
 	return u.Update(func(s *MiningGoodStockUpsert) {
-		s.UpdateMiningPoolID()
+		s.UpdatePoolRootUserID()
 	})
 }
 
-// ClearMiningPoolID clears the value of the "mining_pool_id" field.
-func (u *MiningGoodStockUpsertOne) ClearMiningPoolID() *MiningGoodStockUpsertOne {
+// ClearPoolRootUserID clears the value of the "pool_root_user_id" field.
+func (u *MiningGoodStockUpsertOne) ClearPoolRootUserID() *MiningGoodStockUpsertOne {
 	return u.Update(func(s *MiningGoodStockUpsert) {
-		s.ClearMiningPoolID()
+		s.ClearPoolRootUserID()
 	})
 }
 
@@ -1178,6 +1222,27 @@ func (u *MiningGoodStockUpsertOne) UpdateAppReserved() *MiningGoodStockUpsertOne
 func (u *MiningGoodStockUpsertOne) ClearAppReserved() *MiningGoodStockUpsertOne {
 	return u.Update(func(s *MiningGoodStockUpsert) {
 		s.ClearAppReserved()
+	})
+}
+
+// SetState sets the "state" field.
+func (u *MiningGoodStockUpsertOne) SetState(v string) *MiningGoodStockUpsertOne {
+	return u.Update(func(s *MiningGoodStockUpsert) {
+		s.SetState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *MiningGoodStockUpsertOne) UpdateState() *MiningGoodStockUpsertOne {
+	return u.Update(func(s *MiningGoodStockUpsert) {
+		s.UpdateState()
+	})
+}
+
+// ClearState clears the value of the "state" field.
+func (u *MiningGoodStockUpsertOne) ClearState() *MiningGoodStockUpsertOne {
+	return u.Update(func(s *MiningGoodStockUpsert) {
+		s.ClearState()
 	})
 }
 
@@ -1494,24 +1559,24 @@ func (u *MiningGoodStockUpsertBulk) ClearGoodStockID() *MiningGoodStockUpsertBul
 	})
 }
 
-// SetMiningPoolID sets the "mining_pool_id" field.
-func (u *MiningGoodStockUpsertBulk) SetMiningPoolID(v uuid.UUID) *MiningGoodStockUpsertBulk {
+// SetPoolRootUserID sets the "pool_root_user_id" field.
+func (u *MiningGoodStockUpsertBulk) SetPoolRootUserID(v uuid.UUID) *MiningGoodStockUpsertBulk {
 	return u.Update(func(s *MiningGoodStockUpsert) {
-		s.SetMiningPoolID(v)
+		s.SetPoolRootUserID(v)
 	})
 }
 
-// UpdateMiningPoolID sets the "mining_pool_id" field to the value that was provided on create.
-func (u *MiningGoodStockUpsertBulk) UpdateMiningPoolID() *MiningGoodStockUpsertBulk {
+// UpdatePoolRootUserID sets the "pool_root_user_id" field to the value that was provided on create.
+func (u *MiningGoodStockUpsertBulk) UpdatePoolRootUserID() *MiningGoodStockUpsertBulk {
 	return u.Update(func(s *MiningGoodStockUpsert) {
-		s.UpdateMiningPoolID()
+		s.UpdatePoolRootUserID()
 	})
 }
 
-// ClearMiningPoolID clears the value of the "mining_pool_id" field.
-func (u *MiningGoodStockUpsertBulk) ClearMiningPoolID() *MiningGoodStockUpsertBulk {
+// ClearPoolRootUserID clears the value of the "pool_root_user_id" field.
+func (u *MiningGoodStockUpsertBulk) ClearPoolRootUserID() *MiningGoodStockUpsertBulk {
 	return u.Update(func(s *MiningGoodStockUpsert) {
-		s.ClearMiningPoolID()
+		s.ClearPoolRootUserID()
 	})
 }
 
@@ -1680,6 +1745,27 @@ func (u *MiningGoodStockUpsertBulk) UpdateAppReserved() *MiningGoodStockUpsertBu
 func (u *MiningGoodStockUpsertBulk) ClearAppReserved() *MiningGoodStockUpsertBulk {
 	return u.Update(func(s *MiningGoodStockUpsert) {
 		s.ClearAppReserved()
+	})
+}
+
+// SetState sets the "state" field.
+func (u *MiningGoodStockUpsertBulk) SetState(v string) *MiningGoodStockUpsertBulk {
+	return u.Update(func(s *MiningGoodStockUpsert) {
+		s.SetState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *MiningGoodStockUpsertBulk) UpdateState() *MiningGoodStockUpsertBulk {
+	return u.Update(func(s *MiningGoodStockUpsert) {
+		s.UpdateState()
+	})
+}
+
+// ClearState clears the value of the "state" field.
+func (u *MiningGoodStockUpsertBulk) ClearState() *MiningGoodStockUpsertBulk {
+	return u.Update(func(s *MiningGoodStockUpsert) {
+		s.ClearState()
 	})
 }
 

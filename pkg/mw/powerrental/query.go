@@ -81,7 +81,7 @@ func (h *queryHandler) getMiningGoodStocks(ctx context.Context, cli *ent.Client)
 	return stm.Select(
 		entmininggoodstock.FieldEntID,
 		entmininggoodstock.FieldGoodStockID,
-		entmininggoodstock.FieldMiningPoolID,
+		entmininggoodstock.FieldPoolRootUserID,
 		entmininggoodstock.FieldPoolGoodUserID,
 		entmininggoodstock.FieldTotal,
 		entmininggoodstock.FieldSpotQuantity,
@@ -89,6 +89,7 @@ func (h *queryHandler) getMiningGoodStocks(ctx context.Context, cli *ent.Client)
 		entmininggoodstock.FieldWaitStart,
 		entmininggoodstock.FieldInService,
 		entmininggoodstock.FieldSold,
+		entmininggoodstock.FieldState,
 	).Scan(ctx, &h.miningGoodStocks)
 }
 
@@ -182,6 +183,7 @@ func (h *queryHandler) formalize() {
 		stock.WaitStart = func() string { amount, _ := decimal.NewFromString(stock.WaitStart); return amount.String() }()
 		stock.InService = func() string { amount, _ := decimal.NewFromString(stock.InService); return amount.String() }()
 		stock.Sold = func() string { amount, _ := decimal.NewFromString(stock.Sold); return amount.String() }()
+		stock.State = types.MiningGoodStockState(types.MiningGoodStockState_value[stock.StateStr])
 		goodMiningStocks[stock.GoodStockID] = append(goodMiningStocks[stock.GoodStockID], stock)
 	}
 	for _, goodCoin := range h.goodCoins {
@@ -223,6 +225,7 @@ func (h *queryHandler) formalize() {
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
 		info.RewardState = types.BenefitState(types.BenefitState_value[info.RewardStateStr])
+		info.State = types.GoodState(types.GoodState_value[info.StateStr])
 		info.MiningGoodStocks = goodMiningStocks[info.GoodStockID]
 		info.GoodCoins = goodCoins[info.GoodID]
 		info.Rewards = coinRewards[info.GoodID]
@@ -253,7 +256,7 @@ func (h *Handler) GetPowerRental(ctx context.Context) (*npool.PowerRental, error
 		return handler.getMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	if len(handler.infos) == 0 {
 		return nil, nil
@@ -308,7 +311,7 @@ func (h *Handler) GetPowerRentals(ctx context.Context) ([]*npool.PowerRental, ui
 		return handler.getMiningGoodStocks(_ctx, cli)
 	})
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 
 	handler.formalize()

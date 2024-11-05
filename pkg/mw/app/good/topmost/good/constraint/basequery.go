@@ -43,7 +43,7 @@ func (h *baseQueryHandler) queryTopMostGoodConstraint(cli *ent.Client) error {
 func (h *baseQueryHandler) queryTopMostGoodConstraints(cli *ent.Client) (*ent.TopMostGoodConstraintSelect, error) {
 	stm, err := constraintcrud.SetQueryConds(cli.TopMostGoodConstraint.Query(), h.ConstraintConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectTopMostGoodConstraint(stm), nil
 }

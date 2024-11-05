@@ -41,7 +41,7 @@ func (h *baseQueryHandler) queryDisplayName(cli *ent.Client) error {
 func (h *baseQueryHandler) queryDisplayNames(cli *ent.Client) (*ent.AppGoodDisplayNameSelect, error) {
 	stm, err := appgooddisplaynamecrud.SetQueryConds(cli.AppGoodDisplayName.Query(), h.DisplayNameConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectDisplayName(stm), nil
 }

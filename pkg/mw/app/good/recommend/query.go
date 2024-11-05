@@ -60,7 +60,7 @@ func (h *Handler) GetRecommend(ctx context.Context) (*npool.Recommend, error) {
 		return handler.scan(ctx)
 	})
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	if len(handler.infos) == 0 {
 		return nil, nil
@@ -107,7 +107,7 @@ func (h *Handler) GetRecommends(ctx context.Context) ([]*npool.Recommend, uint32
 		return handler.scan(ctx)
 	})
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, wlog.WrapError(err)
 	}
 
 	handler.formalize()

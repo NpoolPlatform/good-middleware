@@ -43,7 +43,7 @@ func (h *baseQueryHandler) queryTopMostGood(cli *ent.Client) error {
 func (h *baseQueryHandler) queryTopMostGoods(cli *ent.Client) (*ent.TopMostGoodSelect, error) {
 	stm, err := topmostgoodcrud.SetQueryConds(cli.TopMostGood.Query(), h.TopMostGoodConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	return h.selectTopMostGood(stm), nil
 }

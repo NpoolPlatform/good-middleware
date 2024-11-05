@@ -53,7 +53,7 @@ func (h *baseQueryHandler) queryGoodBase(cli *ent.Client) error {
 func (h *baseQueryHandler) queryGoodBases(cli *ent.Client) (*ent.GoodBaseSelect, error) {
 	stm, err := goodbasecrud.SetQueryConds(cli.GoodBase.Query(), h.GoodBaseConds)
 	if err != nil {
-		return nil, err
+		return nil, wlog.WrapError(err)
 	}
 	stm.Where(
 		entgoodbase.Or(
@@ -81,11 +81,13 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 			t1.C(entgoodbase.FieldBenefitIntervalHours),
 			t1.C(entgoodbase.FieldPurchasable),
 			t1.C(entgoodbase.FieldOnline),
+			t1.C(entgoodbase.FieldState),
 			t1.C(entgoodbase.FieldCreatedAt),
 			t1.C(entgoodbase.FieldUpdatedAt),
 		)
 }
 
+//nolint:funlen
 func (h *baseQueryHandler) queryJoinPowerRental(s *sql.Selector) error {
 	t1 := sql.Table(entpowerrental.Table)
 	t2 := sql.Table(entdevicetype.Table)
@@ -138,6 +140,20 @@ func (h *baseQueryHandler) queryJoinPowerRental(s *sql.Selector) error {
 			}
 			return
 		}()...))
+	}
+	if h.PowerRentalConds.StockMode != nil {
+		stockmode, ok := h.PowerRentalConds.StockMode.Val.(types.GoodStockMode)
+		if !ok {
+			return wlog.Errorf("invalid stockmode")
+		}
+		switch h.PowerRentalConds.StockMode.Op {
+		case cruder.EQ:
+			s.OnP(sql.EQ(t1.C(entpowerrental.FieldStockMode), stockmode.String()))
+		case cruder.NEQ:
+			s.OnP(sql.NEQ(t1.C(entpowerrental.FieldStockMode), stockmode.String()))
+		default:
+			return wlog.Errorf("invalid stockmode field")
+		}
 	}
 	s.LeftJoin(t2).
 		On(
