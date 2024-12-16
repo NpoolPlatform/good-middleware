@@ -414,6 +414,30 @@ func (f AppMiningGoodStockMutationRuleFunc) EvalMutation(ctx context.Context, m 
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppMiningGoodStockMutation", m)
 }
 
+// The AppPledgeQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AppPledgeQueryRuleFunc func(context.Context, *ent.AppPledgeQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AppPledgeQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppPledgeQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppPledgeQuery", q)
+}
+
+// The AppPledgeMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AppPledgeMutationRuleFunc func(context.Context, *ent.AppPledgeMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AppPledgeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppPledgeMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppPledgeMutation", m)
+}
+
 // The AppPowerRentalQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type AppPowerRentalQueryRuleFunc func(context.Context, *ent.AppPowerRentalQuery) error
@@ -918,6 +942,30 @@ func (f MiningGoodStockMutationRuleFunc) EvalMutation(ctx context.Context, m ent
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.MiningGoodStockMutation", m)
 }
 
+// The PledgeQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type PledgeQueryRuleFunc func(context.Context, *ent.PledgeQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f PledgeQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.PledgeQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.PledgeQuery", q)
+}
+
+// The PledgeMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type PledgeMutationRuleFunc func(context.Context, *ent.PledgeMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f PledgeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.PledgeMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.PledgeMutation", m)
+}
+
 // The PowerRentalQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type PowerRentalQueryRuleFunc func(context.Context, *ent.PowerRentalQuery) error
@@ -1311,6 +1359,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.AppMiningGoodStockQuery:
 		return q.Filter(), nil
+	case *ent.AppPledgeQuery:
+		return q.Filter(), nil
 	case *ent.AppPowerRentalQuery:
 		return q.Filter(), nil
 	case *ent.AppSimulatePowerRentalQuery:
@@ -1352,6 +1402,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 	case *ent.LikeQuery:
 		return q.Filter(), nil
 	case *ent.MiningGoodStockQuery:
+		return q.Filter(), nil
+	case *ent.PledgeQuery:
 		return q.Filter(), nil
 	case *ent.PowerRentalQuery:
 		return q.Filter(), nil
@@ -1410,6 +1462,8 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 		return m.Filter(), nil
 	case *ent.AppMiningGoodStockMutation:
 		return m.Filter(), nil
+	case *ent.AppPledgeMutation:
+		return m.Filter(), nil
 	case *ent.AppPowerRentalMutation:
 		return m.Filter(), nil
 	case *ent.AppSimulatePowerRentalMutation:
@@ -1451,6 +1505,8 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	case *ent.LikeMutation:
 		return m.Filter(), nil
 	case *ent.MiningGoodStockMutation:
+		return m.Filter(), nil
+	case *ent.PledgeMutation:
 		return m.Filter(), nil
 	case *ent.PowerRentalMutation:
 		return m.Filter(), nil

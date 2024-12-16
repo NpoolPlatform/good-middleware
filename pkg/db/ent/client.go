@@ -21,6 +21,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppledge"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulatepowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
@@ -42,6 +43,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/pledge"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredappgood"
@@ -88,6 +90,8 @@ type Client struct {
 	AppLegacyPowerRental *AppLegacyPowerRentalClient
 	// AppMiningGoodStock is the client for interacting with the AppMiningGoodStock builders.
 	AppMiningGoodStock *AppMiningGoodStockClient
+	// AppPledge is the client for interacting with the AppPledge builders.
+	AppPledge *AppPledgeClient
 	// AppPowerRental is the client for interacting with the AppPowerRental builders.
 	AppPowerRental *AppPowerRentalClient
 	// AppSimulatePowerRental is the client for interacting with the AppSimulatePowerRental builders.
@@ -130,6 +134,8 @@ type Client struct {
 	Like *LikeClient
 	// MiningGoodStock is the client for interacting with the MiningGoodStock builders.
 	MiningGoodStock *MiningGoodStockClient
+	// Pledge is the client for interacting with the Pledge builders.
+	Pledge *PledgeClient
 	// PowerRental is the client for interacting with the PowerRental builders.
 	PowerRental *PowerRentalClient
 	// Recommend is the client for interacting with the Recommend builders.
@@ -182,6 +188,7 @@ func (c *Client) init() {
 	c.AppGoodPoster = NewAppGoodPosterClient(c.config)
 	c.AppLegacyPowerRental = NewAppLegacyPowerRentalClient(c.config)
 	c.AppMiningGoodStock = NewAppMiningGoodStockClient(c.config)
+	c.AppPledge = NewAppPledgeClient(c.config)
 	c.AppPowerRental = NewAppPowerRentalClient(c.config)
 	c.AppSimulatePowerRental = NewAppSimulatePowerRentalClient(c.config)
 	c.AppStock = NewAppStockClient(c.config)
@@ -203,6 +210,7 @@ func (c *Client) init() {
 	c.GoodRewardHistory = NewGoodRewardHistoryClient(c.config)
 	c.Like = NewLikeClient(c.config)
 	c.MiningGoodStock = NewMiningGoodStockClient(c.config)
+	c.Pledge = NewPledgeClient(c.config)
 	c.PowerRental = NewPowerRentalClient(c.config)
 	c.Recommend = NewRecommendClient(c.config)
 	c.RequiredAppGood = NewRequiredAppGoodClient(c.config)
@@ -261,6 +269,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		AppGoodPoster:          NewAppGoodPosterClient(cfg),
 		AppLegacyPowerRental:   NewAppLegacyPowerRentalClient(cfg),
 		AppMiningGoodStock:     NewAppMiningGoodStockClient(cfg),
+		AppPledge:              NewAppPledgeClient(cfg),
 		AppPowerRental:         NewAppPowerRentalClient(cfg),
 		AppSimulatePowerRental: NewAppSimulatePowerRentalClient(cfg),
 		AppStock:               NewAppStockClient(cfg),
@@ -282,6 +291,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		GoodRewardHistory:      NewGoodRewardHistoryClient(cfg),
 		Like:                   NewLikeClient(cfg),
 		MiningGoodStock:        NewMiningGoodStockClient(cfg),
+		Pledge:                 NewPledgeClient(cfg),
 		PowerRental:            NewPowerRentalClient(cfg),
 		Recommend:              NewRecommendClient(cfg),
 		RequiredAppGood:        NewRequiredAppGoodClient(cfg),
@@ -326,6 +336,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		AppGoodPoster:          NewAppGoodPosterClient(cfg),
 		AppLegacyPowerRental:   NewAppLegacyPowerRentalClient(cfg),
 		AppMiningGoodStock:     NewAppMiningGoodStockClient(cfg),
+		AppPledge:              NewAppPledgeClient(cfg),
 		AppPowerRental:         NewAppPowerRentalClient(cfg),
 		AppSimulatePowerRental: NewAppSimulatePowerRentalClient(cfg),
 		AppStock:               NewAppStockClient(cfg),
@@ -347,6 +358,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		GoodRewardHistory:      NewGoodRewardHistoryClient(cfg),
 		Like:                   NewLikeClient(cfg),
 		MiningGoodStock:        NewMiningGoodStockClient(cfg),
+		Pledge:                 NewPledgeClient(cfg),
 		PowerRental:            NewPowerRentalClient(cfg),
 		Recommend:              NewRecommendClient(cfg),
 		RequiredAppGood:        NewRequiredAppGoodClient(cfg),
@@ -401,6 +413,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.AppGoodPoster.Use(hooks...)
 	c.AppLegacyPowerRental.Use(hooks...)
 	c.AppMiningGoodStock.Use(hooks...)
+	c.AppPledge.Use(hooks...)
 	c.AppPowerRental.Use(hooks...)
 	c.AppSimulatePowerRental.Use(hooks...)
 	c.AppStock.Use(hooks...)
@@ -422,6 +435,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.GoodRewardHistory.Use(hooks...)
 	c.Like.Use(hooks...)
 	c.MiningGoodStock.Use(hooks...)
+	c.Pledge.Use(hooks...)
 	c.PowerRental.Use(hooks...)
 	c.Recommend.Use(hooks...)
 	c.RequiredAppGood.Use(hooks...)
@@ -1437,6 +1451,97 @@ func (c *AppMiningGoodStockClient) GetX(ctx context.Context, id uint32) *AppMini
 func (c *AppMiningGoodStockClient) Hooks() []Hook {
 	hooks := c.hooks.AppMiningGoodStock
 	return append(hooks[:len(hooks):len(hooks)], appmininggoodstock.Hooks[:]...)
+}
+
+// AppPledgeClient is a client for the AppPledge schema.
+type AppPledgeClient struct {
+	config
+}
+
+// NewAppPledgeClient returns a client for the AppPledge from the given config.
+func NewAppPledgeClient(c config) *AppPledgeClient {
+	return &AppPledgeClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `apppledge.Hooks(f(g(h())))`.
+func (c *AppPledgeClient) Use(hooks ...Hook) {
+	c.hooks.AppPledge = append(c.hooks.AppPledge, hooks...)
+}
+
+// Create returns a builder for creating a AppPledge entity.
+func (c *AppPledgeClient) Create() *AppPledgeCreate {
+	mutation := newAppPledgeMutation(c.config, OpCreate)
+	return &AppPledgeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppPledge entities.
+func (c *AppPledgeClient) CreateBulk(builders ...*AppPledgeCreate) *AppPledgeCreateBulk {
+	return &AppPledgeCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppPledge.
+func (c *AppPledgeClient) Update() *AppPledgeUpdate {
+	mutation := newAppPledgeMutation(c.config, OpUpdate)
+	return &AppPledgeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppPledgeClient) UpdateOne(ap *AppPledge) *AppPledgeUpdateOne {
+	mutation := newAppPledgeMutation(c.config, OpUpdateOne, withAppPledge(ap))
+	return &AppPledgeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppPledgeClient) UpdateOneID(id uint32) *AppPledgeUpdateOne {
+	mutation := newAppPledgeMutation(c.config, OpUpdateOne, withAppPledgeID(id))
+	return &AppPledgeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppPledge.
+func (c *AppPledgeClient) Delete() *AppPledgeDelete {
+	mutation := newAppPledgeMutation(c.config, OpDelete)
+	return &AppPledgeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppPledgeClient) DeleteOne(ap *AppPledge) *AppPledgeDeleteOne {
+	return c.DeleteOneID(ap.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppPledgeClient) DeleteOneID(id uint32) *AppPledgeDeleteOne {
+	builder := c.Delete().Where(apppledge.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppPledgeDeleteOne{builder}
+}
+
+// Query returns a query builder for AppPledge.
+func (c *AppPledgeClient) Query() *AppPledgeQuery {
+	return &AppPledgeQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppPledge entity by its id.
+func (c *AppPledgeClient) Get(ctx context.Context, id uint32) (*AppPledge, error) {
+	return c.Query().Where(apppledge.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppPledgeClient) GetX(ctx context.Context, id uint32) *AppPledge {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppPledgeClient) Hooks() []Hook {
+	hooks := c.hooks.AppPledge
+	return append(hooks[:len(hooks):len(hooks)], apppledge.Hooks[:]...)
 }
 
 // AppPowerRentalClient is a client for the AppPowerRental schema.
@@ -3348,6 +3453,97 @@ func (c *MiningGoodStockClient) GetX(ctx context.Context, id uint32) *MiningGood
 func (c *MiningGoodStockClient) Hooks() []Hook {
 	hooks := c.hooks.MiningGoodStock
 	return append(hooks[:len(hooks):len(hooks)], mininggoodstock.Hooks[:]...)
+}
+
+// PledgeClient is a client for the Pledge schema.
+type PledgeClient struct {
+	config
+}
+
+// NewPledgeClient returns a client for the Pledge from the given config.
+func NewPledgeClient(c config) *PledgeClient {
+	return &PledgeClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `pledge.Hooks(f(g(h())))`.
+func (c *PledgeClient) Use(hooks ...Hook) {
+	c.hooks.Pledge = append(c.hooks.Pledge, hooks...)
+}
+
+// Create returns a builder for creating a Pledge entity.
+func (c *PledgeClient) Create() *PledgeCreate {
+	mutation := newPledgeMutation(c.config, OpCreate)
+	return &PledgeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Pledge entities.
+func (c *PledgeClient) CreateBulk(builders ...*PledgeCreate) *PledgeCreateBulk {
+	return &PledgeCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Pledge.
+func (c *PledgeClient) Update() *PledgeUpdate {
+	mutation := newPledgeMutation(c.config, OpUpdate)
+	return &PledgeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PledgeClient) UpdateOne(pl *Pledge) *PledgeUpdateOne {
+	mutation := newPledgeMutation(c.config, OpUpdateOne, withPledge(pl))
+	return &PledgeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PledgeClient) UpdateOneID(id uint32) *PledgeUpdateOne {
+	mutation := newPledgeMutation(c.config, OpUpdateOne, withPledgeID(id))
+	return &PledgeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Pledge.
+func (c *PledgeClient) Delete() *PledgeDelete {
+	mutation := newPledgeMutation(c.config, OpDelete)
+	return &PledgeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PledgeClient) DeleteOne(pl *Pledge) *PledgeDeleteOne {
+	return c.DeleteOneID(pl.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *PledgeClient) DeleteOneID(id uint32) *PledgeDeleteOne {
+	builder := c.Delete().Where(pledge.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PledgeDeleteOne{builder}
+}
+
+// Query returns a query builder for Pledge.
+func (c *PledgeClient) Query() *PledgeQuery {
+	return &PledgeQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Pledge entity by its id.
+func (c *PledgeClient) Get(ctx context.Context, id uint32) (*Pledge, error) {
+	return c.Query().Where(pledge.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PledgeClient) GetX(ctx context.Context, id uint32) *Pledge {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *PledgeClient) Hooks() []Hook {
+	hooks := c.hooks.Pledge
+	return append(hooks[:len(hooks):len(hooks)], pledge.Hooks[:]...)
 }
 
 // PowerRentalClient is a client for the PowerRental schema.

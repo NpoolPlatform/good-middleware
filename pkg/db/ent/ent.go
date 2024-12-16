@@ -21,6 +21,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppledge"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulatepowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
@@ -42,6 +43,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/pledge"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredappgood"
@@ -87,6 +89,7 @@ func columnChecker(table string) func(string) error {
 		appgoodposter.Table:          appgoodposter.ValidColumn,
 		applegacypowerrental.Table:   applegacypowerrental.ValidColumn,
 		appmininggoodstock.Table:     appmininggoodstock.ValidColumn,
+		apppledge.Table:              apppledge.ValidColumn,
 		apppowerrental.Table:         apppowerrental.ValidColumn,
 		appsimulatepowerrental.Table: appsimulatepowerrental.ValidColumn,
 		appstock.Table:               appstock.ValidColumn,
@@ -108,6 +111,7 @@ func columnChecker(table string) func(string) error {
 		goodrewardhistory.Table:      goodrewardhistory.ValidColumn,
 		like.Table:                   like.ValidColumn,
 		mininggoodstock.Table:        mininggoodstock.ValidColumn,
+		pledge.Table:                 pledge.ValidColumn,
 		powerrental.Table:            powerrental.ValidColumn,
 		recommend.Table:              recommend.ValidColumn,
 		requiredappgood.Table:        requiredappgood.ValidColumn,

@@ -19,6 +19,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppledge"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulatepowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
@@ -40,6 +41,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/pledge"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/predicate"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
@@ -81,6 +83,7 @@ const (
 	TypeAppGoodPoster          = "AppGoodPoster"
 	TypeAppLegacyPowerRental   = "AppLegacyPowerRental"
 	TypeAppMiningGoodStock     = "AppMiningGoodStock"
+	TypeAppPledge              = "AppPledge"
 	TypeAppPowerRental         = "AppPowerRental"
 	TypeAppSimulatePowerRental = "AppSimulatePowerRental"
 	TypeAppStock               = "AppStock"
@@ -102,6 +105,7 @@ const (
 	TypeGoodRewardHistory      = "GoodRewardHistory"
 	TypeLike                   = "Like"
 	TypeMiningGoodStock        = "MiningGoodStock"
+	TypePledge                 = "Pledge"
 	TypePowerRental            = "PowerRental"
 	TypeRecommend              = "Recommend"
 	TypeRequiredAppGood        = "RequiredAppGood"
@@ -12380,6 +12384,916 @@ func (m *AppMiningGoodStockMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *AppMiningGoodStockMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown AppMiningGoodStock edge %s", name)
+}
+
+// AppPledgeMutation represents an operation that mutates the AppPledge nodes in the graph.
+type AppPledgeMutation struct {
+	config
+	op                    Op
+	typ                   string
+	id                    *uint32
+	created_at            *uint32
+	addcreated_at         *int32
+	updated_at            *uint32
+	addupdated_at         *int32
+	deleted_at            *uint32
+	adddeleted_at         *int32
+	ent_id                *uuid.UUID
+	app_good_id           *uuid.UUID
+	service_start_at      *uint32
+	addservice_start_at   *int32
+	start_mode            *string
+	enable_set_commission *bool
+	clearedFields         map[string]struct{}
+	done                  bool
+	oldValue              func(context.Context) (*AppPledge, error)
+	predicates            []predicate.AppPledge
+}
+
+var _ ent.Mutation = (*AppPledgeMutation)(nil)
+
+// apppledgeOption allows management of the mutation configuration using functional options.
+type apppledgeOption func(*AppPledgeMutation)
+
+// newAppPledgeMutation creates new mutation for the AppPledge entity.
+func newAppPledgeMutation(c config, op Op, opts ...apppledgeOption) *AppPledgeMutation {
+	m := &AppPledgeMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeAppPledge,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withAppPledgeID sets the ID field of the mutation.
+func withAppPledgeID(id uint32) apppledgeOption {
+	return func(m *AppPledgeMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *AppPledge
+		)
+		m.oldValue = func(ctx context.Context) (*AppPledge, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().AppPledge.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withAppPledge sets the old AppPledge of the mutation.
+func withAppPledge(node *AppPledge) apppledgeOption {
+	return func(m *AppPledgeMutation) {
+		m.oldValue = func(context.Context) (*AppPledge, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m AppPledgeMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m AppPledgeMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of AppPledge entities.
+func (m *AppPledgeMutation) SetID(id uint32) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *AppPledgeMutation) ID() (id uint32, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *AppPledgeMutation) IDs(ctx context.Context) ([]uint32, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uint32{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().AppPledge.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *AppPledgeMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *AppPledgeMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the AppPledge entity.
+// If the AppPledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppPledgeMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *AppPledgeMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *AppPledgeMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *AppPledgeMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *AppPledgeMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *AppPledgeMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the AppPledge entity.
+// If the AppPledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppPledgeMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *AppPledgeMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *AppPledgeMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *AppPledgeMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *AppPledgeMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *AppPledgeMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the AppPledge entity.
+// If the AppPledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppPledgeMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *AppPledgeMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *AppPledgeMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *AppPledgeMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetEntID sets the "ent_id" field.
+func (m *AppPledgeMutation) SetEntID(u uuid.UUID) {
+	m.ent_id = &u
+}
+
+// EntID returns the value of the "ent_id" field in the mutation.
+func (m *AppPledgeMutation) EntID() (r uuid.UUID, exists bool) {
+	v := m.ent_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEntID returns the old "ent_id" field's value of the AppPledge entity.
+// If the AppPledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppPledgeMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEntID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEntID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEntID: %w", err)
+	}
+	return oldValue.EntID, nil
+}
+
+// ResetEntID resets all changes to the "ent_id" field.
+func (m *AppPledgeMutation) ResetEntID() {
+	m.ent_id = nil
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (m *AppPledgeMutation) SetAppGoodID(u uuid.UUID) {
+	m.app_good_id = &u
+}
+
+// AppGoodID returns the value of the "app_good_id" field in the mutation.
+func (m *AppPledgeMutation) AppGoodID() (r uuid.UUID, exists bool) {
+	v := m.app_good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppGoodID returns the old "app_good_id" field's value of the AppPledge entity.
+// If the AppPledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppPledgeMutation) OldAppGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppGoodID: %w", err)
+	}
+	return oldValue.AppGoodID, nil
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (m *AppPledgeMutation) ClearAppGoodID() {
+	m.app_good_id = nil
+	m.clearedFields[apppledge.FieldAppGoodID] = struct{}{}
+}
+
+// AppGoodIDCleared returns if the "app_good_id" field was cleared in this mutation.
+func (m *AppPledgeMutation) AppGoodIDCleared() bool {
+	_, ok := m.clearedFields[apppledge.FieldAppGoodID]
+	return ok
+}
+
+// ResetAppGoodID resets all changes to the "app_good_id" field.
+func (m *AppPledgeMutation) ResetAppGoodID() {
+	m.app_good_id = nil
+	delete(m.clearedFields, apppledge.FieldAppGoodID)
+}
+
+// SetServiceStartAt sets the "service_start_at" field.
+func (m *AppPledgeMutation) SetServiceStartAt(u uint32) {
+	m.service_start_at = &u
+	m.addservice_start_at = nil
+}
+
+// ServiceStartAt returns the value of the "service_start_at" field in the mutation.
+func (m *AppPledgeMutation) ServiceStartAt() (r uint32, exists bool) {
+	v := m.service_start_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldServiceStartAt returns the old "service_start_at" field's value of the AppPledge entity.
+// If the AppPledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppPledgeMutation) OldServiceStartAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldServiceStartAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldServiceStartAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldServiceStartAt: %w", err)
+	}
+	return oldValue.ServiceStartAt, nil
+}
+
+// AddServiceStartAt adds u to the "service_start_at" field.
+func (m *AppPledgeMutation) AddServiceStartAt(u int32) {
+	if m.addservice_start_at != nil {
+		*m.addservice_start_at += u
+	} else {
+		m.addservice_start_at = &u
+	}
+}
+
+// AddedServiceStartAt returns the value that was added to the "service_start_at" field in this mutation.
+func (m *AppPledgeMutation) AddedServiceStartAt() (r int32, exists bool) {
+	v := m.addservice_start_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearServiceStartAt clears the value of the "service_start_at" field.
+func (m *AppPledgeMutation) ClearServiceStartAt() {
+	m.service_start_at = nil
+	m.addservice_start_at = nil
+	m.clearedFields[apppledge.FieldServiceStartAt] = struct{}{}
+}
+
+// ServiceStartAtCleared returns if the "service_start_at" field was cleared in this mutation.
+func (m *AppPledgeMutation) ServiceStartAtCleared() bool {
+	_, ok := m.clearedFields[apppledge.FieldServiceStartAt]
+	return ok
+}
+
+// ResetServiceStartAt resets all changes to the "service_start_at" field.
+func (m *AppPledgeMutation) ResetServiceStartAt() {
+	m.service_start_at = nil
+	m.addservice_start_at = nil
+	delete(m.clearedFields, apppledge.FieldServiceStartAt)
+}
+
+// SetStartMode sets the "start_mode" field.
+func (m *AppPledgeMutation) SetStartMode(s string) {
+	m.start_mode = &s
+}
+
+// StartMode returns the value of the "start_mode" field in the mutation.
+func (m *AppPledgeMutation) StartMode() (r string, exists bool) {
+	v := m.start_mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStartMode returns the old "start_mode" field's value of the AppPledge entity.
+// If the AppPledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppPledgeMutation) OldStartMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStartMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStartMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStartMode: %w", err)
+	}
+	return oldValue.StartMode, nil
+}
+
+// ClearStartMode clears the value of the "start_mode" field.
+func (m *AppPledgeMutation) ClearStartMode() {
+	m.start_mode = nil
+	m.clearedFields[apppledge.FieldStartMode] = struct{}{}
+}
+
+// StartModeCleared returns if the "start_mode" field was cleared in this mutation.
+func (m *AppPledgeMutation) StartModeCleared() bool {
+	_, ok := m.clearedFields[apppledge.FieldStartMode]
+	return ok
+}
+
+// ResetStartMode resets all changes to the "start_mode" field.
+func (m *AppPledgeMutation) ResetStartMode() {
+	m.start_mode = nil
+	delete(m.clearedFields, apppledge.FieldStartMode)
+}
+
+// SetEnableSetCommission sets the "enable_set_commission" field.
+func (m *AppPledgeMutation) SetEnableSetCommission(b bool) {
+	m.enable_set_commission = &b
+}
+
+// EnableSetCommission returns the value of the "enable_set_commission" field in the mutation.
+func (m *AppPledgeMutation) EnableSetCommission() (r bool, exists bool) {
+	v := m.enable_set_commission
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEnableSetCommission returns the old "enable_set_commission" field's value of the AppPledge entity.
+// If the AppPledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppPledgeMutation) OldEnableSetCommission(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEnableSetCommission is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEnableSetCommission requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEnableSetCommission: %w", err)
+	}
+	return oldValue.EnableSetCommission, nil
+}
+
+// ClearEnableSetCommission clears the value of the "enable_set_commission" field.
+func (m *AppPledgeMutation) ClearEnableSetCommission() {
+	m.enable_set_commission = nil
+	m.clearedFields[apppledge.FieldEnableSetCommission] = struct{}{}
+}
+
+// EnableSetCommissionCleared returns if the "enable_set_commission" field was cleared in this mutation.
+func (m *AppPledgeMutation) EnableSetCommissionCleared() bool {
+	_, ok := m.clearedFields[apppledge.FieldEnableSetCommission]
+	return ok
+}
+
+// ResetEnableSetCommission resets all changes to the "enable_set_commission" field.
+func (m *AppPledgeMutation) ResetEnableSetCommission() {
+	m.enable_set_commission = nil
+	delete(m.clearedFields, apppledge.FieldEnableSetCommission)
+}
+
+// Where appends a list predicates to the AppPledgeMutation builder.
+func (m *AppPledgeMutation) Where(ps ...predicate.AppPledge) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *AppPledgeMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (AppPledge).
+func (m *AppPledgeMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *AppPledgeMutation) Fields() []string {
+	fields := make([]string, 0, 8)
+	if m.created_at != nil {
+		fields = append(fields, apppledge.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, apppledge.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, apppledge.FieldDeletedAt)
+	}
+	if m.ent_id != nil {
+		fields = append(fields, apppledge.FieldEntID)
+	}
+	if m.app_good_id != nil {
+		fields = append(fields, apppledge.FieldAppGoodID)
+	}
+	if m.service_start_at != nil {
+		fields = append(fields, apppledge.FieldServiceStartAt)
+	}
+	if m.start_mode != nil {
+		fields = append(fields, apppledge.FieldStartMode)
+	}
+	if m.enable_set_commission != nil {
+		fields = append(fields, apppledge.FieldEnableSetCommission)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *AppPledgeMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case apppledge.FieldCreatedAt:
+		return m.CreatedAt()
+	case apppledge.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case apppledge.FieldDeletedAt:
+		return m.DeletedAt()
+	case apppledge.FieldEntID:
+		return m.EntID()
+	case apppledge.FieldAppGoodID:
+		return m.AppGoodID()
+	case apppledge.FieldServiceStartAt:
+		return m.ServiceStartAt()
+	case apppledge.FieldStartMode:
+		return m.StartMode()
+	case apppledge.FieldEnableSetCommission:
+		return m.EnableSetCommission()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *AppPledgeMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case apppledge.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case apppledge.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case apppledge.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case apppledge.FieldEntID:
+		return m.OldEntID(ctx)
+	case apppledge.FieldAppGoodID:
+		return m.OldAppGoodID(ctx)
+	case apppledge.FieldServiceStartAt:
+		return m.OldServiceStartAt(ctx)
+	case apppledge.FieldStartMode:
+		return m.OldStartMode(ctx)
+	case apppledge.FieldEnableSetCommission:
+		return m.OldEnableSetCommission(ctx)
+	}
+	return nil, fmt.Errorf("unknown AppPledge field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AppPledgeMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case apppledge.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case apppledge.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case apppledge.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case apppledge.FieldEntID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEntID(v)
+		return nil
+	case apppledge.FieldAppGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppGoodID(v)
+		return nil
+	case apppledge.FieldServiceStartAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetServiceStartAt(v)
+		return nil
+	case apppledge.FieldStartMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStartMode(v)
+		return nil
+	case apppledge.FieldEnableSetCommission:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEnableSetCommission(v)
+		return nil
+	}
+	return fmt.Errorf("unknown AppPledge field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *AppPledgeMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, apppledge.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, apppledge.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, apppledge.FieldDeletedAt)
+	}
+	if m.addservice_start_at != nil {
+		fields = append(fields, apppledge.FieldServiceStartAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *AppPledgeMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case apppledge.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case apppledge.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case apppledge.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	case apppledge.FieldServiceStartAt:
+		return m.AddedServiceStartAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AppPledgeMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case apppledge.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case apppledge.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case apppledge.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	case apppledge.FieldServiceStartAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddServiceStartAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown AppPledge numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *AppPledgeMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(apppledge.FieldAppGoodID) {
+		fields = append(fields, apppledge.FieldAppGoodID)
+	}
+	if m.FieldCleared(apppledge.FieldServiceStartAt) {
+		fields = append(fields, apppledge.FieldServiceStartAt)
+	}
+	if m.FieldCleared(apppledge.FieldStartMode) {
+		fields = append(fields, apppledge.FieldStartMode)
+	}
+	if m.FieldCleared(apppledge.FieldEnableSetCommission) {
+		fields = append(fields, apppledge.FieldEnableSetCommission)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *AppPledgeMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *AppPledgeMutation) ClearField(name string) error {
+	switch name {
+	case apppledge.FieldAppGoodID:
+		m.ClearAppGoodID()
+		return nil
+	case apppledge.FieldServiceStartAt:
+		m.ClearServiceStartAt()
+		return nil
+	case apppledge.FieldStartMode:
+		m.ClearStartMode()
+		return nil
+	case apppledge.FieldEnableSetCommission:
+		m.ClearEnableSetCommission()
+		return nil
+	}
+	return fmt.Errorf("unknown AppPledge nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *AppPledgeMutation) ResetField(name string) error {
+	switch name {
+	case apppledge.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case apppledge.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case apppledge.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case apppledge.FieldEntID:
+		m.ResetEntID()
+		return nil
+	case apppledge.FieldAppGoodID:
+		m.ResetAppGoodID()
+		return nil
+	case apppledge.FieldServiceStartAt:
+		m.ResetServiceStartAt()
+		return nil
+	case apppledge.FieldStartMode:
+		m.ResetStartMode()
+		return nil
+	case apppledge.FieldEnableSetCommission:
+		m.ResetEnableSetCommission()
+		return nil
+	}
+	return fmt.Errorf("unknown AppPledge field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *AppPledgeMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *AppPledgeMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *AppPledgeMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *AppPledgeMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *AppPledgeMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *AppPledgeMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *AppPledgeMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown AppPledge unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *AppPledgeMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown AppPledge edge %s", name)
 }
 
 // AppPowerRentalMutation represents an operation that mutates the AppPowerRental nodes in the graph.
@@ -37146,6 +38060,882 @@ func (m *MiningGoodStockMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *MiningGoodStockMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown MiningGoodStock edge %s", name)
+}
+
+// PledgeMutation represents an operation that mutates the Pledge nodes in the graph.
+type PledgeMutation struct {
+	config
+	op                   Op
+	typ                  string
+	id                   *uint32
+	created_at           *uint32
+	addcreated_at        *int32
+	updated_at           *uint32
+	addupdated_at        *int32
+	deleted_at           *uint32
+	adddeleted_at        *int32
+	ent_id               *uuid.UUID
+	good_id              *uuid.UUID
+	contract_code_url    *string
+	contract_code_branch *string
+	contract_state       *string
+	clearedFields        map[string]struct{}
+	done                 bool
+	oldValue             func(context.Context) (*Pledge, error)
+	predicates           []predicate.Pledge
+}
+
+var _ ent.Mutation = (*PledgeMutation)(nil)
+
+// pledgeOption allows management of the mutation configuration using functional options.
+type pledgeOption func(*PledgeMutation)
+
+// newPledgeMutation creates new mutation for the Pledge entity.
+func newPledgeMutation(c config, op Op, opts ...pledgeOption) *PledgeMutation {
+	m := &PledgeMutation{
+		config:        c,
+		op:            op,
+		typ:           TypePledge,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withPledgeID sets the ID field of the mutation.
+func withPledgeID(id uint32) pledgeOption {
+	return func(m *PledgeMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Pledge
+		)
+		m.oldValue = func(ctx context.Context) (*Pledge, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Pledge.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withPledge sets the old Pledge of the mutation.
+func withPledge(node *Pledge) pledgeOption {
+	return func(m *PledgeMutation) {
+		m.oldValue = func(context.Context) (*Pledge, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m PledgeMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m PledgeMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Pledge entities.
+func (m *PledgeMutation) SetID(id uint32) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *PledgeMutation) ID() (id uint32, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *PledgeMutation) IDs(ctx context.Context) ([]uint32, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uint32{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Pledge.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *PledgeMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *PledgeMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the Pledge entity.
+// If the Pledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PledgeMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *PledgeMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *PledgeMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *PledgeMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *PledgeMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *PledgeMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the Pledge entity.
+// If the Pledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PledgeMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *PledgeMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *PledgeMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *PledgeMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *PledgeMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *PledgeMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the Pledge entity.
+// If the Pledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PledgeMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *PledgeMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *PledgeMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *PledgeMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetEntID sets the "ent_id" field.
+func (m *PledgeMutation) SetEntID(u uuid.UUID) {
+	m.ent_id = &u
+}
+
+// EntID returns the value of the "ent_id" field in the mutation.
+func (m *PledgeMutation) EntID() (r uuid.UUID, exists bool) {
+	v := m.ent_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEntID returns the old "ent_id" field's value of the Pledge entity.
+// If the Pledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PledgeMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEntID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEntID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEntID: %w", err)
+	}
+	return oldValue.EntID, nil
+}
+
+// ResetEntID resets all changes to the "ent_id" field.
+func (m *PledgeMutation) ResetEntID() {
+	m.ent_id = nil
+}
+
+// SetGoodID sets the "good_id" field.
+func (m *PledgeMutation) SetGoodID(u uuid.UUID) {
+	m.good_id = &u
+}
+
+// GoodID returns the value of the "good_id" field in the mutation.
+func (m *PledgeMutation) GoodID() (r uuid.UUID, exists bool) {
+	v := m.good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGoodID returns the old "good_id" field's value of the Pledge entity.
+// If the Pledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PledgeMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGoodID: %w", err)
+	}
+	return oldValue.GoodID, nil
+}
+
+// ClearGoodID clears the value of the "good_id" field.
+func (m *PledgeMutation) ClearGoodID() {
+	m.good_id = nil
+	m.clearedFields[pledge.FieldGoodID] = struct{}{}
+}
+
+// GoodIDCleared returns if the "good_id" field was cleared in this mutation.
+func (m *PledgeMutation) GoodIDCleared() bool {
+	_, ok := m.clearedFields[pledge.FieldGoodID]
+	return ok
+}
+
+// ResetGoodID resets all changes to the "good_id" field.
+func (m *PledgeMutation) ResetGoodID() {
+	m.good_id = nil
+	delete(m.clearedFields, pledge.FieldGoodID)
+}
+
+// SetContractCodeURL sets the "contract_code_url" field.
+func (m *PledgeMutation) SetContractCodeURL(s string) {
+	m.contract_code_url = &s
+}
+
+// ContractCodeURL returns the value of the "contract_code_url" field in the mutation.
+func (m *PledgeMutation) ContractCodeURL() (r string, exists bool) {
+	v := m.contract_code_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldContractCodeURL returns the old "contract_code_url" field's value of the Pledge entity.
+// If the Pledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PledgeMutation) OldContractCodeURL(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldContractCodeURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldContractCodeURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldContractCodeURL: %w", err)
+	}
+	return oldValue.ContractCodeURL, nil
+}
+
+// ClearContractCodeURL clears the value of the "contract_code_url" field.
+func (m *PledgeMutation) ClearContractCodeURL() {
+	m.contract_code_url = nil
+	m.clearedFields[pledge.FieldContractCodeURL] = struct{}{}
+}
+
+// ContractCodeURLCleared returns if the "contract_code_url" field was cleared in this mutation.
+func (m *PledgeMutation) ContractCodeURLCleared() bool {
+	_, ok := m.clearedFields[pledge.FieldContractCodeURL]
+	return ok
+}
+
+// ResetContractCodeURL resets all changes to the "contract_code_url" field.
+func (m *PledgeMutation) ResetContractCodeURL() {
+	m.contract_code_url = nil
+	delete(m.clearedFields, pledge.FieldContractCodeURL)
+}
+
+// SetContractCodeBranch sets the "contract_code_branch" field.
+func (m *PledgeMutation) SetContractCodeBranch(s string) {
+	m.contract_code_branch = &s
+}
+
+// ContractCodeBranch returns the value of the "contract_code_branch" field in the mutation.
+func (m *PledgeMutation) ContractCodeBranch() (r string, exists bool) {
+	v := m.contract_code_branch
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldContractCodeBranch returns the old "contract_code_branch" field's value of the Pledge entity.
+// If the Pledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PledgeMutation) OldContractCodeBranch(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldContractCodeBranch is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldContractCodeBranch requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldContractCodeBranch: %w", err)
+	}
+	return oldValue.ContractCodeBranch, nil
+}
+
+// ClearContractCodeBranch clears the value of the "contract_code_branch" field.
+func (m *PledgeMutation) ClearContractCodeBranch() {
+	m.contract_code_branch = nil
+	m.clearedFields[pledge.FieldContractCodeBranch] = struct{}{}
+}
+
+// ContractCodeBranchCleared returns if the "contract_code_branch" field was cleared in this mutation.
+func (m *PledgeMutation) ContractCodeBranchCleared() bool {
+	_, ok := m.clearedFields[pledge.FieldContractCodeBranch]
+	return ok
+}
+
+// ResetContractCodeBranch resets all changes to the "contract_code_branch" field.
+func (m *PledgeMutation) ResetContractCodeBranch() {
+	m.contract_code_branch = nil
+	delete(m.clearedFields, pledge.FieldContractCodeBranch)
+}
+
+// SetContractState sets the "contract_state" field.
+func (m *PledgeMutation) SetContractState(s string) {
+	m.contract_state = &s
+}
+
+// ContractState returns the value of the "contract_state" field in the mutation.
+func (m *PledgeMutation) ContractState() (r string, exists bool) {
+	v := m.contract_state
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldContractState returns the old "contract_state" field's value of the Pledge entity.
+// If the Pledge object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PledgeMutation) OldContractState(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldContractState is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldContractState requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldContractState: %w", err)
+	}
+	return oldValue.ContractState, nil
+}
+
+// ClearContractState clears the value of the "contract_state" field.
+func (m *PledgeMutation) ClearContractState() {
+	m.contract_state = nil
+	m.clearedFields[pledge.FieldContractState] = struct{}{}
+}
+
+// ContractStateCleared returns if the "contract_state" field was cleared in this mutation.
+func (m *PledgeMutation) ContractStateCleared() bool {
+	_, ok := m.clearedFields[pledge.FieldContractState]
+	return ok
+}
+
+// ResetContractState resets all changes to the "contract_state" field.
+func (m *PledgeMutation) ResetContractState() {
+	m.contract_state = nil
+	delete(m.clearedFields, pledge.FieldContractState)
+}
+
+// Where appends a list predicates to the PledgeMutation builder.
+func (m *PledgeMutation) Where(ps ...predicate.Pledge) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *PledgeMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Pledge).
+func (m *PledgeMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *PledgeMutation) Fields() []string {
+	fields := make([]string, 0, 8)
+	if m.created_at != nil {
+		fields = append(fields, pledge.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, pledge.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, pledge.FieldDeletedAt)
+	}
+	if m.ent_id != nil {
+		fields = append(fields, pledge.FieldEntID)
+	}
+	if m.good_id != nil {
+		fields = append(fields, pledge.FieldGoodID)
+	}
+	if m.contract_code_url != nil {
+		fields = append(fields, pledge.FieldContractCodeURL)
+	}
+	if m.contract_code_branch != nil {
+		fields = append(fields, pledge.FieldContractCodeBranch)
+	}
+	if m.contract_state != nil {
+		fields = append(fields, pledge.FieldContractState)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *PledgeMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case pledge.FieldCreatedAt:
+		return m.CreatedAt()
+	case pledge.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case pledge.FieldDeletedAt:
+		return m.DeletedAt()
+	case pledge.FieldEntID:
+		return m.EntID()
+	case pledge.FieldGoodID:
+		return m.GoodID()
+	case pledge.FieldContractCodeURL:
+		return m.ContractCodeURL()
+	case pledge.FieldContractCodeBranch:
+		return m.ContractCodeBranch()
+	case pledge.FieldContractState:
+		return m.ContractState()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *PledgeMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case pledge.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case pledge.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case pledge.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case pledge.FieldEntID:
+		return m.OldEntID(ctx)
+	case pledge.FieldGoodID:
+		return m.OldGoodID(ctx)
+	case pledge.FieldContractCodeURL:
+		return m.OldContractCodeURL(ctx)
+	case pledge.FieldContractCodeBranch:
+		return m.OldContractCodeBranch(ctx)
+	case pledge.FieldContractState:
+		return m.OldContractState(ctx)
+	}
+	return nil, fmt.Errorf("unknown Pledge field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *PledgeMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case pledge.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case pledge.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case pledge.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case pledge.FieldEntID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEntID(v)
+		return nil
+	case pledge.FieldGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGoodID(v)
+		return nil
+	case pledge.FieldContractCodeURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContractCodeURL(v)
+		return nil
+	case pledge.FieldContractCodeBranch:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContractCodeBranch(v)
+		return nil
+	case pledge.FieldContractState:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContractState(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Pledge field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *PledgeMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, pledge.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, pledge.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, pledge.FieldDeletedAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *PledgeMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case pledge.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case pledge.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case pledge.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *PledgeMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case pledge.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case pledge.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case pledge.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Pledge numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *PledgeMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(pledge.FieldGoodID) {
+		fields = append(fields, pledge.FieldGoodID)
+	}
+	if m.FieldCleared(pledge.FieldContractCodeURL) {
+		fields = append(fields, pledge.FieldContractCodeURL)
+	}
+	if m.FieldCleared(pledge.FieldContractCodeBranch) {
+		fields = append(fields, pledge.FieldContractCodeBranch)
+	}
+	if m.FieldCleared(pledge.FieldContractState) {
+		fields = append(fields, pledge.FieldContractState)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *PledgeMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *PledgeMutation) ClearField(name string) error {
+	switch name {
+	case pledge.FieldGoodID:
+		m.ClearGoodID()
+		return nil
+	case pledge.FieldContractCodeURL:
+		m.ClearContractCodeURL()
+		return nil
+	case pledge.FieldContractCodeBranch:
+		m.ClearContractCodeBranch()
+		return nil
+	case pledge.FieldContractState:
+		m.ClearContractState()
+		return nil
+	}
+	return fmt.Errorf("unknown Pledge nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *PledgeMutation) ResetField(name string) error {
+	switch name {
+	case pledge.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case pledge.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case pledge.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case pledge.FieldEntID:
+		m.ResetEntID()
+		return nil
+	case pledge.FieldGoodID:
+		m.ResetGoodID()
+		return nil
+	case pledge.FieldContractCodeURL:
+		m.ResetContractCodeURL()
+		return nil
+	case pledge.FieldContractCodeBranch:
+		m.ResetContractCodeBranch()
+		return nil
+	case pledge.FieldContractState:
+		m.ResetContractState()
+		return nil
+	}
+	return fmt.Errorf("unknown Pledge field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *PledgeMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *PledgeMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *PledgeMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *PledgeMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *PledgeMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *PledgeMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *PledgeMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Pledge unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *PledgeMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Pledge edge %s", name)
 }
 
 // PowerRentalMutation represents an operation that mutates the PowerRental nodes in the graph.
