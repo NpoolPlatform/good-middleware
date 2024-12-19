@@ -19,7 +19,6 @@ type Req struct {
 	DeletedAt           *uint32
 }
 
-//nolint:gocyclo
 func CreateSet(c *ent.AppPledgeCreate, req *Req) *ent.AppPledgeCreate {
 	if req.EntID != nil {
 		c.SetEntID(*req.EntID)
@@ -39,7 +38,6 @@ func CreateSet(c *ent.AppPledgeCreate, req *Req) *ent.AppPledgeCreate {
 	return c
 }
 
-//nolint:gocyclo
 func UpdateSet(u *ent.AppPledgeUpdateOne, req *Req) *ent.AppPledgeUpdateOne {
 	if req.ServiceStartAt != nil {
 		u.SetServiceStartAt(*req.ServiceStartAt)
