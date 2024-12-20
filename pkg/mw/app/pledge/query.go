@@ -424,17 +424,11 @@ func (h *queryHandler) formalize() {
 		requireds[required.MainAppGoodID] = append(requireds[required.MainAppGoodID], required)
 	}
 	for _, info := range h.infos {
-		info.MinOrderAmount = func() string { amount, _ := decimal.NewFromString(info.MinOrderAmount); return amount.String() }()
-		info.MaxOrderAmount = func() string { amount, _ := decimal.NewFromString(info.MaxOrderAmount); return amount.String() }()
-		info.MaxUserAmount = func() string { amount, _ := decimal.NewFromString(info.MaxUserAmount); return amount.String() }()
 		info.Score = func() string { amount, _ := decimal.NewFromString(info.Score); return amount.String() }()
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
-		info.CancelMode = types.CancelMode(types.CancelMode_value[info.CancelModeStr])
-		info.SaleMode = types.GoodSaleMode(types.GoodSaleMode_value[info.SaleModeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.GoodStartMode = types.GoodStartMode(types.GoodStartMode_value[info.GoodStartModeStr])
 		info.AppGoodStartMode = types.GoodStartMode(types.GoodStartMode_value[info.AppGoodStartModeStr])
-		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
 		info.State = types.GoodState(types.GoodState_value[info.StateStr])
 		info.ContractState = types.ContractState(types.ContractState_value[info.ContractStateStr])
 		info.GoodCoins = goodCoins[info.GoodID]
@@ -444,7 +438,6 @@ func (h *queryHandler) formalize() {
 		info.DisplayNames = displayNames[info.AppGoodID]
 		info.DisplayColors = displayColors[info.AppGoodID]
 		info.Rewards = coinRewards[info.GoodID]
-		info.Requireds = requireds[info.AppGoodID]
 	}
 }
 

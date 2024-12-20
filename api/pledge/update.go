@@ -35,7 +35,6 @@ func (s *Server) UpdatePledge(ctx context.Context, in *npool.UpdatePledgeRequest
 		pledge1.WithBenefitIntervalHours(req.BenefitIntervalHours, false),
 		pledge1.WithPurchasable(req.Purchasable, false),
 		pledge1.WithOnline(req.Online, false),
-		pledge1.WithState(req.State, false),
 
 		pledge1.WithRewardState(req.RewardState, false),
 		pledge1.WithRewardAt(req.RewardAt, false),

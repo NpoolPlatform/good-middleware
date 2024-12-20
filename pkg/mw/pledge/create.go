@@ -130,6 +130,7 @@ func (h *Handler) CreatePledge(ctx context.Context) error {
 	}
 
 	h.GoodBaseReq.BenefitType = func() *types.BenefitType { e := types.BenefitType_BenefitTypeContract; return &e }()
+	h.GoodBaseReq.State = func() *types.GoodState { e := types.GoodState_GoodStateReady; return &e }()
 	h.ContractState = func() *types.ContractState { e := types.ContractState_ContractWaitDeployment; return &e }()
 	handler.formalizeEntIDs()
 	handler.constructPledgeSQL()

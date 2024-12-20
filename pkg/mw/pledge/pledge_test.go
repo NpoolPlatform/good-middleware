@@ -40,9 +40,6 @@ var ret = npool.Pledge{
 	ContractState:      types.ContractState_ContractWaitDeployment,
 	ContractStateStr:   types.ContractState_ContractWaitDeployment.String(),
 
-	UnitPrice:          decimal.NewFromInt(0).String(),
-	QuantityUnitAmount: decimal.NewFromInt(0).String(),
-
 	GoodType:             types.GoodType_Pledge,
 	GoodTypeStr:          types.GoodType_Pledge.String(),
 	BenefitType:          types.BenefitType_BenefitTypeContract,
@@ -52,7 +49,6 @@ var ret = npool.Pledge{
 	StartMode:            types.GoodStartMode_GoodStartModeInstantly,
 	StartModeStr:         types.GoodStartMode_GoodStartModeInstantly.String(),
 	BenefitIntervalHours: 20,
-	UnitLockDeposit:      decimal.NewFromInt(0).String(),
 
 	GoodCoins: []*goodcoinmwpb.GoodCoinInfo{
 		{
@@ -71,8 +67,8 @@ var ret = npool.Pledge{
 
 	RewardState:    types.BenefitState_BenefitWait,
 	RewardStateStr: types.BenefitState_BenefitWait.String(),
-	State:          types.GoodState_GoodStatePreWait,
-	StateStr:       types.GoodState_GoodStatePreWait.String(),
+	State:          types.GoodState_GoodStateReady,
+	StateStr:       types.GoodState_GoodStateReady.String(),
 }
 
 //nolint:unparam

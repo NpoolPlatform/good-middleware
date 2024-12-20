@@ -170,12 +170,8 @@ func (h *queryHandler) formalize() {
 		coinRewards[coinReward.GoodID] = append(coinRewards[coinReward.GoodID], coinReward)
 	}
 	for _, info := range h.infos {
-		info.UnitPrice = func() string { amount, _ := decimal.NewFromString(info.UnitPrice); return amount.String() }()
-		info.QuantityUnitAmount = func() string { amount, _ := decimal.NewFromString(info.QuantityUnitAmount); return amount.String() }()
-		info.UnitLockDeposit = func() string { amount, _ := decimal.NewFromString(info.UnitLockDeposit); return amount.String() }()
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
-		info.DurationDisplayType = types.GoodDurationType(types.GoodDurationType_value[info.DurationDisplayTypeStr])
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
 		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
 		info.RewardState = types.BenefitState(types.BenefitState_value[info.RewardStateStr])
