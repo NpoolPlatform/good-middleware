@@ -149,6 +149,7 @@ func WithBenefitType(e *types.BenefitType, must bool) func(context.Context, *Han
 			return nil
 		}
 		switch *e {
+		case types.BenefitType_BenefitTypeContract:
 		case types.BenefitType_BenefitTypePlatform:
 		case types.BenefitType_BenefitTypePool:
 		case types.BenefitType_BenefitTypeOffline:

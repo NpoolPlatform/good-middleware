@@ -45,7 +45,7 @@ var ret = &npool.Pledge{
 	QuantityUnitAmount:   decimal.NewFromInt(0).String(),
 	UnitLockDeposit:      decimal.NewFromInt(0).String(),
 	GoodType:             types.GoodType_Pledge,
-	BenefitType:          types.BenefitType_BenefitTypePlatform,
+	BenefitType:          types.BenefitType_BenefitTypeContract,
 	Name:                 uuid.NewString(),
 	ServiceStartAt:       uint32(time.Now().Unix()),
 	StartMode:            types.GoodStartMode_GoodStartModeInstantly,

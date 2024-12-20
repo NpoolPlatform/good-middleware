@@ -46,7 +46,7 @@ var ret = &npool.Pledge{
 	AppGoodID: uuid.NewString(),
 
 	GoodType:             types.GoodType_Pledge,
-	BenefitType:          types.BenefitType_BenefitTypePlatform,
+	BenefitType:          types.BenefitType_BenefitTypeContract,
 	GoodName:             uuid.NewString(),
 	GoodServiceStartAt:   uint32(time.Now().Unix()),
 	GoodStartMode:        types.GoodStartMode_GoodStartModeInstantly,

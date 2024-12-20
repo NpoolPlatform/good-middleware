@@ -55,13 +55,14 @@ func UpdateSet(u *ent.PledgeUpdateOne, req *Req) *ent.PledgeUpdateOne {
 }
 
 type Conds struct {
-	ID            *cruder.Cond
-	IDs           *cruder.Cond
-	EntID         *cruder.Cond
-	EntIDs        *cruder.Cond
-	GoodID        *cruder.Cond
-	GoodIDs       *cruder.Cond
-	ContractState *cruder.Cond
+	ID             *cruder.Cond
+	IDs            *cruder.Cond
+	EntID          *cruder.Cond
+	EntIDs         *cruder.Cond
+	GoodID         *cruder.Cond
+	GoodIDs        *cruder.Cond
+	ContractState  *cruder.Cond
+	ContractStates *cruder.Cond
 }
 
 // nolint
@@ -159,7 +160,23 @@ func SetQueryConds(q *ent.PledgeQuery, conds *Conds) (*ent.PledgeQuery, error) {
 		case cruder.NEQ:
 			q.Where(entpledge.ContractStateNEQ(_mode.String()))
 		default:
-			return nil, wlog.Errorf("invalid contractstate field")
+			return nil, wlog.Errorf("invalid pledge field")
+		}
+	}
+	if conds.ContractStates != nil {
+		_types, ok := conds.ContractStates.Val.([]types.ContractState)
+		if !ok {
+			return nil, wlog.Errorf("invalid contractstates")
+		}
+		es := []string{}
+		for _, _type := range _types {
+			es = append(es, _type.String())
+		}
+		switch conds.ContractStates.Op {
+		case cruder.IN:
+			q.Where(entpledge.ContractStateIn(es...))
+		default:
+			return nil, wlog.Errorf("invalid pledge field")
 		}
 	}
 	return q, nil
