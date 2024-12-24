@@ -17,7 +17,6 @@ import (
 	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	goodcoinmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin"
 	goodcoinrewardmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin/reward"
-	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/pledge"
 
 	"github.com/google/uuid"
@@ -26,12 +25,11 @@ import (
 
 type queryHandler struct {
 	*baseQueryHandler
-	stmCount         *ent.GoodBaseSelect
-	infos            []*npool.Pledge
-	miningGoodStocks []*stockmwpb.MiningGoodStock
-	goodCoins        []*goodcoinmwpb.GoodCoinInfo
-	coinRewards      []*goodcoinrewardmwpb.RewardInfo
-	total            uint32
+	stmCount    *ent.GoodBaseSelect
+	infos       []*npool.Pledge
+	goodCoins   []*goodcoinmwpb.GoodCoinInfo
+	coinRewards []*goodcoinrewardmwpb.RewardInfo
+	total       uint32
 }
 
 func (h *queryHandler) queryJoin() {
@@ -133,20 +131,9 @@ func (h *queryHandler) getCoinRewards(ctx context.Context, cli *ent.Client) erro
 }
 
 func (h *queryHandler) formalize() {
-	goodMiningStocks := map[string][]*stockmwpb.MiningGoodStock{}
 	goodCoins := map[string][]*goodcoinmwpb.GoodCoinInfo{}
 	coinRewards := map[string][]*goodcoinrewardmwpb.RewardInfo{}
 
-	for _, stock := range h.miningGoodStocks {
-		stock.Total = func() string { amount, _ := decimal.NewFromString(stock.Total); return amount.String() }()
-		stock.SpotQuantity = func() string { amount, _ := decimal.NewFromString(stock.SpotQuantity); return amount.String() }()
-		stock.Locked = func() string { amount, _ := decimal.NewFromString(stock.Locked); return amount.String() }()
-		stock.WaitStart = func() string { amount, _ := decimal.NewFromString(stock.WaitStart); return amount.String() }()
-		stock.InService = func() string { amount, _ := decimal.NewFromString(stock.InService); return amount.String() }()
-		stock.Sold = func() string { amount, _ := decimal.NewFromString(stock.Sold); return amount.String() }()
-		stock.State = types.MiningGoodStockState(types.MiningGoodStockState_value[stock.StateStr])
-		goodMiningStocks[stock.GoodStockID] = append(goodMiningStocks[stock.GoodStockID], stock)
-	}
 	for _, goodCoin := range h.goodCoins {
 		goodCoins[goodCoin.GoodID] = append(goodCoins[goodCoin.GoodID], goodCoin)
 	}
@@ -173,7 +160,6 @@ func (h *queryHandler) formalize() {
 		info.GoodType = types.GoodType(types.GoodType_value[info.GoodTypeStr])
 		info.BenefitType = types.BenefitType(types.BenefitType_value[info.BenefitTypeStr])
 		info.StartMode = types.GoodStartMode(types.GoodStartMode_value[info.StartModeStr])
-		info.StockMode = types.GoodStockMode(types.GoodStockMode_value[info.StockModeStr])
 		info.RewardState = types.BenefitState(types.BenefitState_value[info.RewardStateStr])
 		info.ContractState = types.ContractState(types.ContractState_value[info.ContractStateStr])
 		info.State = types.GoodState(types.GoodState_value[info.StateStr])

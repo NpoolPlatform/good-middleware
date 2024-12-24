@@ -38,11 +38,9 @@ import (
 	appgoodlabelmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/label"
 	appgoodpostermwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/poster"
 	requiredappgoodmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/required"
-	appmininggoodstockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/app/good/stock/mining"
 	npool "github.com/NpoolPlatform/message/npool/good/mw/v1/app/pledge"
 	goodcoinmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin"
 	goodcoinrewardmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/coin/reward"
-	stockmwpb "github.com/NpoolPlatform/message/npool/good/mw/v1/good/stock"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -50,19 +48,17 @@ import (
 
 type queryHandler struct {
 	*baseQueryHandler
-	stmCount            *ent.AppGoodBaseSelect
-	infos               []*npool.Pledge
-	miningGoodStocks    []*stockmwpb.MiningGoodStockInfo
-	appMiningGoodStocks []*appmininggoodstockmwpb.StockInfo
-	goodCoins           []*goodcoinmwpb.GoodCoinInfo
-	descriptions        []*appgooddescriptionmwpb.DescriptionInfo
-	posters             []*appgoodpostermwpb.PosterInfo
-	labels              []*appgoodlabelmwpb.LabelInfo
-	displayNames        []*appgooddisplaynamemwpb.DisplayNameInfo
-	displayColors       []*appgooddisplaycolormwpb.DisplayColorInfo
-	coinRewards         []*goodcoinrewardmwpb.RewardInfo
-	requiredAppGoods    []*requiredappgoodmwpb.RequiredInfo
-	total               uint32
+	stmCount         *ent.AppGoodBaseSelect
+	infos            []*npool.Pledge
+	goodCoins        []*goodcoinmwpb.GoodCoinInfo
+	descriptions     []*appgooddescriptionmwpb.DescriptionInfo
+	posters          []*appgoodpostermwpb.PosterInfo
+	labels           []*appgoodlabelmwpb.LabelInfo
+	displayNames     []*appgooddisplaynamemwpb.DisplayNameInfo
+	displayColors    []*appgooddisplaycolormwpb.DisplayColorInfo
+	coinRewards      []*goodcoinrewardmwpb.RewardInfo
+	requiredAppGoods []*requiredappgoodmwpb.RequiredInfo
+	total            uint32
 }
 
 func (h *queryHandler) queryJoin() {
@@ -355,8 +351,6 @@ func (h *queryHandler) getRequiredAppGoods(ctx context.Context, cli *ent.Client)
 
 //nolint:funlen
 func (h *queryHandler) formalize() {
-	miningGoodStocks := map[string][]*stockmwpb.MiningGoodStockInfo{}
-	appMiningGoodStocks := map[string][]*appmininggoodstockmwpb.StockInfo{}
 	goodCoins := map[string][]*goodcoinmwpb.GoodCoinInfo{}
 	descriptions := map[string][]*appgooddescriptionmwpb.DescriptionInfo{}
 	posters := map[string][]*appgoodpostermwpb.PosterInfo{}
@@ -365,21 +359,6 @@ func (h *queryHandler) formalize() {
 	displayColors := map[string][]*appgooddisplaycolormwpb.DisplayColorInfo{}
 	coinRewards := map[string][]*goodcoinrewardmwpb.RewardInfo{}
 	requireds := map[string][]*requiredappgoodmwpb.RequiredInfo{}
-
-	for _, stock := range h.miningGoodStocks {
-		stock.Total = func() string { amount, _ := decimal.NewFromString(stock.Total); return amount.String() }()
-		stock.SpotQuantity = func() string { amount, _ := decimal.NewFromString(stock.SpotQuantity); return amount.String() }()
-		miningGoodStocks[stock.GoodStockID] = append(miningGoodStocks[stock.GoodStockID], stock)
-	}
-	for _, stock := range h.appMiningGoodStocks {
-		stock.Reserved = func() string { amount, _ := decimal.NewFromString(stock.Reserved); return amount.String() }()
-		stock.SpotQuantity = func() string { amount, _ := decimal.NewFromString(stock.SpotQuantity); return amount.String() }()
-		stock.Locked = func() string { amount, _ := decimal.NewFromString(stock.Locked); return amount.String() }()
-		stock.WaitStart = func() string { amount, _ := decimal.NewFromString(stock.WaitStart); return amount.String() }()
-		stock.InService = func() string { amount, _ := decimal.NewFromString(stock.InService); return amount.String() }()
-		stock.Sold = func() string { amount, _ := decimal.NewFromString(stock.Sold); return amount.String() }()
-		appMiningGoodStocks[stock.AppGoodStockID] = append(appMiningGoodStocks[stock.AppGoodStockID], stock)
-	}
 	for _, goodCoin := range h.goodCoins {
 		goodCoins[goodCoin.GoodID] = append(goodCoins[goodCoin.GoodID], goodCoin)
 	}
