@@ -39,6 +39,9 @@ func (s *Server) UpdatePledge(ctx context.Context, in *npool.UpdatePledgeRequest
 		pledge1.WithRewardState(req.RewardState, false),
 		pledge1.WithRewardAt(req.RewardAt, false),
 		pledge1.WithRewards(req.Rewards, false),
+		pledge1.WithContractCodeURL(req.ContractCodeURL, false),
+		pledge1.WithContractCodeBranch(req.ContractCodeBranch, false),
+		pledge1.WithContractState(req.ContractState, false),
 		pledge1.WithRollback(req.Rollback, false),
 	)
 	if err != nil {
