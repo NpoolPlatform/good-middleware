@@ -174,7 +174,7 @@ func (h *updateHandler) constructPledgeSQL() {
 	_sql += fmt.Sprintf("where id = %v ", *h.ID)
 	_sql += "and exists ("
 	_sql += "select 1 from ("
-	_sql += "select * from power_rentals as pr "
+	_sql += "select * from pledges as pr "
 	_sql += fmt.Sprintf("where pr.good_id = '%v'", *h.GoodID)
 	_sql += " limit 1) as tmp)"
 	h.sqlPledge = _sql
