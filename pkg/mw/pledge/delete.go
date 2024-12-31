@@ -2,6 +2,7 @@ package pledge
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	wlog "github.com/NpoolPlatform/go-service-framework/pkg/wlog"
@@ -10,6 +11,7 @@ import (
 	pledgecrud "github.com/NpoolPlatform/good-middleware/pkg/crud/pledge"
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
+	entgoodcoin "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
 )
 
 type deleteHandler struct {
@@ -62,6 +64,31 @@ func (h *deleteHandler) deleteReward(ctx context.Context, tx *ent.Tx) error {
 	return nil
 }
 
+func (h *deleteHandler) deleteGoodCoin(ctx context.Context, tx *ent.Tx) error {
+	fmt.Println("--h.goodCoins: ", h.goodCoins)
+	if h.goodCoins == nil {
+		return nil
+	}
+	ids := []uint32{}
+	for _, coin := range h.goodCoins {
+		ids = append(ids, coin.ID)
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	if _, err := tx.GoodCoin.
+		Update().
+		Where(
+			entgoodcoin.IDIn(ids...),
+			entgoodcoin.DeletedAt(0),
+		).
+		SetDeletedAt(h.now).
+		Save(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (h *Handler) DeletePledge(ctx context.Context) error {
 	handler := &deleteHandler{
 		pledgeGoodQueryHandler: &pledgeGoodQueryHandler{
@@ -83,6 +110,9 @@ func (h *Handler) DeletePledge(ctx context.Context) error {
 			return err
 		}
 		if err := handler.deleteReward(_ctx, tx); err != nil {
+			return err
+		}
+		if err := handler.deleteGoodCoin(_ctx, tx); err != nil {
 			return err
 		}
 		return handler.deletePledge(_ctx, tx)

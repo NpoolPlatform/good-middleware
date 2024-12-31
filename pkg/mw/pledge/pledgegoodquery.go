@@ -7,6 +7,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entgoodbase "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodbase"
+	entgoodcoin "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoin"
 	entgoodcoinreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodcoinreward"
 	entgoodreward "github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodreward"
 	entpledge "github.com/NpoolPlatform/good-middleware/pkg/db/ent/pledge"
@@ -17,6 +18,7 @@ type pledgeGoodQueryHandler struct {
 	pledge      *ent.Pledge
 	goodBase    *ent.GoodBase
 	goodReward  *ent.GoodReward
+	goodCoins   []*ent.GoodCoin
 	coinRewards []*ent.GoodCoinReward
 }
 
@@ -72,6 +74,18 @@ func (h *pledgeGoodQueryHandler) getGoodReward(ctx context.Context, cli *ent.Cli
 	return nil
 }
 
+func (h *pledgeGoodQueryHandler) getGoodCoins(ctx context.Context, cli *ent.Client) (err error) {
+	h.goodCoins, err = cli.
+		GoodCoin.
+		Query().
+		Where(
+			entgoodcoin.GoodID(h.pledge.GoodID),
+			entgoodcoin.DeletedAt(0),
+		).
+		All(ctx)
+	return wlog.WrapError(err)
+}
+
 func (h *pledgeGoodQueryHandler) getGoodCoinRewards(ctx context.Context, cli *ent.Client) (err error) {
 	h.coinRewards, err = cli.
 		GoodCoinReward.
@@ -103,6 +117,9 @@ func (h *pledgeGoodQueryHandler) _getPledgeGood(ctx context.Context, must bool) 
 			return wlog.WrapError(err)
 		}
 		if err := h.getGoodCoinRewards(_ctx, cli); err != nil {
+			return wlog.WrapError(err)
+		}
+		if err := h.getGoodCoins(_ctx, cli); err != nil {
 			return wlog.WrapError(err)
 		}
 		return nil
