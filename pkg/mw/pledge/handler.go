@@ -452,6 +452,17 @@ func (h *Handler) withPledgeConds(conds *npool.Conds) error {
 			Val: types.ContractState(conds.GetContractState().GetValue()),
 		}
 	}
+	if conds.ContractStates != nil {
+		states := []types.ContractState{}
+		for _, state := range conds.GetContractStates().GetValue() {
+			_state := types.ContractState(state)
+			states = append(states, _state)
+		}
+		h.PledgeConds.ContractStates = &cruder.Cond{
+			Op:  conds.GetContractStates().GetOp(),
+			Val: states,
+		}
+	}
 	return nil
 }
 

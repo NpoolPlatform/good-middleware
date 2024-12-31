@@ -129,6 +129,29 @@ func (h *baseQueryHandler) queryJoinPledge(s *sql.Selector) error {
 			return
 		}()...))
 	}
+	if h.PledgeConds.ContractState != nil {
+		state, ok := h.PledgeConds.ContractState.Val.(types.ContractState)
+		if !ok {
+			return wlog.Errorf("invalid contractstate")
+		}
+		s.OnP(
+			sql.EQ(t1.C(entpledge.FieldContractState), state.String()),
+		)
+	}
+	if h.PledgeConds.ContractStates != nil {
+		states, ok := h.PledgeConds.ContractStates.Val.([]types.ContractState)
+		if !ok {
+			return wlog.Errorf("invalid contractstates")
+		}
+		s.OnP(
+			sql.In(t1.C(entpledge.FieldContractState), func() (_states []interface{}) {
+				for _, state := range states {
+					_states = append(_states, interface{}(state.String()))
+				}
+				return
+			}()...),
+		)
+	}
 
 	s.AppendSelect(
 		t1.C(entpledge.FieldID),

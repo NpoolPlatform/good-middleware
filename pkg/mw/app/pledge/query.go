@@ -70,9 +70,11 @@ func (h *queryHandler) queryJoin() {
 		h.queryJoinGoodBase(s)
 		h.queryJoinGoodReward(s)
 		h.queryJoinExtraInfo(s)
-		h.queryJoinPledge(s)
 		if err := h.queryJoinAppPledge(s); err != nil {
 			logger.Sugar().Errorw("queryJoinAppPledge", "Error", err)
+		}
+		if err := h.queryJoinPledge(s); err != nil {
+			logger.Sugar().Errorw("queryJoinPledge", "Error", err)
 		}
 	})
 }
