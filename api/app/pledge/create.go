@@ -35,7 +35,6 @@ func (s *Server) CreatePledge(ctx context.Context, in *npool.CreatePledgeRequest
 		pledge1.WithName(req.Name, true),
 		pledge1.WithDisplayIndex(req.DisplayIndex, false),
 		pledge1.WithBanner(req.Banner, false),
-
 		pledge1.WithServiceStartAt(req.ServiceStartAt, true),
 		pledge1.WithStartMode(req.StartMode, false),
 		pledge1.WithEnableSetCommission(req.EnableSetCommission, false),

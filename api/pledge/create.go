@@ -25,7 +25,6 @@ func (s *Server) CreatePledge(ctx context.Context, in *npool.CreatePledgeRequest
 		ctx,
 		pledge1.WithEntID(req.EntID, false),
 		pledge1.WithGoodID(req.GoodID, false),
-
 		pledge1.WithGoodType(req.GoodType, true),
 		pledge1.WithName(req.Name, true),
 		pledge1.WithServiceStartAt(req.ServiceStartAt, true),

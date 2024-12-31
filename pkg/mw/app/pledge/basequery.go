@@ -211,6 +211,7 @@ func (h *baseQueryHandler) queryJoinAppPledge(s *sql.Selector) error {
 			sql.EQ(t1.C(entapppledge.FieldEntID), uid),
 		)
 	}
+
 	s.AppendSelect(
 		t1.C(entapppledge.FieldID),
 		t1.C(entapppledge.FieldEntID),
@@ -222,7 +223,7 @@ func (h *baseQueryHandler) queryJoinAppPledge(s *sql.Selector) error {
 	return nil
 }
 
-func (h *baseQueryHandler) queryJoinPledge(s *sql.Selector) {
+func (h *baseQueryHandler) queryJoinPledge(s *sql.Selector) error {
 	t1 := sql.Table(entpledge.Table)
 
 	s.Join(t1).
@@ -234,13 +235,32 @@ func (h *baseQueryHandler) queryJoinPledge(s *sql.Selector) {
 			sql.EQ(t1.C(entpledge.FieldDeletedAt), 0),
 		)
 
+	if h.PledgeConds.GoodID != nil {
+		uid, ok := h.PledgeConds.GoodID.Val.(uuid.UUID)
+		if !ok {
+			return wlog.Errorf("invalid goodid")
+		}
+		s.OnP(sql.EQ(t1.C(entpledge.FieldGoodID), uid))
+	}
+	if h.PledgeConds.GoodIDs != nil {
+		uids, ok := h.PledgeConds.GoodIDs.Val.([]uuid.UUID)
+		if !ok {
+			return wlog.Errorf("invalid goodids")
+		}
+		s.OnP(sql.In(t1.C(entpledge.FieldGoodID), func() (_uids []interface{}) {
+			for _, uid := range uids {
+				_uids = append(_uids, interface{}(uid))
+			}
+			return
+		}()...))
+	}
 	s.AppendSelect(
 		t1.C(entpledge.FieldGoodID),
-
 		sql.As(t1.C(entpledge.FieldContractCodeURL), "contract_code_url"),
 		sql.As(t1.C(entpledge.FieldContractCodeBranch), "contract_code_branch"),
 		sql.As(t1.C(entpledge.FieldContractState), "contract_state"),
 	)
+	return nil
 }
 
 func (h *baseQueryHandler) queryJoin() {
@@ -249,7 +269,9 @@ func (h *baseQueryHandler) queryJoin() {
 		h.queryJoinGoodBase(s)
 		h.queryJoinGoodReward(s)
 		h.queryJoinExtraInfo(s)
-		h.queryJoinPledge(s)
+		if err := h.queryJoinPledge(s); err != nil {
+			logger.Sugar().Errorw("queryJoinPledge", "Error", err)
+		}
 		if err := h.queryJoinAppPledge(s); err != nil {
 			logger.Sugar().Errorw("queryJoinAppPledge", "Error", err)
 		}

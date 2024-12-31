@@ -349,7 +349,6 @@ func (h *queryHandler) getRequiredAppGoods(ctx context.Context, cli *ent.Client)
 	}).Scan(ctx, &h.requiredAppGoods)
 }
 
-
 func (h *queryHandler) formalize() {
 	goodCoins := map[string][]*goodcoinmwpb.GoodCoinInfo{}
 	descriptions := map[string][]*appgooddescriptionmwpb.DescriptionInfo{}
