@@ -80,6 +80,7 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 		)
 }
 
+//nolint:gocyclo
 func (h *baseQueryHandler) queryJoinPledge(s *sql.Selector) error {
 	t1 := sql.Table(entpledge.Table)
 

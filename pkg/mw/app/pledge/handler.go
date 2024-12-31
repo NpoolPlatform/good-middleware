@@ -295,6 +295,7 @@ func (h *Handler) withAppPledgeConds(conds *npool.Conds) error {
 	return nil
 }
 
+//nolint:dupl
 func (h *Handler) withPledgeConds(conds *npool.Conds) error {
 	if conds.GoodID != nil {
 		id, err := uuid.Parse(conds.GetGoodID().GetValue())
@@ -413,6 +414,7 @@ func (h *Handler) withGoodCoinConds(conds *npool.Conds) error {
 	return nil
 }
 
+//nolint:dupl
 func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
 	if conds.GoodID != nil {
 		id, err := uuid.Parse(conds.GetGoodID().GetValue())
@@ -436,22 +438,6 @@ func (h *Handler) withGoodBaseConds(conds *npool.Conds) error {
 		h.GoodBaseConds.EntIDs = &cruder.Cond{
 			Op:  conds.GetGoodIDs().GetOp(),
 			Val: ids,
-		}
-	}
-	if conds.GoodType != nil {
-		h.GoodBaseConds.GoodType = &cruder.Cond{
-			Op:  conds.GetGoodType().GetOp(),
-			Val: types.GoodType(conds.GetGoodType().GetValue()),
-		}
-	}
-	if conds.GoodTypes != nil {
-		es := []types.GoodType{}
-		for _, e := range conds.GetGoodTypes().GetValue() {
-			es = append(es, types.GoodType(e))
-		}
-		h.GoodBaseConds.GoodTypes = &cruder.Cond{
-			Op:  conds.GetGoodTypes().GetOp(),
-			Val: es,
 		}
 	}
 	return nil
