@@ -76,6 +76,9 @@ func (h *queryHandler) queryJoin() {
 		if err := h.queryJoinPledge(s); err != nil {
 			logger.Sugar().Errorw("queryJoinPledge", "Error", err)
 		}
+		if err := h.queryJoinGoodCoin(s); err != nil {
+			logger.Sugar().Errorw("queryJoinGoodCoin", "Error", err)
+		}
 	})
 }
 
