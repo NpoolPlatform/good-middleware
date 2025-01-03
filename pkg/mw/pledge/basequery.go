@@ -76,7 +76,6 @@ func (h *baseQueryHandler) queryJoinMyself(s *sql.Selector) {
 			t1.C(entgoodbase.FieldOnline),
 			t1.C(entgoodbase.FieldState),
 			t1.C(entgoodbase.FieldCreatedAt),
-			t1.C(entgoodbase.FieldUpdatedAt),
 		)
 }
 
@@ -161,6 +160,7 @@ func (h *baseQueryHandler) queryJoinPledge(s *sql.Selector) error {
 		t1.C(entpledge.FieldContractCodeURL),
 		t1.C(entpledge.FieldContractCodeBranch),
 		t1.C(entpledge.FieldContractState),
+		sql.As(t1.C(entpledge.FieldUpdatedAt), "updated_at"),
 	)
 	return nil
 }
