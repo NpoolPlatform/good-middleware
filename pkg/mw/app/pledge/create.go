@@ -85,11 +85,11 @@ func (h *createHandler) constructAppPledgeSQL() {
 	_sql += "where not exists ("
 	_sql += "select 1 from ("
 	_sql += "select * from app_pledges as apr "
-	_sql += fmt.Sprintf("where app_good_id = '%v'", *h.AppGoodID)
+	_sql += fmt.Sprintf("where app_good_id = '%v' and deleted_at=0", *h.AppGoodID)
 	_sql += " limit 1) as tmp)"
 	_sql += "and exists ("
 	_sql += "select 1 from pledges "
-	_sql += fmt.Sprintf("where good_id = '%v'", *h.AppGoodBaseReq.GoodID)
+	_sql += fmt.Sprintf("where good_id = '%v' and deleted_at=0", *h.AppGoodBaseReq.GoodID)
 	_sql += " limit 1)"
 	h.sqlAppPledge = _sql
 }
