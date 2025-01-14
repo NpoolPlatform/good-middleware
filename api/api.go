@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 
+	appdelegatedstaking "github.com/NpoolPlatform/good-middleware/api/app/delegatedstaking"
 	appfee "github.com/NpoolPlatform/good-middleware/api/app/fee"
 	appgood "github.com/NpoolPlatform/good-middleware/api/app/good"
 	"github.com/NpoolPlatform/good-middleware/api/app/good/comment"
@@ -23,9 +24,9 @@ import (
 	topmostgoodconstraint "github.com/NpoolPlatform/good-middleware/api/app/good/topmost/good/constraint"
 	topmostgoodposter "github.com/NpoolPlatform/good-middleware/api/app/good/topmost/good/poster"
 	topmostposter "github.com/NpoolPlatform/good-middleware/api/app/good/topmost/poster"
-	apppledge "github.com/NpoolPlatform/good-middleware/api/app/pledge"
 	apppowerrental "github.com/NpoolPlatform/good-middleware/api/app/powerrental"
 	appsimulatepowerrental "github.com/NpoolPlatform/good-middleware/api/app/powerrental/simulate"
+	delegatedstaking "github.com/NpoolPlatform/good-middleware/api/delegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/api/device"
 	manufacturer "github.com/NpoolPlatform/good-middleware/api/device/manufacturer"
 	deviceposter "github.com/NpoolPlatform/good-middleware/api/device/poster"
@@ -35,7 +36,6 @@ import (
 	"github.com/NpoolPlatform/good-middleware/api/good/coin/reward/history"
 	goodmalfunction "github.com/NpoolPlatform/good-middleware/api/good/malfunction"
 	goodrequired "github.com/NpoolPlatform/good-middleware/api/good/required"
-	pledge "github.com/NpoolPlatform/good-middleware/api/pledge"
 	powerrental "github.com/NpoolPlatform/good-middleware/api/powerrental"
 	"github.com/NpoolPlatform/good-middleware/api/vender/brand"
 	"github.com/NpoolPlatform/good-middleware/api/vender/location"
@@ -85,8 +85,8 @@ func Register(server grpc.ServiceRegistrar) {
 	powerrental.Register(server)
 	good.Register(server)
 	appgood.Register(server)
-	pledge.Register(server)
-	apppledge.Register(server)
+	delegatedstaking.Register(server)
+	appdelegatedstaking.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {

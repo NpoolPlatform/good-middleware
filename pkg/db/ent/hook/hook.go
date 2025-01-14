@@ -22,6 +22,19 @@ func (f AppDefaultGoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Val
 	return f(ctx, mv)
 }
 
+// The AppDelegatedStakingFunc type is an adapter to allow the use of ordinary
+// function as AppDelegatedStaking mutator.
+type AppDelegatedStakingFunc func(context.Context, *ent.AppDelegatedStakingMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppDelegatedStakingFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppDelegatedStakingMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppDelegatedStakingMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The AppFeeFunc type is an adapter to allow the use of ordinary
 // function as AppFee mutator.
 type AppFeeFunc func(context.Context, *ent.AppFeeMutation) (ent.Value, error)
@@ -148,19 +161,6 @@ func (f AppMiningGoodStockFunc) Mutate(ctx context.Context, m ent.Mutation) (ent
 	mv, ok := m.(*ent.AppMiningGoodStockMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppMiningGoodStockMutation", m)
-	}
-	return f(ctx, mv)
-}
-
-// The AppPledgeFunc type is an adapter to allow the use of ordinary
-// function as AppPledge mutator.
-type AppPledgeFunc func(context.Context, *ent.AppPledgeMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f AppPledgeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.AppPledgeMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppPledgeMutation", m)
 	}
 	return f(ctx, mv)
 }
@@ -434,19 +434,6 @@ func (f MiningGoodStockFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Va
 	mv, ok := m.(*ent.MiningGoodStockMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.MiningGoodStockMutation", m)
-	}
-	return f(ctx, mv)
-}
-
-// The PledgeFunc type is an adapter to allow the use of ordinary
-// function as Pledge mutator.
-type PledgeFunc func(context.Context, *ent.PledgeMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f PledgeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.PledgeMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PledgeMutation", m)
 	}
 	return f(ctx, mv)
 }

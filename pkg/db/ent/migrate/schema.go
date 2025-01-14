@@ -32,6 +32,36 @@ var (
 			},
 		},
 	}
+	// AppDelegatedStakingsColumns holds the columns for the "app_delegated_stakings" table.
+	AppDelegatedStakingsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "service_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "start_mode", Type: field.TypeString, Nullable: true, Default: "GoodStartModeNextDay"},
+		{Name: "enable_set_commission", Type: field.TypeBool, Nullable: true, Default: false},
+	}
+	// AppDelegatedStakingsTable holds the schema information for the "app_delegated_stakings" table.
+	AppDelegatedStakingsTable = &schema.Table{
+		Name:       "app_delegated_stakings",
+		Columns:    AppDelegatedStakingsColumns,
+		PrimaryKey: []*schema.Column{AppDelegatedStakingsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appdelegatedstaking_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppDelegatedStakingsColumns[4]},
+			},
+			{
+				Name:    "appdelegatedstaking_app_good_id",
+				Unique:  false,
+				Columns: []*schema.Column{AppDelegatedStakingsColumns[5]},
+			},
+		},
+	}
 	// AppFeesColumns holds the columns for the "app_fees" table.
 	AppFeesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -354,36 +384,6 @@ var (
 			},
 		},
 	}
-	// AppPledgesColumns holds the columns for the "app_pledges" table.
-	AppPledgesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUint32, Increment: true},
-		{Name: "created_at", Type: field.TypeUint32},
-		{Name: "updated_at", Type: field.TypeUint32},
-		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
-		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "service_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
-		{Name: "start_mode", Type: field.TypeString, Nullable: true, Default: "GoodStartModeNextDay"},
-		{Name: "enable_set_commission", Type: field.TypeBool, Nullable: true, Default: false},
-	}
-	// AppPledgesTable holds the schema information for the "app_pledges" table.
-	AppPledgesTable = &schema.Table{
-		Name:       "app_pledges",
-		Columns:    AppPledgesColumns,
-		PrimaryKey: []*schema.Column{AppPledgesColumns[0]},
-		Indexes: []*schema.Index{
-			{
-				Name:    "apppledge_ent_id",
-				Unique:  true,
-				Columns: []*schema.Column{AppPledgesColumns[4]},
-			},
-			{
-				Name:    "apppledge_app_good_id",
-				Unique:  false,
-				Columns: []*schema.Column{AppPledgesColumns[5]},
-			},
-		},
-	}
 	// AppPowerRentalsColumns holds the columns for the "app_power_rentals" table.
 	AppPowerRentalsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -552,10 +552,9 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
 		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "no_stake_redeem_delay_hours", Type: field.TypeUint32, Nullable: true, Default: 8},
-		{Name: "max_redeem_delay_hours", Type: field.TypeUint32, Nullable: true, Default: 96},
-		{Name: "contract_address", Type: field.TypeString, Nullable: true, Default: ""},
-		{Name: "no_stake_benefit_delay_hours", Type: field.TypeUint32, Nullable: true, Default: 24},
+		{Name: "contract_code_url", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "contract_code_branch", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "contract_state", Type: field.TypeString, Nullable: true, Default: "ContractWaitDeployment"},
 	}
 	// DelegatedStakingsTable holds the schema information for the "delegated_stakings" table.
 	DelegatedStakingsTable = &schema.Table{
@@ -1046,36 +1045,6 @@ var (
 			},
 		},
 	}
-	// PledgesColumns holds the columns for the "pledges" table.
-	PledgesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUint32, Increment: true},
-		{Name: "created_at", Type: field.TypeUint32},
-		{Name: "updated_at", Type: field.TypeUint32},
-		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
-		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "contract_code_url", Type: field.TypeString, Nullable: true, Default: ""},
-		{Name: "contract_code_branch", Type: field.TypeString, Nullable: true, Default: ""},
-		{Name: "contract_state", Type: field.TypeString, Nullable: true, Default: "ContractWaitDeployment"},
-	}
-	// PledgesTable holds the schema information for the "pledges" table.
-	PledgesTable = &schema.Table{
-		Name:       "pledges",
-		Columns:    PledgesColumns,
-		PrimaryKey: []*schema.Column{PledgesColumns[0]},
-		Indexes: []*schema.Index{
-			{
-				Name:    "pledge_ent_id",
-				Unique:  true,
-				Columns: []*schema.Column{PledgesColumns[4]},
-			},
-			{
-				Name:    "pledge_good_id",
-				Unique:  false,
-				Columns: []*schema.Column{PledgesColumns[5]},
-			},
-		},
-	}
 	// PowerRentalsColumns holds the columns for the "power_rentals" table.
 	PowerRentalsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -1484,6 +1453,7 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AppDefaultGoodsTable,
+		AppDelegatedStakingsTable,
 		AppFeesTable,
 		AppGoodsTable,
 		AppGoodBasesTable,
@@ -1494,7 +1464,6 @@ var (
 		AppGoodPostersTable,
 		AppLegacyPowerRentalsTable,
 		AppMiningGoodStocksTable,
-		AppPledgesTable,
 		AppPowerRentalsTable,
 		AppSimulatePowerRentalsTable,
 		AppStocksTable,
@@ -1516,7 +1485,6 @@ var (
 		GoodRewardHistoriesTable,
 		AppGoodLikesTable,
 		MiningGoodStocksTable,
-		PledgesTable,
 		PowerRentalsTable,
 		AppGoodRecommendsTable,
 		RequiredAppGoodsTable,

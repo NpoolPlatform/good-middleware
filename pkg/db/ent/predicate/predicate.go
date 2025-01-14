@@ -9,6 +9,9 @@ import (
 // AppDefaultGood is the predicate function for appdefaultgood builders.
 type AppDefaultGood func(*sql.Selector)
 
+// AppDelegatedStaking is the predicate function for appdelegatedstaking builders.
+type AppDelegatedStaking func(*sql.Selector)
+
 // AppFee is the predicate function for appfee builders.
 type AppFee func(*sql.Selector)
 
@@ -38,9 +41,6 @@ type AppLegacyPowerRental func(*sql.Selector)
 
 // AppMiningGoodStock is the predicate function for appmininggoodstock builders.
 type AppMiningGoodStock func(*sql.Selector)
-
-// AppPledge is the predicate function for apppledge builders.
-type AppPledge func(*sql.Selector)
 
 // AppPowerRental is the predicate function for apppowerrental builders.
 type AppPowerRental func(*sql.Selector)
@@ -104,9 +104,6 @@ type Like func(*sql.Selector)
 
 // MiningGoodStock is the predicate function for mininggoodstock builders.
 type MiningGoodStock func(*sql.Selector)
-
-// Pledge is the predicate function for pledge builders.
-type Pledge func(*sql.Selector)
 
 // PowerRental is the predicate function for powerrental builders.
 type PowerRental func(*sql.Selector)

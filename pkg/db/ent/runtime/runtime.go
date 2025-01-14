@@ -6,6 +6,7 @@ import (
 	"context"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdelegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appfee"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
@@ -16,7 +17,6 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodposter"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/applegacypowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appmininggoodstock"
-	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppledge"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/apppowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appsimulatepowerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appstock"
@@ -38,7 +38,6 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/goodrewardhistory"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/like"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/mininggoodstock"
-	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/pledge"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/powerrental"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/recommend"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/requiredappgood"
@@ -99,6 +98,56 @@ func init() {
 	appdefaultgoodDescEntID := appdefaultgoodMixinFields1[1].Descriptor()
 	// appdefaultgood.DefaultEntID holds the default value on creation for the ent_id field.
 	appdefaultgood.DefaultEntID = appdefaultgoodDescEntID.Default.(func() uuid.UUID)
+	appdelegatedstakingMixin := schema.AppDelegatedStaking{}.Mixin()
+	appdelegatedstaking.Policy = privacy.NewPolicies(appdelegatedstakingMixin[0], schema.AppDelegatedStaking{})
+	appdelegatedstaking.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := appdelegatedstaking.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	appdelegatedstakingMixinFields0 := appdelegatedstakingMixin[0].Fields()
+	_ = appdelegatedstakingMixinFields0
+	appdelegatedstakingMixinFields1 := appdelegatedstakingMixin[1].Fields()
+	_ = appdelegatedstakingMixinFields1
+	appdelegatedstakingFields := schema.AppDelegatedStaking{}.Fields()
+	_ = appdelegatedstakingFields
+	// appdelegatedstakingDescCreatedAt is the schema descriptor for created_at field.
+	appdelegatedstakingDescCreatedAt := appdelegatedstakingMixinFields0[0].Descriptor()
+	// appdelegatedstaking.DefaultCreatedAt holds the default value on creation for the created_at field.
+	appdelegatedstaking.DefaultCreatedAt = appdelegatedstakingDescCreatedAt.Default.(func() uint32)
+	// appdelegatedstakingDescUpdatedAt is the schema descriptor for updated_at field.
+	appdelegatedstakingDescUpdatedAt := appdelegatedstakingMixinFields0[1].Descriptor()
+	// appdelegatedstaking.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	appdelegatedstaking.DefaultUpdatedAt = appdelegatedstakingDescUpdatedAt.Default.(func() uint32)
+	// appdelegatedstaking.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	appdelegatedstaking.UpdateDefaultUpdatedAt = appdelegatedstakingDescUpdatedAt.UpdateDefault.(func() uint32)
+	// appdelegatedstakingDescDeletedAt is the schema descriptor for deleted_at field.
+	appdelegatedstakingDescDeletedAt := appdelegatedstakingMixinFields0[2].Descriptor()
+	// appdelegatedstaking.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	appdelegatedstaking.DefaultDeletedAt = appdelegatedstakingDescDeletedAt.Default.(func() uint32)
+	// appdelegatedstakingDescEntID is the schema descriptor for ent_id field.
+	appdelegatedstakingDescEntID := appdelegatedstakingMixinFields1[1].Descriptor()
+	// appdelegatedstaking.DefaultEntID holds the default value on creation for the ent_id field.
+	appdelegatedstaking.DefaultEntID = appdelegatedstakingDescEntID.Default.(func() uuid.UUID)
+	// appdelegatedstakingDescAppGoodID is the schema descriptor for app_good_id field.
+	appdelegatedstakingDescAppGoodID := appdelegatedstakingFields[0].Descriptor()
+	// appdelegatedstaking.DefaultAppGoodID holds the default value on creation for the app_good_id field.
+	appdelegatedstaking.DefaultAppGoodID = appdelegatedstakingDescAppGoodID.Default.(func() uuid.UUID)
+	// appdelegatedstakingDescServiceStartAt is the schema descriptor for service_start_at field.
+	appdelegatedstakingDescServiceStartAt := appdelegatedstakingFields[1].Descriptor()
+	// appdelegatedstaking.DefaultServiceStartAt holds the default value on creation for the service_start_at field.
+	appdelegatedstaking.DefaultServiceStartAt = appdelegatedstakingDescServiceStartAt.Default.(uint32)
+	// appdelegatedstakingDescStartMode is the schema descriptor for start_mode field.
+	appdelegatedstakingDescStartMode := appdelegatedstakingFields[2].Descriptor()
+	// appdelegatedstaking.DefaultStartMode holds the default value on creation for the start_mode field.
+	appdelegatedstaking.DefaultStartMode = appdelegatedstakingDescStartMode.Default.(string)
+	// appdelegatedstakingDescEnableSetCommission is the schema descriptor for enable_set_commission field.
+	appdelegatedstakingDescEnableSetCommission := appdelegatedstakingFields[3].Descriptor()
+	// appdelegatedstaking.DefaultEnableSetCommission holds the default value on creation for the enable_set_commission field.
+	appdelegatedstaking.DefaultEnableSetCommission = appdelegatedstakingDescEnableSetCommission.Default.(bool)
 	appfeeMixin := schema.AppFee{}.Mixin()
 	appfee.Policy = privacy.NewPolicies(appfeeMixin[0], schema.AppFee{})
 	appfee.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -719,56 +768,6 @@ func init() {
 	appmininggoodstockDescSold := appmininggoodstockFields[7].Descriptor()
 	// appmininggoodstock.DefaultSold holds the default value on creation for the sold field.
 	appmininggoodstock.DefaultSold = appmininggoodstockDescSold.Default.(decimal.Decimal)
-	apppledgeMixin := schema.AppPledge{}.Mixin()
-	apppledge.Policy = privacy.NewPolicies(apppledgeMixin[0], schema.AppPledge{})
-	apppledge.Hooks[0] = func(next ent.Mutator) ent.Mutator {
-		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-			if err := apppledge.Policy.EvalMutation(ctx, m); err != nil {
-				return nil, err
-			}
-			return next.Mutate(ctx, m)
-		})
-	}
-	apppledgeMixinFields0 := apppledgeMixin[0].Fields()
-	_ = apppledgeMixinFields0
-	apppledgeMixinFields1 := apppledgeMixin[1].Fields()
-	_ = apppledgeMixinFields1
-	apppledgeFields := schema.AppPledge{}.Fields()
-	_ = apppledgeFields
-	// apppledgeDescCreatedAt is the schema descriptor for created_at field.
-	apppledgeDescCreatedAt := apppledgeMixinFields0[0].Descriptor()
-	// apppledge.DefaultCreatedAt holds the default value on creation for the created_at field.
-	apppledge.DefaultCreatedAt = apppledgeDescCreatedAt.Default.(func() uint32)
-	// apppledgeDescUpdatedAt is the schema descriptor for updated_at field.
-	apppledgeDescUpdatedAt := apppledgeMixinFields0[1].Descriptor()
-	// apppledge.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	apppledge.DefaultUpdatedAt = apppledgeDescUpdatedAt.Default.(func() uint32)
-	// apppledge.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	apppledge.UpdateDefaultUpdatedAt = apppledgeDescUpdatedAt.UpdateDefault.(func() uint32)
-	// apppledgeDescDeletedAt is the schema descriptor for deleted_at field.
-	apppledgeDescDeletedAt := apppledgeMixinFields0[2].Descriptor()
-	// apppledge.DefaultDeletedAt holds the default value on creation for the deleted_at field.
-	apppledge.DefaultDeletedAt = apppledgeDescDeletedAt.Default.(func() uint32)
-	// apppledgeDescEntID is the schema descriptor for ent_id field.
-	apppledgeDescEntID := apppledgeMixinFields1[1].Descriptor()
-	// apppledge.DefaultEntID holds the default value on creation for the ent_id field.
-	apppledge.DefaultEntID = apppledgeDescEntID.Default.(func() uuid.UUID)
-	// apppledgeDescAppGoodID is the schema descriptor for app_good_id field.
-	apppledgeDescAppGoodID := apppledgeFields[0].Descriptor()
-	// apppledge.DefaultAppGoodID holds the default value on creation for the app_good_id field.
-	apppledge.DefaultAppGoodID = apppledgeDescAppGoodID.Default.(func() uuid.UUID)
-	// apppledgeDescServiceStartAt is the schema descriptor for service_start_at field.
-	apppledgeDescServiceStartAt := apppledgeFields[1].Descriptor()
-	// apppledge.DefaultServiceStartAt holds the default value on creation for the service_start_at field.
-	apppledge.DefaultServiceStartAt = apppledgeDescServiceStartAt.Default.(uint32)
-	// apppledgeDescStartMode is the schema descriptor for start_mode field.
-	apppledgeDescStartMode := apppledgeFields[2].Descriptor()
-	// apppledge.DefaultStartMode holds the default value on creation for the start_mode field.
-	apppledge.DefaultStartMode = apppledgeDescStartMode.Default.(string)
-	// apppledgeDescEnableSetCommission is the schema descriptor for enable_set_commission field.
-	apppledgeDescEnableSetCommission := apppledgeFields[3].Descriptor()
-	// apppledge.DefaultEnableSetCommission holds the default value on creation for the enable_set_commission field.
-	apppledge.DefaultEnableSetCommission = apppledgeDescEnableSetCommission.Default.(bool)
 	apppowerrentalMixin := schema.AppPowerRental{}.Mixin()
 	apppowerrental.Policy = privacy.NewPolicies(apppowerrentalMixin[0], schema.AppPowerRental{})
 	apppowerrental.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -1149,22 +1148,18 @@ func init() {
 	delegatedstakingDescGoodID := delegatedstakingFields[0].Descriptor()
 	// delegatedstaking.DefaultGoodID holds the default value on creation for the good_id field.
 	delegatedstaking.DefaultGoodID = delegatedstakingDescGoodID.Default.(func() uuid.UUID)
-	// delegatedstakingDescNoStakeRedeemDelayHours is the schema descriptor for no_stake_redeem_delay_hours field.
-	delegatedstakingDescNoStakeRedeemDelayHours := delegatedstakingFields[1].Descriptor()
-	// delegatedstaking.DefaultNoStakeRedeemDelayHours holds the default value on creation for the no_stake_redeem_delay_hours field.
-	delegatedstaking.DefaultNoStakeRedeemDelayHours = delegatedstakingDescNoStakeRedeemDelayHours.Default.(uint32)
-	// delegatedstakingDescMaxRedeemDelayHours is the schema descriptor for max_redeem_delay_hours field.
-	delegatedstakingDescMaxRedeemDelayHours := delegatedstakingFields[2].Descriptor()
-	// delegatedstaking.DefaultMaxRedeemDelayHours holds the default value on creation for the max_redeem_delay_hours field.
-	delegatedstaking.DefaultMaxRedeemDelayHours = delegatedstakingDescMaxRedeemDelayHours.Default.(uint32)
-	// delegatedstakingDescContractAddress is the schema descriptor for contract_address field.
-	delegatedstakingDescContractAddress := delegatedstakingFields[3].Descriptor()
-	// delegatedstaking.DefaultContractAddress holds the default value on creation for the contract_address field.
-	delegatedstaking.DefaultContractAddress = delegatedstakingDescContractAddress.Default.(string)
-	// delegatedstakingDescNoStakeBenefitDelayHours is the schema descriptor for no_stake_benefit_delay_hours field.
-	delegatedstakingDescNoStakeBenefitDelayHours := delegatedstakingFields[4].Descriptor()
-	// delegatedstaking.DefaultNoStakeBenefitDelayHours holds the default value on creation for the no_stake_benefit_delay_hours field.
-	delegatedstaking.DefaultNoStakeBenefitDelayHours = delegatedstakingDescNoStakeBenefitDelayHours.Default.(uint32)
+	// delegatedstakingDescContractCodeURL is the schema descriptor for contract_code_url field.
+	delegatedstakingDescContractCodeURL := delegatedstakingFields[1].Descriptor()
+	// delegatedstaking.DefaultContractCodeURL holds the default value on creation for the contract_code_url field.
+	delegatedstaking.DefaultContractCodeURL = delegatedstakingDescContractCodeURL.Default.(string)
+	// delegatedstakingDescContractCodeBranch is the schema descriptor for contract_code_branch field.
+	delegatedstakingDescContractCodeBranch := delegatedstakingFields[2].Descriptor()
+	// delegatedstaking.DefaultContractCodeBranch holds the default value on creation for the contract_code_branch field.
+	delegatedstaking.DefaultContractCodeBranch = delegatedstakingDescContractCodeBranch.Default.(string)
+	// delegatedstakingDescContractState is the schema descriptor for contract_state field.
+	delegatedstakingDescContractState := delegatedstakingFields[3].Descriptor()
+	// delegatedstaking.DefaultContractState holds the default value on creation for the contract_state field.
+	delegatedstaking.DefaultContractState = delegatedstakingDescContractState.Default.(string)
 	deviceinfoMixin := schema.DeviceInfo{}.Mixin()
 	deviceinfo.Policy = privacy.NewPolicies(deviceinfoMixin[0], schema.DeviceInfo{})
 	deviceinfo.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -2089,56 +2084,6 @@ func init() {
 	mininggoodstockDescState := mininggoodstockFields[10].Descriptor()
 	// mininggoodstock.DefaultState holds the default value on creation for the state field.
 	mininggoodstock.DefaultState = mininggoodstockDescState.Default.(string)
-	pledgeMixin := schema.Pledge{}.Mixin()
-	pledge.Policy = privacy.NewPolicies(pledgeMixin[0], schema.Pledge{})
-	pledge.Hooks[0] = func(next ent.Mutator) ent.Mutator {
-		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-			if err := pledge.Policy.EvalMutation(ctx, m); err != nil {
-				return nil, err
-			}
-			return next.Mutate(ctx, m)
-		})
-	}
-	pledgeMixinFields0 := pledgeMixin[0].Fields()
-	_ = pledgeMixinFields0
-	pledgeMixinFields1 := pledgeMixin[1].Fields()
-	_ = pledgeMixinFields1
-	pledgeFields := schema.Pledge{}.Fields()
-	_ = pledgeFields
-	// pledgeDescCreatedAt is the schema descriptor for created_at field.
-	pledgeDescCreatedAt := pledgeMixinFields0[0].Descriptor()
-	// pledge.DefaultCreatedAt holds the default value on creation for the created_at field.
-	pledge.DefaultCreatedAt = pledgeDescCreatedAt.Default.(func() uint32)
-	// pledgeDescUpdatedAt is the schema descriptor for updated_at field.
-	pledgeDescUpdatedAt := pledgeMixinFields0[1].Descriptor()
-	// pledge.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	pledge.DefaultUpdatedAt = pledgeDescUpdatedAt.Default.(func() uint32)
-	// pledge.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	pledge.UpdateDefaultUpdatedAt = pledgeDescUpdatedAt.UpdateDefault.(func() uint32)
-	// pledgeDescDeletedAt is the schema descriptor for deleted_at field.
-	pledgeDescDeletedAt := pledgeMixinFields0[2].Descriptor()
-	// pledge.DefaultDeletedAt holds the default value on creation for the deleted_at field.
-	pledge.DefaultDeletedAt = pledgeDescDeletedAt.Default.(func() uint32)
-	// pledgeDescEntID is the schema descriptor for ent_id field.
-	pledgeDescEntID := pledgeMixinFields1[1].Descriptor()
-	// pledge.DefaultEntID holds the default value on creation for the ent_id field.
-	pledge.DefaultEntID = pledgeDescEntID.Default.(func() uuid.UUID)
-	// pledgeDescGoodID is the schema descriptor for good_id field.
-	pledgeDescGoodID := pledgeFields[0].Descriptor()
-	// pledge.DefaultGoodID holds the default value on creation for the good_id field.
-	pledge.DefaultGoodID = pledgeDescGoodID.Default.(func() uuid.UUID)
-	// pledgeDescContractCodeURL is the schema descriptor for contract_code_url field.
-	pledgeDescContractCodeURL := pledgeFields[1].Descriptor()
-	// pledge.DefaultContractCodeURL holds the default value on creation for the contract_code_url field.
-	pledge.DefaultContractCodeURL = pledgeDescContractCodeURL.Default.(string)
-	// pledgeDescContractCodeBranch is the schema descriptor for contract_code_branch field.
-	pledgeDescContractCodeBranch := pledgeFields[2].Descriptor()
-	// pledge.DefaultContractCodeBranch holds the default value on creation for the contract_code_branch field.
-	pledge.DefaultContractCodeBranch = pledgeDescContractCodeBranch.Default.(string)
-	// pledgeDescContractState is the schema descriptor for contract_state field.
-	pledgeDescContractState := pledgeFields[3].Descriptor()
-	// pledge.DefaultContractState holds the default value on creation for the contract_state field.
-	pledge.DefaultContractState = pledgeDescContractState.Default.(string)
 	powerrentalMixin := schema.PowerRental{}.Mixin()
 	powerrental.Policy = privacy.NewPolicies(powerrentalMixin[0], schema.PowerRental{})
 	powerrental.Hooks[0] = func(next ent.Mutator) ent.Mutator {

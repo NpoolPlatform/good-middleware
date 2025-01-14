@@ -26,14 +26,12 @@ type DelegatedStaking struct {
 	EntID uuid.UUID `json:"ent_id,omitempty"`
 	// GoodID holds the value of the "good_id" field.
 	GoodID uuid.UUID `json:"good_id,omitempty"`
-	// NoStakeRedeemDelayHours holds the value of the "no_stake_redeem_delay_hours" field.
-	NoStakeRedeemDelayHours uint32 `json:"no_stake_redeem_delay_hours,omitempty"`
-	// MaxRedeemDelayHours holds the value of the "max_redeem_delay_hours" field.
-	MaxRedeemDelayHours uint32 `json:"max_redeem_delay_hours,omitempty"`
-	// ContractAddress holds the value of the "contract_address" field.
-	ContractAddress string `json:"contract_address,omitempty"`
-	// NoStakeBenefitDelayHours holds the value of the "no_stake_benefit_delay_hours" field.
-	NoStakeBenefitDelayHours uint32 `json:"no_stake_benefit_delay_hours,omitempty"`
+	// ContractCodeURL holds the value of the "contract_code_url" field.
+	ContractCodeURL string `json:"contract_code_url,omitempty"`
+	// ContractCodeBranch holds the value of the "contract_code_branch" field.
+	ContractCodeBranch string `json:"contract_code_branch,omitempty"`
+	// ContractState holds the value of the "contract_state" field.
+	ContractState string `json:"contract_state,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -41,9 +39,9 @@ func (*DelegatedStaking) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case delegatedstaking.FieldID, delegatedstaking.FieldCreatedAt, delegatedstaking.FieldUpdatedAt, delegatedstaking.FieldDeletedAt, delegatedstaking.FieldNoStakeRedeemDelayHours, delegatedstaking.FieldMaxRedeemDelayHours, delegatedstaking.FieldNoStakeBenefitDelayHours:
+		case delegatedstaking.FieldID, delegatedstaking.FieldCreatedAt, delegatedstaking.FieldUpdatedAt, delegatedstaking.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case delegatedstaking.FieldContractAddress:
+		case delegatedstaking.FieldContractCodeURL, delegatedstaking.FieldContractCodeBranch, delegatedstaking.FieldContractState:
 			values[i] = new(sql.NullString)
 		case delegatedstaking.FieldEntID, delegatedstaking.FieldGoodID:
 			values[i] = new(uuid.UUID)
@@ -98,29 +96,23 @@ func (ds *DelegatedStaking) assignValues(columns []string, values []interface{})
 			} else if value != nil {
 				ds.GoodID = *value
 			}
-		case delegatedstaking.FieldNoStakeRedeemDelayHours:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field no_stake_redeem_delay_hours", values[i])
-			} else if value.Valid {
-				ds.NoStakeRedeemDelayHours = uint32(value.Int64)
-			}
-		case delegatedstaking.FieldMaxRedeemDelayHours:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field max_redeem_delay_hours", values[i])
-			} else if value.Valid {
-				ds.MaxRedeemDelayHours = uint32(value.Int64)
-			}
-		case delegatedstaking.FieldContractAddress:
+		case delegatedstaking.FieldContractCodeURL:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field contract_address", values[i])
+				return fmt.Errorf("unexpected type %T for field contract_code_url", values[i])
 			} else if value.Valid {
-				ds.ContractAddress = value.String
+				ds.ContractCodeURL = value.String
 			}
-		case delegatedstaking.FieldNoStakeBenefitDelayHours:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field no_stake_benefit_delay_hours", values[i])
+		case delegatedstaking.FieldContractCodeBranch:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field contract_code_branch", values[i])
 			} else if value.Valid {
-				ds.NoStakeBenefitDelayHours = uint32(value.Int64)
+				ds.ContractCodeBranch = value.String
+			}
+		case delegatedstaking.FieldContractState:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field contract_state", values[i])
+			} else if value.Valid {
+				ds.ContractState = value.String
 			}
 		}
 	}
@@ -165,17 +157,14 @@ func (ds *DelegatedStaking) String() string {
 	builder.WriteString("good_id=")
 	builder.WriteString(fmt.Sprintf("%v", ds.GoodID))
 	builder.WriteString(", ")
-	builder.WriteString("no_stake_redeem_delay_hours=")
-	builder.WriteString(fmt.Sprintf("%v", ds.NoStakeRedeemDelayHours))
+	builder.WriteString("contract_code_url=")
+	builder.WriteString(ds.ContractCodeURL)
 	builder.WriteString(", ")
-	builder.WriteString("max_redeem_delay_hours=")
-	builder.WriteString(fmt.Sprintf("%v", ds.MaxRedeemDelayHours))
+	builder.WriteString("contract_code_branch=")
+	builder.WriteString(ds.ContractCodeBranch)
 	builder.WriteString(", ")
-	builder.WriteString("contract_address=")
-	builder.WriteString(ds.ContractAddress)
-	builder.WriteString(", ")
-	builder.WriteString("no_stake_benefit_delay_hours=")
-	builder.WriteString(fmt.Sprintf("%v", ds.NoStakeBenefitDelayHours))
+	builder.WriteString("contract_state=")
+	builder.WriteString(ds.ContractState)
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -5,18 +5,18 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent"
 	entdelegatedstaking "github.com/NpoolPlatform/good-middleware/pkg/db/ent/delegatedstaking"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 
 	"github.com/google/uuid"
 )
 
 type Req struct {
-	EntID                    *uuid.UUID
-	GoodID                   *uuid.UUID
-	NoStakeRedeemDelayHours  *uint32
-	MaxRedeemDelayHours      *uint32
-	ContractAddress          *string
-	NoStakeBenefitDelayHours *uint32
-	DeletedAt                *uint32
+	EntID              *uuid.UUID
+	GoodID             *uuid.UUID
+	ContractCodeURL    *string
+	ContractCodeBranch *string
+	ContractState      *types.ContractState
+	DeletedAt          *uint32
 }
 
 func CreateSet(c *ent.DelegatedStakingCreate, req *Req) *ent.DelegatedStakingCreate {
@@ -26,33 +26,27 @@ func CreateSet(c *ent.DelegatedStakingCreate, req *Req) *ent.DelegatedStakingCre
 	if req.GoodID != nil {
 		c.SetGoodID(*req.GoodID)
 	}
-	if req.NoStakeRedeemDelayHours != nil {
-		c.SetNoStakeRedeemDelayHours(*req.NoStakeRedeemDelayHours)
+	if req.ContractCodeURL != nil {
+		c.SetContractCodeURL(*req.ContractCodeURL)
 	}
-	if req.MaxRedeemDelayHours != nil {
-		c.SetMaxRedeemDelayHours(*req.MaxRedeemDelayHours)
+	if req.ContractCodeBranch != nil {
+		c.SetContractCodeBranch(*req.ContractCodeBranch)
 	}
-	if req.ContractAddress != nil {
-		c.SetContractAddress(*req.ContractAddress)
-	}
-	if req.NoStakeBenefitDelayHours != nil {
-		c.SetNoStakeBenefitDelayHours(*req.NoStakeBenefitDelayHours)
+	if req.ContractState != nil {
+		c.SetContractState(req.ContractState.String())
 	}
 	return c
 }
 
 func UpdateSet(u *ent.DelegatedStakingUpdateOne, req *Req) *ent.DelegatedStakingUpdateOne {
-	if req.NoStakeRedeemDelayHours != nil {
-		u.SetNoStakeRedeemDelayHours(*req.NoStakeRedeemDelayHours)
+	if req.ContractCodeURL != nil {
+		u.SetContractCodeURL(*req.ContractCodeURL)
 	}
-	if req.MaxRedeemDelayHours != nil {
-		u.SetMaxRedeemDelayHours(*req.MaxRedeemDelayHours)
+	if req.ContractCodeBranch != nil {
+		u.SetContractCodeBranch(*req.ContractCodeBranch)
 	}
-	if req.ContractAddress != nil {
-		u.SetContractAddress(*req.ContractAddress)
-	}
-	if req.NoStakeBenefitDelayHours != nil {
-		u.SetNoStakeBenefitDelayHours(*req.NoStakeBenefitDelayHours)
+	if req.ContractState != nil {
+		u.SetContractState(req.ContractState.String())
 	}
 	if req.DeletedAt != nil {
 		u.SetDeletedAt(*req.DeletedAt)
@@ -61,12 +55,14 @@ func UpdateSet(u *ent.DelegatedStakingUpdateOne, req *Req) *ent.DelegatedStaking
 }
 
 type Conds struct {
-	ID      *cruder.Cond
-	IDs     *cruder.Cond
-	EntID   *cruder.Cond
-	EntIDs  *cruder.Cond
-	GoodID  *cruder.Cond
-	GoodIDs *cruder.Cond
+	ID             *cruder.Cond
+	IDs            *cruder.Cond
+	EntID          *cruder.Cond
+	EntIDs         *cruder.Cond
+	GoodID         *cruder.Cond
+	GoodIDs        *cruder.Cond
+	ContractState  *cruder.Cond
+	ContractStates *cruder.Cond
 }
 
 //nolint
@@ -149,6 +145,36 @@ func SetQueryConds(q *ent.DelegatedStakingQuery, conds *Conds) (*ent.DelegatedSt
 		switch conds.GoodIDs.Op {
 		case cruder.IN:
 			q.Where(entdelegatedstaking.GoodIDIn(ids...))
+		default:
+			return nil, wlog.Errorf("invalid delegatedstaking field")
+		}
+	}
+	if conds.ContractState != nil {
+		_mode, ok := conds.ContractState.Val.(types.ContractState)
+		if !ok {
+			return nil, wlog.Errorf("invalid contractstate")
+		}
+		switch conds.ContractState.Op {
+		case cruder.EQ:
+			q.Where(entdelegatedstaking.ContractState(_mode.String()))
+		case cruder.NEQ:
+			q.Where(entdelegatedstaking.ContractStateNEQ(_mode.String()))
+		default:
+			return nil, wlog.Errorf("invalid delegatedstaking field")
+		}
+	}
+	if conds.ContractStates != nil {
+		_types, ok := conds.ContractStates.Val.([]types.ContractState)
+		if !ok {
+			return nil, wlog.Errorf("invalid contractstates")
+		}
+		es := []string{}
+		for _, _type := range _types {
+			es = append(es, _type.String())
+		}
+		switch conds.ContractStates.Op {
+		case cruder.IN:
+			q.Where(entdelegatedstaking.ContractStateIn(es...))
 		default:
 			return nil, wlog.Errorf("invalid delegatedstaking field")
 		}

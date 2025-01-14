@@ -29,6 +29,7 @@ type config struct {
 // hooks per client, for fast access.
 type hooks struct {
 	AppDefaultGood         []ent.Hook
+	AppDelegatedStaking    []ent.Hook
 	AppFee                 []ent.Hook
 	AppGood                []ent.Hook
 	AppGoodBase            []ent.Hook
@@ -39,7 +40,6 @@ type hooks struct {
 	AppGoodPoster          []ent.Hook
 	AppLegacyPowerRental   []ent.Hook
 	AppMiningGoodStock     []ent.Hook
-	AppPledge              []ent.Hook
 	AppPowerRental         []ent.Hook
 	AppSimulatePowerRental []ent.Hook
 	AppStock               []ent.Hook
@@ -61,7 +61,6 @@ type hooks struct {
 	GoodRewardHistory      []ent.Hook
 	Like                   []ent.Hook
 	MiningGoodStock        []ent.Hook
-	Pledge                 []ent.Hook
 	PowerRental            []ent.Hook
 	Recommend              []ent.Hook
 	RequiredAppGood        []ent.Hook

@@ -73,7 +73,7 @@ func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) 
 		case types.GoodType_LegacyPowerRental:
 		case types.GoodType_TechniqueServiceFee:
 		case types.GoodType_ElectricityFee:
-		case types.GoodType_Pledge:
+		case types.GoodType_DelegatedStaking:
 		default:
 			return wlog.Errorf("invalid goodtype")
 		}
