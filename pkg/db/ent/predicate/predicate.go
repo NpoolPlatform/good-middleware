@@ -9,6 +9,9 @@ import (
 // AppDefaultGood is the predicate function for appdefaultgood builders.
 type AppDefaultGood func(*sql.Selector)
 
+// AppDelegatedStaking is the predicate function for appdelegatedstaking builders.
+type AppDelegatedStaking func(*sql.Selector)
+
 // AppFee is the predicate function for appfee builders.
 type AppFee func(*sql.Selector)
 

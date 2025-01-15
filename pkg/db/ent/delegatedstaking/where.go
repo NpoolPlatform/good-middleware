@@ -114,31 +114,24 @@ func GoodID(v uuid.UUID) predicate.DelegatedStaking {
 	})
 }
 
-// NoStakeRedeemDelayHours applies equality check predicate on the "no_stake_redeem_delay_hours" field. It's identical to NoStakeRedeemDelayHoursEQ.
-func NoStakeRedeemDelayHours(v uint32) predicate.DelegatedStaking {
+// ContractCodeURL applies equality check predicate on the "contract_code_url" field. It's identical to ContractCodeURLEQ.
+func ContractCodeURL(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldNoStakeRedeemDelayHours), v))
+		s.Where(sql.EQ(s.C(FieldContractCodeURL), v))
 	})
 }
 
-// MaxRedeemDelayHours applies equality check predicate on the "max_redeem_delay_hours" field. It's identical to MaxRedeemDelayHoursEQ.
-func MaxRedeemDelayHours(v uint32) predicate.DelegatedStaking {
+// ContractCodeBranch applies equality check predicate on the "contract_code_branch" field. It's identical to ContractCodeBranchEQ.
+func ContractCodeBranch(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMaxRedeemDelayHours), v))
+		s.Where(sql.EQ(s.C(FieldContractCodeBranch), v))
 	})
 }
 
-// ContractAddress applies equality check predicate on the "contract_address" field. It's identical to ContractAddressEQ.
-func ContractAddress(v string) predicate.DelegatedStaking {
+// ContractState applies equality check predicate on the "contract_state" field. It's identical to ContractStateEQ.
+func ContractState(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldContractAddress), v))
-	})
-}
-
-// NoStakeBenefitDelayHours applies equality check predicate on the "no_stake_benefit_delay_hours" field. It's identical to NoStakeBenefitDelayHoursEQ.
-func NoStakeBenefitDelayHours(v uint32) predicate.DelegatedStaking {
-	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldNoStakeBenefitDelayHours), v))
+		s.Where(sql.EQ(s.C(FieldContractState), v))
 	})
 }
 
@@ -476,350 +469,342 @@ func GoodIDNotNil() predicate.DelegatedStaking {
 	})
 }
 
-// NoStakeRedeemDelayHoursEQ applies the EQ predicate on the "no_stake_redeem_delay_hours" field.
-func NoStakeRedeemDelayHoursEQ(v uint32) predicate.DelegatedStaking {
+// ContractCodeURLEQ applies the EQ predicate on the "contract_code_url" field.
+func ContractCodeURLEQ(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldNoStakeRedeemDelayHours), v))
+		s.Where(sql.EQ(s.C(FieldContractCodeURL), v))
 	})
 }
 
-// NoStakeRedeemDelayHoursNEQ applies the NEQ predicate on the "no_stake_redeem_delay_hours" field.
-func NoStakeRedeemDelayHoursNEQ(v uint32) predicate.DelegatedStaking {
+// ContractCodeURLNEQ applies the NEQ predicate on the "contract_code_url" field.
+func ContractCodeURLNEQ(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldNoStakeRedeemDelayHours), v))
+		s.Where(sql.NEQ(s.C(FieldContractCodeURL), v))
 	})
 }
 
-// NoStakeRedeemDelayHoursIn applies the In predicate on the "no_stake_redeem_delay_hours" field.
-func NoStakeRedeemDelayHoursIn(vs ...uint32) predicate.DelegatedStaking {
+// ContractCodeURLIn applies the In predicate on the "contract_code_url" field.
+func ContractCodeURLIn(vs ...string) predicate.DelegatedStaking {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldNoStakeRedeemDelayHours), v...))
+		s.Where(sql.In(s.C(FieldContractCodeURL), v...))
 	})
 }
 
-// NoStakeRedeemDelayHoursNotIn applies the NotIn predicate on the "no_stake_redeem_delay_hours" field.
-func NoStakeRedeemDelayHoursNotIn(vs ...uint32) predicate.DelegatedStaking {
+// ContractCodeURLNotIn applies the NotIn predicate on the "contract_code_url" field.
+func ContractCodeURLNotIn(vs ...string) predicate.DelegatedStaking {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldNoStakeRedeemDelayHours), v...))
+		s.Where(sql.NotIn(s.C(FieldContractCodeURL), v...))
 	})
 }
 
-// NoStakeRedeemDelayHoursGT applies the GT predicate on the "no_stake_redeem_delay_hours" field.
-func NoStakeRedeemDelayHoursGT(v uint32) predicate.DelegatedStaking {
+// ContractCodeURLGT applies the GT predicate on the "contract_code_url" field.
+func ContractCodeURLGT(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldNoStakeRedeemDelayHours), v))
+		s.Where(sql.GT(s.C(FieldContractCodeURL), v))
 	})
 }
 
-// NoStakeRedeemDelayHoursGTE applies the GTE predicate on the "no_stake_redeem_delay_hours" field.
-func NoStakeRedeemDelayHoursGTE(v uint32) predicate.DelegatedStaking {
+// ContractCodeURLGTE applies the GTE predicate on the "contract_code_url" field.
+func ContractCodeURLGTE(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldNoStakeRedeemDelayHours), v))
+		s.Where(sql.GTE(s.C(FieldContractCodeURL), v))
 	})
 }
 
-// NoStakeRedeemDelayHoursLT applies the LT predicate on the "no_stake_redeem_delay_hours" field.
-func NoStakeRedeemDelayHoursLT(v uint32) predicate.DelegatedStaking {
+// ContractCodeURLLT applies the LT predicate on the "contract_code_url" field.
+func ContractCodeURLLT(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldNoStakeRedeemDelayHours), v))
+		s.Where(sql.LT(s.C(FieldContractCodeURL), v))
 	})
 }
 
-// NoStakeRedeemDelayHoursLTE applies the LTE predicate on the "no_stake_redeem_delay_hours" field.
-func NoStakeRedeemDelayHoursLTE(v uint32) predicate.DelegatedStaking {
+// ContractCodeURLLTE applies the LTE predicate on the "contract_code_url" field.
+func ContractCodeURLLTE(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldNoStakeRedeemDelayHours), v))
+		s.Where(sql.LTE(s.C(FieldContractCodeURL), v))
 	})
 }
 
-// NoStakeRedeemDelayHoursIsNil applies the IsNil predicate on the "no_stake_redeem_delay_hours" field.
-func NoStakeRedeemDelayHoursIsNil() predicate.DelegatedStaking {
+// ContractCodeURLContains applies the Contains predicate on the "contract_code_url" field.
+func ContractCodeURLContains(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldNoStakeRedeemDelayHours)))
+		s.Where(sql.Contains(s.C(FieldContractCodeURL), v))
 	})
 }
 
-// NoStakeRedeemDelayHoursNotNil applies the NotNil predicate on the "no_stake_redeem_delay_hours" field.
-func NoStakeRedeemDelayHoursNotNil() predicate.DelegatedStaking {
+// ContractCodeURLHasPrefix applies the HasPrefix predicate on the "contract_code_url" field.
+func ContractCodeURLHasPrefix(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldNoStakeRedeemDelayHours)))
+		s.Where(sql.HasPrefix(s.C(FieldContractCodeURL), v))
 	})
 }
 
-// MaxRedeemDelayHoursEQ applies the EQ predicate on the "max_redeem_delay_hours" field.
-func MaxRedeemDelayHoursEQ(v uint32) predicate.DelegatedStaking {
+// ContractCodeURLHasSuffix applies the HasSuffix predicate on the "contract_code_url" field.
+func ContractCodeURLHasSuffix(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMaxRedeemDelayHours), v))
+		s.Where(sql.HasSuffix(s.C(FieldContractCodeURL), v))
 	})
 }
 
-// MaxRedeemDelayHoursNEQ applies the NEQ predicate on the "max_redeem_delay_hours" field.
-func MaxRedeemDelayHoursNEQ(v uint32) predicate.DelegatedStaking {
+// ContractCodeURLIsNil applies the IsNil predicate on the "contract_code_url" field.
+func ContractCodeURLIsNil() predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldMaxRedeemDelayHours), v))
+		s.Where(sql.IsNull(s.C(FieldContractCodeURL)))
 	})
 }
 
-// MaxRedeemDelayHoursIn applies the In predicate on the "max_redeem_delay_hours" field.
-func MaxRedeemDelayHoursIn(vs ...uint32) predicate.DelegatedStaking {
+// ContractCodeURLNotNil applies the NotNil predicate on the "contract_code_url" field.
+func ContractCodeURLNotNil() predicate.DelegatedStaking {
+	return predicate.DelegatedStaking(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldContractCodeURL)))
+	})
+}
+
+// ContractCodeURLEqualFold applies the EqualFold predicate on the "contract_code_url" field.
+func ContractCodeURLEqualFold(v string) predicate.DelegatedStaking {
+	return predicate.DelegatedStaking(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldContractCodeURL), v))
+	})
+}
+
+// ContractCodeURLContainsFold applies the ContainsFold predicate on the "contract_code_url" field.
+func ContractCodeURLContainsFold(v string) predicate.DelegatedStaking {
+	return predicate.DelegatedStaking(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldContractCodeURL), v))
+	})
+}
+
+// ContractCodeBranchEQ applies the EQ predicate on the "contract_code_branch" field.
+func ContractCodeBranchEQ(v string) predicate.DelegatedStaking {
+	return predicate.DelegatedStaking(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldContractCodeBranch), v))
+	})
+}
+
+// ContractCodeBranchNEQ applies the NEQ predicate on the "contract_code_branch" field.
+func ContractCodeBranchNEQ(v string) predicate.DelegatedStaking {
+	return predicate.DelegatedStaking(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldContractCodeBranch), v))
+	})
+}
+
+// ContractCodeBranchIn applies the In predicate on the "contract_code_branch" field.
+func ContractCodeBranchIn(vs ...string) predicate.DelegatedStaking {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldMaxRedeemDelayHours), v...))
+		s.Where(sql.In(s.C(FieldContractCodeBranch), v...))
 	})
 }
 
-// MaxRedeemDelayHoursNotIn applies the NotIn predicate on the "max_redeem_delay_hours" field.
-func MaxRedeemDelayHoursNotIn(vs ...uint32) predicate.DelegatedStaking {
+// ContractCodeBranchNotIn applies the NotIn predicate on the "contract_code_branch" field.
+func ContractCodeBranchNotIn(vs ...string) predicate.DelegatedStaking {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldMaxRedeemDelayHours), v...))
+		s.Where(sql.NotIn(s.C(FieldContractCodeBranch), v...))
 	})
 }
 
-// MaxRedeemDelayHoursGT applies the GT predicate on the "max_redeem_delay_hours" field.
-func MaxRedeemDelayHoursGT(v uint32) predicate.DelegatedStaking {
+// ContractCodeBranchGT applies the GT predicate on the "contract_code_branch" field.
+func ContractCodeBranchGT(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldMaxRedeemDelayHours), v))
+		s.Where(sql.GT(s.C(FieldContractCodeBranch), v))
 	})
 }
 
-// MaxRedeemDelayHoursGTE applies the GTE predicate on the "max_redeem_delay_hours" field.
-func MaxRedeemDelayHoursGTE(v uint32) predicate.DelegatedStaking {
+// ContractCodeBranchGTE applies the GTE predicate on the "contract_code_branch" field.
+func ContractCodeBranchGTE(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldMaxRedeemDelayHours), v))
+		s.Where(sql.GTE(s.C(FieldContractCodeBranch), v))
 	})
 }
 
-// MaxRedeemDelayHoursLT applies the LT predicate on the "max_redeem_delay_hours" field.
-func MaxRedeemDelayHoursLT(v uint32) predicate.DelegatedStaking {
+// ContractCodeBranchLT applies the LT predicate on the "contract_code_branch" field.
+func ContractCodeBranchLT(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldMaxRedeemDelayHours), v))
+		s.Where(sql.LT(s.C(FieldContractCodeBranch), v))
 	})
 }
 
-// MaxRedeemDelayHoursLTE applies the LTE predicate on the "max_redeem_delay_hours" field.
-func MaxRedeemDelayHoursLTE(v uint32) predicate.DelegatedStaking {
+// ContractCodeBranchLTE applies the LTE predicate on the "contract_code_branch" field.
+func ContractCodeBranchLTE(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldMaxRedeemDelayHours), v))
+		s.Where(sql.LTE(s.C(FieldContractCodeBranch), v))
 	})
 }
 
-// MaxRedeemDelayHoursIsNil applies the IsNil predicate on the "max_redeem_delay_hours" field.
-func MaxRedeemDelayHoursIsNil() predicate.DelegatedStaking {
+// ContractCodeBranchContains applies the Contains predicate on the "contract_code_branch" field.
+func ContractCodeBranchContains(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldMaxRedeemDelayHours)))
+		s.Where(sql.Contains(s.C(FieldContractCodeBranch), v))
 	})
 }
 
-// MaxRedeemDelayHoursNotNil applies the NotNil predicate on the "max_redeem_delay_hours" field.
-func MaxRedeemDelayHoursNotNil() predicate.DelegatedStaking {
+// ContractCodeBranchHasPrefix applies the HasPrefix predicate on the "contract_code_branch" field.
+func ContractCodeBranchHasPrefix(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldMaxRedeemDelayHours)))
+		s.Where(sql.HasPrefix(s.C(FieldContractCodeBranch), v))
 	})
 }
 
-// ContractAddressEQ applies the EQ predicate on the "contract_address" field.
-func ContractAddressEQ(v string) predicate.DelegatedStaking {
+// ContractCodeBranchHasSuffix applies the HasSuffix predicate on the "contract_code_branch" field.
+func ContractCodeBranchHasSuffix(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldContractAddress), v))
+		s.Where(sql.HasSuffix(s.C(FieldContractCodeBranch), v))
 	})
 }
 
-// ContractAddressNEQ applies the NEQ predicate on the "contract_address" field.
-func ContractAddressNEQ(v string) predicate.DelegatedStaking {
+// ContractCodeBranchIsNil applies the IsNil predicate on the "contract_code_branch" field.
+func ContractCodeBranchIsNil() predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldContractAddress), v))
+		s.Where(sql.IsNull(s.C(FieldContractCodeBranch)))
 	})
 }
 
-// ContractAddressIn applies the In predicate on the "contract_address" field.
-func ContractAddressIn(vs ...string) predicate.DelegatedStaking {
+// ContractCodeBranchNotNil applies the NotNil predicate on the "contract_code_branch" field.
+func ContractCodeBranchNotNil() predicate.DelegatedStaking {
+	return predicate.DelegatedStaking(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldContractCodeBranch)))
+	})
+}
+
+// ContractCodeBranchEqualFold applies the EqualFold predicate on the "contract_code_branch" field.
+func ContractCodeBranchEqualFold(v string) predicate.DelegatedStaking {
+	return predicate.DelegatedStaking(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldContractCodeBranch), v))
+	})
+}
+
+// ContractCodeBranchContainsFold applies the ContainsFold predicate on the "contract_code_branch" field.
+func ContractCodeBranchContainsFold(v string) predicate.DelegatedStaking {
+	return predicate.DelegatedStaking(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldContractCodeBranch), v))
+	})
+}
+
+// ContractStateEQ applies the EQ predicate on the "contract_state" field.
+func ContractStateEQ(v string) predicate.DelegatedStaking {
+	return predicate.DelegatedStaking(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldContractState), v))
+	})
+}
+
+// ContractStateNEQ applies the NEQ predicate on the "contract_state" field.
+func ContractStateNEQ(v string) predicate.DelegatedStaking {
+	return predicate.DelegatedStaking(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldContractState), v))
+	})
+}
+
+// ContractStateIn applies the In predicate on the "contract_state" field.
+func ContractStateIn(vs ...string) predicate.DelegatedStaking {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldContractAddress), v...))
+		s.Where(sql.In(s.C(FieldContractState), v...))
 	})
 }
 
-// ContractAddressNotIn applies the NotIn predicate on the "contract_address" field.
-func ContractAddressNotIn(vs ...string) predicate.DelegatedStaking {
+// ContractStateNotIn applies the NotIn predicate on the "contract_state" field.
+func ContractStateNotIn(vs ...string) predicate.DelegatedStaking {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldContractAddress), v...))
+		s.Where(sql.NotIn(s.C(FieldContractState), v...))
 	})
 }
 
-// ContractAddressGT applies the GT predicate on the "contract_address" field.
-func ContractAddressGT(v string) predicate.DelegatedStaking {
+// ContractStateGT applies the GT predicate on the "contract_state" field.
+func ContractStateGT(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldContractAddress), v))
+		s.Where(sql.GT(s.C(FieldContractState), v))
 	})
 }
 
-// ContractAddressGTE applies the GTE predicate on the "contract_address" field.
-func ContractAddressGTE(v string) predicate.DelegatedStaking {
+// ContractStateGTE applies the GTE predicate on the "contract_state" field.
+func ContractStateGTE(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldContractAddress), v))
+		s.Where(sql.GTE(s.C(FieldContractState), v))
 	})
 }
 
-// ContractAddressLT applies the LT predicate on the "contract_address" field.
-func ContractAddressLT(v string) predicate.DelegatedStaking {
+// ContractStateLT applies the LT predicate on the "contract_state" field.
+func ContractStateLT(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldContractAddress), v))
+		s.Where(sql.LT(s.C(FieldContractState), v))
 	})
 }
 
-// ContractAddressLTE applies the LTE predicate on the "contract_address" field.
-func ContractAddressLTE(v string) predicate.DelegatedStaking {
+// ContractStateLTE applies the LTE predicate on the "contract_state" field.
+func ContractStateLTE(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldContractAddress), v))
+		s.Where(sql.LTE(s.C(FieldContractState), v))
 	})
 }
 
-// ContractAddressContains applies the Contains predicate on the "contract_address" field.
-func ContractAddressContains(v string) predicate.DelegatedStaking {
+// ContractStateContains applies the Contains predicate on the "contract_state" field.
+func ContractStateContains(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldContractAddress), v))
+		s.Where(sql.Contains(s.C(FieldContractState), v))
 	})
 }
 
-// ContractAddressHasPrefix applies the HasPrefix predicate on the "contract_address" field.
-func ContractAddressHasPrefix(v string) predicate.DelegatedStaking {
+// ContractStateHasPrefix applies the HasPrefix predicate on the "contract_state" field.
+func ContractStateHasPrefix(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldContractAddress), v))
+		s.Where(sql.HasPrefix(s.C(FieldContractState), v))
 	})
 }
 
-// ContractAddressHasSuffix applies the HasSuffix predicate on the "contract_address" field.
-func ContractAddressHasSuffix(v string) predicate.DelegatedStaking {
+// ContractStateHasSuffix applies the HasSuffix predicate on the "contract_state" field.
+func ContractStateHasSuffix(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldContractAddress), v))
+		s.Where(sql.HasSuffix(s.C(FieldContractState), v))
 	})
 }
 
-// ContractAddressIsNil applies the IsNil predicate on the "contract_address" field.
-func ContractAddressIsNil() predicate.DelegatedStaking {
+// ContractStateIsNil applies the IsNil predicate on the "contract_state" field.
+func ContractStateIsNil() predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldContractAddress)))
+		s.Where(sql.IsNull(s.C(FieldContractState)))
 	})
 }
 
-// ContractAddressNotNil applies the NotNil predicate on the "contract_address" field.
-func ContractAddressNotNil() predicate.DelegatedStaking {
+// ContractStateNotNil applies the NotNil predicate on the "contract_state" field.
+func ContractStateNotNil() predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldContractAddress)))
+		s.Where(sql.NotNull(s.C(FieldContractState)))
 	})
 }
 
-// ContractAddressEqualFold applies the EqualFold predicate on the "contract_address" field.
-func ContractAddressEqualFold(v string) predicate.DelegatedStaking {
+// ContractStateEqualFold applies the EqualFold predicate on the "contract_state" field.
+func ContractStateEqualFold(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldContractAddress), v))
+		s.Where(sql.EqualFold(s.C(FieldContractState), v))
 	})
 }
 
-// ContractAddressContainsFold applies the ContainsFold predicate on the "contract_address" field.
-func ContractAddressContainsFold(v string) predicate.DelegatedStaking {
+// ContractStateContainsFold applies the ContainsFold predicate on the "contract_state" field.
+func ContractStateContainsFold(v string) predicate.DelegatedStaking {
 	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldContractAddress), v))
-	})
-}
-
-// NoStakeBenefitDelayHoursEQ applies the EQ predicate on the "no_stake_benefit_delay_hours" field.
-func NoStakeBenefitDelayHoursEQ(v uint32) predicate.DelegatedStaking {
-	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldNoStakeBenefitDelayHours), v))
-	})
-}
-
-// NoStakeBenefitDelayHoursNEQ applies the NEQ predicate on the "no_stake_benefit_delay_hours" field.
-func NoStakeBenefitDelayHoursNEQ(v uint32) predicate.DelegatedStaking {
-	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldNoStakeBenefitDelayHours), v))
-	})
-}
-
-// NoStakeBenefitDelayHoursIn applies the In predicate on the "no_stake_benefit_delay_hours" field.
-func NoStakeBenefitDelayHoursIn(vs ...uint32) predicate.DelegatedStaking {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldNoStakeBenefitDelayHours), v...))
-	})
-}
-
-// NoStakeBenefitDelayHoursNotIn applies the NotIn predicate on the "no_stake_benefit_delay_hours" field.
-func NoStakeBenefitDelayHoursNotIn(vs ...uint32) predicate.DelegatedStaking {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldNoStakeBenefitDelayHours), v...))
-	})
-}
-
-// NoStakeBenefitDelayHoursGT applies the GT predicate on the "no_stake_benefit_delay_hours" field.
-func NoStakeBenefitDelayHoursGT(v uint32) predicate.DelegatedStaking {
-	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldNoStakeBenefitDelayHours), v))
-	})
-}
-
-// NoStakeBenefitDelayHoursGTE applies the GTE predicate on the "no_stake_benefit_delay_hours" field.
-func NoStakeBenefitDelayHoursGTE(v uint32) predicate.DelegatedStaking {
-	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldNoStakeBenefitDelayHours), v))
-	})
-}
-
-// NoStakeBenefitDelayHoursLT applies the LT predicate on the "no_stake_benefit_delay_hours" field.
-func NoStakeBenefitDelayHoursLT(v uint32) predicate.DelegatedStaking {
-	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldNoStakeBenefitDelayHours), v))
-	})
-}
-
-// NoStakeBenefitDelayHoursLTE applies the LTE predicate on the "no_stake_benefit_delay_hours" field.
-func NoStakeBenefitDelayHoursLTE(v uint32) predicate.DelegatedStaking {
-	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldNoStakeBenefitDelayHours), v))
-	})
-}
-
-// NoStakeBenefitDelayHoursIsNil applies the IsNil predicate on the "no_stake_benefit_delay_hours" field.
-func NoStakeBenefitDelayHoursIsNil() predicate.DelegatedStaking {
-	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldNoStakeBenefitDelayHours)))
-	})
-}
-
-// NoStakeBenefitDelayHoursNotNil applies the NotNil predicate on the "no_stake_benefit_delay_hours" field.
-func NoStakeBenefitDelayHoursNotNil() predicate.DelegatedStaking {
-	return predicate.DelegatedStaking(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldNoStakeBenefitDelayHours)))
+		s.Where(sql.ContainsFold(s.C(FieldContractState), v))
 	})
 }
 

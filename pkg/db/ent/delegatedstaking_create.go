@@ -92,58 +92,44 @@ func (dsc *DelegatedStakingCreate) SetNillableGoodID(u *uuid.UUID) *DelegatedSta
 	return dsc
 }
 
-// SetNoStakeRedeemDelayHours sets the "no_stake_redeem_delay_hours" field.
-func (dsc *DelegatedStakingCreate) SetNoStakeRedeemDelayHours(u uint32) *DelegatedStakingCreate {
-	dsc.mutation.SetNoStakeRedeemDelayHours(u)
+// SetContractCodeURL sets the "contract_code_url" field.
+func (dsc *DelegatedStakingCreate) SetContractCodeURL(s string) *DelegatedStakingCreate {
+	dsc.mutation.SetContractCodeURL(s)
 	return dsc
 }
 
-// SetNillableNoStakeRedeemDelayHours sets the "no_stake_redeem_delay_hours" field if the given value is not nil.
-func (dsc *DelegatedStakingCreate) SetNillableNoStakeRedeemDelayHours(u *uint32) *DelegatedStakingCreate {
-	if u != nil {
-		dsc.SetNoStakeRedeemDelayHours(*u)
-	}
-	return dsc
-}
-
-// SetMaxRedeemDelayHours sets the "max_redeem_delay_hours" field.
-func (dsc *DelegatedStakingCreate) SetMaxRedeemDelayHours(u uint32) *DelegatedStakingCreate {
-	dsc.mutation.SetMaxRedeemDelayHours(u)
-	return dsc
-}
-
-// SetNillableMaxRedeemDelayHours sets the "max_redeem_delay_hours" field if the given value is not nil.
-func (dsc *DelegatedStakingCreate) SetNillableMaxRedeemDelayHours(u *uint32) *DelegatedStakingCreate {
-	if u != nil {
-		dsc.SetMaxRedeemDelayHours(*u)
-	}
-	return dsc
-}
-
-// SetContractAddress sets the "contract_address" field.
-func (dsc *DelegatedStakingCreate) SetContractAddress(s string) *DelegatedStakingCreate {
-	dsc.mutation.SetContractAddress(s)
-	return dsc
-}
-
-// SetNillableContractAddress sets the "contract_address" field if the given value is not nil.
-func (dsc *DelegatedStakingCreate) SetNillableContractAddress(s *string) *DelegatedStakingCreate {
+// SetNillableContractCodeURL sets the "contract_code_url" field if the given value is not nil.
+func (dsc *DelegatedStakingCreate) SetNillableContractCodeURL(s *string) *DelegatedStakingCreate {
 	if s != nil {
-		dsc.SetContractAddress(*s)
+		dsc.SetContractCodeURL(*s)
 	}
 	return dsc
 }
 
-// SetNoStakeBenefitDelayHours sets the "no_stake_benefit_delay_hours" field.
-func (dsc *DelegatedStakingCreate) SetNoStakeBenefitDelayHours(u uint32) *DelegatedStakingCreate {
-	dsc.mutation.SetNoStakeBenefitDelayHours(u)
+// SetContractCodeBranch sets the "contract_code_branch" field.
+func (dsc *DelegatedStakingCreate) SetContractCodeBranch(s string) *DelegatedStakingCreate {
+	dsc.mutation.SetContractCodeBranch(s)
 	return dsc
 }
 
-// SetNillableNoStakeBenefitDelayHours sets the "no_stake_benefit_delay_hours" field if the given value is not nil.
-func (dsc *DelegatedStakingCreate) SetNillableNoStakeBenefitDelayHours(u *uint32) *DelegatedStakingCreate {
-	if u != nil {
-		dsc.SetNoStakeBenefitDelayHours(*u)
+// SetNillableContractCodeBranch sets the "contract_code_branch" field if the given value is not nil.
+func (dsc *DelegatedStakingCreate) SetNillableContractCodeBranch(s *string) *DelegatedStakingCreate {
+	if s != nil {
+		dsc.SetContractCodeBranch(*s)
+	}
+	return dsc
+}
+
+// SetContractState sets the "contract_state" field.
+func (dsc *DelegatedStakingCreate) SetContractState(s string) *DelegatedStakingCreate {
+	dsc.mutation.SetContractState(s)
+	return dsc
+}
+
+// SetNillableContractState sets the "contract_state" field if the given value is not nil.
+func (dsc *DelegatedStakingCreate) SetNillableContractState(s *string) *DelegatedStakingCreate {
+	if s != nil {
+		dsc.SetContractState(*s)
 	}
 	return dsc
 }
@@ -268,21 +254,17 @@ func (dsc *DelegatedStakingCreate) defaults() error {
 		v := delegatedstaking.DefaultGoodID()
 		dsc.mutation.SetGoodID(v)
 	}
-	if _, ok := dsc.mutation.NoStakeRedeemDelayHours(); !ok {
-		v := delegatedstaking.DefaultNoStakeRedeemDelayHours
-		dsc.mutation.SetNoStakeRedeemDelayHours(v)
+	if _, ok := dsc.mutation.ContractCodeURL(); !ok {
+		v := delegatedstaking.DefaultContractCodeURL
+		dsc.mutation.SetContractCodeURL(v)
 	}
-	if _, ok := dsc.mutation.MaxRedeemDelayHours(); !ok {
-		v := delegatedstaking.DefaultMaxRedeemDelayHours
-		dsc.mutation.SetMaxRedeemDelayHours(v)
+	if _, ok := dsc.mutation.ContractCodeBranch(); !ok {
+		v := delegatedstaking.DefaultContractCodeBranch
+		dsc.mutation.SetContractCodeBranch(v)
 	}
-	if _, ok := dsc.mutation.ContractAddress(); !ok {
-		v := delegatedstaking.DefaultContractAddress
-		dsc.mutation.SetContractAddress(v)
-	}
-	if _, ok := dsc.mutation.NoStakeBenefitDelayHours(); !ok {
-		v := delegatedstaking.DefaultNoStakeBenefitDelayHours
-		dsc.mutation.SetNoStakeBenefitDelayHours(v)
+	if _, ok := dsc.mutation.ContractState(); !ok {
+		v := delegatedstaking.DefaultContractState
+		dsc.mutation.SetContractState(v)
 	}
 	return nil
 }
@@ -375,37 +357,29 @@ func (dsc *DelegatedStakingCreate) createSpec() (*DelegatedStaking, *sqlgraph.Cr
 		})
 		_node.GoodID = value
 	}
-	if value, ok := dsc.mutation.NoStakeRedeemDelayHours(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: delegatedstaking.FieldNoStakeRedeemDelayHours,
-		})
-		_node.NoStakeRedeemDelayHours = value
-	}
-	if value, ok := dsc.mutation.MaxRedeemDelayHours(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: delegatedstaking.FieldMaxRedeemDelayHours,
-		})
-		_node.MaxRedeemDelayHours = value
-	}
-	if value, ok := dsc.mutation.ContractAddress(); ok {
+	if value, ok := dsc.mutation.ContractCodeURL(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: delegatedstaking.FieldContractAddress,
+			Column: delegatedstaking.FieldContractCodeURL,
 		})
-		_node.ContractAddress = value
+		_node.ContractCodeURL = value
 	}
-	if value, ok := dsc.mutation.NoStakeBenefitDelayHours(); ok {
+	if value, ok := dsc.mutation.ContractCodeBranch(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: delegatedstaking.FieldNoStakeBenefitDelayHours,
+			Column: delegatedstaking.FieldContractCodeBranch,
 		})
-		_node.NoStakeBenefitDelayHours = value
+		_node.ContractCodeBranch = value
+	}
+	if value, ok := dsc.mutation.ContractState(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: delegatedstaking.FieldContractState,
+		})
+		_node.ContractState = value
 	}
 	return _node, _spec
 }
@@ -545,93 +519,57 @@ func (u *DelegatedStakingUpsert) ClearGoodID() *DelegatedStakingUpsert {
 	return u
 }
 
-// SetNoStakeRedeemDelayHours sets the "no_stake_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsert) SetNoStakeRedeemDelayHours(v uint32) *DelegatedStakingUpsert {
-	u.Set(delegatedstaking.FieldNoStakeRedeemDelayHours, v)
+// SetContractCodeURL sets the "contract_code_url" field.
+func (u *DelegatedStakingUpsert) SetContractCodeURL(v string) *DelegatedStakingUpsert {
+	u.Set(delegatedstaking.FieldContractCodeURL, v)
 	return u
 }
 
-// UpdateNoStakeRedeemDelayHours sets the "no_stake_redeem_delay_hours" field to the value that was provided on create.
-func (u *DelegatedStakingUpsert) UpdateNoStakeRedeemDelayHours() *DelegatedStakingUpsert {
-	u.SetExcluded(delegatedstaking.FieldNoStakeRedeemDelayHours)
+// UpdateContractCodeURL sets the "contract_code_url" field to the value that was provided on create.
+func (u *DelegatedStakingUpsert) UpdateContractCodeURL() *DelegatedStakingUpsert {
+	u.SetExcluded(delegatedstaking.FieldContractCodeURL)
 	return u
 }
 
-// AddNoStakeRedeemDelayHours adds v to the "no_stake_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsert) AddNoStakeRedeemDelayHours(v uint32) *DelegatedStakingUpsert {
-	u.Add(delegatedstaking.FieldNoStakeRedeemDelayHours, v)
+// ClearContractCodeURL clears the value of the "contract_code_url" field.
+func (u *DelegatedStakingUpsert) ClearContractCodeURL() *DelegatedStakingUpsert {
+	u.SetNull(delegatedstaking.FieldContractCodeURL)
 	return u
 }
 
-// ClearNoStakeRedeemDelayHours clears the value of the "no_stake_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsert) ClearNoStakeRedeemDelayHours() *DelegatedStakingUpsert {
-	u.SetNull(delegatedstaking.FieldNoStakeRedeemDelayHours)
+// SetContractCodeBranch sets the "contract_code_branch" field.
+func (u *DelegatedStakingUpsert) SetContractCodeBranch(v string) *DelegatedStakingUpsert {
+	u.Set(delegatedstaking.FieldContractCodeBranch, v)
 	return u
 }
 
-// SetMaxRedeemDelayHours sets the "max_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsert) SetMaxRedeemDelayHours(v uint32) *DelegatedStakingUpsert {
-	u.Set(delegatedstaking.FieldMaxRedeemDelayHours, v)
+// UpdateContractCodeBranch sets the "contract_code_branch" field to the value that was provided on create.
+func (u *DelegatedStakingUpsert) UpdateContractCodeBranch() *DelegatedStakingUpsert {
+	u.SetExcluded(delegatedstaking.FieldContractCodeBranch)
 	return u
 }
 
-// UpdateMaxRedeemDelayHours sets the "max_redeem_delay_hours" field to the value that was provided on create.
-func (u *DelegatedStakingUpsert) UpdateMaxRedeemDelayHours() *DelegatedStakingUpsert {
-	u.SetExcluded(delegatedstaking.FieldMaxRedeemDelayHours)
+// ClearContractCodeBranch clears the value of the "contract_code_branch" field.
+func (u *DelegatedStakingUpsert) ClearContractCodeBranch() *DelegatedStakingUpsert {
+	u.SetNull(delegatedstaking.FieldContractCodeBranch)
 	return u
 }
 
-// AddMaxRedeemDelayHours adds v to the "max_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsert) AddMaxRedeemDelayHours(v uint32) *DelegatedStakingUpsert {
-	u.Add(delegatedstaking.FieldMaxRedeemDelayHours, v)
+// SetContractState sets the "contract_state" field.
+func (u *DelegatedStakingUpsert) SetContractState(v string) *DelegatedStakingUpsert {
+	u.Set(delegatedstaking.FieldContractState, v)
 	return u
 }
 
-// ClearMaxRedeemDelayHours clears the value of the "max_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsert) ClearMaxRedeemDelayHours() *DelegatedStakingUpsert {
-	u.SetNull(delegatedstaking.FieldMaxRedeemDelayHours)
+// UpdateContractState sets the "contract_state" field to the value that was provided on create.
+func (u *DelegatedStakingUpsert) UpdateContractState() *DelegatedStakingUpsert {
+	u.SetExcluded(delegatedstaking.FieldContractState)
 	return u
 }
 
-// SetContractAddress sets the "contract_address" field.
-func (u *DelegatedStakingUpsert) SetContractAddress(v string) *DelegatedStakingUpsert {
-	u.Set(delegatedstaking.FieldContractAddress, v)
-	return u
-}
-
-// UpdateContractAddress sets the "contract_address" field to the value that was provided on create.
-func (u *DelegatedStakingUpsert) UpdateContractAddress() *DelegatedStakingUpsert {
-	u.SetExcluded(delegatedstaking.FieldContractAddress)
-	return u
-}
-
-// ClearContractAddress clears the value of the "contract_address" field.
-func (u *DelegatedStakingUpsert) ClearContractAddress() *DelegatedStakingUpsert {
-	u.SetNull(delegatedstaking.FieldContractAddress)
-	return u
-}
-
-// SetNoStakeBenefitDelayHours sets the "no_stake_benefit_delay_hours" field.
-func (u *DelegatedStakingUpsert) SetNoStakeBenefitDelayHours(v uint32) *DelegatedStakingUpsert {
-	u.Set(delegatedstaking.FieldNoStakeBenefitDelayHours, v)
-	return u
-}
-
-// UpdateNoStakeBenefitDelayHours sets the "no_stake_benefit_delay_hours" field to the value that was provided on create.
-func (u *DelegatedStakingUpsert) UpdateNoStakeBenefitDelayHours() *DelegatedStakingUpsert {
-	u.SetExcluded(delegatedstaking.FieldNoStakeBenefitDelayHours)
-	return u
-}
-
-// AddNoStakeBenefitDelayHours adds v to the "no_stake_benefit_delay_hours" field.
-func (u *DelegatedStakingUpsert) AddNoStakeBenefitDelayHours(v uint32) *DelegatedStakingUpsert {
-	u.Add(delegatedstaking.FieldNoStakeBenefitDelayHours, v)
-	return u
-}
-
-// ClearNoStakeBenefitDelayHours clears the value of the "no_stake_benefit_delay_hours" field.
-func (u *DelegatedStakingUpsert) ClearNoStakeBenefitDelayHours() *DelegatedStakingUpsert {
-	u.SetNull(delegatedstaking.FieldNoStakeBenefitDelayHours)
+// ClearContractState clears the value of the "contract_state" field.
+func (u *DelegatedStakingUpsert) ClearContractState() *DelegatedStakingUpsert {
+	u.SetNull(delegatedstaking.FieldContractState)
 	return u
 }
 
@@ -783,108 +721,66 @@ func (u *DelegatedStakingUpsertOne) ClearGoodID() *DelegatedStakingUpsertOne {
 	})
 }
 
-// SetNoStakeRedeemDelayHours sets the "no_stake_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsertOne) SetNoStakeRedeemDelayHours(v uint32) *DelegatedStakingUpsertOne {
+// SetContractCodeURL sets the "contract_code_url" field.
+func (u *DelegatedStakingUpsertOne) SetContractCodeURL(v string) *DelegatedStakingUpsertOne {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.SetNoStakeRedeemDelayHours(v)
+		s.SetContractCodeURL(v)
 	})
 }
 
-// AddNoStakeRedeemDelayHours adds v to the "no_stake_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsertOne) AddNoStakeRedeemDelayHours(v uint32) *DelegatedStakingUpsertOne {
+// UpdateContractCodeURL sets the "contract_code_url" field to the value that was provided on create.
+func (u *DelegatedStakingUpsertOne) UpdateContractCodeURL() *DelegatedStakingUpsertOne {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.AddNoStakeRedeemDelayHours(v)
+		s.UpdateContractCodeURL()
 	})
 }
 
-// UpdateNoStakeRedeemDelayHours sets the "no_stake_redeem_delay_hours" field to the value that was provided on create.
-func (u *DelegatedStakingUpsertOne) UpdateNoStakeRedeemDelayHours() *DelegatedStakingUpsertOne {
+// ClearContractCodeURL clears the value of the "contract_code_url" field.
+func (u *DelegatedStakingUpsertOne) ClearContractCodeURL() *DelegatedStakingUpsertOne {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.UpdateNoStakeRedeemDelayHours()
+		s.ClearContractCodeURL()
 	})
 }
 
-// ClearNoStakeRedeemDelayHours clears the value of the "no_stake_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsertOne) ClearNoStakeRedeemDelayHours() *DelegatedStakingUpsertOne {
+// SetContractCodeBranch sets the "contract_code_branch" field.
+func (u *DelegatedStakingUpsertOne) SetContractCodeBranch(v string) *DelegatedStakingUpsertOne {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.ClearNoStakeRedeemDelayHours()
+		s.SetContractCodeBranch(v)
 	})
 }
 
-// SetMaxRedeemDelayHours sets the "max_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsertOne) SetMaxRedeemDelayHours(v uint32) *DelegatedStakingUpsertOne {
+// UpdateContractCodeBranch sets the "contract_code_branch" field to the value that was provided on create.
+func (u *DelegatedStakingUpsertOne) UpdateContractCodeBranch() *DelegatedStakingUpsertOne {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.SetMaxRedeemDelayHours(v)
+		s.UpdateContractCodeBranch()
 	})
 }
 
-// AddMaxRedeemDelayHours adds v to the "max_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsertOne) AddMaxRedeemDelayHours(v uint32) *DelegatedStakingUpsertOne {
+// ClearContractCodeBranch clears the value of the "contract_code_branch" field.
+func (u *DelegatedStakingUpsertOne) ClearContractCodeBranch() *DelegatedStakingUpsertOne {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.AddMaxRedeemDelayHours(v)
+		s.ClearContractCodeBranch()
 	})
 }
 
-// UpdateMaxRedeemDelayHours sets the "max_redeem_delay_hours" field to the value that was provided on create.
-func (u *DelegatedStakingUpsertOne) UpdateMaxRedeemDelayHours() *DelegatedStakingUpsertOne {
+// SetContractState sets the "contract_state" field.
+func (u *DelegatedStakingUpsertOne) SetContractState(v string) *DelegatedStakingUpsertOne {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.UpdateMaxRedeemDelayHours()
+		s.SetContractState(v)
 	})
 }
 
-// ClearMaxRedeemDelayHours clears the value of the "max_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsertOne) ClearMaxRedeemDelayHours() *DelegatedStakingUpsertOne {
+// UpdateContractState sets the "contract_state" field to the value that was provided on create.
+func (u *DelegatedStakingUpsertOne) UpdateContractState() *DelegatedStakingUpsertOne {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.ClearMaxRedeemDelayHours()
+		s.UpdateContractState()
 	})
 }
 
-// SetContractAddress sets the "contract_address" field.
-func (u *DelegatedStakingUpsertOne) SetContractAddress(v string) *DelegatedStakingUpsertOne {
+// ClearContractState clears the value of the "contract_state" field.
+func (u *DelegatedStakingUpsertOne) ClearContractState() *DelegatedStakingUpsertOne {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.SetContractAddress(v)
-	})
-}
-
-// UpdateContractAddress sets the "contract_address" field to the value that was provided on create.
-func (u *DelegatedStakingUpsertOne) UpdateContractAddress() *DelegatedStakingUpsertOne {
-	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.UpdateContractAddress()
-	})
-}
-
-// ClearContractAddress clears the value of the "contract_address" field.
-func (u *DelegatedStakingUpsertOne) ClearContractAddress() *DelegatedStakingUpsertOne {
-	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.ClearContractAddress()
-	})
-}
-
-// SetNoStakeBenefitDelayHours sets the "no_stake_benefit_delay_hours" field.
-func (u *DelegatedStakingUpsertOne) SetNoStakeBenefitDelayHours(v uint32) *DelegatedStakingUpsertOne {
-	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.SetNoStakeBenefitDelayHours(v)
-	})
-}
-
-// AddNoStakeBenefitDelayHours adds v to the "no_stake_benefit_delay_hours" field.
-func (u *DelegatedStakingUpsertOne) AddNoStakeBenefitDelayHours(v uint32) *DelegatedStakingUpsertOne {
-	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.AddNoStakeBenefitDelayHours(v)
-	})
-}
-
-// UpdateNoStakeBenefitDelayHours sets the "no_stake_benefit_delay_hours" field to the value that was provided on create.
-func (u *DelegatedStakingUpsertOne) UpdateNoStakeBenefitDelayHours() *DelegatedStakingUpsertOne {
-	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.UpdateNoStakeBenefitDelayHours()
-	})
-}
-
-// ClearNoStakeBenefitDelayHours clears the value of the "no_stake_benefit_delay_hours" field.
-func (u *DelegatedStakingUpsertOne) ClearNoStakeBenefitDelayHours() *DelegatedStakingUpsertOne {
-	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.ClearNoStakeBenefitDelayHours()
+		s.ClearContractState()
 	})
 }
 
@@ -1201,108 +1097,66 @@ func (u *DelegatedStakingUpsertBulk) ClearGoodID() *DelegatedStakingUpsertBulk {
 	})
 }
 
-// SetNoStakeRedeemDelayHours sets the "no_stake_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsertBulk) SetNoStakeRedeemDelayHours(v uint32) *DelegatedStakingUpsertBulk {
+// SetContractCodeURL sets the "contract_code_url" field.
+func (u *DelegatedStakingUpsertBulk) SetContractCodeURL(v string) *DelegatedStakingUpsertBulk {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.SetNoStakeRedeemDelayHours(v)
+		s.SetContractCodeURL(v)
 	})
 }
 
-// AddNoStakeRedeemDelayHours adds v to the "no_stake_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsertBulk) AddNoStakeRedeemDelayHours(v uint32) *DelegatedStakingUpsertBulk {
+// UpdateContractCodeURL sets the "contract_code_url" field to the value that was provided on create.
+func (u *DelegatedStakingUpsertBulk) UpdateContractCodeURL() *DelegatedStakingUpsertBulk {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.AddNoStakeRedeemDelayHours(v)
+		s.UpdateContractCodeURL()
 	})
 }
 
-// UpdateNoStakeRedeemDelayHours sets the "no_stake_redeem_delay_hours" field to the value that was provided on create.
-func (u *DelegatedStakingUpsertBulk) UpdateNoStakeRedeemDelayHours() *DelegatedStakingUpsertBulk {
+// ClearContractCodeURL clears the value of the "contract_code_url" field.
+func (u *DelegatedStakingUpsertBulk) ClearContractCodeURL() *DelegatedStakingUpsertBulk {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.UpdateNoStakeRedeemDelayHours()
+		s.ClearContractCodeURL()
 	})
 }
 
-// ClearNoStakeRedeemDelayHours clears the value of the "no_stake_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsertBulk) ClearNoStakeRedeemDelayHours() *DelegatedStakingUpsertBulk {
+// SetContractCodeBranch sets the "contract_code_branch" field.
+func (u *DelegatedStakingUpsertBulk) SetContractCodeBranch(v string) *DelegatedStakingUpsertBulk {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.ClearNoStakeRedeemDelayHours()
+		s.SetContractCodeBranch(v)
 	})
 }
 
-// SetMaxRedeemDelayHours sets the "max_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsertBulk) SetMaxRedeemDelayHours(v uint32) *DelegatedStakingUpsertBulk {
+// UpdateContractCodeBranch sets the "contract_code_branch" field to the value that was provided on create.
+func (u *DelegatedStakingUpsertBulk) UpdateContractCodeBranch() *DelegatedStakingUpsertBulk {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.SetMaxRedeemDelayHours(v)
+		s.UpdateContractCodeBranch()
 	})
 }
 
-// AddMaxRedeemDelayHours adds v to the "max_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsertBulk) AddMaxRedeemDelayHours(v uint32) *DelegatedStakingUpsertBulk {
+// ClearContractCodeBranch clears the value of the "contract_code_branch" field.
+func (u *DelegatedStakingUpsertBulk) ClearContractCodeBranch() *DelegatedStakingUpsertBulk {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.AddMaxRedeemDelayHours(v)
+		s.ClearContractCodeBranch()
 	})
 }
 
-// UpdateMaxRedeemDelayHours sets the "max_redeem_delay_hours" field to the value that was provided on create.
-func (u *DelegatedStakingUpsertBulk) UpdateMaxRedeemDelayHours() *DelegatedStakingUpsertBulk {
+// SetContractState sets the "contract_state" field.
+func (u *DelegatedStakingUpsertBulk) SetContractState(v string) *DelegatedStakingUpsertBulk {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.UpdateMaxRedeemDelayHours()
+		s.SetContractState(v)
 	})
 }
 
-// ClearMaxRedeemDelayHours clears the value of the "max_redeem_delay_hours" field.
-func (u *DelegatedStakingUpsertBulk) ClearMaxRedeemDelayHours() *DelegatedStakingUpsertBulk {
+// UpdateContractState sets the "contract_state" field to the value that was provided on create.
+func (u *DelegatedStakingUpsertBulk) UpdateContractState() *DelegatedStakingUpsertBulk {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.ClearMaxRedeemDelayHours()
+		s.UpdateContractState()
 	})
 }
 
-// SetContractAddress sets the "contract_address" field.
-func (u *DelegatedStakingUpsertBulk) SetContractAddress(v string) *DelegatedStakingUpsertBulk {
+// ClearContractState clears the value of the "contract_state" field.
+func (u *DelegatedStakingUpsertBulk) ClearContractState() *DelegatedStakingUpsertBulk {
 	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.SetContractAddress(v)
-	})
-}
-
-// UpdateContractAddress sets the "contract_address" field to the value that was provided on create.
-func (u *DelegatedStakingUpsertBulk) UpdateContractAddress() *DelegatedStakingUpsertBulk {
-	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.UpdateContractAddress()
-	})
-}
-
-// ClearContractAddress clears the value of the "contract_address" field.
-func (u *DelegatedStakingUpsertBulk) ClearContractAddress() *DelegatedStakingUpsertBulk {
-	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.ClearContractAddress()
-	})
-}
-
-// SetNoStakeBenefitDelayHours sets the "no_stake_benefit_delay_hours" field.
-func (u *DelegatedStakingUpsertBulk) SetNoStakeBenefitDelayHours(v uint32) *DelegatedStakingUpsertBulk {
-	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.SetNoStakeBenefitDelayHours(v)
-	})
-}
-
-// AddNoStakeBenefitDelayHours adds v to the "no_stake_benefit_delay_hours" field.
-func (u *DelegatedStakingUpsertBulk) AddNoStakeBenefitDelayHours(v uint32) *DelegatedStakingUpsertBulk {
-	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.AddNoStakeBenefitDelayHours(v)
-	})
-}
-
-// UpdateNoStakeBenefitDelayHours sets the "no_stake_benefit_delay_hours" field to the value that was provided on create.
-func (u *DelegatedStakingUpsertBulk) UpdateNoStakeBenefitDelayHours() *DelegatedStakingUpsertBulk {
-	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.UpdateNoStakeBenefitDelayHours()
-	})
-}
-
-// ClearNoStakeBenefitDelayHours clears the value of the "no_stake_benefit_delay_hours" field.
-func (u *DelegatedStakingUpsertBulk) ClearNoStakeBenefitDelayHours() *DelegatedStakingUpsertBulk {
-	return u.Update(func(s *DelegatedStakingUpsert) {
-		s.ClearNoStakeBenefitDelayHours()
+		s.ClearContractState()
 	})
 }
 

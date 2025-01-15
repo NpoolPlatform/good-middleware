@@ -9,6 +9,7 @@ import (
 	"sync"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdelegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appfee"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
@@ -71,6 +72,7 @@ const (
 
 	// Node types.
 	TypeAppDefaultGood         = "AppDefaultGood"
+	TypeAppDelegatedStaking    = "AppDelegatedStaking"
 	TypeAppFee                 = "AppFee"
 	TypeAppGood                = "AppGood"
 	TypeAppGoodBase            = "AppGoodBase"
@@ -846,6 +848,916 @@ func (m *AppDefaultGoodMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *AppDefaultGoodMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown AppDefaultGood edge %s", name)
+}
+
+// AppDelegatedStakingMutation represents an operation that mutates the AppDelegatedStaking nodes in the graph.
+type AppDelegatedStakingMutation struct {
+	config
+	op                    Op
+	typ                   string
+	id                    *uint32
+	created_at            *uint32
+	addcreated_at         *int32
+	updated_at            *uint32
+	addupdated_at         *int32
+	deleted_at            *uint32
+	adddeleted_at         *int32
+	ent_id                *uuid.UUID
+	app_good_id           *uuid.UUID
+	service_start_at      *uint32
+	addservice_start_at   *int32
+	start_mode            *string
+	enable_set_commission *bool
+	clearedFields         map[string]struct{}
+	done                  bool
+	oldValue              func(context.Context) (*AppDelegatedStaking, error)
+	predicates            []predicate.AppDelegatedStaking
+}
+
+var _ ent.Mutation = (*AppDelegatedStakingMutation)(nil)
+
+// appdelegatedstakingOption allows management of the mutation configuration using functional options.
+type appdelegatedstakingOption func(*AppDelegatedStakingMutation)
+
+// newAppDelegatedStakingMutation creates new mutation for the AppDelegatedStaking entity.
+func newAppDelegatedStakingMutation(c config, op Op, opts ...appdelegatedstakingOption) *AppDelegatedStakingMutation {
+	m := &AppDelegatedStakingMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeAppDelegatedStaking,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withAppDelegatedStakingID sets the ID field of the mutation.
+func withAppDelegatedStakingID(id uint32) appdelegatedstakingOption {
+	return func(m *AppDelegatedStakingMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *AppDelegatedStaking
+		)
+		m.oldValue = func(ctx context.Context) (*AppDelegatedStaking, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().AppDelegatedStaking.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withAppDelegatedStaking sets the old AppDelegatedStaking of the mutation.
+func withAppDelegatedStaking(node *AppDelegatedStaking) appdelegatedstakingOption {
+	return func(m *AppDelegatedStakingMutation) {
+		m.oldValue = func(context.Context) (*AppDelegatedStaking, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m AppDelegatedStakingMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m AppDelegatedStakingMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of AppDelegatedStaking entities.
+func (m *AppDelegatedStakingMutation) SetID(id uint32) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *AppDelegatedStakingMutation) ID() (id uint32, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *AppDelegatedStakingMutation) IDs(ctx context.Context) ([]uint32, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uint32{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().AppDelegatedStaking.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *AppDelegatedStakingMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *AppDelegatedStakingMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the AppDelegatedStaking entity.
+// If the AppDelegatedStaking object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppDelegatedStakingMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *AppDelegatedStakingMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *AppDelegatedStakingMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *AppDelegatedStakingMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *AppDelegatedStakingMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *AppDelegatedStakingMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the AppDelegatedStaking entity.
+// If the AppDelegatedStaking object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppDelegatedStakingMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *AppDelegatedStakingMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *AppDelegatedStakingMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *AppDelegatedStakingMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *AppDelegatedStakingMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *AppDelegatedStakingMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the AppDelegatedStaking entity.
+// If the AppDelegatedStaking object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppDelegatedStakingMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *AppDelegatedStakingMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *AppDelegatedStakingMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *AppDelegatedStakingMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetEntID sets the "ent_id" field.
+func (m *AppDelegatedStakingMutation) SetEntID(u uuid.UUID) {
+	m.ent_id = &u
+}
+
+// EntID returns the value of the "ent_id" field in the mutation.
+func (m *AppDelegatedStakingMutation) EntID() (r uuid.UUID, exists bool) {
+	v := m.ent_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEntID returns the old "ent_id" field's value of the AppDelegatedStaking entity.
+// If the AppDelegatedStaking object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppDelegatedStakingMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEntID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEntID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEntID: %w", err)
+	}
+	return oldValue.EntID, nil
+}
+
+// ResetEntID resets all changes to the "ent_id" field.
+func (m *AppDelegatedStakingMutation) ResetEntID() {
+	m.ent_id = nil
+}
+
+// SetAppGoodID sets the "app_good_id" field.
+func (m *AppDelegatedStakingMutation) SetAppGoodID(u uuid.UUID) {
+	m.app_good_id = &u
+}
+
+// AppGoodID returns the value of the "app_good_id" field in the mutation.
+func (m *AppDelegatedStakingMutation) AppGoodID() (r uuid.UUID, exists bool) {
+	v := m.app_good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppGoodID returns the old "app_good_id" field's value of the AppDelegatedStaking entity.
+// If the AppDelegatedStaking object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppDelegatedStakingMutation) OldAppGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppGoodID: %w", err)
+	}
+	return oldValue.AppGoodID, nil
+}
+
+// ClearAppGoodID clears the value of the "app_good_id" field.
+func (m *AppDelegatedStakingMutation) ClearAppGoodID() {
+	m.app_good_id = nil
+	m.clearedFields[appdelegatedstaking.FieldAppGoodID] = struct{}{}
+}
+
+// AppGoodIDCleared returns if the "app_good_id" field was cleared in this mutation.
+func (m *AppDelegatedStakingMutation) AppGoodIDCleared() bool {
+	_, ok := m.clearedFields[appdelegatedstaking.FieldAppGoodID]
+	return ok
+}
+
+// ResetAppGoodID resets all changes to the "app_good_id" field.
+func (m *AppDelegatedStakingMutation) ResetAppGoodID() {
+	m.app_good_id = nil
+	delete(m.clearedFields, appdelegatedstaking.FieldAppGoodID)
+}
+
+// SetServiceStartAt sets the "service_start_at" field.
+func (m *AppDelegatedStakingMutation) SetServiceStartAt(u uint32) {
+	m.service_start_at = &u
+	m.addservice_start_at = nil
+}
+
+// ServiceStartAt returns the value of the "service_start_at" field in the mutation.
+func (m *AppDelegatedStakingMutation) ServiceStartAt() (r uint32, exists bool) {
+	v := m.service_start_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldServiceStartAt returns the old "service_start_at" field's value of the AppDelegatedStaking entity.
+// If the AppDelegatedStaking object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppDelegatedStakingMutation) OldServiceStartAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldServiceStartAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldServiceStartAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldServiceStartAt: %w", err)
+	}
+	return oldValue.ServiceStartAt, nil
+}
+
+// AddServiceStartAt adds u to the "service_start_at" field.
+func (m *AppDelegatedStakingMutation) AddServiceStartAt(u int32) {
+	if m.addservice_start_at != nil {
+		*m.addservice_start_at += u
+	} else {
+		m.addservice_start_at = &u
+	}
+}
+
+// AddedServiceStartAt returns the value that was added to the "service_start_at" field in this mutation.
+func (m *AppDelegatedStakingMutation) AddedServiceStartAt() (r int32, exists bool) {
+	v := m.addservice_start_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearServiceStartAt clears the value of the "service_start_at" field.
+func (m *AppDelegatedStakingMutation) ClearServiceStartAt() {
+	m.service_start_at = nil
+	m.addservice_start_at = nil
+	m.clearedFields[appdelegatedstaking.FieldServiceStartAt] = struct{}{}
+}
+
+// ServiceStartAtCleared returns if the "service_start_at" field was cleared in this mutation.
+func (m *AppDelegatedStakingMutation) ServiceStartAtCleared() bool {
+	_, ok := m.clearedFields[appdelegatedstaking.FieldServiceStartAt]
+	return ok
+}
+
+// ResetServiceStartAt resets all changes to the "service_start_at" field.
+func (m *AppDelegatedStakingMutation) ResetServiceStartAt() {
+	m.service_start_at = nil
+	m.addservice_start_at = nil
+	delete(m.clearedFields, appdelegatedstaking.FieldServiceStartAt)
+}
+
+// SetStartMode sets the "start_mode" field.
+func (m *AppDelegatedStakingMutation) SetStartMode(s string) {
+	m.start_mode = &s
+}
+
+// StartMode returns the value of the "start_mode" field in the mutation.
+func (m *AppDelegatedStakingMutation) StartMode() (r string, exists bool) {
+	v := m.start_mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStartMode returns the old "start_mode" field's value of the AppDelegatedStaking entity.
+// If the AppDelegatedStaking object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppDelegatedStakingMutation) OldStartMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStartMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStartMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStartMode: %w", err)
+	}
+	return oldValue.StartMode, nil
+}
+
+// ClearStartMode clears the value of the "start_mode" field.
+func (m *AppDelegatedStakingMutation) ClearStartMode() {
+	m.start_mode = nil
+	m.clearedFields[appdelegatedstaking.FieldStartMode] = struct{}{}
+}
+
+// StartModeCleared returns if the "start_mode" field was cleared in this mutation.
+func (m *AppDelegatedStakingMutation) StartModeCleared() bool {
+	_, ok := m.clearedFields[appdelegatedstaking.FieldStartMode]
+	return ok
+}
+
+// ResetStartMode resets all changes to the "start_mode" field.
+func (m *AppDelegatedStakingMutation) ResetStartMode() {
+	m.start_mode = nil
+	delete(m.clearedFields, appdelegatedstaking.FieldStartMode)
+}
+
+// SetEnableSetCommission sets the "enable_set_commission" field.
+func (m *AppDelegatedStakingMutation) SetEnableSetCommission(b bool) {
+	m.enable_set_commission = &b
+}
+
+// EnableSetCommission returns the value of the "enable_set_commission" field in the mutation.
+func (m *AppDelegatedStakingMutation) EnableSetCommission() (r bool, exists bool) {
+	v := m.enable_set_commission
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEnableSetCommission returns the old "enable_set_commission" field's value of the AppDelegatedStaking entity.
+// If the AppDelegatedStaking object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppDelegatedStakingMutation) OldEnableSetCommission(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEnableSetCommission is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEnableSetCommission requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEnableSetCommission: %w", err)
+	}
+	return oldValue.EnableSetCommission, nil
+}
+
+// ClearEnableSetCommission clears the value of the "enable_set_commission" field.
+func (m *AppDelegatedStakingMutation) ClearEnableSetCommission() {
+	m.enable_set_commission = nil
+	m.clearedFields[appdelegatedstaking.FieldEnableSetCommission] = struct{}{}
+}
+
+// EnableSetCommissionCleared returns if the "enable_set_commission" field was cleared in this mutation.
+func (m *AppDelegatedStakingMutation) EnableSetCommissionCleared() bool {
+	_, ok := m.clearedFields[appdelegatedstaking.FieldEnableSetCommission]
+	return ok
+}
+
+// ResetEnableSetCommission resets all changes to the "enable_set_commission" field.
+func (m *AppDelegatedStakingMutation) ResetEnableSetCommission() {
+	m.enable_set_commission = nil
+	delete(m.clearedFields, appdelegatedstaking.FieldEnableSetCommission)
+}
+
+// Where appends a list predicates to the AppDelegatedStakingMutation builder.
+func (m *AppDelegatedStakingMutation) Where(ps ...predicate.AppDelegatedStaking) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *AppDelegatedStakingMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (AppDelegatedStaking).
+func (m *AppDelegatedStakingMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *AppDelegatedStakingMutation) Fields() []string {
+	fields := make([]string, 0, 8)
+	if m.created_at != nil {
+		fields = append(fields, appdelegatedstaking.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, appdelegatedstaking.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, appdelegatedstaking.FieldDeletedAt)
+	}
+	if m.ent_id != nil {
+		fields = append(fields, appdelegatedstaking.FieldEntID)
+	}
+	if m.app_good_id != nil {
+		fields = append(fields, appdelegatedstaking.FieldAppGoodID)
+	}
+	if m.service_start_at != nil {
+		fields = append(fields, appdelegatedstaking.FieldServiceStartAt)
+	}
+	if m.start_mode != nil {
+		fields = append(fields, appdelegatedstaking.FieldStartMode)
+	}
+	if m.enable_set_commission != nil {
+		fields = append(fields, appdelegatedstaking.FieldEnableSetCommission)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *AppDelegatedStakingMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case appdelegatedstaking.FieldCreatedAt:
+		return m.CreatedAt()
+	case appdelegatedstaking.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case appdelegatedstaking.FieldDeletedAt:
+		return m.DeletedAt()
+	case appdelegatedstaking.FieldEntID:
+		return m.EntID()
+	case appdelegatedstaking.FieldAppGoodID:
+		return m.AppGoodID()
+	case appdelegatedstaking.FieldServiceStartAt:
+		return m.ServiceStartAt()
+	case appdelegatedstaking.FieldStartMode:
+		return m.StartMode()
+	case appdelegatedstaking.FieldEnableSetCommission:
+		return m.EnableSetCommission()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *AppDelegatedStakingMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case appdelegatedstaking.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case appdelegatedstaking.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case appdelegatedstaking.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case appdelegatedstaking.FieldEntID:
+		return m.OldEntID(ctx)
+	case appdelegatedstaking.FieldAppGoodID:
+		return m.OldAppGoodID(ctx)
+	case appdelegatedstaking.FieldServiceStartAt:
+		return m.OldServiceStartAt(ctx)
+	case appdelegatedstaking.FieldStartMode:
+		return m.OldStartMode(ctx)
+	case appdelegatedstaking.FieldEnableSetCommission:
+		return m.OldEnableSetCommission(ctx)
+	}
+	return nil, fmt.Errorf("unknown AppDelegatedStaking field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AppDelegatedStakingMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case appdelegatedstaking.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case appdelegatedstaking.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case appdelegatedstaking.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case appdelegatedstaking.FieldEntID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEntID(v)
+		return nil
+	case appdelegatedstaking.FieldAppGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppGoodID(v)
+		return nil
+	case appdelegatedstaking.FieldServiceStartAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetServiceStartAt(v)
+		return nil
+	case appdelegatedstaking.FieldStartMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStartMode(v)
+		return nil
+	case appdelegatedstaking.FieldEnableSetCommission:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEnableSetCommission(v)
+		return nil
+	}
+	return fmt.Errorf("unknown AppDelegatedStaking field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *AppDelegatedStakingMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, appdelegatedstaking.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, appdelegatedstaking.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, appdelegatedstaking.FieldDeletedAt)
+	}
+	if m.addservice_start_at != nil {
+		fields = append(fields, appdelegatedstaking.FieldServiceStartAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *AppDelegatedStakingMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case appdelegatedstaking.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case appdelegatedstaking.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case appdelegatedstaking.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	case appdelegatedstaking.FieldServiceStartAt:
+		return m.AddedServiceStartAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AppDelegatedStakingMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case appdelegatedstaking.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case appdelegatedstaking.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case appdelegatedstaking.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	case appdelegatedstaking.FieldServiceStartAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddServiceStartAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown AppDelegatedStaking numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *AppDelegatedStakingMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(appdelegatedstaking.FieldAppGoodID) {
+		fields = append(fields, appdelegatedstaking.FieldAppGoodID)
+	}
+	if m.FieldCleared(appdelegatedstaking.FieldServiceStartAt) {
+		fields = append(fields, appdelegatedstaking.FieldServiceStartAt)
+	}
+	if m.FieldCleared(appdelegatedstaking.FieldStartMode) {
+		fields = append(fields, appdelegatedstaking.FieldStartMode)
+	}
+	if m.FieldCleared(appdelegatedstaking.FieldEnableSetCommission) {
+		fields = append(fields, appdelegatedstaking.FieldEnableSetCommission)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *AppDelegatedStakingMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *AppDelegatedStakingMutation) ClearField(name string) error {
+	switch name {
+	case appdelegatedstaking.FieldAppGoodID:
+		m.ClearAppGoodID()
+		return nil
+	case appdelegatedstaking.FieldServiceStartAt:
+		m.ClearServiceStartAt()
+		return nil
+	case appdelegatedstaking.FieldStartMode:
+		m.ClearStartMode()
+		return nil
+	case appdelegatedstaking.FieldEnableSetCommission:
+		m.ClearEnableSetCommission()
+		return nil
+	}
+	return fmt.Errorf("unknown AppDelegatedStaking nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *AppDelegatedStakingMutation) ResetField(name string) error {
+	switch name {
+	case appdelegatedstaking.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case appdelegatedstaking.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case appdelegatedstaking.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case appdelegatedstaking.FieldEntID:
+		m.ResetEntID()
+		return nil
+	case appdelegatedstaking.FieldAppGoodID:
+		m.ResetAppGoodID()
+		return nil
+	case appdelegatedstaking.FieldServiceStartAt:
+		m.ResetServiceStartAt()
+		return nil
+	case appdelegatedstaking.FieldStartMode:
+		m.ResetStartMode()
+		return nil
+	case appdelegatedstaking.FieldEnableSetCommission:
+		m.ResetEnableSetCommission()
+		return nil
+	}
+	return fmt.Errorf("unknown AppDelegatedStaking field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *AppDelegatedStakingMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *AppDelegatedStakingMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *AppDelegatedStakingMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *AppDelegatedStakingMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *AppDelegatedStakingMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *AppDelegatedStakingMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *AppDelegatedStakingMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown AppDelegatedStaking unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *AppDelegatedStakingMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown AppDelegatedStaking edge %s", name)
 }
 
 // AppFeeMutation represents an operation that mutates the AppFee nodes in the graph.
@@ -18828,28 +19740,24 @@ func (m *CommentMutation) ResetEdge(name string) error {
 // DelegatedStakingMutation represents an operation that mutates the DelegatedStaking nodes in the graph.
 type DelegatedStakingMutation struct {
 	config
-	op                              Op
-	typ                             string
-	id                              *uint32
-	created_at                      *uint32
-	addcreated_at                   *int32
-	updated_at                      *uint32
-	addupdated_at                   *int32
-	deleted_at                      *uint32
-	adddeleted_at                   *int32
-	ent_id                          *uuid.UUID
-	good_id                         *uuid.UUID
-	no_stake_redeem_delay_hours     *uint32
-	addno_stake_redeem_delay_hours  *int32
-	max_redeem_delay_hours          *uint32
-	addmax_redeem_delay_hours       *int32
-	contract_address                *string
-	no_stake_benefit_delay_hours    *uint32
-	addno_stake_benefit_delay_hours *int32
-	clearedFields                   map[string]struct{}
-	done                            bool
-	oldValue                        func(context.Context) (*DelegatedStaking, error)
-	predicates                      []predicate.DelegatedStaking
+	op                   Op
+	typ                  string
+	id                   *uint32
+	created_at           *uint32
+	addcreated_at        *int32
+	updated_at           *uint32
+	addupdated_at        *int32
+	deleted_at           *uint32
+	adddeleted_at        *int32
+	ent_id               *uuid.UUID
+	good_id              *uuid.UUID
+	contract_code_url    *string
+	contract_code_branch *string
+	contract_state       *string
+	clearedFields        map[string]struct{}
+	done                 bool
+	oldValue             func(context.Context) (*DelegatedStaking, error)
+	predicates           []predicate.DelegatedStaking
 }
 
 var _ ent.Mutation = (*DelegatedStakingMutation)(nil)
@@ -19209,263 +20117,151 @@ func (m *DelegatedStakingMutation) ResetGoodID() {
 	delete(m.clearedFields, delegatedstaking.FieldGoodID)
 }
 
-// SetNoStakeRedeemDelayHours sets the "no_stake_redeem_delay_hours" field.
-func (m *DelegatedStakingMutation) SetNoStakeRedeemDelayHours(u uint32) {
-	m.no_stake_redeem_delay_hours = &u
-	m.addno_stake_redeem_delay_hours = nil
+// SetContractCodeURL sets the "contract_code_url" field.
+func (m *DelegatedStakingMutation) SetContractCodeURL(s string) {
+	m.contract_code_url = &s
 }
 
-// NoStakeRedeemDelayHours returns the value of the "no_stake_redeem_delay_hours" field in the mutation.
-func (m *DelegatedStakingMutation) NoStakeRedeemDelayHours() (r uint32, exists bool) {
-	v := m.no_stake_redeem_delay_hours
+// ContractCodeURL returns the value of the "contract_code_url" field in the mutation.
+func (m *DelegatedStakingMutation) ContractCodeURL() (r string, exists bool) {
+	v := m.contract_code_url
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldNoStakeRedeemDelayHours returns the old "no_stake_redeem_delay_hours" field's value of the DelegatedStaking entity.
+// OldContractCodeURL returns the old "contract_code_url" field's value of the DelegatedStaking entity.
 // If the DelegatedStaking object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DelegatedStakingMutation) OldNoStakeRedeemDelayHours(ctx context.Context) (v uint32, err error) {
+func (m *DelegatedStakingMutation) OldContractCodeURL(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldNoStakeRedeemDelayHours is only allowed on UpdateOne operations")
+		return v, errors.New("OldContractCodeURL is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldNoStakeRedeemDelayHours requires an ID field in the mutation")
+		return v, errors.New("OldContractCodeURL requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldNoStakeRedeemDelayHours: %w", err)
+		return v, fmt.Errorf("querying old value for OldContractCodeURL: %w", err)
 	}
-	return oldValue.NoStakeRedeemDelayHours, nil
+	return oldValue.ContractCodeURL, nil
 }
 
-// AddNoStakeRedeemDelayHours adds u to the "no_stake_redeem_delay_hours" field.
-func (m *DelegatedStakingMutation) AddNoStakeRedeemDelayHours(u int32) {
-	if m.addno_stake_redeem_delay_hours != nil {
-		*m.addno_stake_redeem_delay_hours += u
-	} else {
-		m.addno_stake_redeem_delay_hours = &u
-	}
+// ClearContractCodeURL clears the value of the "contract_code_url" field.
+func (m *DelegatedStakingMutation) ClearContractCodeURL() {
+	m.contract_code_url = nil
+	m.clearedFields[delegatedstaking.FieldContractCodeURL] = struct{}{}
 }
 
-// AddedNoStakeRedeemDelayHours returns the value that was added to the "no_stake_redeem_delay_hours" field in this mutation.
-func (m *DelegatedStakingMutation) AddedNoStakeRedeemDelayHours() (r int32, exists bool) {
-	v := m.addno_stake_redeem_delay_hours
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ClearNoStakeRedeemDelayHours clears the value of the "no_stake_redeem_delay_hours" field.
-func (m *DelegatedStakingMutation) ClearNoStakeRedeemDelayHours() {
-	m.no_stake_redeem_delay_hours = nil
-	m.addno_stake_redeem_delay_hours = nil
-	m.clearedFields[delegatedstaking.FieldNoStakeRedeemDelayHours] = struct{}{}
-}
-
-// NoStakeRedeemDelayHoursCleared returns if the "no_stake_redeem_delay_hours" field was cleared in this mutation.
-func (m *DelegatedStakingMutation) NoStakeRedeemDelayHoursCleared() bool {
-	_, ok := m.clearedFields[delegatedstaking.FieldNoStakeRedeemDelayHours]
+// ContractCodeURLCleared returns if the "contract_code_url" field was cleared in this mutation.
+func (m *DelegatedStakingMutation) ContractCodeURLCleared() bool {
+	_, ok := m.clearedFields[delegatedstaking.FieldContractCodeURL]
 	return ok
 }
 
-// ResetNoStakeRedeemDelayHours resets all changes to the "no_stake_redeem_delay_hours" field.
-func (m *DelegatedStakingMutation) ResetNoStakeRedeemDelayHours() {
-	m.no_stake_redeem_delay_hours = nil
-	m.addno_stake_redeem_delay_hours = nil
-	delete(m.clearedFields, delegatedstaking.FieldNoStakeRedeemDelayHours)
+// ResetContractCodeURL resets all changes to the "contract_code_url" field.
+func (m *DelegatedStakingMutation) ResetContractCodeURL() {
+	m.contract_code_url = nil
+	delete(m.clearedFields, delegatedstaking.FieldContractCodeURL)
 }
 
-// SetMaxRedeemDelayHours sets the "max_redeem_delay_hours" field.
-func (m *DelegatedStakingMutation) SetMaxRedeemDelayHours(u uint32) {
-	m.max_redeem_delay_hours = &u
-	m.addmax_redeem_delay_hours = nil
+// SetContractCodeBranch sets the "contract_code_branch" field.
+func (m *DelegatedStakingMutation) SetContractCodeBranch(s string) {
+	m.contract_code_branch = &s
 }
 
-// MaxRedeemDelayHours returns the value of the "max_redeem_delay_hours" field in the mutation.
-func (m *DelegatedStakingMutation) MaxRedeemDelayHours() (r uint32, exists bool) {
-	v := m.max_redeem_delay_hours
+// ContractCodeBranch returns the value of the "contract_code_branch" field in the mutation.
+func (m *DelegatedStakingMutation) ContractCodeBranch() (r string, exists bool) {
+	v := m.contract_code_branch
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldMaxRedeemDelayHours returns the old "max_redeem_delay_hours" field's value of the DelegatedStaking entity.
+// OldContractCodeBranch returns the old "contract_code_branch" field's value of the DelegatedStaking entity.
 // If the DelegatedStaking object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DelegatedStakingMutation) OldMaxRedeemDelayHours(ctx context.Context) (v uint32, err error) {
+func (m *DelegatedStakingMutation) OldContractCodeBranch(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldMaxRedeemDelayHours is only allowed on UpdateOne operations")
+		return v, errors.New("OldContractCodeBranch is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldMaxRedeemDelayHours requires an ID field in the mutation")
+		return v, errors.New("OldContractCodeBranch requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldMaxRedeemDelayHours: %w", err)
+		return v, fmt.Errorf("querying old value for OldContractCodeBranch: %w", err)
 	}
-	return oldValue.MaxRedeemDelayHours, nil
+	return oldValue.ContractCodeBranch, nil
 }
 
-// AddMaxRedeemDelayHours adds u to the "max_redeem_delay_hours" field.
-func (m *DelegatedStakingMutation) AddMaxRedeemDelayHours(u int32) {
-	if m.addmax_redeem_delay_hours != nil {
-		*m.addmax_redeem_delay_hours += u
-	} else {
-		m.addmax_redeem_delay_hours = &u
-	}
+// ClearContractCodeBranch clears the value of the "contract_code_branch" field.
+func (m *DelegatedStakingMutation) ClearContractCodeBranch() {
+	m.contract_code_branch = nil
+	m.clearedFields[delegatedstaking.FieldContractCodeBranch] = struct{}{}
 }
 
-// AddedMaxRedeemDelayHours returns the value that was added to the "max_redeem_delay_hours" field in this mutation.
-func (m *DelegatedStakingMutation) AddedMaxRedeemDelayHours() (r int32, exists bool) {
-	v := m.addmax_redeem_delay_hours
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ClearMaxRedeemDelayHours clears the value of the "max_redeem_delay_hours" field.
-func (m *DelegatedStakingMutation) ClearMaxRedeemDelayHours() {
-	m.max_redeem_delay_hours = nil
-	m.addmax_redeem_delay_hours = nil
-	m.clearedFields[delegatedstaking.FieldMaxRedeemDelayHours] = struct{}{}
-}
-
-// MaxRedeemDelayHoursCleared returns if the "max_redeem_delay_hours" field was cleared in this mutation.
-func (m *DelegatedStakingMutation) MaxRedeemDelayHoursCleared() bool {
-	_, ok := m.clearedFields[delegatedstaking.FieldMaxRedeemDelayHours]
+// ContractCodeBranchCleared returns if the "contract_code_branch" field was cleared in this mutation.
+func (m *DelegatedStakingMutation) ContractCodeBranchCleared() bool {
+	_, ok := m.clearedFields[delegatedstaking.FieldContractCodeBranch]
 	return ok
 }
 
-// ResetMaxRedeemDelayHours resets all changes to the "max_redeem_delay_hours" field.
-func (m *DelegatedStakingMutation) ResetMaxRedeemDelayHours() {
-	m.max_redeem_delay_hours = nil
-	m.addmax_redeem_delay_hours = nil
-	delete(m.clearedFields, delegatedstaking.FieldMaxRedeemDelayHours)
+// ResetContractCodeBranch resets all changes to the "contract_code_branch" field.
+func (m *DelegatedStakingMutation) ResetContractCodeBranch() {
+	m.contract_code_branch = nil
+	delete(m.clearedFields, delegatedstaking.FieldContractCodeBranch)
 }
 
-// SetContractAddress sets the "contract_address" field.
-func (m *DelegatedStakingMutation) SetContractAddress(s string) {
-	m.contract_address = &s
+// SetContractState sets the "contract_state" field.
+func (m *DelegatedStakingMutation) SetContractState(s string) {
+	m.contract_state = &s
 }
 
-// ContractAddress returns the value of the "contract_address" field in the mutation.
-func (m *DelegatedStakingMutation) ContractAddress() (r string, exists bool) {
-	v := m.contract_address
+// ContractState returns the value of the "contract_state" field in the mutation.
+func (m *DelegatedStakingMutation) ContractState() (r string, exists bool) {
+	v := m.contract_state
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldContractAddress returns the old "contract_address" field's value of the DelegatedStaking entity.
+// OldContractState returns the old "contract_state" field's value of the DelegatedStaking entity.
 // If the DelegatedStaking object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DelegatedStakingMutation) OldContractAddress(ctx context.Context) (v string, err error) {
+func (m *DelegatedStakingMutation) OldContractState(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldContractAddress is only allowed on UpdateOne operations")
+		return v, errors.New("OldContractState is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldContractAddress requires an ID field in the mutation")
+		return v, errors.New("OldContractState requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldContractAddress: %w", err)
+		return v, fmt.Errorf("querying old value for OldContractState: %w", err)
 	}
-	return oldValue.ContractAddress, nil
+	return oldValue.ContractState, nil
 }
 
-// ClearContractAddress clears the value of the "contract_address" field.
-func (m *DelegatedStakingMutation) ClearContractAddress() {
-	m.contract_address = nil
-	m.clearedFields[delegatedstaking.FieldContractAddress] = struct{}{}
+// ClearContractState clears the value of the "contract_state" field.
+func (m *DelegatedStakingMutation) ClearContractState() {
+	m.contract_state = nil
+	m.clearedFields[delegatedstaking.FieldContractState] = struct{}{}
 }
 
-// ContractAddressCleared returns if the "contract_address" field was cleared in this mutation.
-func (m *DelegatedStakingMutation) ContractAddressCleared() bool {
-	_, ok := m.clearedFields[delegatedstaking.FieldContractAddress]
+// ContractStateCleared returns if the "contract_state" field was cleared in this mutation.
+func (m *DelegatedStakingMutation) ContractStateCleared() bool {
+	_, ok := m.clearedFields[delegatedstaking.FieldContractState]
 	return ok
 }
 
-// ResetContractAddress resets all changes to the "contract_address" field.
-func (m *DelegatedStakingMutation) ResetContractAddress() {
-	m.contract_address = nil
-	delete(m.clearedFields, delegatedstaking.FieldContractAddress)
-}
-
-// SetNoStakeBenefitDelayHours sets the "no_stake_benefit_delay_hours" field.
-func (m *DelegatedStakingMutation) SetNoStakeBenefitDelayHours(u uint32) {
-	m.no_stake_benefit_delay_hours = &u
-	m.addno_stake_benefit_delay_hours = nil
-}
-
-// NoStakeBenefitDelayHours returns the value of the "no_stake_benefit_delay_hours" field in the mutation.
-func (m *DelegatedStakingMutation) NoStakeBenefitDelayHours() (r uint32, exists bool) {
-	v := m.no_stake_benefit_delay_hours
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldNoStakeBenefitDelayHours returns the old "no_stake_benefit_delay_hours" field's value of the DelegatedStaking entity.
-// If the DelegatedStaking object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DelegatedStakingMutation) OldNoStakeBenefitDelayHours(ctx context.Context) (v uint32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldNoStakeBenefitDelayHours is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldNoStakeBenefitDelayHours requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldNoStakeBenefitDelayHours: %w", err)
-	}
-	return oldValue.NoStakeBenefitDelayHours, nil
-}
-
-// AddNoStakeBenefitDelayHours adds u to the "no_stake_benefit_delay_hours" field.
-func (m *DelegatedStakingMutation) AddNoStakeBenefitDelayHours(u int32) {
-	if m.addno_stake_benefit_delay_hours != nil {
-		*m.addno_stake_benefit_delay_hours += u
-	} else {
-		m.addno_stake_benefit_delay_hours = &u
-	}
-}
-
-// AddedNoStakeBenefitDelayHours returns the value that was added to the "no_stake_benefit_delay_hours" field in this mutation.
-func (m *DelegatedStakingMutation) AddedNoStakeBenefitDelayHours() (r int32, exists bool) {
-	v := m.addno_stake_benefit_delay_hours
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ClearNoStakeBenefitDelayHours clears the value of the "no_stake_benefit_delay_hours" field.
-func (m *DelegatedStakingMutation) ClearNoStakeBenefitDelayHours() {
-	m.no_stake_benefit_delay_hours = nil
-	m.addno_stake_benefit_delay_hours = nil
-	m.clearedFields[delegatedstaking.FieldNoStakeBenefitDelayHours] = struct{}{}
-}
-
-// NoStakeBenefitDelayHoursCleared returns if the "no_stake_benefit_delay_hours" field was cleared in this mutation.
-func (m *DelegatedStakingMutation) NoStakeBenefitDelayHoursCleared() bool {
-	_, ok := m.clearedFields[delegatedstaking.FieldNoStakeBenefitDelayHours]
-	return ok
-}
-
-// ResetNoStakeBenefitDelayHours resets all changes to the "no_stake_benefit_delay_hours" field.
-func (m *DelegatedStakingMutation) ResetNoStakeBenefitDelayHours() {
-	m.no_stake_benefit_delay_hours = nil
-	m.addno_stake_benefit_delay_hours = nil
-	delete(m.clearedFields, delegatedstaking.FieldNoStakeBenefitDelayHours)
+// ResetContractState resets all changes to the "contract_state" field.
+func (m *DelegatedStakingMutation) ResetContractState() {
+	m.contract_state = nil
+	delete(m.clearedFields, delegatedstaking.FieldContractState)
 }
 
 // Where appends a list predicates to the DelegatedStakingMutation builder.
@@ -19487,7 +20283,7 @@ func (m *DelegatedStakingMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *DelegatedStakingMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 8)
 	if m.created_at != nil {
 		fields = append(fields, delegatedstaking.FieldCreatedAt)
 	}
@@ -19503,17 +20299,14 @@ func (m *DelegatedStakingMutation) Fields() []string {
 	if m.good_id != nil {
 		fields = append(fields, delegatedstaking.FieldGoodID)
 	}
-	if m.no_stake_redeem_delay_hours != nil {
-		fields = append(fields, delegatedstaking.FieldNoStakeRedeemDelayHours)
+	if m.contract_code_url != nil {
+		fields = append(fields, delegatedstaking.FieldContractCodeURL)
 	}
-	if m.max_redeem_delay_hours != nil {
-		fields = append(fields, delegatedstaking.FieldMaxRedeemDelayHours)
+	if m.contract_code_branch != nil {
+		fields = append(fields, delegatedstaking.FieldContractCodeBranch)
 	}
-	if m.contract_address != nil {
-		fields = append(fields, delegatedstaking.FieldContractAddress)
-	}
-	if m.no_stake_benefit_delay_hours != nil {
-		fields = append(fields, delegatedstaking.FieldNoStakeBenefitDelayHours)
+	if m.contract_state != nil {
+		fields = append(fields, delegatedstaking.FieldContractState)
 	}
 	return fields
 }
@@ -19533,14 +20326,12 @@ func (m *DelegatedStakingMutation) Field(name string) (ent.Value, bool) {
 		return m.EntID()
 	case delegatedstaking.FieldGoodID:
 		return m.GoodID()
-	case delegatedstaking.FieldNoStakeRedeemDelayHours:
-		return m.NoStakeRedeemDelayHours()
-	case delegatedstaking.FieldMaxRedeemDelayHours:
-		return m.MaxRedeemDelayHours()
-	case delegatedstaking.FieldContractAddress:
-		return m.ContractAddress()
-	case delegatedstaking.FieldNoStakeBenefitDelayHours:
-		return m.NoStakeBenefitDelayHours()
+	case delegatedstaking.FieldContractCodeURL:
+		return m.ContractCodeURL()
+	case delegatedstaking.FieldContractCodeBranch:
+		return m.ContractCodeBranch()
+	case delegatedstaking.FieldContractState:
+		return m.ContractState()
 	}
 	return nil, false
 }
@@ -19560,14 +20351,12 @@ func (m *DelegatedStakingMutation) OldField(ctx context.Context, name string) (e
 		return m.OldEntID(ctx)
 	case delegatedstaking.FieldGoodID:
 		return m.OldGoodID(ctx)
-	case delegatedstaking.FieldNoStakeRedeemDelayHours:
-		return m.OldNoStakeRedeemDelayHours(ctx)
-	case delegatedstaking.FieldMaxRedeemDelayHours:
-		return m.OldMaxRedeemDelayHours(ctx)
-	case delegatedstaking.FieldContractAddress:
-		return m.OldContractAddress(ctx)
-	case delegatedstaking.FieldNoStakeBenefitDelayHours:
-		return m.OldNoStakeBenefitDelayHours(ctx)
+	case delegatedstaking.FieldContractCodeURL:
+		return m.OldContractCodeURL(ctx)
+	case delegatedstaking.FieldContractCodeBranch:
+		return m.OldContractCodeBranch(ctx)
+	case delegatedstaking.FieldContractState:
+		return m.OldContractState(ctx)
 	}
 	return nil, fmt.Errorf("unknown DelegatedStaking field %s", name)
 }
@@ -19612,33 +20401,26 @@ func (m *DelegatedStakingMutation) SetField(name string, value ent.Value) error 
 		}
 		m.SetGoodID(v)
 		return nil
-	case delegatedstaking.FieldNoStakeRedeemDelayHours:
-		v, ok := value.(uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetNoStakeRedeemDelayHours(v)
-		return nil
-	case delegatedstaking.FieldMaxRedeemDelayHours:
-		v, ok := value.(uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetMaxRedeemDelayHours(v)
-		return nil
-	case delegatedstaking.FieldContractAddress:
+	case delegatedstaking.FieldContractCodeURL:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetContractAddress(v)
+		m.SetContractCodeURL(v)
 		return nil
-	case delegatedstaking.FieldNoStakeBenefitDelayHours:
-		v, ok := value.(uint32)
+	case delegatedstaking.FieldContractCodeBranch:
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetNoStakeBenefitDelayHours(v)
+		m.SetContractCodeBranch(v)
+		return nil
+	case delegatedstaking.FieldContractState:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContractState(v)
 		return nil
 	}
 	return fmt.Errorf("unknown DelegatedStaking field %s", name)
@@ -19657,15 +20439,6 @@ func (m *DelegatedStakingMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, delegatedstaking.FieldDeletedAt)
 	}
-	if m.addno_stake_redeem_delay_hours != nil {
-		fields = append(fields, delegatedstaking.FieldNoStakeRedeemDelayHours)
-	}
-	if m.addmax_redeem_delay_hours != nil {
-		fields = append(fields, delegatedstaking.FieldMaxRedeemDelayHours)
-	}
-	if m.addno_stake_benefit_delay_hours != nil {
-		fields = append(fields, delegatedstaking.FieldNoStakeBenefitDelayHours)
-	}
 	return fields
 }
 
@@ -19680,12 +20453,6 @@ func (m *DelegatedStakingMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdatedAt()
 	case delegatedstaking.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case delegatedstaking.FieldNoStakeRedeemDelayHours:
-		return m.AddedNoStakeRedeemDelayHours()
-	case delegatedstaking.FieldMaxRedeemDelayHours:
-		return m.AddedMaxRedeemDelayHours()
-	case delegatedstaking.FieldNoStakeBenefitDelayHours:
-		return m.AddedNoStakeBenefitDelayHours()
 	}
 	return nil, false
 }
@@ -19716,27 +20483,6 @@ func (m *DelegatedStakingMutation) AddField(name string, value ent.Value) error 
 		}
 		m.AddDeletedAt(v)
 		return nil
-	case delegatedstaking.FieldNoStakeRedeemDelayHours:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddNoStakeRedeemDelayHours(v)
-		return nil
-	case delegatedstaking.FieldMaxRedeemDelayHours:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddMaxRedeemDelayHours(v)
-		return nil
-	case delegatedstaking.FieldNoStakeBenefitDelayHours:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddNoStakeBenefitDelayHours(v)
-		return nil
 	}
 	return fmt.Errorf("unknown DelegatedStaking numeric field %s", name)
 }
@@ -19748,17 +20494,14 @@ func (m *DelegatedStakingMutation) ClearedFields() []string {
 	if m.FieldCleared(delegatedstaking.FieldGoodID) {
 		fields = append(fields, delegatedstaking.FieldGoodID)
 	}
-	if m.FieldCleared(delegatedstaking.FieldNoStakeRedeemDelayHours) {
-		fields = append(fields, delegatedstaking.FieldNoStakeRedeemDelayHours)
+	if m.FieldCleared(delegatedstaking.FieldContractCodeURL) {
+		fields = append(fields, delegatedstaking.FieldContractCodeURL)
 	}
-	if m.FieldCleared(delegatedstaking.FieldMaxRedeemDelayHours) {
-		fields = append(fields, delegatedstaking.FieldMaxRedeemDelayHours)
+	if m.FieldCleared(delegatedstaking.FieldContractCodeBranch) {
+		fields = append(fields, delegatedstaking.FieldContractCodeBranch)
 	}
-	if m.FieldCleared(delegatedstaking.FieldContractAddress) {
-		fields = append(fields, delegatedstaking.FieldContractAddress)
-	}
-	if m.FieldCleared(delegatedstaking.FieldNoStakeBenefitDelayHours) {
-		fields = append(fields, delegatedstaking.FieldNoStakeBenefitDelayHours)
+	if m.FieldCleared(delegatedstaking.FieldContractState) {
+		fields = append(fields, delegatedstaking.FieldContractState)
 	}
 	return fields
 }
@@ -19777,17 +20520,14 @@ func (m *DelegatedStakingMutation) ClearField(name string) error {
 	case delegatedstaking.FieldGoodID:
 		m.ClearGoodID()
 		return nil
-	case delegatedstaking.FieldNoStakeRedeemDelayHours:
-		m.ClearNoStakeRedeemDelayHours()
+	case delegatedstaking.FieldContractCodeURL:
+		m.ClearContractCodeURL()
 		return nil
-	case delegatedstaking.FieldMaxRedeemDelayHours:
-		m.ClearMaxRedeemDelayHours()
+	case delegatedstaking.FieldContractCodeBranch:
+		m.ClearContractCodeBranch()
 		return nil
-	case delegatedstaking.FieldContractAddress:
-		m.ClearContractAddress()
-		return nil
-	case delegatedstaking.FieldNoStakeBenefitDelayHours:
-		m.ClearNoStakeBenefitDelayHours()
+	case delegatedstaking.FieldContractState:
+		m.ClearContractState()
 		return nil
 	}
 	return fmt.Errorf("unknown DelegatedStaking nullable field %s", name)
@@ -19812,17 +20552,14 @@ func (m *DelegatedStakingMutation) ResetField(name string) error {
 	case delegatedstaking.FieldGoodID:
 		m.ResetGoodID()
 		return nil
-	case delegatedstaking.FieldNoStakeRedeemDelayHours:
-		m.ResetNoStakeRedeemDelayHours()
+	case delegatedstaking.FieldContractCodeURL:
+		m.ResetContractCodeURL()
 		return nil
-	case delegatedstaking.FieldMaxRedeemDelayHours:
-		m.ResetMaxRedeemDelayHours()
+	case delegatedstaking.FieldContractCodeBranch:
+		m.ResetContractCodeBranch()
 		return nil
-	case delegatedstaking.FieldContractAddress:
-		m.ResetContractAddress()
-		return nil
-	case delegatedstaking.FieldNoStakeBenefitDelayHours:
-		m.ResetNoStakeBenefitDelayHours()
+	case delegatedstaking.FieldContractState:
+		m.ResetContractState()
 		return nil
 	}
 	return fmt.Errorf("unknown DelegatedStaking field %s", name)

@@ -5,6 +5,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/mixin"
 	crudermixin "github.com/NpoolPlatform/libent-cruder/pkg/mixin"
+	types "github.com/NpoolPlatform/message/npool/basetypes/good/v1"
 	"github.com/google/uuid"
 )
 
@@ -30,21 +31,17 @@ func (DelegatedStaking) Fields() []ent.Field {
 				return uuid.Nil
 			}),
 		field.
-			Uint32("no_stake_redeem_delay_hours").
-			Optional().
-			Default(8), //nolint
-		field.
-			Uint32("max_redeem_delay_hours").
-			Optional().
-			Default(96), //nolint
-		field.
-			String("contract_address").
+			String("contract_code_url").
 			Optional().
 			Default(""),
 		field.
-			Uint32("no_stake_benefit_delay_hours").
+			String("contract_code_branch").
 			Optional().
-			Default(24), //nolint
+			Default(""),
+		field.
+			String("contract_state").
+			Optional().
+			Default(types.ContractState_ContractWaitDeployment.String()),
 	}
 }
 

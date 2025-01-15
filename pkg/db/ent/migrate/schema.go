@@ -32,6 +32,36 @@ var (
 			},
 		},
 	}
+	// AppDelegatedStakingsColumns holds the columns for the "app_delegated_stakings" table.
+	AppDelegatedStakingsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint32, Increment: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_good_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "service_start_at", Type: field.TypeUint32, Nullable: true, Default: 0},
+		{Name: "start_mode", Type: field.TypeString, Nullable: true, Default: "GoodStartModeNextDay"},
+		{Name: "enable_set_commission", Type: field.TypeBool, Nullable: true, Default: false},
+	}
+	// AppDelegatedStakingsTable holds the schema information for the "app_delegated_stakings" table.
+	AppDelegatedStakingsTable = &schema.Table{
+		Name:       "app_delegated_stakings",
+		Columns:    AppDelegatedStakingsColumns,
+		PrimaryKey: []*schema.Column{AppDelegatedStakingsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appdelegatedstaking_ent_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppDelegatedStakingsColumns[4]},
+			},
+			{
+				Name:    "appdelegatedstaking_app_good_id",
+				Unique:  false,
+				Columns: []*schema.Column{AppDelegatedStakingsColumns[5]},
+			},
+		},
+	}
 	// AppFeesColumns holds the columns for the "app_fees" table.
 	AppFeesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint32, Increment: true},
@@ -522,10 +552,9 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "ent_id", Type: field.TypeUUID, Unique: true},
 		{Name: "good_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "no_stake_redeem_delay_hours", Type: field.TypeUint32, Nullable: true, Default: 8},
-		{Name: "max_redeem_delay_hours", Type: field.TypeUint32, Nullable: true, Default: 96},
-		{Name: "contract_address", Type: field.TypeString, Nullable: true, Default: ""},
-		{Name: "no_stake_benefit_delay_hours", Type: field.TypeUint32, Nullable: true, Default: 24},
+		{Name: "contract_code_url", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "contract_code_branch", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "contract_state", Type: field.TypeString, Nullable: true, Default: "ContractWaitDeployment"},
 	}
 	// DelegatedStakingsTable holds the schema information for the "delegated_stakings" table.
 	DelegatedStakingsTable = &schema.Table{
@@ -1424,6 +1453,7 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AppDefaultGoodsTable,
+		AppDelegatedStakingsTable,
 		AppFeesTable,
 		AppGoodsTable,
 		AppGoodBasesTable,

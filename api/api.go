@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 
+	appdelegatedstaking "github.com/NpoolPlatform/good-middleware/api/app/delegatedstaking"
 	appfee "github.com/NpoolPlatform/good-middleware/api/app/fee"
 	appgood "github.com/NpoolPlatform/good-middleware/api/app/good"
 	"github.com/NpoolPlatform/good-middleware/api/app/good/comment"
@@ -25,6 +26,7 @@ import (
 	topmostposter "github.com/NpoolPlatform/good-middleware/api/app/good/topmost/poster"
 	apppowerrental "github.com/NpoolPlatform/good-middleware/api/app/powerrental"
 	appsimulatepowerrental "github.com/NpoolPlatform/good-middleware/api/app/powerrental/simulate"
+	delegatedstaking "github.com/NpoolPlatform/good-middleware/api/delegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/api/device"
 	manufacturer "github.com/NpoolPlatform/good-middleware/api/device/manufacturer"
 	deviceposter "github.com/NpoolPlatform/good-middleware/api/device/poster"
@@ -83,6 +85,8 @@ func Register(server grpc.ServiceRegistrar) {
 	powerrental.Register(server)
 	good.Register(server)
 	appgood.Register(server)
+	delegatedstaking.Register(server)
+	appdelegatedstaking.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {

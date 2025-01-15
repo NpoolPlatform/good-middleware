@@ -11,6 +11,7 @@ import (
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/migrate"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdelegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appfee"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
@@ -68,6 +69,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// AppDefaultGood is the client for interacting with the AppDefaultGood builders.
 	AppDefaultGood *AppDefaultGoodClient
+	// AppDelegatedStaking is the client for interacting with the AppDelegatedStaking builders.
+	AppDelegatedStaking *AppDelegatedStakingClient
 	// AppFee is the client for interacting with the AppFee builders.
 	AppFee *AppFeeClient
 	// AppGood is the client for interacting with the AppGood builders.
@@ -172,6 +175,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.AppDefaultGood = NewAppDefaultGoodClient(c.config)
+	c.AppDelegatedStaking = NewAppDelegatedStakingClient(c.config)
 	c.AppFee = NewAppFeeClient(c.config)
 	c.AppGood = NewAppGoodClient(c.config)
 	c.AppGoodBase = NewAppGoodBaseClient(c.config)
@@ -251,6 +255,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:                    ctx,
 		config:                 cfg,
 		AppDefaultGood:         NewAppDefaultGoodClient(cfg),
+		AppDelegatedStaking:    NewAppDelegatedStakingClient(cfg),
 		AppFee:                 NewAppFeeClient(cfg),
 		AppGood:                NewAppGoodClient(cfg),
 		AppGoodBase:            NewAppGoodBaseClient(cfg),
@@ -316,6 +321,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		ctx:                    ctx,
 		config:                 cfg,
 		AppDefaultGood:         NewAppDefaultGoodClient(cfg),
+		AppDelegatedStaking:    NewAppDelegatedStakingClient(cfg),
 		AppFee:                 NewAppFeeClient(cfg),
 		AppGood:                NewAppGoodClient(cfg),
 		AppGoodBase:            NewAppGoodBaseClient(cfg),
@@ -391,6 +397,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.AppDefaultGood.Use(hooks...)
+	c.AppDelegatedStaking.Use(hooks...)
 	c.AppFee.Use(hooks...)
 	c.AppGood.Use(hooks...)
 	c.AppGoodBase.Use(hooks...)
@@ -527,6 +534,97 @@ func (c *AppDefaultGoodClient) GetX(ctx context.Context, id uint32) *AppDefaultG
 func (c *AppDefaultGoodClient) Hooks() []Hook {
 	hooks := c.hooks.AppDefaultGood
 	return append(hooks[:len(hooks):len(hooks)], appdefaultgood.Hooks[:]...)
+}
+
+// AppDelegatedStakingClient is a client for the AppDelegatedStaking schema.
+type AppDelegatedStakingClient struct {
+	config
+}
+
+// NewAppDelegatedStakingClient returns a client for the AppDelegatedStaking from the given config.
+func NewAppDelegatedStakingClient(c config) *AppDelegatedStakingClient {
+	return &AppDelegatedStakingClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appdelegatedstaking.Hooks(f(g(h())))`.
+func (c *AppDelegatedStakingClient) Use(hooks ...Hook) {
+	c.hooks.AppDelegatedStaking = append(c.hooks.AppDelegatedStaking, hooks...)
+}
+
+// Create returns a builder for creating a AppDelegatedStaking entity.
+func (c *AppDelegatedStakingClient) Create() *AppDelegatedStakingCreate {
+	mutation := newAppDelegatedStakingMutation(c.config, OpCreate)
+	return &AppDelegatedStakingCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppDelegatedStaking entities.
+func (c *AppDelegatedStakingClient) CreateBulk(builders ...*AppDelegatedStakingCreate) *AppDelegatedStakingCreateBulk {
+	return &AppDelegatedStakingCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppDelegatedStaking.
+func (c *AppDelegatedStakingClient) Update() *AppDelegatedStakingUpdate {
+	mutation := newAppDelegatedStakingMutation(c.config, OpUpdate)
+	return &AppDelegatedStakingUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppDelegatedStakingClient) UpdateOne(ads *AppDelegatedStaking) *AppDelegatedStakingUpdateOne {
+	mutation := newAppDelegatedStakingMutation(c.config, OpUpdateOne, withAppDelegatedStaking(ads))
+	return &AppDelegatedStakingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppDelegatedStakingClient) UpdateOneID(id uint32) *AppDelegatedStakingUpdateOne {
+	mutation := newAppDelegatedStakingMutation(c.config, OpUpdateOne, withAppDelegatedStakingID(id))
+	return &AppDelegatedStakingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppDelegatedStaking.
+func (c *AppDelegatedStakingClient) Delete() *AppDelegatedStakingDelete {
+	mutation := newAppDelegatedStakingMutation(c.config, OpDelete)
+	return &AppDelegatedStakingDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppDelegatedStakingClient) DeleteOne(ads *AppDelegatedStaking) *AppDelegatedStakingDeleteOne {
+	return c.DeleteOneID(ads.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppDelegatedStakingClient) DeleteOneID(id uint32) *AppDelegatedStakingDeleteOne {
+	builder := c.Delete().Where(appdelegatedstaking.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppDelegatedStakingDeleteOne{builder}
+}
+
+// Query returns a query builder for AppDelegatedStaking.
+func (c *AppDelegatedStakingClient) Query() *AppDelegatedStakingQuery {
+	return &AppDelegatedStakingQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppDelegatedStaking entity by its id.
+func (c *AppDelegatedStakingClient) Get(ctx context.Context, id uint32) (*AppDelegatedStaking, error) {
+	return c.Query().Where(appdelegatedstaking.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppDelegatedStakingClient) GetX(ctx context.Context, id uint32) *AppDelegatedStaking {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppDelegatedStakingClient) Hooks() []Hook {
+	hooks := c.hooks.AppDelegatedStaking
+	return append(hooks[:len(hooks):len(hooks)], appdelegatedstaking.Hooks[:]...)
 }
 
 // AppFeeClient is a client for the AppFee schema.

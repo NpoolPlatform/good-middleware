@@ -58,7 +58,6 @@ func WithEntID(id *string, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-//nolint:dupl
 func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {
@@ -74,6 +73,7 @@ func WithGoodType(e *types.GoodType, must bool) func(context.Context, *Handler) 
 		case types.GoodType_LegacyPowerRental:
 		case types.GoodType_TechniqueServiceFee:
 		case types.GoodType_ElectricityFee:
+		case types.GoodType_DelegatedStaking:
 		default:
 			return wlog.Errorf("invalid goodtype")
 		}
@@ -95,6 +95,7 @@ func WithBenefitType(e *types.BenefitType, must bool) func(context.Context, *Han
 		case types.BenefitType_BenefitTypePool:
 		case types.BenefitType_BenefitTypeOffline:
 		case types.BenefitType_BenefitTypeNone:
+		case types.BenefitType_BenefitTypeContract:
 		default:
 			return wlog.Errorf("invalid benefittype")
 		}
@@ -192,7 +193,6 @@ func WithOnline(b *bool, must bool) func(context.Context, *Handler) error {
 	}
 }
 
-//nolint:dupl
 func WithState(e *types.GoodState, must bool) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if e == nil {

@@ -174,6 +174,30 @@ func (f AppDefaultGoodMutationRuleFunc) EvalMutation(ctx context.Context, m ent.
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppDefaultGoodMutation", m)
 }
 
+// The AppDelegatedStakingQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AppDelegatedStakingQueryRuleFunc func(context.Context, *ent.AppDelegatedStakingQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AppDelegatedStakingQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppDelegatedStakingQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppDelegatedStakingQuery", q)
+}
+
+// The AppDelegatedStakingMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AppDelegatedStakingMutationRuleFunc func(context.Context, *ent.AppDelegatedStakingMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AppDelegatedStakingMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppDelegatedStakingMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppDelegatedStakingMutation", m)
+}
+
 // The AppFeeQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type AppFeeQueryRuleFunc func(context.Context, *ent.AppFeeQuery) error
@@ -1291,6 +1315,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 	switch q := q.(type) {
 	case *ent.AppDefaultGoodQuery:
 		return q.Filter(), nil
+	case *ent.AppDelegatedStakingQuery:
+		return q.Filter(), nil
 	case *ent.AppFeeQuery:
 		return q.Filter(), nil
 	case *ent.AppGoodQuery:
@@ -1389,6 +1415,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 func mutationFilter(m ent.Mutation) (Filter, error) {
 	switch m := m.(type) {
 	case *ent.AppDefaultGoodMutation:
+		return m.Filter(), nil
+	case *ent.AppDelegatedStakingMutation:
 		return m.Filter(), nil
 	case *ent.AppFeeMutation:
 		return m.Filter(), nil

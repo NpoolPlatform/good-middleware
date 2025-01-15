@@ -6,6 +6,7 @@ import (
 	"context"
 
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdelegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appfee"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
@@ -97,6 +98,56 @@ func init() {
 	appdefaultgoodDescEntID := appdefaultgoodMixinFields1[1].Descriptor()
 	// appdefaultgood.DefaultEntID holds the default value on creation for the ent_id field.
 	appdefaultgood.DefaultEntID = appdefaultgoodDescEntID.Default.(func() uuid.UUID)
+	appdelegatedstakingMixin := schema.AppDelegatedStaking{}.Mixin()
+	appdelegatedstaking.Policy = privacy.NewPolicies(appdelegatedstakingMixin[0], schema.AppDelegatedStaking{})
+	appdelegatedstaking.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := appdelegatedstaking.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	appdelegatedstakingMixinFields0 := appdelegatedstakingMixin[0].Fields()
+	_ = appdelegatedstakingMixinFields0
+	appdelegatedstakingMixinFields1 := appdelegatedstakingMixin[1].Fields()
+	_ = appdelegatedstakingMixinFields1
+	appdelegatedstakingFields := schema.AppDelegatedStaking{}.Fields()
+	_ = appdelegatedstakingFields
+	// appdelegatedstakingDescCreatedAt is the schema descriptor for created_at field.
+	appdelegatedstakingDescCreatedAt := appdelegatedstakingMixinFields0[0].Descriptor()
+	// appdelegatedstaking.DefaultCreatedAt holds the default value on creation for the created_at field.
+	appdelegatedstaking.DefaultCreatedAt = appdelegatedstakingDescCreatedAt.Default.(func() uint32)
+	// appdelegatedstakingDescUpdatedAt is the schema descriptor for updated_at field.
+	appdelegatedstakingDescUpdatedAt := appdelegatedstakingMixinFields0[1].Descriptor()
+	// appdelegatedstaking.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	appdelegatedstaking.DefaultUpdatedAt = appdelegatedstakingDescUpdatedAt.Default.(func() uint32)
+	// appdelegatedstaking.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	appdelegatedstaking.UpdateDefaultUpdatedAt = appdelegatedstakingDescUpdatedAt.UpdateDefault.(func() uint32)
+	// appdelegatedstakingDescDeletedAt is the schema descriptor for deleted_at field.
+	appdelegatedstakingDescDeletedAt := appdelegatedstakingMixinFields0[2].Descriptor()
+	// appdelegatedstaking.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	appdelegatedstaking.DefaultDeletedAt = appdelegatedstakingDescDeletedAt.Default.(func() uint32)
+	// appdelegatedstakingDescEntID is the schema descriptor for ent_id field.
+	appdelegatedstakingDescEntID := appdelegatedstakingMixinFields1[1].Descriptor()
+	// appdelegatedstaking.DefaultEntID holds the default value on creation for the ent_id field.
+	appdelegatedstaking.DefaultEntID = appdelegatedstakingDescEntID.Default.(func() uuid.UUID)
+	// appdelegatedstakingDescAppGoodID is the schema descriptor for app_good_id field.
+	appdelegatedstakingDescAppGoodID := appdelegatedstakingFields[0].Descriptor()
+	// appdelegatedstaking.DefaultAppGoodID holds the default value on creation for the app_good_id field.
+	appdelegatedstaking.DefaultAppGoodID = appdelegatedstakingDescAppGoodID.Default.(func() uuid.UUID)
+	// appdelegatedstakingDescServiceStartAt is the schema descriptor for service_start_at field.
+	appdelegatedstakingDescServiceStartAt := appdelegatedstakingFields[1].Descriptor()
+	// appdelegatedstaking.DefaultServiceStartAt holds the default value on creation for the service_start_at field.
+	appdelegatedstaking.DefaultServiceStartAt = appdelegatedstakingDescServiceStartAt.Default.(uint32)
+	// appdelegatedstakingDescStartMode is the schema descriptor for start_mode field.
+	appdelegatedstakingDescStartMode := appdelegatedstakingFields[2].Descriptor()
+	// appdelegatedstaking.DefaultStartMode holds the default value on creation for the start_mode field.
+	appdelegatedstaking.DefaultStartMode = appdelegatedstakingDescStartMode.Default.(string)
+	// appdelegatedstakingDescEnableSetCommission is the schema descriptor for enable_set_commission field.
+	appdelegatedstakingDescEnableSetCommission := appdelegatedstakingFields[3].Descriptor()
+	// appdelegatedstaking.DefaultEnableSetCommission holds the default value on creation for the enable_set_commission field.
+	appdelegatedstaking.DefaultEnableSetCommission = appdelegatedstakingDescEnableSetCommission.Default.(bool)
 	appfeeMixin := schema.AppFee{}.Mixin()
 	appfee.Policy = privacy.NewPolicies(appfeeMixin[0], schema.AppFee{})
 	appfee.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -1097,22 +1148,18 @@ func init() {
 	delegatedstakingDescGoodID := delegatedstakingFields[0].Descriptor()
 	// delegatedstaking.DefaultGoodID holds the default value on creation for the good_id field.
 	delegatedstaking.DefaultGoodID = delegatedstakingDescGoodID.Default.(func() uuid.UUID)
-	// delegatedstakingDescNoStakeRedeemDelayHours is the schema descriptor for no_stake_redeem_delay_hours field.
-	delegatedstakingDescNoStakeRedeemDelayHours := delegatedstakingFields[1].Descriptor()
-	// delegatedstaking.DefaultNoStakeRedeemDelayHours holds the default value on creation for the no_stake_redeem_delay_hours field.
-	delegatedstaking.DefaultNoStakeRedeemDelayHours = delegatedstakingDescNoStakeRedeemDelayHours.Default.(uint32)
-	// delegatedstakingDescMaxRedeemDelayHours is the schema descriptor for max_redeem_delay_hours field.
-	delegatedstakingDescMaxRedeemDelayHours := delegatedstakingFields[2].Descriptor()
-	// delegatedstaking.DefaultMaxRedeemDelayHours holds the default value on creation for the max_redeem_delay_hours field.
-	delegatedstaking.DefaultMaxRedeemDelayHours = delegatedstakingDescMaxRedeemDelayHours.Default.(uint32)
-	// delegatedstakingDescContractAddress is the schema descriptor for contract_address field.
-	delegatedstakingDescContractAddress := delegatedstakingFields[3].Descriptor()
-	// delegatedstaking.DefaultContractAddress holds the default value on creation for the contract_address field.
-	delegatedstaking.DefaultContractAddress = delegatedstakingDescContractAddress.Default.(string)
-	// delegatedstakingDescNoStakeBenefitDelayHours is the schema descriptor for no_stake_benefit_delay_hours field.
-	delegatedstakingDescNoStakeBenefitDelayHours := delegatedstakingFields[4].Descriptor()
-	// delegatedstaking.DefaultNoStakeBenefitDelayHours holds the default value on creation for the no_stake_benefit_delay_hours field.
-	delegatedstaking.DefaultNoStakeBenefitDelayHours = delegatedstakingDescNoStakeBenefitDelayHours.Default.(uint32)
+	// delegatedstakingDescContractCodeURL is the schema descriptor for contract_code_url field.
+	delegatedstakingDescContractCodeURL := delegatedstakingFields[1].Descriptor()
+	// delegatedstaking.DefaultContractCodeURL holds the default value on creation for the contract_code_url field.
+	delegatedstaking.DefaultContractCodeURL = delegatedstakingDescContractCodeURL.Default.(string)
+	// delegatedstakingDescContractCodeBranch is the schema descriptor for contract_code_branch field.
+	delegatedstakingDescContractCodeBranch := delegatedstakingFields[2].Descriptor()
+	// delegatedstaking.DefaultContractCodeBranch holds the default value on creation for the contract_code_branch field.
+	delegatedstaking.DefaultContractCodeBranch = delegatedstakingDescContractCodeBranch.Default.(string)
+	// delegatedstakingDescContractState is the schema descriptor for contract_state field.
+	delegatedstakingDescContractState := delegatedstakingFields[3].Descriptor()
+	// delegatedstaking.DefaultContractState holds the default value on creation for the contract_state field.
+	delegatedstaking.DefaultContractState = delegatedstakingDescContractState.Default.(string)
 	deviceinfoMixin := schema.DeviceInfo{}.Mixin()
 	deviceinfo.Policy = privacy.NewPolicies(deviceinfoMixin[0], schema.DeviceInfo{})
 	deviceinfo.Hooks[0] = func(next ent.Mutator) ent.Mutator {

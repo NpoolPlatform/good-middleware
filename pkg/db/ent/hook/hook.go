@@ -22,6 +22,19 @@ func (f AppDefaultGoodFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Val
 	return f(ctx, mv)
 }
 
+// The AppDelegatedStakingFunc type is an adapter to allow the use of ordinary
+// function as AppDelegatedStaking mutator.
+type AppDelegatedStakingFunc func(context.Context, *ent.AppDelegatedStakingMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppDelegatedStakingFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppDelegatedStakingMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppDelegatedStakingMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The AppFeeFunc type is an adapter to allow the use of ordinary
 // function as AppFee mutator.
 type AppFeeFunc func(context.Context, *ent.AppFeeMutation) (ent.Value, error)

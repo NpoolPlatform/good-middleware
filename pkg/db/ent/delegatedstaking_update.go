@@ -118,104 +118,63 @@ func (dsu *DelegatedStakingUpdate) ClearGoodID() *DelegatedStakingUpdate {
 	return dsu
 }
 
-// SetNoStakeRedeemDelayHours sets the "no_stake_redeem_delay_hours" field.
-func (dsu *DelegatedStakingUpdate) SetNoStakeRedeemDelayHours(u uint32) *DelegatedStakingUpdate {
-	dsu.mutation.ResetNoStakeRedeemDelayHours()
-	dsu.mutation.SetNoStakeRedeemDelayHours(u)
+// SetContractCodeURL sets the "contract_code_url" field.
+func (dsu *DelegatedStakingUpdate) SetContractCodeURL(s string) *DelegatedStakingUpdate {
+	dsu.mutation.SetContractCodeURL(s)
 	return dsu
 }
 
-// SetNillableNoStakeRedeemDelayHours sets the "no_stake_redeem_delay_hours" field if the given value is not nil.
-func (dsu *DelegatedStakingUpdate) SetNillableNoStakeRedeemDelayHours(u *uint32) *DelegatedStakingUpdate {
-	if u != nil {
-		dsu.SetNoStakeRedeemDelayHours(*u)
-	}
-	return dsu
-}
-
-// AddNoStakeRedeemDelayHours adds u to the "no_stake_redeem_delay_hours" field.
-func (dsu *DelegatedStakingUpdate) AddNoStakeRedeemDelayHours(u int32) *DelegatedStakingUpdate {
-	dsu.mutation.AddNoStakeRedeemDelayHours(u)
-	return dsu
-}
-
-// ClearNoStakeRedeemDelayHours clears the value of the "no_stake_redeem_delay_hours" field.
-func (dsu *DelegatedStakingUpdate) ClearNoStakeRedeemDelayHours() *DelegatedStakingUpdate {
-	dsu.mutation.ClearNoStakeRedeemDelayHours()
-	return dsu
-}
-
-// SetMaxRedeemDelayHours sets the "max_redeem_delay_hours" field.
-func (dsu *DelegatedStakingUpdate) SetMaxRedeemDelayHours(u uint32) *DelegatedStakingUpdate {
-	dsu.mutation.ResetMaxRedeemDelayHours()
-	dsu.mutation.SetMaxRedeemDelayHours(u)
-	return dsu
-}
-
-// SetNillableMaxRedeemDelayHours sets the "max_redeem_delay_hours" field if the given value is not nil.
-func (dsu *DelegatedStakingUpdate) SetNillableMaxRedeemDelayHours(u *uint32) *DelegatedStakingUpdate {
-	if u != nil {
-		dsu.SetMaxRedeemDelayHours(*u)
-	}
-	return dsu
-}
-
-// AddMaxRedeemDelayHours adds u to the "max_redeem_delay_hours" field.
-func (dsu *DelegatedStakingUpdate) AddMaxRedeemDelayHours(u int32) *DelegatedStakingUpdate {
-	dsu.mutation.AddMaxRedeemDelayHours(u)
-	return dsu
-}
-
-// ClearMaxRedeemDelayHours clears the value of the "max_redeem_delay_hours" field.
-func (dsu *DelegatedStakingUpdate) ClearMaxRedeemDelayHours() *DelegatedStakingUpdate {
-	dsu.mutation.ClearMaxRedeemDelayHours()
-	return dsu
-}
-
-// SetContractAddress sets the "contract_address" field.
-func (dsu *DelegatedStakingUpdate) SetContractAddress(s string) *DelegatedStakingUpdate {
-	dsu.mutation.SetContractAddress(s)
-	return dsu
-}
-
-// SetNillableContractAddress sets the "contract_address" field if the given value is not nil.
-func (dsu *DelegatedStakingUpdate) SetNillableContractAddress(s *string) *DelegatedStakingUpdate {
+// SetNillableContractCodeURL sets the "contract_code_url" field if the given value is not nil.
+func (dsu *DelegatedStakingUpdate) SetNillableContractCodeURL(s *string) *DelegatedStakingUpdate {
 	if s != nil {
-		dsu.SetContractAddress(*s)
+		dsu.SetContractCodeURL(*s)
 	}
 	return dsu
 }
 
-// ClearContractAddress clears the value of the "contract_address" field.
-func (dsu *DelegatedStakingUpdate) ClearContractAddress() *DelegatedStakingUpdate {
-	dsu.mutation.ClearContractAddress()
+// ClearContractCodeURL clears the value of the "contract_code_url" field.
+func (dsu *DelegatedStakingUpdate) ClearContractCodeURL() *DelegatedStakingUpdate {
+	dsu.mutation.ClearContractCodeURL()
 	return dsu
 }
 
-// SetNoStakeBenefitDelayHours sets the "no_stake_benefit_delay_hours" field.
-func (dsu *DelegatedStakingUpdate) SetNoStakeBenefitDelayHours(u uint32) *DelegatedStakingUpdate {
-	dsu.mutation.ResetNoStakeBenefitDelayHours()
-	dsu.mutation.SetNoStakeBenefitDelayHours(u)
+// SetContractCodeBranch sets the "contract_code_branch" field.
+func (dsu *DelegatedStakingUpdate) SetContractCodeBranch(s string) *DelegatedStakingUpdate {
+	dsu.mutation.SetContractCodeBranch(s)
 	return dsu
 }
 
-// SetNillableNoStakeBenefitDelayHours sets the "no_stake_benefit_delay_hours" field if the given value is not nil.
-func (dsu *DelegatedStakingUpdate) SetNillableNoStakeBenefitDelayHours(u *uint32) *DelegatedStakingUpdate {
-	if u != nil {
-		dsu.SetNoStakeBenefitDelayHours(*u)
+// SetNillableContractCodeBranch sets the "contract_code_branch" field if the given value is not nil.
+func (dsu *DelegatedStakingUpdate) SetNillableContractCodeBranch(s *string) *DelegatedStakingUpdate {
+	if s != nil {
+		dsu.SetContractCodeBranch(*s)
 	}
 	return dsu
 }
 
-// AddNoStakeBenefitDelayHours adds u to the "no_stake_benefit_delay_hours" field.
-func (dsu *DelegatedStakingUpdate) AddNoStakeBenefitDelayHours(u int32) *DelegatedStakingUpdate {
-	dsu.mutation.AddNoStakeBenefitDelayHours(u)
+// ClearContractCodeBranch clears the value of the "contract_code_branch" field.
+func (dsu *DelegatedStakingUpdate) ClearContractCodeBranch() *DelegatedStakingUpdate {
+	dsu.mutation.ClearContractCodeBranch()
 	return dsu
 }
 
-// ClearNoStakeBenefitDelayHours clears the value of the "no_stake_benefit_delay_hours" field.
-func (dsu *DelegatedStakingUpdate) ClearNoStakeBenefitDelayHours() *DelegatedStakingUpdate {
-	dsu.mutation.ClearNoStakeBenefitDelayHours()
+// SetContractState sets the "contract_state" field.
+func (dsu *DelegatedStakingUpdate) SetContractState(s string) *DelegatedStakingUpdate {
+	dsu.mutation.SetContractState(s)
+	return dsu
+}
+
+// SetNillableContractState sets the "contract_state" field if the given value is not nil.
+func (dsu *DelegatedStakingUpdate) SetNillableContractState(s *string) *DelegatedStakingUpdate {
+	if s != nil {
+		dsu.SetContractState(*s)
+	}
+	return dsu
+}
+
+// ClearContractState clears the value of the "contract_state" field.
+func (dsu *DelegatedStakingUpdate) ClearContractState() *DelegatedStakingUpdate {
+	dsu.mutation.ClearContractState()
 	return dsu
 }
 
@@ -379,77 +338,43 @@ func (dsu *DelegatedStakingUpdate) sqlSave(ctx context.Context) (n int, err erro
 			Column: delegatedstaking.FieldGoodID,
 		})
 	}
-	if value, ok := dsu.mutation.NoStakeRedeemDelayHours(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: delegatedstaking.FieldNoStakeRedeemDelayHours,
-		})
-	}
-	if value, ok := dsu.mutation.AddedNoStakeRedeemDelayHours(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: delegatedstaking.FieldNoStakeRedeemDelayHours,
-		})
-	}
-	if dsu.mutation.NoStakeRedeemDelayHoursCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: delegatedstaking.FieldNoStakeRedeemDelayHours,
-		})
-	}
-	if value, ok := dsu.mutation.MaxRedeemDelayHours(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: delegatedstaking.FieldMaxRedeemDelayHours,
-		})
-	}
-	if value, ok := dsu.mutation.AddedMaxRedeemDelayHours(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: delegatedstaking.FieldMaxRedeemDelayHours,
-		})
-	}
-	if dsu.mutation.MaxRedeemDelayHoursCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: delegatedstaking.FieldMaxRedeemDelayHours,
-		})
-	}
-	if value, ok := dsu.mutation.ContractAddress(); ok {
+	if value, ok := dsu.mutation.ContractCodeURL(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: delegatedstaking.FieldContractAddress,
+			Column: delegatedstaking.FieldContractCodeURL,
 		})
 	}
-	if dsu.mutation.ContractAddressCleared() {
+	if dsu.mutation.ContractCodeURLCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: delegatedstaking.FieldContractAddress,
+			Column: delegatedstaking.FieldContractCodeURL,
 		})
 	}
-	if value, ok := dsu.mutation.NoStakeBenefitDelayHours(); ok {
+	if value, ok := dsu.mutation.ContractCodeBranch(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: delegatedstaking.FieldNoStakeBenefitDelayHours,
+			Column: delegatedstaking.FieldContractCodeBranch,
 		})
 	}
-	if value, ok := dsu.mutation.AddedNoStakeBenefitDelayHours(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: delegatedstaking.FieldNoStakeBenefitDelayHours,
-		})
-	}
-	if dsu.mutation.NoStakeBenefitDelayHoursCleared() {
+	if dsu.mutation.ContractCodeBranchCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: delegatedstaking.FieldNoStakeBenefitDelayHours,
+			Type:   field.TypeString,
+			Column: delegatedstaking.FieldContractCodeBranch,
+		})
+	}
+	if value, ok := dsu.mutation.ContractState(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: delegatedstaking.FieldContractState,
+		})
+	}
+	if dsu.mutation.ContractStateCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: delegatedstaking.FieldContractState,
 		})
 	}
 	_spec.Modifiers = dsu.modifiers
@@ -562,104 +487,63 @@ func (dsuo *DelegatedStakingUpdateOne) ClearGoodID() *DelegatedStakingUpdateOne 
 	return dsuo
 }
 
-// SetNoStakeRedeemDelayHours sets the "no_stake_redeem_delay_hours" field.
-func (dsuo *DelegatedStakingUpdateOne) SetNoStakeRedeemDelayHours(u uint32) *DelegatedStakingUpdateOne {
-	dsuo.mutation.ResetNoStakeRedeemDelayHours()
-	dsuo.mutation.SetNoStakeRedeemDelayHours(u)
+// SetContractCodeURL sets the "contract_code_url" field.
+func (dsuo *DelegatedStakingUpdateOne) SetContractCodeURL(s string) *DelegatedStakingUpdateOne {
+	dsuo.mutation.SetContractCodeURL(s)
 	return dsuo
 }
 
-// SetNillableNoStakeRedeemDelayHours sets the "no_stake_redeem_delay_hours" field if the given value is not nil.
-func (dsuo *DelegatedStakingUpdateOne) SetNillableNoStakeRedeemDelayHours(u *uint32) *DelegatedStakingUpdateOne {
-	if u != nil {
-		dsuo.SetNoStakeRedeemDelayHours(*u)
-	}
-	return dsuo
-}
-
-// AddNoStakeRedeemDelayHours adds u to the "no_stake_redeem_delay_hours" field.
-func (dsuo *DelegatedStakingUpdateOne) AddNoStakeRedeemDelayHours(u int32) *DelegatedStakingUpdateOne {
-	dsuo.mutation.AddNoStakeRedeemDelayHours(u)
-	return dsuo
-}
-
-// ClearNoStakeRedeemDelayHours clears the value of the "no_stake_redeem_delay_hours" field.
-func (dsuo *DelegatedStakingUpdateOne) ClearNoStakeRedeemDelayHours() *DelegatedStakingUpdateOne {
-	dsuo.mutation.ClearNoStakeRedeemDelayHours()
-	return dsuo
-}
-
-// SetMaxRedeemDelayHours sets the "max_redeem_delay_hours" field.
-func (dsuo *DelegatedStakingUpdateOne) SetMaxRedeemDelayHours(u uint32) *DelegatedStakingUpdateOne {
-	dsuo.mutation.ResetMaxRedeemDelayHours()
-	dsuo.mutation.SetMaxRedeemDelayHours(u)
-	return dsuo
-}
-
-// SetNillableMaxRedeemDelayHours sets the "max_redeem_delay_hours" field if the given value is not nil.
-func (dsuo *DelegatedStakingUpdateOne) SetNillableMaxRedeemDelayHours(u *uint32) *DelegatedStakingUpdateOne {
-	if u != nil {
-		dsuo.SetMaxRedeemDelayHours(*u)
-	}
-	return dsuo
-}
-
-// AddMaxRedeemDelayHours adds u to the "max_redeem_delay_hours" field.
-func (dsuo *DelegatedStakingUpdateOne) AddMaxRedeemDelayHours(u int32) *DelegatedStakingUpdateOne {
-	dsuo.mutation.AddMaxRedeemDelayHours(u)
-	return dsuo
-}
-
-// ClearMaxRedeemDelayHours clears the value of the "max_redeem_delay_hours" field.
-func (dsuo *DelegatedStakingUpdateOne) ClearMaxRedeemDelayHours() *DelegatedStakingUpdateOne {
-	dsuo.mutation.ClearMaxRedeemDelayHours()
-	return dsuo
-}
-
-// SetContractAddress sets the "contract_address" field.
-func (dsuo *DelegatedStakingUpdateOne) SetContractAddress(s string) *DelegatedStakingUpdateOne {
-	dsuo.mutation.SetContractAddress(s)
-	return dsuo
-}
-
-// SetNillableContractAddress sets the "contract_address" field if the given value is not nil.
-func (dsuo *DelegatedStakingUpdateOne) SetNillableContractAddress(s *string) *DelegatedStakingUpdateOne {
+// SetNillableContractCodeURL sets the "contract_code_url" field if the given value is not nil.
+func (dsuo *DelegatedStakingUpdateOne) SetNillableContractCodeURL(s *string) *DelegatedStakingUpdateOne {
 	if s != nil {
-		dsuo.SetContractAddress(*s)
+		dsuo.SetContractCodeURL(*s)
 	}
 	return dsuo
 }
 
-// ClearContractAddress clears the value of the "contract_address" field.
-func (dsuo *DelegatedStakingUpdateOne) ClearContractAddress() *DelegatedStakingUpdateOne {
-	dsuo.mutation.ClearContractAddress()
+// ClearContractCodeURL clears the value of the "contract_code_url" field.
+func (dsuo *DelegatedStakingUpdateOne) ClearContractCodeURL() *DelegatedStakingUpdateOne {
+	dsuo.mutation.ClearContractCodeURL()
 	return dsuo
 }
 
-// SetNoStakeBenefitDelayHours sets the "no_stake_benefit_delay_hours" field.
-func (dsuo *DelegatedStakingUpdateOne) SetNoStakeBenefitDelayHours(u uint32) *DelegatedStakingUpdateOne {
-	dsuo.mutation.ResetNoStakeBenefitDelayHours()
-	dsuo.mutation.SetNoStakeBenefitDelayHours(u)
+// SetContractCodeBranch sets the "contract_code_branch" field.
+func (dsuo *DelegatedStakingUpdateOne) SetContractCodeBranch(s string) *DelegatedStakingUpdateOne {
+	dsuo.mutation.SetContractCodeBranch(s)
 	return dsuo
 }
 
-// SetNillableNoStakeBenefitDelayHours sets the "no_stake_benefit_delay_hours" field if the given value is not nil.
-func (dsuo *DelegatedStakingUpdateOne) SetNillableNoStakeBenefitDelayHours(u *uint32) *DelegatedStakingUpdateOne {
-	if u != nil {
-		dsuo.SetNoStakeBenefitDelayHours(*u)
+// SetNillableContractCodeBranch sets the "contract_code_branch" field if the given value is not nil.
+func (dsuo *DelegatedStakingUpdateOne) SetNillableContractCodeBranch(s *string) *DelegatedStakingUpdateOne {
+	if s != nil {
+		dsuo.SetContractCodeBranch(*s)
 	}
 	return dsuo
 }
 
-// AddNoStakeBenefitDelayHours adds u to the "no_stake_benefit_delay_hours" field.
-func (dsuo *DelegatedStakingUpdateOne) AddNoStakeBenefitDelayHours(u int32) *DelegatedStakingUpdateOne {
-	dsuo.mutation.AddNoStakeBenefitDelayHours(u)
+// ClearContractCodeBranch clears the value of the "contract_code_branch" field.
+func (dsuo *DelegatedStakingUpdateOne) ClearContractCodeBranch() *DelegatedStakingUpdateOne {
+	dsuo.mutation.ClearContractCodeBranch()
 	return dsuo
 }
 
-// ClearNoStakeBenefitDelayHours clears the value of the "no_stake_benefit_delay_hours" field.
-func (dsuo *DelegatedStakingUpdateOne) ClearNoStakeBenefitDelayHours() *DelegatedStakingUpdateOne {
-	dsuo.mutation.ClearNoStakeBenefitDelayHours()
+// SetContractState sets the "contract_state" field.
+func (dsuo *DelegatedStakingUpdateOne) SetContractState(s string) *DelegatedStakingUpdateOne {
+	dsuo.mutation.SetContractState(s)
+	return dsuo
+}
+
+// SetNillableContractState sets the "contract_state" field if the given value is not nil.
+func (dsuo *DelegatedStakingUpdateOne) SetNillableContractState(s *string) *DelegatedStakingUpdateOne {
+	if s != nil {
+		dsuo.SetContractState(*s)
+	}
+	return dsuo
+}
+
+// ClearContractState clears the value of the "contract_state" field.
+func (dsuo *DelegatedStakingUpdateOne) ClearContractState() *DelegatedStakingUpdateOne {
+	dsuo.mutation.ClearContractState()
 	return dsuo
 }
 
@@ -853,77 +737,43 @@ func (dsuo *DelegatedStakingUpdateOne) sqlSave(ctx context.Context) (_node *Dele
 			Column: delegatedstaking.FieldGoodID,
 		})
 	}
-	if value, ok := dsuo.mutation.NoStakeRedeemDelayHours(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: delegatedstaking.FieldNoStakeRedeemDelayHours,
-		})
-	}
-	if value, ok := dsuo.mutation.AddedNoStakeRedeemDelayHours(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: delegatedstaking.FieldNoStakeRedeemDelayHours,
-		})
-	}
-	if dsuo.mutation.NoStakeRedeemDelayHoursCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: delegatedstaking.FieldNoStakeRedeemDelayHours,
-		})
-	}
-	if value, ok := dsuo.mutation.MaxRedeemDelayHours(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: delegatedstaking.FieldMaxRedeemDelayHours,
-		})
-	}
-	if value, ok := dsuo.mutation.AddedMaxRedeemDelayHours(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: delegatedstaking.FieldMaxRedeemDelayHours,
-		})
-	}
-	if dsuo.mutation.MaxRedeemDelayHoursCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: delegatedstaking.FieldMaxRedeemDelayHours,
-		})
-	}
-	if value, ok := dsuo.mutation.ContractAddress(); ok {
+	if value, ok := dsuo.mutation.ContractCodeURL(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: delegatedstaking.FieldContractAddress,
+			Column: delegatedstaking.FieldContractCodeURL,
 		})
 	}
-	if dsuo.mutation.ContractAddressCleared() {
+	if dsuo.mutation.ContractCodeURLCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: delegatedstaking.FieldContractAddress,
+			Column: delegatedstaking.FieldContractCodeURL,
 		})
 	}
-	if value, ok := dsuo.mutation.NoStakeBenefitDelayHours(); ok {
+	if value, ok := dsuo.mutation.ContractCodeBranch(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: delegatedstaking.FieldNoStakeBenefitDelayHours,
+			Column: delegatedstaking.FieldContractCodeBranch,
 		})
 	}
-	if value, ok := dsuo.mutation.AddedNoStakeBenefitDelayHours(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: delegatedstaking.FieldNoStakeBenefitDelayHours,
-		})
-	}
-	if dsuo.mutation.NoStakeBenefitDelayHoursCleared() {
+	if dsuo.mutation.ContractCodeBranchCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Column: delegatedstaking.FieldNoStakeBenefitDelayHours,
+			Type:   field.TypeString,
+			Column: delegatedstaking.FieldContractCodeBranch,
+		})
+	}
+	if value, ok := dsuo.mutation.ContractState(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: delegatedstaking.FieldContractState,
+		})
+	}
+	if dsuo.mutation.ContractStateCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: delegatedstaking.FieldContractState,
 		})
 	}
 	_spec.Modifiers = dsuo.modifiers

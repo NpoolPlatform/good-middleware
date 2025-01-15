@@ -16,6 +16,8 @@ type Tx struct {
 	config
 	// AppDefaultGood is the client for interacting with the AppDefaultGood builders.
 	AppDefaultGood *AppDefaultGoodClient
+	// AppDelegatedStaking is the client for interacting with the AppDelegatedStaking builders.
+	AppDelegatedStaking *AppDelegatedStakingClient
 	// AppFee is the client for interacting with the AppFee builders.
 	AppFee *AppFeeClient
 	// AppGood is the client for interacting with the AppGood builders.
@@ -242,6 +244,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.AppDefaultGood = NewAppDefaultGoodClient(tx.config)
+	tx.AppDelegatedStaking = NewAppDelegatedStakingClient(tx.config)
 	tx.AppFee = NewAppFeeClient(tx.config)
 	tx.AppGood = NewAppGoodClient(tx.config)
 	tx.AppGoodBase = NewAppGoodBaseClient(tx.config)

@@ -22,14 +22,12 @@ const (
 	FieldEntID = "ent_id"
 	// FieldGoodID holds the string denoting the good_id field in the database.
 	FieldGoodID = "good_id"
-	// FieldNoStakeRedeemDelayHours holds the string denoting the no_stake_redeem_delay_hours field in the database.
-	FieldNoStakeRedeemDelayHours = "no_stake_redeem_delay_hours"
-	// FieldMaxRedeemDelayHours holds the string denoting the max_redeem_delay_hours field in the database.
-	FieldMaxRedeemDelayHours = "max_redeem_delay_hours"
-	// FieldContractAddress holds the string denoting the contract_address field in the database.
-	FieldContractAddress = "contract_address"
-	// FieldNoStakeBenefitDelayHours holds the string denoting the no_stake_benefit_delay_hours field in the database.
-	FieldNoStakeBenefitDelayHours = "no_stake_benefit_delay_hours"
+	// FieldContractCodeURL holds the string denoting the contract_code_url field in the database.
+	FieldContractCodeURL = "contract_code_url"
+	// FieldContractCodeBranch holds the string denoting the contract_code_branch field in the database.
+	FieldContractCodeBranch = "contract_code_branch"
+	// FieldContractState holds the string denoting the contract_state field in the database.
+	FieldContractState = "contract_state"
 	// Table holds the table name of the delegatedstaking in the database.
 	Table = "delegated_stakings"
 )
@@ -42,10 +40,9 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldEntID,
 	FieldGoodID,
-	FieldNoStakeRedeemDelayHours,
-	FieldMaxRedeemDelayHours,
-	FieldContractAddress,
-	FieldNoStakeBenefitDelayHours,
+	FieldContractCodeURL,
+	FieldContractCodeBranch,
+	FieldContractState,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -79,12 +76,10 @@ var (
 	DefaultEntID func() uuid.UUID
 	// DefaultGoodID holds the default value on creation for the "good_id" field.
 	DefaultGoodID func() uuid.UUID
-	// DefaultNoStakeRedeemDelayHours holds the default value on creation for the "no_stake_redeem_delay_hours" field.
-	DefaultNoStakeRedeemDelayHours uint32
-	// DefaultMaxRedeemDelayHours holds the default value on creation for the "max_redeem_delay_hours" field.
-	DefaultMaxRedeemDelayHours uint32
-	// DefaultContractAddress holds the default value on creation for the "contract_address" field.
-	DefaultContractAddress string
-	// DefaultNoStakeBenefitDelayHours holds the default value on creation for the "no_stake_benefit_delay_hours" field.
-	DefaultNoStakeBenefitDelayHours uint32
+	// DefaultContractCodeURL holds the default value on creation for the "contract_code_url" field.
+	DefaultContractCodeURL string
+	// DefaultContractCodeBranch holds the default value on creation for the "contract_code_branch" field.
+	DefaultContractCodeBranch string
+	// DefaultContractState holds the default value on creation for the "contract_state" field.
+	DefaultContractState string
 )

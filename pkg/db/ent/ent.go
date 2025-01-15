@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdefaultgood"
+	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appdelegatedstaking"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appfee"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgood"
 	"github.com/NpoolPlatform/good-middleware/pkg/db/ent/appgoodbase"
@@ -77,6 +78,7 @@ type OrderFunc func(*sql.Selector)
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
 		appdefaultgood.Table:         appdefaultgood.ValidColumn,
+		appdelegatedstaking.Table:    appdelegatedstaking.ValidColumn,
 		appfee.Table:                 appfee.ValidColumn,
 		appgood.Table:                appgood.ValidColumn,
 		appgoodbase.Table:            appgoodbase.ValidColumn,
